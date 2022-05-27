@@ -4,10 +4,8 @@ namespace Illuminate\Database\Console\Factories;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'make:factory')]
 class FactoryMakeCommand extends GeneratorCommand
 {
     /**
@@ -16,17 +14,6 @@ class FactoryMakeCommand extends GeneratorCommand
      * @var string
      */
     protected $name = 'make:factory';
-
-    /**
-     * The name of the console command.
-     *
-     * This name is used to identify the command during lazy loading.
-     *
-     * @var string|null
-     *
-     * @deprecated
-     */
-    protected static $defaultName = 'make:factory';
 
     /**
      * The console command description.
@@ -81,9 +68,11 @@ class FactoryMakeCommand extends GeneratorCommand
 
         $model = class_basename($namespaceModel);
 
-        $namespace = $this->getNamespace(
-            Str::replaceFirst($this->rootNamespace(), 'Database\\Factories\\', $this->qualifyClass($this->getNameInput()))
-        );
+        if (Str::startsWith($namespaceModel, $this->rootNamespace().'Models')) {
+            $namespace = Str::beforeLast('Database\\Factories\\'.Str::after($namespaceModel, $this->rootNamespace().'Models\\'), '\\');
+        } else {
+            $namespace = 'Database\\Factories';
+        }
 
         $replace = [
             '{{ factoryNamespace }}' => $namespace,
@@ -123,7 +112,7 @@ class FactoryMakeCommand extends GeneratorCommand
      */
     protected function guessModelName($name)
     {
-        if (str_ends_with($name, 'Factory')) {
+        if (Str::endsWith($name, 'Factory')) {
             $name = substr($name, 0, -7);
         }
 

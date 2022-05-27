@@ -65,17 +65,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Append a new line to the string.
-     *
-     * @param  int  $count
-     * @return $this
-     */
-    public function newLine($count = 1)
-    {
-        return $this->append(str_repeat(PHP_EOL, $count));
-    }
-
-    /**
      * Transliterate a UTF-8 value to ASCII.
      *
      * @param  string  $language
@@ -142,18 +131,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Get the smallest possible portion of a string between two given values.
-     *
-     * @param  string  $from
-     * @param  string  $to
-     * @return static
-     */
-    public function betweenFirst($from, $to)
-    {
-        return new static(Str::betweenFirst($this->value, $from, $to));
-    }
-
-    /**
      * Convert a value to camel case.
      *
      * @return static
@@ -166,7 +143,7 @@ class Stringable implements JsonSerializable
     /**
      * Determine if a given string contains a given substring.
      *
-     * @param  string|string[]  $needles
+     * @param  string|array  $needles
      * @return bool
      */
     public function contains($needles)
@@ -199,7 +176,7 @@ class Stringable implements JsonSerializable
     /**
      * Determine if a given string ends with a given substring.
      *
-     * @param  string|string[]  $needles
+     * @param  string|array  $needles
      * @return bool
      */
     public function endsWith($needles)
@@ -210,28 +187,12 @@ class Stringable implements JsonSerializable
     /**
      * Determine if the string is an exact match with the given value.
      *
-     * @param  \Illuminate\Support\Stringable|string  $value
+     * @param  string  $value
      * @return bool
      */
     public function exactly($value)
     {
-        if ($value instanceof Stringable) {
-            $value = $value->toString();
-        }
-
         return $this->value === $value;
-    }
-
-    /**
-     * Extracts an excerpt from text that matches the first instance of a phrase.
-     *
-     * @param  string  $phrase
-     * @param  array  $options
-     * @return string|null
-     */
-    public function excerpt($phrase = '', $options = [])
-    {
-        return Str::excerpt($this->value, $phrase, $options);
     }
 
     /**
@@ -483,7 +444,7 @@ class Stringable implements JsonSerializable
      */
     public function pipe(callable $callback)
     {
-        return new static($callback($this));
+        return new static(call_user_func($callback, $this));
     }
 
     /**
@@ -549,7 +510,7 @@ class Stringable implements JsonSerializable
      */
     public function repeat(int $times)
     {
-        return new static(str_repeat($this->value, $times));
+        return new static(Str::repeat($this->value, $times));
     }
 
     /**
@@ -561,7 +522,7 @@ class Stringable implements JsonSerializable
      */
     public function replace($search, $replace)
     {
-        return new static(str_replace($search, $replace, $this->value));
+        return new static(Str::replace($search, $replace, $this->value));
     }
 
     /**
@@ -626,16 +587,6 @@ class Stringable implements JsonSerializable
     public function scan($format)
     {
         return collect(sscanf($this->value, $format));
-    }
-
-    /**
-     * Remove all "extra" blank space from the given string.
-     *
-     * @return static
-     */
-    public function squish()
-    {
-        return new static(Str::squish($this->value));
     }
 
     /**
@@ -726,7 +677,7 @@ class Stringable implements JsonSerializable
     /**
      * Determine if a given string starts with a given substring.
      *
-     * @param  string|string[]  $needles
+     * @param  string|array  $needles
      * @return bool
      */
     public function startsWith($needles)
@@ -827,16 +778,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Make a string's first character lowercase.
-     *
-     * @return static
-     */
-    public function lcfirst()
-    {
-        return new static(Str::lcfirst($this->value));
-    }
-
-    /**
      * Make a string's first character uppercase.
      *
      * @return static
@@ -859,7 +800,7 @@ class Stringable implements JsonSerializable
     /**
      * Execute the given callback if the string contains a given substring.
      *
-     * @param  string|string[]  $needles
+     * @param  string|array  $needles
      * @param  callable  $callback
      * @param  callable|null  $default
      * @return static
@@ -909,7 +850,7 @@ class Stringable implements JsonSerializable
     /**
      * Execute the given callback if the string ends with a given substring.
      *
-     * @param  string|string[]  $needles
+     * @param  string|array  $needles
      * @param  callable  $callback
      * @param  callable|null  $default
      * @return static
@@ -972,7 +913,7 @@ class Stringable implements JsonSerializable
     /**
      * Execute the given callback if the string starts with a given substring.
      *
-     * @param  string|string[]  $needles
+     * @param  string|array  $needles
      * @param  callable  $callback
      * @param  callable|null  $default
      * @return static
@@ -1018,18 +959,6 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Wrap the string with the given strings.
-     *
-     * @param  string  $before
-     * @param  string|null  $after
-     * @return static
-     */
-    public function wrap($before, $after = null)
-    {
-        return new static($before.$this->value.($after ??= $before));
-    }
-
-    /**
      * Convert the string into a `HtmlString` instance.
      *
      * @return \Illuminate\Support\HtmlString
@@ -1064,31 +993,12 @@ class Stringable implements JsonSerializable
     }
 
     /**
-     * Get the underlying string value.
-     *
-     * @return string
-     */
-    public function value()
-    {
-        return $this->toString();
-    }
-
-    /**
-     * Get the underlying string value.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        return $this->value;
-    }
-
-    /**
      * Convert the object to a string when JSON encoded.
      *
      * @return string
      */
-    public function jsonSerialize(): string
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         return $this->__toString();
     }

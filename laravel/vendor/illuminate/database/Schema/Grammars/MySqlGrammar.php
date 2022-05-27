@@ -959,16 +959,8 @@ class MySqlGrammar extends Grammar
      */
     protected function modifyVirtualAs(Blueprint $blueprint, Fluent $column)
     {
-        if (! is_null($virtualAs = $column->virtualAsJson)) {
-            if ($this->isJsonSelector($virtualAs)) {
-                $virtualAs = $this->wrapJsonSelector($virtualAs);
-            }
-
-            return " as ({$virtualAs})";
-        }
-
-        if (! is_null($virtualAs = $column->virtualAs)) {
-            return " as ({$virtualAs})";
+        if (! is_null($column->virtualAs)) {
+            return " as ({$column->virtualAs})";
         }
     }
 
@@ -981,16 +973,8 @@ class MySqlGrammar extends Grammar
      */
     protected function modifyStoredAs(Blueprint $blueprint, Fluent $column)
     {
-        if (! is_null($storedAs = $column->storedAsJson)) {
-            if ($this->isJsonSelector($storedAs)) {
-                $storedAs = $this->wrapJsonSelector($storedAs);
-            }
-
-            return " as ({$storedAs}) stored";
-        }
-
-        if (! is_null($storedAs = $column->storedAs)) {
-            return " as ({$storedAs}) stored";
+        if (! is_null($column->storedAs)) {
+            return " as ({$column->storedAs}) stored";
         }
     }
 
@@ -1045,10 +1029,7 @@ class MySqlGrammar extends Grammar
      */
     protected function modifyNullable(Blueprint $blueprint, Fluent $column)
     {
-        if (is_null($column->virtualAs) &&
-            is_null($column->virtualAsJson) &&
-            is_null($column->storedAs) &&
-            is_null($column->storedAsJson)) {
+        if (is_null($column->virtualAs) && is_null($column->storedAs)) {
             return $column->nullable ? ' null' : ' not null';
         }
 
@@ -1150,7 +1131,7 @@ class MySqlGrammar extends Grammar
      */
     protected function modifySrid(Blueprint $blueprint, Fluent $column)
     {
-        if (is_int($column->srid) && $column->srid > 0) {
+        if (! is_null($column->srid) && is_int($column->srid) && $column->srid > 0) {
             return ' srid '.$column->srid;
         }
     }
@@ -1168,18 +1149,5 @@ class MySqlGrammar extends Grammar
         }
 
         return $value;
-    }
-
-    /**
-     * Wrap the given JSON selector.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    protected function wrapJsonSelector($value)
-    {
-        [$field, $path] = $this->wrapJsonFieldAndPath($value);
-
-        return 'json_unquote(json_extract('.$field.$path.'))';
     }
 }

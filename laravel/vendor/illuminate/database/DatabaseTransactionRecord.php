@@ -57,7 +57,7 @@ class DatabaseTransactionRecord
     public function executeCallbacks()
     {
         foreach ($this->callbacks as $callback) {
-            $callback();
+            call_user_func($callback);
         }
     }
 

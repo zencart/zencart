@@ -3,7 +3,6 @@
 namespace Illuminate\Database\Eloquent\Relations;
 
 use Closure;
-use Illuminate\Contracts\Database\Eloquent\Builder as BuilderContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -14,10 +13,13 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Illuminate\Support\Traits\Macroable;
 
-abstract class Relation implements BuilderContract
+/**
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
+abstract class Relation
 {
     use ForwardsCalls, Macroable {
-        Macroable::__call as macroCall;
+        __call as macroCall;
     }
 
     /**
@@ -164,21 +166,19 @@ abstract class Relation implements BuilderContract
      * @param  array|string  $columns
      * @return \Illuminate\Database\Eloquent\Model
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException<\Illuminate\Database\Eloquent\Model>
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Illuminate\Database\MultipleRecordsFoundException
      */
     public function sole($columns = ['*'])
     {
         $result = $this->take(2)->get($columns);
 
-        $count = $result->count();
-
-        if ($count === 0) {
+        if ($result->isEmpty()) {
             throw (new ModelNotFoundException)->setModel(get_class($this->related));
         }
 
-        if ($count > 1) {
-            throw new MultipleRecordsFoundException($count);
+        if ($result->count() > 1) {
+            throw new MultipleRecordsFoundException;
         }
 
         return $result->first();
@@ -306,16 +306,6 @@ abstract class Relation implements BuilderContract
     public function getBaseQuery()
     {
         return $this->query->getQuery();
-    }
-
-    /**
-     * Get a base query builder instance.
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function toBase()
-    {
-        return $this->query->toBase();
     }
 
     /**

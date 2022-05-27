@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 trait CanBeOneOfMany
@@ -51,7 +52,7 @@ trait CanBeOneOfMany
     /**
      * Add join query constraints for one of many relationships.
      *
-     * @param  \Illuminate\Database\Query\JoinClause  $join
+     * @param  \Illuminate\Database\Eloquent\JoinClause  $join
      * @return void
      */
     abstract public function addOneOfManyJoinSubQueryConstraints(JoinClause $join);
@@ -60,7 +61,7 @@ trait CanBeOneOfMany
      * Indicate that the relation is a single result of a larger one-to-many relationship.
      *
      * @param  string|array|null  $column
-     * @param  string|\Closure|null  $aggregate
+     * @param  string|Closure|null  $aggregate
      * @param  string|null  $relation
      * @return $this
      *
@@ -136,6 +137,7 @@ trait CanBeOneOfMany
      * Indicate that the relation is the latest single result of a larger one-to-many relationship.
      *
      * @param  string|array|null  $column
+     * @param  string|Closure|null  $aggregate
      * @param  string|null  $relation
      * @return $this
      */
@@ -150,6 +152,7 @@ trait CanBeOneOfMany
      * Indicate that the relation is the oldest single result of a larger one-to-many relationship.
      *
      * @param  string|array|null  $column
+     * @param  string|Closure|null  $aggregate
      * @param  string|null  $relation
      * @return $this
      */
@@ -224,7 +227,7 @@ trait CanBeOneOfMany
     /**
      * Merge the relationship query joins to the given query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
      * @return void
      */
     protected function mergeOneOfManyJoinsTo(Builder $query)
@@ -275,7 +278,7 @@ trait CanBeOneOfMany
      */
     protected function qualifyRelatedColumn($column)
     {
-        return str_contains($column, '.') ? $column : $this->query->getModel()->getTable().'.'.$column;
+        return Str::contains($column, '.') ? $column : $this->query->getModel()->getTable().'.'.$column;
     }
 
     /**
