@@ -444,34 +444,39 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       // SUCCESS
       $this->payment_type = MODULE_PAYMENT_PAYPALWPP_EC_TEXT_TYPE;
       $this->responsedata = $response;
-      if ($response['PAYMENTINFO_0_PAYMENTTYPE'] != '') $this->payment_type .=  ' (' . urldecode($response['PAYMENTINFO_0_PAYMENTTYPE']) . ')';
 
-      $this->transaction_id = trim((isset($response['PNREF']) ? $response['PNREF'] : '') . ' ' . $response['PAYMENTINFO_0_TRANSACTIONID']);
-      if (empty($response['PAYMENTINFO_0_PENDINGREASON']) ||
-          $response['PAYMENTINFO_0_PENDINGREASON'] == 'none' ||
-          $response['PAYMENTINFO_0_PENDINGREASON'] == 'completed' ||
-          $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Completed') {
+      // -----
+      // Note that variable names are 'prefixed', based on the NVP/PAYFLOW mode currently in use.  Those
+      // prefixes are set by the paypal_init method.
+      //
+      if ($response[$this->infoPrefix . 'PAYMENTTYPE'] != '') $this->payment_type .=  ' (' . urldecode($response[$this->infoPrefix . 'PAYMENTTYPE']) . ')';
+
+      $this->transaction_id = trim((isset($response['PNREF']) ? $response['PNREF'] : '') . ' ' . $response[$this->infoPrefix . 'TRANSACTIONID']);
+      if (empty($response[$this->infoPrefix . 'PENDINGREASON']) ||
+          $response[$this->infoPrefix . 'PENDINGREASON'] == 'none' ||
+          $response[$this->infoPrefix . 'PENDINGREASON'] == 'completed' ||
+          $response[$this->infoPrefix . 'PAYMENTSTATUS'] == 'Completed') {
         $this->payment_status = 'Completed';
         if ($this->order_status > 0) $order->info['order_status'] = $this->order_status;
       } else {
-        if ($response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
+        if ($response[$this->infoPrefix . 'PAYMENTSTATUS'] == 'Pending')
         {
-          if ($response['L_ERRORCODE0'] == 11610 && $response['PAYMENTINFO_0_PENDINGREASON'] == '') $response['PAYMENTINFO_0_PENDINGREASON'] = 'Pending FMF Review by Storeowner';
+          if ($response['L_ERRORCODE0'] == 11610 && $response[$this->infoPrefix . 'PENDINGREASON'] == '') $response[$this->infoPrefix . 'PENDINGREASON'] = 'Pending FMF Review by Storeowner';
         }
-        $this->payment_status = 'Pending (' . $response['PAYMENTINFO_0_PENDINGREASON'] . ')';
+        $this->payment_status = 'Pending (' . $response[$this->infoPrefix . 'PENDINGREASON'] . ')';
         $order->info['order_status'] = $this->order_pending_status;
       }
       $this->avs = 'N/A';
       $this->cvv2 = 'N/A';
       $this->correlationid = $response['CORRELATIONID'];
-      $this->transactiontype = $response['PAYMENTINFO_0_TRANSACTIONTYPE'];
-      $this->payment_time = urldecode($response['PAYMENTINFO_0_ORDERTIME']);
-      $this->feeamt = urldecode($response['PAYMENTINFO_0_FEEAMT']);
-      $this->taxamt = urldecode($response['PAYMENTINFO_0_TAXAMT']);
-      $this->pendingreason = $response['PAYMENTINFO_0_PENDINGREASON'];
-      $this->reasoncode = $response['PAYMENTINFO_0_REASONCODE'];
-      $this->numitems = sizeof($order->products);
-      $this->amt = urldecode($response['PAYMENTINFO_0_AMT'] . ' ' . $response['PAYMENTINFO_0_CURRENCYCODE']);
+      $this->transactiontype = $response[$this->infoPrefix . 'TRANSACTIONTYPE'];
+      $this->payment_time = urldecode($response[$this->infoPrefix . 'ORDERTIME']);
+      $this->feeamt = urldecode($response[$this->infoPrefix . 'FEEAMT']);
+      $this->taxamt = urldecode($response[$this->infoPrefix . 'TAXAMT']);
+      $this->pendingreason = $response[$this->infoPrefix . 'PENDINGREASON'];
+      $this->reasoncode = $response[$this->infoPrefix . 'REASONCODE'];
+      $this->numitems = count($order->products);
+      $this->amt = urldecode($response[$this->infoPrefix . 'AMT'] . ' ' . $response[$this->infoPrefix . 'CURRENCYCODE']);
       $this->auth_code = (isset($response['AUTHCODE'])) ? $response['AUTHCODE'] : $response['TOKEN'];
 
       $this->notify('NOTIFY_PAYPALWPP_BEFORE_PROCESS_FINISHED', $response);
@@ -531,10 +536,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'num_cart_items' => (float)$this->numitems,
                           'mc_gross' => (float)$this->amt,
                           'mc_fee' => (float)urldecode($this->feeamt),
-                          'mc_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
-                          'settle_amount' => (float)(isset($this->responsedata['PAYMENTINFO_0_SETTLEAMT']) ? urldecode($this->responsedata['PAYMENTINFO_0_SETTLEAMT']) : $this->amt),
-                          'settle_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
-                          'exchange_rate' => (isset($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) && urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) > 0) ? urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) : 1.0,
+                          'mc_currency' => $this->responsedata[$this->infoPrefix . 'CURRENCYCODE'],
+                          'settle_amount' => (float)(isset($this->responsedata[$this->infoPrefix . 'SETTLEAMT']) ? urldecode($this->responsedata[$this->infoPrefix . 'SETTLEAMT']) : $this->amt),
+                          'settle_currency' => $this->responsedata[$this->infoPrefix . 'CURRENCYCODE'],
+                          'exchange_rate' => (isset($this->responsedata[$this->infoPrefix . 'EXCHANGERATE']) && urldecode($this->responsedata[$this->infoPrefix . 'EXCHANGERATE']) > 0) ? urldecode($this->responsedata[$this->infoPrefix . 'EXCHANGERATE']) : 1.0,
                           'notify_version' => '0',
                           'verify_sign' =>'',
                           'date_added' => 'now()',
@@ -805,6 +810,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       return $doPayPal;
     }
     $ec_uses_gateway = (defined('MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD') && MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD == 'Payflow') ? true : false;
+    
+    // -----
+    // The PayFlow processing uses older-style, unprefixed, NVP variable names while the PayPal processing
+    // uses the PAYMENTREQUEST_0_ and PAYMENT_INFO_0_ prefixes!
+    //
     if (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow') {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
                                         'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
@@ -814,6 +824,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                                         'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://payflowpro.paypal.com/transaction',
                                     'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction');
+
+      $this->requestPrefix = '';
+      $this->infoPrefix = '';
     } else {
       $doPayPal = new paypal_curl(array('mode' => 'nvp',
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
@@ -823,6 +836,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                                         'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
+
+      $this->requestPrefix = 'PAYMENTREQUEST_0_';
+      $this->infoPrefix = 'PAYMENTINFO_0_';
     }
 
     // set logging options
@@ -1799,14 +1815,15 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // Fill in possibly blank return values, prevents PHP notices in follow-on checking clause.
     $response_vars = array(
-        'PAYMENTREQUEST_0_SHIPTONAME',
-        'PAYMENTREQUEST_0_SHIPTOSTREET',
-        'PAYMENTREQUEST_0_SHIPTOSTREET2',
-        'PAYMENTREQUEST_0_SHIPTOCITY',
-        'PAYMENTREQUEST_0_SHIPTOSTATE',
-        'PAYMENTREQUEST_0_SHIPTOZIP',
-        'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE',
+        $this->requestPrefix . 'SHIPTONAME',
+        $this->requestPrefix . 'SHIPTOSTREET',
+        $this->requestPrefix . 'SHIPTOSTREET2',
+        $this->requestPrefix . 'SHIPTOCITY',
+        $this->requestPrefix . 'SHIPTOSTATE',
+        $this->requestPrefix . 'SHIPTOZIP',
+        $this->requestPrefix . 'SHIPTOCOUNTRYCODE',
     );
+
     $address_received = '';
     foreach ($response_vars as $response_var) {
         if (!isset($response[$response_var])) {
@@ -1848,31 +1865,31 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                              'payer_lastname'  => urldecode($response['LASTNAME']),
                              'payer_business'  => urldecode($response['BUSINESS']),
                              'payer_status'    => $response['PAYERSTATUS'],
-                             'ship_country_code'   => urldecode($response['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']),
-                             'ship_address_status' => urldecode($response['PAYMENTREQUEST_0_ADDRESSSTATUS']),
-                             'ship_phone'      => urldecode($response['PAYMENTREQUEST_0_SHIPTOPHONENUM'] != '' ? $response['PAYMENTREQUEST_0_SHIPTOPHONENUM'] : $response['PHONENUM']),
-                             'order_comment'   => (isset($response['NOTE']) || isset($response['PAYMENTREQUEST_0_NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response['PAYMENTREQUEST_0_NOTETEXT']) : ''),
+                             'ship_country_code'   => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
+                             'ship_address_status' => urldecode($response[$this->requestPrefix . 'ADDRESSSTATUS']),
+                             'ship_phone'      => urldecode($response[$this->requestPrefix . 'SHIPTOPHONENUM'] != '' ? $response[$this->requestPrefix . 'SHIPTOPHONENUM'] : $response['PHONENUM']),
+                             'order_comment'   => (isset($response['NOTE']) && isset($response[$this->requestPrefix . 'NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response[$this->requestPrefix . 'NOTETEXT']) : ''),
                              );
 
 //    if (strtoupper($response['ADDRESSSTATUS']) == 'NONE' || !isset($response['SHIPTOSTREET']) || $response['SHIPTOSTREET'] == '') {
 //      $step2_shipto = array();
 //    } else {
       // accomodate PayPal bug which repeats 1st line of address for 2nd line if 2nd line is empty.
-      if ($response['PAYMENTREQUEST_0_SHIPTOSTREET2'] == $response['PAYMENTREQUEST_0_SHIPTOSTREET']) $response['PAYMENTREQUEST_0_SHIPTOSTREET2'] = '';
+      if ($response[$this->requestPrefix . 'SHIPTOSTREET2'] == $response[$this->requestPrefix . 'SHIPTOSTREET']) $response[$this->requestPrefix . 'SHIPTOSTREET2'] = '';
 
       // accomodate PayPal bug which incorrectly treats 'Yukon Territory' as YK instead of ISO standard of YT.
-      if ($response['PAYMENTREQUEST_0_SHIPTOSTATE'] == 'YK') $response['PAYMENTREQUEST_0_SHIPTOSTATE'] = 'YT';
+      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] == 'YK') $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'YT';
       // same with Newfoundland
-      if ($response['PAYMENTREQUEST_0_SHIPTOSTATE'] == 'NF') $response['PAYMENTREQUEST_0_SHIPTOSTATE'] = 'NL';
+      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] == 'NF') $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'NL';
 
       // process address details supplied
-      $step2_shipto = array('ship_name'     => urldecode($response['PAYMENTREQUEST_0_SHIPTONAME']),
-                            'ship_street_1' => urldecode($response['PAYMENTREQUEST_0_SHIPTOSTREET']),
-                            'ship_street_2' => urldecode($response['PAYMENTREQUEST_0_SHIPTOSTREET2']),
-                            'ship_city'     => urldecode($response['PAYMENTREQUEST_0_SHIPTOCITY']),
-                            'ship_state'    => (isset($response['PAYMENTREQUEST_0_SHIPTOSTATE']) && $response['PAYMENTREQUEST_0_SHIPTOSTATE'] !='' ? urldecode($response['PAYMENTREQUEST_0_SHIPTOSTATE']) : urldecode($response['PAYMENTREQUEST_0_SHIPTOCITY'])),
-                            'ship_postal_code' => urldecode($response['PAYMENTREQUEST_0_SHIPTOZIP']),
-                            'ship_country_code'  => urldecode($response['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']),
+      $step2_shipto = array('ship_name'     => urldecode($response[$this->requestPrefix . 'SHIPTONAME']),
+                            'ship_street_1' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET']),
+                            'ship_street_2' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET2']),
+                            'ship_city'     => urldecode($response[$this->requestPrefix . 'SHIPTOCITY']),
+                            'ship_state'    => (isset($response[$this->requestPrefix . 'SHIPTOSTATE']) && $response[$this->requestPrefix . 'SHIPTOSTATE'] !='' ? urldecode($response[$this->requestPrefix . 'SHIPTOSTATE']) : urldecode($response[$this->requestPrefix . 'SHIPTOCITY'])),
+                            'ship_postal_code' => urldecode($response[$this->requestPrefix . 'SHIPTOZIP']),
+                            'ship_country_code'  => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
                             'ship_country_name'  => (isset($response['SHIPTOCOUNTRY']) ? urldecode($response['SHIPTOCOUNTRY']) : (isset($response['SHIPTOCOUNTRYNAME']) ? urldecode($response['SHIPTOCOUNTRYNAME']) : '')));
 //    }
 
@@ -1898,7 +1915,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $order_totals = $order_total_modules->process();
       $this->zcLog('ec_step2 ', 'Instantiated $order object contents: ' . print_r($order, true));
     }
-    if ($order->info['total'] < 0.01 && urldecode($response['PAYMENTREQUEST_0_AMT']) > 0) $order->info['total'] = urldecode($response['PAYMENTREQUEST_0_AMT']);
+
+    if ($order->info['total'] < 0.01 && urldecode($response[$this->requestPrefix . 'AMT']) > 0) $order->info['total'] = urldecode($response[$this->requestPrefix . 'AMT']);
     //$this->zcLog('ec_step2 - processed info', print_r(array_merge($step2_payerinfo, $step2_shipto), true));
 
     // send data off to build account, log in, set addresses, place order

@@ -120,7 +120,7 @@ class paypaldp extends base {
   var $fmfResponse = '';
   var $fmfErrors = array();
   /**
-   * this module collects card-info onsite
+   * this module collects card-info onsite, unless operating in PayFlow-UK mode!
    */
   var $collectsCardDataOnsite = TRUE;
   /**
@@ -180,6 +180,16 @@ class paypaldp extends base {
       if (CC_ENABLED_MC=='1')      $this->cards[] = array('id' => 'MasterCard', 'text' => 'MasterCard');
       if (CC_ENABLED_MAESTRO=='1') $this->cards[] = array('id' => 'Maestro', 'text' => 'Maestro');
       if (CC_ENABLED_SOLO=='1')    $this->cards[] = array('id' => 'Solo', 'text' => 'Solo');
+    }
+
+    // -----
+    // For PayFlow-UK with the 3Dauth processing, an iframe is displayed for the 3DS challenge which
+    // is not compatible with the AJAX interface used when a payment method 'collectsCardDataOnsite'.  If
+    // the PayFlow-UK mode is currently in use, that class variable is 'reset' to enable the 3DS handling
+    // to proceed without issue.
+    //
+    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY === 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR !== '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD !== '')) {
+      $this->collectsCardDataOnsite = false;
     }
 
     // debug setup
