@@ -310,7 +310,7 @@ class Customer extends base
                     'language_code' => $result['language_code'],
                 ];
             }
-            $lifetime_value += ($result['order_total'] * $result['currency_value']);
+            $lifetime_value += ((float)$result['order_total'] * (float)$result['currency_value']);
         }
         $this->data['last_order'] = $last_order;
         $this->data['lifetime_value'] = $lifetime_value;
