@@ -34,8 +34,7 @@ if (!empty($action)) {
       if (isset($_GET['ptID'])) $type_id = zen_db_prepare_input($_GET['ptID']);
       $type_name = zen_db_prepare_input($_POST['type_name']);
       $handler = zen_db_prepare_input($_POST['handler']);
-      $allow_add_to_cart = zen_db_prepare_input(($_POST['catalog_add_to_cart'] ? 'Y' : 'N'));
-
+      $allow_add_to_cart = zen_db_prepare_input(isset($_POST['catalog_add_to_cart']) ? 'Y' : 'N');
       $sql_data_array = array(
         'type_name' => $type_name,
         'type_handler' => $handler,
