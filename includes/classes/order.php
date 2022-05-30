@@ -396,7 +396,7 @@ class order extends base
         //
         // If that's not the case, issue a PHP Notice and reset the shipping to its unselected state.
         //
-        if (isset($_SESSION['shipping'])) {
+        if (!empty($_SESSION['shipping'])) {
             if (!empty($_SESSION['shipping']['id']) && strpos((string)$_SESSION['shipping']['id'], '_')) {
                 $shipping_module_code = $_SESSION['shipping']['id'];
             } else {
