@@ -679,6 +679,11 @@ a.btn-pricemanager-on {
     color: #eee;
 }
 
+a.btn-pricemanager-on-enabled {
+    background-color: #006400;
+    color: #eee;
+}
+
 a.btn-pricemanager-off {
     background-color: #d3d3d3;
     color: #eee;
