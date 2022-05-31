@@ -147,6 +147,7 @@ if (file_exists('includes/defined_paths.php')) {
     exit;
 }
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
 /**
  * include the list of extra configure files
  */
@@ -162,14 +163,14 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
   $za_dir->close();
   unset($za_dir);
 }
-$autoLoadConfig = array();
+$autoLoadConfig = [];
 if (isset($loaderPrefix)) {
  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
 } else {
   $loaderPrefix = 'config';
 }
 $loader_file = $loaderPrefix . '.core.php';
-require('includes/initsystem.php');
+require 'includes/initsystem.php';
 /**
  * determine install status
  */
@@ -244,7 +245,7 @@ $loaderList = $initSystem->loadAutoLoaders();
 
 $initSystemList = $initSystem->processLoaderList($loaderList);
 
-require(DIR_FS_CATALOG . 'includes/autoload_func.php');
+require DIR_FS_CATALOG . 'includes/autoload_func.php';
 /**
  * load the counter code
 **/
