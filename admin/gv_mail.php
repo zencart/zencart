@@ -58,7 +58,7 @@ if ($action != '') {
         if (!empty($_POST['email_to_name'])) {
           $mail_sent_to_names = explode(' ', zen_db_prepare_input($_POST['email_to_name']), 2);
           $customers_firstname = $mail_sent_to_names[0];
-          $customers_lastname = $mail_sent_to_names[1];
+          $customers_lastname = (!empty($mail_sent_to_names[1]) ? $mail_sent_to_names[1] : ''); 
         } else {
           $customers_firstname = '';
           $customers_lastname = TEXT_CUSTOMER;
