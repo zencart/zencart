@@ -260,12 +260,28 @@
       $contents[] = array('align' => 'center', 'text' => '<br>' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>'. ' <a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id) . '" class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>');
       break;
     case 'products':
-      $new_product_query = $db->Execute("SELECT ptc.*, pd.products_name FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc  LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON ptc.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "' WHERE ptc.categories_id='" . $current_category_id . "' ORDER BY pd.products_name");
       $heading[] = array('text' => '<strong>' . TEXT_HEADING_ASSIGN_MEDIA_COLLECTION . '</strong>');
       $contents[] = array('text' => TEXT_PRODUCTS_INTRO . '<br><br>');
       $contents[] = array('text' => zen_draw_form('new_category', FILENAME_MEDIA_MANAGER, '', 'get') . '&nbsp;&nbsp;' .
-                           zen_draw_pull_down_menu('current_category_id', zen_get_category_tree('', '', '0'), '', 'onChange="this.form.submit();"') . zen_hide_session_id() . zen_draw_hidden_field('products_filter', $_GET['products_filter']) . zen_draw_hidden_field('action', 'new_cat') . zen_draw_hidden_field('mID', $mInfo->media_id) . zen_draw_hidden_field('page', $_GET['page']) . '&nbsp;&nbsp;</form>');
-      $product_array = $zc_products->get_products_in_category($current_category_id, false);
+                           zen_draw_pull_down_menu('current_category_id', zen_get_category_tree('', '', '0'), (isset($current_category_id)? $current_category_id : ''), 'onChange="this.form.submit();"') . zen_hide_session_id() . zen_draw_hidden_field('products_filter', $_GET['products_filter']) . zen_draw_hidden_field('action', 'new_cat') . zen_draw_hidden_field('mID', $mInfo->media_id) . zen_draw_hidden_field('page', $_GET['page']) . '&nbsp;&nbsp;</form>');
+      // product_array should be products in this category that do not already 
+      // have a media_to_products entry for this media id. 
+     $products_query = "SELECT ptc.*, pd.products_name
+                            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
+                            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                            ON ptc.products_id = pd.products_id
+                            AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                            WHERE ptc.categories_id='" . (int)$current_category_id. "'
+                            AND NOT EXISTS (SELECT pmp.product_id FROM " . TABLE_MEDIA_TO_PRODUCTS . " pmp WHERE pmp.product_id = pd.products_id) 
+                            ORDER BY pd.products_name";
+      $product_list = $db->Execute($products_query);
+      $products_array = []; 
+      foreach ($product_list as $product) {
+         $product_array[] = array(
+            'id' => $product['products_id'],
+            'text' => $product['products_name']
+         );
+      }
       if ($product_array) {
         $contents[] = array('text' => zen_draw_form('new_product', FILENAME_MEDIA_MANAGER, 'action=add_product&page=' . (isset($GET['page']) ? $_GET['page'] : ''), 'post') . '&nbsp;&nbsp;' .
                            zen_draw_pull_down_menu('current_product_id', $product_array) . '&nbsp;' . '<input type="submit" name="add_product" value="Add">' .
