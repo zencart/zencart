@@ -42,6 +42,7 @@ span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.
 .button_in_cart:hover{background-color:#000;}
 #docGeneralDisplay #pinfo-right, #popupShippingEstimator, #popupSearchHelp, #popupAdditionalImage, #popupImage, #popupCVVHelp, #popupCouponHelp, #popupAtrribsQuantityPricesHelp, #infoShoppingCart{background:none;}
 #navMain ul li a.navCartContentsIndicator {background: #ff662e;color:#000}
+input.submit_button:disabled, input.submit_button:disabled:hover, input.cssButtonHover:disabled{background:#808080;}
 
 /*bof border colors*/
 HR {border-bottom:1px solid #9a9a9a;}
