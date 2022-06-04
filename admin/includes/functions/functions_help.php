@@ -114,6 +114,7 @@ function page_has_help()
         FILENAME_MODULES => 'https://docs.zen-cart.com/user/admin_pages/modules/',
         FILENAME_PLUGIN_MANAGER=> 'https://docs.zen-cart.com/user/admin_pages/modules/plugin_manager',
         FILENAME_CUSTOMERS => 'https://docs.zen-cart.com/user/admin_pages/customers/customers/',
+        FILENAME_CUSTOMER_GROUPS => 'https://docs.zen-cart.com/user/admin_pages/customers/customer_groups/',
         FILENAME_ORDERS => 'https://docs.zen-cart.com/user/admin_pages/customers/orders/',
         FILENAME_GROUP_PRICING => 'https://docs.zen-cart.com/user/admin_pages/customers/group_pricing/',
         FILENAME_PAYPAL => '',
