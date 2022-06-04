@@ -133,6 +133,7 @@ class order extends base
             'telephone' => $order->fields['customers_telephone'],
             'email_address' => $order->fields['customers_email_address'],
         ];
+        $this->customer['zone_id'] = $this->getCountryZoneId((int)$this->customer['country'], $this->customer['state']);
 
         $this->delivery = [
             'name' => $order->fields['delivery_name'],
@@ -145,6 +146,7 @@ class order extends base
             'country' => $this->getCountryInfo($order->fields['delivery_country']),
             'format_id' => $order->fields['delivery_address_format_id'],
         ];
+        $this->delivery['zone_id'] = $this->getCountryZoneId((int)$this->delivery['country']['id'], $this->delivery['state']);
 
         if (($order->fields['shipping_module_code'] == 'storepickup') ||
             (empty($this->delivery['name']) && empty($this->delivery['street_address']))) {
@@ -162,6 +164,7 @@ class order extends base
             'country' => $this->getCountryInfo($order->fields['billing_country']),
             'format_id' => $order->fields['billing_address_format_id'],
         ];
+        $this->billing['zone_id'] = $this->getCountryZoneId((int)$this->billing['country'], $this->billing['state']);
 
         $index = 0;
         $orders_products_query = "SELECT *
@@ -324,6 +327,22 @@ class order extends base
 
         }
         return $return;
+    }
+
+    protected function getCountryZoneId(int $countries_id, string $state)
+    {
+        global $db;
+        
+        $sql =
+            "SELECT zone_id
+               FROM " . TABLE_ZONES . "
+              WHERE zone_country_id = $countries_id
+                AND (zone_code = :state: OR zone_name = :state:)
+              LIMIT 1";
+        $sql = $db->bindVars($sql, ':state:', $state, 'string');
+        $results = $db->Execute($sql);
+
+        return ($results->EOF) ? '0' : $results->fields['zone_id'];
     }
 
     function cart()
