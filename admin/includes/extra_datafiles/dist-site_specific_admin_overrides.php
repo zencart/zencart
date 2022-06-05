@@ -21,6 +21,11 @@
 // false ..... attribute images are not shown on invoice and packingslip 
 // $show_attrib_images = false;
 
+// Set the width of the attribute image used in packingslip and invoice.
+// the default is 25. if $show_attrinb_images = false is set above then setting this value will have no effect
+// Change 25 below to the number of px you require.
+// $attr_img_width = '25';
+
 // The flag show_product_images is used by the files 
 // admin/invoice.php and admin/packingslip.php 
 // to determine whether product images should be displayed. 
