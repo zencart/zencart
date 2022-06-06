@@ -157,59 +157,237 @@
             <h1>
                 What's New ... Changes from prior versions
             </h1>
-            <h2>
-                The most notable improvements and bugfixes in v1.5.8 since v1.5.7 include:
-            </h2>
-            <ul>
-               <li>Admin: Improved dashboard performance.</li>
-               <li>Admin: Implement "forget" option for customer deletion to support GDPR.</li>
-               <li>Admin: multiple per page javascript now supported in Admin.</li>
-               <li>Admin: multiple per page CSS now supported in Admin.</li>
-               <li>Admin: more notifiers.</li>
-               <li>Admin: Improved appearance of pages: Manufacturers, EZ-Pages, Countries.</li>
-               <li>Admin: Manufacturers edit page now allows you to feature specific manufacturers on the storefront Brands page.</li>
-               <li>Admin: Warning when downloadable products are misconfigured, both on Downloads Manager and shipping module screens.</li>
-               <li>Admin: Product search in admin improved.</li>
-               <li>Admin: Show image when viewing categories containing products.</li>
-               <li>Admin: Indicate if product has quantity discounts on listing page.</li>
-               <li>Admin: Copy product now correctly copies downloads.</li>
-               <li>Admin: Copy product works on products with long names.</li>
-               <li>Admin: Help now available for modules.</li>
-               <li>Admin: Correct issues in Media Manager.</li>
-               <li>Admin: Delete, Move or Copy of product from search results now operates as expected.</li>
-               <li>Admin: Customers can now be assigned to multiple groups.</li>
-               <li>Admin: Improve performance of Orders page.</li>
-               <li>Admin: Simplify switching display options on orders, invoice and packingslip pages.</li>
-               <li>Admin: (Optionally) show zone information on Orders page.</li>
-               <li>Admin: Layout boxes controller improvements. </li>
-               <li>Admin: Address formats extended and updated. </li>
-               <li>Admin: Extend Store Manager's Cleanup Debug Log Files function to remove Square and Bambora logs. </li>
-               <li>Admin: Correct counts for queries split over multiple pages. </li>
-               <li>Core: Stores may be configured to return HTTP 200 for disabled products instead of HTTP 404.</li>
-               <li>Core: Detect bad URL input and avoid creating PHP logs.</li>
-               <li>Core: Rename "Advanced Search" to simply "Search".</li>
-               <li>Core: Added notifier hooks on add-to-cart attempt, contact us email, change shipping/payment info.</li>
-               <li>Core: Event aliasing added so notifier names can be changed without breaking older plugins.</li>
-               <li>Core: Updated jQuery to latest version on storefront and admin side.</li>
-               <li>Core: Continued function consolidation initiated in 1.5.7.</li>
-               <li>Core: Renaming targeted functions to improve clarity.</li>
-               <li>Core: Language loading moved into arrays to prevent PHP duplication notices.</li>
-               <li>Core: Customer class introduced to consolidate customer table related logic.</li>
-               <li>Core: Manufacturer list not shown on search page if no manufacturers defined.</li>
-               <li>Core: Plugin manager improvements (<i>FIXME more details here</i>).</li>
-               <li>Core: Order weight now captured.</li>
-               <li>Core: Fix for orders being marked free shipping because of misconfigured downloadable product.</li>
-               <li>Core: Consolidated and improved JavaScript checks related to countries with states.</li>
-               <li>Email: Improved appearance of HTML email.</li>
-               <li>Storefront: Log account creation IP Address for fraud tracking and GDPR delete requests.</li>
-               <li>Storefront: Improve checkout flow labels and descriptions.</li>
-               <li>Storefront: Shop by Brand page added, listing all your manufacturers, with featured manufacturers at the top.</li>
-               <li>Storefront: About Us page now built in.</li>
-               <li>Storefront: Site Specific define file provided to permit customization without modifying core files.</li>
-               <li>Storefront: Continue button on checkout_payment page is disabled if the Terms and Conditions tick box is present and not ticked.</li>
-               <li>All known v1.5.7 bugfixes and security fixes are included in v1.5.8</li>
-               <li>... and many other incremental improvements to make Zen Cart more efficient, more robust and easier to use.</li>
-            </ul>
+            <p>
+                The most notable improvements and bugfixes in v1.5.8 since v1.5.7 include the items in the following table.  We've added columns to identify who, either the <em>Store Owner</em> or <em>Developer</em> or both, will be most interested in the change.  All v1.5.7 known bug- and security-fixes are included in v1.5.8.  We've also included many other incremental improvements to make Zen Cart more efficient, more robust and easier to use.
+            </p>
+            <table class="table table-striped">
+                <thead class="text-center">
+                    <tr>
+                        <th class="text-left">Description</th>
+                        <th>Store Owner</th>
+                        <th>Developer</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    <tr>
+                        <td colspan="3"><h3><b>Admin Changes</b></h3></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Improved home-page dashboard and <em>Customers :: Orders</em> listing performance.  Some are controlled by a site-specific set of overrides.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">To support GDPR, you can now <em>forget</em> a customer instead of totally removing them.  The <em>forget</em> option removes the customer's identifying information from their base record.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Multiple per-page javascript and CSS files are now supported.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">More notifications have been added to enable additional, non-core features to be added without changing the Zen Cart core files.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">The appearance of the <em>Manufacturers</em>, <em>EZ-Pages</em> and <em>Countries</em> pages have been improved.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>                    <tr>
+                        <td class="text-left">When editing a &quot;manufacturer&quot;, you can now <em>feature</em> a manufacturer on the newly-added <code>brands</code> page on the storefront.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">A warning message is now displayed when downloadable products are not correctly configured.  This message is issued both by the <em>Downloads Manager</em> and <em>Modules :: Shipping</em> pages.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Enhance &quot;products&quot; to enable products with an invalid <code>Product Master Category</code> to be found and corrected.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">When viewing a listing of products in <em>Catalog :: Categories/Products</em>, each product's image is also displayed.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Indicate if product has quantity discounts on listing page. <b>FIXME ???</b></li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Copying a product now also copies the original product's downloads and correctly operates on products with &quot;long&quot; names.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Various issues with the <em>Media Manager</em> were corrected.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Admin modules can now indicate that there's on-line help available.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Customers can now be assigned to more than one pricing group.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Some display options for orders, invoice and packingslip pages can now be easily customized, requires a site-specific file's edit.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left"><em>Optionally</em> show an order's &quot;Zone&quot; on the <em>Customers :: Orders</em> listing, requires a site-specific file's edit.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Improvements to the <em>Tools :: Layout Boxes Controller</em> page.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Country-specific address formats added and updated to reflect current country requirements.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">The <em>Tools :: StoreManager</em> page's &quot;Cleanup Debug Log Files&quot; button now also removes logs from the <em>Square</em> and <em>Bambora</em> payment methods.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Correct page-count handling when a listing, e.g. <em>Customers :: Orders</em> spans multiple pages.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><h3><b>Core</b></h3></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Notifiers added for add-to-cart attempts, contact-us email and changes to shipping/payment information during checkout.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Event-aliasing added so that notifier &quot;names&quot; can be changed without breaking existing plugins.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Additional consolidation of functions used by both the admin and storefront.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Some function names changed to improve code &quot;readability&quot;.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Language &quot;definitions&quot; now moved into arrays to prevent PHP duplicate-constant notices.  The &quot;core&quot; language files have been renamed.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><h3><b>Email</b></h3></li>
+                    </tr>
+                    <tr>
+                        <td class="text-left">The appearance of HTML emails has been improved.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><h3><b>Storefront</b></h3></li>
+                    </tr>
+                    <tr>
+                        <td class="text-left">The store can be configured so that disabled products return an HTTP code of 200 (Request Succeeded) instead of HTTP code 404 (Not Found) as an aid in store's Search Engine Optimization (SEO) when a store has products that go in and out of stock, e.g. seasonal items.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Improved detection of invalid page-requests, e.g. by scammers, to avoid creating unwanted PHP logs.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">The <code>advanced_search</code> page is renamed to simply <code>search</code>.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">The <code>search</code> page no longer displays an empty dropdown of manufacturers if no manufacturers exist.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Improvements were made to the &quot;Plugin Manager&quot;.  <b>FIXME ???</b></li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">An order's overall weight is now captured when an order is placed.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Orders are no longer marked as having free shipping when the order contains a misconfigured downloadable product.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Javascript/jQuery checking for countries with states was consolidated and improved.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">The IP address used to create an account is now captured and recorded for fraud tracking and GDPR customer-removal requests.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Labels and descriptions for checkout-related pages have been improved.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">A <em>Shop by Brand</em> page (<code>brands</code>) was added, listing all a store's manufacturers with any featured manufacturers displayed first.</li>
+                        <td>&check;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">An <em>About Us</em> page (<code>about_us</code>) was added.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">A site-specific set of override variables is defined, enabling customization without modifying Zen Cart core-files.</li>
+                        <td>&nbsp;</td>
+                        <td>&check;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">If the site requires a &quot;Terms and Conditions&quot; checkbox, the <em>Continue</em> button on the <code>checkout_payment</code> page is disabled until that checkbox is ticked.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">Orders are no longer marked as having free shipping when the order contains a misconfigured downloadable product.</li>
+                        <td>&check;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <div>
                 <p>
                     A detailed list of all edits to all files can be seen on Github at: <a href="https://github.com/zencart/zencart/compare/v157...v158">v1.5.7...v1.5.8</a>
@@ -249,7 +427,7 @@
                 OSI Certified is a certification mark of the Open Source Initiative.
             </p>
             <p class="zenData">
-                Copyright 2003 - 2020 Zen Ventures, LLC
+                Copyright 2003 - 2022 Zen Ventures, LLC
                 <br><br>
                 Zen Cart
                 <br>
