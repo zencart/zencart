@@ -50,7 +50,7 @@ if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
 }
 
 $sql = "SELECT DISTINCT popt.products_options_id, popt.products_options_name, popt.products_options_sort_order,
-            popt.products_options_type, popt.products_options_length, popt.products_options_comment,
+            popt.products_options_type, popt.products_options_length, popt.products_options_comment, popt.products_options_comment_position,
             popt.products_options_size,
             popt.products_options_images_per_row,
             popt.products_options_images_style,
@@ -116,10 +116,6 @@ while (!$products_options_names->EOF) {
     $i = 0;
 
     $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $products_options_names->fields);
-
-    if (!isset($products_options_names->fields['products_options_comment_position'])) {
-        $products_options_names->fields['products_options_comment_position'] = '0';
-    }
 
     // loop through each Attribute
     while (!$products_options->EOF) {

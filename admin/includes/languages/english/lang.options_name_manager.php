@@ -16,6 +16,7 @@ $define = [
     'TEXT_WARNING_DUPLICATE_OPTION_NAME' => 'Option ID#%1$u: Duplicate Option Name Added: "%2$s" (%3$s)',
     'TEXT_ORDER_BY' => 'Order by',
     'TEXT_OPTION_NAME_COMMENTS' => 'Comment (displayed next to Option Name)',
+    'TEXT_OPTION_NAME_COMMENTS_POSITION' => 'Position for comment', 
     'TEXT_OPTION_ATTRIBUTE_IMAGES_PER_ROW' => 'Attribute Images per Row',
     'TEXT_OPTION_ATTRIBUTE_IMAGES_STYLE' => 'Attribute Image Layout Style (for Checkbox/Radio Buttons only)',
     'TEXT_OPTION_ATTRIBUTE_LAYOUTS_EXAMPLE' => 'View Examples',
