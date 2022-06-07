@@ -94,6 +94,8 @@ $define = [
     'TEXT_MAP_BILLING_ADDRESS' => 'Map Billing Address',
     'TEXT_EMAIL_LANGUAGE' => 'Order Language: %s',
     'SUCCESS_EMAIL_SENT' => 'Email %s sent to customer',
+    'WARNING_PAYMENT_MODULE_DOESNT_EXIST' => "The order's payment module (%s) no longer exists.",
+    'WARNING_PAYMENT_MODULE_NOTIFICATIONS_DISABLED' => 'The configuration of the order\'s payment module (%s) has changed. No refunds, auths, captures or voids can be done for this order.',
 ];
 
 return $define;
