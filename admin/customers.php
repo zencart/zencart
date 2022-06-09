@@ -11,6 +11,9 @@ require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 $group_array = [];
 
+// Override instructions in: 
+// https://docs.zen-cart.com/user/admin/site_specific_overrides/
+if (!isset($show_registration_ip_in_listing)) $show_registration_ip_in_listing = false;
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $customers_id = isset($_GET['cID']) ? (int)$_GET['cID'] : 0;
 if (isset($_POST['cID'])) {
@@ -745,6 +748,13 @@ if (!empty($action)) {
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=company-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'company-desc' ? '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' : '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'); ?></a>
                   </th>
                   <?php }
+                  if ($show_registration_ip_in_listing) { 
+                  ?>
+                  <th class="dataTableHeadingContent text-right">
+                    <?php echo TABLE_HEADING_REGISTRATION_IP; ?>
+                  </th>
+                  <?php
+                  } 
                   // -----
                   // If a plugin has additional columns to add to the display, it attaches to both this "listing header" and (see below)
                   // the "listing data" notifications.
@@ -926,6 +936,9 @@ if (!empty($action)) {
                       }
                     }
                     ?>
+                    <?php if ($show_registration_ip_in_listing) { ?>
+                    <td class="dataTableContent"><?php echo $customer['registration_ip']; ?></td>
+                    <?php } ?>
                     <td class="dataTableContent"><?php echo zen_date_short($customer['date_account_created']); ?></td>
                     <td class="dataTableContent"><?php echo zen_date_short($customer['date_of_last_login']); ?></td>
                     <td class="dataTableContent"><?php echo $customer['pricing_group_name']; ?></td>

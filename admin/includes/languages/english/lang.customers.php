@@ -12,6 +12,7 @@ $define = [
     'TABLE_HEADING_LASTNAME' => 'Last Name',
     'TABLE_HEADING_ACCOUNT_CREATED' => 'Account Created',
     'TABLE_HEADING_LOGIN' => 'Last Login',
+    'TABLE_HEADING_REGISTRATION_IP' => 'Registration IP',
     'TABLE_HEADING_PRICING_GROUP' => 'Pricing Group',
     'TABLE_HEADING_AUTHORIZATION_APPROVAL' => 'Authorized',
     'TABLE_HEADING_GV_AMOUNT' => 'GV Balance',
