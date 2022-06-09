@@ -12,7 +12,8 @@ if (isset($module)) {
   unset($module);
 }
 
-// To override these values, create a file in admin/includes/extra_configures
+// Override instructions in: 
+// https://docs.zen-cart.com/user/admin/site_specific_overrides/
 if (!isset($quick_view_popover_enabled)) $quick_view_popover_enabled = false;
 if (!isset($includeAttributesInProductDetailRows)) $includeAttributesInProductDetailRows = true;
 if (!isset($show_product_tax)) $show_product_tax = true;
