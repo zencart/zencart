@@ -55,11 +55,6 @@ if (!empty($action)) {
 <div class="container-fluid">
     <h1><?php echo HEADING_TITLE; ?></h1>
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-            <?php echo TEXT_INFORMATION; ?>
-        </div>
-    </div>
-    <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover">
@@ -125,13 +120,11 @@ if (!empty($action)) {
                         <td class="dataTableContent text-right"><div>
                             <?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=edit') . '" class="btn btn-primary" role="button">' . ICON_EDIT . '</a>'; ?>
                             <?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=delete') . '" class="btn btn-warning" role="button">' . ICON_DELETE . '</a>'; ?>
-                            <?php
-                                echo '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, zen_get_all_get_params(['gID']) . 'gID=' . $group['group_id']) . '" class="btn btn-info" role="button">' . IMAGE_ICON_INFO;
-                                if (isset($gInfo) && is_object($gInfo) && ($group['group_id'] == $gInfo->group_id)) {
-                                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
-                                }
-                                echo '</a>';
-                            ?>
+                            <?php 
+                              if (!isset($gInfo) || (isset($gInfo) && is_object($gInfo) && ($group['group_id'] != $gInfo->group_id))) {
+                                 echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); 
+                              }
+                             ?>
                             </div>
                         </td>
                     </tr>
