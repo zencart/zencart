@@ -1486,14 +1486,24 @@ if (!empty($action) && $order_exists === true) {
                     }
 
                     // indicate if comments exist
-                    $orders_history_query = $db->Execute("SELECT orders_status_id, date_added, customer_notified, comments
-                                                          FROM " . TABLE_ORDERS_STATUS_HISTORY . "
-                                                          WHERE orders_id = " . (int)$oInfo->orders_id . "
-                                                          AND comments != ''");
+                    $orders_history_query = $db->Execute(
+                        "SELECT comments, updated_by
+                           FROM " . TABLE_ORDERS_STATUS_HISTORY . "
+                          WHERE orders_id = " . (int)$oInfo->orders_id . "
+                            AND comments != ''
+                          ORDER BY date_added ASC
+                          LIMIT 1"
+                    );
 
-                    if ($orders_history_query->RecordCount() > 0) {
+                    if (!$orders_history_query->EOF) {
                       $contents[] = ['text' => '<br>' . TABLE_HEADING_COMMENTS];
-                      $contents[] = ['text' => nl2br(zen_output_string_protected($orders_history_query->fields['comments']))];
+
+                      // -----
+                      // If the first comment was made by the customer, protect the output (no HTML); otherwise, HTML was entered
+                      // by an admin or 'known' process so it's OK.
+                      //
+                      $protected = $orders_history_query->fields['updated_by'] === '';
+                      $contents[] = ['text' => nl2br(zen_output_string($orders_history_query->fields['comments'], false, $protected))];
                     }
 
                     $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];

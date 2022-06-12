@@ -103,7 +103,11 @@ if (!empty($order->statuses)) {
         <th scope="col" id="myAccountStatusComments"><?php echo TABLE_HEADING_STATUS_COMMENTS; ?></th>
        </tr>
 <?php
-  $first = true;
+  // -----
+  // The *first* comment, made by the customer, is 'protected' from using HTML taga; all others are
+  // made by the admin or a 'known' entity and HTML is allowed.
+  //
+  $protected = true;
   foreach ($order->statuses as $statuses) {
 ?>
     <tr>
@@ -112,19 +116,13 @@ if (!empty($order->statuses)) {
         <td>
 <?php
     if (!empty($statuses['comments'])) {
-      if ($first) {
-         echo nl2br(zen_output_string_protected($statuses['comments']));
-      } else {
-         echo nl2br(zen_output_string($statuses['comments']));
-      }
-    }
-    if ($first) {
-       $first = false;
+       echo nl2br(zen_output_string($statuses['comments'], false, $protected));
     }
 ?>
        </td>
      </tr>
 <?php
+    $protected = false;
   }
 ?>
 </table>
