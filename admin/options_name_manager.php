@@ -96,6 +96,7 @@ if (!empty($action)) {
 
             $products_options_length_array = $_POST['products_options_length'];
             $products_options_comment_array = $_POST['products_options_comment'];
+            $products_options_comment_position_array = $_POST['products_options_comment_position'];
             $products_options_size_array = $_POST['products_options_size'];
 
             $products_options_images_per_row_array = $_POST['products_options_images_per_row'];
@@ -109,6 +110,7 @@ if (!empty($action)) {
 
                 $products_options_length = zen_db_prepare_input($products_options_length_array[$languages[$i]['id']]);
                 $products_options_comment = zen_db_prepare_input($products_options_comment_array[$languages[$i]['id']]);
+                $products_options_comment_position = zen_db_prepare_input($products_options_comment_position_array[$languages[$i]['id']]);
                 $products_options_size = zen_db_prepare_input($products_options_size_array[$languages[$i]['id']]);
 
                 $products_options_images_per_row = (int)$products_options_images_per_row_array[$languages[$i]['id']];
@@ -120,6 +122,7 @@ if (!empty($action)) {
                           products_options_type = '" . $option_type . "',
                           products_options_length = '" . zen_db_input($products_options_length) . "',
                           products_options_comment = '" . zen_db_input($products_options_comment) . "',
+                          products_options_comment_position = '" . zen_db_input($products_options_comment_position) . "',
                           products_options_size = '" . zen_db_input($products_options_size) . "',
                           products_options_sort_order = " . $products_options_sort_order . ",
                           products_options_images_per_row = " . $products_options_images_per_row . ",
@@ -522,7 +525,7 @@ function translate_type_to_name($opt_type)
                             $sort_order_input = '';
                             $inputs2 = '';
                             for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                                $option_name = $db->Execute("SELECT products_options_name, products_options_sort_order, products_options_size, products_options_length, products_options_comment, products_options_images_per_row, products_options_images_style, products_options_rows
+                                $option_name = $db->Execute("SELECT products_options_name, products_options_sort_order, products_options_size, products_options_length, products_options_comment, products_options_comment_position, products_options_images_per_row, products_options_images_style, products_options_rows
                                                    FROM " . TABLE_PRODUCTS_OPTIONS . "
                                                    WHERE products_options_id = " . (int)$options_name['products_options_id'] . "
                                                    AND language_id = " . (int)$languages[$i]['id']);
@@ -540,6 +543,9 @@ function translate_type_to_name($opt_type)
                                 $inputs2 .= '<div class="col-sm-12">';
                                 $inputs2 .= zen_draw_label(TEXT_OPTION_NAME_COMMENTS . ':', 'products_options_comment[' . $languages[$i]['id'] . ']', 'class="control-label"');
                                 $inputs2 .= zen_draw_input_field('products_options_comment[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_comment'], 'class="form-control" style="width:100%" id="products_options_comment[' . $languages[$i]['id'] . ']"');
+
+                                $inputs2 .= zen_draw_label(TEXT_OPTION_NAME_COMMENTS_POSITION. ':', 'products_options_comment_position[' . $languages[$i]['id'] . ']', 'class="control-label"');
+                                $inputs2 .= zen_draw_input_field('products_options_comment_position[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_comment_position'], 'class="form-control" id="products_options_comment_position[' . $languages[$i]['id'] . ']"', '', 'number');
                                 $inputs2 .= '</div>';
                                 $inputs2 .= '</div>';
                                 $inputs2 .= '<div class="row">';
