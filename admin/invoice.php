@@ -6,16 +6,18 @@
  * @version $Id: DrByte 2020 May 20 Modified in v1.5.7 $
  */
 require('includes/application_top.php');
-// To override the $show_* values, see 
+// To override the $show_* or $attr_img_width values, see 
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
-if (!isset($show_product_images)) $show_product_images = true;
-if (!isset($show_attrib_images)) $show_attrib_images = true;
+if (!isset($show_product_images)) {
+    $show_product_images = true;
+}
+if (!isset($show_attrib_images)) {
+    $show_attrib_images = true;
+}
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
-$attr_img_width = '25';
-/*
- * Notifier to allow defaults to be changed
- */
-$zco_notifier->notify('NOTIFY_ADMIN_INVOICE_DEFAULTS', '', $show_product_images, $show_attrib_images, $attr_img_width);
+if (!isset($attr_img_width)) {
+    $attr_img_width = '25';
+}
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -25,7 +27,9 @@ $oID = zen_db_prepare_input($_GET['oID']);
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
-if (!isset($show_product_tax)) $show_product_tax = true;
+if (!isset($show_product_tax)) {
+    $show_product_tax = true;
+}
 
 // prepare order-status pulldown list
 $orders_statuses = array();
@@ -36,7 +40,8 @@ $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
 foreach ($orders_status as $order_status) {
   $orders_statuses[] = array(
     'id' => $order_status['orders_status_id'],
-    'text' => $order_status['orders_status_name'] . ' [' . $order_status['orders_status_id'] . ']');
+    'text' => $order_status['orders_status_name'] . ' [' . $order_status['orders_status_id'] . ']'
+  );
   $orders_status_array[$order_status['orders_status_id']] = $order_status['orders_status_name'];
 }
 
@@ -227,13 +232,13 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
              *
              * Set $sort_order to the order->products array counter in the sequence you require the invoice to be displayed
              */
-            $sort_order=false;
+            $sort_order = false;
             $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_SORT_DISPLAY', $order->products, $sort_order);
             for ($ii = 0, $n = sizeof($order->products); $ii < $n; $ii++) {
                 if (is_array($sort_order)) {
-                    $i=$sort_order[$ii];
+                    $i = $sort_order[$ii];
                 } else {
-                    $i=$ii;
+                    $i = $ii;
                 }
                 $product_name = $order->products[$i]['name'];
               if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
@@ -460,4 +465,4 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
     <!-- body_text_eof //-->
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
