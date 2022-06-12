@@ -42,6 +42,14 @@ $filter_options[3] = array('id' => '3', 'text' => TEXT_EXPORTFILTER3, 'filter' =
 $filter_options[4] = array('id' => '4', 'text' => TEXT_EXPORTFILTER4, 'filter' => 'notice+warning');
 $post_filter = (isset($_POST['filter']) && (int)$_POST['filter'] >= 0 && (int)$_POST['filter'] < 5) ? (int)$_POST['filter'] : ($post_format == 1 ? 0 : 4);
 $selected_filter = $filter_options[$post_filter]['filter'];
+//filter by admin user
+$filter_by_user = empty($_POST['filter_user']) ? 0 : (int)$_POST['filter_user'];
+$filter_by_user = zen_get_admin_name($filter_by_user) !== null ? $filter_by_user : 0; //  check for a valid admin id
+$admin_users = [['id' => '0', 'text' => TEXT_EXPORTFILTER_USER]];
+$users = zen_get_users();
+foreach ($users as $user) {
+    $admin_users[] = ['id' => $user['id'], 'text' => $user['id'] . ': ' . $user['name']];
+}
 
 zen_set_time_limit(600);
 
@@ -114,6 +122,9 @@ if ($action != '') {
       if ($where != '') {
         $where = " WHERE " . $where;
       }
+  if ($filter_by_user !== 0) {
+        $where = ($where === '' ? " WHERE" : " AND") . " a.admin_id = " . $filter_by_user;
+    }
 
       $sql = "SELECT a.access_date, a.admin_id, u.admin_name, a.ip_address, a.page_accessed, a.page_parameters, a.gzpost, a.flagged, a.attention, a.severity, a.logmessage
               FROM " . TABLE_ADMIN_ACTIVITY_LOG . " a
@@ -328,6 +339,11 @@ if ($action != '') {
               <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_pull_down_menu('filter', $filter_options, $post_filter, 'class="form-control" id="filter"'); ?>
               </div>
+            </div>
+            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER_USER, 'filter_user', 'class="col-sm-3 control-label"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <?php echo zen_draw_pull_down_menu('filter_user', $admin_users, $filter_by_user, 'class="form-control" id="filter_user"'); ?>
+                </div>
             </div>
             <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">

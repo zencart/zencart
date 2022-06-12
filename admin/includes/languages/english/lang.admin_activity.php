@@ -39,6 +39,8 @@ You should save this data for use in fraud investigations in case your site is c
     'TEXT_EXPORTFILTER2' => 'NOTICE - Notable info, which should be reviewed periodically',
     'TEXT_EXPORTFILTER3' => 'WARNING - Activity which should be reviewed daily',
     'TEXT_EXPORTFILTER4' => 'Both NOTICE and WARNING (common combination for review).',
+    'TEXT_ACTIVITY_EXPORT_FILTER_USER' => 'Filter by Admin User:',
+	'TEXT_EXPORTFILTER_USER' => 'All Admin Users',
     'TEXT_INTERPRETING_LOG_DATA' => '<p><strong>Interpretation of the log data</strong></p><ul>
 <li><strong>Severity</strong> - The standards for logging generally describe severities as follows:
   <ul>
