@@ -955,7 +955,7 @@ class queryFactoryResult implements Countable, Iterator
     }
 }
 
-class queryFactoryMeta
+class queryFactoryMeta extends base
 {
     function __construct($field)
     {
@@ -964,10 +964,34 @@ class queryFactoryMeta
         $this->type = $matches[0];
         $this->max_length = preg_replace('/[a-z\(\)]/', '', $type);
         if (empty($this->max_length)) {
-            if (strtoupper($type) === 'DATE') $this->max_length = 10;
-            if (strtoupper($type) === 'DATETIME') $this->max_length = 19; // ignores fractional which would be 26
-            if (strtoupper($type) === 'TIMESTAMP') $this->max_length = 19; // ignores fractional which would be 26
-            if (strtoupper($type) === 'TINYTEXT') $this->max_length = 255; 
+           switch (strtoupper($type)) {
+              case 'DATE':
+                  $this->max_length = 10;
+                  break;
+              case 'DATETIME':
+              case 'TIMESTAMP':
+                  $this->max_length = 19; // ignores fractional which would be 26
+                  break;
+              case 'TINYTEXT':
+                  $this->max_length = 255;
+                  break;
+              case 'INT':
+                  $this->max_length = 11;
+                  break;
+              case 'TINYINT':
+                  $this->max_length = 4;
+                  break;
+              case 'SMALLINT':
+                  $this->max_length = 4;
+                  break;
+              default:
+                  // This is antibugging code to prevent a fatal error
+                  // You should not be here unless you have changed the db 
+                  $this->max_length = 8; 
+                  $this->notify('NOTIFY_QUERY_FACTORY_META_DEFAULT', ['field' => $field, 'type' => $type], $this->max_length);
+                  break;
+           }
+
         }
     }
 }
