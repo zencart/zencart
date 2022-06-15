@@ -748,13 +748,13 @@ if (!empty($action)) {
                     <a href="<?php echo zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('list_order', 'page')) . 'list_order=company-desc', 'NONSSL'); ?>"><?php echo ($_GET['list_order'] == 'company-desc' ? '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' : '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'); ?></a>
                   </th>
                   <?php }
-                  if ($show_registration_ip_in_listing) { 
+                  if ($show_registration_ip_in_listing) {
                   ?>
-                  <th class="dataTableHeadingContent text-right">
+                  <th class="dataTableHeadingContent">
                     <?php echo TABLE_HEADING_REGISTRATION_IP; ?>
                   </th>
                   <?php
-                  } 
+                  }
                   // -----
                   // If a plugin has additional columns to add to the display, it attaches to both this "listing header" and (see below)
                   // the "listing data" notifications.
@@ -901,7 +901,9 @@ if (!empty($action)) {
                  <?php if (ACCOUNT_COMPANY === 'true') { ?>
                     <td class="dataTableContent"><?php echo $customer['company']; ?></td>
                  <?php }
-
+                 if ($show_registration_ip_in_listing) { ?>
+                    <td class="dataTableContent"><?php echo $customer['registration_ip']; ?></td>
+                    <?php }
                     // -----
                     // If a plugin has additional columns to add to the display, it attaches to both this "listing element" and (see above)
                     // the "listing heading" notifications.
@@ -936,9 +938,6 @@ if (!empty($action)) {
                       }
                     }
                     ?>
-                    <?php if ($show_registration_ip_in_listing) { ?>
-                    <td class="dataTableContent"><?php echo $customer['registration_ip']; ?></td>
-                    <?php } ?>
                     <td class="dataTableContent"><?php echo zen_date_short($customer['date_account_created']); ?></td>
                     <td class="dataTableContent"><?php echo zen_date_short($customer['date_of_last_login']); ?></td>
                     <td class="dataTableContent"><?php echo $customer['pricing_group_name']; ?></td>
