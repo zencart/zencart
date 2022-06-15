@@ -636,7 +636,6 @@ $define = [
     'WARNING_SQL_CACHE_DIRECTORY_NON_EXISTENT' => 'Warning: The SQL cache directory does not exist: ' . DIR_FS_SQL_CACHE . '. SQL caching will not work until this directory is created.',
     'WARNING_SQL_CACHE_DIRECTORY_NOT_WRITEABLE' => 'Warning: I am not able to write to the SQL cache directory: ' . DIR_FS_SQL_CACHE . '. SQL caching will not work until the right user permissions are set.',
     'WARNING_WELCOME_DISCOUNT_COUPON_EXPIRES_IN' => 'WARNING! Welcome Email Discount Coupon expires in %s days',
-    'WARN_DATABASE_VERSION_PROBLEM' => 'true',
     'WHOS_ONLINE_ACTIVE_NO_CART_TEXT' => 'Active no cart',
     'WHOS_ONLINE_ACTIVE_TEXT' => 'Active cart',
     'WHOS_ONLINE_INACTIVE_NO_CART_TEXT' => 'Inactive no cart',

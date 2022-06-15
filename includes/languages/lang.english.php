@@ -72,7 +72,6 @@ $define = [
     'CART_SHIPPING_METHOD_RATES' => 'Rates',
     'CART_SHIPPING_METHOD_TEXT' => 'Available Shipping Methods',
     'CART_SHIPPING_METHOD_TO' => 'Ship to: ',
-    'CART_SHIPPING_METHOD_ZIP_REQUIRED' => 'true',
     'CART_SHIPPING_OPTIONS' => 'Estimate Shipping Costs',
     'CART_SHIPPING_QUOTE_CRITERIA' => 'Shipping quotes are based on the address information you selected:',
     'CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS' => 'Featured Products ...',

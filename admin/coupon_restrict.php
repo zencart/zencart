@@ -5,7 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2020 Apr 29 Modified in v1.5.7 $
  */
-//define('MAX_DISPLAY_RESTRICT_ENTRIES', 10);
 require('includes/application_top.php');
 
 // -----
