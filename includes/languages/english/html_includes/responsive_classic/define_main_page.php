@@ -1,4 +1,4 @@
-<a href="https://docs.zen-cart.com/user/" target="_blank" rel="noopener"><img src="images/large/zencart-docs.jpg" alt="Zen Cart Documentation" title="View the online Zen Cart documentation!" class="home-image" width="100%"></a>
+<a href="https://docs.zen-cart.com/user/" target="_blank" rel="noopener"><img src="images/large/zencart-docs.jpg" alt="Zen Cart Documentation" title="View the online Zen Cart documentation!" class="home-image"></a>
 <p class="biggerText">The template package uses PHP Mobile Detect to serve up the optimized layout based on device.  
     If you are on a Desktop and want to view the Tablet layout <a class="red" href="index.php?main_page=index&amp;layoutType=tablet">use this link.</a>  
     If you want to view the Mobile layout <a class="red" href="index.php?main_page=index&amp;layoutType=mobile">use this link.</a>  
