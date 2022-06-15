@@ -16,6 +16,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class configurationValidation extends base
 {
+    static public function sanitizeEmailNullOK(&$val) {
+        if (empty($val)) {
+          return true;
+        }
+        return $this->sanitizeEmail($val); 
+    }
     static public function sanitizeEmail(&$val) {
         $results = array();
         $send_email_array = array();
