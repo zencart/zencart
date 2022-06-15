@@ -1057,7 +1057,7 @@ if (!empty($action)) {
 
                   if (!empty($cInfo->lifetime_value)) {
                     $contents[] = array('text' => TEXT_INFO_LIFETIME_VALUE . ' ' . $currencies->format($cInfo->lifetime_value));
-                    $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($cInfo->last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . (float)$currencies->format($cInfo->last_order['order_total'], true, $cInfo->last_order['currency'], (float)$cInfo->last_order['currency_value']));
+                    $contents[] = array('text' => TEXT_INFO_LAST_ORDER . ' ' . zen_date_short($cInfo->last_order['date_purchased']) . '<br>' . TEXT_INFO_ORDERS_TOTAL . ' ' . $cInfo->last_order['order_total']);
                   }
                   $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY . ' ' . $cInfo->country_iso);
                   $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_OF_REVIEWS . ' ' . $cInfo->number_of_reviews);
