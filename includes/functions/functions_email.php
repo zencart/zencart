@@ -485,31 +485,6 @@ use PHPMailer\PHPMailer\SMTP;
       ));
   }
 
-  //DEFINE EMAIL-ARCHIVABLE-MODULES LIST // this array will likely be used by the email archive log VIEWER module in future
-  $emodules_array = array();
-  $emodules_array[] = array('id' => 'newsletters', 'text' => 'Newsletters');
-  $emodules_array[] = array('id' => 'product_notification', 'text' => 'Product Notifications');
-  $emodules_array[] = array('id' => 'direct_email', 'text' => 'One-Time Email');
-  $emodules_array[] = array('id' => 'contact_us', 'text' => 'Contact Us');
-  $emodules_array[] = array('id' => 'ask_a_question', 'text' => 'Ask A Question');
-  $emodules_array[] = array('id' => 'coupon', 'text' => 'Send Coupon');
-  $emodules_array[] = array('id' => 'coupon_extra', 'text' => 'Send Coupon');
-  $emodules_array[] = array('id' => 'gv_queue', 'text' => 'Send-GV-Queue');
-  $emodules_array[] = array('id' => 'gv_mail', 'text' => 'Send-GV');
-  $emodules_array[] = array('id' => 'gv_mail_extra', 'text' => 'Send-GV-Extra');
-  $emodules_array[] = array('id' => 'welcome', 'text' => 'New Customer Welcome');
-  $emodules_array[] = array('id' => 'welcome_extra', 'text' => 'New Customer Welcome-Extra');
-  $emodules_array[] = array('id' => 'password_forgotten', 'text' => 'Password Forgotten');
-  $emodules_array[] = array('id' => 'password_forgotten_admin', 'text' => 'Password Forgotten');
-  $emodules_array[] = array('id' => 'checkout', 'text' => 'Checkout');
-  $emodules_array[] = array('id' => 'checkout_extra', 'text' => 'Checkout-Extra');
-  $emodules_array[] = array('id' => 'order_status', 'text' => 'Order Status');
-  $emodules_array[] = array('id' => 'order_status_extra', 'text' => 'Order Status-Extra');
-  $emodules_array[] = array('id' => 'low_stock', 'text' => 'Low Stock Notices');
-  $emodules_array[] = array('id' => 'cc_middle_digs', 'text' => 'CC - Middle-Digits');
-  $emodules_array[] = array('id' => 'purchase_order', 'text' => 'Purchase Order');
-  $emodules_array[] = array('id' => 'payment_modules', 'text' => 'Payment Modules');
-  $emodules_array[] = array('id' => 'payment_modules_extra', 'text' => 'Payment Modules-Extra');
   /////////////////////////////////////////////////////////////////////////////////////////
   ////////END SECTION FOR EMAIL FUNCTIONS//////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////
