@@ -74,7 +74,7 @@ function zen_user_has_gv_account(int $customer_id)
  * @param string $prefix - include a prefix string if you want to force the generated code to start with a specific string
  * @return string (new coupon code) (will be blank if the function failed)
  */
-function zen_create_coupon_code(string $salt = "secret", int $length = SECURITY_CODE_LENGTH, string $prefix = '')
+function zen_create_coupon_code(string $salt = "secret", $length = SECURITY_CODE_LENGTH, string $prefix = '')
 {
     global $db;
     $length = (int)$length;
