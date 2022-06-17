@@ -15,7 +15,7 @@ $product_categories = zen_generate_category_path($pInfo->products_id, 'product')
 if (!isset($category_path)) {
     $category_path = '';
 }
-$preselect_master_category = true; // set to false to prevent accidental deletion
+$preselect_master_category = false; // to prevent accidental deletion
 for ($i = 0, $n = count($product_categories); $i < $n; $i++) {
     $category_path = '';
     for ($j = 0, $k = count($product_categories[$i]); $j < $k; $j++) {
