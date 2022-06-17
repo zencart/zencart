@@ -456,7 +456,7 @@ h4.optionName{margin:1% 30px 0 30px;padding:0;}
 h2.greeting{margin-bottom:20px;}
 h2.greeting a{}
 h2.greeting a:hover{}
-.home-image{display:block;margin:0 auto;}
+.home-image{display:block;margin:0 auto;width:600px;height:540px;}
 #indexHomeBody #navBreadCrumb{display:none;}
 #icon{padding:40px;margin:100px;font-size:1500%;}
 
