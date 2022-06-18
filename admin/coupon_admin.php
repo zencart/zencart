@@ -1226,10 +1226,16 @@ switch ($_GET['action']) {
                 <tbody>
                   <?php
                   if ($status != 'A') {
-                    $cc_query_raw = "SELECT *
+                     if (isset($_GET['cid'])) {
+                       $cc_query_raw = "SELECT *
+                                     FROM " . TABLE_COUPONS . "
+                                     WHERE coupon_id = " . (int)$_GET['cid'];
+                     } else {
+                       $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
                                      WHERE coupon_active = '" . zen_db_input($status) . "'
                                      AND coupon_type != 'G'";
+                     }
                   } else {
                     $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
