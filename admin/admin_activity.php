@@ -267,7 +267,7 @@ if ($action != '') {
             // HTML
             ?>
             <!doctype html>
-            <html <?php echo HTML_PARAMS; ?>>
+            <html <?= HTML_PARAMS ?>>
               <head>
                   <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
               </head>
@@ -315,7 +315,7 @@ if ($action != '') {
 } //endif $action
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
@@ -327,64 +327,64 @@ if ($action != '') {
     <!-- header_eof //-->
     <div class="container-fluid">
       <!-- body //-->
-      <h1><?php echo HEADING_TITLE; ?></h1>
+      <h1><?= HEADING_TITLE ?></h1>
       <!-- body_text //-->
 
       <?php if ($action == '') { ?>
         <div class="row">
-            <?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post', 'class="form-horizontal"'); //, 'onsubmit="return check_form(export);"');     ?>
-          <h4><?php echo HEADING_SUB1; ?></h4>
-            <div class="row"><?php echo TEXT_INSTRUCTIONS; ?></div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER, 'filter', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post', 'class="form-horizontal"') //, 'onsubmit="return check_form(export);"');     ?>
+          <h4><?= HEADING_SUB1 ?></h4>
+            <div class="row"><?= TEXT_INSTRUCTIONS ?></div>
+            <div class="form-group"><?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER, 'filter', 'class="col-sm-3 control-label"') ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('filter', $filter_options, $post_filter, 'class="form-control" id="filter"'); ?>
+                  <?= zen_draw_pull_down_menu('filter', $filter_options, $post_filter, 'class="form-control" id="filter"') ?>
               </div>
             </div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER_USER, 'filter_user', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group"><?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER_USER, 'filter_user', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php echo zen_draw_pull_down_menu('filter_user', $admin_users, $filter_by_user, 'class="form-control" id="filter_user"'); ?>
+                    <?= zen_draw_pull_down_menu('filter_user', $admin_users, $filter_by_user, 'class="form-control" id="filter_user"') ?>
                 </div>
             </div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group"><?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 control-label"') ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('format', $available_export_formats, $post_format, 'class="form-control" id="format"'); ?>
+                  <?= zen_draw_pull_down_menu('format', $available_export_formats, $post_format, 'class="form-control" id="format"') ?>
               </div>
             </div>
             <div class="form-group">
-                <?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILENAME, 'filename', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FILENAME, 'filename', 'class="col-sm-3 control-label"') ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), 'class="form-control" size="60" id="filename"'); ?>
+                  <?= zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), 'class="form-control" size="60" id="filename"') ?>
               </div>
             </div>
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-9 col-md-6">
                 <div class="checkbox">
-                  <label><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></label>
+                  <label><?= zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked) ?><?= TEXT_ACTIVITY_EXPORT_SAVETOFILE ?></label>
                 </div>
-                <div><strong><?php echo TEXT_ACTIVITY_EXPORT_DEST; ?></strong> <em><?php echo DIR_FS_ADMIN_ACTIVITY_EXPORT; ?></em></div>
+                <div><strong><?= TEXT_ACTIVITY_EXPORT_DEST ?></strong> <em><?= DIR_FS_ADMIN_ACTIVITY_EXPORT ?></em></div>
               </div>
             </div>
             <div class="text-right">
-              <button class="btn btn-primary"><?php echo IMAGE_GO; ?></button> <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
-            <div class="row"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></div>
-            <?php echo '</form>'; ?>
+              <button class="btn btn-primary"><?= IMAGE_GO ?></button> <a href="<?= zen_href_link(FILENAME_ADMIN_ACTIVITY) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a></div>
+            <div class="row"><?= TEXT_INTERPRETING_LOG_DATA ?></div>
+            <?= '</form>' ?>
         </div>
 
         <!-- bof: reset admin_activity_log -->
-        <h4><?php echo HEADING_SUB2; ?></h4>
+        <h4><?= HEADING_SUB2 ?></h4>
         <div class="row">
-          <div class="col <?php echo (!empty($_SESSION['reset_admin_activity_log']) ? "text-danger" : "main"); ?>"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></div>
-          <div class="text-right"><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_RESET; ?></a></div>
+          <div class="col <?= (!empty($_SESSION['reset_admin_activity_log']) ? "text-danger" : "main") ?>"><?= TEXT_INFO_ADMIN_ACTIVITY_LOG ?></div>
+          <div class="text-right"><a href="<?= zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log') ?>" class="btn btn-primary" role="button"><?= IMAGE_RESET ?></a></div>
         </div>
         <!-- eof: reset admin_activity_log -->
 
       <?php } elseif ($confirmation_needed) { ?>
         <div class="row">
-            <?php echo TEXT_ADMIN_LOG_PLEASE_CONFIRM_ERASE; ?>
-            <?php echo zen_draw_form('admin_activity_erase', FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); ?>
-          <button type="submit" class="btn btn-primary"><?php echo IMAGE_RESET; ?></button>
-          <?php echo zen_draw_hidden_field('confirm', 'yes'); ?>
-          <?php echo '</form>'; ?>
+            <?= TEXT_ADMIN_LOG_PLEASE_CONFIRM_ERASE ?>
+            <?= zen_draw_form('admin_activity_erase', FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log') ?>
+          <button type="submit" class="btn btn-primary"><?= IMAGE_RESET ?></button>
+          <?= zen_draw_hidden_field('confirm', 'yes') ?>
+          <?= '</form>' ?>
         </div>
 
       <?php } ?>
