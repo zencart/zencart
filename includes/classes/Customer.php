@@ -284,13 +284,19 @@ class Customer extends base
         return true;
     }
 
+    // -----
+    // The $order_history array, if supplied, is **assumed** to have been previously returned
+    // by the getOrderHistory method.  That method has previously formatted the 'order_total' element of
+    // each order's history for display as a currency value, with the 'order_total_raw' element being
+    // the 'raw' numeric string returned via the database query.
+    //
     protected function getLifetimeValue(array $order_history = null)
     {
-        global $db;
+        global $db, $currencies;
         $lifetime_value = 0;
 
-        if (empty($order_history)) {
-            $sql = "SELECT o.orders_id, o.date_purchased, o.order_total, o.currency, o.currency_value, o.language_code
+        if ($order_history === null) {
+            $sql = "SELECT o.orders_id, o.date_purchased, o.order_total AS order_total_raw, o.currency, o.currency_value, o.language_code
                     FROM " . TABLE_ORDERS . " o
                     WHERE customers_id = " . (int)$this->customer_id . "
                     ORDER BY date_purchased DESC";
@@ -304,13 +310,14 @@ class Customer extends base
             if (null === $last_order) {
                 $last_order = [
                     'date_purchased' => $result['date_purchased'],
-                    'order_total' => $result['order_total'],
+                    'order_total' => $currencies->format($result['order_total_raw'], false, $result['currency'], $result['currency_value']),
+                    'order_total_raw' => $result['order_total_raw'],
                     'currency' => $result['currency'],
                     'currency_value' => $result['currency_value'],
                     'language_code' => $result['language_code'],
                 ];
             }
-            $lifetime_value += ((float)$result['order_total'] * (float)$result['currency_value']);
+            $lifetime_value += $result['order_total_raw'] * $result['currency_value'];
         }
         $this->data['last_order'] = $last_order;
         $this->data['lifetime_value'] = $lifetime_value;
@@ -532,7 +539,7 @@ class Customer extends base
                 'order_name' => $order_name,
                 'order_country' => $order_country,
                 'orders_status_name' => $result['orders_status_name'],
-                'order_total' => $currencies->format($result['order_total'], false, $result['currency']),
+                'order_total' => $currencies->format($result['order_total'], false, $result['currency'], $result['currency_value']),
                 'order_total_raw' => $result['order_total'],
                 'currency' => $result['currency'],
                 'currency_value' => $result['currency_value'],
