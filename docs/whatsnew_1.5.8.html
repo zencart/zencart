@@ -111,10 +111,13 @@
     <section id="upgradingToResponsiveClassic">
         <div>
             <h1>
-                Upgrading to the New Responsive Classic Template added in v1.5.5
+                Upgrading to a Responsive Template 
             </h1>
             <p>
-            Zen Cart contains a newer "responsive_classic" template, which performs well on mobile devices such as phones and tablets. If you are upgrading an older site, we recommend that you use this template (rather than template_default or any older non-responsive template) as the starting point for your upgraded site.
+            If your site doesn't look good on a mobile phone or a tablet, it's likely because it's using an older non-responsive template.  You can read about <a href="https://docs.zen-cart.com/user/template/responsive/">Responsive Templates</a> on the help site to learn more.
+            </p>
+            <p>
+            If you are upgrading an older site, we recommend that you use a responsive template (rather than template_default or any older non-responsive template) as the starting point for your upgraded site.  Both the <a href="https://docs.zen-cart.com/user/template/responsive_classic/">Responsive Classic</a> and <a href="https://docs.zen-cart.com/user/template/bootstrap/">Bootstrap</a> templates are good candidates.
             </p>
         </div>
     </section> <!-- End upgradingToResponsiveClassice //-->
@@ -151,6 +154,23 @@
             </p>
         </div>
     </section> <!-- End changesToTemplateDefault //-->
+
+    <section id="arrayBasedLanguageFiles">
+        <div>
+            <h1>
+                Language Files in Zen Cart 1.5.8 and above 
+            </h1>
+            <p>
+            Upgraders from prior versions of Zen Cart will notice a signficant change to the language files in this version.  Because of new stricter PHP standards, simply doing a <i>define</i> on language file constants (with multiple define operations being done when overrides were present) was not an approach that could be used. 
+            </p>
+            <p>
+            Zen Cart now uses <a href="https://docs.zen-cart.com/user/localization/158_language_files/">Array based language files</a>.  For plugins with language files which are not overridden, the older style may still be used.
+            </p>
+            <p>
+            For developers with language skills wishing to provide a translation, <a href="https://docs.zen-cart.com/dev/languages/158_language_files/">developer information on Array based language files</a> is provided.
+            </p>
+        </div>
+    </section> <!-- End upgradingToResponsiveClassice //-->
     
     <section id="whatsNew">
         <div>
@@ -185,12 +205,12 @@
                <li>Admin: Address formats extended and updated. </li>
                <li>Admin: Extend Store Manager's Cleanup Debug Log Files function to remove Square and Bambora logs. </li>
                <li>Admin: Correct counts for queries split over multiple pages. </li>
+               <li>Admin: "Send Copy" email fields can now be cleared when not needed. </li>
                <li>Core: Stores may be configured to return HTTP 200 for disabled products instead of HTTP 404.</li>
                <li>Core: Detect bad URL input and avoid creating PHP logs.</li>
                <li>Core: Rename "Advanced Search" to simply "Search".</li>
                <li>Core: Added notifier hooks on add-to-cart attempt, contact us email, change shipping/payment info.</li>
                <li>Core: Event aliasing added so notifier names can be changed without breaking older plugins.</li>
-               <li>Core: Updated jQuery to latest version on storefront and admin side.</li>
                <li>Core: Continued function consolidation initiated in 1.5.7.</li>
                <li>Core: Renaming targeted functions to improve clarity.</li>
                <li>Core: Language loading moved into arrays to prevent PHP duplication notices.</li>
