@@ -87,7 +87,7 @@ if (isset($_POST) && !empty($_POST)) {
 // prepare options for menu pulldown
 $menu_titles = zen_get_menu_titles();
 $menu_options = array();
-$menu_options[0] = array('id' => NULL, 'text' => TEXT_SELECT_MENU);
+$menu_options[0] = array('id' => '', 'text' => TEXT_SELECT_MENU);
 foreach ($menu_titles as $id => $title) {
   $menu_options[] = array('id' => $id, 'text' => $title);
 }
