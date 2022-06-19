@@ -195,7 +195,10 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if (!file_exists($src)) {
       $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
     }
-
+    //image is defined but is missing
+    if (PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !file_exists($src)) {
+        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+      }
     // hook for handle_image() function such as Image Handler etc
     if (function_exists('handle_image')) {
       $newimg = handle_image($src, $alt, $width, $height, $parameters);
