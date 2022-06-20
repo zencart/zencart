@@ -415,12 +415,24 @@ use PHPMailer\PHPMailer\SMTP;
       if (EMAIL_ARCHIVE == 'true'  && $module != 'password_forgotten_admin' && $module != 'cc_middle_digs' && $module != 'no_archive') {
         zen_mail_archive_write($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo );
       } // endif archiving
-    } // end foreach loop thru possible multiple email addresses
-    $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_ALL_SPECIFIED_ADDRESSES');
 
-    if (!empty($ErrorInfo)) {
-      trigger_error('Email Error: ' . $ErrorInfo);
-    }
+      // -----
+      // If a mail-related error (reported by PHPMailer) occurred, treat the 'recipients_failed' message as a special
+      // case, logging to a differently-named log file to make finding these issues easier.  Otherwise, log a PHP notice.
+      //
+      if ($ErrorInfo !== '') {
+          $mail_langs = $mail->getTranslations();
+          if (strpos($ErrorInfo, $mail_langs['recipients_failed']) === false) {
+              trigger_error('Email Error: ' . $ErrorInfo);
+          } else {
+              $log_prefix = (IS_ADMIN_FLAG === true) ? '/myDEBUG-bounced-email-adm-' : '/myDEBUG-bounced-email-';
+              $log_date = new DateTime();
+              error_log('Request URI: ' . $_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL . $ErrorInfo, 3, DIR_FS_LOGS . $log_prefix . $log_date->format('Ymd-His-u') . '.log');
+          }
+      }
+    } // end foreach loop thru possible multiple email addresses
+
+    $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_ALL_SPECIFIED_ADDRESSES');
 
     return isset($ErrorInfo) ? nl2br($ErrorInfo) : '';
   }  // end function
