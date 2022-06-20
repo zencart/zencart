@@ -131,10 +131,11 @@ if (zen_is_logged_in()) {
     $telephone = $check_customer->fields['customers_telephone'];
 }
 
-$send_to_array = array();
-if (CONTACT_US_LIST !=''){
-    foreach (explode(",", CONTACT_US_LIST) as $k => $v) {
-        $send_to_array[] = array('id' => $k, 'text' => preg_replace('/\<[^*]*/', '', $v));
+$send_to_array = [];
+if (CONTACT_US_LIST !== ''){
+    $send_to_array[] = ['id' => '', 'text' => PLEASE_SELECT];
+    foreach (explode(',', CONTACT_US_LIST) as $k => $v) {
+        $send_to_array[] = ['id' => (string)$k, 'text' => preg_replace('/\<[^*]*/', '', $v)];
     }
 }
 
