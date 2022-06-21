@@ -131,12 +131,18 @@ if (zen_is_logged_in()) {
     $telephone = $check_customer->fields['customers_telephone'];
 }
 
+// -----
+// If a contact-us list is configured, create the dropdown of 'names' to be displayed.  The default value
+// is set to a value **not present** in the array, so that no value is initially identified as 'selected'.
+// Otherwise, it's possible to submit the form without actually selecting a name!
+//
 $send_to_array = [];
 if (CONTACT_US_LIST !== ''){
     $send_to_array[] = ['id' => '', 'text' => PLEASE_SELECT];
     foreach (explode(',', CONTACT_US_LIST) as $k => $v) {
         $send_to_array[] = ['id' => (string)$k, 'text' => preg_replace('/\<[^*]*/', '', $v)];
     }
+    $send_to_default = count($send_to_array) + 1;
 }
 
 // include template specific file name defines

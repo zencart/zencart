@@ -54,14 +54,14 @@
     if (CONTACT_US_LIST !== '') {
 ?>
 <label class="inputLabel" for="send-to"><?php echo SEND_TO_TEXT; ?></label>
-<?php echo zen_draw_pull_down_menu('send_to',  $send_to_array, '', 'id="send-to" required') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
+<?php echo zen_draw_pull_down_menu('send_to',  $send_to_array, $send_to_default, 'id="send-to" required size="' . count($send_to_array) . '"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
 <br class="clearBoth">
 <?php
     }
 ?>
 
 <label class="inputLabel" for="contactname"><?php echo ENTRY_NAME; ?></label>
-<?php echo zen_draw_input_field('contactname', $name, ' size="40" id="contactname" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" autofocus required'); ?>
+<?php echo zen_draw_input_field('contactname', $name, ' size="40" id="contactname" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required'); ?>
 <br class="clearBoth">
 
 <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
