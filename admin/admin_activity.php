@@ -123,7 +123,7 @@ if ($action != '') {
         $where = " WHERE " . $where;
       }
   if ($filter_by_user !== 0) {
-        $where = ($where === '' ? " WHERE" : " AND") . " a.admin_id = " . $filter_by_user;
+        $where .= ($where === '' ? " WHERE" : " AND") . " a.admin_id = " . $filter_by_user;
     }
 
       $sql = "SELECT a.access_date, a.admin_id, u.admin_name, a.ip_address, a.page_accessed, a.page_parameters, a.gzpost, a.flagged, a.attention, a.severity, a.logmessage
