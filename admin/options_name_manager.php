@@ -142,9 +142,9 @@ if (!empty($action)) {
                                       FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
                                       WHERE products_options_id = " . (int)$_POST['option_id'] . "
                                       AND products_options_values_id = 0");
-                    if ($check_type->fields['count'] === 0) {
-                        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_values_to_products_options_id, products_options_id, products_options_values_id)
-                          VALUES (NULL, " . (int)$_POST['option_id'] . ", " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ")");
+                    if ($check_type->fields['count'] === '0') {
+                        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
+                          VALUES (" . (int)$_POST['option_id'] . ", " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ")");
                     }
                     break;
                 default:
