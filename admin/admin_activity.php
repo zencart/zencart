@@ -18,7 +18,7 @@ require ('includes/application_top.php');
 if (!defined('DIR_FS_ADMIN_ACTIVITY_EXPORT')) {
   define('DIR_FS_ADMIN_ACTIVITY_EXPORT', DIR_FS_ADMIN . 'backups/');
 }
-
+$confirmation_needed = false;
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $start = (isset($_GET['s']) ? (int)$_GET['s'] : 0);
 $perpage = (isset($_GET['p']) ? (int)$_GET['p'] : 50);
@@ -308,7 +308,7 @@ if ($action != '') {
         unset($_SESSION['reset_admin_activity_log']);
         zen_redirect(zen_href_link(FILENAME_ADMIN_ACTIVITY));
       } else {
-        $confirmation_needed = TRUE;
+        $confirmation_needed = true;
       }
       break;
   } //end switch / case
