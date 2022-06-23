@@ -9,10 +9,11 @@
  * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
  */
 
-// strip slashes in case they were added to handle apostrophes:
-  foreach ($ipn->fields as $key=>$value){
-    $ipn->fields[$key] = stripslashes($value);
-  }
+// strip slashes in case they were added to handle apostrophes, noting that some of the fields
+// from the "paypal" table might be NULL:
+foreach ($ipn->fields as $key => $value) {
+    $ipn->fields[$key] = stripslashes($value ?? '');
+}
 
 // display all paypal status fields (in admin Orders page):
           $output = '<table>'."\n";
