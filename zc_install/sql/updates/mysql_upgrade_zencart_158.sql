@@ -47,7 +47,7 @@ ALTER TABLE orders MODIFY customers_country varchar(64) NOT NULL default '';
 ALTER TABLE orders MODIFY delivery_country varchar(64) NOT NULL default '';
 ALTER TABLE orders MODIFY billing_country varchar(64) NOT NULL default '';
 
-ALTER TABLE products_options ADD products_options_comment_position smallint(2) NOT NULL default '0' AFTER products_options_comment; 
+ALTER TABLE products_options ADD products_options_comment_position smallint(2) NOT NULL default '0' AFTER products_options_comment;
 # Remove greater-than sign in query_builder
 UPDATE query_builder SET query_name = 'Customers Dormant for 3+ months (Subscribers)' WHERE query_id = 3;
 
@@ -61,6 +61,7 @@ DELETE FROM configuration WHERE configuration_key = 'MAX_ROW_LISTS_ATTRIBUTES_CO
 
 
 # Update configuration descriptions
+UPDATE configuration SET configuration_title = 'Create Account Default Country', configuration_description = 'Set the default/pre-selected country on the Create Account page to:<br>(default is United States)' WHERE configuration_key = 'SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY';
 UPDATE configuration SET configuration_title = 'State field - Display as pulldown when possible?', configuration_description = 'If zones have been defined for a country, the State field may be displayed as a dropdown populated by the defined zones. Otherwise a text field is displayed for customer entry.<br><strong>true</strong>: When a State field is used, display a pulldown menu whenever possible.<br><strong>false</strong>: When a State field is used, always display a text input field.' WHERE configuration_key = 'ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN';
 UPDATE configuration SET configuration_description = 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on your account name at the top right, then clicking Account Settings, and navigating to the Business Information section; You will find your Merchant Account ID on that screen. A typical Merchant ID looks like FDEFDEFDEFDE11.' WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID';
 UPDATE configuration SET configuration_description = 'If there is no weight to the order, does the order have Free Shipping?<br>0= no<br>1= yes<br><br>Note: When using Free Shipping, Enable the Free Shipping Module.  It will only show when shipping is free.' WHERE configuration_key = 'ORDER_WEIGHT_ZERO_STATUS';
@@ -209,7 +210,7 @@ DELETE FROM product_type_layout WHERE configuration_key = 'SHOW_PRODUCT_FREE_SHI
 DELETE FROM product_type_layout WHERE configuration_key = 'SHOW_PRODUCT_INFO_TELL_A_FRIEND';
 DELETE FROM product_type_layout WHERE configuration_key = 'SHOW_PRODUCT_MUSIC_INFO_TELL_A_FRIEND';
 
-## Email Validation 
+## Email Validation
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE_SINGLE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key = 'EMAIL_FROM';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE_SINGLE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmail"]}}' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmailNullOK"]}}' WHERE configuration_key ='SEND_EXTRA_ORDER_EMAILS_TO';
