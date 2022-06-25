@@ -49,6 +49,7 @@ h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #03A9D3;}
 span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.button.small_edit, #navEZPagesTop, .seDisplayedAddressLabel, TR.tableHeading, .prod-list-wrap, #myAccountPaymentInfo h4, #myAccountShipInfo h4 {background:#666;}
 #siteinfoIP, #siteinfoLegal, #bannerSix{background:#666665;}
 #navEZPagesTop li a:hover, .pagination li a:hover {color: @0EA9D3;}
+#navEZPagesTop li a {color: #FFFFFF;}
 .messageStackWarning, .messageStackError {background-color:#8b0000;}
 .messageStackSuccess {background-color:#99ff99;}
 #shippingEstimatorContent th, .navSplitPagesLinks a:hover, .productListing-rowheading, #productQuantityDiscounts table tr:first-child td{background:#999;}
