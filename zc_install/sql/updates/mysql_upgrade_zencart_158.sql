@@ -223,6 +223,10 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmailNullOK"]}}' WHERE configuration_key ='SEND_EXTRA_LOW_STOCK_EMAILS_TO';
 UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeEmailNullOK"]}}' WHERE configuration_key ='CONTACT_US_LIST';
 
+#############
+### Added v158 bring banners_titles up to date
+UPDATE banners SET banners_title = 'Zen Cart Certified Services' WHERE banners_html_text LIKE '%<script>%';
+
 #### VERSION UPDATE STATEMENTS
 ## THE FOLLOWING 2 SECTIONS SHOULD BE THE "LAST" ITEMS IN THE FILE, so that if the upgrade fails prematurely, the version info is not updated.
 ##The following updates the version HISTORY to store the prior version info (Essentially "moves" the prior version info from the "project_version" to "project_version_history" table
