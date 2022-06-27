@@ -59,7 +59,6 @@ span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.
 #filter-wrapper, span.normal_button:hover, span.cssButton.normal_button.button.button_goto_prod_details, .button_add_selected:hover{background:#000;}
 .button_in_cart:hover{background-color:#000;}
 #docGeneralDisplay #pinfo-right, #popupShippingEstimator, #popupSearchHelp, #popupAdditionalImage, #popupImage, #popupCVVHelp, #popupCouponHelp, #popupAtrribsQuantityPricesHelp, #infoShoppingCart{background:none;}
-#navMain ul li a.navCartContentsIndicator {background: #ff662e;color:#000}
 #navMain {background: #ff662e;color:#000}
 #navMain ul li a.navCartContentsIndicator:hover {color: #db3a00;background: #FFFFFF;font-weight: bold;}
 #navMain ul li a.navCartContentsIndicator {color: #000000;background: #ff662e;font-weight: bold;}
