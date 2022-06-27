@@ -656,7 +656,7 @@ if (!empty($action)) {
              */
             foreach ($addressArray as $addresses) {
               ?>
-              <h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']); ?><?php echo ($addresses['address_book_id'] == zen_get_customers_address_primary($_GET['cID']) ? '&nbsp;' . PRIMARY_ADDRESS : ''); ?></h3>
+              <h3 class="addressBookDefaultName"><?php echo zen_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']); ?><?php echo ((int)$addresses['address_book_id'] === zen_get_customers_address_primary((int)$_GET['cID']) ? '&nbsp;' . PRIMARY_ADDRESS : ''); ?></h3>
               <address><?php echo zen_address_format($addresses['format_id'], $addresses['address'], true, ' ', '<br>'); ?></address>
 
               <br class="clearBoth">
