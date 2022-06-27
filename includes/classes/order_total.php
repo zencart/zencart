@@ -63,6 +63,9 @@ class order_total extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if (!isset($GLOBALS[$class])) continue;
         $GLOBALS[$class]->process();
+        if (empty($GLOBALS[$class]->output)) {
+           continue; 
+        }
         for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
           if (zen_not_null($GLOBALS[$class]->output[$i]['title']) && zen_not_null($GLOBALS[$class]->output[$i]['text'])) {
             $order_total_array[] = array('code' => $GLOBALS[$class]->code,
