@@ -28,11 +28,17 @@ $manufacturer_sidebox = $db->Execute($manufacturer_sidebox_query);
 if (!$manufacturer_sidebox->EOF) {
     $number_of_rows = $manufacturer_sidebox->RecordCount() + 1;
 
-// Display a list
+    // -----
+    // Display a list, noting that the empty ('') selection will not be enabled (via jQuery)
+    // if this is the initial display without a previous selection.
+    //
     $manufacturer_sidebox_array = [];
+    $default_selection = (isset($_GET['manufacturers_id'])) ? (int)$_GET['manufacturers_id'] : '';
     if (!isset($_GET['manufacturers_id']) || $_GET['manufacturers_id'] === '' ) {
+        $required = ' required';
         $manufacturer_sidebox_array[] = ['id' => '', 'text' => PULL_DOWN_ALL];
     } else {
+        $required = '';
         $manufacturer_sidebox_array[] = ['id' => '', 'text' => PULL_DOWN_MANUFACTURERS];
     }
 

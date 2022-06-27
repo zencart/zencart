@@ -19,9 +19,12 @@ if (!$music_genres->EOF) {
 
 // Display a list
     $music_genres_array = [];
+    $default_selection = (isset($_GET['music_genre_id'])) ? (int)$_GET['music_genre_id'] : '';
     if (!isset($_GET['music_genre_id']) || $_GET['music_genre_id'] === '' ) {
+        $required = ' required';
         $music_genres_array[] = ['id' => '', 'text' => PULL_DOWN_ALL];
     } else {
+        $required = '';
         $music_genres_array[] = ['id' => '', 'text' => PULL_DOWN_MUSIC_GENRES];
     }
 

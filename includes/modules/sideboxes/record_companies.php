@@ -19,9 +19,12 @@ if (!$record_company->EOF) {
 
 // Display a list
     $record_company_array = [];
+    $default_selection = (isset($_GET['record_company_id'])) ? (int)$_GET['record_company_id'] : '';
     if (!isset($_GET['record_company_id']) || $_GET['record_company_id'] === '' ) {
+        $required = ' required';
         $record_company_array[] = ['id' => '', 'text' => PULL_DOWN_ALL];
     } else {
+        $required = '';
         $record_company_array[] = ['id' => '', 'text' => PULL_DOWN_RECORD_COMPANIES];
     }
 
