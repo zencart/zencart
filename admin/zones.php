@@ -36,7 +36,7 @@ if (!empty($action)) {
                         zone_name = '" . zen_db_input($zone_name) . "'
                     WHERE zone_id = " . (int)$zone_id);
 
-      zen_redirect(zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id));
+      zen_redirect(zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $zone_id));
       break;
     case 'deleteconfirm':
       $zone_id = zen_db_prepare_input($_POST['cID']);
@@ -44,7 +44,7 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_ZONES . "
                     WHERE zone_id = " . (int)$zone_id);
 
-      zen_redirect(zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page']));
+      zen_redirect(zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page']));
       break;
   }
 }
@@ -80,7 +80,7 @@ if (!empty($action)) {
                                          " . TABLE_COUNTRIES . " c
                                     where z.zone_country_id = c.countries_id
                                     order by c.countries_name, z.zone_name";
-                $zones_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows, 'countries_name', zen_field_length(TABLE_COUNTRIES, 'countries_name'));
+                $zones_split = new splitPageResults($_GET['zone_page'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows, 'countries_name', zen_field_length(TABLE_COUNTRIES, 'countries_name'));
                 $zones = $db->Execute($zones_query_raw);
                 foreach ($zones as $zone) {
                   if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $zone['zone_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -88,9 +88,9 @@ if (!empty($action)) {
                   }
 
                   if (isset($cInfo) && is_object($cInfo) && ($zone['zone_id'] == $cInfo->zone_id)) {
-                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=edit') . '\'" role="button">' . "\n";
+                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $cInfo->zone_id . '&action=edit') . '\'" role="button">' . "\n";
                   } else {
-                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone['zone_id']) . '\'" role="button">' . "\n";
+                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $zone['zone_id']) . '\'" role="button">' . "\n";
                   }
                   ?>
               <td class="dataTableContent"><?php echo $zone['countries_name']; ?></td>
@@ -101,7 +101,7 @@ if (!empty($action)) {
                   if (isset($cInfo) && is_object($cInfo) && ($zone['zone_id'] == $cInfo->zone_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone['zone_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $zone['zone_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                   }
                   ?>
                 &nbsp;</td>
@@ -121,36 +121,36 @@ if (!empty($action)) {
               case 'new':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_ZONE . '</h4>');
 
-                $contents = array('form' => zen_draw_form('zones', FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('zones', FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&action=insert', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_NAME, 'zone_name', 'class="control-label"') . zen_draw_input_field('zone_name', '', 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_CODE, 'zone_code', 'class="control-label"') . zen_draw_input_field('zone_code', '', 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(), '', 'class="form-control"'));
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_ZONE . '</h4>');
 
-                $contents = array('form' => zen_draw_form('zones', FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=save', 'post', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('zones', FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $cInfo->zone_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_NAME, 'zone_name', 'class="control-label"') . zen_draw_input_field('zone_name', htmlspecialchars($cInfo->zone_name, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONES_CODE, 'zone_code', 'class="control-label"') . zen_draw_input_field('zone_code', $cInfo->zone_code, 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(), $cInfo->countries_id, 'class="form-control"'));
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $cInfo->zone_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_ZONE . '</h4>');
 
-                $contents = array('form' => zen_draw_form('zones', FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('cID', $cInfo->zone_id));
+                $contents = array('form' => zen_draw_form('zones', FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&action=deleteconfirm') . zen_draw_hidden_field('cID', $cInfo->zone_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $cInfo->zone_name . '</b>');
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $cInfo->zone_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (isset($cInfo) && is_object($cInfo)) {
                   $heading[] = array('text' => '<h4>' . $cInfo->zone_name . '</h4>');
 
-                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $cInfo->zone_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&cID=' . $cInfo->zone_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
                   $contents[] = array('text' => '<br>' . TEXT_INFO_ZONES_NAME . '<br>' . $cInfo->zone_name . ' (' . $cInfo->zone_code . ')');
                   $contents[] = array('text' => '<br>' . TEXT_INFO_COUNTRY_NAME . ' ' . $cInfo->countries_name);
                 }
@@ -167,14 +167,14 @@ if (!empty($action)) {
         <div class="row">
           <table class="table">
             <tr>
-              <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></td>
-              <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+              <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['zone_page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></td>
+              <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['zone_page'], '', 'zone_page'); ?></td>
             </tr>
             <?php
             if (empty($action)) {
               ?>
               <tr>
-                <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_ZONE; ?></a></td>
+                <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_ZONES, 'zone_page=' . $_GET['zone_page'] . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_ZONE; ?></a></td>
               </tr>
               <?php
             }
