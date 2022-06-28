@@ -2,9 +2,9 @@
 <html>
 <!--
 /**
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2021 Mar 05 Modified in v1.5.7c $
+ * @version $Id: zcwilt 2022 Feb 20 Modified in v1.5.7d $
  */
 //-->
 <head>
@@ -27,7 +27,7 @@
         <div class="row">
             <div class="col-md-6 col-sm-12">
                 <a href="./index.html">
-                    <img src="../includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" />
+                    <img src="https://www.zen-cart.com/images/styles/zencart/style/zen-cart-logo.png" alt="Zen Cart&reg;" title="Zen Cart&reg;" />
                 </a>
             </div>
             <div class="col-md-6 hidden-xs hidden-sm text-right">
@@ -37,9 +37,9 @@
             </div>
         </div>
     </section> <!-- End pageHeader //-->
-    
+
     <section id="zenTeamMessage">
-        <h1>Welcome to Zen Cart&reg;</h1>         
+        <h1>Welcome to Zen Cart&reg;</h1>
         <div class="alert add-shadow">
             <em>Dear Zen Cart&reg; User</em>,
             <p>
@@ -58,7 +58,7 @@
             </p>
         </div>
     </section> <!-- End zenTeamMessage //-->
-    
+
     <section id="introCenter">
         <div>
             <h1>Zen Cart&reg; Version 1.5.7c</h1>
@@ -69,15 +69,52 @@
                 <br>
                 A detailed list of all edits to all files can be seen on Github at:<br>
                 <a href="https://github.com/zencart/zencart/compare/v156...v1.5.7">v1.5.6...v1.5.7c</a><br>
-                <a href="https://github.com/zencart/zencart/compare/v1.5.6c...v1.5.7c">v1.5.6c...v1.5.7c</a><br>
-                <a href="https://github.com/zencart/zencart/compare/v1.5.7...v1.5.7c">v1.5.7...v1.5.7c</a><br>
-                <a href="https://github.com/zencart/zencart/compare/v1.5.7b...v1.5.7c">v1.5.7b...v1.5.7c</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.6c...v1.5.7d">v1.5.6c...v1.5.7d</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.7...v1.5.7d">v1.5.7...v1.5.7d</a><br>
+                <a href="https://github.com/zencart/zencart/compare/v1.5.7c...v1.5.7d">v1.5.7c...v1.5.7d</a><br>
             </p>
         </div>
     </section> <!-- End introCenter //-->
-    
+
     <section id="changedFiles">
         <div>
+            <h1>CHANGED Files in v1.5.7d (since v1.5.7c)</h1>
+            <ul>
+                <li>admin/category_product_listing.php</li>
+                <li>admin/customers.php</li>
+                <li>admin/developers_tool_kit.php</li>
+                <li>admin/includes/application_bootstrap.php</li>
+                <li>admin/includes/languages/english/developers_tool_kit.php</li>
+                <li>admin/invoice.php</li>
+                <li>admin/orders.php</li>
+                <li>admin/plugin_manager.php</li>
+                <li>admin/reviews.php</li>
+                <li>includes/classes/PluginSupport/BasePluginInstaller.php</li>
+                <li>includes/classes/ajax/zcAjaxPayment.php</li>
+                <li>includes/classes/db/mysql/query_factory.php</li>
+                <li>includes/classes/vendors/PHPMailer/README.md</li>
+                <li>includes/classes/vendors/PHPMailer/SECURITY.md</li>
+                <li>includes/classes/vendors/PHPMailer/VERSION</li>
+                <li>includes/classes/vendors/PHPMailer/composer.json</li>
+                <li>includes/classes/vendors/PHPMailer/get_oauth_token.php</li>
+                <li>includes/classes/vendors/PHPMailer/language/phpmailer.lang-ar.php</li>
+                <li>includes/classes/vendors/PHPMailer/language/phpmailer.lang-ja.php</li>
+                <li>includes/classes/vendors/PHPMailer/language/phpmailer.lang-nl.php</li>
+                <li>includes/classes/vendors/PHPMailer/language/phpmailer.lang-uk.php</li>
+                <li>includes/classes/vendors/PHPMailer/src/Exception.php</li>
+                <li>includes/classes/vendors/PHPMailer/src/PHPMailer.php</li>
+                <li>includes/classes/vendors/PHPMailer/src/POP3.php</li>
+                <li>includes/classes/vendors/PHPMailer/src/SMTP.php</li>
+                <li>includes/functions/html_output.php</li>
+                <li>includes/functions/functions_taxes.php</li>
+                <li>includes/modules/payment/paypalwpp.php</li>
+                <li>includes/modules/order_total/ot_coupon.php</li>
+                <li>includes/modules/pages/product_reviews_write/header_php.php</li>
+                <li>includes/modules/payment/paypal/paypal_curl.php</li>
+                <li>includes/modules/payment/paypaldp.php</li>
+                <li>includes/version.php</li>
+                <li>(Note: no database changes between v157/v157a/v157b/157c/157d, so no need to run zc_install if v157/v157a/157b/157c already installed.)</li>
+            </ul>
             <h1>CHANGED Files in v1.5.7c (since v1.5.7b)</h1>
             <ul>
                 <li>/admin/attributes_controller.php</li>
@@ -105,7 +142,7 @@
                 <li>/includes/modules/pages/index/header_php.php</li>
                 <li>/includes/templates/template_default/templates/tpl_account_edit_default.php</li>
                 <li>/includes/version.php</li>
-                <li>/zc_install/ (ENTIRE DIRECTORY) (Note: no database changes between v157/v157a/v157b/v15c, so no need to run zc_install if v157/v157a/v157b already installed.)</li>
+                <li>(Note: no database changes between v157/v157a/v157b/v15c, so no need to run zc_install if v157/v157a/v157b already installed.)</li>
             </ul>
         </div>
         <div>
@@ -956,8 +993,8 @@ NOTE: The zc_plugins directory is NEW  (DO NOT CONFUSE IT WITH zc_install)
             ^^ <a href="#pageHeader">Back to Top</a> ^^
         </div>
     </section> <!-- End deletedFiles //-->
-    
-    
+
+
     <section id="helpSupport">
         <div>
             <h1>Help and Support</h1>
@@ -966,7 +1003,7 @@ NOTE: The zc_plugins directory is NEW  (DO NOT CONFUSE IT WITH zc_install)
             </p>
         </div>
     </section> <!-- End helpSupport //-->
-    
+
     <section id="footerBlock">
         <div class="appInfo">
             <p>
@@ -988,14 +1025,14 @@ NOTE: The zc_plugins directory is NEW  (DO NOT CONFUSE IT WITH zc_install)
             <p class="zenData">
                 Copyright 2003 - 2019 Zen Ventures, LLC
                 <br><br>
-                Zen Cart&reg; 
+                Zen Cart&reg;
                 <br>
                 <a href="https://www.zen-cart.com" target="_blank">www.zen-cart.com</a>
             </p>
         </div>
     </section> <!-- End footerBlock //-->
-    
-</div>    
+
+</div>
 </body>
 </html>
 
