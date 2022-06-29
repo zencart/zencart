@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 23 Modified in v1.5.7 $
+ * @version $Id: dbltoe 2022 June 25 Modified in v1.5.8 $
  */
 
 /*bof basic elements*/
@@ -121,7 +121,7 @@ select#country, select#stateZone, #state {margin-left:0;}
 #navMainSearch input[type=text]{vertical-align:top;display:inline-block;border:0;width:65% !important;height:32px;margin:0;font-size:0.9em;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 #navMainSearch input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
 
-.cart-add input[type=text]{vertical-align:top;display:inline-block;border:0;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;height:42px;border:3px solid #ccc;}
+.cart-add input[type=text]{vertical-align:top;display:inline-block;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;height:42px;border:3px solid #ccc;}
 .cart-add input[type=submit], #navMainSearch input[type=submit]{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;display:inline-block;margin:0;height:32px;}
 
 
@@ -214,7 +214,7 @@ ul.list-links li:hover, ol.list-links li:hover{}
 .tableHeading{}
 #cartSubTotal {text-align:right;line-height:2.2em;padding:10px 0 20px 0;font-size:130%;}
 .tableRow, .tableHeading, #cartSubTotal {height:2.2em;}
-.cartProductDisplay, .cartUnitDisplay, .cartTotalDisplay, .cartRemoveItemDisplay, .cartQuantityUpdate, .cartQuantity, #cartInstructionsDisplay, .cartTotalsDisplay {padding: 0.5em 0em;}
+.cartProductDisplay, .cartUnitDisplay, .cartTotalDisplay, .cartRemoveItemDisplay, .cartQuantityUpdate, .cartQuantity, #cartInstructionsDisplay, .cartTotalsDisplay {padding: 0.5em 0;}
 .cartUnitDisplay, .cartTotalDisplay {text-align:right;padding-right:0.2em;}
 .cartTotalDisplay{font-size:130%;}
 #scUpdateQuantity {width:2em;}
@@ -320,7 +320,7 @@ span.list-addtext{display:block;text-align:center;}
 #productsListingBottomNumber, #allProductsListingBottomNumber, #allProductsListingTopNumber, #productsListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber{width:25%;margin-left:-74%;margin-top:0;}
 #newProductsDefaultListingTopNumber, #newProductsDefaultListingBottomNumber{margin-left:-72.5%;}
 #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber{margin-left:-71%;}
-.button-top{width:25%;text-align:right;margin:-10px 0px 0 0;}
+.button-top{width:25%;text-align:right;margin:-10px 0 0 0;}
 .button-bottom{height:auto;padding:9px 0 5px 0;}
 #specialsListing .prod-list-wrap{padding:20px 20px 0 20px;}
 #productListing{margin-bottom:20px;}
@@ -354,7 +354,7 @@ span.list-addtext{display:block;text-align:center;}
 .categoryIcon img{margin-bottom:5px;}
 .navNextPrevWrapper {padding-bottom: 5px;float:right;margin-bottom:30px;}
 .navNextPrevCounter {margin:0;font-size:0.9em;}
-.navNextPrevList {display:inline;white-space:nowrap;margin:0;padding:0.5em 0;list-style-type: none;}
+.navNextPrevList {display:inline;white-space:nowrap;padding:0.5em 0;list-style-type: none;}
 #pinfo-left{float:left;width:43%;}
 #productMainImage{float:none;margin:0;}
 #productMainImage a{text-decoration:none;}
