@@ -86,19 +86,19 @@ if ($_SESSION['cart']->count_contents() > 0) {
             // country is selected
             $_SESSION['country_info'] = zen_get_countries($_POST['zone_country_id'],true);
             $country_info = $_SESSION['country_info'];
-            $order->delivery = array(
+            $order->delivery = [
                 'postcode' => $postcode,
-                'country' => array(
+                'country' => [
                     'id' => $_POST['zone_country_id'],
                     'title' => $country_info['countries_name'],
                     'iso_code_2' => $country_info['countries_iso_code_2'],
                     'iso_code_3' =>  $country_info['countries_iso_code_3'],
-                ),
+                ],
                 'country_id' => $_POST['zone_country_id'],
                 //add state zone_id
                 'zone_id' => $state_zone_id,
                 'format_id' => zen_get_address_format_id($_POST['zone_country_id']),
-            );
+            ];
             $_SESSION['cart_country_id'] = $_POST['zone_country_id'];
             //add state zone_id
             $_SESSION['cart_zone'] = $state_zone_id;
@@ -108,42 +108,42 @@ if ($_SESSION['cart']->count_contents() > 0) {
             $_SESSION['country_info'] = zen_get_countries($_SESSION['cart_country_id'],true);
             $country_info = $_SESSION['country_info'];
             // fix here - check for error on $cart_country_id
-            $order->delivery = array(
+            $order->delivery = [
                 'postcode' => $postcode,
-                'country' => array(
+                'country' => [
                     'id' => $_SESSION['cart_country_id'],
                     'title' => $country_info['countries_name'],
                     'iso_code_2' => $country_info['countries_iso_code_2'],
                     'iso_code_3' =>  $country_info['countries_iso_code_3'],
-                ),
+                ],
                 'country_id' => $_SESSION['cart_country_id'],
                 'zone_id' => $state_zone_id,
                 'format_id' => zen_get_address_format_id($_SESSION['cart_country_id']),
-            );
+            ];
         } else {
             // first timer
             $_SESSION['cart_country_id'] = STORE_COUNTRY;
             $_SESSION['country_info'] = zen_get_countries(STORE_COUNTRY,true);
             $country_info = $_SESSION['country_info'];
-            $order->delivery = array(
+            $order->delivery = [
                 //'postcode' => '',
-                'country' => array(
+                'country' => [
                     'id' => STORE_COUNTRY,
                     'title' => $country_info['countries_name'],
                     'iso_code_2' => $country_info['countries_iso_code_2'],
                     'iso_code_3' =>  $country_info['countries_iso_code_3'],
-                ),
+                ],
                 'country_id' => STORE_COUNTRY,
                 'zone_id' => $state_zone_id,
                 'format_id' => zen_get_address_format_id(isset($_POST['zone_country_id']) ? $_POST['zone_country_id'] : 0),
-            );
+            ];
         }
         // set the cost to be able to calculate free shipping
-        $order->info = array(
+        $order->info = [
             'total' => $_SESSION['cart']->show_total(), // TAX ????
             'currency' => isset($currency) ? $currency : DEFAULT_CURRENCY,
             'currency_value'=> isset($currency) && isset($currencies->currencies[$currency]['value']) ? $currencies->currencies[$currency]['value'] : 1
-        );
+        ];
     }
     // weight and count needed for shipping !
     $total_weight = $_SESSION['cart']->show_weight();
@@ -207,7 +207,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                     if (!empty($method)) {
                         foreach ($selected_quote[0]['methods'] as $qkey=>$qval) {
                             if ($qval['id'] == $method) {
-                                $selected_quote[0]['methods'] = array($qval);
+                                $selected_quote[0]['methods'] = [$qval];
                                 continue;
                             }
                         }
@@ -256,20 +256,20 @@ if ($_SESSION['cart']->count_contents() > 0) {
         // only display addresses if more than 1
         if ($addresses->RecordCount() > 1) {
             while (!$addresses->EOF) {
-                $addresses_array[] = array('id' => $addresses->fields['address_book_id'], 'text' => zen_address_format(zen_get_address_format_id($addresses->fields['country_id']), $addresses->fields, 0, ' ', ' '));
+                $addresses_array[] = ['id' => $addresses->fields['address_book_id'], 'text' => zen_address_format(zen_get_address_format_id($addresses->fields['country_id']), $addresses->fields, 0, ' ', ' ')];
                 $addresses->MoveNext();
             }
         }
     } else {
         if ($_SESSION['cart']->get_content_type() != 'virtual') {
-            $state_array = array();
-            $state_array[] = array('id' => '', 'text' => PULL_DOWN_SHIPPING_ESTIMATOR_SELECT);
+            $state_array = [];
+            $state_array[] = ['id' => '', 'text' => PULL_DOWN_SHIPPING_ESTIMATOR_SELECT];
             $state_values = $db->Execute("SELECT zone_name, zone_id FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . (int)$selected_country . "' ORDER BY zone_country_id DESC, zone_name");
             while (!$state_values->EOF) {
-                $state_array[] = array(
+                $state_array[] = [
                     'id' => $state_values->fields['zone_id'],
                     'text' => $state_values->fields['zone_name']
-                );
+                ];
                 $state_values->MoveNext();
             }
         }
