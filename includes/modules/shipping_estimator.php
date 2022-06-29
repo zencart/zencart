@@ -252,7 +252,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         $show_in = FILENAME_SHOPPING_CART;
     }
     if (zen_is_logged_in() && !zen_in_guest_checkout()) {
-        $addresses = $db->execute("SELECT address_book_id, entry_city AS city, entry_postcode AS postcode, entry_state AS state, entry_zone_id AS zone_id, entry_country_id AS country_id FROM " . TABLE_ADDRESS_BOOK . " WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+        $addresses = $db->Execute("SELECT address_book_id, entry_city AS city, entry_postcode AS postcode, entry_state AS state, entry_zone_id AS zone_id, entry_country_id AS country_id FROM " . TABLE_ADDRESS_BOOK . " WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
         // only display addresses if more than 1
         if ($addresses->RecordCount() > 1) {
             while (!$addresses->EOF) {
