@@ -39,8 +39,8 @@ function shipincart_submit(){
 <?php
 // Only do when something is in the cart
 if ($_SESSION['cart']->count_contents() > 0) {
-    $zip_code = (isset($_SESSION['cart_zip_code'])) ? $_SESSION['cart_zip_code'] : '';
-    $zip_code = (isset($_POST['zip_code'])) ? strip_tags(addslashes($_POST['zip_code'])) : $zip_code;
+    $postcode = (isset($_SESSION['cart_postcode'])) ? $_SESSION['cart_postcode'] : '';
+    $postcode = (isset($_POST['postcode'])) ? strip_tags(addslashes($_POST['postcode'])) : $postcode;
     $state_zone_id = (isset($_SESSION['cart_zone'])) ? (int)$_SESSION['cart_zone'] : '';
     $state_zone_id = (isset($_POST['zone_id'])) ? (int)$_POST['zone_id'] : $state_zone_id;
     $selectedState = (isset($_POST['state']) ? zen_output_string_protected($_POST['state']) : '');
@@ -87,7 +87,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
             $_SESSION['country_info'] = zen_get_countries($_POST['zone_country_id'],true);
             $country_info = $_SESSION['country_info'];
             $order->delivery = array(
-                'postcode' => $zip_code,
+                'postcode' => $postcode,
                 'country' => array(
                     'id' => $_POST['zone_country_id'],
                     'title' => $country_info['countries_name'],
@@ -102,14 +102,14 @@ if ($_SESSION['cart']->count_contents() > 0) {
             $_SESSION['cart_country_id'] = $_POST['zone_country_id'];
             //add state zone_id
             $_SESSION['cart_zone'] = $state_zone_id;
-            $_SESSION['cart_zip_code'] = $zip_code;
+            $_SESSION['cart_postcode'] = $postcode;
         } elseif (!empty($_SESSION['cart_country_id'])) {
             // session is available
             $_SESSION['country_info'] = zen_get_countries($_SESSION['cart_country_id'],true);
             $country_info = $_SESSION['country_info'];
             // fix here - check for error on $cart_country_id
             $order->delivery = array(
-                'postcode' => $zip_code,
+                'postcode' => $postcode,
                 'country' => array(
                     'id' => $_SESSION['cart_country_id'],
                     'title' => $country_info['countries_name'],
