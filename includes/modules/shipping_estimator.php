@@ -188,10 +188,10 @@ if ($_SESSION['cart']->count_contents() > 0) {
     // begin shipping cost
     if (!$free_shipping && $_SESSION['cart']->get_content_type() !== 'virtual') {
         if (!empty($_POST['scid'])){
-            list($module, $method) = explode('_', $_POST['scid']);
+            [$module, $method] = explode('_', $_POST['scid']);
             $_SESSION['cart_sid'] = $_POST['scid'];
         } elseif (!empty($_SESSION['cart_sid'])) {
-            list($module, $method) = explode('_', $_SESSION['cart_sid']);
+            [$module, $method] = explode('_', $_SESSION['cart_sid']);
         } else {
             $module = '';
             $method = '';
