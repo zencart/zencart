@@ -23,7 +23,7 @@ if (isset($_POST['scid'])) {
 }
 
 // load JS updater
-if ($current_page_base != 'popup_shipping_estimator') {
+if ($current_page_base !== 'popup_shipping_estimator') {
     require DIR_WS_MODULES . '/pages/popup_shipping_estimator/jscript_addr_pulldowns.php';
 }
 ?>
@@ -161,7 +161,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     // eo shipping cost
     // check free shipping based on order $total
     $free_shipping = $pass = false;
-    if (defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true')) {
+    if (defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING === 'true')) {
         switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
             case 'national':
                 if ($order->delivery['country_id'] == STORE_COUNTRY) {
@@ -234,7 +234,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         }
     }
     // virtual products need a free shipping
-    if ($_SESSION['cart']->get_content_type() == 'virtual') {
+    if ($_SESSION['cart']->get_content_type() === 'virtual') {
         $order->info['shipping_method'] = CART_SHIPPING_METHOD_FREE_TEXT . ' ' . CART_SHIPPING_METHOD_ALL_DOWNLOADS;
         $order->info['shipping_cost'] = 0;
     }
@@ -261,7 +261,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
             }
         }
     } else {
-        if ($_SESSION['cart']->get_content_type() != 'virtual') {
+        if ($_SESSION['cart']->get_content_type() !== 'virtual') {
             $state_array = [];
             $state_array[] = ['id' => '', 'text' => PULL_DOWN_SHIPPING_ESTIMATOR_SELECT];
             $state_values = $db->Execute("SELECT zone_name, zone_id FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . (int)$selected_country . "' ORDER BY zone_country_id DESC, zone_name");
