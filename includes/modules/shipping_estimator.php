@@ -39,7 +39,7 @@ function shipincart_submit(){
 <?php
 // Only do when something is in the cart
 if ($_SESSION['cart']->count_contents() > 0) {
-    $postcode = (isset($_SESSION['cart_postcode'])) ? $_SESSION['cart_postcode'] : '';
+    $postcode = $_SESSION['cart_postcode'] ?? '';
     $postcode = (isset($_POST['postcode'])) ? strip_tags(addslashes($_POST['postcode'])) : $postcode;
     $state_zone_id = (isset($_SESSION['cart_zone'])) ? (int)$_SESSION['cart_zone'] : '';
     $state_zone_id = (isset($_POST['zone_id'])) ? (int)$_POST['zone_id'] : $state_zone_id;
@@ -135,14 +135,14 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 ],
                 'country_id' => STORE_COUNTRY,
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id(isset($_POST['zone_country_id']) ? $_POST['zone_country_id'] : 0),
+                'format_id' => zen_get_address_format_id($_POST['zone_country_id'] ?? 0),
             ];
         }
         // set the cost to be able to calculate free shipping
         $order->info = [
             'total' => $_SESSION['cart']->show_total(), // TAX ????
-            'currency' => isset($currency) ? $currency : DEFAULT_CURRENCY,
-            'currency_value'=> isset($currency) && isset($currencies->currencies[$currency]['value']) ? $currencies->currencies[$currency]['value'] : 1
+            'currency' => $currency ?? DEFAULT_CURRENCY,
+            'currency_value'=> isset($currency, $currencies->currencies[$currency]['value']) ? $currencies->currencies[$currency]['value'] : 1
         ];
     }
     // weight and count needed for shipping !
@@ -216,9 +216,9 @@ if ($_SESSION['cart']->count_contents() > 0) {
             }
 
             if (!isset($selected_quote) || (isset($selected_quote[0]['error']) && $selected_quote[0]['error']) || !zen_not_null($selected_quote[0]['methods'][0]['cost'])) {
-                $order->info['shipping_method'] = isset($selected_shipping['title']) ? $selected_shipping['title'] : '';
-                $order->info['shipping_cost'] = isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
-                $order->info['total']+= isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
+                $order->info['shipping_method'] = $selected_shipping['title'] ?? '';
+                $order->info['shipping_cost'] = $selected_shipping['cost'] ?? 0;
+                $order->info['total']+= $selected_shipping['cost'] ?? 0;
             } else {
                 $order->info['shipping_method'] = $selected_quote[0]['module'].' ('.$selected_quote[0]['methods'][0]['title'].')';
                 $order->info['shipping_cost'] = $selected_quote[0]['methods'][0]['cost'];
@@ -228,9 +228,9 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 $selected_shipping['id'] = $selected_quote[0]['id'].'_'.$selected_quote[0]['methods'][0]['id'];
             }
         } else {
-            $order->info['shipping_method'] = isset($selected_shipping['title']) ? $selected_shipping['title'] : '';
-            $order->info['shipping_cost'] = isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
-            $order->info['total']+= isset($selected_shipping['cost']) ? $selected_shipping['cost'] : 0;
+            $order->info['shipping_method'] = $selected_shipping['title'] ?? '';
+            $order->info['shipping_cost'] = $selected_shipping['cost'] ?? 0;
+            $order->info['total']+= $selected_shipping['cost'] ?? 0;
         }
     }
     // virtual products need a free shipping
