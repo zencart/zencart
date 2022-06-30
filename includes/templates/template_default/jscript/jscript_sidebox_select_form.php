@@ -28,11 +28,31 @@ jQuery(document).ready(function() {
     jQuery('form.sidebox-select-form select:required').each(function() {
 <?php
         // -----
-        // If there's an option with an empty ('') value, mark that option as disabled and
-        // remove its selected attribute.
+        // Iterate over each of the select tag's options, 'converting' any option with a value
+        // of '' into an <optgroup>, adding the other options as <option> tags for that 'group' and then closing
+        // up the <optgroup> tag.
         //
 ?>
-        jQuery('option[value=""]', this).attr('disabled', true).removeAttr('selected');
+        var theOptions = '';
+        var optGroup = false;
+        var isSelected = '';
+        jQuery('option', this).each(function() {
+            if (jQuery(this).val() == '') {
+                optGroup = true;
+                theOptions += '<optgroup label="'+jQuery(this).text()+'">';
+            } else {
+                isSelected = '';
+                if (jQuery(this).is(':selected')) {
+                    isSelected = ' selected="selected"';
+                }
+                theOptions += '<option value="'+jQuery(this).val()+'"'+isSelected+'>'+jQuery(this).text()+'</option>';
+            }
+        });
+        if (optGroup === true) {
+            theOptions += '</optgroup>';
+        }
+        jQuery(this).empty().append(theOptions);
+        jQuery('optgroup', this).css({'font-style':'normal'});
 <?php
         // -----
         // If a non-'' option is currently selected, ensure that the form's submit button is
