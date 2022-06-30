@@ -74,6 +74,7 @@
       <div class="infocell"><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS; ?></strong> <?php echo $system['mysql_slow_query_log_status'] == '1' ? 'On' : 'Off'; ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_FILE; ?></strong> <?php echo zen_output_string_protected($system['mysql_slow_query_log_file']); ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_MYSQL_MODE; ?></strong> <?php echo $system['mysql_mode'] == '' ? '(None set)' : zen_output_string_protected(str_replace(',', ', ', $system['mysql_mode'])); ?></div>
+      <div class="infocell"><strong><?php echo TEXT_DATABASE_VARIABLES_LINK; ?></strong></div>
 </div>
 <br class="clearBoth">
 <?php echo $sinfo; ?>
@@ -100,6 +101,24 @@ if (strpos($disabled_functions,"phpinfo") === false) {
 <?php } else { ?>
 <div class="phpinfo phpinfo-is-disabled"><?php echo ERROR_UNABLE_TO_DISPLAY_SERVER_INFORMATION; ?></div>
 <?php } ?>
+<h2 id="db-h2"><?php echo TITLE_DATABASE_VARIABLES . $system['db_version'] . ($system['mysql_strict_mode'] === true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''); ?></h2>
+<table class="table" id="database-info">
+    <tr class="db-row">
+        <th class="db-name db-head db-info"><?php echo HEADING_DATABASE_VARIABLE; ?></th>
+        <th class="db-value db-head db-info"><?php echo HEADING_DATABASE_VALUE; ?></th>
+    </tr>
+    <?php
+    $show_variables = $db->Execute("SHOW VARIABLES");
+    foreach ($show_variables as $variable) {
+        ?>
+        <tr class="db-row">
+            <td class="db-info db-name"><?php echo $variable['Variable_name']; ?></td>
+            <td class="db-info db-value"><?php echo empty($variable['Value']) ? '$nbsp;' : $variable['Value']; ?></td>
+        </tr>
+        <?php
+    }
+    ?>
+</table>
 <!-- body_text_eof //-->
 
 <!-- body_eof //-->
