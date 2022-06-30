@@ -14,9 +14,9 @@ $zco_notifier->notify('NOTIFY_HEADER_START_INDEX_MAIN_TEMPLATE_VARS');
 
 // release manufacturers_id when nothing is there so a blank filter is not setup.
 // this will result in the home page, if used
-if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] <= 0) {
-  unset($_GET['manufacturers_id']);
-  unset($manufacturers_id);
+if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] <= 0) {
+    unset($_GET['manufacturers_id']);
+    $manufacturers_id = '';
 }
 
 // release music_genre_id when nothing is there so a blank filter is not setup.
