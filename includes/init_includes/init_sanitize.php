@@ -16,6 +16,8 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+$zco_notifier->notify('NOTIFY_INIT_SANITIZE_STARTS');
+
 foreach ($_GET as $getvar) {
     if (is_array($getvar)) {
         $site_array_override = false;
@@ -49,88 +51,136 @@ if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_MET
     }
 }
 
+// -----
+// Check products_id values (and variants) as a uprid.  That's either an integer
+// value or a uprid (dddd:xxxx), where xxxx is the 32-hexadecimal character md5 hash of the currently-selected
+// attributes.
+//
+$saniGroup1 = [
+    'products_id',  //- 'Normal', multi-use
+    'product_id',   //- shopping_cart, when removing a product from the cart
+    'pid',          //- order_history sidebox and ask_a_question page
+    'pID',          //- main/additional images' pop-ups
+];
+foreach ($saniGroup1 as $key) {
+    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', $_GET[$key])) {
+        $_GET[$key] = '';
+        if (isset($_REQUEST[$key])) {
+            $_REQUEST[$key] = '';
+        }
+    }
+}
+
+// -----
+// Various variables that are expected to contain **only** digits [0-9].
+//
+// Note: Special-case for 'page'; if set to an invalid value, it's 'reset' to '1'.
+//
+$saniGroup2 = [
+    'alpha_filter_id',          //- Set by /includes/modules/product_listing_alpha_sorter.php
+    'chapter',                  //- EZ-Pages, a 'toc_chapter'
+    'cID',                      //- A "coupon_id"
+    'categories_id',            //- A categories_id
+    'delete',                   //- address_book_process, the id to delete
+    'disp_order',               //- /includes/modules/listing_display_order
+    'edit',                     //- address_book_process, the id to edit
+    'faq_item',                 //- gv_faq
+    'filter_id',                //- Various index_filters
+    'goto',                     //- redirect, a banners_id
+    'id',                       //- An EZ-page or download id
+    'inc_subcat',               //- Searches (0/1)
+    'manufacturers_id',         //- A manufacturers_id
+    'markflow',                 //- Paypal processing
+    'music_genre_id',           //- Music products
+    'number_of_uploads',        //- Various
+    'order_id',                 //- Various, an order_id
+    'order',                    //- download page, an order_id
+    'page',                     //- Various, a page's number (defaults to '1' if invalid)
+    'record_company_id',        //- Music products
+    'reviews_id',               //- Various, a reviews_id
+    'search_in_description',    //- Searches indicator
+];
+foreach ($saniGroup2 as $key) {
+    if (isset($_GET[$key]) && !ctype_digit($_GET[$key])) {
+        $_GET[$key] = ($key === 'page') ? '1' : '';
+        if (isset($_REQUEST[$key])) {
+            $_REQUEST[$key] = $_GET[$key];
+        }
+    }
+}
+
+// -----
+// Various variables that are expected to be a monetary format, e.g. 10 or 10. or 10.12.
+//
+$saniGroup3 = [
+    'pfrom', //- Searches, price-from (float)
+    'pto',   //- Searches, price-to (float)
+];
+foreach ($saniGroup3 as $key) {
+    if (isset($_GET[$key]) && !preg_match('/^\d+(\.\d+)/', $_GET[$key])) {
+        $_GET[$key] = '';
+        if (isset($_REQUEST[$key])) {
+            $_REQUEST[$key] = '';
+        }
+    }
+}
+
+// -----
+// The cPath value is of the form "nnnn[_nnnn]...", e.g. 2454 or 2544_0284.
+//
+if (isset($_GET['cPath']) && !preg_match('/^\d+(_\d+)*/', $_GET['cPath'])) {
+    $_GET['cPath'] = '';
+}
+
+// -----
+// Other variables with special formatting.
+//
 if (isset($_GET['typefilter'])) {
     $_GET['typefilter'] = preg_replace('/[^0-9a-zA-Z_-]/', '', $_GET['typefilter']);
-}
-if (isset($_GET['products_id'])) {
-    $_GET['products_id'] = preg_replace('/[^0-9a-f:]/', '', $_GET['products_id']);
-}
-if (isset($_GET['manufacturers_id'])) {
-    $_GET['manufacturers_id'] = preg_replace('/[^0-9]/', '', $_GET['manufacturers_id']);
-}
-if (isset($_GET['categories_id'])) {
-    $_GET['categories_id'] = preg_replace('/[^0-9]/', '', $_GET['categories_id']);
-}
-if (isset($_GET['cPath'])) {
-    $_GET['cPath'] = preg_replace('/[^0-9_]/', '', $_GET['cPath']);
 }
 if (isset($_GET['main_page'])) {
     $_GET['main_page'] = preg_replace('/[^0-9a-zA-Z_]/', '', $_GET['main_page']);
 }
-if (isset($_GET['sort'])) {
-    $_GET['sort'] = preg_replace('/[^0-9a-zA-Z]/', '', $_GET['sort']);
+if (isset($_GET['sort']) && !ctype_alnum($_GET['sort'])) {
+    $_GET['sort'] = '';
 }
-// if present, 'page' should always be a number because it is used for pagination and canonical URL generation
-if (isset($_GET['page'])) {
-    $_GET['page'] = (int)$_GET['page'];
+if (isset($_GET['gv_no']) && !ctype_alnum($_GET['gv_no'])) {
+    $_GET['gv_no'] = '';
+}
+if (isset($_GET['addr']) && !filter_var($_GET['addr'], FILTER_VALIDATE_EMAIL)) {
+    $_GET['addr'] = '';
 }
 
-$saniGroup1 = [
-    'action',
-    'addr',
-    'alpha_filter_id',
-    'alpha_filter',
-    'authcapt',
-    'chapter',
-    'cID',
-    'currency',
-    'debug',
-    'delete',
-    'dfrom',
-    'disp_order',
-    'dto',
-    'edit',
-    'faq_item',
-    'filter_id',
-    'goback',
-    'goto',
-    'gv_no',
-    'id',
-    'inc_subcat',
-    'language',
-    'markflow',
-    'music_genre_id',
-    'nocache',
-    'notify',
-    'number_of_uploads',
-    'order_id',
-    'order',
-    'override',
-    'page',
-    'pfrom', 
-    'pid', 
-    'pID',
-    'pos',
-    'product_id',
-    'products_image_large_additional',
-    'products_tax_class_id',
-    'pto',
-    'record_company_id',
-    'referer',
-    'reviews_id',
-    'search_in_description',
-    'set_session_login',
-    'token',
-    'tx',
-    'type',
-    'zenid',
-    $zenSessionId
+// -----
+// Remaining variables, sanitized as with previous Zen Cart versions.
+//
+$saniGroup4 = [
+    'action',                           //- Various
+    'alpha_filter',                     //- Not present
+    'currency',                         //- A currency definition
+    'debug',                            //- Various
+    'dfrom',                            //- Various, a date-formatted value
+    'dto',                              //- Various, a date-formatted value
+    'goback',                           //- gv_redeem, gv_faq, if set is 'true'
+    'language',                         //- A language string
+    'nocache',                          //- init_db_config_read and square (mixed)
+    'notify',                           //- Various (mixed)
+    'override',                         //- ot_total.php, remove method, admin only
+    'pos',                              //- EZ-pages (page) page, either 'h' or 'v'
+    'products_image_large_additional',  //- A filename
+    'referer',                          //- PayPal payment method, specifically 'paypal'
+    'set_session_login',                //- init_customer_auth (not set or 'true')
+    'token',                            //- paypalwpp/paypaldp, [0-9A-Z.-]
+    'tx',                               //- paypal/paypay_functions
+    'type',                             //- Paypal
+    'zenid',                            //- [a-z0-9]
+    $zenSessionId                       //- [a-z0-9]
 ];
-foreach ($saniGroup1 as $key) {
+foreach ($saniGroup4 as $key) {
     if (isset($_GET[$key])) {
-        $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_:@.-]/', '', $_GET[$key]);
+        $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_.-]/', '', $_GET[$key]);
         if (isset($_REQUEST[$key])) {
-            $_REQUEST[$key] = preg_replace('/[^\/0-9a-zA-Z_:@.-]/', '', $_REQUEST[$key]);
+            $_REQUEST[$key] = preg_replace('/[^\/0-9a-zA-Z_.-]/', '', $_REQUEST[$key]);
         }
     }
 }
@@ -219,3 +269,5 @@ $code_page_directory = $pageDir;
 $page_directory = $code_page_directory;
 
 $sanitizedRequest = Request::capture();
+
+$zco_notifier->notify('NOTIFY_INIT_SANITIZE_ENDS');
