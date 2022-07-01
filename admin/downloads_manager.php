@@ -16,6 +16,11 @@ $languages = zen_get_languages();
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 
+// Override instructions in:
+// https://docs.zen-cart.com/user/admin/site_specific_overrides/
+if (!isset($show_download_date)) {
+   $show_download_date = false;
+}
 if (!empty($action)) {
   switch ($action) {
     case 'insert':
@@ -111,6 +116,9 @@ if (!empty($action)) {
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_TEXT_FILENAME; ?></th>
+<?php if ($show_download_date === true) { ?>
+                <th class="dataTableHeadingContent"><?php echo TABLE_TEXT_DATE; ?></th>
+<?php } ?>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_TEXT_MAX_DAYS; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_TEXT_MAX_COUNT; ?></th>
                 <th class="dataTableHeadingContent">&nbsp;</th>
@@ -164,6 +172,7 @@ if (!empty($action)) {
                 if ($products_downloads['product_is_always_free_shipping'] == 1 || $products_downloads['products_virtual'] == 1) {
                   $product_is_misconfigured = '<div class="fa-stack fa-fw"><i class="fa fa-circle fa-stack-1x txt-yellow"></i><i class="fa fa-circle-o fa-stack-1x txt-black"></i></div>';
                 }
+                $file_check = zen_orders_products_downloads($products_downloads['products_attributes_filename']); 
                 ?>
                 <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
                   <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id . '&action=edit'); ?>'" role="button">
@@ -179,10 +188,22 @@ if (!empty($action)) {
                   <td><?php echo zen_values_name($products_downloads['options_values_id']); ?></td>
                   <td>
                     <div class="fa-stack fa-fw">
-                      <i class="fa fa-circle fa-stack-1x<?php echo (!zen_orders_products_downloads($products_downloads['products_attributes_filename']) ? ' txt-red' : ' txt-lime'); ?>"></i>
+                      <i class="fa fa-circle fa-stack-1x<?php echo (!$file_check ? ' txt-red' : ' txt-lime'); ?>"></i>
                       <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
                     </div>
                     <?php echo $products_downloads['products_attributes_filename']; ?></td>
+<?php if ($show_download_date === true) { 
+         $file_date = ''; 
+         if ($file_check) { 
+            $handler = zen_get_download_handler($products_downloads['products_attributes_filename']); 
+        
+            if ($handler === 'local') {
+              $file_date = $zcDate->output(DATE_TIME_FORMAT, filemtime(DIR_FS_DOWNLOAD . $products_downloads['products_attributes_filename']));
+            }
+         } 
+?>
+                  <td><?php echo $file_date;  ?></td> 
+<?php } ?>
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxdays']; ?></td>
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxcount']; ?></td>
                   <td class="text-right">
