@@ -134,8 +134,8 @@ if ($action != '') {
       $results = $db->Execute($sql);
       $records = $results->RecordCount();
       if ($records == 0) {
-
-        $messageStack->add_session(TEXT_NO_RECORDS_FOUND, 'error');
+        $messageStack->add(TEXT_NO_RECORDS_FOUND, 'error');
+        $action = '';
       } else { //process records
         $i = 0;
         $exporter_output = '';
@@ -296,8 +296,8 @@ if ($action != '') {
           }
           unset($f);
         } // endif $save_to_file
+          zen_redirect(zen_href_link(FILENAME_ADMIN_ACTIVITY));
       } //end if $records for processing not 0
-      zen_redirect(zen_href_link(FILENAME_ADMIN_ACTIVITY));
       break;
 
 // clean out the admin_activity_log
