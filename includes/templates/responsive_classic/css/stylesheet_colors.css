@@ -66,3 +66,6 @@ ol.list-links li{border-bottom:1px solid #ddd;}
 ::-moz-placeholder, :-moz-placeholder, ::-webkit-input-placeholder, :-ms-input-placeholder, :placeholder-shown {color: #D01;}
 
 #siteinfoLegal a{color:#ffffff;}
+
+.sideBoxContent optgroup {color: #db0000}
+.sideBoxContent optgroup > option {color: #000000}
