@@ -179,7 +179,7 @@ if (!empty($action)) {
                   <td><?php echo zen_values_name($products_downloads['options_values_id']); ?></td>
                   <td>
                     <div class="fa-stack fa-fw">
-                      <i class="fa fa-circle fa-stack-1x<?php echo (!zen_orders_products_downloads($products_downloads['products_attributes_filename']) ? ' txt-red' : ' txt-lime'); ?>;"></i>
+                      <i class="fa fa-circle fa-stack-1x<?php echo (!zen_orders_products_downloads($products_downloads['products_attributes_filename']) ? ' txt-red' : ' txt-lime'); ?>"></i>
                       <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
                     </div>
                     <?php echo $products_downloads['products_attributes_filename']; ?></td>
