@@ -27,15 +27,11 @@
 
   <address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br>'); ?></address>
 
-<?php
-  $class = &$_SESSION['payment'];
-?>
-
   <h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3>
-  <h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $GLOBALS[$class]->title; ?></h4>
+  <h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $payment_title; ?></h4>
 
 <?php
-  if (is_array($payment_modules->modules)) {
+  if ($credit_covers === false && is_array($payment_modules->modules)) {
     if ($confirmation = $payment_modules->confirmation()) {
 ?>
   <div class="important"><?php echo $confirmation['title']; ?></div>
@@ -169,7 +165,7 @@
 <?php
   echo zen_draw_form('checkout_confirmation', $form_action_url, 'post', 'id="checkout_confirmation" onsubmit="submitonce();"');
 
-  if (is_array($payment_modules->modules)) {
+  if ($credit_covers === false && is_array($payment_modules->modules)) {
     echo $payment_modules->process_button();
   }
 ?>

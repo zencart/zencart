@@ -72,12 +72,19 @@ if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
 }
 
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PRE_CONFIRMATION_CHECK');
-if (strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
-  $order_totals = $order_total_modules->pre_confirmation_check();
+if (empty($_SESSION['payment']) || strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
+    $order_totals = $order_total_modules->pre_confirmation_check();
 }
-if ($credit_covers === TRUE)
-{
-	$order->info['payment_method'] = $order->info['payment_module_code'] = '';
+
+// -----
+// The order-totals::pre_confirmation_check method could have set the indication that
+// either a Gift Certificate or coupon has 'covered' the payment.  Let the payment
+// class perform any updates needed for its proper follow-on operation.
+//
+$payment_modules->checkCreditCovered();
+
+if ($credit_covers === true) {
+    $order->info['payment_method'] = $order->info['payment_module_code'] = '';
 }
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PROCESS');
 $order_totals = $order_total_modules->process();

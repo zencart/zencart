@@ -35,8 +35,7 @@ class payment extends base {
         $this->selected_module = $module;
 
         $include_modules[] = array('class' => $module, 'file' => $module . '.php');
-      } else {
-
+      } elseif ($this->checkCreditCovered() === false) {
         // Free Payment Only shows
         $freecharger_enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS == 'True');
         if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
@@ -98,6 +97,18 @@ class payment extends base {
       if (!empty($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
         $this->form_action_url = $GLOBALS[$module]->form_action_url;
       }
+  }
+
+  public function checkCreditCovered()
+  {
+      global $credit_covers;
+      $credit_is_covered = false;
+      if (isset($credit_covers) && $credit_covers === true) {
+          $credit_is_covered = true;
+          $this->modules = '';
+          $this->selected_method = '';
+      }
+      return $credit_is_covered;
   }
 
   /**
@@ -299,7 +310,9 @@ class payment extends base {
 
   function clear_payment()
   {
-    if (!is_array($this->modules)) return;
+    if (empty($this->selected_module) || !is_array($this->modules)) {
+        return;
+    }
     if (!is_object($GLOBALS[$this->selected_module])) return;
     if (!$GLOBALS[$this->selected_module]->enabled) return;
     $function = __FUNCTION__;
