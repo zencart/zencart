@@ -221,7 +221,7 @@ if ($num_products_count > 0) {
             $listing_weight = (isset($record['products_weight'])) ? $record['products_weight'] : 0;
             $listing_mfg_link = zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . (int)$record['manufacturers_id']);
             $listing_price = zen_get_products_display_price($record['products_id']);
-            $more_info_button = '<a class="moreinfoLink list-more" href="' . $href . '">' . MORE_INFO_TEXT . '</a>';
+            $more_info_button = '<a class="moreinfoLink list-more" href="' . $href . '" title-"' . ($record['products_id']) . '">' . MORE_INFO_TEXT . '</a>';
             $buy_now_link = zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $record['products_id']);
             $buy_now_button = '<a class="" href="' . $buy_now_link . '">' . zen_image_button(BUTTON_IMAGE_BUY_NOW, BUTTON_BUY_NOW_ALT, 'class="listingBuyNowButton"') . '</a>';
             $listing_qty_input_form = zen_draw_form('cart_quantity', zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=add_product&products_id=' . $record['products_id']), 'post', 'enctype="multipart/form-data"')
