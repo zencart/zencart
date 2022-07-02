@@ -1204,11 +1204,12 @@ if (!empty($action) && $order_exists === true) {
                       $keyword_search_fields = [
                           'op.products_name',
                           'op.products_model',
+                          'op.products_id',
                       ];
-                      $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                      $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
                     if (substr(strtoupper($_GET['search_orders_products']), 0, 3) === 'ID:') {
                       $keywords = trim(substr($_GET['search_orders_products'], 3));
-                      $search = " AND op.products_id ='" . (int)$keywords . "'";
+                      $search .= " OR op.products_id ='" . (int)$keywords . "'";
                     }
                   } elseif (!empty($_GET['search'])) {
 // create search filter
@@ -1234,7 +1235,7 @@ if (!empty($action) && $order_exists === true) {
                           'o.delivery_postcode',
                           'o.ip_address',
                       ];
-                      $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                      $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
                   }
                   $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.orders_status, o.ip_address, o.language_code, o.delivery_state, o.delivery_country ";
 
@@ -1255,7 +1256,7 @@ if (!empty($action) && $order_exists === true) {
                     $status_filter = (int)zen_db_prepare_input($_GET['statusFilterSelect']);
                     $orders_query_raw .= " WHERE s.orders_status_id = " . (int)$status_filter . $search;
                   } else {
-                    $orders_query_raw .= (trim($search) !== '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
+                    $orders_query_raw .= $search;
                   }
 
                   $orders_query_raw .= $order_by;
