@@ -231,7 +231,7 @@ if (!empty($action)) {
       <div class="row">
         <h1 class="col-sm-8"><?php echo HEADING_TITLE; ?></h1>
         <div class="col-sm-4">
-          <?php if ($products_filter != '') { ?>
+          <?php if (!empty($products_filter) && $products_filter !== 0) { ?>
             <div class="dropdown">
               <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
                 <?php echo BUTTON_ADDITIONAL_ACTIONS; ?>
@@ -294,7 +294,7 @@ if (!empty($action)) {
       ?>
       <?php
 // show when product is linked
-      if ($products_filter != '' && zen_get_product_is_linked($products_filter) == 'true') {
+      if  (!empty($products_filter) && $products_filter !== 0 && zen_get_product_is_linked($products_filter) === 'true') {
         ?>
         <div class="row text-center">
           <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>&nbsp;&nbsp;<?php echo TEXT_LEGEND_LINKED . '&nbsp;' . zen_get_product_is_linked($products_filter, 'true'); ?>
