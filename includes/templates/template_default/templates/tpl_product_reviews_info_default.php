@@ -26,7 +26,7 @@
 <?php
         // more info in place of buy now
         if (zen_has_product_attributes($review_info->fields['products_id'] )) {
-          //   $link = '<p>' . '<a href="' . zen_href_link(zen_get_info_page($review_info->fields['products_id']), 'products_id=' . $review_info->fields['products_id'] ) . '" title-"' . $review_info->fields['products_id']) . '">' . MORE_INFO_TEXT . '</a>' . '</p>';
+          //   $link = '<p>' . '<a href="' . zen_href_link(zen_get_info_page($review_info->fields['products_id']), 'products_id=' . $review_info->fields['products_id'] ) . '" title="' . $review_info->fields['products_id']) . '">' . MORE_INFO_TEXT . '</a>' . '</p>';
           $link = '';
         } else {
           $link= '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action', 'reviews_id')) . 'action=buy_now') . '">' . zen_image_button(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT) . '</a>';
