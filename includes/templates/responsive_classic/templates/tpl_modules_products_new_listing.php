@@ -107,12 +107,12 @@
         }
 
         $the_button = $link;
-        $products_link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '"title="' .$products_new->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
+        $products_link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '" title="' . $products_new->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
         $display_products_button = zen_get_buy_now_button($products_new->fields['products_id'], $the_button, $products_link) . '<br>' . zen_get_products_quantity_min_units_display($products_new->fields['products_id']) . str_repeat('<br class="clearBoth">', substr(PRODUCT_NEW_BUY_NOW, 3, 1));
       } else {
-        $link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '"title="' .$products_new->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
+        $link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '" title="' . $products_new->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
         $the_button = $link;
-        $products_link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '"title="' .$products_new->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
+        $products_link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '" title="' . $products_new->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
         $display_products_button = zen_get_buy_now_button($products_new->fields['products_id'], $the_button, $products_link) . '<br>' . zen_get_products_quantity_min_units_display($products_new->fields['products_id']) . str_repeat('<br class="clearBoth">', substr(PRODUCT_NEW_BUY_NOW, 3, 1));
       }
 
@@ -120,7 +120,7 @@
         $disp_text = zen_get_products_description($products_new->fields['products_id']);
         $disp_text = zen_clean_html($disp_text);
 
-        $display_products_description = stripslashes(zen_trunc_string($disp_text, PRODUCT_NEW_LIST_DESCRIPTION, '<a href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '"title="' .$products_new->fields['products_id'] . '"> ' . MORE_INFO_TEXT . '</a>'));
+        $display_products_description = stripslashes(zen_trunc_string($disp_text, PRODUCT_NEW_LIST_DESCRIPTION, '<a href="' . zen_href_link(zen_get_info_page($products_new->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($products_new->fields['master_categories_id']) . '&products_id=' . $products_new->fields['products_id']) . '" title="' . $products_new->fields['products_id'] . '"> ' . MORE_INFO_TEXT . '</a>'));
       } else {
         $display_products_description = '';
       }
