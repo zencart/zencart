@@ -182,7 +182,7 @@ class order_total extends base {
         $GLOBALS[$class]->output = array();
       }
       $reCalculatedOrderTotal = $order->info['total'];
-      if ($reCalculatedOrderTotal <= 0.009 && $_SESSION['payment'] != 'freecharger') {
+      if ($reCalculatedOrderTotal <= 0.009 && !(isset($_SESSION['payment']) && $_SESSION['payment'] === 'freecharger')) {
         $credit_covers = true;
       }
       $order->info = $orderInfoSaved;

@@ -35,7 +35,7 @@ class payment extends base {
         $this->selected_module = $module;
 
         $include_modules[] = array('class' => $module, 'file' => $module . '.php');
-      } elseif ($this->checkCreditCovered() === false) {
+      } else {
         // Free Payment Only shows
         $freecharger_enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS == 'True');
         if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
