@@ -417,7 +417,7 @@ class Customer extends base
         return false;
     }
 
-    public function getAddressBookEntries(int $customer_id = null): array
+    public function getAddressBookEntries(int $customer_id = null): object
     {
         global $db;
 
