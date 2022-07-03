@@ -1256,7 +1256,7 @@ class order extends base
         $html_msg['ADDRESS_BILLING_TITLE'] = EMAIL_TEXT_BILLING_ADDRESS;
         $html_msg['ADDRESS_BILLING_DETAIL'] = zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, '', "<br>");
 
-        if (is_object($GLOBALS[$_SESSION['payment']])) {
+        if (!empty($_SESSION['payment']) && is_object($GLOBALS[$_SESSION['payment']])) {
             $cc_num_display = (isset($this->info['cc_number']) && $this->info['cc_number'] != '') ? /*substr($this->info['cc_number'], 0, 4) . */
                 str_repeat('X', (strlen($this->info['cc_number']) - 8)) . substr($this->info['cc_number'], -4) . "\n\n" : '';
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

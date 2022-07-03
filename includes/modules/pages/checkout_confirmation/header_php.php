@@ -84,15 +84,19 @@ if ($credit_covers === true) {
     unset($_SESSION['payment']);
     $_SESSION['payment'] = '';
     $payment_title = PAYMENT_METHOD_GV;
-} elseif (empty($_SESSION['payment']) || !is_object(${$_SESSION['payment']})) {
-    $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
 } else {
-    $payment_modules = new payment($_SESSION['payment']);
-    $payment_modules->update_status();
-    if (is_array($payment_modules->modules)) {
-        $payment_modules->pre_confirmation_check();
+    if (!empty($_SESSION['payment'])) {
+        $payment_modules = new payment($_SESSION['payment']);
+        $payment_modules->update_status();
+        if (is_array($payment_modules->modules)) {
+            $payment_modules->pre_confirmation_check();
+        }
     }
-    $payment_title = ${$_SESSION['payment']}->title;
+    if (!empty($_SESSION['payment']) && is_object(${$_SESSION['payment']})) {
+        $payment_title = ${$_SESSION['payment']}->title;
+    } else {
+        $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
+    }
 }
 
 if ($messageStack->size('checkout_payment') > 0) {
