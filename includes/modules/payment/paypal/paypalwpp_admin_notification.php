@@ -19,9 +19,10 @@ $outputCapt = '';
 $outputVoid = '';
 $outputRefund = '';
 
-// strip slashes in case they were added to handle apostrophes:
+// strip slashes in case they were added to handle apostrophes, noting that some of the fields
+// from the "paypal" table might be NULL:
 foreach ($ipn->fields as $key => $value) {
-    $ipn->fields[$key] = stripslashes($value);
+    $ipn->fields[$key] = ($value === null ? '' : stripslashes($value));
 }
 
 if (!empty($response['RESPMSG'])) {
