@@ -50,7 +50,7 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         $this->addLanguageDefines($defineList);
         $mainFile = DIR_WS_LANGUAGES . $this->templateDir . '/lang.' . $_SESSION['language'] . '.php';
-        $fallbackFile = DIR_WS_LANGUAGES . '/lang.' . $_SESSION['language'] . '.php';
+        $fallbackFile = DIR_WS_LANGUAGES . 'lang.' . $_SESSION['language'] . '.php';
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         $this->addLanguageDefines($defineList);
         foreach ($extraFiles as $file) {
