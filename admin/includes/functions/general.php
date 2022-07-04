@@ -700,14 +700,10 @@ function zen_geo_zones_pull_down_coupon($parameters, $selected = '')
 }
 
 /**
- * @TODO - refactor associated code
- * @deprecated -- consider using $order->getStatusHistory() instead
  * get first customer comment record for an order (usually contains their special instructions)
  */
 function zen_get_orders_comments($orders_id)
 {
-//    trigger_error('Call to deprecated function zen_get_orders_comments. Use order->getStatusHistory instead', E_USER_DEPRECATED);
-
     global $db;
     $orders_comments_query = "SELECT osh.comments
                               FROM " . TABLE_ORDERS_STATUS_HISTORY . " osh
