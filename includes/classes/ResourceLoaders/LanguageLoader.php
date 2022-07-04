@@ -80,17 +80,18 @@ class LanguageLoader
 
     public function isFileAlreadyLoaded($defineFile)
     {
-//        if (in_array(DIR_FS_CATALOG . $defineFile, get_included_files())) {
-//            return true;
-//        }
         $fileInfo = pathinfo($defineFile);
-        $searchFile = 'lang.' . $fileInfo['basename'];
+        $searchFile = $fileInfo['basename'];
+        if (strpos($searchFile, 'lang.') !== 0) {
+            $searchFile = 'lang.' . $searchFile;
+        }
         $searchFile = $fileInfo['dirname'] . '/' . $searchFile;
         if (in_array($searchFile, $this->languageFilesLoaded['arrays'])) {
             return true;
         }
-        if (in_array($searchFile, $this->languageFilesLoaded['legacy'])) {
+        if (in_array($defineFile, $this->languageFilesLoaded['legacy'])) {
             return true;
         }
+        return false;
     }
 }
