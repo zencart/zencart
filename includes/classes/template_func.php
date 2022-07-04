@@ -26,22 +26,6 @@ class template_func extends base {
       $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
       $directory_array = $pageLoader->getTemplatePart($page_directory, $template_part, $file_extension);
       return $directory_array;
-
-
-    $directory_array = array();
-    if ($dir = @dir($page_directory)) {
-      while ($file = $dir->read()) {
-        if (!is_dir($page_directory . $file)) {
-          if (substr($file, strrpos($file, '.')) == $file_extension && preg_match($template_part, $file)) {
-            $directory_array[] = $file;
-          }
-        }
-      }
-
-      sort($directory_array);
-      $dir->close();
-    }
-    return $directory_array;
   }
 
   function get_template_dir($template_code, $current_template, $current_page, $template_dir, $debug=false) {
