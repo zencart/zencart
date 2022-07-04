@@ -113,7 +113,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
     protected function loadDefinesWithFallback($mainFile, $fallbackFile)
     {
         $defineListFallback = [];
-        if ($mainFile != $fallbackFile) {
+        if ($mainFile !== $fallbackFile) {
             $defineListFallback = $this->loadArrayDefineFile($fallbackFile);
         }
         $defineListMain = $this->loadArrayDefineFile($mainFile);
@@ -133,12 +133,12 @@ class ArraysLanguageLoader extends BaseLanguageLoader
     protected function loadArrayDefineFile($definesFile)
     {
         $definesList = [];
-        if (!is_file($definesFile)) {
+        if ($this->mainLoader->isFileAlreadyLoaded($definesFile) === true || !is_file($definesFile)) {
             return $definesList;
         }
         $this->mainLoader->addLanguageFilesLoaded('arrays', $definesFile);
         // file should return a variable 
-        $definesList = include($definesFile);
+        $definesList = require $definesFile;
         return $definesList; 
     }
 }
