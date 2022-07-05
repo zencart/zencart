@@ -19,7 +19,7 @@ if (!defined('DIR_FS_ADMIN_ACTIVITY_EXPORT')) {
   define('DIR_FS_ADMIN_ACTIVITY_EXPORT', DIR_FS_ADMIN . 'backups/');
 }
 $confirmation_needed = false;
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = ($_GET['action'] ?? '');
 $start = (isset($_GET['s']) ? (int)$_GET['s'] : 0);
 $perpage = (isset($_GET['p']) ? (int)$_GET['p'] : 50);
 $available_export_formats = array();
@@ -59,13 +59,13 @@ if ($action != '') {
   if ($perpage > 0 || $start > 0) {
     $limit = ' LIMIT ';
     if ($start > 0) {
-      $limit .= (int)$start;
+      $limit .= $start;
     }
     if ($start > 0 && $perpage > 0) {
       $limit .= ', ';
     }
     if ($perpage > 0) {
-      $limit .= (int)$perpage;
+      $limit .= $perpage;
     }
   }
   $sort = '';
@@ -74,9 +74,9 @@ if ($action != '') {
     case 'save':
       global $db;
 
-      zen_record_admin_activity(sprintf(TEXT_ACTIVITY_LOG_ACCESSED, $format, $selected_filter, ($save_to_file_checked ? '(SaveToFile)' : ($format == 'HTML' ? '(Output to browser)' : '(Download to browser)'))), 'warning');
+      zen_record_admin_activity(sprintf(TEXT_ACTIVITY_LOG_ACCESSED, $format, $selected_filter, ($save_to_file_checked ? '(SaveToFile)' : ($format === 'HTML' ? '(Output to browser)' : '(Download to browser)'))), 'warning');
 
-      if ($format == 'CSV') {
+      if ($format === 'CSV') {
         $FIELDSTART = '"';
         $FIELDEND = '"';
         $FIELDSEPARATOR = ',';
@@ -85,7 +85,7 @@ if ($action != '') {
         $sort = ' ASC ';
         $limit = '';
       }
-      if ($format == 'TXT') {
+      if ($format === 'TXT') {
         $FIELDSTART = '';
         $FIELDEND = '';
         $FIELDSEPARATOR = "\t";
@@ -93,7 +93,7 @@ if ($action != '') {
         $LINEBREAK = "\n";
         $sort = ' ASC ';
       }
-      if ($format == 'HTML') {
+      if ($format === 'HTML') {
         $FIELDSTART = '<td>';
         $FIELDEND = '</td>';
         $FIELDSEPARATOR = "";
@@ -102,7 +102,6 @@ if ($action != '') {
         $sort = ' DESC ';
       }
 
-      $where = '';
       switch ($selected_filter) {
         case 'warning':
           $where = " severity='warning'";
@@ -140,11 +139,11 @@ if ($action != '') {
         $i = 0;
         $exporter_output = '';
         // make a <table> tag if HTML output
-        if ($format == "HTML") {
+        if ($format === "HTML") {
           $exporter_output .= '<table class="table table-bordered">' . $NL;
         }
         // add column headers if CSV or HTML format
-        if ($format == "CSV" || $format == "HTML") {
+        if ($format === "CSV" || $format === "HTML") {
           $exporter_output .= $LINESTART;
           $exporter_output .= $FIELDSTART . "severity" . $FIELDEND;
           $exporter_output .= $FIELDSEPARATOR;
@@ -168,7 +167,7 @@ if ($action != '') {
           $exporter_output .= $LINEBREAK;
         }
         // headers - XML
-        if ($format == "XML") {
+        if ($format === "XML") {
           $exporter_output .= '<?xml version="1.0" encoding="' . CHARSET . '"?>' . "\n";
         }
         // output real data
@@ -178,7 +177,7 @@ if ($action != '') {
           if ($postoutput === false) {
               $postoutput = '';
           }
-          if ($format == "XML") {
+          if ($format === "XML") {
             $postoutput = nl2br(print_r(json_decode($postoutput), true));
             $exporter_output .= "<admin_activity_log>\n";
             $exporter_output .= "  <row>\n";
@@ -196,7 +195,7 @@ if ($action != '') {
             $exporter_output .= "  </row>\n";
           } else { // output non-XML data-format
             $postoutput = print_r(json_decode($postoutput), true);
-            if ($format == 'HTML') {
+            if ($format === 'HTML') {
               $postoutput = nl2br(zen_output_string_protected($postoutput));
             } else {
               $postoutput = nl2br($postoutput);
@@ -224,25 +223,26 @@ if ($action != '') {
             $exporter_output .= $LINEBREAK;
           }
         }
-        if ($format == "HTML") {
+        if ($format === "HTML") {
           $exporter_output .= $NL . "</table>";
         }
-        if ($format == "XML") {
+        if ($format === "XML") {
           $exporter_output .= "</admin_activity_log>\n";
         }
         // theoretically, $i should == $records at this point.
         // status message
-        if ($format != "HTML")
-          $messageStack->add($records . TEXT_PROCESSED, 'success');
+        if ($format !== "HTML") {
+            $messageStack->add($records . TEXT_PROCESSED, 'success');
+        }
         // begin streaming file contents
         if ($save_to_file_checked != 1) { // not saving to a file, so do regular output
-          if ($format == "CSV" || $format == "TXT" || $format == "XML") {
-            if ($format == "CSV" || $format == "TXT") {
+          if ($format === "CSV" || $format === "TXT" || $format === "XML") {
+            if ($format === "CSV" || $format === "TXT") {
               $content_type = 'text/x-csv';
-            } elseif ($format == "XML") {
+            } elseif ($format === "XML") {
               $content_type = 'text/xml; charset=' . CHARSET;
             }
-            if (preg_match('/MSIE/', $_SERVER['HTTP_USER_AGENT'])) {
+            if (false !== strpos($_SERVER['HTTP_USER_AGENT'], "MSIE")) {
               header('Content-Type: application/octetstream');
 //              header('Content-Type: '.$content_type);
 //              header('Content-Disposition: inline; filename="' . $file . '"');
@@ -302,7 +302,7 @@ if ($action != '') {
 
 // clean out the admin_activity_log
     case 'clean_admin_activity_log':
-      if (isset($_POST['confirm']) && $_POST['confirm'] == 'yes') {
+      if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
         $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_RESET');
         $messageStack->add_session(SUCCESS_CLEAN_ADMIN_ACTIVITY_LOG, 'success');
         unset($_SESSION['reset_admin_activity_log']);
