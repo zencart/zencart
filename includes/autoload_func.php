@@ -47,7 +47,7 @@ foreach ($initSystemList as $entry) {
             $$objectName = new $className();
             break;
         case 'sessionClass':
-            if ($debugAutoload)  'case "sessionClass": ' . $entry['class'] . "<br>\n";
+            if ($debugAutoload) echo 'case "sessionClass": ' . $entry['class'] . "<br>\n";
             $objectName = $entry['object'];
             $className = $entry['class'];
             if (!$entry['checkInstantiated'] || !isset($_SESSION[$objectName])) {
