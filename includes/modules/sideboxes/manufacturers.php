@@ -26,8 +26,6 @@ if (PRODUCTS_MANUFACTURERS_STATUS === '1') {
 $manufacturer_sidebox = $db->Execute($manufacturer_sidebox_query);
 
 if (!$manufacturer_sidebox->EOF) {
-    $number_of_rows = $manufacturer_sidebox->RecordCount() + 1;
-
     // -----
     // Display a list, noting that the empty ('') selection will not be enabled (via jQuery)
     // if this is the initial display without a previous selection.

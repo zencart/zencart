@@ -15,8 +15,6 @@ $record_company = $db->Execute(
 );
 
 if (!$record_company->EOF) {
-    $number_of_rows = $record_company->RecordCount() + 1;
-
 // Display a list
     $record_company_array = [];
     $default_selection = (isset($_GET['record_company_id'])) ? (int)$_GET['record_company_id'] : '';

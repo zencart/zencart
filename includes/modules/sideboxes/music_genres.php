@@ -15,8 +15,6 @@ $music_genres = $db->Execute(
 );
 
 if (!$music_genres->EOF) {
-    $number_of_rows = $music_genres->RecordCount() + 1;
-
 // Display a list
     $music_genres_array = [];
     $default_selection = (isset($_GET['music_genre_id'])) ? (int)$_GET['music_genre_id'] : '';
