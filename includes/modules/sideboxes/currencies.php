@@ -9,27 +9,20 @@
  * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
  */
 
-// test if box should display
-  $show_currencies= false;
+// test if box should display; it's not displayed on checkout-related pages
+$show_currencies = (strpos($current_page, 'checkout') !== 0);
 
-  // don't display on checkout page:
-  if (substr($current_page, 0, 8) != 'checkout') {
-    $show_currencies= true;
-  }
-
-  if ($show_currencies == true) {
-    if (isset($currencies) && is_object($currencies)) {
-
-      $currencies_array = array();
-      foreach($currencies->currencies as $key => $value) {
-        $currencies_array[] = array('id' => $key, 'text' => $value['title']);
-      }
-
-      $hidden_get_variables = zen_post_all_get_params('currency');
-
-      require($template->get_template_dir('tpl_currencies.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_currencies.php');
-      $title =  '<label>' . BOX_HEADING_CURRENCIES . '</label>';
-      $title_link = false;
-      require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default);
+if ($show_currencies === true && isset($currencies) && is_object($currencies)) {
+    $currencies_array = [];
+    foreach ($currencies->currencies as $key => $value) {
+        $currencies_array[] = ['id' => $key, 'text' => $value['title']];
     }
-  }
+
+    $hidden_get_variables = zen_post_all_get_params('currency');
+
+    require $template->get_template_dir('tpl_currencies.php', DIR_WS_TEMPLATE, $current_page_base, 'sideboxes') . '/tpl_currencies.php';
+
+    $title =  BOX_HEADING_CURRENCIES;
+    $title_link = false;
+    require $template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base, 'common') . '/' . $column_box_default;
+}

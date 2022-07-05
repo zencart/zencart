@@ -84,7 +84,7 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select, select#
 select#send-to {font-size: 1.1em; margin-bottom: 10px; margin-left: 0;}
 select#country, select#stateZone, #state {margin-left:0;}
 .ccinfo select{width:auto;height:25px;margin-bottom:10px;}
-.sideBoxContent select{width:auto;}
+.sideBoxContent select{width:90%; margin: auto; margin-bottom: 5px;}
 #currenciesContent select{height:35px;}
 
 /*bof warnings, errors, messages*/
