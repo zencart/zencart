@@ -22,7 +22,18 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
     public function loadLanguageForView()
     {
         $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage . '.php');
-        // $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage . '.php', '/' . $this->templateDir);
+        // Pick up additional plugin files which are substring matches
+        // Example: lang.create_account_register.php on create_account page.  
+        $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
+        $tfiles = $this->fileSystem->listFilesFromDirectory($directory, '~^' . "lang." . $this->currentPage  . '(.+)\.php$~i');
+        $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
+        $files = $this->fileSystem->listFilesFromDirectory($directory, '~^' . "lang." . $this->currentPage . '(.+)\.php$~i');
+        $files = array_merge($files, $tfiles); 
+        asort($files);
+        foreach ($files as $file) {
+           $file = substr($file, 5); 
+           $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
+        }
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
             $this->loadExtraLanguageFiles($pluginDir, $_SESSION['language'], $this->currentPage . '.php');
