@@ -1046,6 +1046,13 @@ class order extends base
                     }
 
                     //clr 030714 update insert query.  changing to use values form $order->products for products_options_values.
+                    // -----
+                    // A couple of the 'products_attributes' fields' values might be `NULL` and zen_db_perform's processing
+                    // doesn't accept those values when run under PHP versions 8.1 and later.  A temporary copy of those
+                    // values is created, with `NULL` values converted to an empty string ('').
+                    //
+                    $string_attributes_qty_prices = $attributes_values->fields['attributes_qty_prices'] ?? '';
+                    $string_attributes_qty_prices_onetime = $attributes_values->fields['attributes_qty_prices_onetime'] ?? '';
                     $sql_data_array = [
                         'orders_id' => $zf_insert_id,
                         'orders_products_id' => $order_products_id,
@@ -1065,8 +1072,8 @@ class order extends base
                         'attributes_price_factor_offset' => $attributes_values->fields['attributes_price_factor_offset'],
                         'attributes_price_factor_onetime' => $attributes_values->fields['attributes_price_factor_onetime'],
                         'attributes_price_factor_onetime_offset' => $attributes_values->fields['attributes_price_factor_onetime_offset'],
-                        'attributes_qty_prices' => $attributes_values->fields['attributes_qty_prices'],
-                        'attributes_qty_prices_onetime' => $attributes_values->fields['attributes_qty_prices_onetime'],
+                        'attributes_qty_prices' => $string_attributes_qty_prices,
+                        'attributes_qty_prices_onetime' => $string_attributes_qty_prices_onetime,
                         'attributes_price_words' => $attributes_values->fields['attributes_price_words'],
                         'attributes_price_words_free' => $attributes_values->fields['attributes_price_words_free'],
                         'attributes_price_letters' => $attributes_values->fields['attributes_price_letters'],
