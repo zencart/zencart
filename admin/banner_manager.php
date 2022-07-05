@@ -639,7 +639,7 @@ if (!empty($action)) {
                     'text' => '<br>' .
                     '<div id="banner-infobox" style="width:200px;height:220px;"></div>' .
                     '<div class="flot-x-axis">' .
-                    '<div class="flot-tick-label">' . sprintf(TEXT_BANNERS_LAST_3_DAYS) . '</div>' .
+                    '<div class="flot-tick-label">' . TEXT_BANNERS_LAST_3_DAYS . '</div>' .
                     '</div>' .
                     '<script>' .
                     'var data = ' . json_encode($data) . ' ;' .
