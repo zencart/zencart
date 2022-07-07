@@ -8,7 +8,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$parameters = array(
+$parameters = [
   'products_name' => '',
   'products_description' => '',
   'products_url' => '',
@@ -39,7 +39,7 @@ $parameters = array(
   'products_discount_type_from' => '0',
   'products_price_sorter' => '0',
   'master_categories_id' => '',
-);
+];
 
 $pInfo = new objectInfo($parameters);
 
@@ -73,7 +73,7 @@ $category_lookup = $db->Execute("SELECT *
 if (!$category_lookup->EOF) {
   $cInfo = new objectInfo($category_lookup->fields);
 } else {
-  $cInfo = new objectInfo(array());
+  $cInfo = new objectInfo([]);
 }
 
 $artists_array = array(array(
@@ -239,7 +239,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     //
     // Note: The product's type can be found in the 'product_type' element of the passed $pInfo object.
     //
-    $extra_product_inputs = array();
+    $extra_product_inputs = [];
     $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COLLECT_INFO_EXTRA_INPUTS', $pInfo, $extra_product_inputs);
     if (!empty($extra_product_inputs)) {
         foreach ($extra_product_inputs as $extra_input) {
@@ -294,7 +294,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control" id="products_price_gross"'); ?>
+          <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control" id="products_price_gross" inputmode="decimal"'); ?>
       </div>
     </div>
   </div>
@@ -387,7 +387,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <?php echo zen_info_image($pInfo->products_image, $pInfo->categories_name); ?>
+                <?php echo zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name)); ?>
                 <br>
                 <?php echo $pInfo->products_image; ?>
             </div>

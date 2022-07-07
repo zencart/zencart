@@ -8,7 +8,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$parameters = array(
+$parameters = [
   'products_name' => '',
   'products_description' => '',
   'products_url' => '',
@@ -39,7 +39,7 @@ $parameters = array(
   'products_discount_type_from' => '0',
   'products_price_sorter' => '0',
   'master_categories_id' => '',
-);
+];
 
 $pInfo = new objectInfo($parameters);
 
@@ -70,20 +70,23 @@ $category_lookup = $db->Execute("SELECT *
 if (!$category_lookup->EOF) {
   $cInfo = new objectInfo($category_lookup->fields);
 } else {
-  $cInfo = new objectInfo(array());
+  $cInfo = new objectInfo([]);
 }
 
-$manufacturers_array = array(array(
+$manufacturers_array = [
+    [
     'id' => '',
-    'text' => TEXT_NONE));
+    'text' => TEXT_NONE
+    ]
+];
 $manufacturers = $db->Execute("SELECT manufacturers_id, manufacturers_name
                                FROM " . TABLE_MANUFACTURERS . "
                                ORDER BY manufacturers_name");
 foreach ($manufacturers as $manufacturer) {
-  $manufacturers_array[] = array(
+  $manufacturers_array[] = [
     'id' => $manufacturer['manufacturers_id'],
     'text' => $manufacturer['manufacturers_name']
-  );
+  ];
 }
 
 // set to out of stock if categories_status is off and new product or existing products_status is off
@@ -127,7 +130,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             <?php echo TEXT_MASTER_CATEGORIES_ID; ?>
         </strong>
       </div>
-      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . (isset($_GET['pID']) && $_GET['pID'] > 0 ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
+      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . (!empty($_GET['pID']) ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
     <?php } ?>
   </div>
   <div class="form-group">
@@ -203,7 +206,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     //
     // Note: The product's type can be found in the 'product_type' element of the passed $pInfo object.
     //
-    $extra_product_inputs = array();
+    $extra_product_inputs = [];
     $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COLLECT_INFO_EXTRA_INPUTS', $pInfo, $extra_product_inputs);
     if (!empty($extra_product_inputs)) {
         foreach ($extra_product_inputs as $extra_input) {
@@ -351,7 +354,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <?php echo zen_info_image($pInfo->products_image, $pInfo->categories_name); ?>
+                <?php echo zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name)); ?>
                 <br>
                 <?php echo $pInfo->products_image; ?>
             </div>
