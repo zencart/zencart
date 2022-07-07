@@ -48,3 +48,8 @@
 // false ..... The zcDate debug is disabled (the default).
 //
 //$zen_date_debug = false;
+
+// Indicate whether the downloads manager page should show the file date
+// true ...... Show the file date 
+// false ..... Do not show the file date (the default).
+// $show_download_date = false; 
