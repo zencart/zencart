@@ -25,11 +25,12 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         // Pick up additional plugin files which are substring matches
         // Example: lang.create_account_register.php on create_account page.  
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
-        $tfiles = $this->fileSystem->listFilesFromDirectory($directory, '~^' . "lang." . $this->currentPage  . '(.+)\.php$~i');
+        $tfiles = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . "lang." . $this->currentPage  . '(.+)\.php$~i');
+
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
-        $files = $this->fileSystem->listFilesFromDirectory($directory, '~^' . "lang." . $this->currentPage . '(.+)\.php$~i');
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . "lang." . $this->currentPage . '(.+)\.php$~i');
         $files = array_merge($files, $tfiles); 
-        asort($files);
+
         foreach ($files as $file) {
            $file = substr($file, 5); 
            $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
@@ -45,10 +46,13 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
     {
         $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions');
         $this->addLanguageDefines($defineList);
+
         $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions/' . $this->templateDir);
         $this->addLanguageDefines($defineList);
+
         $defineList = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions', 'catalog');
         $this->addLanguageDefines($defineList);
+
         $defineList = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions/default');
         $this->addLanguageDefines($defineList);
     }
@@ -60,10 +64,12 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $fallbackFile = DIR_WS_LANGUAGES . 'lang.' . $this->fallback . '.php';
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         $this->addLanguageDefines($defineList);
+
         $mainFile = DIR_WS_LANGUAGES . $this->templateDir . '/lang.' . $_SESSION['language'] . '.php';
         $fallbackFile = DIR_WS_LANGUAGES . 'lang.' . $_SESSION['language'] . '.php';
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         $this->addLanguageDefines($defineList);
+
         foreach ($extraFiles as $file) {
             $file = basename($file, '.php') . ".php";
             $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
