@@ -92,7 +92,8 @@ function zen_db_perform(string $tableName, array $tableData, $performType = 'INS
         }
         $query = substr($query, 0, -2) . ') VALUES (';
         foreach ($tableData as $value) {
-            switch ((string)$value) {
+            $value = (string)$value;
+            switch ($value) {
                 case 'now()':
                     $query .= 'now(), ';
                     break;
@@ -109,7 +110,8 @@ function zen_db_perform(string $tableName, array $tableData, $performType = 'INS
     } elseif (strtolower($performType) == 'update') {
         $query = 'UPDATE ' . $tableName . ' SET ';
         foreach ($tableData as $columns => $value) {
-            switch ((string)$value) {
+            $value = (string)$value;
+            switch ($value) {
                 case 'now()':
                     $query .= $columns . ' = now(), ';
                     break;
