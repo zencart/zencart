@@ -24,27 +24,25 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
             $pluginDir .= '/catalog/includes/languages/'  . $_SESSION['language'];
-            $files = $this->fileSystem->listFilesFromDirectory($pluginDir . '/' . $this->templateDir, '~^' . $this->currentPage  . '(.*)\.php$~i');
-            asort($files);
+            $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($pluginDir . '/' . $this->templateDir, '~^' . $this->currentPage  . '(.*)\.php$~i');
             foreach ($files as $file) {
                 $this->loadFileDefineFile($pluginDir . '/' . $this->templateDir . '/' . $file);
             }
-            $files = $this->fileSystem->listFilesFromDirectory($pluginDir, '~^' . $this->currentPage  . '(.*)\.php$~i');
-            asort($files);
+
+            $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($pluginDir, '~^' . $this->currentPage  . '(.*)\.php$~i');
             foreach ($files as $file) {
                 $this->loadFileDefineFile($pluginDir . '/' . $file);
             }
         }
 
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
-        $files = $this->fileSystem->listFilesFromDirectory($directory, '~^' . $this->currentPage  . '(.*)\.php$~i');
-        asort($files);
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $this->currentPage  . '(.*)\.php$~i');
         foreach ($files as $file) {
             $this->loadFileDefineFile($directory . '/' . $file);
         }
+
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
-        $files = $this->fileSystem->listFilesFromDirectory($directory, '~^' . $this->currentPage . '(.*)\.php$~i');
-        asort($files);
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $this->currentPage . '(.*)\.php$~i');
         foreach ($files as $file) {
             $this->loadFileDefineFile($directory . '/' . $file);
         }
@@ -65,17 +63,18 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
     {
         $extraDefsDir = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions';
         $extraDefsDirTpl = $extraDefsDir . '/' . $this->templateDir;
-        $extraDefs = $this->fileSystem->listFilesFromDirectory($extraDefsDir);
-        $extraDefsTpl = $this->fileSystem->listFilesFromDirectory($extraDefsDirTpl);
+        $extraDefs = $this->fileSystem->listFilesFromDirectoryAlphaSorted($extraDefsDir);
+        $extraDefsTpl = $this->fileSystem->listFilesFromDirectoryAlphaSorted($extraDefsDirTpl);
 
         $folderList = [$extraDefsDir => $extraDefs, $extraDefsDirTpl => $extraDefsTpl];
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
             $pluginDir .= '/catalog/includes/languages/'  . $_SESSION['language'] . '/extra_definitions';
-            $extraDefsPlugin = $this->fileSystem->listFilesFromDirectory($pluginDir);
+            $extraDefsPlugin = $this->fileSystem->listFilesFromDirectoryAlphaSorted($pluginDir);
+
             $folderList[$pluginDir] = $extraDefsPlugin;
             $pluginDirTpl = $pluginDir . '/' . $this->templateDir;
-            $extraDefsPluginTpl = $this->fileSystem->listFilesFromDirectory($pluginDirTpl);
+            $extraDefsPluginTpl = $this->fileSystem->listFilesFromDirectoryAlphaSorted($pluginDirTpl);
             $folderList[$pluginDirTpl] = $extraDefsPluginTpl;
        }
         $foundList = [];
