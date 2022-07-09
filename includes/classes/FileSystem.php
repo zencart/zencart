@@ -25,7 +25,7 @@ class FileSystem extends IlluminateFilesystem
         $dir->close();
     }
 
-    public function listFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i', $sort = false)
+    public function listFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         if (!is_dir($rootDir)) return [];
         if (!$dir = @dir($rootDir)) return [];
@@ -36,15 +36,14 @@ class FileSystem extends IlluminateFilesystem
             }
         }
         $dir->close();
-        if ($sort === true) {
-            sort($fileList);
-        }
         return $fileList;
     }
 
     public function listFilesFromDirectoryAlphaSorted($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
-        return $this->listFilesFromDirectory($rootDir, $fileRegx, true);
+        $fileList = $this->listFilesFromDirectory($rootDir, $fileRegx);
+        sort($fileList);
+        return $fileList;
     }
 
     public function loadFilesFromPluginsDirectory($installedPlugins, $rootDir, $fileRegx = '~^[^\._].*\.php$~i')
