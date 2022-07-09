@@ -1359,8 +1359,16 @@ if (!empty($action) && $order_exists === true) {
 <?php } ?>
                 <td class="dataTableContent text-center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent text-right"><?php echo ($orders->fields['orders_status_name'] !== '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
-                <?php $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id'])); ?>
-                <td class="dataTableContent text-center"<?php if (!empty($order_comments)) echo ' title="' . $order_comments . '"'; ?>><?php if (!empty($order_comments)) echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', '', 16, 16); ?></td>
+                <?php 
+                   $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id'])); 
+                   if (!empty($order_comments)) { 
+                      echo '<td class="dataTableContent text-center" title="' . $order_comments . '">'; 
+                      echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', '', 16, 16); 
+                      echo '</td>'; 
+                   } else {
+                     echo '<td class="dataTableContent text-center"></td>'; 
+                   }
+                ?>
 <?php
   // -----
   // A watching observer can provide an associative array in the form:
