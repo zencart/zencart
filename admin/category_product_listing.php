@@ -783,7 +783,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
 // reset page when page is unknown
             if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['pID'])) {
-              $old_page = $_GET['page'];
               $check_page = $db->Execute($products_query_raw);
               if ($check_page->RecordCount() > $max_results) {
                 $check_count = 0;
@@ -795,9 +794,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 }
                 $_GET['page'] = round((($check_count / $max_results) + (fmod_round($check_count, $max_results) != 0 ? .5 : 0)), 0);
                 $page = $_GET['page'];
-                if ($old_page != $_GET['page']) {
-//      zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
-                }
               } else {
                 $_GET['page'] = 1;
               }
