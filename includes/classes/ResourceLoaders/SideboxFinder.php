@@ -44,11 +44,11 @@ class SideboxFinder
         }
         $baseDir = DIR_FS_CATALOG . DIR_WS_MODULES . 'sideboxes/';
         $rootPath = ($withFullPath) ? DIR_FS_CATALOG . DIR_WS_MODULES : '';
-        if (file_exists($baseDir . $sideboxInfo['layout_box_name'])) {
-            return $rootPath . 'sideboxes/';
-        }
         if (file_exists($baseDir . $templateDir . '/' . $sideboxInfo['layout_box_name'])) {
             return $rootPath . 'sideboxes/' . $templateDir . '/';
+        }
+        if (file_exists($baseDir . $sideboxInfo['layout_box_name'])) {
+            return $rootPath . 'sideboxes/';
         }
         return false;
     }
