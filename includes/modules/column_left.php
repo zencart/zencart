@@ -25,7 +25,7 @@ $sideboxes = LayoutBox::where('layout_box_location', 0)
 $column_width = (int)BOX_WIDTH_LEFT;
 foreach ($sideboxes as $sidebox) {
     $boxFile = (new SideboxFinder(new FileSystem))->sideboxPath($sidebox, $template_dir, true);
-    if (file_exists($boxFile)) {
+    if ($boxFile !== false) {
         $box_id = zen_get_box_id($sidebox['layout_box_name']);
         include($boxFile . $sidebox['layout_box_name']);
     }
