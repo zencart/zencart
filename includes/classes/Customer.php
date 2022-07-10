@@ -119,9 +119,11 @@ class Customer extends base
         // fire notifier to check whether login should be allowed?
 //@TODO        $this->notify('NOTIFY_?LOGIN_ATTEMPT', null, $is_logged_in);
 
-        if (empty($this->data)) {
-            $this->load($customer_id);
-        }
+        // -----
+        // Load the customer's information from the database and set the appropriate
+        // session variables.
+        //
+        $this->load($customer_id);
         if (empty($this->data)) {
             return false;
         }
