@@ -935,13 +935,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-attributes-off" role="button" title="<?php echo BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER; ?>"><strong>A</strong></a>
                       <?php } ?>
                       <?php if ($zc_products->get_allow_add_to_cart($product['products_id']) == "Y") { ?>
-<?php 
-                     $ppm_color = 'btn-pricemanager-on'; 
+<?php
+                     $ppm_color = 'btn-pricemanager-on';
                      if (zen_has_product_discounts($product['products_id']) === 'true') {
-                        $ppm_color = 'btn-pricemanager-on-enabled'; 
+                        $ppm_color = 'btn-pricemanager-on-enabled';
                      }
 ?>
-                        <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id) . '" class="btn btn-sm btn-default ' . $ppm_color . '" role="button" title="' . BOX_CATALOG_PRODUCTS_PRICE_MANAGER . '">'; ?>
+                        <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default <?php echo $ppm_color; ?>" role="button" title="<?php echo BOX_CATALOG_PRODUCTS_PRICE_MANAGER; ?>">
                           <i class="fa fa-dollar fa-lg" aria-hidden="true"></i>
                         </a>
                       <?php } else { ?>
