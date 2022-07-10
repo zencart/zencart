@@ -55,6 +55,19 @@ class LanguageLoader
         return true; 
     }
 
+    /**
+     * Used on the catalog-side to set the current page for the language-load, since it's not necessarily
+     * available during the autoload process (e.g. for AJAX handlers).
+     *
+     * @param string $currentPage
+     * @return void
+     */
+    public function setCurrentPage($currentPage)
+    {
+        $this->arrayLoader->currentPage = $currentPage;
+        $this->fileLoader->currentPage = $currentPage;
+    }
+
     public function loadLanguageForView()
     {
         $this->arrayLoader->loadLanguageForView();
