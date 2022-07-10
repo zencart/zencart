@@ -227,7 +227,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
               </tr>
             <?php } ?>
             <tr>
-              <td class="text-right"><b><?php echo TEXT_MESSAGE; ?></b</td>
+              <td class="text-right"><b><?php echo TEXT_MESSAGE; ?></b></td>
               <td><span class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true)); ?></span></td>
             </tr>
           </table>
