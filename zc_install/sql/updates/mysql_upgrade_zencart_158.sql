@@ -82,21 +82,16 @@ UPDATE configuration SET configuration_description = 'Customers Referral Code is
 
 UPDATE configuration SET configuration_description = 'The shipping cost may be calculated based on the total weight of the items ordered, the total price of the items ordered, or the total number of items ordered.' WHERE configuration_key = 'MODULE_SHIPPING_TABLE_MODE';
 
-UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing an index listing' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
-UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing All Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_ALL';
-UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing New Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
-UPDATE configuration SET configuration_description = 'Number of products to show per page when viewing Featured Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
-
 UPDATE configuration SET configuration_title = 'New Products Centerbox', configuration_description = 'Number of products to display in the New Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_NEW_PRODUCTS';
 UPDATE configuration SET configuration_title = 'Products on Special Centerbox', configuration_description = 'Number of products to display in the Products on Special centerbox' WHERE configuration_key = 'MAX_DISPLAY_SPECIAL_PRODUCTS_INDEX';
 UPDATE configuration SET configuration_title = 'Upcoming Products Centerbox', configuration_description = 'Number of products to display in the Upcoming Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_UPCOMING_PRODUCTS';
 UPDATE configuration SET configuration_title = 'Featured Products Centerbox', configuration_description = 'Number of products to display in the Featured Products centerbox' WHERE configuration_key = 'MAX_DISPLAY_SEARCH_RESULTS_FEATURED';
 
-UPDATE configuration SET configuration_title = 'Products on Special Page', configuration_description = 'Number of products to display per page on the Specials page' WHERE configuration_key = 'MAX_DISPLAY_SPECIAL_PRODUCTS';
-UPDATE configuration SET configuration_title = 'All Products Page', configuration_description = 'Number of products to display per page on the All Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_ALL';
-UPDATE configuration SET configuration_title = 'Featured Products Page', configuration_description = 'Number of products to display per page on the Featured Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
-UPDATE configuration SET configuration_title = 'New Products Page', configuration_description = 'Number of products to display per page on the New Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
-UPDATE configuration SET configuration_title = 'Products Listing Page', configuration_description = 'Number of products to display per page on a Listing page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
+UPDATE configuration SET configuration_title = 'Products on Special Page', configuration_description = 'Number of products to show per page on the Specials page' WHERE configuration_key = 'MAX_DISPLAY_SPECIAL_PRODUCTS';
+UPDATE configuration SET configuration_title = 'All Products Page', configuration_description = 'Number of products to show per page on the All Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_ALL';
+UPDATE configuration SET configuration_title = 'Featured Products Page', configuration_description = 'Number of products to show per page when viewing Featured Products' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_FEATURED_PRODUCTS';
+UPDATE configuration SET configuration_title = 'New Products Page', configuration_description = 'Number of products to show per page on the New Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
+UPDATE configuration SET configuration_title = 'Products Listing Page', configuration_description = 'Number of products to show per page when viewing an index listing' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
 
 #############
 # Incorporate setting for Column-Grid-Layout template control
