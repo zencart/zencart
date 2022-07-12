@@ -185,7 +185,8 @@ class zcDate extends base
             }
         }
 
-        $this->debug("zcDate output for '$format' with timestamp ($timestamp), with format converted to '$converted_format': '" . json_encode($output) . "'");
+        $additional_message = ($format === $converted_format) ? '' : ", with format converted to '$converted_format'";
+        $this->debug("zcDate output for '$format' with timestamp ($timestamp)" . $additional_message . ": '" . json_encode($output) . "'");
 
         return $output;
     }
