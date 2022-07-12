@@ -2,11 +2,10 @@
 /**
  * template for 3d-secure iframe
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2010 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_payer_auth_frame_default.php 15817 2010-04-04 22:13:38Z drbyte $
+ * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 ?>
 <div>

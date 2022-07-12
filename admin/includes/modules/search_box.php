@@ -1,8 +1,8 @@
 <?php
 /*
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2020 sept 08 New in v1.5.8 $
+ * @version $Id: Zen4All 2020 Sep 09 New in v1.5.8-alpha $
  */
 ?>
 <?php echo zen_draw_form('search', basename($PHP_SELF, '.php'), '', 'get', 'class="form-horizontal"', true); ?>

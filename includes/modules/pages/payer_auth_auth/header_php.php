@@ -2,10 +2,10 @@
 /**
  * payer_auth_auth page
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Dec 16 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Feb 18 Modified in v1.5.8-alpha $
  */
   if (!zen_is_logged_in()) {
     die(WARNING_SESSION_TIMEOUT);

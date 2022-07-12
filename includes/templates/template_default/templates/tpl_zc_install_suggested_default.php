@@ -5,9 +5,9 @@
  * This page is auto-displayed if the configure.php file cannot be read properly.
  * It is intended simply to recommend clicking on the zc_install link to begin installation.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: dbltoe 2022 July 2 Modified in v1.5.8 $
+ * @version $Id: John 2022 Jul 07 Modified in v1.5.8-alpha $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');

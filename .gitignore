@@ -223,3 +223,6 @@ images/call_for_price.jpg
 #testing
 includes/*.config.save
 admin/includes/*.config.save
+
+#release process
+modified_files.txt

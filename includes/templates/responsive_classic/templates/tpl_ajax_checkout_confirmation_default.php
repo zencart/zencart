@@ -5,11 +5,10 @@
  * Loaded automatically by index.php?main_page=checkout_confirmation.
  * Displays final checkout details, cart, payment and shipping info details.
  *
- * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Steve 2021 Mar 14 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">

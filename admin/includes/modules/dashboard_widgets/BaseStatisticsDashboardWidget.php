@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 15 Modified in v1.5.7 $
+ * @version $Id: lat9 2022 May 05 Modified in v1.5.8-alpha $
  */
 
 // to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored

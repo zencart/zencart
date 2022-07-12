@@ -2,10 +2,10 @@
 /**
  * Checkout Shipping Page
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Mar 27 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Jan 12 Modified in v1.5.8-alpha $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');

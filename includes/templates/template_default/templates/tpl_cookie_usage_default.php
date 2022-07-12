@@ -5,11 +5,10 @@
  * Loaded automatically by index.php?main_page=cookie_usage.
  * Displays information page, if cookie only is set in admin and cookies disabled in users browser.
  *
- * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_cookie_usage_default.php 2540 2005-12-11 07:55:22Z birdbrain $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="cookieUsageDefault">

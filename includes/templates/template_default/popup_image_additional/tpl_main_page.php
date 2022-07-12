@@ -2,10 +2,10 @@
 /**
  * Override Template for common/tpl_main_page.php
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 Jan 21 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Jan 22 Modified in v1.5.8-alpha $
  */
 ?>
 <body id="popupAdditionalImage" class="centeredContent" onload="resize();">

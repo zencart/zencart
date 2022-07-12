@@ -1,7 +1,6 @@
 <?php
 /**
  * Mod List 
- * @package admin
  * @copyright That Software Guy, Inc., 2015
 */ 
 define('HEADING_TITLE', 'Mods To This Cart');

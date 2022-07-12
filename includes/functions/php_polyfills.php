@@ -3,7 +3,7 @@
  * polyfills to accommodate older PHP versions, adapted from https://github.com/symfony/polyfill/
  * @copyright Portions  (c) Fabien Potencier <fabien@symfony.com>
  *
- * @version $Id: php_polyfills.php  Modified in v1.5.8 $
+ * @version $Id: DrByte 2021 Jan 11 New in v1.5.8-alpha $
  */
 
 

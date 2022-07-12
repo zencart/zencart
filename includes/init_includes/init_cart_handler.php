@@ -2,11 +2,10 @@
 /**
  * initialise and handle cart actions
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
- * @package initSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Sat Oct 6 15:06:42 2012 +0100 Modified in v1.5.2 $
+ * @version $Id: Scott C Wilson 2020 Aug 01 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

@@ -2,11 +2,10 @@
 /**
  * manufacturers sidebox - displays a list of manufacturers so customer can choose to filter on their products only
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: Crystal Jones  Tue Mar 3 10:36:43 2015 -0800 Modified in v1.5.5 $
+ * @version $Id: lat9 2022 Jul 05 Modified in v1.5.8-alpha $
  */
 // only check products if requested - this may slow down the processing of the manufacturers sidebox
 if (PRODUCTS_MANUFACTURERS_STATUS === '1') {
