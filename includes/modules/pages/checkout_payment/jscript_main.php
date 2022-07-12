@@ -22,23 +22,5 @@ function submitFunction($gv,$total) {
     submitter = 1;
   }
 }
-function tAndCChange() {
-// function to disable continue if T&C present and not checked.
-  var conditionsElement = document.getElementById('conditions');
-  var paymentSubmitInputs = document.getElementById('paymentSubmit').getElementsByTagName('input'), i=0, e;
-  if(typeof(conditionsElement) != 'undefined' && conditionsElement != null){
-    while(e=paymentSubmitInputs[i++]){
-      e.disabled = ! conditionsElement.checked;
-    }
-  }
-}
-// Add listeners to initially disable the continue button and to reset when T&C changed
-document.addEventListener('DOMContentLoaded',  function () {
-  var conditionsElement = document.getElementById("conditions");
-  if(typeof(conditionsElement) != 'undefined' && conditionsElement != null){
-    conditionsElement.addEventListener('change', tAndCChange);
-    tAndCChange();
-  }
-});
 
 </script>

@@ -53,9 +53,7 @@ $_SESSION['comments'] = !empty($_POST['comments']) ? $_POST['comments'] : '';
 
 
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-  if (!isset($_POST['conditions']) || ($_POST['conditions'] != '1')) {
-    $messageStack->add_session('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
-  }
+    $_SESSION['conditions'] = $_POST['conditions'] ?? NULL;
 }
 //echo $messageStack->size('checkout_payment');
 

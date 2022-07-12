@@ -168,7 +168,7 @@ $define = [
     'ENTRY_TELEPHONE_NUMBER_TEXT' => '*',
     'ERROR_AT_LEAST_ONE_INPUT' => 'At least one of the fields in the search form must be entered.',
     'ERROR_CART_UPDATE' => '<strong>Please update your order.</strong> ',
-    'ERROR_CONDITIONS_NOT_ACCEPTED' => 'Please confirm the terms and conditions bound to this order by ticking the box below.',
+    'ERROR_CONDITIONS_NOT_ACCEPTED' => 'Please confirm you have read and agree to the terms and conditions bound to this order by ticking this box.',
     'ERROR_CORRECTIONS_HEADING' => 'Please correct the following: <br>',
     'ERROR_CUSTOMERS_ID_INVALID' => 'Customer information cannot be validated!<br>Please login or recreate your account ...',
     'ERROR_DATABASE_MAINTENANCE_NEEDED' => '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" rel="noopener" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>',
