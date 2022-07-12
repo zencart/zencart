@@ -2,11 +2,10 @@
 /**
  * music_genres sidebox - displays list of available music genres to filter on
  *
- * @package templateSystem
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: music_genres.php 18922 2011-06-13 03:23:35Z drbyte $
+ * @version $Id: lat9 2022 Jul 05 Modified in v1.5.8-alpha $
  */
 $music_genres = $db->Execute(
     "SELECT music_genre_id, music_genre_name

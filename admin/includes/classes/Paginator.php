@@ -2,11 +2,10 @@
 /**
  * split_page_results Class.
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 13:13:41 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 Dec 24 Modified in v1.5.8-alpha $
  */
 
 namespace Zencart\Paginator;
@@ -20,7 +19,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  * An sql paging class, that allows for sql result to be shown over a number of pages using simple navigation system
  * Overhaul scheduled for subsequent release
  *
- * @package classes
  */
 class Paginator extends \base {
   var $sql_query, $number_of_rows, $current_page_number, $number_of_pages, $number_of_rows_per_page, $page_name;

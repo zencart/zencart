@@ -2,11 +2,10 @@
 /**
  * listing_display_order module
  *
- * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: listing_display_order.php 3012 2006-02-11 16:34:02Z wilt $
+ * @version $Id: DrByte 2020 Dec 24 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

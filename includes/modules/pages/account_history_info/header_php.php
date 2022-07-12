@@ -2,10 +2,10 @@
 /**
  * Header code file for the Account History Information/Details page (which displays details for a single specific order)
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Aug 02 Modified in v1.5.7 $
+ * @version $Id: lat9 2022 Jun 12 Modified in v1.5.8-alpha $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_HISTORY_INFO');

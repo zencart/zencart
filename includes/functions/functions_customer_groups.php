@@ -2,9 +2,9 @@
 /**
  * functions_customer_groups
  *
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v1.5.8 $
+ * @version $Id: DrByte 2021 Apr 26 New in v1.5.8-alpha $
  */
 
 /**

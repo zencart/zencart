@@ -5,10 +5,10 @@
  * Initializes common classes & methods. Controlled by an array which describes
  * the elements to be initialised and the order in which that happens.
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Jun 08 Modified in v1.5.8 $
+ * @version $Id: lat9 2022 May 30 Modified in v1.5.8-alpha $
  */
 
 use App\Models\PluginControl;

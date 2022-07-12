@@ -5,11 +5,10 @@
  * Loaded automatically by index.php?main_page=adress_book.
  * Allows customer to manage entries in their address book
  *
- * @package templateSystem
- * @copyright Copyright 2003-2005 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_address_book_default.php 5369 2006-12-23 10:55:52Z drbyte $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="addressBookDefault">

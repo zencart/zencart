@@ -1,9 +1,8 @@
 <?php
 /**
  * Mod List by That Software Guy 
- * @package admin
  * @copyright That Software Guy, Inc., 2015-2020
- * @copyright Portions Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
 */ 
 define('BUILT_IN_BOXES', array(

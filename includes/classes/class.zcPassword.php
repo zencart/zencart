@@ -2,10 +2,9 @@
 /**
  * File contains just the zcPassword class
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Feb 9 16:18:42 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson 2020 Jul 11 Modified in v1.5.8-alpha $
  */
 /**
  * class zcPassword
@@ -14,7 +13,6 @@
  *
  * Updates admin/customer tables on successful login
  *
- * @package classes
  */
 class zcPassword extends base
 {

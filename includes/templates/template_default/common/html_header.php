@@ -4,10 +4,10 @@
  *
  * outputs the html header. i,e, everything that comes before the \</head\> tag
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2020 May 12 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 May 01 Modified in v1.5.8-alpha $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {

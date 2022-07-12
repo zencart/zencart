@@ -4,10 +4,9 @@
  *
  * This file may NOT be required, depending on your host mailserver configuration.
  *
- * @package constants
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: email_use_8bit.php 6028 2007-03-21 09:12:39Z drbyte $
+ * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 /**
  * specify the email encoding method to be used for sending emails

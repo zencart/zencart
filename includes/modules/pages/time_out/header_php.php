@@ -2,11 +2,10 @@
 /**
  * Time out page
  *
- * @package page
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: Ian Wilson  Wed Feb 19 15:57:35 2014 +0000 Modified in v1.5.3 $
+ * @version $Id: DrByte 2020 Aug 08 Modified in v1.5.8-alpha $
  */
 
 // This should be first line of the script:

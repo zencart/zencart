@@ -4,11 +4,10 @@
  *
  * This file is used for generating tabular output where needed, based on the supplied array of table-cell contents.
  *
- * @package templateSystem
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v1.5.8 $
+ * @version $Id: DrByte 2021 Jan 15 Modified in v1.5.8-alpha $
  */
 $zco_notifier->notify('NOTIFY_TPL_TABULAR_DISPLAY_START', $current_page_base, $list_box_contents);
 

@@ -6,10 +6,10 @@
  * Then loads template-specific language file, followed by master/default language file
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Sep 30 Modified in v1.5.7a $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 
 use Zencart\LanguageLoader\LanguageLoaderFactory;
