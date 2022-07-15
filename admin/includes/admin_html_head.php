@@ -36,24 +36,24 @@ if (!defined('IS_ADMIN_FLAG')) {
 <?php
 }
 foreach ($installedPlugins as $plugin) {
-    $relativeDir = $plugin->getRelativePath();
+    $relativeDir = substr($plugin->getRelativePath(), 1);
     $absoluteDir = $plugin->getAbsolutePath();
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^global_stylesheet/', '.css');
     foreach ($directory_array as $key => $value) {
         ?>
-        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
+        <link rel="stylesheet" href="<?php echo ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG) . $relativeDir . 'admin/includes/css/' . $value; ?>">
         <?php
     }
 
-    if (file_exists($absoluteDir . substr($relativeDir, 1) . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css')) {
+    if (file_exists($absoluteDir . $relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css')) {
 ?>
-        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css'; ?>">
+        <link rel="stylesheet" href="<?php echo ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG) .$relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css'; ?>">
 <?php
     }
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
     foreach ($directory_array as $key => $value) {
         ?>
-        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
+        <link rel="stylesheet" href="<?php echo ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG) .$relativeDir . 'admin/includes/css/' . $value; ?>">
         <?php
     }
 }
