@@ -8,8 +8,6 @@
 
 class AdminNotifications
 {
-    protected $notificationServer = 'https://versionserver.zen-cart.com/api/notifications';
-
     protected $enabled = true;
 
     public function __construct()
@@ -22,8 +20,8 @@ class AdminNotifications
             $this->enabled = false;
         }
 
-        global $sniffer;  
-        if (!$sniffer->table_exists(TABLE_ADMIN_NOTIFICATIONS)) { 
+        global $sniffer;
+        if (!$sniffer->table_exists(TABLE_ADMIN_NOTIFICATIONS)) {
             $this->enabled = false;
         }
     }
