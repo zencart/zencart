@@ -7,9 +7,9 @@
 class zcDate extends base
 {
     protected
-        $intlDateInstalled = false,
+        $useIntlDate = false,
         $useStrftime = false,
-        $locale,                //- Only used when $this->intlDateInstalled is true
+        $locale,                //- Only used when $this->useIntlDate is true
         $strftime2date,         //- Only used when $this->useStrftime is false
         $strftime2intl,         //- Only used when $this->useStrftime is false
         $debug = false;
@@ -33,7 +33,7 @@ class zcDate extends base
             $this->useStrftime = true;
         } else {
             if (function_exists('datefmt_create')) {
-                $this->intlDateInstalled = true;
+                $this->useIntlDate = true;
             }
             $this->initializeConversionArrays();
         }
@@ -72,7 +72,7 @@ class zcDate extends base
             'to' => array_values($strftime2date)
         ];
 
-        if ($this->intlDateInstalled === true) {
+        if ($this->useIntlDate === true) {
             // -----
             // First, save the current locale; it's set by the main language file's (presumed) call to the
             // setlocale function.
@@ -155,7 +155,7 @@ class zcDate extends base
         // -----
         // Otherwise, if there's no international date support, format the requested string using date.
         //
-        } elseif ($this->intlDateInstalled === false) {
+        } elseif ($this->useIntlDate === false) {
             $converted_format = $this->convertFormat($format, $this->strftime2date);
             $output = date($converted_format, $timestamp);
         // -----
@@ -185,7 +185,8 @@ class zcDate extends base
             }
         }
 
-        $this->debug("zcDate output for '$format' with timestamp ($timestamp), with format converted to '$converted_format': '" . json_encode($output) . "'");
+        $additional_message = ($format === $converted_format) ? '' : ", with format converted to '$converted_format'";
+        $this->debug("zcDate output for '$format' with timestamp ($timestamp)" . $additional_message . ": '" . json_encode($output) . "'");
 
         return $output;
     }
