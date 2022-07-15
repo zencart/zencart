@@ -15,7 +15,7 @@
 /**
  * Order Total class to handle discount coupons
  */
-class ot_coupon
+class ot_coupon extends base
 {
     /**
      * module title
@@ -195,6 +195,8 @@ class ot_coupon
             ' title="' . TEXT_COUPON_LINK_TITLE . '"' .
             '>' . $coupon_code . '</a>';
 
+        $this->notify('NOTIFY_OT_COUPON_GENERATE_POPUP_LINK', ['coupon_id' => $coupon_id, 'coupon_code' => $coupon_code], $couponLink);
+
         return $couponLink;
     }
 
@@ -285,7 +287,7 @@ class ot_coupon
      */
     function performValidations($coupon_code)
     {
-        global $currencies, $zco_notifier;
+        global $currencies;
         $this->validation_errors = [];
 
         $coupon_details = $this->getCouponDetailsFromDb($coupon_code);
@@ -297,7 +299,7 @@ class ot_coupon
             return;
         }
 
-        $zco_notifier->notify('NOTIFY_OT_COUPON_COUPON_INFO', ['coupon_result' => $coupon_details, 'code' => $coupon_code]);
+        $this->notify('NOTIFY_OT_COUPON_COUPON_INFO', ['coupon_result' => $coupon_details, 'code' => $coupon_code]);
 
         // get popup link to insert into validation error messages
         $dc_link = $this->generateCouponPopupLink($coupon_details['coupon_id'], $coupon_code);
@@ -405,7 +407,7 @@ class ot_coupon
      */
     function calculate_deductions()
     {
-        global $db, $currencies, $zco_notifier;
+        global $db, $currencies;
 
         $od_amount = ['tax' => 0, 'total' => 0];
         if (empty($_SESSION['cc_id'])) {
@@ -550,7 +552,7 @@ class ot_coupon
         // copies of (a) the base coupon information, (b) the results from 'get_order_total' and this
         // method's return values.
         //
-        $zco_notifier->notify('NOTIFY_OT_COUPON_CALCS_FINISHED', ['coupon' => $coupon_details, 'order_totals' => $orderTotalDetails, 'od_amount' => $od_amount], $coupon_details);
+        $this->notify('NOTIFY_OT_COUPON_CALCS_FINISHED', ['coupon' => $coupon_details, 'order_totals' => $orderTotalDetails, 'od_amount' => $od_amount], $coupon_details);
 
 //    print_r($order->info);
 //    print_r($orderTotalDetails);echo "<br><br>";
@@ -567,7 +569,7 @@ class ot_coupon
      */
     function get_order_total($coupon_id)
     {
-        global $order, $zco_notifier;
+        global $order;
         $orderTaxGroups = $order->info['tax_groups'];
         $orderTotalTax = $order->info['tax'];
         $orderTotal = $order->info['total'];
@@ -579,7 +581,7 @@ class ot_coupon
             $i++;
             $is_product_valid = (is_product_valid($product['id'], $coupon_id) && is_coupon_valid_for_sales($product['id'], $coupon_id));
 
-            $zco_notifier->notify('NOTIFY_OT_COUPON_PRODUCT_VALIDITY', ['is_product_valid' => $is_product_valid, 'i' => $i]);
+            $this->notify('NOTIFY_OT_COUPON_PRODUCT_VALIDITY', ['is_product_valid' => $is_product_valid, 'i' => $i]);
 
             // @TODO - defer this to the shopping_cart class so product price calculations are handled in one central place
             if (!$is_product_valid) {
@@ -712,11 +714,9 @@ class ot_coupon
      */
     public function remove_coupon_from_current_session()
     {
-        global $zco_notifier;
-
         $this->clear_posts();
 
-        $zco_notifier->notify('NOTIFY_OT_COUPON_COUPON_REMOVED');
+        $this->notify('NOTIFY_OT_COUPON_COUPON_REMOVED');
     }
 
     /**
@@ -749,9 +749,8 @@ class ot_coupon
     {
         $products = $_SESSION['cart']->get_products();
 
-        global $zco_notifier;
         $found_valid = null;
-        $zco_notifier->notify('NOTIFY_COUPON_VALIDATION_PRODUCT_RESTRICTIONS', $coupon_id, $products, $found_valid);
+        $this->notify('NOTIFY_COUPON_VALIDATION_PRODUCT_RESTRICTIONS', $coupon_id, $products, $found_valid);
         if ($found_valid !== null) {
             return $found_valid;
         }
@@ -897,7 +896,7 @@ class ot_coupon
      */
     protected function validateCouponUsesPerCustomer($coupon_details, $customer_id = null)
     {
-        global $db, $zco_notifier;
+        global $db;
 
         // 0 means unlimited
         if (empty($coupon_details['uses_per_user'])) {
@@ -929,7 +928,7 @@ class ot_coupon
         $valid = ($result->RecordCount() < $coupon_details['uses_per_user']);
 
         // NOTE: Prior to v158 this Notifier hook was used to alter $valid status if in Guest Checkout in plugins such as OPC
-        $zco_notifier->notify('NOTIFY_OT_COUPON_USES_PER_USER_CHECK', $coupon_details, $valid);
+        $this->notify('NOTIFY_OT_COUPON_USES_PER_USER_CHECK', $coupon_details, $valid);
 
         return $valid;
     }
@@ -943,8 +942,6 @@ class ot_coupon
      */
     protected function validateCouponUsesPerGuestCheckoutCustomer($coupon_details)
     {
-        global $zco_notifier;
-
         if (!zen_in_guest_checkout()) {
             return null;
         }
@@ -952,7 +949,7 @@ class ot_coupon
         // NOTE: prior to v158 eligibility during guest checkout was checked via the NOTIFY_OT_COUPON_USES_PER_USER_CHECK Notifier in validateCouponUsesPerCustomer()
 
         $valid = null;
-        $zco_notifier->notify('NOTIFY_OT_COUPON_USES_PER_CUSTOMER_GUEST_CHECKOUT_CHECK', $coupon_details, $valid);
+        $this->notify('NOTIFY_OT_COUPON_USES_PER_CUSTOMER_GUEST_CHECKOUT_CHECK', $coupon_details, $valid);
 
         return $valid;
     }
