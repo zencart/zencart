@@ -11,41 +11,43 @@
  * @version $Id: Scott C Wilson 2021 Jul 28 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
+
 $title = '';
 $num_categories = $categories->RecordCount();
 
 $row = 0;
 $col = 0;
-$list_box_contents = array();
+$list_box_contents = [];
 if ($num_categories > 0) {
-  if ($num_categories < MAX_DISPLAY_CATEGORIES_PER_ROW || MAX_DISPLAY_CATEGORIES_PER_ROW == 0) {
-    $col_width = floor(100/$num_categories);
-  } else {
-    $col_width = floor(100/MAX_DISPLAY_CATEGORIES_PER_ROW);
-  }
-
-  while (!$categories->EOF) {
-    $zco_notifier->notify('NOTIFY_CATEGORY_ROW_IMAGE', $categories->fields['categories_id'], $categories->fields['categories_image']); 
-    if (empty($categories->fields['categories_image'])) {
-       $categories->fields['categories_image'] = 'pixel_trans.gif';
+    if ($num_categories < MAX_DISPLAY_CATEGORIES_PER_ROW || MAX_DISPLAY_CATEGORIES_PER_ROW === '0') {
+        $col_width = floor(100/$num_categories);
+    } else {
+        $col_width = floor(100/MAX_DISPLAY_CATEGORIES_PER_ROW);
     }
-    $cPath_new = zen_get_path($categories->fields['categories_id']);
 
-    // strip out 0_ from top level cats
-    $cPath_new = str_replace('=0_', '=', $cPath_new);
+    foreach ($categories as $next_category) {
+        $zco_notifier->notify('NOTIFY_CATEGORY_ROW_IMAGE', $next_category['categories_id'], $next_category['categories_image']); 
+        if (empty($next_category['categories_image'])) {
+            $next_category['categories_image'] = 'pixel_trans.gif';
+        }
+        $cPath_new = zen_get_path($next_category['categories_id']);
 
-    //    $categories->fields['products_name'] = zen_get_products_name($categories->fields['products_id']);
+        // strip out 0_ from top level cats
+        $cPath_new = str_replace('=0_', '=', $cPath_new);
 
-    $list_box_contents[$row][$col] = array('params' => 'class="categoryListBoxContents"' . ' ' . 'style="width:' . $col_width . '%;"',
-                                           'text' => '<a href="' . zen_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . zen_image(DIR_WS_IMAGES . $categories->fields['categories_image'], $categories->fields['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br>' . $categories->fields['categories_name'] . '</a>');
+        //    $categories->fields['products_name'] = zen_get_products_name($categories->fields['products_id']);
 
-    $col ++;
-    if ($col > (MAX_DISPLAY_CATEGORIES_PER_ROW -1)) {
-      $col = 0;
-      $row ++;
+        $list_box_contents[$row][$col] = [
+            'params' => 'class="categoryListBoxContents"' . ' ' . 'style="width:' . $col_width . '%;"',
+            'text' => '<a href="' . zen_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . zen_image(DIR_WS_IMAGES . $next_category['categories_image'], $next_category['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT, 'loading="lazy"') . '<br>' . $next_category['categories_name'] . '</a>'
+        ];
+
+        $col++;
+        if ($col >= MAX_DISPLAY_CATEGORIES_PER_ROW) {
+            $col = 0;
+            $row++;
+        }
     }
-    $categories->MoveNext();
-  }
 }
