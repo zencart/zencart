@@ -21,11 +21,6 @@ if (isset($_POST['zone_country_id'])) {
 if (isset($_POST['scid'])) {
     $_POST['scid'] = preg_replace('/[^a-z_0-9\- ]/i', '', $_POST['scid']);
 }
-
-// load JS updater
-if ($current_page_base !== 'popup_shipping_estimator') {
-    require DIR_WS_MODULES . '/pages/popup_shipping_estimator/jscript_addr_pulldowns.php';
-}
 ?>
 <!-- shipping_estimator //-->
 
