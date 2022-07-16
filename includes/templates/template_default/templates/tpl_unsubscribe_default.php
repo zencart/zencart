@@ -9,24 +9,23 @@
  */
 ?>
 <div class="centerColumn" id="unsubDefault">
+<?php
+if (!isset($_GET['action']) || $_GET['action'] !== 'unsubscribe') {
+?>
+    <h1 id="unsubDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
-<?php if (!isset($_GET['action']) || ($_GET['action'] != 'unsubscribe')) { ?>
+    <?php echo ($unsubscribe_address === '') ? UNSUBSCRIBE_TEXT_NO_ADDRESS_GIVEN : UNSUBSCRIBE_TEXT_INFORMATION; ?>
 
-<h1 id="unsubDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
+    <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_UNSUBSCRIBE, 'addr=' . $unsubscribe_address . '&action=unsubscribe', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_UNSUBSCRIBE, BUTTON_UNSUBSCRIBE) . '</a>'; ?></div>
+<?php
+} else {
+?>
+    <h1 id="unsubDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
-<?php echo ($unsubscribe_address=='') ? UNSUBSCRIBE_TEXT_NO_ADDRESS_GIVEN : UNSUBSCRIBE_TEXT_INFORMATION; ?>
+    <?php echo $status_display; ?>
 
-<div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_UNSUBSCRIBE, 'addr=' . $unsubscribe_address . '&action=unsubscribe', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_UNSUBSCRIBE, BUTTON_UNSUBSCRIBE) . '</a>'; ?></div>
-
-<?php } elseif (isset($_GET['action']) && ($_GET['action'] == 'unsubscribe')) { ?>
-<h1 id="unsubDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
-
-<?php echo $status_display; ?>
-
-<div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_CONTINUE_SHOPPING, BUTTON_CONTINUE_SHOPPING_ALT) . '</a>'; ?></div>
-
-<?php } else {
-        zen_redirect(zen_href_link(FILENAME_DEFAULT,'','SSL'));
-   }
+    <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_CONTINUE_SHOPPING, BUTTON_CONTINUE_SHOPPING_ALT) . '</a>'; ?></div>
+<?php
+}
 ?>
 </div>
