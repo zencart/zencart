@@ -16,6 +16,7 @@
         <p id="gvSendDefaultBalance"><?php echo TEXT_BALANCE_IS . $gv_current_balance; ?></p>
 <?php
 $action = (isset($_GET['action'])) ? $_GET['action'] : '';
+$to_name = (isset($_POST['to_name'])) ? zen_output_string_protected($_POST['to_name']) : '';
 $error ??= false;
 if ($gv_result->fields['amount'] > 0 && $action === 'doneprocess') {
 ?>
@@ -47,11 +48,11 @@ if ($action === 'doneprocess') {
 
     <?php echo zen_draw_form('gv_send_process', zen_href_link(FILENAME_GV_SEND, 'action=process', 'SSL', false)); ?>
         <div id="gvSendDefaultMainMessage" class="content">
-            <?php echo sprintf(MAIN_MESSAGE, $currencies->format($currencies->normalizeValue($_POST['amount']), false), $_POST['to_name'], $_POST['email']); ?>
+            <?php echo sprintf(MAIN_MESSAGE, $currencies->format($currencies->normalizeValue($_POST['amount']), false), $to_name, $_POST['email']); ?>
         </div>
 
         <div id="gvSendDefaultMessageSecondary" class="content">
-            <?php echo sprintf(SECONDARY_MESSAGE, $_POST['to_name'], $currencies->format($currencies->normalizeValue($_POST['amount']), false), $send_name); ?>
+            <?php echo sprintf(SECONDARY_MESSAGE, $to_name, $currencies->format($currencies->normalizeValue($_POST['amount']), false), $send_name); ?>
         </div>
 <?php
     if (!empty($_POST['message'])) {
@@ -62,7 +63,7 @@ if ($action === 'doneprocess') {
 <?php
     }
 
-    echo zen_draw_hidden_field('to_name', stripslashes($_POST['to_name'])) .
+    echo zen_draw_hidden_field('to_name', stripslashes($to_name)) .
          zen_draw_hidden_field('email', $_POST['email']) .
          zen_draw_hidden_field('amount', $gv_amount) .
          zen_draw_hidden_field('message', stripslashes($_POST['message']));
@@ -93,7 +94,7 @@ if ($action === 'doneprocess') {
             <legend><?php echo HEADING_TITLE; ?></legend>
 
             <label class="inputLabel" for="to-name"><?php echo ENTRY_RECIPIENT_NAME; ?></label>
-            <?php echo zen_draw_input_field('to_name', (!empty($_POST['to_name']) ? $_POST['to_name'] : ''), 'size="40" id="to-name"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
+            <?php echo zen_draw_input_field('to_name', $to_name, 'size="40" id="to-name"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
             <br class="clearBoth">
 
             <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
