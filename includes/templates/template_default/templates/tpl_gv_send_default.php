@@ -15,7 +15,7 @@
         <h2><?php echo TEXT_AVAILABLE_BALANCE;?></h2>
         <p id="gvSendDefaultBalance"><?php echo TEXT_BALANCE_IS . $gv_current_balance; ?></p>
 <?php
-$action = (isset($_GET['action'])) ? $_GET['action'] : '';
+$action = $_GET['action'] ?? '';
 $to_name = (isset($_POST['to_name'])) ? zen_output_string_protected($_POST['to_name']) : '';
 $error ??= false;
 if ($gv_result->fields['amount'] > 0 && $action === 'doneprocess') {
