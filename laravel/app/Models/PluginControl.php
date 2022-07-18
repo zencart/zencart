@@ -17,20 +17,17 @@ class PluginControl extends Eloquent
     public $incrementing = false;
     public $timestamps = false;
     protected $guarded = [];
-
-
+      
     public function getRelativePath()
     {
-        $relativePath = '/zc_plugins/' . $this->unique_key . '/' . $this->version . '/';
+        $relativePath =  ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG). 'zc_plugins/' . $this->unique_key . '/' . $this->version . '/';
         return $relativePath;
     }
-
+    
     public function getAbsolutePath()
     {
-        $relativePath = $this->getRelativePath();
-        $absolutePath = DIR_FS_CATALOG . ltrim('/', $relativePath);
+        $absolutePath = DIR_FS_CATALOG . 'zc_plugins/' . $this->unique_key . '/' . $this->version . '/';
         return $absolutePath;
     }
-
-
+    
 }
