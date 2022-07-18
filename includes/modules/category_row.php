@@ -21,7 +21,7 @@ $row = 0;
 $col = 0;
 $list_box_contents = [];
 if ($num_categories > 0) {
-    if ($num_categories < MAX_DISPLAY_CATEGORIES_PER_ROW || MAX_DISPLAY_CATEGORIES_PER_ROW === '0') {
+    if ($num_categories < MAX_DISPLAY_CATEGORIES_PER_ROW || MAX_DISPLAY_CATEGORIES_PER_ROW === 0) {
         $col_width = floor(100/$num_categories);
     } else {
         $col_width = floor(100/MAX_DISPLAY_CATEGORIES_PER_ROW);
