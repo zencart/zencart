@@ -18,7 +18,6 @@ $define = [
     'TABLE_HEADING_RESTRICT_REMOVE' => 'Remove',
     'IMAGE_REMOVE' => 'Remove this restriction',
     'TEXT_ALL_CATEGORIES' => 'All Categories',
-    'MAX_DISPLAY_RESTRICT_ENTRIES' => 20,
     'TEXT_ALL_PRODUCTS_ADD' => 'Add All Category Products',
     'TEXT_ALL_PRODUCTS_REMOVE' => 'Remove All Category Products',
     'TEXT_INFO_ADD_DENY_ALL' => '<strong>For Add all Category Products, only Products not already set for restrictions will be added.<br>
