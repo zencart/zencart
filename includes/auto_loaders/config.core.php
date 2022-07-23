@@ -106,6 +106,16 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
 /**
+ * Breakpoint 45.
+ *
+ * require 'includes/init_includes/init_non_db_settings.php';
+ *
+ */
+  $autoLoadConfig[45][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_non_db_settings.php'
+  ];
+/**
  * Breakpoint 50.
  *
  * $sniffer = new sniffer();

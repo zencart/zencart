@@ -120,6 +120,16 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[20][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
 /**
+ * Breakpoint 25.
+ *
+ * require 'includes/init_includes/init_non_db_settings_admin.php';
+ *
+ */
+  $autoLoadConfig[25][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_non_db_settings_admin.php'
+  ];
+/**
  * Breakpoint 30.
  *
  * require('includes/init_includes/init_gzip.php');
