@@ -370,11 +370,19 @@ class PluginManagerController extends BaseController
                 )
             );
         }
+        $error = "";
         foreach ($this->request->input('version') as $version) {
             $path = DIR_FS_CATALOG . 'zc_plugins/' . $this->currentFieldValue('unique_key') . '/' . $version;
             (new FileSystem)->deleteDirectory($path);
+            if (is_dir($path)) {
+                $error .= " :" . $path; 
+            }
         }
-        $this->messageStack->add_session(TEXT_CLEANUP_SUCCESS, 'success');
+        if ($error === "") {
+            $this->messageStack->add_session(TEXT_CLEANUP_SUCCESS, 'success');
+        } else {
+            $this->messageStack->add_session(TEXT_CLEANUP_ERROR . $error, 'error');
+        }
         zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink()));
     }
 
