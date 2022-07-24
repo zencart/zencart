@@ -414,7 +414,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         </div>
         <?php
         $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
-        $default_directory = substr($cInfo->categories_image, 0, strpos($cInfo->categories_image, '/') + 1);
+        if (empty($cInfo->categories_image)) {
+            $default_directory = '';
+        } else {
+            $default_directory = substr($cInfo->categories_image, 0, strpos($cInfo->categories_image, '/') + 1);
+        }
         ?>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_CATEGORIES_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
