@@ -39,7 +39,7 @@ class zcObserverNonCaptchaObserver extends base
     public function updateNotifyContactUsCaptchaCheck(&$class, $eventID, $paramsArray)
     {
         // sanitize the contact-us name field more aggressively
-        $GLOBALS['name'] = zen_db_prepare_input(zen_sanitize_string($_POST['contactname']));
+        $GLOBALS['name'] = zen_db_prepare_input(zen_sanitize_string($_POST['contactname'] ?? ''));
 
         // fire default tests
         $this->update($class, $eventID, $paramsArray);
@@ -71,7 +71,7 @@ class zcObserverNonCaptchaObserver extends base
         // Simple regex to identify presence of an (unwanted) URL
         $regexPattern = '~(https?|ftps?):/~';
 
-        $fields = array(
+        $fields = [
             'firstname',
             'lastname',
             'contactname',
@@ -91,7 +91,7 @@ class zcObserverNonCaptchaObserver extends base
             'passwordhintA',
             'review_text', // comment-out if you actually want to allow URLs for this
             'enquiry',     // comment-out if you actually want to allow URLs for this
-        );
+        ];
 
         // prepare for inspection
         foreach ($fields as $field) {
@@ -110,4 +110,3 @@ class zcObserverNonCaptchaObserver extends base
         }
     }
 }
-
