@@ -1,6 +1,13 @@
 <?php
+// -----
+// Since the languages are now loaded via classes, the $locales definition
+// needs to be globalized for use in payment-methods (e.g. paypalwpp) and
+// other processing.
+//
+global $locales;
 $locales = ['en_US', 'en_US.utf8', 'en', 'English_United States.1252'];
 @setlocale(LC_TIME, $locales);
+
 $define = [
     'ARIA_DELETE_ITEM_FROM_CART' => 'Delete this item from the cart',
     'ARIA_EDIT_QTY_IN_CART' => 'Edit quantity in cart',
