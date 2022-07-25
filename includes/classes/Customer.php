@@ -493,7 +493,7 @@ class Customer extends base
         return $addressArray;
     }
 
-    public function getOrderHistory(int $max_number_to_return = 0): array
+    public function getOrderHistory(int $max_number_to_return = 0, &$returned_history_split = null): array
     {
         $language = $_SESSION['languages_id'];
         global $db, $currencies;
@@ -514,7 +514,11 @@ class Customer extends base
 
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $language, 'integer');
-        $results = $db->Execute($sql, ($max_number_to_return ?: false));
+        $history_split = new splitPageResults($sql, $max_number_to_return);
+        if ($returned_history_split !== null) {
+            $returned_history_split = $history_split;
+        }
+        $results = $db->Execute($history_split->sql_query);
 
         $ordersArray = [];
         foreach ($results as $result) {
