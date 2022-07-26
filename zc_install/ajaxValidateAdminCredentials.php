@@ -10,19 +10,18 @@ define('IS_ADMIN_FLAG', false);
 define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
-require(DIR_FS_INSTALL . 'includes/application_top.php');
+require DIR_FS_INSTALL . 'includes/application_top.php';
 
-$error          = FALSE;
-$postParams     = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-$systemChecker  = new systemChecker();
+$error = false;
+$systemChecker = new systemChecker();
 $adminCandidate = $systemChecker->validateAdminCredentials(
-  trim($postParams['admin_user']),
-  trim($postParams['admin_password'])
+    trim(stripslashes($_POST['admin_user'])),
+    trim(stripslashes($_POST['admin_password']))
 );
 
 if (!is_int($adminCandidate)) {
-  $error = !$adminCandidate;
-  $adminCandidate = '';
+    $error = !$adminCandidate;
+    $adminCandidate = '';
 }
 
 echo json_encode(compact('error', 'adminCandidate'));
