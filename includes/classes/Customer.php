@@ -250,11 +250,10 @@ class Customer extends base
         $this->data['number_of_reviews'] = (int)$result->fields['number_of_reviews'];
 
         if (IS_ADMIN_FLAG) {
-            $order_history = $this->getOrderHistory();
-            $this->data['number_of_orders'] = count($order_history);
+            $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
             // only calculating this on the Admin side, for performance reasons
             if ($this->data['number_of_orders']) {
-                $this->data['lifetime_value'] = $this->getLifetimeValue($order_history);
+                $this->data['lifetime_value'] = $this->getLifetimeValue();
             }
         } else {
             $this->data['lifetime_value'] = null;
@@ -287,25 +286,33 @@ class Customer extends base
     }
 
     // -----
-    // The $order_history array, if supplied, is **assumed** to have been previously returned
-    // by the getOrderHistory method.  That method has previously formatted the 'order_total' element of
-    // each order's history for display as a currency value, with the 'order_total_raw' element being
-    // the 'raw' numeric string returned via the database query.
+    // Return the count of the current customer's previous orders.
     //
-    protected function getLifetimeValue(array $order_history = null)
+    protected function countCustomersPreviousOrders()
+    {
+        global $db;
+        $orders = $db->Execute(
+            "SELECT count(*) AS count
+               FROM " . TABLE_ORDERS . "
+              WHERE customers_id = " . (int)$this->customer_id
+        );
+        return (int)$orders->fields['count'];
+    }
+
+    // -----
+    // Retrieve the current customer's lifetime value, the sum of all
+    // previously-placed orders.
+    //
+    protected function getLifetimeValue()
     {
         global $db, $currencies;
         $lifetime_value = 0;
 
-        if ($order_history === null) {
-            $sql = "SELECT o.orders_id, o.date_purchased, o.order_total AS order_total_raw, o.currency, o.currency_value, o.language_code
-                    FROM " . TABLE_ORDERS . " o
-                    WHERE customers_id = " . (int)$this->customer_id . "
-                    ORDER BY date_purchased DESC";
-            $results = $db->Execute($sql);
-        } else {
-            $results = $order_history;
-        }
+        $sql = "SELECT o.orders_id, o.date_purchased, o.order_total AS order_total_raw, o.currency, o.currency_value, o.language_code
+                FROM " . TABLE_ORDERS . " o
+                WHERE customers_id = " . (int)$this->customer_id . "
+                ORDER BY date_purchased DESC";
+        $results = $db->Execute($sql);
 
         $last_order = null;
         foreach ($results as $result) {
