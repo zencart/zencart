@@ -15,26 +15,28 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 $error = false;
 $enquiry = '';
-$antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
+$antiSpamFieldName = $_SESSION['antispam_fieldname'] ?? 'should_be_empty';
 $telephone = '';
 
-if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
-    $name = zen_db_prepare_input($_POST['contactname']);
-    $email_address = zen_db_prepare_input($_POST['email']);
-    $telephone = zen_db_prepare_input($_POST['telephone']);
-    $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry']));
+if (isset($_GET['action']) && ($_GET['action'] === 'send')) {
+    $name = zen_db_prepare_input($_POST['contactname'] ?? '');
+    $email_address = zen_db_prepare_input($_POST['email'] ?? '');
+    $telephone = zen_db_prepare_input($_POST['telephone'] ?? '');
+    $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry'] ?? ''));
     $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
-    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
+    if (!empty($name) && preg_match('~https?://?~', $name)) {
+        $antiSpam = 'spam';
+    }
 
     $zco_notifier->notify('NOTIFY_CONTACT_US_CAPTCHA_CHECK', $_POST);
 
     $zc_validate_email = zen_validate_email($email_address);
 
-    if ($zc_validate_email && !empty($enquiry) && !empty($name) && $error == FALSE) {
+    if ($zc_validate_email && !empty($enquiry) && !empty($name) && $error === false) {
         // if anti-spam is not triggered, prepare and send email:
-        if ($antiSpam != '') {
+        if ($antiSpam !== '') {
             $zco_notifier->notify('NOTIFY_SPAM_DETECTED_USING_CONTACT_US', $_POST);
-        } elseif ($antiSpam == '') {
+        } else {
 
             // auto complete when logged in
             if (zen_is_logged_in() && !zen_in_guest_checkout()) {
@@ -53,14 +55,14 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
                 $customer_telephone = NOT_LOGGED_IN_TEXT;
             }
 
-            $zco_notifier->notify('NOTIFY_CONTACT_US_ACTION', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0), $customer_email, $customer_name, $email_address, $name, $enquiry, $telephone);
+            $zco_notifier->notify('NOTIFY_CONTACT_US_ACTION', $_SESSION['customer_id'] ?? 0, $customer_email, $customer_name, $email_address, $name, $enquiry, $telephone);
 
             // declare variable
             $send_to_array = [];
 
             // use contact us dropdown if defined and if a destination is provided
-            if (CONTACT_US_LIST != '' && isset($_POST['send_to'])){
-                $send_to_array = explode(",", CONTACT_US_LIST);
+            if (CONTACT_US_LIST !== '' && isset($_POST['send_to'])){
+                $send_to_array = explode(',', CONTACT_US_LIST);
 
                 if (isset($send_to_array[$_POST['send_to']])) {
                     preg_match('/\<[^>]+\>/', $send_to_array[$_POST['send_to']], $send_email_array);
@@ -82,7 +84,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             // Prepare Text-only portion of message
             $text_message = OFFICE_FROM . "\t" . $name . "\n" .
               OFFICE_EMAIL . "\t" . $email_address . "\n";
-            if (!empty($telephone)) $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
+            if (!empty($telephone)) {
+                $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
+            }
             $text_message .= "\n" .
             '------------------------------------------------------' . "\n\n" .
             $enquiry .  "\n\n" .
@@ -101,7 +105,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
         if (empty($name)) {
             $messageStack->add('contact', ENTRY_EMAIL_NAME_CHECK_ERROR);
         }
-        if ($zc_validate_email == false) {
+        if ($zc_validate_email === false) {
             $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
         }
         if (empty($enquiry)) {
@@ -111,7 +115,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
 } // end action==send
 
 
-if (ENABLE_SSL == 'true' && $request_type != 'SSL') {
+if (ENABLE_SSL === 'true' && $request_type !== 'SSL') {
     zen_redirect(zen_href_link(FILENAME_CONTACT_US, '', 'SSL'));
 }
 
@@ -119,7 +123,7 @@ $name = $name ?? '';
 $email_address = $email_address ?? '';
 
 // default email and name if customer is logged in
-if (zen_is_logged_in()) {
+if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone 
             FROM " . TABLE_CUSTOMERS . "
             WHERE customers_id = :customersID";
