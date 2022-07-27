@@ -43,7 +43,7 @@ if ($best_sellers->RecordCount() >= MIN_DISPLAY_BESTSELLERS) {
     $rows++;
     $bestsellers_list[$rows]['id'] = $best_sellers->fields['products_id'];
     $bestsellers_list[$rows]['name']  = $best_sellers->fields['products_name'];
-    $bestsellers_list[$rows]['image'] = zen_image(DIR_WS_IMAGES . $best_sellers->fields['products_image'], $best_sellers->fields['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);;
+    $bestsellers_list[$rows]['image'] = zen_image(DIR_WS_IMAGES . $best_sellers->fields['products_image'], $best_sellers->fields['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
     $bestsellers_list[$rows]['href'] = zen_href_link(zen_get_info_page($best_sellers->fields["products_id"]), 'cPath=' . zen_get_generated_category_path_rev($best_sellers->fields["master_categories_id"]) . '&products_id=' . $best_sellers->fields["products_id"]);
     $bestsellers_list[$rows]['price'] = zen_get_products_display_price((int)$best_sellers->fields['products_id']);
     $bestsellers_list[$rows]['model']  = $best_sellers->fields['products_model'];

@@ -395,7 +395,7 @@ if ($pr_list->EOF) {
         $products_id = $pr_list->fields['product_id'];
         $products_name = zen_get_products_name($products_id, $_SESSION['languages_id']);
         $products_model = htmlspecialchars(zen_get_products_model($products_id), ENT_COMPAT, CHARSET);
-        $products_status = htmlspecialchars(zen_get_products_status($products_id), ENT_COMPAT, CHARSET);;
+        $products_status = htmlspecialchars(zen_get_products_status($products_id), ENT_COMPAT, CHARSET);
 ?>
             <tr class="dataTableRow" data-rid="<?php echo $pr_list->fields['restrict_id']; ?>">
                 <td class="dataTableContent text-center"><?php echo $products_id; ?></td>
