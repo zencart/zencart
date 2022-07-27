@@ -80,7 +80,9 @@ class ot_group_pricing {
   function calculate_deductions($order_total) {
     global $db, $order;
     $od_amount = array();
-    if ($order_total == 0) return $od_amount;
+    if ($order_total == 0 || !zen_is_logged_in() || zen_in_guest_checkout())
+        return $od_amount;
+    }
     $orderTotal = $this->get_order_total();
     $orderTotalTax = $orderTotal['tax'];
     $taxGroups = $orderTotal['taxGroups'];
