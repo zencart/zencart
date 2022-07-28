@@ -32,7 +32,7 @@ $PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $serverScript : 'home.php';
 if (basename($PHP_SELF, '.php') === 'index') {
     $PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
 }
-$PHP_SELF = htmlspecialchars($PHP_SELF);
+$PHP_SELF = htmlspecialchars($PHP_SELF, ENT_COMPAT);
 $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']) . $PHP_SELF;
 // Suppress html from error messages
 @ini_set("html_errors","0");
