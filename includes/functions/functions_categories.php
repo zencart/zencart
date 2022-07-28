@@ -910,9 +910,9 @@ function zen_get_target_categories_products($parent_id = 0, $spacing = '', $cate
                     $category_product_tree_array[] = [
                         'id' => $product['products_id'],
                         'text' => $spacing .
-                            htmlentities($category['categories_name']) . ': ' .
-                            htmlentities($product['products_model']) . ' - ' .
-                            htmlentities($product['products_name']) . ' (#' . $product['products_id'] . ')',
+                            htmlentities($category['categories_name'], ENT_COMPAT) . ': ' .
+                            htmlentities($product['products_model'], ENT_COMPAT) . ' - ' .
+                            htmlentities($product['products_name'], ENT_COMPAT) . ' (#' . $product['products_id'] . ')',
                     ];
                 }
             }
