@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Carbon\Traits;
 
 use Carbon\CarbonInterface;
@@ -51,7 +52,7 @@ trait Rounding
             'millisecond' => [1000, 'microsecond'],
         ];
         $normalizedUnit = static::singularUnit($unit);
-        $ranges = array_merge(static::getRangesByUnit(), [
+        $ranges = array_merge(static::getRangesByUnit($this->daysInMonth), [
             // @call roundUnit
             'microsecond' => [0, 999999],
         ]);
@@ -92,7 +93,7 @@ trait Rounding
                 $delta = $maximum + 1 - $minimum;
                 $factor /= $delta;
                 $fraction *= $delta;
-                $arguments[0] += $this->$unit * $factor;
+                $arguments[0] += ($this->$unit - $minimum) * $factor;
                 $changes[$unit] = round(
                     $minimum + ($fraction ? $fraction * $function(($this->$unit - $minimum) / $fraction) : 0)
                 );
@@ -194,7 +195,10 @@ trait Rounding
      */
     public function roundWeek($weekStartsAt = null)
     {
-        return $this->closest($this->copy()->floorWeek($weekStartsAt), $this->copy()->ceilWeek($weekStartsAt));
+        return $this->closest(
+            $this->avoidMutation()->floorWeek($weekStartsAt),
+            $this->avoidMutation()->ceilWeek($weekStartsAt)
+        );
     }
 
     /**
@@ -219,7 +223,7 @@ trait Rounding
     public function ceilWeek($weekStartsAt = null)
     {
         if ($this->isMutable()) {
-            $startOfWeek = $this->copy()->startOfWeek($weekStartsAt);
+            $startOfWeek = $this->avoidMutation()->startOfWeek($weekStartsAt);
 
             return $startOfWeek != $this ?
                 $this->startOfWeek($weekStartsAt)->addWeek() :
@@ -230,6 +234,6 @@ trait Rounding
 
         return $startOfWeek != $this ?
             $startOfWeek->addWeek() :
-            $this->copy();
+            $this->avoidMutation();
     }
 }

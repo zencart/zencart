@@ -36,6 +36,7 @@ return array(
     'Carbon\\Exceptions\\BadFluentConstructorException' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/BadFluentConstructorException.php',
     'Carbon\\Exceptions\\BadFluentSetterException' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/BadFluentSetterException.php',
     'Carbon\\Exceptions\\BadMethodCallException' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/BadMethodCallException.php',
+    'Carbon\\Exceptions\\EndLessPeriodException' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/EndLessPeriodException.php',
     'Carbon\\Exceptions\\Exception' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/Exception.php',
     'Carbon\\Exceptions\\ImmutableException' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/ImmutableException.php',
     'Carbon\\Exceptions\\InvalidArgumentException' => $vendorDir . '/nesbot/carbon/src/Carbon/Exceptions/InvalidArgumentException.php',
