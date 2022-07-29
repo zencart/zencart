@@ -1,7 +1,14 @@
 <?php
 
+
+    /**
+     *
+     */
     class productPulldown extends pulldown
     {
+        /**
+         * @var string[]
+         */
         private $keyed_allowed_sort_array = [
             'products_name' => 'pd',
             'products_model' => 'p',
@@ -10,7 +17,10 @@
             'products_sort_order' => 'p',
         ];
 
-        function __construct()
+        /**
+         *
+         */
+        public function __construct()
         {
             parent::__construct();
 
@@ -29,7 +39,12 @@
             ];
         }
 
-        public function setSort($fieldnameArray)
+        /**
+         * @param array $fieldnameArray
+         *
+         * @return $this
+         */
+        public function setSort(array $fieldnameArray)
         {
             if (empty($fieldnameArray)) {
                 return $this;
@@ -46,6 +61,11 @@
             return $this;
         }
 
+        /**
+         * @param int $category_id
+         *
+         * @return $this
+         */
         public function setCategory(int $category_id)
         {
             $this->categories_join = " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc ON (ptc.products_id = p.products_id)";
@@ -53,28 +73,46 @@
             return $this;
         }
 
+        /**
+         * @param bool $status
+         *
+         * @return $this
+         */
         public function showModel(bool $status)
         {
             $this->show_model = $status;
             return $this;
         }
 
+        /**
+         * @param bool $status
+         *
+         * @return $this
+         */
         public function showPrice(bool $status)
         {
             $this->show_price = $status;
             return $this;
         }
 
+        /**
+         * @param bool $status
+         *
+         * @return $this
+         */
         public function onlyActive(bool $status)
         {
-        	$condition = " AND p.products_status = 1";
-        	$this->condition = str_replace($condition, '', $this->condition);
-        	if ($status) {
-		        $this->condition .= " AND p.products_status = 1";
-	        }
+            $condition = " AND p.products_status = 1";
+            $this->condition = str_replace($condition, '', $this->condition);
+            if ($status) {
+                $this->condition .= " AND p.products_status = 1";
+            }
             return $this;
         }
 
+        /**
+         * @return mixed|void
+         */
         protected function setSQL()
         {
             $this->sql = "SELECT DISTINCT pd.products_id, p.products_sort_order, p.products_price, p.products_model, pd.products_name
@@ -86,6 +124,9 @@
         }
 
 
+        /**
+         * @return mixed|void
+         */
         protected function processSQL()
         {
             global $currencies;
@@ -119,9 +160,12 @@
                 $name = zen_get_products_name($result['products_id']);
                 $this->values[] = [
                     'id' => $result['products_id'],
-                    'text' => sprintf($this->output_string, trim(zen_clean_html($name)),
-                            ($this->show_model ? ' [' . $result['products_model'] . '] ' : ''),
-                            $currencies->format($display_price)) . ($this->show_id ? ' - ID# ' . $result['products_id'] : ''),
+                    'text' => sprintf(
+                        $this->output_string,
+                        trim(zen_clean_html($name)),
+                        ($this->show_model ? ' [' . $result['products_model'] . '] ' : ''),
+                        $currencies->format($display_price)
+                    ) . ($this->show_id ? ' - ID# ' . $result['products_id'] : ''),
                 ];
             }
         }

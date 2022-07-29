@@ -1,9 +1,15 @@
 <?php
 
+
+    /**
+     *
+     */
     class productOptionsPulldown extends pulldown
     {
-
-        function __construct()
+        /**
+         *
+         */
+        public function __construct()
         {
             parent::__construct();
 
@@ -12,9 +18,11 @@
             $this->keyword_search_fields = [
                 'products_options_name',
             ];
-
         }
 
+        /**
+         * @return mixed|void
+         */
         protected function setSQL()
         {
             $this->sql = "SELECT products_options_id, products_options_name
@@ -22,6 +30,9 @@
                                     WHERE language_id = " . $_SESSION['languages_id'];
         }
 
+        /**
+         * @return mixed|void
+         */
         protected function processSQL()
         {
             $this->setSQL();
@@ -40,10 +51,14 @@
             }
         }
 
+        /**
+         * @param $optionValue
+         *
+         * @return string
+         */
         private function optionText($optionValue)
         {
             $return = "(" . $optionValue['products_options_id'] . ") " . $optionValue['products_options_name'];
             return $return;
         }
-
     }
