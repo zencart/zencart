@@ -274,7 +274,7 @@ class PluginManagerController extends BaseController
         if ($error) {
             zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
         }
-        $installer = $this->installerFactory->make($this->currentRow->unique_key, $this->request->input('version'));
+        $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $upgraded = $installer->processUpgrade($this->currentFieldValue('unique_key'), $this->request->input('version'), $this->currentFieldValue('version'));
         if (!$upgraded) {
             $this->outputMessageList($installer->errorContainer->getFriendlyErrors(), 'error');
