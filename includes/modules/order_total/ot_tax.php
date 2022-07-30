@@ -50,7 +50,7 @@
             }
             foreach ($order->info['tax_groups'] as $key => $value) {
                 if (SHOW_SPLIT_TAX_CHECKOUT === 'true') {
-                    if ($value > 0 || ($value === 0 && STORE_TAX_DISPLAY_STATUS === '1')) {
+                    if ($value > 0 || (abs($value) < PHP_FLOAT_EPSILON && STORE_TAX_DISPLAY_STATUS === '1')) {
                         $this->output[] = [
                             'title' => ((is_numeric($key) && $key == 0) ? TEXT_UNKNOWN_TAX_RATE : $key) . ':',
                             'text' => $currencies->format($value, true, $order->info['currency'], $order->info['currency_value']),
@@ -58,7 +58,7 @@
                         ];
                     }
                 } else {
-                    if ($value > 0 || ($value === 0 && STORE_TAX_DISPLAY_STATUS === '1')) {
+                    if ($value > 0 || (abs($value) < PHP_FLOAT_EPSILON && STORE_TAX_DISPLAY_STATUS === '1')) {
                         $taxDescription .= ((is_numeric($key) && $key == 0) ? TEXT_UNKNOWN_TAX_RATE : $key) . ' + ';
                         $taxValue += $value;
                     }
