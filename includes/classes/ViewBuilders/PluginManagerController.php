@@ -19,7 +19,7 @@ class PluginManagerController extends BaseController
 
     protected function processDefaultAction()
     {
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name')) . '</h4>';
+        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
         if ($this->currentFieldValue('status') == 1) {
             $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->currentFieldValue('version')) . '<br>');
         }
