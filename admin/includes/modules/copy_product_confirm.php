@@ -13,14 +13,14 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
     $products_id = (int)$_POST['products_id'];
     $categories_id = (int)$_POST['categories_id'];
 
-    if ($_POST['copy_as'] == 'link') {
+    if ($_POST['copy_as'] === 'link') {
         if ($categories_id != $current_category_id) {
             zen_link_product_to_category($products_id, $categories_id);
             zen_record_admin_activity('Product ' . $products_id . ' copied as link to category ' . $categories_id . ' via admin console.', 'info');
         } else {
             $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
         }
-    } elseif ($_POST['copy_as'] == 'duplicate') {
+    } elseif ($_POST['copy_as'] === 'duplicate') {
 
         $product = zen_get_product_details($products_id);
 
@@ -41,15 +41,15 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
             $product->fields['products_quantity_order_min'] = 1;
         }
 
-        $sql_data_array = array();
-        $separately_updated_fields = array(
+        $sql_data_array = [];
+        $separately_updated_fields = [
           'products_id',
           'products_status',
           'products_last_modified',
           'products_date_added',
           'products_date_available',
-        );
-        $casted_fields = array(
+        ];
+        $casted_fields = [
           'products_quantity' =>  'float',
           'products_price' =>  'float',
           'products_weight' =>  'float',
@@ -58,7 +58,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
           'product_is_free' =>  'int',
           'product_is_call' =>  'int',
           'products_quantity_mixed' =>  'int',
-        );
+        ];
 
         // -----
         // Give an observer the chance to add any customized fields to the two arrays above.
@@ -66,21 +66,22 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         $zco_notifier->notify('NOTIFY_MODULES_COPY_PRODUCT_CONFIRM_DUPLICATE_FIELDS', $product, $separately_updated_fields, $casted_fields);
 
         foreach ($product->fields as $key => $value) {
-          $value = zen_db_input($value);
-          if (in_array($key, $separately_updated_fields)) {
-            continue;
-          }
-          if (array_key_exists($key, $casted_fields)) {
-            if ($casted_fields[$key] == 'int') {
-              $sql_data_array[$key] = (int)$value;
-            } else if ($casted_fields[$key] == 'float') {
-              $sql_data_array[$key] = (float)$value;
-            } else {
-              $sql_data_array[$key] = (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : $value;
+            if (in_array($key, $separately_updated_fields)) {
+                continue;
             }
-          } else {
-            $sql_data_array[$key] = $value;
-          }
+
+            $value = zen_db_input($value);
+            if (array_key_exists($key, $casted_fields)) {
+                if ($casted_fields[$key] === 'int') {
+                    $sql_data_array[$key] = (int)$value;
+                } elseif ($casted_fields[$key] === 'float') {
+                    $sql_data_array[$key] = (float)$value;
+                } else {
+                    $sql_data_array[$key] = (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : $value;
+                }
+            } else {
+                $sql_data_array[$key] = $value;
+            }
         }
 
         // separately_updated_fields - last_modified and products_id are skipped
@@ -134,9 +135,9 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 // copy attributes to Duplicate
-        if (!empty($_POST['copy_attributes']) && $_POST['copy_attributes'] == 'copy_attributes_yes') {
+        if (!empty($_POST['copy_attributes']) && $_POST['copy_attributes'] === 'copy_attributes_yes') {
 
-            if (DOWNLOAD_ENABLED == 'true') {
+            if (DOWNLOAD_ENABLED === 'true') {
                 $copy_attributes_include_downloads = '1';
                 $copy_attributes_include_filename = '1';
             } else {
@@ -151,7 +152,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         }
 
 // copy meta tags to Duplicate
-        if (!empty($_POST['copy_metatags']) && $_POST['copy_metatags'] == 'copy_metatags_yes') {
+        if (!empty($_POST['copy_metatags']) && $_POST['copy_metatags'] === 'copy_metatags_yes') {
             $metatags_status = $db->Execute("SELECT metatags_title_status, metatags_products_name_status, metatags_model_status, metatags_price_status, metatags_title_tagline_status
                                              FROM " . TABLE_PRODUCTS . "
                                              WHERE products_id = '" . $products_id . "'");
@@ -184,7 +185,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         }
 
 // copy linked categories to Duplicate
-        if (!empty($_POST['copy_linked_categories']) && $_POST['copy_linked_categories'] == 'copy_linked_categories_yes') {
+        if (!empty($_POST['copy_linked_categories']) && $_POST['copy_linked_categories'] === 'copy_linked_categories_yes') {
             $categories_from = zen_get_linked_categories_for_product($products_id);
 
             foreach ($categories_from as $row) {
@@ -194,7 +195,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         }
 
 // copy product discounts to Duplicate
-        if (!empty($_POST['copy_discounts']) && $_POST['copy_discounts'] == 'copy_discounts_yes') {
+        if (!empty($_POST['copy_discounts']) && $_POST['copy_discounts'] === 'copy_discounts_yes') {
             zen_copy_discounts_to_product($products_id, $dup_products_id);
             $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_DISCOUNTS, $products_id, $dup_products_id), 'success');
         }
@@ -214,4 +215,3 @@ if ($_POST['copy_as'] === 'duplicate' && !empty($_POST['edit_duplicate'])) {
 } else {
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
 }
-
