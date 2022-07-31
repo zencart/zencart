@@ -39,7 +39,57 @@ jobs:
           touch includes/configure.php
 
       - name: Run UnitTests suite
-        run: php vendor/bin/phpunit --verbose --testsuite=UnitTests --debug
+        run: php vendor/bin/phpunit --verbose --testsuite=Unit --debug
+
+
+  database-tests:
+     runs-on: ubuntu-latest
+     strategy:
+       matrix:
+         php-versions: ['7.4', '8.0', '8.1']
+     name: PHP ${{ matrix.php-versions }} Datasbase Tests
+     services:
+       mysql:
+         image: mysql:5.7
+         env:
+           MYSQL_DATABASE: zencart_test
+           MYSQL_USER: user
+           MYSQL_PASSWORD: password
+           MYSQL_ROOT_PASSWORD: password
+         ports:
+           - 3306:3306
+         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v2
+         with:
+           fetch-depth: 1
+
+       - name: Setup PHP
+         uses: shivammathur/setup-php@v2
+         with:
+           php-version: ${{ matrix.php-versions }}
+           tools: composer, phpunit
+
+       - name: Get composer cache directory
+         id: composer-cache
+         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+       - name: Cache composer dependencies
+         uses: actions/cache@v1
+         with:
+           path: ${{ steps.composer-cache.outputs.dir }}
+           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+           restore-keys: ${{ runner.os }}-composer-
+
+       - name: Install Composer dependencies
+         run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
+
+       - name: Prepare the application
+         run: |
+           touch includes/configure.php
+
+       - name: Run UnitTests suite
+         run: php vendor/bin/phpunit --verbose --testsuite=Dbunit --debug
 
 #   browser-tests:
 #     name: Browser Tests

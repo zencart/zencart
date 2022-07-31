@@ -3,9 +3,8 @@
 namespace Tests\Browser;
 
 
-use Laravel\Dusk\Browser;
-use Tests\Browser\Traits\ConfigureFileConcerns;
 use Tests\Browser\Traits\DatabaseConcerns;
+use Tests\Support\Traits\ConfigureFileConcerns;
 
 abstract class InstallDuskTestCase extends DuskTestCase
 {

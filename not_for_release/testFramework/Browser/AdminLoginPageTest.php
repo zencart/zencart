@@ -2,10 +2,7 @@
 
 namespace Tests\Browser;
 
-use Tests\Browser\Pages\AdminHomePage;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Traits\ConfigureFileConcerns;
-use Tests\Browser\Traits\DatabaseConcerns;
 
 class AdminLoginPageTest extends AdminDuskTestCase
 {
