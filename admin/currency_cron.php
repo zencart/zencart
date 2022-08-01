@@ -48,7 +48,7 @@ if (isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
 }
 
 // setup
-chdir( dirname(__FILE__) );
+chdir(__DIR__);
 $loaderPrefix = 'currency_cron';
 $_SERVER['REMOTE_ADDR'] = 'cron';
 $_SERVER['REQUEST_URI'] = 'cron';
