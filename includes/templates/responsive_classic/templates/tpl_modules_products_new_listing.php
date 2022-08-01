@@ -74,7 +74,7 @@
       }
 
       if (PRODUCT_NEW_LIST_DATE_ADDED != '0' and $flag_show_date_added) {
-        $display_products_date_added = '<b>' . TEXT_DATE_ADDED . '</b> ' . zen_date_long($products_new->fields['products_date_added']) . str_repeat('<br>', substr(PRODUCT_NEW_LIST_DATE_ADDED, 3, 1));
+        $display_products_date_added = '<b>' . TEXT_DATE_ADDED_LISTING . '</b> ' . zen_date_long($products_new->fields['products_date_added']) . str_repeat('<br>', substr(PRODUCT_NEW_LIST_DATE_ADDED, 3, 1));
       } else {
         $display_products_date_added = '';
       }
