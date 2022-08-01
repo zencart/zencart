@@ -13,7 +13,7 @@ $is_browser = (isset($_SERVER['HTTP_HOST']) || PHP_SAPI != 'cli');
 if ($is_browser && isset($_SERVER["REMOTE_ADDR"]) && ($_SERVER["REMOTE_ADDR"] != $_SERVER["SERVER_ADDR"])){
   echo ' ERROR: Permission denied.';
   exit(1);
-};
+}
 
 // Some servers' PHP configuration doesn't know where to find the mysql socket correctly (evidenced by getting errors about mysqli and mysql.sock, esp when running cron or command-line scripts, such as this one)
 // uncomment the following line ONLY if your server's configuration requires it and you don't already have this in your configure.php file
