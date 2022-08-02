@@ -12,6 +12,7 @@ use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PageLoader\PageLoader;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Support\Facades\Route;
 
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
@@ -170,6 +171,15 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+$container = new Illuminate\Container\Container;
+$lRequest = \Illuminate\Http\Request::capture();
+$container->instance('Illuminate\Http\Request', $lRequest);
+$events = new \Illuminate\Events\Dispatcher($container);
+$router = new \Illuminate\Routing\Router($events, $container);
+require_once DIR_FS_CATALOG . 'laravel/routes/routes.php';
+//$redirect = new \Illuminate\Routing\Redirector(new \Illuminate\Routing\UrlGenerator($router->getRoutes(), $lRequest));
+//$response = $router->dispatch($lRequest);
+//$response->send();
 
 $pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
 $installedPlugins = $pluginManager->getInstalledPlugins();
