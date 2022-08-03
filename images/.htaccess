@@ -29,7 +29,7 @@
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(jpe?g|gif|webp|png|svgz?)$" >
+<FilesMatch "(?i).*\.(jpe?g|gif|webp|png|svgz?)$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>

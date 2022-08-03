@@ -190,7 +190,7 @@ foreach ($ipn->fields as $key => $value) {
           $output .= '</tr>'."\n";
         if ($ipn->fields['memo'] != '') {
           $output .= '<tr style="background-color : #cccccc; border-style : dotted;">'."\n";
-          $output .= '<td valign="top" colspan="4" ><table>'."\n";
+          $output .= '<td valign="top" colspan="4"><table>'."\n";
           $output .= '<tr><td valign="top" class="main">'."\n";
           $output .= MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS."\n";
           $output .= '</td><td valign="top" class="main">'."\n";
