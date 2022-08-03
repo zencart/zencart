@@ -17,7 +17,7 @@
 <?php
 $action = $_GET['action'] ?? '';
 $to_name = (isset($_POST['to_name'])) ? zen_output_string_protected($_POST['to_name']) : '';
-$error ??= false;
+$error = $error ?? false;
 if ($gv_result->fields['amount'] > 0 && $action === 'doneprocess') {
 ?>
         <p><?php echo TEXT_SEND_ANOTHER; ?></p>
