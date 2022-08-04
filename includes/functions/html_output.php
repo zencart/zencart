@@ -114,170 +114,189 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
  * The HTML image wrapper function for non-proportional images
  * used when "proportional images" is turned off or if calling from a template directory
  */
-  function zen_image_OLD($src, $alt = '', $width = '', $height = '', $parameters = '') {
+function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters = '')
+{
     global $template_dir;
 
-//auto replace with defined missing image
-    if ($src == DIR_WS_IMAGES and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
-      $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    //auto replace with defined missing image
+    if ($src === DIR_WS_IMAGES && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
 
-    if ( (empty($src) || $src == DIR_WS_IMAGES) && (IMAGE_REQUIRED == 'false') ) {
-      return false;
+    if ((empty($src) || $src === DIR_WS_IMAGES) && IMAGE_REQUIRED === 'false') {
+        return false;
     }
 
     // if not in current template switch to template_default
-    if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+    $file_exists = is_file($src);
+    if ($file_exists === false) {
+        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+        $file_exists = is_file($src);
     }
-
-// alt is added to the img tag even if it is null to prevent browsers from outputting
-// the image filename as default
-    $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
-
-    if (!empty($alt)) {
-      $image .= ' title="' . zen_output_string($alt) . '"';
-    }
-
-    if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height)) ) {
-      if ($image_size = @getimagesize($src)) {
-        if (empty($width) && zen_not_null($height)) {
-          $ratio = $height / $image_size[1];
-          $width = $image_size[0] * $ratio;
-        } elseif (zen_not_null($width) && empty($height)) {
-          $ratio = $width / $image_size[0];
-          $height = $image_size[1] * $ratio;
-        } elseif (empty($width) && empty($height)) {
-          $width = $image_size[0];
-          $height = $image_size[1];
-        }
-      } elseif (IMAGE_REQUIRED == 'false') {
+    if ($file_exists === false && IMAGE_REQUIRED === 'false') {
         return false;
-      }
     }
 
-    if (zen_not_null($width) && zen_not_null($height)) {
-      $image .= ' width="' . zen_output_string($width) . '" height="' . zen_output_string($height) . '"';
+    // The alt attribute is now provided as an empty string, with the addition of a
+    // role="presentation", since most browsers see an empty alt attribute as presentational
+    // and now-current browsers also accept the 'role=' attribute.
+    $image = '<img src="' . zen_output_string($src) . '" alt=""';
+    if (strpos($parameters, 'role="presentation"') === false) {
+        $image .= ' role="presentation"';
     }
 
-    if (!empty($parameters)) $image .= ' ' . $parameters;
+    if (!empty($title)) {
+        $image .= ' title="' . zen_output_string($title) . '"';
+    }
+
+    $width = (int)$width;
+    $height = (int)$height;
+    if ($file_exists === true && CONFIG_CALCULATE_IMAGE_SIZE === 'true' && ($width === 0 || $height === 0)) {
+        $image_size = getimagesize($src);
+        if ($image_size === false) {
+            if (IMAGE_REQUIRED === 'false') {
+                return false;
+            }
+        } elseif ($width === 0 && $height === 0) {
+            $width = (int)$image_size[0];
+            $height = (int)$image_size[1];
+        } elseif ($width === 0) {
+            $ratio = $height / $image_size[1];
+            $width = (int)($image_size[0] * $ratio);
+        } else {
+            $ratio = $width / $image_size[0];
+            $height = (int)($image_size[1] * $ratio);
+        }
+    }
+
+    if ($width !== 0 && $height !== 0) {
+        $image .= ' width="' . $width . '" height="' . $height . '"';
+    }
+
+    if (!empty($parameters)) {
+        $image .= ' ' . $parameters;
+    }
 
     $image .= '>';
 
     return $image;
-  }
-
+}
 
 /*
  * The HTML image wrapper function
  */
-  function zen_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
+function zen_image($src, $title = '', $width = '', $height = '', $parameters = '')
+{
     global $template_dir, $zco_notifier;
 
-    // soft clean the alt tag
-    $alt = zen_clean_html($alt);
+    // soft clean the title attribute's value
+    $title = zen_clean_html($title);
 
     // use old method on template images
-    if (strstr($src, 'includes/templates') || strstr($src, 'includes/languages') || PROPORTIONAL_IMAGES_STATUS == '0') {
-      return zen_image_OLD($src, $alt, $width, $height, $parameters);
+    if (strpos($src, 'includes/templates') !== false || strpos($src, 'includes/languages') !== false || PROPORTIONAL_IMAGES_STATUS === '0') {
+        return zen_image_OLD($src, $title, $width, $height, $parameters);
     }
 
-//auto replace with defined missing image
-    if ($src == DIR_WS_IMAGES and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
-      $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    //auto replace with defined missing image
+    if ($src === DIR_WS_IMAGES && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
 
-    if ( (empty($src) || ($src == DIR_WS_IMAGES)) && IMAGE_REQUIRED == 'false') {
-      return false;
+    if ((empty($src) || ($src === DIR_WS_IMAGES)) && IMAGE_REQUIRED === 'false') {
+        return false;
     }
 
     // if not in current template switch to template_default
-    if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+    if (!is_file($src)) {
+        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
     }
 
     // hook for handle_image() function such as Image Handler etc
     if (function_exists('handle_image')) {
-      $newimg = handle_image($src, $alt, $width, $height, $parameters);
-      list($src, $alt, $width, $height, $parameters) = $newimg;
-      $zco_notifier->notify('NOTIFY_HANDLE_IMAGE', array($newimg));
+        $newimg = handle_image($src, $title, $width, $height, $parameters);
+        list($src, $title, $width, $height, $parameters) = $newimg;
+        $zco_notifier->notify('NOTIFY_HANDLE_IMAGE', [$newimg]);
     }
 
     //image is defined but is missing
-    if (PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !file_exists($src)) {
-      $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    if (PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !is_file($src)) {
+        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
     
-    $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $alt, $width, $height, $parameters);
+    $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $title, $width, $height, $parameters);
+
+    // Determine if the source-file exists.
+    $file_exists = is_file($src);
+    $image_size = false;
+    if ($file_exists === true) {
+        $image_size = getimagesize($src);
+    }
+    if ($image_size === false && IMAGE_REQUIRED === 'false') {
+        return false;
+    }
 
     // Convert width/height to int for proper validation.
-    // intval() used to support compatibility with plugins like image-handler
-    $width = empty($width) ? $width : (int)$width;
-    $height = empty($height) ? $height : (int)$height;
+    $width = empty($width) ? 0 : (int)$width;
+    $height = empty($height) ? 0 : (int)$height;
 
-// alt is added to the img tag even if it is null to prevent browsers from outputting
-// the image filename as default
-    $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
-
-    if (!empty($alt)) {
-      $image .= ' title="' . zen_output_string($alt) . '"';
+    // The alt attribute is now provided as an empty string, with the addition of a
+    // role="presentation", since most browsers see an empty alt attribute as presentational
+    // and now-current browsers also accept the 'role=' attribute.
+    $image = '<img src="' . zen_output_string($src) . '" alt=""';
+    if (strpos($parameters, 'role="presentation"') === false) {
+        $image .= ' role="presentation"';
     }
 
-    if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height))) {
-      if ($image_size = @getimagesize($src)) {
-        if (empty($width) && !empty($height)) {
-          $ratio = $height / $image_size[1];
-          $width = $image_size[0] * $ratio;
-        } elseif (!empty($width) && empty($height)) {
-          $ratio = $width / $image_size[0];
-          $height = $image_size[1] * $ratio;
-        } elseif (empty($width) && empty($height)) {
-          $width = $image_size[0];
-          $height = $image_size[1];
+    if (!empty($title)) {
+        $image .= ' title="' . zen_output_string($title) . '"';
+    }
+
+    if ($image_size !== false && CONFIG_CALCULATE_IMAGE_SIZE === 'true' && ($width === 0 || $height === 0)) {
+        if ($width === 0 && $height === 0) {
+            $width = $image_size[0];
+            $height = $image_size[1];
+        } elseif ($width === 0) {
+            $ratio = $height / $image_size[1];
+            $width = (int)($image_size[0] * $ratio);
+        } else {
+            $ratio = $width / $image_size[0];
+            $height = (int)($image_size[1] * $ratio);
         }
-      } elseif (IMAGE_REQUIRED == 'false') {
-        return false;
-      }
     }
 
+    if ($image_size !== false && $width !== 0 && $height !== 0) {
+        // fix division by zero error
+        $ratio = ($image_size[0] !== 0) ? $width / $image_size[0] : 1;
+        if ($image_size[1] * $ratio > $height) {
+            $ratio = $height / $image_size[1];
+            $width = (int)($image_size[0] * $ratio);
+        } else {
+            $height = (int)($image_size[1] * $ratio);
+        }
 
-    if (!empty($width) && !empty($height) && file_exists($src)) {
-// proportional images
-      $image_size = @getimagesize($src);
-      // fix division by zero error
-      $ratio = ($image_size[0] != 0 ? $width / $image_size[0] : 1);
-      if ($image_size[1]*$ratio > $height) {
-        $ratio = $height / $image_size[1];
-        $width = $image_size[0] * $ratio;
-      } else {
-        $height = $image_size[1] * $ratio;
-      }
-// only use proportional image when image is larger than proportional size
-      if ($image_size[0] < $width and $image_size[1] < $height) {
-        $image .= ' width="' . $image_size[0] . '" height="' . (int)$image_size[1] . '"';
-      } else {
-        $image .= ' width="' . round($width) . '" height="' . round($height) . '"';
-      }
-    } else {
-       // override on missing image to allow for proportional and required/not required
-      if (IMAGE_REQUIRED == 'false') {
-        return false;
-      } else if (substr($src, 0, 4) != 'http') {
+        // only use proportional image when image is larger than proportional size
+        if ($image_size[0] < $width && $image_size[1] < $height) {
+            $image .= ' width="' . $image_size[0] . '" height="' . $image_size[1] . '"';
+        } else {
+            $image .= ' width="' . (int)round($width) . '" height="' . (int)round($height) . '"';
+        }
+    } elseif (strpos($src, 'http') !== 0) {
         $image .= ' width="' . (int)SMALL_IMAGE_WIDTH . '" height="' . (int)SMALL_IMAGE_HEIGHT . '"';
-      }
     }
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
-    if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS != '') {
-      $parameters .= (!empty($parameters) ? ' ' : '') . 'class="rollover"';
+    if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS !== '') {
+        $parameters .= (!empty($parameters) ? ' ' : '') . 'class="rollover"';
     }
     // add $parameters to the tag output
-    if (!empty($parameters)) $image .= ' ' . $parameters;
+    if (!empty($parameters)) {
+        $image .= ' ' . $parameters;
+    }
 
     $image .= '>';
 
     return $image;
-  }
+}
 
 /*
  * The HTML form submit button wrapper function
