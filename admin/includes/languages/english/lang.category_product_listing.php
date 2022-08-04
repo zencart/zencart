@@ -68,6 +68,17 @@ $define = [
     'WARNING_PRODUCTS_IN_TOP_INFO' => 'WARNING: You have Products in the Top Level Category. This will cause pricing to not work properly in the Catalog. Products found: ',
     'TEXT_COPY_MEDIA_MANAGER' => 'Copy media?',
     'SUCCESS_ATTRIBUTES_DELETED' => 'Attributes successfully deleted',
+    'TEXT_SORT_CATEGORIES_NAME_DESC' => 'Category Name (desc)',
+    'TEXT_SORT_CATEGORIES_ID' => 'Category ID',
+    'TEXT_SORT_CATEGORIES_ID_DESC' => 'Category ID (desc)',
+    'TEXT_SORT_CATEGORIES_STATUS' => 'Category Status (disabled)',
+    'TEXT_SORT_CATEGORIES_STATUS_DESC' => 'Category Status (enabled)',
+    'TEXT_SORT_PRODUCTS_MODEL_DESC' => 'Products Model (desc)',
+    'TEXT_SORT_PRODUCTS_STATUS' => 'Status (disabled), Name',
+    'TEXT_SORT_PRODUCTS_STATUS_DESC' => 'Status (enabled), Name',
+    'TEXT_SORT_PRODUCTS_ID' => 'Products ID',
+    'TEXT_SORT_PRODUCTS_ID_DESC' => 'Products ID (desc)',
+    'TEXT_SORT_PRODUCTS_WEIGHT' => 'Weight',
 ];
 
 return $define;
