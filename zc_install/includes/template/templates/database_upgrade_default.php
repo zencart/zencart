@@ -17,7 +17,7 @@
 <div id="upgradeResponsesHolder"></div>
 
 <form id="db_upgrade<?php echo (count($newArray)) ? '' : '_done'; ?>" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide="ajax">
-  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
   <input type="hidden" name="action" value="process">
 <?php if (sizeof($newArray)) { ?>
   <input type="hidden" name="upgrade_mode" value="yes">

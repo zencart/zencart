@@ -86,7 +86,7 @@ function executeSql($lines, $database, $table_prefix = '') {
 
      // Preset entries 0..5 if not set
      for ($i = 0; $i <= 13; $i++) {
-        if (!isset($param[$i])) $param[$i] = ''; 
+        if (!isset($param[$i])) $param[$i] = '';
      }
 
     // The following command checks to see if we're asking for a block of commands to be run at once.
@@ -821,7 +821,7 @@ if (!empty($action)) {
         }
       </script>
     </head>
-    <body onLoad="init()" >
+    <body onLoad="init()">
       <!-- header //-->
       <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
       <!-- header_eof //-->

@@ -20,11 +20,11 @@
 <?php } ?>
 
 <form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" data-abide>
-  <input type="hidden" name="action" value="process" >
-  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
+  <input type="hidden" name="action" value="process">
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
   <?php foreach ($_POST as $key=>$value) {  ?>
     <?php if ($key != 'action') { ?>
-    <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" >
+    <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
     <?php }?>
   <?php }?>
   <fieldset>
