@@ -414,22 +414,32 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               	$zc_skip_products = false;
             }
 
-            if ($zc_skip_products == true) {
-              // toggle switch for display sort order
-              $categories_products_sort_order_array = array(array('id' => '0', 'text' => TEXT_SORT_CATEGORIES_SORT_ORDER_CATEGORIES_NAME),
-                array('id' => '1', 'text' => TEXT_SORT_CATEGORIES_NAME)
-              );
+            if ($zc_skip_products === true) {
+                // toggle switch for category display sort order
+                $categories_products_sort_order_array = array(
+                    array('id' => '0', 'text' => TEXT_SORT_CATEGORIES_SORT_ORDER_CATEGORIES_NAME),
+                    array('id' => '1', 'text' => TEXT_SORT_CATEGORIES_NAME),
+                    array('id' => '2', 'text' => TEXT_SORT_CATEGORIES_ID),
+                    array('id' => '3', 'text' => TEXT_SORT_CATEGORIES_ID_DESC),
+                    array('id' => '4', 'text' => TEXT_SORT_CATEGORIES_STATUS),
+                    array('id' => '5', 'text' => TEXT_SORT_CATEGORIES_STATUS_DESC)
+                );
             } else {
-              // toggle switch for display sort order
-              $categories_products_sort_order_array = array(
-                array('id' => '0', 'text' => TEXT_SORT_PRODUCTS_SORT_ORDER_PRODUCTS_NAME),
-                array('id' => '1', 'text' => TEXT_SORT_PRODUCTS_NAME),
-                array('id' => '2', 'text' => TEXT_SORT_PRODUCTS_MODEL),
-                array('id' => '3', 'text' => TEXT_SORT_PRODUCTS_QUANTITY),
-                array('id' => '4', 'text' => TEXT_SORT_PRODUCTS_QUANTITY_DESC),
-                array('id' => '5', 'text' => TEXT_SORT_PRODUCTS_PRICE),
-                array('id' => '6', 'text' => TEXT_SORT_PRODUCTS_PRICE_DESC)
-              );
+                // toggle switch for product display sort order
+                $categories_products_sort_order_array = array(
+                    array('id' => '0', 'text' => TEXT_SORT_PRODUCTS_SORT_ORDER_PRODUCTS_NAME),
+                    array('id' => '1', 'text' => TEXT_SORT_PRODUCTS_NAME),
+                    array('id' => '2', 'text' => TEXT_SORT_PRODUCTS_MODEL),
+                    array('id' => '3', 'text' => TEXT_SORT_PRODUCTS_QUANTITY),
+                    array('id' => '4', 'text' => TEXT_SORT_PRODUCTS_QUANTITY_DESC),
+                    array('id' => '5', 'text' => TEXT_SORT_PRODUCTS_PRICE),
+                    array('id' => '6', 'text' => TEXT_SORT_PRODUCTS_PRICE_DESC),
+                    array('id' => '7', 'text' => TEXT_SORT_PRODUCTS_MODEL_DESC),
+                    array('id' => '8', 'text' => TEXT_SORT_PRODUCTS_STATUS),
+                    array('id' => '9', 'text' => TEXT_SORT_PRODUCTS_STATUS_DESC),
+                    array('id' => '10', 'text' => TEXT_SORT_PRODUCTS_ID),
+                    array('id' => '11', 'text' => TEXT_SORT_PRODUCTS_WEIGHT)
+                );
             }
             echo zen_draw_form('set_categories_products_sort_order_form', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get', 'class="form-horizontal"');
             ?>
@@ -509,18 +519,27 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
       <div class="row">
         <div<?php echo (empty($action)) ? '' : ' class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft"'; ?>>
           <?php
-          $order_by = " ";
           switch ($_SESSION['categories_products_sort_order']) {
-            case (0):
-              $order_by = " ORDER BY c.sort_order, cd.categories_name";
-              break;
-            case (1):
-              $order_by = " ORDER BY cd.categories_name";
-            case (2);
-            case (3);
-            case (4);
-            case (5);
-            case (6);
+              case (0):
+                  $order_by = " ORDER BY c.sort_order, cd.categories_name";
+                  break;
+              case (1):
+                  $order_by = " ORDER BY cd.categories_name";
+                  break;
+              case (2):
+                  $order_by = " ORDER BY cd.categories_id";
+                  break;
+              case (3):
+                  $order_by = " ORDER BY cd.categories_id DESC";
+                  break;
+              case (4):
+                  $order_by = " ORDER BY c.categories_status, cd.categories_name";
+                  break;
+              case (5):
+                  $order_by = " ORDER BY c.categories_status, cd.categories_name DESC";
+                  break;
+              default:
+                  $order_by = " ";
           }
 
           $categories_count = 0;
@@ -711,30 +730,45 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               <?php
             }
 
-
-            $order_by = " ";
             switch ($_SESSION['categories_products_sort_order']) {
-              case (0):
-                $order_by = " ORDER BY p.products_sort_order, pd.products_name";
-                break;
-              case (1):
-                $order_by = " ORDER BY pd.products_name";
-                break;
-              case (2);
-                $order_by = " ORDER BY p.products_model";
-                break;
-              case (3);
-                $order_by = " ORDER BY p.products_quantity, pd.products_name";
-                break;
-              case (4);
-                $order_by = " ORDER BY p.products_quantity DESC, pd.products_name";
-                break;
-              case (5);
-                $order_by = " ORDER BY p.products_price_sorter, pd.products_name";
-                break;
-              case (6);
-                $order_by = " ORDER BY p.products_price_sorter DESC, pd.products_name";
-                break;
+                case (0):
+                    $order_by = " ORDER BY p.products_sort_order, pd.products_name";
+                    break;
+                case (1):
+                    $order_by = " ORDER BY pd.products_name";
+                    break;
+                case (2):
+                    $order_by = " ORDER BY p.products_model";
+                    break;
+                case (3):
+                    $order_by = " ORDER BY p.products_quantity, pd.products_name";
+                    break;
+                case (4):
+                    $order_by = " ORDER BY p.products_quantity DESC, pd.products_name";
+                    break;
+                case (5):
+                    $order_by = " ORDER BY p.products_price_sorter, pd.products_name";
+                    break;
+                case (6):
+                    $order_by = " ORDER BY p.products_price_sorter DESC, pd.products_name";
+                    break;
+                case (7):
+                    $order_by = " ORDER BY p.products_model DESC";
+                    break;
+                case (8):
+                    $order_by = " ORDER BY p.products_status";
+                    break;
+                case (9):
+                    $order_by = " ORDER BY p.products_status DESC";
+                    break;
+                case (10):
+                    $order_by = " ORDER BY p.products_id";
+                    break;
+                case (11):
+                    $order_by = " ORDER BY p.products_weight";
+                    break;
+                default:
+                    $order_by = " ";
             }
 
             $products_count = 0;
