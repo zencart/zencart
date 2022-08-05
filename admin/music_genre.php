@@ -98,6 +98,7 @@ if (!empty($action)) {
 
                     $aInfo_array = array_merge($music_genre, $music_genre_products->fields);
                     $aInfo = new objectInfo($aInfo_array);
+                    $_GET['mID'] = $aInfo->music_genre_id;
                   }
 
                   if (isset($aInfo) && is_object($aInfo) && ($music_genre['music_genre_id'] == $aInfo->music_genre_id)) {

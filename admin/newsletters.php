@@ -15,7 +15,7 @@ if (!empty($action)) {
     case 'set_editor':
       // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
       $action = '';
-      zen_redirect(zen_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'nID=' . $newsletter_id));
+      zen_redirect(zen_href_link(FILENAME_NEWSLETTERS,  (isset($_GET['page']) ? 'page=' . $_GET['page'] : '') ));
       break;
     case 'insert':
     case 'update':
@@ -211,7 +211,7 @@ if (!empty($action)) {
         }
         ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWSLETTER_MODULE, 'modules', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(TEXT_NEWSLETTER_MODULE, 'module', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_pull_down_menu('module', $modules_array, $nInfo->module, 'class="form-control"'); ?>
           </div>
@@ -238,6 +238,7 @@ if (!empty($action)) {
           <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_SAVE : IMAGE_UPDATE); ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['nID']) ? 'nID=' . $_GET['nID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
+        echo '</form>'; 
       } elseif ($action == 'preview') {
         $nID = zen_db_prepare_input($_GET['nID']);
 
@@ -253,11 +254,11 @@ if (!empty($action)) {
         <div class="row"><?php echo zen_draw_separator(); ?></div>
         <div class="row">
           <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT_HTML), '', 'class="control-label"'); ?></div>
-          <div class="col-sm-9 col-md-6"><?php echo nl2br($nInfo->content_html); ?></div>
+          <div class="col-sm-9 col-md-6" ><?php echo nl2br($nInfo->content_html); ?></div>
         </div>
         <div class="row">
           <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT), '', 'class="control-label"'); ?></div>
-          <div class="col-sm-9 col-md-6"><tt><?php echo nl2br($nInfo->content); ?></tt></div>
+          <div class="col-sm-9 col-md-6"><span class="tt"><?php echo nl2br($nInfo->content); ?></span></div>
         </div>
         <div class="row"><?php echo zen_draw_separator(); ?></div>
         <div class="row text-right">
@@ -329,8 +330,8 @@ if (!empty($action)) {
         <div class="row">
           <h1><span class="text-danger"><?php echo TEXT_FINISHED_SENDING_EMAILS; ?></span></h1>
         </div>
-        <div class="row">
-          <span class="text-danger"><?php echo sprintf(TEXT_AFTER_EMAIL_INSTRUCTIONS, $i); ?></span>
+        <div class="row text-danger" >
+          <?php echo sprintf(TEXT_AFTER_EMAIL_INSTRUCTIONS, $i); ?>
         </div>
         <div class="row text-center">
           <a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
@@ -370,16 +371,16 @@ if (!empty($action)) {
                     <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id']); ?>'">
                       <?php } ?>
                     <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id'] . '&action=preview') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $newsletter['title']; ?></td>
-                    <td class="dataTableContent" align="right"><?php echo number_format($newsletter['content_length'] + $newsletter['content_html_length']) . ' bytes'; ?></td>
-                    <td class="dataTableContent" align="right"><?php echo $newsletter['module']; ?></td>
-                    <td class="dataTableContent" align="center"><?php
+                    <td class="dataTableContent text-right"><?php echo number_format($newsletter['content_length'] + $newsletter['content_html_length']) . ' bytes'; ?></td>
+                    <td class="dataTableContent text-right"><?php echo $newsletter['module']; ?></td>
+                    <td class="dataTableContent text-center"><?php
                         if ($newsletter['status'] == '1') {
                           echo zen_image(DIR_WS_ICONS . 'tick.gif', ICON_TICK);
                         } else {
                           echo zen_image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS);
                         }
                         ?></td>
-                    <td class="dataTableContent" align="right"><?php
+                    <td class="dataTableContent text-right"><?php
                         if (isset($nInfo) && is_object($nInfo) && ($newsletter['newsletters_id'] == $nInfo->newsletters_id)) {
                           echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                         } else {

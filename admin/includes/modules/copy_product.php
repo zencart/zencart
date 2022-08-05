@@ -34,7 +34,7 @@ $contents[] = array('text' => zen_draw_label(TEXT_CATEGORIES, 'categories_id', '
 $contents[] = array(
     'text' => '<h5>' . TEXT_HOW_TO_COPY . '</h5>' .
         '<div class="radio h6"><label>' . zen_draw_radio_field('copy_as', 'link', true) . TEXT_COPY_AS_LINK . '</label></div>' .
-        zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%"') .
+        zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1', '') .
         '<div class="radio h6"><label>' . zen_draw_radio_field('copy_as', 'duplicate') . TEXT_COPY_AS_DUPLICATE . '</label></div>'
 );
 
@@ -84,10 +84,10 @@ if (zen_has_product_discounts($pInfo->products_id) == 'true') {
     );
 }
 $contents[] = array('text' => '<label>' . zen_draw_checkbox_field('edit_duplicate', '1', true) . TEXT_COPY_EDIT_DUPLICATE . '</label>');
-$contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"'));
+$contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3', ''));
 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY . '</button>
 <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
 );
 
-$contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%"'));
+$contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1', ''));
 $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $pInfo->products_id . '&current_category_id=' . $current_category_id) . '" class="btn btn-info" role="button">' . BUTTON_PRODUCTS_TO_CATEGORIES . '</a>');

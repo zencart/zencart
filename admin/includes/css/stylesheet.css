@@ -839,6 +839,7 @@ input.faint {
 
 .control-label {/*for multiple inputs*/
     font-weight: 700;
+    font-size:inherit;
 }
 
 .txt-black {

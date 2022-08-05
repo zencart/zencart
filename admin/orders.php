@@ -1340,7 +1340,6 @@ if (!empty($action) && $order_exists === true) {
                 <td class="dataTableContent text-left">
 <?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
                 </td>
-                </td>
 <?php } ?> 
                 <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br />' => '', '<hr>' => "----\n"]); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
@@ -1490,7 +1489,7 @@ if (!empty($action) && $order_exists === true) {
                                               LIMIT 1");
                     if ($gv_check->RecordCount() > 0) {
                       $goto_gv = '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'order=' . $oInfo->orders_id) . '" class="btn btn-primary" role="button">' . IMAGE_GIFT_QUEUE . '</a>';
-                      $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
+                      $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3', '')];
                       $contents[] = ['align' => 'text-center', 'text' => $goto_gv];
                     }
 
@@ -1515,7 +1514,7 @@ if (!empty($action) && $order_exists === true) {
                       $contents[] = ['text' => nl2br(zen_output_string($orders_history_query->fields['comments'], false, $protected))];
                     }
 
-                    $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
+                    $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '3', '')];
                     $order = new order($oInfo->orders_id);
                     $contents[] = ['text' => TABLE_HEADING_PRODUCTS . ': ' . count($order->products)];
                     for ($i = 0, $n=count($order->products); $i <$n; $i++) {

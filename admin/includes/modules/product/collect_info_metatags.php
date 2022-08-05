@@ -94,41 +94,41 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
   <div class="form-group">
     <div class="col-sm-3 control-label"><?php echo TEXT_META_TAG_TITLE_INCLUDES; ?></div>
     <div class="col-sm-6">
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS, 'metatags_products_name_status', 'class="col-sm-3 control-label"'); ?>
+      <fieldset class="form-group">
+          <legend class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS; ?></legend>
         <div class="col-sm-9">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_products_name_status', '1', ($pInfo->metatags_products_name_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_products_name_status', '0', ($pInfo->metatags_products_name_status == '0')) . TEXT_NO; ?></label>
         </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_TITLE_STATUS, 'metatags_title_status', 'class="col-sm-3 control-label"'); ?>
+      </fieldset>
+      <fieldset class="form-group">
+          <legend class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_METATAGS_TITLE_STATUS; ?></legend>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_status', '1', ($pInfo->metatags_title_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_status', '0', ($pInfo->metatags_title_status == '0')) . TEXT_NO; ?></label>
         </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_MODEL_STATUS, 'metatags_model_status', 'class="col-sm-3 control-label"'); ?>
+      </fieldset>
+      <fieldset class="form-group">
+          <legend class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_METATAGS_MODEL_STATUS; ?></legend>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_model_status', '1', ($pInfo->metatags_model_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_model_status', '0', ($pInfo->metatags_model_status == '0')) . TEXT_NO; ?></label>
         </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_PRICE_STATUS, 'metatags_price_status', 'class="col-sm-3 control-label"') ?>
+      </fieldset>
+      <fieldset class="form-group">
+          <legend class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_METATAGS_PRICE_STATUS; ?></legend>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_price_status', '1', ($pInfo->metatags_price_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_price_status', '0', ($pInfo->metatags_price_status == '0')) . TEXT_NO; ?></label>
         </div>
-      </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS, 'metatags_title_tagline_status', 'class="col-sm-3 control-label"'); ?>
+      </fieldset>
+      <fieldset class="form-group">
+          <legend class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS; ?></legend>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_tagline_status', '1', ($pInfo->metatags_title_tagline_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_tagline_status', '0', ($pInfo->metatags_title_tagline_status == '0')) . TEXT_NO; ?></label>
         </div>
-      </div>
+      </fieldset>
     </div>
   </div>
   <div class="form-group"><?php echo zen_draw_separator('pixel_black.gif', '100%', '3'); ?></div>
@@ -147,7 +147,7 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_META_TAGS_TITLE, 'metatags_title[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_title'), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false) . 'class="form-control"'); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"'); ?>
+                <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_title'), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false) . ' class="form-control"'); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"'); ?>
             </div>
           </div>
           <div class="form-group">

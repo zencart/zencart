@@ -204,7 +204,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           <?php echo zen_draw_form('mail', FILENAME_GV_MAIL, 'action=send_email_to_user'); ?>
           <table class="table">
             <tr>
-              <td width="25%" class="text-right"><b><?php echo TEXT_FROM; ?></b></td>
+              <td class="text-right col-sm-3"><b><?php echo TEXT_FROM; ?></b></td>
               <td><?php echo htmlspecialchars(stripslashes($_POST['from']), ENT_COMPAT, CHARSET, true); ?></td>
             </tr>
             <tr>
@@ -256,9 +256,9 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
                   <?php echo zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();" class="form-control" id="reset_editor"'); ?>
                 </div>
                 <?php echo zen_hide_session_id(); ?>
-                <?php echo zen_draw_hidden_field('action', 'set_editor'); ?>
-                <?php echo'</form>'; ?>
+                <?php echo zen_draw_hidden_field('action', 'set_editor'); ?>          
               </div>
+            <?php echo'</form>'; ?>
             </div>
           </div>
           <?php

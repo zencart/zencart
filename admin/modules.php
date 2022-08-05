@@ -347,7 +347,7 @@ if (!empty($action)) {
                     if (method_exists($module, 'help')) { 
                        $help_text = $module->help();
                        if (isset($help_text['link'])) { 
-                          $help_button = array('align' => 'text-center', 'text' => '<a href="' . $help_text['link'] . '" target="_blank" rel="noreferrer noopener">' . '<button type="submit" class="btn btn-primary " id="helpButton">' . IMAGE_MODULE_HELP. '</button></a>'); 
+                          $help_button = array('align' => 'text-center', 'text' => '<a href="' . $help_text['link'] . '" target="_blank" rel="noreferrer noopener" class="btn btn-primary " id="helpButton">' . IMAGE_MODULE_HELP. '</a>'); 
                        } else if (isset($help_text['body'])) { 
                           $help_title = $module->title; 
                           $help_button = array('align' => 'text-center', 'text' => '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal">' . IMAGE_MODULE_HELP . '</button>');

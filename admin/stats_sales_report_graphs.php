@@ -288,8 +288,8 @@ for ($i = 0; $i < $report->size; $i++) {
         </table>
         <table class="table table-condensed">
           <tr class="dataTableRow">
-            <td class="dataTableContent" width="80%" align="left"><?php echo FILTER_STATUS ?></td>
-            <td class="dataTableContent" align="right"><?php echo FILTER_VALUE ?></td>
+            <td class="dataTableContent col-sm-9 text left"><?php echo FILTER_STATUS ?></td>
+            <td class="dataTableContent text-right"><?php echo FILTER_VALUE ?></td>
           </tr>
           <?php
           if (($sales_report_filter) == 0) {
@@ -300,13 +300,13 @@ for ($i = 0; $i < $report->size; $i++) {
           for ($i = 0; $i < $report->status_available_size; $i++) {
             ?>
             <tr>
-              <td class="dataTableContent" align="left"><?php echo $report->status_available[$i]['value'] ?></a></td>
+              <td class="dataTableContent text-left"><?php echo $report->status_available[$i]['value'] ?></td>
               <?php
               if (substr($sales_report_filter, $i, 1) == "0") {
                 $tmp = substr($sales_report_filter, 0, $i) . "1" . substr($sales_report_filter, $i + 1, $report->status_available_size - ($i + 1));
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
-                <td class="dataTableContent" width="100%" align="right">
+                <td class="dataTableContent col-sm-12 text-right">
                   <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?>&nbsp;
                   <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></a></td>
                 <?php
@@ -314,7 +314,7 @@ for ($i = 0; $i < $report->size; $i++) {
                 $tmp = substr($sales_report_filter, 0, $i) . "0" . substr($sales_report_filter, $i + 1);
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
-                <td class="dataTableContent" width="100%" align="right">
+                <td class="dataTableContent col-sm-12 text-right">
                   <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?></a>
                   &nbsp;<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></td>
                 <?php

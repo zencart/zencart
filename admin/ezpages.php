@@ -243,7 +243,7 @@ if (!empty($action)) {
             <?php echo '</form>'; ?>
           <?php } ?>
         </div>
-      </div>
+      
       <?php
       if ($action == 'new') {
         $form_action = 'insert';
@@ -357,21 +357,21 @@ if (!empty($action)) {
         <div class="form-group">
           <?php echo zen_draw_label(TABLE_HEADING_PAGE_OPEN_NEW_WINDOW, 'page_open_new_window', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', ($ezInfo->page_open_new_window == 1)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', ($ezInfo->page_open_new_window == 1),'','id="page_open_new_window"') . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', ($ezInfo->page_open_new_window == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
         <div class="form-group">
           <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_SSL, 'page_is_ssl', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', ($ezInfo->page_is_ssl == 1)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', ($ezInfo->page_is_ssl == 1),'','id="page_is_ssl"') . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '0', ($ezInfo->page_is_ssl == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
         <div class="form-group">
           <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_VISIBLE, 'page_is_visible', 'class="col-sm-3 control-label"'); ?>
           <div class="col-sm-9 col-md-6">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '1', ($ezInfo->status_visible == 1)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '1', ($ezInfo->status_visible == 1),'','id="page_is_visible"') . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '0', ($ezInfo->status_visible == 0)) . TEXT_NO; ?></label>
             <br><br><?php echo TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION; ?>
           </div>
@@ -398,7 +398,7 @@ if (!empty($action)) {
             <p class="control-label"><?php echo zen_draw_label(TABLE_HEADING_STATUS_SIDEBOX, 'status_sidebox', 'class="control-label"'); ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '1', ($ezInfo->status_sidebox == 1)) . TEXT_YES; ?></label>
+            <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '1', ($ezInfo->status_sidebox == 1),'','id="status_sidebox"') . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '0', ($ezInfo->status_sidebox == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
@@ -419,9 +419,9 @@ if (!empty($action)) {
           </div>
         </div>
         <div class="form-group">
-          <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label col-sm-3"'); ?>
+          <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'footer_sort_order', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-2">
-            <?php echo zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control" id="footer_sort_order"'); ?>
+            <?php echo zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control"'); ?>
           </div>
         </div>
         <hr>
@@ -507,7 +507,7 @@ if (!empty($action)) {
       <?php } else { ?>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
@@ -594,9 +594,9 @@ if (!empty($action)) {
                   }
                   if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) {
                     ?>
-                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="button">
+                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="option" aria-selected="true">
                     <?php } else { ?>
-                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="button">
+                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="option" aria-selected="false">
                     <?php } ?>
                     <td class="dataTableContent text-right"><?php echo ($zv_link_method_cnt > 1 ? zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) : '') . '&nbsp;' . $page['pages_id']; ?></td>
                     <td class="dataTableContent"><?php echo $page['pages_title']; ?></td>

@@ -306,7 +306,7 @@ $cr_list = $db->Execute($cr_query_raw);
 ?>
     <div class="row">
         <h4><?php echo HEADING_TITLE_CATEGORY; ?></h4>
-        <table class="table table-hover">
+        <table class="table table-hover t1">
 <?php
 if ($cr_list->EOF) {
 ?>
@@ -371,16 +371,7 @@ $pr_list = $db->Execute($pr_query_raw);
     <div class="row">
         <h4><?php echo HEADING_TITLE_PRODUCT; ?></h4>
         <table class="table table-hover">
-<?php
-if ($pr_list->EOF) {
-?>
-            <tr class="dataTableHeadingRow">
-                <td colspan="6" class="dataTableHeadingContent text-center"><?php echo TEXT_NO_PRODUCT_RESTRICTIONS; ?></td>
-            </tr>
-<?php
-} else {
-?>
-            <tr class="dataTableHeadingRow">
+        <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_PRODUCT_ID; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></td>
                 <td class="dataTableHeadingContent text-left"><?php echo TABLE_HEADING_MODEL; ?></td>
@@ -389,6 +380,14 @@ if ($pr_list->EOF) {
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_RESTRICT_REMOVE; ?></td>
             </tr>
 <?php
+if ($pr_list->EOF) {
+?>
+            <tr class="dataTableHeadingRow">
+                <td colspan="6" class="dataTableHeadingContent text-center"><?php echo TEXT_NO_PRODUCT_RESTRICTIONS; ?></td>
+            </tr>
+<?php
+} else {
+
     $products_status_disabled = zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF);
     $products_status_enabled = zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON);
     while (!$pr_list->EOF) {

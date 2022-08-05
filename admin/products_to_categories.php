@@ -690,7 +690,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                         }
                         // Add a class to the checkbox so that it can be identified as a target category checkbox, for the purposes of selecting all/none at once
                         $zc_categories_checkbox = zen_draw_checkbox_field('categories_add[]',
-                            $categories_list->fields['categories_id'], $selected, '', 'class="TargetCategoryCheckbox"');
+                        $categories_list->fields['categories_id'], $selected, '', 'class="TargetCategoryCheckbox" id="categories_add[' . (int)$categories_list->fields['categories_id'] . '"');
 
                         if ($cnt_columns === 1) {
                             ?>

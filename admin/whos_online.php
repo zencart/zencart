@@ -182,7 +182,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     // item css classes indicating cart status: 'wo-inactive-empty', 'wo-active-empty', 'wo-inactive-not-empty', 'wo-active-not-empty'
                     ?>
                 <td class="dataTableContentWhois <?php echo $item['icon_class']; ?>"><?php echo $item['icon_image'] . '&nbsp;' . gmdate('H:i:s', $item['time_online']); ?></td>
-                <td class="dataTableContentWhois" align="center">
+                <td class="dataTableContentWhois text-center">
                     <?php
                     if ($item['customer_id'] != 0) {
                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $item['customer_id'] . '&action=edit', 'NONSSL') . '"><u>' . $item['customer_id'] . '</u></a>';
@@ -191,7 +191,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     }
                     ?>
                 </td>
-                <td class="dataTableContentWhois" nowrap="nowrap">
+                <td class="dataTableContentWhois text-nowrap">
                     <?php
                     if ($item['customer_id'] != 0) {
                       echo '<a href="' . zen_href_link(FILENAME_ORDERS, 'cID=' . $item['customer_id'], 'NONSSL') . '">' . '<u>' . $item['full_name'] . '</u></a>';
@@ -200,7 +200,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     }
                     ?>
                 </td>
-                <td class="dataTableContentWhois dataTableButtonCell" align="left" valign="top">
+                <td class="dataTableContentWhois dataTableButtonCell text-left">
                     <?php
                     $whois_url = 'https://whois.domaintools.com/' . $item['ip_address'];
                     $additional_ipaddress_links = '';
@@ -212,9 +212,9 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     <?php echo $additional_ipaddress_links; ?>
                 </td>
                 <td>&nbsp;</td>
-                <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_entry']); ?></td>
-                <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_last_click']); ?></td>
-                <td class="dataTableContentWhois" colspan="2" valign="top">&nbsp;</td>
+                <td class="dataTableContentWhois text-center"><?php echo date('H:i:s', $item['time_entry']); ?></td>
+                <td class="dataTableContentWhois text-center"><?php echo date('H:i:s', $item['time_last_click']); ?></td>
+                <td class="dataTableContentWhois" >&nbsp;</td>
                 </tr>
                 <?php
                 // show host name
@@ -225,8 +225,8 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     echo '              <tr class="' . ($item['is_a_bot'] ? 'dataTableRowBot' : 'dataTableRowWhois') .' whois-listing-row" data-sid="' . $item['session_id'] .'">' . "\n";
                   }
                   ?>
-                  <td class="dataTableContentWhois" colspan=3 valign="top">&nbsp;&nbsp;<?php echo TIME_PASSED_LAST_CLICKED . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $item['time_since_last_click']; ?> ago</td>
-                  <td class="dataTableContentWhois dataTableButtonCell" colspan=5 valign="top">
+                  <td class="dataTableContentWhois" colspan=3>&nbsp;&nbsp;<?php echo TIME_PASSED_LAST_CLICKED . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . $item['time_since_last_click']; ?> ago</td>
+                  <td class="dataTableContentWhois dataTableButtonCell" colspan=5>
                       <?php
                       echo TEXT_SESSION_ID . zen_output_string_protected($item['session_id']) . '<br>' .
                       TEXT_HOST . zen_output_string_protected($item['host_address']) . '<br>' .

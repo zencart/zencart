@@ -202,7 +202,7 @@ switch ($action) {
               <input class="btn btn-info checkButton" type="button" value="<?php echo TEXT_UNCHECK_ALL; ?>" onclick="checkAll(this.form, '<?php echo $menuKey ?>', false);">
             </dt>
             <?php foreach ($pageList as $pageKey => $page) { ?>
-              <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), in_array($pageKey, $permittedPages), '', ' class="' . $menuKey . ' admin-profile"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
+              <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), in_array($pageKey, $permittedPages), '', ' class="' . $menuKey . ' admin-profile" id="' . zen_make_id('p[' . $pageKey . ']"')); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
             <?php } ?>
           </dl>
         <?php } ?>
@@ -234,7 +234,7 @@ switch ($action) {
               <input class="btn btn-info checkButton" type="button" value="<?php echo TEXT_UNCHECK_ALL; ?>" onclick="checkAll(this.form, '<?php echo $menuKey ?>', false);">
             </dt>
             <?php foreach ($pageList as $pageKey => $page) { ?>
-              <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '"'); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
+              <dd><label><?php echo zen_draw_checkbox_field('p[]', htmlspecialchars($pageKey, ENT_COMPAT, CHARSET, TRUE), isset($_POST['p']) && in_array($pageKey, $_POST['p']), '', ' class="' . $menuKey . '" id="' . zen_make_id('p[' . $pageKey . ']"')); ?><?php echo zen_output_string($page['name'], false, true); ?></label></dd>
             <?php } ?>
           </dl>
         <?php } ?>

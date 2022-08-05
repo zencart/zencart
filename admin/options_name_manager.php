@@ -748,7 +748,7 @@ function translate_type_to_name($opt_type)
                     echo zen_draw_hidden_field('form_wrapper_id', 'addOptionValuesOneWrapper'); ?>
                     <div>
                         <div class="col-sm-3">
-                            <?php echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"'); ?>
+                            <?php echo zen_draw_label(TEXT_SELECT_OPTION, 'addOptionValuesOne', 'class="control-label"'); ?>
                             <?php echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, $selectedOptionId, 'class="form-control" id="addOptionValuesOne" onchange="this.form.submit();" required'); ?></div>
                         <div class="col-sm-7">
                             <?php
@@ -782,7 +782,7 @@ function translate_type_to_name($opt_type)
                     <div class="row">
                         <div class="col-sm-3">
                             <?php
-                            echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
+                            echo zen_draw_label(TEXT_SELECT_OPTION, 'addOptionValuesCategory', 'class="control-label"');
                             echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, $selectedOptionId, 'class="form-control optionNameFilter" id="addOptionValuesCategory" onchange="this.form.submit();" required'); ?></div>
                         <div class="col-sm-7">
                             <?php
@@ -821,8 +821,8 @@ function translate_type_to_name($opt_type)
                     <div class="row">
                         <div class="col-sm-3">
                             <?php
-                            echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
-                            echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, '', 'class="form-control" required'); ?>
+                            echo zen_draw_label(TEXT_SELECT_OPTION, 'delete_values_all', 'class="control-label"');
+                            echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, '', 'class="form-control" id="delete_values_all" required'); ?>
                         </div>
                         <div class="col-sm-7">&nbsp;</div>
                         <div class="col-sm-2">
@@ -846,7 +846,7 @@ function translate_type_to_name($opt_type)
                     <div class="row">
                         <div class="col-sm-3">
                             <?php
-                            echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
+                            echo zen_draw_label(TEXT_SELECT_OPTION, 'deleteOptionValuesOne', 'class="control-label"');
                             echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, $selectedOptionId, 'class="form-control optionNameFilter" id="deleteOptionValuesOne" onchange="this.form.submit(this.id);" required'); ?>
                         </div>
                         <div class="col-sm-7">
@@ -881,7 +881,7 @@ function translate_type_to_name($opt_type)
                     <div class="row">
                         <div class="col-sm-3">
                             <?php
-                            echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
+                            echo zen_draw_label(TEXT_SELECT_OPTION, 'deleteOptionValuesCategory', 'class="control-label"');
                             echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, $selectedOptionId, 'class="form-control optionNameFilter" id="deleteOptionValuesCategory" onchange="this.form.submit();" required'); ?>
                         </div>
                         <div class="col-sm-7">

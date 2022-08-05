@@ -139,7 +139,7 @@ if (!empty($action)) {
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <!-- body_text //-->
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONFIGURATION_TITLE; ?></th>
@@ -179,9 +179,9 @@ if (!empty($action)) {
                   }
 
                   if ((isset($cInfo) && is_object($cInfo)) && ($item['configuration_id'] == $cInfo->configuration_id)) {
-                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '\'" role="button">' . "\n";
+                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '\'" role="option" aria-selected="true">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $item['configuration_id'] . '&action=layout_edit') . '\'" role="button">' . "\n";
+                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $item['configuration_id'] . '&action=layout_edit') . '\'" role="option" aria-selected="false">' . "\n";
                   }
                   ?>
                 <td class="dataTableContent"><?php echo $item['configuration_title']; ?></td>
@@ -190,7 +190,7 @@ if (!empty($action)) {
                   if ((isset($cInfo) && is_object($cInfo)) && ($item['configuration_id'] == $cInfo->configuration_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $item['configuration_id'] . '&action=layout') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO);
                   }
                   ?>&nbsp;</td>
                 </tr>
@@ -256,7 +256,7 @@ if (!empty($action)) {
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <!-- body_text //-->
 
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT_TYPES; ?></th>
@@ -281,18 +281,18 @@ if (!empty($action)) {
                   }
 
                   if (isset($ptInfo) && is_object($ptInfo) && ($product_type['type_id'] == $ptInfo->type_id)) {
-                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id'] . '&action=layout') . '\'" role="button">' . "\n";
+                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id'] . '&action=layout') . '\'" role="option" aria-selected="true">' . "\n";
                   } else {
-                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id']) . '\'" role="button">' . "\n";
+                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id']) . '\'" role="option" aria-selected="false">' . "\n";
                   }
                   ?>
                 <td class="dataTableContent"><?php echo $product_type['type_name']; ?></td>
-                <td class="dataTableContent" align="center"><?php echo $product_type['allow_add_to_cart']; ?></td>
-                <td class="dataTableContent" align="right"><?php
+                <td class="dataTableContent text-center"><?php echo $product_type['allow_add_to_cart']; ?></td>
+                <td class="dataTableContent text-right"><?php
                   if ((isset($ptInfo) && is_object($ptInfo)) && ($product_type['type_id'] == $ptInfo->type_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_type['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO);
                   }
                   ?>&nbsp;</td>
                 </tr>

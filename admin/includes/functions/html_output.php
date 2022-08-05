@@ -137,10 +137,13 @@ function zen_catalog_base_link($connection = '')
       $image .= ' title="' . zen_output_string($alt) . '"';
     }
     if ($width) {
-      $image .= ' width="' . $width . '"';
-    }
-    if ($height) {
-      $image .= ' height="' . $height . '"';
+        if ($height) {
+            $image .= ' style="width:' . $width . (is_numeric($width)? 'px;': ';') . ' height:' . $height . (is_numeric($height)? 'px;': ';') . '"';
+        } else {
+            $image .= ' style="width:' . $width . (is_numeric($width)? 'px;': ';') .'"';
+        }
+    } elseif ($height) {
+        $image .= ' style="height:' . $height . (is_numeric($height)? 'px;': ';') . '"';
     }
     if ($params) {
       $image .= ' ' . $params;
@@ -169,14 +172,13 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 ////
 // Draw a 1 pixel black line
   function zen_black_line() {
-    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%;"');
+    return zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1', '');
   }
 
 ////
 // Output a separator either through whitespace, or with an image
   function zen_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    if (substr(rtrim($width), -1) != "%") $width = $width . 'px';
-    return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
+    return zen_image(DIR_WS_IMAGES . $image, '', $width, $height, '');
   }
 
 /**
@@ -267,8 +269,11 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
     $type = 'number" step="0.01';
   }
   $field = ($required ? '<div class="input-group">' . PHP_EOL : '');
-  $field .= '<input type="' . $type . '" name="' . zen_output_string($name) . '"';
-
+  $field .= '<input type="' . $type . '" name="' . zen_output_string($name); 
+  if ($parameters === '' || preg_match('/id[ ]*=/',$parameters) === 0) {   
+      $field.= '" id="' . zen_output_string($name);
+  }
+  $field .= '"';
   if ($value == '~*~*#' && (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true)) {
     $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
   } elseif ($value != '~*~*#' && zen_not_null($value)) {
@@ -295,8 +300,13 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 // Output a form password field
   function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
     $parameters .= ' maxlength="40"';
-    if($autocomplete == false){
-      $parameters .= ' autocomplete="off"';
+    if ($autocomplete === false) {
+        // Check if autocomplete already in parameters and replace with off if it is.
+        if ($parameters !== '' && preg_match('/autocomplete[ ]*=[ ]*"[^"]*"/',$parameters) === 1) {
+            $parameters = preg_replace('/autocomplete[ ]*=[ ]*"[^"]*"/', 'autocomplete="off"', $parameters);
+        } else {
+            $parameters .= ' autocomplete="off"';
+        }   
     }
     $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
 
@@ -337,6 +347,9 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 ////
 // Output a form checkbox field
   function zen_draw_checkbox_field($name, $value = '', $checked = false, $compare = '', $parameters = '') {
+      if ($parameters === '' || preg_match('/id[ ]*=/',$parameters) === 0) {
+          $parameters.= ' id="' . zen_output_string($name) . '"';
+      } 
     return zen_draw_selection_field($name, 'checkbox', $value, $checked, $compare, $parameters);
   }
 
@@ -349,8 +362,13 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 ////
 // Output a form textarea field
   function zen_draw_textarea_field($name, $wrap, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
-    $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
-
+      $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) .
+          (is_numeric($width)? '" cols="'  : '" style="width:') . (($width==='') ? '100%' : zen_output_string($width)) .
+          '" rows="' . zen_output_string($height);
+    if ($parameters === '' || preg_match('/id[ ]*=/',$parameters) === 0) {   
+        $field.= '" id="' . zen_output_string($name);
+    }
+    $field .= '"';
     if (!empty($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
@@ -398,7 +416,11 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
 {
   $field = ($required ? '<div class="input-group">' . PHP_EOL : '');
-  $field .= '<select rel="dropdown" name="' . zen_output_string($name) . '"';
+  $field .= '<select rel="dropdown" name="' . zen_output_string($name);
+  if ($parameters === '' || preg_match('/id[ ]*=/',$parameters) === 0) {   
+      $field.= '" id="' . zen_output_string($name);
+  }
+  $field .= '"';
 
   if (!empty($parameters)) {
     $field .= ' ' . $parameters;
@@ -448,9 +470,9 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
  * @param string $parameters
  * @return string
  */
-function zen_draw_label($text, $for, $parameters = '')
+function zen_draw_label($text, $for = '', $parameters = '')
 {
-    $label = '<label for="' . $for . '"' . (!empty($parameters) ? ' ' . $parameters : '') . '>' . $text . '</label>';
+    $label = '<label ' . (!empty($for) ? 'for="' . $for . '" ' : '') . (!empty($parameters) ? $parameters : '') . '>' . $text . '</label>';
     return $label;
 }
 
@@ -479,21 +501,21 @@ function zen_draw_date_selector($fieldname_prefix, $default_date='') {
     $day = $usedate['mday'];
     $month = $usedate['mon'];
     $year = $usedate['year'];
-    $date_selector = '<select name="'. $fieldname_prefix .'_day">';
+    $date_selector = '<select name="'. $fieldname_prefix .'_day" id="'. $fieldname_prefix .'_day">';
     for ($i=1;$i<32;$i++){
         $date_selector .= '<option value="' . $i . '"';
         if ($i==$day) $date_selector .= ' selected';
         $date_selector .= '>' . $i . '</option>';
     }
     $date_selector .= '</select>';
-    $date_selector .= '<select name="'. $fieldname_prefix .'_month">';
+    $date_selector .= '<select name="'. $fieldname_prefix .'_month" id="'. $fieldname_prefix .'_month">';
     for ($i=1;$i<13;$i++){
         $date_selector .= '<option value="' . $i . '"';
         if ($i==$month) $date_selector .= ' selected';
         $date_selector .= '>' . $month_array[$i] . '</option>';
     }
     $date_selector .= '</select>';
-    $date_selector .= '<select name="'. $fieldname_prefix .'_year">';
+    $date_selector .= '<select name="'. $fieldname_prefix .'_year" id="'. $fieldname_prefix .'_year">';
     for ($i = date('Y') - 5, $j = date('Y') + 11; $i < $j; $i++) {
         $date_selector .= '<option value="' . $i . '"';
         if ($i==$year) $date_selector .= ' selected';
@@ -532,7 +554,7 @@ function zen_draw_date_selector($fieldname_prefix, $default_date='') {
                 <div class="form-group">' .
             zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'keywords', 'class="control-label col-sm-3"') . '
                          <div class="col-sm-9">' .
-            zen_draw_input_field('keywords', ($_POST['keywords'] ?? ''), 'class="form-control" id="keywords"') . '
+            zen_draw_input_field('keywords', ($_POST['keywords'] ?? ''), 'class="form-control"') . '
                          </div>
                 </div>' . zen_hide_session_id();
         if (!empty($keywords_products)) {
@@ -552,4 +574,17 @@ function zen_draw_date_selector($fieldname_prefix, $default_date='') {
             </div>
         </div>';
         return $html;
+    }
+
+    /**
+     * intended to create Valid HTML5 id attribute
+     * @param string $id
+     * @return string
+     */
+    function zen_make_id (string $id) {
+        // remove white space from string
+        $str = preg_replace('/\s+/', '', $id);
+        // remove any numbers from the start of the string
+        $str = preg_replace('/^\d/', '', $str);
+        return $str;
     }

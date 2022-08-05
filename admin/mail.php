@@ -22,7 +22,7 @@ $upload_file_name = $attachment_file = $attachment_filetype = '';
 if ($action == 'set_editor') {
   // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
   $action = '';
-  zen_redirect(zen_href_link(FILENAME_MAIL));
+  zen_redirect(zen_href_link(FILENAME_MAIL, $_GET['calling_parameters'] ?? ''));
 }
 
 if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']) && !isset($_POST['back'])) {
@@ -185,10 +185,11 @@ if ($action == 'preview') {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="row text-right">
           <?php
-          // toggle switch for editor
+          // toggle switch for editor add calling parameters so customer details are not lost.
           echo TEXT_EDITOR_INFO . zen_draw_form('set_editor_form', FILENAME_MAIL, '', 'get') . '&nbsp;&nbsp;' . zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();"') .
           zen_hide_session_id() .
           zen_draw_hidden_field('action', 'set_editor') .
+          zen_draw_hidden_field('calling_parameters', strstr($_SERVER['QUERY_STRING'] ?? '' , '&')) .
           '</form>';
           ?>
       </div>
@@ -224,7 +225,7 @@ if ($action == 'preview') {
               $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview));
               $message_preview = str_replace(array('<br>', '<br />'), "<br />\n", $message_preview);
               $message_preview = str_replace('</p>', "</p>\n", $message_preview);
-              echo '<tt>' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE)) . '</tt>';
+              echo '<span class="tt">' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE)) . '</span>';
               ?>
           </div>
           <div class="col-sm-12"><hr></div>
@@ -276,7 +277,12 @@ if ($action == 'preview') {
             <div class="col-sm-9"><?php echo zen_draw_input_field('subject', htmlspecialchars(isset($_POST['subject']) ? $_POST['subject'] : '', ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
           </div>
           <div class="form-group">
-            <?php echo zen_draw_label(TEXT_MESSAGE_HTML, 'message_html', 'class="col-sm-3 control-label"'); //HTML version   ?>
+            <?php  
+            if (EMAIL_USE_HTML == 'true') {
+                echo zen_draw_label(TEXT_MESSAGE_HTML, 'message_html', 'class="col-sm-3 control-label"'); //HTML version   
+            } else {
+                echo '<div class="col-sm-3 control-label">' . TEXT_MESSAGE_HTML . '</div>';
+            }?>
             <div class="col-sm-9">
                 <?php
                 if (EMAIL_USE_HTML == 'true') {
@@ -324,6 +330,10 @@ if ($action == 'preview') {
           <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, (!empty($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : ''), $request_type); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
+        echo '</form>'; 
+        ?>
+      </div>
+      <?php 
       }
       ?>
       <!-- body_text_eof //-->

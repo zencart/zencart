@@ -722,7 +722,7 @@ if (!empty($action)) {
         ?>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-right">
@@ -886,9 +886,9 @@ if (!empty($action)) {
 
                   if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] == $cInfo->customers_id)) {
                     ?>
-                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=edit'); ?>'" role="button">
+                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=edit'); ?>'" role="option" aria-selected="true">
                     <?php } else { ?>
-                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customer['customers_id']); ?>'" role="button">
+                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customer['customers_id']); ?>'" role=option aria-selected="false">
                       <?php
                     }
 
@@ -946,13 +946,13 @@ if (!empty($action)) {
                     <?php } ?>
                     <td class="dataTableContent text-center">
                       <?php echo zen_draw_form('set_status_' . (int)$customer['customers_id'], FILENAME_CUSTOMERS, 'action=status&cID=' . $customer['customers_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>
-                      <button type="submit" class="btn btn-status">
+                        <button type="submit" class="btn btn-status">
                         <?php if ($customer['customers_authorization'] == 0) { ?>
                           <i class="fa fa-square txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
                           <i class="fa fa-square txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
-                      </button>
+                        </button>
                       <?php echo zen_draw_hidden_field('current_status', strval($customer['customers_authorization'])); ?>
                       <?php echo '</form>'; ?>
                     </td>

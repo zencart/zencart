@@ -95,7 +95,7 @@ switch ($_GET['action']) {
           <?php echo zen_draw_form('quick_jump', FILENAME_PRODUCTS_OPTIONS_VALUES, '', 'get', 'class="form-horizontal"'); ?>
           <table class="table table-condensed">
             <tr class="dataTableHeadingRow">
-              <td colspan="2" align="center" class="dataTableHeadingContent"><?php echo TEXT_UPDATE_OPTION_VALUES; ?></td>
+              <td colspan="2" class="dataTableHeadingContent text-center"><?php echo TEXT_UPDATE_OPTION_VALUES; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent">

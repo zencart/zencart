@@ -206,7 +206,7 @@ if (!empty($action)) {
                   $record_company_inputs_string .= '<br><div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('record_company_url[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_RECORD_COMPANY_INFO, 'record_company_url') . ' class="form-control"') . '</div>';
                 }
 
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url', 'class="control-label"') . $record_company_inputs_string);
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url[' . $languages[0]['id'] . ']', 'class="control-label"') . $record_company_inputs_string);
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $_GET['mID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
@@ -228,7 +228,7 @@ if (!empty($action)) {
                   $record_company_inputs_string .= '<br><div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('record_company_url[' . $languages[$i]['id'] . ']', zen_get_record_company_url($aInfo->record_company_id, $languages[$i]['id']), zen_set_field_length(TABLE_RECORD_COMPANY_INFO, 'record_company_url') . ' class="form-control"') . '</div>';
                 }
 
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url', 'class="control-label"') . $record_company_inputs_string);
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url[' . $languages[0]['id'] . ']', 'class="control-label"') . $record_company_inputs_string);
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $aInfo->record_company_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':

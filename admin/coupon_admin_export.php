@@ -94,6 +94,7 @@ if ($action != '')
       { //process records
         $i = 0;
         // make a <table> tag if HTML output
+        $exporter_output = '';
         if ($format == "HTML")
         {
           $exporter_output .= '<table border="1">' . $NL;
@@ -282,15 +283,16 @@ if ($action != '')
             //open output file for readback
             $readback = file_get_contents(DIR_FS_COUPON_EXPORT . $file);
           }
+          unset($f);
           if ($readback !== FALSE && $readback == $exporter_output) {
             $messageStack->add_session(SUCCESS_EXPORT_DISCOUNT_COUPON_LOG . $file, 'success');
           } else {
             $messageStack->add_session(FAILURE_EXPORT_DISCOUNT_COUPON_LOG . $file, 'error');
           }
-          unset($f);
         } // endif $save_to_file
       } //end if $records for processing not 0
-      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN_EXPORT));
+      unset($_GET['action']);
+      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN_EXPORT,$_GET));
       break;
 
   } //end switch / case
@@ -310,17 +312,16 @@ require (DIR_WS_INCLUDES . 'header.php');
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
+
     <!-- body_text //-->
-    <td width="100%" valign="top">
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+
+    <table class="table">
       <tr>
-        <td width="100%">
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td >
+        <table class="table">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table>
         </td>
@@ -330,24 +331,25 @@ require (DIR_WS_INCLUDES . 'header.php');
       </tr>
 
 <?php if ($action == '') { ?>
-      <tr><?php echo zen_draw_form('export', FILENAME_COUPON_ADMIN_EXPORT, 'action=save&codebase=' . $_GET['codebase'], 'post'); //, 'onsubmit="return check_form(export);"');   ?>
-        <td align="center">
-        <table border="0" cellspacing="0" cellpadding="2">
+      <tr>
+        <td>
+        <?php echo zen_draw_form('export', FILENAME_COUPON_ADMIN_EXPORT, 'action=save&codebase=' . $_GET['codebase'] . '&cid=' . $_GET['cid'], 'post'); //, 'onsubmit="return check_form(export);"');   ?>
+        <table class="details">
         <tr><td><h2><?php echo HEADING_SUB1 . ' - ' . $_GET['codebase']; ?></h2></td></tr>
           <tr>
-            <td class="main" colspan="2"><?php echo TEXT_INSTRUCTIONS; ?></td>
+            <td class="main" ><?php echo TEXT_INSTRUCTIONS; ?></td>
           </tr>
           <tr>
             <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td ><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td ><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?> <strong><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></strong><br>
@@ -355,11 +357,11 @@ require (DIR_WS_INCLUDES . 'header.php');
               </td>
           </tr>
           <tr>
-            <td class="main" align="right"><?php echo '<input type="submit" name="submit" value="'. (defined('BUTTON_TEXT_EXPORT') ? BUTTON_TEXT_EXPORT : IMAGE_GO) . '" id="export_btn" class="btn btn-danger">' . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>'; ?></td>
+            <td class="main text-right"><?php echo '<input type="submit" name="submit" value="'. (defined('BUTTON_TEXT_EXPORT') ? BUTTON_TEXT_EXPORT : IMAGE_GO) . '" id="export_btn" class="btn btn-danger">' . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>'; ?></td>
           </tr>
         </table>
-        </td>
-        </form>
+        <?php echo ' </form>'; ?>
+        </td>   
       </tr>
 
 
@@ -372,4 +374,4 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 </body>
 </html>
-<?php require (DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require (DIR_WS_INCLUDES . 'application_bottom.php'); 

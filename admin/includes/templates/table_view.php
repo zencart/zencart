@@ -28,7 +28,7 @@ use Zencart\Paginator\LaravelPaginator;
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
                 <thead>
                 <tr class="dataTableHeadingRow">
                     <?php foreach ($formatter->getTableHeaders() as $colHeader) { ?>
@@ -42,11 +42,11 @@ use Zencart\Paginator\LaravelPaginator;
                 <?php foreach ($formatter->getTableData() as $tableData) { ?>
                     <?php if ($formatter->isRowSelected($tableData)) { ?>
                         <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo $formatter->getSelectedRowLink(
-                            $tableData); ?>'" role="button">
+                            $tableData); ?>'" role="option" aria-selected="true">
                     <?php } else { ?>
                         <tr class="dataTableRow" onclick="document.location.href='<?php echo
                         $formatter->getNotSelectedRowLink($tableData); ?>'"
-                        role="button">
+                        role="option" aria-selected="false">
                     <?php } ?>
                     <?php foreach ($tableData as $column) { ?>
                         <td class="<?php echo $column['class']; ?>">
@@ -81,9 +81,10 @@ use Zencart\Paginator\LaravelPaginator;
     <?php if ($formatter->hasButtonActions()) { ?>
     <div class="row">
         <?php foreach ($formatter->getButtonActions() as $buttonAction) { ?>
-            <a href="<?php echo zen_href_link($PHP_SELF, $buttonAction['hrefLink']); ?>">
-            <button class="btn <?php echo $buttonAction['buttonClass']; ?>" type="button"><?php echo $buttonAction['title']; ?></button>
+            <a href="<?php echo zen_href_link($PHP_SELF, $buttonAction['hrefLink'] ) . '" class="btn ' . $buttonAction['buttonClass'] . '" role="button'; ?>">
+            <?php echo $buttonAction['title']; ?>
             </a>
         <?php } ?>
     </div>
     <?php } ?>
+</div>
