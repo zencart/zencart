@@ -205,6 +205,14 @@ if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATU
 
 <?php
       }
+
+    // -----
+    // Enable extra content to be included, via additional header_php_*.php files present
+    // in /includes/modules/pages/shopping_cart.
+    //
+    if (!empty($extra_content_shopping_cart)) {
+        echo $extra_content_shopping_cart;
+    }
 ?>
 <?php
   } else {
@@ -213,6 +221,14 @@ if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATU
 <h2 id="cartEmptyText"><?php echo TEXT_CART_EMPTY; ?></h2>
 
 <?php
+    // -----
+    // Enable extra content to be included, via additional header_php_*.php files present
+    // in /includes/modules/pages/shopping_cart.
+    //
+    if (!empty($extra_content_shopping_cart)) {
+        echo $extra_content_shopping_cart;
+    }
+
 $show_display_shopping_cart_empty = $db->Execute(SQL_SHOW_SHOPPING_CART_EMPTY);
 
 while (!$show_display_shopping_cart_empty->EOF) {
