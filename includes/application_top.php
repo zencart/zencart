@@ -16,7 +16,6 @@ use App\Models\PluginControlVersion;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\InitSystem\InitSystem;
-use Illuminate\Database\Capsule\Manager as Capsule;
 
 // Set session ID
 $zenSessionId = 'zenid';
@@ -112,6 +111,7 @@ if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTI
 } else {
     error_reporting(0);
 }
+
 @date_default_timezone_set(date_default_timezone_get());
 /**
  * check for and include load application parameters
@@ -198,18 +198,7 @@ $zc_cache = new cache();
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 
-$capsule = new Capsule;
-$capsule->addConnection([
-    'driver'    => DB_TYPE,
-    'host'      => DB_SERVER,
-    'database'  => DB_DATABASE,
-    'username'  => DB_SERVER_USERNAME,
-    'password'  => DB_SERVER_PASSWORD,
-    'charset'   => DB_CHARSET,
-    // do not pass prefix; this is included in the table definition
-]);
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
+require DIR_FS_CATALOG . 'includes/application_laravel.php';
 
 $pluginManager = new PluginManager(new PluginControl(), new \App\Models\PluginControlVersion());
 $installedPlugins = $pluginManager->getInstalledPlugins();

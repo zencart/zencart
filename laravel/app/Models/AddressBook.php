@@ -9,14 +9,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class Customer extends Eloquent
+class AddressBook extends Eloquent
 {
-    protected $table = TABLE_CUSTOMERS;
-    protected $primaryKey = 'customers_id';
+    protected $table = TABLE_ADDRESS_BOOK;
+    protected $primaryKey = 'address_book_id';
     public $timestamps = false;
 
-    public function addressBooks()
+    public function customer()
     {
-        return $this->hasMany(AddressBook::class, 'customers_id');
+        return $this->hasOne(Customer::class, 'customers_id');
     }
 }

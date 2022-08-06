@@ -11,8 +11,6 @@ use App\Models\PluginControlVersion;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PageLoader\PageLoader;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Support\Facades\Route;
 
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
@@ -157,29 +155,7 @@ require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 require 'includes/classes/AdminRequestSanitizer.php';
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
-
-$capsule = new Capsule;
-$capsule->addConnection([
-    'driver'    => DB_TYPE,
-    'host'      => DB_SERVER,
-    'database'  => DB_DATABASE,
-    'username'  => DB_SERVER_USERNAME,
-    'password'  => DB_SERVER_PASSWORD,
-    'charset'   => DB_CHARSET,
-    // do not pass prefix; this is included in the table definition
-]);
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
-
-$container = new Illuminate\Container\Container;
-$lRequest = \Illuminate\Http\Request::capture();
-$container->instance('Illuminate\Http\Request', $lRequest);
-$events = new \Illuminate\Events\Dispatcher($container);
-$router = new \Illuminate\Routing\Router($events, $container);
-require_once DIR_FS_CATALOG . 'laravel/routes/routes.php';
-//$redirect = new \Illuminate\Routing\Redirector(new \Illuminate\Routing\UrlGenerator($router->getRoutes(), $lRequest));
-//$response = $router->dispatch($lRequest);
-//$response->send();
+require (DIR_FS_CATALOG . 'includes/application_laravel.php');
 
 $pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
 $installedPlugins = $pluginManager->getInstalledPlugins();
