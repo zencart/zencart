@@ -26,7 +26,3 @@ $router = new Router($events, $container);
 require_once DIR_FS_CATALOG . 'laravel/routes/routes.php';
 
 $redirect = new \Illuminate\Routing\Redirector(new \Illuminate\Routing\UrlGenerator($router->getRoutes(), $lRequest));
-
-
-$customers = \App\Models\Customer::with('addressBooks')->get();
-dd($customers);

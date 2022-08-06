@@ -19,4 +19,10 @@ class Customer extends Eloquent
     {
         return $this->hasMany(AddressBook::class, 'customers_id');
     }
+
+    public function CustomerInfo()
+    {
+        return $this->hasOne(CustomerInfo::class, 'customers_info_id');
+    }
+
 }
