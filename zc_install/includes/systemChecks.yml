@@ -82,15 +82,6 @@ systemChecks:
       checkExtension:
         parameters:
           extension: pdo_mysql
-  pdosqliteExt:
-    runLevel: always
-    errorLevel: WARN
-    criticalError: true
-    mainErrorText: <?php echo TEXT_ERROR_PDOSQLITE_SUPPORT .PHP_EOL; ?>
-    methods:
-      checkExtension:
-        parameters:
-          extension: pdo_sqlite
   phpzipExt:
     runLevel: always
     errorLevel: WARN
