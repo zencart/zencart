@@ -48,11 +48,11 @@ legend, #cart-box{background:#bbb;}
 h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #03A9D3;}
 span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.button.small_edit, .seDisplayedAddressLabel, TR.tableHeading, .prod-list-wrap, #myAccountPaymentInfo h4, #myAccountShipInfo h4 {background:#666;}
 #siteinfoIP, #siteinfoLegal, #bannerSix{background:#666665;}
-#navEZPagesTop li a:hover, .pagination li a:hover {color:#0eA9D3;}
+#navEZPagesTop li a:hover, .pagination li a:hover {color:#000a06;}
 #navEZPagesTop li a {color:#FFFFFF;}
 .messageStackWarning, .messageStackError {background-color:#8b0000;}
 .messageStackSuccess {background-color:#99ff99;}
-#shippingEstimatorContent th, .navSplitPagesLinks a:hover, .productListing-rowheading, #productQuantityDiscounts table tr:first-child td{background:#999;}
+#shippingEstimatorContent th, .navSplitPagesLinks a:hover, #navEZPagesTop li a:hover, .productListing-rowheading, #productQuantityDiscounts table tr:first-child td{background:#999;}
 #navCatTabsWrapper, .current, .productListing-rowheading a, .list-more:hover, input.submit_button, span.normal_button {background:#364fb5;}
 .button_goto_prod_details:hover{background:#05a5cb !important;}
 #navCatTabs li a:hover, input.submit_button:hover, input.cssButtonHover {background:#666666;}
@@ -86,5 +86,5 @@ ol.list-links li{border-bottom:1px solid #ddd;}
 
 #siteinfoLegal a{color:#ffffff;}
 
-.sideBoxContent optgroup {color: #db0000}
-.sideBoxContent optgroup > option {color: #000000}
+.sideBoxContent optgroup {color: #db0000;}
+.sideBoxContent optgroup > option {color: #000000;}
