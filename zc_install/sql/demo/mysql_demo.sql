@@ -10,7 +10,7 @@ UPDATE configuration SET configuration_value='true' WHERE configuration_key='DOW
 # Dumping data for table `address_book`
 #
 
-INSERT INTO address_book (address_book_id, customers_id, entry_gender, entry_company, entry_firstname, entry_lastname, entry_street_address, entry_suburb, entry_postcode, entry_city, entry_state, entry_country_id, entry_zone_id) VALUES (NULL, 1, 'm', 'JustaDemo', 'Bill', 'Smith', '123 Any Avenue', '', '12345', 'Here', '', 223, 12);
+INSERT INTO address_book (address_book_id, customers_id, entry_gender, entry_company, entry_firstname, entry_lastname, entry_street_address, entry_suburb, entry_postcode, entry_city, entry_state, entry_country_id, entry_zone_id) VALUES (NULL, 1, 'm', 'DeanPick', 'Dean', 'Pickett', '5827 Valley Point', '', '78233', 'San Antonio', 'TX', 840, 12);
 
 #
 # Dumping data for table `categories`
