@@ -29,7 +29,7 @@ abstract class DuskTestCase extends \PHPUnit\Framework\TestCase
 
     protected $user;
 
-    protected const configPath = '/not_for_release/testFramework/Browser/duskConfigures/';
+    protected const configPath = '/not_for_release/testFramework/duskConfigures/';
 
     /**
      * Register the base URL with Dusk.

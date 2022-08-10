@@ -22,14 +22,14 @@
     },
     "_comment": "compatible with PHP 7.3-8.0",
     "require": {
-        "php": "^7.3|^8.0",
         "ext-curl": "*",
         "ext-json": "*"
     },
     "require-dev": {
-        "laravel/dusk": ">5.8",
-        "mikey179/vfsstream": ">1.6",
-        "orchestra/dusk-updater": "^1.5",
+        "php": "^7.3|^7.4|^8.0|^8.1",
+        "illuminate/database": "^8.83",
+        "illuminate/events": "^8.83",
+        "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.5",
         "sempro/phpunit-pretty-print": "^1.4"
     },
@@ -40,7 +40,8 @@
     "autoload-dev": {
         "classmap": ["not_for_release/testFramework"],
         "psr-4": {
-            "Tests\\": "not_for_release/testFramework/"
+            "Tests\\": "not_for_release/testFramework/",
+            "App\\": "laravel/app/"
         }
     },
     "extra": {
@@ -54,7 +55,8 @@
         "optimize-autoloader": true
     },
     "scripts": {
-        "tests": "phpunit --verbose --testsuite UnitTests --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "db-tests": "phpunit --verbose --testsuite Dbunit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "tests": "phpunit --verbose --testsuite Unit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
         "dusk": "phpunit --verbose --testsuite Browser --debug --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'"
     },
     "minimum-stability": "dev",

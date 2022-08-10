@@ -11,12 +11,12 @@ trait DatabaseConcerns
 
     public function getPdoConnection(string $dbName = null)
     {
-        $dsn = 'mysql:host=' . TESTING_DB_SERVER;
+        $dsn = 'mysql:host=' . DB_SERVER;
         if (isset($dbName)) {
             $dsn .= ';dbname=' . $dbName;
         }
         try {
-            $conn = new \PDO($dsn, TESTING_DB_SERVER_USERNAME, TESTING_DB_SERVER_PASSWORD);
+            $conn = new \PDO($dsn, DB_SERVER_USERNAME, DB_SERVER_PASSWORD);
         } catch (\PDOException $e) {
             $conn = null;
         }
@@ -25,7 +25,7 @@ trait DatabaseConcerns
 
     protected function hasDatabase() : bool
     {
-        $this->getPdoConnection(TESTING_DB_DATABASE);
+        $this->getPdoConnection(DB_DATABASE);
         if (!isset($this->pdoConnection)) {
             return false;
         }
@@ -34,12 +34,12 @@ trait DatabaseConcerns
 
     protected  function createDatabase()
     {
-        $this->getPdoConnection(TESTING_DB_DATABASE);
-        $sql = "DROP DATABASE IF EXISTS " . TESTING_DB_DATABASE;
+        $this->getPdoConnection(DB_DATABASE);
+        $sql = "DROP DATABASE IF EXISTS " . DB_DATABASE;
         $this->executePDOQuery($sql);
-        $sql = "CREATE DATABASE IF NOT EXISTS " . TESTING_DB_DATABASE;
+        $sql = "CREATE DATABASE IF NOT EXISTS " . DB_DATABASE;
         $this->executePDOQuery($sql);
-        $this->getPdoConnection(TESTING_DB_DATABASE);
+        $this->getPdoConnection(DB_DATABASE);
     }
 
     protected function populateDatabase()
@@ -57,7 +57,7 @@ trait DatabaseConcerns
 
     protected function createDummyAdminUser()
     {
-        $this->getPdoConnection(TESTING_DB_DATABASE);
+        $this->getPdoConnection(DB_DATABASE);
         $name = 'Admin';
         $email = 'test@zencart.test';
         $password = password_hash('develop1', PASSWORD_DEFAULT);
@@ -89,12 +89,12 @@ trait DatabaseConcerns
     protected function buildMysqlCommandLine()
     {
         $line = '';
-        $line .= " -h" . TESTING_DB_SERVER;
-        $line .= " -u" . TESTING_DB_SERVER_USERNAME;
-        if (TESTING_DB_SERVER_PASSWORD != "") {
-            $line .= " -p" . TESTING_DB_SERVER_PASSWORD;
+        $line .= " -h" . DB_SERVER;
+        $line .= " -u" . DB_SERVER_USERNAME;
+        if (DB_SERVER_PASSWORD != "") {
+            $line .= " -p" . DB_SERVER_PASSWORD;
         }
-        $line .= " " . TESTING_DB_DATABASE;
+        $line .= " " . DB_DATABASE;
         return $line;
     }
 }

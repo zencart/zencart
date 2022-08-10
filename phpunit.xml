@@ -11,8 +11,11 @@
          processIsolation="true"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="UnitTests">
-          <directory suffix="Test.php">./not_for_release/testFramework/unittests/</directory>
+        <testsuite name="Dbunit">
+            <directory suffix="Test.php">./not_for_release/testFramework/Dbunit/</directory>
+        </testsuite>
+        <testsuite name="Unit">
+          <directory suffix="Test.php">./not_for_release/testFramework/Unit/</directory>
         </testsuite>
         <testsuite name="Browser">
             <directory suffix="Test.php">./not_for_release/testFramework/Browser/</directory>
