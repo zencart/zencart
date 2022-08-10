@@ -749,7 +749,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
 
   function help() {
-       return array('link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/'); 
+       return array('link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/');
   }
 
   /**
@@ -810,7 +810,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       return $doPayPal;
     }
     $ec_uses_gateway = (defined('MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD') && MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD == 'Payflow') ? true : false;
-    
+
     // -----
     // The PayFlow processing uses older-style, unprefixed, NVP variable names while the PayPal processing
     // uses the PAYMENTREQUEST_0_ and PAYMENT_INFO_0_ prefixes!
@@ -2041,8 +2041,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $_SESSION['comments'] = (isset($_SESSION['comments']) && $_SESSION['comments'] != '' ? $_SESSION['comments'] . "\n" : '') . $paypal_ec_payer_info['order_comment'];
       $order->info['comments'] = $_SESSION['comments'];
     }
-    // debug
-    $this->zcLog('ec_step2_finish - 2', 'country_id = ' . $country_id . ' ' . $paypal_ec_payer_info['ship_country_name'] . ' ' . $paypal_ec_payer_info['ship_country_code'] ."\naddress_format_id = " . $address_format_id . "\nstate_id = " . $state_id . ' (original state tested: ' . $paypal_ec_payer_info['ship_state'] . ')' . "\ncountry1->fields['countries_id'] = " . $country1->fields['countries_id'] . "\ncountry2->fields['countries_id'] = " . $country2->fields['countries_id'] . "\n" . '$order->customer = ' . print_r($order->customer, true));
+      // debug
+      $this->zcLog(
+          'ec_step2_finish - 2',
+          'country_id = ' . $country_id . ' ' . $paypal_ec_payer_info['ship_country_name'] . ' ' . $paypal_ec_payer_info['ship_country_code'] . "\n" .
+          'address_format_id = ' . $address_format_id . "\n" .
+          'state_id = ' . $state_id . ' (original state tested: ' . $paypal_ec_payer_info['ship_state'] . ')' . "\n" .
+          "country1->fields['countries_id'] = " . ($country1->fields['countries_id'] ?? 'no result') . "\n" .
+          "country2->fields['countries_id'] = " . ($country2->fields['countries_id'] ?? 'no result') . "\n" .
+          '$order->customer = ' . print_r($order->customer, true)
+      );
 
     // check to see whether PayPal should still be offered to this customer, based on the zone of their address:
     $this->update_status();
