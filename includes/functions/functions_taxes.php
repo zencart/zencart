@@ -385,9 +385,7 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
                                   AND ab.address_book_id = " . (int)$_SESSION['billto'];
             $tax_address_result = $db->Execute($tax_address_query);
 
-            if ($tax_address_result->fields['entry_zone_id'] == STORE_ZONE) {
-
-            } else {
+            if ($tax_address_result->fields['entry_zone_id'] !== STORE_ZONE && (!empty($_SESSION['sendto']))) {
                 $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
                                       FROM " . TABLE_ADDRESS_BOOK . " ab
                                       LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
