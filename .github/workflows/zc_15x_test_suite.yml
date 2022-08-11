@@ -83,11 +83,6 @@ jobs:
 
        - name: Install Composer dependencies
          run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
-
-       - name: Prepare the application
-         run: |
-           touch includes/configure.php
-
        - name: Run UnitTests suite
          run: php vendor/bin/phpunit --verbose --testsuite=Dbunit --debug
 
