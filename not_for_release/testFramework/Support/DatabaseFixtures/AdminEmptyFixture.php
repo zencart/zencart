@@ -2,12 +2,9 @@
 
 namespace Tests\Support\DatabaseFixtures;
 
-class AdminEmptyFixture implements FixtureContract
+class AdminEmptyFixture extends DatabaseFixture implements FixtureContract
 {
-
-    protected $table = TABLE_ADMIN;
-
-    public function createTable($connection)
+    public function createTable()
     {
         $sql = "CREATE TABLE IF NOT EXISTS admin (
               admin_id int(11) NOT NULL auto_increment,
@@ -33,7 +30,7 @@ class AdminEmptyFixture implements FixtureContract
               KEY idx_admin_profile_zen (admin_profile)
             ) ENGINE=MyISAM;";
 
-        $connection->query($sql);
+        $this->connection->query($sql);
     }
 
     public function seeder()

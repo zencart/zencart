@@ -48,19 +48,30 @@ trait DatabaseConcerns
         $this->prepareDatabase();
     }
 
+    public function tearDown() : void
+    {
+        foreach($this->databaseFixtures as $fixture => $tables) {
+            $f = '\\Tests\\Support\\DatabaseFixtures\\' . ucfirst($fixture) . 'Fixture';
+            $class = new $f($tables, $this->pdoConnection);
+            $class->unloadFixture();
+        }
+        parent::tearDown();
+    }
+
+
     protected function prepareDatabase()
     {
-        foreach($this->databaseFixtures as $fixture) {
-            $this->loadFixture($fixture);
+        foreach($this->databaseFixtures as $fixture => $tables) {
+            $this->loadFixture($fixture, $tables);
         }
     }
 
-    protected function loadFixture($fixture)
+    protected function loadFixture($fixture, $tables)
     {
         $f = '\\Tests\\Support\\DatabaseFixtures\\' . ucfirst($fixture) . 'Fixture';
-        $class = new $f;
-        $class->createTable($this->pdoConnection);
-        $class->seeder($this->pdoConnection);
+        $class = new $f($tables, $this->pdoConnection);
+        $class->createTable();
+        $class->seeder();
     }
 
     public function getPdoConnection(string $dbName = null)
