@@ -291,7 +291,8 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
             $cart = isset($whos_online[$selectedSession]['cart']) ? $whos_online[$selectedSession]['cart'] : null;
 
             if ($cart !== null) {
-                $contents[] = ['text' => $whos_online[$selectedSession]['full_name'] . ' - ' . $cart['customer_ip'] . ' (' . $cart['language_code']  . ')<br>' . $selectedSession];
+                $contents[] = ['text' => $whos_online[$selectedSession]['full_name'] . ' - ' . ($cart['customer_ip'] ?? $cart['customer_hostname']) . ' (' . $cart['language_code']  . ')<br>' .
+                    $selectedSession];
 
                 foreach ($cart['products'] as $product) {
                   $contents[] = ['text' => $product['quantity'] . ' x '
