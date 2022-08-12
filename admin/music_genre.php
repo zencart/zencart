@@ -91,7 +91,7 @@ if (!empty($action)) {
                 $music_genres = $db->Execute($music_genre_query_raw);
 
                 foreach ($music_genres as $music_genre) {
-                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $music_genre['music_genre_id']))) && (substr($action, 0, 3) != 'new')) {
+                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $music_genre['music_genre_id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
                     $music_genre_products = $db->Execute("SELECT COUNT(*) AS products_count
                                                           FROM " . TABLE_PRODUCT_MUSIC_EXTRA . "
                                                           WHERE music_genre_id = " . (int)$music_genre['music_genre_id']);

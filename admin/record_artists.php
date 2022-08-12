@@ -150,7 +150,7 @@ if (!empty($action)) {
                 $artists = $db->Execute($artists_query_raw);
 
                 foreach ($artists as $artist) {
-                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $artist['artists_id']))) && (substr($action, 0, 3) != 'new')) {
+                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $artist['artists_id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
                     $artists_products = $db->Execute("SELECT COUNT(*) AS products_count
                                                       FROM " . TABLE_PRODUCT_MUSIC_EXTRA . "
                                                       WHERE artists_id = " . (int)$artist['artists_id']);

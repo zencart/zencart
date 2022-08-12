@@ -151,7 +151,7 @@ if (!empty($action)) {
                 $record_companies = $db->Execute($record_company_query_raw);
 
                 foreach ($record_companies as $record_company) {
-                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $record_company['record_company_id']))) && (substr($action, 0, 3) != 'new')) {
+                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $record_company['record_company_id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
                     $record_company_products = $db->Execute("SELECT COUNT(*) AS products_count
                                                              FROM " . TABLE_PRODUCT_MUSIC_EXTRA . "
                                                              WHERE record_company_id = " . (int)$record_company['record_company_id']);
