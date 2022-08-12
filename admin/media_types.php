@@ -92,7 +92,7 @@ if (!empty($action)) {
                     ?>
                   <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $media_type['type_id'] . '&action=edit'); ?>'">
                     <?php } else { ?>
-                  <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $media_type->fields['type_id'] . '&action=edit'); ?>'">
+                  <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $media_type['type_id'] . '&action=edit'); ?>'">
                     <?php } ?>
                   <td class="dataTableContent"><?php echo $media_type['type_name']; ?></td>
                   <td class="dataTableContent"><?php echo $media_type['type_ext']; ?></td>
@@ -101,7 +101,7 @@ if (!empty($action)) {
                       if (isset($mInfo) && is_object($mInfo) && ($media_type['type_id'] == $mInfo->type_id)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                       } else {
-                      echo '<a href="' . zen_href_link(FILENAME_MEDIA_TYPES, zen_get_all_get_params(array('mID')) . 'mID=' . $media_type->fields['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                      echo '<a href="' . zen_href_link(FILENAME_MEDIA_TYPES, zen_get_all_get_params(array('mID')) . 'mID=' . $media_type['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                       }
                       ?>
                   </td>
