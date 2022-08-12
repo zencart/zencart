@@ -26,6 +26,8 @@ if (isset($_POST['edit']) && $_POST['edit'] == 'edit') {
   }
   $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
+  $zco_notifier->notify('NOTIFY_MODULES_UPDATE_PRODUCT_START', ['action' => $action, 'products_id' => $products_id]);
+
   // Data-cleaning to prevent data-type mismatch errors:
   $sql_data_array = array(
     'products_quantity' => convertToFloat($_POST['products_quantity']),
