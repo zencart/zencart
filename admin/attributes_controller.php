@@ -275,7 +275,7 @@ if (!empty($action)) {
 
             $attributes_image = new upload('attributes_image');
             $attributes_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
-            $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
+            $attributes_image->set_destination(DIR_FS_CATALOG_IMAGES .  (isset($_POST['img_dir']) ? $_POST['img_dir'] : ''));
             if ($attributes_image->parse() && $attributes_image->save($_POST['overwrite'])) {
               $attributes_image_name = $_POST['img_dir'] . $attributes_image->filename;
             } else {
@@ -1781,6 +1781,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         </div>
 
                         <?php
+                      } else {
+                          echo zen_draw_hidden_field('attributes_price_factor', 0);
+                          echo zen_draw_hidden_field('attributes_price_factor_offset', 0);
+                          echo zen_draw_hidden_field('attributes_price_factor_onetime', 0);
+                          echo zen_draw_hidden_field('attributes_price_factor_onetime_offset', 0);
                       } // ATTRIBUTES_ENABLED_PRICE_FACTOR
                       ?>
                     </div>
@@ -1798,6 +1803,9 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       </div>
                       <hr style="border: inherit; margin: 10px 0;">
                       <?php
+                    } else {
+                        echo zen_draw_hidden_field('attributes_qty_prices', '');
+                        echo zen_draw_hidden_field('attributes_qty_prices_onetime', '');
                     } // ATTRIBUTES_ENABLED_QTY_PRICES
                     ?>
                     <?php if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { ?>
@@ -1821,6 +1829,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       </div>
                       <hr style="border: inherit; margin: 10px 0;">
                       <?php
+                    } else {
+                        echo zen_draw_hidden_field('attributes_price_words', 0);
+                        echo zen_draw_hidden_field('attributes_price_words_free', 0);
+                        echo zen_draw_hidden_field('attributes_price_letters', 0);
+                        echo zen_draw_hidden_field('attributes_price_letters_free', 0);
                     } // ATTRIBUTES_ENABLED_TEXT_PRICES
                     ?>
                     <!-- eof: Edit Prices -->
