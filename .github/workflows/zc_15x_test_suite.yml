@@ -39,7 +39,7 @@ jobs:
           touch includes/configure.php
 
       - name: Run UnitTests suite
-        run: php vendor/bin/phpunit --verbose --testsuite=Unit --debug
+        run: php vendor/bin/phpunit --verbose --process-isolation --testsuite=Unit --debug
 
 
   database-tests:
@@ -83,13 +83,8 @@ jobs:
 
        - name: Install Composer dependencies
          run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
-
-       - name: Prepare the application
-         run: |
-           touch includes/configure.php
-
        - name: Run UnitTests suite
-         run: php vendor/bin/phpunit --verbose --testsuite=Dbunit --debug
+         run: php vendor/bin/phpunit --verbose --process-isolation --testsuite=Dbunit --debug
 
 #   browser-tests:
 #     name: Browser Tests

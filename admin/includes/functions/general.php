@@ -318,10 +318,10 @@ function zen_get_system_information($privacy = false)
     $mysql_slow_query_log_status = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log'");
     if (!$result->EOF) {
-       $mysql_slow_query_log_status = '0'; 
+       $mysql_slow_query_log_status = '0';
        if (in_array($result->fields['Value'], ['On', 'ON', '1',])) {
-         $mysql_slow_query_log_status = '1'; 
-       } 
+         $mysql_slow_query_log_status = '1';
+       }
     }
     $mysql_slow_query_log_file = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log\_file'");
@@ -585,12 +585,9 @@ function zen_get_language_name($lookup)
 
 function zen_get_configuration_group_value($lookup)
 {
-    global $db;
-    $configuration_query = $db->Execute("select configuration_group_title from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id =" . (int)$lookup);
-    if ($configuration_query->RecordCount() == 0) {
-        return (int)$lookup;
-    }
-    return $configuration_query->fields['configuration_group_title'];
+    // @todo could also do this as a dynamic scope
+    $r = \App\Models\ConfigurationGroup::select('configuration_group_title')->where('configuration_group_id', '=', $lookup)->first();
+    return $r['configuration_group_title'] ?? (int)$lookup;
 }
 
 
@@ -760,9 +757,9 @@ function zen_get_orders_status_pulldown_array()
     return $orders_status_array;
 }
 
-function zen_get_customer_email_from_id($cid) { 
+function zen_get_customer_email_from_id($cid) {
    global $db;
-   $query = $db->Execute("SELECT customers_email_address FROM " . TABLE_CUSTOMERS . " WHERE customers_id = " . (int)$cid); 
-   if ($query->EOF) return ''; 
-   return $query->fields['customers_email_address']; 
+   $query = $db->Execute("SELECT customers_email_address FROM " . TABLE_CUSTOMERS . " WHERE customers_id = " . (int)$cid);
+   if ($query->EOF) return '';
+   return $query->fields['customers_email_address'];
 }
