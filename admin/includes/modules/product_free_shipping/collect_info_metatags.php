@@ -147,7 +147,7 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_META_TAGS_TITLE, 'metatags_title[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_title'), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false) . 'class="form-control"'); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"'); ?>
+                <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_title'), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false) . ' class="form-control"'); //,'id="'.'metatags_title' . $languages[$i]['id'] . '"'); ?>
             </div>
           </div>
           <div class="form-group">
