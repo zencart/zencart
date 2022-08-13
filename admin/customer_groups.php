@@ -146,7 +146,7 @@ if (!empty($action)) {
                     $contents = ['form' => zen_draw_form('group_add', FILENAME_CUSTOMER_GROUPS, 'action=insert', 'post', 'class="form-horizontal"')];
                     $contents[] = ['text' => TEXT_NEW_INTRO];
                     $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_NAME, 'group_name', 'class="control-label"') . zen_draw_input_field('group_name', '', zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_name') . ' class="form-control"')];
-                    $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_COMMENT, 'group_comment', 'class="control-label"') . zen_draw_input_field('group_comment', '', zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_comment') . 'class="form-control"')];
+                    $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_COMMENT, 'group_comment', 'class="control-label"') . zen_draw_input_field('group_comment', '', zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_comment') . ' class="form-control"')];
                     $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . (!empty($_GET['gID']) ? 'gID=' . $_GET['gID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                     break;
                 case 'edit':
@@ -155,7 +155,7 @@ if (!empty($action)) {
                     $contents = ['form' => zen_draw_form('group_edit', FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id . '&action=save', 'post', 'class="form-horizontal"')];
                     $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
                     $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_NAME, 'group_name', 'class="control-label"') . zen_draw_input_field('group_name', htmlspecialchars($gInfo->group_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_name') . ' class="form-control"')];
-                    $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_COMMENT, 'group_comment', 'class="control-label"') . zen_draw_input_field('group_comment', zen_output_string_protected($gInfo->group_comment), zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_comment') . 'class="form-control"')];
+                    $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_GROUP_COMMENT, 'group_comment', 'class="control-label"') . zen_draw_input_field('group_comment', zen_output_string_protected($gInfo->group_comment), zen_set_field_length(TABLE_CUSTOMER_GROUPS, 'group_comment') . ' class="form-control"')];
                     $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                     break;
                 case 'delete':
