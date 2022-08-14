@@ -743,7 +743,7 @@ if ($found == false) {
         ?>
         <table border="3" cellspacing="4" cellpadding="4">
           <tr class="infoBoxContent">
-            <td colspan="2" class="pageHeading" align="center"><?php echo TABLE_CONFIGURATION_TABLE; ?></td>
+            <td colspan="2" class="pageHeading text-center"><?php echo TABLE_CONFIGURATION_TABLE; ?></td>
           </tr>
           <tr>
             <td class="infoBoxHeading"><?php echo TABLE_TITLE_KEY; ?></td>
@@ -792,7 +792,7 @@ if ($found == false) {
           <?php } ?>
           <tr>
               <td>&nbsp;</td>
-            <td class="main" align="center">
+            <td class="main text-center">
                 <?php
                 if ($show_products_type_layout == false and ( $check_configure->fields['configuration_id'] != 0 and $check_configure_group->fields['visible'] != 0)) {
                   echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
@@ -820,7 +820,7 @@ if ($found == false) {
             </td>
           </tr>
           <tr class="infoBoxContent">
-            <td colspan="2" class="pageHeading" align="center">
+            <td colspan="2" class="pageHeading text-center">
                 <?php
                 $links = '<br><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br>';
                 echo $links;
@@ -840,8 +840,8 @@ if ($found == false) {
           <!-- bof: update all products price sorter -->
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
-              <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-              <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '" class="btn btn-primary" role="button">' . IMAGE_UPDATE . '</a>'; ?></td>
+              <td class="main text-left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
+              <td class="main text-right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '" class="btn btn-primary" role="button">' . IMAGE_UPDATE . '</a>'; ?></td>
             </tr>
           </table>
           <!-- eof: update all products price sorter -->

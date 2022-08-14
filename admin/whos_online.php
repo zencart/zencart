@@ -182,7 +182,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     // item css classes indicating cart status: 'wo-inactive-empty', 'wo-active-empty', 'wo-inactive-not-empty', 'wo-active-not-empty'
                     ?>
                 <td class="dataTableContentWhois <?php echo $item['icon_class']; ?>"><?php echo $item['icon_image'] . '&nbsp;' . gmdate('H:i:s', $item['time_online']); ?></td>
-                <td class="dataTableContentWhois" align="center">
+                <td class="dataTableContentWhois text-center">
                     <?php
                     if ($item['customer_id'] != 0) {
                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $item['customer_id'] . '&action=edit', 'NONSSL') . '"><u>' . $item['customer_id'] . '</u></a>';
@@ -200,7 +200,7 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     }
                     ?>
                 </td>
-                <td class="dataTableContentWhois dataTableButtonCell" align="left" valign="top">
+                <td class="dataTableContentWhois dataTableButtonCell text-left" valign="top">
                     <?php
                     $whois_url = 'https://whois.domaintools.com/' . $item['ip_address'];
                     $additional_ipaddress_links = '';
@@ -212,8 +212,8 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
                     <?php echo $additional_ipaddress_links; ?>
                 </td>
                 <td>&nbsp;</td>
-                <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_entry']); ?></td>
-                <td class="dataTableContentWhois" align="center" valign="top"><?php echo date('H:i:s', $item['time_last_click']); ?></td>
+                <td class="dataTableContentWhois text-center" valign="top"><?php echo date('H:i:s', $item['time_entry']); ?></td>
+                <td class="dataTableContentWhois text-center" valign="top"><?php echo date('H:i:s', $item['time_last_click']); ?></td>
                 <td class="dataTableContentWhois" colspan="2" valign="top">&nbsp;</td>
                 </tr>
                 <?php

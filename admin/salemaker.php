@@ -461,12 +461,12 @@ if (!empty($action)) {
                     <?php } else { ?>
                   <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sale['sale_id']); ?>'">
                     <?php } ?>
-                  <td  class="dataTableContent" align="left"><?php echo $salemaker_sale['sale_name']; ?></td>
-                  <td  class="dataTableContent" align="right"><?php echo $salemaker_sale['sale_deduction_value']; ?></td>
-                  <td  class="dataTableContent" align="left"><?php echo $deduction_type_array[$salemaker_sale['sale_deduction_type']]['text']; ?></td>
-                  <td  class="dataTableContent" align="center"><?php echo (($salemaker_sale['sale_date_start'] == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sale['sale_date_start'])); ?></td>
-                  <td  class="dataTableContent" align="center"><?php echo (($salemaker_sale['sale_date_end'] == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sale['sale_date_end'])); ?></td>
-                  <td  class="dataTableContent" align="center">
+                  <td  class="dataTableContent text-left"><?php echo $salemaker_sale['sale_name']; ?></td>
+                  <td  class="dataTableContent text-right"><?php echo $salemaker_sale['sale_deduction_value']; ?></td>
+                  <td  class="dataTableContent text-left"><?php echo $deduction_type_array[$salemaker_sale['sale_deduction_type']]['text']; ?></td>
+                  <td  class="dataTableContent text-center"><?php echo (($salemaker_sale['sale_date_start'] == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sale['sale_date_start'])); ?></td>
+                  <td  class="dataTableContent text-center"><?php echo (($salemaker_sale['sale_date_end'] == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sale['sale_date_end'])); ?></td>
+                  <td  class="dataTableContent text-center">
                       <?php
                       if ($salemaker_sale['sale_status'] == '1') {
                         echo zen_draw_form('setflag_products', FILENAME_SALEMAKER, 'action=setflag&sID=' . $salemaker_sale['sale_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
@@ -485,7 +485,7 @@ if (!empty($action)) {
                     }
                     ?>
                   </td>
-                  <td class="dataTableContent" align="right"><?php
+                  <td class="dataTableContent text-right"><?php
                       if (!empty($sInfo) && (is_object($sInfo)) && !empty($salemaker_sale) && isset($salemaker_sale['sale_id']) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                       } else {

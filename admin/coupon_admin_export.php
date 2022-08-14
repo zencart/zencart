@@ -320,7 +320,7 @@ require (DIR_WS_INCLUDES . 'header.php');
         <table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table>
         </td>
@@ -355,7 +355,7 @@ require (DIR_WS_INCLUDES . 'header.php');
               </td>
           </tr>
           <tr>
-            <td class="main" align="right"><?php echo '<input type="submit" name="submit" value="'. (defined('BUTTON_TEXT_EXPORT') ? BUTTON_TEXT_EXPORT : IMAGE_GO) . '" id="export_btn" class="btn btn-danger">' . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>'; ?></td>
+            <td class="main text-right"><?php echo '<input type="submit" name="submit" value="'. (defined('BUTTON_TEXT_EXPORT') ? BUTTON_TEXT_EXPORT : IMAGE_GO) . '" id="export_btn" class="btn btn-danger">' . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>'; ?></td>
           </tr>
         </table>
         </td>

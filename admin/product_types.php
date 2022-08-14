@@ -287,8 +287,8 @@ if (!empty($action)) {
                   }
                   ?>
                 <td class="dataTableContent"><?php echo $product_type['type_name']; ?></td>
-                <td class="dataTableContent" align="center"><?php echo $product_type['allow_add_to_cart']; ?></td>
-                <td class="dataTableContent" align="right"><?php
+                <td class="dataTableContent text-center"><?php echo $product_type['allow_add_to_cart']; ?></td>
+                <td class="dataTableContent text-right"><?php
                   if ((isset($ptInfo) && is_object($ptInfo)) && ($product_type['type_id'] == $ptInfo->type_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
