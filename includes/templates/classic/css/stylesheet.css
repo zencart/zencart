@@ -21,7 +21,7 @@ a:link, #navEZPagesTOC ul li a {
 	color: #3300FF;
 	text-decoration: none;
 	}
- 
+
 a:visited {
 	color: #3300FF;
 	text-decoration: none;
@@ -92,7 +92,7 @@ input:focus, select:focus, textarea:focus {
 
 FIELDSET {
 	padding: 0.5em;
-	margin: 0.5em 0em;
+	margin: 0.5em 0;
 	border: 1px solid #cccccc;
 	}
 
@@ -186,8 +186,8 @@ HR {
 	}
 
 #headerWrapper, #contentMainWrapper, #logoWrapper, #cartBoxListWrapper, #ezPageBoxList, #cartBoxListWrapper ul, #ezPageBoxList ul, #mainWrapper, #popupAdditionalImage, #popupImage {
-	margin: 0em;
-	padding: 0em;
+	margin: 0;
+	padding: 0;
 	}
 
 #logoWrapper{
@@ -199,12 +199,12 @@ HR {
 
 #navColumnOneWrapper, #navColumnTwoWrapper, #mainWrapper {
 	margin: auto;
-	} 
+	}
 #navColumnOneWrapper, #navColumnTwoWrapper {
 	margin-left: 0.5em;
 	margin-right: 0.5em;
 	}
-	
+
 #tagline {
 	color:#000000;
 	font-size: 2em;
@@ -215,7 +215,7 @@ HR {
 #sendSpendWrapper {
 	border: 1px solid #cacaca;
 	float: right;
-	margin: 0em 0em 1em 1em;
+	margin: 0 0 1em 1em;
 	}
 
 .floatingBox, #accountLinksWrapper, #sendSpendWrapper, #checkoutShipto, #checkoutBillto, #navEZPagesTOCWrapper {
@@ -224,7 +224,7 @@ HR {
 	}
 
 .wrapperAttribsOptions {
-	margin: 0.3em 0em;
+	margin: 0.3em 0;
 	}
 
 /*navigation*/
@@ -233,19 +233,19 @@ HR {
 .navSplitPagesLinks {}
 
 .navNextPrevCounter {
-	margin: 0em;
+	margin: 0;
 	font-size: 0.9em;
 	}
 .navNextPrevList {
 	display: inline;
 	white-space: nowrap;
 	margin: 0;
-	padding: 0.5em 0em;
+	padding: 0.5em 0;
 	list-style-type: none;
 	}
 
 #navMainWrapper, #navSuppWrapper, #navCatTabsWrapper {
-	margin: 0em;
+	margin: 0;
 	background-color: #abbbd3;
 	background-image: url(../images/tile_back.gif);
 	padding: 0.5em 0.2em;
@@ -262,7 +262,7 @@ HR {
 
 #navMain ul, #navSupp ul, #navCatTabs ul {
 	margin: 0;
-	padding: 0.5em 0em;
+	padding: 0.5em 0;
 	list-style-type: none;
 	text-align: center;
 	line-height: 1.5em;
@@ -274,7 +274,7 @@ HR {
 
 #navMain ul li a, #navSupp ul li a, #navCatTabs ul li a {
 	text-decoration: none;
-	padding: 0em 0.5em;
+	padding: 0 0.5em;
 	margin: 0;
 	color: #ffffff;
 	white-space: nowrap;
@@ -293,7 +293,7 @@ HR {
 
 #navEZPagesTOC ul {
 	margin: 0;
-	padding: 0.5em 0em;
+	padding: 0.5em 0;
 	list-style-type: none;
 	line-height: 1.5em;
 	}
@@ -303,7 +303,7 @@ HR {
 	}
 
 #navEZPagesTOC ul li a {
-	padding: 0em 0.5em;
+	padding: 0 0.5em;
 	margin: 0;
 	}
 
@@ -320,7 +320,7 @@ HR {
 	background-color: #ffffff;
 	font-size: 0.95em;
 	font-weight: bold;
-	margin: 0em;
+	margin: 0;
 	}
 
 #navEZPagesTop {
@@ -328,7 +328,7 @@ HR {
 	background-image: url(../images/tile_back.gif);
 	font-size: 0.95em;
 	font-weight: bold;
-	margin: 0em;
+	margin: 0;
 	padding: 0.5em;
 	}
 
@@ -397,7 +397,7 @@ HR {
 	}
 
 .cartProductDisplay, .cartUnitDisplay, .cartTotalDisplay, .cartRemoveItemDisplay, .cartQuantityUpdate, .cartQuantity, #cartInstructionsDisplay, .cartTotalsDisplay {
-	padding: 0.5em 0em;
+	padding: 0.5em 0;
 	}
 
 .cartUnitDisplay, .cartTotalDisplay {
@@ -437,7 +437,7 @@ HR {
 	}
 
 #mediaManager {
-	width: 50%; 
+	width: 50%;
 	margin: 0.2em;
 	padding: 0.5em;
 	background-color: #E4FEf5;
@@ -460,9 +460,9 @@ HR {
 
 .orderHistList {
 	margin: 1em;
-	padding: 0.2em 0em;
+	padding: 0.2em 0;
 	list-style-type: none;
-	} 
+	}
 
 #cartBoxListWrapper ul, #ezPageBoxList ul {
 	list-style-type: none;
@@ -470,8 +470,8 @@ HR {
 
 #cartBoxListWrapper li, #ezPageBoxList li, .cartBoxTotal {
 	margin: 0;
-	padding: 0.2em 0em;
-	} 
+	padding: 0.2em 0;
+	}
 
 #cartBoxEmpty, #cartBoxVoucherBalance {
 	font-weight: bold;
@@ -494,7 +494,7 @@ HR {
 
 /*Image Display*/
 #productMainImage, #reviewsInfoDefaultProductImage, #productReviewsDefaultProductImage, #reviewWriteMainImage {
-	margin: 0em 1em 1em 0em ;
+	margin: 0 1em 1em 0;
 	}
 
 .categoryIcon {}
@@ -506,14 +506,14 @@ HR {
 /*Attributes*/
 .attribImg {
 	width: 20%;
-	margin: 0.3em 0em;
+	margin: 0.3em 0;
 }
 
 .attributesComments {}
 
 /*list box contents*/
 .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew {
-	margin: 1em 0em;
+	margin: 1em 0;
 	}
 
 .centerBoxWrapper {
@@ -541,14 +541,14 @@ h3.rightBoxHeading, h3.rightBoxHeading a {
 }
 
 .leftBoxHeading, .centerBoxHeading, .rightBoxHeading {
-	margin: 0em;
+	margin: 0;
 	background-color: #abbbd3;
 	background-image: url(../images/tile_back.gif);
 	padding: 0.5em 0.2em;
 	}
 
 .leftBoxContainer, .rightBoxContainer {
-	margin: 0em;
+	margin: 0;
 	border: 1px solid #9a9a9a;
 	border-bottom: 5px solid #336633;
 	margin-top: 1.5em;
@@ -562,7 +562,7 @@ h3.rightBoxHeading, h3.rightBoxHeading a {
 h3.leftBoxHeading a:hover, h3.rightBoxHeading a:hover {
 	color: #FFFF33;
 	text-decoration: none;
-	} 
+	}
 
 .rightBoxHeading a:visited, .leftBoxHeading a:visited, .centerBoxHeading a:visited {
 	color: #FFFFFF;
@@ -573,7 +573,7 @@ h3.leftBoxHeading a:hover, h3.rightBoxHeading a:hover {
 	}
 
 #bestsellers .wrapper {
-	margin: 0em 0em 0em 1.5em;
+	margin: 0 0 0 1.5em;
 	}
 
 #bestsellers ol {
@@ -583,7 +583,7 @@ h3.leftBoxHeading a:hover, h3.rightBoxHeading a:hover {
 
 #bestsellers li {
 	padding: 0;
-	margin: 0.3em 0em 0.3em 0em;
+	margin: 0.3em 0 0.3em 0;
 	}
 
 #bannerboxHeading {
@@ -657,7 +657,7 @@ CAPTION {
 
 #myAccountGen li, #myAccountNotify li {
 	margin: 0;
-	} 
+	}
 
 .accountTotalDisplay, .accountTaxDisplay {
 	width: 20%;
@@ -688,12 +688,12 @@ TR.tableHeading {
 	}
 
 .ratingRow {
-	margin: 1em 0em 1.5em 0em;
+	margin: 1em 0 1.5em 0;
 	}
 
 LABEL#textAreaReviews {
 	font-weight: normal;
-	margin: 1em 0em;
+	margin: 1em 0;
 	}
 
 #popupShippingEstimator, #popupSearchHelp, #popupAdditionalImage, #popupImage, #popupCVVHelp, #popupCouponHelp, #popupAtrribsQuantityPricesHelp, #infoShoppingCart {

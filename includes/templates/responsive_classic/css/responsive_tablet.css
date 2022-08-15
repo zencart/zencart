@@ -12,7 +12,7 @@
 /* ALL TABLETS - ORIENTATION:LANDSCAPE */
 @media only screen and (orientation:landscape)  {
 /*bof responsive*/
-.onerow-fluid {width:100% !important;} 
+.onerow-fluid {width:100% !important;}
 .onerow-fluid>[class*="col"], .onerow-fluid>[class*="zcol"], .onerow-fluid>[class*="zcaCenterCol"] {}
 
 /*bof header*/
@@ -97,8 +97,8 @@ input.submit_button{padding:12px 15px 30px 15px;}
 /* ALL TABLETS - ORIENTATION:PORTRAIT (DEFAULT LAYOUT) */
 @media only screen and (orientation:portrait)  {
 /*bof responsive*/
-.onerow-fluid {width:100% !important;} 
-.onerow-fluid>[class*="col"], .onerow-fluid>[class*="zcol"], .onerow-fluid>[class*="zcaCenterCol"] {float:none;display:block;width:auto;margin:0px;clear:both;}
+.onerow-fluid {width:100% !important;}
+.onerow-fluid>[class*="col"], .onerow-fluid>[class*="zcol"], .onerow-fluid>[class*="zcaCenterCol"] {float:none;display:block;width:auto;margin:0;clear:both;}
 
 ul{line-height:170%;}
 ul li a{padding:0 1.5em;}

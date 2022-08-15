@@ -83,7 +83,7 @@ input:focus, select:focus, textarea:focus {
 
 FIELDSET {
 	padding: 0.5em;
-	margin: 0.5em 0em;
+	margin: 0.5em 0;
 	border: 1px solid #cccccc;
 	}
 
@@ -170,8 +170,8 @@ HR {
 	}
 
 #headerWrapper, #contentMainWrapper, #logoWrapper, #cartBoxListWrapper, #ezPageBoxList, #cartBoxListWrapper ul, #ezPageBoxList ul, #mainWrapper, #popupAdditionalImage, #popupImage {
-	margin: 0em;
-	padding: 0em;
+	margin: 0;
+	padding: 0;
 	}
 
 #navColumnOneWrapper, #navColumnTwoWrapper, #mainWrapper {
@@ -188,7 +188,7 @@ HR {
 #sendSpendWrapper {
 	border: 1px solid #cacaca;
 	float: right;
-	margin: 0em 0em 1em 1em;
+	margin: 0 0 1em 1em;
 	}
 
 .floatingBox, #accountLinksWrapper, #sendSpendWrapper, #checkoutShipto, #checkoutBillto, #navEZPagesTOCWrapper {
@@ -197,7 +197,7 @@ HR {
 	}
 
 .wrapperAttribsOptions {
-	margin: 0.3em 0em;
+	margin: 0.3em 0;
 	}
 
 /*navigation*/
@@ -205,19 +205,19 @@ HR {
 .navSplitPagesResult {}
 .navSplitPagesLinks {}
 .navNextPrevCounter {
-	margin: 0em;
+	margin: 0;
 	font-size: 0.9em;
 	}
 .navNextPrevList {
 	display: inline;
 	white-space: nowrap;
 	margin: 0;
-	padding:  0.5em 0em;
+	padding:  0.5em 0;
 	list-style-type: none;
 	}
 
 #navMainWrapper, #navSuppWrapper, #navCatTabsWrapper {
-	margin: 0em;
+	margin: 0;
 	background-color: #9a9a9a;
 	font-weight: bold;
 	color: #ffffff;
@@ -227,7 +227,7 @@ HR {
 
 #navMain ul, #navSupp ul, #navCatTabs ul  {
 	margin: 0;
-	padding:  0.5em 0em;
+	padding:  0.5em 0;
 	list-style-type: none;
 	text-align: center;
 	line-height: 1.5em;
@@ -239,7 +239,7 @@ HR {
 
 #navMain ul li a, #navSupp ul li a, #navCatTabs ul li a {
 	text-decoration: none;
-	padding: 0em 0.5em;
+	padding: 0 0.5em;
 	margin: 0;
 	color: #ffffff;
 	white-space: nowrap;
@@ -254,7 +254,7 @@ HR {
 
 #navEZPagesTOC ul {
 	margin: 0;
-	padding:  0.5em 0em;
+	padding:  0.5em 0;
 	list-style-type: none;
 	line-height: 1.5em;
 	}
@@ -264,7 +264,7 @@ HR {
 	}
 
 #navEZPagesTOC ul li a {
-	padding: 0em 0.5em;
+	padding: 0 0.5em;
 	margin: 0;
 	}
 
@@ -287,7 +287,7 @@ HR {
 #navBreadCrumb, #navEZPagesTop {
 	font-size: 0.95em;
 	font-weight: bold;
-	margin: 0em;
+	margin: 0;
 	padding: 0.5em;
 	}
 
@@ -360,7 +360,7 @@ HR {
 	}
 
 .cartProductDisplay, .cartUnitDisplay, .cartTotalDisplay, .cartRemoveItemDisplay, .cartQuantityUpdate, .cartQuantity, #cartInstructionsDisplay, .cartTotalsDisplay   {
-	padding: 0.5em 0em;
+	padding: 0.5em 0;
 	}
 
 .cartUnitDisplay, .cartTotalDisplay {
@@ -421,7 +421,7 @@ HR {
 
 .orderHistList {
 	margin: 1em;
-	padding: 0.2em 0em;
+	padding: 0.2em 0;
 	}
 
 #cartBoxListWrapper ul, #ezPageBoxList ul {
@@ -430,7 +430,7 @@ HR {
 
 #cartBoxListWrapper li, #ezPageBoxList li, .cartBoxTotal {
 	margin: 0;
-	padding: 0.2em 0em;
+	padding: 0.2em 0;
 	}
 
 #cartBoxEmpty, #cartBoxVoucherBalance {
@@ -454,7 +454,7 @@ HR {
 
 /*Image Display*/
 #productMainImage, #reviewsInfoDefaultProductImage, #productReviewsDefaultProductImage, #reviewWriteMainImage {
-	margin: 0em 1em 1em 0em ;
+	margin: 0 1em 1em 0;
 	}
 
 .categoryIcon {}
@@ -466,14 +466,14 @@ HR {
 /*Attributes*/
 .attribImg {
 	width: 20%;
-	margin: 0.3em 0em;
+	margin: 0.3em 0;
 }
 
 .attributesComments {}
 
 /*list box contents*/
 .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew {
-	margin: 1em 0em;
+	margin: 1em 0;
 	}
 
 /*sideboxes*/
@@ -485,7 +485,7 @@ h3.leftBoxHeading, h3.leftBoxHeading a {
 	}
 
 .leftBoxHeading, .centerBoxHeading {
-	margin: 0em;
+	margin: 0;
 	background-color: #FF6699;
 	padding: 0.5em 0.2em;
 	}
@@ -506,9 +506,9 @@ h3.rightBoxHeading, h3.rightBoxHeading a {
 	}
 
 .rightBoxHeading {
-	margin: 0em;
+	margin: 0;
 	background-color: #663366;
-	padding: 0.2em 0em;
+	padding: 0.2em 0;
 	}
 
 h3.leftBoxHeading a:hover {
@@ -531,7 +531,7 @@ h3.rightBoxHeading a:hover {
 	}
 
 #bestsellers .wrapper {
-	margin: 0em 0em 0em 1.5em;
+	margin: 0 0 0 1.5em;
 	}
 
 #bestsellers ol {
@@ -541,7 +541,7 @@ h3.rightBoxHeading a:hover {
 
 #bestsellers li {
 	padding: 0;
-	margin: 0.3em 0em 0.3em 0em;
+	margin: 0.3em 0 0.3em 0;
 	}
 
 #bannerboxHeading {
@@ -618,12 +618,12 @@ TR.tableHeading {
 	}
 
 .ratingRow {
-	margin: 1em 0em 1.5em 0em;
+	margin: 1em 0 1.5em 0;
 	}
 
 LABEL#textAreaReviews {
 	font-weight: normal;
-	margin: 1em 0em;
+	margin: 1em 0;
 	}
 
 #popupShippingEstimator, #popupSearchHelp, #popupAdditionalImage, #popupImage, #popupCVVHelp, #popupCouponHelp, #popupAtrribsQuantityPricesHelp, #infoShoppingCart {

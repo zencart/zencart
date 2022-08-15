@@ -1,5 +1,5 @@
-/** 
- * This is for compatibility with v1.5.6 CSS that was upgraded in v1.5.7; 
+/**
+ * This is for compatibility with v1.5.6 CSS that was upgraded in v1.5.7;
  * Plugins relying on these older CSS rules can include this CSS if needed ... but do not expect this file to be kept/maintained in future versions.
  */
 
@@ -57,5 +57,5 @@
 
 .edit i.overlay:hover, .delete i.overlay:hover, .move i.overlay:hover, .copy i.overlay:hover, .imagehandler i.overlay:hover, .attributes-on i.overlay:hover, .attributes-off i.overlay:hover, .pricemanager-on i.overlay:hover, .metatags-on i.overlay:hover, .metatags-off i.overlay:hover {
   color: #ccc;
-  text-shadow: 0px 0px 4px rgba(0,0,0,0.5)
+  text-shadow: 0 0 4px rgba(0,0,0,0.5)
 }

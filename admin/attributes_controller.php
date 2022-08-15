@@ -1176,7 +1176,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                           <div class="input-group">
                             <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $attributes_value_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
-                            <span class="input-group-btn" style="width:0px;"></span>
+                            <span class="input-group-btn" style="width:0;"></span>
                             <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'class="form-control" id="value_price"'); ?>
                           </div>
                         </div>
@@ -1184,7 +1184,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                           <div class="input-group">
                             <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
-                            <span class="input-group-btn" style="width:0px;"></span>
+                            <span class="input-group-btn" style="width:0;"></span>
                             <?php echo zen_draw_input_field('products_attributes_weight', $attributes_value['products_attributes_weight'], 'class="form-control" id="products_attributes_weight"'); ?>
                           </div>
                         </div>
@@ -1741,7 +1741,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                         <div class="input-group">
                           <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $default_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
-                          <span class="input-group-btn" style="width:0px;"></span>
+                          <span class="input-group-btn" style="width:0;"></span>
                           <?php echo zen_draw_input_field('value_price', '', 'class="form-control" id="value_price"'); ?>
                         </div>
                       </div>
@@ -1749,7 +1749,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                         <div class="input-group">
                           <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $default_products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
-                          <span class="input-group-btn" style="width:0px;"></span>
+                          <span class="input-group-btn" style="width:0;"></span>
                           <?php echo zen_draw_input_field('products_attributes_weight', '', 'class="form-control" id="products_attributes_weight"'); ?>
                         </div>
                       </div>

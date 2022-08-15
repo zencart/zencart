@@ -142,9 +142,9 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
         }
 
         .add-shadow {
-        	-webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-        	   -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-        	        box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+        	-webkit-box-shadow: 4px 10px 41px 0 rgba(161, 161, 161, 0.75);
+        	   -moz-box-shadow: 4px 10px 41px 0 rgba(161, 161, 161, 0.75);
+        	        box-shadow: 4px 10px 41px 0 rgba(161, 161, 161, 0.75);
         }
 
         .prime-string {

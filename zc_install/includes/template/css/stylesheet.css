@@ -13,9 +13,9 @@
   height: 110px;
   overflow: hidden;
   box-sizing: border-box;
-  border: 0px solid rgba(0,0,0,.25);
+  border: 0 solid rgba(0,0,0,.25);
   border-radius: 8px;
-  box-shadow: inset 0px 0px 2px 2px rgba(0,0,0,.0);
+  box-shadow: inset 0 0 2px 2px rgba(0,0,0,.0);
   padding: 15px 0;
   margin-bottom: 20px;
   /*background: url(../img/banner-lg-1100.jpg) right no-repeat;*/
