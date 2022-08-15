@@ -42,16 +42,13 @@
     }
   }
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <title><?php echo $page_title; ?></title>
 <script>
-var i=0;
-
 function resize() {
-  if (navigator.appName == 'Netscape') i = 40;
-  window.resizeTo(document.images[0].width + 30, document.images[0].height + 60 - i);
+  window.resizeTo(document.images[0].width + 30, document.images[0].height + 60);
 }
 </script>
 </head>
