@@ -75,7 +75,7 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
             <?php echo zen_draw_input_field('end_date', $_GET['end_date'], 'class="form-control"'); ?>
         </div>
       </div>
-      <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_DISPLAY; ?></div>
+      <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_DISPLAY; ?></button></div>
       <?php echo '</form>'; ?>
 
 

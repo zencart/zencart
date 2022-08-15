@@ -550,7 +550,7 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['unique_id'] == $cInfo->unique_id)) {
-                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle">';
+                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle"></i>';
                         } else {
                           echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '"><i class="fa fa-info-circle fa-fw fa-2x align-middle"></i></a>';
                         }
@@ -646,7 +646,7 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['unique_id'] == $cInfo->unique_id)) {
-                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle">';
+                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle"></i>';
                         } else {
                           echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '"><i class="fa fa-info-circle fa-fw fa-2x align-middle"></i></a>';
                         }
@@ -1302,7 +1302,7 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
-                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle">';
+                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle"></i>';
                         } else {
                           echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $item['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '"><i class="fa fa-info-circle fa-fw fa-2x align-middle"></i></a>';
                         }
