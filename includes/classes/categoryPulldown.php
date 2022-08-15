@@ -1,9 +1,15 @@
 <?php
 
+
+    /**
+     *
+     */
     class categoryPulldown extends pulldown
     {
-
-        function __construct()
+        /**
+         *
+         */
+        public function __construct()
         {
             parent::__construct();
 
@@ -18,21 +24,33 @@
                 'cd.categories_description',
                 'c.categories_id',
             ];
-
         }
 
+        /**
+         * @param bool $status
+         *
+         * @return $this
+         */
         public function showParent(bool $status)
         {
             $this->show_parent = $status;
             return $this;
         }
 
+        /**
+         * @param bool $status
+         *
+         * @return $this
+         */
         public function showFullPath(bool $status)
         {
             $this->show_full_path = $status;
             return $this;
         }
 
+        /**
+         * @return mixed|void
+         */
         protected function setSQL()
         {
             $this->attributes_join = str_replace('p.products_id', 'ptoc.products_id', $this->attributes_join);
@@ -44,6 +62,9 @@
             WHERE TRUE ";
         }
 
+        /**
+         * @return mixed|void
+         */
         protected function processSQL()
         {
             $this->setSQL();
@@ -60,6 +81,11 @@
             }
         }
 
+        /**
+         * @param $category
+         *
+         * @return string|string[]|null
+         */
         private function categoryText($category)
         {
             if (!empty($this->attributes_join)) {
