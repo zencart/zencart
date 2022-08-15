@@ -1340,7 +1340,6 @@ if (!empty($action) && $order_exists === true) {
                 <td class="dataTableContent text-left">
 <?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
                 </td>
-                </td>
 <?php } ?> 
                 <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br />' => '', '<hr>' => "----\n"]); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
