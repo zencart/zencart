@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: torvista 2022 Jul 10 Modified in v1.5.8-alpha $
  */
+
 require 'includes/application_top.php';
 $languages = zen_get_languages();
 require DIR_WS_CLASSES . 'currencies.php';
@@ -62,7 +64,7 @@ if (!empty($action)) {
       if (isset($_POST['categories_id'])) {
         $categories_id = zen_db_prepare_input($_POST['categories_id']);
 
-        $categories = zen_get_category_tree($categories_id, '', '0', '', true);
+        $categories = zen_get_category_tree((string)$categories_id, '', '0', '', true);
 
         // change the status of categories and products
         zen_set_time_limit(600);
@@ -79,7 +81,7 @@ if (!empty($action)) {
         for ($i = 0, $n = count($categories); $i < $n; $i++) {
 
           //set categories_status
-          if ($categories[$i]['id'] === $categories_id) {//always update THIS category
+          if ($categories[$i]['id'] === (string)$categories_id) {//always update THIS category
               zen_set_category_status($categories[$i]['id'], $category_status);
           } elseif ($subcategories_status !== '') {//optionally update subcategories if a change was selected
               zen_set_category_status($categories[$i]['id'], $subcategories_status);
