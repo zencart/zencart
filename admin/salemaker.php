@@ -327,7 +327,7 @@ if (!empty($action)) {
         </div>
       </div>
       <?php
-      $categories_array = zen_get_category_tree('0', '&nbsp;&nbsp;', '0');
+      $categories_array = zen_get_category_tree(TOPMOST_CATEGORY_PARENT_ID, '&nbsp;&nbsp;', TOPMOST_CATEGORY_PARENT_ID);
       $n = sizeof($categories_array);
       for ($i = 0; $i < $n; $i++) {
         $parents = $db->Execute("SELECT parent_id
