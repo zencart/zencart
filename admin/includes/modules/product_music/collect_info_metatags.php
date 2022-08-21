@@ -13,4 +13,4 @@ if (!defined('IS_ADMIN_FLAG')) {
 // -----
 // Use the 'base' 'product' type's handling.
 //
-require DIR_WS_MODULES . 'product/collect_info_meta_tags.php';
+require DIR_WS_MODULES . 'product/collect_info_metatags.php';
