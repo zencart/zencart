@@ -60,7 +60,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
       <table class="table">
         <tr>
           <td class="pageHeading"><?php echo nl2br(STORE_NAME_ADDRESS); ?></td>
-          <td class="pageHeading" align="right"><?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT); ?></td>
+          <td class="pageHeading text-right"><?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT); ?></td>
         </tr>
       </table>
       <div><?php echo zen_draw_separator(); ?></div>

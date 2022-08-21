@@ -315,14 +315,14 @@ $opts = array(
     <table caption="<?php echo TABLE_HEADING_SOURCE; ?>">
       <tr class="headingRow dataTableHeadingRow">
         <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SOURCE; ?></th>
-        <th class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_VIEWS; ?></th>
-        <th class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_CLICKS; ?></th>
+        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_VIEWS; ?></th>
+        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_CLICKS; ?></th>
       </tr>
   <?php for ($i=0, $n=sizeof($stats[2]); $i<$n; $i++) { ?>
         <tr class="dataTableRow">
           <td class="dataTableContent"><?php echo $stats[2][$i][0]; ?></td>
-          <td class="dataTableContent" align="right"><?php echo $stats[2][$i][1]; ?></td>
-          <td class="dataTableContent" align="right"><?php echo $stats[2][$i][2]; ?></td>
+          <td class="dataTableContent text-right"><?php echo $stats[2][$i][1]; ?></td>
+          <td class="dataTableContent text-right"><?php echo $stats[2][$i][2]; ?></td>
         </tr>
   <?php } ?>
     </table>

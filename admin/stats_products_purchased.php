@@ -98,7 +98,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
           <tbody>
               <?php if ($chk_orders_products->EOF) { ?>
               <tr class="dataTableRowSelectedBot">
-                <td colspan="7" class="dataTableContent" align="center"><?php echo NONE; ?></td>
+                <td colspan="7" class="dataTableContent text-center"><?php echo NONE; ?></td>
               </tr>
             <?php } ?>
             <?php

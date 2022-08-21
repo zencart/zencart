@@ -256,8 +256,8 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><br><table border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_VIEWED_UPDATE; ?></td>
-            <td class="main" align="right" valign="middle"><?php echo zen_draw_form('update_all_products_viewed', FILENAME_STORE_MANAGER, 'action=update_all_products_viewed')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
+            <td class="main text-left" valign="top"><?php echo TEXT_INFO_PRODUCTS_VIEWED_UPDATE; ?></td>
+            <td class="main text-right" valign="middle"><?php echo zen_draw_form('update_all_products_viewed', FILENAME_STORE_MANAGER, 'action=update_all_products_viewed')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
           </tr>
         </table></td>
       </tr>
