@@ -365,7 +365,7 @@ if (!empty($action)) {
           'products_quantity_order_units' => '',
           'products_quantity_order_max' => '',
           'product_is_free' => 0,
-          'p.product_is_cal' => 0,
+          'product_is_call' => 0,
           'products_quantity_mixed' => 0,
           'products_priced_by_attribute' => 0,
           'products_status' => 1,
