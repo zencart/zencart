@@ -24,7 +24,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 */
 
   class box extends boxTableBlock {
-
+      private
+          $heading,
+          $contents;
+      
     function __construct() {
       $this->heading = array();
       $this->contents = array();

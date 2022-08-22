@@ -7,8 +7,11 @@
  * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 class boxTableBlock {
-
-  function tableBlock($contents) {
+    protected 
+        $table_row_parameters,
+        $table_data_parameters;
+     
+function tableBlock($contents) {
     $tableBox_string = '';
 
     $form_set = false;
