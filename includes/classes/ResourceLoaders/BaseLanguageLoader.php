@@ -12,7 +12,14 @@ use Zencart\FileSystem\FileSystem;
 
 class BaseLanguageLoader
 {
-    protected $languageDefines = [];
+    protected 
+        $fallback,
+        $fileSystem,
+        $languageDefines = [],
+        $pluginList,
+        $templateDir;
+    public
+        $currentPage;
 
     public function __construct($pluginList, $currentPage, $templateDir, $fallback = 'english')
     {

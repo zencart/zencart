@@ -10,6 +10,11 @@ namespace Zencart\LanguageLoader;
 
 class LanguageLoader
 {
+    private
+        $languageFilesLoaded,
+        $arrayLoader,
+        $fileLoader;
+        
     public function __construct($arraysLoader, $filesLoader)
     {
         $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];

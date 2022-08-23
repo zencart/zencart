@@ -12,6 +12,8 @@ use Zencart\FileSystem\FileSystem;
 
 class ArraysLanguageLoader extends BaseLanguageLoader
 {
+    protected $mainLoader;
+    
     public function makeConstants($defines)
     {
         if (!is_array($defines)) return; 
