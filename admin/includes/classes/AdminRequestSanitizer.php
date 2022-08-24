@@ -52,6 +52,10 @@ class AdminRequestSanitizer extends base
      * @var string
      */
     private $charset;
+    /**
+     * @var string
+     */
+    private $arrayName;
 
     /**
      * @return AdminRequestSanitizer
