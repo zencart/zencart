@@ -10,7 +10,10 @@ namespace Zencart\PluginManager;
 
 class PluginManager
 {
-
+    private
+        $pluginControl,
+        $pluginControlVersion;
+    
     public function __construct($pluginControl, $pluginControlVersion)
     {
         $this->pluginControl = $pluginControl;
