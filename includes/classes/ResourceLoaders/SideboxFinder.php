@@ -5,7 +5,8 @@ namespace Zencart\ResourceLoaders;
 
 class SideboxFinder
 {
-
+    private $filesystem;
+    
     public function __construct($filesystem)
     {
         $this->filesystem = $filesystem;
