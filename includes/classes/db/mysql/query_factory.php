@@ -19,12 +19,14 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class queryFactory extends base
 {
-    var $link; // mysqli object
-    var $count_queries = 0;
-    var $total_query_time;
-    var $dieOnErrors = false;
-    var $error_number = 0;
-    var $error_text = '';
+    private $link; // mysqli object
+    private $count_queries = 0;
+    private $total_query_time;
+    public $dieOnErrors = false;
+    public $error_number = 0;
+    public $error_text = '';
+    
+    private $pConnect;
     /**
      * @var bool
      */
