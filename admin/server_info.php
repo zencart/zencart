@@ -13,7 +13,7 @@
 
 // the following is for display later
   $sinfo =  '<div class="sysinfo wrapper">' .
-         '  <div class="center"><a href="https://www.zen-cart.com"><img border="0" src="images/small_zen_logo.gif" alt=" Zen Cart "></a></div>' .
+         '  <div class="center"><a href="https://www.zen-cart.com"><img src="images/small_zen_logo.gif" alt=" Zen Cart "></a></div>' .
          '  <div class="center"><h2> ' . PROJECT_VERSION_NAME . ' ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '</h2>' .
                ((PROJECT_VERSION_PATCH1 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH1 . '::' . PROJECT_VERSION_PATCH1_SOURCE . '</h3>') .
                ((PROJECT_VERSION_PATCH2 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH2 . '::' . PROJECT_VERSION_PATCH2_SOURCE . '</h3>') .
@@ -41,7 +41,7 @@
     $sinfo .= '<br><a href="https://docs.zen-cart.com/user/first_steps/server_requirements/" rel="noopener" target="_blank">Zen Cart documentation: Server Requirements</a>';
     $sinfo .= '</div></div>';
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
@@ -92,7 +92,10 @@ if (strpos($disabled_functions,"phpinfo") === false) {
     ob_end_clean();
     $regs = '';
     preg_match('/<body>(.*)<\/body>/msi', $phpinfo, $regs);
-    echo $regs[1];
+    // clean up html to html 5
+    // replace font with span, replace name with id in <a> tag, remove border="0" from <img> tag, add colspan for missing td element
+    $phpinfo = preg_replace(['/<(\/)?font/','/<a name=/','/<img border="0"/','/<tr><td class="e">Features <\/td><\/tr>/'],['<$1span','<a id=','<img ','<tr><td class="e" colspan=2>Features </td></tr>'],$regs[1]);
+    echo $phpinfo;
   } else {
     phpinfo();
   }
@@ -113,7 +116,7 @@ if (strpos($disabled_functions,"phpinfo") === false) {
         ?>
         <tr class="db-row">
             <td class="db-info db-name"><?php echo $variable['Variable_name']; ?></td>
-            <td class="db-info db-value"><?php echo empty($variable['Value']) ? '$nbsp;' : $variable['Value']; ?></td>
+            <td class="db-info db-value"><?php echo empty($variable['Value']) ? '$nbsp;' : htmlspecialchars($variable['Value']); ?></td>
         </tr>
         <?php
     }
