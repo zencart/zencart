@@ -92,7 +92,9 @@ if (!empty($action)) {
         $categories_id = (int)$_POST['categories_id'];
       }
 
-      $sql_data_array = ['sort_order' => (int)$_POST['sort_order']];
+      $sql_data_array = [
+         'sort_order' => (int)$_POST['sort_order'],
+      ];
 
       if ($action === 'insert_category') {
         $insert_sql_data = [
