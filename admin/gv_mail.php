@@ -228,7 +228,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             <?php } ?>
             <tr>
               <td class="text-right"><b><?php echo TEXT_MESSAGE; ?></b></td>
-              <td><span class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true)); ?></span></td>
+              <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true)); ?></td>
             </tr>
           </table>
           <div class="form-group">
