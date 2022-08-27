@@ -11,10 +11,16 @@ namespace Zencart\InitSystem;
 class InitSystem
 {
 
-    protected $context;
-    protected $loaderPrefix;
-    protected $fileSystem;
-    protected $pluginManager;
+    private 
+        $installedPlugins,
+        $debug,
+        $debugList,
+        $actionList;
+        
+    private $context;
+    private $loaderPrefix;
+    private $fileSystem;
+    private $pluginManager;
 
     public function __construct($context, $loaderPrefix, $fileSystem, $pluginManager, $installedPlugins)
     {
