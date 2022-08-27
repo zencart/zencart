@@ -313,7 +313,7 @@ require (DIR_WS_INCLUDES . 'header.php');
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
   <tr>
     <!-- body_text //-->
-    <td width="100%" valign="top">
+    <td class="align-top" width="100%">
     <table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
         <td width="100%">
