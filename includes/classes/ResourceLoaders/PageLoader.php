@@ -13,7 +13,12 @@ use Zencart\Traits\Singleton;
 class PageLoader
 {
     use Singleton;
-
+    
+    private
+        $installedPlugins,
+        $mainPage,
+        $fileSystem;
+    
     public function init(array $installedPlugins, $mainPage, $fileSystem)
     {
         $this->installedPlugins = $installedPlugins;
