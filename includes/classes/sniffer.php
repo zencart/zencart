@@ -17,6 +17,12 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class sniffer extends base {
 
+    private
+        $browser,
+        $database,
+        $php,
+        $server;
+
   function __construct() {
     $this->browser = Array();
     $this->php = Array();
