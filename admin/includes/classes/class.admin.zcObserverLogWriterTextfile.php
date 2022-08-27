@@ -12,6 +12,7 @@
 class zcObserverLogWriterTextfile extends base {
 
   private $destinationLogFilename = '';
+  private $notifier;
 
   public function __construct(notifier $zco_notifier = null) {
     if (!$zco_notifier) $zco_notifier = new notifier;
