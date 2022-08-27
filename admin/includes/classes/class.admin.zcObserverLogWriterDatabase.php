@@ -11,6 +11,8 @@
 
 class zcObserverLogWriterDatabase extends base {
 
+    private $notifier;
+    
   public function __construct(notifier $zco_notifier = null) {
     if (!$zco_notifier) $zco_notifier = new notifier;
     $this->notifier = $zco_notifier;

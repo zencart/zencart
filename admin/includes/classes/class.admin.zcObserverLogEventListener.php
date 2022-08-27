@@ -17,6 +17,8 @@
 
 class zcObserverLogEventListener extends base {
 
+    private $notifier;
+    
   /**
    * using integer values implemented by monolog API
    */
