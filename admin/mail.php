@@ -224,7 +224,7 @@ if ($action == 'preview') {
               $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview));
               $message_preview = str_replace(array('<br>', '<br />'), "<br />\n", $message_preview);
               $message_preview = str_replace('</p>', "</p>\n", $message_preview);
-              echo '<tt>' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE)) . '</tt>';
+              echo '<span class="tt">' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE)) . '</span>';
               ?>
           </div>
           <div class="col-sm-12"><hr></div>
