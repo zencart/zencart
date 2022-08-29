@@ -158,7 +158,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
                 if ((!isset($_GET['gid']) || $_GET['gid'] == $gv_list['unique_id']) && (!isset($gInfo))) {
                   $gInfo = new objectInfo($gv_list);
                 }
-                if ((is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id)) {
+                if (isset($gInfo) && (is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id)) {
                   ?>
                   <tr class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link('gv_queue.php', zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit'); ?>'">
                   <?php } else { ?>
@@ -170,7 +170,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
                   <td class="dataTableContent text-right"><?php echo zen_datetime_short($gv_list['date_created']); ?></td>
                   <td class="dataTableContent text-right">
                     <?php
-                    if ((is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id)) {
+                    if (isset($gInfo) && (is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id)) {
                       echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
                     } else {
                       echo '<a href="' . zen_href_link(FILENAME_GV_QUEUE, 'page=' . $_GET['page'] . '&gid=' . $gv_list['unique_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';

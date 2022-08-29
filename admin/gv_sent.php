@@ -50,7 +50,7 @@ $currencies = new currencies();
                   if ((empty($_GET['gid']) || (@$_GET['gid'] == $gv_list['coupon_id'])) && !isset($gInfo)) {
                     $gInfo = new objectInfo($gv_list);
                   }
-                  if (is_object($gInfo) && $gv_list['coupon_id'] == $gInfo->coupon_id) {
+                  if (isset($gInfo) && is_object($gInfo) && $gv_list['coupon_id'] == $gInfo->coupon_id) {
                     ?>
                     <tr class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link('gv_sent.php', zen_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->coupon_id . '&action=edit'); ?>'">
                     <?php } else { ?>
@@ -63,7 +63,7 @@ $currencies = new currencies();
                     <td class="dataTableContent text-right"><?php echo (empty($gv_list['redeem_date']) ? TEXT_INFO_NOT_REDEEMED : zen_date_short($gv_list['redeem_date'])); ?></td>
                     <td class="dataTableContent text-right">
                       <?php
-                      if ((is_object($gInfo)) && ($gv_list['coupon_id'] == $gInfo->coupon_id)) {
+                      if (isset($gInfo) && (is_object($gInfo)) && ($gv_list['coupon_id'] == $gInfo->coupon_id)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
                       } else {
                         echo '<a href="' . zen_href_link(FILENAME_GV_SENT, 'page=' . $_GET['page'] . '&gid=' . $gv_list['coupon_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
