@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
 * @copyright Portions Copyright 2003 osCommerce
 * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-* @version $Id: DrByte 2020 Aug 08 Modified in v1.5.8-alpha $
+* @version $Id: Scott C Wilson 2022 Jul 27 Modified in v1.5.8-alpha2 $
 */
 $limit = (trim(MAX_DISPLAY_BESTSELLERS) == "") ? "" : " LIMIT " . (int)MAX_DISPLAY_BESTSELLERS;
 if (isset($current_category_id) && ($current_category_id > 0)) {
