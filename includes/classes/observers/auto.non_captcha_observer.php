@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2017-2019 CowboyGeek.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Aug 05 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2022 Jul 24 Modified in v1.5.8-alpha2 $
  */
 
 class zcObserverNonCaptchaObserver extends base
