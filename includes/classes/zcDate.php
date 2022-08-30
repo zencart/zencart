@@ -12,7 +12,8 @@ class zcDate extends base
         $locale,                //- Only used when $this->useIntlDate is true
         $strftime2date,         //- Only used when $this->useStrftime is false
         $strftime2intl,         //- Only used when $this->useStrftime is false
-        $debug = false;
+        $debug = false,
+        $dateObject;
 
     // -----
     // Initial construction; initializes the conversion arrays and determines which PHP
