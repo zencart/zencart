@@ -16,8 +16,10 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class template_func extends base {
 
+        private $info = [];
+        
   function __construct($template_dir = 'default') {
-    $this->info = array();
+    $this->info = [];
   }
 
   function get_template_part($page_directory, $template_part, $file_extension = '.php') {
