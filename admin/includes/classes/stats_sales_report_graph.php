@@ -29,8 +29,12 @@ class statsSalesReportGraph
         $previous = '',
         $next = '',
         $filter = '',
+        $filter_link,
+        $filter_sql = '',
+        $status_available = [],
+        $status_available_size = 0,
         $size = 0;
-
+       
     /**
      * statsSalesReportGraph constructor.
      *
