@@ -21,7 +21,12 @@
             'products_price' => 'p',
             'products_sort_order' => 'p',
         ];
-
+        
+        private $categories_join;
+        private $output_string;
+        private $show_model;
+        private $show_price;
+        
         /**
          *
          */

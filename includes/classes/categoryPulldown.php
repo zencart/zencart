@@ -10,6 +10,10 @@
 
     class categoryPulldown extends pulldown
     {
+
+        private $show_full_path;
+        private $show_parent;
+
         /**
          *
          */

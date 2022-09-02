@@ -10,39 +10,42 @@
 
     abstract class pulldown extends base
     {
-        /**
-         * @var
-         */
-        public $pulldown;
+
         /**
          * @var string
          */
-        public $attributes_join;
+        protected $attributes_join;
         /**
          * @var false
          */
-        public $show_id;
+        protected $show_id;
         /**
          * @var int
          */
-        public $set_selected;
+        protected $set_selected;
         /**
          * @var string
          */
-        public $parameters;
+        protected $parameters;
         /**
          * @var string
          */
-        public $condition;
+        protected $condition;
         /**
          * @var array
          */
-        public $exclude;
+        protected $exclude = [];
         /**
          * @var int
          */
-        public $count = 0;
-
+        protected $count = 0;
+        
+        protected $keywords;
+        protected $keyword_search_fields; 
+        protected $results;    
+        protected $sort;
+        protected $sql;
+        protected $values = [];
 
         /**
          *
