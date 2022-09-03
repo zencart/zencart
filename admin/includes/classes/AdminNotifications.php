@@ -9,6 +9,7 @@
 class AdminNotifications
 {
     protected $enabled = true;
+    private $projectNotificationServer;
 
     public function __construct()
     {
@@ -50,6 +51,9 @@ class AdminNotifications
 
     protected function getNotificationInfo()
     {
+        if (empty($this->projectNotificationServer)){
+            return [];
+        }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->projectNotificationServer);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
