@@ -441,7 +441,7 @@ class queryFactory extends base
      */
     public function queryTime(): int
     {
-        return $this->total_query_time;
+        return (int)$this->total_query_time;
     }
 
     /**
@@ -959,6 +959,9 @@ class queryFactoryResult implements Countable, Iterator
 
 class queryFactoryMeta extends base
 {
+    public $type;
+    public $max_length;
+    
     function __construct($field)
     {
         $type = $field['Type'];
