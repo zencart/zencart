@@ -19,7 +19,35 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class splitPageResults extends base {
-  var $sql_query, $number_of_rows, $current_page_number, $number_of_pages, $number_of_rows_per_page, $page_name;
+    
+    /**
+     * Database field used to define unique item to count. Becomes the sql query.
+     */
+    private $countQuery;
+    /**
+     * Current page number
+     */
+    public $current_page_number;
+    /**
+     * Total number of pages;
+     */
+    public $number_of_pages;
+    /**
+     * Total Number of unique rows from $countQuery
+     */
+    public $number_of_rows;
+    /**
+     * maximum number of rows to display on a page
+     */
+    private $number_of_rows_per_page;
+    /**
+     *  The form name of field that holds the current page number
+     */
+    private $page_name;
+    /**
+     * Query used to select items for page
+     */
+    public $sql_query;
 
   /* class constructor */
   function __construct($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
