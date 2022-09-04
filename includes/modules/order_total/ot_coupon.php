@@ -86,7 +86,7 @@ class ot_coupon extends base
         if ($od_amount['total'] > 0) {
             $tax = 0;
             foreach ($order->info['tax_groups'] as $key => $value) {
-                if ($od_amount['tax_groups'][$key]) {
+                if (isset($od_amount['tax_groups'][$key])) {
                     $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
                     $order->info['tax_groups'][$key] = zen_round($order->info['tax_groups'][$key], $currencies->get_decimal_places($_SESSION['currency']));
                     $tax += $od_amount['tax_groups'][$key];
