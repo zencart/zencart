@@ -33,7 +33,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $product_global = '0';
   }
 
-  (array)$products = $_POST['notify'];
+  (array)$products = $_POST['notify'] ?? '';
 
   if ($product_global != $global->fields['global_product_notifications']) {
     $product_global = (($global->fields['global_product_notifications'] == '1') ? '0' : '1');
