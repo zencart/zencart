@@ -12,20 +12,95 @@
  *
  */
 class ot_gv {
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
+     * @var string
+     */
+    public $calculate_tax;
+    /**
+     * $checkbox is the output to request the amount of gift vouchers the user wants to redeem
+     * @var string
+     */
+    public $checkbox;
+    /**
+     * $code determines the internal 'code' name used to designate "this" order total module
+     * @var string
+     */
+    public $code;
+    /**
+     * $credit_class flag to indicate order totals method is a credit class
+     * @var boolean
+     */
+    public $credit_class;
+    /**
+     * $credit_tax if 'true' tax is to be calculated on purchased GVs
+     * @var string
+     */
+    public $credit_tax;
+    /**
+     * $deduction amount of deduction calculated/afforded while being applied to an order
+     * @var float|null
+     */
+    protected $deduction;
+    /**
+     * $description is a soft name for this order total method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $header the module box header 
+     * @var string
+     */
+    public $header;
+    /**
+     * $include_shipping allow shipping costs to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_shipping;
+    /**
+     * $include_tax allow tax to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_tax;
+    /**
+     * $sort_order is the order priority of this order total module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $tax_class is the Tax class to be applied to the coupon cost
+     * @var
+     */
+    public $tax_class;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $output is an array of the display elements used on checkout pages
+     * @var array
+     */
+    public $output = [];
+    /**
+     * $user_prompt string to request redemption of gift vouchers
+     * @var string
+     */
+    public $user_prompt;
+    /**
+     * $validation_errors is an array of error messages from coupon validation
+     * @var array
+     */
+    protected $validation_errors = [];
+  
   /**
-   * Enter description here...
-   *
-   * @var unknown_type
-   */
-  var $title;
-  /**
-   * Enter description here...
-   *
-   * @var unknown_type
-   */
-  var $output;
-  /**
-   * Enter description here...
+   * process gift vouchers
    *
    * @return ot_gv
    */
@@ -393,12 +468,12 @@ class ot_gv {
    */
   function check() {
     global $db;
-    if (!isset($this->check)) {
+    if (!isset($this->_check)) {
       $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_STATUS'");
-      $this->check = $check_query->RecordCount();
+      $this->_check = $check_query->RecordCount();
     }
 
-    if ($this->check) {
+    if ($this->_check) {
       // move switch for admin-display of queue in header from lang file to module settings
       if (!defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN')) {
           $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show Queue in Admin header?', 'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'true', 'Show Queue button on all pages of Admin?<br>(Will auto-hide if nothing in queue, and will auto-display on \'Orders\' screen, regardless of this setting)', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
@@ -409,7 +484,7 @@ class ot_gv {
 
     }
 
-    return $this->check;
+    return $this->_check;
   }
   /**
    * Enter description here...

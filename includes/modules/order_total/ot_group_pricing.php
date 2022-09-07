@@ -9,7 +9,67 @@
  */
 
 class ot_group_pricing {
-  var $title, $output;
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" order total module
+     * @var string
+     */
+    public $code;
+    /**
+     * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
+     * @var string
+     */
+    public $calculate_tax;
+    /**
+     * $credit_class flag to indicate order totals method is a credit class
+     * @var boolean
+     */
+    public $credit_class;
+    /**
+     * $deduction amount of deduction calculated/afforded while being applied to an order
+     * @var float|null
+     */
+    protected $deduction;
+    /**
+     * $description is a soft name for this order total method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $include_shipping allow shipping costs to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_shipping;
+    /**
+     * $include_tax allow tax to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_tax;
+    /**
+     * $sort_order is the order priority of this order total module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $tax_class is the Tax class to be applied to the coupon cost
+     * @var
+     */
+    public $tax_class;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $output is an array of the display elements used on checkout pages
+     * @var array
+     */
+    public $output = [];
 
   function __construct() {
     $this->code = 'ot_group_pricing';
