@@ -74,6 +74,9 @@
 
 
             $order->info['tax'] += zen_calculate_tax($low_order_fee, $tax);
+            if (!isset($order->info['tax_groups']["$tax_description"])) {
+                $order->info['tax_groups']["$tax_description"] = 0;
+            }
             $order->info['tax_groups']["$tax_description"] += zen_calculate_tax($low_order_fee, $tax);
             $order->info['total'] += $low_order_fee + zen_calculate_tax($low_order_fee, $tax);
             if (DISPLAY_PRICE_WITH_TAX == 'true') {
