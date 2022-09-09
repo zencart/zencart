@@ -16,7 +16,32 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class payment extends base {
-  var $modules, $selected_module, $doesCollectsCardDataOnsite;
+
+   /**
+    * $doesCollectsCardDataOnsite is a flag to indicate if card details are collected on site
+    * @var boolean
+    */
+   public $doesCollectsCardDataOnsite;
+   /**
+    * $form_action_url is the URL to process the payment or not set for local processing
+    * @var string
+    */
+   public $form_action_url;
+    /**
+     * $modules array of payment module names
+     * @var array 
+     */
+   public $modules;
+   /**
+    * $paymentClass is a payment class
+    * @var class
+    */
+   public $paymentClass;
+   /**
+    * $selected_module is the selected payment module
+    * @var string
+    */
+   public $selected_module;
 
   function __construct($module = '') {
       global $PHP_SELF, $language, $credit_covers, $messageStack, $languageLoader;
