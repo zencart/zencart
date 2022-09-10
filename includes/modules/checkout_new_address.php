@@ -176,9 +176,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
     switch($addressType) {
       case 'billto':
       $reset_payment = false;
-      if ($_SESSION['billto']) {
+      if (isset($_SESSION['billto'])) {
         if ($_SESSION['billto'] != $_POST['address']) {
-          if ($_SESSION['payment']) {
+          if (isset($_SESSION['payment'])) {
             $reset_payment = true;
           }
         }
@@ -204,7 +204,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       break;
       case 'shipto':
       $reset_shipping = false;
-      if ($_SESSION['sendto']) {
+      if (isset($_SESSION['sendto'])) {
         if ($_SESSION['sendto'] != $_POST['address']) {
           if (isset($_SESSION['shipping'])) {
             $reset_shipping = true;
