@@ -431,7 +431,20 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                 <tr>
                   <td class="text-left"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
                   <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
-                  <td class="text-left"><?php echo ($order_history['comments'] == '' ? TEXT_NONE : nl2br(zen_output_string_protected($order_history['comments']))); ?>&nbsp;</td>
+                  <td class="text-left">
+                  <?php 
+                  if (empty($order_history['comments'])) {
+                     echo TEXT_NONE;
+                  } else {
+                     if ($count_comments == 1) {
+                        echo nl2br(zen_output_string_protected($order_history['comments'])); 
+                     } else {
+                        echo $order_history['comments']; 
+                     }
+                  }
+                  ?>
+                  &nbsp;
+                  </td>
                 </tr>
                 <?php
                 if (ORDER_COMMENTS_INVOICE == 1 && $count_comments >= 1) {
