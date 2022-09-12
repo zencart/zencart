@@ -345,7 +345,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                 <strong><?php echo $currencies->format(zen_round($order->products[$i]['final_price'], $decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($order->products[$i]['onetime_charges'] != 0 ? '<br>' . $currencies->format($order->products[$i]['onetime_charges'], true, $order->info['currency'], $order->info['currency_value']) : ''); ?></strong>
               </td>
 <?php if ($show_including_tax)  { ?>
-              <td class="dataTableContent text-right" valign="top">
+              <td class="dataTableContent text-right align-top">
                 <strong>
                   <?php echo $priceIncTax; ?>
                   <?php if ($order->products[$i]['onetime_charges'] != 0) {
