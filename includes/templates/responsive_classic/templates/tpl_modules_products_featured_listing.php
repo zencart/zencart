@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: John Thompson 2022 Jul 30 Modified in v1.5.8-alpha2 $
+ * @version $Id: dbltoe 2022 Sep 12 Modified in v1.5.8-alpha2 $
  */
 ?>
 <div id="product-listing">
@@ -26,7 +26,7 @@
         if ($featured_products->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) {
           $display_products_image = str_repeat('<br>', substr(PRODUCT_FEATURED_LIST_IMAGE, 3, 1));
         } else {
-          $display_products_image = '<a href="' . zen_href_link(zen_get_info_page($featured_products->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($featured_products->fields['master_categories_id']) . '&products_id=' . $featured_products->fields['products_id']) . '">' . zen_image(DIR_WS_IMAGES . $featured_products->fields['products_image'], $featured_products->fields['products_name'], IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH, IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT) . '</a>' . str_repeat('<br>', substr(PRODUCT_FEATURED_LIST_IMAGE, 3, 1));
+          $display_products_image = '<a href="' . zen_href_link(zen_get_info_page($featured_products->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($featured_products->fields['master_categories_id']) . '&products_id=' . $featured_products->fields['products_id']) . '" title="' . "Product ID " . $featured_products->fields['products_id'] . '">' . zen_image(DIR_WS_IMAGES . $featured_products->fields['products_image'], $featured_products->fields['products_name'], IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH, IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT) . '</a>' . str_repeat('<br>', substr(PRODUCT_FEATURED_LIST_IMAGE, 3, 1));
         }
       } else {
         $display_products_image = '';
