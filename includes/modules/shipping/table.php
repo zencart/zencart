@@ -10,38 +10,61 @@
  *
  */
 class table extends base {
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" shipping module
+     *
+     * @var string
+     */
+    public $code;
+    /**
+     * $description is a soft name for this shipping method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $enabled determines whether this module shows or not... during checkout.
+     * @var boolean
+     */
+    public $enabled;
+    /**
+     * $icon is the file name containing the Shipping method icon
+     * @var string
+     */
+    public $icon;
+    /** 
+     * $quotes is an array containing all the quote information for this shipping module
+     * @var array
+     */
+    public $quotes;
+    /**
+     * $sort_order is the order priority of this shipping module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
+     * @var string
+     */
+    public $tax_basis;
+    /**
+     * $tax_class is the  Tax class to be applied to the shipping cost
+     * @var string
+     */
+    public $tax_class;
+    /**
+     * $title is the displayed name for this shipping method
+     * @var string
+     */
+    public $title;
+    
   /**
-   * Enter description here...
-   *
-   * @var string
-   */
-  var $code;
-  /**
-   * Enter description here...
-   *
-   * @var string
-   */
-  var $title;
-  /**
-   * Enter description here...
-   *
-   * @var string
-   */
-  var $description;
-  /**
-   * Enter description here...
-   *
-   * @var string
-   */
-  var $icon;
-  /**
-   * Enter description here...
-   *
-   * @var boolean
-   */
-  var $enabled;
-  /**
-   * Enter description here...
+   * constructor
    *
    * @return table
    */
@@ -104,9 +127,9 @@ class table extends base {
     }
   }
   /**
-   * Enter description here...
+   *  Obtain quote from shipping system/calculations
    *
-   * @param unknown_type $method
+   * @param string $method
    * @return unknown
    */
   function quote($method = '') {
@@ -174,7 +197,7 @@ class table extends base {
     return $this->quotes;
   }
   /**
-   * Enter description here...
+   * Check to see whether module is installed
    *
    * @return unknown
    */
@@ -187,7 +210,7 @@ class table extends base {
     return $this->_check;
   }
   /**
-   * Enter description here...
+   * Install the shipping module and its configuration settings
    *
    */
   function install() {
@@ -205,7 +228,7 @@ class table extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_TABLE_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
   }
   /**
-   * Enter description here...
+   * Remove the module and all its settings
    *
    */
     function remove() {
@@ -214,8 +237,8 @@ class table extends base {
     }
 
   /**
-   * Enter description here...
-   *
+   * Internal list of configuration keys used for configuration of the module
+   * 
    * @return unknown
    */
   function keys() {
