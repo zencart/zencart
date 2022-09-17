@@ -204,7 +204,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           <?php echo zen_draw_form('mail', FILENAME_GV_MAIL, 'action=send_email_to_user'); ?>
           <table class="table">
             <tr>
-              <td width="25%" class="text-right"><b><?php echo TEXT_FROM; ?></b></td>
+              <td class="text-right col-sm-3"><b><?php echo TEXT_FROM; ?></b></td>
               <td><?php echo htmlspecialchars(stripslashes($_POST['from']), ENT_COMPAT, CHARSET, true); ?></td>
             </tr>
             <tr>

@@ -98,7 +98,7 @@ if (!empty($action)) {
           <table class="table table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent" width="50%"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
+                <th class="dataTableHeadingContent col-sm-6"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_COUNTRY_STATUS; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
@@ -122,7 +122,7 @@ if (!empty($action)) {
                   <?php } else { ?>
                   <tr class="dataTableRow country-listing-row" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $country['countries_id']); ?>'" data-cid="<?php echo $country['countries_id']; ?>">
                   <?php } ?>
-                  <td class="dataTableContent" width="50%"><?php echo zen_output_string_protected($country['countries_name']); ?></td>
+                  <td class="dataTableContent col-sm-6"><?php echo zen_output_string_protected($country['countries_name']); ?></td>
                   <td class="dataTableContent text-center"><?php echo $country['countries_iso_code_2']; ?></td>
                   <td class="dataTableContent text-center"><?php echo $country['countries_iso_code_3']; ?></td>
                   <td class="dataTableContent text-center dataTableButtonCell">

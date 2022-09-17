@@ -288,7 +288,7 @@ for ($i = 0; $i < $report->size; $i++) {
         </table>
         <table class="table table-condensed">
           <tr class="dataTableRow">
-            <td class="dataTableContent text-left" width="80%"><?php echo FILTER_STATUS ?></td>
+            <td class="dataTableContent text-left col-sm-10"><?php echo FILTER_STATUS ?></td>
             <td class="dataTableContent text-right"><?php echo FILTER_VALUE ?></td>
           </tr>
           <?php
@@ -306,7 +306,7 @@ for ($i = 0; $i < $report->size; $i++) {
                 $tmp = substr($sales_report_filter, 0, $i) . "1" . substr($sales_report_filter, $i + 1, $report->status_available_size - ($i + 1));
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
-                <td class="dataTableContent text-right" width="100%">
+                <td class="dataTableContent text-right col-sm-12">
                   <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?>&nbsp;
                   <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></a></td>
                 <?php
@@ -314,7 +314,7 @@ for ($i = 0; $i < $report->size; $i++) {
                 $tmp = substr($sales_report_filter, 0, $i) . "0" . substr($sales_report_filter, $i + 1);
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
-                <td class="dataTableContent text-right" width="100%">
+                <td class="dataTableContent text-right col-sm-12">
                   <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?></a>
                   &nbsp;<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></td>
                 <?php
