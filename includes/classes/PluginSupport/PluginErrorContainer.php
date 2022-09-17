@@ -9,6 +9,23 @@ namespace Zencart\PluginSupport;
 
 class PluginErrorContainer
 {
+
+    /**
+     * $logger "null" the logger to used.
+     * @var object
+     */
+    protected $logger;
+    /**
+     * $logErrors is an array of error messages
+     * @var array
+     */
+    protected $logErrors = [];
+    /**
+     * $friendlyErrors is a subset of $logErrors that have a friendly message (a know error with additional information)
+     * @var array
+     */
+    protected $friendlyErrors = [];
+
     public function __construct($logger = null)
     {
         $this->logger = $logger;
