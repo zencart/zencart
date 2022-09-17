@@ -37,4 +37,3 @@ span.normal_button {
 span.normal_button:hover {
   background-color:#b4bc8b;  /* Hover color for link-related buttons */
 }
-input.submit_button:disabled, input.submit_button:disabled:hover, input.cssButtonHover:disabled{background:#808080;} /* Button disabled color */

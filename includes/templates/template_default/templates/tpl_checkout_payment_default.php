@@ -196,7 +196,7 @@
 <fieldset>
 <legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
 <div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
-<?php echo  zen_draw_checkbox_field('conditions', '1', false, 'id="conditions"');?>
+<?php echo  zen_draw_checkbox_field('conditions', '1', (isset($_SESSION['conditions']) && ($_SESSION['conditions'] === '1')), 'id="conditions" required  oninput="this.setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'' . ERROR_CONDITIONS_NOT_ACCEPTED . '\')"');?>
 <label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
 </fieldset>
 <?php
