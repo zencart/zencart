@@ -10,6 +10,17 @@ namespace Zencart\PluginSupport;
 class ScriptedInstallerFactory
 {
 
+    /**
+     * $dbConn is a database object 
+     * @var object
+     */
+    protected $dbConn;
+    /**
+     * $errorContainer is a PluginErrorContainer object
+     * @var object
+     */
+    protected $errorContainer;
+
     public function __construct($dbConn, $errorContainer)
     {
         $this->dbConn = $dbConn;
