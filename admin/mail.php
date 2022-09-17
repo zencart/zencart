@@ -218,13 +218,13 @@ if ($action == 'preview') {
           </div>
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE); ?></b></div>
-          <div class="col-sm-9">
+          <div class="col-sm-9 tt">
               <?php
               $message_preview = empty($_POST['message']) ? $_POST['message_html'] : $_POST['message'];
               $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview));
               $message_preview = str_replace(array('<br>', '<br />'), "<br />\n", $message_preview);
               $message_preview = str_replace('</p>', "</p>\n", $message_preview);
-              echo '<span class="tt">' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE)) . '</span>';
+              echo  nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE));
               ?>
           </div>
           <div class="col-sm-12"><hr></div>

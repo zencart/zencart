@@ -724,7 +724,7 @@ switch ($_GET['action']) {
               <?php } ?>
               <tr>
                 <td class="text-right"><b><?php echo TEXT_MESSAGE; ?></b></td>
-                <td><span class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE)); ?></span></td>
+                <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE)); ?></td>
               </tr>
               <tr>
                 <td>
