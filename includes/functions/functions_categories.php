@@ -1162,11 +1162,11 @@ function zen_remove_category($category_id)
             echo 'D: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
           }
         */
-        $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
-
+        if (!empty($new_sale_categories_all)) { 
+            $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
+            $db->Execute($salemakerupdate);
 //echo 'Update sale_categories_all: ' . $salemakerupdate . '<br>';
-
-        $db->Execute($salemakerupdate);
+        }
 
         $chk_sale_categories_all->MoveNext();
     }
