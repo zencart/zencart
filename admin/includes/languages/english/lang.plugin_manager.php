@@ -44,6 +44,9 @@ $define = [
     'TEXT_INFO_UPGRADE_WARNING' => '',
     'TEXT_INFO_CONFIRM_CLEAN' => 'Confirm version directories to clean/remove',
     'TEXT_LABEL_STATUS' => 'Status: ',
+    'ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP' => 'Check your sql statement. A sql function map cannot be found for : ',
+    'ERROR_INVALID_SYNTAX' => 'The table cannot be identified as syntax is invalid in: ',
+    'ERROR_SQL_PATCH' => 'Error while processing SQL install. ',
 ];
 
 return $define;
