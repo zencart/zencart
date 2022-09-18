@@ -133,12 +133,12 @@
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
+<table class="col-sm-12" border="0" cellspacing="2" cellpadding="2">
   <tr>
 <!-- body_text //-->
-    <td class="align-top" width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <td class="align-top col-sm-12" ><table class="col-sm-12" border="0" cellspacing="0" cellpadding="2">
       <tr>
-        <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td class="col-sm-12"><table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE_MEDIA_MANAGER; ?></td>
             <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
@@ -146,9 +146,9 @@
         </table></td>
       </tr>
       <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td><table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="align-top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+            <td class="align-top"><table class="col-sm-12" border="0" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MEDIA; ?></td>
                 <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
@@ -181,7 +181,7 @@
   }
 ?>
               <tr>
-                <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+                <td colspan="2"><table class="col-sm-12" border="0" cellspacing="0" cellpadding="2">
                   <tr>
                     <td class="smallText align-top"><?php echo $media_split->display_count($media_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA); ?></td>
                     <td class="smallText text-right"><?php echo $media_split->display_links($media_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
@@ -319,7 +319,7 @@
   }
 
   if (!empty($heading) && !empty($contents)) {
-    echo '            <td class="align-top" width="25%">' . "\n";
+    echo '            <td class="align-top col-sm-3">' . "\n";
 
     $box = new box;
     echo $box->infoBox($heading, $contents);

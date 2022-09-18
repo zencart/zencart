@@ -220,7 +220,7 @@ function Calendar(whatMonth,whatYear) {
         output += '<table width="185" border="3" class="cal-Table" cellspacing="0" cellpadding="0"><form name="Cal"><tr>';
     }
      
-    output += '<td class="cal-HeadCell text-center" width="100%"><a href="javascript:clearDay();"><img name="calbtn1" src="./images/cal_del_small.gif" border="0" width="12" height="10"></a>&nbsp;&nbsp;<a href="javascript:scrollMonth(-1);" class="cal-DayLink">&lt;</a>&nbsp;<SELECT class="cal-TextBox" NAME="cboMonth" onChange="changeMonth();">';
+    output += '<td class="cal-HeadCell text-center col-sm-12"><a href="javascript:clearDay();"><img name="calbtn1" src="./images/cal_del_small.gif" border="0" width="12" height="10"></a>&nbsp;&nbsp;<a href="javascript:scrollMonth(-1);" class="cal-DayLink">&lt;</a>&nbsp;<SELECT class="cal-TextBox" NAME="cboMonth" onChange="changeMonth();">';
     for (month=0; month<12; month++) {
         if (month == whatMonth) output += '<OPTION VALUE="' + month + '" SELECTED>' + names[month] + '<\/OPTION>';
         else                output += '<OPTION VALUE="' + month + '">'          + names[month] + '<\/OPTION>';
@@ -233,7 +233,7 @@ function Calendar(whatMonth,whatYear) {
         else              output += '<OPTION VALUE="' + year + '">'          + year + '<\/OPTION>';
     }
 
-    output += '<\/SELECT>&nbsp;<a href="javascript:scrollMonth(1);" class="cal-DayLink">&gt;</a>&nbsp;&nbsp;<a href="javascript:hideCalendar();"><img name="calbtn2" src="./images/cal_close_small.gif" border="0" width="12" height="10"></a><\/td><\/tr><tr><td width="100%" class="text-center">';
+    output += '<\/SELECT>&nbsp;<a href="javascript:scrollMonth(1);" class="cal-DayLink">&gt;</a>&nbsp;&nbsp;<a href="javascript:hideCalendar();"><img name="calbtn2" src="./images/cal_close_small.gif" border="0" width="12" height="10"></a><\/td><\/tr><tr><td class="text-center col-sm-12">';
 
     firstDay = new Date(whatYear,whatMonth,1);
     startDay = firstDay.getDay();

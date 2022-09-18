@@ -310,14 +310,14 @@ require (DIR_WS_INCLUDES . 'header.php');
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
+<table class="col-sm-12" border="0" cellspacing="2" cellpadding="2">
   <tr>
     <!-- body_text //-->
-    <td class="align-top" width="100%">
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+    <td class="align-top col-sm-12">
+    <table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="100%">
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td class="col-sm-12">
+        <table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
