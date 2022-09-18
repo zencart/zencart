@@ -701,7 +701,7 @@ switch ($_GET['action']) {
             ?>
             <table class="table">
               <tr>
-                <td width="25%" class="text-right"><b><?php echo TEXT_CUSTOMER; ?></b></td>
+                <td class="text-right col-sm-3"><b><?php echo TEXT_CUSTOMER; ?></b></td>
                 <td><?php echo $mail_sent_to; ?></td>
               </tr>
               <tr>
@@ -724,7 +724,7 @@ switch ($_GET['action']) {
               <?php } ?>
               <tr>
                 <td class="text-right"><b><?php echo TEXT_MESSAGE; ?></b></td>
-                <td><span class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE)); ?></span></td>
+                <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE)); ?></td>
               </tr>
               <tr>
                 <td>
@@ -803,7 +803,7 @@ switch ($_GET['action']) {
             ?>
             <table class="table">
               <tr>
-                <td width="25%" class="main"><?php echo COUPON_ZONE_RESTRICTION; ?></td>
+                <td class="main col-sm-3"><?php echo COUPON_ZONE_RESTRICTION; ?></td>
                 <td class="main"><?php echo zen_get_geo_zone_name($_POST['coupon_zone_restriction']); ?>
               </tr>
               <tr>

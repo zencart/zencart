@@ -224,6 +224,10 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 ### Added v158 bring banners_titles up to date
 UPDATE banners SET banners_title = 'Zen Cart Certified Services' WHERE banners_html_text LIKE '%<script>%';
 
+#############
+### Added to correct storepickup tax basis description
+UPDATE configuration set configuration_description = 'On what basis is Shipping Tax calculated. Options are<br>Shipping - Based on Store Pickup Address <br>Billing - Based on customers Billing address' WHERE  configuration_key= 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS';
+
 #### VERSION UPDATE STATEMENTS
 ## THE FOLLOWING 2 SECTIONS SHOULD BE THE "LAST" ITEMS IN THE FILE, so that if the upgrade fails prematurely, the version info is not updated.
 ##The following updates the version HISTORY to store the prior version info (Essentially "moves" the prior version info from the "project_version" to "project_version_history" table

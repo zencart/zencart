@@ -9,7 +9,22 @@ namespace Zencart\PluginSupport;
 
 class Installer
 {
-    protected $errors = [];
+
+    /**
+     * $errorContainer is a PluginErrorContainer object
+     * @var object
+     */
+    protected $errorContainer;
+    /**
+     * $errorContainer is a patchInstaller object
+     * @var object
+     */
+    protected $patchInstaller;
+    /**
+     * $errorContainer is a scriptedInstallerFactory object
+     * @var object
+     */
+    protected $scriptedInstallerFactory;
 
     public function __construct($patchInstaller, $scriptedInstallerFactory, $errorContainer)
     {

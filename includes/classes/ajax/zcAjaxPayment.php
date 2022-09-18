@@ -73,9 +73,7 @@ class zcAjaxPayment extends base
     $_SESSION['comments'] = $_POST['comments'];
 
     if (DISPLAY_CONDITIONS_ON_CHECKOUT=='true') {
-      if (!isset ($_POST['conditions'])||($_POST['conditions']!='1')) {
-        $messageStack->add_session ('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
-      }
+        $_SESSION['conditions'] = $_POST['conditions'] ?? NULL;
     }
     // load the selected payment module
     require (DIR_WS_CLASSES.'payment.php');

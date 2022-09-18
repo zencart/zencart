@@ -25,7 +25,7 @@ function zen_db_insert_id()
 function zen_db_input($string)
 {
     global $db;
-    return $db->prepare_input($string);
+    return (empty($string) ? $string : $db->prepare_input($string));
 }
 
 /**

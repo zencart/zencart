@@ -17,7 +17,21 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class shipping extends base
 {
+    /**
+     * $enabled allows notifier to turn off shipping method
+     * @var boolean
+     */
+    public $enabled;
+    /**
+     * $modules is an array of installed shipping module names can be altered by notifier
+     * @var array
+     */
     public $modules;
+    /**
+     * $abort_legacy_calculations allows a notifier to enable the calculate_boxes_weight_and_tare method
+     * @var boolean
+     */
+    public $abort_legacy_calculations;
 
     public function __construct($module = null)
     {

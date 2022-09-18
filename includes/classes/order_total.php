@@ -17,7 +17,11 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 class order_total extends base {
-  var $modules = array();
+  /**
+     * $modules is an array of installed order totals module names 
+     * @var array
+     */
+    public $modules;
 
   // class constructor
   function __construct() {

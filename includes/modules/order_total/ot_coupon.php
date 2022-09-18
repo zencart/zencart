@@ -17,30 +17,85 @@
  */
 class ot_coupon extends base
 {
+
     /**
-     * module title
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
+     * @var string
+     */
+    public $calculate_tax;
+    /**
+     * $code determines the internal 'code' name used to designate "this" order total module
+     * @var string
+     */
+    public $code;
+    /**
+     * $coupon_code is the coupon_code under consideration while being applied to an order
+     * @var string
+     */
+    protected $coupon_code;
+    /**
+     * $credit_class flag to indicate order totals method is a credit class
+     * @var boolean
+     */
+    public $credit_class;
+    /**
+     * $deduction amount of deduction calculated/afforded while being applied to an order
+     * @var float|null
+     */
+    protected $deduction;
+    /**
+     * $description is a soft name for this order total method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $header the module box header 
+     * @var string
+     */
+    public $header;
+    /**
+     * $include_shipping allow shipping costs to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_shipping;
+    /**
+     * $include_tax allow tax to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_tax;
+    /**
+     * $sort_order is the order priority of this order total module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $tax_class is the Tax class to be applied to the coupon cost
+     * @var
+     */
+    public $tax_class;
+    /**
+     * $title is the displayed name for this order total method
      * @var string
      */
     public $title;
     /**
-     * display elements used on checkout pages
+     * $output is an array of the display elements used on checkout pages
      * @var array
      */
     public $output = [];
-
     /**
-     * while being applied to an order, this is the coupon_code under consideration
+     * $user_prompt not used = ''
      * @var string
      */
-    var $coupon_code;
+    public $user_prompt;
     /**
-     * amount of deduction calculated/afforded while being applied to an order
-     * @var float|null
-     */
-    var $deduction;
-
-    /**
-     * error messages from coupon validation
+     * $validation_errors is an array of error messages from coupon validation
+     * @var array
      */
     protected $validation_errors = [];
 
@@ -637,12 +692,12 @@ class ot_coupon extends base
     function check()
     {
         global $db;
-        if (!isset($this->check)) {
+        if (!isset($this->_check)) {
             $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_COUPON_STATUS'");
-            $this->check = $check_query->RecordCount();
+            $this->_check = $check_query->RecordCount();
         }
 
-        return $this->check;
+        return $this->_check;
     }
 
     /**

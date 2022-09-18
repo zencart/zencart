@@ -11,6 +11,23 @@ use Zencart\Exceptions\PluginInstallerException;
 
 class InstallerFactory
 {
+
+    /**
+     * $dbConn is a database object 
+     * @var object
+     */
+    protected $dbConn;
+    /**
+     * $errorContainer is a PluginErrorContainer object
+     * @var object
+     */
+    protected $errorContainer;
+    /**
+     * $errorContainer is a pluginInstaller object
+     * @var object
+     */
+    protected $pluginInstaller;
+
     public function __construct($dbConn, $pluginInstaller, $errorContainer)
     {
         $this->dbConn = $dbConn;

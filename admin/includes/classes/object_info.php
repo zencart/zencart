@@ -27,17 +27,22 @@ class objectInfo
         $banners_html_text,
         $banners_id,
         $banners_image,
+        $banners_image_local,
+        $banners_image_target,
         $banners_on_ssl,
         $banners_open_new_windows,
         $banners_shown,
         $banners_sort_order,
         $banners_title,
         $banners_url,
+        $bID,
         $date_added,
         $date_scheduled,
         $date_status_change,
+        $delete_image,
         $expires_date,
         $expires_impressions,
+        $new_banners_group,
         $status;
 
     // for categories, category_product_listing
@@ -119,11 +124,13 @@ class objectInfo
     public
         $address_book_id,
         $addresses,
+        $cID,
         $city,
         $company,
         $country_id,
         $country_iso,
         $country_name,
+        $current_status,
         $customers_authorization,
         $customers_default_address_id,
         $customers_dob,
@@ -133,6 +140,7 @@ class objectInfo
         $customers_firstname,
         $customers_gender,
         $customers_group_pricing,
+        $customer_groups,
         $customers_id,
         $customers_lastname,
         $customers_newsletter,
@@ -145,12 +153,25 @@ class objectInfo
         $date_account_created,
         $date_account_last_modified,
         $date_of_last_login,
+        $default_address_id,
+        $delete_type_forget,
+        $delete_reviews,
+        $entry_city,
+        $entry_company,
+        $entry_country_id,
+        $entry_postcode,
+        $entry_state,
+        $entry_street_address,
+        $entry_suburb,
+        $entry_zone_id,
         $firstname,
         $gv_balance,
         $last_login_ip,
         $last_order,
         $lastname,
         $lifetime_value,
+        $newpassword,
+        $newpasswordConfirm,
         $number_of_logins,
         $number_of_orders,
         $number_of_reviews,
@@ -183,8 +204,11 @@ class objectInfo
     public
         $alt_url_external,
         $alt_url,
+        $ezID,
+        $fieldName,
         $footer_sort_order,
         $header_sort_order,
+        $new_status,
         $page_is_ssl,
         $page_open_new_window,
         $pages_html_text,
@@ -319,7 +343,8 @@ class objectInfo
         $products_url,
 //        $products_virtual,    declared in banner_manager
         $products_weight,
-        $record_company_id; // only required for music
+        $record_company_id, // only required for music
+        $search;
 //        $sort_order;    declared in banner_manager
 
     // for modules/.../collect_info_metatags and preview_info_meta_tags
@@ -376,8 +401,9 @@ class objectInfo
 //        $products_url,    declared in modules/.../collect_info
 //        $products_virtual,    declared in banner_manager
 //        $products_weight,    declared in modules/.../collect_info
-//        $record_company_id;    declared in modules/.../collect_info - only required for music
+//        $record_company_id,    declared in modules/.../collect_info - only required for music
 //        $securityToken,    declared in modules/.../collect_info_metatags and preview_info_meta_tags
+//        $search,    declared in modules/.../collect_info    
          
     // for languages
     public
@@ -566,12 +592,14 @@ class objectInfo
         $average_rating,
 //        $customers_name,    declared in customers
 //        $date_added,    declared in banner_manager
+        $flag,
 //        $language_id,    declared in collect_info
 //        $last_modified,    declared in configuration
 //        $products_id,   declared in downloads_manager 
 //        $products_image,   declared in fearured
 //        $products_model,   declared in downloads_manager
 //        $products_name,   declared in downloads_manage
+        $rID,
         $reviews_id,
         $reviews_rating,
         $reviews_read,
@@ -649,6 +677,11 @@ class objectInfo
 //        $zone_name,    declared in customers
         $zone_code,
         $zone_country_id;  
+    
+    // General from $_POST
+    public
+        $cPath,
+        $action;
     
 /*
  * Still need method of allowing customisation fields to be included.

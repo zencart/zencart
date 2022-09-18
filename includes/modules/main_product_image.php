@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 //
 $GLOBALS['zco_notifier']->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_START');
 
-$products_image_extension = substr($products_image, strrpos($products_image, '.'));
+$products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
 $products_image_base = str_replace($products_image_extension, '', $products_image);
 $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
 $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
