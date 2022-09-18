@@ -52,7 +52,9 @@ function zen_date_long($raw_date)
 
     global $zcDate;
     $retVal = $zcDate->output(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
-    if (stristr(PHP_OS, 'win')) return utf8_encode($retVal);
+    if (stristr(PHP_OS, 'win') === 0) {
+       return utf8_encode($retVal);
+    }
     return $retVal;
 }
 
