@@ -9,6 +9,11 @@ namespace Zencart\ViewBuilders;
 
 class TableViewDefinition
 {
+    /**
+     * $definition is an array holding the table definition
+     * @var array
+     */
+    protected $definition = [];
     public function __construct(array $definition = [])
     {
         $this->definition = $definition;
