@@ -18,11 +18,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 class order extends base
 {
     protected $orderId = null;
-    var $info, $totals, $products, $customer, $delivery, $billing, $content_type, $email_low_stock, $products_ordered_attributes,
+    public $info, $totals, $products, $customer, $delivery, $billing, $content_type, $email_low_stock, $products_ordered_attributes,
         $products_ordered, $products_ordered_email, $products_ordered_html, $attachArray, $email_order_message, $extra_header_text,
         $doStockDecrement, $send_low_stock_emails, $queryReturnFlag, $bestSellersUpdate, $use_external_tax_handler_only;
-    var $products_ordered_attributes_html = [];
-    var $statuses = [];
+    protected $products_ordered_attributes_html = [];
+    protected $statuses = [];
+    protected $subtotal, $total_tax, $total_weight, $total_cost = 0; 
 
     function __construct($order_id = null)
     {
