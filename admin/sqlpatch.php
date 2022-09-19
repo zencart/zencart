@@ -785,7 +785,7 @@ if (!empty($action)) {
           }
         }
         if ($query_results['ignored'] != 0) {
-          $messageStack->add(ERROR_UPLOADQUERY_IGNORED, 'caution');
+          $messageStack->add(sprintf(ERROR_UPLOADQUERY_IGNORED, (int)$query_results['ignored']), 'caution');
         }
         if (!empty($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
