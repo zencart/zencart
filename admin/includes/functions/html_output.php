@@ -264,7 +264,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 {
   $type = zen_output_string($type);
   if ($type === 'price') {
-    $type = 'number" step="0.01';
+    $type = 'number" step="any';
   }
   $field = ($required ? '<div class="input-group">' . PHP_EOL : '');
   $field .= '<input type="' . $type . '" name="' . zen_output_string($name) . '"';
