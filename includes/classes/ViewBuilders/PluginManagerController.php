@@ -11,6 +11,10 @@ use Zencart\FileSystem\FileSystem;
 
 class PluginManagerController extends BaseController
 {
+
+    protected $pluginManager;
+    protected $installerFactory;
+    
     public function init($pluginManager, $installerFactory)
     {
         $this->pluginManager = $pluginManager;
