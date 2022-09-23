@@ -59,12 +59,27 @@ class splitPageResults
      * Default is -1 for no grouping. Or 1 if $letterGroupColumn is set but no length specified.
      * @var int
      */
-    private $letterGroupLength = 1;
+    protected $letterGroupLength = 1;
 
     /**
      * @var int
      */
     protected $totalByLetter = 0;
+    /**
+     * The current page number
+     * @var int
+     */
+    protected $current_page_number;
+   /**
+     * The total number of rows
+     * @var int
+     */
+    protected $number_of_rows;
+    /**
+     * The maximum number of rows to display on a page
+     * @var int
+     */
+    protected $number_of_rows_per_page;
 
     /**
      * @param int $current_page_number
