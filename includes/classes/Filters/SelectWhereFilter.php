@@ -13,7 +13,10 @@ use Zencart\Request\Request;
 class SelectWhereFilter extends baseFilter implements RequestFilter
 {
     private $default;
-
+    protected $filterDefinition = [];
+    protected $options = [];
+    protected $parameters =[];
+    
     public function make(array $filterDefinition) : void
     {
         $this->filterDefinition = $filterDefinition;
