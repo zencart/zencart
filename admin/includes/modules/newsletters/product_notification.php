@@ -12,7 +12,26 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class product_notification {
 
-  var $show_choose_audience, $title, $content, $content_html;
+    /**
+     * $content_html is the email content in HTML form.
+     * @var string
+     */
+    protected $content_html;
+    /**
+     * $content is the email content in text form.
+     * @var string
+     */
+    protected $content;
+    /**
+     * $show_choose_audience is a flag that toggles the select audience form display
+     * @var boolean
+     */
+    public $show_choose_audience;
+    /**
+     * $title is the display title
+     * @var string
+     */
+    protected $title;
 
   function __construct($title, $content, $content_html, $queryname = '') {
     $this->show_choose_audience = true;
