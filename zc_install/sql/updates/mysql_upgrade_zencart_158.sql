@@ -224,6 +224,13 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 ### Added v158 bring banners_titles up to date
 UPDATE banners SET banners_title = 'Zen Cart Certified Services' WHERE banners_html_text LIKE '%<script>%';
 
+### Add missing updates from 137->138 
+ALTER TABLE address_book MODIFY COLUMN entry_company varchar(64) default NULL; 
+ALTER TABLE orders MODIFY COLUMN customers_company varchar(64) default NULL; 
+ALTER TABLE orders MODIFY COLUMN delivery_company varchar(64) default NULL; 
+ALTER TABLE orders MODIFY COLUMN billing_company varchar(64) default NULL; 
+
+
 #############
 ### Added to correct storepickup tax basis description
 UPDATE configuration set configuration_description = 'On what basis is Shipping Tax calculated. Options are<br>Shipping - Based on Store Pickup Address <br>Billing - Based on customers Billing address' WHERE  configuration_key= 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS';
