@@ -316,7 +316,7 @@ if (!empty($action)) {
         $languageLoader->loadExtraLanguageFiles( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
         include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
         $module_name = $nInfo->module;
-        $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html, $_POST['audience_selected']);
+        $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html, $_POST['audience_selected'] ?? '');
         ?>
         <div class="row">
           <div class="col-sm-12"><strong><?php echo TEXT_PLEASE_WAIT; ?></strong></div>
