@@ -17,45 +17,45 @@ class authorizenet extends base {
    *
    * @var string
    */
-  var $code = 'authorizenet'; // SIM
+  public $code = 'authorizenet'; // SIM
   /**
    * Internal module version string
    * @var string
    */
-  var $version = '2019-02-26';
+  protected $version = '2019-02-26';
   /**
    * $title is the displayed name for this payment method
    *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * $description is a soft name for this payment method
    *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * $enabled determines whether this module shows or not... in catalog.
    *
    * @var boolean
    */
-  var $enabled = false;
+  public $enabled = false;
   /**
    * log file folder
    *
    * @var string
    */
-  var $_logDir = '';
+  private $_logDir = '';
   /**
    * vars
    */
-  var $gateway_mode;
-  var $reportable_submit_data;
-  var $authorize;
-  var $auth_code;
-  var $transaction_id;
-  var $order_status;
+  protected $gateway_mode;
+  protected $reportable_submit_data;
+  protected $authorize;
+  public $auth_code;
+  public $transaction_id;
+  public $order_status;
   /**
    * @var string the currency enabled in this gateway's merchant account
    */
@@ -64,8 +64,15 @@ class authorizenet extends base {
    * What order this module displays in relation to other enabled modules
    * @var int $sort_order
    */
-  var $sort_order = 0;
+  public $sort_order = 0;
 
+    private $_check;
+    protected $cc_card_number;
+    protected $cc_card_type;
+    protected $cc_expiry_month;
+    protected $cc_expiry_year;
+    public $form_action_url;
+    public $submit_extras;
 
   /**
    * Constructor
