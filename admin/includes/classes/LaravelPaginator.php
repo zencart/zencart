@@ -16,6 +16,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class LaravelPaginator extends \splitPageResults
 {
+
+    protected $cmd;
+    protected $page_name;
+
     /* class constructor */
     function __construct($paginatorResults, $letterGroupColumn = '', $letterGroupLength = 0)
     {

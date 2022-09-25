@@ -21,7 +21,14 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class Paginator extends \base {
-  var $sql_query, $number_of_rows, $current_page_number, $number_of_pages, $number_of_rows_per_page, $page_name;
+    protected $cmd;
+    protected $countQuery;
+    protected $current_page_number;
+    protected $number_of_pages;
+    protected $number_of_rows_per_page;
+    protected $number_of_rows;
+    protected $page_name;
+    protected $sql_query;
 
   /* class constructor */
   function __construct($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
