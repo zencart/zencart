@@ -13,6 +13,10 @@ use Zencart\Request\Request;
 class FilterManager
 {
 
+    protected $filterDefinitions = [];
+    protected $filterFactory;
+    protected $filters = [];
+    
     public function __construct(array $filterDefinitions, FilterFactory $filterFactory)
     {
         $this->filterDefinitions = $filterDefinitions;

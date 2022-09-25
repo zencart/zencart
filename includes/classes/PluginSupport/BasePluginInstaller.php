@@ -9,6 +9,26 @@ namespace Zencart\PluginSupport;
 
 class BasePluginInstaller
 {
+
+    /**
+     * $dbConn is a database object 
+     * @var object
+     */
+    protected $dbConn;
+    /**
+     * $errorContainer is a PluginErrorContainer object
+     * @var object
+     */
+    protected $errorContainer;
+    /**
+     * $errorContainer is a pluginInstaller object
+     * @var object
+     */
+    protected $pluginInstaller;
+    /**
+     * $pluginDir is the directory where the plugin is located
+     * @var string
+     */
     protected $pluginDir;
 
     public function __construct($dbConn, $pluginInstaller, $errorContainer)

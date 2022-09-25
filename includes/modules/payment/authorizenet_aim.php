@@ -17,25 +17,25 @@ class authorizenet_aim extends base {
    *
    * @var string
    */
-  var $code;
+  public $code;
   /**
    * $title is the displayed name for this payment method
    *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * $description is a soft name for this payment method
    *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * $enabled determines whether this module shows or not... in catalog.
    *
    * @var boolean
    */
-  var $enabled;
+  public $enabled;
   /**
    * Do we display specific info about CVV and/or Expiry Date errors?
    * The default is no, as Authorize.net also defaults to no.
@@ -60,22 +60,22 @@ class authorizenet_aim extends base {
    *
    * @var string
    */
-  var $_logDir = '';
+  private $_logDir = '';
   /**
    * communication vars
    */
-  var $authorize = '';
-  var $commErrNo = 0;
-  var $commError = '';
-  var $transaction_id = null;
+  protected $authorize = '';
+  protected $commErrNo = 0;
+  protected $commError = '';
+  public $transaction_id = null;
   /**
    * this module collects card-info onsite
    */
-  var $collectsCardDataOnsite = TRUE;
+  public $collectsCardDataOnsite = TRUE;
   /**
    * debug content var
    */
-  var $reportable_submit_data = array();
+  protected $reportable_submit_data = array();
   /**
    * Given that this module can be used to interact with other gateways (authnet emulators),
    * this var is used to declare which gateway to work with
@@ -85,6 +85,22 @@ class authorizenet_aim extends base {
    * @var string the currency enabled in this gateway's merchant account
    */
   private $gateway_currency;
+  
+    private $_check;
+    public $auth_code;
+    protected $avs_response;
+    protected $cc_card_number;
+    protected $cc_card_type;
+    protected $cc_expiry_month;
+    protected $cc_expiry_year;
+    protected $ccv_response;
+    protected $commInfo;
+    public $form_action_url;
+    protected $include_x_type;
+    public $order_status;
+    protected $proxy_tunnel_flag;
+    public $sort_order;
+    public $submit_extras;
 
   /**
    * Constructor
