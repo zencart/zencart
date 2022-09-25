@@ -266,7 +266,11 @@ if (!empty($_GET['cID'])) {
         'PRODUCT_LIST_SORT_ORDER_ASCENDING',
         'PRODUCT_LIST_SORT_ORDER_DESCENDING',
     );
-
+    $extra_configs_with_special_characters = false; 
+    $zco_notifier->notify('NOTIFY_ADMIN_CONFIGURATION_SPECIAL_CHARACTERS', [], $extra_configs_with_special_characters);
+    if (is_array($extra_configs_with_special_characters)) {
+       $configs_with_special_characters = $configs_with_special_characters + $extra_configs_with_special_characters; 
+    }
     $checks = $db->Execute("SELECT configuration_key, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . (int)$cID);
     if (!$checks->EOF) {
         if (!empty($checks->fields['val_function'])) {
