@@ -83,7 +83,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
     if ($should_throw_404) {
         // if specified product_id doesn't exist, ensure that metatags and breadcrumbs don't share bad data or inappropriate information
         unset($_GET['products_id']);
-        unset($breadcrumb->_trail[count($breadcrumb->_trail) - 1]['title']);
+        $breadcrumb->removeLast();
         $robotsNoIndex = true;
         header('HTTP/1.1 404 Not Found');
         return;
