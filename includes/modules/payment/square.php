@@ -602,9 +602,9 @@ class square extends base
     {
         global $db;
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'False' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_STATUS'");
-        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN', 'MODULE_PAYMENT_SQUARE_TOKEN_EXPIRES_AT', 'MODULE_PAYMENT_SQUARE_REFRESH_TOKEN'");
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN', 'MODULE_PAYMENT_SQUARE_TOKEN_EXPIRES_AT', 'MODULE_PAYMENT_SQUARE_REFRESH_TOKEN')");
         if ($include_sandbox) {
-            $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_SANDBOX_TOKEN'");
+            $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_SANDBOX_TOKEN')");
             $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'Live' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_TESTING_MODE'");
         }
     }
