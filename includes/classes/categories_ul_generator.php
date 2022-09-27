@@ -22,9 +22,9 @@
 //
 
 class zen_categories_ul_generator {
-    var $root_category_id = TOPMOST_CATEGORY_PARENT_ID,
+    protected $root_category_id = TOPMOST_CATEGORY_PARENT_ID,
     $max_level = 0,
-    $data = array(),
+    $data = [],
     $parent_group_start_string = '<ul%s>',
     $parent_group_end_string = '</ul>',
     $child_start_string = '<li%s>',
@@ -32,9 +32,6 @@ class zen_categories_ul_generator {
     $spacer_string = '
 ',
     $spacer_multiplier = 1;
-
-    var $document_types_list = ' (3) ';
-    // acceptable format example: ' (3, 4, 9, 22, 18) '
 
     function __construct($load_from_database = true)
     {
