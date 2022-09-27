@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class currencies extends base
 {
-    var $currencies;
+    public $currencies = [];
 
     function __construct()
     {
