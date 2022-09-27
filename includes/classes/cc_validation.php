@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class cc_validation extends base {
-  var $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
+  public $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
 
   function validate($number, $expiry_m, $expiry_y, $start_m = null, $start_y = null) {
     $this->cc_number = preg_replace('/[^0-9]/', '', $number);
