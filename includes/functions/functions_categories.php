@@ -710,6 +710,9 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
 function zen_get_category_name($category_id, $language_id = null) {
     global $db;
     if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
+    if ((int)($category_id) < 1 ) {
+        return TEXT_TOP;
+    }
     $category = $db->Execute("SELECT categories_name
                               FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                               WHERE categories_id = " . (int)$category_id . "
@@ -1162,7 +1165,7 @@ function zen_remove_category($category_id)
             echo 'D: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
           }
         */
-        if (!empty($new_sale_categories_all)) { 
+        if (!empty($new_sale_categories_all)) {
             $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
             $db->Execute($salemakerupdate);
 //echo 'Update sale_categories_all: ' . $salemakerupdate . '<br>';
