@@ -16,9 +16,13 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class language extends base {
-  var $languages, $catalog_languages, $browser_languages, $language;
 
-  function __construct($lng = '') {
+    protected $browser_languages;
+    public $catalog_languages = [];
+    public $language = [];
+    protected $languages;
+
+    function __construct($lng = '') {
     global $db;
 
     $this->catalog_languages = array();
