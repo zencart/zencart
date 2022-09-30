@@ -42,13 +42,16 @@ function zen_datepicker_format_forsql()
 }
 
 /**
- * Convet Date to the corect farmat
+ * Convert Date to the correct format
  * @param string $raw_date Date value
- * @param boolean $past_date_null Set the date value to null is the dat is in the past
+ * @param string $past_date is the value to set the date if it is in the past or empty
  * @return string
  */
-function zen_prepare_date($raw_date, $past_date_null = false)
+function zen_prepare_date($raw_date, $past_date = '')
 {
+    if (empty($raw_date)) {
+        return $past_date;
+    }
   $date = zen_db_prepare_input($raw_date);
   if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($date)) {
     $local_fmt = zen_datepicker_format_fordate();
@@ -58,8 +61,8 @@ function zen_prepare_date($raw_date, $past_date_null = false)
       $date = $dt->format('Y-m-d');
     }
   }
-  if ($past_date_null == true) {
-    $date = (date('Y-m-d') < $date) ? $date : 'null';
+  if (!empty($past_date)) {
+    $date = (date('Y-m-d') < $date) ? $date : $past_date;
   }
   return $date;
 }
