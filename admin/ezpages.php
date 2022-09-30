@@ -721,7 +721,7 @@ if (!empty($action)) {
                     $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_EXTRA_ACTION_ICONS', $page, $extra_action_icons);
                     ?>
                     <td class="dataTableContent text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) ? 'ezID=' . $page['pages_id'] . '&action=new' : ''); ?>" title="<?php echo ICON_EDIT; ?>" role="button" style="text-decoration: none">
+                      <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id'] . '&action=new'); ?>" title="<?php echo ICON_EDIT; ?>" role="button" style="text-decoration: none">
                         <div class="fa-stack fa-fw">
                           <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
                           <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
