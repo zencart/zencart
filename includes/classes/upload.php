@@ -24,8 +24,15 @@ if (!defined('UPLOAD_FILENAME_EXTENSIONS_LIST')) {
 
 class upload extends base
 {
-    var $file, $filename, $destination, $permissions, $extensions, $tmp_filename, $message_location;
 
+    protected $file;
+    protected $destination;
+    protected $extensions;
+    public $filename;
+    protected $message_location;
+    protected $permissions;
+    protected $tmp_filename;
+    
     function __construct($file = '', $destination = '', $permissions = '644', $extensions = array())
     {
         $this->set_file($file);
