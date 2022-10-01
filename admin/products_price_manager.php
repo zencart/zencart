@@ -102,14 +102,14 @@ if (!empty($action)) {
       } else {
         $master_categories_id = $_POST['master_categories_id'];
       }
+// Set date to null if empty or in the past
+      $products_date_available = zen_prepare_date($_POST['products_date_available'], 'null');
+// Set dates empty equivelent '0001-01-01' if empty or in the past
+      $specials_date_available = zen_prepare_date($_POST['specials_date_available'], '0001-01-01');
+      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'], '0001-01-01');
 
-      $products_date_available = zen_prepare_date($_POST['products_date_available'] ?? 'null', true);
-
-      $specials_date_available = zen_prepare_date($_POST['specials_date_available'] ?? 'null');
-      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'] ?? 'null');
-
-      $featured_date_available = zen_prepare_date($_POST['featured_date_available'] ?? 'null');
-      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'] ?? 'null');
+      $featured_date_available = zen_prepare_date($_POST['featured_date_available'],'00001-01-01');
+      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'], '0001-01-01');
 
       $tmp_value = (isset($_POST['products_price_sorter']) ? zen_db_prepare_input($_POST['products_price_sorter']) : '');
       $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value == '' || $tmp_value == 0) ? 0 : $tmp_value;
@@ -152,9 +152,9 @@ if (!empty($action)) {
         }
         $db->Execute("UPDATE " . TABLE_SPECIALS . "
                       SET specials_new_products_price = " . (float)$specials_price . ",
-                          specials_date_available = '" . ($specials_date_available != 'null' ? $specials_date_available : '0001-01-01') . "',
+                          specials_date_available = '" . $specials_date_available . "',
                           specials_last_modified = NOW(),
-                          expires_date = '" . ($specials_expires_date != 'null' ? $specials_expires_date : '0001-01-01') . "',
+                          expires_date = '" . $specials_expires_date . "',
                           status = " . (int)$_POST['special_status'] . "
                       WHERE products_id = " . (int)$products_filter);
       }
@@ -162,8 +162,8 @@ if (!empty($action)) {
       if ($_POST['featured_id'] != '') {
 
         $db->Execute("UPDATE " . TABLE_FEATURED . "
-                      SET featured_date_available = '" . ($featured_date_available != 'null' ? $featured_date_available : '0001-01-01') . "',
-                          expires_date = '" . ($featured_expires_date != 'null' ? $featured_expires_date : '0001-01-01') . "',
+                      SET featured_date_available = '" . $featured_date_available . "',
+                          expires_date = '" . $featured_expires_date . "',
                           featured_last_modified = NOW(),
                           status = " . (int)$_POST['featured_status'] . "
                       WHERE products_id = " . (int)$products_filter);
