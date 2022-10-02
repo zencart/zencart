@@ -398,7 +398,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
 {
   $field = ($required ? '<div class="input-group">' . PHP_EOL : '');
-  $field .= '<select rel="dropdown" name="' . zen_output_string($name) . '"';
+  $field .= '<select name="' . zen_output_string($name) . '"';
 
   if (!empty($parameters)) {
     $field .= ' ' . $parameters;
