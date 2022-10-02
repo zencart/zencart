@@ -108,7 +108,7 @@ if (!empty($action)) {
       $specials_date_available = zen_prepare_date($_POST['specials_date_available'], '0001-01-01');
       $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'], '0001-01-01');
 
-      $featured_date_available = zen_prepare_date($_POST['featured_date_available'],'00001-01-01');
+      $featured_date_available = zen_prepare_date($_POST['featured_date_available'],'0001-01-01');
       $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'], '0001-01-01');
 
       $tmp_value = (isset($_POST['products_price_sorter']) ? zen_db_prepare_input($_POST['products_price_sorter']) : '');
