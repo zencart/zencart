@@ -1838,7 +1838,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
 
     // will we be creating an account for this customer?  We must if the cart contents are virtual, so can login to download etc.
-    if ($_SESSION['cart']->get_content_type('true') > 0 || in_array($_SESSION['cart']->content_type, array('mixed', 'virtual'))) $this->new_acct_notify = 'Yes';
+    if ($_SESSION['cart']->get_content_type('true') > 0 || in_array($_SESSION['cart']->get_content_type(), array('mixed', 'virtual'))) $this->new_acct_notify = 'Yes';
 
     // get the payer_id from the customer's info as returned from PayPal
     $_SESSION['paypal_ec_payer_id'] = $response['PAYERID'];
