@@ -818,6 +818,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON (p2c.products_id = p.products_id) ";
                 $where .= " AND p2c.categories_id=" . (int)$current_category_id;
             }
+            $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY_WHERE');
 
             $products_query_raw .= $where . $order_by;
 
