@@ -2771,19 +2771,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $db->Execute($sql);
 
     // bof: contents merge notice
-    // save current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0) {
-          $zc_check_basket_before = $_SESSION['cart']->count_contents();
-        }
-
-        // bof: not require part of contents merge notice
-        // restore cart contents
+    // save current cart contents count
+        $zc_check_basket_before = $_SESSION['cart']->count_contents();
+        // restore cart contents will add any saved items from previous login.
         $_SESSION['cart']->restore_contents();
-        // eof: not require part of contents merge notice
-
-        // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
+        // check new cart contents count
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+        if ($zc_check_basket_before > 0 && $zc_check_basket_before == $zc_check_basket_after) {
+            // If contents still same set the cartID this stops unnecessary return to checkout_shipping.
+            $_SESSION['cartID'] = $_SESSION['cart']->cartID;
+        } elseif (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
           if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
             if (SHOW_SHOPPING_CART_COMBINED == 2) {
               // warning only do not send to cart
