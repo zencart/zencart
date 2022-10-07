@@ -223,7 +223,7 @@ class shipping extends base
             $class = substr($value, 0, strrpos($value, '.'));
             if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
                 $quotes = isset($GLOBALS[$class]->quotes) ? $GLOBALS[$class]->quotes : null;
-                if (empty($quotes['methods'])) {
+                if (empty($quotes['methods']) || isset($quotes['error'])) {
                     continue;
                 }
                 $size = count($quotes['methods']);
