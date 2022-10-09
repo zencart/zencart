@@ -518,7 +518,7 @@ class shoppingCart extends base
             }
         }
         $this->notify('NOTIFIER_CART_COUNT_CONTENTS_END');
-        return $total_items;
+        return (int)$total_items;
     }
 
     /**
