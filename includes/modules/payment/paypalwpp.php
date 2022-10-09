@@ -2826,31 +2826,40 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // click of the PPEC button.
     //
     if ($_SESSION['paypal_ec_temp'] === false) {
-    // bof: contents merge notice
-    // save current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0) {
-          $zc_check_basket_before = $_SESSION['cart']->count_contents();
+        // -----
+        // Determine the number of products currently in the cart, restore the customer's
+        // saved cart contents and determine the number of products now present in the cart.
+        //
+        $zc_check_basket_before = $_SESSION['cart']->count_contents();
+        $_SESSION['cart']->restore_contents();
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+
+        // -----
+        // See if a message to the customer (possibly with a redirect back to the shopping-cart page)
+        // is required if the cart's contents have changed.
+        //
+        if (SHOW_SHOPPING_CART_COMBINED !== '0' && $zc_check_basket_before > 0) {
+            if ($zc_check_basket_before !== $zc_check_basket_after && $zc_check_basket_after > 0) {
+                if (SHOW_SHOPPING_CART_COMBINED === '2') {
+                    // warning only do not send to cart
+                    $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+                } else {
+                    // show warning and send to shopping cart for review
+                    $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
+                    zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+                }
+            }
         }
 
-        // bof: not require part of contents merge notice
-        // restore cart contents
-        $_SESSION['cart']->restore_contents();
-        // eof: not require part of contents merge notice
-
-        // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
-              $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
-              zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
-            }
-          }
+        // -----
+        // If the cart contents are unchanged, i.e. no saved products were added via the
+        // cart's restore_contents method, save the cart's cartID value (a random number
+        // that's been changed by that call to restore_contents) into the session
+        // so that an unchanged cart doesn't result in an unwanted redirect back to the
+        // checkout_shipping phase.
+        //
+        if ($zc_check_basket_before === $zc_check_basket_after) {
+            $_SESSION['cartID'] = $_SESSION['cart']->cartID;
         }
     }
 
