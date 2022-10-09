@@ -20,7 +20,7 @@ class messageStack extends base
     /** to override these, call setMessageFormatting() and pass it an array of the desired formats, similar to what getDefaultFormats() returns */
     private $formats = [];
     /** array of messages to be displayed */
-    private $messages = [];
+    public $messages = [];
 
     function __construct()
     {
