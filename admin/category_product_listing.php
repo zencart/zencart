@@ -829,7 +829,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               if ($check_page->RecordCount() > $max_results) {
                 $check_count = 0;
                 foreach ($check_page as $item) {
-                  if ((int)$item['products_id'] === $_GET['pID']) {
+                  if ((int)$item['products_id'] === (int)$_GET['pID']) {
                     break;
                   }
                   $check_count++;
