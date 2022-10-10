@@ -707,18 +707,29 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
  * @param int $language_id
  * @return string
  */
-function zen_get_category_name($category_id, $language_id = null) {
+function zen_get_category_name($category_id, $language_id = null)
+{
     global $db;
-    if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
-    if ((int)($category_id) < 1 ) {
-        return TEXT_TOP;
+    if (empty($language_id)) {
+        $language_id = (int)$_SESSION['languages_id'];
     }
-    $category = $db->Execute("SELECT categories_name
+    switch (true) {
+        case ($category_id === null):
+            return '';
+        case ((int)($category_id) < 1):
+            return TEXT_TOP;
+        default:
+            $category = $db->Execute(
+                "SELECT categories_name
                               FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                               WHERE categories_id = " . (int)$category_id . "
-                              AND language_id = " . (int)$language_id);
-    if ($category->EOF) return '';
-    return $category->fields['categories_name'];
+                              AND language_id = " . (int)$language_id
+            );
+            if ($category->EOF) {
+                return '';
+            }
+            return $category->fields['categories_name'];
+    }
 }
 
 
