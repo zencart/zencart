@@ -2827,8 +2827,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     //
     if ($_SESSION['paypal_ec_temp'] === false) {
         // -----
-        // Determine the number of products currently in the cart, restore the customer's
-        // saved cart contents and determine the number of products now present in the cart.
+        // Determine the sum of products' quantities (a floating-point value!) currently in the cart,
+        // restore the customer's saved cart contents and determine the sum of products' quantities
+        // now present in the cart.
         //
         $zc_check_basket_before = $_SESSION['cart']->count_contents();
         $_SESSION['cart']->restore_contents();
@@ -2839,12 +2840,12 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // is required if the cart's contents have changed.
         //
         if (SHOW_SHOPPING_CART_COMBINED !== '0' && $zc_check_basket_before > 0) {
-            if ($zc_check_basket_before !== $zc_check_basket_after && $zc_check_basket_after > 0) {
+            if ($zc_check_basket_before != $zc_check_basket_after && $zc_check_basket_after > 0) {
                 if (SHOW_SHOPPING_CART_COMBINED === '2') {
-                    // warning only do not send to cart
+                    // warning only do not send to cart ('2')
                     $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
                 } else {
-                    // show warning and send to shopping cart for review
+                    // show warning and send to shopping cart for review ('1')
                     $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
                     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
                 }
@@ -2858,7 +2859,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // so that an unchanged cart doesn't result in an unwanted redirect back to the
         // checkout_shipping phase.
         //
-        if ($zc_check_basket_before === $zc_check_basket_after) {
+        if ($zc_check_basket_before == $zc_check_basket_after) {
             $_SESSION['cartID'] = $_SESSION['cart']->cartID;
         }
     }
