@@ -11,6 +11,13 @@
  */
 class systemChecker
 {
+    protected $adminDirectoryList = [];
+    protected $errorList = [];
+    protected $extraRunLevels = [];
+    protected $localErrors;
+    protected $selectedAdminDir;
+    protected $serverConfig;
+    protected $systemChecks;
     public function __construct($selectedAdminDir = 'UNSPECIFIED')
     {
         $this->adminDirectoryList = self::getAdminDirectoryList();
