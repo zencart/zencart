@@ -58,8 +58,8 @@ class square extends base
     /**
      * transaction vars hold the IDs of the completed payment
      */
-    public $transaction_id, $transaction_messages, $auth_code;
-    protected $currency_comment, $transaction_date;
+    public $transaction_id, $transaction_messages, $auth_code, $order_status;
+    protected $currency_comment, $transaction_date, $_logDir, $transaction_status, $sdkApiVersion, $_check, $gateway_currency;
     /**
      * Square configuration/connection
      * @var SquareConnect\Configuration
