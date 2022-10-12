@@ -27,102 +27,223 @@ require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_curl.php')
 class paypaldp extends base {
   /**
    * name of this module
-   *
    * @var string
    */
-  var $code;
+  public $code;
   /**
    * displayed module title
-   *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * displayed module description
-   *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * module status - set based on various config and zone criteria
-   *
    * @var string
    */
-  var $enabled;
+  public $enabled;
   /**
    * the zone to which this module is restricted for use
-   *
    * @var string
    */
-  var $zone;
+  protected $zone;
   /**
    * array holding accepted DP/gateway card types
-   *
    * @var array
    */
-  var $cards = array();
+  protected $cards = [];
   /**
-   * JS code used for gateway/DP mode
-   *
+   * JS code used for gateway/DP mode ***NOT USED?***
    * @var string
    */
-  var $cc_type_javascript = '';
+  public $cc_type_javascript = '';
   /**
    * JS code used for gateway/DP mode
-   *
    * @var string
    */
-  var $cc_type_check = '';
+  protected $cc_type_check = '';
   /**
    * debugging flag
-   *
    * @var boolean
    */
-  var $enableDebugging = false;
+  protected $enableDebugging = false;
   /**
    * is DP enabled ?
-   *
    * @var boolean
    */
-  var $enableDirectPayment = true;
+  public $enableDirectPayment = true;
   /**
    * sort order of display
-   *
    * @var int
    */
-  var $sort_order = 0;
+  public $sort_order = 0;
   /**
    * Button Source / BN code -- enables the module to work for Zen Cart sites
-   *
    * @var string
    */
-  var $buttonSource = 'ZenCart-DP_us';
+  protected $buttonSource = 'ZenCart-DP_us';
   /**
    * order status setting for pending orders
-   *
    * @var int
    */
-  var $order_pending_status = 1;
+  protected $order_pending_status = 1;
   /**
    * order status setting for completed orders
-   *
    * @var int
    */
-  var $order_status = DEFAULT_ORDERS_STATUS_ID;
+  public $order_status = DEFAULT_ORDERS_STATUS_ID;
   /**
    * Debug tools
    */
-  var $_logDir = DIR_FS_LOGS;
-  var $_logLevel = 0;
+  protected $_logDir = DIR_FS_LOGS;
+  protected $_logLevel = 0;
   /**
    * FMF
    */
-  var $fmfResponse = '';
-  var $fmfErrors = array();
+  protected $fmfResponse = '';
+  public $fmfErrors = [];
   /**
    * this module collects card-info onsite, unless operating in PayFlow-UK mode!
    */
-  var $collectsCardDataOnsite = TRUE;
+  public $collectsCardDataOnsite = TRUE;
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $amt is the order amount to display
+     * @var string
+     */
+     protected  $amt;
+    /**
+     * $auth_code is the authorisation code returned by PayPal
+     * @var string
+     */
+    public $auth_code;
+    /**
+     * $avs is the PayPal payment advice response code
+     * @var string
+     */
+     public  $avs;
+    /**
+     * $cc_card_number is the number of the credit card being processed
+     * @var string
+     */
+    protected $cc_card_number;
+    /**
+     * $cc_card_type is the card issue type visa...
+     * @var string
+     */
+    protected $cc_card_type;
+    /**
+     * $cc_checkcode the verification code entered buy the user in the credit card payment screen
+     * @var string
+     */
+    protected $cc_checkcode;
+    /**
+     * $cc_expiry_month is the credit card expiry month
+     * @var int
+     */
+    protected $cc_expiry_month;
+    /**
+     * $cc_expiry_year is the credit card expiry year
+     * @var int
+     */
+    protected $cc_expiry_year;
+    /**
+     * $codeTitle is title of PayPal payment method
+     * @var string
+     */
+    protected $codeTitle;
+    /**
+     * $codeVersion is the version of this module
+     * @var string
+     */
+    protected $codeVersion;
+    /**
+     * $correlationid is the correlation ID returned by PayPal
+     * @var string
+     */
+    protected $correlationid;
+    /**
+     * $cvv2 is the cvv2 match response from PayPal
+     * @var string
+     */
+     public  $cvv2;
+    /**
+     * $emailAlerts is a flag to indicate if email alerts are required
+     * @var boolean
+     */
+    protected $emailAlerts;
+    /**
+     * $feeamt is the fee charged by PayPal
+     * @var string
+     */
+     protected  $feeamt;
+    /**
+    * $form_action_url is the URL to process the payment or not set for local processing
+    * @var string
+    */
+    public $form_action_url;
+    /**
+     * $numitems is the number of items in the shopping cart
+     * @var int
+     */
+     protected  $numitems;
+    /**
+     * $ot_merge allows notifier to additional items to the subtotal array $optionsST
+     * @var array
+     */
+    public $ot_merge = [];
+    /**
+     * $payment_status PayPal status values 'Authorization' : 'Completed'
+     * @var string
+     */
+    protected $payment_status;
+    /**
+     * $payment_time payment time stamp
+     * @var string
+     */
+     protected  $payment_time;
+    /**
+     * $payment_type name of payment type
+     * @var string
+     */
+     protected  $payment_type;
+    /**
+     * $pendingreason is reason transaction is pending
+     * @var string
+     */
+     protected  $pendingreason;
+    /**
+     * $reasoncode is the reason code returned by PayPal
+     * @var string
+     */
+     protected  $reasoncode;
+    /**
+     * $responsedata is an array of info returned by PayPal request
+     * @var array
+     */
+    protected $responsedata = [];
+    /**
+     * $taxamt is the value of tax on the transaction
+     * @var float
+     */
+     protected  $taxamt;
+    /**
+     * $transaction_id the transaction id returned by PzyPal
+     * @var string
+     */
+    public $transaction_id;
+    /**
+     * $transactiontype is the PayPal transaction type = 'cart'
+     * @var string
+     */
+     public  $transactiontype;
   /**
    * class constructor
    */
@@ -865,7 +986,7 @@ class paypaldp extends base {
         $this->payment_time = date('Y-m-d h:i:s');
         $this->responsedata['CURRENCYCODE'] = $my_currency;
         $this->responsedata['EXCHANGERATE'] = $order->info['currency_value'];
-        $this->auth_code = $this->response['AUTHCODE'];
+        $this->auth_code = $this->responsedata['AUTHCODE'];
       } else {
         // here we're in NVP mode
         $this->transaction_id = $response['TRANSACTIONID'];
@@ -877,7 +998,7 @@ class paypaldp extends base {
         $this->correlationid = $response['CORRELATIONID'];
         $this->payment_time = urldecode($response['TIMESTAMP']);
         $this->amt = urldecode($response['AMT'] . ' ' . $response['CURRENCYCODE']);
-        $this->auth_code = (isset($this->response['AUTHCODE'])) ? $this->response['AUTHCODE'] : $this->response['TOKEN'];
+        $this->auth_code = (isset($this->responsedata['AUTHCODE'])) ? $this->responsedata['AUTHCODE'] : $this->responsedata['TOKEN'];
         $this->transactiontype = 'cart';
       }
   }
