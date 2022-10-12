@@ -93,6 +93,8 @@ UPDATE configuration SET configuration_title = 'Featured Products Page', configu
 UPDATE configuration SET configuration_title = 'New Products Page', configuration_description = 'Number of products to show per page on the New Products page' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_NEW';
 UPDATE configuration SET configuration_title = 'Products Listing Page', configuration_description = 'Number of products to show per page when viewing an index listing' WHERE configuration_key = 'MAX_DISPLAY_PRODUCTS_LISTING';
 
+UPDATE configuration SET configuration_title = 'Categories/Products Display Sort Order', configuration_description = '<p>Set the initial sort order for the Admin Category/Product listing page.</p>&nbsp;0 = Categories/Products: Sort Order, Name<br>&nbsp;1 = Categories/Products: Name<br>&nbsp;2 = Categories: ID+ / Products: Model<br>&nbsp;3 = Categories: ID- / Products: Qty+, Name<br>&nbsp;4 = Categories: Status, Name+ / Products: Qty-, Name<br>&nbsp;5 = Categories: Status, Name- / Products: Price+, Name<br>&nbsp;6 = Products: Price-, Name<br>&nbsp;7 = Products: Model-<br>&nbsp;8 = Products: Status+<br>&nbsp;9 = Products: Status-<br>10 = Products: ID<br>11 = Products: Weight', set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\', \'6\', \'7\', \'8\', \'9\', \'10\', \'11\'),' WHERE configuration_key = 'CATEGORIES_PRODUCTS_SORT_ORDER';
+
 #############
 # Incorporate setting for Column-Grid-Layout template control
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Columns Per Row', 'PRODUCT_LISTING_COLUMNS_PER_ROW', '1', 'Select the number of columns of products to show per row in the product listing.<br>Recommended: 3<br>1=[rows] mode.', '8', '45', NULL, now(), NULL, NULL);
@@ -224,11 +226,11 @@ UPDATE configuration SET val_function = '{"error":"TEXT_EMAIL_ADDRESS_VALIDATE",
 ### Added v158 bring banners_titles up to date
 UPDATE banners SET banners_title = 'Zen Cart Certified Services' WHERE banners_html_text LIKE '%<script>%';
 
-### Add missing updates from 137->138 
-ALTER TABLE address_book MODIFY COLUMN entry_company varchar(64) default NULL; 
-ALTER TABLE orders MODIFY COLUMN customers_company varchar(64) default NULL; 
-ALTER TABLE orders MODIFY COLUMN delivery_company varchar(64) default NULL; 
-ALTER TABLE orders MODIFY COLUMN billing_company varchar(64) default NULL; 
+### Add missing updates from 137->138
+ALTER TABLE address_book MODIFY COLUMN entry_company varchar(64) default NULL;
+ALTER TABLE orders MODIFY COLUMN customers_company varchar(64) default NULL;
+ALTER TABLE orders MODIFY COLUMN delivery_company varchar(64) default NULL;
+ALTER TABLE orders MODIFY COLUMN billing_company varchar(64) default NULL;
 
 
 #############
