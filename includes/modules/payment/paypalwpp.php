@@ -20,84 +20,129 @@ class paypalwpp extends base {
    *
    * @var string
    */
-  var $code;
+  public $code;
+  public $codeTitle;
+  public $codeVersion;
   /**
    * displayed module title
    *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * displayed module description
    *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * module status - set based on various config and zone criteria
    *
-   * @var string
+   * @var boolean
    */
-  var $enabled;
+  public $enabled;
+  /**
+   * Installation 'check' flag
+   *
+   * @var boolean
+   */
+  protected $_check;
   /**
    * the zone to which this module is restricted for use
    *
-   * @var string
+   * @var int
    */
-  var $zone;
+  public $zone;
   /**
    * debugging flag
    *
    * @var boolean
    */
-  var $enableDebugging = false;
+  public $enableDebugging = false;
+  public $emailAlerts;
   /**
    * Determines whether payment page is displayed or not
    *
    * @var boolean
    */
-  var $showPaymentPage = false;
-  var $flagDisablePaymentAddressChange = false;
+  public $showPaymentPage = false;
+  public $flagDisablePaymentAddressChange = false;
   /**
    * sort order of display
    *
    * @var int
    */
-  var $sort_order = 0;
+  public $sort_order = 0;
   /**
-   * Button Source / BN code -- enables the module to work for Zen Cart
+   * Button Sources / BN code -- enables the module to work for Zen Cart
    *
    * @var string
    */
-  var $buttonSourceEC = 'ZenCart-EC_us';
+  public $buttonSourceEC = 'ZenCart-EC_us';
+  public $buttonSourceDP;
+  /**
+   * Notify customer on new-account creation?
+   *
+   * @var string
+   */
+  protected $new_acct_notify;
   /**
    * order status setting for pending orders
    *
    * @var int
    */
-  var $order_pending_status = 1;
+  public $order_pending_status = 1;
   /**
    * order status setting for completed orders
    *
    * @var int
    */
-  var $order_status = DEFAULT_ORDERS_STATUS_ID;
+  public $order_status;
+  /**
+   * URLs used during checkout if this is the selected payment method
+   *
+   * @var string
+   */
+  public $form_action_url;
+  public $ec_redirect_url;
+  /**
+   * Variables used in processing transaction request/response values for internal use.
+   */
+  protected $payment_type;
+  protected $payment_status;
+  protected $avs;
+  protected $cvv2;
+  protected $correlationid;
+  protected $transactiontype;
+  protected $payment_time;
+  protected $feeamt;
+  protected $taxamt;
+  protected $pendingreason;
+  protected $reasoncode;
+  protected $numitems;
+  protected $amt;
+  protected $auth_code;
+  protected $responsedata;
+  protected $transaction_id;
+  public $ot_merge;     //-Public, since might be referenced by an observer.
+  protected $requestPrefix;
+  protected $infoPrefix;
   /**
    * Debug tools
    */
-  var $_logDir = DIR_FS_LOGS;
-  var $_logLevel = 0;
+  protected $_logDir = DIR_FS_LOGS;
+  protected $_logLevel = 0;
   /**
    * FMF
    */
-  var $fmfResponse = '';
-  var $fmfErrors = array();
+  public $fmfResponse = '';
+  public $fmfErrors = [];
   /**
    * Flag to enable the modern in-context checkout.
    * https://developer.paypal.com/docs/classic/express-checkout/in-context/integration/
    * @var boolean
    */
-  var $use_incontext_checkout = true;
+  public $use_incontext_checkout = true;
   /**
    * class constructor
    */
@@ -106,7 +151,6 @@ class paypalwpp extends base {
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
     $this->codeVersion = '1.5.8';
-    $this->enableDirectPayment = FALSE;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
@@ -150,7 +194,6 @@ class paypalwpp extends base {
 
     $this->enableDebugging = (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email');
     $this->emailAlerts = (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Alerts Only');
-    $this->doDPonly = (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE =='Payflow-US' && !(defined('MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC') && MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC == 'Yes'));
     $this->showPaymentPage = (MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE == 'No') ? true : false;
 
     $this->buttonSourceEC = 'ZenCart-EC_us';
@@ -164,17 +207,15 @@ class paypalwpp extends base {
       $this->buttonSourceDP = 'ZenCart-GW_us';
     }
 
-    $this->order_pending_status = MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID;
-    if ((int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID > 0) {
-      $this->order_status = MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID;
-    }
+    $this->order_pending_status = (int)MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID;
+    $this->order_status = ((int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID;
+
     $this->new_acct_notify = MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY;
     $this->zone = (int)MODULE_PAYMENT_PAYPALWPP_ZONE;
     if (is_object($order)) $this->update_status();
 
     if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.6') $this->enabled = false;
 
-    $this->cards = array();
     // if operating in markflow mode, start EC process when submitting order
     if (!$this->in_special_checkout()) {
       $this->form_action_url = zen_href_link('ipn_main_handler.php', 'type=ec&markflow=1&clearSess=1&stage=final', 'SSL', true, true, true);
@@ -264,7 +305,6 @@ class paypalwpp extends base {
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
    */
   function selection() {
-    $this->cc_type_check = '';
     /**
      * since we are NOT processing via the gateway, we will only display MarkFlow payment option, and no CC fields
      */
@@ -2826,31 +2866,41 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // click of the PPEC button.
     //
     if ($_SESSION['paypal_ec_temp'] === false) {
-    // bof: contents merge notice
-    // save current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0) {
-          $zc_check_basket_before = $_SESSION['cart']->count_contents();
+        // -----
+        // Determine the sum of products' quantities (a floating-point value!) currently in the cart,
+        // restore the customer's saved cart contents and determine the sum of products' quantities
+        // now present in the cart.
+        //
+        $zc_check_basket_before = $_SESSION['cart']->count_contents();
+        $_SESSION['cart']->restore_contents();
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
+
+        // -----
+        // See if a message to the customer (possibly with a redirect back to the shopping-cart page)
+        // is required if the cart's contents have changed.
+        //
+        if (SHOW_SHOPPING_CART_COMBINED !== '0' && $zc_check_basket_before > 0) {
+            if ($zc_check_basket_before != $zc_check_basket_after && $zc_check_basket_after > 0) {
+                if (SHOW_SHOPPING_CART_COMBINED === '2') {
+                    // warning only do not send to cart ('2')
+                    $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+                } else {
+                    // show warning and send to shopping cart for review ('1')
+                    $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
+                    zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+                }
+            }
         }
 
-        // bof: not require part of contents merge notice
-        // restore cart contents
-        $_SESSION['cart']->restore_contents();
-        // eof: not require part of contents merge notice
-
-        // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
-            }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
-              $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
-              zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
-            }
-          }
+        // -----
+        // If the cart contents are unchanged, i.e. no saved products were added via the
+        // cart's restore_contents method, save the cart's cartID value (a random number
+        // that's been changed by that call to restore_contents) into the session
+        // so that an unchanged cart doesn't result in an unwanted redirect back to the
+        // checkout_shipping phase.
+        //
+        if ($zc_check_basket_before == $zc_check_basket_after) {
+            $_SESSION['cartID'] = $_SESSION['cart']->cartID;
         }
     }
 
