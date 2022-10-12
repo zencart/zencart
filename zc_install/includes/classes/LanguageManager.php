@@ -7,6 +7,17 @@
 
 class LanguageManager
 {
+    /**
+     * $langPath is the directory path to languages files
+     * @var type string
+     */
+    protected $langPath;
+    /**
+     * $languagesInstalled is an array of the languages installed
+     * @var array
+     */
+    protected $languagesInstalled = [];
+          
     public function __construct($langPath = 'includes/languages/')
     {
         $this->langPath = $langPath;
