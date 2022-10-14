@@ -501,6 +501,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       } else {
         if ($response[$this->infoPrefix . 'PAYMENTSTATUS'] == 'Pending')
         {
+            $response['L_ERRORCODE0'] = empty($response['L_ERRORCODE0']) ? 0 : $response['L_ERRORCODE0'];
           if ($response['L_ERRORCODE0'] == 11610 && $response[$this->infoPrefix . 'PENDINGREASON'] == '') $response[$this->infoPrefix . 'PENDINGREASON'] = 'Pending FMF Review by Storeowner';
         }
         $this->payment_status = 'Pending (' . $response[$this->infoPrefix . 'PENDINGREASON'] . ')';
@@ -511,7 +512,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->correlationid = $response['CORRELATIONID'];
       $this->transactiontype = $response[$this->infoPrefix . 'TRANSACTIONTYPE'];
       $this->payment_time = urldecode($response[$this->infoPrefix . 'ORDERTIME']);
-      $this->feeamt = urldecode($response[$this->infoPrefix . 'FEEAMT']);
+      $this->feeamt = empty($response[$this->infoPrefix . 'FEEAMT']) ? 0 : urldecode($response[$this->infoPrefix . 'FEEAMT']);
       $this->taxamt = urldecode($response[$this->infoPrefix . 'TAXAMT']);
       $this->pendingreason = $response[$this->infoPrefix . 'PENDINGREASON'];
       $this->reasoncode = $response[$this->infoPrefix . 'REASONCODE'];
@@ -2963,7 +2964,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->zcLog('termEC-1', 'Killed the session vars as requested');
     }
 
-    $this->zcLog('termEC-2', 'BEFORE: $this->showPaymentPage = ' . (int)$this->showPaymentPage . "\nToken Data:" . $_SESSION['paypal_ec_token']);
+    $this->zcLog('termEC-2', 'BEFORE: $this->showPaymentPage = ' . (int)$this->showPaymentPage . "\nToken Data:" . (!isset($_SESSION['paypal_ec_token']) ? 'not set' : $_SESSION['paypal_ec_token'])) ;
     // force display of payment page if GV/DC active for this customer
     if (MODULE_ORDER_TOTAL_INSTALLED && $this->showPaymentPage !== true && isset($_SESSION['paypal_ec_token']) ) {
       require_once(DIR_WS_CLASSES . 'order.php');
@@ -3047,6 +3048,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $messageStack->add_session($errorText, 'error');
     }
     /** Handle FMF Scenarios **/
+      $response['L_ERRORCODE0'] = empty($response['L_ERRORCODE0']) ? 0 : $response['L_ERRORCODE0'];
+      $response['L_LONGMESSAGE2'] = empty($response['L_LONGMESSAGE2']) ? '' : $response['L_LONGMESSAGE2'];
     if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment'))
         && ((isset($response['PAYMENTINFO_0_PAYMENTSTATUS']) && $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
             || (isset($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] == 'Pending')
