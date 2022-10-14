@@ -16,7 +16,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class products extends base {
-  var $modules, $selected_module;
 
   // class constructor
   function __construct() {

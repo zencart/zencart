@@ -10,7 +10,9 @@
  */
 class zcConfigureFileWriter
 {
-  public $errors = array();
+  public $errors = [];
+  protected $inputs = [];
+  protected $replaceVars;
 
   public function __construct($inputs)
   {

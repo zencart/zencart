@@ -58,8 +58,8 @@ class square extends base
     /**
      * transaction vars hold the IDs of the completed payment
      */
-    public $transaction_id, $transaction_messages, $auth_code;
-    protected $currency_comment, $transaction_date;
+    public $transaction_id, $transaction_messages, $auth_code, $order_status;
+    protected $currency_comment, $transaction_date, $_logDir, $transaction_status, $sdkApiVersion, $_check, $gateway_currency;
     /**
      * Square configuration/connection
      * @var SquareConnect\Configuration
@@ -602,9 +602,9 @@ class square extends base
     {
         global $db;
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'False' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_STATUS'");
-        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN', 'MODULE_PAYMENT_SQUARE_TOKEN_EXPIRES_AT', 'MODULE_PAYMENT_SQUARE_REFRESH_TOKEN'");
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN', 'MODULE_PAYMENT_SQUARE_TOKEN_EXPIRES_AT', 'MODULE_PAYMENT_SQUARE_REFRESH_TOKEN')");
         if ($include_sandbox) {
-            $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_SANDBOX_TOKEN'");
+            $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_SANDBOX_TOKEN')");
             $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'Live' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_TESTING_MODE'");
         }
     }

@@ -17,7 +17,7 @@ class BaseController
     protected $request;
     protected $messageStack;
     protected $tableDefinition;
-    protected $infoBox;
+    protected $infoBox = [];
     protected $formatter;
 
     public function __construct(Request $request, $messageStack, TableViewDefinition $tableDefinition, $formatter)

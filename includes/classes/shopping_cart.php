@@ -18,59 +18,63 @@ class shoppingCart extends base
      * shopping cart contents
      * @var array
      */
-    var $contents;
+    public $contents;
     /**
      * shopping cart total price
      * @var float
      */
-    var $total;
+    public $total;
     /**
      * shopping cart total weight
      * @var float
      */
-    var $weight;
+    public $weight;
     /**
      * cart identifier
      * @var integer
      */
-    var $cartID;
+    public $cartID;
     /**
      * overall content type of shopping cart
      * @var string
      */
-    var $content_type;
+    protected $content_type;
     /**
      * number of free shipping items in cart
      * @var float|int
      */
-    var $free_shipping_item;
+    protected $free_shipping_item;
     /**
      * total weight of free shipping items in cart
      * @var float|int
      */
-    var $free_shipping_weight;
+    protected $free_shipping_weight;
     /**
      * total price of free shipping items in cart
      * @var float|int
      */
-    var $free_shipping_price;
+    protected $free_shipping_price;
     /**
      * total downloads in cart
      * @var float|int
      */
-    var $download_count;
+    protected $download_count;
     /**
      * shopping cart total price before Specials, Sales and Discounts
      * @var float|int
      */
-    var $total_before_discounts;
+    protected $total_before_discounts;
     /**
      * set to TRUE to see debug messages for developer use when troubleshooting add/update cart
      * Then, Logout/Login to reset cart for change
-     * @var string
+     * @var boolean
      */
     protected $display_debug_messages = false;
     protected $flag_duplicate_msgs_set = false;
+    /**
+     * array of flag to indicate if quantity ordered is outside product min/max order values
+     * @var array
+     */
     protected $flag_duplicate_quantity_msgs_set = [];
 
     /**

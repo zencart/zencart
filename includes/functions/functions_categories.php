@@ -707,15 +707,29 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
  * @param int $language_id
  * @return string
  */
-function zen_get_category_name($category_id, $language_id = null) {
+function zen_get_category_name($category_id, $language_id = null)
+{
     global $db;
-    if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
-    $category = $db->Execute("SELECT categories_name
+    if (empty($language_id)) {
+        $language_id = (int)$_SESSION['languages_id'];
+    }
+    switch (true) {
+        case ($category_id === null):
+            return '';
+        case ((int)($category_id) < 1):
+            return TEXT_TOP;
+        default:
+            $category = $db->Execute(
+                "SELECT categories_name
                               FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                               WHERE categories_id = " . (int)$category_id . "
-                              AND language_id = " . (int)$language_id);
-    if ($category->EOF) return '';
-    return $category->fields['categories_name'];
+                              AND language_id = " . (int)$language_id
+            );
+            if ($category->EOF) {
+                return '';
+            }
+            return $category->fields['categories_name'];
+    }
 }
 
 
@@ -1162,11 +1176,11 @@ function zen_remove_category($category_id)
             echo 'D: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
           }
         */
-        $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
-
+        if (!empty($new_sale_categories_all)) {
+            $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
+            $db->Execute($salemakerupdate);
 //echo 'Update sale_categories_all: ' . $salemakerupdate . '<br>';
-
-        $db->Execute($salemakerupdate);
+        }
 
         $chk_sale_categories_all->MoveNext();
     }

@@ -199,7 +199,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
 
                         $where_str .= $sql_add;
 
-                        $where_str = $db->bindVars($where_str, ':keyword', $search_keywords[$i], 'noquotestring');
+                        $where_str = $db->bindVars($where_str, ':keyword', addslashes($search_keywords[$i]), 'noquotestring');
                         $where_str = $db->bindVars($where_str, ':numeric_keyword', $search_keywords[$i], 'integer');
                         break;
                 }

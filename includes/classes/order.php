@@ -17,12 +17,127 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class order extends base
 {
+
+    /**
+     * $attachArray is an array of file names to be attached to the email
+     * @var array
+     */
+    public $attachArray = [];
+    /**
+     * $bestSellersUpdate is a flag used in Notifier to prevent updating of the best sellers details.
+     * @var boolean
+     */
+    public $bestSellersUpdate;
+    /**
+     * $billing is an array containing the billing details for the order
+     * @var array
+     */
+    public $billing = [];
+    /**
+     * $content_type is the overall content type of order
+     * @var string "mixed","physical","virtual"
+     */
+    public $content_type;
+    /**
+     * $customer is an array containing information about the customer for the order
+     * @var array
+     */
+    public $customer = [];
+    /**
+     * $delivery is an array containing delivery details for the order
+     * @var array
+     */
+    public $delivery = [];
+    /**
+     * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing 
+     * @var boolean
+     */
+    public $doStockDecrement;
+    /**
+     * $extra_header_text is a string containing header text to be added to email
+     * @var string
+     */
+    public $extra_header_text;
+    /**
+     * $email_low_stock is the contents of the email to be sent if stock is low
+     * @var string
+     */
+    public $email_low_stock;
+    /**
+     * $email_order_message is a string containing the store order message
+     * @var string
+     */
+    public $email_order_message;
+    /**
+     * $info is an array containing general information about the order
+     * @var array
+     */
+    public $info = [];
+    /**
+     * $orderId is the order identifier.
+     * @var int
+     */
     protected $orderId = null;
-    var $info, $totals, $products, $customer, $delivery, $billing, $content_type, $email_low_stock, $products_ordered_attributes,
-        $products_ordered, $products_ordered_email, $products_ordered_html, $attachArray, $email_order_message, $extra_header_text,
-        $doStockDecrement, $send_low_stock_emails, $queryReturnFlag, $bestSellersUpdate, $use_external_tax_handler_only;
-    var $products_ordered_attributes_html = [];
-    var $statuses = [];
+    /**
+     * $products is an array containing details of the products for the order
+     * @var array 
+     */
+    public $products = [];
+    /**
+     * $products_ordered a plain text string containing the details of products order for email
+     * @var string
+     */
+    public $products_ordered;
+    /**
+     * $products_ordered_attributes is a string containing the products attributes
+     * @var string
+     */
+    public $products_ordered_attributes;
+    /**
+     * $products_ordered_html is an HTML formatted string containing details of the products ordered for email
+     * @var string
+     */
+    public $products_ordered_html;
+    /**
+     * $queryReturnFlag is a flag used in a notifier to prevent default processing of order query.
+     * @var boolean
+     */
+    public $queryReturnFlag;
+    /**
+     * $send_low_stock_emails is a flag to indicate if a low stock email should be send. It may be modified by a notifier
+     * @var boolean
+     */
+    public $send_low_stock_emails;
+    /**
+     * $statuses is an array containing the status history information for the order
+     * @var array
+     */
+    public $statuses = [];
+    /**
+     * $total_cost is the total cost of the order
+     * @var float 
+     */
+    public $total_cost;
+    /**
+     * $total_tax is the total amount of tax for the order
+     * @var float 
+     */
+    public $total_tax;
+    /**
+     * $total_weight is the total weight of the order
+     * @var float 
+     */
+    public $total_weight;
+    /**
+     * $totals is an array of order total information
+     * @var array
+     */
+    public $totals = [];
+    /**
+     * $use_external_tax_handler_only is a flag used by notifier to prevent default tax calculation.
+     * @var boolean
+     */
+    public $use_external_tax_handler_only;
 
     function __construct($order_id = null)
     {
@@ -890,7 +1005,6 @@ class order extends base
         // initialized for the email confirmation
         $this->products_ordered = '';
         $this->products_ordered_html = '';
-        $this->subtotal = 0;
         $this->total_tax = 0;
 
         // lowstock email report

@@ -8,8 +8,31 @@
 
 class zcDatabaseInstaller
 {
-    public $ignoreLine;
-    var $jsonProgressLoggingCount = 0;
+    protected $ignoreLine;
+    protected $jsonProgressLoggingCount = 0;
+    protected $basicParseStrings = [];
+    protected $collateSuffix;
+    protected $completeLine;
+    protected $db;
+    protected $dbCharset;
+    protected $dbHost;
+    protected $dbName;
+    protected $dbPassword;
+    protected $dbPrefix;
+    protected $dbType;
+    protected $dbUser;
+    protected $dieOnErrors;
+    protected $errors = [];
+    protected $extendedOptions;
+    protected $fileName;
+    protected $func;
+    protected $jsonProgressLoggingTotal;
+    protected $keepTogetherCount;
+    protected $keepTogetherLines;
+    protected $line;
+    protected $lineSplit = [];
+    protected $newLine;
+    protected $upgradeExceptions;
 
     public function __construct($options)
     {

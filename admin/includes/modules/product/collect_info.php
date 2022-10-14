@@ -56,6 +56,9 @@ if (isset($_GET['pID']) && empty($_POST)) {
   $pInfo->updateObjectInfo($product->fields);
 } elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
+  if (isset($_GET['pID'])) { 
+     $pInfo->products_id = (int)$_GET['pID']; 
+  }
   $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
   $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';
   $products_url = isset($_POST['products_url']) ? $_POST['products_url'] : '';
