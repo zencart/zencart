@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2021 May 19 New in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Sep 28 Modified in v1.5.8 $
  */
 
 

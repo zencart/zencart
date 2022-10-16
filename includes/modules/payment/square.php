@@ -9,7 +9,7 @@
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Feb 18 Modified in v1.5.8-alpha $
+ * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
