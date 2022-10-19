@@ -2,18 +2,16 @@ Zen Cart(R) - The Art of E-Commerce
 
 Welcome to Zen Cart(R) E-Commerce
 
-THE DOCUMENTATION HAS ALL BEEN MOVED ONLINE AND OUT OF THE DISTRIBUTION.
+MOST OF THE DOCUMENTATION HAS BEEN MOVED ONLINE AND OUT OF THE DISTRIBUTION.
 THE FOLLOWING IS A VERY SIMPLIFIED INSTALLATION DOCUMENT.
 
-WE SUGGEST YOU USE THE PDF "Implementation Guide" FILE AT 
+We suggest you use the PDF "Implementation Guide" file which is included with this distribution 
 
-https://docs.zen-cart.com/release/implementation-guide.pdf
-
-AS WELL AS THE ONLINE DOCUMENTATION AT 
+as well as the online documentation at 
 
 https://docs.zen-cart.com/user/upgrading/
 
-FOR FULLY DETAILED INSTRUCTIONS.
+for fully detailed instructions.
 
 Zen Cart has a built-in automatic installation system. However to use this you must first unpack and upload the code to a compatible web server:
 
@@ -24,6 +22,5 @@ Zen Cart has a built-in automatic installation system. However to use this you m
 5. Follow the instructions. You must create your MySQL database credentials before installation, and provide those details when prompted. Details of this are in the Implementation Guide.
 
 For more detailed installation instructions, please see the Implementation Guide and the online documentation. 
-
 
 ( (c)Copyright 2003-2022, Zen Cart(R). All rights reserved.)
