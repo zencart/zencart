@@ -5,9 +5,13 @@ Welcome to Zen Cart(R) E-Commerce
 THE FOLLOWING IS A VERY SIMPLIFIED INSTALLATION DOCUMENT.
 You can find online documentation at: https://docs.zen-cart.com
 
-WE SUGGEST YOU USE ONLINE DOCS AND THE PDF "Implementation Guide" 
+WE SUGGEST YOU USE THE PDF "Implementation Guide" FILE AT 
 
-https://docs.zen-cart.com/release/implementation-guide-v157.pdf
+https://docs.zen-cart.com/release/implementation-guide.pdf
+
+AS WELL AS THE ONLINE DOCUMENTATION AT 
+
+https://docs.zen-cart.com/user/upgrading/
 
 FOR FULLY DETAILED INSTRUCTIONS.
 
@@ -16,9 +20,11 @@ Zen Cart has a built-in automatic installation system. However to use this you m
 
 1. Extract the Zen Cart ZIP file (and tell the unzip utility to *retain* folder structures)
 2. Upload the Zen Cart files and folders to your server using your FTP program
-3. You must make some folders writable. The details are in the Implementation-Guide.pdf and the online documentation. 
+3. You must make some folders writable. The details are in the Implementation Guide.
 4. In your browser enter the URL to your website where you uploaded the files, specifically to the /zc_install/index.php file.
-5. Follow the instructions. You must create your MySQL database credentials before installation, and provide those details when prompted. Details of this are in the Implementation Guide PDF.
+5. Follow the instructions. You must create your MySQL database credentials before installation, and provide those details when prompted. Details of this are in the Implementation Guide.
+
+For more detailed installation instructions, please see the Implementation Guide and the online documentation. 
 
 
-((c)Copyright 2003-2022, Zen Cart(R). All rights reserved.)
+( (c)Copyright 2003-2022, Zen Cart(R). All rights reserved.)
