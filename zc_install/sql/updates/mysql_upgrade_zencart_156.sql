@@ -175,7 +175,7 @@ VALUES ('categoriesProductListing', 'BOX_CATALOG_CATEGORIES_PRODUCTS', 'FILENAME
 
 DELETE FROM admin_pages WHERE page_key = 'linkpointReview';
 
-# This was moved to the 1.5.7 upgrade; DROP did not work in 1.5.6
+# This was moved to the 1.5.8 upgrade; DROP did not work in 1.5.6/1.5.7
 # ALTER TABLE customers_basket DROP final_price;
 
 ## add support for multi lingual ezpages
@@ -195,7 +195,8 @@ SELECT e.pages_id, l.languages_id, e.pages_title, e.pages_html_text
 FROM ezpages e
 LEFT JOIN languages l ON 1;
 
-# This was moved to the 1.5.7 upgrade; DROP did not work in 1.5.6
+# This was moved to the 1.5.8 upgrade; DROP did not work in 1.5.6/1.5.7
+# for databases with prefixes 
 # Note that these should have been done on separate lines
 # ALTER TABLE ezpages DROP languages_id, DROP pages_title, DROP pages_html_text;
 

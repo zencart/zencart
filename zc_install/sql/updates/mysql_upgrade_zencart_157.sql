@@ -246,12 +246,11 @@ ALTER TABLE upgrade_exceptions MODIFY sql_file varchar(128) default NULL;
 ALTER TABLE upgrade_exceptions MODIFY reason TEXT;
 ALTER TABLE upgrade_exceptions MODIFY errordate datetime default NULL;
 
-# ZC 156 upgrade did these operations, which did not work.
-# Adding for people who upgraded to 1.5.6, and are now upgrading again
-ALTER TABLE customers_basket DROP final_price;
-ALTER TABLE ezpages DROP languages_id;
-ALTER TABLE ezpages DROP pages_title;
-ALTER TABLE ezpages DROP pages_html_text;
+# For databases with prefixes, these operations did not work in 1.5.7.
+# ALTER TABLE customers_basket DROP final_price;
+# ALTER TABLE ezpages DROP languages_id;
+# ALTER TABLE ezpages DROP pages_title;
+# ALTER TABLE ezpages DROP pages_html_text;
 
 # ZC 155 upgrade missed these operations
 ALTER TABLE admin_activity_log ADD logmessage mediumtext NOT NULL;
