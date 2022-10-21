@@ -479,7 +479,7 @@ class zcDatabaseInstaller
     {
         if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
         $check = $this->db->Execute(
-            'SHOW COLUMNS FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
+            'SHOW COLUMNS FROM `' . DB_DATABASE . '`.`' . $this->dbPrefix . $this->db->prepare_input($table) . '` ' .
             'WHERE `Field` = \'' . $this->db->prepare_input($column) . '\''
         );
         return !$check->EOF;
@@ -489,7 +489,7 @@ class zcDatabaseInstaller
     {
         if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
         $check = $this->db->Execute(
-            'SHOW INDEX FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
+            'SHOW INDEX FROM `' . DB_DATABASE . '`.`' . $this->dbPrefix . $this->db->prepare_input($table) . '` ' .
             'WHERE `Key_name` = \'' . $this->db->prepare_input($index) . '\''
         );
         return !$check->EOF;
