@@ -105,11 +105,11 @@ if (!empty($action)) {
 // Set date to null if empty or in the past
       $products_date_available = zen_prepare_date($_POST['products_date_available'], 'null');
 // Set dates empty equivelent '0001-01-01' if empty or in the past
-      $specials_date_available = zen_prepare_date($_POST['specials_date_available'], '0001-01-01');
-      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'], '0001-01-01');
+      $specials_date_available = zen_prepare_date($_POST['specials_date_available'] ?? '', '0001-01-01');
+      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'] ?? '', '0001-01-01');
 
-      $featured_date_available = zen_prepare_date($_POST['featured_date_available'],'0001-01-01');
-      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'], '0001-01-01');
+      $featured_date_available = zen_prepare_date($_POST['featured_date_available'] ?? '','0001-01-01');
+      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'] ?? '', '0001-01-01');
 
       $tmp_value = (isset($_POST['products_price_sorter']) ? zen_db_prepare_input($_POST['products_price_sorter']) : '');
       $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value == '' || $tmp_value == 0) ? 0 : $tmp_value;
