@@ -189,7 +189,7 @@
                 </table></td>
               </tr>
 <?php
-  if (empty($action)) {
+  if (empty($action) && !empty($mInfo)) {
 ?>
               <tr>
                 <td align="right" colspan="2" class="smallText"><?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id . '&action=new') . '" class="btn btn-primary" role="button">' . IMAGE_INSERT . '</a>'; ?></td>
