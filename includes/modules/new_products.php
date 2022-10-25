@@ -93,8 +93,8 @@ if ($num_products_count > 0) {
         $new_products->MoveNextRandom();
     }
 
-    if (!empty($new_products_category_id)) {
-        $category_title = zen_get_category_name((int)$new_products_category_id);
+    if (!empty($current_category_id)) {
+        $category_title = zen_get_category_name((int)$current_category_id);
         $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, $zcDate->output('%B')) . ($category_title != '' ? ' - ' . $category_title : '' ) . '</h2>';
     } else {
         $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, $zcDate->output('%B')) . '</h2>';
