@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 May 28 Modified in v1.5.8-alpha $
+ * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -369,8 +369,8 @@ class paypaldp extends base {
     // Purchase amount
     if ($this->enabled && isset($order) && isset($order->info)) {
       // module cannot be used for purchase > $10,000 USD equiv
-      $order_amount = $this->calc_order_amount($order->info['total'], 'USD', false);
-      if ($order_amount > 10000) {
+      require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
+      if (paypalUSDCheck($order->info['total']) === false) {
         $this->enabled = false;
         $this->zcLog('update_status', 'Module disabled because purchase price (' . $order_amount . ') exceeds PayPal-imposed maximum limit of 10,000 USD.');
       }

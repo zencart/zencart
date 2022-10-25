@@ -7,7 +7,9 @@
  * @version $Id: Scott C Wilson 2022 Feb 02 Modified in v1.5.8-alpha $
  */
 
-$paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
+// PayPal module cannot be used for purchase > $10,000 USD equiv
+require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
+$paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True'  && paypalUSDCheck($_SESSION['cart']->total) === true);
 $ecs_off = (defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') && MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON == 'Off');
 if ($ecs_off) $paypalec_enabled = FALSE;
 
@@ -42,10 +44,6 @@ if ($paypalec_enabled) {
     $paypalec_enabled = false;
   }
 
-  // PayPal module cannot be used for purchase > $10,000 USD equiv
-  if ($currencies->value($_SESSION['cart']->total, true, 'USD') > 10000) {
-    $paypalec_enabled = false;
-  }
 }
 // if all is okay, display the button
 if ($paypalec_enabled) {

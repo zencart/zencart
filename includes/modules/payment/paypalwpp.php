@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Aug 11 Modified in v1.5.8-alpha2 $
+ * @version $Id: Scott C Wilson 2022 Oct 14 Modified in v1.5.8 $
  */
 /**
  * load the communications layer code
@@ -280,8 +280,8 @@ class paypalwpp extends base {
       $this->zcLog('update_status', 'Module disabled because purchase price (' . $order->info['total'] . ') exceeds PayPal-imposed maximum limit of 1000000 JPY.');
     }
     // module cannot be used for purchase > $10,000 USD equiv
-    $order_amount = $this->calc_order_amount($order->info['total'], 'USD', false);
-    if ($order_amount > 10000) {
+    require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
+    if (paypalUSDCheck($order->info['total']) === false) {
       $this->enabled = false;
       $this->zcLog('update_status', 'Module disabled because purchase price (' . $order_amount . ') exceeds PayPal-imposed maximum limit of 10,000 USD or equivalent.');
     }
