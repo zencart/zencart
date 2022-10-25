@@ -392,7 +392,7 @@ use PHPMailer\PHPMailer\SMTP;
       } catch (Exception $e) {
       }
       if (!$success) {
-        $msg = sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject);
+        $msg = sprintf(EMAIL_SEND_FAILED , $to_name, $to_email_address, $email_subject) . '&nbsp;' . $mail->ErrorInfo;
         if ($messageStack !== NULL) {
           if (IS_ADMIN_FLAG === true) {
             $messageStack->add_session($msg, 'error');
