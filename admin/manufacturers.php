@@ -326,7 +326,7 @@ if (!empty($action)) {
         </div>
         <!-- body_text_eof //-->
       </div>
-      <?php if (empty($action)) { ?>
+      <?php if (empty($action) && !empty($mInfo)) { ?>
         <div class="col-sm-12 text-right">
           <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
         </div>
