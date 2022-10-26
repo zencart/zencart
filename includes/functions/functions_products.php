@@ -669,14 +669,15 @@ function zen_get_products_description($product_id, $language_id = 0)
 {
     global $db;
 
-    if (empty($language_id)) $language = $_SESSION['languages_id'];
+    if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
+    }
 
     $product = $db->Execute("SELECT products_description
                              FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                              WHERE products_id = " . (int)$product_id . "
                              AND language_id = " . (int)$language_id, 1);
-    if ($product->EOF) return '';
-    return $product->fields['products_description'];
+    return ($product->EOF) ? '' : $product->fields['products_description'];
 }
 
 /**
