@@ -116,7 +116,7 @@ switch ($_GET['action']) {
                     );
                   }
                   ?>
-                  <?php echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, '', 'class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, '', 'class="form-control" id="options_id"'); ?>
               </td>
               <td class="dataTableHeadingContent text-center">
                 <button type="submit" class="btn btn-primary"><?php echo IMAGE_EDIT; ?></button>
