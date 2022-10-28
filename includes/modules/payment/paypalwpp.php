@@ -2639,7 +2639,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 ///        $fromDb = str_replace("\n", '', $answers_arr->fields['entry_firstname'].$answers_arr->fields['entry_lastname']);
         $fromDb = str_replace("\n", '', $answers_arr->fields['entry_street_address']);
         $fromDb = trim($fromDb);
-        $fromDb = $fromDb . str_replace("\n", '', $answers_arr->fields['entry_suburb']);
+        if (!empty($answers_arr->fields['entry_suburb'])) {
+           $fromDb = $fromDb . str_replace("\n", '', $answers_arr->fields['entry_suburb']);
+        }
         $fromDb = $fromDb . str_replace("\n", '', $answers_arr->fields['entry_city']);
         $fromDb = str_replace("\t", '', $fromDb);
         $fromDb = trim($fromDb);
