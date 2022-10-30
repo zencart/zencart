@@ -12,8 +12,12 @@
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
 }
-$autoLoadConfig[190][] = array('autoType'=>'class',
-                              'loadFile'=>'observers/class.products_viewed_counter.php');
-$autoLoadConfig[190][] = array('autoType'=>'classInstantiate',
-                              'className'=>'products_viewed_counter',
-                              'objectName'=>'products_viewed_counter');
+$autoLoadConfig[200][] = [
+    'autoType'=>'class',
+    'loadFile'=>'observers/class.products_viewed_counter.php'
+];
+$autoLoadConfig[200][] = [
+    'autoType'=>'classInstantiate',
+    'className'=>'products_viewed_counter',
+    'objectName'=>'products_viewed_counter'
+];
