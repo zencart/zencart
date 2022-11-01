@@ -63,7 +63,7 @@ $saniGroup1 = [
     'pID',          //- main/additional images' pop-ups
 ];
 foreach ($saniGroup1 as $key) {
-    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', $_GET[$key])) {
+    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', (string)$_GET[$key])) {
         $_GET[$key] = '';
         if (isset($_REQUEST[$key])) {
             $_REQUEST[$key] = '';
@@ -101,7 +101,7 @@ $saniGroup2 = [
     'search_in_description',    //- Searches indicator
 ];
 foreach ($saniGroup2 as $key) {
-    if (isset($_GET[$key]) && !ctype_digit($_GET[$key])) {
+    if (isset($_GET[$key]) && !ctype_digit((string)$_GET[$key])) {
         $_GET[$key] = ($key === 'page') ? '1' : '';
         if (isset($_REQUEST[$key])) {
             $_REQUEST[$key] = $_GET[$key];
@@ -128,7 +128,7 @@ foreach ($saniGroup3 as $key) {
 // -----
 // The cPath value is of the form "nnnn[_nnnn]...", e.g. 2454 or 2544_0284.
 //
-if (isset($_GET['cPath']) && !preg_match('/^\d+(_\d+)*/', $_GET['cPath'])) {
+if (isset($_GET['cPath']) && !preg_match('/^\d+(_\d+)*/', (string)$_GET['cPath'])) {
     $_GET['cPath'] = '';
 }
 
