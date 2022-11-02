@@ -20,6 +20,10 @@ if (!empty($action)) {
 
     case 'save':
       zen_update_template_name_for_id($selected_template, $_POST['ln']);
+      $init_file = DIR_FS_CATALOG . 'includes/templates/' . $_POST['ln'] . '/template_init.php';  
+      if (file_exists($init_file)) {
+         require $init_file;
+      }
       zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
       break;
 
