@@ -11,8 +11,6 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
-define('TOPMOST_CATEGORY_PARENT_ID', '0');
-
 $show_welcome = false;
 if (isset($_GET['cPath'])) {
     $cPath = $_GET['cPath'];
