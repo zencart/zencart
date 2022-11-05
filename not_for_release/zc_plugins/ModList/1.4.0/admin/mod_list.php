@@ -184,7 +184,7 @@
 
 <h2><?php echo MISSING_ADMIN_PAGES; ?></h2>
 <?php echo '<div class="smallText">' . MISSING_ADMIN_PAGES_WHY . '</div>'; ?>
-<br />
+<br>
 <?php
     $missing_pages = array();
     $pages_query_raw = " SELECT * FROM " . TABLE_CONFIGURATION_GROUP . " WHERE visible = '1'" ;

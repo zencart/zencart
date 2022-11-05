@@ -22,7 +22,7 @@ NOTE THAT THE NEW PHP SDK REQUIRES PHP 7.1+, and will NOT work on PHP 5
 The old Connect SDK documentation is available under the
 [`/docs` folder](./docs/README.md).
 
-<br/>
+<br>
 
 ---
 
@@ -33,7 +33,7 @@ The old Connect SDK documentation is available under the
 
 ---
 
-<br/>
+<br>
 
 ## Migrate to the Square PHP SDK
 
@@ -153,10 +153,10 @@ try {
   print_r($result);
   echo "</pre>";
 } catch (ApiException $e) {
-  echo "Caught exception!<br/>";
-  print_r("<strong>Response body:</strong><br/>");
+  echo "Caught exception!<br>";
+  print_r("<strong>Response body:</strong><br>");
   echo "<pre>"; var_dump($e->getResponseBody()); echo "</pre>";
-  echo "<br/><strong>Response headers:</strong><br/>";
+  echo "<br><strong>Response headers:</strong><br>";
   echo "<pre>"; var_dump($e->getResponseHeaders()); echo "</pre>";
 }
 ```
@@ -181,7 +181,7 @@ try {
   print_r($response);
   echo '</pre>';
 } catch (ApiException $e) {
-  echo 'Caught exception!<br/>';
+  echo 'Caught exception!<br>';
   exit();
 }
 ```
@@ -190,11 +190,11 @@ That's it!
 
 
 
-<br/>
+<br>
 
 ---
 
-<br/>
+<br>
 
 ## Ask the community
 

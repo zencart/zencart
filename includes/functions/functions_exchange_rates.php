@@ -151,8 +151,8 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 
 
   function doCurlCurrencyRequest($method, $url, $vars = '') {
-    //echo '-----------------<br />';
-    //echo 'URL: ' . $url . ' VARS: ' . $vars . '<br />';
+    //echo '-----------------<br>';
+    //echo 'URL: ' . $url . ' VARS: ' . $vars . '<br>';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -180,8 +180,8 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
       global $messageStack;
       if (is_object($messageStack)) $messageStack->add_session('cURL communication ERROR: ' . $error, 'error');
     }
-    //echo 'INFO: <pre>'; print_r($info); echo '</pre><br />';
-    //echo 'ERROR: ' . $error . '<br />';
+    //echo 'INFO: <pre>'; print_r($info); echo '</pre><br>';
+    //echo 'ERROR: ' . $error . '<br>';
     //print_r($data) ;
 
     if ($data != '') {

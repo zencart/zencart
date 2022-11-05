@@ -23,7 +23,7 @@ if ($new_currency == false || isset($_GET['language'])) $new_currency = (USE_DEF
 
 // Final check -- if selected currency is bad and the "default" is bad, default to the first-found currency in order of exch rate.
 if ($new_currency == false) $new_currency = zen_currency_exists(DEFAULT_CURRENCY, true);
-//echo '<br />NEW = ' . $new_currency . '<br />';
+//echo '<br>NEW = ' . $new_currency . '<br>';
 
 // Now apply currency update
 if (

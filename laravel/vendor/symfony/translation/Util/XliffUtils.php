@@ -101,11 +101,11 @@ class XliffUtils
             });
             $schema = '<?xml version="1.0" encoding="utf-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:include schemaLocation="file:///'.str_replace('\\', '/', $tmpfile).'" />
+  <xsd:include schemaLocation="file:///'.str_replace('\\', '/', $tmpfile).'"/>
 </xsd:schema>';
             file_put_contents($tmpfile, '<?xml version="1.0" encoding="utf-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:element name="test" type="testType" />
+  <xsd:element name="test" type="testType"/>
   <xsd:complexType name="testType"/>
 </xsd:schema>');
         }

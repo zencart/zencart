@@ -479,7 +479,7 @@ systemChecks:
         parameters:
           - checkType: configDescription
             fieldName: DEFINE_BREADCRUMB_STATUS
-            expectedResult: 'Enable the Breadcrumb Trail Links?<br />0= OFF<br />1= ON<br />2= Off for Home Page Only'
+            expectedResult: 'Enable the Breadcrumb Trail Links?<br>0= OFF<br>1= ON<br>2= Off for Home Page Only'
           - checkType: configValue
             fieldName: USE_SPLIT_LOGIN_MODE
             expectedResult: 'Use split-login page'
@@ -542,7 +542,7 @@ systemChecks:
             expectedResult: 'Automatically check to see if a new version of Zen Cart is available. Enabling this can sometimes slow down the loading of Admin pages. (Displayed on main Index page after login, and Server Info page.)'
           - checkType: configValue
             fieldName: SHOW_SHOPPING_CART_BOX_STATUS
-            expectedResult: 'Shopping Cart Shows<br />0= Always<br />1= Only when full<br />2= Only when full but not when viewing the Shopping Cart'
+            expectedResult: 'Shopping Cart Shows<br>0= Always<br>1= Only when full<br>2= Only when full but not when viewing the Shopping Cart'
 
   checkDBVersion126:
     runLevel: dbVersion

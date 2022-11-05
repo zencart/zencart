@@ -1,11 +1,11 @@
-# This SQL script upgrades the core Zen Cart database structure from v1.2.6 to v1.2.7
+y# This SQL script upgrades the core Zen Cart database structure from v1.2.6 to v1.2.7
 #
 # $Id: mysql_upgrade_zencart_126_to_127.sql 4243 2006-08-24 10:55:28Z drbyte $
 #
 
 
 ## CONFIGURATION TABLE
-UPDATE configuration SET configuration_description = 'Shopping Cart Shows<br />0= Always<br />1= Only when full<br />2= Only when full but not when viewing the Shopping Cart' where configuration_key = 'SHOW_SHOPPING_CART_BOX_STATUS';
+UPDATE configuration SET configuration_description = 'Shopping Cart Shows<br>0= Always<br>1= Only when full<br>2= Only when full but not when viewing the Shopping Cart' where configuration_key = 'SHOW_SHOPPING_CART_BOX_STATUS';
 UPDATE configuration SET configuration_description = 'Automatically check to see if a new version of Zen Cart is available. Enabling this can sometimes slow down the loading of Admin pages. (Displayed on main Index page after login, and Server Info page.)' where configuration_key = 'SHOW_VERSION_UPDATE_IN_HEADER';
 
 

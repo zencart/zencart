@@ -222,7 +222,7 @@ if ($action == 'preview') {
               <?php
               $message_preview = empty($_POST['message']) ? $_POST['message_html'] : $_POST['message'];
               $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview));
-              $message_preview = str_replace(array('<br>', '<br />'), "<br />\n", $message_preview);
+              $message_preview = str_replace(array('<br>', '<br>'), "<br>\n", $message_preview);
               $message_preview = str_replace('</p>', "</p>\n", $message_preview);
               echo  nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE));
               ?>

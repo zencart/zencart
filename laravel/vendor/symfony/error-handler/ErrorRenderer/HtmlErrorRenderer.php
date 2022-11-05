@@ -273,9 +273,9 @@ class HtmlErrorRenderer implements ErrorRendererInterface
             $code = preg_replace('#^<code.*?>\s*<span.*?>(.*)</span>\s*</code>#s', '\\1', $code);
             // split multiline spans
             $code = preg_replace_callback('#<span ([^>]++)>((?:[^<]*+<br \/>)++[^<]*+)</span>#', function ($m) {
-                return "<span $m[1]>".str_replace('<br />', "</span><br /><span $m[1]>", $m[2]).'</span>';
+                return "<span $m[1]>".str_replace('<br>', "</span><br><span $m[1]>", $m[2]).'</span>';
             }, $code);
-            $content = explode('<br />', $code);
+            $content = explode('<br>', $code);
 
             $lines = [];
             if (0 > $srcContext) {

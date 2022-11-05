@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noodp,notranslate,noimageindex" />
+    <meta charset="UTF-8"/>
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noodp,notranslate,noimageindex"/>
     <title>Welcome to Symfony!</title>
     <style>
         <?php $hue = random_int(0, 360); ?>

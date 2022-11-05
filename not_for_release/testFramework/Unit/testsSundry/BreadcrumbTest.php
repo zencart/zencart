@@ -63,7 +63,7 @@ class BreadcrumbTest extends zcUnitTestCase
         $this->markTestSkipped();
         $expected = '<nav class="breadcrumb">';
         $expected .= '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb" class="crumb">';
-        $expected .= '<link itemprop="url" href="https://zen-cart.com" class="link" />';
+        $expected .= '<link itemprop="url" href="https://zen-cart.com" class="link"/>';
         $expected .= '<span itemprop="title" class="title">Zen Cart</span>';
         $expected .= "</span></nav>\n";
 

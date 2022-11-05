@@ -24,7 +24,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   }
   if (!$_POST) {
     ipn_debug_email('IPN FATAL ERROR :: No POST data available -- Most likely initiated by browser and not PayPal.' . "\n\n\n" . '     *** The rest of this log report can most likely be ignored !! ***' . "\n\n\n\n");
-     //if ($show_all_errors) echo 'No POST data. This is not a real IPN transaction. Any "Undefined" errors below can be ignored ...<br />';
+     //if ($show_all_errors) echo 'No POST data. This is not a real IPN transaction. Any "Undefined" errors below can be ignored ...<br>';
   }
 
 

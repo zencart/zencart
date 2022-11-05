@@ -109,7 +109,7 @@ Tidelift will coordinate the fix and disclosure.
 
 This project exists thanks to all the people who contribute. 
 
-<a href="https://github.com/briannesbitt/Carbon/graphs/contributors" target="_blank"><img src="https://opencollective.com/Carbon/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/briannesbitt/Carbon/graphs/contributors" target="_blank"><img src="https://opencollective.com/Carbon/contributors.svg?width=890&button=false"/></a>
 
 ### Translators
 

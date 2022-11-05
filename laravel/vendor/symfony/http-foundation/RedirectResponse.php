@@ -92,8 +92,8 @@ class RedirectResponse extends Response
             sprintf('<!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="refresh" content="0;url=\'%1$s\'" />
+        <meta charset="UTF-8"/>
+        <meta http-equiv="refresh" content="0;url=\'%1$s\'"/>
 
         <title>Redirecting to %1$s</title>
     </head>
