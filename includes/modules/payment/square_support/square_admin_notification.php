@@ -40,7 +40,7 @@ if (!empty($transaction) && $transaction->getId()) {
     $outputSquare .= '<tr><td class="main">' . "\n";
     $outputSquare .= 'Reference: ' . "\n";
     $outputSquare .= '</td><td class="main">' . "\n";
-    $outputSquare .= zen_output_string_protected($transaction->getReferenceId()) . "\n";
+    $outputSquare .= zen_output_string_protected($transaction->getReferenceId() ?? ' ') . "\n";
     $outputSquare .= '</td></tr>' . "\n";
 
     $outputSquare .= '<tr><td class="main">' . "\n";
