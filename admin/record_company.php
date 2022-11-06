@@ -273,7 +273,7 @@ if (!empty($action)) {
           <td><?php echo $record_company_split->display_count($record_company_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES); ?></td>
           <td class="text-right"><?php echo $record_company_split->display_links($record_company_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
         </tr>
-        <?php if (empty($action)) { ?>
+        <?php if (empty($action) && !empty($aInfo)) { ?>
           <tr>
             <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . '&mID=' . $aInfo->record_company_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
           </tr>

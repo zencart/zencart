@@ -164,7 +164,7 @@ if (!empty($action)) {
           <td><?php echo $media_type_split->display_count($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES); ?></td>
           <td class="text-right"><?php echo $media_type_split->display_links($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
         </tr>
-        <?php if (empty($action)) { ?>
+        <?php if (empty($action) && !empty($mInfo)) { ?>
           <tr>
             <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
           </tr>
