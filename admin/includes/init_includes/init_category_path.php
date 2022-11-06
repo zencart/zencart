@@ -9,8 +9,6 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
-define('TOPMOST_CATEGORY_PARENT_ID', '0');
-
 // calculate category path
 if (isset($_POST['cPath'])) {
     $cPath = $_POST['cPath'];

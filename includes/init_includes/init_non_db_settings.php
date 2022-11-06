@@ -25,6 +25,9 @@ $non_db_settings = [
     //
     'CART_SHIPPING_METHOD_ZIP_REQUIRED' => 'true',  //- Either 'true' or 'false'.  Used by tpl_modules_shipping_estimator.php
 
+    // Shared - Storefront and Admin 
+    'TOPMOST_CATEGORY_PARENT_ID' => 0, 
+    
     // -----
     // Admin settings.
     //
