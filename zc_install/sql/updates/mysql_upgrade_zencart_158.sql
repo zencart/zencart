@@ -232,6 +232,16 @@ ALTER TABLE orders MODIFY COLUMN customers_company varchar(64) default NULL;
 ALTER TABLE orders MODIFY COLUMN delivery_company varchar(64) default NULL;
 ALTER TABLE orders MODIFY COLUMN billing_company varchar(64) default NULL;
 
+## DROP commands which did not work in prior releases
+## This will need to be done YET AGAIN in the next version upgrade script
+## to catch upgraders who used the initial 1.5.8 upgrade script.
+## Root cause fix: PR #5342
+## Upgraders using 1.5.8a and later will get this fix
+ALTER TABLE customers_basket DROP final_price;
+ALTER TABLE ezpages DROP languages_id;
+ALTER TABLE ezpages DROP pages_title;
+ALTER TABLE ezpages DROP pages_html_text;
+
 
 #############
 ### Added to correct storepickup tax basis description
