@@ -617,7 +617,7 @@ function zen_get_products_manufacturers_image($product_id)
 
     $product_query = "SELECT m.manufacturers_image
                       FROM " . TABLE_PRODUCTS . " p
-                      INNER JOIN " . TABLE_MANUFACTURERS . " m ON manufacturers_id
+                      INNER JOIN " . TABLE_MANUFACTURERS . " m USING (manufacturers_id)
                       WHERE p.products_id = " . (int)$product_id;
 
     $product = $db->Execute($product_query, 1);
