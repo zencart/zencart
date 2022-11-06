@@ -99,15 +99,16 @@ switch ($_GET['action']) {
             </tr>
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent">
-                  <?php echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"'); ?>
-                  <?php
-                  $options_values = $db->Execute("SELECT products_options_id, products_options_name
-                                                  FROM " . TABLE_PRODUCTS_OPTIONS . "
-                                                  WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                                                  AND products_options_name != ''
-                                                  AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-                                                  AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
-                                                  ORDER BY products_options_name");
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
+                  //filter the dropdown to only show Option Names that have Option Values defined
+                  $options_values = $db->Execute("SELECT DISTINCT po.products_options_id, po.products_options_name
+                                                  FROM " . TABLE_PRODUCTS_OPTIONS . " po INNER JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " povtpo
+                                                  ON po.products_options_id = povtpo.products_options_id
+                                                  WHERE po.language_id = " . (int)$_SESSION['languages_id'] . "
+                                                  AND po.products_options_name != ''
+                                                  AND po.products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
+                                                  AND po.products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
+                                                  ORDER BY po.products_options_name");
                   $optionsValuesArray = array();
                   foreach ($options_values as $options_value) {
                     $optionsValuesArray[] = array(
