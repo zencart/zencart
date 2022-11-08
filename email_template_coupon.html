@@ -1,0 +1,46 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=$CHARSET"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<base href="$BASE_HREF"/>
+
+<style>
+$EMAIL_COMMON_CSS
+</style>
+
+</head>
+
+<body id="coupon">
+<div class="holder">
+
+  <!-- Header Section -->
+  <div class="header">
+    <img src="$EMAIL_LOGO_FILE" alt="$EMAIL_LOGO_ALT_TEXT" title="$EMAIL_LOGO_ALT_TEXT" width="$EMAIL_LOGO_WIDTH" height="$EMAIL_LOGO_HEIGHT" border="0"/>
+    $EXTRA_HEADER_INFO
+  </div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <div class="content-line">$EMAIL_SALUTATION $EMAIL_FIRST_NAME $EMAIL_LAST_NAME,</div>
+    <div class="content-line">$EMAIL_MESSAGE_HTML</div>
+    <div class="content-line">$COUPON_TEXT_TO_REDEEM</div>
+    <div class="content-line">$COUPON_TEXT_VOUCHER_IS <span class="coupon-code">$COUPON_CODE</span> -
+    <span class="coupon-desc">$COUPON_DESCRIPTION</span>
+  </div>
+  <div class="content-line">$COUPON_TEXT_REMEMBER</div>
+  <div class="content-line">$COUPON_REDEEM_STORENAME_URL</div>
+  </div>
+
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <div class="copyright">$EMAIL_FOOTER_COPYRIGHT</div>
+  </div>
+
+</div>
+<div class="disclaimer">
+  <div class="disclaimer1">$EMAIL_DISCLAIMER</div>
+  <div class="disclaimer2">$EMAIL_SPAM_DISCLAIMER</div>
+</div>
+</body>
+</html>
