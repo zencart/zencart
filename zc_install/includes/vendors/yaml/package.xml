@@ -23,14 +23,14 @@
  <notes>-</notes>
  <contents>
    <dir name="/">
-     <file name="SF_README.markdown" role="doc" />
-     <file name="SF_LICENSE" role="doc" />
+     <file name="SF_README.markdown" role="doc"/>
+     <file name="SF_LICENSE" role="doc"/>
 
      <dir name="lib">
-       <file name="sfYaml.php" role="php" />
-       <file name="sfYamlDumper.php" role="php" />
-       <file name="sfYamlInline.php" role="php" />
-       <file name="sfYamlParser.php" role="php" />
+       <file name="sfYaml.php" role="php"/>
+       <file name="sfYamlDumper.php" role="php"/>
+       <file name="sfYamlInline.php" role="php"/>
+       <file name="sfYamlParser.php" role="php"/>
      </dir>
    </dir>
  </contents>
@@ -48,10 +48,10 @@
 
  <phprelease>
    <filelist>
-     <install as="SymfonyComponents/YAML/sfYaml.php" name="lib/sfYaml.php" />
-     <install as="SymfonyComponents/YAML/sfYamlDumper.php" name="lib/sfYamlDumper.php" />
-     <install as="SymfonyComponents/YAML/sfYamlInline.php" name="lib/sfYamlInline.php" />
-     <install as="SymfonyComponents/YAML/sfYamlParser.php" name="lib/sfYamlParser.php" />
+     <install as="SymfonyComponents/YAML/sfYaml.php" name="lib/sfYaml.php"/>
+     <install as="SymfonyComponents/YAML/sfYamlDumper.php" name="lib/sfYamlDumper.php"/>
+     <install as="SymfonyComponents/YAML/sfYamlInline.php" name="lib/sfYamlInline.php"/>
+     <install as="SymfonyComponents/YAML/sfYamlParser.php" name="lib/sfYamlParser.php"/>
    </filelist>
  </phprelease>
 

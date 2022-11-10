@@ -5,7 +5,7 @@
 
 
 ## CONFIGURATION TABLE
-UPDATE configuration SET configuration_description = 'Shopping Cart Shows<br />0= Always<br />1= Only when full<br />2= Only when full but not when viewing the Shopping Cart' where configuration_key = 'SHOW_SHOPPING_CART_BOX_STATUS';
+UPDATE configuration SET configuration_description = 'Shopping Cart Shows<br>0= Always<br>1= Only when full<br>2= Only when full but not when viewing the Shopping Cart' where configuration_key = 'SHOW_SHOPPING_CART_BOX_STATUS';
 UPDATE configuration SET configuration_description = 'Automatically check to see if a new version of Zen Cart is available. Enabling this can sometimes slow down the loading of Admin pages. (Displayed on main Index page after login, and Server Info page.)' where configuration_key = 'SHOW_VERSION_UPDATE_IN_HEADER';
 
 

@@ -33,9 +33,9 @@
 
 
 ## CONFIGURATION TABLE
-UPDATE configuration set configuration_description = 'Enable the Breadcrumb Trail Links?<br />0= OFF<br />1= ON<br />2= Off for Home Page Only', set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\'), ' WHERE configuration_key = 'DEFINE_BREADCRUMB_STATUS';
-UPDATE configuration set configuration_description = 'Categories/Products Display Sort Order<br />0= Categories/Products Sort Order/Name<br />1= Categories/Products Name<br />2= Products Model<br />3= Products Qty+, Products Name<br />4= Products Qty-, Products Name<br />5= Products Price+, Products Name<br />6= Products Price-, Products Name' WHERE configuration_key = 'CATEGORIES_PRODUCTS_SORT_ORDER';
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Use split-login page', 'USE_SPLIT_LOGIN_MODE', 'False', 'The login page can be displayed in two modes: Split or Vertical.<br />In Split mode, the create-account options are accessed by clicking a button to get to the create-account page.  In Vertical mode, the create-account input fields are all displayed inline, below the login field, making one less click for the customer to create their account.<br />Default: False', '19', '121', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
+UPDATE configuration set configuration_description = 'Enable the Breadcrumb Trail Links?<br>0= OFF<br>1= ON<br>2= Off for Home Page Only', set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\'), ' WHERE configuration_key = 'DEFINE_BREADCRUMB_STATUS';
+UPDATE configuration set configuration_description = 'Categories/Products Display Sort Order<br>0= Categories/Products Sort Order/Name<br>1= Categories/Products Name<br>2= Products Model<br>3= Products Qty+, Products Name<br>4= Products Qty-, Products Name<br>5= Products Price+, Products Name<br>6= Products Price-, Products Name' WHERE configuration_key = 'CATEGORIES_PRODUCTS_SORT_ORDER';
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Use split-login page', 'USE_SPLIT_LOGIN_MODE', 'False', 'The login page can be displayed in two modes: Split or Vertical.<br>In Split mode, the create-account options are accessed by clicking a button to get to the create-account page.  In Vertical mode, the create-account input fields are all displayed inline, below the login field, making one less click for the customer to create their account.<br>Default: False', '19', '121', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 
 ## PP EC
 ALTER TABLE customers ADD customers_paypal_payerid VARCHAR(20) NOT NULL default '' AFTER customers_referral;
@@ -50,7 +50,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 #this one was missed in the 1.3.6 fresh-installs (was okay for upgrades):
 # it will likely trigger a warning because upgrades to 1.3.6 will already have this.
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Define Page-Not-Found Status', 'DEFINE_PAGE_NOT_FOUND_STATUS', '1', 'Enable the Defined Page-Not-Found Text from define-pages?<br />0= Define Text OFF<br />1= Define Text ON', '25', '67', now(), now(), NULL, 'zen_cfg_select_option(array(\'0\', \'1\'),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) values ('Define Page-Not-Found Status', 'DEFINE_PAGE_NOT_FOUND_STATUS', '1', 'Enable the Defined Page-Not-Found Text from define-pages?<br>0= Define Text OFF<br>1= Define Text ON', '25', '67', now(), now(), NULL, 'zen_cfg_select_option(array(\'0\', \'1\'),');
 
 
 #############
