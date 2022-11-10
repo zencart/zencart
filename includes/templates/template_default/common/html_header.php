@@ -30,29 +30,29 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
 <head>
-<meta charset="<?php echo CHARSET; ?>" />
+<meta charset="<?php echo CHARSET; ?>"/>
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://code.jquery.com">
 <title><?php echo META_TAG_TITLE; ?></title>
-<meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
-<meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
-<meta http-equiv="imagetoolbar" content="no" />
-<meta name="author" content="<?php echo STORE_NAME ?>" />
-<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce" />
+<meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>"/>
+<meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>"/>
+<meta http-equiv="imagetoolbar" content="no"/>
+<meta name="author" content="<?php echo STORE_NAME ?>"/>
+<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce"/>
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
-<meta name="robots" content="noindex, nofollow" />
+<meta name="robots" content="noindex, nofollow"/>
 <?php } ?>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
 
 <?php if (defined('FAVICON')) { ?>
-<link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
-<link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
+<link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon"/>
+<link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon"/>
 <?php } //endif FAVICON ?>
 
-<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ); ?>" />
+<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ); ?>"/>
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
-<link rel="canonical" href="<?php echo $canonicalLink; ?>" />
+<link rel="canonical" href="<?php echo $canonicalLink; ?>"/>
 <?php } ?>
 <?php
 // BOF hreflang for multilingual sites
@@ -61,7 +61,7 @@ if (!isset($lng) || (isset($lng) && !is_object($lng))) {
 }
 if (count($lng->catalog_languages) > 1) {
   foreach($lng->catalog_languages as $key => $value) {
-    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '"/>' . "\n";
   }
 }
 // EOF hreflang for multilingual sites
@@ -73,7 +73,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^style/', '.css');
   foreach($directory_array as $key => $value) {
-    echo '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
+    echo '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '"/>'."\n";
   }
 /**
  * load stylesheets on a per-page/per-language/per-product/per-manufacturer/per-category basis. Concept by Juxi Zoza.
@@ -95,7 +95,7 @@ if (count($lng->catalog_languages) > 1) {
   foreach($sheets_array as $key => $value) {
     //echo "<!--looking for: $value-->\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'"/>'."\n";
   }
 
 /**
@@ -106,9 +106,9 @@ if (count($lng->catalog_languages) > 1) {
   foreach($tmp_cats as $val) {
     $value .= $val;
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/c_' . $value . '_children.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'"/>'."\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $_SESSION['language'] . '_c_' . $value . '_children.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'"/>'."\n";
     $value .= '_';
   }
 
@@ -118,7 +118,7 @@ if (count($lng->catalog_languages) > 1) {
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
   sort($directory_array);
   foreach($directory_array as $key => $value) {
-    echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
+    echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '"/>'."\n";
   }
 
 /** CDN for jQuery core **/

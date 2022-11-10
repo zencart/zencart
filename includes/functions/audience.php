@@ -83,7 +83,7 @@
       if ($selected_entry == $query_list['query_name']) {
       $query_name   = $query_list['query_name'];
         $query_string = parsed_query_string($query_list['query_string']);
-//echo 'GET_AUD_EM_ADDR_QRY:<br />query_name='.$query_name.'<br />query_string='.$query_string;
+//echo 'GET_AUD_EM_ADDR_QRY:<br>query_name='.$query_name.'<br>query_string='.$query_string;
       }
   }
   //if no match found against queries listed in database, then $selected_entry must be an email address
