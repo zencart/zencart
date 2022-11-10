@@ -48,7 +48,7 @@ class sniffer extends base {
     $sql = "show fields from " . $table_name;
     $result = $db->Execute($sql);
     while (!$result->EOF) {
-      // echo 'fields found='.$result->fields['Field'].'<br />';
+      // echo 'fields found='.$result->fields['Field'].'<br>';
       if  ($result->fields['Field'] == $field_name) {
         return true; // exists, so return with no error
       }
@@ -62,7 +62,7 @@ class sniffer extends base {
     $sql = "show fields from " . $table_name;
     $result = $db->Execute($sql);
     while (!$result->EOF) {
-      // echo 'fields found='.$result->fields['Field'].'<br />';
+      // echo 'fields found='.$result->fields['Field'].'<br>';
       if  ($result->fields['Field'] == $field_name) {
         if  ($result->fields['Type'] == $field_type) {
           return true; // exists and matches required type, so return with no error

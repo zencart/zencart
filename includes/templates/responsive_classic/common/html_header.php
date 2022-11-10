@@ -209,7 +209,7 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
 }
 ?>
   <script>document.documentElement.className = 'no-fouc';</script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous"/>
 <?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 2 of 2) ?>
 <?php
   $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);

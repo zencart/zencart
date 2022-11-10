@@ -623,8 +623,8 @@ function ipn_create_order_history_array($insert_id)
     if ($errors != '') {
       ipn_debug_email('CURL errors: ' . $errors, print_r($commInfo, true));
     }
-    //echo 'INFO: <pre>'; print_r($commInfo); echo '</pre><br />';
-    //echo 'ERROR: ' . $errors . '<br />';
+    //echo 'INFO: <pre>'; print_r($commInfo); echo '</pre><br>';
+    //echo 'ERROR: ' . $errors . '<br>';
     //print_r($response) ;
 
     if (($response == '' || $errors != '') && ($url['scheme'] != 'http')) {
