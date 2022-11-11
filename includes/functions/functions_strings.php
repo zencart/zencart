@@ -15,6 +15,10 @@
  */
 function zen_output_string($string, $translate = false, $protected = false): string
 {
+    if (is_null($string) === true) {
+        return '';
+    }
+
     if ($protected === true) {
         $double_encode = (IS_ADMIN_FLAG ? FALSE : TRUE);
         return htmlspecialchars($string, ENT_COMPAT, CHARSET, $double_encode);
