@@ -53,3 +53,6 @@ CKEDITOR.editorConfig = function(config) {
 
 	config.skin = 'moono'; // kama, moono, moono-lisa
 };
+CKEDITOR.on( 'instanceReady', function( ev ) {
+    ev.editor.dataProcessor.writer.selfClosingEnd = '>';
+});
