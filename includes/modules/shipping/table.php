@@ -163,6 +163,7 @@ class table extends base {
       }
     }
 
+    $show_box_weight = ''; 
     if (MODULE_SHIPPING_TABLE_MODE == 'weight') {
       $shipping = $shipping * $shipping_num_boxes;
       // show boxes if weight
