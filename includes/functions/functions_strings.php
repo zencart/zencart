@@ -86,6 +86,9 @@ function zen_not_null($value)
  */
 function zen_break_string($string, $len, $break_char = '-')
 {
+    if (is_null($string) === true) {
+        return '';
+    }
     $l = 0;
     $output = '';
     for ($i = 0, $n = strlen($string); $i < $n; $i++) {
@@ -115,6 +118,9 @@ function zen_break_string($string, $len, $break_char = '-')
  */
 function zen_trunc_string($str = "", $len = 150, $more = 'true')
 {
+    if (is_null($str) === true) {
+        return '';
+    }
     if ($str == "") return $str;
     if (is_array($str)) return $str;
     $str = trim($str);
