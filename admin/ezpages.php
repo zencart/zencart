@@ -505,6 +505,13 @@ if (!empty($action)) {
         </div>
         <?php echo '</form>'; ?>
       <?php } else { ?>
+<?php
+        // Additional notification, allowing admin-observers to include additional legend icons
+        $extra_legends = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_MENU_LEGEND', [], $extra_legends);
+?>
+
+        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_WARNING_MULTIPLE_SETTINGS, 10, 10) . ' ' . TEXT_WARNING_MULTIPLE_SETTINGS .  $extra_legends; ?></div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover">
@@ -773,7 +780,7 @@ if (!empty($action)) {
                   }
 
                   if ($zv_link_method_cnt > 1) {
-                    $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) . ' &nbsp;' . TEXT_WARNING_MULTIPLE_SETTINGS);
+                    $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) . ' &nbsp;' . '<b>' . TEXT_WARNING_MULTIPLE_SETTINGS . '</b>');
                   }
 
                   $contents[] = array('text' => TEXT_ALT_URL . (empty($ezInfo->alt_url) ? '&nbsp;' . TEXT_NONE : '<br>' . $ezInfo->alt_url));
