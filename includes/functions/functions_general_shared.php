@@ -164,7 +164,7 @@ function zen_get_all_get_params($exclude_array = array())
         foreach ($_GET as $key => $value) {
             if (!in_array($key, $exclude_array)) {
                 if (!is_array($value)) {
-                    if (strlen($value) > 0) {
+                    if (!empty($value)) {
                         $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
                     }
                 } else {
@@ -203,7 +203,7 @@ function zen_post_all_get_params($exclude_array = array(), $hidden = true, $para
         foreach ($_GET as $key => $value) {
             if (!in_array($key, $exclude_array)) {
                 if (!is_array($value)) {
-                    if (strlen($value) > 0) {
+                    if (!empty($value)) {
                         if ($hidden) {
                             $fields .= zen_draw_hidden_field($key, $value);
                         } else {
