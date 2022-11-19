@@ -1,9 +1,9 @@
 <?php
 $define = [
+    'EMAIL_LOGO_ALT_TITLE_TEXT' => 'Zen Cart! The Art of E-commerce',
     'EMAIL_LOGO_FILENAME' => 'header.jpg',
     'EMAIL_LOGO_WIDTH' => '550',
     'EMAIL_LOGO_HEIGHT' => '110',
-    'EMAIL_LOGO_ALT_TITLE_TEXT' => 'Zen Cart! The Art of E-commerce',
     'EMAIL_EXTRA_HEADER_INFO' => '',
     'OFFICE_FROM' => '<strong>From:</strong>',
     'OFFICE_EMAIL' => '<strong>Mail:</strong>',
