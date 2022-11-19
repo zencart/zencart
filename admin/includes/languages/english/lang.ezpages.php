@@ -60,7 +60,7 @@ $define = [
     'TEXT_SORT_PAGE_TITLE' => 'Page Title',
     'TEXT_SORT_PAGE_ID_TITLE' => 'Page ID, Title',
     'TEXT_PAGE_TITLE' => 'Title:',
-    'TEXT_WARNING_MULTIPLE_SETTINGS' => '<strong>WARNING: Multiple Link Definition</strong>',
+    'TEXT_WARNING_MULTIPLE_SETTINGS' => 'WARNING: Multiple Link Definition',
 ];
 
 return $define;
