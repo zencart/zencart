@@ -14,7 +14,7 @@ $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (fi
 $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists('../docs/index.html') ? '../docs/index.html' : '');
 ?>
 <!DOCTYPE html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?php echo defined('HTML_PARAMS') ? HTML_PARAMS : '';?>>
   <head>
     <title>System Setup Required</title>
     <meta content="utf-8">
