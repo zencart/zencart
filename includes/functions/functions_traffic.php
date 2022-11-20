@@ -29,7 +29,7 @@ function zen_get_ip_address() {
             $ip = $_SERVER['HTTP_FORWARDED_FOR'];
         } elseif (isset($_SERVER['HTTP_FORWARDED'])) {
             $ip = $_SERVER['HTTP_FORWARDED'];
-        } else {
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
     }
