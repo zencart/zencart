@@ -19,7 +19,7 @@ class cc_validation extends base {
   public $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
 
   function validate($number, $expiry_m, $expiry_y, $start_m = null, $start_y = null) {
-    $this->cc_number = preg_replace('/[^0-9]/', '', $number);
+    $this->cc_number = preg_replace('/[^0-9]/', '', ($number ?? ''));
     // NOTE: We check Solo before Maestro, and Maestro/Switch *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
     if (preg_match('/^(6334[5-9][0-9]|6767[0-9]{2})[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && CC_ENABLED_SOLO=='1') {
       $this->cc_type = "Solo"; // is also a Maestro product
