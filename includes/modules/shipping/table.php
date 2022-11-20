@@ -152,6 +152,7 @@ class table extends base {
 
     $table_cost = preg_split("/[:,]/" , MODULE_SHIPPING_TABLE_COST);
     $size = sizeof($table_cost);
+    $shipping = 0; 
     for ($i=0, $n=$size; $i<$n; $i+=2) {
       if (round($order_total,9) <= $table_cost[$i]) {
         if (strstr($table_cost[$i+1], '%')) {
