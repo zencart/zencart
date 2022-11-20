@@ -36,13 +36,18 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         }
 
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
-        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $this->currentPage  . '(.*)\.php$~i');
+        if (defined('NO_LANGUAGE_SUBSTRING_MATCH') && in_array($this->currentPage, NO_LANGUAGE_SUBSTRING_MATCH)) {
+            $files_to_match = $this->currentPage;
+        } else {
+            $files_to_match = $this->currentPage . '(.*)';
+        }
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $files_to_match  . '\.php$~i');
         foreach ($files as $file) {
             $this->loadFileDefineFile($directory . '/' . $file);
         }
 
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
-        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $this->currentPage . '(.*)\.php$~i');
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $files_to_match  . '\.php$~i');
         foreach ($files as $file) {
             $this->loadFileDefineFile($directory . '/' . $file);
         }

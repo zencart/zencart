@@ -14,7 +14,7 @@
  * @version $Id: lat9 2022 May 06 New in v1.5.8-alpha $
  */
 // -----
-// Idenfify whether the link to the 'about_us' page is included in the "Information" sidebox.
+// Identify whether the link to the 'about_us' page is included in the "Information" sidebox.
 //
 // true .... Show in the sidebox (default)
 // false ... Don't show in the sidebox
@@ -38,3 +38,8 @@
 // false ..... The zcDate debug is disabled (the default).
 //
 //$zen_date_debug = false;
+
+// Identify if some pages should not load matching language file substrings
+// In this example, loading page "video" will not load "video_info" files
+// define('NO_LANGUAGE_SUBSTRING_MATCH', ['video']);
+
