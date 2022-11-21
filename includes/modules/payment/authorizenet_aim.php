@@ -260,7 +260,7 @@ class authorizenet_aim extends base {
     include(DIR_WS_CLASSES . 'cc_validation.php');
 
     $cc_validation = new cc_validation();
-    $result = $cc_validation->validate($_POST['authorizenet_aim_cc_number'], $_POST['authorizenet_aim_cc_expires_month'], $_POST['authorizenet_aim_cc_expires_year'], $_POST['authorizenet_aim_cc_cvv']);
+    $result = $cc_validation->validate(($_POST['authorizenet_aim_cc_number'] ?? ''), ($_POST['authorizenet_aim_cc_expires_month'] ?? ''), ($_POST['authorizenet_aim_cc_expires_year'] ?? ''), ($_POST['authorizenet_aim_cc_cvv'] ?? ''));
     $error = '';
     switch ($result) {
       case -1:
