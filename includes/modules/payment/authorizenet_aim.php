@@ -485,7 +485,7 @@ class authorizenet_aim extends base {
     if ($response_code == '4'){
         $this->order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REVIEW_ORDER_STATUS_ID;
     }
-    if ($response[88] != '') {
+    if (!empty($response[88])) {
       $_SESSION['payment_method_messages'] = $response[88];
     }
     $order->info['cc_type'] = $response[51];
@@ -644,10 +644,10 @@ class authorizenet_aim extends base {
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
     foreach($submit_data as $key => $value) {
-      if ($key != 'x_delim_char' && $key != 'x_encap_char') {
+      if ($key != 'x_delim_char' && $key != 'x_encap_char' && !empty($value)) {
         $value = str_replace(array($this->delimiter, $this->encapChar,'"',"'",'&amp;','&', '='), '', $value);
       }
-      $data .= $key . '=' . urlencode($value) . '&';
+      $data .= $key . '=' . (!empty($value) ? urlencode($value) : '') . '&';
     }
     // Remove the last "&" from the string
     $data = substr($data, 0, -1);
