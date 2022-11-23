@@ -829,10 +829,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               if ($check_page->RecordCount() > $max_results) {
                 $check_count = 0;
                 foreach ($check_page as $item) {
+                  $check_count++;
                   if ((int)$item['products_id'] === (int)$_GET['pID']) {
                     break;
                   }
-                  $check_count++;
                 }
                 $_GET['page'] = round((($check_count / $max_results) + (fmod_round($check_count, $max_results) != 0 ? .5 : 0)));
                 $page = $_GET['page'];
