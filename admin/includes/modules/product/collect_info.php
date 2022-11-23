@@ -54,10 +54,14 @@ if (isset($_GET['pID']) && empty($_POST)) {
                            AND pd.language_id = " . (int)$_SESSION['languages_id']);
 
   $pInfo->updateObjectInfo($product->fields);
+  $pInfo->product_type = $pInfo->products_type;
 } elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
   if (isset($_GET['pID'])) { 
      $pInfo->products_id = (int)$_GET['pID']; 
+  }
+  if (isset($pInfo->cPath)) {
+      $pInfo->master_categories_id = $pInfo->cPath;
   }
   $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
   $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';
