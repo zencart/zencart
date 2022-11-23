@@ -112,7 +112,7 @@ use PHPMailer\PHPMailer\SMTP;
       // Build the email based on whether customer has selected HTML or TEXT, and whether we have supplied HTML or TEXT-only components
       // special handling for XML content
       if ($email_text == '') {
-        $email_text = str_replace(array('<br>','<br>'), "<br>\n", $block['EMAIL_MESSAGE_HTML']);
+        $email_text = str_replace(array('<br>','<br />'), "<br>\n", $block['EMAIL_MESSAGE_HTML']);
         $email_text = str_replace('</p>', "</p>\n", $email_text);
         $email_text = ($module != 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
       } else if ($module != 'xml_record') {
