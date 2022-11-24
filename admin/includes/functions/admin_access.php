@@ -835,7 +835,9 @@ function zen_get_menu_titles()
     $sql = "SELECT menu_key, language_key FROM " . TABLE_ADMIN_MENUS . " ORDER BY sort_order";
     $result = $db->Execute($sql);
     foreach ($result as $row) {
-        $retVal[$row['menu_key']] = constant($row['language_key']);
+       if (defined($row['language_key'])) {
+          $retVal[$row['menu_key']] = constant($row['language_key']);
+       }
     }
     $retVal['_productTypes'] = BOX_HEADING_PRODUCT_TYPES;
     return $retVal;
