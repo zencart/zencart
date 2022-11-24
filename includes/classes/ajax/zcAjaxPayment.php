@@ -6,6 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
  */
+use Zencart\LanguageLoader\LanguageLoaderFactory;
 class zcAjaxPayment extends base
 {
   /**
@@ -174,7 +175,11 @@ class zcAjaxPayment extends base
     }
 
     $current_page_base = FILENAME_CHECKOUT_CONFIRMATION;
-    require_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'].'.php', 'false'));
+    $languageLoaderFactory = new LanguageLoaderFactory();
+    $languageLoader = $languageLoaderFactory->make('catalog', [], $current_page, $template_dir);
+    $languageLoader->loadInitialLanguageDefines();
+    $languageLoader->finalizeLanguageDefines();
+
     require_once (DIR_WS_MODULES.zen_get_module_directory ('require_languages.php'));
     require_once (DIR_WS_MODULES.zen_get_module_directory ('meta_tags.php'));
     $breadcrumb->add (NAVBAR_TITLE_1, zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
