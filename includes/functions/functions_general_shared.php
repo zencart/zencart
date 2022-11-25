@@ -412,3 +412,16 @@ function zen_get_admin_name($id = null)
     $result = $db->Execute($sql);
     return $result->RecordCount() ? $result->fields['admin_name'] : null;
 }
+
+function zen_load_extra_language_file()
+{
+    global $define;
+    if (empty($define) || (!is_array($define))) {
+        return;
+    }
+    foreach ($define as $key => $value) {
+        if (!defined($key)) {
+            define($key, $value);
+        }
+    }
+}
