@@ -10,7 +10,9 @@
 function paypalUSDCheck ($amount) : bool
 {
     global $currencies;
-    
+    if (IS_ADMIN_FLAG) {
+       return true;
+    } 
     // Check if USD is defined as a currency
 
     if ($currencies->is_set('USD')) {
