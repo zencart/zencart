@@ -358,7 +358,7 @@ if (!empty($action)) {
       }
 
       $prev_sales = $db->Execute("SELECT sale_categories_all
-                                  FROM " . TABLE_SALEMAKER_SALES);
+                                  FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1 AND sale_id != " . (int)$_GET['sID']);
       foreach ($prev_sales as $prev_sale) {
         $prev_categories = explode(',', $prev_sale['sale_categories_all']);
         foreach ($prev_categories as $key => $value) {
