@@ -679,13 +679,31 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER) ?>" target="_blank"><?php echo IMAGE_OPTION_NAMES; ?></a></li>
               <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER) ?>" target="_blank"><?php echo IMAGE_OPTION_VALUES; ?></a></li>
               <?php
-              $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id);
+              // -----
+              // Enable an observer to provide additional-action link/text pairs, which are output here.
+              //
+              $additional_actions = [];
+              $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id, $additional_actions);
+              foreach ($additional_actions as $next_action) {
+              ?>
+                <li role="presentation"><a role="menuitem" href="<?php echo $next_action['link']; ?>"><?php echo $next_action['text']; ?></a></li>
+              <?php
+              }
               ?>
               <?php if ($products_filter !== 0 && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
                 <?php
-                $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_SUBMENU', $zc_products, $action, $products_filter, $current_category_id);
+                // -----
+                // Enable an observer to provide additional-action link/text pairs, which are output here.
+                //
+                $additional_actions = [];
+                $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_SUBMENU', $zc_products, $action, $products_filter, $current_category_id, $additional_actions);
+                foreach ($additional_actions as $next_action) {
+                ?>
+                  <li role="presentation"><a role="menuitem" href="<?php echo $next_action['link']; ?>"><?php echo $next_action['text']; ?></a></li>
+                <?php
+                }
                 ?>
                 <?php if ($zc_products->get_allow_add_to_cart($products_filter) == "Y") { ?>
                   <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo IMAGE_PRODUCTS_PRICE_MANAGER; ?></a></li>
