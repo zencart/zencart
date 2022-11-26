@@ -18,10 +18,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 $zco_notifier->notify('NOTIFY_INIT_SANITIZE_STARTS');
 
-foreach ($_GET as $getvar) {
-    if (is_array($getvar)) {
+foreach ($_GET as $varname => $varvalue) {
+    if (is_array($varvalue)) {
         $site_array_override = false;
-        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['getvarname' => $getvar], $site_array_override);
+        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $site_array_override);
         if ($site_array_override === false) {
             zen_redirect(zen_href_link(FILENAME_DEFAULT));
         }
