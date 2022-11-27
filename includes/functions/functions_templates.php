@@ -32,6 +32,7 @@ function zen_get_catalog_template_directories($include_template_default = false)
             continue;
         }
         if (file_exists($path . '/template_info.php')) {
+            unset($uses_single_column_layout_settings);
             require $path . '/template_info.php';
             // expects the following variables to be set inside each respective template_info.php file
             $template_info[$tpl_dir_name] = [
@@ -40,6 +41,7 @@ function zen_get_catalog_template_directories($include_template_default = false)
                 'author' => $template_author,
                 'description' => $template_description,
                 'screenshot' => $template_screenshot,
+                'uses_single_column_layout_settings' => !empty($uses_single_column_layout_settings),
             ];
         }
     }
