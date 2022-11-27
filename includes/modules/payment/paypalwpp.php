@@ -2745,6 +2745,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // now try and find the zone_id (state/province code)
     // use the country id above
+    $zone_id = 0;
     if ($check_zone) {
       $sql = "SELECT zone_id
                     FROM " . TABLE_ZONES . "
@@ -2758,8 +2759,6 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if (!$zone->EOF) {
         // grab the id
         $zone_id = $zone->fields['zone_id'];
-      } else {
-        $zone_id = 0;
       }
     }
 
