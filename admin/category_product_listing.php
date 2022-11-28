@@ -306,9 +306,12 @@ if (!empty($action)) {
     case 'attribute_features_copy_to_category':
       break;
     default:
-      $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DEFAULT_ACTION');
-      $action = $_GET['action'] = '';
-      break;
+            $clearAction = true;
+            $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DEFAULT_ACTION', $action, $clearAction);
+            if ($clearAction === true) {
+                $action = $_GET['action'] = '';
+            }
+            unset($clearAction);
   }
 }
 
