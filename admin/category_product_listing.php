@@ -306,9 +306,12 @@ if (!empty($action)) {
     case 'attribute_features_copy_to_category':
       break;
     default:
-      $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DEFAULT_ACTION');
-      $action = $_GET['action'] = '';
-      break;
+        $clearAction = true;
+        $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DEFAULT_ACTION', $action, $clearAction);
+        if ($clearAction === true) {
+            $action = '';
+        }
+        unset($clearAction);
   }
 }
 
@@ -1161,6 +1164,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY_TO . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
             break;
         }
+        $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DEFAULT_INFOBOX', $action, $heading, $contents);
         if (!empty($heading) && !empty($contents)) {
           $box = new box;
           echo '<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">';
