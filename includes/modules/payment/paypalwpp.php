@@ -283,7 +283,7 @@ class paypalwpp extends base {
     require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
     if (paypalUSDCheck($order->info['total']) === false) {
       $this->enabled = false;
-      $this->zcLog('update_status', 'Module disabled because purchase price (' . $order_amount . ') exceeds PayPal-imposed maximum limit of 10,000 USD or equivalent.');
+      $this->zcLog('update_status', 'Module disabled because purchase price (' . $order->info['total']. ') exceeds PayPal-imposed maximum limit of 10,000 USD or equivalent.');
     }
     if ($order->info['total'] == 0) {
       $this->enabled = false;
