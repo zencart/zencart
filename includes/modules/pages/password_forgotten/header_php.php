@@ -29,6 +29,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     $_SESSION['login_attempt'] ++;
   } // END SLAM PREVENTION
 
+  if (empty($_POST['email_address'])) { 
+    $messageStack->add_session('password_forgotten', ENTRY_EMAIL_ADDRESS_ERROR, 'error');
+    zen_redirect(zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'));
+  }
+
   $email_address = zen_db_prepare_input(trim($_POST['email_address']));
 
   $check_customer_query = "SELECT customers_firstname, customers_lastname, customers_password, customers_id
