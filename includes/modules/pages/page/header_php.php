@@ -18,8 +18,8 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_EZPAGE');
 
-$ezpage_id = (int)$_GET['id'];
-if ($ezpage_id == 0) {
+$ezpage_id = (int)($_GET['id'] ?? '0');
+if ($ezpage_id === 0) {
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
 
