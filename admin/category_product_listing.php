@@ -793,7 +793,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             // 3. Any modification of the $extra_ands must include a leading ' AND'
             //
             $extra_select = $extra_from = $extra_joins = $extra_ands = '';
-            $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by);
+            $extra_search_fields = [];
+            $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by, $extra_search_fields);
 
             $products_query_raw = "SELECT DISTINCT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order,
@@ -816,7 +817,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     'pd.products_description',
                     'p.products_id',
                 ];
-                $where .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
+                $where .= zen_build_keyword_where_clause(array_merge($keyword_search_fields, $extra_search_fields), trim($keywords));
             } else {
                 $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON (p2c.products_id = p.products_id) ";
                 $where .= " AND p2c.categories_id=" . (int)$current_category_id;
