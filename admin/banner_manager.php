@@ -241,6 +241,7 @@ if (!empty($action)) {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <!-- body_text //-->
       <?php if ($action == '') { ?>
+        <div class="row"><?php echo sprintf(TEXT_BANNERS_INTRO, zen_href_link(FILENAME_CONFIGURATION,  'gID=19&cID=433')); ?></div>
         <div class="row">
           <table class="table-condensed">
             <tr>

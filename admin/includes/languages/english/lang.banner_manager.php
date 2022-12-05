@@ -14,6 +14,7 @@ $define = [
     'TABLE_HEADING_BANNER_OPEN_NEW_WINDOWS' => 'New Window',
     'TABLE_HEADING_BANNER_ON_SSL' => 'Show SSL',
     'TABLE_HEADING_BANNER_SORT_ORDER' => 'Sort<br>Order',
+    'TEXT_BANNERS_INTRO' => 'Each Banner (text or image) is assigned to a Banner Group along with other Banners, to allow different Banners to be displayed (rotated) in the same position.<br>The position of a Banner Group on the shopfront page is defined in <a href="%s"> Configuration->Layout Settings</a>.<br>You may create a new Banner Group when creating/editing a Banner.<br>Use the Help icon <strong>?</strong> for more details.',
     'TEXT_BANNERS_TITLE' => 'Banner Title:',
     'TEXT_BANNERS_URL' => 'Banner URL:',
     'TEXT_BANNERS_GROUP' => 'Banner Group:',
