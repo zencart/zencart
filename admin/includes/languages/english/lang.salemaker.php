@@ -17,7 +17,6 @@ $define = [
     'TEXT_SALEMAKER_DATE_START' => 'Start Date:',
     'TEXT_SALEMAKER_DATE_END' => 'End Date:',
     'TEXT_SALEMAKER_CATEGORIES' => '<b>Or</b> check the categories to which this sale applies:',
-    'TEXT_SALEMAKER_POPUP' => '<a href="javascript:session_win();"><span class="errorText"><b>Click here for help with Salemaker</b></span></a>',
     'TEXT_SALEMAKER_ENTIRE_CATALOG' => 'Check this box if you want the sale to be applied to <b>all products</b>:',
     'TEXT_SALEMAKER_TOP' => 'Entire catalog',
     'TEXT_INFO_DATE_STATUS_CHANGE' => 'Last Status Change:',

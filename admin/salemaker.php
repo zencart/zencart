@@ -160,17 +160,9 @@ if (!empty($action)) {
       <link rel="stylesheet" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
       <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
       <script>
-        function session_win() {
-            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
-        }
         function popupWindow(url) {
             window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
         }
-<?php /*
-//        function session_win1() {
-//            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
-//        }
-*/?>
         function RowClick(RowValue) {
             for (i = 0; i < document.sale_form.length; i++) {
                 if (document.sale_form.elements[i].type == 'checkbox') {

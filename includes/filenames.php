@@ -149,7 +149,6 @@ define('FILENAME_PROFILES', 'profiles');
 define('FILENAME_REDIRECT', 'redirect');
 define('FILENAME_REVIEWS', 'reviews');
 define('FILENAME_SALEMAKER', 'salemaker');
-define('FILENAME_SALEMAKER_INFO', 'salemaker_info');
 define('FILENAME_SALEMAKER_POPUP', 'salemaker_popup');
 define('FILENAME_SEARCH', 'search');
 define('FILENAME_SEARCH_RESULT', 'search_result');
