@@ -795,6 +795,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
           <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); ?>
           <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
+          <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
           <div class="form-group">
             <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></div>
             <div class="col-sm-6">
