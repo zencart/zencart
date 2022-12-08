@@ -389,15 +389,13 @@ function zen_draw_pulldown_products_having_attributes($field_name, $parameters =
  */
 function zen_draw_pulldown_categories_having_products($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false, $show_full_path = false, $filter_by_option_name = null)
 {
-    global $db, $currencies;
-
     if (!is_array($exclude)) {
         $exclude = [];
     }
 
     $pulldown = new categoryPulldown();
 
-    $pulldown->showID($show_id)->showParent($show_parent)->showFullPath($show_full_path)->exclude($exclude);
+    $pulldown->showID($show_id)->showParent($show_parent)->showFullPath($show_full_path)->exclude($exclude)->includeAttributes($show_full_path);
 
     if ((int) $filter_by_option_name > 0) {
         $pulldown->setOptionFilter((int) $filter_by_option_name);
