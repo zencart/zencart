@@ -470,7 +470,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
         if ($copy_attributes_duplicates_skipped == '1' and $check_duplicate->RecordCount() != 0) {
             $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_SKIPPING, (int)$copy_from['products_attributes_id'], (int)$products_id_to), 'caution');
             // skip it
-            $copy_from();
+            continue;
         }
 
         // New attribute - insert it
