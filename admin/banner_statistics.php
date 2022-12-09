@@ -212,7 +212,7 @@ $opts = array(
       <div class="form-group">
           <?php echo zen_draw_label(TITLE_TYPE, 'type', 'class="control-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_pull_down_menu('type', $type_array, (!empty($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control"'); ?>
+            <?php echo zen_draw_pull_down_menu('type', $type_array, (!empty($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control" id="type"'); ?>
           <noscript><input type="submit" value="GO"></noscript>
         </div>
       </div>
@@ -224,7 +224,7 @@ $opts = array(
           <div class="form-group">
               <?php echo zen_draw_label(TITLE_YEAR, 'year', 'class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control"'); ?>
+                <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control" id="year"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
             </div>
           </div>
@@ -236,14 +236,14 @@ $opts = array(
           <div class="form-group">
               <?php echo zen_draw_label(TITLE_MONTH, 'month','class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('month', $months_array, (isset($_GET['month']) ? (int)$_GET['month'] : date('n')), 'onChange="this.form.submit();" class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('month', $months_array, (isset($_GET['month']) ? (int)$_GET['month'] : date('n')), 'onChange="this.form.submit();" class="form-control" id="month"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TITLE_YEAR, 'year','class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control" id="year"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
             </div>
           </div>
