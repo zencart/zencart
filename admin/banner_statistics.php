@@ -314,7 +314,7 @@ $opts = array(
         </script>
       </div>
 
-<?php if (FALSE) { ?>
+<?php if (FALSE) { //https://github.com/zencart/zencart/issues/5016 ?>
   <div class="banner-statistics-source-data">
     <table caption="<?php echo TABLE_HEADING_SOURCE; ?>">
       <tr class="headingRow dataTableHeadingRow">
