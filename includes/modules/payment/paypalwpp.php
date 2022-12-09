@@ -121,9 +121,9 @@ class paypalwpp extends base {
   protected $reasoncode;
   protected $numitems;
   protected $amt;
-  protected $auth_code;
+  public $auth_code; // used in order class 
   protected $responsedata;
-  protected $transaction_id;
+  public $transaction_id; // used in order class 
   public $ot_merge;     //-Public, since might be referenced by an observer.
   protected $requestPrefix;
   protected $infoPrefix;
