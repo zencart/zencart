@@ -178,7 +178,7 @@ $opts = array(
           });
 
           function showTooltip(x, y, contents) {
-              $('<div id="tooltip">' + contents + '</div>').css({
+              $('<div id="tooltip">' + contents + '<\/div>').css({
                   top: y - 16,
                   left: x + 20
               }).appendTo('body').fadeIn();
