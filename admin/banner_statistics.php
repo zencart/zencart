@@ -297,7 +297,11 @@ $opts = array(
 <?php
   $stats = zen_get_banner_data_daily($banner_id, (isset($_GET['year']) ? (int)$_GET['year'] : ''), (isset($_GET['month']) ? (int)$_GET['month'] : ''));
   $data = array(array('label'=>TEXT_BANNERS_BANNER_VIEWS, 'data'=>$stats[0]), array('label'=>TEXT_BANNERS_BANNER_CLICKS, 'data'=>$stats[1]));
-  $title = sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner->fields['banners_title'], strftime('%B', mktime(0,0,0,(isset($_GET['month']) ? (int)$_GET['month'] : date('n')))), (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')));
+  $title = sprintf(
+      TEXT_BANNERS_DAILY_STATISTICS, $banner->fields['banners_title'],
+      $zcDate->output('%B', mktime(0,0,0,(isset($_GET['month']) ? (int)$_GET['month'] : date('n')))),
+      (isset($_GET['year']) ? (int)$_GET['year'] : date('Y'))
+  );
 ?>
 
       <div class="row">
