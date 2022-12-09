@@ -205,7 +205,7 @@ $opts = array(
       </script>
 
       <!-- body_text //-->
-      <?php echo zen_draw_form('year', FILENAME_BANNER_STATISTICS, '', 'get', 'class="form-horizontal"'); ?>
+      <?php echo zen_draw_form('form_type', FILENAME_BANNER_STATISTICS, '', 'get', 'class="form-horizontal"'); ?>
       <?php echo zen_hide_session_id(); ?>
       <?php echo zen_draw_hidden_field('page', (int)$_GET['page']); ?>
       <?php echo zen_draw_hidden_field('bID', $banner_id); ?>
