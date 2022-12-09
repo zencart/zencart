@@ -314,25 +314,6 @@ $opts = array(
         </script>
       </div>
 
-<?php if (FALSE) { //https://github.com/zencart/zencart/issues/5016 ?>
-  <div class="banner-statistics-source-data">
-    <table caption="<?php echo TABLE_HEADING_SOURCE; ?>">
-      <tr class="headingRow dataTableHeadingRow">
-        <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SOURCE; ?></th>
-        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_VIEWS; ?></th>
-        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_CLICKS; ?></th>
-      </tr>
-  <?php for ($i=0, $n=sizeof($stats[2]); $i<$n; $i++) { ?>
-        <tr class="dataTableRow">
-          <td class="dataTableContent"><?php echo $stats[2][$i][0]; ?></td>
-          <td class="dataTableContent text-right"><?php echo $stats[2][$i][1]; ?></td>
-          <td class="dataTableContent text-right"><?php echo $stats[2][$i][2]; ?></td>
-        </tr>
-  <?php } ?>
-    </table>
-  </div>
-<?php } ?>
-
   <div class="row text-right">
     <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
   </div>
