@@ -212,7 +212,7 @@ if (!empty($action)) {
 //          }
         }
 
-          if ($action === 'new') {
+          if ($action === 'new' && !isset($_GET['preID'])) {
               $form = addSearchKeywordForm(FILENAME_FEATURED, $action);
               echo $form;
           }

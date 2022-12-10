@@ -283,7 +283,7 @@ if (!empty($action)) {
 //            $specials_array[] = $item['products_id'];
 //          }
         }
-          if ($action === 'new') {
+          if ($action === 'new' && !isset($_GET['preID'])) {
               $form = addSearchKeywordForm(FILENAME_SPECIALS, $action);
               echo $form;
           }
