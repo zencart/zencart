@@ -3,8 +3,8 @@
  * init_sanitize
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 25 Modified in v1.5.8 $
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version   $Id: Scott C Wilson 2022 Sep 25 Modified in v1.5.8 $
  */
 
 use Zencart\Request\Request;
@@ -21,30 +21,30 @@ $sanitizer = AdminRequestSanitizer::getInstance();
 $sanitizer->setDebug(DO_DEBUG_SANITIZATION);
 $sanitizer->setDoStrictSanitization(DO_STRICT_SANITIZATION);
 
-$adminSanitizerTypes = array(
-    'SIMPLE_ALPHANUM_PLUS' => array('type' => 'builtin'),
-    'CONVERT_INT' => array('type' => 'builtin'),
-    'FILE_DIR_REGEX' => array('type' => 'builtin'),
-    'ALPHANUM_DASH_UNDERSCORE' => array('type' => 'builtin'),
-    'WORDS_AND_SYMBOLS_REGEX' => array('type' => 'builtin'),
-    'META_TAGS' => array('type' => 'builtin'),
-    'SANITIZE_EMAIL' => array('type' => 'builtin'),
-    'SANITIZE_EMAIL_AUDIENCE' => array('type' => 'builtin'),
-    'PRODUCT_DESC_REGEX' => array('type' => 'builtin'),
-    'PRODUCT_URL_REGEX' => array('type' => 'builtin'),
-    'FILE_PATH_OR_URL' => array('type' => 'builtin'),
-    'CURRENCY_VALUE_REGEX' => array('type' => 'builtin'),
-    'FLOAT_VALUE_REGEX' => array('type' => 'builtin'),
-    'PRODUCT_NAME_DEEP_REGEX' => array('type' => 'builtin'),
-    'NULL_ACTION' => array('type' => 'builtin'),
-    'MULTI_DIMENSIONAL' => array('type' => 'builtin'),
-    'SIMPLE_ARRAY' => array('type' => 'builtin'),
-    'STRICT_SANITIZE_VALUES' => array('type' => 'builtin'),
-);
+$adminSanitizerTypes = [
+    'SIMPLE_ALPHANUM_PLUS' => ['type' => 'builtin'],
+    'CONVERT_INT' => ['type' => 'builtin'],
+    'FILE_DIR_REGEX' => ['type' => 'builtin'],
+    'ALPHANUM_DASH_UNDERSCORE' => ['type' => 'builtin'],
+    'WORDS_AND_SYMBOLS_REGEX' => ['type' => 'builtin'],
+    'META_TAGS' => ['type' => 'builtin'],
+    'SANITIZE_EMAIL' => ['type' => 'builtin'],
+    'SANITIZE_EMAIL_AUDIENCE' => ['type' => 'builtin'],
+    'PRODUCT_DESC_REGEX' => ['type' => 'builtin'],
+    'PRODUCT_URL_REGEX' => ['type' => 'builtin'],
+    'FILE_PATH_OR_URL' => ['type' => 'builtin'],
+    'CURRENCY_VALUE_REGEX' => ['type' => 'builtin'],
+    'FLOAT_VALUE_REGEX' => ['type' => 'builtin'],
+    'PRODUCT_NAME_DEEP_REGEX' => ['type' => 'builtin'],
+    'NULL_ACTION' => ['type' => 'builtin'],
+    'MULTI_DIMENSIONAL' => ['type' => 'builtin'],
+    'SIMPLE_ARRAY' => ['type' => 'builtin'],
+    'STRICT_SANITIZE_VALUES' => ['type' => 'builtin'],
+];
 
 $sanitizer->addSanitizerTypes($adminSanitizerTypes);
 
-$group = array(
+$group = [
     'action',
     'add_products_id',
     'attribute_id',
@@ -164,11 +164,11 @@ $group = array(
     'za_lookup',
     'zID',
     'zone',
-    'zpage'
-);
+    'zpage',
+];
 $sanitizer->addSimpleSanitization('SIMPLE_ALPHANUM_PLUS', $group);
 
-$group = array(
+$group = [
     'current_master_categories_id',
     'categories_id',
     'cID',
@@ -184,13 +184,13 @@ $group = array(
     'coupon_calc_base',
     'coupon_order_limit',
     'coupon_is_valid_for_sales',
-);
+];
 $sanitizer->addSimpleSanitization('CONVERT_INT', $group);
 
-$group = array('img_dir', 'products_previous_image', 'products_image_manual', 'manufacturers_image_manual');
+$group = ['img_dir', 'products_previous_image', 'products_image_manual', 'manufacturers_image_manual'];
 $sanitizer->addSimpleSanitization('FILE_DIR_REGEX', $group);
 
-$group = array(
+$group = [
     'handler',
     'action',
     'oldaction',
@@ -203,53 +203,54 @@ $group = array(
     'page',
     'attribute_page',
     'cPath',
-);
+];
 $sanitizer->addSimpleSanitization('ALPHANUM_DASH_UNDERSCORE', $group);
 
-$group = array(
+$group = [
     'pages_title', 'page_params', 'music_genre_name', 'artists_name', 'record_company_name', 'countries_name', 'name', 'type_name', 'manufacturers_name',
     'title', 'coupon_name', 'coupon_copy_to_dup_name', 'banners_title', 'coupon_code', 'coupon_delete_duplicate_code', 'coupon_type',
     'group_name', 'geo_zone_name', 'geo_zone_description',
     'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
     'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'zone_page',
-);
+    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'zone_page', 'search',
+];
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
-$group = array('metatags_title', 'metatags_keywords', 'metatags_description');
+$group = ['metatags_title', 'metatags_keywords', 'metatags_description'];
 $sanitizer->addSimpleSanitization('META_TAGS', $group);
 
-$group = array('customers_email_address' => array('sanitizerType' => 'SANITIZE_EMAIL_AUDIENCE', 'method' => 'post', 'pages' => array('coupon_admin', 'gv_mail', 'mail')));
+$group = ['customers_email_address' => ['sanitizerType' => 'SANITIZE_EMAIL_AUDIENCE', 'method' => 'post', 'pages' => ['coupon_admin', 'gv_mail', 'mail']]];
 $sanitizer->addComplexSanitization($group);
 
-$group = array('customers_email_address', 'email_to');
+$group = ['customers_email_address', 'email_to'];
 $sanitizer->addSimpleSanitization('SANITIZE_EMAIL', $group);
 
-$group = array('products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text', 'pages_html_text', 'comments', 'products_options_comment');
+$group = ['products_description', 'coupon_desc', 'file_contents', 'categories_description', 'message_html', 'banners_html_text', 'pages_html_text', 'comments', 'products_options_comment'];
 $sanitizer->addSimpleSanitization('PRODUCT_DESC_REGEX', $group);
 
-$group = array('products_url', 'manufacturers_url');
+$group = ['products_url', 'manufacturers_url'];
 $sanitizer->addSimpleSanitization('PRODUCT_URL_REGEX', $group);
 
-$group = array('products_attributes_filename');
+$group = ['products_attributes_filename'];
 $sanitizer->addSimpleSanitization('FILE_PATH_OR_URL', $group);
 
-$group = array('coupon_min_order');
+$group = ['coupon_min_order'];
 $sanitizer->addSimpleSanitization('CURRENCY_VALUE_REGEX', $group);
 
-$group = array('categories_name', 'products_name', 'orders_status_name', 'configuration');
+$group = ['categories_name', 'products_name', 'orders_status_name', 'configuration'];
 $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 
-$group = array('configuration_key', 'search', 'query_string');
+$group = ['configuration_key', 'query_string'];
 $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
-$group = array('configuration_key' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('developers_tool_kit')));
+
+$group = ['configuration_key' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => ['developers_tool_kit']]];
 $sanitizer->addComplexSanitization($group);
 
 // Determine correct treatment of configuration_value settings
 if (!empty($_GET['cID'])) {
     $cID = (int)$_GET['cID'];
 
-    $configs_with_special_characters = array(
+    $configs_with_special_characters = [
         'BREAD_CRUMBS_SEPARATOR',
         'BEST_SELLERS_FILLER',
         'CATEGORIES_SEPARATOR',
@@ -265,42 +266,42 @@ if (!empty($_GET['cID'])) {
         'STORE_NAME_ADDRESS',
         'PRODUCT_LIST_SORT_ORDER_ASCENDING',
         'PRODUCT_LIST_SORT_ORDER_DESCENDING',
-    );
-    $extra_configs_with_special_characters = false; 
+    ];
+    $extra_configs_with_special_characters = false;
     $zco_notifier->notify('NOTIFY_ADMIN_CONFIGURATION_SPECIAL_CHARACTERS', [], $extra_configs_with_special_characters);
     if (is_array($extra_configs_with_special_characters)) {
-       $configs_with_special_characters = $configs_with_special_characters + $extra_configs_with_special_characters; 
+        $configs_with_special_characters = $configs_with_special_characters + $extra_configs_with_special_characters;
     }
     $checks = $db->Execute("SELECT configuration_key, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . (int)$cID);
     if (!$checks->EOF) {
         if (!empty($checks->fields['val_function'])) {
-            $group = array('configuration_value' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post'));
-        } else if (in_array($checks->fields['configuration_key'], $configs_with_special_characters)) {
-            $group = array('configuration_value' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post'));
+            $group = ['configuration_value' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post']];
+        } elseif (in_array($checks->fields['configuration_key'], $configs_with_special_characters)) {
+            $group = ['configuration_value' => ['sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post']];
         }
         $sanitizer->addComplexSanitization($group);
     } else {
-        $group = array('configuration_value');
+        $group = ['configuration_value'];
         $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
     }
 }
 
-$group = array('report', 'startDate', 'endDate', 'filter');
+$group = ['report', 'startDate', 'endDate', 'filter'];
 $sanitizer->addSimpleSanitization('FLOAT_VALUE_REGEX', $group);
 
-$group = array('products_name' => array('sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post', 'pages' => array('reviews')));
+$group = ['products_name' => ['sanitizerType' => 'WORDS_AND_SYMBOLS_REGEX', 'method' => 'post', 'pages' => ['reviews']]];
 $sanitizer->addComplexSanitization($group);
 
-$group = array('query_string' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('sqlpatch')));
+$group = ['query_string' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => ['sqlpatch']]];
 $sanitizer->addComplexSanitization($group);
 
-$group = array(
-    'password' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('admin_account', 'users')),
-    'confirm' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('admin_account', 'users')),
-    'admin_pass' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('login')),
-    'newpassword' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('customers')),
-    'newpasswordConfirm' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('customers')),
-    );
+$group = [
+    'password' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => ['admin_account', 'users']],
+    'confirm' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => ['admin_account', 'users']],
+    'admin_pass' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => ['login']],
+    'newpassword' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => ['customers']],
+    'newpasswordConfirm' => ['sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => ['customers']],
+];
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();
