@@ -212,7 +212,7 @@ $group = array(
     'group_name', 'geo_zone_name', 'geo_zone_description',
     'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
     'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'zone_page',
+    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'zone_page', 'search',
 );
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
@@ -240,7 +240,7 @@ $sanitizer->addSimpleSanitization('CURRENCY_VALUE_REGEX', $group);
 $group = array('categories_name', 'products_name', 'orders_status_name', 'configuration');
 $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 
-$group = array('configuration_key', 'search', 'query_string');
+$group = array('configuration_key', 'query_string');
 $sanitizer->addSimpleSanitization('STRICT_SANITIZE_VALUES', $group);
 $group = array('configuration_key' => array('sanitizerType' => 'NULL_ACTION', 'method' => 'post', 'pages' => array('developers_tool_kit')));
 $sanitizer->addComplexSanitization($group);
