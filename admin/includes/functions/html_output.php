@@ -230,24 +230,36 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 
 ////
 // Output a form
-  function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
-    $form = '<form name="' . zen_output_string($name) . '" action="';
-    if (!empty($parameters)) {
-      $form .= zen_href_link($action, $parameters, 'NONSSL');
-    } else {
-      $form .= zen_href_link($action, '', 'NONSSL');
-    }
-    $form .= '" method="' . zen_output_string($method) . '"';
-    if (!empty($params)) {
-      $form .= ' ' . $params;
-    }
-    $form .= '>';
-    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
-    if (strtolower($method) == 'get') {
-      $form .= '<input type="hidden" name="cmd" value="' . (isset($_GET['cmd']) ? $_GET['cmd'] : 'home') . '">';
-    }
-    return $form;
+  function zen_draw_form($name, $action, $href_parameters = '', $method = 'post', $form_parameters = '', $usessl = 'deprecated') {
+      $url = zen_href_link($action, (!empty($href_parameters) ? $href_parameters : ''));
+      $form = '<form name="' . zen_output_string($name) . '" action="' . $url . '" method="' . zen_output_string($method) . '"';
+      if (!empty($form_parameters)) {
+          $form .= ' ' . $form_parameters;
+      }
+      $form .= '>';
+      if (strtolower($method) === 'post') {
+          $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
+      }
+
+      // for get-method forms, if no cmd= exists in form action or parameters, assume current page
+      if (strtolower($method) === 'get') {
+          $query_keys = zen_get_url_get_params_as_array($url);
+          $cmd = array_key_exists('cmd', $query_keys) ? $query_keys['cmd'] : (isset($_GET['cmd']) ? $_GET['cmd'] : 'home');
+          $form .= '<input type="hidden" name="cmd" value="' . $cmd . '">';
+      }
+      return $form;
   }
+
+function zen_get_url_get_params_as_array($url)
+{
+    $query_segments = explode('&', parse_url($url, PHP_URL_QUERY));
+    $query_array = [];
+    foreach ($query_segments as $segment) {
+        $parts = explode('=', $segment);
+        $query_array[$parts[0]] = (isset($parts[1]) ? $parts[1] : '');
+    }
+    return $query_array;
+}
 
   /**
  *
