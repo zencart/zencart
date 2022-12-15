@@ -30,6 +30,13 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
 <head>
+<?php
+// -----
+// Provide a notification that the <head> tag has been rendered for the current page; some scripts need to be
+// inserted just after that tag's rendered.
+//
+$zco_notifier->notify('NOTIFY_HTML_HEAD_TAG_START', $current_page_base);
+?>
 <meta charset="<?php echo CHARSET; ?>"/>
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://code.jquery.com">
