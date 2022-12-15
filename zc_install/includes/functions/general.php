@@ -35,7 +35,7 @@ function zen_get_select_options($optionList, $setDefault)
     static $seeded;
 
     if (!isset($seeded)) {
-      mt_srand((double)microtime()*1000000);
+      mt_srand((int)(microtime(true)*1000000));
       $seeded = true;
     }
 
