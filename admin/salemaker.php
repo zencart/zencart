@@ -43,7 +43,7 @@ if (!empty($action)) {
     case 'update':
 // insert a new sale or update an existing sale
 // Create a string of all affected (sub-)categories
-      if (zen_not_null($_POST['categories'])) {
+      if (!empty($_POST['categories'])) {
         $categories_selected = array();
         $categories_all = array();
         foreach (zen_db_prepare_input($_POST['categories']) as $category_path) {
@@ -350,8 +350,8 @@ if (!empty($action)) {
         }
         $categories_array[$i]['path'] = $categories_array[$i]['path'] . '_';
       }
-      $categories_selected = explode(',', $sInfo->sale_categories_selected);
       if (zen_not_null($sInfo->sale_categories_selected)) {
+        $categories_selected = explode(',', $sInfo->sale_categories_selected);
         $selected = in_array(TOPMOST_CATEGORY_PARENT_ID, $categories_selected);
       } else {
         $selected = false;
