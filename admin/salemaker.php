@@ -283,7 +283,7 @@ if (!empty($action)) {
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_SALEMAKER_NAME, 'name', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_input_field('name', htmlspecialchars($sInfo->sale_name, ENT_COMPAT, CHARSET, TRUE), 'size="37" class="form-control" autofocus'); ?>
+            <?php echo zen_draw_input_field('name', htmlspecialchars(($sInfo->sale_name ?? ''), ENT_COMPAT, CHARSET, TRUE), 'size="37" class="form-control" autofocus'); ?>
         </div>
       </div>
       <div class="form-group">
@@ -357,17 +357,19 @@ if (!empty($action)) {
         $selected = false;
       }
 
-      $prev_sales = $db->Execute("SELECT sale_categories_all
-                                  FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1 AND sale_id != " . (int)$_GET['sID']);
-      foreach ($prev_sales as $prev_sale) {
-        $prev_categories = explode(',', $prev_sale['sale_categories_all']);
-        foreach ($prev_categories as $key => $value) {
-            if ($value && isset($prev_categories_array[$value])) {
-                $prev_categories_array[$value] ++;
-            } else {
-                $prev_categories_array[$value] = 1;
-            }
-        }
+      if (!empty($_GET['sID'])) {
+         $prev_sales = $db->Execute("SELECT sale_categories_all
+                                     FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1 AND sale_id != " . (int)$_GET['sID']);
+         foreach ($prev_sales as $prev_sale) {
+           $prev_categories = explode(',', $prev_sale['sale_categories_all']);
+           foreach ($prev_categories as $key => $value) {
+               if ($value && isset($prev_categories_array[$value])) {
+                   $prev_categories_array[$value] ++;
+               } else {
+                   $prev_categories_array[$value] = 1;
+               }
+           }
+         }
       }
 
 // set Entire Catalog when set

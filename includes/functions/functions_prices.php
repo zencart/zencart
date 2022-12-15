@@ -1555,7 +1555,9 @@ function zen_update_salemaker_product_prices($salemaker_id)
 {
     global $db;
     $zv_categories = $db->Execute("SELECT sale_categories_selected FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_id = " . (int)$salemaker_id);
-    if ($zv_categories->EOF) return false;
+    if ($zv_categories->EOF || empty($zv_categories->fields['sale_categories_selected'])) {
+       return false;
+    }
 
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
     foreach ($za_salemaker_categories as $category) {
