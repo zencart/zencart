@@ -45,6 +45,13 @@ if (!class_exists('Mobile_Detect')) {
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
+<?php
+// -----
+// Provide a notification that the <head> tag has been rendered for the current page; some scripts need to be
+// inserted just after that tag's rendered.
+//
+$zco_notifier->notify('NOTIFY_HTML_HEAD_TAG_START', $current_page_base);
+?>
   <meta charset="<?php echo CHARSET; ?>">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://code.jquery.com">
