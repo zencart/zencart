@@ -461,7 +461,7 @@ while (!$products_options_names->EOF) {
                     }
                 }
             } else {
-                $tmp_value = isset($_SESSION['cart']->contents[$_GET['products_id']]['attributes_values'][$products_options_id]) ? $_SESSION['cart']->contents[$_GET['products_id']]['attributes_values'][$products_options_id] : '';
+                $tmp_value = $_SESSION['cart']->contents[$_GET['products_id']]['attributes_values'][$products_options_id] ?? '';
                 // use text area or input box based on setting of products_options_rows in the products_options table
                 if ($products_options_names->fields['products_options_rows'] > 1) {
                     $tmp_html = '  <input disabled="disabled" type="text" name="remaining' . TEXT_PREFIX . $products_options_id . '" size="3" maxlength="3" value="' . $products_options_names->fields['products_options_length'] . '"> ' . TEXT_MAXIMUM_CHARACTERS_ALLOWED . '<br>';
@@ -510,7 +510,7 @@ while (!$products_options_names->EOF) {
             $number_of_uploads++;
             $tmp_html = '';
             if (zen_run_normal() && zen_check_show_prices()) {
-                $file_attribute_value = isset($_SESSION['cart']->contents[$prod_id]['attributes_values'][$products_options_id]) ? $_SESSION['cart']->contents[$prod_id]['attributes_values'][$products_options_id] : '';
+                $file_attribute_value = $_SESSION['cart']->contents[$prod_id]['attributes_values'][$products_options_id] ?? '';
                 $tmp_html = '<input type="file" name="id[' . TEXT_PREFIX . $products_options_id . ']"  id="' . $inputFieldId . '" ' . $data_properties . '><br>' . $file_attribute_value . "\n" .
                     zen_draw_hidden_field(UPLOAD_PREFIX . $number_of_uploads, $products_options_id) . "\n" .
                     zen_draw_hidden_field(TEXT_PREFIX . UPLOAD_PREFIX . $number_of_uploads, $file_attribute_value);
