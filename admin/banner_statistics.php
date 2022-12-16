@@ -178,7 +178,7 @@ $opts = array(
           });
 
           function showTooltip(x, y, contents) {
-              $('<div id="tooltip">' + contents + '</div>').css({
+              $('<div id="tooltip">' + contents + '<\/div>').css({
                   top: y - 16,
                   left: x + 20
               }).appendTo('body').fadeIn();
@@ -205,14 +205,14 @@ $opts = array(
       </script>
 
       <!-- body_text //-->
-      <?php echo zen_draw_form('year', FILENAME_BANNER_STATISTICS, '', 'get', 'class="form-horizontal"'); ?>
+      <?php echo zen_draw_form('form_type', FILENAME_BANNER_STATISTICS, '', 'get', 'class="form-horizontal"'); ?>
       <?php echo zen_hide_session_id(); ?>
       <?php echo zen_draw_hidden_field('page', (int)$_GET['page']); ?>
       <?php echo zen_draw_hidden_field('bID', $banner_id); ?>
       <div class="form-group">
           <?php echo zen_draw_label(TITLE_TYPE, 'type', 'class="control-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_pull_down_menu('type', $type_array, (!empty($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control"'); ?>
+            <?php echo zen_draw_pull_down_menu('type', $type_array, (!empty($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control" id="type"'); ?>
           <noscript><input type="submit" value="GO"></noscript>
         </div>
       </div>
@@ -224,7 +224,7 @@ $opts = array(
           <div class="form-group">
               <?php echo zen_draw_label(TITLE_YEAR, 'year', 'class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control"'); ?>
+                <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control" id="year"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
             </div>
           </div>
@@ -236,14 +236,14 @@ $opts = array(
           <div class="form-group">
               <?php echo zen_draw_label(TITLE_MONTH, 'month','class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('month', $months_array, (isset($_GET['month']) ? (int)$_GET['month'] : date('n')), 'onChange="this.form.submit();" class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('month', $months_array, (isset($_GET['month']) ? (int)$_GET['month'] : date('n')), 'onChange="this.form.submit();" class="form-control" id="month"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TITLE_YEAR, 'year','class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control"'); ?>
+                  <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control" id="year"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
             </div>
           </div>
@@ -313,25 +313,6 @@ $opts = array(
           var plot = $("#banner-daily").plot(dData, dOptions).data("plot");
         </script>
       </div>
-
-<?php if (FALSE) { ?>
-  <div class="banner-statistics-source-data">
-    <table caption="<?php echo TABLE_HEADING_SOURCE; ?>">
-      <tr class="headingRow dataTableHeadingRow">
-        <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SOURCE; ?></th>
-        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_VIEWS; ?></th>
-        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_CLICKS; ?></th>
-      </tr>
-  <?php for ($i=0, $n=sizeof($stats[2]); $i<$n; $i++) { ?>
-        <tr class="dataTableRow">
-          <td class="dataTableContent"><?php echo $stats[2][$i][0]; ?></td>
-          <td class="dataTableContent text-right"><?php echo $stats[2][$i][1]; ?></td>
-          <td class="dataTableContent text-right"><?php echo $stats[2][$i][2]; ?></td>
-        </tr>
-  <?php } ?>
-    </table>
-  </div>
-<?php } ?>
 
   <div class="row text-right">
     <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
