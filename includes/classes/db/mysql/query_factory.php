@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class queryFactory extends base
 {
-    private $link; // mysqli object
+    public $link; // mysqli object
     private $count_queries = 0;
     private $total_query_time;
     public $dieOnErrors = false;
