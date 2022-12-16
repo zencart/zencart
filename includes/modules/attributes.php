@@ -290,7 +290,7 @@ while (!$products_options_names->EOF) {
                     // select default but do NOT auto select single radio buttons
                         //$selected_attribute = ($products_options->fields['attributes_default']=='1' ? true : false);
                     // select default radio button or auto select single radio buttons
-                    $selected_attribute = ($products_options->fields['attributes_default'] == '1' ? true : ($products_options->RecordCount() == 1));
+                    $selected_attribute = ($products_options->fields['attributes_default'] === '1' || $products_options->RecordCount() === 1);
                 }
             }
 
