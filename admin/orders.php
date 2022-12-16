@@ -12,7 +12,7 @@ if (isset($module)) {
   unset($module);
 }
 
-// Override instructions in: 
+// Override instructions in:
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 if (!isset($quick_view_popover_enabled)) $quick_view_popover_enabled = false;
 if (!isset($includeAttributesInProductDetailRows)) $includeAttributesInProductDetailRows = true;
@@ -189,7 +189,7 @@ if (!empty($action) && $order_exists === true) {
         $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
         if ($chk_products_download_time->EOF) {
-          $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + DOWNLOAD_MAX_DAYS);
+          $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + intval(DOWNLOAD_MAX_DAYS);
           $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                      SET download_maxdays = " . (int)$zc_max_days . ",
                                          download_count = " . (int)DOWNLOAD_MAX_COUNT . "
@@ -251,7 +251,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doStatusUpdate')) {
             $response = $module->_doStatusUpdate($oID, $status, $comments, $customer_notified, $order->info['orders_status']);
@@ -281,7 +281,7 @@ if (!empty($action) && $order_exists === true) {
             $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
             if ($chk_products_download_time->EOF) {
-              $zc_max_days = (DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + DOWNLOAD_MAX_DAYS);
+              $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + intval(DOWNLOAD_MAX_DAYS);
               $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                          SET download_maxdays = " . (int)$zc_max_days . ",
                                              download_count = " . (int)DOWNLOAD_MAX_COUNT . "
@@ -339,7 +339,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doRefund')) {
             $module->_doRefund($oID);
@@ -353,7 +353,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doAuth')) {
             $module->_doAuth($oID, $order->info['total'], $order->info['currency']);
@@ -366,7 +366,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doCapt')) {
             $module->_doCapt($oID, 'Complete', $order->info['total'], $order->info['currency']);
@@ -379,7 +379,7 @@ if (!empty($action) && $order_exists === true) {
       if ($order->info['payment_module_code']) {
         if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
           require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
+          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
           $module = new $order->info['payment_module_code']();
           if (method_exists($module, '_doVoid')) {
             $module->_doVoid($oID);
@@ -514,7 +514,7 @@ if (!empty($action) && $order_exists === true) {
               $messageStack->add(sprintf(WARNING_PAYMENT_MODULE_DOESNT_EXIST, $order->info['payment_module_code']), 'warning');
           } else {
             require $payment_module;
-            zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline'); 
+            zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
             $module = new $order->info['payment_module_code']();
             if ((is_object($module) && method_exists($module, 'admin_notification')) && !$module->enabled) {
                 $messageStack->add(sprintf(WARNING_PAYMENT_MODULE_NOTIFICATIONS_DISABLED, $order->info['payment_module_code']), 'warning');
@@ -1150,9 +1150,9 @@ if (!empty($action) && $order_exists === true) {
                   <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ORDERS_ID; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></td>
-<?php if ($show_zone_info) { ?> 
+<?php if ($show_zone_info) { ?>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ZONE_INFO; ?></td>
-<?php } ?> 
+<?php } ?>
                   <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ORDER_TOTAL; ?></td>
 <?php if ($quick_view_popover_enabled) { ?>
                   <td></td>
@@ -1336,11 +1336,11 @@ if (!empty($action) && $order_exists === true) {
                 <td class="dataTableContent text-center"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
-<?php if ($show_zone_info) { ?> 
+<?php if ($show_zone_info) { ?>
                 <td class="dataTableContent text-left">
 <?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
                 </td>
-<?php } ?> 
+<?php } ?>
                 <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '', '<hr>' => "----\n"]); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
                 </td>
@@ -1358,14 +1358,14 @@ if (!empty($action) && $order_exists === true) {
 <?php } ?>
                 <td class="dataTableContent text-center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
                 <td class="dataTableContent text-right"><?php echo ($orders->fields['orders_status_name'] !== '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
-                <?php 
-                   $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id'])); 
-                   if (!empty($order_comments)) { 
-                      echo '<td class="dataTableContent text-center" title="' . $order_comments . '">'; 
-                      echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', '', 16, 16); 
-                      echo '</td>'; 
+                <?php
+                   $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id']));
+                   if (!empty($order_comments)) {
+                      echo '<td class="dataTableContent text-center" title="' . $order_comments . '">';
+                      echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', '', 16, 16);
+                      echo '</td>';
                    } else {
-                     echo '<td class="dataTableContent text-center"></td>'; 
+                     echo '<td class="dataTableContent text-center"></td>';
                    }
                 ?>
 <?php
