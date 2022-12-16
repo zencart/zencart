@@ -14,7 +14,7 @@ class PluginManagerController extends BaseController
 
     protected $pluginManager;
     protected $installerFactory;
-    
+
     public function init($pluginManager, $installerFactory)
     {
         $this->pluginManager = $pluginManager;
@@ -124,7 +124,7 @@ class PluginManagerController extends BaseController
         $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $installed = $installer->processInstall($this->currentFieldValue('unique_key'), $this->request->input('version'));
         if (!$installed) {
-            $this->outputMessageList($installer->errorContainer->getFriendlyErrors(), 'error');
+            $this->outputMessageList($installer->getErrorContainer()->getFriendlyErrors(), 'error');
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -176,7 +176,7 @@ class PluginManagerController extends BaseController
         $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $uninstalled = $installer->processUninstall($this->currentFieldValue('unique_key'), $this->request->input('version'));
         if (!$uninstalled) {
-            $this->outputMessageList($installer->errorContainer->getFriendlyErrors(), 'error');
+            $this->outputMessageList($installer->getErrorContainer()->getFriendlyErrors(), 'error');
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -379,7 +379,7 @@ class PluginManagerController extends BaseController
             $path = DIR_FS_CATALOG . 'zc_plugins/' . $this->currentFieldValue('unique_key') . '/' . $version;
             (new FileSystem)->deleteDirectory($path);
             if (is_dir($path)) {
-                $error .= " :" . $path; 
+                $error .= " :" . $path;
             }
         }
         if ($error === "") {

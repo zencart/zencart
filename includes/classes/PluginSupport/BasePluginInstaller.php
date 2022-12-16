@@ -11,7 +11,7 @@ class BasePluginInstaller
 {
 
     /**
-     * $dbConn is a database object 
+     * $dbConn is a database object
      * @var object
      */
     protected $dbConn;
@@ -102,5 +102,10 @@ class BasePluginInstaller
         if (file_exists($filename)) {
             require_once($filename);
         }
+    }
+
+    public function getErrorContainer()
+    {
+        return $this->errorContainer;
     }
 }
