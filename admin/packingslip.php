@@ -9,12 +9,11 @@ require('includes/application_top.php');
 
 // To override the $show_* values or $attr_img_width, see 
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
-if (!isset($show_product_images)) {
-    $show_product_images = true;
-}
-if (!isset($show_attrib_images)) {
-    $show_attrib_images = true;
-}
+
+$show_product_images_pack = $show_product_images_pack ?? $show_product_images ?? true;
+ 
+$show_attrib_images_pack = $show_attrib_images_pack ?? $show_attrib_images ?? true;
+
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 if (!isset($attr_img_width)) {
     $attr_img_width = '25';
@@ -138,7 +137,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
       <table class="table table-striped">
         <thead>
           <tr class="dataTableHeadingRow">
-            <?php if ($show_product_images) { ?>
+            <?php if ($show_product_images_pack) { ?>
             <th class="dataTableHeadingContent" style="width: <?php echo (int)$img_width . 'px'; ?>">&nbsp;</th>
             <?php } ?>
             <th class="dataTableHeadingContent">&nbsp;</th>
@@ -194,7 +193,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
             $product_name = $order->products[$i]['name'];
             ?>
             <tr class="dataTableRow">
-                <?php if ($show_product_images) { ?>
+                <?php if ($show_product_images_pack) { ?>
                 <td class="dataTableContent">
                     <?php echo zen_image(DIR_WS_CATALOG . DIR_WS_IMAGES . zen_get_products_image($order->products[$i]['id']), zen_output_string($product_name), (int)$img_width); ?>
                 </td>
@@ -217,7 +216,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                       <li>
                         <?php
 
-                                    if ($show_attrib_images && !empty($attribute_image)) {
+                                    if ($show_attrib_images_pack && !empty($attribute_image)) {
                                         echo zen_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $attribute_image, zen_output_string($attribute_name), (int)$attr_img_width);
                         }
                         ?>

@@ -17,9 +17,13 @@
 // admin/invoice.php and admin/packingslip.php 
 // to determine whether attribute images should be displayed. 
 //
-// true ...... attribute images are shown on invoice and packingslip (the default) 
-// false ..... attribute images are not shown on invoice and packingslip 
+// $show_attrib_images   $show_attrib_images_pack
+// true or unset         true or unset            ...... attribute images are shown on invoice and packingslip (the default) 
+// false                 false or unset           ...... attribute images are NOT shown on invoice or packingslip 
+// false                 true                     ...... attribute images are NOT shown on invoice but are shown packingslip 
+// true or unset         false                    ...... attribute images are shown on invoice but are NOT shown packingslip
 // $show_attrib_images = false;
+// $show_attrib_images_pack = false;
 
 // Set the width of the attribute image used in packingslip and invoice.
 // the default is 25. if $show_attrinb_images = false is set above then setting this value will have no effect
@@ -29,10 +33,14 @@
 // The flag show_product_images is used by the files 
 // admin/invoice.php and admin/packingslip.php 
 // to determine whether product images should be displayed. 
-//
-// true ...... product images are shown on invoice and packingslip (the default) 
-// false ..... product images are not shown on invoice and packingslip 
+// 
+// $show_product_images  $show_product_images_pack
+// true or unset         true or unset            ...... product images are shown on invoice and packingslip (the default) 
+// false                 false or unset           ...... product images are NOT shown on invoice or packingslip 
+// false                 true                     ...... product images are NOT shown on invoice  but are shown packingslip 
+// true or unset         false                    ...... product images are shown on invoice and but are NOT shown packingslip
 // $show_product_images = false;
+// $show_product_images_pack = false;
 
 // The flag show_product_tax is used by the file 
 // admin/invoice.php 
