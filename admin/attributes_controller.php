@@ -575,6 +575,10 @@ if (!empty($action)) {
       }
       $_GET['action'] = '';
       $products_filter = $_POST['products_filter'];
+      if ($_POST['categories_update_id'] !== '') {
+          $_POST['current_category_id'] = $_POST['categories_update_id'];
+          $products_filter = '';
+      }
       zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $_POST['current_category_id']));
       break;
   }
@@ -828,8 +832,6 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
           <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
           <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); ?>
-          <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
-          <?php echo zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes']); ?>
           <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
           <div class="form-group">
             <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_CATEGORY . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></div>
