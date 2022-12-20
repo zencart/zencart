@@ -236,8 +236,6 @@ class zones
         switch (MODULE_SHIPPING_ZONES_METHOD) {
           case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
             if (round($shipping_weight, 9) <= $zones_table[$i]) {
-              $shipping = $zones_table[$i + 1];
-
               switch (SHIPPING_BOX_WEIGHT_DISPLAY) {
                 case (0):
                   $show_box_weight = '';
@@ -266,7 +264,6 @@ class zones
           case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
             // shipping adjustment
             if (($_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices()) <= $zones_table[$i]) {
-              $shipping = $zones_table[$i + 1];
               $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
               if (strstr($zones_table[$i + 1], '%')) {
                 $shipping = ($zones_table[$i + 1] / 100) * $order_total_amount;
@@ -280,7 +277,6 @@ class zones
           case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
             // shipping adjustment
             if (($total_count - $_SESSION['cart']->free_shipping_items()) <= $zones_table[$i]) {
-              $shipping = $zones_table[$i + 1];
               $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
               $done = true;
               if (strstr($zones_table[$i + 1], '%')) {
