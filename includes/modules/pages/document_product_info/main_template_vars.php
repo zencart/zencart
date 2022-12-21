@@ -14,7 +14,7 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_DOCUMENT_PRODUCT_INFO');
 
-  if (!isset($product_info->EOF, $product_info->fields['products_id'], $product_info->fields['products_status']) || $product_info->fields['products_id'] !== (int)$_GET['products_id']) {
+  if (!isset($product_info->EOF, $product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$_GET['products_id']) {
     $product_info = zen_get_product_details($_GET['products_id']);
   }
 
