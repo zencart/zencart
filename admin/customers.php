@@ -212,7 +212,11 @@ if (!empty($action)) {
                         'value' => $customers_telephone,
                         'type' => 'stringIgnoreNull'
                     ),
-                    array('fieldName' => 'customers_fax', 'value' => $customers_fax, 'type' => 'stringIgnoreNull'),
+                    array(
+                       'fieldName' => 'customers_fax',
+                       'value' => $customers_fax,
+                       'type' => 'stringIgnoreNull'
+                    ),
                     array(
                         'fieldName' => 'customers_group_pricing',
                         'value' => $customers_group_pricing,
@@ -286,9 +290,21 @@ if (!empty($action)) {
                         'value' => $entry_street_address,
                         'type' => 'stringIgnoreNull'
                     ),
-                    array('fieldName' => 'entry_postcode', 'value' => $entry_postcode, 'type' => 'stringIgnoreNull'),
-                    array('fieldName' => 'entry_city', 'value' => $entry_city, 'type' => 'stringIgnoreNull'),
-                    array('fieldName' => 'entry_country_id', 'value' => $entry_country_id, 'type' => 'integer'),
+                    array(
+                       'fieldName' => 'entry_postcode',
+                       'value' => $entry_postcode,
+                       'type' => 'stringIgnoreNull'
+                    ),
+                    array(
+                       'fieldName' => 'entry_city', 
+                       'value' => $entry_city, 
+                       'type' => 'stringIgnoreNull'
+                    ),
+                    array(
+                       'fieldName' => 'entry_country_id', 
+                       'value' => $entry_country_id, 
+                       'type' => 'integer'
+                    ),
                 );
 
                 if (ACCOUNT_COMPANY == 'true') {
@@ -313,9 +329,17 @@ if (!empty($action)) {
                             'value' => $entry_zone_id,
                             'type' => 'integer'
                         );
-                        $sql_data_array[] = array('fieldName' => 'entry_state', 'value' => '', 'type' => 'string');
+                        $sql_data_array[] = array(
+                           'fieldName' => 'entry_state', 
+                           'value' => '', 
+                           'type' => 'string'
+                        );
                     } else {
-                        $sql_data_array[] = array('fieldName' => 'entry_zone_id', 'value' => 0, 'type' => 'integer');
+                       $sql_data_array[] = array(
+                          'fieldName' => 'entry_zone_id', 
+                          'value' => 0, 
+                          'type' => 'integer'
+                       );
                         $sql_data_array[] = array(
                             'fieldName' => 'entry_state',
                             'value' => $entry_state,
