@@ -720,7 +720,7 @@ if (!empty($action)) {
                             <?php
                             echo zen_draw_input_field(
                                 'entry_company',
-                                htmlspecialchars($cInfo->company, ENT_COMPAT, CHARSET, true),
+                                htmlspecialchars(($cInfo->company ?? ''), ENT_COMPAT, CHARSET, true),
                                 zen_set_field_length(
                                     TABLE_ADDRESS_BOOK,
                                     'entry_company',
