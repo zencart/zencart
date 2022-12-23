@@ -129,7 +129,7 @@ function zen_enable_disabled_upcoming($datetime = null)
             FROM " . TABLE_PRODUCTS . "
             WHERE products_status = 0
             AND products_date_available <= " . $zc_disabled_upcoming_date . "
-            AND products_date_available >= '0001-01-01'
+            AND products_date_available != '0001-01-01'
             AND products_date_available IS NOT NULL
             ";
 
