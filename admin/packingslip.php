@@ -11,13 +11,10 @@ require('includes/application_top.php');
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 
 $show_product_images_pack = $show_product_images_pack ?? $show_product_images ?? true;
- 
 $show_attrib_images_pack = $show_attrib_images_pack ?? $show_attrib_images ?? true;
+$attr_img_width = $attr_img_width ?? '25';
 
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
-if (!isset($attr_img_width)) {
-    $attr_img_width = '25';
-}
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
