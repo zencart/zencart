@@ -23,7 +23,7 @@ if (strlen(SITE_TAGLINE) > 1) {
 }
 $review_on = "";
 $keywords_string_metatags = "";
-if (!defined('METATAGS_DIVIDER')) define('METATAGS_DIVIDER', ', ');
+zen_define_default('METATAGS_DIVIDER', ', ');
 
 // Get all top category names for use with web site keywords
 $sql = "SELECT cd.categories_name FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd WHERE c.parent_id = 0 AND c.categories_id = cd.categories_id AND cd.language_id='" . (int)$_SESSION['languages_id'] . "' AND c.categories_status=1";
@@ -341,9 +341,9 @@ switch ($metatag_page_name) {
     $metatags_keywords = KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '');
     $zco_notifier->notify('NOTIFY_MODULE_META_TAGS_UNSPECIFIEDPAGE', $current_page_base, $metatag_page_name, $meta_tags_over_ride, $metatags_title, $metatags_description, $metatags_keywords);
     if (false===$meta_tags_over_ride) {
-      if (!defined('META_TAG_TITLE')) define('META_TAG_TITLE', (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE);
-      if (!defined('META_TAG_DESCRIPTION')) define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) . SECONDARY_SECTION . KEYWORDS);
-      if (!defined('META_TAG_KEYWORDS')) define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) );
+      zen_define_default('META_TAG_TITLE', (defined('NAVBAR_TITLE') ? NAVBAR_TITLE . PRIMARY_SECTION : '') . TITLE . TAGLINE);
+      zen_define_default('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) . SECONDARY_SECTION . KEYWORDS);
+      zen_define_default('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . (defined('NAVBAR_TITLE') ? NAVBAR_TITLE : '' ) );
     }
 }
 
