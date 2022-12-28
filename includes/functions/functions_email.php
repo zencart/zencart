@@ -81,6 +81,7 @@ use PHPMailer\PHPMailer\SMTP;
     if (empty($from_email_name) || $from_email_name == $from_email_address) $from_email_name = STORE_NAME;
 
     // loop thru multiple email recipients if more than one listed  --- (esp for the admin's "Extra" emails)...
+    $archive_done = false; 
     foreach(explode(',',$to_address) as $key=>$value) {
       if (preg_match("/ *([^<]*) *<([^>]*)> */i",$value,$regs)) {
         $to_name = str_replace('"', '', trim($regs[1]));
@@ -412,8 +413,9 @@ use PHPMailer\PHPMailer\SMTP;
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_WITH_ALL_PARAMS', array($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo));
       // Archive this message to storage log
       // don't archive pwd-resets and CC numbers
-      if (EMAIL_ARCHIVE == 'true'  && $module != 'password_forgotten_admin' && $module != 'cc_middle_digs' && $module != 'no_archive') {
+      if (EMAIL_ARCHIVE == 'true'  && $module != 'password_forgotten_admin' && $module != 'cc_middle_digs' && $module != 'no_archive' && $archive_done === false) {
         zen_mail_archive_write($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo );
+        $archive_done = true; 
       } // endif archiving
 
       // -----
