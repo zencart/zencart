@@ -94,6 +94,9 @@ class Customer extends base
     {
         global $db;
 
+        if (!zen_validate_email($email)) {
+           return false;
+        }
         $sql = "SELECT customers_id, customers_password, customers_authorization
                 FROM " . TABLE_CUSTOMERS . "
                 WHERE customers_email_address = :emailAddress";
