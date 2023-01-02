@@ -66,6 +66,7 @@ $define = [
     'TEXT_ALL_FILES_LOOKUP_JS' => '.js only',
     'TEXT_ALL_FILES_LOOKUP_ALL_TYPES' => 'Everything',
     'TEXT_CASE_SENSITIVE' => 'Case Sensitive?',
+    'TEXT_INCLUDE_PLUGINS' => 'Add Plugins?',
     'TEXT_CONTEXT_LINES' => 'Context lines: ',
     'TEXT_SEARCH_LOOKUP_PLACEHOLDER' => 'Enter search phrase or pattern',
     'TEXT_SEARCH_KEY_PLACEHOLDER' => 'Enter key name or phrase to search for',
