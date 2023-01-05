@@ -54,7 +54,7 @@ function zen_get_path($current_category_id = null)
  * @param bool $include_inactive
  * @return int|mixed
  */
-function zen_count_products_in_category($category_id, $include_inactive = false)
+function zen_count_products_in_category($category_id, $include_inactive = false, $count_subcategories = true)
 {
     global $db;
     $products_count = 0;
@@ -70,15 +70,16 @@ function zen_count_products_in_category($category_id, $include_inactive = false)
     }
     $products = $db->Execute($sql);
     $products_count += $products->fields['total'];
+    if ($count_subcategories === true) {
+        $sql = "SELECT categories_id
+                FROM " . TABLE_CATEGORIES . "
+                WHERE parent_id = " . (int)$category_id;
 
-    $sql = "SELECT categories_id
-            FROM " . TABLE_CATEGORIES . "
-            WHERE parent_id = " . (int)$category_id;
+        $child_categories = $db->Execute($sql);
 
-    $child_categories = $db->Execute($sql);
-
-    foreach ($child_categories as $result) {
-        $products_count += zen_count_products_in_category($result['categories_id'], $include_inactive);
+        foreach ($child_categories as $result) {
+            $products_count += zen_count_products_in_category($result['categories_id'], $include_inactive, $count_subcategories);
+        }
     }
 
     return $products_count;

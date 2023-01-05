@@ -194,7 +194,8 @@ class category_tree extends base {
     }
 
     if (SHOW_COUNTS == 'true') {
-      $products_in_category = zen_count_products_in_category($counter);
+      $count_subcategories = !(defined("COUNT_SUB_CATEGORIES") && COUNT_SUB_CATEGORIES === 'false');
+      $products_in_category = zen_count_products_in_category($counter, false, $count_subcategories);
       if ($products_in_category > 0) {
         $this->box_categories_array[$ii]['count'] = $products_in_category;
       } else {
