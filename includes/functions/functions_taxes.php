@@ -146,7 +146,7 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
  * @param array $tax_description
  * @return array (description => tax_rate)
  */
-function zen_get_multiple_tax_rates($class_id, $country_id, $zone_id, $tax_description = [])
+function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, $tax_description = [])
 {
     global $db, $zco_notifier;
 
