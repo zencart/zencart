@@ -19,14 +19,15 @@
             'products_model' => 'p',
             'products_id' => 'p',
             'products_price' => 'p',
+            'products_price_sorter' => 'p',
             'products_sort_order' => 'p',
         ];
-        
+
         private $categories_join;
         private $output_string;
         private $show_model;
         private $show_price;
-        
+
         /**
          *
          */
@@ -64,7 +65,7 @@
             $this->sort = '';
             foreach ($fieldnameArray as $fieldname) {
                 if (array_key_exists($fieldname, $this->keyed_allowed_sort_array)) {
-                    $this->sort = ($first ? ' ORDER BY ' : ', ') . $this->keyed_allowed_sort_array[$fieldname] . '.' . $fieldname;
+                    $this->sort .= ($first ? ' ORDER BY ' : ', ') . $this->keyed_allowed_sort_array[$fieldname] . '.' . $fieldname;
                     $first = false;
                 }
             }
@@ -128,7 +129,7 @@
             $this->sql = "SELECT DISTINCT pd.products_id, p.products_sort_order, p.products_price, p.products_model, pd.products_name
                 FROM " . TABLE_PRODUCTS . " p"
                 . $this->categories_join . "
-                INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id) 
+                INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id)
 				" . $this->attributes_join . "
 				WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
         }
