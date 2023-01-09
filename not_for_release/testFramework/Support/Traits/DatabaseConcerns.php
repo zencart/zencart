@@ -6,8 +6,10 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 trait DatabaseConcerns
 {
-
-    protected  $configPath = '/not_for_release/testFramework/Support/DatabaseConfigure';
+    protected $configPath = '/not_for_release/testFramework/Support/DatabaseConfigure';
+    protected $user;
+    protected \queryFactory $db;
+    protected ?\PDO $pdoConnection;
 
     public function setup(): void
     {
