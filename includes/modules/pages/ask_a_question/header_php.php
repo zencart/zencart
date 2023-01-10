@@ -39,7 +39,7 @@ $sql = "SELECT pd.products_name, p.products_image, p.products_model
 $result = $db->Execute($sql);
 
 if ($result->EOF) {
-    zen_redirect(zen_href_link(zen_get_info_page($pid), 'products_id=' . $pid));
+    zen_redirect(zen_href_link($info_page, 'products_id=' . $pid));
 }
 
 $product_details = $result->fields;
