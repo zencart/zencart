@@ -16,23 +16,33 @@ $pid = (isset($_GET['pid'])) ? (int)$_GET['pid'] : false;
 //
 if ($pid === false) {
     zen_redirect(zen_href_link(FILENAME_DEFAULT));
-} else {
-    $sql = "SELECT pd.products_name, p.products_image, p.products_model
-            FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-            WHERE p.products_id = pd.products_id
-            AND p.products_id = " . (int)$_GET['pid'] . "
-            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-            AND p.products_status = 1
-            LIMIT 1";
-
-    $result = $db->Execute($sql);
-
-    if ($result->EOF) {
-        zen_redirect(zen_href_link(zen_get_info_page($pid), 'pid=' . $pid));
-    }
-
-    $product_details = $result->fields;
 }
+
+// -----
+// Check to see if the "Show Ask a Question" button is enabled for the product's
+// type.  If not, redirect to the product's information page.
+//
+$info_page = zen_get_info_page($pid);
+$show_info_page_ask_a_question = 'SHOW_' . strtoupper($info_page) . '_ASK_A_QUESTION';
+if (!defined($show_info_page_ask_a_question) || constant($show_info_page_ask_a_question) === '0') {
+    zen_redirect(zen_href_link($info_page, 'products_id=' . $_GET['pid']));
+}
+
+$sql = "SELECT pd.products_name, p.products_image, p.products_model
+        FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+        WHERE p.products_id = pd.products_id
+        AND p.products_id = " . (int)$_GET['pid'] . "
+        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+        AND p.products_status = 1
+        LIMIT 1";
+
+$result = $db->Execute($sql);
+
+if ($result->EOF) {
+    zen_redirect(zen_href_link(zen_get_info_page($pid), 'products_id=' . $pid));
+}
+
+$product_details = $result->fields;
 
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
