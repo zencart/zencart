@@ -57,15 +57,15 @@ if (isset($_GET['pID']) && empty($_POST)) {
   $pInfo->product_type = $pInfo->products_type;
 } elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
-  if (isset($_GET['pID'])) { 
-     $pInfo->products_id = (int)$_GET['pID']; 
+  if (isset($_GET['pID'])) {
+     $pInfo->products_id = (int)$_GET['pID'];
   }
   if (isset($pInfo->cPath)) {
       $pInfo->master_categories_id = $pInfo->cPath;
   }
-  $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
-  $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';
-  $products_url = isset($_POST['products_url']) ? $_POST['products_url'] : '';
+  $products_name = $_POST['products_name'] ?? '';
+  $products_description = $_POST['products_description'] ?? '';
+  $products_url = $_POST['products_url'] ?? '';
 }
 
 $category_lookup = $db->Execute("SELECT *
@@ -152,7 +152,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   echo zen_draw_hidden_field('products_discount_type_from', $pInfo->products_discount_type_from);
   echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter);
   ?>
-  <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status == true ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
+  <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
   <div class="form-group">
       <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_STATUS; ?></p>
     <div class="col-sm-9 col-md-6">
@@ -295,8 +295,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_QTY_BOX_STATUS; ?></p>
     <div class="col-sm-9 col-md-6">
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '1', ($pInfo->products_qty_box_status == 1 ? true : false)) . TEXT_PRODUCTS_QTY_BOX_STATUS_ON; ?></label>
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '0', ($pInfo->products_qty_box_status == 0 ? true : false)) . TEXT_PRODUCTS_QTY_BOX_STATUS_OFF; ?></label>
+      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '1', $pInfo->products_qty_box_status == 1) . TEXT_PRODUCTS_QTY_BOX_STATUS_ON; ?></label>
+      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '0', $pInfo->products_qty_box_status == 0) . TEXT_PRODUCTS_QTY_BOX_STATUS_OFF; ?></label>
       <?php echo ($pInfo->products_qty_box_status == 0 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_QTY_BOX_STATUS_EDIT . '</span>' : ''); ?>
     </div>
   </div>
@@ -416,7 +416,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control" inputmode="url"'); ?>
+          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars($products_url[$languages[$i]['id']] ?? zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control" inputmode="url"'); ?>
         </div>
         <br>
         <?php
