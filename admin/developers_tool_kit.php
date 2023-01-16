@@ -22,6 +22,7 @@ if (!empty($_GET['configuration_key_lookup']))  {
 $configuration_key_lookup = $_POST['configuration_key'] ?? '';
 $default_context_lines = (int)($_POST['context_lines'] ?? $default_context_lines);
 $case_sensitive = !empty($_POST['case_sensitive']);
+$include_plugins = !empty($_POST['include_plugins']);
 $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
 function getDirList($dirName, $filetypes = 1) {
@@ -161,6 +162,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
   $file_cnt = 0;
   $cnt_found = 0;
   $case_sensitive = !empty($_POST['case_sensitive']);
+  $include_plugins = !empty($_POST['include_plugins']);
   for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
     // build file content of matching lines
     $file_cnt++;
@@ -640,7 +642,9 @@ switch ($action) {
 
 // get zc_plugins
         $sub_dir_files = array();
-        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        if ($include_plugins) {
+          getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        }
         $sub_dir_files_plugins = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin, $sub_dir_files_plugins);
@@ -685,7 +689,9 @@ switch ($action) {
 
 // get zc_plugins
         $sub_dir_files = array();
-        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        if ($include_plugins) {
+          getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
+        }
         $sub_dir_files_plugins = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_admin, $sub_dir_files_plugins);
@@ -1078,6 +1084,14 @@ if ($found == false) {
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILES_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_all_files' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
+        </div>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_INCLUDE_PLUGINS, 'include_plugins', 'class="control-label col-sm-3"'); ?>
+          <div class="col-sm-9 col-md-6">
+            <div class="checkbox">
+              <label for="include_zc_plugins"><?php echo zen_draw_checkbox_field('include_plugins', true, $include_plugins, '', 'id="include_zc_plugins" aria-label="include_zc_plugins"'); ?></label>
+            </div>
+          </div>
         </div>
         <div class="form-group">
             <?php
