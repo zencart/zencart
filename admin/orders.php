@@ -14,10 +14,10 @@ if (isset($module)) {
 
 // Override instructions in:
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
-if (!isset($quick_view_popover_enabled)) $quick_view_popover_enabled = false;
-if (!isset($includeAttributesInProductDetailRows)) $includeAttributesInProductDetailRows = true;
-if (!isset($show_product_tax)) $show_product_tax = true;
-if (!isset($show_zone_info)) $show_zone_info = true;
+$quick_view_popover_enabled = $quick_view_popover_enabled ?? false;
+$includeAttributesInProductDetailRows = $includeAttributesInProductDetailRows ?? true;
+$show_product_tax = $show_product_tax ?? true;
+$show_zone_info = $show_zone_info ?? true;
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();

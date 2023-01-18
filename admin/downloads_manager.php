@@ -17,9 +17,8 @@ $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page']
 
 // Override instructions in:
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
-if (!isset($show_download_date)) {
-   $show_download_date = false;
-}
+$show_download_date = $show_download_date ?? false;
+
 if (!empty($action)) {
   switch ($action) {
     case 'insert':
