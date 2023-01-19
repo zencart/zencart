@@ -1188,6 +1188,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         }
 
         $cPath_back = (zen_not_null($cPath_back)) ? 'cPath=' . $cPath_back . '&' : '';
+
+        $messageSubCategories = CATEGORY_HAS_SUBCATEGORIES;
+        $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_SKIP_ACTIONS', $current_category_id, $zc_skip_products, $zc_skip_categories, $messageSubCategories);
+
         ?>
         <div class="row">
           <div class="col-md-3"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br>' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
@@ -1235,7 +1239,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               ?>
               <?php
             } else {
-              echo CATEGORY_HAS_SUBCATEGORIES;
+              echo $messageSubCategories;
               ?>
               <?php
             } // hide has cats
