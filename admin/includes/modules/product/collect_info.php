@@ -83,7 +83,7 @@ if (!$category_lookup->EOF) {
 $manufacturers_array = [
     [
     'id' => '',
-    'text' => TEXT_NONE
+    'text' => TEXT_NONE,
     ]
 ];
 $manufacturers = $db->Execute("SELECT manufacturers_id, manufacturers_name
@@ -92,7 +92,7 @@ $manufacturers = $db->Execute("SELECT manufacturers_id, manufacturers_name
 foreach ($manufacturers as $manufacturer) {
   $manufacturers_array[] = [
     'id' => $manufacturer['manufacturers_id'],
-    'text' => $manufacturer['manufacturers_name']
+    'text' => $manufacturer['manufacturers_name'],
   ];
 }
 
