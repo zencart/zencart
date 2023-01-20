@@ -60,12 +60,15 @@ if (isset($_GET['pID']) && empty($_POST)) {
   $pInfo->product_type = $pInfo->products_type;
 } elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
+  if (isset($_GET['pID'])) {
+     $pInfo->products_id = (int)$_GET['pID'];
+  }
   if (isset($pInfo->cPath)) {
       $pInfo->master_categories_id = $pInfo->cPath;
   }
-  $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
-  $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';
-  $products_url = isset($_POST['products_url']) ? $_POST['products_url'] : '';
+  $products_name = $_POST['products_name'] ?? '';
+  $products_description = $_POST['products_description'] ?? '';
+  $products_url = $_POST['products_url'] ?? '';
 }
 
 $category_lookup = $db->Execute("SELECT *
@@ -80,38 +83,52 @@ if (!$category_lookup->EOF) {
   $cInfo = new objectInfo([]);
 }
 
-$artists_array = array(array(
+$artists_array = [
+    [
     'id' => '',
-    'text' => TEXT_NONE));
+    'text' => TEXT_NONE,
+    ]
+];
 $artists = $db->Execute("SELECT artists_id, artists_name
                          FROM " . TABLE_RECORD_ARTISTS . "
                          ORDER BY artists_name");
 foreach ($artists as $artist) {
-  $artists_array[] = array(
+  $artists_array[] = [
     'id' => $artist['artists_id'],
-    'text' => $artist['artists_name']);
+    'text' => $artist['artists_name'],
+  ];
 }
 
-$record_company_array = array(array(
+$record_company_array = [
+    [
     'id' => '',
-    'text' => TEXT_NONE));
+    'text' => TEXT_NONE,
+    ]
+];
 $record_companies = $db->Execute("SELECT record_company_id, record_company_name
                                 FROM " . TABLE_RECORD_COMPANY . "
                                 ORDER BY record_company_name");
 foreach ($record_companies as $record_company) {
-  $record_company_array[] = array(
+  $record_company_array[] = [
     'id' => $record_company['record_company_id'],
-    'text' => $record_company['record_company_name']);
+    'text' => $record_company['record_company_name']
+  ];
 }
 
-$music_genre_array = array(array('id' => '', 'text' => TEXT_NONE));
+$music_genre_array = [
+    [
+    'id' => '',
+    'text' => TEXT_NONE,
+    ]
+];
 $music_genres = $db->Execute("SELECT music_genre_id, music_genre_name
                               FROM " . TABLE_MUSIC_GENRE . "
                               ORDER BY music_genre_name");
 foreach ($music_genres as $music_genre) {
-  $music_genre_array[] = array(
+  $music_genre_array[] = [
     'id' => $music_genre['music_genre_id'],
-    'text' => $music_genre['music_genre_name']);
+    'text' => $music_genre['music_genre_name'],
+  ];
 }
 
 // set to out of stock if categories_status is off and new product or existing products_status is off
@@ -170,7 +187,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   echo zen_draw_hidden_field('products_discount_type_from', $pInfo->products_discount_type_from);
   echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter);
   ?>
-  <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status == true ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
+  <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
   <div class="form-group">
       <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_STATUS; ?></p>
     <div class="col-sm-9 col-md-6">
@@ -325,8 +342,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_QTY_BOX_STATUS; ?></p>
     <div class="col-sm-9 col-md-6">
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '1', ($pInfo->products_qty_box_status == 1 ? true : false)) . TEXT_PRODUCTS_QTY_BOX_STATUS_ON; ?></label>
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '0', ($pInfo->products_qty_box_status == 0 ? true : false)) . TEXT_PRODUCTS_QTY_BOX_STATUS_OFF; ?></label>
+      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '1', $pInfo->products_qty_box_status == 1) . TEXT_PRODUCTS_QTY_BOX_STATUS_ON; ?></label>
+      <label class="radio-inline"><?php echo zen_draw_radio_field('products_qty_box_status', '0', $pInfo->products_qty_box_status == 0) . TEXT_PRODUCTS_QTY_BOX_STATUS_OFF; ?></label>
       <?php echo ($pInfo->products_qty_box_status == 0 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_QTY_BOX_STATUS_EDIT . '</span>' : ''); ?>
     </div>
   </div>
@@ -446,7 +463,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control" inputmode="url"'); ?>
+          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars($products_url[$languages[$i]['id']] ?? zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control" inputmode="url"'); ?>
         </div>
         <br>
         <?php
