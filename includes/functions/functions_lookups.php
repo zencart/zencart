@@ -95,6 +95,9 @@ function zen_get_configuration_key_value_layout($lookup, $type = 1)
 {
     global $db;
     $configuration_query = $db->Execute("select configuration_value from " . TABLE_PRODUCT_TYPE_LAYOUT . " where configuration_key='" . zen_db_input($lookup) . "' and product_type_id='" . (int)$type . "'");
+    if ($configuration_query->EOF) {
+      return '<span class="lookupAttention">' . $lookup . '</span>';
+    }
     $lookup_value = $configuration_query->fields['configuration_value'];
     if (!($lookup_value)) {
         $lookup_value = '<span class="lookupAttention">' . $lookup . '</span>';
