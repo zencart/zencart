@@ -111,8 +111,8 @@ class zcDate extends base
                 '%T' => 'HH:mm:ss',
                 '%x' => $date_short,
                 '%X' => $time_short,
-                '%y' => 'YY',
-                '%Y' => 'YYYY',
+                '%y' => 'yy',
+                '%Y' => 'y',
             ];
             $this->strftime2intl = [
                 'from' => array_keys($strftime2intl),
