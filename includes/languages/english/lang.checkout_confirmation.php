@@ -6,7 +6,7 @@ $define = [
     'HEADING_PRODUCTS' => 'Shopping Cart Contents',
     'NO_COMMENTS_TEXT' => 'None',
     'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => '<strong>Final Step</strong>',
-    'TEXT_CONTINUE_CHECKOUT_PROCEDURE' => '- continue to confirm your order. Thank you!',
+    'TEXT_CONTINUE_CHECKOUT_PROCEDURE' => '- continue to complete your order. Thank you!',
 ];
 
 return $define;
