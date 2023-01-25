@@ -49,7 +49,7 @@ jobs:
        matrix:
          php-versions: ['7.4', '8.0', '8.1', '8.2']
      continue-on-error: ${{ matrix.php == '8.2' }}
-     name: PHP ${{ matrix.php-versions }} Datasbase Tests
+     name: PHP ${{ matrix.php-versions }} Database Tests
      services:
        mysql:
          image: mysql:5.7
