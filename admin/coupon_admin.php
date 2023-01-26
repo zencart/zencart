@@ -1197,17 +1197,7 @@ switch ($_GET['action']) {
               ?>
             </div>
             <div class="col-sm-4 text-right">
-              <?php echo zen_draw_form('search', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"', true); ?>
-              <div class="form-group">
-                <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
-                <div class="col-sm-9">
-                  <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"'); ?>
-                </div>
-              </div>
-              <?php
-              echo zen_hide_session_id();
-              echo '</form>';
-              ?>
+            <?php require DIR_WS_MODULES . 'search_box.php'; ?>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
               <table class="table table-hover table-striped">
