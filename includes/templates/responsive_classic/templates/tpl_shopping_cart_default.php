@@ -31,7 +31,7 @@
 
 <?php if ($messageStack->size('shopping_cart') > 0) echo $messageStack->output('shopping_cart'); ?>
 
-<?php echo zen_draw_form('cart_quantity', zen_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type), 'post', 'id="shoppingCartForm"'); ?>
+<?php echo zen_draw_form('cart_quantity', zen_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type), 'post', 'id="cart_quantity"'); ?>
 <div id="cartInstructionsDisplay" class="content"><?php
 /**
  * require the html_define for the shopping_cart page
