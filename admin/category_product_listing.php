@@ -540,6 +540,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $keyword_search_fields = [
                 'cd.categories_name',
                 'cd.categories_description',
+                'cd.categories_id',
               ];
               $sql .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
           } else {
