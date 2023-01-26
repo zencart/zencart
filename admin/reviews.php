@@ -250,7 +250,7 @@ if (!empty($action)) {
             <?php echo '</form>'; ?>
           </div>
           <div class="col-sm-4">
-            <?php include DIR_WS_MODULES . 'search_box.php'; ?>
+            <?php require DIR_WS_MODULES . 'search_box.php'; ?>
           </div>
         </div>
         <div class="row">
