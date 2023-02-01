@@ -34,5 +34,10 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       </div>
     </div>
   </div>
-<?php } ?>
+    <?php
+}
+$extra_form_group = '';
+$zco_notifier->notify('NOTIFY_ADMIN_SEARCH_BOX_FORM_GROUP', '', $extra_form_group);
+echo $extra_form_group;
+?>
 <?php echo '</form>'; ?>
