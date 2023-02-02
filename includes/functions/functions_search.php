@@ -162,7 +162,6 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
         global $db, $zco_notifier;
 
         $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
-        $first_field = true;
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
             if ($startWithWhere) {
@@ -179,6 +178,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
                         break;
                     default:
                         $sql_add = " (";
+                        $first_field = true;
                         $sql_or = ' ';
                         foreach ($fields as $field_name) {
                             if (!$first_field) {
@@ -208,7 +208,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
             }
             $where_str .= " )";
         }
-        if ($first_field) {
+        if (substr($where_str, -7) === '( ()  )') {
             return ' ';
         }
         return $where_str ?? ' ';
