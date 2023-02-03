@@ -1118,3 +1118,39 @@ function zen_copy_discounts_to_product($copy_from, $copy_to)
         $cnt_discount++;
     }
 }
+
+function zen_products_sort_order($includeOrderBy = true): string
+{
+    switch(PRODUCT_INFO_PREVIOUS_NEXT_SORT) {
+        case (0):
+            $productSort = 'LPAD(p.products_id,11,"0")';
+            $productSort = 'p.products_id';
+            break;
+        case (1):
+            $productSort = 'pd.products_name';
+            break;
+        case (2):
+            $productSort = 'p.products_model';
+            break;
+        case (3):
+            $productSort = 'p.products_price_sorter, pd.products_name';
+            break;
+        case (4):
+            $productSort = 'p.products_price_sorter, p.products_model';
+            break;
+        case (5):
+            $productSort = 'pd.products_name, p.products_model';
+            break;
+        case (6):
+            $productSort = 'LPAD(p.products_sort_order,11,"0"), pd.products_name';
+            $productSort = 'products_sort_order, pd.products_name';
+            break;
+        default:
+            $productSort = 'pd.products_name';
+            break;
+    }
+    if ($includeOrderBy) {
+        return ' ORDER BY ' . $productSort;
+    }
+    return $productSort;
+}
