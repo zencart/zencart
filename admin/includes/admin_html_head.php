@@ -35,33 +35,51 @@ if (!defined('IS_ADMIN_FLAG')) {
     <link rel="stylesheet" href="<?php echo $value; ?>">
 <?php
 }
+
+$page_base_name = basename($PHP_SELF, '.php');
+
 foreach ($installedPlugins as $plugin) {
     $relativeDir = $plugin->getRelativePath();
     $absoluteDir = $plugin->getAbsolutePath();
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^global_stylesheet/', '.css');
     foreach ($directory_array as $key => $value) {
-        ?>
-        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
-        <?php
-    }
-
-    if (file_exists($absoluteDir  . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css')) {
 ?>
-        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . basename($PHP_SELF, '.php') . '.css'; ?>">
+        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
 <?php
     }
-    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
+
+    if (file_exists($absoluteDir  . 'admin/includes/css/' . $page_base_name . '.css')) {
+?>
+        <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $page_base_name . '.css'; ?>">
+<?php
+    }
+
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^' . $page_base_name . '_/', '.css');
     foreach ($directory_array as $key => $value) {
-        ?>
+?>
         <link rel="stylesheet" href="<?php echo $relativeDir . 'admin/includes/css/' . $value; ?>">
-        <?php
+<?php
+    }
+
+    $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^' . $page_base_name . '_/', '.php');
+    foreach ($directory_array as $key => $value) {
+        echo "\n";
+        require $absoluteDir . 'admin/includes/css/' . $value;
     }
 }
-$directory_array = $template->get_template_part('includes/css/', '/^' . basename($PHP_SELF, '.php') . '_/', '.css');
+
+$directory_array = $template->get_template_part('includes/css/', '/^' . $page_base_name . '_/', '.css');
 foreach ($directory_array as $key => $value) {
 ?>
     <link rel="stylesheet" href="includes/css/<?php echo $value; ?>">
 <?php
 }
+
+$directory_array = $template->get_template_part('includes/css/', '/^' . $page_base_name . '_/', '.php');
+foreach ($directory_array as $key => $value) {
+    echo "\n";
+    require 'includes/css/' . $value;
+}
+
 // pull in any necessary JS for the page
-require(DIR_WS_INCLUDES . 'javascript_loader.php');
+require DIR_WS_INCLUDES . 'javascript_loader.php';
