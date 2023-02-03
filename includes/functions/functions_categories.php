@@ -336,30 +336,7 @@ function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = []
     }
 
     if (empty($order_by)) {
-        switch(PRODUCT_INFO_PREVIOUS_NEXT_SORT) {
-            case 0:
-                $order_by = 'products_id';
-                break;
-            case 2:
-                $order_by = 'products_model';
-                break;
-            case 3:
-                $order_by = 'products_price_sorter, products_name';
-                break;
-            case 4:
-                $order_by = 'products_price_sorter, products_model';
-                break;
-            case 5:
-                $order_by = 'products_name, products_model';
-                break;
-            case 6:
-                $order_by = 'products_sort_order, products_name';
-                break;
-            case 1:
-            default:
-                $order_by = 'products_name';
-                break;
-        }
+        $order_by = zen_products_sort_order(false);
     }
 
     $sort_array = array_map('trim', array_filter(explode(',', str_ireplace('order by ', '', $order_by))));
