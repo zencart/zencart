@@ -403,7 +403,9 @@ function zen_unlink_product_from_all_linked_categories($product_id, $master_cate
 function zen_get_uprid($prid, $params)
 {
     $uprid = $prid;
-    if (!is_array($params) || empty($params) || strstr($prid, ':')) return $prid;
+    if (!is_array($params)) {
+        return (string)$prid;
+    }
 
     foreach ($params as $option => $value) {
         if (is_array($value)) {
