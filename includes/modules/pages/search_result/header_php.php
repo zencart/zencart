@@ -128,7 +128,7 @@ if ($search_additional_clause === false &&
     }
 }
 
-if (empty($dfrom) && empty($dto) && empty($pfrom) && empty($pto) && empty($keywords)) {
+if (empty($dfrom) && empty($dto) && empty($pfrom) && empty($pto) && empty($keywords) && $search_additional_clause === false) {
     $error = true;
     // redundant should be able to remove this
     if (!$missing_one_input) {
