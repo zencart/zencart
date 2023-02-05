@@ -28,7 +28,7 @@
 <address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br>'); ?></address>
 
 <h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3>
-<h4 id="checkoutConfirmDefaultPaymentTitle"><?php $payment_title; ?></h4>
+<h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $payment_title; ?></h4>
 
 <?php
   if ($credit_covers === false && is_array($payment_modules->modules)) {
