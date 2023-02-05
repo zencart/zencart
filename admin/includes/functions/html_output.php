@@ -244,7 +244,7 @@ function zen_image_submit($image, $alt = '', $parameters = '')
     $form .= '>';
     if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
     if (strtolower($method) == 'get') {
-      $form .= '<input type="hidden" name="cmd" value="' . (isset($_GET['cmd']) ? $_GET['cmd'] : 'home') . '">';
+      $form .= '<input type="hidden" name="cmd" value="' . $action . '">';
     }
     return $form;
   }
