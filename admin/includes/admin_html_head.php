@@ -81,5 +81,13 @@ foreach ($directory_array as $key => $value) {
     require 'includes/css/' . $value;
 }
 
+// -----
+// Enable site-specific styling.
+//
+if (file_exists('includes/css/site-specific-styles.php')) {
+    echo "\n";
+    require 'includes/css/site-specific-styles.php';
+}
+
 // pull in any necessary JS for the page
 require DIR_WS_INCLUDES . 'javascript_loader.php';
