@@ -31,6 +31,13 @@ if (!defined('IS_ADMIN_FLAG')) {
     <link rel="stylesheet" href="includes/css/jAlert.css">
     <link rel="stylesheet" href="includes/css/menu.css">
     <link rel="stylesheet" href="includes/css/stylesheet.css">
+<?php
+if (file_exists('includes/css/site-specific-stylesheet.css')) {
+?>
+    <link rel="stylesheet" href="includes/css/site-specific-stylesheet.css">
+<?php
+}
+?>
 <?php if (file_exists($value = 'includes/css/' . basename($PHP_SELF, '.php') . '.css')) { ?>
     <link rel="stylesheet" href="<?php echo $value; ?>">
 <?php
