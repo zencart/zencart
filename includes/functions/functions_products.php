@@ -402,11 +402,25 @@ function zen_unlink_product_from_all_linked_categories($product_id, $master_cate
  */
 function zen_get_uprid($prid, $params)
 {
-    $uprid = $prid;
-    if (!is_array($params) || $params === []) {
-        return (string)$prid;
+    // -----
+    // The string version of the supplied $prid is returned if:
+    //
+    // 1. The supplied $params is not an array or is an empty array, implying
+    //    that no attributes are associated with the product-selection.
+    // 2. The supplied $prid is already in uprid-format (ppp:xxxx), where
+    //    ppp is the product's id and xxx is a hash of the associated attributes.
+    //
+    $prid = (string)$prid;
+    if (!is_array($params) || $params === [] || strpos($prid, ':') !== false) {
+        return $prid;
     }
 
+    // -----
+    // Otherwise, the $params array is expected to contain option/value
+    // pairs which are concatenated to the supplied $prid, hashed and then
+    // appended to the supplied $prid.
+    //
+    $uprid = $prid;
     foreach ($params as $option => $value) {
         if (is_array($value)) {
             foreach ($value as $opt => $val) {
