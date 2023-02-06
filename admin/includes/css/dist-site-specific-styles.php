@@ -8,6 +8,8 @@
  * to overall css styling in your site's admin.  The file should be created in the
  * same directory (/admin/includes/css) that you found this one! Place your site-specific content
  * between the opening and closing style tags.
+ *
+ * See https://docs.zen-cart.com/user/customizing/admin_customizing/ for additional information.
  */
 ?>
 <style>
