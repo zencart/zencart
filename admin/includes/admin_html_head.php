@@ -31,13 +31,6 @@ if (!defined('IS_ADMIN_FLAG')) {
     <link rel="stylesheet" href="includes/css/jAlert.css">
     <link rel="stylesheet" href="includes/css/menu.css">
     <link rel="stylesheet" href="includes/css/stylesheet.css">
-<?php
-if (file_exists('includes/css/site-specific-stylesheet.css')) {
-?>
-    <link rel="stylesheet" href="includes/css/site-specific-stylesheet.css">
-<?php
-}
-?>
 <?php if (file_exists($value = 'includes/css/' . basename($PHP_SELF, '.php') . '.css')) { ?>
     <link rel="stylesheet" href="<?php echo $value; ?>">
 <?php
@@ -86,6 +79,14 @@ $directory_array = $template->get_template_part('includes/css/', '/^' . $page_ba
 foreach ($directory_array as $key => $value) {
     echo "\n";
     require 'includes/css/' . $value;
+}
+
+// -----
+// Enable site-specific styling.
+//
+if (file_exists('includes/css/site-specific-styles.php')) {
+    echo "\n";
+    require 'includes/css/site-specific-styles.php';
 }
 
 // pull in any necessary JS for the page
