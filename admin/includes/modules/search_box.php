@@ -5,7 +5,7 @@
  * @version $Id: Zen4All 2020 Sep 09 New in v1.5.8-alpha $
  */
 ?>
-<?php echo zen_draw_form('search', basename($PHP_SELF, '.php'), '', 'get', 'class="form-horizontal"', true); ?>
+<?php echo zen_draw_form('searchForm', basename($PHP_SELF, '.php'), '', 'get', 'class="form-horizontal"', true); ?>
 <div class="form-group">
   <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
   <div class="col-sm-9">
@@ -34,5 +34,10 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       </div>
     </div>
   </div>
-<?php } ?>
+    <?php
+}
+$extra_form_group = '';
+$zco_notifier->notify('NOTIFY_ADMIN_SEARCH_BOX_FORM_GROUP', '', $extra_form_group);
+echo $extra_form_group;
+?>
 <?php echo '</form>'; ?>

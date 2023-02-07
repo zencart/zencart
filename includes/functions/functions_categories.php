@@ -336,10 +336,10 @@ function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = []
     }
 
     if (empty($order_by)) {
-        $order_by = $prev_next_order;
+        $order_by = zen_products_sort_order(false);
     }
 
-    $sort_array = array_filter(explode(',', str_ireplace('order by ', '', trim($order_by))));
+    $sort_array = array_map('trim', array_filter(explode(',', str_ireplace('order by ', '', $order_by))));
 
     $pulldown = new productPulldown();
 
