@@ -16,22 +16,30 @@ if (!defined('IS_ADMIN_FLAG')) {
  * CONSTANTS are used for language-specific display names, and are defined in /YOUR_ADMIN_FOLDER/includes/languages/extra_definitions/editor_EDITORNAME.php
  *
  * To add additional editors, add your own entries to the $editors_list array by creating a NEW FILE in /YOUR_ADMIN_FOLDER/includes/extra_functions/editor_EDITORNAME.php containing just one line of PHP:
- *    <?php  $editors_list['NAME_OF_EDITOR']  = array('desc' => EDITOR_CONSTANT,  'handler' => 'editorhandlerfilename.php',  'special_needs' => '');
+ *    <?php  $editors_list['NAME_OF_EDITOR'] = ['desc' => EDITOR_CONSTANT,  'handler' => 'editorhandlerfilename.php',  'special_needs' => ''];
  *
  *
  * NOTE: THERE SHOULD BE NO NEED TO EDIT ANYTHING BELOW THIS LINE:
  */
-$editors_list = [
-    'NONE' => [                 // Plain-text editor
-        'desc' => EDITOR_NONE,
-        'handler' => '',
-        'special_needs' => '',
-    ],
-    'CKEDITOR' => [
-        'desc' => EDITOR_CKEDITOR,
-        'handler' => 'ckeditor.php',
-        'special_needs' => '',
-    ],
+if (!isset($editors_list)) {
+    $editors_list = [];
+}
+
+/**
+ * Note the key associated with the plain-text editor.  It'll
+ * be needed if an unsupported or misconfigured HTML editor is the
+ * current editor-of-choice.
+ */
+$plain_editor_key = count($editors_list) + 1;
+$editors_list['NONE'] = [
+    'desc' => EDITOR_NONE,
+    'handler' => '',
+    'special_needs' => '',
+];                 // Plain-text editor
+$editors_list['CKEDITOR'] = [
+    'desc' => EDITOR_CKEDITOR,
+    'handler' => 'ckeditor.php',
+    'special_needs' => '',
 ];
 if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tiny_mce')) {
     $editors_list['TINYMCE'] = [
@@ -56,10 +64,22 @@ foreach ($editors_list as $key => $value) {
 }
 
 /**
- * Session default is set if no preference has been chosen during this login session
+ * Account for the fact that the editor might not be valid.  For instance, on an upgrade
+ * it might still be set for the HTMLAREA editor!  If the preferred editor is no longer
+ * valid, use 'NONE' as the default.
+ */
+$preferred_editor = HTML_EDITOR_PREFERENCE;
+if (!in_array(HTML_EDITOR_PREFERENCE, array_keys($editors_list))) {
+    $preferred_editor = 'NONE';
+    $current_editor_key = $plain_editor_key;
+    $messageStack->add(sprintf(ERROR_EDITOR_NOT_FOUND, HTML_EDITOR_PREFERENCE), 'error');
+}
+
+/**
+ * Session default is set if no preference has been chosen during this login session.
  */
 if (!isset($_SESSION['html_editor_preference_status'])) {
-    $_SESSION['html_editor_preference_status'] = HTML_EDITOR_PREFERENCE;
+    $_SESSION['html_editor_preference_status'] = $preferred_editor;
 }
 
 /**
@@ -79,7 +99,7 @@ foreach ($editors_pulldown as $key => $value) {
     if ($new_editor_choice === $value['id']) {
         $_SESSION['html_editor_preference_status'] = $value['key'];
     }
-    if ($_SESSION['html_editor_preference_status'] == $value['key']) {
+    if ($_SESSION['html_editor_preference_status'] === $value['key']) {
         $current_editor_key = $value['id'];
     }
 }
@@ -87,10 +107,10 @@ foreach ($editors_pulldown as $key => $value) {
 $editor_handler = DIR_WS_INCLUDES . $editors_list[$_SESSION['html_editor_preference_status']]['handler'];
 $editor_handler = ($editor_handler === DIR_WS_INCLUDES) ? '' : $editor_handler;
 /* if handler not found, reset to NONE */
-if ($editor_handler != '' && !file_exists($editor_handler)) {
+if ($editor_handler !== '' && !is_file($editor_handler)) {
     $editor_handler = '';
     $_SESSION['html_editor_preference_status'] = 'NONE';
-    $current_editor_key = 0;
+    $current_editor_key = $plain_editor_key;
 }
 
 /**
