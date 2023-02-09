@@ -324,7 +324,7 @@ if (!empty($action)) {
                 $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
                 $default_directory = substr($ptInfo->default_image, 0, strpos($ptInfo->default_image, '/') + 1);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir' ,'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_info_image($ptInfo->default_image, $ptInfo->type_name));
+                $contents[] = array('text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_HANDLER, 'handler', 'class="control-label"') . zen_draw_input_field('handler', $ptInfo->type_handler, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_handler') . ' class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_ALLOW_ADD_CART, 'catalog_add_to_cart', 'class="control-label"') . zen_draw_checkbox_field('catalog_add_to_cart', $ptInfo->allow_add_to_cart, ($ptInfo->allow_add_to_cart == 'Y' ? true : false), 'class="form-control"'));
                 $sql = "SELECT type_id, type_name FROM " . TABLE_PRODUCT_TYPES;
@@ -363,7 +363,7 @@ if (!empty($action)) {
                   if (zen_not_null($ptInfo->last_modified)) {
                     $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($ptInfo->last_modified));
                   }
-                  $contents[] = array('text' => '<br>' . zen_info_image($ptInfo->manufacturers_image, $ptInfo->manufacturers_name));
+                  $contents[] = array('text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
                   $contents[] = array('text' => '<br>' . TEXT_PRODUCTS . ' ' . $ptInfo->products_count);
                 }
                 break;
