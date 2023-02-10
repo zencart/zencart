@@ -218,6 +218,7 @@ $define = [
     'ERROR_DESTINATION_DOES_NOT_EXIST' => 'Error: Destination does not exist %s',
     'ERROR_DESTINATION_NOT_WRITEABLE' => 'Error: Destination not writeable %s',
     'ERROR_DIRECTORY_NOT_REMOVEABLE' => 'Error: Could not remove the directory specified. You may have to use FTP to remove the directory, due to a server-permissions configuration limitation.',
+    'ERROR_EDITOR_NOT_FOUND' => 'The HTML editor currently selected (%s) in \'My Store\' is not available. The site\'s default editor will be plain-text until you update that selection to an available HTML editor.',
     'ERROR_EDITORS_FOLDER_NOT_FOUND' => 'You have an HTML editor selected in \'My Store\' but the \'/editors/\' folder cannot be located. Please disable your selection or move your editor files into the \'' . DIR_WS_CATALOG . 'editors/\' folder',
     'ERROR_FILETYPE_NOT_ALLOWED' => 'Error: File upload type not allowed (%s). See &quot;Maximum Values&quot; settings.',
     'ERROR_FILE_NOT_REMOVEABLE' => 'Error: Could not remove the file specified. You may have to use FTP to remove the file, due to a server-permissions configuration limitation.',
