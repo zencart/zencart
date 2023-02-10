@@ -13,11 +13,23 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * List of potential editors apps
  *
- * CONSTANTS are used for language-specific display names, and are defined in /YOUR_ADMIN_FOLDER/includes/languages/extra_definitions/editor_EDITORNAME.php
+ * CONSTANTS are used for language-specific display names, and are defined in /YOUR_ADMIN_FOLDER/includes/languages/extra_definitions/editor_MYEDITOR.php
+ * - You'll define the language-specific description of MYEDITOR in the constant EDITOR_MYEDITOR:
+ * <?php
+ * define('EDITOR_MYEDITOR', 'A description of myeditor.');
  *
- * To add additional editors, add your own entries to the $editors_list array by creating a NEW FILE in /YOUR_ADMIN_FOLDER/includes/extra_functions/editor_EDITORNAME.php containing just one line of PHP:
- *    <?php  $editors_list['NAME_OF_EDITOR'] = ['desc' => EDITOR_CONSTANT,  'handler' => 'editorhandlerfilename.php',  'special_needs' => ''];
+ * To add additional editors, add your own entries to the $editors_list array by creating a
+ * NEW FILE in /YOUR_ADMIN_FOLDER/includes/extra_functions/editor_MYEDITOR.php containing:
  *
+ * <?php
+ * if (!isset($editors_list)) {
+ *     $editors_list = [];
+ * }
+ * $editors_list['MYEDITOR'] = [
+ *     'desc' => EDITOR_MYEDITOR,       //- This is the language constant you created above.
+ *     'handler' => 'myeditor.php',
+ *     'special_needs' => '',
+ * ];
  *
  * NOTE: THERE SHOULD BE NO NEED TO EDIT ANYTHING BELOW THIS LINE:
  */
