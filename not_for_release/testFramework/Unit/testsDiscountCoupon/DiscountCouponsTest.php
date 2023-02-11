@@ -260,7 +260,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 501);
-        $this->assertEquals($GLOBALS['order']->info['total'], 1.49);
+        $this->assertEquals(round($GLOBALS['order']->info['total'],4), 1.49);
         $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
 
@@ -292,7 +292,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 501);
-        $this->assertEquals($GLOBALS['order']->info['total'], 1.5893);
+        $this->assertEquals(round($GLOBALS['order']->info['total'],4), 1.5893);
         $this->assertTrue($GLOBALS['order']->info['shipping_cost'] == 2.50);
     }
 
@@ -356,7 +356,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         $this->coupon->process();
         $result = $this->coupon->output;
         $this->assertTrue($result[0]['value'] == 402.50);
-        $this->assertEquals($GLOBALS['order']->info['total'], 99.99);
+        $this->assertEquals(round($GLOBALS['order']->info['total'],4), 99.99);
         $this->assertEquals($GLOBALS['order']->info['shipping_cost'], 0);
     }
 
