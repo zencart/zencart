@@ -505,7 +505,6 @@ if (!empty($action) && $order_exists === true) {
 
       <?php
       if ($action === 'edit' && $order_exists) {
-        $order = new order($oID);
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EDIT_BEGIN', $oID, $order);
         if ($order->info['payment_module_code']) {
           $messageStack->reset();
