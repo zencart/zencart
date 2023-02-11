@@ -92,11 +92,11 @@ trait DatabaseConcerns
 
     public function loadDatabaseConfigures($user)
     {
-        $f = DIR_FS_ROOT . $this->configPath . '/' . $user . '.configure.dusk.php';
-        echo "\n" . "Found DB Config = " . $f . "\n";
+        $f = DIR_FS_ROOT . $this->configPath . '/' . $user . '.configure.db.php';
+        echo "\n" . "looking for DB Config = " . $f . "\n";
 
         if (!file_exists( $f)) {
-            echo 'Could not find database configure';
+            echo 'Could not find DB Config' . "\n";
             die(1);
         }
         require($f);
