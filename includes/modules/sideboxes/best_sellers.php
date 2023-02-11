@@ -39,6 +39,7 @@ if ($best_sellers->RecordCount() >= MIN_DISPLAY_BESTSELLERS) {
   $title =  BOX_HEADING_BESTSELLERS;
   $box_id =  'bestsellers';
   $rows = 0;
+  $bestsellers_list = [];
   while (!$best_sellers->EOF) {
     $rows++;
     $bestsellers_list[$rows]['id'] = $best_sellers->fields['products_id'];
