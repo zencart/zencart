@@ -6,9 +6,9 @@
 
 use App\Models\Admin;
 use Tests\Support\Traits\DatabaseConcerns;
-use Tests\Support\zcUnitTestCase;
+use Tests\Support\zcDBTestCase;
 
-class DatabaseTest extends zcUnitTestCase
+class DatabaseTest extends zcDBTestCase
 {
     use DatabaseConcerns;
 
