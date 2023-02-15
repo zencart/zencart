@@ -90,6 +90,9 @@ class zcObserverDownloadsViaUrl extends base {
   protected function updateNotifyCheckDownloadHandler(&$class, $eventID, $var, &$fields, &$origin_filename, &$browser_filename, &$source_directory, &$file_exists, &$service)
   {
     $file_parts = $this->parseFileParts($origin_filename);
+    if ($file_parts === false) {
+        return;
+    }
     if ($file_parts[0] == 'http' || $file_parts[0] == 'https') {
       $origin_filename  = $file_parts[1];
       $browser_filename = substr($origin_filename, strrpos($origin_filename, '/') + 1);
@@ -119,7 +122,9 @@ class zcObserverDownloadsViaUrl extends base {
     // verify that the passed "file" is an http/https URL
     if ($source_directory != 'http' && $source_directory != 'https') {
       $file_parts = $this->parseFileParts($origin_filename);
-      if ($file_parts[0] != 'http' && $file_parts[0] != 'https') return;
+      if ($file_parts === false || ($file_parts[0] != 'http' && $file_parts[0] != 'https')) {
+          return;
+      }
       $origin_filename  = $file_parts[1];
       $browser_filename = substr($origin_filename, strrpos($origin_filename, '/') + 1);
       $source_directory = $file_parts[0];
