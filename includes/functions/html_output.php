@@ -140,10 +140,10 @@ function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters
     $image = '<img src="' . zen_output_string($src) . '"';
 
     if (empty($title)) {
-        $alt_text = IMAGE_ALT_TEXT_NO_TITLE;
+        $alt_text = (defined('IMAGE_ALT_TEXT_NO_TITLE')) ? IMAGE_ALT_TEXT_NO_TITLE : 'n/a';
     } else {
         $title_text = zen_output_string($title);
-        $alt_text = IMAGE_ALT_PREFIX . ' ' . $title_text;
+        $alt_text = ((defined('IMAGE_ALT_PREFIX')) ? (IMAGE_ALT_PREFIX . ' ') : '') . $title_text;
         $image .= ' title="' . $title_text . '"';
     }
     $image .= ' alt="' . $alt_text . '"';
@@ -241,10 +241,10 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     $image = '<img src="' . zen_output_string($src) . '"';
 
     if (empty($title)) {
-        $alt_text = IMAGE_ALT_TEXT_NO_TITLE;
+        $alt_text = (defined('IMAGE_ALT_TEXT_NO_TITLE')) ? IMAGE_ALT_TEXT_NO_TITLE : 'n/a';
     } else {
         $title_text = zen_output_string($title);
-        $alt_text = IMAGE_ALT_PREFIX . ' ' . $title_text;
+        $alt_text = ((defined('IMAGE_ALT_PREFIX')) ? (IMAGE_ALT_PREFIX . ' ') : '') . $title_text;
         $image .= ' title="' . $title_text . '"';
     }
     $image .= ' alt="' . $alt_text . '"';
