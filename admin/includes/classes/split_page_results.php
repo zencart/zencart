@@ -303,7 +303,7 @@ class splitPageResults
 
         if ($this->num_pages > 1) {
             $display_links = '';
-            if ($displayAsDropdown) $display_links .= zen_draw_form('pages', basename($PHP_SELF), '', 'get');
+            if ($displayAsDropdown) $display_links .= zen_draw_form('pages', basename($PHP_SELF, '.php'), '', 'get');
 
             if (!empty($this->previousPage)) {
                 $display_links .= '<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . $this->previousPage) . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
