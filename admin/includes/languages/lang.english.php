@@ -349,6 +349,7 @@ $define = [
     'NOT_INSTALLED_TEXT' => 'Not Installed',
     'OTHER_IMAGE_CALL_FOR_PRICE' => 'call_for_prices.png',
     'OTHER_IMAGE_PRICE_IS_FREE' => 'free.png',
+    'PAYMENT_MODULE_GV' => 'GV/DC',     //- NOTE: This value is also defined in the storefront's lang.english.php, be sure to update both if this one's changed!
     'PHP_DATE_TIME_FORMAT' => 'm/d/Y H:i:s',
     'PLEASE_SELECT' => 'Please select ...',
     'PLUGIN_INSTALL_SQL_FAILURE' => 'one or more database errors occured',
