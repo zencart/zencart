@@ -348,8 +348,9 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 
 ////
 // Output a form textarea field
-  function zen_draw_textarea_field($name, $wrap, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
-    $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
+  function zen_draw_textarea_field($name, $wrap, $cols, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
+    $cols = (int)$cols;
+    $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) . '"' . ($cols > 0 ? ' cols="' . $cols . '"' : '') . ' rows="' . zen_output_string($height) . '"';
 
     if (!empty($parameters)) $field .= ' ' . $parameters;
 
