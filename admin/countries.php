@@ -8,7 +8,51 @@
 require 'includes/application_top.php';
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
+// -----
+// The 'page=' parameter, if supplied, must be an alphabetic value; otherwise, default to the
+// first page (blank/A).
+//
 $currentPage = (!empty($_GET['page']) && ctype_alpha($_GET['page'][0]) ? $_GET['page'][0] : '');
+
+// -----
+// If a country's ID (cID=) parameter is also specified, ensure that the 'page=' parameter is
+// valid for that country.
+//
+if (isset($_GET['cID'])) {
+    // -----
+    // If the country's ID isn't a digit-based value, redirect back to the
+    // first page of the display.
+    //
+    if (!ctype_digit($_GET['cID'])) {
+        zen_redirect(zen_href_link(FILENAME_COUNTRIES));
+    }
+
+    // -----
+    // Retrieve the country's name and ensure that the 'page=' parameter accurately reflects
+    // the selected country's first character.  If the country's ID isn't found, redirect back
+    // to the first page of the display, as the variable's value has been muddled with!
+    //
+    $country_name = $db->Execute(
+        "SELECT countries_name
+           FROM " . TABLE_COUNTRIES . "
+          WHERE countries_id = " . $_GET['cID'] . "
+          LIMIT 1"
+    );
+    if ($country_name->EOF) {
+        zen_redirect(zen_href_link(FILENAME_COUNTRIES));
+    }
+
+    // -----
+    // Otherwise, set the current page to reflect the first
+    // character of the country's name.
+    //
+    $currentPage = strtoupper($country_name->fields['countries_name'][0]);
+}
+
+// -----
+// Set the 'page=' parameter for use in various href-links that follow.
+//
 $page_parameter = ($currentPage !== '') ? ('page=' . $currentPage . '&') : '';
 
 if (!empty($action)) {
@@ -110,7 +154,7 @@ if (!empty($action)) {
               $countries_query_raw = "SELECT countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id, status
                                       FROM " . TABLE_COUNTRIES . "
                                       ORDER BY countries_name";
-              $countries_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
+              $countries_split = new splitPageResults($currentPage, MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
               $countries = $db->Execute($countries_query_raw);
               foreach ($countries as $country) {
                 if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $country['countries_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -119,7 +163,7 @@ if (!empty($action)) {
 
                 if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) {
                   ?>
-                  <tr id="defaultSelected" class="dataTableRowSelected" onclick = "document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit'); ?>'" role="button">
+                  <tr id="defaultSelected" class="dataTableRowSelected" onclick = "document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id . '&action=edit'); ?>'" role="button">
                   <?php } else { ?>
                   <tr class="dataTableRow country-listing-row" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $country['countries_id']); ?>'" data-cid="<?php echo $country['countries_id']; ?>">
                   <?php } ?>
@@ -215,8 +259,8 @@ if (!empty($action)) {
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $countries_split->display_count($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
-            <td class="text-right"><?php echo $countries_split->display_links($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td><?php echo $countries_split->display_count($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $currentPage, TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
+            <td class="text-right"><?php echo $countries_split->display_links($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $currentPage); ?></td>
           </tr>
           <?php if (empty($action)) { ?>
             <tr>
