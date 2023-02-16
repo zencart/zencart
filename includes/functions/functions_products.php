@@ -1064,7 +1064,7 @@ function zen_remove_product($product_id, $ptc = 'true')
                   WHERE products_id = " . (int)$product_id);
 
     $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                  WHERE products_id LIKE '" . (int)$product_id) . ":%'";
+                  WHERE products_id LIKE '" . (int)$product_id . ":%'");
 
 
     $product_reviews = $db->Execute("SELECT reviews_id
