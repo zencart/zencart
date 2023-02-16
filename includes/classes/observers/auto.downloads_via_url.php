@@ -154,7 +154,6 @@ class zcObserverDownloadsViaUrl extends base {
 
     $file_parts = explode(':', $filename);
     if (preg_match('~^(https?://)(?!=.*)~', $filename, $matches)) {
-//       $file_parts[1] = ltrim($file_parts[1], '/');
       return $file_parts;
     }
 
