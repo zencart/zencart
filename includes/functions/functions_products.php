@@ -17,7 +17,7 @@
  */
 function zen_get_product_details($product_id, $language_id = null)
 {
-    global $db;
+    global $db, $zco_notifier;
 
     if ($language_id === null) $language_id = $_SESSION['languages_id'];
 
@@ -26,7 +26,10 @@ function zen_get_product_details($product_id, $language_id = null)
             LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (p.products_type = pt.type_id)
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$language_id . ")
             WHERE p.products_id = " . (int)$product_id;
-    return $db->Execute($sql, 1, true, 900);
+    $product = $db->Execute($sql, 1, true, 900);
+    //Allow an observer to modify details
+    $zco_notifier->notify('NOTIFY_GET_PRODUCT_DETAILS', $product_id, $product);
+    return $product;
 }
 
 /**
@@ -683,7 +686,7 @@ function zen_get_products_url($product_id, $language_id)
  */
 function zen_get_products_description($product_id, $language_id = 0)
 {
-    global $db;
+    global $db, $zco_notifier;
 
     if (empty($language_id)) {
         $language_id = $_SESSION['languages_id'];
@@ -693,6 +696,8 @@ function zen_get_products_description($product_id, $language_id = 0)
                              FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                              WHERE products_id = " . (int)$product_id . "
                              AND language_id = " . (int)$language_id, 1);
+//Allow an observer to modify the description
+    $zco_notifier->notify('NOTIFY_GET_PRODUCTS_DESCRIPTION', $product_id, $product);
     return ($product->EOF) ? '' : $product->fields['products_description'];
 }
 
