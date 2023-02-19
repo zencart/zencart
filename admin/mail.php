@@ -280,7 +280,7 @@ if ($action == 'preview') {
             <div class="col-sm-9">
                 <?php
                 if (EMAIL_USE_HTML == 'true') {
-                  echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(stripslashes(isset($_POST['message_html'])?$_POST['message_html']:''), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
+                  echo zen_draw_textarea_field('message_html', 'soft', '', '25', htmlspecialchars(stripslashes(isset($_POST['message_html'])?$_POST['message_html']:''), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
                 } else {
                   echo TEXT_WARNING_HTML_DISABLED;
                 }
@@ -289,7 +289,7 @@ if ($action == 'preview') {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_textarea_field('message', 'soft', '100%', '15', htmlspecialchars(isset($_POST['message']) ? $_POST['message'] : '', ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_textarea_field('message', 'soft', '', '15', htmlspecialchars(isset($_POST['message']) ? $_POST['message'] : '', ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?></div>
           </div>
 
           <?php if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED === true && defined('DIR_WS_ADMIN_ATTACHMENTS') && is_dir(DIR_WS_ADMIN_ATTACHMENTS) && is_writable(DIR_WS_ADMIN_ATTACHMENTS)) { ?>
