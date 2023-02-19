@@ -17,7 +17,7 @@
  */
 function zen_get_product_details($product_id, $language_id = null)
 {
-    global $db;
+    global $db, $zco_notifier;
 
     if ($language_id === null) $language_id = $_SESSION['languages_id'];
 
@@ -26,7 +26,10 @@ function zen_get_product_details($product_id, $language_id = null)
             LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (p.products_type = pt.type_id)
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$language_id . ")
             WHERE p.products_id = " . (int)$product_id;
-    return $db->Execute($sql, 1, true, 900);
+    $product = $db->Execute($sql, 1, true, 900);
+    //Allow an observer to modify details
+    $zco_notifier->notify('NOTIFY_GET_PRODUCT_DETAILS', $product_id, $product);
+    return $product;
 }
 
 /**
@@ -402,11 +405,25 @@ function zen_unlink_product_from_all_linked_categories($product_id, $master_cate
  */
 function zen_get_uprid($prid, $params)
 {
-    $uprid = $prid;
-    if (!is_array($params)) {
-        return (string)$prid;
+    // -----
+    // The string version of the supplied $prid is returned if:
+    //
+    // 1. The supplied $params is not an array or is an empty array, implying
+    //    that no attributes are associated with the product-selection.
+    // 2. The supplied $prid is already in uprid-format (ppp:xxxx), where
+    //    ppp is the product's id and xxx is a hash of the associated attributes.
+    //
+    $prid = (string)$prid;
+    if (!is_array($params) || $params === [] || strpos($prid, ':') !== false) {
+        return $prid;
     }
 
+    // -----
+    // Otherwise, the $params array is expected to contain option/value
+    // pairs which are concatenated to the supplied $prid, hashed and then
+    // appended to the supplied $prid.
+    //
+    $uprid = $prid;
     foreach ($params as $option => $value) {
         if (is_array($value)) {
             foreach ($value as $opt => $val) {
@@ -669,7 +686,7 @@ function zen_get_products_url($product_id, $language_id)
  */
 function zen_get_products_description($product_id, $language_id = 0)
 {
-    global $db;
+    global $db, $zco_notifier;
 
     if (empty($language_id)) {
         $language_id = $_SESSION['languages_id'];
@@ -679,6 +696,8 @@ function zen_get_products_description($product_id, $language_id = 0)
                              FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                              WHERE products_id = " . (int)$product_id . "
                              AND language_id = " . (int)$language_id, 1);
+//Allow an observer to modify the description
+    $zco_notifier->notify('NOTIFY_GET_PRODUCTS_DESCRIPTION', $product_id, $product);
     return ($product->EOF) ? '' : $product->fields['products_description'];
 }
 
@@ -1045,7 +1064,7 @@ function zen_remove_product($product_id, $ptc = 'true')
                   WHERE products_id = " . (int)$product_id);
 
     $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                  WHERE products_id = " . (int)$product_id);
+                  WHERE products_id LIKE '" . (int)$product_id . ":%'");
 
 
     $product_reviews = $db->Execute("SELECT reviews_id

@@ -505,9 +505,8 @@ if (!empty($action) && $order_exists === true) {
 
       <?php
       if ($action === 'edit' && $order_exists) {
-        $order = new order($oID);
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EDIT_BEGIN', $oID, $order);
-        if ($order->info['payment_module_code']) {
+        if ($order->info['payment_module_code'] && $order->info['payment_module_code'] !== PAYMENT_MODULE_GV) {
           $messageStack->reset();
           $payment_module = DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php';
           if (!file_exists($payment_module)) {

@@ -10,21 +10,24 @@ trait DatabaseConcerns
     protected $user;
     protected \queryFactory $db;
     protected ?\PDO $pdoConnection;
+    protected static $initialized = FALSE;
 
     public function setup(): void
     {
+        parent::setup();
+        if (!self::$initialized) {
+            // Do something once here for _all_ test subclasses.
+            $this->user = $this->detectUser();
+            $this->root = getcwd();
 
-        define('DIR_FS_ROOT', getcwd());
-        define('USE_PCONNECT', false);
-
-        $this->user = $this->detectUser();
-        echo "\n" . "Found User = " . $this->user . "\n";
+            //echo "\n" . "Found User = " . $this->user . "\n";
+            $this->loadDatabaseConfigures($this->detectUser());
+            self::$initialized = TRUE;
+        }
 
         if (!isset($this->databaseFixtures)) {
             return;
         }
-        $this->loadDatabaseConfigures($this->detectUser());
-        parent::setup();
 
         $capsule = new Capsule;
         $capsule->addConnection([
@@ -42,7 +45,7 @@ trait DatabaseConcerns
 
         $this->db = new \queryFactory();
         $GLOBALS['db'] = $this->db;
-        if (!$this->db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
+        if (!$this->db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, false, false)) {
 
         }
 
@@ -92,11 +95,11 @@ trait DatabaseConcerns
 
     public function loadDatabaseConfigures($user)
     {
-        $f = DIR_FS_ROOT . $this->configPath . '/' . $user . '.configure.dusk.php';
-        echo "\n" . "Found DB Config = " . $f . "\n";
+        $f = $this->root . $this->configPath . '/' . $user . '.configure.db.php';
+        //echo "\n" . "looking for DB Config = " . $f . "\n";
 
         if (!file_exists( $f)) {
-            echo 'Could not find database configure';
+            echo 'Could not find DB Config' . "\n";
             die(1);
         }
         require($f);

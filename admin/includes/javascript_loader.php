@@ -29,6 +29,23 @@
     }));
   });
 </script>
+<?php
+$searchBoxScriptArray = [
+    'specials',
+    'coupon_admin',
+    'reviews',
+    'featured',
+    'customers',
+    'category_product_listing',
+    'downloads_manager',
+];
+$searchBoxJs = 'includes/javascript/searchBox.js';
+if (in_array(basename($PHP_SELF, '.php'), $searchBoxScriptArray) && file_exists($searchBoxJs)) {
+    ?>
+    <script defer src="<?= $searchBoxJs; ?>"></script>
+    <?php
+}
+?>
 
 <?php if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) { ?>
 <script src="<?php echo $jsFile; ?>"></script>
