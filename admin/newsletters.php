@@ -225,13 +225,13 @@ if (!empty($action)) {
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_NEWSLETTER_CONTENT_HTML, 'message_html', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '30', htmlspecialchars($nInfo->content_html, ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"'); ?>
+              <?php echo zen_draw_textarea_field('message_html', 'soft', '', '30', htmlspecialchars($nInfo->content_html, ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"'); ?>
           </div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_NEWSLETTER_CONTENT, 'content', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_textarea_field('content', 'soft', '100%', '20', htmlspecialchars($nInfo->content, ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?>
+              <?php echo zen_draw_textarea_field('content', 'soft', '', '20', htmlspecialchars($nInfo->content, ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?>
           </div>
         </div>
         <div class="main row text-right">
