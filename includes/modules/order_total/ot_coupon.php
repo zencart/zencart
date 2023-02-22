@@ -17,7 +17,6 @@
  */
 class ot_coupon extends base
 {
-
     /**
      * $_check is used to check the configuration key set up
      * @var int
@@ -391,7 +390,6 @@ class ot_coupon extends base
             $this->validation_errors[] = sprintf(TEXT_INVALID_FINISHDATE_COUPON, (empty($this->validation_errors) ? $dc_link : $coupon_code), zen_date_short($coupon_details['coupon_expire_date']));
             // return;
         }
-
 
         $validNotExceededNumberOfUses = $this->validateCouponMaximumUses($coupon_details);
         if (!$validNotExceededNumberOfUses) {
@@ -939,7 +937,7 @@ class ot_coupon extends base
 
         $result = $db->Execute($sql);
 
-        return ($result->RecordCount() < $coupon_details['uses_per_coupon']);
+        return ($result->fields['total_uses_of_coupon'] < $coupon_details['uses_per_coupon']);
     }
 
     /**
