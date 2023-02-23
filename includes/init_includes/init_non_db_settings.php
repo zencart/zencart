@@ -26,14 +26,13 @@ $non_db_settings = [
     'CART_SHIPPING_METHOD_ZIP_REQUIRED' => 'true',  //- Either 'true' or 'false'.  Used by tpl_modules_shipping_estimator.php
 
     // Shared - Storefront and Admin 
-    'TOPMOST_CATEGORY_PARENT_ID' => 0, 
-    
+    'TOPMOST_CATEGORY_PARENT_ID' => '0',
+
     // -----
     // Admin settings.
     //
     'MAX_DISPLAY_RESTRICT_ENTRIES' => 10,           //- Note, an integer value!.  Used by /admin/coupon_restrict.php
     'WARN_DATABASE_VERSION_PROBLEM' => 'true',      //- Either 'true' or 'false'.  Used by /admin/init_includes/init_errors.php
-
 ];
 $non_db_settings = array_merge($non_db_settings, $site_specific_non_db_settings);
 
