@@ -11,7 +11,7 @@ $define = [
     'TITLE_NO_SHIPPING_AVAILABLE' => 'Not Available At This Time',
     'TEXT_NO_SHIPPING_AVAILABLE' => '<span class="alert">Sorry, we are not shipping to your region at this time.</span><br>Please contact us for alternate arrangements.',
     'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => 'Continue to Step 2',
-    'TEXT_CONTINUE_CHECKOUT_PROCEDURE' => '- choose your payment method.',
+    'TEXT_CONTINUE_CHECKOUT_PROCEDURE' => '- to choose your payment method.',
     'FREE_SHIPPING_TITLE' => 'Free Shipping',
     'ERROR_PLEASE_RESELECT_SHIPPING_METHOD' => 'Your available shipping options have changed. Please re-select your desired shipping method.',
 ];

@@ -9,7 +9,7 @@ $define = [
     'TITLE_PLEASE_SELECT' => 'Change the Shipping Address for This Order',
     'TABLE_HEADING_NEW_SHIPPING_ADDRESS' => 'New Shipping Address',
     'TEXT_CREATE_NEW_SHIPPING_ADDRESS' => 'Please use the following form to create a new shipping address for use with this order.',
-    'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => '<strong>Continue</strong>',
+    'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => 'Continue',
     'TEXT_CONTINUE_CHECKOUT_PROCEDURE' => '- to shipping method.',
 ];
 
