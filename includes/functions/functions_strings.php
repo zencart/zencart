@@ -378,8 +378,10 @@ function zen_clean_html($clean_it, $extraTags = '')
  */
 function fixup_url($url)
 {
+    global $request_type;
+
     if (!preg_match('#^https?://#', $url)) {
-        $url = 'http://' . $url;
+        $url = (($request_type === 'NONSSL') ? 'http' : 'https') . '://' . $url;
     }
     return $url;
 }

@@ -114,7 +114,7 @@ switch ($_GET['action']) {
         $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
         $db->Execute($sql);
-        zen_redirect($manufacturer->fields['manufacturers_url']);
+        zen_redirect(fixup_url($manufacturer->fields['manufacturers_url']));
       }
     } else {
       // no url exists for the selected language, lets use the default language then
@@ -138,7 +138,7 @@ switch ($_GET['action']) {
           $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
           $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
           $db->Execute($sql);
-          zen_redirect($manufacturer->fields['manufacturers_url']);
+          zen_redirect(fixup_url($manufacturer->fields['manufacturers_url']));
         }
       }
     }
