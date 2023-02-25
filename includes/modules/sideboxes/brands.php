@@ -8,10 +8,10 @@
  */
 
 // test if brands sidebox should show
-if ($current_page_base === 'brands') {
+if ($current_page_base === FILENAME_BRANDS) {
     return;
 }
-if ($current_page_base === 'index' && !empty($_GET['manufacturers_id'])) {
+if ($current_page_base === FILENAME_DEFAULT && !empty($_GET['manufacturers_id'])) {
     return;
 }
 
@@ -21,9 +21,11 @@ $sql = "SELECT manufacturers_name, manufacturers_image, manufacturers_id, featur
         ORDER BY weighted DESC, manufacturers_name";
 $results = $db->Execute($sql);
 
-if ($results->RecordCount() == 0) return;
+if ($results->EOF) {
+    return;
+}
 
-$brands_array = array();
+$brands_array = [];
 foreach ($results as $result) {
     $brands_array[] = [
         'id' => $result['manufacturers_id'],
@@ -33,7 +35,7 @@ foreach ($results as $result) {
     ];
 }
 
-require($template->get_template_dir('tpl_brands.php', DIR_WS_TEMPLATE, $current_page_base, 'sideboxes') . '/tpl_brands.php');
+require $template->get_template_dir('tpl_brands.php', DIR_WS_TEMPLATE, $current_page_base, 'sideboxes') . '/tpl_brands.php';
 $title = BOX_HEADING_BRANDS;
 $title_link = FILENAME_BRANDS;
-require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base, 'common') . '/' . $column_box_default);
+require $template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base, 'common') . '/' . $column_box_default;
