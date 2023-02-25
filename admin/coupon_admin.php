@@ -623,8 +623,8 @@ switch ($_GET['action']) {
                   $cc_list = $db->Execute($cc_query_raw);
 
                   foreach ($cc_list as $item) {
-                    if (((!$_GET['uid']) || (@$_GET['uid'] == $item['unique_id'])) && (!$cInfo)) {
-                      $cInfo = new objectInfo($item);
+                    if (empty($_GET['uid']) || ($_GET['uid'] === $item['unique_id'] && !isset($cInfo))) {
+                        $cInfo = new objectInfo($item);
                     }
                     if ((isset($cInfo)) && ($item['unique_id'] == $cInfo->unique_id)) {
                       ?>
