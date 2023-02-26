@@ -381,7 +381,7 @@ function fixup_url($url)
     global $request_type;
 
     if (!preg_match('#^https?://#', $url)) {
-        $url = (($request_type === 'NONSSL') ? 'http' : 'https') . '://' . $url;
+        $url = '//' . $url;
     }
     return $url;
 }
