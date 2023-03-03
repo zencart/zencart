@@ -56,7 +56,7 @@
 
   $review_status = " and r.status = 1";
 
-  $reviews_query_raw = "SELECT r.reviews_id, left(rd.reviews_text, 100) as reviews_text, r.reviews_rating, r.date_added, r.customers_name
+  $reviews_query_raw = "SELECT r.reviews_id, rd.reviews_text, r.reviews_rating, r.date_added, r.customers_name
                         FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
                         WHERE r.products_id = :productsID
                         AND r.reviews_id = rd.reviews_id
