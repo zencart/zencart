@@ -104,4 +104,8 @@ class breadcrumb extends base
     {
         return count($this->_trail);
     }
+    function getTrail()
+    {
+       return $this->_trail;
+    }
 }
