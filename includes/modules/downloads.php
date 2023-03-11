@@ -60,7 +60,7 @@ if ($downloadsOnThisOrder) {
   // Now get all downloadable products in that order
   $downloads_query = "select date_format(o.date_purchased, '%Y-%m-%d') as date_purchased_day,
                              opd.download_maxdays, op.products_name, opd.orders_products_download_id,
-                             opd.orders_products_filename, opd.download_count, opd.download_maxdays
+                             opd.orders_products_filename, opd.download_count 
                         from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
                         where o.orders_id = '" . (int)$last_order . "'
                         and (o.orders_status >= '" . DOWNLOADS_CONTROLLER_ORDERS_STATUS . "'
