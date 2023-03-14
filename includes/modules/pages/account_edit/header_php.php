@@ -30,7 +30,10 @@ if (!empty($_POST['action']) && $_POST['action'] == 'process') {
   $fax = isset($_POST['fax']) ? zen_db_prepare_input($_POST['fax']) : '';
   $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
 
-  if (CUSTOMERS_REFERRAL_STATUS == '2' and $_POST['customers_referral'] != '') $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
+  $customers_referral = ''; 
+  if (CUSTOMERS_REFERRAL_STATUS === '2' && !empty($_POST['customers_referral']) ) {
+     $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
+  }
 
   if (ACCOUNT_GENDER == 'true') {
     if ( ($gender != 'm') && ($gender != 'f') ) {
