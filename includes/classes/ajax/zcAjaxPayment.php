@@ -126,7 +126,7 @@ class zcAjaxPayment extends base
     }
 
     // update customers_referral with $_SESSION['gv_id']
-    if ($_SESSION['cc_id']) {
+    if (!empty($_SESSION['cc_id'])) {
       $discount_coupon_query = "SELECT coupon_code
                             FROM ".TABLE_COUPONS."
                             WHERE coupon_id = :couponID";
@@ -163,7 +163,7 @@ class zcAjaxPayment extends base
 
     // if shipping-edit button should be overridden, do so
     $editShippingButtonLink = zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
-    if (!empty($_SESSION['payment']) && method_exists (${$_SESSION['payment']}, 'alterShippingEditButton')) {
+    if (!empty($_SESSION['payment']) && !empty(${$_SESSION['payment']}) && is_object(${$_SESSION['payment']}) && method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
       $theLink = ${$_SESSION['payment']}->alterShippingEditButton ();
       if ($theLink)
         $editShippingButtonLink = $theLink;
