@@ -76,5 +76,3 @@ if ($numberOfDownloads < 1) {
 <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
 <?php
   }
-?>
-
