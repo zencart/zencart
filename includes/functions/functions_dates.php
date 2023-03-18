@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
+ * @version $Id: brittainmark 2023 Feb 22 Modified in v1.5.8a $
  */
 
 // Normally this zen_date_raw function will ONLY be defined here.

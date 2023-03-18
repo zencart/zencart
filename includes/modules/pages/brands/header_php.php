@@ -2,9 +2,9 @@
 /**
  * brands header_php.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Apr 30 New in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Feb 28 Modified in v1.5.8a $
  */
 
 // This should be first line of the script:

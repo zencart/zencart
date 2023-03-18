@@ -1,8 +1,8 @@
 <?php 
 /*
- * @copyright Copyright 2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Feb 06 Modified in v1.5.8a $
+ * @version $Id: lat9 2023 Feb 06 New in v1.5.8a $
  *
  * Create a file called "site-specific-styles.php" to contain any changes
  * to overall css styling in your site's admin.  The file should be created in the

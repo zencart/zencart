@@ -2,10 +2,10 @@
 /**
  * products_all  header_php.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2021 Aug 14 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2023 Feb 09 Modified in v1.5.8a $
  */
 
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));

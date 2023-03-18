@@ -3,10 +3,10 @@
  * html_output.php
  * HTML-generating functions used throughout the core
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2022 Oct 01 Modified in v1.5.8 $
+ * @version $Id: lat9 2023 Feb 15 Modified in v1.5.8a $
  */
 
 /*

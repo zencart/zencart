@@ -2,11 +2,10 @@
 /**
  * Template Information File
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Tue Jan 19 13:59:06 2016 -0500 New in v1.5.5 $
+ * @version $Id: lat9 2022 Nov 29 Modified in v1.5.8a $
  *
  * picaflor-azul.com, Picaflor Responsive Classic
  */

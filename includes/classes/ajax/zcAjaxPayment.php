@@ -2,9 +2,9 @@
 /**
  * zcAjaxPayment
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2023 Mar 14 Modified in v1.5.8a $
  */
 use Zencart\LanguageLoader\LanguageLoaderFactory;
 class zcAjaxPayment extends base

@@ -2,10 +2,10 @@
 /**
  * paypal.php payment module class for PayPal Payments Standard (IPN) method
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
+ * @version $Id: dbltoe 2022 Nov 10 Modified in v1.5.8a $
  */
 
 define('MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE', 'true');

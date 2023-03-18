@@ -1,9 +1,8 @@
 <?php
 /**
- * @package patches
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: add_cookie_path_switch.php 18695 2011-05-04 05:24:19Z drbyte $
+ * @version $Id: John 2022 Nov 06 Modified in v1.5.8a $
  */
 if (!defined('SESSION_USE_ROOT_COOKIE_PATH') || !defined('SESSION_ADD_PERIOD_PREFIX'))
 {
