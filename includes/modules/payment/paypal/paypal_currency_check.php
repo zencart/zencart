@@ -3,9 +3,9 @@
  * function to check if below 10000 usd limit
  * Returns true $amount if below the limit or the exchange rate cannot be found
  * 
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Oct 16 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2022 Nov 25 New in v1.5.8a $
  */
 function paypalUSDCheck ($amount) : bool
 {

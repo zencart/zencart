@@ -2,11 +2,11 @@
 /**
  * functions used by payment module class for Paypal IPN payment method
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jun 23 Modified in v1.5.8-alpha $
+ * @version $Id: dbltoe 2022 Nov 10 Modified in v1.5.8a $
  */
 
 // Functions for paypal processing

@@ -2,10 +2,10 @@
 /**
 * best_sellers sidebox - displays selected number of (usually top ten) best selling products
 *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
 * @copyright Portions Copyright 2003 osCommerce
 * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-* @version $Id: Scott C Wilson 2022 Jul 27 Modified in v1.5.8-alpha2 $
+* @version $Id: lat9 2023 Feb 13 Modified in v1.5.8a $
 */
 if (isset($current_category_id) && ($current_category_id > 0)) {
     $best_sellers_query =
