@@ -2109,7 +2109,7 @@ class shoppingCart extends base
         if ($this->display_debug_messages) $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
 
         $addCount = 0;
-        if (is_array($_POST['products_id']) && count($_POST['products_id']) > 0) {
+        if (!empty($_POST['products_id']) && is_array($_POST['products_id'])) {
             $products_list = $_POST['products_id'];
             foreach ($products_list as $key => $val) {
                 $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
