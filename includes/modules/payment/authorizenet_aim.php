@@ -441,7 +441,7 @@ class authorizenet_aim extends base {
     $this->auth_code = $response[4];
     $this->transaction_id = $response[6];
     $this->avs_response= $response[5];
-    $this->ccv_response= $response[38];
+    $this->ccv_response= ($response[38] ?? '');
     $response_msg_to_customer = $response_text . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
 
     if ($this->display_specific_failure_reason_for_cvv_and_date) {
@@ -722,7 +722,7 @@ class authorizenet_aim extends base {
       $errorMessage = date('M-d-Y h:i:s') .
                       "\n=================================\n\n" .
                       ($this->commError !='' ? 'Comm results: ' . $this->commErrNo . ' ' . $this->commError . "\n\n" : '') .
-                      'Response Code: ' . $response[0] . ".\nResponse Text: " . $response[3] . "\n\n" .
+                      'Response Code: ' . ($response[0] ?? "Unknown") . ".\nResponse Text: " . $response[3] . "\n\n" .
                       'Sending to Authorizenet: ' . print_r($this->reportable_submit_data, true) . "\n\n" .
                       'Results Received back from Authorizenet: ' . print_r($resp_output, true) . "\n\n" .
                       'CURL communication info: ' . print_r($this->commInfo, true) . "\n";
@@ -745,8 +745,9 @@ class authorizenet_aim extends base {
     // Insert the send and receive response data into the database.
     // This can be used for testing or for implementation in other applications
     // This can be turned on and off if the Admin Section
+    $response_order_id = ($response[7] ?? '');
     if (MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA == 'True'){
-      $db_response_text = $response[3] . ($this->commError !='' ? ' - Comm results: ' . $this->commErrNo . ' ' . $this->commError : '');
+      $db_response_text = ($response[3] ?? "Unknown") . ($this->commError !='' ? ' - Comm results: ' . $this->commErrNo . ' ' . $this->commError : '');
       $db_response_text .= ($response[0] == 2 && $response[2] == 4) ? ' NOTICE: Card should be picked up - possibly stolen ' : '';
       $db_response_text .= ($response[0] == 3 && $response[2] == 11) ? ' DUPLICATE TRANSACTION ATTEMPT ' : '';
 
@@ -756,7 +757,7 @@ class authorizenet_aim extends base {
       $sql = $db->bindVars($sql, ':orderID', preg_replace('/[^0-9]/', '', $response[7]), 'integer');
       $sql = $db->bindVars($sql, ':respCode', $response[0], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
-      $sql = $db->bindVars($sql, ':authType', $response[11], 'string');
+      $sql = $db->bindVars($sql, ':authType', ($response[11] ?? ''), 'string');
       if (!empty($this->transaction_id)) {
         $sql = $db->bindVars($sql, ':transID', substr($this->transaction_id, 0, strpos($this->transaction_id, ' ')), 'string');
       } else {
