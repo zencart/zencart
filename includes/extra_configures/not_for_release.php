@@ -15,9 +15,9 @@ $fsDir = DIR_FS_CATALOG . 'not_for_release/testFramework/extra_scripts/';
 $wsDir = 'not_for_release/testFramework/extra_scripts/';
 
 // Check for new functions in extra_scripts directory
-$directory_array = array();
+$directory_array = [];
 
-if ($dir = @dir($fsDir)) {
+if (is_dir($fsDir) && $dir = dir($fsDir)) {
   while ($file = $dir->read()) {
     if (!is_dir($fsDir . $file)) {
       if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
