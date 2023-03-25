@@ -94,17 +94,20 @@ jQuery(document).ready(function() {
     update_zone = function(theForm)
     {
         var countryHasZones = false;
-        var countryZones = '<option selected="selected" value="0"><?php echo addslashes(PLEASE_SELECT); ?><' + '/option>';
+        var countryZones = '';
         var selected_country = jQuery('#country option:selected').val();
         jQuery.each(JSON.parse(country_zones), function(country_id, country_zones) {
             if (selected_country === country_id) {
                 countryHasZones = true;
                 jQuery.each(country_zones, function(zone_id, zone_name) {
-                    countryZones += '<option value="' + zone_id + '">' + zone_name + '<' + '/option>';
+                    countryZones += '<option label ="' + zone_name + '" value="' + zone_id + '">' + zone_name + '<' + '/option>';
                 });
             }
         });
         if (countryHasZones) {
+            var split = countryZones.split('<option');
+            var sorted = split.sort();
+            countryZones = '<option selected="selected" value="0"><?php echo addslashes(PLEASE_SELECT); ?><' + '/option><option' + sorted.join('<option');
             jQuery('#state').hide();
             jQuery('#stateZone').html(countryZones);
             jQuery('#stateZone').show();
