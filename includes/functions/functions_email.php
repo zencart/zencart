@@ -206,21 +206,21 @@ use PHPMailer\PHPMailer\SMTP;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
       if ((int)EMAIL_SYSTEM_DEBUG > 4 ) $mail->Debugoutput = 'error_log';
 
-      $sending_newsletter = false; 
-      $email_transport = EMAIL_TRANSPORT; 
-      $email_mailbox = EMAIL_SMTPAUTH_MAILBOX; 
-      $email_password = EMAIL_SMTPAUTH_PASSWORD; 
-      $email_mail_server = EMAIL_SMTPAUTH_MAIL_SERVER; 
-      $email_mail_server_port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT; 
+      $sending_newsletter = false;
+      $email_transport = EMAIL_TRANSPORT;
+      $email_mailbox = EMAIL_SMTPAUTH_MAILBOX;
+      $email_password = EMAIL_SMTPAUTH_PASSWORD;
+      $email_mail_server = EMAIL_SMTPAUTH_MAIL_SERVER;
+      $email_mail_server_port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
       if (defined('NEWSLETTER_MODULES') && !empty(NEWSLETTER_MODULES) && defined('NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER') && !empty(NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER)) {
         $modules = explode(',', str_replace(' ', '', NEWSLETTER_MODULES));
-        if (in_array($module, $modules)) { 
-            $sending_newsletter = true; 
-            $email_transport = 'smtpauth'; 
-            $email_mailbox = NEWSLETTER_EMAIL_SMTPAUTH_MAILBOX; 
-            $email_password = NEWSLETTER_EMAIL_SMTPAUTH_PASSWORD; 
-            $email_mail_server = NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER; 
-            $email_mail_server_port = (int)NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER_PORT; 
+        if (in_array($module, $modules)) {
+            $sending_newsletter = true;
+            $email_transport = 'smtpauth';
+            $email_mailbox = NEWSLETTER_EMAIL_SMTPAUTH_MAILBOX;
+            $email_password = NEWSLETTER_EMAIL_SMTPAUTH_PASSWORD;
+            $email_mail_server = NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER;
+            $email_mail_server_port = (int)NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
         }
       }
 
@@ -246,7 +246,7 @@ use PHPMailer\PHPMailer\SMTP;
           if ($mail->Port == '465') $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
           if ($mail->Port == '587') $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
-          if (!$sending_newsletter) { 
+          if (!$sending_newsletter) {
              if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
                $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
              }
@@ -600,8 +600,8 @@ use PHPMailer\PHPMailer\SMTP;
     if (!isset($block['EMAIL_FOOTER_COPYRIGHT']) || $block['EMAIL_FOOTER_COPYRIGHT'] == '') $block['EMAIL_FOOTER_COPYRIGHT'] = EMAIL_FOOTER_COPYRIGHT;
     if (!isset($block['EMAIL_DISCLAIMER']) || $block['EMAIL_DISCLAIMER'] == '')     $block['EMAIL_DISCLAIMER']  = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">'. STORE_OWNER_EMAIL_ADDRESS .'</a>');
     if (!isset($block['EMAIL_SPAM_DISCLAIMER']) || $block['EMAIL_SPAM_DISCLAIMER'] == '')   $block['EMAIL_SPAM_DISCLAIMER']  = EMAIL_SPAM_DISCLAIMER;
-    if (!isset($block['EMAIL_DATE_SHORT']) || $block['EMAIL_DATE_SHORT'] == '')     $block['EMAIL_DATE_SHORT']  = zen_date_short(date("Y-m-d"));
-    if (!isset($block['EMAIL_DATE_LONG']) || $block['EMAIL_DATE_LONG'] == '')       $block['EMAIL_DATE_LONG']   = zen_date_long(date("Y-m-d"));
+    if (!isset($block['EMAIL_DATE_SHORT']) || $block['EMAIL_DATE_SHORT'] == '')     $block['EMAIL_DATE_SHORT']  = zen_date_short(date('Y-m-d H:i:s'));
+    if (!isset($block['EMAIL_DATE_LONG']) || $block['EMAIL_DATE_LONG'] == '')       $block['EMAIL_DATE_LONG']   = zen_date_long(date('Y-m-d H:i:s'));
     if (!isset($block['BASE_HREF']) || $block['BASE_HREF'] == '') $block['BASE_HREF'] = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     if (!isset($block['CHARSET']) || $block['CHARSET'] == '') $block['CHARSET'] = CHARSET;
     //  if (!isset($block['EMAIL_STYLESHEET']) || $block['EMAIL_STYLESHEET'] == '')      $block['EMAIL_STYLESHEET']       = str_replace(array("\r\n", "\n", "\r"), "",@file_get_contents(DIR_FS_EMAIL_TEMPLATES.'stylesheet.css'));
