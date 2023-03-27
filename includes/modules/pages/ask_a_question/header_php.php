@@ -24,7 +24,9 @@ if ($pid === false) {
 //
 $info_page = zen_get_info_page($pid);
 $show_info_page_ask_a_question = 'SHOW_' . strtoupper($info_page) . '_ASK_A_QUESTION';
-if (!defined($show_info_page_ask_a_question) || constant($show_info_page_ask_a_question) === '0') {
+$bypass_redirect = false;
+$zco_notifier->notify('NOTIFY_ASK_A_QUESTION_ALLOW_BYPASS_REDIRECT', ['products_id' => $pid, ], $bypass_redirect);
+if ($bypass_redirect === false && (!defined($show_info_page_ask_a_question) || constant($show_info_page_ask_a_question) === '0')) {
     zen_redirect(zen_href_link($info_page, 'products_id=' . $_GET['pid']));
 }
 
