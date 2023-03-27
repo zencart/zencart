@@ -12,6 +12,7 @@ define('ROBOTS_PAGES_TO_SKIP', '
     account_notifications,
     account_password,
     address_book,
+    ask_a_question,
     checkout_confirmation,
     checkout_payment,
     checkout_process,
@@ -32,7 +33,7 @@ define('ROBOTS_PAGES_TO_SKIP', '
     login,
     logoff,
     no_account,
-    order_status
+    order_status,
     password_forgotten,
     popup_image,
     popup_image_additional,
