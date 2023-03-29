@@ -1943,19 +1943,20 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
 
     // prepare the information to pass to the ec_step2_finish() function, which does the account creation, address build, etc
-    $step2_payerinfo = array('payer_id'        => $response['PAYERID'],
-                             'payer_email'     => urldecode($response['EMAIL']),
-                             'payer_salutation'=> '',
-                             'payer_gender'    => '',
-                             'payer_firstname' => urldecode($response['FIRSTNAME']),
-                             'payer_lastname'  => urldecode($response['LASTNAME']),
-                             'payer_business'  => urldecode($response['BUSINESS']),
-                             'payer_status'    => $response['PAYERSTATUS'],
-                             'ship_country_code'   => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
-                             'ship_address_status' => urldecode($response[$this->requestPrefix . 'ADDRESSSTATUS']),
-                             'ship_phone'      => urldecode($response[$this->requestPrefix . 'SHIPTOPHONENUM'] != '' ? $response[$this->requestPrefix . 'SHIPTOPHONENUM'] : $response['PHONENUM']),
-                             'order_comment'   => (isset($response['NOTE']) && isset($response[$this->requestPrefix . 'NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response[$this->requestPrefix . 'NOTETEXT']) : ''),
-                             );
+    $step2_payerinfo = [
+        'payer_id' => $response['PAYERID'],
+        'payer_email' => urldecode($response['EMAIL']),
+        'payer_salutation'=> '',
+        'payer_gender' => '',
+        'payer_firstname' => urldecode($response['FIRSTNAME']),
+        'payer_lastname'  => urldecode($response['LASTNAME']),
+        'payer_business'  => urldecode($response['BUSINESS']),
+        'payer_status'    => $response['PAYERSTATUS'],
+        'ship_country_code' => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
+        'ship_address_status' => (empty($response[$this->requestPrefix . 'ADDRESSSTATUS'])) ? 'NONE' : urldecode($response[$this->requestPrefix . 'ADDRESSSTATUS']),
+        'ship_phone' => urldecode($response[$this->requestPrefix . 'SHIPTOPHONENUM'] != '' ? $response[$this->requestPrefix . 'SHIPTOPHONENUM'] : $response['PHONENUM']),
+        'order_comment' => (isset($response['NOTE']) && isset($response[$this->requestPrefix . 'NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response[$this->requestPrefix . 'NOTETEXT']) : ''),
+    ];
 
 //    if (strtoupper($response['ADDRESSSTATUS']) == 'NONE' || !isset($response['SHIPTOSTREET']) || $response['SHIPTOSTREET'] == '') {
 //      $step2_shipto = array();
@@ -2033,6 +2034,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $address_format_id = 2;
     $state_id = 0;
     $acct_exists = false;
+    $country_code3 = '???';
     // store default address id for later use/reference
     $original_default_address_id = $_SESSION['customer_default_address_id'] ?? 'Not set';
 
@@ -2048,26 +2050,28 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $country2 = $db->Execute($sql2);
 
     // see if we found a record, if yes, then use it instead of default American format
-    if ($country1->RecordCount() > 0) {
-      $country_id = $country1->fields['countries_id'];
-      if (!isset($paypal_ec_payer_info['ship_country_code']) || $paypal_ec_payer_info['ship_country_code'] == '') $paypal_ec_payer_info['ship_country_code'] = $country1->fields['countries_iso_code_2'];
-      $country_code3 = $country1->fields['countries_iso_code_3'];
-      $address_format_id = (int)$country1->fields['address_format_id'];
-    } elseif ($country2->RecordCount() > 0) {
-      // if didn't find it based on name, check using ISO code (ie: in case of no-shipping-address required/supplied)
-      $country_id = $country2->fields['countries_id'];
-      $country_code3 = $country2->fields['countries_iso_code_3'];
-      $address_format_id = (int)$country2->fields['address_format_id'];
+    if (!$country1->EOF) {
+        $country_id = $country1->fields['countries_id'];
+        if (!isset($paypal_ec_payer_info['ship_country_code']) || $paypal_ec_payer_info['ship_country_code'] == '') {
+            $paypal_ec_payer_info['ship_country_code'] = $country1->fields['countries_iso_code_2'];
+        }
+        $country_code3 = $country1->fields['countries_iso_code_3'];
+        $address_format_id = (int)$country1->fields['address_format_id'];
+    } elseif (!$country2->EOF) {
+        // if didn't find it based on name, check using ISO code (ie: in case of no-shipping-address required/supplied)
+        $country_id = $country2->fields['countries_id'];
+        $country_code3 = $country2->fields['countries_iso_code_3'];
+        $address_format_id = (int)$country2->fields['address_format_id'];
     } else {
-      // if defaulting to US, make sure US is valid
-      $sql = "SELECT countries_id FROM " . TABLE_COUNTRIES . " WHERE countries_id = :countryId: LIMIT 1";
-      $sql = $db->bindVars($sql, ':countryId:', $country_id, 'integer');
-      $result = $db->Execute($sql);
-      if ($result->EOF) {
-        $this->notify('NOTIFY_PAYPAL_CUSTOMER_ATTEMPT_TO_USE_INVALID_COUNTRY_CODE');
-        $this->zcLog('ec-step2-finish - 1b', 'Cannot use address due to country lookup/match failure.');
-        $this->terminateEC(MODULE_PAYMENT_PAYPALWPP_TEXT_INVALID_ZONE_ERROR, true, FILENAME_SHOPPING_CART);
-      }
+        // if defaulting to US, make sure US is valid
+        $sql = "SELECT countries_id FROM " . TABLE_COUNTRIES . " WHERE countries_id = :countryId: LIMIT 1";
+        $sql = $db->bindVars($sql, ':countryId:', $country_id, 'integer');
+        $result = $db->Execute($sql);
+        if ($result->EOF) {
+            $this->notify('NOTIFY_PAYPAL_CUSTOMER_ATTEMPT_TO_USE_INVALID_COUNTRY_CODE');
+            $this->zcLog('ec-step2-finish - 1b', 'Cannot use address due to country lookup/match failure.');
+            $this->terminateEC(MODULE_PAYMENT_PAYPALWPP_TEXT_INVALID_ZONE_ERROR, true, FILENAME_SHOPPING_CART);
+        }
     }
     // Need to determine zone, based on zone name first, and then zone code if name fails check. Otherwise uses 0.
     $sql = "SELECT zone_id
@@ -2166,6 +2170,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
 
       // if no address required for shipping (or overridden by above), leave shipping portion alone
+      $address_book_id = $original_default_address_id;
       if (!$bypass_address_creation && strtoupper($_SESSION['paypal_ec_payer_info']['ship_address_status']) != 'NONE' && $_SESSION['paypal_ec_payer_info']['ship_street_1'] != '') {
         // set the session info for the sendto
         $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
