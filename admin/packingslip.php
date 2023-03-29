@@ -38,10 +38,10 @@ foreach ($orders_status as $order_status) {
 }
 
 $show_customer = false;
-if ($order->billing['name'] != $order->delivery['name']) {
+if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
   $show_customer = true;
 }
-if ($order->billing['street_address'] != $order->delivery['street_address']) {
+if (isset($order->delivery['street_address']) && $order->billing['street_address'] != $order->delivery['street_address']) {
   $show_customer = true;
 }
 ?>
@@ -110,7 +110,7 @@ if ($order->billing['street_address'] != $order->delivery['street_address']) {
                 <td class="main"><b><?php echo ENTRY_SHIP_TO; ?></b></td>
               </tr>
               <tr>
-                <td class="main"><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
+                <td class="main"><?php echo (!empty($order->delivery) ? zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>') : TEXT_NONE); ?></td>
               </tr>
             </table>
           </td>
