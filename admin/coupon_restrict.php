@@ -365,6 +365,7 @@ $ppage = (isset($_GET['ppage'])) ? (int)$_GET['ppage'] : 1;
 $pr_query_raw = "SELECT * FROM " . TABLE_COUPON_RESTRICT . " WHERE coupon_id = $cid AND product_id != '0'";
 $pr_split = new splitPageResults($ppage, MAX_DISPLAY_RESTRICT_ENTRIES, $pr_query_raw, $pr_query_numrows);
 $pr_list = $db->Execute($pr_query_raw);
+$prArrayList = [];
 ?>
     <div class="row">
         <h4><?php echo HEADING_TITLE_PRODUCT; ?></h4>
@@ -388,6 +389,7 @@ if ($pr_list->EOF) {
     $products_status_disabled = zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF);
     $products_status_enabled = zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON);
     while (!$pr_list->EOF) {
+        $prArrayList[] = $pr_list->fields['product_id'];
         $products_id = $pr_list->fields['product_id'];
         $products_name = zen_get_products_name($products_id, $_SESSION['languages_id']);
         $products_model = htmlspecialchars(zen_get_products_model($products_id), ENT_COMPAT, CHARSET);
@@ -488,10 +490,12 @@ if (!$products->EOF) {
 }
 
 while (!$products->EOF) {
-    $products_array[] = array(
-        'id' => $products->fields['products_id'],
-        'text' => $products->fields['products_name']
-    );
+    if (!in_array($products->fields['products_id'], $prArrayList)) {
+        $products_array[] = [
+            'id' => $products->fields['products_id'],
+            'text' => $products->fields['products_name'],
+        ];
+    }
     $products->MoveNext();
 }
 unset($products);
