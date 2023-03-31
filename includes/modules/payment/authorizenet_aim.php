@@ -762,7 +762,7 @@ class authorizenet_aim extends base {
       } else {
         $sql = $db->bindVars($sql, ':transID', 'NULL', 'passthru');
       }
-      $sql = $db->bindVars($sql, ':sentData', print_r($this->reportable_submit_data, true), 'string');
+      $sql = $db->bindVars($sql, ':sentData', print_r($this->reportable_submit_data, true), 'stringIgnoreNull');
       $sql = $db->bindVars($sql, ':recvData', print_r($response, true), 'string');
       $sql = $db->bindVars($sql, ':orderTime', $order_time, 'string');
       $sql = $db->bindVars($sql, ':sessID', $sessID, 'string');
