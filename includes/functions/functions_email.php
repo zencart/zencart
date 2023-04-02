@@ -82,7 +82,7 @@
         }
 
         // if no text or html-msg supplied, exit
-        if (trim($email_text) === '' && (empty($block) || (isset($block['EMAIL_MESSAGE_HTML']) && $block['EMAIL_MESSAGE_HTML'] === ''))) {
+        if (trim($email_text) === '' && empty($block['EMAIL_MESSAGE_HTML'])) {
             return false;
         }
 
@@ -118,19 +118,19 @@
 
             //define some additional html message blocks available to templates, then build the html portion.
             if (is_array($block)) {
-                if (!isset($block['EMAIL_TO_NAME']) || $block['EMAIL_TO_NAME'] === '') {
+                if (empty($block['EMAIL_TO_NAME'])) {
                     $block['EMAIL_TO_NAME'] = $to_name;
                 }
-                if (!isset($block['EMAIL_TO_ADDRESS']) || $block['EMAIL_TO_ADDRESS'] === '') {
+                if (empty($block['EMAIL_TO_ADDRESS'])) {
                     $block['EMAIL_TO_ADDRESS'] = $to_email_address;
                 }
-                if (!isset($block['EMAIL_SUBJECT']) || $block['EMAIL_SUBJECT'] === '') {
+                if (empty($block['EMAIL_SUBJECT'])) {
                     $block['EMAIL_SUBJECT'] = $email_subject;
                 }
-                if (!isset($block['EMAIL_FROM_NAME']) || $block['EMAIL_FROM_NAME'] === '') {
+                if (empty($block['EMAIL_FROM_NAME'])) {
                     $block['EMAIL_FROM_NAME'] = $from_email_name;
                 }
-                if (!isset($block['EMAIL_FROM_ADDRESS']) || $block['EMAIL_FROM_ADDRESS'] === '') {
+                if (empty($block['EMAIL_FROM_ADDRESS'])) {
                     $block['EMAIL_FROM_ADDRESS'] = $from_email_address;
                 }
             }
@@ -352,8 +352,8 @@
 
             // set the reply-to address.  If none set yet, then use Store's default email name/address.
             // If sending from checkout or contact-us, use the supplied info
-            $email_reply_to_address = (isset($email_reply_to_address) && $email_reply_to_address !== '') ? $email_reply_to_address : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_address : EMAIL_FROM);
-            $email_reply_to_name = (isset($email_reply_to_name) && $email_reply_to_name !== '') ? $email_reply_to_name : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_name : STORE_NAME);
+            $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_address : EMAIL_FROM);
+            $email_reply_to_name = (!empty($email_reply_to_name)) ? $email_reply_to_name : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_name : STORE_NAME);
             $mail->addReplyTo($email_reply_to_address, $email_reply_to_name);
 
             $mail->setFrom($from_email_address, $from_email_name);
@@ -392,9 +392,9 @@
             if (defined('EMAIL_ATTACHMENTS_ENABLED') && EMAIL_ATTACHMENTS_ENABLED && is_array($attachments_list) && $attachments_list !== []) {
                 foreach ($attachments_list as $key => $val) {
                     $fname = $val['name'] ?? null;
-                    $mimeType = (isset($val['mime_type']) && $val['mime_type'] !== '' && $val['mime_type'] !== 'application/octet-stream') ? $val['mime_type'] : '';
+                    $mimeType = (!empty($val['mime_type']) && $val['mime_type'] !== 'application/octet-stream') ? $val['mime_type'] : '';
                     switch (true) {
-                        case (isset($val['raw_data']) && $val['raw_data'] !== ''):
+                        case (!empty($val['raw_data'])):
                             $fdata = $val['raw_data'];
                             if ($mimeType !== '') {
                                 $mail->addStringAttachment($fdata, $fname, 'base64', $mimeType);
@@ -627,18 +627,18 @@
             $domain = (IS_ADMIN_FLAG === true) ? HTTP_CATALOG_SERVER : HTTP_SERVER;
             $block['EMAIL_LOGO_FILE'] = $domain . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
         }
-        if (!isset($block['EMAIL_LOGO_ALT_TEXT']) || $block['EMAIL_LOGO_ALT_TEXT'] === '') {
+        if (empty($block['EMAIL_LOGO_ALT_TEXT'])) {
             $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
         }
-        if (!isset($block['EMAIL_LOGO_WIDTH']) || $block['EMAIL_LOGO_WIDTH'] === '') {
+        if (empty($block['EMAIL_LOGO_WIDTH'])) {
             $block['EMAIL_LOGO_WIDTH'] = EMAIL_LOGO_WIDTH;
         }
-        if (!isset($block['EMAIL_LOGO_HEIGHT']) || $block['EMAIL_LOGO_HEIGHT'] === '') {
+        if (empty($block['EMAIL_LOGO_HEIGHT'])) {
             $block['EMAIL_LOGO_HEIGHT'] = EMAIL_LOGO_HEIGHT;
         }
 
         zen_define_default('EMAIL_EXTRA_HEADER_INFO', '');
-        if (!isset($block['EXTRA_HEADER_INFO']) || $block['EXTRA_HEADER_INFO'] === '') {
+        if (empty($block['EXTRA_HEADER_INFO'])) {
             $block['EXTRA_HEADER_INFO'] = EMAIL_EXTRA_HEADER_INFO;
         }
 
@@ -652,7 +652,7 @@
             $template_filename_base_en . str_replace(['_extra', '_admin'], '', $module) . '.html',
             DIR_FS_EMAIL_TEMPLATES . $langfolder . 'email_template_' . $current_page_base . '.html',
             DIR_FS_EMAIL_TEMPLATES . 'email_template_' . $current_page_base . '.html',
-            (isset($block['EMAIL_TEMPLATE_FILENAME']) && $block['EMAIL_TEMPLATE_FILENAME'] !== '' ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : null),
+            (!empty($block['EMAIL_TEMPLATE_FILENAME']) ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : null),
             $template_filename_base . 'default.html',
             $template_filename_base_en . 'default.html',
         ];
@@ -692,34 +692,34 @@
             define('HTTP_CATALOG_SERVER', HTTP_SERVER);
         }
         //check for some specifics that need to be included with all messages
-        if (!isset($block['EMAIL_STORE_NAME']) || $block['EMAIL_STORE_NAME'] === '') {
+        if (empty($block['EMAIL_STORE_NAME'])) {
             $block['EMAIL_STORE_NAME'] = STORE_NAME;
         }
-        if (!isset($block['EMAIL_STORE_URL']) || $block['EMAIL_STORE_URL'] === '') {
+        if (empty($block['EMAIL_STORE_URL'])) {
             $block['EMAIL_STORE_URL'] = '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . STORE_NAME . '</a>';
         }
-        if (!isset($block['EMAIL_STORE_OWNER']) || $block['EMAIL_STORE_OWNER'] === '') {
+        if (empty($block['EMAIL_STORE_OWNER'])) {
             $block['EMAIL_STORE_OWNER'] = STORE_OWNER;
         }
-        if (!isset($block['EMAIL_FOOTER_COPYRIGHT']) || $block['EMAIL_FOOTER_COPYRIGHT'] === '') {
+        if (empty($block['EMAIL_FOOTER_COPYRIGHT']) ) {
             $block['EMAIL_FOOTER_COPYRIGHT'] = EMAIL_FOOTER_COPYRIGHT;
         }
-        if (!isset($block['EMAIL_DISCLAIMER']) || $block['EMAIL_DISCLAIMER'] === '') {
+        if (empty($block['EMAIL_DISCLAIMER'])) {
             $block['EMAIL_DISCLAIMER'] = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">' . STORE_OWNER_EMAIL_ADDRESS . '</a>');
         }
-        if (!isset($block['EMAIL_SPAM_DISCLAIMER']) || $block['EMAIL_SPAM_DISCLAIMER'] === '') {
+        if (empty($block['EMAIL_SPAM_DISCLAIMER'])) {
             $block['EMAIL_SPAM_DISCLAIMER'] = EMAIL_SPAM_DISCLAIMER;
         }
-        if (!isset($block['EMAIL_DATE_SHORT']) || $block['EMAIL_DATE_SHORT'] === '') {
+        if (empty($block['EMAIL_DATE_SHORT'])) {
             $block['EMAIL_DATE_SHORT'] = zen_date_short(date('Y-m-d H:i:s'));
         }
-        if (!isset($block['EMAIL_DATE_LONG']) || $block['EMAIL_DATE_LONG'] === '') {
+        if (empty($block['EMAIL_DATE_LONG'])) {
             $block['EMAIL_DATE_LONG'] = zen_date_long(date('Y-m-d H:i:s'));
         }
-        if (!isset($block['BASE_HREF']) || $block['BASE_HREF'] === '') {
+        if (empty($block['BASE_HREF'])) {
             $block['BASE_HREF'] = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
         }
-        if (!isset($block['CHARSET']) || $block['CHARSET'] === '') {
+        if (empty($block['CHARSET'])) {
             $block['CHARSET'] = CHARSET;
         }
         //  if (!isset($block['EMAIL_STYLESHEET']) || $block['EMAIL_STYLESHEET'] == '')      $block['EMAIL_STYLESHEET']       = str_replace(array("\r\n", "\n", "\r"), "",@file_get_contents(DIR_FS_EMAIL_TEMPLATES.'stylesheet.css'));
@@ -732,7 +732,7 @@
         }
 
         $block['COUPON_BLOCK'] = '';
-        if (isset($block['COUPON_TEXT_VOUCHER_IS']) && $block['COUPON_TEXT_VOUCHER_IS'] !== '' && isset($block['COUPON_TEXT_TO_REDEEM']) && $block['COUPON_TEXT_TO_REDEEM'] !== '') {
+        if (!empty($block['COUPON_TEXT_VOUCHER_IS']) && !empty($block['COUPON_TEXT_TO_REDEEM'])) {
             $block['COUPON_BLOCK'] =
                 '<div class="coupon-block">' .
                     $block['COUPON_TEXT_VOUCHER_IS'] . $block['COUPON_DESCRIPTION'] .
@@ -743,7 +743,7 @@
         }
 
         $block['GV_BLOCK'] = '';
-        if ((isset($block['GV_ANNOUNCE']) && $block['GV_ANNOUNCE'] !== '') && (isset($block['GV_REDEEM']) && $block['GV_REDEEM'] !== '')) {
+        if (!empty($block['GV_ANNOUNCE']) && !empty($block['GV_REDEEM'])) {
             $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_ANNOUNCE'] . '<br>' . $block['GV_REDEEM'] . '</div>';
         }
 
