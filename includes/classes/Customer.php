@@ -239,6 +239,12 @@ class Customer extends base
         }
         if (!$found_default_address_id && !empty($first_address)) {
             $this->setDefaultAddressBookId($first_address);
+            foreach($addresses as $address) {
+                if ($address['address_book_id'] === $first_address) {
+                    $this->data += $address['address'];
+                    break;
+                }
+            }
         }
         // keep this info so we don't have to query it again
         $this->data['addresses'] = $addresses;
@@ -354,7 +360,9 @@ class Customer extends base
     protected function setDefaultAddressBookId(int $id)
     {
         global $db;
-        $sql = "UPDATE " . TABLE_CUSTOMERS . " SET customers_default_address_id=" . (int)$id;
+        $sql = "UPDATE " . TABLE_CUSTOMERS . "
+                SET customers_default_address_id = " . (int)$id . "
+                WHERE customers_id = " . (int)$this->customer_id;
         $db->Execute($sql);
         $this->data['customers_default_address_id'] = (int)$id;
     }
