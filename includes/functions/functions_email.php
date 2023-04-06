@@ -302,7 +302,7 @@
                     if ($email_mail_server_port !== 25 && $email_mail_server_port !== 0) {
                         $mail->Port = $email_mail_server_port;
                     }
-                    if ((int)$mail->Port < 30 && $mail->Host === 'smtp.gmail.com') {
+                    if ($mail->Port < 30 && $mail->Host === 'smtp.gmail.com') {
                         $mail->Port = 587;
                     }
                     //set encryption protocol to allow support for secured email protocols
