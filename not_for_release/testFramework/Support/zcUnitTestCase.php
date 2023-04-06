@@ -82,6 +82,7 @@ abstract class zcUnitTestCase extends TestCase
         require_once(DIR_FS_INCLUDES . 'filenames.php');
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/NotifierManager.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/ObserverManager.php';
+        require_once(DIR_FS_CATALOG . '/includes/functions/zen_define_default.php');
 
         if (!array_key_exists('zco_notifier', $GLOBALS)) {
             $GLOBALS['zco_notifier'] = new notifier();
