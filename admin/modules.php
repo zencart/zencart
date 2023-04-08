@@ -213,8 +213,8 @@ if (!empty($action)) {
                           }
                         }
                         $module_info['keys'] = $keys_extra;
-                        if (method_exists($module, 'get_configuration_errors')) { 
-                          $module_info['configuration_errors'] = $module->get_configuration_errors(); 
+                        if (method_exists($module, 'get_configuration_errors')) {
+                          $module_info['configuration_errors'] = $module->get_configuration_errors();
                         }
 
                         $mInfo = new objectInfo($module_info);
@@ -317,7 +317,11 @@ if (!empty($action)) {
               }
               $keys = '';
               foreach($mInfo->keys as $key => $value) {
-                $keys .= '<b>' . $value['title'] . '</b><br>' . $value['description'] . '<br>';
+                  $displayKey = '';
+                  if (ADMIN_CONFIGURATION_KEY_ON === '1') {
+                      $displayKey = 'Key: ' . $key . '<br>';
+                  }
+                $keys .= '<b>' . $displayKey . $value['title'] . '</b><br>' . $value['description'] . '<br>';
                 if ($value['set_function']) {
                   eval('$keys .= ' . $value['set_function'] . '"' . zen_output_string($value['value'], array('"' => '&quot;', '`' => 'null;return;exit;')) . '", "' . $key . '");');
                 } else {
@@ -344,12 +348,12 @@ if (!empty($action)) {
                   if ($languageLoader->loadModuleDefinesFromFile( '/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
                     include_once $module_directory . $class . $file_extension;
                     $module = new $class;
-                    if (method_exists($module, 'help')) { 
+                    if (method_exists($module, 'help')) {
                        $help_text = $module->help();
-                       if (isset($help_text['link'])) { 
-                          $help_button = array('align' => 'text-center', 'text' => '<a href="' . $help_text['link'] . '" target="_blank" rel="noreferrer noopener">' . '<button type="submit" class="btn btn-primary " id="helpButton">' . IMAGE_MODULE_HELP. '</button></a>'); 
-                       } else if (isset($help_text['body'])) { 
-                          $help_title = $module->title; 
+                       if (isset($help_text['link'])) {
+                          $help_button = array('align' => 'text-center', 'text' => '<a href="' . $help_text['link'] . '" target="_blank" rel="noreferrer noopener">' . '<button type="submit" class="btn btn-primary " id="helpButton">' . IMAGE_MODULE_HELP. '</button></a>');
+                       } else if (isset($help_text['body'])) {
+                          $help_title = $module->title;
                           $help_button = array('align' => 'text-center', 'text' => '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal">' . IMAGE_MODULE_HELP . '</button>');
                        }
                     }
@@ -357,8 +361,12 @@ if (!empty($action)) {
               }
               if ($mInfo->status == '1') {
                 $keys = '';
-                foreach($mInfo->keys as $value) {
-                  $keys .= '<b>' . $value['title'] . '</b><br>';
+                foreach($mInfo->keys as $key => $value) {
+                    $displayKey = '';
+                    if (ADMIN_CONFIGURATION_KEY_ON === '1') {
+                        $displayKey = 'Key: ' . $key . '<br>';
+                    }
+                  $keys .= '<b>'. $displayKey . $value['title'] . '</b><br>';
                   if ($value['use_function']) {
                     $use_function = $value['use_function'];
                     if (preg_match('/->/', $use_function)) {
@@ -389,13 +397,13 @@ if (!empty($action)) {
                   $contents[] = ['align' => 'text-center', 'text' => TEXT_WARNING_SSL_EDIT];
                 }
                 $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '" class="btn btn-warning" role="button" id="removeButton"><i class="fa fa-minus"></i> ' . IMAGE_MODULE_REMOVE . '</a>'];
-                if (!empty($help_button)) { 
-                   $contents[] = $help_button; 
+                if (!empty($help_button)) {
+                   $contents[] = $help_button;
                 }
                 $contents[] = ['text' => '<br>' . $mInfo->description];
 
-                if (!empty($mInfo->configuration_errors)) { 
-                  $contents[] = ['text' => $mInfo->configuration_errors . '<br>'];  // warnings, etc. 
+                if (!empty($mInfo->configuration_errors)) {
+                  $contents[] = ['text' => $mInfo->configuration_errors . '<br>'];  // warnings, etc.
                 }
                 $contents[] = ['text' => '<br>' . $keys];
               } else {
@@ -404,8 +412,8 @@ if (!empty($action)) {
                 } else {
                   $contents[] = ['align' => 'text-center', 'text' => TEXT_WARNING_SSL_INSTALL];
                 }
-                if (!empty($help_button)) { 
-                   $contents[] = $help_button; 
+                if (!empty($help_button)) {
+                   $contents[] = $help_button;
                 }
                 $contents[] = ['text' => '<br>' . $mInfo->description];
               }
@@ -437,7 +445,7 @@ if (!empty($action)) {
                      <h4 class="modal-title"><?php echo $help_title . ' ' . IMAGE_MODULE_HELP; ?></h4>
                 </div>
                 <div class="modal-body">
-<?php echo $help_text['body']; ?> 
+<?php echo $help_text['body']; ?>
                 </div>
                 <div class="modal-footer">
                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
