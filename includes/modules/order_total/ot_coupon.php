@@ -49,11 +49,11 @@ class ot_coupon extends base
     protected $deduction;
     /**
      * $description is a soft name for this order total method
-     * @var string 
+     * @var string
      */
     public $description;
     /**
-     * $header the module box header 
+     * $header the module box header
      * @var string
      */
     public $header;
@@ -100,6 +100,11 @@ class ot_coupon extends base
 
     function __construct()
     {
+        $valid = true;
+        $this->notify('NOTIFY_OT_COUPON_START', true, $valid);
+        if (!$valid) {
+            return false;
+        }
         $this->code = 'ot_coupon';
         $this->header = MODULE_ORDER_TOTAL_COUPON_HEADER;
         $this->title = MODULE_ORDER_TOTAL_COUPON_TITLE;
@@ -1061,6 +1066,6 @@ class ot_coupon extends base
         return false;
     }
     function help() {
-       return array('link' => 'https://docs.zen-cart.com/user/order_total/coupons/'); 
+       return array('link' => 'https://docs.zen-cart.com/user/order_total/coupons/');
     }
 }
