@@ -198,7 +198,7 @@ function zen_run_normal(): bool
  *
  * 1. The site's 'Store Status' is '1' (Showcase no prices).
  * 2. 'Customer Shop Status - View Shop and Prices' is '2' (must login to see prices) and a customer is not logged in.
- * 3. 'Customer Approval Status - Authorization Pending' is '1' (Must be Authorized to Browse) or '2' (May browse but no prices unless Authorized) and eitherper
+ * 3. 'Customer Approval Status - Authorization Pending' is '1' (Must be Authorized to Browse) or '2' (May browse but no prices unless Authorized) and either
  *    a. A customer IS NOT logged in
  *    b. A customer IS logged in, but their authorization status is neither '0' (Approved) nor '3' (Pending Approval - May browse with prices but may not buy)
  */
