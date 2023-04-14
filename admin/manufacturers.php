@@ -259,7 +259,7 @@ if (!empty($action)) {
               }
 
               $contents[] = ['text' => '<p class="p_label control-label">' . TEXT_MANUFACTURERS_URL . '</p>' . $manufacturer_inputs_string];
-              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $_GET['mID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . ($_GET['mID'] ?? '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
               break;
             case 'edit':
               $heading[] = ['text' => '<h4>' . TEXT_HEADING_EDIT_MANUFACTURER . '</h4>'];
@@ -326,9 +326,12 @@ if (!empty($action)) {
         </div>
         <!-- body_text_eof //-->
       </div>
-      <?php if (empty($action) && !empty($mInfo)) { ?>
+       <?php
+      if (empty($action)) {
+        $current_mid = (isset($mInfo)) ? 'mID=' . $mInfo->manufacturers_id : '';
+     ?>
         <div class="col-sm-12 text-right">
-          <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . $current_mid . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
         </div>
       <?php } ?>
       <div class="row">
