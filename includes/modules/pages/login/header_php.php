@@ -40,6 +40,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
         if (!zen_validate_hmac_timestamp() || !$adminId = zen_validate_hmac_admin_id($_POST['aid'])) {
             zen_redirect(zen_href_link(FILENAME_TIME_OUT));
         }
+        unset($_SESSION['billto']);
+        unset($_SESSION['sendto']);
         $loginAuthorized = true;
         $_SESSION['emp_admin_login'] = true;
         $_SESSION['emp_admin_id'] = $adminId;
