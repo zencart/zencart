@@ -125,7 +125,6 @@ return [
 'TEXT_NAVBAR_DATABASE_SETUP' => 'Database Setup',
 'TEXT_NAVBAR_ADMIN_SETUP' => 'Admin Setup',
 'TEXT_NAVBAR_COMPLETION' => 'Finished',
-'TEXT_NAVBAR_PAYMENT_PROVIDERS' => 'Payment Providers',
 'TEXT_INDEX_ALERTS' => 'Alerts',
 'TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES' => 'There were problems preparing and storing the configure.php files. YOUR INSTALL DID NOT COMPLETE!<br>Additional technical details may be found in your /logs/ folder.',
 'TEXT_ERROR_COULD_NOT_READ_CFGFILE_TEMPLATE' => 'Could not read the master config file layout: %s. Please ensure the file exists and is readable.',
