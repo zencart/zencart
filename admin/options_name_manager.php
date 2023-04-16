@@ -331,27 +331,47 @@ if (!empty($action)) {
                 // cannot copy to self
                 $messageStack->add_session(sprintf(ERROR_OPTION_VALUES_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to)), 'caution');
             } else {
-                $copy_from_values = $db->Execute("SELECT pov.*
-                                          FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
-                                          LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " povtpo ON pov.products_options_values_id = povtpo.products_options_values_id
-                                          WHERE povtpo.products_options_id = " . $options_id_from . "
-                                          ORDER BY povtpo.products_options_values_id");
+                $copy_from_values = $db->Execute(
+                    'SELECT pov.*
+                    FROM ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' pov
+                    LEFT JOIN ' . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . ' povtpo
+                    ON pov.products_options_values_id = povtpo.products_options_values_id
+                    WHERE povtpo.products_options_id = ' . $options_id_from . '
+                    ORDER BY povtpo.products_options_values_id, pov.language_id'
+                );
 
                 if ($copy_from_values->RecordCount() > 0) {
-                    $max_id = $db->Execute("SELECT MAX(products_options_values_id) + 1 AS next_id FROM " . TABLE_PRODUCTS_OPTIONS_VALUES);
-                    $next_id = (int)$max_id->fields['next_id'];
-                    foreach ($copy_from_values as $copy_from_value) {
-                        $sql = "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
-                    VALUES (" . $next_id . ", " . (int)$copy_from_value['language_id'] . ", '" . $copy_from_value['products_options_values_name'] . "', " . (int)$copy_from_value['products_options_values_sort_order'] . ")";
-                        $db->Execute($sql);
-                        $sql = "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
-                      VALUES (" . $options_id_to . ", " . $next_id . ")";
-                        $db->Execute($sql);
-                        $next_id++;
-                        echo '<hr>';
-                        $messageStack->add_session(sprintf(SUCCESS_OPTION_VALUE_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to), $copy_from_value['products_options_values_id'], $copy_from_value['products_options_values_name']), 'success');
+                    $max_id = $db->Execute('SELECT MAX(products_options_values_id) AS max_id FROM ' . TABLE_PRODUCTS_OPTIONS_VALUES);
+                    $max_id = (int)$max_id->fields['max_id'];
+                    $insert_id = $max_id;
+                    $last_value_id = '';
+
+                    foreach ($copy_from_values as $key => $copy_from_value) {
+                        $this_value_id = $copy_from_value['products_options_values_id'];
+
+                        // a new value id
+                        if ($this_value_id !== $last_value_id) {
+                            $insert_id++;
+                            $sql = 'INSERT INTO ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
+                    VALUES (' . $insert_id . ', ' . (int)$copy_from_value['language_id'] . ', "' . $copy_from_value['products_options_values_name'] . '", ' . (int)$copy_from_value['products_options_values_sort_order'] . ')';
+                            $db->Execute($sql);
+                            $sql = 'INSERT INTO ' . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . ' (products_options_id, products_options_values_id)
+                      VALUES (' . $options_id_to . ', ' . $insert_id . ')';
+                            $db->Execute($sql);
+                        } else { // a repeat value id: additional language
+                            $sql = 'INSERT INTO ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
+                    VALUES (' . $insert_id . ', ' . (int)$copy_from_value['language_id'] . ', "' . $copy_from_value['products_options_values_name'] . '", ' . (int)$copy_from_value['products_options_values_sort_order'] . ')';
+                            $db->Execute($sql);
+                        }
+                        $last_value_id = $copy_from_value['products_options_values_id'];
+
+                        $language_info =  count($languages) > 1 ? ' (' . zen_get_language_name($copy_from_value['language_id']) . ')' : '';
+                        $messageStack->add_session(
+                            sprintf(SUCCESS_OPTION_VALUE_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to), $copy_from_value['products_options_values_id'] . $language_info, $copy_from_value['products_options_values_name']),
+                            'success'
+                        );
                     }
-                    $messageStack->add_session(sprintf(SUCCESS_OPTION_VALUES_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to), $copy_from_values->RecordCount()), 'success');
+                    $messageStack->add_session(sprintf(SUCCESS_OPTION_VALUES_COPIED, $options_id_from, zen_options_name($options_id_from), $options_id_to, zen_options_name($options_id_to), $insert_id - $max_id), 'success');
                 } else {
                     // warning nothing to copy
                     $messageStack->add_session(sprintf(ERROR_OPTION_VALUES_NONE, $options_id_from, zen_options_name($options_id_from)), 'caution');
