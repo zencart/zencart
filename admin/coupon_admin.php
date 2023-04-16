@@ -1169,7 +1169,7 @@ switch ($_GET['action']) {
 
               $status = (isset($_GET['status']) ? substr(zen_db_prepare_input($_GET['status']), 0) : 'Y');
 
-              echo zen_draw_form('status', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"');
+              echo zen_draw_form('statusForm', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"');
               ?>
               <div class="form-group">
                 <?php echo zen_draw_label(HEADING_TITLE_STATUS, 'status', 'class="control-label col-sm-3"'); ?>
