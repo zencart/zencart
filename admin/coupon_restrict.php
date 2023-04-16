@@ -25,20 +25,20 @@ require('includes/application_top.php');
 //    are valid or invalid for the associated coupon.  Product-specific exceptions -- see (1) and (2) above --
 //    are then applied.
 //
-$restrict_array = array(
-    array(
+$restrict_array = [
+    [
         'id' => 'Deny',
         'text' => TEXT_PULLDOWN_DENY
-    ),
-    array(
+    ],
+    [
         'id' => 'Allow',
         'text' => TEXT_PULLDOWN_ALLOW
-    )
-);
+    ]
+];
 
 if (isset($_GET['cPath_prod']) && isset($_GET['manufacturers_id']) && ((int)$_GET['cPath_prod']) > 0 && ((int)$_GET['manufacturers_id']) > 0) {
     $messageStack->add_session(ERROR_RESET_CATEGORY_MANUFACTURER, 'caution');
-    zen_redirect(zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('cPath_prod', 'manufacturers_id'))));
+    zen_redirect(zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['cPath_prod', 'manufacturers_id'])));
 }
 
 // -----
@@ -273,7 +273,7 @@ switch ($action) {
 }
 
 if (!empty($action)) {
-    zen_redirect(zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action'))));
+    zen_redirect(zen_href_link(FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['action'])));
 }
 ?>
 <!doctype html>
@@ -340,7 +340,7 @@ if ($cr_list->EOF) {
 ?>
             <tr class="smallText">
                 <td colspan="2"><?php echo $cr_split->display_count($cr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, $cpage, TEXT_DISPLAY_NUMBER_OF_CATEGORIES); ?></td>
-                <td colspan="2" class="text-right"><?php echo $cr_split->display_links($cr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, MAX_DISPLAY_PAGE_LINKS, $cpage, zen_get_all_get_params(array('cpage','action', 'x', 'y')), 'cpage'); ?></td>
+                <td colspan="2" class="text-right"><?php echo $cr_split->display_links($cr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, MAX_DISPLAY_PAGE_LINKS, $cpage, zen_get_all_get_params(['cpage','action', 'x', 'y']), 'cpage'); ?></td>
             </tr>
 <?php
 }
@@ -349,7 +349,7 @@ if ($cr_list->EOF) {
                 <td class="font-weight-bold"><?php echo TABLE_HEADING_CATEGORY_NAME; ?></td>
                 <td>
                     <?php echo
-                    zen_draw_form('cat_cpath', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action')), 'get', 'id="cat-path-form"') .
+                    zen_draw_form('cat_cpath', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['action']), 'get', 'id="cat-path-form"') .
                     zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $cPath, 'id="cat-path"') .
                     zen_draw_hidden_field('cid', $cid) .
                     '</form>'; ?>
@@ -409,7 +409,7 @@ if ($pr_list->EOF) {
 ?>
             <tr class="smallText">
                 <td colspan="3"><?php echo $pr_split->display_count($pr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, $ppage, TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-                <td colspan="3" class="text-right"><?php echo $pr_split->display_links($pr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, MAX_DISPLAY_PAGE_LINKS, $ppage, zen_get_all_get_params(array('ppage','action', 'x', 'y')), 'ppage'); ?></td>
+                <td colspan="3" class="text-right"><?php echo $pr_split->display_links($pr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, MAX_DISPLAY_PAGE_LINKS, $ppage, zen_get_all_get_params(['ppage','action', 'x', 'y']), 'ppage'); ?></td>
             </tr>
 <?php
 }
@@ -417,12 +417,12 @@ if ($pr_list->EOF) {
 $cPath_prod = (isset($_GET['cPath_prod'])) ? (int)$_GET['cPath_prod'] : 0;
 $current_manufacturers_id = (isset($_GET['manufacturers_id'])) ? (int)$_GET['manufacturers_id'] : 0;
 
-$manufacturers_array = array(
-    array(
+$manufacturers_array = [
+    [
         'id' => '0',
         'text' => TEXT_NONE
-    )
-);
+    ]
+];
 
 $manufacturers = $db->Execute(
     "SELECT distinct m.manufacturers_id, m.manufacturers_name
@@ -436,10 +436,10 @@ $manufacturers = $db->Execute(
 );
 
 while (!$manufacturers->EOF) {
-    $manufacturers_array[] = array(
+    $manufacturers_array[] = [
         'id' => $manufacturers->fields['manufacturers_id'],
         'text' => $manufacturers->fields['manufacturers_name'] . ' [ #' . $manufacturers->fields['manufacturers_id'] . ' ]'
-    );
+    ];
     $manufacturers->MoveNext();
 }
 unset($manufacturers);
@@ -466,26 +466,26 @@ if ($current_manufacturers_id > 0) {
     );
 }
 
-$products_array = array();
+$products_array = [];
 if (!$products->EOF) {
     if ($cPath_prod > 0) {
-        $products_array[] = array(
+        $products_array[] = [
             'id' => '-1',
             'text' => TEXT_ALL_PRODUCTS_ADD
-        );
-        $products_array[] = array(
+        ];
+        $products_array[] = [
             'id' => '-2',
             'text' => TEXT_ALL_PRODUCTS_REMOVE
-        );
+        ];
     } elseif ($current_manufacturers_id > 0) {
-        $products_array[] = array(
+        $products_array[] = [
             'id' => '-1',
             'text' => TEXT_ALL_MANUFACTURERS_ADD
-        );
-        $products_array[] = array(
+        ];
+        $products_array[] = [
             'id' => '-2',
             'text' => TEXT_ALL_MANUFACTURERS_REMOVE
-        );
+        ];
     }
 }
 
@@ -504,7 +504,7 @@ unset($products);
                 <td><?php echo TABLE_HEADING_CATEGORY_NAME . HEADER_MANUFACTURER_NAME; ?></td>
                 <td colspan="2">
                     <?php echo
-                    zen_draw_form('prod-sel', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action')), 'get', 'id="prod-cat-man"') .
+                    zen_draw_form('prod-sel', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['action']), 'get', 'id="prod-cat-man"') .
                     zen_draw_pull_down_menu('cPath_prod', zen_get_category_tree(), $cPath_prod, 'id="prod-path"') .
                     '<br><br>' .
                     zen_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $current_manufacturers_id, 'id="prod-man"') .
@@ -548,13 +548,13 @@ require DIR_WS_INCLUDES . 'footer.php';
 // A collection of "helper" forms, used by the page's jQuery (see below).
 //
 echo
-    zen_draw_form('new-cat', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=add_category', 'post') .
+    zen_draw_form('new-cat', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['action', 'page']) . '&action=add_category', 'post') .
     zen_draw_hidden_field('cPath', $cPath) .
     zen_draw_hidden_field('restrict_status', '', 'id="new-cat-restrict"') .
     '</form>';
 
 echo
-    zen_draw_form('new-prod', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=add_product', 'post') .
+    zen_draw_form('new-prod', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['action', 'page']) . '&action=add_product', 'post') .
     zen_draw_hidden_field('pid', '0', 'id="new-prod-id"') .
     zen_draw_hidden_field('restrict_status', '', 'id="new-prod-restrict"') .
     zen_draw_hidden_field('prod_cat', '0', 'id="new-prod-cat"') .
@@ -562,13 +562,13 @@ echo
     '</form>';
 
 echo
-    zen_draw_form('toggle', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=switch_status', 'post') .
+    zen_draw_form('toggle', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['action', 'page']) . '&action=switch_status', 'post') .
     zen_draw_hidden_field('rid', '0', 'id="switch-rid"') .
     zen_draw_hidden_field('cid', $cid) .
     '</form>';
 
 echo
-    zen_draw_form('remove', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(array('action', 'page')) . '&action=remove', 'post') .
+    zen_draw_form('remove', FILENAME_COUPON_RESTRICT, zen_get_all_get_params(['action', 'page']) . '&action=remove', 'post') .
     zen_draw_hidden_field('rid', '0', 'id="remove-rid"') .
     zen_draw_hidden_field('cid', $cid) .
     '</form>';
