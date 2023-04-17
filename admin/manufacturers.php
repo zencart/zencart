@@ -328,10 +328,10 @@ if (!empty($action)) {
       </div>
        <?php
       if (empty($action)) {
-        $current_mid = (isset($mInfo)) ? 'mID=' . $mInfo->manufacturers_id : '';
+        $current_mid = (isset($mInfo)) ? 'mID=' . $mInfo->manufacturers_id . '&' : '';
      ?>
         <div class="col-sm-12 text-right">
-          <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . $current_mid . ($current_mid != '' ? '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . $current_mid . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
         </div>
       <?php } ?>
       <div class="row">
