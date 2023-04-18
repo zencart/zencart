@@ -483,7 +483,8 @@ class authorizenet_aim extends base {
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
     }
     if ($response_code == '4'){
-        $this->order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REVIEW_ORDER_STATUS_ID;
+        $review_order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REVIEW_ORDER_STATUS_ID;
+        $this->order_status = ($review_order_status === 0) ? (int)DEFAULT_ORDERS_STATUS_ID : $review_order_status;
     }
     if (!empty($response[88])) {
       $_SESSION['payment_method_messages'] = $response[88];
@@ -789,7 +790,7 @@ class authorizenet_aim extends base {
 
         $new_order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REFUNDED_ORDER_STATUS_ID;
         if ($new_order_status === 0) {
-            $new_order_status = 1;
+            $new_order_status = (int)DEFAULT_ORDERS_STATUS_ID;
         }
         $proceedToRefund = true;
         $refundNote = strip_tags(zen_db_input($_POST['refnote']));
@@ -799,7 +800,6 @@ class authorizenet_aim extends base {
         }
         if (isset($_POST['buttonrefund']) && $_POST['buttonrefund'] === MODULE_PAYMENT_AUTHORIZENET_AIM_ENTRY_REFUND_BUTTON_TEXT) {
             $refundAmt = (float)$_POST['refamt'];
-            $new_order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REFUNDED_ORDER_STATUS_ID;
             if ($refundAmt == 0) {
                 $messageStack->add_session(MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_INVALID_REFUND_AMOUNT, 'error');
                 $proceedToRefund = false;
@@ -807,6 +807,7 @@ class authorizenet_aim extends base {
         }
         if (isset($_POST['cc_number']) && trim($_POST['cc_number']) === '') {
             $messageStack->add_session(MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CC_NUM_REQUIRED_ERROR, 'error');
+            $proceedToRefund = false;
         }
         if (isset($_POST['trans_id']) && trim($_POST['trans_id']) === '') {
             $messageStack->add_session(MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_TRANS_ID_REQUIRED_ERROR, 'error');
@@ -836,7 +837,7 @@ class authorizenet_aim extends base {
             } else {
                 // Success, so save the results
                 $comments = 'REFUND INITIATED. Trans ID:' . $response[6] . ' ' . $response[4]. "\n" . ' Gross Refund Amt: ' . $response[9] . "\n" . $refundNote;
-                zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+                zen_update_orders_history($oID, $comments, null, $new_order_status, 1);
 
                 $messageStack->add_session(sprintf(MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_REFUND_INITIATED, $response[9], $response[6]), 'success');
                 return true;
@@ -855,7 +856,7 @@ class authorizenet_aim extends base {
         //@TODO: Read current order status and determine best status to set this to
         $new_order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_ORDER_STATUS_ID;
         if ($new_order_status === 0) {
-            $new_order_status = 1;
+            $new_order_status = (int)DEFAULT_ORDERS_STATUS_ID;
         }
 
         $proceedToCapture = true;
@@ -911,7 +912,7 @@ class authorizenet_aim extends base {
                     ' Amount: ' . ($response[9] == 0.00 ? 'Full Amount' : $response[9]) . "\n" .
                     'Time: ' . date('Y-m-D h:i:s') . "\n" .
                     $captureNote;
-                zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+                zen_update_orders_history($oID, $comments, null, $new_order_status, 1);
 
                 $messageStack->add_session(sprintf(MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CAPT_INITIATED, ($response[9] == 0.00 ? 'Full Amount' : $response[9]), $response[6], $response[4]), 'success');
                 return true;
@@ -929,7 +930,7 @@ class authorizenet_aim extends base {
 
         $new_order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REFUNDED_ORDER_STATUS_ID;
         if ($new_order_status === 0) {
-            $new_order_status = 1;
+            $new_order_status = (int)DEFAULT_ORDERS_STATUS_ID;
         }
         $voidNote = strip_tags(zen_db_input($_POST['voidnote'] . $note));
         $voidAuthID = trim(strip_tags(zen_db_input($_POST['voidauthid'])));
@@ -967,7 +968,7 @@ class authorizenet_aim extends base {
             } else {
                 // Success, so save the results
                 $comments = 'VOIDED. Trans ID: ' . $response[6] . ' ' . $response[4] . "\n" . $voidNote;
-                zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
+                zen_update_orders_history($oID, $comments, null, $new_order_status, 1);
 
                 $messageStack->add_session(sprintf(MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_VOID_INITIATED, $response[6], $response[4]), 'success');
                 return true;
