@@ -328,7 +328,7 @@ if ($num_products_count > 0) {
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
                     //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_QUANTITY . '</label>';
-                    $lc_text .= $listing_quantity;
+                    $lc_text .= TEXT_PRODUCTS_QUANTITY . $listing_quantity;
                     break;
 
                 case 'PRODUCT_LIST_WEIGHT':

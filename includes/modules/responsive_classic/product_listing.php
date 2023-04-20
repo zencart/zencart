@@ -343,7 +343,7 @@ if ($num_products_count > 0) {
                     $lc_text = '';
                     $lc_text .= '<div class="list-quantity">';
                     //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_QUANTITY . '</label>';
-                    $lc_text .= $listing_quantity;
+                    $lc_text .= TEXT_PRODUCTS_QUANTITY . $listing_quantity;
                     $lc_text .= '</div>';
                     break;
 
