@@ -192,24 +192,32 @@ function zen_run_normal(): bool
 }
 
 /**
- *  Look up whether to show prices, based on customer-authorization levels
+ * Look up whether to show prices, based on customer-authorization levels
+ *
+ * Prices are NOT shown if
+ *
+ * 1. The site's 'Store Status' is '1' (Showcase no prices).
+ * 2. 'Customer Shop Status - View Shop and Prices' is '2' (must login to see prices) and a customer is not logged in.
+ * 3. 'Customer Approval Status - Authorization Pending' is '1' (Must be Authorized to Browse) or '2' (May browse but no prices unless Authorized) and either
+ *    a. A customer IS NOT logged in
+ *    b. A customer IS logged in, but their authorization status is neither '0' (Approved) nor '3' (Pending Approval - May browse with prices but may not buy)
  */
 function zen_check_show_prices(): bool
 {
-    if (
-        !(CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in())
-        && !(
-            (CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && CUSTOMERS_APPROVAL_AUTHORIZATION < 3)
-            && ($_SESSION['customers_authorization'] > '0' || !zen_is_logged_in())
-        )
-        && STORE_STATUS != '1'
-    ) {
+    if (STORE_STATUS === '1') {
+        return false;
+    }
+    if (CUSTOMERS_APPROVAL === '2' && zen_is_logged_in() === false) {
+        return false;
+    }
+    if (CUSTOMERS_APPROVAL_AUTHORIZATION !== '1' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '2') {
         return true;
     }
-
-    return false;
+    if (zen_is_logged_in() === false || ((int)$_SESSION['customers_authorization'] !== 0 && (int)$_SESSION['customers_authorization'] !== 3)) {
+        return false;
+    }
+    return true;
 }
-
 
 /**
  * check to see if database stored GET terms are in the URL as $_GET parameters

@@ -261,6 +261,8 @@ switch ($metatag_page_name) {
       define('META_TAG_KEYWORDS', str_replace('"','',zen_clean_html($metatags_keywords)));  // KEYWORDS and CUSTOM_KEYWORDS are added above
 
     } else {
+      $meta_products_price = '';
+
       // build un-customized meta tag
       if (META_TAG_INCLUDE_PRICE == '1' and !strstr($_GET['main_page'], 'document_general')) {
         if ($product_info_metatags->fields['product_is_free'] != '1') {
@@ -272,8 +274,6 @@ switch ($metatag_page_name) {
         } else {
           $meta_products_price = SECONDARY_SECTION . META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT;
         }
-      } else {
-        $meta_products_price = '';
       }
 
       if (META_TAG_INCLUDE_MODEL == '1' && !empty($product_info_metatags->fields['products_model'])) {
