@@ -139,8 +139,12 @@ $products = $db->Execute($sql);
     <!-- script for datepicker -->
     <script>
         $(function () {
-            $('input[name="start_date"]').datepicker();
-            $('input[name="end_date"]').datepicker();
+            $('input[name="start_date"]').datepicker({
+                maxDate: 0
+            });
+            $('input[name="end_date"]').datepicker({
+                maxDate: 0
+            });
         })
     </script>
     </body>
