@@ -796,7 +796,7 @@ function zen_get_products_allow_add_to_cart($product_id)
 
     // If product is encoded as GV but GV feature is turned off, disallow add-to-cart
     if ($allow_add_to_cart && preg_match('/^GIFT/', addslashes($product_query_results->fields['products_model']))) {
-        if (MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
+        if (!defined('MODULE_ORDER_TOTAL_GV_STATUS') || MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
             $allow_add_to_cart = false;
         }
     }
