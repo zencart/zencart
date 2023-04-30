@@ -954,7 +954,7 @@ switch ($_GET['action']) {
             echo zen_draw_form('coupon', FILENAME_COUPON_ADMIN, 'action=update&oldaction=' . $_GET['action'] . '&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"');
             ?>
             <div class="form-group">
-              <?php echo zen_draw_label(COUPON_NAME, 'coupon_name[]', 'class="control-label col-sm-3"'); ?>
+          <?php echo zen_draw_label(COUPON_NAME, 'coupon_name[' . $languages[0]['id'] . ']', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -976,7 +976,7 @@ switch ($_GET['action']) {
               </div>
             </div>
             <div class="form-group">
-              <?php echo zen_draw_label(COUPON_DESC, 'coupon_desc[]', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(COUPON_DESC, 'coupon_desc[' . $languages[0]['id'] . ']', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
