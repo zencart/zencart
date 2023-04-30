@@ -1036,8 +1036,8 @@ switch ($_GET['action']) {
             <div class="form-group">
               <?php echo zen_draw_label(COUPON_FREE_SHIP, 'coupon_free_ship', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
-                <label><?php echo zen_draw_checkbox_field('coupon_free_ship', '', (!empty($coupon_free_ship))); ?></label>
-                &nbsp;<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FREE_SHIP_HELP; ?>"></i>
+                <label><?php echo zen_draw_checkbox_field('coupon_free_ship', '', (!empty($coupon_free_ship)), '', 'id="coupon_free_ship"'); ?></label>
+                <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FREE_SHIP_HELP; ?>"></i>
               </div>
             </div>
             <div class="form-group">
