@@ -1029,9 +1029,11 @@ class paypaldp extends base {
     if ($this->requiresLookup($order->info['cc_type']) == true) {
       // CardinalCommerce Liability Protection Status
       // Inserts 'PROTECTED' or 'NOT PROTECTED' status, ECI, CAVV values in the order status history comments
-      $auth_proc_status = $this->determine3DSecureProtection($order->info['cc_type'], $_SESSION['3Dsecure_auth_eci']);
-      $commentString = "3D-Secure: " . $auth_proc_status . "\n" . 'ECI Value = ' . $_SESSION['3Dsecure_auth_eci'] . "\n" . 'CAVV Value = ' . $_SESSION['3Dsecure_auth_cavv'];
-      zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], -1);
+      if (!empty($_SESSION['3Dsecure_auth_eci'])) { 
+         $auth_proc_status = $this->determine3DSecureProtection($order->info['cc_type'], $_SESSION['3Dsecure_auth_eci']);
+         $commentString = "3D-Secure: " . $auth_proc_status . "\n" . 'ECI Value = ' . $_SESSION['3Dsecure_auth_eci'] . "\n" . 'CAVV Value = ' . $_SESSION['3Dsecure_auth_cavv'];
+         zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], -1);
+      }
     }
 
     // store the PayPal order meta data -- used for later matching and back-end processing activities
