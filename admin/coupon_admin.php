@@ -9,11 +9,6 @@ require 'includes/application_top.php';
 require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 $languages = zen_get_languages();
-$status_array = [];
-if (!empty($_GET['selected_box'])) {
-  $_GET['action'] = '';
-  $_GET['old_action'] = '';
-}
 if (!isset($_GET['action'])) {
   $_GET['action'] = '';
 }

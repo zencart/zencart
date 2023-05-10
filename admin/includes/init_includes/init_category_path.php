@@ -26,12 +26,3 @@ if (zen_not_null($cPath)) {
     $cPath_array = [];
     $current_category_id = TOPMOST_CATEGORY_PARENT_ID;
 }
-
-// default open navigation box
-if (!isset($_SESSION['selected_box'])) {
-    $_SESSION['selected_box'] = 'configuration';
-}
-
-if (isset($_GET['selected_box'])) {
-    $_SESSION['selected_box'] = $_GET['selected_box'];
-}

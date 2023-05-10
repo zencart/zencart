@@ -143,7 +143,6 @@ $group = [
     'rID',
     's',
     'saction',
-    'selected_box',
     'set',
     'set_display_categories_dropdown',
     'sID',
