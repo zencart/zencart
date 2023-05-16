@@ -1053,11 +1053,21 @@ if (!empty($action)) {
                 <!-- script for datepicker -->
                 <script>
                   $(function () {
-                    $('#products_date_available').datepicker();
-                    $('#specials_date_available').datepicker();
-                    $('#specials_expires_date').datepicker();
-                    $('#featured_date_available').datepicker();
-                    $('#featured_expires_date').datepicker();
+                    $('#products_date_available').datepicker({
+                        minDate: 1
+                    });
+                    $('#specials_date_available').datepicker({
+                        minDate: 0
+                    });
+                    $('#specials_expires_date').datepicker({
+                        minDate: 1
+                    });
+                    $('#featured_date_available').datepicker({
+                        minDate: 0
+                    });
+                    $('#featured_expires_date').datepicker({
+                        minDate: 1
+                    });
                   });
                 </script>
                 <?php

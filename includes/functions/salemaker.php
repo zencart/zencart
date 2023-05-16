@@ -37,9 +37,9 @@ function zen_expire_salemaker()
             FROM " . TABLE_SALEMAKER_SALES . "
             WHERE sale_status = 1
             AND (
-             (" . $sale_date . " >= sale_date_end AND sale_date_end != '0001-01-01')
+             ('" . $sale_date . "' >= sale_date_end AND sale_date_end != '0001-01-01')
              OR
-             (" . $sale_date . " < sale_date_start AND sale_date_start != '0001-01-01')
+             ('" . $sale_date . "' < sale_date_start AND sale_date_start != '0001-01-01')
             )";
 
     $results = $db->Execute($sql);
@@ -64,17 +64,17 @@ function zen_start_salemaker()
             WHERE sale_status = 0
             AND (
             (
-                (sale_date_start <= " . $sale_date . " AND sale_date_start != '0001-01-01')
+                (sale_date_start <= '" . $sale_date . "' AND sale_date_start != '0001-01-01')
                 AND
-                (sale_date_end > " . $sale_date . ")
+                (sale_date_end > '" . $sale_date . "')
             )
             OR
             (
-                (sale_date_start <= " . $sale_date . " AND sale_date_start != '0001-01-01')
+                (sale_date_start <= '" . $sale_date . "' AND sale_date_start != '0001-01-01')
                 AND
                 (sale_date_end <= '0001-01-01')
             )
-            OR (sale_date_start <= '0001-01-01' AND sale_date_end > " . $sale_date . ")
+            OR (sale_date_start <= '0001-01-01' AND sale_date_end > '" . $sale_date . "')
             )
             ";
 
