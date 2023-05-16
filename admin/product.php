@@ -111,7 +111,9 @@ $languages = zen_get_languages();
     <!-- script for datepicker -->
     <script>
       $(function () {
-        $('input[name="products_date_available"]').datepicker();
+        $('input[name="products_date_available"]').datepicker({
+            minDate: 1
+        });
       })
     </script>
     <!-- footer //-->
