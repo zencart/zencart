@@ -52,6 +52,21 @@ function zen_get_products_special_price($product_id, $specials_price_only = fals
     $category = $product->fields['master_categories_id'];
     $sale = zen_get_sale_for_category_and_price($category, $product_price);
 
+    // -----
+    // Give an observer the opportunity to add functionality for the salemaker sales, 
+    // perhaps enabling linked products to be included.
+    //
+    // If the 'sale' price is to be overridden, an observer sets the $sale variable
+    // to an associative array with keys sale_specials_condition, sale_deduction_value and
+    // sale_deduction_type to match the format returned from a query of the
+    // salemaker_sales database table.
+    //
+    // If the observer wishes to negate a sale of the current product, the observer
+    // sets the $sale to contain (bool)false.
+    //
+    global $zco_notifier;
+    $zco_notifier->notify('NOTIFY_ZEN_GET_PRODUCTS_SPECIAL_PRICE', $product->fields, $sale, $product_price);
+
     if ($sale === false) {
         return $special_price;
     }
@@ -61,6 +76,10 @@ function zen_get_products_special_price($product_id, $specials_price_only = fals
     } else {
         $tmp_special_price = $special_price;
     }
+
+    // SPECIALS_CONDITION_DROPDOWN_0: Ignore Specials Price - Apply to Product Price and Replace Special
+    // SPECIALS_CONDITION_DROPDOWN_1: Ignore SaleCondition - No Sale Applied When Special Exists
+    // SPECIALS_CONDITION_DROPDOWN_2: Apply SaleDeduction to Specials Price - Otherwise Apply to Price
     switch ($sale['sale_deduction_type']) {
         case 0:
             $sale_product_price = $product_price - $sale['sale_deduction_value'];
