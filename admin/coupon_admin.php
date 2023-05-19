@@ -949,7 +949,7 @@ switch ($_GET['action']) {
             echo zen_draw_form('coupon', FILENAME_COUPON_ADMIN, 'action=update&oldaction=' . $_GET['action'] . '&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"');
             ?>
             <div class="form-group">
-              <?php echo zen_draw_label(COUPON_NAME, 'coupon_name[]', 'class="control-label col-sm-3"'); ?>
+          <?php echo zen_draw_label(COUPON_NAME, 'coupon_name[' . $languages[0]['id'] . ']', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -971,7 +971,7 @@ switch ($_GET['action']) {
               </div>
             </div>
             <div class="form-group">
-              <?php echo zen_draw_label(COUPON_DESC, 'coupon_desc[]', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(COUPON_DESC, 'coupon_desc[' . $languages[0]['id'] . ']', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -1031,8 +1031,8 @@ switch ($_GET['action']) {
             <div class="form-group">
               <?php echo zen_draw_label(COUPON_FREE_SHIP, 'coupon_free_ship', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
-                <label><?php echo zen_draw_checkbox_field('coupon_free_ship', '', (!empty($coupon_free_ship))); ?></label>
-                &nbsp;<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FREE_SHIP_HELP; ?>"></i>
+                <label><?php echo zen_draw_checkbox_field('coupon_free_ship', '', (!empty($coupon_free_ship)), '', 'id="coupon_free_ship"'); ?></label>
+                <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FREE_SHIP_HELP; ?>"></i>
               </div>
             </div>
             <div class="form-group">
@@ -1164,7 +1164,7 @@ switch ($_GET['action']) {
 
               $status = (isset($_GET['status']) ? substr(zen_db_prepare_input($_GET['status']), 0) : 'Y');
 
-              echo zen_draw_form('status', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"');
+              echo zen_draw_form('statusForm', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"');
               ?>
               <div class="form-group">
                 <?php echo zen_draw_label(HEADING_TITLE_STATUS, 'status', 'class="control-label col-sm-3"'); ?>
