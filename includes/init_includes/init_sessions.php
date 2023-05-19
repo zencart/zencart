@@ -68,7 +68,14 @@ $_SERVER['REMOTE_ADDR'] = $ipAddress;
  */
 $session_started = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
-  setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, $path, (!empty($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);
+    if (PHP_VERSION_ID < 70300) {
+        setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, $path, (!empty($cookieDomain) ? $domainPrefix . $cookieDomain : ''), $secureFlag);
+    } else {
+        $params = session_get_cookie_params();
+        unset($params['lifetime']);
+        $params['expires'] = time() + 60 * 60 * 24 * 30;
+        setcookie('cookie_test', 'please_accept_for_session', $params);
+    }
 
   if (isset($_COOKIE['cookie_test'])) {
     zen_session_start();
