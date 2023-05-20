@@ -140,9 +140,9 @@ if (!empty($action)) {
 
             if (ACCOUNT_DOB == 'true') {
                 if (checkdate(
-                    substr(zen_date_raw($customers_dob), 4, 2),
-                    substr(zen_date_raw($customers_dob), 6, 2),
-                    substr(zen_date_raw($customers_dob), 0, 4)
+                    (int)substr(zen_date_raw($customers_dob), 4, 2),
+                    (int)substr(zen_date_raw($customers_dob), 6, 2),
+                    (int)substr(zen_date_raw($customers_dob), 0, 4)
                 )) {
                     $entry_date_of_birth_error = false;
                 } else {
@@ -371,6 +371,12 @@ if (!empty($action)) {
             } else {
                 if ($error == true) {
                     $cInfo = new objectInfo($_POST);
+					$cInfo->company = $cInfo->entry_company;
+					$cInfo->street_address = $cInfo->entry_street_address;
+					$cInfo->suburb = $cInfo->entry_suburb;
+					$cInfo->postcode = $cInfo->entry_postcode;
+					$cInfo->city =  $cInfo->entry_city;
+					$cInfo->state = $cInfo->entry_state;
                     $processed = true;
                 }
             }
@@ -597,7 +603,8 @@ if (!empty($action)) {
                                 TABLE_CUSTOMERS,
                                 'customers_firstname',
                                 50
-                            ) . ' class="form-control" id="customers_firstname" minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '"'
+                            ) . ' class="form-control" id="customers_firstname" minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '"',
+							true
                         ); ?>
                     </div>
                 </div>
@@ -632,12 +639,13 @@ if (!empty($action)) {
                             <?php
                             echo zen_draw_input_field(
                                 'customers_dob',
-                                ((empty($cInfo->customers_dob) || $cInfo->customers_dob <= '0001-01-01' || $cInfo->customers_dob == '0001-01-01 00:00:00') ? '' : zen_date_short(
-                                    $cInfo->customers_dob
-                                )),
+                                ((empty($cInfo->customers_dob) || $cInfo->customers_dob <= '0001-01-01' || $cInfo->customers_dob == '0001-01-01 00:00:00') ? '' :
+									(($action == 'edit') ? zen_date_short($cInfo->customers_dob) : $cInfo->customers_dob)
+                                ),
                                 'maxlength="10" class="form-control" id="customers_dob" minlength="' . ENTRY_DOB_MIN_LENGTH . '"',
-                                true
-                            ); ?>
+                                (ACCOUNT_DOB == 'true' && (int)ENTRY_DOB_MIN_LENGTH != 0 ? true : false)
+                            );
+							echo($error == true && $entry_date_of_birth_error == true ? '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR : '');?>
                         </div>
                     </div>
                 <?php
@@ -665,7 +673,8 @@ if (!empty($action)) {
                                 50
                             ) . ' class="form-control" id="customers_email_address" minlength="' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . '"',
                             true
-                        ); ?>
+							);
+							echo($error == true && $entry_email_address_check_error == true ? '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR : '');?>
                     </div>
                 </div>
                 <?php
