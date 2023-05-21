@@ -5,6 +5,9 @@
  * @version $Id: Leonard 2022 Apr 30 Modified in v1.5.8-alpha $
  */
 
+/** @var $PHP_SELF */
+/** @var $zco_notifier */
+
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
 
 define('SUPERUSER_PROFILE', 1);
@@ -26,7 +29,7 @@ if (basename($PHP_SELF) == FILENAME_AJAX . '.php') {
 }
 
 // admin folder rename required
-if (!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '')
+if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '') && !defined('ZENCART_TESTFRAMEWORK_RUNNING'))
 {
   if (basename($PHP_SELF) != FILENAME_ALERT_PAGE . '.php')
   {
@@ -64,7 +67,7 @@ if (basename($PHP_SELF) != FILENAME_ALERT_PAGE . '.php')
     if (!in_array($page, array(FILENAME_DEFAULT,FILENAME_ADMIN_ACCOUNT,FILENAME_LOGOFF,FILENAME_ALERT_PAGE,FILENAME_PASSWORD_FORGOTTEN,FILENAME_DENIED,FILENAME_ALT_NAV)) &&
         !zen_is_superuser())
     {
-      if ( (check_page($page, $_GET) == FALSE) && (check_related_page($page, $_GET) == FALSE) ) 
+      if ( (check_page($page, $_GET) == FALSE) && (check_related_page($page, $_GET) == FALSE) )
       {
         zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));

@@ -26,7 +26,7 @@ class zcURLTestObserver extends base
         $this->mode = 0;
     }
 
-    function update(&$class, $eventID, $paramsArray = array(), &$page, &$parameters, &$connection, &$static)
+    function update(&$class, $eventID, $paramsArray, &$page, &$parameters, &$connection, &$static)
     {
         if ($this->mode & zcURLTestObserver::$CHANGE_CONNECTION) {
             if ($connection == 'SSL') {
