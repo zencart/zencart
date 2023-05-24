@@ -16,7 +16,7 @@
 <?php echo zen_draw_form('contact_us', zen_href_link(FILENAME_CONTACT_US, 'action=send', 'SSL')); ?>
 
 <?php if (CONTACT_US_STORE_NAME_ADDRESS== '1') { ?>
-<address><?php echo nl2br(STORE_NAME_ADDRESS); ?></address>
+<address><?php echo nl2br(STORE_NAME_ADDRESS, false); ?></address>
 <?php } ?>
 
 <?php
