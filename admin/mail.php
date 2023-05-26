@@ -235,7 +235,7 @@ if ($action == 'preview') {
             </div>
           <?php } ?>
           <div class="col-sm-12"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-          <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=send_email_to_user' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>
+          <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=send_email_to_user' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>
           <?php
           /* Re-Post all POST'ed variables */
           foreach($_POST as $key => $value) {
@@ -251,7 +251,7 @@ if ($action == 'preview') {
             <button type="submit" name="back" value="back" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
           </div>
           <div class="col-sm-6 text-right">
-            <a href="<?php echo zen_href_link(FILENAME_MAIL, (isset($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
+            <a href="<?php echo zen_href_link(FILENAME_MAIL, (isset($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
           </div>
           <?php echo '</form>'; ?>
         </div>
@@ -259,13 +259,13 @@ if ($action == 'preview') {
       } else {
         ?>
         <div class="row">
-            <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=preview' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : ''), 'post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data" class="form-horizontal"'); ?>
+            <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=preview' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : ''), 'post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data" class="form-horizontal"'); ?>
             <?php
-            $customers = get_audiences_list('email', '', (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''));
+            $customers = get_audiences_list('email', '', (isset($_GET['customer']) ? zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : ''));
             ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''), 'class="form-control"');  //, 'multiple'        ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : ''), 'class="form-control"');  //, 'multiple'        ?></div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="col-sm-3 control-label"'); ?>
