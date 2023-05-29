@@ -30,9 +30,15 @@ class WhosOnline extends base
 
     public function __construct($forceRebuild = false, $skip_gc = false)
     {
-        if (defined('WHOIS_TIMER_REMOVE')) $this->timer_remove_threshold = WHOIS_TIMER_REMOVE;
-        if (defined('WHOIS_TIMER_INACTIVE')) $this->timer_inactive_threshold = WHOIS_TIMER_INACTIVE;
-        if (defined('WHOIS_TIMER_DEAD')) $this->timer_dead_threshold = WHOIS_TIMER_DEAD;
+        if (defined('WHOIS_TIMER_REMOVE')) {
+            $this->timer_remove_threshold = WHOIS_TIMER_REMOVE;
+        }
+        if (defined('WHOIS_TIMER_INACTIVE')) {
+            $this->timer_inactive_threshold = WHOIS_TIMER_INACTIVE;
+        }
+        if (defined('WHOIS_TIMER_DEAD')) {
+            $this->timer_dead_threshold = WHOIS_TIMER_DEAD;
+        }
 
         // normally we get rid of expired data
         if (!$skip_gc) {
@@ -264,13 +270,13 @@ class WhosOnline extends base
         foreach ($this->whos_online as $session) {
             if (empty($session['session_id'])) {
                 $this->spider_array[$session['status_code']]++;
-            } else {
-                if ($session['full_name'] === "&yen;Guest") {
-                    $this->guest_array[$session['status_code']]++;
-                } else {
-                    $this->user_array[$session['status_code']]++;
-                }
+                continue;
             }
+            if ($session['full_name'] === "&yen;Guest") {
+                $this->guest_array[$session['status_code']]++;
+                continue;
+            }
+            $this->user_array[$session['status_code']]++;
         }
     }
 
@@ -299,7 +305,9 @@ class WhosOnline extends base
     protected function inspectSessionCart($session_id = '', $session_data = '')
     {
         // we need at least one of these parameters
-        if (empty($session_id) && empty($session_data)) return null;
+        if (empty($session_id) && empty($session_data)) {
+          return null;
+        }
 
         // or we can pass in the already-queried session data
         if (empty($session_data)) {
