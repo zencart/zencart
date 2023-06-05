@@ -671,6 +671,7 @@ CREATE TABLE customers_info (
 #
 # Table structure for table customer_groups
 #
+DROP TABLE IF EXISTS customer_groups;
 CREATE TABLE customer_groups (
   group_id int UNSIGNED NOT NULL AUTO_INCREMENT,
   group_name varchar(191) NOT NULL,
@@ -686,6 +687,7 @@ CREATE TABLE customer_groups (
 #
 # Table structure for table customers_to_groups
 #
+DROP TABLE IF EXISTS customers_to_groups;
 CREATE TABLE customers_to_groups (
   id int UNSIGNED NOT NULL AUTO_INCREMENT,
   group_id int UNSIGNED NOT NULL,
