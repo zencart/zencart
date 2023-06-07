@@ -11,9 +11,6 @@
 function zen_parse_search_string($search_str = '', &$objects = array()) {
     $search_str = trim(strtolower($search_str));
 
-// Separate any parentheses from adjacent words so splitting works as intended
-    $search_str = preg_replace([ '/(\b)(\()/', '/(\))(\b)/' ], [ '$1 $2', '$1 $2' ], $search_str);
-
 // Break up $search_str on whitespace; quoted string will be reconstructed later
     $pieces = preg_split('/[[:space:]]+/', $search_str);
     $objects = array();
@@ -21,7 +18,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
     $flag = '';
 
     for ($k=0; $k<count($pieces); $k++) {
-        while (substr($pieces[$k], 0, 1) == '(') {
+        while (substr($pieces[$k], 0, 1) == '(' && strpos($pieces[$k], ')', 1) == false) {
             $objects[] = '(';
             if (strlen($pieces[$k]) > 1) {
                 $pieces[$k] = substr($pieces[$k], 1);
@@ -32,7 +29,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
 
         $post_objects = array();
 
-        while (substr($pieces[$k], -1) == ')')  {
+        while (substr($pieces[$k], -1) == ')' && strpos($pieces[$k], '(') == false)  {
             $post_objects[] = ')';
             if (strlen($pieces[$k]) > 1) {
                 $pieces[$k] = substr($pieces[$k], 0, -1);
