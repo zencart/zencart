@@ -11,6 +11,9 @@
 function zen_parse_search_string($search_str = '', &$objects = array()) {
     $search_str = trim(strtolower($search_str));
 
+// Separate any parentheses from adjacent words so splitting works as intended
+    $search_str = preg_replace([ '/(\b)(\()/', '/(\))(\b)/' ], [ '$1 $2', '$1 $2' ], $search_str);
+
 // Break up $search_str on whitespace; quoted string will be reconstructed later
     $pieces = preg_split('/[[:space:]]+/', $search_str);
     $objects = array();
@@ -162,6 +165,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
         global $db, $zco_notifier;
 
         $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
+        if (empty($string)) { return ''; }
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
             if ($startWithWhere) {
