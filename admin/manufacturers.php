@@ -25,6 +25,12 @@ if (!empty($action)) {
 
       $sql_data_array['featured'] = $featured;
 
+      // -----
+      // Give a watching observer the opportunity to add/update additional fields in the
+      // manufacturers table.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_INSERT_UPDATE', ['action' => $action, 'manufacturers_id' => $manufacturers_id ?? 0], $sql_data_array);
+
       if ($action === 'insert') {
         $insert_sql_data = ['date_added' => 'now()'];
 
@@ -159,14 +165,40 @@ if (!empty($action)) {
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURERS; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURER_FEATURED; ?></th>
+<?php
+// -----
+// A watching observer can add extra table column headings via an associative array in the form:
+//
+// $extra_headings = [
+//     [
+//       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+//       'text' => $value
+//     ],
+// ];
+//
+// Observer note:  Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+// multiple observers might be injecting content!
+//
+$extra_headings = false;
+$zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_EXTRA_COLUMN_HEADING', [], $extra_headings);
+if (is_array($extra_headings)) {
+  foreach ($extra_headings as $heading_info) {
+      $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <th class="dataTableHeadingContent<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+    }
+}
+?>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
               <?php
-              $manufacturers_query_raw = "SELECT manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified, featured, (featured=1) AS weighted
-                                          FROM " . TABLE_MANUFACTURERS . "
-                                          ORDER BY weighted DESC, manufacturers_name";
+              $manufacturers_query_raw =
+                "SELECT *, (featured=1) AS weighted
+                   FROM " . TABLE_MANUFACTURERS . "
+                  ORDER BY weighted DESC, manufacturers_name";
 
               // reset page when page is unknown
               if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
@@ -206,6 +238,32 @@ if (!empty($action)) {
                   <td class="dataTableContent text-center"><?php echo $manufacturer['manufacturers_id']; ?></td>
                   <td class="dataTableContent"><?php echo $manufacturer['manufacturers_name']; ?></td>
                   <td class="dataTableContent"><?php echo $manufacturer['featured'] ? '<strong>' . TEXT_YES . '</strong>' : TEXT_NO; ?></td>
+<?php
+// -----
+// A watching observer can provide any added manufacturers' fields' values to the listing
+// via an associative array in the form:
+//
+// $extra_data = [
+//     [
+//       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+//       'text' => $value
+//     ],
+// ];
+//
+// Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+// multiple observers might be injecting content!
+//
+$extra_data = false;
+$zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_EXTRA_COLUMN_DATA', $manufacturer, $extra_data);
+if (is_array($extra_data)) {
+    foreach ($extra_data as $data_info) {
+        $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                  <td class="dataTableContent<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+    }
+}
+?>
                   <td class="dataTableContent text-right">
                     <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
                       <div class="fa-stack fa-fw">
@@ -245,6 +303,29 @@ if (!empty($action)) {
               $contents[] = ['text' => TEXT_NEW_INTRO];
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name"')];
               $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured') . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
+
+              // -----
+              // Give a watching observer the opportunity to add additional content to the sidebox
+              // form to gather any new fields it might support via an array of arrays in the form:
+              //
+              // $additional_contents = [
+              //     [
+              //       'align' => $alignment,    // (Optional) One of 'text-center', 'text-right', or 'text-left'.
+              //       'text' => $value
+              //     ],
+              // ];
+              //
+              // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              // multiple observers might be injecting content!
+              //
+              $additional_contents = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_NEW', '', $additional_contents);
+              if (is_array($additional_contents)) {
+                  foreach ($additional_contents as $next_addition) {
+                      $contents[] = $next_addition;
+                  }
+              }
+
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', 'class="form-control" id="manufacturers_image"')];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
               $default_directory = 'manufacturers/';
@@ -268,6 +349,29 @@ if (!empty($action)) {
               $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', htmlspecialchars($mInfo->manufacturers_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name" required')];
               $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured', '1', $mInfo->featured) . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
+
+              // -----
+              // Give a watching observer the opportunity to add additional content to the sidebox
+              // form to manage any new fields it might support via an array of arrays in the form:
+              //
+              // $additional_contents = [
+              //     [
+              //       'align' => $alignment,    // (Optional) One of 'text-center', 'text-right', or 'text-left'.
+              //       'text' => $value
+              //     ],
+              // ];
+              //
+              // Observer note:  Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              // multiple observers might be injecting content!
+              //
+              $additional_contents = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_EDIT', $mInfo, $additional_contents);
+              if (is_array($additional_contents)) {
+                  foreach ($additional_contents as $next_addition) {
+                      $contents[] = $next_addition;
+                  }
+              }
+
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', ' class="form-control" id="manufacturers_image"') . '<br>' . $mInfo->manufacturers_image];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
               $default_directory = ($mInfo->manufacturers_image === null) ? '/' : substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image, '/') + 1);
