@@ -162,9 +162,6 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
         global $db, $zco_notifier;
 
         $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
-        if (empty($string)) {
-            return '';
-        }
         $where_str = '';
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
