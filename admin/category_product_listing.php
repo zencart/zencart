@@ -549,7 +549,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           }
 
           $sql .= $order_by;
-          echo "DEBUG: $sql<br><br>";
 
           $categories = $db->Execute($sql);
 
