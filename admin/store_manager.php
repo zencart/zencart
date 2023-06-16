@@ -129,7 +129,7 @@
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
           if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
-            if (preg_match('/^(myDEBUG-|Bambora_Debug_|Square_|SquareWebPay_|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall|SHIP_|PAYMENT_|usps_|.*debug).*\.log$/i', $file)) {
+            if (preg_match('/^(myDEBUG-|upsoauth-|fedexrest-|Bambora_Debug_|Square_|SquareWebPay_|AIM_Debug_|SIM_Debug_|FirstData_Debug_|Linkpoint_Debug_|Paypal|paypal|ipn_|zcInstall|SHIP_|PAYMENT_|usps_|.*debug).*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
                 zen_remove($purgeFolder . '/' . $file);
               }
