@@ -30,9 +30,15 @@ class WhosOnline extends base
 
     public function __construct($forceRebuild = false, $skip_gc = false)
     {
-        if (defined('WHOIS_TIMER_REMOVE')) $this->timer_remove_threshold = WHOIS_TIMER_REMOVE;
-        if (defined('WHOIS_TIMER_INACTIVE')) $this->timer_inactive_threshold = WHOIS_TIMER_INACTIVE;
-        if (defined('WHOIS_TIMER_DEAD')) $this->timer_dead_threshold = WHOIS_TIMER_DEAD;
+        if (defined('WHOIS_TIMER_REMOVE')) {
+            $this->timer_remove_threshold = WHOIS_TIMER_REMOVE;
+        }
+        if (defined('WHOIS_TIMER_INACTIVE')) {
+            $this->timer_inactive_threshold = WHOIS_TIMER_INACTIVE;
+        }
+        if (defined('WHOIS_TIMER_DEAD')) {
+            $this->timer_dead_threshold = WHOIS_TIMER_DEAD;
+        }
 
         // normally we get rid of expired data
         if (!$skip_gc) {
@@ -230,33 +236,33 @@ class WhosOnline extends base
     protected function getStatusCode($data)
     {
         $xx_mins_ago_long = (time() - (int)$this->timer_inactive_threshold);
+        $inactive = ($data['time_last_click'] ?? 0) < $xx_mins_ago_long;
 
         // empty session data means definitely no cart (or not parseable, so we treat as empty)
         if (empty($data['session_data'])) {
-            if ($data['time_last_click'] < $xx_mins_ago_long) {
+            if ($inactive) {
                 return 3;
             }
             return 2;
         }
 
-        $chk_cart_status = base64_decode($data['session_data']);
+        $session = $this->inspectSessionCart('', $data['session_data']);
+
         // lookup how many rows are in the shopping cart contents array
-        if (preg_match('/shoppingCart":\d*:{s:\d*:"(contents)";a:(\d*):/', $chk_cart_status, $matches)) {
-            $rows_in_cart = $matches[2];
+        if (!empty($session['products'])) {
+            $rows_in_cart = count($session['products']);
         }
 
         if (empty($rows_in_cart)) {
-            if ($data['time_last_click'] < $xx_mins_ago_long) {
+            if ($inactive) {
                 return 3; // empty inactive
             }
             return 2; // empty active
         }
-        if ($rows_in_cart > 0) {
-            if ($data['time_last_click'] < $xx_mins_ago_long) {
-                return 1; // not-empty, inactive
-            }
-            return 0; // not-empty, active
+        if ($inactive) {
+            return 1; // not-empty, inactive
         }
+        return 0; // not-empty, active
     }
 
     protected function calculateStats()
@@ -264,13 +270,13 @@ class WhosOnline extends base
         foreach ($this->whos_online as $session) {
             if (empty($session['session_id'])) {
                 $this->spider_array[$session['status_code']]++;
-            } else {
-                if ($session['full_name'] === "&yen;Guest") {
-                    $this->guest_array[$session['status_code']]++;
-                } else {
-                    $this->user_array[$session['status_code']]++;
-                }
+                continue;
             }
+            if ($session['full_name'] === "&yen;Guest") {
+                $this->guest_array[$session['status_code']]++;
+                continue;
+            }
+            $this->user_array[$session['status_code']]++;
         }
     }
 
@@ -299,7 +305,9 @@ class WhosOnline extends base
     protected function inspectSessionCart($session_id = '', $session_data = '')
     {
         // we need at least one of these parameters
-        if (empty($session_id) && empty($session_data)) return null;
+        if (empty($session_id) && empty($session_data)) {
+          return null;
+        }
 
         // or we can pass in the already-queried session data
         if (empty($session_data)) {
