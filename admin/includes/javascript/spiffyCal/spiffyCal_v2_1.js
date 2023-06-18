@@ -873,7 +873,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
         strOutput += '<tr>';
         // Header ROW showing days of week here
         for (intLoop = 0; intLoop < 7; intLoop++) {
-            strOutput += '<td class="cal-HeadCell text-center align-middle>' + msDOW[intLoop] + '<\/td>';
+            strOutput += '<td class="cal-HeadCell text-center align-middle">' + msDOW[intLoop] + '<\/td>';
         }
 
         strOutput += '<\/tr><tr>';
