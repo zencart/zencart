@@ -6,9 +6,9 @@ Zen Cart&reg; - The Art of E-Commerce
 
 Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
 
-Zen Cart&reg; v1.5.8 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
+Zen Cart v1.5.8 the latest major update to the project.  It contains bugfixes and updates for PHP8 applied on top of the PA-DSS Certified version v1.5.4.
 
-It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at [zen-cart.com/forum](https://www.zen-cart.com/forum.php)
+Zen Cart is free and open source software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at [zen-cart.com/forum](https://www.zen-cart.com/forum.php)
 
 --------------------
 
@@ -114,5 +114,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2022, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2023, Zen Cart&reg;. All rights reserved.*
 
