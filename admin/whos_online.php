@@ -53,8 +53,8 @@ $whos_online = $wo->retrieve($selectedView, (empty($_GET['inspect']) ? '' : $_GE
 
 if (!defined('WHOIS_SHOW_HOST')) define('WHOIS_SHOW_HOST', '1');
 
-$optURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['t', 'na', 'ns']);
-$listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't', 'na', 'ns']);
+$optURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['t', 'na', 'ns']));
+$listingURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['q', 't', 'na', 'ns']));
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -102,23 +102,23 @@ $listingURL = FILENAME_WHOS_ONLINE . '.php?' . zen_get_all_get_params(['q', 't',
         <div class="col-sm-6" id="wo-filters">
             <?php echo TEXT_WHOS_ONLINE_TIMER_UPDATING . ($_SESSION['wo_timeout'] > 0 ? sprintf(TEXT_WHOS_ONLINE_TIMER_EVERY, $_SESSION['wo_timeout']) : TEXT_WHOS_ONLINE_TIMER_DISABLED); ?>
 
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '0') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=0"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ0; ?></a>&nbsp;
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '5') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=5"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ1; ?></a>&nbsp;
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '15') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=15"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ2; ?></a>&nbsp;
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '30') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=30"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ3; ?></a>&nbsp;
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '60') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=60"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ4; ?></a>&nbsp;
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '300') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=300"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ5; ?></a>&nbsp;
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '600') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=600"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ6; ?></a>&nbsp;
-          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '840') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>t=840"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ7; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '0') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=0"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ0; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '5') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=5"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ1; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '15') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=15"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ2; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '30') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=30"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ3; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '60') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=60"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ4; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '300') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=300"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ5; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '600') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=600"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ6; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_timeout'] == '840') ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&t=840"><?php echo TEXT_WHOS_ONLINE_TIMER_FREQ7; ?></a>&nbsp;
           <br>
 
           <?php echo TEXT_WHOS_ONLINE_FILTER_SPIDERS; ?>
-          <a class="optionClick<?php echo ($_SESSION['wo_exclude_spiders']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>ns=1"><?php echo TEXT_YES; ?></a>&nbsp;
-          <a class="optionClick<?php echo (!$_SESSION['wo_exclude_spiders']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>ns=0"><?php echo TEXT_NO; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_exclude_spiders']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&ns=1"><?php echo TEXT_YES; ?></a>&nbsp;
+          <a class="optionClick<?php echo (!$_SESSION['wo_exclude_spiders']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&ns=0"><?php echo TEXT_NO; ?></a>&nbsp;
           &nbsp;&nbsp;&nbsp;
           <?php echo TEXT_WHOS_ONLINE_FILTER_ADMINS; ?>
-          <a class="optionClick<?php echo ($_SESSION['wo_exclude_admins']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>na=1"><?php echo TEXT_YES; ?></a>&nbsp;
-          <a class="optionClick<?php echo (!$_SESSION['wo_exclude_admins']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>na=0"><?php echo TEXT_NO; ?></a>&nbsp;
+          <a class="optionClick<?php echo ($_SESSION['wo_exclude_admins']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&na=1"><?php echo TEXT_YES; ?></a>&nbsp;
+          <a class="optionClick<?php echo (!$_SESSION['wo_exclude_admins']) ? ' chosen' : ''; ?>" href="<?php echo $optURL; ?>&na=0"><?php echo TEXT_NO; ?></a>&nbsp;
         </div>
       </div>
       <div class="row">
