@@ -21,6 +21,7 @@ class zcDatabaseInstaller
     protected $dbPrefix;
     protected $dbType;
     protected $dbUser;
+    protected $table;
     protected $dieOnErrors;
     protected $errors = [];
     protected $extendedOptions;
@@ -75,7 +76,7 @@ class zcDatabaseInstaller
             'DROP INDEX ',
             'LEFT JOIN ',
             'FROM ',
-
+            ') ENGINE=MYISAM'
         );
     }
 
@@ -170,8 +171,11 @@ class zcDatabaseInstaller
         if (!isset($this->lineSplit[5])) $this->lineSplit[5] = "";
         foreach ($this->basicParseStrings as $parseString) {
             $parseMethod = 'parser' . trim($this->camelize($parseString));
+
             if (substr(strtoupper($this->line), 0, strlen($parseString)) == $parseString) {
-//          echo 'GOT '. $parseMethod .  "<br>";
+                if ($parseMethod == 'parser)Engine=myisam') {
+                    $parseMethod = 'parserEngineInnodb';
+                }
                 if (method_exists($this, $parseMethod)) {
                     $this->$parseMethod();
                 }
@@ -211,6 +215,7 @@ class zcDatabaseInstaller
     public function parserCreateTable()
     {
         $table = (strtoupper($this->lineSplit[2] . ' ' . $this->lineSplit[3] . ' ' . $this->lineSplit[4]) == 'IF NOT EXISTS') ? $this->lineSplit[5] : $this->lineSplit[2];
+        $this->table = $table;
         if ($this->tableExists($table)) {
             $this->ignoreLine = TRUE;
             if (strtoupper($this->lineSplit[2] . ' ' . $this->lineSplit[3] . ' ' . $this->lineSplit[4]) != 'IF NOT EXISTS') {
@@ -393,6 +398,21 @@ class zcDatabaseInstaller
         }
     }
 
+    public function parserEngineInnodb()
+    {
+        if (!defined('USE_INNODB') || USE_INNODB == false) {
+            return;
+        }
+        if (!$this->table) {
+            return;
+        }
+        $exceptions = (defined('INNODB_BLACKLIST')) ? INNODB_BLACKLIST : [];
+        if (!is_array($exceptions)) $exceptions = [];
+        if (in_array($this->table, $exceptions)) {
+            return;
+        }
+        $this->line =  str_replace('MyISAM', 'InnoDb', $this->line);
+    }
     public function writeUpgradeExceptions($line, $message, $sqlFile = '')
     {
         logDetails($line . '  ' . $message . '  ' . $sqlFile, 'upgradeException');
