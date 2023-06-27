@@ -78,8 +78,7 @@ if ($product_listing_layout_style === 'table') {
                 $zc_col_count_description++;
                 break;
             case 'PRODUCT_LIST_IMAGE':
-                $lc_text = '&nbsp;';
-//                $lc_text = TABLE_HEADING_IMAGE;   //-Uncomment this line if you want the "Products Image" header title
+                $lc_text = TABLE_HEADING_IMAGE;
                 $lc_align = 'center';
                 $zc_col_count_description++;
                 break;
