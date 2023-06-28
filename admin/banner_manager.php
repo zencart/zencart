@@ -698,7 +698,7 @@ if (!empty($action)) {
         $('input[name="date_scheduled"]').datepicker({
             minDate: 0
         });
-        $('input[name="expires_date"]').datepicker(({
+        $('input[name="expires_date"]').datepicker({
             minDate: 1
         });
       })
