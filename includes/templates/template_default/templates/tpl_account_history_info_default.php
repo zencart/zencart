@@ -144,8 +144,8 @@ if (!empty($order->statuses)) {
 ?>
 <h4><?php echo HEADING_SHIPPING_METHOD; ?></h4>
 <div><?php echo $order->info['shipping_method']; ?></div>
-<?php } else { // temporary just remove these 4 lines ?>
-<div>WARNING: Missing Shipping Information</div>
+<?php } else { ?>
+<div><?php echo TEXT_MISSING_SHIPPING_INFO; ?></div>
 <?php
     }
 ?>
