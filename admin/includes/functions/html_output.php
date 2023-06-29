@@ -175,10 +175,16 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 ////
 // Output a separator either through whitespace, or with an image
   function zen_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    if (substr(rtrim($width), -1) != "%") $width = $width . 'px';
-    return zen_image(DIR_WS_IMAGES . $image, '', '', $height, 'style="width:' . $width . ';"');
+	if (!empty($width)) {
+		if (substr(rtrim($width), -1) !== '%') {
+            $width = $width . 'px';
+        }
+		$param = 'style="width:' . $width . ';"';
+	} else {
+		$param = NULL;
+	}
+    return zen_image(DIR_WS_IMAGES . $image, '', '', $height, $param);
   }
-
 /**
  * @deprecated since v1.5.8. Use <button> markup instead
  */
