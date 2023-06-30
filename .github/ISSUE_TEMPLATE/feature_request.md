@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+NOTE: Please open feature requests in the Discussions tab, not the Issues tab.  Issues that are actually feature requests will be migrated to Discussions.
+
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
