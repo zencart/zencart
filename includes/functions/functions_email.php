@@ -756,7 +756,7 @@
 
         //now replace the $BLOCK_NAME items in the template file with the values passed to this function's array
         foreach ($block as $key => $value) {
-            $file_holder = str_replace('$' . $key, $value, $file_holder);
+            $file_holder = str_replace('$' . $key, (string)$value, $file_holder);
         }
 
         //DEBUG -- to display preview on-screen
