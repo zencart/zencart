@@ -38,23 +38,26 @@ if (!function_exists('utf8_encode_recurse')) {
     {
         if (strtolower(CHARSET) == 'utf-8') {
             return $mixed_value;
-        } elseif (!is_array($mixed_value)) {
-            return utf8_encode((string)$mixed_value);
-        } else {
-            $result = array();
-            foreach ($mixed_value as $key => $value) {
-                $result[$key] = utf8_encode($value);
-            }
-            return $result;
         }
+        if (!is_array($mixed_value)) {
+            return utf8_encode((string)$mixed_value);
+        }
+        $result = array();
+        foreach ($mixed_value as $key => $value) {
+            $result[$key] = utf8_encode($value);
+        }
+        return $result;
     }
 }
 
 function ajaxAbort($status = 400, $msg = null)
 {
+    global $zc_ajax_base_dir;
     http_response_code($status); // 400 = "Bad Request"
-    if ($msg) echo $msg;
-    require('includes/application_bottom.php');
+    if ($msg) {
+        echo $msg;
+    }
+    require $zc_ajax_base_dir . 'includes/application_bottom.php';
     exit();
 }
 // --- support functions ------------------
@@ -85,4 +88,4 @@ if (!method_exists($class, $_GET['method'])) {
 $result = call_user_func(array($class, $_GET['method']));
 $result = utf8_encode_recurse($result);
 echo json_encode($result);
-require('includes/application_bottom.php');
+require $zc_ajax_base_dir . 'includes/application_bottom.php';
