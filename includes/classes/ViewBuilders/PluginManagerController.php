@@ -36,6 +36,13 @@ class PluginManagerController extends BaseController
                 ) . '" class="btn btn-primary" role="button">' . TEXT_INSTALL . '</a>'
             );
         }
+
+        if ($available = $this->pluginManager->isNewDownloadAvailable($this->currentFieldValue('zc_contrib_id'), $this->currentFieldValue('version'))) {
+            $this->setBoxContent(
+                sprintf(TEXT_NEW_PLUGIN_DOWNLOAD_AVAILABLE, $available['latest_plugin_version'], $available['id'])
+            );
+        }
+
         if ($this->pluginManager->isUpgradeAvailable($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(

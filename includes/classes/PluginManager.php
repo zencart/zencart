@@ -13,7 +13,7 @@ class PluginManager
     private
         $pluginControl,
         $pluginControlVersion;
-    
+
     public function __construct($pluginControl, $pluginControlVersion)
     {
         $this->pluginControl = $pluginControl;
@@ -64,6 +64,11 @@ class PluginManager
         return $versionList;
     }
 
+    public function isNewDownloadAvailable($pluginId, $currentVersion)
+    {
+        $isAvailable = plugin_version_check_for_updates($pluginId, $currentVersion);
+        return $isAvailable;
+    }
     public function getPluginsAfterCheckingForNewVersionsOnline()
     {
         $plugins = $this->getPluginsFromDb();

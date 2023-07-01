@@ -86,7 +86,7 @@ class BaseController
         $currentRow = $this->formatter->currentRowFromRequest();
         return $currentRow->$field;
     }
-    
+
     public function outputMessageList($errorList, $errorType)
     {
         if (!count($errorList)) {
@@ -95,6 +95,6 @@ class BaseController
         foreach ($errorList as $error) {
             $this->messageStack->add_session($error, $errorType);
         }
-    }  
+    }
 
 }
