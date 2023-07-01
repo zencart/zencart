@@ -72,11 +72,11 @@ if ($_GET['action'] == "update_sort_order") {
         <table class="table table-condensed table-striped">
           <thead>
             <tr class="dataTableHeadingRow">
-              <th class="dataTableHeadingContent text-center"><?php echo TEXT_EDIT_ALL; ?></th>
+              <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TEXT_EDIT_ALL; ?></th>
             </tr>
             <tr class="dataTableHeadingRow">
-              <th  class="dataTableHeadingContent text-center col-sm-5"><?php echo ($_GET['lng_id'] != $_SESSION['languages_id'] ? 'Current Language' : '&nbsp;'); ?></th>
-              <th  class="dataTableHeadingContent text-center">
+              <th class="dataTableHeadingContent text-center col-sm-5"><?php echo ($_GET['lng_id'] != $_SESSION['languages_id'] ? 'Current Language' : '&nbsp;'); ?></th>
+              <th class="dataTableHeadingContent text-center">
                   <?php echo zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get'); ?>
                   <?php echo zen_hide_session_id(); ?>
                 <?php echo zen_draw_label(TEXT_SELECTED_LANGUAGE . zen_get_language_icon($_GET['lng_id']), 'lng_id', 'class="control-label"'); ?>&nbsp;&nbsp;&nbsp;
@@ -106,7 +106,7 @@ if ($_GET['action'] == "update_sort_order") {
             </tr>
           </thead>
           <tbody>
-            
+
                 <?php
                 $options_types = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_OPTIONS_TYPES);
                 $options_types_names = array();
@@ -123,7 +123,7 @@ if ($_GET['action'] == "update_sort_order") {
                   $the_attributes_type = (isset($options_types_names[$option_type])) ? $options_types_names[$option_type] : " (UNKNOWN: $option_type)";
                 ?>
               <tr>
-                <?php  
+                <?php
                   if ($_GET['lng_id'] != $_SESSION['languages_id']) {
                     ?>
                   <td class="dataTableContent text-center"><?php echo zen_get_language_icon($_SESSION['languages_id']); ?></td>
