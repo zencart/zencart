@@ -5,7 +5,7 @@
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
 
-namespace Zencart\Filters;
+namespace Zencart\ViewBuilders\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
@@ -16,7 +16,7 @@ class FilterManager
     protected $filterDefinitions = [];
     protected $filterFactory;
     protected $filters = [];
-    
+
     public function __construct(array $filterDefinitions, FilterFactory $filterFactory)
     {
         $this->filterDefinitions = $filterDefinitions;

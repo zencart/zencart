@@ -5,7 +5,7 @@
  * @version $Id: Zcwilt 2020 Jul 19 New in v1.5.8-alpha $
  */
 
-namespace Zencart\Filters;
+namespace Zencart\ViewBuilders\Filters;
 
 class FilterFactory
 {

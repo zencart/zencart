@@ -6,17 +6,17 @@
  * @version $Id: Zcwilt 2022 Apr 27 Modified in v1.5.8-alpha $
  */
 
-use Zencart\PluginSupport\SqlPatchInstaller;
-use Zencart\PluginSupport\ScriptedInstallerFactory;
-use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\Installer;
+use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\PluginErrorContainer;
+use Zencart\PluginSupport\ScriptedInstallerFactory;
+use Zencart\PluginSupport\SqlPatchInstaller;
+use Zencart\ViewBuilders\DerivedItemsManager;
+use Zencart\ViewBuilders\Filters\FilterFactory;
+use Zencart\ViewBuilders\Filters\FilterManager;
 use Zencart\ViewBuilders\PluginManagerController;
-use Zencart\Filters\FilterFactory;
 use Zencart\ViewBuilders\PluginManagerDataSource;
 use Zencart\ViewBuilders\SimpleDataFormatter;
-use Zencart\Filters\FilterManager;
-use Zencart\ViewBuilders\DerivedItemsManager;
 
 /* @var $pluginManager PluginManager*/
 /* @var $db queryFactory */

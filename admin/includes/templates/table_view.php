@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \Zencart\Filters\FilterManager $filterManager
+ * @var \Zencart\ViewBuilders\Filters\FilterManager $filterManager
  * @var \Zencart\ViewBuilders\SimpleDataFormatter $formatter
  * @var \Zencart\TableViewControllers\BaseController $tableController
  * @var string $PHP_SELF

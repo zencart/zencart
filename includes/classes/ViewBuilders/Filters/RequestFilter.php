@@ -5,7 +5,7 @@
  * @version $Id: Zcwilt 2021 Jan 29 New in v1.5.8-alpha $
  */
 
-namespace Zencart\Filters;
+namespace Zencart\ViewBuilders\Filters;
 
 use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
