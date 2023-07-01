@@ -76,11 +76,10 @@ echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
 
 echo 'Connecting to Canada Post SellOnline HTTP/S ...<br>';
-doCurlTest('https://qa-sellonline.canadapost.ca/sellonline/Rating');
-// doCurlTest('https://sellonline.canadapost.ca/sellonline/Rating');
+doCurlTest('https://sellonline-cybervente.canadapost-postescanada.ca/'); 
 
 echo 'Connecting to Canada Post REST API (SSL) ...<br>';
-doCurlTest('https://ct.soa-gw.canadapost.ca/rs/ship/price');
+doCurlTest('https://soa-gw.canadapost.ca/rs/ship/price');
 
 echo 'Connecting to PayPal IPN (port 443)...<br>';
 dofsockTest('www.paypal.com', 443);
