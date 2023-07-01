@@ -172,7 +172,8 @@ if (!empty($action)) {
               zen_set_category_image($categories_id, $categories_image_name);
               $messageStack->add_session(sprintf(MESSAGE_IMAGE_ADDED_MANUAL, (int)$categories_id, zen_get_category_name($categories_id, $_SESSION['languages_id']), $categories_image_name), 'success');
           } else {
-              $messageStack->add_session(sprintf(ERROR_IMAGE_MANUAL_NOT_FOUND, $categories_image_name));
+              $messageStack->add_session(sprintf(ERROR_IMAGE_MANUAL_NOT_FOUND, DIR_FS_CATALOG_IMAGES . $categories_image_name));
+              zen_redirect(zen_href_link(FILENAME_CATEGORIES, 'action=edit_category&cPath=' . $cPath . '&cID=' . (int)$_POST['categories_id']));
           }
           // or upload a new image
       } elseif ($categories_image = new upload('categories_image')) {
