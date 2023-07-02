@@ -25,7 +25,7 @@ class queryFactory extends base
     public $dieOnErrors = false;
     public $error_number = 0;
     public $error_text = '';
-    
+
     private $pConnect;
     /**
      * @var bool
@@ -961,7 +961,7 @@ class queryFactoryMeta extends base
 {
     public $type;
     public $max_length;
-    
+
     function __construct($field)
     {
         $type = $field['Type'];
@@ -991,8 +991,8 @@ class queryFactoryMeta extends base
                   break;
               default:
                   // This is antibugging code to prevent a fatal error
-                  // You should not be here unless you have changed the db 
-                  $this->max_length = 8; 
+                  // You should not be here unless you have changed the db
+                  $this->max_length = 8;
                   $this->notify('NOTIFY_QUERY_FACTORY_META_DEFAULT', ['field' => $field, 'type' => $type], $this->max_length);
                   break;
            }
