@@ -18,7 +18,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
     $flag = '';
 
     for ($k=0; $k<count($pieces); $k++) {
-        while (substr($pieces[$k], 0, 1) == '(') {
+        while (substr($pieces[$k], 0, 1) == '(' && strpos($pieces[$k], ')', 1) == false) {
             $objects[] = '(';
             if (strlen($pieces[$k]) > 1) {
                 $pieces[$k] = substr($pieces[$k], 1);
@@ -29,7 +29,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
 
         $post_objects = array();
 
-        while (substr($pieces[$k], -1) == ')')  {
+        while (substr($pieces[$k], -1) == ')' && strpos($pieces[$k], '(') == false)  {
             $post_objects[] = ')';
             if (strlen($pieces[$k]) > 1) {
                 $pieces[$k] = substr($pieces[$k], 0, -1);
@@ -162,6 +162,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
         global $db, $zco_notifier;
 
         $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
+        $where_str = '';
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
             if ($startWithWhere) {
@@ -211,5 +212,5 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
         if (substr($where_str, -7) === '( ()  )') {
             return ' ';
         }
-        return $where_str ?? ' ';
+        return $where_str;
     }
