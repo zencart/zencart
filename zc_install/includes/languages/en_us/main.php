@@ -68,6 +68,7 @@ return [
 'TEXT_LOADING_CHARSET_SPECIFIC' => 'Loading Character Set specific data',
 'TEXT_LOADING_DEMO_DATA' => 'Loading Demo Data',
 'TEXT_LOADING_PLUGIN_DATA' => 'Loading SQL for Pre-installed Plugins',
+'TEXT_LOADING_PLUGIN_UPGRADES' => 'Loading SQL for Plugin upgrades',
 'TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED' => 'Could not update to version %s. We detect that you currently have v%s, and must perform the updates to get to version %s first.',
 'TEXT_PAGE_HEADING_ADMIN_SETUP' => 'Admin Setup',
 'TEXT_ADMIN_SETUP_USER_SETTINGS' => 'Admin User Settings',

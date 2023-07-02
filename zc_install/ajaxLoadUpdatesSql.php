@@ -47,14 +47,31 @@ if ($versionInfo['required'] != $dbVersion)
   if (empty($versionInfo['required'])) $versionInfo['required'] = '[ ERROR: NOT READY FOR UPGRADES YET. NOTIFY DEV TEAM!] ';
   $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $dbVersion, $versionInfo['required']);
 }
-if (!$error)
-{
-  require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
-  $file = DIR_FS_INSTALL . 'sql/updates/' . $db_type . '_upgrade_zencart_' . str_replace('.', '', $updateVersion) . '.sql';
-  $options = $systemChecker->getDbConfigOptions();
-  $dbInstaller = new zcDatabaseInstaller($options);
-  $result = $dbInstaller->getConnection();
-  $errDates = $dbInstaller->runZeroDateSql($options);
-  $errorUpg = $dbInstaller->parseSqlFile($file);
+if ($error) {
+    echo json_encode(array('error'=>$error, 'version'=>$_POST['version'], 'errorList'=>$errorList)); die();
 }
+
+require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+$file = DIR_FS_INSTALL . 'sql/updates/' . $db_type . '_upgrade_zencart_' . str_replace('.', '', $updateVersion) . '.sql';
+$options = $systemChecker->getDbConfigOptions();
+$dbInstaller = new zcDatabaseInstaller($options);
+$result = $dbInstaller->getConnection();
+$errDates = $dbInstaller->runZeroDateSql($options);
+$errorUpg = $dbInstaller->parseSqlFile($file);
+if ($error) {
+    echo json_encode(array('error'=>$error, 'version'=>$_POST['version'], 'errorList'=>$errorList)); die();
+}
+
+// Plugins
+$pluginsfolder = DIR_FS_INSTALL . 'sql/plugins/updates/';
+// get all *.sql files in alpha order
+$sql_files = glob($pluginsfolder . '*.sql');
+if ($sql_files !== false) {
+    foreach ($sql_files as $file) {
+        $extendedOptions = array('doJsonProgressLogging'=>TRUE, 'doJsonProgressLoggingFileName'=>DEBUG_LOG_FOLDER . '/progress.json', 'id'=>'main', 'message'=>TEXT_LOADING_PLUGIN_UPGRADES . ' ' . $file);
+        logDetails('processing file ' . $file);
+        $errorUpg = $dbInstaller->parseSqlFile($file, $extendedOptions);
+    }
+}
+
 echo json_encode(array('error'=>$error, 'version'=>$_POST['version'], 'errorList'=>$errorList));
