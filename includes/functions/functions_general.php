@@ -202,7 +202,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             return $additional_link;
             break;
         case ($button_check->fields['product_is_call'] == '1'):
-            $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . (int)$product_id, 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+            $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . (int)$product_id . '&cfp=true', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
             break;
         case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
             global $template;

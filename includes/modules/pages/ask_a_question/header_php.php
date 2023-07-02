@@ -20,13 +20,15 @@ if ($pid === false) {
 
 // -----
 // Check to see if the "Show Ask a Question" button is enabled for the product's
-// type.  If not, redirect to the product's information page.
+// type and it is not a "Call for Price product".
+// If not, redirect to the product's information page.
 //
+$call_for_price = $_GET['cfp'] ?? false;
 $info_page = zen_get_info_page($pid);
 $show_info_page_ask_a_question = 'SHOW_' . strtoupper($info_page) . '_ASK_A_QUESTION';
 $bypass_redirect = false;
 $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_ALLOW_BYPASS_REDIRECT', ['products_id' => $pid, ], $bypass_redirect);
-if ($bypass_redirect === false && (!defined($show_info_page_ask_a_question) || constant($show_info_page_ask_a_question) === '0')) {
+if ($bypass_redirect === false && $call_for_price === false && (!defined($show_info_page_ask_a_question) || constant($show_info_page_ask_a_question) === '0')) {
     zen_redirect(zen_href_link($info_page, 'products_id=' . $_GET['pid']));
 }
 
@@ -48,6 +50,18 @@ $product_details = $result->fields;
 
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
+/*
+ * Set up Form Ask Question or Call For Price
+ */
+if ($call_for_price !== false) {
+    $heading_title = CALL_FOR_PRICE_HEADING_TITLE;
+    $form_title = CALL_FOR_PRICE_FORM_TITLE;
+    $email_subject = CALL_FOR_PRICE_EMAIL_SUBJECT;
+} else {
+    $heading_title = HEADING_TITLE;
+    $form_title = FORM_TITLE;
+    $email_subject = EMAIL_SUBJECT;
+}
 $error = false;
 $enquiry = '';
 $antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
@@ -133,7 +147,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br>' . OFFICE_EMAIL . '(' . $email_address . ')';
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message
-            zen_mail($send_to_name, $send_to_email, EMAIL_SUBJECT, $text_message, $name, $email_address, $html_msg,'ask_a_question');
+            zen_mail($send_to_name, $send_to_email, $email_subject, $text_message, $name, $email_address, $html_msg,'ask_a_question');
         }
         zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, 'action=success&pid=' . (int)$_GET['pid'], 'SSL'));
     } else {
