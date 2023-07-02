@@ -104,7 +104,10 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
       }
     }
   }
-  if (!isset($currencyArray[$base]) || 0 == $currencyArray[$base]) return ''; // no valid value, so abort
+  // Check for valid data  
+  if (!isset($currencyArray[$base]) || !isset($currencyArray[$currencyCode]) || 0 == $currencyArray[$base]) {
+     return ''; // no valid value, so abort
+  }
   $rate = (string)((float)$currencyArray[$currencyCode] / $currencyArray[$base]);
   return $rate;
 }
