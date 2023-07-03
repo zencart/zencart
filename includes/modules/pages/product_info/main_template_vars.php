@@ -70,6 +70,9 @@
         if ($product_info->fields['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS != '1') {
             $products_image = $product_info->fields['products_image'];
         }
+        if (!isset($ignore_products_image)) {
+          $ignore_products_image = 0;
+        }
 
         $products_url = $product_info->fields['products_url'];
         $products_date_available = $product_info->fields['products_date_available'];

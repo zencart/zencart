@@ -52,3 +52,14 @@
 // true ..... no link will be created.
 // false .... a <link> element will load the v4-shims.min.css file.
 //$disableFontAwesomeV4Compatibility = true;
+
+// Provide a default value for $ignore_products_image allowing entry into the
+// template area where both the main image and additional images files exist.
+// $ignore_products_image was originally considered to be an integer to allow
+// nearly unlimited choices instead of just a boolean (true/false).
+// $ignore_products_image = 1 would allow processing the responsive_classic
+// template's tpl_modules_additional_images file to access associated
+// available features such as the additional images without having
+// a primary image. Doing nothing treats this value as 0.
+// $ignore_products_image = 1;
+
