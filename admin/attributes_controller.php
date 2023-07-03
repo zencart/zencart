@@ -757,7 +757,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
           <div class="col-xs-6 col-sm-4 text-danger"><strong><?php echo TEXT_DELETE_ALL_ATTRIBUTES . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></strong></div>
           <div class="col-xs-6 col-sm-8">
-            <button type="submit" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
+            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
             <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
           </div>
           <?php echo '</form>'; ?>
@@ -778,7 +778,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <div class="row">
             <div class="col-sm-4"><?php echo TEXT_INFO_PRODUCT_NAME . zen_get_products_name($products_filter) . '<br>' . TEXT_INFO_PRODUCTS_OPTION_ID . $_GET['products_options_id_all'] . '&nbsp;' . TEXT_INFO_PRODUCTS_OPTION_NAME . '&nbsp;' . zen_options_name($_GET['products_options_id_all']); ?></div>
             <div class="col-sm-8">
-              <button type="submit" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
+              <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
             </div>
           </div>
@@ -821,7 +821,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO; ?></strong></span><br>
               <?php echo zen_draw_pulldown_products('products_update_id', 'size="15" class="form-control"', $products_exclude_array, true, '', true); ?></div>
             <div class="col-sm-6 text-center">
-              <button type="submit" class="btn btn-primary"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
           </div>
           <?php echo '</form>'; ?>
@@ -853,7 +853,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO; ?></strong></span><br>
               <?php echo zen_draw_pulldown_categories_having_products('categories_update_id', 'size="5" class="form-control"', '', true, true); ?></div>
             <div class="col-sm-6 text-center">
-              <button type="submit" class="btn btn-primary"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
           </div>
           <?php echo '</form>'; ?>
@@ -940,77 +940,77 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <td class="text-right"><?php echo LEGEND_KEYS; ?></td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x read-only-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x read-only-attr-txt opacity-25" aria-hidden="true"></i>
+                      <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x read-only-attr-txt" aria-hidden="true"></i>
-                      <i class="fa fa-check fa-stack-1x" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x read-only-attr-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-check fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x is-free-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x is-free-attr-txt opacity-25" aria-hidden="true"></i>
+                      <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x is-free-attr-txt" aria-hidden="true"></i>
-                      <i class="fa fa-check fa-stack-1x" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x is-free-attr-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-check fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x default-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x default-attr-txt opacity-25" aria-hidden="true"></i>
+                      <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x default-attr-txt" aria-hidden="true"></i>
-                      <i class="fa fa-check fa-stack-1x" aria-hidden="true"></i>
-                    </span>
-                  </td>
-                  <td class="text-center">
-                    <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x is-discounted-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
-                    </span>
-                    <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x is-discounted-attr-txt" aria-hidden="true"></i>
-                      <i class="fa fa-check fa-stack-1x" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x default-attr-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-check fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x base-included-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x is-discounted-attr-txt opacity-25" aria-hidden="true"></i>
+                      <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x base-included-attr-txt" aria-hidden="true"></i>
-                      <i class="fa fa-check fa-stack-1x" aria-hidden="true"></i>
-                    </span>
-                  </td>
-                  <td class="text-center">
-                    <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x required-attr-txt opacity-25" aria-hidden="true"></i>
-                      <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
-                    </span>
-                    <span class="fa-stack">
-                      <i class="fa fa-square fa-stack-2x required-attr-txt" aria-hidden="true"></i>
-                      <i class="fa fa-check fa-stack-1x" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x is-discounted-attr-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-check fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
-                      <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x base-included-attr-txt opacity-25" aria-hidden="true"></i>
+                      <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
+                    </span>
+                    <span class="fa-stack">
+                      <i class="fa-solid fa-square fa-stack-2x base-included-attr-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-check fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
-                      <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x required-attr-txt opacity-25" aria-hidden="true"></i>
+                      <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
-                      <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
+                      <i class="fa-solid fa-square fa-stack-2x required-attr-txt" aria-hidden="true"></i>
+                      <i class="fa-solid fa-check fa-stack-1x" aria-hidden="true"></i>
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span class="fa-stack">
+                      <i class="fa-solid fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
+                      <i class="fa-regular fa-circle fa-stack-1x" aria-hidden="true"></i>
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span class="fa-stack">
+                      <i class="fa-solid fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
+                      <i class="fa-regular fa-circle fa-stack-1x" aria-hidden="true"></i>
+                    </span>
+                    <span class="fa-stack">
+                      <i class="fa-solid fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
+                      <i class="fa-regular fa-circle fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                 </tr>
@@ -1104,7 +1104,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <tr>
                     <td>
                       <?php if ($action == '') { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_option_name_values_confirm&products_options_id_all=' . $current_attributes_options_id . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-danger" role="button"><i class="fa fa-trash" aria-hidden="true" title="<?php echo TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT; ?>"></i></a>
+                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_option_name_values_confirm&products_options_id_all=' . $current_attributes_options_id . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-danger" role="button"><i class="fa-solid fa-trash" aria-hidden="true" title="<?php echo TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT; ?>"></i></a>
                       <?php } ?>
                     </td>
                     <td class="pageHeading" colspan="9"><?php echo $current_options_name; ?></td>
@@ -1503,8 +1503,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     <td>
                       <?php if ($attributes_value['attributes_image'] != '') { ?>
                         <span class="fa-stack">
-                          <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
-                          <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
+                          <i class="fa-solid fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
+                          <i class="fa-regular fa-circle fa-stack-1x" aria-hidden="true"></i>
                         </span>
                       <?php } ?>
                       <?php echo $values_name; ?>
@@ -1517,66 +1517,66 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_flag_attributes_display_only' . '&attributes_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&flag=' . $attributes_value['attributes_display_only']); ?>" onClick="divertClick(this.href);return false;" title="<?php echo LEGEND_ATTRIBUTES_DISPLAY_ONLY; ?>">
                           <span class="fa-stack">
                             <?php if ($attributes_value['attributes_display_only'] == '0') { ?>
-                              <i class="fa fa-square fa-stack-2x read-only-attr-txt opacity-25" aria-hidden="true"></i>
-                              <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x read-only-attr-txt opacity-25" aria-hidden="true"></i>
+                              <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                             <?php } else { ?>
-                              <i class="fa fa-square fa-stack-2x read-only-attr-txt" aria-hidden="true"></i>
-                              <i class="fa fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x read-only-attr-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
                             <?php } ?>
                           </span>
                         </a>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_flag_product_attribute_is_free' . '&attributes_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&flag=' . $attributes_value['product_attribute_is_free']); ?>" onClick="divertClick(this.href);return false;" title="<?php echo LEGEND_ATTRIBUTES_IS_FREE; ?>">
                           <span class="fa-stack">
                             <?php if ($attributes_value['product_attribute_is_free'] == '0') { ?>
-                              <i class="fa fa-square fa-stack-2x is-free-attr-txt opacity-25" aria-hidden="true"></i>
-                              <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x is-free-attr-txt opacity-25" aria-hidden="true"></i>
+                              <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                             <?php } else { ?>
-                              <i class="fa fa-square fa-stack-2x is-free-attr-txt" aria-hidden="true"></i>
-                              <i class="fa fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x is-free-attr-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
                             <?php } ?>
                           </span>
                         </a>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_flag_attributes_default' . '&attributes_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&flag=' . $attributes_value['attributes_default']); ?>" onClick="divertClick(this.href);return false;" title="<?php echo LEGEND_ATTRIBUTES_DEFAULT; ?>">
                           <span class="fa-stack">
                             <?php if ($attributes_value['attributes_default'] == '0') { ?>
-                              <i class="fa fa-square fa-stack-2x default-attr-txt opacity-25" aria-hidden="true"></i>
-                              <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x default-attr-txt opacity-25" aria-hidden="true"></i>
+                              <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                             <?php } else { ?>
-                              <i class="fa fa-square fa-stack-2x default-attr-txt" aria-hidden="true"></i>
-                              <i class="fa fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x default-attr-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
                             <?php } ?>
                           </span>
                         </a>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_flag_attributes_discounted' . '&attributes_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&flag=' . $attributes_value['attributes_discounted']); ?>" onClick="divertClick(this.href);return false;" title="<?php echo LEGEND_ATTRIBUTE_IS_DISCOUNTED; ?>">
                           <span class="fa-stack">
                             <?php if ($attributes_value['attributes_discounted'] == '0') { ?>
-                              <i class="fa fa-square fa-stack-2x is-discounted-attr-txt opacity-25" aria-hidden="true"></i>
-                              <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x is-discounted-attr-txt opacity-25" aria-hidden="true"></i>
+                              <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                             <?php } else { ?>
-                              <i class="fa fa-square fa-stack-2x is-discounted-attr-txt" aria-hidden="true"></i>
-                              <i class="fa fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x is-discounted-attr-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
                             <?php } ?>
                           </span>
                         </a>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_flag_attributes_price_base_included' . '&attributes_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&flag=' . $attributes_value['attributes_price_base_included']); ?>" onClick="divertClick(this.href);return false;" title="<?php echo LEGEND_ATTRIBUTE_PRICE_BASE_INCLUDED; ?>">
                           <span class="fa-stack">
                             <?php if ($attributes_value['attributes_price_base_included'] == '0') { ?>
-                              <i class="fa fa-square fa-stack-2x base-included-attr-txt opacity-25" aria-hidden="true"></i>
-                              <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x base-included-attr-txt opacity-25" aria-hidden="true"></i>
+                              <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                             <?php } else { ?>
-                              <i class="fa fa-square fa-stack-2x base-included-attr-txt" aria-hidden="true"></i>
-                              <i class="fa fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x base-included-attr-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
                             <?php } ?>
                           </span>
                         </a>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=set_flag_attributes_required' . '&attributes_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&flag=' . $attributes_value['attributes_required']); ?>" onClick="divertClick(this.href);return false;" title="<?php echo LEGEND_ATTRIBUTES_REQUIRED; ?>">
                           <span class="fa-stack">
                             <?php if ($attributes_value['attributes_required'] == '0') { ?>
-                              <i class="fa fa-square fa-stack-2x required-attr-txt opacity-25" aria-hidden="true"></i>
-                              <i class="fa fa-times fa-stack-1x red-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x required-attr-txt opacity-25" aria-hidden="true"></i>
+                              <i class="fa-solid fa-xmark fa-stack-1x red-txt" aria-hidden="true"></i>
                             <?php } else { ?>
-                              <i class="fa fa-square fa-stack-2x required-attr-txt" aria-hidden="true"></i>
-                              <i class="fa fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-square fa-stack-2x required-attr-txt" aria-hidden="true"></i>
+                              <i class="fa-solid fa-check fa-stack-1x black-txt" aria-hidden="true"></i>
                             <?php } ?>
                           </span>
                         </a>
@@ -1621,11 +1621,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           <span class="smallText">
                             <span class="fa-stack">
                               <?php if (zen_orders_products_downloads($download_display->fields['products_attributes_filename'])) { ?>
-                                <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
-                                <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
+                                <i class="fa-solid fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
+                                <i class="fa-regular fa-circle fa-stack-1x" aria-hidden="true"></i>
                               <?php } else { ?>
-                                <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
-                                <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
+                                <i class="fa-solid fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
+                                <i class="fa-regular fa-circle fa-stack-1x" aria-hidden="true"></i>
                               <?php } ?>
                             </span>
                             <?php echo TABLE_TEXT_FILENAME; ?>&nbsp;&nbsp;<?php echo $download_display->fields['products_attributes_filename']; ?>&nbsp;&nbsp;<?php echo TABLE_TEXT_MAX_DAYS_SHORT; ?>&nbsp;&nbsp;<?php echo $download_display->fields['products_attributes_maxdays']; ?>&nbsp;&nbsp;<?php echo TABLE_TEXT_MAX_COUNT_SHORT; ?>&nbsp;&nbsp;<?php echo $download_display->fields['products_attributes_maxcount']; ?>

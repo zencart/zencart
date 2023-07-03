@@ -267,21 +267,21 @@ if (is_array($extra_data)) {
                   <td class="dataTableContent text-right">
                     <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
                       <div class="fa-stack fa-fw">
-                        <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
-                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                        <i class="fa-solid fa-circle fa-stack-2x txt-status-on"></i>
+                        <i class="fa-solid fa-pencil fa-stack-1x fa-inverse"></i>
                       </div>
                     </a>
                     <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=delete'); ?>" title="<?php echo ICON_DELETE; ?>">
                       <div class="fa-stack fa-fw">
-                        <i class="fa fa-circle fa-stack-2x txt-status-off"></i>
-                        <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
+                        <i class="fa-solid fa-circle fa-stack-2x txt-status-off"></i>
+                        <i class="fa-solid fa-trash fa-stack-1x fa-inverse"></i>
                       </div>
                     </a>
                     <?php if (isset($mInfo) && is_object($mInfo) && ($manufacturer['manufacturers_id'] == $mInfo->manufacturers_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
+                      <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, zen_get_all_get_params(['mID']) . 'mID=' . $manufacturer['manufacturers_id']); ?>">
-                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
+                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
                   </td>

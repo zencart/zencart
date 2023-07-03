@@ -59,20 +59,20 @@ if (!empty($action)) {
       <div class="row">
         <div class="col-sm-6">
           <div class="fa-stack fa-fw">
-            <i class="fa fa-circle fa-stack-1x txt-yellow"></i>
-            <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
+            <i class="fa-solid fa-circle fa-stack-1x txt-yellow"></i>
+            <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_WARNING_PRODUCT_MISCONFIGURED_SHORT; ?>
         </div>
         <div class="col-sm-6">
           <div class="fa-stack fa-fw">
-            <i class="fa fa-circle fa-stack-1x txt-red"></i>
-            <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
+            <i class="fa-solid fa-circle fa-stack-1x txt-red"></i>
+            <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_INFO_FILENAME_MISSING; ?>&nbsp;&nbsp;
           <div class="fa-stack fa-fw">
-            <i class="fa fa-circle fa-stack-1x txt-lime"></i>
-            <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
+            <i class="fa-solid fa-circle fa-stack-1x txt-lime"></i>
+            <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_INFO_FILENAME_GOOD; ?>
         </div>
@@ -119,8 +119,8 @@ if (!empty($action)) {
               $order_by = " ORDER BY pd.products_name ";
 
 // create split page control
-              $sql = "SELECT pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount, 
-                      pa.products_attributes_id, pa.options_id, pa.options_values_id, pd.products_name, 
+              $sql = "SELECT pad.products_attributes_filename, pad.products_attributes_maxdays, pad.products_attributes_maxcount,
+                      pa.products_attributes_id, pa.options_id, pa.options_values_id, pd.products_name,
                       p.products_model, p.products_id, p.products_virtual, p.product_is_always_free_shipping
                       FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                       LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa ON pad.products_attributes_id = pa.products_attributes_id
@@ -146,9 +146,9 @@ if (!empty($action)) {
 
                 $product_is_misconfigured = '';
                 if ($products_downloads['product_is_always_free_shipping'] == 1 || $products_downloads['products_virtual'] == 1) {
-                  $product_is_misconfigured = '<div class="fa-stack fa-fw"><i class="fa fa-circle fa-stack-1x txt-yellow"></i><i class="fa fa-circle-o fa-stack-1x txt-black"></i></div>';
+                  $product_is_misconfigured = '<div class="fa-stack fa-fw"><i class="fa-solid fa-circle fa-stack-1x txt-yellow"></i><i class="fa-regular fa-circle fa-stack-1x txt-black"></i></div>';
                 }
-                $file_check = zen_orders_products_downloads($products_downloads['products_attributes_filename']); 
+                $file_check = zen_orders_products_downloads($products_downloads['products_attributes_filename']);
                 ?>
                 <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
                   <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id . '&action=edit'); ?>'" role="button">
@@ -164,30 +164,30 @@ if (!empty($action)) {
                   <td><?php echo zen_values_name($products_downloads['options_values_id']); ?></td>
                   <td>
                     <div class="fa-stack fa-fw">
-                      <i class="fa fa-circle fa-stack-1x<?php echo (!$file_check ? ' txt-red' : ' txt-lime'); ?>"></i>
-                      <i class="fa fa-circle-o fa-stack-1x txt-black"></i>
+                      <i class="fa-solid fa-circle fa-stack-1x<?php echo (!$file_check ? ' txt-red' : ' txt-lime'); ?>"></i>
+                      <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>
                     </div>
                     <?php echo $products_downloads['products_attributes_filename']; ?></td>
-<?php if ($show_download_date === true) { 
-         $file_date = ''; 
-         if ($file_check) { 
-            $handler = zen_get_download_handler($products_downloads['products_attributes_filename']); 
-        
+<?php if ($show_download_date === true) {
+         $file_date = '';
+         if ($file_check) {
+            $handler = zen_get_download_handler($products_downloads['products_attributes_filename']);
+
             if ($handler === 'local') {
               $file_date = $zcDate->output(DATE_TIME_FORMAT, filemtime(DIR_FS_DOWNLOAD . $products_downloads['products_attributes_filename']));
             }
-         } 
+         }
 ?>
-                  <td><?php echo $file_date;  ?></td> 
+                  <td><?php echo $file_date;  ?></td>
 <?php } ?>
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxdays']; ?></td>
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxcount']; ?></td>
                   <td class="text-right">
                     <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
+                      <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
+                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
                   </td>

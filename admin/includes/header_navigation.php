@@ -45,7 +45,7 @@ $menuTitles = zen_get_menu_titles();
 <?php if ($url = page_has_help()) { ?>
 <div class="pull-right noprint">
   <a href="<?php echo $url; ?>" rel="noopener" target="_blank" class="btn btn-sm btn-default btn-help" role="button" title="Help">
-    <i class="fa fa-question fa-lg" aria-hidden="true"></i>
+    <i class="fa-regular fa-question fa-lg" aria-hidden="true"></i>
   </a>
 </div>
 <?php } ?>

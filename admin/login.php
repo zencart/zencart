@@ -85,7 +85,7 @@ if ($expired && $message == '') {
               <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <i class="fa fa-lg fa-user"></i>
+                    <i class="fa-solid fa-lg fa-user"></i>
                   </span>
                   <?php echo zen_draw_input_field('admin_name', zen_output_string($admin_name), 'class="form-control input-lg" id="admin_name-' . $_SESSION['securityToken'] . '" autocapitalize="none" spellcheck="false" autocomplete="username" autofocus placeholder="' . TEXT_ADMIN_NAME . '"') . PHP_EOL; ?>
                 </div>
@@ -93,7 +93,7 @@ if ($expired && $message == '') {
               <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <i class="fa fa-lg fa-lock"></i>
+                    <i class="fa-solid fa-lg fa-lock"></i>
                   </span>
                   <?php echo zen_draw_password_field('admin_pass', '', false, 'class="form-control input-lg" id="admin_pass" autocomplete="current-password" placeholder="' . TEXT_ADMIN_PASS . '"') . PHP_EOL; ?>
                 </div>

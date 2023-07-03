@@ -18,10 +18,18 @@ if (!defined('IS_ADMIN_FLAG')) {
 <?php } else { ?>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
 <?php } ?>
-<?php if (file_exists($value = 'includes/css/font-awesome.min.css')) { ?>
+<?php if (file_exists($value = 'includes/fontawesome/css/fontawesome.min.css')) { ?>
     <link rel="stylesheet" href="<?php echo $value; ?>">
+    <link rel="stylesheet" href="includes/fontawesome/css/solid.min.css">
+    <link rel="stylesheet" href="includes/fontawesome/css/regular.min.css">
+    <?php if (FONTAWESOME_V4_SHIM == 'true' && file_exists($value = 'includes/fontawesome/css/v4-shims.min.css')) { ?>
+        <link rel="stylesheet" href="<?php echo $value; ?>">
+    <?php } ?>
 <?php } else { ?>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+    <?php if (FONTAWESOME_V4_SHIM == 'true') { ?>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/v4-shims.css" crossorigin="anonymous">
+    <?php } ?>
 <?php } ?>
 <?php if (file_exists($value = 'includes/css/jquery-ui.css')) { ?>
     <link rel="stylesheet" href="<?php echo $value; ?>">

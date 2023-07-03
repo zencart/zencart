@@ -305,7 +305,7 @@ if (!empty($action)) {
                                       LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id = r.products_id
                                       WHERE r.products_id = p.products_id
                                       " . $search . "
-                                      GROUP BY r.reviews_id, rd.languages_id, r.products_id, r.customers_name, r.reviews_rating, r.date_added, r.status, 
+                                      GROUP BY r.reviews_id, rd.languages_id, r.products_id, r.customers_name, r.reviews_rating, r.date_added, r.status,
                                        r.last_modified, r.reviews_read, rd.reviews_text, pd.products_name, p.products_model, p.products_image
                                       " . $order_by;
 
@@ -340,7 +340,7 @@ if (!empty($action)) {
                     <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id']) ?>'">
                     <?php } ?>
                     <td class="dataTableContent" style="white-space:nowrap"><?php echo $review['products_model']; ?></td>
-                    <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id'] . '&action=preview'); ?>" title="<?php echo ICON_PREVIEW; ?>"><i class="fa fa-binoculars fa-lg txt-black"></i></a>&nbsp;<?php echo zen_get_products_name($review['products_id']); ?></td>
+                    <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id'] . '&action=preview'); ?>" title="<?php echo ICON_PREVIEW; ?>"><i class="fa-solid fa-binoculars fa-lg txt-black"></i></a>&nbsp;<?php echo zen_get_products_name($review['products_id']); ?></td>
                     <td class="dataTableContent"><?php echo $review['customers_name']; ?></td>
                     <?php if (count($languages_array) > 1) { ?>
                       <td class="dataTableContent text-center"><?php echo zen_get_language_icon($review['languages_id']); ?></td>
@@ -351,12 +351,12 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('setflag_products', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=setflag&rID=' . $review['reviews_id']); ?>
                       <?php if ($review['status'] === '1') { ?>
                         <button type="submit" class="btn btn-status">
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         </button>
                         <?php echo zen_draw_hidden_field('flag', '0'); ?>
                       <?php } else { ?>
                         <button type="submit" class="btn btn-status">
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         </button>
                         <?php echo zen_draw_hidden_field('flag', '1'); ?>
                       <?php } ?>
@@ -364,10 +364,10 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-right">
                       <?php if (isset($rinfo) && is_object($rInfo) && ($review['reviews_id'] === $rInfo->reviews_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
+                        <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_REVIEWS, zen_get_all_get_params(['rID']) . 'rID=' . $review['reviews_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
+                          <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>

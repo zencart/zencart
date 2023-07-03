@@ -12,7 +12,7 @@ require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 $group_array = [];
 
-// Override instructions in: 
+// Override instructions in:
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 if (!isset($show_registration_ip_in_listing)) {
     $show_registration_ip_in_listing = false;
@@ -1637,11 +1637,11 @@ if (!empty($action)) {
                                 <button type="submit" class="btn btn-status">
                                     <?php
                                     if ($customer['customers_authorization'] == 0) { ?>
-                                        <i class="fa fa-square txt-status-on" title="<?php
+                                        <i class="fa-solid fa-square txt-status-on" title="<?php
                                         echo IMAGE_ICON_STATUS_ON; ?>"></i>
                                     <?php
                                     } else { ?>
-                                        <i class="fa fa-square txt-status-off" title="<?php
+                                        <i class="fa-solid fa-square txt-status-off" title="<?php
                                         echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                                     <?php
                                     } ?>
@@ -1659,7 +1659,7 @@ if (!empty($action)) {
                                 if (isset($cInfo) && is_object(
                                         $cInfo
                                     ) && ($customer['customers_id'] == $cInfo->customers_id)) { ?>
-                                    <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
+                                    <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                                 <?php
                                 } else { ?>
                                     <a href="<?php
@@ -1670,7 +1670,7 @@ if (!empty($action)) {
                                         'NONSSL'
                                     ); ?>" title="<?php
                                     echo IMAGE_ICON_INFO; ?>" role="button">
-                                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
+                                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
                                     </a>
                                 <?php
                                 } ?>

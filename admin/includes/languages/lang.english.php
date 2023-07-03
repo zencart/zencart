@@ -571,7 +571,7 @@ $define = [
     'TEXT_PRODUCTS_MIX_ON' => '*Yes Mixed Options',
     'TEXT_PRODUCTS_MODEL' => 'Products Model:',
     'TEXT_PRODUCTS_STATUS_INFO_OFF' => '<span class="alert">*Product is Disabled</span>',
-    'TEXT_PRODUCT_POPUP_BUTTON' => '<i class="fa fa-commenting"></i>',
+    'TEXT_PRODUCT_POPUP_BUTTON' => '<i class="fa-solid fa-comment-dots"></i>',
     'TEXT_PRODUCT_POPUP_TITLE' => 'Products Ordered',
     'TEXT_PRODUCT_TO_VIEW' => 'Select a Product to View and Press Display ...',
     'TEXT_PRODUCT_WEIGHT_UNIT' => 'lbs',
