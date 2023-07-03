@@ -22,12 +22,12 @@ if (!defined('IS_ADMIN_FLAG')) {
     <link rel="stylesheet" href="<?php echo $value; ?>">
     <link rel="stylesheet" href="includes/fontawesome/css/solid.min.css">
     <link rel="stylesheet" href="includes/fontawesome/css/regular.min.css">
-    <?php if (FONTAWESOME_V4_SHIM == 'true' && file_exists($value = 'includes/fontawesome/css/v4-shims.min.css')) { ?>
+    <?php if (defined('FONTAWESOME_V4_SHIM') && FONTAWESOME_V4_SHIM == 'true' && file_exists($value = 'includes/fontawesome/css/v4-shims.min.css')) { ?>
         <link rel="stylesheet" href="<?php echo $value; ?>">
     <?php } ?>
 <?php } else { ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
-    <?php if (FONTAWESOME_V4_SHIM == 'true') { ?>
+    <?php if (defined('FONTAWESOME_V4_SHIM') && FONTAWESOME_V4_SHIM == 'true') { ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/v4-shims.css" crossorigin="anonymous">
     <?php } ?>
 <?php } ?>
