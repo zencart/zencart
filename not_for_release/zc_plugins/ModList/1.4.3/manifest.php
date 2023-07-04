@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'pluginVersion' => 'v1.4.1',
+    'pluginVersion' => 'v1.4.3',
     'pluginName' => 'Mod List',
     'pluginDescription' => 'Lists database changes have been made to a base Zen Cart installation.',
     'pluginAuthor' => 'That Software Guy (swguy)',
