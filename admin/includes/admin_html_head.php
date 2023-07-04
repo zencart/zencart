@@ -22,12 +22,12 @@ if (!defined('IS_ADMIN_FLAG')) {
     <link rel="stylesheet" href="<?php echo $value; ?>">
     <link rel="stylesheet" href="includes/fontawesome/css/solid.min.css">
     <link rel="stylesheet" href="includes/fontawesome/css/regular.min.css">
-    <?php if (isset($fontawesome_v4_shim_required) && $fontawesome_v4_shim_required == true && file_exists($value = 'includes/fontawesome/css/v4-shims.min.css')) { ?>
+    <?php if (!empty($fontawesome_v4_shim_required) && file_exists($value = 'includes/fontawesome/css/v4-shims.min.css')) { ?>
         <link rel="stylesheet" href="<?php echo $value; ?>">
     <?php } ?>
 <?php } else { ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8= sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0 sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous">
-    <?php if (isset($fontawesome_v4_shim_required) && $fontawesome_v4_shim_required == true) { ?>
+    <?php if (!empty($fontawesome_v4_shim_required)) { ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/v4-shims.css" integrity="sha256-CB2v9WYYUz97XoXZ4htbPxCe33AezlF5MY8ufd1eyQ8= sha384-JfB3EVqS5xkU+PfLClXRAMlOqJdNIb2TNb98chdDBiv5yD7wkdhdjCi6I2RIZ+mL sha512-tqGH6Vq3kFB19sE6vx9P6Fm/f9jWoajQ05sFTf0hr3gwpfSGRXJe4D7BdzSGCEj7J1IB1MvkUf3V/xWR25+zvw==" crossorigin="anonymous">
     <?php } ?>
 <?php } ?>
