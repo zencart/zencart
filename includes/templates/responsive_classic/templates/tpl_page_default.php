@@ -15,9 +15,9 @@
   <?php if (EZPAGES_SHOW_PREV_NEXT_BUTTONS == '2' && $counter > 1) { ?>
     <?php if ($_SESSION['layoutType'] == 'mobile') { ?>
       <div id="navEZPageNextPrev">
-        <a href="<?php echo $prev_link; ?>"><i class="fa fa-chevron-circle-left" title="<?php echo BUTTON_PREVIOUS_ALT; ?>"></i></a>
-        <?php echo zen_back_link(); ?><i class="fa fa-list" title="<?php echo BUTTON_VIEW_ALL_ALT; ?>"></i></a>
-        <a href="<?php echo $next_link; ?>"><i class="fa fa-chevron-circle-right" title="<?php echo BUTTON_NEXT_ALT; ?>"></i></a>
+        <a href="<?php echo $prev_link; ?>"><i class="fa-solid fa-circle-chevron-left" title="<?php echo BUTTON_PREVIOUS_ALT; ?>"></i></a>
+        <?php echo zen_back_link(); ?><i class="fa-solid fa-list" title="<?php echo BUTTON_VIEW_ALL_ALT; ?>"></i></a>
+        <a href="<?php echo $next_link; ?>"><i class="fa-solid fa-circle-chevron-right" title="<?php echo BUTTON_NEXT_ALT; ?>"></i></a>
       </div>
     <?php } else { ?>
       <div id="navEZPageNextPrev">
