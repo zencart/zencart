@@ -74,5 +74,53 @@ class sniffer extends base {
     }
     return false;
   }
+
+    /**
+     * Return true if the specified row exists in the table.
+     *
+     * @param string $table_name The table to query.
+     * @param string $key_name The key to check.
+     * @param int    $key_value The value that key_name must equal.
+     * @return void
+     */
+    public function rowExists(string $table_name, string $key_name, int $key_value): bool
+    {
+        global $db;
+        $sql = 'SELECT COUNT(*) AS cc FROM :table_name WHERE :key_name = :key_value;';
+        $sql = $db->bindVars($sql, ':key_name', $key_name, 'passthru');
+        $sql = $db->bindVars($sql, ':key_value', $key_value, 'integer');
+        $sql = $db->bindVars($sql, ':table_name', $table_name, 'passthru');
+        $rs = $db->Execute($sql);
+        return $rs->fields['cc'] != 0;
+    }
+
+    /**
+     * Return true if the specified row exists in the table.
+     * Key column names taken from $key_names are matched against equivalent
+     * key values in $key_values.
+     *
+     * @param string $table_name The table to query.
+     * @param array  $key_names The array of keys to check.
+     * @param array  $key_values The array of values that key_names must equal.
+     * @return void
+     */
+    public function rowExistsComposite(string $table_name, array $key_names, array $key_values): bool
+    {
+        global $db;
+        $sql = 'SELECT COUNT(*) AS cc FROM :table_name WHERE ';
+        $sql .= join(' AND ', array_map(
+            function ($key, $value) {
+                global $db;
+                $bit = ':key = :value';
+                $bit = $db->bindVars($bit, ':key', $key, 'passthru');
+                $bit = $db->bindVars($bit, ':value', $value, 'integer');
+                return $bit;
+            },
+            $key_names,
+            $key_values
+        ));
+        $sql = $db->bindVars($sql, ':table_name', $table_name, 'passthru');
+        $rs = $db->Execute($sql);
+        return $rs->fields['cc'] != 0;
+    }
 }
-?>

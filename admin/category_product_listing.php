@@ -35,6 +35,20 @@ if (isset($_GET['product_type'])) {
 }
 if (isset($_GET['cID'])) {
   $_GET['cID'] = (int)$_GET['cID'];
+  if ($sniffer->rowExists(TABLE_CATEGORIES, 'categories_id', $_GET['cID'])) {
+    zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+  }
+}
+if (isset($_GET['pID'])) {
+  $_GET['pID'] = (int)$_GET['pID'];
+  if (!$sniffer->rowExists(TABLE_PRODUCTS, 'products_id', $_GET['pID'])) {
+    zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+  }
+}
+if (isset($current_category_id) && isset($_GET['pID'])) {
+  if (!$sniffer->rowExistsComposite(TABLE_PRODUCTS_TO_CATEGORIES, [ 'products_id', 'categories_id' ], [ $_GET['pID'], $current_category_id ])){
+    zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+  }
 }
 
 if (!isset($_SESSION['categories_products_sort_order'])) {
@@ -837,7 +851,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $cPath = $product['master_categories_id'];
               }
 
-              if ((!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] === $product['products_id']))) && !isset($pInfo) && !isset($cInfo) && (strpos($action, 'new')
+              if ((!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] === (int)$product['products_id']))) && !isset($pInfo) && !isset($cInfo) && (strpos($action, 'new')
                       !== 0)) {
                 $pInfo = new objectInfo($product);
               }
