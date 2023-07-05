@@ -2,10 +2,10 @@
 # * This SQL script upgrades the core Zen Cart database structure from v1.5.7 to v1.5.8
 # *
 # * @access private
-# * @copyright Copyright 2003-2023 Zen Cart Development Team
+# * @copyright Copyright 2003-2022 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Scott C Wilson 2023 Mar 18 Modified in v1.5.8a $
+# * @version $Id: mc12345678 2022 Oct 17 Modified in v1.5.8 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -76,6 +76,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Newsletter SMTP Email Mail Host', 'NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER', '', 'Enter the DNS name of your Newsletter SMTP mail server if you are using a separate email server for bulk email.', '12', '503', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Newsletter SMTP Email Mail Server Port', 'NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER_PORT', '587', 'Enter the IP port number that your newsletter SMTP mailserver operates on.<br><br>Default: 587<br>Typical values are:<br>587 - encrypted SMTP<br>465 - older MS SMTP port', '12', '504', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Newsletter Modules', 'NEWSLETTER_MODULES', 'newsletters,product_notification,back_in_stock_notification,recover_cart_sales', 'Enter a comma-separated list of the modules that should use the newsletter settings when sending email (rather than the regular email settings).', '12', '505', now());
+
 
 UPDATE configuration SET configuration_description = 'Customers Referral Code is created from<br />0= Off<br />1= 1st Discount Coupon Code used<br />2= Customer can add during create account or edit if blank<br /><br />NOTE: Once the Customers Referral Code has been set it can only be changed by the Administrator' WHERE configuration_key = 'CUSTOMERS_REFERRAL_STATUS';
 
@@ -255,7 +256,7 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='1', project_version_minor='5.8', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.7->1.5.8a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.8', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.7->1.5.8', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
 UPDATE project_version SET project_version_major='1', project_version_minor='5.8', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.7->1.5.8', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 ##### END OF UPGRADE SCRIPT
