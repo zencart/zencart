@@ -38,13 +38,13 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
     if (file_exists($searchBoxJs)) {
         ?>
         <div class="row">
-            <div class="form-group col-md-4" id="searchRestrictIds">
+            <div class="form-group col-xs-6 col-sm-12" id="searchRestrictIds">
                 <div class="col-sm-9 control-label"><label for="restrictIDs"><?= TEXT_INFO_SEARCH_FILTER_RESTRICT_IDS; ?></label></div>
                 <div class="col-sm-1">
                     <?= zen_draw_checkbox_field('restrictIDs', '', (!empty($_GET['restrictIDs']) && $_GET['restrictIDs'] === 'on'), '', ' id="restrictIDs"'); ?>
                 </div>
             </div>
-            <div class="form-group col-md-4" id="searchTermRepopulate">
+            <div class="form-group col-xs-6 col-sm-12" id="searchTermRepopulate">
                 <div class="col-sm-9 control-label"><label for="repopulateSearch"><?= TEXT_INFO_SEARCH_FILTER_REPOPULATE; ?></label></div>
                 <div class="col-sm-1">
                     <?= zen_draw_checkbox_field('repopulateSearch', '', (!empty($_GET['repopulateSearch']) && $_GET['repopulateSearch'] === 'on'), '', ' id="repopulateSearch"'); ?>
