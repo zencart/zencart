@@ -165,30 +165,21 @@ class messageStack extends base
             'error' => [
                 'params' => 'class="messageStackError larger"',
                 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_ERROR, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_ERROR, ICON_ERROR_ALT),
-//                'params' => 'class="alert alert-danger"',
-//                'icon' => '<i class="fas fa-triangle-exclamation fa-lg" data-title="' . ICON_ERROR_ALT . '"></i>  ',
             ],
             'success' => [
                 'params' => 'class="messageStackSuccess larger"',
                 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_SUCCESS, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_SUCCESS, ICON_SUCCESS_ALT),
-//                'params' => 'class="alert alert-success"',
-//                'icon' => '<i class="fas fa-circle-exclamation fa-lg" data-title="' . ICON_SUCCESS_ALT . '"></i>  ',
             ],
             'warning' => [
                 'params' => 'class="messageStackWarning larger"',
                 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT),
-//                'params' => 'class="alert alert-warning"',
-//                'icon' => '<i class="fas fa-circle-exclamation fa-lg" data-title="' . ICON_WARNING_ALT . '"></i>  ',
             ],
             'caution' => [
                 'params' => 'class="messageStackCaution larger"',
                 'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT),
-//                'params' => 'class="alert alert-info"',
-//                'icon' => '<i class="fas fa-circle-exclamation fa-lg" data-title="' . ICON_CAUTION_ALT . '"></i>  ',
             ],
             'default' => [
                 'params' => 'class="messageStackError larger"'],
-//                'params' => 'class="alert alert-danger"'],
             ];
     }
 }
