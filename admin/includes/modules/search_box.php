@@ -36,18 +36,18 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
   </div>
     <?php
     if (file_exists($searchBoxJs)) {
-        ?>
+    ?>
         <div class="row">
-            <div class="form-group col-xs-6 col-sm-12" id="searchRestrictIds">
-                <div class="col-sm-9 control-label"><label for="restrictIDs"><?= TEXT_INFO_SEARCH_FILTER_RESTRICT_IDS; ?></label></div>
-                <div class="col-sm-1">
-                    <?= zen_draw_checkbox_field('restrictIDs', '', (!empty($_GET['restrictIDs']) && $_GET['restrictIDs'] === 'on'), '', ' id="restrictIDs"'); ?>
+            <div class="form-horizontal col-xs-6">
+                <div class="form-group" id="searchRestrictIds">
+                    <label for="restrictIDs" class="col-xs-11 control-label"><?= TEXT_INFO_SEARCH_FILTER_RESTRICT_IDS; ?></label>
+                    <?= zen_draw_checkbox_field('restrictIDs', '', (!empty($_GET['restrictIDs']) && $_GET['restrictIDs'] === 'on'), '', ' id="restrictIDs" class="col-xs-1"'); ?>
                 </div>
             </div>
-            <div class="form-group col-xs-6 col-sm-12" id="searchTermRepopulate">
-                <div class="col-sm-9 control-label"><label for="repopulateSearch"><?= TEXT_INFO_SEARCH_FILTER_REPOPULATE; ?></label></div>
-                <div class="col-sm-1">
-                    <?= zen_draw_checkbox_field('repopulateSearch', '', (!empty($_GET['repopulateSearch']) && $_GET['repopulateSearch'] === 'on'), '', ' id="repopulateSearch"'); ?>
+            <div class="form-horizontal col-xs-6">
+                <div class="form-group" id="searchTermRepopulate">
+                    <label for="repopulateSearch" class="col-xs-11 control-label"><?= TEXT_INFO_SEARCH_FILTER_REPOPULATE; ?></label>
+                    <?= zen_draw_checkbox_field('repopulateSearch', '', (!empty($_GET['repopulateSearch']) && $_GET['repopulateSearch'] === 'on'), '', ' id="repopulateSearch" class="col-xs-1"'); ?>
                 </div>
             </div>
         </div>
