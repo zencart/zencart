@@ -72,8 +72,18 @@ class queryFactory extends base
         mysqli_report(MYSQLI_REPORT_OFF);
 
         $connectionRetry = 10;
-        while (!isset($this->link) || ($this->link == false && $connectionRetry != 0)) {
+        while (!isset($this->link) || ($this->link == false && $connectionRetry > 0)) {
             $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
+
+            // mariadb connection down or incorrect
+            if (in_array(mysqli_connect_errno(), [2002, 2003])) {
+                if ($connectionRetry > 1) {
+                    // if service is down, try only one more time
+                    $connectionRetry = 1;
+                }
+                $this->dieOnErrors = true;
+            }
+
             $connectionRetry--;
         }
 
@@ -127,7 +137,11 @@ class queryFactory extends base
         $this->user = $db_user;
         $this->host = $db_host;
         $this->password = $db_password;
+
+        // temporarily suppress E_WARNING in case of connection failure
+        $error_level = error_reporting(E_ERROR | E_PARSE);
         $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
+        error_reporting($error_level);
 
         if ($this->link) {
             $this->db_connected = true;
@@ -632,7 +646,9 @@ class queryFactory extends base
         $this->error_text = $err_text;
         if ($dieOnErrors && $err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
             $this->show_error();
-            die();
+            if (!defined('DIR_FS_INSTALL')) {
+                die();
+            }
         }
     }
 
@@ -645,9 +661,24 @@ class queryFactory extends base
         if (!headers_sent()) {
             header("HTTP/1.1 503 Service Unavailable");
         }
-        if ($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED && file_exists(FILENAME_DATABASE_TEMPORARILY_DOWN)) {
-            include(FILENAME_DATABASE_TEMPORARILY_DOWN);
+
+        if (!defined('FILENAME_DATABASE_TEMPORARILY_DOWN')) {
+            define('FILENAME_DATABASE_TEMPORARILY_DOWN', DIR_FS_CATALOG . '/nddbc.html');
         }
+        if (file_exists(FILENAME_DATABASE_TEMPORARILY_DOWN)) {
+            if (($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED)
+                || in_array($this->error_number, [2002, 2003]))
+            {
+                include(FILENAME_DATABASE_TEMPORARILY_DOWN);
+            }
+        }
+
+        // suppress backtrace for MariaDB connection errors: not logging these because they usually come hundreds at a time
+        if (in_array($this->error_number, [2002, 2003]) || defined('DIR_FS_INSTALL')) {
+            return;
+        }
+
+        // display error details if appropriate
         echo '<div class="systemError">';
         if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
             echo $this->error_number . ' ' . $this->error_text;
@@ -655,7 +686,12 @@ class queryFactory extends base
         } else {
             echo 'WARNING: An Error occurred, please let us know!';
         }
+        if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
+            echo ' If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you entered valid data.<br>';
+        }
+        echo '</div>';
 
+        // logging
         $backtrace_array = debug_backtrace();
         $query_factory_caller = '';
         foreach ($backtrace_array as $current_caller) {
@@ -664,13 +700,7 @@ class queryFactory extends base
                 break;
             }
         }
-        trigger_error($this->error_number . ':' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
-
-        if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
-            echo ' If you were entering information, press the BACK button in your browser and re-check the information you had entered to be sure you entered valid data.<br>';
-        }
-
-        echo '</div>';
+        trigger_error('MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
     }
 
     /**
