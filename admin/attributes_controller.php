@@ -663,7 +663,6 @@ function zen_js_option_values_list($selectedName, $fieldName)
       }
     </script>
   </head>
-  <!-- <body onload="init()"> -->
   <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
