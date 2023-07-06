@@ -276,7 +276,7 @@ function zen_is_leap_year($year)
  * compute the days between two dates
  * @param string $date1
  * @param string $date2
- * @return bool|int
+ * @return int
  */
 function zen_date_diff($date1, $date2)
 {
@@ -296,7 +296,7 @@ function zen_date_diff($date1, $date2)
     $date1_set = mktime(0, 0, 0, $m1, $d1, $y1);
     $date2_set = mktime(0, 0, 0, $m2, $d2, $y2);
 
-    return round(($date2_set - $date1_set) / (60 * 60 * 24));
+    return (int)round(($date2_set - $date1_set) / (60 * 60 * 24));
 }
 
 
