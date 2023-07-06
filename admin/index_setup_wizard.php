@@ -108,7 +108,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
       }
     </script>
   </head>
-  <body id="setupWizardPage" onLoad="init()">
+  <body id="setupWizardPage">
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->

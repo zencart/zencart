@@ -44,7 +44,6 @@ if (!empty($action)) {
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <!-- <body onload="init()"> -->
   <body>
     <!-- header //-->
     <?php require DIR_WS_INCLUDES . 'header.php'; ?>
