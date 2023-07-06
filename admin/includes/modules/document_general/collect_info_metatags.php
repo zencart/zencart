@@ -9,7 +9,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
-$parameters = array(
+$parameters = [
   'products_name' => '',
   'products_model' => '',
   'metatags_title_status' => '1',
@@ -21,7 +21,7 @@ $parameters = array(
   'metatags_title' => '',
   'metatags_keywords' => '',
   'metatags_description' => ''
-);
+];
 
 $pInfo = new objectInfo($parameters);
 
@@ -108,7 +108,7 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_status', '0', ($pInfo->metatags_title_status == '0')) . TEXT_NO; ?></label>
         </div>
       </div>
-<!-- // not used for documents
+<?php /* not used for documents
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_MODEL_STATUS, 'metatags_model_status', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
@@ -123,7 +123,7 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_price_status', '0', ($pInfo->metatags_price_status == '0')) . TEXT_NO; ?></label>
         </div>
       </div>
--->
+*/ ?>
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS, 'metatags_title_tagline_status', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
