@@ -43,11 +43,12 @@
 // In this example, loading page "video" will not load "video_info" files
 // define('NO_LANGUAGE_SUBSTRING_MATCH', ['video']);
 
-// Flag to indicate that the FontAwesome v4 shim CSS file should be loaded in the head
-// of every admin page, to make obsolete FontAwesome icon names like fa-star-o work.
-// Only needed when addons using FontAwesome v4 are deployed.
-// Used in: admin/includes/admin_html_head.php
+// Flag to indicate that the FontAwesome v4 shim CSS file should NOT be loaded
+// in the head of every page, to make obsolete FontAwesome icon names
+// like fa-star-o work.
+// Useful when no addons using FontAwesome v4 are deployed.
+// Used in: includes/templates/responsive_classic/common/html_header.php
 //
-// true ..... a <link> element will load the v4-shims.min.css file.
-// false .... no link will be created.
-//$fontawesome_v4_shim_required = true;
+// true ..... no link will be created.
+// false .... a <link> element will load the v4-shims.min.css file.
+//$disableFontAwesomeV4Compatibility = true;
