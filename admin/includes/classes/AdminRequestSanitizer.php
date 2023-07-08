@@ -508,12 +508,15 @@ class AdminRequestSanitizer extends base
     private function filterProductUrlRegex($parameterName)
     {
         $urlRegex = '~([^0-9a-z' . preg_quote("'.!@#$%&()_-~/;:=?[]", '~') . ']|[><])~i';
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
+        }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $this->arrayName;
+        if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
-                $currentArrayName = $this->setCurrentArrayname($pKey);
+                $currentArrayName = $this->setCurrentArrayName($pKey);
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {
                     $newValue = preg_replace($urlRegex, '', $_POST[$parameterName][$pKey]);
@@ -521,7 +524,15 @@ class AdminRequestSanitizer extends base
                 $_POST[$parameterName][$pKey] = $newValue;
                 $this->postKeysAlreadySanitized[] = $currentArrayName;
             }
+            return;
         }
+        // Perform similar sanitization for $_POST of non-array value.
+        $newValue = filter_var($_POST[$parameterName], FILTER_SANITIZE_URL);
+        if ($newValue === false) {
+            $newValue = preg_replace($urlRegex, '', $_POST[$parameterName]);
+        }
+        $_POST[$parameterName] = $newValue;
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
