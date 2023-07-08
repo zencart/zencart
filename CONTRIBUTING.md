@@ -4,10 +4,11 @@
 
 There are numerous ways to contribute to [Zen Cart&reg;](https://www.zen-cart.com/):
 
-1. Enter duplicatable bug reports as Issues on github.
+1. Enter reproduceable bug reports as Issues on github.
 2. Submit PRs containing bug fixes or new features on github
 3. Build plugins as 3rd party contributions which shopowners can install to their own site
 4. Post snippets of bugfixes or minor tweaks to assist with solving specific questions posted on our support forum at [https://www.zen-cart.com/forum.php](https://www.zen-cart.com/forum.php)
+5. Work on a [language pack](https://docs.zen-cart.com/dev/languages/creating_a_language_pack/).
 
 Seasoned open source contributor? Review the guidelines below, fork the repo and start contributing PRs! 
 
@@ -29,5 +30,5 @@ Thank you for your contributions!
 
 &nbsp;  
   
-*&copy;Copyright 2003-2020, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2023, Zen Cart&reg;. All rights reserved.*
 
