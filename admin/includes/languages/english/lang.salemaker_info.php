@@ -27,12 +27,12 @@ $define = [
                       </li>
                       <li>
                         You must choose the action to take if a product is a special <i>and</i> is subject to this sale:
-						<ul>
+                        <ul>
                           <li>
                             <strong>Ignore Specials Price - Apply to Product Price and Replace Special</strong><br>
-							The sale deduction will be applied to the regular price of the product.
+                            The sale deduction will be applied to the regular price of the product.
                             (eg. Regular price $10.00, Specials price is $9.50, Sale Condition is 10%.
-							The product\'s final price will show $9.00 on sale. The Specials price is ignored.)
+                            The product\'s final price will show $9.00 on sale. The Specials price is ignored.)
                           </li>
                           <li>
                             <strong>Ignore Sale Condition - No Sale Applied When Special Exists</strong><br>

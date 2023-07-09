@@ -130,8 +130,8 @@
                 FROM " . TABLE_PRODUCTS . " p"
                 . $this->categories_join . "
                 INNER JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id)
-				" . $this->attributes_join . "
-				WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
+                " . $this->attributes_join . "
+                WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
         }
 
 
