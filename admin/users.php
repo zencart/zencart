@@ -193,7 +193,7 @@ $userList = zen_get_users();
                     <td class="actions">
                         <?php if ($action != 'delete') { ?>
                             <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=edit&user=' . $userDetails['id']) ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a>
-			    <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&user=' . $userDetails['id']) ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
+                            <a href="<?php echo zen_href_link(FILENAME_USERS, 'action=password&user=' . $userDetails['id']) ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
                         <?php } ?>
                         <?php
                         if ($userDetails['id'] != $currentUser) {

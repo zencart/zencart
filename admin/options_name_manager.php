@@ -55,7 +55,7 @@ if (!empty($action)) {
 
                 $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS . " (products_options_id, products_options_name, language_id, products_options_sort_order, products_options_type)
                       VALUES (" . $next_id . ",
-		                      '" . zen_db_input($option_name) . "',
+                              '" . zen_db_input($option_name) . "',
                               " . (int)$languages[$i]['id'] . ",
                               " . (int)$products_options_sort_order[$languages[$i]['id']] . ",
                               " . (int)zen_db_input($option_type) . ")");
