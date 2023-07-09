@@ -20,3 +20,4 @@ span.cssButton.normal_button.button.button_continue_shopping, .button_continue_s
 #reviewsInfoDefault .button_in_cart:hover, #reviewsDefault .button_in_cart:hover{display:block !important;}
 #reviewsDefault .button_in_cart:hover{text-align:center;padding:12px 20px;}
 span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.button.small_edit{background:#666;}
+span.button_sold_out, span.button_sold_out:hover{background:#8b0000;}

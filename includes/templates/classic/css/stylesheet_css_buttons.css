@@ -37,3 +37,7 @@ span.normal_button {
 span.normal_button:hover {
   background-color:#b4bc8b;  /* Hover color for link-related buttons */
 }
+span.button_sold_out, span.button_sold_out:hover{
+  background:#8b0000;
+  color:#ffffff;
+}
