@@ -224,9 +224,9 @@ if (!empty($action)) {
             $messageStack->add_session(SUCCESS_CATEGORY_MOVED, 'success');
           }
 
-          $db->Execute("UPDATE " . TABLE_CATEGORIES . "
-                        SET parent_id = " . (int)$new_parent_id . ", last_modified = now()
-                        WHERE categories_id = " . (int)$categories_id);
+          $db->Execute('UPDATE ' . TABLE_CATEGORIES . '
+                        SET parent_id = ' . (int)$new_parent_id . ', last_modified = now()
+                        WHERE categories_id = ' . (int)$categories_id);
 
           // fix here - if this is a category with subcats it needs to know to loop through
           // reset all products_price_sorter for moved category products
@@ -523,34 +523,34 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           <?php
           switch ($_SESSION['categories_products_sort_order']) {
               case (0):
-                  $order_by = " ORDER BY c.sort_order, cd.categories_name";
+                  $order_by = ' ORDER BY c.sort_order, cd.categories_name';
                   break;
               case (1):
-                  $order_by = " ORDER BY cd.categories_name";
+                  $order_by = ' ORDER BY cd.categories_name';
                   break;
               case (2):
-                  $order_by = " ORDER BY cd.categories_id";
+                  $order_by = ' ORDER BY cd.categories_id';
                   break;
               case (3):
-                  $order_by = " ORDER BY cd.categories_id DESC";
+                  $order_by = ' ORDER BY cd.categories_id DESC';
                   break;
               case (4):
-                  $order_by = " ORDER BY c.categories_status, cd.categories_name";
+                  $order_by = ' ORDER BY c.categories_status, cd.categories_name';
                   break;
               case (5):
-                  $order_by = " ORDER BY c.categories_status, cd.categories_name DESC";
+                  $order_by = ' ORDER BY c.categories_status, cd.categories_name DESC';
                   break;
               default:
-                  $order_by = " ";
+                  $order_by = ' ';
           }
 
           $categories_count = 0;
-          $sql = "SELECT c.categories_id, c.categories_image, cd.categories_name, c.parent_id, c.sort_order, c.categories_status
-                  FROM " . TABLE_CATEGORIES . " c
-                  LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
-                    AND cd.language_id = " . (int)$_SESSION['languages_id'];
+          $sql = 'SELECT c.categories_id, c.categories_image, cd.categories_name, c.parent_id, c.sort_order, c.categories_status
+                  FROM ' . TABLE_CATEGORIES . ' c
+                  LEFT JOIN ' . TABLE_CATEGORIES_DESCRIPTION . ' cd ON c.categories_id = cd.categories_id
+                    AND cd.language_id = ' . (int)$_SESSION['languages_id'];
 
-          if (isset($_GET['search']) && !empty($_GET['search'])) {
+          if (!empty($_GET['search'])) {
               $keyword_search_fields = [
                 'cd.categories_name',
                 'cd.categories_description',
@@ -558,7 +558,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               ];
               $sql .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
           } else {
-              $sql .= " WHERE c.parent_id = :category";
+              $sql .= ' WHERE c.parent_id = :category';
               $sql = $db->bindVars($sql, ':category', $current_category_id, 'integer');
           }
 
@@ -709,7 +709,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $cPath = $category['parent_id'];
               }
 
-              if ((!isset($_GET['cID']) && !isset($_GET['pID']) || (isset($_GET['cID']) && ($_GET['cID'] == $category['categories_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+              if ((!isset($_GET['cID']) && !isset($_GET['pID']) || (isset($_GET['cID']) && ($_GET['cID'] === (int)$category['categories_id']))) && !isset($cInfo) && (substr($action, 0, 3) !== 'new')) {
                 //$category_childs = array('childs_count' => zen_childs_in_category_count($category['categories_id']));
                 //$category_products = array('products_count' => zen_products_in_category_count($category['categories_id']));
                 //$cInfo_array = array_merge($category, $category_childs, $category_products);
@@ -817,43 +817,43 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
             switch ($_SESSION['categories_products_sort_order']) {
                 case (0):
-                    $order_by = " ORDER BY p.products_sort_order, pd.products_name";
+                    $order_by = ' ORDER BY p.products_sort_order, pd.products_name';
                     break;
                 case (1):
-                    $order_by = " ORDER BY pd.products_name";
+                    $order_by = ' ORDER BY pd.products_name';
                     break;
                 case (2):
-                    $order_by = " ORDER BY p.products_model";
+                    $order_by = ' ORDER BY p.products_model';
                     break;
                 case (3):
-                    $order_by = " ORDER BY p.products_quantity, pd.products_name";
+                    $order_by = ' ORDER BY p.products_quantity, pd.products_name';
                     break;
                 case (4):
-                    $order_by = " ORDER BY p.products_quantity DESC, pd.products_name";
+                    $order_by = ' ORDER BY p.products_quantity DESC, pd.products_name';
                     break;
                 case (5):
-                    $order_by = " ORDER BY p.products_price_sorter, pd.products_name";
+                    $order_by = ' ORDER BY p.products_price_sorter, pd.products_name';
                     break;
                 case (6):
-                    $order_by = " ORDER BY p.products_price_sorter DESC, pd.products_name";
+                    $order_by = ' ORDER BY p.products_price_sorter DESC, pd.products_name';
                     break;
                 case (7):
-                    $order_by = " ORDER BY p.products_model DESC";
+                    $order_by = ' ORDER BY p.products_model DESC';
                     break;
                 case (8):
-                    $order_by = " ORDER BY p.products_status";
+                    $order_by = ' ORDER BY p.products_status';
                     break;
                 case (9):
-                    $order_by = " ORDER BY p.products_status DESC";
+                    $order_by = ' ORDER BY p.products_status DESC';
                     break;
                 case (10):
-                    $order_by = " ORDER BY p.products_id";
+                    $order_by = ' ORDER BY p.products_id';
                     break;
                 case (11):
-                    $order_by = " ORDER BY p.products_weight";
+                    $order_by = ' ORDER BY p.products_weight';
                     break;
                 default:
-                    $order_by = " ";
+                    $order_by = ' ';
             }
 
             $products_count = 0;
@@ -870,18 +870,18 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $extra_search_fields = [];
             $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by, $extra_search_fields);
 
-            $products_query_raw = "SELECT DISTINCT p.products_type, p.products_id, pd.products_name, p.products_quantity,
+            $products_query_raw = 'SELECT DISTINCT p.products_type, p.products_id, pd.products_name, p.products_quantity,
                                           p.products_price, p.products_status, p.products_model, p.products_sort_order, p.products_price_sorter, p.products_weight,
-                                          p.master_categories_id";
+                                          p.master_categories_id';
             $products_query_raw .= $extra_select;
 
-            $products_query_raw .= " FROM " . TABLE_PRODUCTS . " p";
+            $products_query_raw .= ' FROM ' . TABLE_PRODUCTS . ' p';
             $products_query_raw .= $extra_from;
 
-            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
+            $products_query_raw .= ' LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON (pd.products_id = p.products_id)';
             $products_query_raw .= $extra_joins;
 
-            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
+            $where = ' WHERE pd.language_id = ' . (int)$_SESSION['languages_id'];
             $where .= $extra_ands;
 
             if ($search_result && $action !== 'edit_category') {
@@ -893,8 +893,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 ];
                 $where .= zen_build_keyword_where_clause(array_merge($keyword_search_fields, $extra_search_fields), trim($keywords));
             } else {
-                $products_query_raw.= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON (p2c.products_id = p.products_id) ";
-                $where .= " AND p2c.categories_id=" . (int)$current_category_id;
+                $products_query_raw.= ' LEFT JOIN ' . TABLE_PRODUCTS_TO_CATEGORIES . ' p2c ON (p2c.products_id = p.products_id) ';
+                $where .= ' AND p2c.categories_id=' . (int)$current_category_id;
             }
 
             $products_query_raw .= $where . $order_by;
@@ -912,7 +912,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     break;
                   }
                 }
-                $_GET['page'] = round((($check_count / $max_results) + (fmod_round($check_count, $max_results) != 0 ? .5 : 0)));
+                $_GET['page'] = round((($check_count / $max_results) + (fmod_round($check_count, $max_results) !== 0 ? .5 : 0)));
                 $page = $_GET['page'];
               } else {
                 $_GET['page'] = 1;
@@ -1055,7 +1055,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id); ?>" class="btn btn-sm btn-default btn-attributes-off" role="button" title="<?php echo BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER; ?>"><strong>A</strong></a>
                       <?php } ?>
-                      <?php if ($zc_products->get_allow_add_to_cart($product['products_id']) === "Y") { ?>
+                      <?php if ($zc_products->get_allow_add_to_cart($product['products_id']) === 'Y') { ?>
 <?php
                      $ppm_color = 'btn-pricemanager-on';
                      if (zen_has_product_discounts($product['products_id']) === 'true') {
@@ -1291,7 +1291,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
               if (empty($product_types)) {
                 // There are no restricted product types so offer all types instead
-                $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
+                $sql = 'SELECT * FROM ' . TABLE_PRODUCT_TYPES;
                 $product_types = $db->Execute($sql);
               }
 

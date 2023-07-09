@@ -24,5 +24,5 @@
   }
   if ($TZ != '') {
     putenv('TZ=' . $TZ);
-    @date_default_timezone_set($TZ);
+    date_default_timezone_set($TZ);
   }

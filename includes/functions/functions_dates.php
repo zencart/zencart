@@ -13,7 +13,7 @@ if (!function_exists('zen_date_raw')) {
      * Return date in raw format
      *
      * $date should be in format mm/dd/yyyy or dd/mm/yyyy
-     * raw date is in format YYYYMMDD, or DDMMYYYY or YYYYMMDD
+     * raw date is in format YYYYMMDD or DDMMYYYY
      *
      * @param string $date
      * @param bool $reverse
@@ -28,20 +28,17 @@ if (!function_exists('zen_date_raw')) {
         if (DATE_FORMAT === 'd/m/Y') {
             if ($reverse) {
                 return substr($date, 0, 2) . substr($date, 3, 2) . substr($date, 6, 4);
-            } else {
-                return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
             }
+            return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
         } elseif (DATE_FORMAT === 'Y/m/d') {
             if ($reverse) {
                 return substr($date, 8, 2) . substr($date, 5, 2) . substr($date, 0, 4);
-            } else {
-                return substr($date, 0, 4) . substr($date, 5, 2) . substr($date, 8, 2);
             }
+            return substr($date, 0, 4) . substr($date, 5, 2) . substr($date, 8, 2);
         } elseif ($reverse) {
             return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
-        } else {
-            return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
         }
+        return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
     }
 }
 
@@ -53,7 +50,9 @@ if (!function_exists('zen_date_raw')) {
  */
 function zen_date_long($raw_date)
 {
-    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
+    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') {
+        return false;
+    }
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -80,7 +79,9 @@ function zen_date_long($raw_date)
  */
 function zen_date_short($raw_date)
 {
-    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') return false;
+    if (empty($raw_date) || $raw_date <= '0001-01-01 00:00:00') {
+        return false;
+    }
 
     $year = (int)substr($raw_date, 0, 4);
     $month = (int)substr($raw_date, 5, 2);
@@ -92,16 +93,17 @@ function zen_date_short($raw_date)
 // error on 1969 only allows for leap year
     if ($year != 1969 && @date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
         return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-        return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
     }
+    return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
 
 }
 
 
 function zen_datetime_short($raw_datetime)
 {
-    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
+    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') {
+        return false;
+    }
 
     $year = (int)substr($raw_datetime, 0, 4);
     $month = (int)substr($raw_datetime, 5, 2);
@@ -122,8 +124,12 @@ function zen_datetime_short($raw_datetime)
  */
 function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
 {
-    if ($formatIn === null && defined('DATE_FORMAT_DATEPICKER_ADMIN')) $formatIn = DATE_FORMAT_DATEPICKER_ADMIN;
-    if ($date == 'null' || $date == '') return $date;
+    if ($formatIn === null && defined('DATE_FORMAT_DATEPICKER_ADMIN')) {
+        $formatIn = DATE_FORMAT_DATEPICKER_ADMIN;
+    }
+    if ($date == 'null' || $date == '') {
+        return $date;
+    }
     $mpos = strpos($formatIn, 'm');
     $dpos = strpos($formatIn, 'd');
     $ypos = strpos($formatIn, 'y');
@@ -199,27 +205,33 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
 
         $size = count($format_string_array);
         for ($i = 0; $i < $size; $i++) {
-            if ($format_string_array[$i] == 'mm' || $format_string_array[$i] == 'mmm') $month = $date_to_check_array[$i];
-            if ($format_string_array[$i] == 'dd') $day = $date_to_check_array[$i];
-            if (($format_string_array[$i] == 'yyyy') || ($format_string_array[$i] == 'aaaa')) $year = $date_to_check_array[$i];
+            if ($format_string_array[$i] == 'mm' || $format_string_array[$i] == 'mmm') {
+                $month = $date_to_check_array[$i];
+            }
+            if ($format_string_array[$i] == 'dd') {
+                $day = $date_to_check_array[$i];
+            }
+            if (($format_string_array[$i] == 'yyyy') || ($format_string_array[$i] == 'aaaa')) {
+                $year = $date_to_check_array[$i];
+            }
         }
     } else {
-        if (strlen($format_string) == 8 || strlen($format_string) == 9) {
-            $pos_month = strpos($format_string, 'mmm');
-            if ($pos_month != false) {
-                $month = substr($date_to_check, $pos_month, 3);
-                $size = count($month_abbr);
-                for ($i = 0; $i < $size; $i++) {
-                    if ($month == $month_abbr[$i]) {
-                        $month = $i;
-                        break;
-                    }
+        if (!in_array(strlen($format_string), [8, 9])) {
+            return false;
+        }
+
+        $pos_month = strpos($format_string, 'mmm');
+        if ($pos_month != false) { // Should this be not exactly equal? Found at 0 is ok?
+            $month = substr($date_to_check, $pos_month, 3);
+            $size = count($month_abbr);
+            for ($i = 0; $i < $size; $i++) {
+                if ($month == $month_abbr[$i]) {
+                    $month = $i;
+                    break;
                 }
-            } else {
-                $month = substr($date_to_check, strpos($format_string, 'mm'), 2);
             }
         } else {
-            return false;
+            $month = substr($date_to_check, strpos($format_string, 'mm'), 2);
         }
 
         $day = substr($date_to_check, strpos($format_string, 'dd'), 2);
@@ -262,13 +274,19 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
  */
 function zen_is_leap_year($year)
 {
-    if ($year % 100 == 0) {
-        if ($year % 400 == 0) return true;
-    } else {
-        if (($year % 4) == 0) return true;
+    if ($year % 4 != 0) {
+        return false;
     }
 
-    return false;
+    if ($year % 100 != 0) {
+        return true;
+    }
+
+    if ($year % 400 != 0) {
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -427,9 +445,10 @@ function zen_datetime_overlap($start1, $start2, $end1 = null, $end2 = null, $fut
     return $overlap;
 }
 
-
+// The numbers related to $start_date and $end_date must be in format: YYYY-MM-DD
 function zen_count_days($start_date, $end_date, $lookup = 'm')
 {
+    $counter = 0;
     if ($lookup == 'd') {
         // Returns number of days
         $start_datetime = gmmktime(0, 0, 0, substr($start_date, 5, 2), substr($start_date, 8, 2), substr($start_date, 0, 4));
@@ -448,12 +467,13 @@ function zen_count_days($start_date, $end_date, $lookup = 'm')
         $end_date_unixtimestamp = strtotime($end_date);
         $end_date_month = date("m", $end_date_unixtimestamp);
         $calculated_date_unixtimestamp = $start_date_unixtimestamp;
-        $counter = 0;
         while ($calculated_date_unixtimestamp < $end_date_unixtimestamp) {
             $counter++;
-            $calculated_date_unixtimestamp = strtotime($start_date . " +{$counter} months");
+            $calculated_date_unixtimestamp = strtotime($start_date . " +{" . $counter . "} months");
         }
-        if (($counter == 1) && ($end_date_month == $start_date_month)) $counter = ($counter - 1);
+        if (($counter == 1) && ($end_date_month == $start_date_month)) {
+            $counter = ($counter - 1);
+        }
     }
     return $counter;
 }
