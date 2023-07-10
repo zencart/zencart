@@ -643,6 +643,27 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 <?php
                   }
               }
+          // -----
+          // For the categories' listing, provide a similar notification as for the products' listing above.  These
+          // notifications are issued **ONLY** for categories' listings!
+          //
+          // Observer notes:
+          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          //   multiple observers might be injecting content!
+          // - If heading-columns are added, be sure to add the associated data columns, too, via the
+          //   'NOTIFY_ADMIN_CATEGORY_LISTING_DATA' notification.
+          //
+          } else {
+              $extra_headings = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_CATEGORY_LISTING_HEADERS', '', $extra_headings);
+              if (is_array($extra_headings)) {
+                  foreach ($extra_headings as $heading_info) {
+                      $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <th class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+                  }
+              }
           }
 ?>
                 <th class="text-right"><?php echo TABLE_HEADING_STATUS; ?></th>
@@ -692,6 +713,36 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     ?>
                   </td>
                 <?php } ?>
+<?php
+              // -----
+              // Additional fields can be added into category-listing columns, before the "Status" column.
+              //
+              // A watching observer can provide an associative array in the following format:
+              //
+              // $extra_data = [
+              //     [
+              //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+              //       'text' => $value
+              //     ],
+              // ];
+              //
+              // Observer notes:
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              //   multiple observers might be injecting content!
+              // - If heading-columns are added, be sure to add the associated header columns, too, via the
+              //   'NOTIFY_ADMIN_CATEGORY_LISTING_HEADERS' notification.
+              //
+              $extra_data = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_CATEGORY_LISTING_DATA_B4', $category, $extra_data);
+              if (is_array($extra_data)) {
+                  foreach ($extra_data as $data_info) {
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+                  }
+              }
+?>
                 <td class="text-right dataTableButtonCell">
                   <?php if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS === 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') === 'true') { ?>
                     <i class="fa-solid fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
