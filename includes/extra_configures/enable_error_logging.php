@@ -81,7 +81,7 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
     if (!empty($backtrace)) {
         $backtrace = PHP_EOL . rtrim($backtrace);
     }
-    $language_info = ', Language id ' . $_SESSION['languages_id'];
+    $language_info = ', Language id ' . ($_SESSION['languages_id'] ?? 'not set');
     $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . ($_SERVER['REQUEST_URI'] ?? 'not set') . ', IP address: ' . ($_SERVER['REMOTE_ADDR'] ?? 'not set')  . $language_info . $backtrace;
 
     $message .= PHP_EOL . "--> PHP $error_type: $errstr in $errfile on line $errline.";
