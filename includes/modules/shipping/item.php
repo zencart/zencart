@@ -95,11 +95,12 @@
           if ($check->fields['zone_id'] < 1) {
             $check_flag = true;
             break;
-          } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
+          }
+          if ($check->fields['zone_id'] == $order->delivery['zone_id']) {
             $check_flag = true;
             break;
           }
-		  $check->MoveNext();
+          $check->MoveNext();
         }
 
         if ($check_flag == false) {
