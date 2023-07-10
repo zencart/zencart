@@ -13,7 +13,7 @@ Zen Cart is free and open source software, with free community-driven support av
 --------------------
 
 
-Zen Cart&reg; v1.5.8-dev
+Zen Cart&reg; v1.5.8
 ---------------------
 
 Compatibility
@@ -31,7 +31,7 @@ Installation
 
 Installation is simple:
 
-1. [![Download Zen Cart](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/zencart/files/latest/download)
+1. [Download Zen Cart](https://github.com/zencart/zencart/archive/refs/tags/v1.5.8a.zip)
 2. Ensure you check that the md5/sha1 hash of the Zip matches those publicly posted.
   * The md5/sha1 values for verifying the zip files hosted at Sourceforge are displayed on the [Zen Cart&reg; website](https://www.zen-cart.com/) along with [instructions on how to verify the file using the hash values](https://docs.zen-cart.com/user/installing/installing_misc/#how-to-validate-the-integrity-of-a-downloaded-file-md5-or-sha1-checksums).
 3. Unzip the downloaded zip file 
