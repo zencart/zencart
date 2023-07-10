@@ -846,7 +846,7 @@ function translate_type_to_name($opt_type)
                         </div>
                         <div class="col-sm-7">&nbsp;</div>
                         <div class="col-sm-2">
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
                         </div>
                     </div>
                     <?php echo '</form>'; ?>
@@ -881,7 +881,7 @@ function translate_type_to_name($opt_type)
                             } ?>
                         </div>
                         <div class="col-sm-2">
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
                         </div>
                     </div>
                     <?php echo '</form>'; ?>
@@ -916,7 +916,7 @@ function translate_type_to_name($opt_type)
                             } ?>
                         </div>
                         <div class="col-sm-2">
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
                         </div>
                     </div>
                     <?php echo '</form>'; ?>
@@ -945,7 +945,7 @@ function translate_type_to_name($opt_type)
                         <?php echo zen_draw_pull_down_menu('options_id_to', $optionsValuesArray, '', 'class="form-control" id="options_id_to_copy" required'); ?>
                     </div>
                     <div class="col-sm-2">
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-copy"></i> <?php echo IMAGE_COPY; ?></button>
+                        <button type="submit" class="btn btn-primary"><i class="fa-regular fa-copy"></i> <?php echo IMAGE_COPY; ?></button>
                     </div>
                 </div>
                 <?php echo '</form>'; ?>

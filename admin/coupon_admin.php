@@ -545,9 +545,9 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['unique_id'] == $cInfo->unique_id)) {
-                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle"></i>';
+                          echo '<i class="fa-solid fa-caret-right fa-fw fa-2x align-middle"></i>';
                         } else {
-                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '"><i class="fa fa-info-circle fa-fw fa-2x align-middle"></i></a>';
+                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '"><i class="fa-solid fa-circle-info fa-fw fa-2x align-middle"></i></a>';
                         }
                         ?>
                       </td>
@@ -641,9 +641,9 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['unique_id'] == $cInfo->unique_id)) {
-                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle"></i>';
+                          echo '<i class="fa-solid fa-caret-right fa-fw fa-2x align-middle"></i>';
                         } else {
-                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '"><i class="fa fa-info-circle fa-fw fa-2x align-middle"></i></a>';
+                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '"><i class="fa-solid fa-circle-info fa-fw fa-2x align-middle"></i></a>';
                         }
                         ?>
                       </td>
@@ -962,7 +962,7 @@ switch ($_GET['action']) {
                     <?php echo zen_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', (!empty($coupon_name[$language_id]) ? htmlspecialchars(stripslashes($coupon_name[$language_id]), ENT_COMPAT, CHARSET, TRUE) : ''), zen_set_field_length(TABLE_COUPONS_DESCRIPTION, 'coupon_name') . ' id="coupon_name[' . $languages[$i]['id'] . ']" class="form-control"'); ?>
                     <?php if ($i == 0) { ?>
                       <span class="input-group-addon">
-                        <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_NAME_HELP; ?>"></i>
+                        <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_NAME_HELP; ?>"></i>
                       </span>
                     <?php } ?>
                   </div>
@@ -984,7 +984,7 @@ switch ($_GET['action']) {
                     <?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']', 'hard', '24', '8', (!empty($coupon_desc[$language_id]) ? htmlspecialchars(stripslashes($coupon_desc[$language_id]), ENT_COMPAT, CHARSET, TRUE) : ''), 'id="coupon_desc[' . $languages[$i]['id'] . ']" class="editorHook form-control"'); ?>
                     <?php if ($i == 0) { ?>
                       <span class="input-group-addon">
-                        <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_DESC_HELP; ?>"></i>
+                        <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_DESC_HELP; ?>"></i>
                       </span>
                     <?php } ?>
                   </div>
@@ -998,7 +998,7 @@ switch ($_GET['action']) {
                 <div class="input-group">
                   <?php echo zen_draw_input_field('coupon_amount', (!empty($coupon_amount) ? $coupon_amount : 0), 'class="form-control" id="coupon_amount"'); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_AMOUNT_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_AMOUNT_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1013,7 +1013,7 @@ switch ($_GET['action']) {
                 <div class="input-group">
                   <?php echo zen_draw_input_field('coupon_min_order', (!empty($coupon_min_order) ? $coupon_min_order : 0), 'class="form-control" id="coupon_min_order"'); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_MIN_ORDER_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_MIN_ORDER_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1024,7 +1024,7 @@ switch ($_GET['action']) {
                 <div class="radio">
                   <label><?php echo zen_draw_radio_field('coupon_calc_base', '0', (empty($coupon_calc_base))) . TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPON_TOTAL_PRODUCTS_BASED; ?></label>
                   <label><?php echo zen_draw_radio_field('coupon_calc_base', '1', (!empty($coupon_calc_base))) . TEXT_COUPON_TOTAL_ORDER . TEXT_COUPON_TOTAL_ORDER_BASED; ?></label>
-                  &nbsp;<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_TOTAL_HELP; ?>"></i>
+                  &nbsp;<i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_TOTAL_HELP; ?>"></i>
                 </div>
               </div>
             </div>
@@ -1032,7 +1032,7 @@ switch ($_GET['action']) {
               <?php echo zen_draw_label(COUPON_FREE_SHIP, 'coupon_free_ship', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <label><?php echo zen_draw_checkbox_field('coupon_free_ship', '', (!empty($coupon_free_ship)), '', 'id="coupon_free_ship"'); ?></label>
-                <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FREE_SHIP_HELP; ?>"></i>
+                <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FREE_SHIP_HELP; ?>"></i>
               </div>
             </div>
             <div class="form-group">
@@ -1041,7 +1041,7 @@ switch ($_GET['action']) {
                 <div class="radio">
                   <label><?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '1', (!empty($coupon_is_valid_for_sales))) . TEXT_COUPON_IS_VALID_FOR_SALES; ?></label>
                   <label><?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '0', (empty($coupon_is_valid_for_sales))) . TEXT_NO_COUPON_IS_VALID_FOR_SALES; ?></label>
-                  &nbsp;<i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_SALE_HELP; ?>"></i>
+                  &nbsp;<i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_SALE_HELP; ?>"></i>
                 </div>
               </div>
             </div>
@@ -1050,7 +1050,7 @@ switch ($_GET['action']) {
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_code', (!empty($coupon_code) ? htmlspecialchars($coupon_code, ENT_COMPAT, CHARSET, TRUE) : ''), 'class="form-control" id="coupon_code"'); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_CODE_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_CODE_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1060,7 +1060,7 @@ switch ($_GET['action']) {
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_uses_coupon', (!empty($coupon_uses_coupon) && $coupon_uses_coupon >= 1 ? $coupon_uses_coupon : ''), 'class="form-control" id="coupon_uses_coupon"'); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_USES_COUPON_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_USES_COUPON_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1070,7 +1070,7 @@ switch ($_GET['action']) {
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_uses_user', (!empty($coupon_uses_user) && $coupon_uses_user >= 1 ? $coupon_uses_user : ''), 'class="form-control" id="coupon_uses_user"'); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_USES_USER_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_USES_USER_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1093,7 +1093,7 @@ switch ($_GET['action']) {
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_date_selector('coupon_startdate', mktime(0, 0, 0, $coupon_startdate[1], (int)$coupon_startdate[2], $coupon_startdate[0])); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_STARTDATE_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_STARTDATE_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1103,7 +1103,7 @@ switch ($_GET['action']) {
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_date_selector('coupon_finishdate', mktime(0, 0, 0, $coupon_finishdate[1], (int)$coupon_finishdate[2], $coupon_finishdate[0])); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FINISHDATE_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FINISHDATE_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1113,7 +1113,7 @@ switch ($_GET['action']) {
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_geo_zones_pull_down_coupon('name="coupon_zone_restriction" class="form-control" id="coupon_zone_restriction"', (!empty($coupon_zone_restriction) ? $coupon_zone_restriction : 0)); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo TEXT_COUPON_ZONE_RESTRICTION; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo TEXT_COUPON_ZONE_RESTRICTION; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1123,7 +1123,7 @@ switch ($_GET['action']) {
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_order_limit', (!empty($coupon_order_limit) && $coupon_order_limit >= 1 ? $coupon_order_limit : ''), 'class="form-control" id="coupon_order_limit"'); ?>
                   <span class="input-group-addon">
-                    <i class="fa fa-info-circle fa-lg" data-toggle="tooltip" title="<?php echo COUPON_ORDER_LIMIT_HELP; ?>"></i>
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_ORDER_LIMIT_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1287,9 +1287,9 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
-                          echo '<i class="fa fa-caret-right fa-fw fa-2x align-middle"></i>';
+                          echo '<i class="fa-solid fa-caret-right fa-fw fa-2x align-middle"></i>';
                         } else {
-                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $item['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '"><i class="fa fa-info-circle fa-fw fa-2x align-middle"></i></a>';
+                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $item['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '"><i class="fa-solid fa-circle-info fa-fw fa-2x align-middle"></i></a>';
                         }
                         ?>
                       </td>

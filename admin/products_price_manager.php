@@ -297,7 +297,7 @@ if (!empty($action)) {
       if  (!empty($products_filter) && $products_filter !== 0 && zen_get_product_is_linked($products_filter) === 'true') {
         ?>
         <div class="row text-center">
-          <i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>&nbsp;&nbsp;<?php echo TEXT_LEGEND_LINKED . '&nbsp;' . zen_get_product_is_linked($products_filter, 'true'); ?>
+          <i class="fa-solid fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>&nbsp;&nbsp;<?php echo TEXT_LEGEND_LINKED . '&nbsp;' . zen_get_product_is_linked($products_filter, 'true'); ?>
         </div>
       <?php } ?>
       <?php
@@ -589,7 +589,7 @@ if (!empty($action)) {
                   <?php echo zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="input-group">
-                      <span class="input-group-addon"><i class="fa fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i></span>
+                      <span class="input-group-addon"><i class="fa-solid fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i></span>
                       <?php echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $pInfo->master_categories_id, 'class="form-control" id="master_category"'); ?>
                     </div>
                     <span class="help-block"><?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?></span>
@@ -640,7 +640,7 @@ if (!empty($action)) {
                 <div class="col-sm-9 col-md-6">
                   <div class="date input-group" id="datepicker_products_date_available">
                     <span class="input-group-addon datepicker_icon">
-                      <i class="fa fa-calendar fa-lg"></i>
+                      <i class="fa-regular fa-calendar-days fa-lg"></i>
                     </span>
                     <?php echo zen_draw_input_field('products_date_available', (($pInfo->products_date_available == '0001-01-01') ? '' : $pInfo->products_date_available), 'class="form-control" id="products_date_available" autocomplete="off"' . $readonly); ?>
                   </div>
@@ -757,7 +757,7 @@ if (!empty($action)) {
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_specials_date_available">
                       <span class="input-group-addon datepicker_icon">
-                        <i class="fa fa-calendar fa-lg"></i>
+                        <i class="fa-regular fa-calendar-days fa-lg"></i>
                       </span>
                       <?php echo zen_draw_input_field('specials_date_available', (($sInfo->specials_date_available == '0001-01-01') ? '' : $sInfo->specials_date_available), 'class="form-control" id="specials_date_available" autocomplete="off"' . $readonly); ?>
                     </div>
@@ -769,7 +769,7 @@ if (!empty($action)) {
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_specials_expires_date">
                       <span class="input-group-addon datepicker_icon">
-                        <i class="fa fa-calendar fa-lg"></i>
+                        <i class="fa-regular fa-calendar-days fa-lg"></i>
                       </span>
                       <?php echo zen_draw_input_field('specials_expires_date', (($sInfo->expires_date == '0001-01-01') ? '' : $sInfo->expires_date), 'class="form-control" id="specials_expires_date" autocomplete="off"' . $readonly); ?>
                     </div>
@@ -810,7 +810,7 @@ if (!empty($action)) {
 // Specials cannot be added to Gift Vouchers when false
                     if ((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true'))) {
                       ?>
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . (isset($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . '&go_back=ON' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa fa-plus"></i> <?php echo IMAGE_INSTALL_SPECIAL; ?></a>
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . (isset($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . '&go_back=ON' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa-solid fa-plus"></i> <?php echo IMAGE_INSTALL_SPECIAL; ?></a>
                     <?php } else { ?>
                       <?php echo TEXT_SPECIALS_NO_GIFTS; ?>
                     <?php } ?>
@@ -825,7 +825,7 @@ if (!empty($action)) {
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_featured_date_available">
                       <span class="input-group-addon datepicker_icon">
-                        <i class="fa fa-calendar fa-lg"></i>
+                        <i class="fa-regular fa-calendar-days fa-lg"></i>
                       </span>
                       <?php echo zen_draw_input_field('featured_date_available', (($fInfo->featured_date_available == '0001-01-01') ? '' : $fInfo->featured_date_available), 'class="form-control" id="featured_date_available" autocomplete="off"' . $readonly); ?>
                     </div>
@@ -837,7 +837,7 @@ if (!empty($action)) {
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_expires_date">
                       <span class="input-group-addon datepicker_icon">
-                        <i class="fa fa-calendar fa-lg"></i>
+                        <i class="fa-regular fa-calendar-days fa-lg"></i>
                       </span>
                       <?php echo zen_draw_input_field('featured_expires_date', (($fInfo->expires_date == '0001-01-01') ? '' : $fInfo->expires_date), 'class="form-control" id="featured_expires_date" autocomplete="off"' . $readonly); ?>
                     </div>
@@ -872,7 +872,7 @@ if (!empty($action)) {
                 <div class="form-group">
                     <div class="control-label col-sm-3"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
-                    <a href="<?php echo zen_href_link(FILENAME_FEATURED, 'add_products_id=' . $_GET['products_filter'] . '&go_back=ON' . '&action=new' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa fa-plus"></i> <?php echo IMAGE_INSTALL_FEATURED; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_FEATURED, 'add_products_id=' . $_GET['products_filter'] . '&go_back=ON' . '&action=new' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa-solid fa-plus"></i> <?php echo IMAGE_INSTALL_FEATURED; ?></a>
                   </div>
                 </div>
               <?php } ?>

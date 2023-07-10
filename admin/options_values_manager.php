@@ -708,7 +708,7 @@ if (!empty($action)) {
                   if (($action == 'update_option_value') && ($_GET['value_id'] == $values_value['products_options_values_id'])) {
                   ?>
                     <td colspan=5>
-                     <?php 
+                     <?php
                     echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage: '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"');
                      ?>
                         <table class="table">
@@ -721,9 +721,9 @@ if (!empty($action)) {
                                     <th class="dataTableHeadingContent text-right col-md-3"><?php echo TABLE_HEADING_ACTION; ?></th>
                                 </tr>
                             </thead>
-                            <tbody> 
+                            <tbody>
                                 <tr>
-                  <?php 
+                  <?php
                     $inputs = '';
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                       $value_name = $db->Execute("SELECT products_options_values_name
@@ -777,7 +777,7 @@ if (!empty($action)) {
                     echo '</form>';
                     ?>
                     </td>
-                    <?php 
+                    <?php
                   } else {
                     ?>
                     <td class="text-right"><?php echo $values_value["products_options_values_id"]; ?></td>
@@ -804,9 +804,9 @@ if (!empty($action)) {
               <?php if ($action != 'update_option_value') { ?>
                 <tr>
                 <td colspan="5">
-                
+
                   <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage : '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
-                  
+
                     <?php
                     $options_values = $db->Execute("SELECT products_options_id, products_options_name, products_options_type
                                                     FROM " . TABLE_PRODUCTS_OPTIONS . "
@@ -989,7 +989,7 @@ if (!empty($action)) {
               </td>
               <td class="dataTableHeadingContent"><?php echo $to_categories_id; ?></td>
               <td class="dataTableHeadingContent text-center">
-                <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
+                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
               </td>
                   </tr>
               </table>

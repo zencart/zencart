@@ -6,9 +6,9 @@
         <?php } ?>
     <?php } ?>
     <?php if ($formatter->isRowSelected($tableData)) { ?>
-        <i class="fa fa-caret-right fa-2x"></i>
+        <i class="fa-solid fa-caret-right fa-2x"></i>
     <?php } else { ?>
         <a href="<?php echo $formatter->getNotSelectedRowLink(
-            $tableData); ?>"><i class="fa fa-info-circle fa-2x"></i></a>
+            $tableData); ?>"><i class="fa-solid fa-circle-info fa-2x"></i></a>
     <?php } ?>
 </td>

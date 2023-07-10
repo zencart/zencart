@@ -12,7 +12,7 @@
     <div class="input-group">
       <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"', false, 'search'); ?>
       <span class="input-group-btn">
-        <button type="submit" class="btn btn-info"><i class="fa fa-search fa-lg"></i></button>
+        <button type="submit" class="btn btn-info"><i class="fa-solid fa-magnifying-glass fa-lg"></i></button>
       </span>
     </div>
   </div>
@@ -29,7 +29,7 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       <div class="input-group">
         <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo zen_output_string_protected($keywords); ?></span>
         <span class="input-group-btn">
-          <a href="<?php echo zen_href_link(basename($PHP_SELF, '.php')); ?>" class="btn btn-default" role="button" title="<?php echo IMAGE_RESET; ?>"><i class="fa fa-remove fa-lg"></i></a>
+          <a href="<?php echo zen_href_link(basename($PHP_SELF, '.php')); ?>" class="btn btn-default" role="button" title="<?php echo IMAGE_RESET; ?>"><i class="fa-solid fa-xmark fa-lg"></i></a>
         </span>
       </div>
     </div>

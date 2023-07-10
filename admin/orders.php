@@ -437,7 +437,7 @@ if (!empty($action) && $order_exists === true) {
     echo $extra_top_content;
 ?>
 
-      <?php $order_list_button = '<a role="button" class="btn btn-default" href="' . zen_href_link(FILENAME_ORDERS) . '"><i class="fa fa-th-list" aria-hidden="true">&nbsp;</i> ' . BUTTON_TO_LIST . '</a>'; ?>
+      <?php $order_list_button = '<a role="button" class="btn btn-default" href="' . zen_href_link(FILENAME_ORDERS) . '"><i class="fa-solid fa-table-list" aria-hidden="true">&nbsp;</i> ' . BUTTON_TO_LIST . '</a>'; ?>
       <?php if ($action === '') { ?>
         <!-- search -->
 
@@ -455,7 +455,7 @@ if (!empty($action) && $order_exists === true) {
                   if (!empty($_GET['search']) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
-                    <i class="fa fa-times" aria-hidden="true">&nbsp;</i>
+                    <i class="fa-solid fa-xmark" aria-hidden="true">&nbsp;</i>
                   </a>
                 <?php } ?>
               </div>
@@ -473,7 +473,7 @@ if (!empty($action) && $order_exists === true) {
                   if (!empty($_GET['search_orders_products']) || !empty($_GET['cID'])) {
                     ?>
                   <a class="btn btn-info input-group-addon" role="button" aria-label="<?php echo TEXT_RESET_FILTER; ?>" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
-                    <i class="fa fa-times" aria-hidden="true">&nbsp;</i>
+                    <i class="fa-solid fa-xmark" aria-hidden="true">&nbsp;</i>
                   </a>
                 <?php } ?>
               </div>
@@ -573,7 +573,7 @@ if (!empty($action) && $order_exists === true) {
               <div class="input-group-btn">
                 <?php echo $next_button; ?>
                 <?php echo $order_list_button; ?>
-                <button type="button" class="btn btn-default" onclick="history.back()"><i class="fa fa-undo" aria-hidden="true">&nbsp;</i> <?php echo IMAGE_BACK; ?></button>
+                <button type="button" class="btn btn-default" onclick="history.back()"><i class="fa-solid fa-arrow-rotate-left" aria-hidden="true">&nbsp;</i> <?php echo IMAGE_BACK; ?></button>
               </div>
             </div>
           </div>
@@ -591,7 +591,7 @@ if (!empty($action) && $order_exists === true) {
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->customer['street_address'] . ',' . $order->customer['city'] . ',' .  $order->customer['state'] . ',' . $order->customer['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
+                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->customer['street_address'] . ',' . $order->customer['city'] . ',' .  $order->customer['state'] . ',' . $order->customer['postcode']); ?>" rel="noreferrer" target="map"><i class="fa-regular fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
               </tr>
 <?php
   $address_footer_suffix = '';
@@ -640,7 +640,7 @@ if (!empty($action) && $order_exists === true) {
 <?php if (!empty($order->delivery)) { ?>
               <tr>
                 <td>&nbsp;</td>
-                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
+                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']); ?>" rel="noreferrer" target="map"><i class="fa-regular fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_SHIPPING_ADDRESS; ?></u></a></td>
               </tr>
 <?php
   }
@@ -660,7 +660,7 @@ if (!empty($action) && $order_exists === true) {
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->billing['street_address'] . ',' . $order->billing['city'] . ',' . $order->billing['state'] . ',' . $order->billing['postcode']); ?>" rel="noreferrer" target="map"><i class="fa fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_BILLING_ADDRESS; ?></u></a></td>
+                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->billing['street_address'] . ',' . $order->billing['city'] . ',' . $order->billing['state'] . ',' . $order->billing['postcode']); ?>" rel="noreferrer" target="map"><i class="fa-regular fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_BILLING_ADDRESS; ?></u></a></td>
               </tr>
 <?php
   $address_footer_suffix = '';
