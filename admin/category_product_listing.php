@@ -35,7 +35,7 @@ if (isset($_GET['product_type'])) {
 }
 if (isset($_GET['cID'])) {
   $_GET['cID'] = (int)$_GET['cID'];
-  if ($sniffer->rowExists(TABLE_CATEGORIES, 'categories_id', $_GET['cID'])) {
+  if (!$sniffer->rowExists(TABLE_CATEGORIES, 'categories_id', $_GET['cID'])) {
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
   }
 }
@@ -793,7 +793,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by, $extra_search_fields);
 
             $products_query_raw = "SELECT DISTINCT p.products_type, p.products_id, pd.products_name, p.products_quantity,
-                                          p.products_price, p.products_status, p.products_model, p.products_sort_order, p.products_price_sorter, p.products_weight,  
+                                          p.products_price, p.products_status, p.products_model, p.products_sort_order, p.products_price_sorter, p.products_weight,
                                           p.master_categories_id";
             $products_query_raw .= $extra_select;
 
