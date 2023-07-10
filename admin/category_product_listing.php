@@ -35,7 +35,7 @@ if (isset($_GET['product_type'])) {
 }
 if (isset($_GET['cID'])) {
   $_GET['cID'] = (int)$_GET['cID'];
-  if ($sniffer->rowExists(TABLE_CATEGORIES, 'categories_id', $_GET['cID'])) {
+  if (!$sniffer->rowExists(TABLE_CATEGORIES, 'categories_id', $_GET['cID'])) {
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
   }
 }
