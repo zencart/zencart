@@ -733,7 +733,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //   'NOTIFY_ADMIN_CATEGORY_LISTING_HEADERS' notification.
               //
               $extra_data = false;
-              $zco_notifier->notify('NOTIFY_ADMIN_CATEGORY_LISTING_DATA_B4', $category, $extra_data);
+              $zco_notifier->notify('NOTIFY_ADMIN_CATEGORY_LISTING_DATA', $category, $extra_data);
               if (is_array($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
