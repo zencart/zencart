@@ -174,9 +174,9 @@ if (!empty($action)) {
                     <?php echo zen_draw_form('setstatus_' . (int)$country['countries_id'], FILENAME_COUNTRIES, zen_get_all_get_params(['action']) . 'action=setstatus'); ?>
                     <button type="submit" class="btn btn-status">
                       <?php if ($country['status'] == '0') { ?>
-                        <i class="fa fa-square txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                        <i class="fa-solid fa-square txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                       <?php } else { ?>
-                        <i class="fa fa-square txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                        <i class="fa-solid fa-square txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                       <?php } ?>
                     </button>
                     <?php
@@ -187,10 +187,10 @@ if (!empty($action)) {
                   </td>
                   <td class="dataTableContent text-right">
                     <?php if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) { ?>
-                      <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
+                      <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                     <?php } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $country['countries_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
+                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
                       </a>
                     <?php } ?>
                   </td>

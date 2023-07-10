@@ -611,9 +611,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('page_open_new_window', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['page_open_new_window'] == '1') { ?>
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -626,9 +626,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('page_is_ssl', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['page_is_ssl'] == '1') { ?>
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -642,9 +642,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('header_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_header'] == '1') { ?>
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -658,9 +658,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('sidebox_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_sidebox'] == '1') { ?>
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -674,9 +674,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('footer_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_footer'] == '1') { ?>
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -691,9 +691,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('status_visible', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_visible'] == '1') { ?>
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -708,9 +708,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('status_toc', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_toc'] == '1') { ?>
-                          <i class="fa fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -730,16 +730,16 @@ if (!empty($action)) {
                     <td class="dataTableContent text-right">
                       <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id'] . '&action=new'); ?>" title="<?php echo ICON_EDIT; ?>" role="button" style="text-decoration: none">
                         <div class="fa-stack fa-fw">
-                          <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
-                          <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                          <i class="fa-solid fa-circle fa-stack-2x txt-status-on"></i>
+                          <i class="fa-solid fa-pencil fa-stack-1x fa-inverse"></i>
                         </div>
                       </a>
                       <?php echo $extra_action_icons; ?>
                       <?php if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
+                        <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($page['pages_id']) ? 'ezID=' . $page['pages_id'] : '')); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
+                          <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>

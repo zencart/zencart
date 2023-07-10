@@ -293,9 +293,9 @@ require DIR_WS_INCLUDES . 'header.php';
     <h1><?php echo HEADING_TITLE; ?></h1>
     <h2><?php echo sprintf(SUB_HEADING_COUPON_NAME, $coupon_name, $cid); ?></h2>
 <?php
-$allowed_icon = '<i class="fa fa-lg fa-check text-success" title="' . TEXT_ALLOWED . '"></i>';
-$denied_icon = '<i class="fa fa-lg fa-ban text-danger" title="' . TEXT_DENIED . '"></i>';
-$remove_image = '<i class="fa fa-lg fa-trash text-default" title="' . IMAGE_REMOVE . '"></i>';
+$allowed_icon = '<i class="fa-solid fa-lg fa-check text-success" title="' . TEXT_ALLOWED . '"></i>';
+$denied_icon = '<i class="fa-solid fa-lg fa-ban text-danger" title="' . TEXT_DENIED . '"></i>';
+$remove_image = '<i class="fa-solid fa-lg fa-trash text-default" title="' . IMAGE_REMOVE . '"></i>';
 $toggle_button = '&nbsp;&nbsp;<button type="button" class="cr-toggle" title="' . TEXT_STATUS_TOGGLE_TITLE . '">' . TEXT_STATUS_TOGGLE . '</button>';
 
 $cpage = (isset($_GET['cpage'])) ? (int)$_GET['cpage'] : 1;

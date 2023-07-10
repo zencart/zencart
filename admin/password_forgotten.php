@@ -117,7 +117,7 @@ $has_duplicate_admin_emails = ($result->RecordCount() > 0);
               <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <i class="fa fa-lg fa-at"></i>
+                    <i class="fa-solid fa-lg fa-at"></i>
                   </span>
                   <?php echo zen_draw_input_field('admin_email', '', 'class="form-control input-lg" id="admin_email" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus required placeholder="' . TEXT_ADMIN_EMAIL . '" aria-label="' . TEXT_ADMIN_EMAIL . '"', false, 'email') . PHP_EOL; ?>
                 </div>
@@ -126,7 +126,7 @@ $has_duplicate_admin_emails = ($result->RecordCount() > 0);
               <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">
-                    <i class="fa fa-lg fa-user"></i>
+                    <i class="fa-solid fa-lg fa-user"></i>
                   </span>
                   <?php echo zen_draw_input_field('admin_username', '', 'class="form-control input-lg" id="admin_username" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_USERNAME . '" aria-label="' . TEXT_ADMIN_USERNAME . '"', false, 'text') . PHP_EOL; ?>
                 </div>

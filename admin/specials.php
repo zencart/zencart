@@ -342,7 +342,7 @@ if (!empty($action)) {
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_specials_date_available">
                 <span class="input-group-addon datepicker_icon">
-                  <i class="fa fa-calendar fa-lg"></i>
+                  <i class="fa-regular fa-calendar-days fa-lg"></i>
                 </span>
                 <?php echo zen_draw_input_field('specials_date_available', (($sInfo->specials_date_available == '0001-01-01') ? '' : $sInfo->specials_date_available), 'class="form-control" id="specials_date_available"'); ?>
               </div>
@@ -354,7 +354,7 @@ if (!empty($action)) {
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_expires_date">
                 <span class="input-group-addon datepicker_icon">
-                  <i class="fa fa-calendar fa-lg"></i>
+                  <i class="fa-regular fa-calendar-days fa-lg"></i>
                 </span>
                 <?php echo zen_draw_input_field('expires_date', (($sInfo->expires_date == '0001-01-01') ? '' : $sInfo->expires_date), 'class="form-control" id="expires_date"'); ?>
               </div>
@@ -496,21 +496,21 @@ if (!empty($action)) {
                       <?php if (($special['specials_date_available'] !== '0001-01-01' && $special['specials_date_available'] !== '') || ($special['expires_date'] !== '0001-01-01' && $special['expires_date'] !== '')) { ?>
                         <button type="submit" class="btn btn-status" style="cursor: initial;">
                           <?php if ($special['status'] === '1') { ?>
-                            <i class="fa fa-square fa-lg txt-status-on" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>: <?php echo TEXT_SPECIAL_STATUS_BY_DATE; ?>"></i>
+                            <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>: <?php echo TEXT_SPECIAL_STATUS_BY_DATE; ?>"></i>
                           <?php } else { ?>
-                            <i class="fa fa-square fa-lg txt-status-off" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>: <?php echo TEXT_SPECIAL_STATUS_BY_DATE; ?>"></i>
+                            <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>: <?php echo TEXT_SPECIAL_STATUS_BY_DATE; ?>"></i>
                           <?php } ?>
                         </button>
                       <?php } else { ?>
                         <?php echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=setflag'); ?>
                         <?php if ($special['status'] === '1') { ?>
                           <button type="submit" class="btn btn-status">
-                            <i class="fa fa-square fa-lg txt-status-on" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>"></i>
+                            <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo TEXT_SPECIAL_ACTIVE; ?>"></i>
                           </button>
                           <?php echo zen_draw_hidden_field('flag', '0'); ?>
                         <?php } else { ?>
                           <button type="submit" class="btn btn-status">
-                            <i class="fa fa-square fa-lg txt-status-off" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>"></i>
+                            <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo TEXT_SPECIAL_INACTIVE; ?>"></i>
                           </button>
                           <?php echo zen_draw_hidden_field('flag', '1'); ?>
                         <?php } ?>
@@ -521,21 +521,21 @@ if (!empty($action)) {
                     <td class="dataTableContent text-right">
                       <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['specials_id']); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
                         <div class="fa-stack fa-fw">
-                          <i class="fa fa-circle fa-stack-2x txt-status-on"></i>
-                          <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                          <i class="fa-solid fa-circle fa-stack-2x txt-status-on"></i>
+                          <i class="fa-solid fa-pencil fa-stack-1x fa-inverse"></i>
                         </div>
                       </a>
                       <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['specials_id']); ?>" title="<?php echo ICON_DELETE; ?>" role="button">
                         <div class="fa-stack fa-fw">
-                          <i class="fa fa-circle fa-stack-2x txt-status-off"></i>
-                          <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
+                          <i class="fa-solid fa-circle fa-stack-2x txt-status-off"></i>
+                          <i class="fa-solid fa-trash fa-stack-1x fa-inverse"></i>
                         </div>
                       </a>
                       <?php if (isset($sInfo) && is_object($sInfo) && ($special['specials_id'] === $sInfo->specials_id)) { ?>
-                        <i class="fa fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
+                        <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_SPECIALS, zen_get_all_get_params(['sID']) . 'sID=' . $special['specials_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa fa-info-circle fa-2x fa-fw txt-black align-middle"></i>
+                          <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
                         </a>
                       <?php } ?>
                     </td>
