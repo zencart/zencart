@@ -18,8 +18,8 @@ if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     return;
 }
 $user = $_SERVER['USER'] ?? $_SERVER['MY_USER'] ?? 'runner';
-$prefix = (IS_ADMIN_FLAG == true) ? '..' : '.';
-$context = (IS_ADMIN_FLAG == true) ? 'admin' : 'store';
+$prefix = (IS_ADMIN_FLAG === true) ? '..' : '.';
+$context = (IS_ADMIN_FLAG === true) ? 'admin' : 'store';
 $config = $prefix . '/not_for_release/testFramework/Support/configs/' . $user . '.' . $context . '.configure.php';
 if (!file_exists($config)) {
   die($config . ' does not exist');
