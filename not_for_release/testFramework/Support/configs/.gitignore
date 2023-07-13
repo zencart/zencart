@@ -1,0 +1,5 @@
+*.configure.php
+*.db_configure.php
+
+!runner.admin.configure.php
+!runner.store.configure.php
