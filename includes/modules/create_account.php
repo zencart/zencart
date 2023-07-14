@@ -198,7 +198,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
         $check_query = $db->bindVars($check_query, ':zoneCountryID', $country, 'integer');
         $check = $db->Execute($check_query);
         $entry_state_has_zones = ($check->fields['total'] > 0);
-        if ($entry_state_has_zones == true) {
+		if ($entry_state_has_zones == true && ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
             $zone_query = "SELECT distinct zone_id, zone_name, zone_code
                      FROM " . TABLE_ZONES . "
                      WHERE zone_country_id = :zoneCountryID
