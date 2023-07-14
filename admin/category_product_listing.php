@@ -615,6 +615,51 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <?php } ?>
 <?php
           // -----
+          // For a categories' listing *or* a mixed category/product listing from a search (!), additional
+          // category-specific column headings can also be added.
+         //
+          // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
+          //
+          // $extra_headings = [
+          //     [
+          //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+          //       'text' => $value
+          //     ],
+          // ];
+          //
+          // Observer notes:
+          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          //   multiple observers might be injecting content!
+          // - If heading-columns are added, be sure to add the associated data columns, too, via the
+          //   'NOTIFY_ADMIN_CATEGORY_LISTING_DATA' notification.
+          // - The $categories (in the first parameter of the notification) will be an empty database-object
+          //   if this is a *strictly* products' listing.  A combination of categories and products can be present
+          //   in a listing based on a search result!
+          // - The listing is a 'mixed' categories/products display if the 'categories' supplied isn't empty *and*
+          //   the 'showing_products' flag is (bool)true.  For this case, any observer inserting category-related columns
+          //   must also watch the 'NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY' notification to insert the
+          //   product-based columns' data, e.g. '&nbsp;', so that all columns are properly aligned!
+          //
+          $extra_headings = false;
+          $zco_notifier->notify(
+              'NOTIFY_ADMIN_CATEGORY_LISTING_HEADERS',
+              [
+                'categories' => $categories,
+                'categories_sql' => $sql,
+                'showing_products' => $show_prod_labels,
+              ],
+              $extra_headings
+          );
+          if (is_array($extra_headings)) {
+              foreach ($extra_headings as $heading_info) {
+                  $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
+?>
+                <th class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $heading_info['text']; ?></th>
+<?php
+              }
+          }
+
+          // -----
           // Additional column-headings can be added after the Quantity column.
           //
           // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
@@ -682,16 +727,49 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
                   <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
                 <?php } ?>
-                <?php if (SHOW_COUNTS_ADMIN === 'true') { ?>
+                <?php if ($show_prod_labels === true || SHOW_COUNTS_ADMIN === 'true') { ?>
                   <td class="text-right hidden-sm hidden-xs">
                     <?php
-                      // show counts
-                      $total_products = zen_get_products_to_categories($category['categories_id'], true);
-                      $total_products_on = zen_get_products_to_categories($category['categories_id']);
-                      echo $total_products_on . TEXT_PRODUCTS_STATUS_ON_OF . $total_products . TEXT_PRODUCTS_STATUS_ACTIVE;
+                      if (SHOW_COUNTS_ADMIN === 'true') {
+                          // show counts
+                          $total_products = zen_get_products_to_categories($category['categories_id'], true);
+                          $total_products_on = zen_get_products_to_categories($category['categories_id']);
+                          echo $total_products_on . TEXT_PRODUCTS_STATUS_ON_OF . $total_products . TEXT_PRODUCTS_STATUS_ACTIVE;
+                      }
                     ?>
                   </td>
                 <?php } ?>
+<?php
+              // -----
+              // Additional fields can be added into category-listing columns (or in mixed
+              // category/product listings resulting from a search), before the "Status" column.
+              //
+              // A watching observer can provide an associative array in the following format:
+              //
+              // $extra_data = [
+              //     [
+              //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+              //       'text' => $value
+              //     ],
+              // ];
+              //
+              // Observer notes:
+              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              //   multiple observers might be injecting content!
+              // - If heading-columns are added, be sure to add the associated header columns, too, via the
+              //   'NOTIFY_ADMIN_CATEGORY_LISTING_HEADERS' notification.
+              //
+              $extra_data = false;
+              $zco_notifier->notify('NOTIFY_ADMIN_CATEGORY_LISTING_DATA', $category, $extra_data);
+              if (is_array($extra_data)) {
+                  foreach ($extra_data as $data_info) {
+                      $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
+?>
+                <td class="hidden-sm hidden-xs<?php echo $align; ?>"><?php echo $data_info['text']; ?></td>
+<?php
+                  }
+              }
+?>
                 <td class="text-right dataTableButtonCell">
                   <?php if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS === 'true' && zen_get_products_to_categories($category['categories_id'], true, 'products_active') === 'true') { ?>
                     <i class="fa-solid fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
