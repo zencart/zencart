@@ -19,7 +19,6 @@ use Zencart\InitSystem\InitSystem;
 
 // Set session ID
 $zenSessionId = 'zenid';
-
 /**
  * inoculate against hack attempts which waste CPU cycles
  */
@@ -71,6 +70,7 @@ if ($zenSessionId !== 'zenid') {
  * boolean used to see if we are in the admin script, obviously set to false here.
  */
 define('IS_ADMIN_FLAG', false);
+
 /**
  * integer saves the time at which the script started.
  */
@@ -113,27 +113,32 @@ if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTI
 }
 
 @date_default_timezone_set(date_default_timezone_get());
+require('includes/application_testing.php');
 /**
  * check for and include load application parameters
  */
-if (file_exists('includes/configure.php')) {
-  /**
-   * load the main configure file.
-   */
-  include('includes/configure.php');
-} else if (!defined('DIR_FS_CATALOG') && !defined('HTTP_SERVER') && !defined('DIR_WS_CATALOG') && !defined('DIR_WS_INCLUDES')) {
-  $problemString = 'includes/configure.php not found';
-  require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
-  exit;
+if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
+    if (file_exists('includes/configure.php')) {
+        /**
+         * load the main configure file.
+         */
+        include('includes/configure.php');
+    } else if (!defined('DIR_FS_CATALOG') && !defined('HTTP_SERVER') && !defined('DIR_WS_CATALOG') && !defined('DIR_WS_INCLUDES')) {
+        $problemString = 'includes/configure.php not found';
+        require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
+        exit;
+    }
 }
 /**
  * if main configure file doesn't contain valid info (ie: is dummy or doesn't match filestructure, display assistance page to suggest running the installer)
  */
 if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
-  $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
+
+    $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
   require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
   exit;
 }
+
 /**
  * check for and load system defined path constants
  */
@@ -174,11 +179,13 @@ require 'includes/initsystem.php';
 /**
  * determine install status
  */
-if (( (!file_exists('includes/configure.php') && !file_exists('includes/local/configure.php')) ) || (DB_TYPE == '') || (!file_exists('includes/classes/db/' .DB_TYPE . '/query_factory.php')) || !file_exists('includes/autoload_func.php')) {
-  $problemString = 'includes/configure.php file empty or file not found, OR wrong DB_TYPE set, OR cannot find includes/autoload_func.php which suggests paths are wrong or files were not uploaded correctly';
-  require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
-  header('location: zc_install/index.php');
-  exit;
+if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
+    if (((!file_exists('includes/configure.php') && !file_exists('includes/local/configure.php'))) || (DB_TYPE == '') || (!file_exists('includes/classes/db/' . DB_TYPE . '/query_factory.php')) || !file_exists('includes/autoload_func.php')) {
+        $problemString = 'includes/configure.php file empty or file not found, OR wrong DB_TYPE set, OR cannot find includes/autoload_func.php which suggests paths are wrong or files were not uploaded correctly';
+        require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
+        header('location: zc_install/index.php');
+        exit;
+    }
 }
 /**
  * psr-4 autoloading
