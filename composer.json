@@ -21,17 +21,25 @@
         "docs": "https://docs.zen-cart.com"
     },
     "_comment": "compatible with PHP 7.3-8.0",
-    "require": {
-        "ext-curl": "*",
-        "ext-json": "*"
-    },
     "require-dev": {
-        "php": "^7.3|^7.4|^8.0|^8.1",
+        "php": "^7.4|^8.0|^8.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.7",
+        "illuminate/console": "^8.83",
         "illuminate/database": "^8.83",
         "illuminate/events": "^8.83",
+        "kitloong/laravel-migrations-generator": "^6.10",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.5",
-        "sempro/phpunit-pretty-print": "^1.4"
+        "sempro/phpunit-pretty-print": "^1.4",
+        "symfony/browser-kit": "^6.0",
+        "symfony/css-selector": "^6.0",
+        "symfony/http-client": "^6.0",
+        "symfony/maker-bundle": "^1.49",
+        "symfony/mime": "^6.0",
+        "symfony/phpunit-bridge": "^6.3",
+        "symfony/test-pack": "^1.1"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
@@ -41,7 +49,10 @@
         "classmap": ["not_for_release/testFramework"],
         "psr-4": {
             "Tests\\": "not_for_release/testFramework/",
-            "App\\": "laravel/app/"
+            "App\\": "laravel/app/",
+            "Seeders\\": "not_for_release/testFramework/Support/database/Seeders/",
+            "Migrations\\": "not_for_release/testFramework/Support/database/migrations/"
+
         }
     },
     "extra": {
@@ -55,9 +66,8 @@
         "optimize-autoloader": true
     },
     "scripts": {
-        "db-tests": "phpunit --verbose --testsuite Dbunit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
-        "tests": "phpunit --verbose  --process-isolation --testsuite Unit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
-        "dusk": "phpunit --verbose --testsuite Browser --debug --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'"
+        "feature-tests": "phpunit --verbose --testsuite Feature --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "unit-tests": "phpunit --verbose  --process-isolation --testsuite Unit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

@@ -1,3 +1,0 @@
-*.configure.db.php
-!runner.configure.db.php
-!example.configure.db.php

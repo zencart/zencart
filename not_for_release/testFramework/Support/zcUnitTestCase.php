@@ -36,6 +36,10 @@ abstract class zcUnitTestCase extends TestCase
      */
     public function setUp(): void
     {
+        if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
+            define('ZENCART_TESTFRAMEWORK_RUNNING', true);
+        }
+
         if (!defined('IS_ADMIN_FLAG')) {
             define('IS_ADMIN_FLAG', false);
         }

@@ -43,6 +43,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
         unset($_SESSION['billto']);
         unset($_SESSION['sendto']);
         unset($_SESSION['customer_default_address_id']);
+        unset($_SESSION['cart_address_id']);
         $loginAuthorized = true;
         $_SESSION['emp_admin_login'] = true;
         $_SESSION['emp_admin_id'] = $adminId;

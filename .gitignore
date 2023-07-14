@@ -1,4 +1,5 @@
 configure.php
+configure.php.save
 local/configure*.php
 /vendor
 
@@ -226,3 +227,7 @@ admin/includes/*.config.save
 
 #release process
 modified_files.txt
+
+# ddev
+
+.ddev
