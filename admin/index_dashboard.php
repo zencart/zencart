@@ -41,15 +41,15 @@ if (empty($currencies)) {
     <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
         <?php
+        include DIR_WS_MODULES . 'dashboard_widgets/OrderStatusDashboardWidget.php';
+        ?>
+
+        <?php
         include DIR_WS_MODULES . 'dashboard_widgets/BaseStatisticsDashboardWidget.php';
         ?>
 
         <?php
         include DIR_WS_MODULES . 'dashboard_widgets/SpecialsDashboardWidget.php';
-        ?>
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/OrderStatusDashboardWidget.php';
         ?>
 
     </div>
@@ -76,4 +76,3 @@ if (empty($currencies)) {
         ?>
 
     </div>
-
