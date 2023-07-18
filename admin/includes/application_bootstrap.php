@@ -158,24 +158,4 @@ require 'includes/classes/AdminRequestSanitizer.php';
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 require (DIR_FS_CATALOG . 'includes/application_laravel.php');
-
-$pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
-$installedPlugins = $pluginManager->getInstalledPlugins();
-$pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
-$pageLoader = PageLoader::getInstance();
-$pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem);
-
-$fs = new FileSystem;
-$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
-$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
-$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/functions/extra_functions', '~^[^\._].*\.php$~i');
-
-foreach ($installedPlugins as $plugin) {
-    $namespaceAdmin = 'Zencart\Plugins\Admin\\' . ucfirst($plugin['unique_key']);
-    $namespaceCatalog = 'Zencart\\Plugins\Catalog\\' . ucfirst($plugin['unique_key']);
-    $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
-    $filePathAdmin = $filePath . 'admin/includes/classes/';
-    $filePathCatalog = $filePath . 'includes/classes/';
-    $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
-    $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
-}
+require_once DIR_FS_CATALOG . 'includes/application_plugin_support.php';

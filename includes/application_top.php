@@ -11,6 +11,7 @@
  * @version $Id: Zcwilt 2022 Aug 09 Modified in v1.5.8-alpha2 $
  */
 
+use admin\classes\cache;
 use App\Models\PluginControl;
 use App\Models\PluginControlVersion;
 use Zencart\FileSystem\FileSystem;
@@ -206,25 +207,7 @@ require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
 
 require DIR_FS_CATALOG . 'includes/application_laravel.php';
-
-$pluginManager = new PluginManager(new PluginControl(), new \App\Models\PluginControlVersion());
-$installedPlugins = $pluginManager->getInstalledPlugins();
-$pluginManager = new PluginManager(new PluginControl, new App\Models\PluginControlVersion);
-
-$fs = new FileSystem;
-$fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');
-$fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');
-
-foreach ($installedPlugins as $plugin) {
-    $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
-    $namespaceCatalog = 'Zencart\\Plugins\\Catalog\\' . ucfirst($plugin['unique_key']);
-    $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
-    $filePathAdmin = $filePath . 'classes/admin';
-    $filePathCatalog = $filePath . 'classes/';
-    $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
-    $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
-}
-
+require_once DIR_FS_CATALOG . 'includes/application_plugin_support.php';
 
 $autoLoadConfig = array();
 if (isset($loaderPrefix)) {
