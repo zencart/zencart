@@ -11,11 +11,7 @@
  * @version $Id: Zcwilt 2022 Aug 09 Modified in v1.5.8-alpha2 $
  */
 
-use admin\classes\cache;
-use App\Models\PluginControl;
-use App\Models\PluginControlVersion;
 use Zencart\FileSystem\FileSystem;
-use Zencart\PluginManager\PluginManager;
 use Zencart\InitSystem\InitSystem;
 
 // Set session ID

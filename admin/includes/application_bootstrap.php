@@ -6,11 +6,6 @@
  * @version $Id: Zcwilt 2022 Aug 09 Modified in v1.5.8-alpha2 $
  */
 
-use App\Models\PluginControl;
-use App\Models\PluginControlVersion;
-use Zencart\FileSystem\FileSystem;
-use Zencart\PluginManager\PluginManager;
-use Zencart\PageLoader\PageLoader;
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
