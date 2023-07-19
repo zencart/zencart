@@ -16,6 +16,9 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./not_for_release/testFramework/Feature/</directory>
         </testsuite>
+        <testsuite name="Database">
+            <directory suffix="Test.php">./not_for_release/testFramework/Database</directory>
+        </testsuite>
     </testsuites>
     <php>
         <server name="APP_ENV" value="testing"/>

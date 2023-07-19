@@ -24,11 +24,10 @@ trait GeneralConcerns
         $basePath = $configFile = TESTCWD . 'Support/configs/';
         $configFile =  $basePath . $user . '.' . $context . '.configure.php';
         if (!file_exists($configFile)) {
-            die('could not find config file ' .$configFile);
+            die('could not find config file ' . $configFile . PHP_EOL);
         }
         echo $configFile . PHP_EOL;
-
-        require($configFile);
+        require_once($configFile);
     }
 
 
