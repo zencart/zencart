@@ -21,7 +21,7 @@ class functionDatesTest extends zcUnitTestCase
         $result = zen_is_leap_year(2024);
         $this->assertTrue($result);
         $result = zen_is_leap_year(2100);
-        $this->assertTrue($result);
+        $this->assertFalse($result);
 
     }
 }
