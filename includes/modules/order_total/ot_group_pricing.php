@@ -160,7 +160,7 @@ class ot_group_pricing {
        */
       switch ($this->calculate_tax) {
         case 'None':
-          if ($this->include_tax) {
+          if ($this->include_tax === 'true') {
             foreach ($order->info['tax_groups'] as $key=>$value) {
               $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio;
             }
