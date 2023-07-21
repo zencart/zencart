@@ -14,3 +14,7 @@
 .dtk-contextline {font-family: Verdana, sans-serif;}
 .dtk-linenum {font-family: Verdana, sans-serif;}
 .dataTableGroupChange {border-top: 2px solid #000 !important;}
+table.results {border:2px solid;}
+table.blank {width:100%;}
+table.constantlink {border:3px solid;}
+table.constantlink td {border:1px solid;}
