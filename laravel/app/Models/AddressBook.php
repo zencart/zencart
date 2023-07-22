@@ -19,4 +19,22 @@ class AddressBook extends Eloquent
     {
         return $this->hasOne(Customer::class, 'customers_id');
     }
+
+    public function rules()
+    {
+        return [
+            'customers_id' => 'required',
+            'entry_gender' => 'sometimes',
+            'entry_company' => 'sometimes',
+            'entry_firstname' => 'sometimes',
+            'entry_lastname' => 'sometimes',
+            'entry_street_address' => 'sometimes',
+            'entry_suburb' => 'sometimes',
+            'entry_postcode' => 'sometimes',
+            'entry_city' => 'sometimes',
+            'entry_state' => 'sometimes',
+            'entry_country_id' => 'sometimes',
+            'entry_zone_id' => 'sometimes',
+        ];
+    }
 }

@@ -14,4 +14,15 @@ class CustomerInfo extends Eloquent
     protected $table = TABLE_CUSTOMERS_INFO;
     protected $primaryKey = 'customers_info_id';
     public $timestamps = false;
+
+    public function rules()
+    {
+        return [
+            'customers_info_date_of_last_logon' => 'sometimes',
+            'customers_info_number_of_logons' => 'sometimes',
+            'customers_info_date_account_created' => 'sometimes',
+            'customers_info_date_account_last_modified' => 'sometimes',
+            'global_product_notifications' => 'sometimes',
+        ];
+    }
 }
