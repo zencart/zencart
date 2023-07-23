@@ -312,22 +312,13 @@ function htmlentities_recurse($mixed_value, $flags = ENT_QUOTES, $encoding = 'ut
 /**
  * @param mixed $mixed_value
  * @return array|false|string
+ *
+ * Deprecated after Zen Cart 1.5.8a
  */
 function utf8_encode_recurse($mixed_value)
 {
-    if (strtolower(CHARSET) == 'utf-8') {
-        return $mixed_value;
-    }
-
-    if (!is_array($mixed_value)) {
-        return utf8_encode((string)$mixed_value);
-    }
-
-    $result = [];
-    foreach ($mixed_value as $key => $value) {
-        $result[$key] = utf8_encode($value);
-    }
-    return $result;
+    trigger_error('Function utf8_encode_recurse is deprecated for Zen Cart versions after 1.5.8a.', E_USER_DEPRECATED);
+    return $mixed_value;
 }
 
 /**

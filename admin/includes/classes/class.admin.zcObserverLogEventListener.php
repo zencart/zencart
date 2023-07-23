@@ -74,7 +74,6 @@ class zcObserverLogEventListener extends base {
      */
     $postdata = $_POST;
     $postdata = self::filterArrayElements($postdata);
-    $postdata = self::ensureDataIsUtf8($postdata);
     $notes = self::parseForMaliciousContent(print_r($postdata, true));
     /**
      * Since the POST data was an array, we json-encode the parsed POST data for storage in the logging system
@@ -90,7 +89,6 @@ class zcObserverLogEventListener extends base {
       if (is_array($message_to_log))
       {
         $data = self::filterArrayElements($data);
-        $data = self::ensureDataIsUtf8($data);
         $data = print_r($data, true);
       }
       $specific_message = $data;
@@ -157,22 +155,6 @@ class zcObserverLogEventListener extends base {
   {
     foreach ($data as $key=>$nul) {
       if (in_array($key, array('x','y','secur'.'ityTo'.'ken','admi'.'n_p'.'ass','pass'.'word','confirm', 'newpwd-'.$_SESSION['securityToken'],'oldpwd-'.$_SESSION['securityToken'],'confpwd-'.$_SESSION['securityToken']))) unset($data[$key]);
-    }
-    return $data;
-  }
-  /**
-   * In order to json_encode the data for storage, it must be utf8, so we encode each element
-   */
-  static function ensureDataIsUtf8($data) {
-    if (strtolower(CHARSET) == 'utf-8') return $data;
-    foreach ($data as $key=>$nul) {
-        if (is_string($nul)) $data[$key] = utf8_encode($nul);
-        if (is_array($nul)) {
-          foreach ($nul as $key2=>$val) {
-            if (is_string($val)) $data[$key][$key2] = utf8_encode($val);
-          if (is_array($val)) $data[$key][$key2] = utf8_encode(print_r($val, true));
-        }
-      }
     }
     return $data;
   }

@@ -206,7 +206,7 @@ class zcObserverDownloadsViaAws extends base {
     $expires = time() + $this->link_expiry_time;
 
     $raw_request = "GET\n\n\n" . $expires . "\n/" . $bucketAndFilename;
-    $sig = urlencode(base64_encode((hash_hmac("sha1", utf8_encode($raw_request), $this->aws_secret, true))));
+    $sig = urlencode(base64_encode((hash_hmac('sha1', $raw_request, $this->aws_secret, true))));
 
     $params = 'AWSAccessKeyId=' . $this->aws_key . '&Expires=' . $expires . '&Signature=' . $sig;
 

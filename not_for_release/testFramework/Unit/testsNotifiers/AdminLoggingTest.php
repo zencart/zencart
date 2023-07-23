@@ -72,20 +72,6 @@ class AdminLoggingTest extends zcUnitTestCase
         $this->assertArrayNotHasKey('password', $result);
     }
 
-    public function testEnsureDataIsUtf8()
-    {
-        define('CHARSET', 'iso-8859-1');
-        $data = array(
-            'key1' => 'abc',
-            'key2' => iconv('UTF-8', 'ISO-8859-1', 'façade'),
-            'key3' => array('r' => iconv('UTF-8', 'ISO-8859-1', 'égale'))
-        );
-        $observer = new zcObserverLogEventListener();
-        $result = $observer::ensureDataIsUtf8($data);
-        $this->assertEquals($result['key2'], 'façade');
-        $this->assertEquals($result['key3']['r'], 'égale');
-    }
-
     public function testParseForMaliciousContent()
     {
         define('CHARSET', 'utf-8');
