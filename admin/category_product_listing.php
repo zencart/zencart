@@ -158,44 +158,7 @@ if (!empty($action)) {
             // determine product-type-specific override script for this product
             $product_type = zen_get_products_type($category_product);
             // now loop thru the delete_product_confirm script for each product in the current category
-            // NOTE: Debug code left in to help with creating additional product type delete-scripts
-
-            $do_delete_flag = false;
-            if (isset($_POST['products_id'], $_POST['product_categories']) && is_array($_POST['product_categories'])) {
-              $product_id = (int)$_POST['products_id'];
-              $product_categories = $_POST['product_categories'];
-              $do_delete_flag = true;
-            }
-
-            if (!empty($cascaded_prod_id_for_delete) && !empty($cascaded_prod_cat_for_delete)) {
-              $product_id = $cascaded_prod_id_for_delete;
-              $product_categories = $cascaded_prod_cat_for_delete;
-              $do_delete_flag = true;
-            }
-
-            if ($do_delete_flag) {
-              //--------------PRODUCT_TYPE_SPECIFIC_INSTRUCTIONS_GO__BELOW_HERE--------------------------------------------------------
-              if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php')) {
-                require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php';
-              }
-              //--------------PRODUCT_TYPE_SPECIFIC_INSTRUCTIONS_GO__ABOVE__HERE--------------------------------------------------------
-              // now do regular non-type-specific delete:
-              // remove product from all its categories:
-              for ($k = 0, $m = count($product_categories); $k < $m; $k++) {
-                  zen_unlink_product_from_category($product_id, $product_categories[$k]);
-              }
-              // confirm that product is no longer linked to any categories
-              $count_categories = zen_get_linked_categories_for_product($product_id);
-              // if not linked to any categories, do delete:
-              if (empty($count_categories)) {
-                zen_remove_product($product_id, $delete_linked);
-              }
-            } // endif $do_delete_flag
-            // if this is a single-product delete, redirect to categories page
-            // if not, then this file was called by the cascading delete initiated by the category-delete process
-            if ($action === 'delete_product_confirm') {
-              zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath));
-            }
+            require zen_get_admin_module_from_directory($product_type, 'delete_product_confirm.php');
           }
 
           zen_remove_category($categories[$i]['id']);
@@ -247,25 +210,13 @@ if (!empty($action)) {
       if (isset($_POST['delete_linked']) && $_POST['delete_linked'] === 'delete_linked_no') {
         $delete_linked = 'false';
       }
-      if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php')) {
-        require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product_confirm.php';
-      } else {
-        require DIR_WS_MODULES . 'delete_product_confirm.php';
-      }
+      require zen_get_admin_module_from_directory($product_type, 'delete_product_confirm.php');
       break;
     case 'move_product_confirm':
-      if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/move_product_confirm.php')) {
-        require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/move_product_confirm.php';
-      } else {
-        require DIR_WS_MODULES . 'move_product_confirm.php';
-      }
+      require zen_get_admin_module_from_directory($product_type, 'move_product_confirm.php');
       break;
     case 'copy_product_confirm':
-      if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/copy_product_confirm.php')) {
-        require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/copy_product_confirm.php';
-      } else {
-        require DIR_WS_MODULES . 'copy_product_confirm.php';
-      }
+      require zen_get_admin_module_from_directory($product_type, 'copy_product_confirm.php');
       break;
     case 'delete_attributes':
       zen_delete_products_attributes($_GET['products_id']);
@@ -1173,25 +1124,13 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_MOVE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
             break;
           case 'delete_product':
-            if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product.php')) {
-              require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/delete_product.php';
-            } else {
-              require DIR_WS_MODULES . 'delete_product.php';
-            }
+            require zen_get_admin_module_from_directory($product_type, 'delete_product.php');
             break;
           case 'move_product':
-            if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/move_product.php')) {
-              require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/move_product.php';
-            } else {
-              require DIR_WS_MODULES . 'move_product.php';
-            }
+            require zen_get_admin_module_from_directory($product_type, 'move_product.php');
             break;
           case 'copy_product':
-            if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/copy_product.php')) {
-              require DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/copy_product.php';
-            } else {
-              require DIR_WS_MODULES . 'copy_product.php';
-            }
+            require zen_get_admin_module_from_directory($product_type, 'copy_product.php');
             break;
           // attribute features
           case 'attribute_features':

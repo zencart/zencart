@@ -1,0 +1,5 @@
+Please refer to /admin/includes/modules/HOW_OVERRIDES_WORK_HERE.txt 
+for explanation of why the following files are missing from this directory upon initial install:
+- collect_info_metatags.php
+- preview_info_meta_tags.php
+- preview_info.php

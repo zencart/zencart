@@ -1,0 +1,34 @@
+Starting with Zen Cart v2.0.0, the /admin/includes/modules/PRODUCT_TYPE_NAME_HERE/*.php files are only needed if they have been customized.
+That is, it's another "override" directory.
+
+The most common files that used to already be cloned here were:
+- collect_info.php
+- collect_info_metatags.php
+- preview_info_meta_tags.php
+- preview_info.php
+But additional overridable files also include:
+- copy_product_confirm.php
+- copy_product.php
+- delete_product_confirm.php
+- delete_product.php
+- move_product_confirm.php
+- move_product.php
+- new_product_preview.php
+- update_product_meta_tags.php
+- update_product.php
+
+But since most of these files were just duplicates of the "default", we now handle this with a very simple override strategy.
+
+This is ONLY admin-specific, and ONLY related to product-types.
+
+Here's how it works:
+If one of the admin UI pages needs to load "collect_info.php", it will search in the following order:
+    /admin/includes/modules/PRODUCT_TYPE_HERE/collect_info.php
+and if that's not found, it will load the default found here:
+    /admin/includes/modules/collect_info.php
+
+What about plugins?
+Many plugins which affected these files WILL still need their customizations made to these files, so they'll still just put them into the product-type-specific file like they did before.
+For example, if a plugin previously had customized /admin/includes/modules/product/collect_info.php, then that plugin STILL SHOULD CUSTOMIZE THAT SAME FILE.
+A plugin author SHOULD compare their customizations against the default at /admin/includes/modules/collect_info.php, and incorporate any updates from that file into their customized file, and then distribute it as the override at /admin/includes/modules/product/collect_info.php
+A PLUGIN SHOULD NEVER DIRECTLY CUSTOMIZE THE DEFAULT FILES LISTED ABOVE IN /admin/includes/modules/ ... they should always be cloned into a product-type-specific subfolder and customized there.
