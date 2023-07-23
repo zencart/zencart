@@ -22,6 +22,9 @@ $fs->loadFilesFromPluginsDirectory($installedPlugins, $context . '/includes/extr
 $fs->loadFilesFromPluginsDirectory($installedPlugins, $context . '/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, $context . '/includes/functions/extra_functions', '~^[^\._].*\.php$~i');
 
+$filePathPluginAdmin = [];
+$filePathPluginCatalog = [];
+
 foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\Plugins\Admin\\' . ucfirst($plugin['unique_key']);
     $namespaceCatalog = 'Zencart\Plugins\Catalog\\' . ucfirst($plugin['unique_key']);
@@ -30,6 +33,10 @@ foreach ($installedPlugins as $plugin) {
     $filePathCatalog = $filePath . 'includes/classes/';
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
+
+    $filePathPluginAdmin[$plugin['unique_key']] = $filePathAdmin;
+    $filePathPluginCatalog[$plugin['unique_key']] = $filePathCatalog;
+
 }
 
 unset($context);
