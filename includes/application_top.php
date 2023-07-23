@@ -212,7 +212,7 @@ $zc_cache = new cache();
 
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
-
+//die('here');
 require DIR_FS_CATALOG . 'includes/application_laravel.php';
 
 $pluginManager = new PluginManager(new PluginControl(), new \App\Models\PluginControlVersion());

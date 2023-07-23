@@ -1,0 +1,46 @@
+{
+  "name": "laravel-restive/restive",
+  "type": "library",
+  "license": "MIT",
+  "description": "An API framework for Laravel",
+  "keywords": ["rest", "api", "laravel"],
+  "authors": [
+    {
+      "name": "Ian C Wilson"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Restive\\": "src/"
+    }
+  },
+  "require": {
+    "illuminate/database": "^8.0|^9.0|^10.0",
+    "illuminate/auth": "^8.0|^9.0|^10.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~5.0|~6.0",
+    "phpunit/phpunit": "^8.0|^9.0",
+    "nunomaduro/collision": "^4.0",
+    "mockery/mockery": "^1.1",
+    "codedungeon/phpunit-result-printer": "^0.32.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "tests": "phpunit -c phpunit.xml",
+    "coverage": "phpunit -c phpunit-cc.xml"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Restive\\RestiveServiceProvider"
+      ]
+    }
+  }
+}

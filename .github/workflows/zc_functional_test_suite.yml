@@ -71,3 +71,10 @@ jobs:
 
       - name: Execute Functional Tests
         run: php vendor/bin/phpunit  --verbose --testsuite Feature --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+            name: laravel-logs
+            path: logs
+            retention-days: 5

@@ -1,0 +1,31 @@
+<?php
+
+namespace {{ namespace }};
+
+use Restive\Http\Requests\Request as RestiveRequest;
+
+class {{ class }} extends RestiveRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return false;
+    }
+
+    public function commonRules() : array
+    {
+        return [];
+    }
+
+    public function storeRules() : array
+    {
+        return [];
+    }
+
+    public function updateRules() : array
+    {
+        return [];
+    }
+}

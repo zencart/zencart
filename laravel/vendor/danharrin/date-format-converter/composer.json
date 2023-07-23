@@ -1,0 +1,32 @@
+{
+    "name": "danharrin/date-format-converter",
+    "description": "Convert token-based date formats between standards.",
+    "license": "MIT",
+    "homepage": "https://github.com/danharrin/date-format-converter",
+    "support": {
+        "issues": "https://github.com/danharrin/date-format-converter/issues",
+        "source": "https://github.com/danharrin/date-format-converter"
+    },
+    "authors": [
+        {
+            "name": "Dan Harrin",
+            "email": "dan@danharrin.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2|^8.0"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php",
+            "src/standards.php"
+        ],
+        "psr-4": {
+            "DanHarrin\\DateFormatConverter\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev"
+}

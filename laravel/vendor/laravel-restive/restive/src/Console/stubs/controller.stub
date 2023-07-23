@@ -1,0 +1,14 @@
+<?php
+
+namespace {{ namespace }};
+
+use Restive\Http\Controllers\ApiController;
+
+class {{ class }} extends ApiController
+{
+    protected $modelName = '{{ model }}';
+    protected $request = '{{ request }}';
+    protected $resource = '{{ resource }}'
+    protected $collection = '{{ resourceCollection }}'
+    protected $paginator = '{{ paginator }}'
+}

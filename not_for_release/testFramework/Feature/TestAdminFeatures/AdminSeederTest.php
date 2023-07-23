@@ -16,6 +16,7 @@ class AdminSeederTest extends zcFeatureTestCaseAdmin
         $this->runCustomSeeder('StoreWizardSeeder');
         $this->browser->request('GET', HTTP_SERVER . '/admin');
         $response = $this->browser->getResponse();
+        dump($response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->browser->request('GET', HTTP_SERVER . '/admin');
         $response = $this->browser->getResponse();
