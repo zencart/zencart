@@ -384,10 +384,10 @@ function utilDumpRequest($mode = 'p', $out = 'log')
  * we ever revert to a full laravel install
  */
 
-function request()
-{
-    return \Zencart\Request\Request::getInstance();
-}
+//function request()
+//{
+//    return \Zencart\Request\Request::getInstance();
+//}
 
 function zen_updated_by_admin($admin_id = null): string
 {
@@ -445,4 +445,3 @@ function zen_get_orders_status()
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_get_orders_status_pulldown_array();
 }
-

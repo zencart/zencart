@@ -65,15 +65,15 @@ final class CompleteCommand extends Command
     {
         try {
             // uncomment when a bugfix or BC break has been introduced in the shell completion scripts
-            //$version = $input->getOption('symfony');
-            //if ($version && version_compare($version, 'x.y', '>=')) {
+            // $version = $input->getOption('symfony');
+            // if ($version && version_compare($version, 'x.y', '>=')) {
             //    $message = sprintf('Completion script version is not supported ("%s" given, ">=x.y" required).', $version);
             //    $this->log($message);
 
             //    $output->writeln($message.' Install the Symfony completion script again by using the "completion" command.');
 
             //    return 126;
-            //}
+            // }
 
             $shell = $input->getOption('shell');
             if (!$shell) {
@@ -155,10 +155,10 @@ final class CompleteCommand extends Command
                 throw $e;
             }
 
-            return self::FAILURE;
+            return 2;
         }
 
-        return self::SUCCESS;
+        return 0;
     }
 
     private function createCompletionInput(InputInterface $input): CompletionInput

@@ -242,7 +242,7 @@ class Command
      *
      * @return int The command exit code
      *
-     * @throws \Exception When binding input fails. Bypass this by calling {@link ignoreValidationErrors()}.
+     * @throws ExceptionInterface When input binding fails. Bypass this by calling {@link ignoreValidationErrors()}.
      *
      * @see setCode()
      * @see execute()
@@ -429,9 +429,9 @@ class Command
      * @param int|null $mode    The argument mode: InputArgument::REQUIRED or InputArgument::OPTIONAL
      * @param mixed    $default The default value (for InputArgument::OPTIONAL mode only)
      *
-     * @throws InvalidArgumentException When argument mode is not valid
-     *
      * @return $this
+     *
+     * @throws InvalidArgumentException When argument mode is not valid
      */
     public function addArgument(string $name, int $mode = null, string $description = '', $default = null)
     {
@@ -450,9 +450,9 @@ class Command
      * @param int|null          $mode     The option mode: One of the InputOption::VALUE_* constants
      * @param mixed             $default  The default value (must be null for InputOption::VALUE_NONE)
      *
-     * @throws InvalidArgumentException If option mode is invalid or incompatible
-     *
      * @return $this
+     *
+     * @throws InvalidArgumentException If option mode is invalid or incompatible
      */
     public function addOption(string $name, $shortcut = null, int $mode = null, string $description = '', $default = null)
     {
@@ -518,7 +518,7 @@ class Command
      *
      * @final since Symfony 5.1
      */
-    public function setHidden(bool $hidden /*= true*/)
+    public function setHidden(bool $hidden /* = true */)
     {
         $this->hidden = $hidden;
 

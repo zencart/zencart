@@ -9,6 +9,10 @@
  * file that was distributed with this source code.
  */
 
+if ('cli' !== \PHP_SAPI) {
+    throw new Exception('This script must be run from the command line.');
+}
+
 $usageInstructions = <<<END
 
   Usage instructions
@@ -62,7 +66,7 @@ foreach (array_slice($argv, 1) as $argumentOrOption) {
         continue;
     }
 
-    if (0 === strpos($argumentOrOption, '-')) {
+    if (str_starts_with($argumentOrOption, '-')) {
         $config['verbose_output'] = true;
     } else {
         $config['locale_to_analyze'] = $argumentOrOption;
