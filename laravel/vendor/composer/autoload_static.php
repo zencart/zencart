@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
+class ComposerStaticInitcb8b979588fe8c4083cbf003d8e3a695
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -207,8 +207,8 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/collections',
-            1 => __DIR__ . '/..' . '/illuminate/macroable',
+            0 => __DIR__ . '/..' . '/illuminate/macroable',
+            1 => __DIR__ . '/..' . '/illuminate/collections',
             2 => __DIR__ . '/..' . '/illuminate/support',
         ),
         'Illuminate\\Session\\' => 
@@ -274,15 +274,30 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardController.php',
+        'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
+        'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
+        'App\\Http\\Middleware\\StartSession' => __DIR__ . '/../..' . '/app/Http/Middleware/StartSession.php',
+        'App\\Models\\AddressBook' => __DIR__ . '/../..' . '/app/Models/AddressBook.php',
+        'App\\Models\\AddressFormat' => __DIR__ . '/../..' . '/app/Models/AddressFormat.php',
+        'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\AdminActivityLog' => __DIR__ . '/../..' . '/app/Models/AdminActivityLog.php',
+        'App\\Models\\AdminMenu' => __DIR__ . '/../..' . '/app/Models/AdminMenu.php',
+        'App\\Models\\AdminPage' => __DIR__ . '/../..' . '/app/Models/AdminPage.php',
+        'App\\Models\\AdminProfile' => __DIR__ . '/../..' . '/app/Models/AdminProfile.php',
         'App\\Models\\Configuration' => __DIR__ . '/../..' . '/app/Models/Configuration.php',
+        'App\\Models\\ConfigurationGroup' => __DIR__ . '/../..' . '/app/Models/ConfigurationGroup.php',
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
+        'App\\Models\\CustomerInfo' => __DIR__ . '/../..' . '/app/Models/CustomerInfo.php',
         'App\\Models\\LayoutBox' => __DIR__ . '/../..' . '/app/Models/LayoutBox.php',
         'App\\Models\\ModelFactory' => __DIR__ . '/../..' . '/app/Models/ModelFactory.php',
         'App\\Models\\PluginControl' => __DIR__ . '/../..' . '/app/Models/PluginControl.php',
         'App\\Models\\PluginControlVersion' => __DIR__ . '/../..' . '/app/Models/PluginControlVersion.php',
         'App\\Models\\ProductTypeLayout' => __DIR__ . '/../..' . '/app/Models/ProductTypeLayout.php',
         'App\\Models\\ProjectVersion' => __DIR__ . '/../..' . '/app/Models/ProjectVersion.php',
+        'App\\Services\\MigrationsRunner' => __DIR__ . '/../..' . '/app/Services/MigrationsRunner.php',
+        'App\\Services\\SeederRunner' => __DIR__ . '/../..' . '/app/Services/SeederRunner.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Carbon\\AbstractTranslator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/AbstractTranslator.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
@@ -291,6 +306,7 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Carbon\\CarbonInterface' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterface.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\CarbonPeriod' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriod.php',
+        'Carbon\\CarbonPeriodImmutable' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriodImmutable.php',
         'Carbon\\CarbonTimeZone' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonTimeZone.php',
         'Carbon\\Cli\\Invoker' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Cli/Invoker.php',
         'Carbon\\Doctrine\\CarbonDoctrineType' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/CarbonDoctrineType.php',
@@ -333,6 +349,7 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Carbon\\FactoryImmutable' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/FactoryImmutable.php',
         'Carbon\\Language' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Language.php',
         'Carbon\\Laravel\\ServiceProvider' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Laravel/ServiceProvider.php',
+        'Carbon\\MessageFormatter\\MessageFormatterMapper' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/MessageFormatter/MessageFormatterMapper.php',
         'Carbon\\PHPStan\\AbstractMacro' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/PHPStan/AbstractMacro.php',
         'Carbon\\PHPStan\\Macro' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/PHPStan/Macro.php',
         'Carbon\\PHPStan\\MacroExtension' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/PHPStan/MacroExtension.php',
@@ -349,6 +366,7 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Carbon\\Traits\\IntervalStep' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/IntervalStep.php',
         'Carbon\\Traits\\Localization' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Localization.php',
         'Carbon\\Traits\\Macro' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Macro.php',
+        'Carbon\\Traits\\MagicParameter' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/MagicParameter.php',
         'Carbon\\Traits\\Mixin' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Mixin.php',
         'Carbon\\Traits\\Modifiers' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Modifiers.php',
         'Carbon\\Traits\\Mutability' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Mutability.php',
@@ -358,6 +376,7 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Carbon\\Traits\\Serialization' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Serialization.php',
         'Carbon\\Traits\\Test' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Test.php',
         'Carbon\\Traits\\Timestamp' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Timestamp.php',
+        'Carbon\\Traits\\ToStringFormat' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/ToStringFormat.php',
         'Carbon\\Traits\\Units' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Units.php',
         'Carbon\\Traits\\Week' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Traits/Week.php',
         'Carbon\\Translator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Translator.php',
@@ -926,6 +945,7 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Illuminate\\Support\\Testing\\Fakes\\PendingChainFake' => __DIR__ . '/..' . '/illuminate/support/Testing/Fakes/PendingChainFake.php',
         'Illuminate\\Support\\Testing\\Fakes\\PendingMailFake' => __DIR__ . '/..' . '/illuminate/support/Testing/Fakes/PendingMailFake.php',
         'Illuminate\\Support\\Testing\\Fakes\\QueueFake' => __DIR__ . '/..' . '/illuminate/support/Testing/Fakes/QueueFake.php',
+        'Illuminate\\Support\\Timebox' => __DIR__ . '/..' . '/illuminate/support/Timebox.php',
         'Illuminate\\Support\\Traits\\CapsuleManagerTrait' => __DIR__ . '/..' . '/illuminate/support/Traits/CapsuleManagerTrait.php',
         'Illuminate\\Support\\Traits\\Conditionable' => __DIR__ . '/..' . '/illuminate/support/Traits/Conditionable.php',
         'Illuminate\\Support\\Traits\\EnumeratesValues' => __DIR__ . '/..' . '/illuminate/collections/Traits/EnumeratesValues.php',
@@ -1731,9 +1751,9 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf04a661e6efe116d07a3be75375dae33::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf04a661e6efe116d07a3be75375dae33::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitf04a661e6efe116d07a3be75375dae33::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcb8b979588fe8c4083cbf003d8e3a695::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcb8b979588fe8c4083cbf003d8e3a695::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitcb8b979588fe8c4083cbf003d8e3a695::$classMap;
 
         }, null, ClassLoader::class);
     }

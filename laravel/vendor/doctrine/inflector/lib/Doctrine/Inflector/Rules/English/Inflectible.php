@@ -11,10 +11,8 @@ use Doctrine\Inflector\Rules\Word;
 
 class Inflectible
 {
-    /**
-     * @return Transformation[]
-     */
-    public static function getSingular() : iterable
+    /** @return Transformation[] */
+    public static function getSingular(): iterable
     {
         yield new Transformation(new Pattern('(s)tatuses$'), '\1\2tatus');
         yield new Transformation(new Pattern('(s)tatus$'), '\1\2tatus');
@@ -56,13 +54,13 @@ class Inflectible
         yield new Transformation(new Pattern('(f)eet$'), '\1oot');
         yield new Transformation(new Pattern('(n)ews$'), '\1\2ews');
         yield new Transformation(new Pattern('eaus$'), 'eau');
+        yield new Transformation(new Pattern('^tights$'), 'tights');
+        yield new Transformation(new Pattern('^shorts$'), 'shorts');
         yield new Transformation(new Pattern('s$'), '');
     }
 
-    /**
-     * @return Transformation[]
-     */
-    public static function getPlural() : iterable
+    /** @return Transformation[] */
+    public static function getPlural(): iterable
     {
         yield new Transformation(new Pattern('(s)tatus$'), '\1\2tatuses');
         yield new Transformation(new Pattern('(quiz)$'), '\1zes');
@@ -91,16 +89,16 @@ class Inflectible
         yield new Transformation(new Pattern('$'), 's');
     }
 
-    /**
-     * @return Substitution[]
-     */
-    public static function getIrregular() : iterable
+    /** @return Substitution[] */
+    public static function getIrregular(): iterable
     {
         yield new Substitution(new Word('atlas'), new Word('atlases'));
         yield new Substitution(new Word('axe'), new Word('axes'));
         yield new Substitution(new Word('beef'), new Word('beefs'));
+        yield new Substitution(new Word('blouse'), new Word('blouses'));
         yield new Substitution(new Word('brother'), new Word('brothers'));
         yield new Substitution(new Word('cafe'), new Word('cafes'));
+        yield new Substitution(new Word('cave'), new Word('caves'));
         yield new Substitution(new Word('chateau'), new Word('chateaux'));
         yield new Substitution(new Word('niveau'), new Word('niveaux'));
         yield new Substitution(new Word('child'), new Word('children'));
@@ -151,6 +149,7 @@ class Inflectible
         yield new Substitution(new Word('runner-up'), new Word('runners-up'));
         yield new Substitution(new Word('safe'), new Word('safes'));
         yield new Substitution(new Word('sex'), new Word('sexes'));
+        yield new Substitution(new Word('sieve'), new Word('sieves'));
         yield new Substitution(new Word('soliloquy'), new Word('soliloquies'));
         yield new Substitution(new Word('son-in-law'), new Word('sons-in-law'));
         yield new Substitution(new Word('syllabus'), new Word('syllabi'));
