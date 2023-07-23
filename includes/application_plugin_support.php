@@ -37,6 +37,9 @@ foreach ($installedPlugins as $plugin) {
     $filePathPluginAdmin[$plugin['unique_key']] = $filePathAdmin;
     $filePathPluginCatalog[$plugin['unique_key']] = $filePathCatalog;
 
+    if (file_exists($filePath . 'psr4AutoLoader.php')) {
+        require_once($filePath . 'psr4AutoLoader.php');
+    }
 }
 
 unset($context);
