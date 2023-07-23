@@ -413,23 +413,23 @@ function zen_get_admin_name($id = null)
     return $result->RecordCount() ? $result->fields['admin_name'] : null;
 }
 
-// Compatibility 
+// Compatibility
 
 function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
-   return zen_draw_pulldown_products($field_name, $parameters, $exclude, $show_id, $set_selected, $show_model, $show_current_category, $order_by, $filter_by_option_name); 
+   return zen_draw_pulldown_products($field_name, $parameters, $exclude, $show_id, $set_selected, $show_model, $show_current_category, $order_by, $filter_by_option_name);
 }
 
 function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
-   return zen_draw_pulldown_products_having_attributes($field_name, $parameters, $exclude, $order_by, $filter_by_option_name); 
+   return zen_draw_pulldown_products_having_attributes($field_name, $parameters, $exclude, $order_by, $filter_by_option_name);
 }
- 
+
 function zen_draw_products_pull_down_categories($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false) {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
-   return zen_draw_pulldown_categories_having_products($field_name, $parameters, $exclude, $show_id, $show_parent); 
+   return zen_draw_pulldown_categories_having_products($field_name, $parameters, $exclude, $show_id, $show_parent);
 }
 
 function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null){
@@ -437,9 +437,8 @@ function zen_draw_products_pull_down_categories_attributes($field_name, $paramet
    return zen_draw_pulldown_categories_having_products_with_attributes($field_name, $parameters, $exclude, $show_full_path, $filter_by_option_name);
 }
 
-function zen_get_orders_status() 
+function zen_get_orders_status()
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
-   return zen_get_orders_status_pulldown_array(); 
+   return zen_get_orders_status_pulldown_array();
 }
-

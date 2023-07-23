@@ -49,7 +49,7 @@ final class WrappedListener
             $r = new \ReflectionFunction($listener);
             if (str_contains($r->name, '{closure}')) {
                 $this->pretty = $this->name = 'closure';
-            } elseif ($class = $r->getClosureScopeClass()) {
+            } elseif ($class = \PHP_VERSION_ID >= 80111 ? $r->getClosureCalledClass() : $r->getClosureScopeClass()) {
                 $this->name = $class->name;
                 $this->pretty = $this->name.'::'.$r->name;
             } else {
@@ -114,10 +114,12 @@ final class WrappedListener
 
         $e = $this->stopwatch->start($this->name, 'event_listener');
 
-        ($this->optimizedListener ?? $this->listener)($event, $eventName, $dispatcher);
-
-        if ($e->isStarted()) {
-            $e->stop();
+        try {
+            ($this->optimizedListener ?? $this->listener)($event, $eventName, $dispatcher);
+        } finally {
+            if ($e->isStarted()) {
+                $e->stop();
+            }
         }
 
         if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
