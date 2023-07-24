@@ -282,6 +282,27 @@ systemChecks:
     methods:
       checkHttpsRequest:
 
+  checkDBVersion200:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '2.0.0'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v2.0.0') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: fieldSchema
+            tableName: products
+            fieldName: products_mpn
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: orders_products
+            fieldName: products_mpn
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: shipping_tax_rate
+            fieldCheck: Exists
+
   checkDBVersion158:
     runLevel: dbVersion
     errorLevel: WARN
