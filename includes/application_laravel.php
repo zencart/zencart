@@ -15,6 +15,11 @@ use Illuminate\View\FileViewFinder;
 use Illuminate\Filesystem\Filesystem as IFilesystem;
 
 
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../laravel/app/bootstrap/app.php';
+
+die('HERE');
+
 $pathsToViews = [DIR_FS_CATALOG . 'laravel/resources/views'];
 $pathToCompiledViews = DIR_FS_CATALOG . 'laravel/resources/compiled';
 
@@ -60,6 +65,8 @@ $container->instance('Illuminate\View\Factory', $factory);
 
 
 $router = new Router($events, $container);
+$container->instance('Illuminate\Routing\Router', $router);
+
 $globalMiddleware = [
     \App\Http\Middleware\StartSession::class,
 ];
@@ -78,7 +85,7 @@ foreach ($routeMiddleware as $key => $middleware) {
 
 require_once DIR_FS_CATALOG . 'laravel/routes/web.php';
 require_once DIR_FS_CATALOG . 'laravel/routes/auth.php';
-
+Container::setInstance($container);
 try {
     $response = ($pipeline)
         ->send($lRequest)
@@ -93,33 +100,5 @@ try {
 
 } catch (Exception $e) {
     dd($e);
+    session_destroy();
 }
-
-function view($view = null, $data = [], $mergeData = [])
-{
-    $factory = app(Factory::class);
-
-    if (func_num_args() === 0) {
-        return $factory;
-    }
-
-    return $factory->make($view, $data, $mergeData);
-}
-
-function redirect($to = null, $status = 302, $headers = [], $secure = null)
-{
-    if (is_null($to)) {
-        return app('redirect');
-    }
-
-    return app('redirect')->to($to, $status, $headers, $secure);
-}
-function app($abstract = null, array $parameters = [])
-{
-    if (is_null($abstract)) {
-        return Container::getInstance();
-    }
-
-    return Container::getInstance()->make($abstract, $parameters);
-}
-

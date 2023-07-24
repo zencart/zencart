@@ -2,6 +2,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Container\Container;
+use Illuminate\Routing\Router;
 
 class Authenticate
 {
@@ -13,12 +15,10 @@ class Authenticate
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function redirectTo($request)
     {
-        if (! isset($_SESSION['user'])) {
-            return redirect('developer/login');
+        if (! $request->expectsJson()) {
+            return route('login');
         }
-
-        return $next($request);
     }
 }
