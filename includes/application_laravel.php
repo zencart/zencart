@@ -13,12 +13,24 @@ use Illuminate\View\Engines\PhpEngine;
 use Illuminate\View\Factory;
 use Illuminate\View\FileViewFinder;
 use Illuminate\Filesystem\Filesystem as IFilesystem;
+use Illuminate\Contracts\Http\Kernel;
 
 
-require __DIR__.'/../vendor/autoload.php';
-$app = require_once __DIR__.'/../laravel/app/bootstrap/app.php';
+require __DIR__ . '/../laravel/vendor/autoload.php';
+$app = require_once __DIR__ . '/../laravel/bootstrap/app.php';
+$kernel = $app->make(Kernel::class);
 
-die('HERE');
+try {
+    $response = $kernel->handle(
+        $request = Request::capture()
+    )->send();
+
+    $kernel->terminate($request, $response);
+
+} catch (\Exception $e) {
+    dd($e);
+}
+
 
 $pathsToViews = [DIR_FS_CATALOG . 'laravel/resources/views'];
 $pathToCompiledViews = DIR_FS_CATALOG . 'laravel/resources/compiled';
