@@ -144,6 +144,26 @@ function zen_get_module_sidebox_directory($check_file)
     return $template_dir_select . $zv_filename;
 }
 
+/**
+ * Find module directory for admin product-type modules
+ */
+function zen_get_admin_module_from_directory(string $product_type, string $filename_to_check, bool $dir_only = false): string
+{
+    global $zc_products;
+
+    $dir = DIR_WS_MODULES;
+    $product_type_foldername = $zc_products->get_handler($product_type);
+    if (file_exists(DIR_WS_MODULES . $product_type_foldername . '/' . $filename_to_check)) {
+        $dir = DIR_WS_MODULES . $product_type_foldername . '/';
+    }
+
+    // As of v2.0.0 $dir_only is not currently used by core code, but is here for the convenience of plugins.
+    if ($dir_only === true) {
+        return $dir;
+    }
+
+    return $dir . $filename_to_check;
+}
 
 /**
  * Find index_filters directory

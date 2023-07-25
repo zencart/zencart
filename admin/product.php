@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Dec 24 Modified in v1.5.8-alpha $
@@ -19,19 +19,11 @@ if (!empty($action)) {
 
     case 'insert_product_meta_tags':
     case 'update_product_meta_tags':
-      if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product_meta_tags.php')) {
-        require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product_meta_tags.php');
-      } else {
-        require(DIR_WS_MODULES . 'update_product_meta_tags.php');
-      }
+      require zen_get_admin_module_from_directory($product_type, 'update_product_meta_tags.php');
       break;
     case 'insert_product':
     case 'update_product':
-      if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product.php')) {
-        require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/update_product.php');
-      } else {
-        require(DIR_WS_MODULES . 'update_product.php');
-      }
+      require zen_get_admin_module_from_directory($product_type, 'update_product.php');
       break;
     case 'new_product_preview':
       if (!isset($_POST['master_categories_id'])
@@ -41,11 +33,7 @@ if (!empty($action)) {
           $action = 'new_product';
           break;
       }
-      if (file_exists(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php')) {
-        require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/new_product_preview.php');
-      } else {
-        require(DIR_WS_MODULES . 'new_product_preview.php');
-      }
+      require zen_get_admin_module_from_directory($product_type, 'new_product_preview.php');
       break;
     case 'new_product_preview_meta_tags':
       if (!isset($_POST['products_price_sorter']) || !isset($_POST['products_model'])) {
@@ -97,13 +85,13 @@ $languages = zen_get_languages();
     <!-- body_text //-->
     <?php
     if ($action == 'new_product_meta_tags') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info_metatags.php');
+      require zen_get_admin_module_from_directory($product_type, 'collect_info_metatags.php');
     } elseif ($action == 'new_product') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/collect_info.php');
+      require zen_get_admin_module_from_directory($product_type, 'collect_info.php');
     } elseif ($action == 'new_product_preview_meta_tags') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info_meta_tags.php');
+      require zen_get_admin_module_from_directory($product_type, 'preview_info_meta_tags.php');
     } elseif ($action == 'new_product_preview') {
-      require(DIR_WS_MODULES . $zc_products->get_handler($product_type) . '/preview_info.php');
+      require zen_get_admin_module_from_directory($product_type, 'preview_info.php');
     }
     ?>
     <!-- body_text_eof //-->
