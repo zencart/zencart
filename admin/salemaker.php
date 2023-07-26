@@ -173,13 +173,16 @@ if (!empty($action)) {
 */?>
         function RowClick(RowValue) {
             for (i = 0; i < document.sale_form.length; i++) {
-                if (document.sale_form.elements[i].type == 'checkbox') {
-                    if (document.sale_form.elements[i].value == RowValue) {
-                        if (document.sale_form.elements[i].disabled == false) {
-                            document.sale_form.elements[i].checked = !document.sale_form.elements[i].checked;
-                        }
-                    }
+                if (document.sale_form.elements[i].type != 'checkbox') {
+                    continue;
                 }
+                if (document.sale_form.elements[i].value != RowValue) {
+                    continue;
+                }
+                if (document.sale_form.elements[i].disabled != false) {
+                    continue;
+                }
+                document.sale_form.elements[i].checked = !document.sale_form.elements[i].checked;
             }
             SetCategories()
         }
@@ -203,32 +206,37 @@ if (!empty($action)) {
             while (change) {
                 change = false;
                 for (i = 0; i < document.sale_form.length; i++) {
-                    if (document.sale_form.elements[i].type == 'checkbox') {
-                        currentcheckbox = document.sale_form.elements[i];
-                        currentrow = currentcheckbox.parentNode.parentNode;
-                        if ((currentcheckbox.checked) && (currentrow.className == 'SaleMakerOver')) {
-                            currentrow.className = 'SaleMakerSelected';
-                            for (j = 0; j < document.sale_form.length; j++) {
-                                if (document.sale_form.elements[j].type == 'checkbox') {
-                                    relatedcheckbox = document.sale_form.elements[j];
-                                    relatedrow = relatedcheckbox.parentNode.parentNode;
-                                    if ((relatedcheckbox != currentcheckbox) && (relatedcheckbox.value.substr(0, currentcheckbox.value.length) == currentcheckbox.value)) {
-                                        if (!relatedcheckbox.disabled) {
+                    if (document.sale_form.elements[i].type != 'checkbox') {
+                        continue;
+                    }
+                    currentcheckbox = document.sale_form.elements[i];
+                    currentrow = currentcheckbox.parentNode.parentNode;
+                    if (!((currentcheckbox.checked) && (currentrow.className == 'SaleMakerOver'))) {
+                        continue;
+                    }
+                    currentrow.className = 'SaleMakerSelected';
+                    for (j = 0; j < document.sale_form.length; j++) {
+                        if (document.sale_form.elements[j].type != 'checkbox') {
+                            continue;
+                        }
+                        relatedcheckbox = document.sale_form.elements[j];
+                        relatedrow = relatedcheckbox.parentNode.parentNode;
+                        if (!((relatedcheckbox != currentcheckbox) && (relatedcheckbox.value.substr(0, currentcheckbox.value.length) == currentcheckbox.value))) {
+                            continue;
+                        }
+                        if (relatedcheckbox.disabled) {
+                            continue;
+                        }
   <?php
   if ((defined('AUTOCHECK')) && (AUTOCHECK == 'True')) {
     ?>
-                                              relatedcheckbox.checked = true;
+                        relatedcheckbox.checked = true;
     <?php
   }
   ?>
-                                            relatedcheckbox.disabled = true;
-                                            relatedrow.className = 'SaleMakerDisabled';
-                                            change = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        relatedcheckbox.disabled = true;
+                        relatedrow.className = 'SaleMakerDisabled';
+                        change = true;
                     }
                 }
             }
@@ -254,6 +262,7 @@ if (!empty($action)) {
     <?php
     if (($action == 'new') || ($action == 'edit')) {
       $form_action = 'insert';
+      $obj_array = [];
       if (($action == 'edit') && ($_GET['sID'])) {
         $form_action = 'update';
 
@@ -264,10 +273,9 @@ if (!empty($action)) {
                                          FROM " . TABLE_SALEMAKER_SALES . "
                                          WHERE sale_id = " . (int)$_GET['sID']);
 
-        $sInfo = new objectInfo($salemaker_sales->fields);
-      } else {
-        $sInfo = new objectInfo(array());
+        $obj_array = $salemaker_sales->fields;
       }
+      $sInfo = new objectInfo($obj_array);
       ?>
       <script>
         var StartDate = new ctlSpiffyCalendarBox("StartDate", "sale_form", "start", "btnDate1", "<?php echo (($sInfo->sale_date_start == '0001-01-01') ? '' : zen_date_short($sInfo->sale_date_start)); ?>", scBTNMODE_CUSTOMBLUE);
@@ -350,33 +358,31 @@ if (!empty($action)) {
         }
         $categories_array[$i]['path'] = $categories_array[$i]['path'] . '_';
       }
+      $selected = false;
       if (zen_not_null($sInfo->sale_categories_selected)) {
         $categories_selected = explode(',', $sInfo->sale_categories_selected);
         $selected = in_array(TOPMOST_CATEGORY_PARENT_ID, $categories_selected);
-      } else {
-        $selected = false;
       }
 
       if (!empty($_GET['sID'])) {
-         $prev_sales = $db->Execute("SELECT sale_categories_all
-                                     FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1 AND sale_id != " . (int)$_GET['sID']);
-         foreach ($prev_sales as $prev_sale) {
-           $prev_categories = explode(',', $prev_sale['sale_categories_all']);
-           foreach ($prev_categories as $key => $value) {
-               if ($value && isset($prev_categories_array[$value])) {
-                   $prev_categories_array[$value] ++;
-               } else {
-                   $prev_categories_array[$value] = 1;
-               }
-           }
-         }
+        $prev_sales = $db->Execute("SELECT sale_categories_all
+                                    FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1 AND sale_id != " . (int)$_GET['sID']);
+        foreach ($prev_sales as $prev_sale) {
+          $prev_categories = explode(',', $prev_sale['sale_categories_all']);
+          foreach ($prev_categories as $key => $value) {
+            if ($value && isset($prev_categories_array[$value])) {
+              $prev_categories_array[$value] ++;
+            } else {
+              $prev_categories_array[$value] = 1;
+            }
+          }
+        }
       }
 
 // set Entire Catalog when set
+      $zc_check_all_cats = 0;
       if (empty($sInfo->sale_categories_selected) && !empty($sInfo->sale_categories_all)) {
         $zc_check_all_cats = 1;
-      } else {
-        $zc_check_all_cats = 0;
       }
       ?>
       <div class="form-group">
@@ -398,10 +404,9 @@ if (!empty($action)) {
       </div>
       <?php
       foreach ($categories_array as $category) {
+        $selected = false;
         if (zen_not_null($sInfo->sale_categories_selected)) {
           $selected = in_array($category['categories_id'], $categories_selected);
-        } else {
-          $selected = false;
         }
         ?>
         <div class="form-group row">

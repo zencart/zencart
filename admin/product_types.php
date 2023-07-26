@@ -5,11 +5,15 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Steve 2023 Feb 09 Modified in v1.5.8a $
  */
-require('includes/application_top.php');
+require 'includes/application_top.php';
 
 $action = ($_GET['action'] ?? '');
-if (!isset($_GET['cID'])) $_GET['cID'] = '';
-if (!isset($_GET['gID'])) $_GET['gID'] = '';
+if (!isset($_GET['cID'])) {
+  $_GET['cID'] = '';
+}
+if (!isset($_GET['gID'])) {
+  $_GET['gID'] = '';
+}
 
 if (!empty($action)) {
   switch ($action) {
@@ -17,12 +21,12 @@ if (!empty($action)) {
       $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
       $cID = zen_db_prepare_input($_GET['cID']);
 
-      $db->Execute("UPDATE " . TABLE_PRODUCT_TYPE_LAYOUT . "
+      $db->Execute('UPDATE ' . TABLE_PRODUCT_TYPE_LAYOUT . "
                     SET configuration_value = '" . zen_db_input($configuration_value) . "',
                         last_modified = now()
                     WHERE configuration_id = " . (int)$cID);
-      $configuration_query = "SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue
-                              FROM " . TABLE_PRODUCT_TYPE_LAYOUT;
+      $configuration_query = 'SELECT configuration_key AS cfgkey, configuration_value AS cfgvalue
+                              FROM ' . TABLE_PRODUCT_TYPE_LAYOUT;
 
       zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'gID=' . $_GET['gID'] . '&cID=' . $cID . '&ptID=' . $_GET['ptID'] . '&action=layout'));
       break;
@@ -38,27 +42,29 @@ if (!empty($action)) {
       $sql_data_array = [
         'type_name' => $type_name,
         'type_handler' => $handler,
-        'allow_add_to_cart' => $allow_add_to_cart
+        'allow_add_to_cart' => $allow_add_to_cart,
       ];
 
-      if ($action == 'insert') {
-        $insert_sql_data = ['date_added' => 'now()'];
+      if ($action === 'insert') {
+        $insert_sql_data = [
+          'date_added' => 'now()',
+        ];
 
         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
         zen_db_perform(TABLE_PRODUCT_TYPES, $sql_data_array);
         $type_id = $db->insert_ID();
-      } elseif ($action == 'save') {
+      } elseif ($action === 'save') {
         $master_type = zen_db_prepare_input($_POST['master_type']);
 
         $update_sql_data = [
           'last_modified' => 'now()',
-          'type_master_type' => $master_type
+          'type_master_type' => $master_type,
         ];
 
         $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
-        zen_db_perform(TABLE_PRODUCT_TYPES, $sql_data_array, 'update', "type_id = " . (int)$type_id);
+        zen_db_perform(TABLE_PRODUCT_TYPES, $sql_data_array, 'update', 'type_id = ' . (int)$type_id);
       }
 
       $type_image = new upload('default_image');
@@ -66,12 +72,12 @@ if (!empty($action)) {
       $type_image->set_destination(DIR_FS_CATALOG_IMAGES . $_POST['img_dir']);
       if ($type_image->parse() && $type_image->save()) {
         // remove image from database if none
-        if ($type_image->filename != 'none') {
-          $db->Execute("UPDATE " . TABLE_PRODUCT_TYPES . "
+        if ($type_image->filename !== 'none') {
+          $db->Execute('UPDATE ' . TABLE_PRODUCT_TYPES . "
                         SET default_image = '" . zen_db_input($_POST['img_dir'] . $type_image->filename) . "'
                         WHERE type_id = " . (int)$type_id);
         } else {
-          $db->Execute("UPDATE " . TABLE_PRODUCT_TYPES . "
+          $db->Execute('UPDATE ' . TABLE_PRODUCT_TYPES . "
                         SET default_image = ''
                         WHERE type_id = " . (int)$type_id);
         }
@@ -82,34 +88,35 @@ if (!empty($action)) {
     case 'deleteconfirm':
       $type_id = zen_db_prepare_input($_POST['ptID']);
 
-      if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
-        $product_type = $db->Execute("SELECT default_image
-                                      FROM " . TABLE_PRODUCT_TYPES . "
-                                      WHERE type_id = " . (int)$type_id);
+      if (isset($_POST['delete_image']) && ($_POST['delete_image'] === 'on')) {
+        $product_type = $db->Execute('SELECT default_image
+                                      FROM ' . TABLE_PRODUCT_TYPES . '
+                                      WHERE type_id = ' . (int)$type_id);
 
         $image_location = DIR_FS_CATALOG_IMAGES . $product_type->fields['default_image'];
 
-        if (file_exists($image_location))
+        if (file_exists($image_location)) {
           unlink($image_location);
+        }
       }
 
-      $db->Execute("DELETE FROM " . TABLE_PRODUCT_TYPES . "
-                    WHERE type_id = " . (int)$type_id);
-//        $db->Execute("delete from " . TABLE_PRODUCT_TYPES_INFO . "
-//                      where manufacturers_id = '" . (int)$manufacturers_id . "'");
+      $db->Execute('DELETE FROM ' . TABLE_PRODUCT_TYPES . '
+                    WHERE type_id = ' . (int)$type_id);
+//        $db->Execute('delete from ' . TABLE_PRODUCT_TYPES_INFO . '
+//                      where manufacturers_id = ' . (int)$manufacturers_id);
 
-      if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
-        $products = $db->Execute("SELECT products_id
-                                  FROM " . TABLE_PRODUCTS . "
-                                  WHERE products_type = " . (int)$type_id);
+      if (isset($_POST['delete_products']) && ($_POST['delete_products'] === 'on')) {
+        $products = $db->Execute('SELECT products_id
+                                  FROM ' . TABLE_PRODUCTS . '
+                                  WHERE products_type = ' . (int)$type_id);
 
         foreach ($products as $product) {
           zen_remove_product($product['products_id']);
         }
       } else {
-        $db->Execute("UPDATE " . TABLE_PRODUCTS . "
+        $db->Execute('UPDATE ' . TABLE_PRODUCTS . '
                       SET products_type = 1
-                      WHERE products_type = " . (int)$type_id);
+                      WHERE products_type = ' . (int)$type_id);
       }
 
       zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page']));
@@ -124,15 +131,15 @@ if (!empty($action)) {
   </head>
   <body>
     <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+    <?php require DIR_WS_INCLUDES . 'header.php'; ?>
     <!-- header_eof //-->
     <div class="container-fluid">
       <!-- body //-->
       <?php
-      if (isset($_GET['action']) && ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit')) {
-        $sql = "SELECT type_name
-                FROM " . TABLE_PRODUCT_TYPES . "
-                WHERE type_id = " . (int)$_GET['ptID'];
+      if (isset($_GET['action']) && ($_GET['action'] === 'layout' || $_GET['action'] === 'layout_edit')) {
+        $sql = 'SELECT type_name
+                FROM ' . TABLE_PRODUCT_TYPES . '
+                WHERE type_id = ' . (int)$_GET['ptID'];
         $type_name = $db->Execute($sql);
         ?>
         <h1><?php echo HEADING_TITLE_LAYOUT . $type_name->fields['type_name']; ?></h1>
@@ -150,17 +157,17 @@ if (!empty($action)) {
               </thead>
               <tbody>
                 <?php
-                $configuration = $db->Execute("SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
-                                               FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
-                                               WHERE product_type_id = " . (int)$_GET['ptID'] . "
-                                               ORDER BY sort_order");
+                $configuration = $db->Execute('SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
+                                               FROM ' . TABLE_PRODUCT_TYPE_LAYOUT . '
+                                               WHERE product_type_id = ' . (int)$_GET['ptID'] . '
+                                               ORDER BY sort_order');
                 foreach ($configuration as $item) {
                   if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
                       $class_method = explode('->', $use_function);
                       if (!is_object(${$class_method[0]})) {
-                        include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                        include DIR_WS_CLASSES . $class_method[0] . '.php';
                         ${$class_method[0]} = new $class_method[0]();
                       }
                       $cfgValue = zen_call_function($class_method[1], $item['configuration_value'], ${$class_method[0]});
@@ -171,10 +178,10 @@ if (!empty($action)) {
                     $cfgValue = $item['configuration_value'];
                   }
 
-                  if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $item['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-                    $cfg_extra = $db->Execute("SELECT configuration_key, configuration_description, date_added, last_modified, use_function, set_function
-                                                         FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
-                                                         WHERE configuration_id = " . (int)$item['configuration_id']);
+                  if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] === $item['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) !== 'new')) {
+                    $cfg_extra = $db->Execute('SELECT configuration_key, configuration_description, date_added, last_modified, use_function, set_function
+                                                         FROM ' . TABLE_PRODUCT_TYPE_LAYOUT . '
+                                                         WHERE configuration_id = ' . (int)$item['configuration_id']);
                     $cInfo_array = array_merge($item, $cfg_extra->fields);
                     $cInfo = new objectInfo($cInfo_array);
                   }
@@ -217,7 +224,7 @@ if (!empty($action)) {
                 }
 
                 $contents = ['form' => zen_draw_form('configuration', FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_save')];
-                if (ADMIN_CONFIGURATION_KEY_ON == 1) {
+                if (ADMIN_CONFIGURATION_KEY_ON === '1') {
                   $contents[] = ['text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>'];
                 }
                 $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
@@ -228,7 +235,7 @@ if (!empty($action)) {
                 if (isset($cInfo) && is_object($cInfo)) {
                   $heading[] = ['text' => '<h4>' . $cInfo->configuration_title . '</h4>'];
 
-                  if (ADMIN_CONFIGURATION_KEY_ON == 1) {
+                  if (ADMIN_CONFIGURATION_KEY_ON === '1') {
                     $contents[] = ['text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>'];
                   }
                   $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
@@ -267,21 +274,21 @@ if (!empty($action)) {
               </thead>
               <tbody>
                 <?php
-                $product_types_query_raw = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
+                $product_types_query_raw = 'SELECT * FROM ' . TABLE_PRODUCT_TYPES;
                 $product_types_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $product_types_query_raw, $product_types_query_numrows);
                 $product_types = $db->Execute($product_types_query_raw);
                 foreach ($product_types as $product_type) {
-                  if ((!isset($_GET['ptID']) || (isset($_GET['ptID']) && ($_GET['ptID'] == $product_type['type_id']))) && !isset($ptInfo) && (substr($action, 0, 3) != 'new')) {
-                    $product_type_products = $db->Execute("SELECT COUNT(*) AS products_count
-                                                           FROM " . TABLE_PRODUCTS . "
-                                                           WHERE products_type = " . (int)$product_type['type_id']);
+                  if ((!isset($_GET['ptID']) || (isset($_GET['ptID']) && ($_GET['ptID'] === $product_type['type_id']))) && !isset($ptInfo) && (substr($action, 0, 3) !== 'new')) {
+                    $product_type_products = $db->Execute('SELECT COUNT(*) AS products_count
+                                                           FROM ' . TABLE_PRODUCTS . '
+                                                           WHERE products_type = ' . (int)$product_type['type_id']);
 
                     $ptInfo_array = array_merge($product_type, $product_type_products->fields);
 
                     $ptInfo = new objectInfo($ptInfo_array);
                   }
 
-                  if (isset($ptInfo) && is_object($ptInfo) && ($product_type['type_id'] == $ptInfo->type_id)) {
+                  if (isset($ptInfo) && is_object($ptInfo) && ($product_type['type_id'] === $ptInfo->type_id)) {
                     echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id'] . '&action=layout') . '\'" role="button">' . "\n";
                   } else {
                     echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id']) . '\'" role="button">' . "\n";
@@ -290,7 +297,7 @@ if (!empty($action)) {
                 <td class="dataTableContent"><?php echo $product_type['type_name']; ?></td>
                 <td class="dataTableContent text-center"><?php echo $product_type['allow_add_to_cart']; ?></td>
                 <td class="dataTableContent text-right"><?php
-                  if ((isset($ptInfo) && is_object($ptInfo)) && ($product_type['type_id'] == $ptInfo->type_id)) {
+                  if ((isset($ptInfo) && is_object($ptInfo)) && ($product_type['type_id'] === $ptInfo->type_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
                     echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_type['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
@@ -327,13 +334,13 @@ if (!empty($action)) {
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir' ,'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"')];
                 $contents[] = ['text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_HANDLER, 'handler', 'class="control-label"') . zen_draw_input_field('handler', $ptInfo->type_handler, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_handler') . ' class="form-control"')];
-                $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_ALLOW_ADD_CART, 'catalog_add_to_cart', 'class="control-label"') . zen_draw_checkbox_field('catalog_add_to_cart', $ptInfo->allow_add_to_cart, $ptInfo->allow_add_to_cart == 'Y', 'class="form-control"')];
-                $sql = "SELECT type_id, type_name FROM " . TABLE_PRODUCT_TYPES;
+                $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_ALLOW_ADD_CART, 'catalog_add_to_cart', 'class="control-label"') . zen_draw_checkbox_field('catalog_add_to_cart', $ptInfo->allow_add_to_cart, $ptInfo->allow_add_to_cart === 'Y', 'class="form-control"')];
+                $sql = 'SELECT type_id, type_name FROM ' . TABLE_PRODUCT_TYPES;
                 $product_type_list = $db->Execute($sql);
                 foreach ($product_type_list as $item) {
                   $product_type_array[] = [
                     'text' => $item['type_name'],
-                    'id' => $item['type_id']
+                    'id' => $item['type_id'],
                   ];
                 }
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_MASTER_TYPE, 'master_type', 'class="control-label"') . zen_draw_pull_down_menu('master_type', $product_type_array, $ptInfo->type_master_type, 'class="form-control"')];
@@ -389,8 +396,8 @@ if (!empty($action)) {
       <!-- body_eof //-->
     </div>
     <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+    <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>

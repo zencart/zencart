@@ -8,21 +8,19 @@
 /*
  * Set time zone
 */
-  // put your timezone here. Refer to http://www.php.net/manual/en/timezones.php
-  $TZ = '';  // eg: 'Europe/Oslo'
+// put your timezone here. Refer to http://www.php.net/manual/en/timezones.php
+$TZ = '';  // eg: 'Europe/Oslo'
 
-
-
-  /**
-   * MAKE NO CHANGES BELOW THIS LINE
-   *
-   * The following will take the timezone you specified above and apply it in your store.
-   * If you didn't specify one, it will try to use the setting from your server's PHP configuration
-   */
-  if ($TZ == '') {
+/**
+* MAKE NO CHANGES BELOW THIS LINE
+*
+* The following will take the timezone you specified above and apply it in your store.
+* If you didn't specify one, it will try to use the setting from your server's PHP configuration
+*/
+if ($TZ === '') {
     $TZ = date_default_timezone_get();
-  }
-  if ($TZ != '') {
+}
+if ($TZ !== '') {
     putenv('TZ=' . $TZ);
-    @date_default_timezone_set($TZ);
-  }
+    date_default_timezone_set($TZ);
+}

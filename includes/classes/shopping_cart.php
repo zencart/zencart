@@ -133,7 +133,7 @@ class shoppingCart extends base
                             // include attribute value: needed for text attributes
                             $attr_value = isset($this->contents[$products_id]['attributes_values'][$option]) ? $this->contents[$products_id]['attributes_values'][$option] : '';
 
-                            $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid($products_id), $option, $value);
+                            $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid((string)$products_id), $option, $value);
                             if ($attr_value) {
                                 $attr_value = zen_db_input($attr_value);
                             }
@@ -332,7 +332,7 @@ class shoppingCart extends base
                         if (zen_is_logged_in() && !zen_in_guest_checkout()) {
                             if (is_array($value)) {
                                 foreach ($value as $opt => $val) {
-                                    $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid($product_id), $option, $opt);
+                                    $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid((string)$product_id), $option, $opt);
                                     $sql = "INSERT INTO " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                                             (customers_id, products_id, products_options_id, products_options_value_id, products_options_sort_order)
                                             VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($product_id) . "',
@@ -343,7 +343,7 @@ class shoppingCart extends base
                                 if ($attr_value) {
                                     $attr_value = zen_db_input($attr_value);
                                 }
-                                $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid($product_id), $option, $value);
+                                $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid((string)$product_id), $option, $value);
                                 $sql = "INSERT INTO " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                                         (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text, products_options_sort_order)
                                         VALUES (" . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($product_id) . "',
@@ -440,7 +440,7 @@ class shoppingCart extends base
                         }
                         if (is_array($value)) {
                             foreach ($value as $opt => $val) {
-                                $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid($product_id), $option, $opt);
+                                $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid((string)$product_id), $option, $opt);
                                 $sql = "UPDATE " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                                         SET products_options_value_id = '" . (int)$val . "'
                                         WHERE customers_id = " . (int)$_SESSION['customer_id'] . "
@@ -1464,8 +1464,8 @@ class shoppingCart extends base
                 $virtual_check = false;
                 if (preg_match('/^GIFT/', addslashes($free_ship_check->fields['products_model']))) {
 // @TODO - fix GIFT price in cart special/attribute
-                    $gift_special = zen_get_products_special_price(zen_get_prid($products_id), true);
-                    $gift_pba = zen_get_products_price_is_priced_by_attributes(zen_get_prid($products_id));
+                    $gift_special = zen_get_products_special_price(zen_get_prid((string)$products_id), true);
+                    $gift_pba = zen_get_products_price_is_priced_by_attributes(zen_get_prid((string)$products_id));
 //echo '$products_id: ' . zen_get_prid($products_id) . ' price: ' . ($free_ship_check->fields['products_price'] + $this->attributes_price($products_id)) . ' vs special price: ' . $gift_special . ' qty: ' . $this->contents[$products_id]['qty'] . ' PBA: ' . ($gift_pba ? 'YES' : 'NO') . '<br>';
                     if (!$gift_pba && $gift_special != 0 && $gift_special != $free_ship_check->fields['products_price']) {
                         $gift_voucher += ($gift_special * $this->contents[$products_id]['qty']);
@@ -1602,14 +1602,14 @@ class shoppingCart extends base
 
         // compute total quantity regardless of attributes
         $in_cart_mixed_qty = 0;
-        $chk_products_id = zen_get_prid($product_id);
+        $chk_products_id = zen_get_prid((string)$product_id);
 
 // added for new code - Ajeh
         global $messageStack;
 
         $check_contents = $this->contents;
         foreach ($check_contents as $prod_id => $data) {
-            $test_id = zen_get_prid($prod_id);
+            $test_id = zen_get_prid((string)$prod_id);
 //$messageStack->add_session('header', 'Product: ' . $prod_id . ' test_id: ' . $test_id . '<br>', 'error');
             if ($test_id == $chk_products_id) {
 //$messageStack->add_session('header', 'MIXED: ' . $prod_id . ' test_id: ' . $test_id . ' qty:' . $check_contents[$products_id]['qty'] . ' in_cart_mixed_qty: ' . $in_cart_mixed_qty . '<br><br>', 'error');
@@ -1645,11 +1645,11 @@ class shoppingCart extends base
 
         // compute total quantity regardless of attributes
         $in_cart_mixed_qty_discount_quantity = 0;
-        $chk_products_id = zen_get_prid($product_id);
+        $chk_products_id = zen_get_prid((string)$product_id);
 
         $check_contents = $this->contents;
         foreach ($check_contents as $prod_id => $data) {
-            $test_id = zen_get_prid($prod_id);
+            $test_id = zen_get_prid((string)$prod_id);
             if ($test_id == $chk_products_id) {
                 $in_cart_mixed_qty_discount_quantity += $check_contents[$prod_id]['qty'];
             }
@@ -1678,7 +1678,7 @@ class shoppingCart extends base
         $in_cart_check_qty = 0;
 
         foreach ($this->contents as $products_id => $data) {
-            $testing_id = zen_get_prid($products_id);
+            $testing_id = zen_get_prid((string)$products_id);
             // check if field it true
             $product_check = $db->Execute("SELECT " . $check_what . " AS check_it FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$testing_id . " LIMIT 1");
             if ($product_check->fields['check_it'] == $check_value) {
@@ -1972,7 +1972,7 @@ class shoppingCart extends base
                          */
                         include_once(DIR_WS_CLASSES . 'upload.php');
                         for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
-                            if (isset($_POST[UPLOAD_PREFIX . $i]) && !empty($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) && (!isset($_POST[UPLOAD_PREFIX . $i]) || !isset($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) || ($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] != 'none'))) {
+                            if (isset($_POST[UPLOAD_PREFIX . $i]) && !empty($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]]) && ($_FILES['id']['tmp_name'][TEXT_PREFIX . $_POST[UPLOAD_PREFIX . $i]] !== 'none')) {
                                 $products_options_file = new upload('id');
                                 $products_options_file->set_destination(DIR_FS_UPLOADS);
                                 $products_options_file->set_output_messages('session');
@@ -2588,7 +2588,7 @@ class shoppingCart extends base
     {
         global $db;
 
-        $pr_id = zen_get_prid($product_id);
+        $pr_id = zen_get_prid((string)$product_id);
 
         if ($pr_id === 0) {
             return true;
@@ -2611,7 +2611,7 @@ class shoppingCart extends base
 
         for ($i = 0, $n = count($_POST['products_id']); $i < $n; $i++) {
             $products_id = $_POST['products_id'][$i];
-            $prs_id = zen_get_prid($products_id);
+            $prs_id = zen_get_prid((string)$products_id);
             $current_qty = $this->get_quantity($products_id); // $products[$i]['quantity']
             if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
                 $_POST['cart_quantity'][$i] = $current_qty; // Default response behavior in cart.
