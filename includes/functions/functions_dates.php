@@ -218,7 +218,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
         }
 
         $pos_month = strpos($format_string, 'mmm');
-        if ($pos_month != false) { // Should this be not exactly equal? Found at 0 is ok?
+        if ($pos_month !== false) {
             $month = substr($date_to_check, $pos_month, 3);
             $size = count($month_abbr);
             for ($i = 0; $i < $size; $i++) {

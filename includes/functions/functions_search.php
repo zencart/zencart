@@ -105,8 +105,9 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
                 */
                 $tmpstring .= ' ' . trim(preg_replace('/"/', ' ', $pieces[$k]));
 
-// Push the $tmpstring onto the array of stuff to search for
-                $objects[] = trim($tmpstring); // Why does this need to again be trimmed when everything else has been so far?
+// Push the $tmpstring onto the array of stuff to search for, trimming again, in case the above
+// statement added a leading space.
+                $objects[] = trim($tmpstring);
 
                 for ($j = 0, $n = count($post_objects); $j < $n; $j++) {
                     $objects[] = $post_objects[$j];
