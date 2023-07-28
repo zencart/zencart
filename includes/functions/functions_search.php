@@ -8,16 +8,16 @@
 
 ////
 // Parse search string into individual objects
-function zen_parse_search_string($search_str = '', &$objects = array()) {
+function zen_parse_search_string($search_str = '', &$objects = []) {
     $search_str = trim(strtolower($search_str));
 
 // Break up $search_str on whitespace; quoted string will be reconstructed later
     $pieces = preg_split('/[[:space:]]+/', $search_str);
-    $objects = array();
+    $objects = [];
     $tmpstring = '';
     $flag = '';
 
-    for ($k=0; $k<count($pieces); $k++) {
+    for ($k=0, $p_count = count($pieces); $k < $p_count; $k++) {
         while (substr($pieces[$k], 0, 1) == '(' && strpos($pieces[$k], ')', 1) == false) {
             $objects[] = '(';
             if (strlen($pieces[$k]) > 1) {
@@ -27,7 +27,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
             }
         }
 
-        $post_objects = array();
+        $post_objects = [];
 
         while (substr($pieces[$k], -1) == ')' && strpos($pieces[$k], '(') == false)  {
             $post_objects[] = ')';
@@ -80,7 +80,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
 
 // Keep reading until the end of the string as long as the $flag is on
 
-            while ( ($flag == 'on') && ($k < count($pieces)) ) {
+            while ( ($flag == 'on') && ($k < $p_count) ) {
                 while (substr($pieces[$k], -1) == ')') {
                     $post_objects[] = ')';
                     if (strlen($pieces[$k]) > 1) {
@@ -122,8 +122,8 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
     }
 
 // add default logical operators if needed
-    $temp = array();
-    for($i=0; $i<(count($objects)-1); $i++) {
+    $temp = [];
+    for ($i=0, $j=count($objects)-1; $i < $j; $i++) {
         $temp[] = $objects[$i];
         if ( ($objects[$i] != 'and') &&
             ($objects[$i] != 'or') &&
@@ -140,7 +140,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
     $keyword_count = 0;
     $operator_count = 0;
     $balance = 0;
-    for($i=0; $i<count($objects); $i++) {
+    for ($i=0, $j=count($objects); $i < $j; $i++) {
         if ($objects[$i] == '(') $balance --;
         if ($objects[$i] == ')') $balance ++;
         if ( ($objects[$i] == 'and') || ($objects[$i] == 'or') ) {
@@ -168,7 +168,7 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
             if ($startWithWhere) {
                 $where_str = " WHERE (";
             }
-            for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i++) {
+            for ($i = 0, $n = count($search_keywords); $i < $n; $i++) {
                 switch ($search_keywords[$i]) {
                     case '(':
                     case ')':
