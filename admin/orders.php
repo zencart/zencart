@@ -1340,7 +1340,7 @@ if (!empty($action) && $order_exists === true) {
 <?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
                 </td>
 <?php } ?>
-                <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '', '<hr>' => "----\n"]); ?>">
+                <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '', '<br />' => '', '<hr>' => "----\n"]); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
                 </td>
 <?php if ($quick_view_popover_enabled) { ?>
@@ -1349,7 +1349,7 @@ if (!empty($action) && $order_exists === true) {
                        data-trigger="focus"
                        data-placement="left"
                        title="<?php echo TEXT_PRODUCT_POPUP_TITLE; ?>"
-                       data-content="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '<br>']); ?>"
+                       data-content="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br />' => '<br>']); ?>"
                     >
                         <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
                     </a>
