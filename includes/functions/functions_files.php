@@ -147,7 +147,7 @@ function zen_get_module_sidebox_directory($check_file)
 /**
  * Find module directory for admin product-type modules
  */
-function zen_get_admin_module_from_directory(string $product_type, string $filename_to_check, bool $dir_only = false): string
+function zen_get_admin_module_from_directory(int $product_type, string $filename_to_check, bool $dir_only = false): string
 {
     global $zc_products;
 

@@ -10,7 +10,7 @@ require('includes/application_top.php');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
-$product_type = (isset($_POST['product_type']) ? $_POST['product_type'] : (isset($_GET['pID']) ? zen_get_products_type($_GET['pID']) : 1));
+$product_type = (isset($_POST['product_type']) ? (int)$_POST['product_type'] : (isset($_GET['pID']) ? zen_get_products_type($_GET['pID']) : 1));
 $type_handler = $zc_products->get_admin_handler($product_type);
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action, $action);
 

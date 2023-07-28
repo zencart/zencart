@@ -13,7 +13,7 @@ $currencies = new currencies();
 if (isset($_POST['products_id'])) {
     $product_type = zen_get_products_type($_POST['products_id']);
 } elseif (isset($_GET['product_type'])) {
-    $product_type = $_GET['product_type'];
+    $product_type = (int)$_GET['product_type'];
 } else {
     $product_type = 1;
 }
