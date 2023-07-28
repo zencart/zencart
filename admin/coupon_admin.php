@@ -102,7 +102,7 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $zco_notifier->notify('ADMIN_COUPON_CODE_EMAILED_TO_CUSTOMER', $coupon_result->fields['coupon_code'], $item['customers_email_address']);
     $recip_count++;
     // send copy to Admin if enabled
-    if (SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_STATUS == '1' and SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO != '') {
+    if (SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_STATUS == '1' && SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO != '') {
       zen_mail('', SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO, SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, '', $from, $html_msg, 'coupon_extra');
     }
   }
@@ -1251,8 +1251,7 @@ switch ($_GET['action']) {
 
                       $coupon_restrictions = $db->Execute("SELECT *
                                                            FROM " . TABLE_COUPON_RESTRICT . "
-                                                           WHERE coupon_id = " . (int)$item['coupon_id'] . "
-                                                           LIMIT 1");
+                                                           WHERE coupon_id = " . (int)$item['coupon_id'], 1);
                       ?>
                       <td class="dataTableContent"><?php echo $coupon_desc->fields['coupon_name']; ?></td>
                       <td class="dataTableContent text-center">
