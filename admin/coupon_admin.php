@@ -482,7 +482,7 @@ switch ($_GET['action']) {
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php
-    if ($editor_handler != '') {
+    if (!empty($editor_handler)) {
       include $editor_handler;
     }
     ?>

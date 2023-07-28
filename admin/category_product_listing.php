@@ -501,7 +501,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
                     AND cd.language_id = " . (int)$_SESSION['languages_id'];
 
-          if (isset($_GET['search']) && !empty($_GET['search'])) {
+          if (!empty($_GET['search'])) {
               $keyword_search_fields = [
                 'cd.categories_name',
                 'cd.categories_description',
