@@ -78,7 +78,7 @@ function zen_include_language_file($file, $folder, $page)
         if ($page === 'inline') {
 ?>
           <div class="messageStackCaution">
-             <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?> 
+             <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?>
           </div>
 <?php
         } else {
@@ -90,9 +90,9 @@ function zen_include_language_file($file, $folder, $page)
                 }
             }
         }
-        return false; 
+        return false;
     }
-    return true; 
+    return true;
 }
 
 /**
