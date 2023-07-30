@@ -90,8 +90,8 @@ use Nette;
  * @method void stringUp($font, $x, $y, string $s, $col)
  * @method void trueColorToPalette(bool $dither, $ncolors)
  * @method array ttfText($size, $angle, $x, $y, $color, string $fontfile, string $text)
- * @property-read int $width
- * @property-read int $height
+ * @property-read positive-int $width
+ * @property-read positive-int $height
  * @property-read \GdImage $imageResource
  */
 class Image
@@ -133,16 +133,16 @@ class Image
 
 	/** image types */
 	public const
-		JPEG = IMAGETYPE_JPEG,
-		PNG = IMAGETYPE_PNG,
-		GIF = IMAGETYPE_GIF,
-		WEBP = IMAGETYPE_WEBP,
-		AVIF = 19, // IMAGETYPE_AVIF,
-		BMP = IMAGETYPE_BMP;
+		JPEG = ImageType::JPEG,
+		PNG = ImageType::PNG,
+		GIF = ImageType::GIF,
+		WEBP = ImageType::WEBP,
+		AVIF = ImageType::AVIF,
+		BMP = ImageType::BMP;
 
 	public const EmptyGIF = "GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;";
 
-	private const Formats = [self::JPEG => 'jpeg', self::PNG => 'png', self::GIF => 'gif', self::WEBP => 'webp', self::AVIF => 'avif', self::BMP => 'bmp'];
+	private const Formats = [ImageType::JPEG => 'jpeg', ImageType::PNG => 'png', ImageType::GIF => 'gif', ImageType::WEBP => 'webp', ImageType::AVIF => 'avif', ImageType::BMP => 'bmp'];
 
 	private \GdImage $image;
 
@@ -220,6 +220,8 @@ class Image
 
 	/**
 	 * Creates a new true color image of the given dimensions. The default color is black.
+	 * @param  positive-int  $width
+	 * @param  positive-int  $height
 	 * @throws Nette\NotSupportedException if gd extension is not loaded
 	 */
 	public static function fromBlank(int $width, int $height, ?array $color = null): static
@@ -247,6 +249,7 @@ class Image
 
 	/**
 	 * Returns the type of image from file.
+	 * @return ImageType::*|null
 	 */
 	public static function detectTypeFromFile(string $file, &$width = null, &$height = null): ?int
 	{
@@ -257,6 +260,7 @@ class Image
 
 	/**
 	 * Returns the type of image from string.
+	 * @return ImageType::*|null
 	 */
 	public static function detectTypeFromString(string $s, &$width = null, &$height = null): ?int
 	{
@@ -266,7 +270,9 @@ class Image
 
 
 	/**
-	 * Returns the file extension for the given `Image::XXX` constant.
+	 * Returns the file extension for the given image type.
+	 * @param  ImageType::*  $type
+	 * @return value-of<self::Formats>
 	 */
 	public static function typeToExtension(int $type): string
 	{
@@ -279,11 +285,12 @@ class Image
 
 
 	/**
-	 * Returns the `Image::XXX` constant for given file extension.
+	 * Returns the image type for given file extension.
+	 * @return ImageType::*
 	 */
 	public static function extensionToType(string $extension): int
 	{
-		$extensions = array_flip(self::Formats) + ['jpg' => self::JPEG];
+		$extensions = array_flip(self::Formats) + ['jpg' => ImageType::JPEG];
 		$extension = strtolower($extension);
 		if (!isset($extensions[$extension])) {
 			throw new Nette\InvalidArgumentException("Unsupported file extension '$extension'.");
@@ -294,11 +301,29 @@ class Image
 
 
 	/**
-	 * Returns the mime type for the given `Image::XXX` constant.
+	 * Returns the mime type for the given image type.
+	 * @param  ImageType::*  $type
 	 */
 	public static function typeToMimeType(int $type): string
 	{
 		return 'image/' . self::typeToExtension($type);
+	}
+
+
+	/**
+	 * @param  ImageType::*  $type
+	 */
+	public static function isTypeSupported(int $type): bool
+	{
+		return (bool) (imagetypes() & match ($type) {
+			ImageType::JPEG => IMG_JPG,
+			ImageType::PNG => IMG_PNG,
+			ImageType::GIF => IMG_GIF,
+			ImageType::WEBP => IMG_WEBP,
+			ImageType::AVIF => 256, // IMG_AVIF,
+			ImageType::BMP => IMG_BMP,
+			default => 0,
+		});
 	}
 
 
@@ -314,6 +339,7 @@ class Image
 
 	/**
 	 * Returns image width.
+	 * @return positive-int
 	 */
 	public function getWidth(): int
 	{
@@ -323,6 +349,7 @@ class Image
 
 	/**
 	 * Returns image height.
+	 * @return positive-int
 	 */
 	public function getHeight(): int
 	{
@@ -351,7 +378,7 @@ class Image
 
 	/**
 	 * Scales an image. Width and height accept pixels or percent.
-	 * @param  self::OrSmaller|self::OrBigger|self::Stretch|self::Cover|self::ShrinkOnly  $mode
+	 * @param  int-mask-of<self::OrSmaller|self::OrBigger|self::Stretch|self::Cover|self::ShrinkOnly>  $mode
 	 */
 	public function resize(int|string|null $width, int|string|null $height, int $mode = self::OrSmaller): static
 	{
@@ -388,7 +415,7 @@ class Image
 
 	/**
 	 * Calculates dimensions of resized image. Width and height accept pixels or percent.
-	 * @param  self::OrSmaller|self::OrBigger|self::Stretch|self::Cover|self::ShrinkOnly  $mode
+	 * @param  int-mask-of<self::OrSmaller|self::OrBigger|self::Stretch|self::Cover|self::ShrinkOnly>  $mode
 	 */
 	public static function calculateSize(
 		int $srcWidth,
@@ -534,7 +561,7 @@ class Image
 
 	/**
 	 * Puts another image into this image. Left and top accepts pixels or percent.
-	 * @param  int  $opacity 0..100
+	 * @param  int<0, 100>  $opacity 0..100
 	 */
 	public function place(self $image, int|string $left = 0, int|string $top = 0, int $opacity = 100): static
 	{
@@ -596,6 +623,7 @@ class Image
 
 	/**
 	 * Saves image to the file. Quality is in the range 0..100 for JPEG (default 85), WEBP (default 80) and AVIF (default 30) and 0..9 for PNG (default 9).
+	 * @param  ImageType::*|null  $type
 	 * @throws ImageException
 	 */
 	public function save(string $file, ?int $quality = null, ?int $type = null): void
@@ -607,8 +635,9 @@ class Image
 
 	/**
 	 * Outputs image to string. Quality is in the range 0..100 for JPEG (default 85), WEBP (default 80) and AVIF (default 30) and 0..9 for PNG (default 9).
+	 * @param  ImageType::*  $type
 	 */
-	public function toString(int $type = self::JPEG, ?int $quality = null): string
+	public function toString(int $type = ImageType::JPEG, ?int $quality = null): string
 	{
 		return Helpers::capture(function () use ($type, $quality): void {
 			$this->output($type, $quality);
@@ -627,9 +656,10 @@ class Image
 
 	/**
 	 * Outputs image to browser. Quality is in the range 0..100 for JPEG (default 85), WEBP (default 80) and AVIF (default 30) and 0..9 for PNG (default 9).
+	 * @param  ImageType::*  $type
 	 * @throws ImageException
 	 */
-	public function send(int $type = self::JPEG, ?int $quality = null): void
+	public function send(int $type = ImageType::JPEG, ?int $quality = null): void
 	{
 		header('Content-Type: ' . self::typeToMimeType($type));
 		$this->output($type, $quality);
@@ -638,36 +668,37 @@ class Image
 
 	/**
 	 * Outputs image to browser or file.
+	 * @param  ImageType::*  $type
 	 * @throws ImageException
 	 */
 	private function output(int $type, ?int $quality, ?string $file = null): void
 	{
 		switch ($type) {
-			case self::JPEG:
+			case ImageType::JPEG:
 				$quality = $quality === null ? 85 : max(0, min(100, $quality));
 				$success = @imagejpeg($this->image, $file, $quality); // @ is escalated to exception
 				break;
 
-			case self::PNG:
+			case ImageType::PNG:
 				$quality = $quality === null ? 9 : max(0, min(9, $quality));
 				$success = @imagepng($this->image, $file, $quality); // @ is escalated to exception
 				break;
 
-			case self::GIF:
+			case ImageType::GIF:
 				$success = @imagegif($this->image, $file); // @ is escalated to exception
 				break;
 
-			case self::WEBP:
+			case ImageType::WEBP:
 				$quality = $quality === null ? 80 : max(0, min(100, $quality));
 				$success = @imagewebp($this->image, $file, $quality); // @ is escalated to exception
 				break;
 
-			case self::AVIF:
+			case ImageType::AVIF:
 				$quality = $quality === null ? 30 : max(0, min(100, $quality));
 				$success = @imageavif($this->image, $file, $quality); // @ is escalated to exception
 				break;
 
-			case self::BMP:
+			case ImageType::BMP:
 				$success = @imagebmp($this->image, $file); // @ is escalated to exception
 				break;
 
