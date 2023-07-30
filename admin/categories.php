@@ -217,9 +217,9 @@ if (!empty($action)) {
         }
 
         $sql_data_array = [
-          'metatags_title' => zen_db_input($_POST['metatags_title'][$language_id]),
-          'metatags_keywords' => zen_db_input($_POST['metatags_keywords'][$language_id]),
-          'metatags_description' => zen_db_input($_POST['metatags_description'][$language_id])
+          'metatags_title' => zen_db_prepare_input(isset($_POST['metatags_title'][$language_id]) ? $_POST['metatags_title'][$language_id] : ''),
+          'metatags_keywords' => zen_db_prepare_input(isset($_POST['metatags_keywords'][$language_id]) ? $_POST['metatags_keywords'][$language_id] : ''),
+          'metatags_description' => zen_db_prepare_input(isset($_POST['metatags_description'][$language_id]) ? $_POST['metatags_description'][$language_id] : '')
         ];
 
         if ($action === 'insert_categories_meta_tags') {
