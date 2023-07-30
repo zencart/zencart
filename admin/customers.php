@@ -71,7 +71,7 @@ if (!empty($action)) {
                     $customer = new Customer($customers_id);
                     $customer->setCustomerAuthorizationStatus(CUSTOMERS_APPROVAL_AUTHORIZATION);
                     zen_record_admin_activity(
-                        'Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . $customers_id,
+                        'Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . (int)$customers_id,
                         'info'
                     );
                 }
@@ -165,7 +165,7 @@ if (!empty($action)) {
                     $zone_query = $db->Execute(
                         "SELECT zone_id
                            FROM " . TABLE_ZONES . "
-                           WHERE zone_country_id = " . $entry_country_id . "
+                           WHERE zone_country_id = " . (int)$entry_country_id . "
                              AND zone_name = '" . zen_db_input($entry_state) . "'"
                     );
 
@@ -180,7 +180,7 @@ if (!empty($action)) {
 
             $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_UPDATE_VALIDATE', [], $error);
 
-            if ($error == false) {
+            if ($error === false) {
                 $sql_data_array = [
                     [
                         'fieldName' => 'customers_firstname',
@@ -241,7 +241,7 @@ if (!empty($action)) {
                         'type' => 'stringIgnoreNull'
                     ];
                 }
-                if (ACCOUNT_DOB == 'true') {
+                if (ACCOUNT_DOB === 'true') {
                     $sql_data_array[] = [
                         'fieldName' => 'customers_dob',
                         'value' => ($customers_dob === '0001-01-01 00:00:00') ?
@@ -251,12 +251,12 @@ if (!empty($action)) {
                 }
 
                 $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_UPDATE', $customers_id, $sql_data_array);
-                $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = " . $customers_id . " LIMIT 1");
+                $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = " . (int)$customers_id . " LIMIT 1");
 
                 $db->Execute(
                     "UPDATE " . TABLE_CUSTOMERS_INFO . "
                       SET customers_info_date_account_last_modified = now()
-                      WHERE customers_info_id = " . $customers_id . "
+                      WHERE customers_info_id = " . (int)$customers_id . "
                       LIMIT 1"
                 );
 
@@ -348,14 +348,14 @@ if (!empty($action)) {
                     TABLE_ADDRESS_BOOK,
                     $sql_data_array,
                     'update',
-                    "customers_id = " . $customers_id . " AND address_book_id = " . $default_address_id . " LIMIT 1"
+                    "customers_id = " . (int)$customers_id . " AND address_book_id = " . (int)$default_address_id . " LIMIT 1"
                 );
 
                 if (isset($_POST['customer_groups']) && is_array($_POST['customer_groups'])) {
                     zen_sync_customer_group_assignments($customers_id, $_POST['customer_groups']);
                 }
 
-                zen_record_admin_activity('Customer record updated for customer ID ' . $customers_id, 'notice');
+                zen_record_admin_activity('Customer record updated for customer ID ' . (int)$customers_id, 'notice');
 
                 // -----
                 // The following, seemingly duplicate, notifications enable an auto-loaded admin observer to successfully
@@ -394,7 +394,7 @@ if (!empty($action)) {
             }
             break;
         case 'pwdresetconfirm':
-            if ($customers_id > 0 && isset($_POST['newpassword']) && $_POST['newpassword'] != '' && isset($_POST['newpasswordConfirm']) && $_POST['newpasswordConfirm'] != '') {
+            if ($customers_id > 0 && isset($_POST['newpassword']) && $_POST['newpassword'] !== '' && isset($_POST['newpasswordConfirm']) && $_POST['newpasswordConfirm'] !== '') {
                 $password_new = zen_db_prepare_input($_POST['newpassword']);
                 $password_confirmation = zen_db_prepare_input($_POST['newpasswordConfirm']);
                 $error = false;
@@ -1510,7 +1510,7 @@ if ($action === 'edit' || $action === 'update') {
             'a.entry_postcode',
         ];
         $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
-        $search = (trim($search) != '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
+        $search = (trim($search) !== '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
     }
     $new_fields = '';
 
