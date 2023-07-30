@@ -20,6 +20,9 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class PoFileDumper extends FileDumper
 {
+    /**
+     * {@inheritdoc}
+     */
     public function formatCatalogue(MessageCatalogue $messages, string $domain, array $options = []): string
     {
         $output = 'msgid ""'."\n";
@@ -65,7 +68,7 @@ class PoFileDumper extends FileDumper
         return $output;
     }
 
-    private function getStandardRules(string $id): array
+    private function getStandardRules(string $id)
     {
         // Partly copied from TranslatorTrait::trans.
         $parts = [];
@@ -108,6 +111,9 @@ EOF;
         return $standardRules;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getExtension(): string
     {
         return 'po';

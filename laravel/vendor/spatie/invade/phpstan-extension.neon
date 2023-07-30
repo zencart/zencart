@@ -1,0 +1,8 @@
+services:
+    - class: Spatie\Invade\PHPStan\InvadePropertiesReflectionExtension
+      tags:
+        - phpstan.broker.propertiesClassReflectionExtension
+
+    - class: Spatie\Invade\PHPStan\InvadeMethodsReflectionExtension
+      tags:
+        - phpstan.broker.methodsClassReflectionExtension

@@ -26,17 +26,20 @@ use Symfony\Component\CssSelector\XPath\XPathExpr;
  */
 class AttributeMatchingExtension extends AbstractExtension
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getAttributeMatchingTranslators(): array
     {
         return [
-            'exists' => $this->translateExists(...),
-            '=' => $this->translateEquals(...),
-            '~=' => $this->translateIncludes(...),
-            '|=' => $this->translateDashMatch(...),
-            '^=' => $this->translatePrefixMatch(...),
-            '$=' => $this->translateSuffixMatch(...),
-            '*=' => $this->translateSubstringMatch(...),
-            '!=' => $this->translateDifferent(...),
+            'exists' => [$this, 'translateExists'],
+            '=' => [$this, 'translateEquals'],
+            '~=' => [$this, 'translateIncludes'],
+            '|=' => [$this, 'translateDashMatch'],
+            '^=' => [$this, 'translatePrefixMatch'],
+            '$=' => [$this, 'translateSuffixMatch'],
+            '*=' => [$this, 'translateSubstringMatch'],
+            '!=' => [$this, 'translateDifferent'],
         ];
     }
 
@@ -106,6 +109,9 @@ class AttributeMatchingExtension extends AbstractExtension
         ));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName(): string
     {
         return 'attribute-matching';

@@ -12,7 +12,7 @@
 namespace Symfony\Component\Translation;
 
 /**
- * This interface is used to get, set, and delete metadata about the translation messages.
+ * MetadataAwareInterface.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
@@ -31,8 +31,6 @@ interface MetadataAwareInterface
 
     /**
      * Adds metadata to a message domain.
-     *
-     * @return void
      */
     public function setMetadata(string $key, mixed $value, string $domain = 'messages');
 
@@ -41,8 +39,6 @@ interface MetadataAwareInterface
      *
      * Passing an empty domain will delete all metadata. Passing an empty key will
      * delete all metadata for the given domain.
-     *
-     * @return void
      */
     public function deleteMetadata(string $key = '', string $domain = 'messages');
 }

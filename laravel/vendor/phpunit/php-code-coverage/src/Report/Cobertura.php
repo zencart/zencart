@@ -16,6 +16,7 @@ use function file_put_contents;
 use function preg_match;
 use function range;
 use function str_replace;
+use function strpos;
 use function time;
 use DOMImplementation;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
@@ -294,7 +295,9 @@ final class Cobertura
         $buffer = $document->saveXML();
 
         if ($target !== null) {
-            Filesystem::createDirectory(dirname($target));
+            if (!strpos($target, '://') !== false) {
+                Filesystem::createDirectory(dirname($target));
+            }
 
             if (@file_put_contents($target, $buffer) === false) {
                 throw new WriteOperationFailedException($target);

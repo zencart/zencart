@@ -46,7 +46,7 @@ class ArrayConverter
         return $tree;
     }
 
-    private static function &getElementByPath(array &$tree, array $parts): mixed
+    private static function &getElementByPath(array &$tree, array $parts)
     {
         $elem = &$tree;
         $parentOfElem = null;
@@ -82,7 +82,7 @@ class ArrayConverter
         return $elem;
     }
 
-    private static function cancelExpand(array &$tree, string $prefix, array $node): void
+    private static function cancelExpand(array &$tree, string $prefix, array $node)
     {
         $prefix .= '.';
 

@@ -53,7 +53,9 @@ class TranslatableMessage implements TranslatableInterface
     public function trans(TranslatorInterface $translator, string $locale = null): string
     {
         return $translator->trans($this->getMessage(), array_map(
-            static fn ($parameter) => $parameter instanceof TranslatableInterface ? $parameter->trans($translator, $locale) : $parameter,
+            static function ($parameter) use ($translator, $locale) {
+                return $parameter instanceof TranslatableInterface ? $parameter->trans($translator, $locale) : $parameter;
+            },
             $this->getParameters()
         ), $this->getDomain(), $locale);
     }

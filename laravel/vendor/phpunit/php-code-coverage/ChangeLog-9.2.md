@@ -2,6 +2,17 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [9.2.27] - 2023-07-26
+
+### Changed
+
+* The result of `CodeCoverage::getReport()` is now cached
+
+### Fixed
+
+* Static analysis cache keys do not include configuration settings that affect source code parsing
+* The Clover, Cobertura, Crap4j, and PHP report writers no longer create a `php:` directory when they should write to `php://stdout`, for instance
+
 ## [9.2.26] - 2023-03-06
 
 ### Changed
@@ -476,6 +487,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 
 * This component is no longer supported on PHP 7.1
 
+[9.2.27]: https://github.com/sebastianbergmann/php-code-coverage/compare/9.2.26...9.2.27
 [9.2.26]: https://github.com/sebastianbergmann/php-code-coverage/compare/9.2.25...9.2.26
 [9.2.25]: https://github.com/sebastianbergmann/php-code-coverage/compare/9.2.24...9.2.25
 [9.2.24]: https://github.com/sebastianbergmann/php-code-coverage/compare/9.2.23...9.2.24

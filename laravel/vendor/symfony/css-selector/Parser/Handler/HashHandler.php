@@ -29,8 +29,8 @@ use Symfony\Component\CssSelector\Parser\TokenStream;
  */
 class HashHandler implements HandlerInterface
 {
-    private TokenizerPatterns $patterns;
-    private TokenizerEscaping $escaping;
+    private $patterns;
+    private $escaping;
 
     public function __construct(TokenizerPatterns $patterns, TokenizerEscaping $escaping)
     {
@@ -38,6 +38,9 @@ class HashHandler implements HandlerInterface
         $this->escaping = $escaping;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function handle(Reader $reader, TokenStream $stream): bool
     {
         $match = $reader->findPattern($this->patterns->getHashPattern());

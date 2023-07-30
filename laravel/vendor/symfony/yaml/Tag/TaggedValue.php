@@ -31,7 +31,7 @@ final class TaggedValue
         return $this->tag;
     }
 
-    public function getValue(): mixed
+    public function getValue()
     {
         return $this->value;
     }

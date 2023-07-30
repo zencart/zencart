@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/develop', function () {
-    return view('welcome');
+Route::middleware('auth')->group(function () {
+    Route::get('/develop', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashhboard');
 });
+
+//Route::get('/develop/login', [\App\Http\Controllers\Auth\LoginController::class, 'index'])->name('login');
