@@ -53,7 +53,6 @@ class Customer extends base
         if (empty($this->customer_id)) {
             $this->setCustomerIdFromSession();
         }
-
         return (int)$this->customer_id;
     }
 
@@ -74,7 +73,9 @@ class Customer extends base
      */
     public function isSameAsLoggedIn(int $idToCheck = null)
     {
-        if (empty($idToCheck)) $idToCheck = $this->customer_id;
+        if (empty($idToCheck)) {
+            $idToCheck = $this->customer_id;
+        }
         $is_currently_logged_in = !empty($_SESSION['customer_id']) && $idToCheck === (int)$_SESSION['customer_id'];
         $this->notify('NOTIFY_ZEN_IS_CURRENTLY_LOGGED_IN', null, $is_currently_logged_in);
         return (bool)$is_currently_logged_in;
@@ -94,13 +95,16 @@ class Customer extends base
     {
         global $db;
 
-        $sql = "SELECT customers_id, customers_password, customers_authorization
-                FROM " . TABLE_CUSTOMERS . "
-                WHERE customers_email_address = :emailAddress";
+        $sql =
+            "SELECT customers_id, customers_password, customers_authorization
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_email_address = :emailAddress";
         $sql = $db->bindVars($sql, ':emailAddress', $email, 'string');
         $result = $db->Execute($sql, 1);
 
-        if ($result->EOF) return false;
+        if ($result->EOF) {
+            return false;
+        }
 
         return $result->fields;
     }
@@ -109,12 +113,16 @@ class Customer extends base
     {
         global $db;
 
-        if (empty($customer_id)) return false;
+        if (empty($customer_id)) {
+            return false;
+        }
 
         // @TODO
         // what if already logged in?
 
-        if (!$this->customerExistsInDatabase($customer_id)) return false;
+        if (!$this->customerExistsInDatabase($customer_id)) {
+            return false;
+        }
 
         // fire notifier to check whether login should be allowed?
 //@TODO        $this->notify('NOTIFY_?LOGIN_ATTEMPT', null, $is_logged_in);
@@ -137,15 +145,17 @@ class Customer extends base
         }
 
         // update last login
-        $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS_INFO . "
                 SET customers_info_date_of_last_logon = now(),
                     customers_info_number_of_logons = IF(customers_info_number_of_logons, customers_info_number_of_logons+1, 1)
-                WHERE customers_info_id = " . (int)$customer_id;
+              WHERE customers_info_id = " . (int)$customer_id;
         $db->Execute($sql);
 
-        $sql = "UPDATE " . TABLE_CUSTOMERS . "
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
                 SET last_login_ip = '" . zen_db_input(zen_get_ip_address()) . "'
-                WHERE customers_id = " . (int)$customer_id;
+              WHERE customers_id = " . (int)$customer_id;
 
         // these session variables are used in various places across the catalog
         $_SESSION['customer_id'] = (int)$customer_id;
@@ -181,12 +191,17 @@ class Customer extends base
     {
         global $db;
 
-        if (empty($customer_id)) $customer_id = $this->customer_id;
-        if (empty($customer_id)) return false;
+        if (empty($customer_id)) {
+            $customer_id = $this->customer_id;
+        }
+        if (empty($customer_id)) {
+            return false;
+        }
 
-        $sql = "SELECT customers_id
-                FROM " . TABLE_CUSTOMERS . "
-                WHERE customers_id = " . (int)$customer_id;
+        $sql =
+            "SELECT customers_id
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_id = " . (int)$customer_id;
 
         $result = $db->Execute($sql, 1);
 
@@ -197,22 +212,25 @@ class Customer extends base
     {
         global $db;
 
-        if (empty($customer_id)) $customer_id = $this->customer_id;
+        if (empty($customer_id)) {
+            $customer_id = $this->customer_id;
+        }
         if (empty($customer_id)) {
             $this->data = [];
             return false;
         }
 
-        $sql = "SELECT c.*,
+        $sql =
+            "SELECT c.*,
                     cgc.amount as gv_balance,
                     customers_info_date_account_created AS date_account_created,
                     customers_info_date_account_last_modified AS date_account_last_modified,
                     customers_info_date_of_last_logon AS date_of_last_login,
                     customers_info_number_of_logons AS number_of_logins
-                FROM " . TABLE_CUSTOMERS . " c
-                LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON (c.customers_id = ci.customers_info_id)
-                LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON (c.customers_id = cgc.customer_id)
-                WHERE c.customers_id = " . (int)$customer_id;
+               FROM " . TABLE_CUSTOMERS . " c
+                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON (c.customers_id = ci.customers_info_id)
+                    LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON (c.customers_id = cgc.customer_id)
+              WHERE c.customers_id = " . (int)$customer_id;
 
         $result = $db->Execute($sql, 1);
 
@@ -229,8 +247,10 @@ class Customer extends base
         $found_default_address_id = false;
         $first_address = null;
 
-        foreach($addresses as $address) {
-            if (empty($first_address)) $first_address = $address['address_book_id'];
+        foreach ($addresses as $address) {
+            if (empty($first_address)) {
+                $first_address = $address['address_book_id'];
+            }
             if ($address['address_book_id'] == $this->data['customers_default_address_id']) {
                 $this->data += $address['address'];
                 $found_default_address_id = true;
@@ -239,7 +259,7 @@ class Customer extends base
         }
         if (!$found_default_address_id && !empty($first_address)) {
             $this->setDefaultAddressBookId($first_address);
-            foreach($addresses as $address) {
+            foreach ($addresses as $address) {
                 if ($address['address_book_id'] === $first_address) {
                     $this->data += $address['address'];
                     break;
@@ -249,9 +269,10 @@ class Customer extends base
         // keep this info so we don't have to query it again
         $this->data['addresses'] = $addresses;
 
-        $sql = "SELECT COUNT(*) AS number_of_reviews
-                FROM " . TABLE_REVIEWS . "
-                WHERE customers_id = " . (int)$customer_id;
+        $sql =
+            "SELECT COUNT(*) AS number_of_reviews
+               FROM " . TABLE_REVIEWS . "
+              WHERE customers_id = " . (int)$customer_id;
         $result = $db->Execute($sql);
         $this->data['number_of_reviews'] = (int)$result->fields['number_of_reviews'];
 
@@ -284,8 +305,10 @@ class Customer extends base
             'number_of_reviews',
             'number_of_orders',
         ];
-        foreach($ints as $key) {
-            if (null !== $this->data[$key]) $this->data[$key] = (int)$this->data[$key];
+        foreach ($ints as $key) {
+            if (null !== $this->data[$key]) {
+                $this->data[$key] = (int)$this->data[$key];
+            }
         }
 
         return true;
@@ -298,7 +321,7 @@ class Customer extends base
     {
         global $db;
         $orders = $db->Execute(
-            "SELECT count(*) AS count
+            "SELECT COUNT(*) AS count
                FROM " . TABLE_ORDERS . "
               WHERE customers_id = " . (int)$this->customer_id
         );
@@ -314,10 +337,11 @@ class Customer extends base
         global $db, $currencies;
         $lifetime_value = 0;
 
-        $sql = "SELECT o.orders_id, o.date_purchased, o.order_total AS order_total_raw, o.currency, o.currency_value, o.language_code
-                FROM " . TABLE_ORDERS . " o
-                WHERE customers_id = " . (int)$this->customer_id . "
-                ORDER BY date_purchased DESC";
+        $sql =
+            "SELECT o.orders_id, o.date_purchased, o.order_total AS order_total_raw, o.currency, o.currency_value, o.language_code
+               FROM " . TABLE_ORDERS . " o
+              WHERE customers_id = " . (int)$this->customer_id . "
+              ORDER BY date_purchased DESC";
         $results = $db->Execute($sql);
 
         $last_order = null;
@@ -342,9 +366,11 @@ class Customer extends base
     protected function getPricingGroupAssociation()
     {
         global $db;
-        $group_query = $db->Execute("SELECT group_name, group_percentage
-                                           FROM " . TABLE_GROUP_PRICING . "
-                                           WHERE group_id = " . (int)$this->data['customers_group_pricing']);
+        $group_query = $db->Execute(
+            "SELECT group_name, group_percentage
+               FROM " . TABLE_GROUP_PRICING . "
+              WHERE group_id = " . (int)$this->data['customers_group_pricing']
+        );
 
         if ($group_query->RecordCount()) {
             $this->data['pricing_group_name'] = $group_query->fields['group_name'];
@@ -360,9 +386,10 @@ class Customer extends base
     protected function setDefaultAddressBookId(int $id)
     {
         global $db;
-        $sql = "UPDATE " . TABLE_CUSTOMERS . "
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_default_address_id = " . (int)$id . "
-                WHERE customers_id = " . (int)$this->customer_id;
+              WHERE customers_id = " . (int)$this->customer_id;
         $db->Execute($sql);
         $this->data['customers_default_address_id'] = (int)$id;
     }
@@ -406,9 +433,12 @@ class Customer extends base
     public function setCustomerAuthorizationStatus(int $status)
     {
         global $db;
-        $db->Execute("UPDATE " . TABLE_CUSTOMERS . "
-                      SET customers_authorization = " . (int)$status . "
-                      WHERE customers_id = " . (int)$this->customer_id, 1);
+        $db->Execute(
+            "UPDATE " . TABLE_CUSTOMERS . "
+                SET customers_authorization = " . (int)$status . "
+              WHERE customers_id = " . (int)$this->customer_id,
+            1
+        );
         $this->data['customers_authorization'] = (int)$status;
 
         return $this->data;
@@ -417,8 +447,8 @@ class Customer extends base
     public function resetCustomerCart()
     {
         global $db;
-        $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $this->customer_id);
-        $db->Execute("DELETE from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $this->customer_id);
+        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $this->customer_id);
+        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $this->customer_id);
         $_SESSION['cart']->reset(true);
         $this->forceLogout();
     }
@@ -438,23 +468,30 @@ class Customer extends base
     {
         global $db;
 
-        if (empty($customer_id)) $customer_id = $this->customer_id;
-        if (empty($customer_id)) return [];
+        if (empty($customer_id)) {
+            $customer_id = $this->customer_id;
+        }
+        if (empty($customer_id)) {
+            return [];
+        }
 
-        $sql = "SELECT c.*, ab.*
-                FROM " . TABLE_ADDRESS_BOOK . " ab
-                LEFT JOIN " . TABLE_CUSTOMERS . " c USING (customers_id)
-                WHERE customers_id = " . (int)$customer_id;
+        $sql =
+            "SELECT c.*, ab.*
+               FROM " . TABLE_ADDRESS_BOOK . " ab
+                    LEFT JOIN " . TABLE_CUSTOMERS . " c USING (customers_id)
+              WHERE customers_id = " . (int)$customer_id;
 
-        $result = $db->Execute($sql);
-
-        return $result;
+        return $db->Execute($sql);
     }
 
     public function getNumberOfAddressBookEntries(int $customer_id = null): int
     {
-        if (empty($customer_id)) $customer_id = $this->customer_id;
-        if (empty($customer_id)) return 0;
+        if (empty($customer_id)) {
+            $customer_id = $this->customer_id;
+        }
+        if (empty($customer_id)) {
+            return 0;
+        }
 
         return count($this->getAddressBookEntries());
     }
@@ -463,24 +500,29 @@ class Customer extends base
     {
         global $db;
 
-        if (empty($customer_id)) $customer_id = $this->customer_id;
-        if (empty($customer_id)) return [];
+        if (empty($customer_id)) {
+            $customer_id = $this->customer_id;
+        }
+        if (empty($customer_id)) {
+            return [];
+        }
 
-        $sql = "SELECT address_book_id,
-                       entry_firstname AS firstname, entry_lastname AS lastname,
-                       entry_company AS company, entry_street_address AS street_address,
-                       entry_suburb AS suburb, entry_city AS city, entry_postcode AS postcode,
-                       entry_state AS state,
-                       entry_zone_id AS zone_id,
-                       zone_name, zone_code AS zone_iso,
-                       entry_country_id AS country_id,
-                       countries_name AS country_name,
-                       countries_iso_code_3 AS country_iso
-                FROM " . TABLE_ADDRESS_BOOK . " ab
-                INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id=c.countries_id)
-                LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id=z.zone_id AND z.zone_country_id=c.countries_id)
-                WHERE customers_id = :customersID
-                ORDER BY firstname, lastname";
+        $sql =
+            "SELECT address_book_id,
+                    entry_firstname AS firstname, entry_lastname AS lastname,
+                    entry_company AS company, entry_street_address AS street_address,
+                    entry_suburb AS suburb, entry_city AS city, entry_postcode AS postcode,
+                    entry_state AS state,
+                    entry_zone_id AS zone_id,
+                    zone_name, zone_code AS zone_iso,
+                    entry_country_id AS country_id,
+                    countries_name AS country_name,
+                    countries_iso_code_3 AS country_iso
+               FROM " . TABLE_ADDRESS_BOOK . " ab
+                    INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
+                    LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id AND z.zone_country_id = c.countries_id)
+              WHERE customers_id = :customersID
+              ORDER BY firstname, lastname";
 
         $sql = $db->bindVars($sql, ':customersID', $customer_id, 'integer');
         $results = $db->Execute($sql);
@@ -512,21 +554,24 @@ class Customer extends base
     {
         $language = $_SESSION['languages_id'];
         global $db, $currencies;
-        $sql = "SELECT o.orders_id, o.date_purchased, o.delivery_name,
-                       o.order_total, o.currency, o.currency_value,
-                       o.delivery_country, o.billing_name, o.billing_country,
-                       s.orders_status_name,
-                       o.language_code
-                 FROM " . TABLE_ORDERS . " o
-                 INNER JOIN " . TABLE_ORDERS_STATUS . " s
-                 WHERE o.customers_id = :customersID
-                 AND s.orders_status_id =
-                     (SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " osh
-                      WHERE osh.orders_id = o.orders_id AND osh.customer_notified >= 0 ORDER BY osh.date_added DESC LIMIT 1)
-                 AND s.language_id = :languagesID";
-
-        $sql .= " ORDER BY orders_id DESC";
-
+        $sql =
+            "SELECT o.orders_id, o.date_purchased, o.delivery_name,
+                    o.order_total, o.currency, o.currency_value,
+                    o.delivery_country, o.billing_name, o.billing_country,
+                    s.orders_status_name,
+                    o.language_code
+               FROM " . TABLE_ORDERS . " o
+                    INNER JOIN " . TABLE_ORDERS_STATUS . " s
+              WHERE o.customers_id = :customersID
+                AND s.orders_status_id = (
+                        SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " osh
+                         WHERE osh.orders_id = o.orders_id
+                           AND osh.customer_notified >= 0
+                         ORDER BY osh.date_added DESC LIMIT 1
+                    )
+                AND s.language_id = :languagesID
+              ORDER BY orders_id DESC";
+ 
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $language, 'integer');
         $history_split = new splitPageResults($sql, $max_number_to_return);
@@ -547,9 +592,10 @@ class Customer extends base
                 $order_country = $result['billing_country'];
             }
 
-            $sql = "SELECT count(*) AS count
-                    FROM " . TABLE_ORDERS_PRODUCTS . "
-                    WHERE orders_id = " . (int)$result['orders_id'];
+            $sql =
+                "SELECT COUNT(*) AS count
+                   FROM " . TABLE_ORDERS_PRODUCTS . "
+                  WHERE orders_id = " . (int)$result['orders_id'];
             $queryResult = $db->Execute($sql);
             $products_count = $queryResult->EOF ? 0 : $queryResult->fields['count'];
 
@@ -567,7 +613,6 @@ class Customer extends base
                 'language_code' => $result['language_code'],
                 'product_count' => $products_count,
             ];
-
         }
         return $ordersArray;
     }
@@ -590,9 +635,10 @@ class Customer extends base
 
         global $db;
 
-        $sql = "SELECT count(*) as total
-                FROM " . TABLE_ORDERS . "
-                WHERE customers_id = " . (int)$this->customer_id;
+        $sql =
+            "SELECT COUNT(*) as total
+               FROM " . TABLE_ORDERS . "
+              WHERE customers_id = " . (int)$this->customer_id;
 
         $result = $db->Execute($sql);
 
@@ -602,15 +648,17 @@ class Customer extends base
     public function setPassword(string $new_password)
     {
         global $db;
-        $sql = "UPDATE " . TABLE_CUSTOMERS . "
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_password = :password
-                WHERE customers_id = :customersID";
+              WHERE customers_id = :customersID";
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':password', zen_encrypt_password($new_password), 'string');
         $db->Execute($sql);
-        $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS_INFO . "
                 SET customers_info_date_account_last_modified = now()
-                WHERE customers_info_id = :customersID";
+              WHERE customers_info_id = :customersID";
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $db->Execute($sql);
     }
@@ -626,80 +674,105 @@ class Customer extends base
         global $db;
 
         if ($delete_reviews) {
-            $reviews = $db->Execute("SELECT reviews_id
-                                     FROM " . TABLE_REVIEWS . "
-                                     WHERE customers_id = " . (int)$this->customer_id);
-            foreach($reviews as $review) {
-                $db->Execute("DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
-                              WHERE reviews_id = " . (int)$review['reviews_id']);
+            $reviews = $db->Execute(
+                "SELECT reviews_id
+                   FROM " . TABLE_REVIEWS . "
+                  WHERE customers_id = " . (int)$this->customer_id);
+            foreach ($reviews as $review) {
+                $db->Execute(
+                    "DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
+                      WHERE reviews_id = " . (int)$review['reviews_id']
+                );
             }
 
-            $db->Execute("DELETE FROM " . TABLE_REVIEWS . "
-                          WHERE customers_id = '" . (int)$this->customer_id . "'");
+            $db->Execute(
+                "DELETE FROM " . TABLE_REVIEWS . "
+                  WHERE customers_id = '" . (int)$this->customer_id . "'"
+            );
         } else {
             $fields = 'customers_id = null';
             if ($forget_only) {
                 $text_anonymous = (defined('DB_TEXT_ANONYMOUS')) ? zen_db_input(constant('DB_TEXT_ANONYMOUS')) : 'anonymous';
                 $fields = "customers_name = '" . $text_anonymous . "'";
             }
-            $db->Execute("UPDATE " . TABLE_REVIEWS . " SET " . $fields . "
-                          WHERE customers_id = " . (int)$this->customer_id);
+            $db->Execute(
+                "UPDATE " . TABLE_REVIEWS . "
+                    SET " . $fields . "
+                  WHERE customers_id = " . (int)$this->customer_id
+            );
         }
 
         $text_deleted = (defined('DB_TEXT_DELETED')) ? zen_db_input(constant('DB_TEXT_DELETED')) : 'deleted';
 
         if ($forget_only) {
-            $db->Execute("UPDATE " . TABLE_ADDRESS_BOOK . "
-                          SET entry_gender = '',
-                              entry_company = '',
-                              entry_firstname = '',
-                              entry_lastname = '" . $text_deleted . "',
-                              entry_street_address = '" . $text_deleted . "',
-                              entry_suburb = ''
-                          WHERE customers_id = " . (int)$this->customer_id);
+            $db->Execute(
+                "UPDATE " . TABLE_ADDRESS_BOOK . "
+                    SET entry_gender = '',
+                        entry_company = '',
+                        entry_firstname = '',
+                        entry_lastname = '" . $text_deleted . "',
+                        entry_street_address = '" . $text_deleted . "',
+                        entry_suburb = ''
+                  WHERE customers_id = " . (int)$this->customer_id
+            );
 
-            $db->Execute("UPDATE " . TABLE_CUSTOMERS . "
-                       SET customers_gender = '',
-                           customers_firstname = '" . $text_deleted . "',
-                           customers_lastname = '" . $text_deleted . " " . date("Y-m-d") . "',
-                           customers_email_address = '" . $text_deleted . "',
-                           customers_dob = '0001-01-01 00:00:00',
-                           customers_newsletter = null,
-                           customers_nick = '',
-                           customers_paypal_payerid = '',
-                           customers_secret = '',
-                           customers_password = '',
-                           customers_telephone = '',
-                           registration_ip = '',
-                           last_login_ip = '',
-                           customers_fax = ''
-                       WHERE customers_id = " . (int)$this->customer_id);
+            $db->Execute(
+                "UPDATE " . TABLE_CUSTOMERS . "
+                    SET customers_gender = '',
+                        customers_firstname = '" . $text_deleted . "',
+                        customers_lastname = '" . $text_deleted . " " . date("Y-m-d") . "',
+                        customers_email_address = '" . $text_deleted . "',
+                        customers_dob = '0001-01-01 00:00:00',
+                        customers_newsletter = null,
+                        customers_nick = '',
+                        customers_paypal_payerid = '',
+                        customers_secret = '',
+                        customers_password = '',
+                        customers_telephone = '',
+                        registration_ip = '',
+                        last_login_ip = '',
+                        customers_fax = ''
+                  WHERE customers_id = " . (int)$this->customer_id
+            );
         } else {
-            $db->Execute("DELETE FROM " . TABLE_ADDRESS_BOOK . "
-                          WHERE customers_id = " . (int)$this->customer_id);
+            $db->Execute(
+                "DELETE FROM " . TABLE_ADDRESS_BOOK . "
+                  WHERE customers_id = " . (int)$this->customer_id
+            );
 
-            $db->Execute("DELETE FROM " . TABLE_CUSTOMERS . "
-                      WHERE customers_id = " . (int)$this->customer_id);
+            $db->Execute(
+                "DELETE FROM " . TABLE_CUSTOMERS . "
+                  WHERE customers_id = " . (int)$this->customer_id
+            );
 
-            $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_INFO . "
-                      WHERE customers_info_id = " . (int)$this->customer_id);
+            $db->Execute(
+                "DELETE FROM " . TABLE_CUSTOMERS_INFO . "
+                  WHERE customers_info_id = " . (int)$this->customer_id
+            );
         }
 
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . "
-                      WHERE customers_id = " . (int)$this->customer_id);
+        $db->Execute(
+            "DELETE FROM " . TABLE_CUSTOMERS_BASKET . "
+              WHERE customers_id = " . (int)$this->customer_id
+        );
 
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                      WHERE customers_id = " . (int)$this->customer_id);
+        $db->Execute(
+            "DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
+              WHERE customers_id = " . (int)$this->customer_id
+        );
 
-        $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . "
-                      WHERE customer_id = " . (int)$this->customer_id);
+        $db->Execute(
+            "DELETE FROM " . TABLE_WHOS_ONLINE . "
+              WHERE customer_id = " . (int)$this->customer_id
+        );
 
-        $db->Execute("DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
-                      WHERE customers_id = " . (int)$this->customer_id);
+        $db->Execute(
+            "DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
+              WHERE customers_id = " . (int)$this->customer_id
+        );
 
         zen_record_admin_activity('Customer with customer ID ' . (int)$this->customer_id . ' deleted.', 'warning');
     }
-
 
     public function create(array $data)
     {
@@ -708,65 +781,66 @@ class Customer extends base
         $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDING_CUSTOMER_RECORD', null, $data);
 
         $sql_data_array = [
-            ['fieldName'=>'customers_firstname', 'value'=> $data['firstname'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_lastname', 'value'=> $data['lastname'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_email_address', 'value'=> $data['email_address'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_nick', 'value'=> $data['nick'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_telephone', 'value'=> $data['telephone'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_fax', 'value'=> $data['fax'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_newsletter', 'value'=> $data['newsletter'], 'type'=>'integer'],
-            ['fieldName'=>'customers_email_format', 'value'=> $data['email_format'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_default_address_id', 'value'=>0, 'type'=>'integer'],
-            ['fieldName'=>'customers_password', 'value'=>zen_encrypt_password($data['password']), 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'customers_authorization', 'value'=> $data['customers_authorization'], 'type'=>'integer'],
-            ['fieldName'=>'registration_ip', 'value'=> $data['ip_address'], 'type'=>'string'],
-            ['fieldName'=>'last_login_ip', 'value'=> $data['ip_address'], 'type'=>'string'],
+            ['fieldName' => 'customers_firstname', 'value' => $data['firstname'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_lastname', 'value' => $data['lastname'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_email_address', 'value' => $data['email_address'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_nick', 'value' => $data['nick'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_telephone', 'value' => $data['telephone'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_fax', 'value' => $data['fax'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_newsletter', 'value' => $data['newsletter'], 'type' => 'integer'],
+            ['fieldName' => 'customers_email_format', 'value' => $data['email_format'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_default_address_id', 'value' => 0, 'type' => 'integer'],
+            ['fieldName' => 'customers_password', 'value' => zen_encrypt_password($data['password']), 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'customers_authorization', 'value' => $data['customers_authorization'], 'type' => 'integer'],
+            ['fieldName' => 'registration_ip', 'value' => $data['ip_address'], 'type' => 'string'],
+            ['fieldName' => 'last_login_ip', 'value' => $data['ip_address'], 'type' => 'string'],
         ];
 
         if (CUSTOMERS_REFERRAL_STATUS == '2' && !empty($data['customers_referral'])) {
-            $sql_data_array[] = ['fieldName'=>'customers_referral', 'value'=> $data['customers_referral'], 'type'=>'stringIgnoreNull'];
+            $sql_data_array[] = ['fieldName' => 'customers_referral', 'value' => $data['customers_referral'], 'type' => 'stringIgnoreNull'];
         }
         if (ACCOUNT_GENDER == 'true') {
-            $sql_data_array[] = ['fieldName'=>'customers_gender', 'value'=> $data['gender'], 'type'=>'stringIgnoreNull'];
+            $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
         if (ACCOUNT_DOB == 'true') {
-            $sql_data_array[] = ['fieldName'=>'customers_dob', 'value'=>empty($_POST['dob']) || $data['dob'] == '0001-01-01 00:00:00' ? ('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']), 'type'=>'date'];
+            $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' =>empty($_POST['dob']) || $data['dob'] == '0001-01-01 00:00:00' ? ('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']), 'type' => 'date'];
         }
 
         $db->perform(TABLE_CUSTOMERS, $sql_data_array);
 
-        $customer_id = $this->customer_id = $db->Insert_ID();
+        $this->customer_id = $db->Insert_ID();
+        $customer_id = $this->customer_id;
 
         $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(['customer_id' => $customer_id], $sql_data_array));
 
 
         $sql_data_array = [
-            ['fieldName'=>'customers_id', 'value'=> $customer_id, 'type'=>'integer'],
-            ['fieldName'=>'entry_firstname', 'value'=> $data['firstname'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'entry_lastname', 'value'=> $data['lastname'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'entry_street_address', 'value'=> $data['street_address'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'entry_postcode', 'value'=> $data['postcode'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'entry_city', 'value'=> $data['city'], 'type'=>'stringIgnoreNull'],
-            ['fieldName'=>'entry_country_id', 'value'=> $data['country'], 'type'=>'integer'],
+            ['fieldName' => 'customers_id', 'value' => $customer_id, 'type' => 'integer'],
+            ['fieldName' => 'entry_firstname', 'value' => $data['firstname'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'entry_lastname', 'value' => $data['lastname'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'entry_street_address', 'value' => $data['street_address'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'entry_postcode', 'value' => $data['postcode'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'entry_city', 'value' => $data['city'], 'type' => 'stringIgnoreNull'],
+            ['fieldName' => 'entry_country_id', 'value' => $data['country'], 'type' => 'integer'],
         ];
 
         if (ACCOUNT_GENDER == 'true') {
-            $sql_data_array[] = ['fieldName'=>'entry_gender', 'value'=> $data['gender'], 'type'=>'stringIgnoreNull'];
+            $sql_data_array[] = ['fieldName' => 'entry_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
         if (ACCOUNT_COMPANY == 'true') {
-            $sql_data_array[] = ['fieldName'=>'entry_company', 'value'=> $data['company'], 'type'=>'stringIgnoreNull'];
+            $sql_data_array[] = ['fieldName' => 'entry_company', 'value' => $data['company'], 'type' => 'stringIgnoreNull'];
         }
         if (ACCOUNT_SUBURB == 'true') {
-            $sql_data_array[] = ['fieldName'=>'entry_suburb', 'value'=> $data['suburb'], 'type'=>'stringIgnoreNull'];
+            $sql_data_array[] = ['fieldName' => 'entry_suburb', 'value' => $data['suburb'], 'type' => 'stringIgnoreNull'];
         }
 
         if (ACCOUNT_STATE == 'true') {
             if ($data['zone_id'] > 0) {
-                $sql_data_array[] = ['fieldName'=>'entry_zone_id', 'value'=> $data['zone_id'], 'type'=>'integer'];
-                $sql_data_array[] = ['fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull'];
+                $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => $data['zone_id'], 'type' => 'integer'];
+                $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => '', 'type' => 'stringIgnoreNull'];
             } else {
-                $sql_data_array[] = ['fieldName'=>'entry_zone_id', 'value'=>0, 'type'=>'integer'];
-                $sql_data_array[] = ['fieldName'=>'entry_state', 'value'=> $data['state'], 'type'=>'stringIgnoreNull'];
+                $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => 0, 'type' => 'integer'];
+                $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => $data['state'], 'type' => 'stringIgnoreNull'];
             }
         }
 
@@ -776,25 +850,22 @@ class Customer extends base
 
         $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array_merge(['address_id' => $address_id], $sql_data_array));
 
-        $sql = "UPDATE " . TABLE_CUSTOMERS . "
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_default_address_id = " . (int)$address_id . "
-                WHERE customers_id = " . (int)$customer_id;
-
+              WHERE customers_id = " . (int)$customer_id;
         $db->Execute($sql);
 
-        $sql = "INSERT INTO " . TABLE_CUSTOMERS_INFO . "
-                          (customers_info_id, customers_info_number_of_logons,
-                           customers_info_date_account_created, customers_info_date_of_last_logon)
-                VALUES ('" . (int)$customer_id . "', '1', now(), now())";
+        $sql =
+            "INSERT INTO " . TABLE_CUSTOMERS_INFO . "
+                (customers_info_id, customers_info_number_of_logons,
+                 customers_info_date_account_created, customers_info_date_of_last_logon)
+             VALUES
+                ('" . (int)$customer_id . "', '1', now(), now())";
         $db->Execute($sql);
 
         $this->load($customer_id);
         return $this->data;
     }
-
-
-
-
-
     // @TODO - add method for deleting duplicate identical address_book records?
 }
