@@ -2,7 +2,7 @@
     "name": "zencart/zencart",
     "description": "Open Source E-commerce Application",
     "homepage": "https://www.zen-cart.com",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "authors": [
         {
             "name": "The Zen-Cart Team",
@@ -20,9 +20,9 @@
         "source": "https://zen-cart.com/getit",
         "docs": "https://docs.zen-cart.com"
     },
-    "_comment": "compatible with PHP 7.3-8.0",
+    "_comment": "compatible with PHP 7.4-8.2",
     "require-dev": {
-        "php": "^7.4|^8.0|^8.1",
+        "php": "^7.4|^8.0",
         "ext-curl": "*",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.7",
@@ -57,7 +57,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.5.x-dev"
+            "dev-master": "2.0.x-dev"
         }
     },
     "config": {
