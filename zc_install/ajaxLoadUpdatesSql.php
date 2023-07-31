@@ -31,6 +31,7 @@ $updateList = array(
         '1.5.6'=>array('required'=>'1.5.5'),
         '1.5.7'=>array('required'=>'1.5.6'),
         '1.5.8'=>array('required'=>'1.5.7'),
+        '2.0.0'=>array('required'=>'1.5.8'),
         );
 
 $systemChecker = new systemChecker();

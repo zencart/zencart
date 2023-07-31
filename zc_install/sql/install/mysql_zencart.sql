@@ -1132,6 +1132,7 @@ CREATE TABLE orders (
   currency_value decimal(14,6) default NULL,
   order_total decimal(15,4) default NULL,
   order_tax decimal(15,4) default NULL,
+  shipping_tax_rate decimal(15,4) DEFAULT NULL,
   paypal_ipn_id int(11) NOT NULL default 0,
   ip_address varchar(96) NOT NULL default '',
   order_weight float default NULL,
@@ -1156,6 +1157,7 @@ CREATE TABLE orders_products (
   orders_id int(11) NOT NULL default '0',
   products_id int(11) NOT NULL default '0',
   products_model varchar(32) default NULL,
+  products_mpn varchar(32) DEFAULT NULL,
   products_name varchar(191) NOT NULL default '',
   products_price decimal(15,4) NOT NULL default '0.0000',
   final_price decimal(15,4) NOT NULL default '0.0000',
@@ -1620,6 +1622,7 @@ CREATE TABLE products (
   products_type int(11) NOT NULL default '1',
   products_quantity float NOT NULL default '0',
   products_model varchar(32) default NULL,
+  products_mpn varchar(32) DEFAULT NULL,
   products_image varchar(255) default NULL,
   products_price decimal(15,4) NOT NULL default '0.0000',
   products_virtual tinyint(1) NOT NULL default '0',
@@ -3459,9 +3462,9 @@ INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPA
 # Dumping data for table project_version
 #
 
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.8a', '', '', '', '', 'New Installation-v158', now());
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.8', '', '', '', '', 'New Installation-v158', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '1', '5.8a', '', 'New Installation-v158', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '1', '5.8', '', 'New Installation-v158', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '0.0', '', '', '', '', 'New Installation-v200', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '0.0', '', '', '', '', 'New Installation-v200', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '0.0', '', 'New Installation-v200', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '0.0', '', 'New Installation-v200', now());
 
 ##### End of SQL setup for Zen Cart.
