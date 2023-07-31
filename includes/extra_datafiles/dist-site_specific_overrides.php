@@ -61,3 +61,9 @@
 // false ... Additional images are displayed *only* if a product's 'main' image is defined (i.e. not `''`); this is the default.
 //
 //$enable_additional_images_without_main_image = false;
+
+// -----
+// Make category counts count distinct products.
+// If a product is in two different sub categories of parent category it will only be counted once.
+//
+//define('COUNT_DISTINCT_PRODUCTS', true);

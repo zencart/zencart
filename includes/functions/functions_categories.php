@@ -56,6 +56,12 @@ function zen_get_path($current_category_id = null)
  */
 function zen_count_products_in_category($category_id, $include_inactive = false)
 {
+//  Check if only want to count destinct peoducts in a category
+    $distinct = defined('COUNT_DISTINCT_PRODUCTS') ? COUNT_DISTINCT_PRODUCTS : false;
+    if ($distinct === true) {
+        return zen_count_distinct_products_in_category($category_id, $include_inactive);
+    }
+    
     global $db;
     $products_count = 0;
 
@@ -81,6 +87,28 @@ function zen_count_products_in_category($category_id, $include_inactive = false)
         $products_count += zen_count_products_in_category($result['categories_id'], $include_inactive);
     }
 
+    return $products_count;
+}
+
+/**
+ * Return the count of distinct products in a category and its sub categories
+ */
+function zen_count_distinct_products_in_category($category_id, $include_inactive = false)
+{
+    global $db;
+    $products_count = 0;
+    $subcategories_array[] = $category_id;
+    zen_get_subcategories($subcategories_array, $category_id);
+    $category_list = str_replace(['[',']'], ['(',')'], json_encode($subcategories_array));
+    $sql = "SELECT count(DISTINCT p.products_id) as total " .
+        "FROM " . TABLE_PRODUCTS . " p " .
+        "LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id) " .
+        "WHERE p2c.categories_id in " . $category_list;
+     if (!$include_inactive) {
+        $sql .= " AND p.products_status = 1";
+    }
+    $products = $db->Execute($sql);
+    $products_count += $products->fields['total'];
     return $products_count;
 }
 
