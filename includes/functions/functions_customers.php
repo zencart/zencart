@@ -25,6 +25,8 @@ function zen_customer_greeting(): string
 }
 
 /**
+ * @deprecated use $customer->getNumberOfOrders() directly
+ *
  * @param int|null $customer_id
  * @param bool $check_session unused legacy param
  * @return int
@@ -37,7 +39,7 @@ function zen_count_customer_orders(int $customer_id = null, $check_session = tru
 }
 
 /**
- * look up customers default or primary address
+ * look up customer's default/primary address
  * @param int $customer_id
  * @return int|null
  */
