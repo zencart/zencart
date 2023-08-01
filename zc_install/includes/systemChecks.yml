@@ -295,10 +295,6 @@ systemChecks:
             fieldName: products_mpn
             fieldCheck: Exists
           - checkType: fieldSchema
-            tableName: orders_products
-            fieldName: products_mpn
-            fieldCheck: Exists
-          - checkType: fieldSchema
             tableName: orders
             fieldName: shipping_tax_rate
             fieldCheck: Exists

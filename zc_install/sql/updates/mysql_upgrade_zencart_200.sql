@@ -38,7 +38,6 @@ TRUNCATE TABLE db_cache;
 #############
 
 ALTER TABLE products ADD products_mpn varchar(32) DEFAULT NULL AFTER products_model; 
-ALTER TABLE orders_products ADD products_mpn varchar(32) DEFAULT NULL AFTER products_model; 
 
 ALTER TABLE orders ADD shipping_tax_rate decimal(15,4) DEFAULT NULL AFTER order_tax; 
 

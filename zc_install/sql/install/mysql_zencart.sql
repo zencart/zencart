@@ -1157,7 +1157,6 @@ CREATE TABLE orders_products (
   orders_id int(11) NOT NULL default '0',
   products_id int(11) NOT NULL default '0',
   products_model varchar(32) default NULL,
-  products_mpn varchar(32) DEFAULT NULL,
   products_name varchar(191) NOT NULL default '',
   products_price decimal(15,4) NOT NULL default '0.0000',
   final_price decimal(15,4) NOT NULL default '0.0000',
