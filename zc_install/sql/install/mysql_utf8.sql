@@ -369,35 +369,7 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (99,14
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (100,14,'ST','Steiermark');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (101,14,'TI','Tirol');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (102,14,'BL','Burgenland');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (103,14,'VB','Voralberg');
-
-# Swizterland
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (104,204,'AG','Aargau');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (105,204,'AI','Appenzell Innerrhoden');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (106,204,'AR','Appenzell Ausserrhoden');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (107,204,'BE','Bern');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (108,204,'BL','Basel-Landschaft');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (109,204,'BS','Basel-Stadt');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (110,204,'FR','Freiburg');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (111,204,'GE','Genf');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (112,204,'GL','Glarus');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (113,204,'JU','Graubnden');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (114,204,'JU','Jura');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (115,204,'LU','Luzern');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (116,204,'NE','Neuenburg');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (117,204,'NW','Nidwalden');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (118,204,'OW','Obwalden');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (119,204,'SG','St. Gallen');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (120,204,'SH','Schaffhausen');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (121,204,'SO','Solothurn');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (122,204,'SZ','Schwyz');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (123,204,'TG','Thurgau');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (124,204,'TI','Tessin');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (125,204,'UR','Uri');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (126,204,'VD','Waadt');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (127,204,'VS','Wallis');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (128,204,'ZG','Zug');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (129,204,'ZH','Zürich');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (103,14,'VB','Vorarlberg');
 
 # Spain
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'A Coruña','A Coruña');
@@ -467,13 +439,13 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AG','Agrigento');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AL','Alessandria');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AN','Ancona');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AO','Aosta');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AO','Valle D\'Aosta');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AR','Arezzo');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AP','Ascoli Piceno');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AT','Asti');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AV','Avellino');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'BA','Bari');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'BT','Barletta Andria Trani');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'BT','Barletta-Andria-Trani');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'BL','Belluno');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'BN','Benevento');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'BG','Bergamo');
@@ -485,7 +457,6 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'CA','Cagliari');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'CL','Caltanissetta');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'CB','Campobasso');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'CI','Carbonia-Iglesias');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'CE','Caserta');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'CT','Catania');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'CZ','Catanzaro');
@@ -500,14 +471,14 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FE','Ferrara');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FI','Firenze');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FG','Foggia');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FC','Forlì Cesena');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FC','Forlì-Cesena');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'FR','Frosinone');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'GE','Genova');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'GO','Gorizia');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'GR','Grosseto');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'IM','Imperia');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'IS','Isernia');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AQ','Aquila');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'AQ','L\'Aquila');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'SP','La Spezia');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'LT','Latina');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'LE','Lecce');
@@ -517,9 +488,8 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'LU','Lucca');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'MC','Macerata');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'MN','Mantova');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'MS','Massa Carrara');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'MS','Massa-Carrara');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'MT','Matera');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VS','Medio Campidano');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'ME','Messina');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'MI','Milano');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'MO','Modena');
@@ -527,15 +497,13 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'NA','Napoli');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'NO','Novara');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'NU','Nuoro');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'OG','Ogliastra');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'OT','Olbia-Tempio');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'OR','Oristano');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PD','Padova');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PA','Palermo');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PR','Parma');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PG','Perugia');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PV','Pavia');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PU','Pesaro Urbino');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PU','Pesaro E Urbino');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PE','Pescara');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PC','Piacenza');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'PI','Pisa');
@@ -557,6 +525,7 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'SI','Siena');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'SR','Siracusa');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'SO','Sondrio');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'SU','Sud Sardegna');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'TA','Taranto');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'TE','Teramo');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'TR','Terni');
@@ -568,7 +537,7 @@ INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL,
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'UD','Udine');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VA','Varese');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VE','Venezia');
-INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VB','Verbania');
+INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VB','Verbano-Cusio-Ossola');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VC','Vercelli');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VR','Verona');
 INSERT INTO zones (zone_id, zone_country_id, zone_code, zone_name) VALUES (NULL, 105,'VV','Vibo Valentia');
