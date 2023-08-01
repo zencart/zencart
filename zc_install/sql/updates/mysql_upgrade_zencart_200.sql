@@ -41,6 +41,12 @@ ALTER TABLE products ADD products_mpn varchar(32) DEFAULT NULL AFTER products_mo
 
 ALTER TABLE orders ADD shipping_tax_rate decimal(15,4) DEFAULT NULL AFTER order_tax; 
 
+#############
+#### Updated country information that has changed.
+UPDATE countries SET countries_name = 'Türkiye' WHERE countries_iso_code_3 = 'TUR';
+#############
+
+
 #### VERSION UPDATE STATEMENTS
 ## THE FOLLOWING 2 SECTIONS SHOULD BE THE "LAST" ITEMS IN THE FILE, so that if the upgrade fails prematurely, the version info is not updated.
 ##The following updates the version HISTORY to store the prior version info (Essentially "moves" the prior version info from the "project_version" to "project_version_history" table
