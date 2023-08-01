@@ -20,7 +20,7 @@
 <?php if ($messageStack->size('account') > 0) echo $messageStack->output('account'); ?>
 
 <?php
-    if ($customer->getNumberOfOrders() > 0) {
+    if (!empty($ordersArray)) {
   ?>
 <p class="forward"><?php echo '<a class="show-all" href="' . zen_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL') . '">' . OVERVIEW_SHOW_ALL_ORDERS . '</a>'; ?></p>
 <br class="clearBoth">
