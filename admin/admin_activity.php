@@ -211,7 +211,11 @@ if ($action != '') {
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result['page_accessed'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
-            $exporter_output .= $FIELDSTART . $result['page_parameters'] . $FIELDEND;
+            if ($format === 'HTML') {
+                $exporter_output .= $FIELDSTART . zen_output_string_protected($result['page_parameters']) . $FIELDEND;
+            } else {
+                $exporter_output .= $FIELDSTART . $result['page_parameters'] . $FIELDEND;
+            }
             $exporter_output .= $FIELDSEPARATOR;
             $exporter_output .= $FIELDSTART . $result['flagged'] . $FIELDEND;
             $exporter_output .= $FIELDSEPARATOR;
