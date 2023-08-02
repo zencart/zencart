@@ -803,7 +803,7 @@ class Customer extends base
             $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
         if (ACCOUNT_DOB == 'true') {
-            $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' =>empty($_POST['dob']) || $data['dob'] == '0001-01-01 00:00:00' ? ('0001-01-01 00:00:00') : zen_date_raw($_POST['dob']), 'type' => 'date'];
+            $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' =>(empty($data['dob']) || $data['dob'] === '0001-01-01 00:00:00') ? '0001-01-01 00:00:00' : zen_date_raw($data['dob']), 'type' => 'date'];
         }
 
         $db->perform(TABLE_CUSTOMERS, $sql_data_array);
