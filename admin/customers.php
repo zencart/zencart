@@ -1213,7 +1213,7 @@ if ($action === 'edit' || $action === 'update') {
 ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-                    <table class="table table-hover">
+                    <table class="table table-hover" role="listbox">
                         <thead>
                         <tr class="dataTableHeadingRow">
                             <th class="dataTableHeadingContent text-right">
@@ -1576,7 +1576,7 @@ if ($action === 'edit' || $action === 'update') {
                                     FILENAME_CUSTOMERS,
                                     zen_get_all_get_params(['cID', 'action']
                                     ) . 'cID=' . $cInfo->customers_id . '&action=edit'
-                                ); ?>'" role="button">
+                                ); ?>'" role="option" aria-selected="true">
 <?php
         } else {
 ?>
@@ -1584,7 +1584,7 @@ if ($action === 'edit' || $action === 'update') {
                                 echo zen_href_link(
                                     FILENAME_CUSTOMERS,
                                     zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customer['customers_id']
-                                ); ?>'" role="button">
+                                ); ?>'" role="option" aria-selected="false">
 <?php
         }
 
