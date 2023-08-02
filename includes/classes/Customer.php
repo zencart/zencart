@@ -366,15 +366,15 @@ class Customer extends base
     protected function getPricingGroupAssociation()
     {
         global $db;
-        $group_query = $db->Execute(
+        $sql =
             "SELECT group_name, group_percentage
                FROM " . TABLE_GROUP_PRICING . "
-              WHERE group_id = " . (int)$this->data['customers_group_pricing']
-        );
+              WHERE group_id = " . (int)$this->data['customers_group_pricing'];
+        $result = $db->Execute($sql);
 
-        if ($group_query->RecordCount()) {
-            $this->data['pricing_group_name'] = $group_query->fields['group_name'];
-            $this->data['pricing_group_discount_percentage'] = $group_query->fields['group_percentage'];
+        if ($result->RecordCount()) {
+            $this->data['pricing_group_name'] = $result->fields['group_name'];
+            $this->data['pricing_group_discount_percentage'] = $result->fields['group_percentage'];
         } else {
             $this->data['pricing_group_name'] = defined('TEXT_NONE') ? TEXT_NONE : '';
             $this->data['pricing_group_discount_percentage'] = 0;
@@ -433,12 +433,12 @@ class Customer extends base
     public function setCustomerAuthorizationStatus(int $status)
     {
         global $db;
-        $db->Execute(
+        $sql =
             "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_authorization = " . (int)$status . "
-              WHERE customers_id = " . (int)$this->customer_id,
-            1
-        );
+              WHERE customers_id = " . (int)$this->customer_id;
+        $db->Execute($sql, 1);
+
         $this->data['customers_authorization'] = (int)$status;
 
         return $this->data;
@@ -571,7 +571,7 @@ class Customer extends base
                     )
                 AND s.language_id = :languagesID
               ORDER BY orders_id DESC";
- 
+
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $language, 'integer');
         $history_split = new splitPageResults($sql, $max_number_to_return);
