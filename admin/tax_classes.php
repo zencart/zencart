@@ -79,7 +79,7 @@ if (!empty($action)) {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
+          <table class="table table-hover" role="listbox">
             <thead>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_CLASS_ID; ?></th>
@@ -100,9 +100,9 @@ if (!empty($action)) {
                   }
 
                   if (isset($tcInfo) && is_object($tcInfo) && ($class['tax_class_id'] == $tcInfo->tax_class_id)) {
-                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '\'" role="button">' . "\n";
+                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '\'" role="option" aria-selected="true">' . "\n";
                   } else {
-                    echo'              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $class['tax_class_id']) . '\'" role="button">' . "\n";
+                    echo'              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $class['tax_class_id']) . '\'" role="option" aria-selected="false">' . "\n";
                   }
                   ?>
               <td class="dataTableContent"><?php echo $class['tax_class_id']; ?></td>

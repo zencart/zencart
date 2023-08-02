@@ -81,7 +81,7 @@ if (!empty($action)) {
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <!-- body_text //-->
           <!-- downloads by product_name//-->
-          <table class="table table-hover">
+          <table class="table table-hover" role="listbox">
             <thead>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ATTRIBUTES_ID; ?></th>
@@ -150,9 +150,9 @@ if (!empty($action)) {
                 $file_check = zen_orders_products_downloads($products_downloads['products_attributes_filename']);
                 ?>
                 <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
-                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id . '&action=edit'); ?>'" role="button">
+                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id . '&action=edit'); ?>'" role="option" aria-selected="true">
                   <?php } else { ?>
-                  <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>'" role="button">
+                  <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action', 'page')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>'" role="option" aria-selected="false">
                   <?php } ?>
 
                   <td class="text-right"><?php echo $products_downloads['products_attributes_id']; ?></td>

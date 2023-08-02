@@ -83,7 +83,7 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
       <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
+          <table class="table table-hover" role="listbox">
             <thead>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></th>
@@ -127,9 +127,9 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
                   }
 
                   if (isset($gInfo) && is_object($gInfo) && ($group['group_id'] == $gInfo->group_id)) {
-                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=edit') . '\'" role="button">' . "\n";
+                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=edit') . '\'" role="option" aria-selected="true">' . "\n";
                   } else {
-                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=edit') . '\'" role="button">' . "\n";
+                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=edit') . '\'" role="option" aria-selected="false">' . "\n";
                   }
                   ?>
               <td class="dataTableContent"><?php echo $group['group_id']; ?></td>

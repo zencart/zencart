@@ -514,7 +514,7 @@ if (!empty($action)) {
         <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_WARNING_MULTIPLE_SETTINGS, 10, 10) . ' ' . TEXT_WARNING_MULTIPLE_SETTINGS .  $extra_legends; ?></div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
@@ -601,9 +601,9 @@ if (!empty($action)) {
                   }
                   if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) {
                     ?>
-                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="button">
+                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="option" aria-selected="true">
                     <?php } else { ?>
-                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="button">
+                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="option" aria-selected="false">
                     <?php } ?>
                     <td class="dataTableContent text-right"><?php echo ($zv_link_method_cnt > 1 ? zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) : '') . '&nbsp;' . $page['pages_id']; ?></td>
                     <td class="dataTableContent"><?php echo $page['pages_title']; ?></td>

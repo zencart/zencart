@@ -140,7 +140,7 @@ if (!empty($action)) {
       <!-- body_text //-->
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
+          <table class="table table-hover" role="listbox">
             <thead>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent col-sm-6"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
@@ -163,9 +163,9 @@ if (!empty($action)) {
 
                 if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) {
                   ?>
-                  <tr id="defaultSelected" class="dataTableRowSelected" onclick = "document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id . '&action=edit'); ?>'" role="button">
+                  <tr id="defaultSelected" class="dataTableRowSelected" onclick = "document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id . '&action=edit'); ?>'" role="option" aria-selected="true">
                   <?php } else { ?>
-                  <tr class="dataTableRow country-listing-row" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $country['countries_id']); ?>'" data-cid="<?php echo $country['countries_id']; ?>">
+                  <tr class="dataTableRow country-listing-row" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_COUNTRIES, zen_get_all_get_params(array('cID', 'action')) . 'cID=' . $country['countries_id']); ?>'" data-cid="<?php echo $country['countries_id']; ?>" role="option" aria-selected="false">
                   <?php } ?>
                   <td class="dataTableContent col-sm-6"><?php echo zen_output_string_protected($country['countries_name']); ?></td>
                   <td class="dataTableContent text-center"><?php echo $country['countries_iso_code_2']; ?></td>

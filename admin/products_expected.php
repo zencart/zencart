@@ -41,7 +41,7 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
       <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
+          <table class="table table-hover" role="listbox">
             <thead>
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
@@ -60,9 +60,9 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
                   }
 
                   if (isset($pInfo) && is_object($pInfo) && ($product['products_id'] == $pInfo->products_id)) {
-                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_products_category_id($pInfo->products_id) . '&pID=' . $pInfo->products_id . '&product_type=' . zen_get_products_type($pInfo->products_id)) . '\'" role="button">' . "\n";
+                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_products_category_id($pInfo->products_id) . '&pID=' . $pInfo->products_id . '&product_type=' . zen_get_products_type($pInfo->products_id)) . '\'" role="option" aria-selected="true">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $product['products_id']) . '\'" role="button">' . "\n";
+                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $product['products_id']) . '\'" role="option" aria-selected="false">' . "\n";
                   }
                   ?>
               <td class="dataTableContent"><?php echo $product['products_name']; ?></td>
