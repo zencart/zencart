@@ -674,7 +674,7 @@ class queryFactory extends base
         }
 
         if (!defined('FILENAME_DATABASE_TEMPORARILY_DOWN')) {
-            define('FILENAME_DATABASE_TEMPORARILY_DOWN', DIR_FS_CATALOG . '/nddbc.html');
+            define('FILENAME_DATABASE_TEMPORARILY_DOWN', (defined('DIR_FS_CATALOG') ? DIR_FS_CATALOG : DIR_FS_ROOT) . '/nddbc.html');
         }
         if (file_exists(FILENAME_DATABASE_TEMPORARILY_DOWN)) {
             if (($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED)
