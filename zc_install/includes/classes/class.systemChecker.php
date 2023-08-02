@@ -105,6 +105,7 @@ class systemChecker
                 $result = TRUE;
             }
         }
+        $this->log(($result ? 'TRUE' : 'FALSE'), __METHOD__, []);
         return $result;
     }
 
@@ -184,6 +185,9 @@ class systemChecker
                 if (isset($version)) break;
             }
         }
+
+        $this->log((!empty($version) ? $version : 'Cannot Be Determined'), __METHOD__, []);
+
 //echo print_r($this->errorList);
         return $version;
     }
@@ -631,6 +635,10 @@ class systemChecker
 
     function log($result, $methodName, $methodDetail)
     {
+        $status = $result;
+        if (is_bool($result)) {
+            $status = ($result === true) ? 'PASSED' : 'FAILED';
+        }
         if (VERBOSE_SYSTEMCHECKER == 'screen' || VERBOSE_SYSTEMCHECKER === TRUE || VERBOSE_SYSTEMCHECKER == 'TRUE') {
             echo $methodName . "<br>";
             if (is_array($methodDetail['parameters'])) {
@@ -638,11 +646,11 @@ class systemChecker
                     echo $key . " : " . $value . "<br>";
                 }
             }
-            echo (($result == 1) ? 'PASSED' : 'FAILED') . "<br>";
+            echo $status  . "<br>";
             echo "------------------<br><br>";
         }
         if (!in_array(VERBOSE_SYSTEMCHECKER, array('silent', 'none', 'off', 'OFF', 'NONE', 'SILENT'))) {
-            logDetails((($result == 1) ? 'PASSED' : 'FAILED') .
+            logDetails($status .
                 (isset($methodDetail['parameters']) ? substr(print_r($methodDetail['parameters'], TRUE), 5) : ''),
                 $methodName);
         }
@@ -683,6 +691,9 @@ class systemChecker
                 }
             }
         }
+
+        $this->log('Present: ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '; Latest release online: ' . trim($lines[0]) . '.'. trim($lines[1]), __METHOD__, []);
+
         // prepare displayable download link
         if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
             $new_version .= '<a href="' . $lines[6] . '" rel="noopener" target="_blank">' . TEXT_VERSION_CHECK_DOWNLOAD . '</a>';
