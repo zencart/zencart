@@ -57,7 +57,7 @@ if (!empty($action)) {
     <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
                 <thead>
                 <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
@@ -108,11 +108,13 @@ if (!empty($action)) {
                     }
 
                     $class_and_id = 'class="dataTableRow"';
+                    $role = 'role="option" aria-selected="false"';
                     if (isset($gInfo) && is_object($gInfo) && ($group['group_id'] == $gInfo->group_id)) {
                         $class_and_id = 'id="defaultSelected" class="dataTableRowSelected"';
-                    }
+                        $role = 'role="option" aria-selected="true"';
+                    } 
                     ?>
-                    <tr <?php echo $class_and_id; ?> onclick="document.location.href='<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=edit'); ?>'" role="button">
+                    <tr <?php echo $class_and_id; ?> onclick="document.location.href='<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=edit'); ?>'" <?php echo $role;?>>
                         <td class="dataTableContent text-center"><?php echo $group['group_id']; ?></td>
                         <td class="dataTableContent"><?php echo $group['group_name']; ?></td>
                         <td class="dataTableContent text-center"><?php echo $group['customer_count']; ?></td>
@@ -177,7 +179,7 @@ if (!empty($action)) {
                     if (isset($gInfo) && is_object($gInfo) && !empty($gInfo->group_name)) {
                         $heading[] = ['text' => '<h4>' . $gInfo->group_name . '</h4>'];
 
-                        $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id . '&action=edit') . '"class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
+                        $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
                                 <a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $gInfo->group_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
                         $contents[] = ['text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($gInfo->date_added)];
                         if (!empty($gInfo->last_modified)) $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($gInfo->last_modified)];

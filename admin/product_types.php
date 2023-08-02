@@ -140,7 +140,7 @@ if (!empty($action)) {
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <!-- body_text //-->
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONFIGURATION_TITLE; ?></th>
@@ -180,9 +180,9 @@ if (!empty($action)) {
                   }
 
                   if ((isset($cInfo) && is_object($cInfo)) && ($item['configuration_id'] == $cInfo->configuration_id)) {
-                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '\'" role="button">' . "\n";
+                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '\'" role="option" aria-selected="true">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $item['configuration_id'] . '&action=layout_edit') . '\'" role="button">' . "\n";
+                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $item['configuration_id'] . '&action=layout_edit') . '\'" role="option" aria-selected="false">' . "\n";
                   }
                   ?>
                 <td class="dataTableContent"><?php echo $item['configuration_title']; ?></td>
@@ -257,7 +257,7 @@ if (!empty($action)) {
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <!-- body_text //-->
 
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT_TYPES; ?></th>
@@ -282,9 +282,9 @@ if (!empty($action)) {
                   }
 
                   if (isset($ptInfo) && is_object($ptInfo) && ($product_type['type_id'] == $ptInfo->type_id)) {
-                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id'] . '&action=layout') . '\'" role="button">' . "\n";
+                    echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id'] . '&action=layout') . '\'" role="option" aria-selected="true">' . "\n";
                   } else {
-                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id']) . '\'" role="button">' . "\n";
+                    echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $product_type['type_id']) . '\'" role="option" aria-selected="false">' . "\n";
                   }
                   ?>
                 <td class="dataTableContent"><?php echo $product_type['type_name']; ?></td>

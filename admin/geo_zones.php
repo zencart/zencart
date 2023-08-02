@@ -161,7 +161,7 @@ if (!empty($action)) {
         ?>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
+            <table class="table table-hover" role="listbox">
               <thead>
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
@@ -201,9 +201,9 @@ if (!empty($action)) {
                       $sInfo = new objectInfo($zone);
                     }
                     if (isset($sInfo) && is_object($sInfo) && ($zone['association_id'] == $sInfo->association_id)) {
-                      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=edit') . '\'" role="button">' . "\n";
+                      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=edit') . '\'" role="option" aria-selected="true">' . "\n";
                     } else {
-                      echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zone['association_id']) . '\'" role="button">' . "\n";
+                      echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zone['association_id']) . '\'" role="option" aria-selected="false">' . "\n";
                     }
                     ?>
                 <td class="dataTableContent"><?php echo (($zone['countries_name']) ? $zone['countries_name'] : TEXT_ALL_COUNTRIES); ?></td>
@@ -232,7 +232,7 @@ if (!empty($action)) {
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-              <table class="table table-hover">
+              <table class="table table-hover" role="listbox">
                 <thead>
                   <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_ZONES; ?></th>
@@ -292,9 +292,9 @@ if (!empty($action)) {
                         $zInfo = new objectInfo($zone);
                       }
                       if (isset($zInfo) && is_object($zInfo) && ($zone['geo_zone_id'] == $zInfo->geo_zone_id)) {
-                        echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '\'" role="button">' . "\n";
+                        echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '\'" role="option" aria-selected="true">' . "\n";
                       } else {
-                        echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zone['geo_zone_id']) . '\'" role="button">' . "\n";
+                        echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zone['geo_zone_id']) . '\'" role="option" aria-selected="false">' . "\n";
                       }
                       ?>
                   <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zone['geo_zone_id'] . '&action=list') . '">' . zen_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $zone['geo_zone_name']; ?></td>
