@@ -16,6 +16,8 @@ if (!zen_is_logged_in()) {
     zen_redirect(zen_href_link(FILENAME_TIME_OUT));
 }
 
+$customer = new Customer;
+
 if (!isset($_GET['action']) || $_GET['action'] !== 'confirm') {
     $notify_string = '';
     if (isset($_GET['action']) && $_GET['action'] === 'update') {
@@ -136,18 +138,9 @@ if (!isset($_GET['action']) || $_GET['action'] !== 'confirm') {
 
     $flag_show_products_notification = (CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS === '1' && count($notificationsArray) > 0 && $flag_global_notifications !== '1');
 
-    $customer_has_gv_balance = false;
-    $gv_query =
-        'SELECT amount
-           FROM ' . TABLE_COUPON_GV_CUSTOMER . '
-          WHERE customer_id = :customersID';
-    $gv_query = $db->bindVars($gv_query, ':customersID', $_SESSION['customer_id'], 'integer');
-    $gv_result = $db->Execute($gv_query, 1);
-
-    if (!$gv_result->EOF && $gv_result->fields['amount'] > 0) {
-        $customer_has_gv_balance = true;
-        $customer_gv_balance = $currencies->format($gv_result->fields['amount']);
-    }
+    $gv_balance = $customer->getData('gv_balance');
+    $customer_has_gv_balance = !empty($gv_balance);
+    $customer_gv_balance = !is_null($gv_balance) ? $currencies->format($gv_balance) : false;
 
     // include template specific file name defines
     $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_CHECKOUT_SUCCESS, 'false');
