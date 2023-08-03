@@ -63,7 +63,7 @@ foreach ($get_terms as $next_get_term) {
 /**
  * add the products name to the breadcrumb trail
  */
-if (isset($_GET['products_id'], $cPath)) {
+if (isset($_GET['products_id'])) {
     $productname_query =
         "SELECT products_name
            FROM " . TABLE_PRODUCTS_DESCRIPTION . "
