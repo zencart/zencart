@@ -86,9 +86,11 @@ class VersionServer
         if (trim($newVersionInfo['versionMajor']) > PROJECT_VERSION_MAJOR) {
             return false;
         }
-        if (trim($newVersionInfo['versionMinor']) > PROJECT_VERSION_MINOR) {
+
+        if ((int)trim($newVersionInfo['versionMajor']) === (int)PROJECT_VERSION_MAJOR && trim($newVersionInfo['versionMinor']) > PROJECT_VERSION_MINOR) {
             return false;
         }
+
         return true;
     }
 
