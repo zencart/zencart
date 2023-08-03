@@ -2,10 +2,10 @@
 /**
  * paypalwpp.php payment module class for PayPal Express Checkout payment method
  *
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: 2021-03-26 Modified in v1.5.7d $
+ * @version $Id: Scott C Wilson 2022 Oct 14 Modified in v1.5.8 $
  */
 /**
  * load the communications layer code
@@ -20,94 +20,137 @@ class paypalwpp extends base {
    *
    * @var string
    */
-  var $code;
+  public $code;
+  public $codeTitle;
+  public $codeVersion;
   /**
    * displayed module title
    *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * displayed module description
    *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * module status - set based on various config and zone criteria
    *
-   * @var string
+   * @var boolean
    */
-  var $enabled;
+  public $enabled;
+  /**
+   * Installation 'check' flag
+   *
+   * @var boolean
+   */
+  protected $_check;
   /**
    * the zone to which this module is restricted for use
    *
-   * @var string
+   * @var int
    */
-  var $zone;
+  public $zone;
   /**
    * debugging flag
    *
    * @var boolean
    */
-  var $enableDebugging = false;
+  public $enableDebugging = false;
+  public $emailAlerts;
   /**
    * Determines whether payment page is displayed or not
    *
    * @var boolean
    */
-  var $showPaymentPage = false;
-  var $flagDisablePaymentAddressChange = false;
+  public $showPaymentPage = false;
+  public $flagDisablePaymentAddressChange = false;
   /**
    * sort order of display
    *
    * @var int
    */
-  var $sort_order = 0;
+  public $sort_order = 0;
   /**
-   * Button Source / BN code -- enables the module to work for Zen Cart
+   * Button Sources / BN code -- enables the module to work for Zen Cart
    *
    * @var string
    */
-  var $buttonSourceEC = 'ZenCart-EC_us';
+  public $buttonSourceEC = 'ZenCart-EC_us';
+  public $buttonSourceDP;
+  /**
+   * Notify customer on new-account creation?
+   *
+   * @var string
+   */
+  protected $new_acct_notify;
   /**
    * order status setting for pending orders
    *
    * @var int
    */
-  var $order_pending_status = 1;
+  public $order_pending_status = 1;
   /**
    * order status setting for completed orders
    *
    * @var int
    */
-  var $order_status = DEFAULT_ORDERS_STATUS_ID;
+  public $order_status;
+  /**
+   * URLs used during checkout if this is the selected payment method
+   *
+   * @var string
+   */
+  public $form_action_url;
+  public $ec_redirect_url;
+  /**
+   * Variables used in processing transaction request/response values for internal use.
+   */
+  protected $payment_type;
+  protected $payment_status;
+  protected $avs;
+  protected $cvv2;
+  protected $correlationid;
+  protected $transactiontype;
+  protected $payment_time;
+  protected $feeamt;
+  protected $taxamt;
+  protected $pendingreason;
+  protected $reasoncode;
+  protected $numitems;
+  protected $amt;
+  protected $auth_code;
+  protected $responsedata;
+  protected $transaction_id;
+  public $ot_merge;     //-Public, since might be referenced by an observer.
+  protected $requestPrefix;
+  protected $infoPrefix;
   /**
    * Debug tools
    */
-  var $_logDir = DIR_FS_LOGS;
-  var $_logLevel = 0;
+  protected $_logDir = DIR_FS_LOGS;
+  protected $_logLevel = 0;
   /**
    * FMF
    */
-  var $fmfResponse = '';
-  var $fmfErrors = array();
+  public $fmfResponse = '';
+  public $fmfErrors = [];
   /**
    * Flag to enable the modern in-context checkout.
    * https://developer.paypal.com/docs/classic/express-checkout/in-context/integration/
    * @var boolean
    */
-  var $use_incontext_checkout = true;
+  public $use_incontext_checkout = true;
   /**
    * class constructor
    */
   function __construct() {
-    include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', 'paypalwpp.php', 'false'));
     global $order;
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
-    $this->codeVersion = '1.5.7';
-    $this->enableDirectPayment = FALSE;
+    $this->codeVersion = '1.5.8';
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
@@ -151,7 +194,6 @@ class paypalwpp extends base {
 
     $this->enableDebugging = (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email');
     $this->emailAlerts = (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Alerts Only');
-    $this->doDPonly = (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE =='Payflow-US' && !(defined('MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC') && MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC == 'Yes'));
     $this->showPaymentPage = (MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE == 'No') ? true : false;
 
     $this->buttonSourceEC = 'ZenCart-EC_us';
@@ -165,17 +207,15 @@ class paypalwpp extends base {
       $this->buttonSourceDP = 'ZenCart-GW_us';
     }
 
-    $this->order_pending_status = MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID;
-    if ((int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID > 0) {
-      $this->order_status = MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID;
-    }
+    $this->order_pending_status = (int)MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID;
+    $this->order_status = ((int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID;
+
     $this->new_acct_notify = MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY;
     $this->zone = (int)MODULE_PAYMENT_PAYPALWPP_ZONE;
     if (is_object($order)) $this->update_status();
 
     if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.6') $this->enabled = false;
 
-    $this->cards = array();
     // if operating in markflow mode, start EC process when submitting order
     if (!$this->in_special_checkout()) {
       $this->form_action_url = zen_href_link('ipn_main_handler.php', 'type=ec&markflow=1&clearSess=1&stage=final', 'SSL', true, true, true);
@@ -265,12 +305,11 @@ class paypalwpp extends base {
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
    */
   function selection() {
-    $this->cc_type_check = '';
     /**
      * since we are NOT processing via the gateway, we will only display MarkFlow payment option, and no CC fields
      */
     return array('id' => $this->code,
-                 'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '" /><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>');
+                 'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '"><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>');
   }
   function pre_confirmation_check() {
     // Since this is an EC checkout, do nothing.
@@ -445,34 +484,40 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       // SUCCESS
       $this->payment_type = MODULE_PAYMENT_PAYPALWPP_EC_TEXT_TYPE;
       $this->responsedata = $response;
-      if ($response['PAYMENTINFO_0_PAYMENTTYPE'] != '') $this->payment_type .=  ' (' . urldecode($response['PAYMENTINFO_0_PAYMENTTYPE']) . ')';
 
-      $this->transaction_id = trim((isset($response['PNREF']) ? $response['PNREF'] : '') . ' ' . $response['PAYMENTINFO_0_TRANSACTIONID']);
-      if (empty($response['PAYMENTINFO_0_PENDINGREASON']) ||
-          $response['PAYMENTINFO_0_PENDINGREASON'] == 'none' ||
-          $response['PAYMENTINFO_0_PENDINGREASON'] == 'completed' ||
-          $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Completed') {
+      // -----
+      // Note that variable names are 'prefixed', based on the NVP/PAYFLOW mode currently in use.  Those
+      // prefixes are set by the paypal_init method.
+      //
+      if ($response[$this->infoPrefix . 'PAYMENTTYPE'] != '') $this->payment_type .=  ' (' . urldecode($response[$this->infoPrefix . 'PAYMENTTYPE']) . ')';
+
+      $this->transaction_id = trim((isset($response['PNREF']) ? $response['PNREF'] : '') . ' ' . $response[$this->infoPrefix . 'TRANSACTIONID']);
+      if (empty($response[$this->infoPrefix . 'PENDINGREASON']) ||
+          $response[$this->infoPrefix . 'PENDINGREASON'] == 'none' ||
+          $response[$this->infoPrefix . 'PENDINGREASON'] == 'completed' ||
+          $response[$this->infoPrefix . 'PAYMENTSTATUS'] == 'Completed') {
         $this->payment_status = 'Completed';
         if ($this->order_status > 0) $order->info['order_status'] = $this->order_status;
       } else {
-        if ($response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
+        if ($response[$this->infoPrefix . 'PAYMENTSTATUS'] == 'Pending')
         {
-          if ($response['L_ERRORCODE0'] == 11610 && $response['PAYMENTINFO_0_PENDINGREASON'] == '') $response['PAYMENTINFO_0_PENDINGREASON'] = 'Pending FMF Review by Storeowner';
+            $response['L_ERRORCODE0'] = empty($response['L_ERRORCODE0']) ? 0 : $response['L_ERRORCODE0'];
+          if ($response['L_ERRORCODE0'] == 11610 && $response[$this->infoPrefix . 'PENDINGREASON'] == '') $response[$this->infoPrefix . 'PENDINGREASON'] = 'Pending FMF Review by Storeowner';
         }
-        $this->payment_status = 'Pending (' . $response['PAYMENTINFO_0_PENDINGREASON'] . ')';
+        $this->payment_status = 'Pending (' . $response[$this->infoPrefix . 'PENDINGREASON'] . ')';
         $order->info['order_status'] = $this->order_pending_status;
       }
       $this->avs = 'N/A';
       $this->cvv2 = 'N/A';
       $this->correlationid = $response['CORRELATIONID'];
-      $this->transactiontype = $response['PAYMENTINFO_0_TRANSACTIONTYPE'];
-      $this->payment_time = urldecode($response['PAYMENTINFO_0_ORDERTIME']);
-      $this->feeamt = urldecode($response['PAYMENTINFO_0_FEEAMT']);
-      $this->taxamt = urldecode($response['PAYMENTINFO_0_TAXAMT']);
-      $this->pendingreason = $response['PAYMENTINFO_0_PENDINGREASON'];
-      $this->reasoncode = $response['PAYMENTINFO_0_REASONCODE'];
-      $this->numitems = sizeof($order->products);
-      $this->amt = urldecode($response['PAYMENTINFO_0_AMT'] . ' ' . $response['PAYMENTINFO_0_CURRENCYCODE']);
+      $this->transactiontype = $response[$this->infoPrefix . 'TRANSACTIONTYPE'];
+      $this->payment_time = urldecode($response[$this->infoPrefix . 'ORDERTIME']);
+      $this->feeamt = empty($response[$this->infoPrefix . 'FEEAMT']) ? 0 : urldecode($response[$this->infoPrefix . 'FEEAMT']);
+      $this->taxamt = urldecode($response[$this->infoPrefix . 'TAXAMT']);
+      $this->pendingreason = $response[$this->infoPrefix . 'PENDINGREASON'];
+      $this->reasoncode = $response[$this->infoPrefix . 'REASONCODE'];
+      $this->numitems = count($order->products);
+      $this->amt = urldecode($response[$this->infoPrefix . 'AMT'] . ' ' . $response[$this->infoPrefix . 'CURRENCYCODE']);
       $this->auth_code = (isset($response['AUTHCODE'])) ? $response['AUTHCODE'] : $response['TOKEN'];
 
       $this->notify('NOTIFY_PAYPALWPP_BEFORE_PROCESS_FINISHED', $response);
@@ -532,10 +577,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'num_cart_items' => (float)$this->numitems,
                           'mc_gross' => (float)$this->amt,
                           'mc_fee' => (float)urldecode($this->feeamt),
-                          'mc_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
-                          'settle_amount' => (float)(isset($this->responsedata['PAYMENTINFO_0_SETTLEAMT']) ? urldecode($this->responsedata['PAYMENTINFO_0_SETTLEAMT']) : $this->amt),
-                          'settle_currency' => $this->responsedata['PAYMENTINFO_0_CURRENCYCODE'],
-                          'exchange_rate' => (isset($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) && urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) > 0) ? urldecode($this->responsedata['PAYMENTINFO_0_EXCHANGERATE']) : 1.0,
+                          'mc_currency' => $this->responsedata[$this->infoPrefix . 'CURRENCYCODE'],
+                          'settle_amount' => (float)(isset($this->responsedata[$this->infoPrefix . 'SETTLEAMT']) ? urldecode($this->responsedata[$this->infoPrefix . 'SETTLEAMT']) : $this->amt),
+                          'settle_currency' => $this->responsedata[$this->infoPrefix . 'CURRENCYCODE'],
+                          'exchange_rate' => (isset($this->responsedata[$this->infoPrefix . 'EXCHANGERATE']) && urldecode($this->responsedata[$this->infoPrefix . 'EXCHANGERATE']) > 0) ? urldecode($this->responsedata[$this->infoPrefix . 'EXCHANGERATE']) : 1.0,
                           'notify_version' => '0',
                           'verify_sign' =>'',
                           'date_added' => 'now()',
@@ -734,7 +779,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // cannot remove EC if DP installed:
     if (defined('MODULE_PAYMENT_PAYPALDP_STATUS')) {
       // this language text is hard-coded in english since Website Payments Pro is not yet available in any countries that speak any other language at this time.
-      $messageStack->add_session('<strong>Sorry, you must remove PayPal Payments Pro (paypaldp) first.</strong> PayPal Payments Pro (Website Payments Pro) requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link('modules.php?set=payment&module=paypaldp', '', 'NONSSL') . '">Click here to edit or remove your PayPal Payments Pro module.</a>' , 'error');
+      $messageStack->add_session('<strong>Sorry, you must remove PayPal Payments Pro (paypaldp) first.</strong> PayPal Payments Pro (Website Payments Pro) requires that you offer Express Checkout to your customers.<br><a href="' . zen_href_link('modules.php?set=payment&module=paypaldp', '', 'NONSSL') . '">Click here to edit or remove your PayPal Payments Pro module.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypalwpp', 'NONSSL'));
       return 'failed';
     }
@@ -743,6 +788,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE\_PAYMENT\_PAYPALWPP\_%' OR configuration_key LIKE 'MODULE\_PAYMENT\_PAYPALEC\_%'");
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_UNINSTALLED');
   }
+
+  function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/');
+  }
+
   /**
    * Check settings and conditions to determine whether we are in an Express Checkout phase or not
    */
@@ -801,6 +851,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       return $doPayPal;
     }
     $ec_uses_gateway = (defined('MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD') && MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD == 'Payflow') ? true : false;
+
+    // -----
+    // The PayFlow processing uses older-style, unprefixed, NVP variable names while the PayPal processing
+    // uses the PAYMENTREQUEST_0_ and PAYMENT_INFO_0_ prefixes!
+    //
     if (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow') {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
                                         'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
@@ -810,6 +865,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                                         'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://payflowpro.paypal.com/transaction',
                                     'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction');
+
+      $this->requestPrefix = '';
+      $this->infoPrefix = '';
     } else {
       $doPayPal = new paypal_curl(array('mode' => 'nvp',
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
@@ -819,6 +877,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                                         'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
+
+      $this->requestPrefix = 'PAYMENTREQUEST_0_';
+      $this->infoPrefix = 'PAYMENTINFO_0_';
     }
 
     // set logging options
@@ -1066,49 +1127,67 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
     }
   }
-  /**
-   * Determine the language to use when redirecting to the PayPal site
-   * Order of selection: locale for current language, current-language-code, delivery-country, billing-country, store-country
-   */
-  function getLanguageCode($mode = 'ec') {
-    global $order, $locales, $lng;
-    if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-      $lng = new language;
-    }
-    $allowed_country_codes = array('US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL', 'PT', 'BR', 'RU');
-    $allowed_language_codes = array('da_DK', 'he_IL', 'id_ID', 'ja_JP', 'no_NO', 'pt_BR', 'ru_RU', 'sv_SE', 'th_TH', 'tr_TR', 'zh_CN', 'zh_HK', 'zh_TW');
+    /**
+     * Determine the language to use when redirecting to the PayPal site
+     * Order of selection: locale for current language, current-language-code, delivery-country, billing-country, store-country
+     */
+    public function getLanguageCode($mode = 'ec')
+    {
+        global $order, $locales, $lng;
 
-    $additional_language_codes = array('de_DE', 'en_AU', 'en_GB', 'en_US', 'es_ES', 'fr_CA', 'fr_FR', 'it_IT', 'nl_NL', 'pl_PL', 'pt_PT');
-    if ($mode == 'incontext') {
-      $allowed_language_codes = array_merge($allowed_language_codes, $additional_language_codes);
-      $allowed_country_codes = array();
+        if (!isset($lng) || !is_object($lng)) {
+            $lng = new language;
+        }
+        $allowed_country_codes = ['US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL', 'PT', 'BR', 'RU'];
+        $allowed_language_codes = ['da_DK', 'he_IL', 'id_ID', 'ja_JP', 'no_NO', 'pt_BR', 'ru_RU', 'sv_SE', 'th_TH', 'tr_TR', 'zh_CN', 'zh_HK', 'zh_TW'];
+
+        if ($mode === 'incontext') {
+            $additional_language_codes = ['de_DE', 'en_AU', 'en_GB', 'en_US', 'es_ES', 'fr_CA', 'fr_FR', 'it_IT', 'nl_NL', 'pl_PL', 'pt_PT'];
+            $allowed_language_codes = array_merge($allowed_language_codes, $additional_language_codes);
+            $allowed_country_codes = [];
+        }
+
+        $lang_code = '';
+        $user_locale_info = [];
+        if (isset($locales) && is_array($locales)) {
+            $user_locale_info = $locales;
+        }
+
+        $lng->get_browser_language();
+        array_unshift($user_locale_info, $lng->language['code']);
+
+        $user_locale_info[] = strtoupper($_SESSION['languages_code']);
+
+        if (isset($order->delivery['country']['id'])) {
+            $shippingISO = zen_get_countries_with_iso_codes($order->delivery['country']['id']);
+            $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2']);
+        }
+
+        if (isset($order->billing['country']['id'])) {
+            $billingISO = zen_get_countries_with_iso_codes($order->billing['country']['id']);
+            $user_locale_info[] = strtoupper($billingISO['countries_iso_code_2']);
+        }
+
+        if (isset($order->customer['country']['id'])) {
+            $custISO = zen_get_countries_with_iso_codes($order->customer['country']['id']);
+            $user_locale_info[] = strtoupper($custISO['countries_iso_code_2']);
+        }
+
+        $storeISO = zen_get_countries_with_iso_codes(STORE_COUNTRY);
+        $user_locale_info[] = strtoupper($storeISO['countries_iso_code_2']);
+
+        $to_match = array_map('strtoupper', array_merge($allowed_country_codes, $allowed_language_codes));
+        foreach ($user_locale_info as $val) {
+            if (in_array(strtoupper($val), $to_match)) {
+                if (strtoupper($val) === 'EN') {
+                    $val = (isset($locales) && $locales[0] === 'en_GB') ? 'GB' : 'US';
+                }
+                return $val;
+            }
+        }
+        return '';
     }
 
-    $lang_code = '';
-    $user_locale_info = array();
-    if (isset($locales) && is_array($locales)) {
-      $user_locale_info = $locales;
-    }
-    array_unshift($user_locale_info, $lng->get_browser_language());
-    $user_locale_info[] = strtoupper($_SESSION['languages_code']);
-    $shippingISO = zen_get_countries($order->delivery['country']['id'], true);
-    $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2']);
-    $billingISO = zen_get_countries($order->billing['country']['id'], true);
-    $user_locale_info[] = strtoupper($billingISO['countries_iso_code_2']);
-    $custISO = zen_get_countries($order->customer['country']['id'], true);
-    $user_locale_info[] = strtoupper($custISO['countries_iso_code_2']);
-    $storeISO = zen_get_countries(STORE_COUNTRY, true);
-    $user_locale_info[] = strtoupper($storeISO['countries_iso_code_2']);
-
-    $to_match = array_map('strtoupper', array_merge($allowed_country_codes, $allowed_language_codes));
-    foreach($user_locale_info as $val) {
-      if (in_array(strtoupper($val), $to_match)) {
-        if (strtoupper($val) == 'EN' && isset($locales) && $locales[0] == 'en_GB') $val = 'GB';
-        if (strtoupper($val) == 'EN') $val = 'US';
-        return $val;
-      }
-    }
-  }
   /**
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
    */
@@ -1254,8 +1333,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
-      $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      if (zen_not_null($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (!empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+        $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
         if (isset($GLOBALS[$module]) && $GLOBALS[$module]->tax_class > 0) {
           $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
@@ -1288,9 +1367,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $decimals = $currencies->get_decimal_places($_SESSION['currency']);
 
     // loop thru all products to prepare details of quantity and price.
-    for ($i=0, $n=sizeof($order->products), $k=-1; $i<$n; $i++) {
-      // PayPal is inconsistent in how it handles zero-value line-items, so skip this entry if price is zero
-      if ($order->products[$i]['final_price'] == 0) {
+    for ($i = 0, $n = count($order->products), $k = -1; $i < $n; $i++) {
+      // PayPal is inconsistent in how it handles zero-value line-items, so skip this entry if price is zero ...
+      // so long as there is more than one product to be submitted.
+      if ($n !== 1 && $order->products[$i]['final_price'] == 0) {
         continue;
       } else {
         $k++;
@@ -1528,13 +1608,30 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', 'SSL'));
     }
 
+    // -----
+    // If the session's 'cartID' has not yet been set (it hasn't if the checkout
+    // was started via the PPEC button), then set it to the current cart's 'cartID'.
+    // Otherwise, a PPEC-button-started order will redirect back to the shipping
+    // phase upon click of the 'Continue' button on the checkout_payment page.
+    //
+    if (!isset($_SESSION['cartID']) || $_SESSION['cartID'] === '') {
+        $_SESSION['cartID'] = $_SESSION['cart']->cartID;
+    }
+
     // init new order object
     require(DIR_WS_CLASSES . 'order.php');
     $order = new order;
 
-    // load the selected shipping module so that shipping taxes can be assessed
-    require(DIR_WS_CLASSES . 'shipping.php');
-    $shipping_modules = new shipping($_SESSION['shipping']);
+    // -----
+    // If we're just starting the checkout process via the PPEC button, there's
+    // no customer or shipping-address currently defined.  Bypass the shipping
+    // determination.
+    //
+    if ($this->in_special_checkout()) {
+        // load the selected shipping module so that shipping taxes can be assessed
+        require(DIR_WS_CLASSES . 'shipping.php');
+        $shipping_modules = new shipping($_SESSION['shipping']);
+    }
 
     // load OT modules so that discounts and taxes can be assessed
     require(DIR_WS_CLASSES . 'order_total.php');
@@ -1543,7 +1640,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $order_totals = $order_total_modules->process();
 
     $doPayPal = $this->paypal_init();
-    $options = array();
+    $options = [];
 
     // build line item details
     $options = $this->getLineItemDetails($this->selectCurrency());
@@ -1592,11 +1689,19 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // Set the return URL if they click "Submit" on PayPal site
     $return_url = str_replace('&amp;', '&', zen_href_link('ipn_main_handler.php', 'type=ec', 'SSL', true, true, true));
     // Select the return URL if they click "cancel" on PayPal site or click to return without making payment or login
-    $cancel_url = str_replace('&amp;', '&', zen_href_link(($_SESSION['customer_first_name'] != '' && $_SESSION['customer_id'] != '' ? FILENAME_CHECKOUT_SHIPPING : FILENAME_SHOPPING_CART), 'ec_cancel=1', 'SSL'));
+    $cancel_url = str_replace('&amp;', '&', zen_href_link((zen_is_logged_in() ? FILENAME_CHECKOUT_SHIPPING : FILENAME_SHOPPING_CART), 'ec_cancel=1', 'SSL'));
 
     // debug
     $val = $_SESSION; unset($val['navigation']);
-    $this->zcLog('ec_step1 - 1', 'Checking to see if we are in markflow' . "\n" . 'cart contents: ' . $_SESSION['cart']->get_content_type() . "\n\nNOTE: " . '$this->showPaymentPage = ' . (int)$this->showPaymentPage . "\nCustomer ID: " . (int)$_SESSION['customer_id'] . "\nSession Data: " . print_r($val, true));
+    $this->zcLog(
+        'ec_step1 - 1',
+        'Checking to see if we are in markflow' . "\n" .
+        'cart contents: ' . $_SESSION['cart']->get_content_type() .
+        "\n\nNOTE: " . '$this->showPaymentPage = ' . (int)$this->showPaymentPage .
+        "\nCustomer ID: " . (zen_is_logged_in() ? (int)$_SESSION['customer_id'] : 'Guest').
+        "\nSession Data: " .
+        print_r($val, true)
+    );
 
     /**
      * Check whether shipping is required on this order or not.
@@ -1739,7 +1844,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // Set the name of the displayed "continue" button on the PayPal site.
     // 'commit' = "Pay Now"  ||  'continue' = "Review Payment"
     $orderReview = true;
-    if ($_SESSION['paypal_ec_markflow'] == 1) $orderReview = false;
+    if (isset($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1) {
+        $orderReview = false;
+    }
     $userActionKey = "&useraction=" . ((int)$orderReview == false ? 'commit' : 'continue');
 
     $this->ec_redirect_url = $paypal_url . "?cmd=_express-checkout&token=" . $_SESSION['paypal_ec_token'] . $userActionKey;
@@ -1794,14 +1901,15 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // Fill in possibly blank return values, prevents PHP notices in follow-on checking clause.
     $response_vars = array(
-        'PAYMENTREQUEST_0_SHIPTONAME',
-        'PAYMENTREQUEST_0_SHIPTOSTREET',
-        'PAYMENTREQUEST_0_SHIPTOSTREET2',
-        'PAYMENTREQUEST_0_SHIPTOCITY',
-        'PAYMENTREQUEST_0_SHIPTOSTATE',
-        'PAYMENTREQUEST_0_SHIPTOZIP',
-        'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE',
+        $this->requestPrefix . 'SHIPTONAME',
+        $this->requestPrefix . 'SHIPTOSTREET',
+        $this->requestPrefix . 'SHIPTOSTREET2',
+        $this->requestPrefix . 'SHIPTOCITY',
+        $this->requestPrefix . 'SHIPTOSTATE',
+        $this->requestPrefix . 'SHIPTOZIP',
+        $this->requestPrefix . 'SHIPTOCOUNTRYCODE',
     );
+
     $address_received = '';
     foreach ($response_vars as $response_var) {
         if (!isset($response[$response_var])) {
@@ -1816,7 +1924,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
 
     // will we be creating an account for this customer?  We must if the cart contents are virtual, so can login to download etc.
-    if ($_SESSION['cart']->get_content_type('true') > 0 || in_array($_SESSION['cart']->content_type, array('mixed', 'virtual'))) $this->new_acct_notify = 'Yes';
+    if ($_SESSION['cart']->get_content_type('true') > 0 || in_array($_SESSION['cart']->get_content_type(), array('mixed', 'virtual'))) $this->new_acct_notify = 'Yes';
 
     // get the payer_id from the customer's info as returned from PayPal
     $_SESSION['paypal_ec_payer_id'] = $response['PAYERID'];
@@ -1843,31 +1951,31 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                              'payer_lastname'  => urldecode($response['LASTNAME']),
                              'payer_business'  => urldecode($response['BUSINESS']),
                              'payer_status'    => $response['PAYERSTATUS'],
-                             'ship_country_code'   => urldecode($response['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']),
-                             'ship_address_status' => urldecode($response['PAYMENTREQUEST_0_ADDRESSSTATUS']),
-                             'ship_phone'      => urldecode($response['PAYMENTREQUEST_0_SHIPTOPHONENUM'] != '' ? $response['PAYMENTREQUEST_0_SHIPTOPHONENUM'] : $response['PHONENUM']),
-                             'order_comment'   => (isset($response['NOTE']) || isset($response['PAYMENTREQUEST_0_NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response['PAYMENTREQUEST_0_NOTETEXT']) : ''),
+                             'ship_country_code'   => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
+                             'ship_address_status' => urldecode($response[$this->requestPrefix . 'ADDRESSSTATUS']),
+                             'ship_phone'      => urldecode($response[$this->requestPrefix . 'SHIPTOPHONENUM'] != '' ? $response[$this->requestPrefix . 'SHIPTOPHONENUM'] : $response['PHONENUM']),
+                             'order_comment'   => (isset($response['NOTE']) && isset($response[$this->requestPrefix . 'NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response[$this->requestPrefix . 'NOTETEXT']) : ''),
                              );
 
 //    if (strtoupper($response['ADDRESSSTATUS']) == 'NONE' || !isset($response['SHIPTOSTREET']) || $response['SHIPTOSTREET'] == '') {
 //      $step2_shipto = array();
 //    } else {
       // accomodate PayPal bug which repeats 1st line of address for 2nd line if 2nd line is empty.
-      if ($response['PAYMENTREQUEST_0_SHIPTOSTREET2'] == $response['PAYMENTREQUEST_0_SHIPTOSTREET']) $response['PAYMENTREQUEST_0_SHIPTOSTREET2'] = '';
+      if ($response[$this->requestPrefix . 'SHIPTOSTREET2'] == $response[$this->requestPrefix . 'SHIPTOSTREET']) $response[$this->requestPrefix . 'SHIPTOSTREET2'] = '';
 
       // accomodate PayPal bug which incorrectly treats 'Yukon Territory' as YK instead of ISO standard of YT.
-      if ($response['PAYMENTREQUEST_0_SHIPTOSTATE'] == 'YK') $response['PAYMENTREQUEST_0_SHIPTOSTATE'] = 'YT';
+      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] == 'YK') $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'YT';
       // same with Newfoundland
-      if ($response['PAYMENTREQUEST_0_SHIPTOSTATE'] == 'NF') $response['PAYMENTREQUEST_0_SHIPTOSTATE'] = 'NL';
+      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] == 'NF') $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'NL';
 
       // process address details supplied
-      $step2_shipto = array('ship_name'     => urldecode($response['PAYMENTREQUEST_0_SHIPTONAME']),
-                            'ship_street_1' => urldecode($response['PAYMENTREQUEST_0_SHIPTOSTREET']),
-                            'ship_street_2' => urldecode($response['PAYMENTREQUEST_0_SHIPTOSTREET2']),
-                            'ship_city'     => urldecode($response['PAYMENTREQUEST_0_SHIPTOCITY']),
-                            'ship_state'    => (isset($response['PAYMENTREQUEST_0_SHIPTOSTATE']) && $response['PAYMENTREQUEST_0_SHIPTOSTATE'] !='' ? urldecode($response['PAYMENTREQUEST_0_SHIPTOSTATE']) : urldecode($response['PAYMENTREQUEST_0_SHIPTOCITY'])),
-                            'ship_postal_code' => urldecode($response['PAYMENTREQUEST_0_SHIPTOZIP']),
-                            'ship_country_code'  => urldecode($response['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']),
+      $step2_shipto = array('ship_name'     => urldecode($response[$this->requestPrefix . 'SHIPTONAME']),
+                            'ship_street_1' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET']),
+                            'ship_street_2' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET2']),
+                            'ship_city'     => urldecode($response[$this->requestPrefix . 'SHIPTOCITY']),
+                            'ship_state'    => (isset($response[$this->requestPrefix . 'SHIPTOSTATE']) && $response[$this->requestPrefix . 'SHIPTOSTATE'] !='' ? urldecode($response[$this->requestPrefix . 'SHIPTOSTATE']) : urldecode($response[$this->requestPrefix . 'SHIPTOCITY'])),
+                            'ship_postal_code' => urldecode($response[$this->requestPrefix . 'SHIPTOZIP']),
+                            'ship_country_code'  => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
                             'ship_country_name'  => (isset($response['SHIPTOCOUNTRY']) ? urldecode($response['SHIPTOCOUNTRY']) : (isset($response['SHIPTOCOUNTRYNAME']) ? urldecode($response['SHIPTOCOUNTRYNAME']) : '')));
 //    }
 
@@ -1883,8 +1991,12 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $order = new order;
 
       // load the selected shipping module so that shipping taxes can be assessed
-      if (!class_exists('shipping')) require(DIR_WS_CLASSES . 'shipping.php');
-      $shipping_modules = new shipping($_SESSION['shipping']);
+      if (isset($_SESSION['shipping'])) {
+          if (!class_exists('shipping')) {
+              require DIR_WS_CLASSES . 'shipping.php';
+          }
+          $shipping_modules = new shipping($_SESSION['shipping']);
+      }
 
       // load OT modules so that discounts and taxes can be assessed
       if (!class_exists('order_total')) require(DIR_WS_CLASSES . 'order_total.php');
@@ -1893,7 +2005,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $order_totals = $order_total_modules->process();
       $this->zcLog('ec_step2 ', 'Instantiated $order object contents: ' . print_r($order, true));
     }
-    if ($order->info['total'] < 0.01 && urldecode($response['PAYMENTREQUEST_0_AMT']) > 0) $order->info['total'] = urldecode($response['PAYMENTREQUEST_0_AMT']);
+
+    if ($order->info['total'] < 0.01 && urldecode($response[$this->requestPrefix . 'AMT']) > 0) $order->info['total'] = urldecode($response[$this->requestPrefix . 'AMT']);
     //$this->zcLog('ec_step2 - processed info', print_r(array_merge($step2_payerinfo, $step2_shipto), true));
 
     // send data off to build account, log in, set addresses, place order
@@ -1921,7 +2034,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $state_id = 0;
     $acct_exists = false;
     // store default address id for later use/reference
-    $original_default_address_id = $_SESSION['customer_default_address_id'];
+    $original_default_address_id = $_SESSION['customer_default_address_id'] ?? 'Not set';
 
     // Get the customer's country ID based on name or ISO code
     $sql = "SELECT countries_id, address_format_id, countries_iso_code_2, countries_iso_code_3
@@ -2018,8 +2131,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $_SESSION['comments'] = (isset($_SESSION['comments']) && $_SESSION['comments'] != '' ? $_SESSION['comments'] . "\n" : '') . $paypal_ec_payer_info['order_comment'];
       $order->info['comments'] = $_SESSION['comments'];
     }
-    // debug
-    $this->zcLog('ec_step2_finish - 2', 'country_id = ' . $country_id . ' ' . $paypal_ec_payer_info['ship_country_name'] . ' ' . $paypal_ec_payer_info['ship_country_code'] ."\naddress_format_id = " . $address_format_id . "\nstate_id = " . $state_id . ' (original state tested: ' . $paypal_ec_payer_info['ship_state'] . ')' . "\ncountry1->fields['countries_id'] = " . $country1->fields['countries_id'] . "\ncountry2->fields['countries_id'] = " . $country2->fields['countries_id'] . "\n" . '$order->customer = ' . print_r($order->customer, true));
+      // debug
+      $this->zcLog(
+          'ec_step2_finish - 2',
+          'country_id = ' . $country_id . ' ' . $paypal_ec_payer_info['ship_country_name'] . ' ' . $paypal_ec_payer_info['ship_country_code'] . "\n" .
+          'address_format_id = ' . $address_format_id . "\n" .
+          'state_id = ' . $state_id . ' (original state tested: ' . $paypal_ec_payer_info['ship_state'] . ')' . "\n" .
+          "country1->fields['countries_id'] = " . ($country1->fields['countries_id'] ?? 'no result') . "\n" .
+          "country2->fields['countries_id'] = " . ($country2->fields['countries_id'] ?? 'no result') . "\n" .
+          '$order->customer = ' . print_r($order->customer, true)
+      );
 
     // check to see whether PayPal should still be offered to this customer, based on the zone of their address:
     $this->update_status();
@@ -2200,7 +2321,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // send Welcome Email if appropriate
         if ($this->new_acct_notify == 'Yes') {
           // require the language file
-          require(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", 'create_account.php', 'false'));
+          zen_include_language_file('create_account.php', '/', 'inline');
           // set the mail text
           $email_text = sprintf(EMAIL_GREET_NONE, $paypal_ec_payer_info['payer_firstname']) . EMAIL_WELCOME . "\n\n" . EMAIL_TEXT;
           $email_text .= "\n\n" . EMAIL_EC_ACCOUNT_INFORMATION . "\nUsername: " . $paypal_ec_payer_info['payer_email'] . "\nPassword: " . $password . "\n\n";
@@ -2277,7 +2398,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->notify('NOTIFY_PAYPALEC_END_ECSTEP2', $order);
 
       // send the user on
-      if ($_SESSION['paypal_ec_markflow'] == 1) {
+      if (isset($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1) {
         $this->terminateEC('', false, FILENAME_CHECKOUT_PROCESS);
       } else {
         $this->terminateEC('', false, FILENAME_CHECKOUT_CONFIRMATION);
@@ -2339,7 +2460,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           return false;
         }
       }
-      
+
       // -----
       // Give a watching observer the opportunity to bypass this address-override.  An observer
       // can disable the address-override processing by setting the $disable_address_override
@@ -2351,7 +2472,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $this->zcLog('getOverrideAddress - 1a', "Override disabled by observer request.\n");
         return false;
       }
-      
+
       // now grab the address from the database and set it as the overridden address
       $sql = "SELECT entry_firstname, entry_lastname, entry_company,
                      entry_street_address, entry_suburb, entry_city, entry_postcode,
@@ -2640,6 +2761,14 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
     }
 
+    // truncate long data
+    $address_question_arr['company'] = substr($address_question_arr['company'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_company'));
+    $address_question_arr['street_address'] = substr($address_question_arr['street_address'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_street_address'));
+    $address_question_arr['suburb'] = substr($address_question_arr['suburb'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_suburb'));
+    $address_question_arr['city'] = substr($address_question_arr['city'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_city'));
+    $address_question_arr['state'] = substr($address_question_arr['state'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_state'));
+    $address_question_arr['postcode'] = substr($address_question_arr['postcode'], 0, zen_field_length(TABLE_ADDRESS_BOOK, 'entry_postcode'));
+
     // now run the insert
 
     // this isn't the best way to get fname/lname but it will get the majority of cases
@@ -2721,6 +2850,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $_SESSION['customer_id'] = (int)$check_customer->fields['customers_id'];
     $_SESSION['customer_default_address_id'] = $check_customer->fields['customers_default_address_id'];
     $_SESSION['customer_first_name'] = $check_customer->fields['customers_firstname'];
+    $_SESSION['customer_last_name'] = $check_customer->fields['customers_lastname'];
     $_SESSION['customer_country_id'] = $check_country->fields['entry_country_id'];
     $_SESSION['customer_zone_id'] = $check_country->fields['entry_zone_id'];
     $order->customer['id'] = $_SESSION['customer_id'];
@@ -2731,32 +2861,50 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $sql = $db->bindVars($sql, ':custID', $_SESSION['customer_id'], 'integer');
     $db->Execute($sql);
 
-    // bof: contents merge notice
-    // save current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0) {
-          $zc_check_basket_before = $_SESSION['cart']->count_contents();
-        }
-
-        // bof: not require part of contents merge notice
-        // restore cart contents
+    // -----
+    // Check any **previous** customer's cart contents for potential merge, bypassing
+    // this check if a temporary account has been created for an order placed via
+    // click of the PPEC button.
+    //
+    if ($_SESSION['paypal_ec_temp'] === false) {
+        // -----
+        // Determine the sum of products' quantities (a floating-point value!) currently in the cart,
+        // restore the customer's saved cart contents and determine the sum of products' quantities
+        // now present in the cart.
+        //
+        $zc_check_basket_before = $_SESSION['cart']->count_contents();
         $_SESSION['cart']->restore_contents();
-        // eof: not require part of contents merge notice
+        $zc_check_basket_after = $_SESSION['cart']->count_contents();
 
-        // check current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_before > 0) {
-          $zc_check_basket_after = $_SESSION['cart']->count_contents();
-          if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
-            if (SHOW_SHOPPING_CART_COMBINED == 2) {
-              // warning only do not send to cart
-              $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+        // -----
+        // See if a message to the customer (possibly with a redirect back to the shopping-cart page)
+        // is required if the cart's contents have changed.
+        //
+        if (SHOW_SHOPPING_CART_COMBINED !== '0' && $zc_check_basket_before > 0) {
+            if ($zc_check_basket_before != $zc_check_basket_after && $zc_check_basket_after > 0) {
+                if (SHOW_SHOPPING_CART_COMBINED === '2') {
+                    // warning only do not send to cart ('2')
+                    $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
+                } else {
+                    // show warning and send to shopping cart for review ('1')
+                    $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
+                    zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+                }
             }
-            if (SHOW_SHOPPING_CART_COMBINED == 1) {
-              // show warning and send to shopping cart for review
-              $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
-              zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
-            }
-          }
         }
+
+        // -----
+        // If the cart contents are unchanged, i.e. no saved products were added via the
+        // cart's restore_contents method, save the cart's cartID value (a random number
+        // that's been changed by that call to restore_contents) into the session
+        // so that an unchanged cart doesn't result in an unwanted redirect back to the
+        // checkout_shipping phase.
+        //
+        if ($zc_check_basket_before == $zc_check_basket_after) {
+            $_SESSION['cartID'] = $_SESSION['cart']->cartID;
+        }
+    }
+
     // eof: contents merge notice
     if ($redirect) {
       $this->terminateEC();
@@ -2816,7 +2964,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->zcLog('termEC-1', 'Killed the session vars as requested');
     }
 
-    $this->zcLog('termEC-2', 'BEFORE: $this->showPaymentPage = ' . (int)$this->showPaymentPage . "\nToken Data:" . $_SESSION['paypal_ec_token']);
+    $this->zcLog('termEC-2', 'BEFORE: $this->showPaymentPage = ' . (int)$this->showPaymentPage . "\nToken Data:" . (!isset($_SESSION['paypal_ec_token']) ? 'not set' : $_SESSION['paypal_ec_token'])) ;
     // force display of payment page if GV/DC active for this customer
     if (MODULE_ORDER_TOTAL_INSTALLED && $this->showPaymentPage !== true && isset($_SESSION['paypal_ec_token']) ) {
       require_once(DIR_WS_CLASSES . 'order.php');
@@ -2828,7 +2976,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if (sizeof($selection)>0) $this->showPaymentPage = true;
     }
     // if came from Payment page, don't go back to it
-    if ($_SESSION['paypal_ec_markflow'] == 1) $this->showPaymentPage = false;
+    if (isset($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1) {
+        $this->showPaymentPage = false;
+    }
     // if in DP mode, don't go to payment page ... we've already been there to get here
     if ($goto_page == FILENAME_CHECKOUT_PROCESS) $this->showPaymentPage = false;
 
@@ -2898,6 +3048,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $messageStack->add_session($errorText, 'error');
     }
     /** Handle FMF Scenarios **/
+      $response['L_ERRORCODE0'] = empty($response['L_ERRORCODE0']) ? 0 : $response['L_ERRORCODE0'];
+      $response['L_LONGMESSAGE2'] = empty($response['L_LONGMESSAGE2']) ? '' : $response['L_LONGMESSAGE2'];
     if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment'))
         && ((isset($response['PAYMENTINFO_0_PAYMENTSTATUS']) && $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
             || (isset($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] == 'Pending')
@@ -2917,10 +3069,19 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       return (sizeof($this->fmfErrors)>0) ? $this->fmfErrors : FALSE;
     }
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
-    //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
+    //echo '<br>basicError='.$basicError.'<br>' . urldecode(print_r($response,true)); die('halted');
     $errorInfo = '';
     if (IS_ADMIN_FLAG === false) {
-        $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Express Checkout.' . "\n\n";
+        if (zen_is_logged_in()) {
+            if (zen_in_guest_checkout()) {
+                $customer_info = 'Guest checkout';
+            } else {
+                $customer_info = $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'];
+            }
+        } else {
+            $customer_info = 'Not logged in';
+        }
+        $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($customer_info) . ' was attempting checkout with PayPal Express Checkout.' . "\n\n";
     }
 
     $this->notify('NOTIFY_PAYPALWPP_ERROR_HANDLER', $response, $operation, $basicError, $ignoreList, $errorInfo);

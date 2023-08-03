@@ -2,11 +2,10 @@
 /**
  * main_product_image module
  *
- * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Thu May 17 09:25:19 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: torvista 2022 Aug 22 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -17,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 //
 $GLOBALS['zco_notifier']->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_START');
 
-$products_image_extension = substr($products_image, strrpos($products_image, '.'));
+$products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
 $products_image_base = str_replace($products_image_extension, '', $products_image);
 $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
 $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;

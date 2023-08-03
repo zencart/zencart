@@ -1,0 +1,33 @@
+<?php
+$define = [
+    'EMAIL_LOGO_FILENAME' => 'header.jpg',
+    'EMAIL_LOGO_WIDTH' => '550',
+    'EMAIL_LOGO_HEIGHT' => '110',
+    'EMAIL_LOGO_ALT_TITLE_TEXT' => 'Zen Cart! The Art of E-commerce',
+    'EMAIL_EXTRA_HEADER_INFO' => '',
+    'OFFICE_FROM' => '<strong>From:</strong>',
+    'OFFICE_EMAIL' => '<strong>Mail:</strong>',
+    'OFFICE_USE' => '<strong>Office Use Only:</strong>',
+    'OFFICE_LOGIN_NAME' => '<strong>Login Name:</strong>',
+    'OFFICE_LOGIN_EMAIL' => '<strong>Login Email:</strong>',
+    'OFFICE_LOGIN_PHONE' => '<strong>Telephone:</strong>',
+    'OFFICE_LOGIN_FAX' => '<strong>Fax:</strong>',
+    'OFFICE_IP_ADDRESS' => '<strong>IP Address:</strong>',
+    'OFFICE_HOST_ADDRESS' => '<strong>Host Address:</strong>',
+    'OFFICE_DATE_TIME' => '<strong>Date and Time:</strong>',
+    'EMAIL_TEXT_TELEPHONE' => 'Telephone: ',
+    'EMAIL_DISCLAIMER' => 'This email address was given to us by you or by one of our customers. If you feel that you have received this email in error, please send an email to %s ',
+    'EMAIL_SPAM_DISCLAIMER' => '',
+    'EMAIL_ORDER_MESSAGE' => '',
+    'EMAIL_FOOTER_COPYRIGHT' => 'Copyright (c) ' . date('Y') . ' <a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . STORE_NAME . '</a>. Powered by <a href="https://www.zen-cart.com">Zen Cart</a>',
+    'TEXT_UNSUBSCRIBE' => "\n\nTo unsubscribe from future newsletter and promotional mailings, simply click on the following link: \n",
+    'EMAIL_ADVISORY' => '-----' . "\n" . '<strong>IMPORTANT:</strong> For your protection and to prevent malicious use, all emails sent via this web site are logged and the contents recorded and available to the store owner. If you feel that you have received this email in error, please send an email to ' . STORE_OWNER_EMAIL_ADDRESS . "\n\n",
+    'EMAIL_ADVISORY_INCLUDED_WARNING' => '<strong>This message is included with all emails sent from this site:</strong>',
+    'SEND_EXTRA_CREATE_ACCOUNT_EMAILS_TO_SUBJECT' => '[CREATE ACCOUNT]',
+    'SEND_EXTRA_GV_CUSTOMER_EMAILS_TO_SUBJECT' => '[GV CUSTOMER SENT]',
+    'SEND_EXTRA_NEW_ORDERS_EMAILS_TO_SUBJECT' => '[NEW ORDER]',
+    'EMAIL_TEXT_SUBJECT_LOWSTOCK' => 'Warning: Low Stock',
+    'SEND_EXTRA_LOW_STOCK_EMAIL_TITLE' => 'Low Stock Report: ',
+];
+
+return $define;

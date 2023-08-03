@@ -2,14 +2,48 @@
 /**
  * COD Payment Module
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: brittainmark 2022 Sep 09 Modified in v1.5.8 $
  */
-  class cod {
-    var $code, $title, $description, $enabled;
+  class cod { 
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" payment module
+     * @var string
+     */
+    public $code;
+    /**
+     * $description is a soft name for this payment method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $enabled determines whether this module shows or not... during checkout.
+     * @var boolean
+     */
+    public $enabled;
+    /**
+     * $order_status is the order status to set after processing the payment
+     * @var int
+     */
+    public $order_status;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $sort_order is the order priority of this payment module when displayed
+     * @var int
+     */
+    public $sort_order;
 
 // class constructor
     function __construct() {
@@ -20,7 +54,7 @@
       $this->description = MODULE_PAYMENT_COD_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_COD_SORT_ORDER') ? MODULE_PAYMENT_COD_SORT_ORDER : null;
       $this->enabled = (defined('MODULE_PAYMENT_COD_STATUS') && MODULE_PAYMENT_COD_STATUS == 'True');
-
+      if (null === $this->sort_order) return false;
       if (defined('MODULE_PAYMENT_COD_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
         $this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
       }

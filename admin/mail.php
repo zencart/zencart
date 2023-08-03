@@ -1,14 +1,13 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Oct 16 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
-//DEBUG:  // these defines will become configuration switches in ADMIN in a future version.
-//DEBUG:  // right now, attachments aren't working right unless only sending HTML messages with NO text-only version supplied.
+// the following are marked as false because they are not fully implemented in this page
 if (!defined('EMAIL_ATTACHMENTS_ENABLED')) {
   define('EMAIL_ATTACHMENTS_ENABLED', false);
 }
@@ -69,7 +68,7 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
 
 if (EMAIL_ATTACHMENTS_ENABLED && $action == 'preview') {
   // PROCESS UPLOAD ATTACHMENTS
-  if (isset($_FILES['upload_file']) && zen_not_null($_FILES['upload_file']) && ($_POST['upload_file'] != 'none')) {
+  if (isset($_FILES['upload_file']) && !empty($_FILES['upload_file']) && ($_POST['upload_file'] != 'none')) {
     if ($attachments_obj = new upload('upload_file')) {
       $attachments_obj->set_extensions(array('jpg', 'jpeg', 'gif', 'png', 'zip', 'gzip', 'pdf', 'mp3', 'wma', 'wmv', 'wav', 'epub', 'ogg', 'webm', 'm4v', 'm4a'));
       $attachments_obj->set_destination(DIR_WS_ADMIN_ATTACHMENTS . $_POST['attach_dir']);
@@ -86,15 +85,15 @@ if (EMAIL_ATTACHMENTS_ENABLED && $action == 'preview') {
 } //end attachments upload
 // error detection
 if ($action == 'preview') {
-  if (!isset($_POST['customers_email_address'])) {
+  if (empty($_POST['customers_email_address'])) {
     $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
-  if (!$_POST['subject']) {
+  if (empty($_POST['subject'])) {
     $messageStack->add(ERROR_NO_SUBJECT, 'error');
   }
 
-  if (!$_POST['message'] && !$_POST['message_html']) {
+  if (empty($_POST['message']) && empty($_POST['message_html'])) {
     $messageStack->add(ENTRY_NOTHING_TO_SEND, 'error');
   }
 }
@@ -102,20 +101,7 @@ if ($action == 'preview') {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php if ($editor_handler != '') include ($editor_handler); ?>
     <script>
       var form = "";
@@ -189,7 +175,7 @@ if ($action == 'preview') {
       }
     </script>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -224,7 +210,7 @@ if ($action == 'preview') {
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE_HTML); ?></b></div>
           <div class="col-sm-9">
-              <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br />'; ?>
+              <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br>'; ?>
               <?php
               $html_preview = zen_output_string(isset($_POST['message_html']) ? $_POST['message_html'] : '');
               echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview));
@@ -232,20 +218,20 @@ if ($action == 'preview') {
           </div>
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE); ?></b></div>
-          <div class="col-sm-9">
+          <div class="col-sm-9 tt">
               <?php
               $message_preview = empty($_POST['message']) ? $_POST['message_html'] : $_POST['message'];
               $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview));
               $message_preview = str_replace(array('<br>', '<br />'), "<br />\n", $message_preview);
               $message_preview = str_replace('</p>', "</p>\n", $message_preview);
-              echo '<tt>' . nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE)) . '</tt>';
+              echo  nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE));
               ?>
           </div>
           <div class="col-sm-12"><hr></div>
           <?php if (EMAIL_ATTACHMENTS_ENABLED && ($upload_file_name != '' || $attachment_file != '')) { ?>
             <div class="col-sm-3 text-right"><b><?php echo TEXT_ATTACHMENTS_LIST; ?></b></div>
             <div class="col-sm-9">
-                <?php echo ((EMAIL_ATTACHMENT_UPLOADS_ENABLED && zen_not_null($upload_file_name)) ? $upload_file_name : $attachment_file); ?>
+                <?php echo ((EMAIL_ATTACHMENT_UPLOADS_ENABLED && !empty($upload_file_name)) ? $upload_file_name : $attachment_file); ?>
             </div>
           <?php } ?>
           <div class="col-sm-12"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
@@ -275,7 +261,7 @@ if ($action == 'preview') {
         <div class="row">
             <?php echo zen_draw_form('mail', FILENAME_MAIL, 'action=preview' . (isset($_GET['cID']) ? '&cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected($_GET['customer']) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : ''), 'post', 'onsubmit="return check_form(mail);" enctype="multipart/form-data" class="form-horizontal"'); ?>
             <?php
-            $customers = get_audiences_list('email', 'false', (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''));
+            $customers = get_audiences_list('email', '', (isset($_GET['customer']) ? zen_output_string_protected($_GET['customer']) : ''));
             ?>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>

@@ -20,17 +20,18 @@
         "source": "https://zen-cart.com/getit",
         "docs": "https://docs.zen-cart.com"
     },
-    "_comment": "compatible with PHP 5.5-7.4",
+    "_comment": "compatible with PHP 7.3-8.0",
     "require": {
-        "php": ">=5.5",
         "ext-curl": "*",
         "ext-json": "*"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.9",
-        "laravel/dusk": ">5.8",
-        "mikey179/vfsstream": ">1.6",
-        "phpunit/phpunit": "^7.5.19 || ^8.5.1 || ^9.0"
+        "php": "^7.3|^7.4|^8.0|^8.1",
+        "illuminate/database": "^8.83",
+        "illuminate/events": "^8.83",
+        "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^9.5",
+        "sempro/phpunit-pretty-print": "^1.4"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
@@ -39,7 +40,13 @@
     "autoload-dev": {
         "classmap": ["not_for_release/testFramework"],
         "psr-4": {
-            "Tests\\": "not_for_release/testFramework/"
+            "Tests\\": "not_for_release/testFramework/",
+            "App\\": "laravel/app/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.5.x-dev"
         }
     },
     "config": {
@@ -48,7 +55,10 @@
         "optimize-autoloader": true
     },
     "scripts": {
-        "tests": "phpunit --verbose --testsuite UnitTests --debug",
-        "dusk": "phpunit --verbose --testsuite Browser --debug"
-    }
+        "db-tests": "phpunit --verbose --testsuite Dbunit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "tests": "phpunit --verbose  --process-isolation --testsuite Unit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "dusk": "phpunit --verbose --testsuite Browser --debug --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

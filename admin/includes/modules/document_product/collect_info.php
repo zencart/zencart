@@ -1,14 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 11 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 11 Modified in v1.5.8-alpha2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$parameters = array(
+$parameters = [
   'products_name' => '',
   'products_description' => '',
   'products_url' => '',
@@ -39,13 +39,13 @@ $parameters = array(
   'products_discount_type_from' => '0',
   'products_price_sorter' => '0',
   'master_categories_id' => '',
-);
+];
 
 $pInfo = new objectInfo($parameters);
 
 if (isset($_GET['pID']) && empty($_POST)) {
   $product = $db->Execute("SELECT pd.products_name, pd.products_description, pd.products_url,
-                                  p.*, 
+                                  p.*,
                                   date_format(p.products_date_available, '" .  zen_datepicker_format_forsql() . "') as products_date_available
                            FROM " . TABLE_PRODUCTS . " p,
                                 " . TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -54,7 +54,7 @@ if (isset($_GET['pID']) && empty($_POST)) {
                            AND pd.language_id = " . (int)$_SESSION['languages_id']);
 
   $pInfo->updateObjectInfo($product->fields);
-} elseif (zen_not_null($_POST)) {
+} elseif (!empty($_POST)) {
   $pInfo->updateObjectInfo($_POST);
   $products_name = isset($_POST['products_name']) ? $_POST['products_name'] : '';
   $products_description = isset($_POST['products_description']) ? $_POST['products_description'] : '';
@@ -70,20 +70,23 @@ $category_lookup = $db->Execute("SELECT *
 if (!$category_lookup->EOF) {
   $cInfo = new objectInfo($category_lookup->fields);
 } else {
-  $cInfo = new objectInfo(array());
+  $cInfo = new objectInfo([]);
 }
 
-$manufacturers_array = array(array(
+$manufacturers_array = [
+    [
     'id' => '',
-    'text' => TEXT_NONE));
+    'text' => TEXT_NONE
+    ]
+];
 $manufacturers = $db->Execute("SELECT manufacturers_id, manufacturers_name
                                FROM " . TABLE_MANUFACTURERS . "
                                ORDER BY manufacturers_name");
 foreach ($manufacturers as $manufacturer) {
-  $manufacturers_array[] = array(
+  $manufacturers_array[] = [
     'id' => $manufacturer['manufacturers_id'],
     'text' => $manufacturer['manufacturers_name']
-  );
+  ];
 }
 
 // set to out of stock if categories_status is off and new product or existing products_status is off
@@ -127,7 +130,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             <?php echo TEXT_MASTER_CATEGORIES_ID; ?>
         </strong>
       </div>
-      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . (isset($_GET['pID']) && $_GET['pID'] > 0 ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
+      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . (!empty($_GET['pID']) ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
     <?php } ?>
   </div>
   <div class="form-group">
@@ -203,7 +206,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     //
     // Note: The product's type can be found in the 'product_type' element of the passed $pInfo object.
     //
-    $extra_product_inputs = array();
+    $extra_product_inputs = [];
     $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_COLLECT_INFO_EXTRA_INPUTS', $pInfo, $extra_product_inputs);
     if (!empty($extra_product_inputs)) {
         foreach ($extra_product_inputs as $extra_input) {
@@ -252,13 +255,13 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_NET, 'products_price', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateGross()" class="form-control" id="products_price"'); ?>
+          <?php echo zen_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateGross()" class="form-control" id="products_price" inputmode="decimal"'); ?>
       </div>
     </div>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control" id="products_price_gross"'); ?>
+          <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control" id="products_price_gross" inputmode="decimal"'); ?>
       </div>
     </div>
   </div>
@@ -293,19 +296,19 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MIN_RETAIL, 'products_quantity_order_min', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'class="form-control" id="products_quantity_order_min"'); ?>
+        <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'class="form-control" id="products_quantity_order_min" inputmode="decimal"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MAX_RETAIL, 'products_quantity_order_max', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-      <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'class="form-control" id="products_quantity_order_max"'); ?>&nbsp;&nbsp;<?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?>
+      <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'class="form-control" id="products_quantity_order_max" inputmode="decimal"'); ?>&nbsp;&nbsp;<?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_UNITS_RETAIL, 'products_quantity_order_units', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'class="form-control" id="products_quantity_order_units"'); ?>
+        <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'class="form-control" id="products_quantity_order_units" inputmode="decimal"'); ?>
     </div>
   </div>
   <div class="form-group">
@@ -336,7 +339,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY, 'products_quantity', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_quantity', $pInfo->products_quantity, 'class="form-control" id="products_quantity"'); ?>
+        <?php echo zen_draw_input_field('products_quantity', $pInfo->products_quantity, 'class="form-control" id="products_quantity" inputmode="decimal"'); ?>
     </div>
   </div>
   <div class="form-group">
@@ -351,7 +354,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <?php echo zen_info_image($pInfo->products_image, $pInfo->categories_name); ?>
+                <?php echo zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name)); ?>
                 <br>
                 <?php echo $pInfo->products_image; ?>
             </div>
@@ -377,7 +380,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     $default_directory = substr($pInfo->products_image, 0, strpos($pInfo->products_image, '/') + 1);
     ?>
     <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
+        <?php echo zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-9 col-lg-6">
             <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?>
         </div>
@@ -406,7 +409,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control"'); ?>
+          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_url[$languages[$i]['id']]) ? $products_url[$languages[$i]['id']] : zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control" inputmode="url"'); ?>
         </div>
         <br>
         <?php
@@ -417,13 +420,13 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_WEIGHT, 'products_weight', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control" id="products_weight"'); ?>
+        <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control" id="products_weight" inputmode="decimal"'); ?>
     </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-      <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control" id="products_sort_order"'); ?>
+      <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control" id="products_sort_order" inputmode="decimal"'); ?>
     </div>
     <?php
     echo zen_draw_hidden_field('products_date_added', (zen_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));

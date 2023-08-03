@@ -1,13 +1,13 @@
 <?php
 /**
- * Designed for v1.5.7
+ * Designed for v1.5.7+
  *
  * Observer class used to detect spam input
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2017-2019 CowboyGeek.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Aug 05 Modified in v1.5.7a $
+ * @version $Id: lat9 2022 Jul 24 Modified in v1.5.8-alpha2 $
  */
 
 class zcObserverNonCaptchaObserver extends base
@@ -39,7 +39,7 @@ class zcObserverNonCaptchaObserver extends base
     public function updateNotifyContactUsCaptchaCheck(&$class, $eventID, $paramsArray)
     {
         // sanitize the contact-us name field more aggressively
-        $GLOBALS['name'] = zen_db_prepare_input(zen_sanitize_string($_POST['contactname']));
+        $GLOBALS['name'] = zen_db_prepare_input(zen_sanitize_string($_POST['contactname'] ?? ''));
 
         // fire default tests
         $this->update($class, $eventID, $paramsArray);
@@ -54,11 +54,10 @@ class zcObserverNonCaptchaObserver extends base
 
     protected function generate_random_string($input, $strength = 16)
     {
-        $function = PHP_VERSION_ID >= 70000 ? 'random_int' : 'mt_rand';
         $input_length = strlen($input);
         $random_string = '';
         for ($i = 0; $i < $strength; $i++) {
-            $random_character = $input[$function(0, $input_length - 1)];
+            $random_character = $input[random_int(0, $input_length - 1)];
             $random_string .= $random_character;
         }
 
@@ -70,9 +69,9 @@ class zcObserverNonCaptchaObserver extends base
         $test_string = '';
 
         // Simple regex to identify presence of an (unwanted) URL
-        $reg_exUrl = '~(https?|ftps?):/~';
+        $regexPattern = '~(https?|ftps?):/~';
 
-        $fields = array(
+        $fields = [
             'firstname',
             'lastname',
             'contactname',
@@ -92,7 +91,7 @@ class zcObserverNonCaptchaObserver extends base
             'passwordhintA',
             'review_text', // comment-out if you actually want to allow URLs for this
             'enquiry',     // comment-out if you actually want to allow URLs for this
-        );
+        ];
 
         // prepare for inspection
         foreach ($fields as $field) {
@@ -101,15 +100,13 @@ class zcObserverNonCaptchaObserver extends base
             }
         }
 
-        if (empty($test_string)) return;
+        if (empty(trim($test_string))) return;
 
         $test_string = str_ireplace([HTTP_SERVER, HTTPS_SERVER], '', $test_string);
 
         // inspect
-        if(preg_match($reg_exUrl, $test_string)) {
+        if (preg_match($regexPattern, $test_string)) {
             $GLOBALS['antiSpam'] = 'spam';
         }
     }
-
 }
-

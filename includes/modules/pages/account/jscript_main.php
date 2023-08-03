@@ -20,7 +20,7 @@
 // $Id: jscript_main.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
 ?>
-<script type="text/javascript">
+<script>
 function rowOverEffect(object) {
   if (object.className == 'moduleRow') object.className = 'moduleRowOver';
 }
@@ -28,4 +28,4 @@ function rowOverEffect(object) {
 function rowOutEffect(object) {
   if (object.className == 'moduleRowOver') object.className = 'moduleRow';
 }
-</script> 
+</script>

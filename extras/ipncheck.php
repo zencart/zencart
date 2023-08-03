@@ -2,10 +2,9 @@
 /**
  * ipncheck.php diagnostic tool
  *
- * @package utility
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Oct 13 15:33:54 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: DrByte 2021 Mar 17 Modified in v1.5.8-alpha $
  *
  * This utility is intended to be used to check whether this webserver is able to connect TO PayPal in order to RESPOND to an incoming IPN notification.
  * Unfortunately it cannot test whether PayPal's servers can successfully post an IPN *to* your store.  To do that one should test a live transaction.
@@ -171,7 +170,7 @@ echo '<br><br>Script finished.';
     fclose($fp);
     //break up results into a string
     $info = implode("", $info);
-    $status = (strstr($info,'VERIFIED')) ? 'VERIFIED' : (strstr($info,'SUCCESS')) ? 'SUCCESS' : (strstr($info,'INVALID')) ? 'FSOCKOPEN() RESPONSE RECEIVED - Communications OKAY' : 'FAILED';
+    $status = (strstr($info,'VERIFIED')) ? 'VERIFIED' : (strstr($info,'SUCCESS') ? 'SUCCESS' : (strstr($info,'INVALID') ? 'FSOCKOPEN() RESPONSE RECEIVED - Communications OKAY' : 'FAILED'));
     echo "\n\n" . '<!-- IPN INFO - Confirmation/Validation response ' . "\n-------------\n" . $header_data . $info . "\n--------------\n -->";
 
     return $status;
@@ -234,7 +233,7 @@ echo '<br><br>Script finished.';
       echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'ABORTING CURL METHOD ...' . "\n\n");
     }
 
-    $status = (strstr($response,'VERIFIED')) ? 'VERIFIED' : (strstr($response,'SUCCESS')) ? 'SUCCESS' : (strstr($response,'INVALID')) ? 'CURL RESPONSE RECEIVED - Communications OKAY' : 'FAILED';
+    $status = (strstr($response,'VERIFIED')) ? 'VERIFIED' : (strstr($response,'SUCCESS') ? 'SUCCESS' : (strstr($response,'INVALID') ? 'CURL RESPONSE RECEIVED - Communications OKAY' : 'FAILED'));
     echo  $status . '<br />';
 
 

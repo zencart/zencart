@@ -1,23 +1,20 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 Oct 23 Modified in v1.5.7a $
+ * @version $Id: brittainmark 2022 Jul 09 Modified in v1.5.8-alpha $
  */
 
 namespace Zencart\FileSystem;
 
-use Zencart\Traits\Singleton;
+use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 
-class FileSystem
+class FileSystem extends IlluminateFilesystem
 {
-    use Singleton;
-
-    protected $installedPlugins;
-
-    public function loadFilesFromDirectory($rootDir, $fileRegx)
+    public function loadFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
+        if (!is_dir($rootDir)) return;
         if (!$dir = @dir($rootDir)) return;
         while ($file = $dir->read()) {
             if (preg_match($fileRegx, $file) > 0) {
@@ -27,8 +24,9 @@ class FileSystem
         $dir->close();
     }
 
-    public function listFilesFromDirectory($rootDir, $fileRegx)
+    public function listFilesFromDirectory($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
+        if (!is_dir($rootDir)) return [];
         if (!$dir = @dir($rootDir)) return [];
         $fileList = [];
         while ($file = $dir->read()) {
@@ -40,7 +38,14 @@ class FileSystem
         return $fileList;
     }
 
-    public function loadFilesFromPluginsDirectory($installedPlugins, $rootDir, $fileRegx)
+    public function listFilesFromDirectoryAlphaSorted($rootDir, $fileRegx = '~^[^\._].*\.php$~i')
+    {
+        $fileList = $this->listFilesFromDirectory($rootDir, $fileRegx);
+        sort($fileList);
+        return $fileList;
+    }
+
+    public function loadFilesFromPluginsDirectory($installedPlugins, $rootDir, $fileRegx = '~^[^\._].*\.php$~i')
     {
         foreach ($installedPlugins as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
@@ -105,6 +110,7 @@ class FileSystem
     {
         $found = false;
         $filePattern = '/' . str_replace("/", "\/", $filePattern) . '$/';
+        if (!is_dir($fileDir)) return false;
         if ($mydir = @dir($fileDir)) {
             while ($file = $mydir->read()) {
                 if (preg_match($filePattern, $file)) {
@@ -117,29 +123,30 @@ class FileSystem
         return $found;
     }
 
-    public function getPluginRelativeDirectory($pluginKey)
+    public function setFileExtension($file, $extension = 'php')
     {
-        if (!isset($this->installedPlugins[$pluginKey])) {
-            return null;
+        if (preg_match('~\.' . $extension . '~i', $file)) {
+            return $file;
         }
-        $version = $this->installedPlugins[$pluginKey]['version'];
-        $relativePath = ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG) . 'zc_plugins/' . $pluginKey . '/' . $version . '/';
-        return $relativePath;
+        return $file . '.php';
     }
 
-
-    public function getPluginAbsoluteDirectory($pluginKey)
+    public function hasTemplateLanguageOverride($templateDir, $rootPath, $language, $file, $extraPath = '')
     {
-        if (!isset($this->installedPlugins[$pluginKey])) {
-            return null;
+        $file = $this->setFileExtension($file);
+        $fullPath = $rootPath . $language . $extraPath . '/' . $templateDir . '/' . $file;
+        if (!file_exists($fullPath)) {
+            return false;
         }
-        $version = $this->installedPlugins[$pluginKey]['version'];
-        $absolutePath = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version . '/';
-        return $absolutePath;
+        return true;
     }
 
-    public function setInstalledPlugins($installedPlugins)
+    public function getExtraPathForTemplateOverrrideOrOriginal($templateDir, $rootPath, $language, $file, $extraPath = '')
     {
-        $this->installedPlugins = $installedPlugins;
+        if (!$this->hasTemplateLanguageOverride($templateDir, $rootPath, $language, $file, $extraPath)) {
+            return $extraPath;
+        }
+        $extraPath = $extraPath . '/' . $templateDir;
+        return $extraPath;
     }
 }

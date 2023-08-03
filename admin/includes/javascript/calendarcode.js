@@ -1,7 +1,7 @@
 /*
- * Bazillyo's Spiffy DHTML Popup Calendar v. 1.0 © 2000 S. Ousta
+ * Bazillyo's Spiffy DHTML Popup Calendar v. 1.0 ï¿½ 2000 S. Ousta
  *   - freeware with this comment
- *   - for download size, you can strip all spaces & comments except the © notices
+ *   - for download size, you can strip all spaces & comments except the ï¿½ notices
  *   - Thanks to Chris for the domlay() function
  *   - this requires calendarcode.js, calendar.css, and calendarTest.htm
  *   - works in IE4.x, IE5.x, NS4.75 possibly 4.x, NS6 (with slight cosmetic issues)
@@ -220,7 +220,7 @@ function Calendar(whatMonth,whatYear) {
         output += '<table width="185" border="3" class="cal-Table" cellspacing="0" cellpadding="0"><form name="Cal"><tr>';
     }
      
-    output += '<td class="cal-HeadCell" align="center" width="100%"><a href="javascript:clearDay();"><img name="calbtn1" src="./images/cal_del_small.gif" border="0" width="12" height="10"></a>&nbsp;&nbsp;<a href="javascript:scrollMonth(-1);" class="cal-DayLink">&lt;</a>&nbsp;<SELECT class="cal-TextBox" NAME="cboMonth" onChange="changeMonth();">';
+    output += '<td class="cal-HeadCell text-center col-sm-12"><a href="javascript:clearDay();"><img name="calbtn1" src="./images/cal_del_small.gif" border="0" width="12" height="10"></a>&nbsp;&nbsp;<a href="javascript:scrollMonth(-1);" class="cal-DayLink">&lt;</a>&nbsp;<SELECT class="cal-TextBox" NAME="cboMonth" onChange="changeMonth();">';
     for (month=0; month<12; month++) {
         if (month == whatMonth) output += '<OPTION VALUE="' + month + '" SELECTED>' + names[month] + '<\/OPTION>';
         else                output += '<OPTION VALUE="' + month + '">'          + names[month] + '<\/OPTION>';
@@ -233,7 +233,7 @@ function Calendar(whatMonth,whatYear) {
         else              output += '<OPTION VALUE="' + year + '">'          + year + '<\/OPTION>';
     }
 
-    output += '<\/SELECT>&nbsp;<a href="javascript:scrollMonth(1);" class="cal-DayLink">&gt;</a>&nbsp;&nbsp;<a href="javascript:hideCalendar();"><img name="calbtn2" src="./images/cal_close_small.gif" border="0" width="12" height="10"></a><\/td><\/tr><tr><td width="100%" align="center">';
+    output += '<\/SELECT>&nbsp;<a href="javascript:scrollMonth(1);" class="cal-DayLink">&gt;</a>&nbsp;&nbsp;<a href="javascript:hideCalendar();"><img name="calbtn2" src="./images/cal_close_small.gif" border="0" width="12" height="10"></a><\/td><\/tr><tr><td class="text-center col-sm-12">';
 
     firstDay = new Date(whatYear,whatMonth,1);
     startDay = firstDay.getDay();
@@ -253,7 +253,7 @@ function Calendar(whatMonth,whatYear) {
         {
             datecolwidth="14%"
         }
-        output += '<td class="cal-HeadCell" width="' + datecolwidth + '" align="center" valign="middle">'+ dow[i] +'<\/td>';
+        output += '<td class="cal-HeadCell text-center" width="' + datecolwidth + '" valign="middle">'+ dow[i] +'<\/td>';
     }
     
     output += '<\/tr><tr>';

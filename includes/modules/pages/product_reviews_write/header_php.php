@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2021 Aug 25 Modified in v1.5.7d $
+ * @version $Id: lat9 2021 Aug 25 Modified in v1.5.8-alpha $
  */
 /**
  * Header code file for product reviews "write" page
@@ -106,15 +106,15 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $email_subject = sprintf(EMAIL_REVIEW_PENDING_SUBJECT,$product_info->fields['products_name']);
         $html_msg['EMAIL_SUBJECT'] = sprintf(EMAIL_REVIEW_PENDING_SUBJECT,$product_info->fields['products_name']);
         $html_msg['EMAIL_MESSAGE_HTML'] = str_replace('\n','',sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_INTRO, $product_info->fields['products_name']));
-        $html_msg['EMAIL_MESSAGE_HTML'] .= '<br />';
+        $html_msg['EMAIL_MESSAGE_HTML'] .= '<br>';
         $html_msg['EMAIL_MESSAGE_HTML'] .= str_replace('\n','',sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_DETAILS, $review_text));
-        $extra_info = email_collect_extra_info('', '', $customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname'] , $customer->fields['customers_email_address']);
+        $extra_info=email_collect_extra_info('', '', $customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname'] , $customer->fields['customers_email_address'] );
         $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
         $zco_notifier->notify('NOTIFY_EMAIL_READY_WRITE_REVIEW');
         zen_mail('', SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO, $email_subject, $email_text . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'reviews_extra');
       }
       // end send email
-      
+
       $messageStack->add_session('product_info', (REVIEWS_APPROVAL == '1') ? TEXT_REVIEW_SUBMITTED_FOR_REVIEW : TEXT_REVIEW_SUBMITTED, 'success');
     }
     zen_redirect(zen_href_link(FILENAME_PRODUCT_REVIEWS, zen_get_all_get_params(array('action'))));
@@ -124,10 +124,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 $products_price = zen_get_products_display_price($product_info->fields['products_id']);
 
 $products_name = $product_info->fields['products_name'];
-
+$rating = $rating ?? '';
+$review_text = $review_text ?? '';
 $products_model = '';
 if ($product_info->fields['products_model'] != '') {
-  $products_model = '<br /><span class="smallText">[' . $product_info->fields['products_model'] . ']</span>';
+  $products_model = '<br><span class="smallText">[' . $product_info->fields['products_model'] . ']</span>';
 }
 
 // set image

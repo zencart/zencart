@@ -2,10 +2,10 @@
 /**
  * category_tree Class.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Oct 09 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 03 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,6 +16,19 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class category_tree extends base {
+    
+    /**
+     * Array of category details for display
+     */
+    private $box_categories_array = [];
+    /**
+     * String containing concatenated list of categories with separator. 
+     */
+    private $categories_string;
+    /*
+     * Array of categories from database
+     */
+    private $tree = []; 
 
   function zen_category_tree($product_type = "all") {
     global $db, $cPath, $cPath_array;
@@ -29,7 +42,7 @@ class category_tree extends base {
     if ($product_type == 'all') {
       $categories_query = "select c.categories_id, cd.categories_name, c.parent_id, c.categories_image
                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                             where c.parent_id = 0
+                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
                              and c.categories_id = cd.categories_id
                              and cd.language_id='" . (int)$_SESSION['languages_id'] . "'
                              and c.categories_status= 1
@@ -37,7 +50,7 @@ class category_tree extends base {
     } else {
       $categories_query = "select ptc.category_id as categories_id, cd.categories_name, c.parent_id, c.categories_image
                              from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
-                             where c.parent_id = 0
+                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
                              and ptc.category_id = cd.categories_id
                              and ptc.product_type_id = " . $master_type . "
                              and c.categories_id = ptc.category_id
@@ -146,13 +159,13 @@ class category_tree extends base {
     $this->categories_string = "";
 
     for ($i=0; $i<$this->tree[$counter]['level']; $i++) {
-      if ($this->tree[$counter]['parent'] != 0) {
+      if ($this->tree[$counter]['parent'] != TOPMOST_CATEGORY_PARENT_ID) {
         $this->categories_string .= CATEGORIES_SUBCATEGORIES_INDENT;
       }
     }
 
 
-    if ($this->tree[$counter]['parent'] == 0) {
+    if ($this->tree[$counter]['parent'] == TOPMOST_CATEGORY_PARENT_ID) {
       $cPath_new = 'cPath=' . $counter;
       $this->box_categories_array[$ii]['top'] = 'true';
     } else {

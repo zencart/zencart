@@ -1,15 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jun 04 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
@@ -52,7 +52,7 @@ if (zen_not_null($action)) {
         }
       } else {
         $db->Execute("UPDATE " . TABLE_PRODUCT_MUSIC_EXTRA . "
-                      SET music_genre_id = 0 
+                      SET music_genre_id = 0
                       WHERE music_genre_id = " . (int)$music_genre_id);
       }
 
@@ -64,23 +64,9 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -105,7 +91,7 @@ if (zen_not_null($action)) {
                 $music_genres = $db->Execute($music_genre_query_raw);
 
                 foreach ($music_genres as $music_genre) {
-                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $music_genre['music_genre_id']))) && (substr($action, 0, 3) != 'new')) {
+                  if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $music_genre['music_genre_id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
                     $music_genre_products = $db->Execute("SELECT COUNT(*) AS products_count
                                                           FROM " . TABLE_PRODUCT_MUSIC_EXTRA . "
                                                           WHERE music_genre_id = " . (int)$music_genre['music_genre_id']);
@@ -151,7 +137,7 @@ if (zen_not_null($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_MUSIC_GENRE . '</h4>');
                 $contents = array('form' => zen_draw_form('music_genre', FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
-                $contents[] = array('text' => TEXT_EDIT_INTRO);
+                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_MUSIC_GENRE_NAME, 'music_genre_name', 'class="control-label"') . zen_draw_input_field('music_genre_name', htmlspecialchars($aInfo->music_genre_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MUSIC_GENRE, 'music_genre_name') . ' class="form-control"'));
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
@@ -174,16 +160,16 @@ if (zen_not_null($action)) {
                   $heading[] = array('text' => '<h4>' . $aInfo->music_genre_name . '</h4>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MUSIC_GENRE, 'page=' . $_GET['page'] . '&mID=' . $aInfo->music_genre_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
-                  $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($aInfo->date_added));
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($aInfo->date_added));
                   if (zen_not_null($aInfo->last_modified)) {
-                    $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($aInfo->last_modified));
+                    $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($aInfo->last_modified));
                   }
                   $contents[] = array('text' => '<br>' . TEXT_PRODUCTS . ' ' . $aInfo->products_count);
                 }
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

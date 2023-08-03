@@ -2,16 +2,16 @@
 /**
  * Module Template - for shipping-estimator display
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 May 07 Modified in v1.5.7 $
+ * @version $Id: Steve 2022 Jun 29 Modified in v1.5.8-alpha $
  */
 ?>
 <div id="shippingEstimatorContent">
-<?php echo zen_draw_form('estimator', zen_href_link($show_in . '#view', '', $request_type), 'post'); ?>
+<?php echo zen_draw_form('estimator', zen_href_link($show_in . '#seView', '', $request_type), 'post'); ?>
 <?php if (is_array($selected_shipping)) {
-    zen_draw_hidden_field('scid', $selected_shipping['id']);
+    echo zen_draw_hidden_field('scid', $selected_shipping['id']);
 } ?>
 <?php echo zen_draw_hidden_field('action', 'submit'); ?>
 <?php
@@ -36,8 +36,8 @@
 ?>
 
 <div class="bold back" id="seShipTo"><?php echo CART_SHIPPING_METHOD_TO; ?></div>
-<address class="back"><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></address>
-<br class="clearBoth" />
+<address class="back"><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br>'); ?></address>
+<br class="clearBoth">
 <?php
     } else {
 ?>
@@ -46,32 +46,39 @@
 <div class="cartTotalsDisplay important"><?php echo $totalsDisplay; ?></div>
 <?php } ?>
 <?php
-      if($_SESSION['cart']->get_content_type() != 'virtual'){
+      if ($_SESSION['cart']->get_content_type() != 'virtual') {
+          $flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true');
 ?>
 
 <label class="inputLabel" for="country"><?php echo ENTRY_COUNTRY; ?></label>
-<?php echo zen_get_country_list('zone_country_id', $selected_country, 'id="country" onchange="update_zone(this.form);"'); ?>
-<br class="clearBoth" />
+<?php echo zen_get_country_list('zone_country_id', $selected_country, 'id="country"' . (($flag_show_pulldown_states) ? ' onchange="update_zone(this.form);"' : '')); ?>
+<br class="clearBoth">
 
-<a name="view"></a>
+<a id="seView"></a>
 <label class="inputLabel" for="stateZone" id="zoneLabel"><?php echo ENTRY_STATE; ?></label>
+<?php
+          if ($flag_show_pulldown_states) {
+?>
 <?php echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $state_zone_id, 'id="stateZone"');?>
-<br class="clearBoth" id="stBreak" />
+<br class="clearBoth" id="stBreak">
+<?php
+          }
+?>
 <label class="inputLabel" for="state" id="stateLabel"><?php echo (isset($state_field_label) ? $state_field_label : ''); ?></label>
 <?php echo zen_draw_input_field('state', $selectedState, zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"') .'&nbsp;<span class="alert" id="stText">&nbsp;</span>'; ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
         if(CART_SHIPPING_METHOD_ZIP_REQUIRED == "true"){
 ?>
 <label class="inputLabel"><?php echo ENTRY_POST_CODE; ?></label>
-<?php echo  zen_draw_input_field('zip_code', $zip_code, 'size="7"'); ?>
-<br class="clearBoth" />
+<?php echo zen_draw_input_field('postcode', $postcode, 'size="7" id="postcode"'); ?>
+<br class="clearBoth">
 <?php
         }
 ?>
 <div class="buttonRow forward"><?php echo  zen_image_submit(BUTTON_IMAGE_UPDATE, BUTTON_UPDATE_ALT); ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
       }
     }
@@ -89,8 +96,13 @@
 <?php if (!zen_is_logged_in() || zen_in_guest_checkout()) { ?>
     <tr>
       <td colspan="2" class="seDisplayedAddressLabel">
-        <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br />
-        <?php echo '<span class="seDisplayedAddressInfo">' . zen_get_zone_name($selected_country, $state_zone_id, '') . ($selectedState != '' ? ' ' . $selectedState : '') . ' ' . (isset($order->delivery['postcode']) ? $order->delivery['postcode'] : '') . ' ' . zen_get_country_name($order->delivery['country_id']) . '</span>'; ?>
+        <?php echo CART_SHIPPING_QUOTE_CRITERIA; ?><br>
+        <?php echo '<span class="seDisplayedAddressInfo">' .
+            zen_get_zone_name((int)$selected_country, (int)$state_zone_id, '') .
+            ($selectedState != '' ? ' ' . $selectedState : '') . ' ' .
+            (isset($order->delivery['postcode']) ? $order->delivery['postcode'] : '') . ' ' .
+            zen_get_country_name($order->delivery['country_id']) .
+            '</span>'; ?>
       </td>
     </tr>
 <?php } ?>
@@ -99,16 +111,13 @@
        <th scope="col" id="seTotalHeading"><?php echo CART_SHIPPING_METHOD_RATES; ?></th>
      </tr>
 <?php
-      if (empty($extra)) {
-        $extra = '';
-      }
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         $thisquoteid = '';
         if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods'])==1 && isset($quotes[$i]['methods'][0]['id'])){
           // simple shipping method
           $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][0]['id'];
 ?>
-     <tr class="<?php echo $extra; ?>">
+     <tr<?php echo (empty($extra) ? '' : ' class="' . $extra . '"'); ?>>
 <?php
           if(isset($quotes[$i]['error']) && $quotes[$i]['error']){
 ?>
@@ -138,7 +147,7 @@
                 $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'];
             }
 ?>
-    <tr class="<?php echo $extra; ?>">
+       <tr<?php echo (empty($extra) ? '' : ' class="' . $extra . '"'); ?>>
 <?php
             if(!empty($quotes[$i]['error'])){
 ?>

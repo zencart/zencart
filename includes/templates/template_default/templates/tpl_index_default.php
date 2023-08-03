@@ -2,14 +2,14 @@
 /**
  * Page Template
  *
- * Main index page<br />
- * Displays greetings, welcome text (define-page content), and various centerboxes depending on switch settings in Admin<br />
+ * Main index page
+ * Displays greetings, welcome text (define-page content), and various centerboxes depending on switch settings in Admin
  * Centerboxes are called as necessary
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Sep 10 Modified in v1.5.7a $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="indexDefault">

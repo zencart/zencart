@@ -2,10 +2,10 @@
 /**
  * Header code file for the customer's Account-Edit page
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Mar 18 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Feb 19 Modified in v1.5.8-alpha $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_EDIT');
@@ -16,7 +16,10 @@ if (!zen_is_logged_in()) {
 }
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
+
+$error = false;
+
+if (!empty($_POST['action']) && $_POST['action'] == 'process') {
   if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
   $firstname = zen_db_prepare_input($_POST['firstname']);
   $lastname = zen_db_prepare_input($_POST['lastname']);
@@ -28,8 +31,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
 
   if (CUSTOMERS_REFERRAL_STATUS == '2' and $_POST['customers_referral'] != '') $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
-
-  $error = false;
 
   if (ACCOUNT_GENDER == 'true') {
     if ( ($gender != 'm') && ($gender != 'f') ) {
@@ -186,7 +187,7 @@ if (!(isset($_POST['action']) && ($_POST['action'] == 'process'))) {
   }
 }
 // if DOB field has database default setting, show blank:
-$dob = ($dob == '0001-01-01 00:00:00') ? '' : $dob;
+$dob = (empty($dob) || $dob == '0001-01-01 00:00:00') ? '' : $dob;
 
 $customers_referral = $account->fields['customers_referral'];
 

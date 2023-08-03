@@ -1,1 +1,1 @@
-update_zone(document.createAccountForm);
+javascript:void(0);

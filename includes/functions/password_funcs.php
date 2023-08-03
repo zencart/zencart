@@ -2,14 +2,13 @@
 /**
  * password_funcs functions
  *
- * @package functions
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Tue Oct 13 15:36:50 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: Scott C Wilson 2020 Jul 11 Modified in v1.5.8-alpha $
  */
 // //
-// This function validates a plain text password with an encrpyted password
+// This function validates a plain text password with an encrypted password
 function zen_validate_password($plain, $encrypted, $userRef = NULL)
 {
   $zcPassword = zcPassword::getInstance(PHP_VERSION);
@@ -18,19 +17,12 @@ function zen_validate_password($plain, $encrypted, $userRef = NULL)
 
 /**
  * This function makes a new password from a plaintext password.
- * if php >= 5.5.0 we use inbuilt password_hash function.
- * otherwise we use zen_encrypt_password_new to create a salted sha256 password.
  * @param $plain
  * @return string
  */
 function zen_encrypt_password($plain)
 {
-    if (function_exists('password_hash')) {
-        $password = password_hash($plain, PASSWORD_DEFAULT);
-    } else {
-        $password = zen_encrypt_password_new($plain);
-    }
-    return $password;
+    return password_hash($plain, PASSWORD_DEFAULT);
 }
 
 /**
@@ -109,9 +101,8 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
 
   // Use mcrypt with /dev/urandom if available
   if ($data === null && function_exists('mcrypt_create_iv') && (
-    // There is a bug in Windows + IIS in older versions of PHP
-    (
-strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' || version_compare(PHP_VERSION, '5.3.7', '>='))))
+    // There is a bug in Windows + IIS 
+    (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')))
   {
     // echo('Attempting to create entropy using mcrypt');
     $entropy = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);

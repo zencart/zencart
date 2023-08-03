@@ -1,7 +1,7 @@
 <?php
 /**
  * index.php represents the hub of the Zen Cart MVC system
- * 
+ *
  * Overview of flow
  * <ul>
  * <li>Load application_top.php - see {@tutorial initsystem}</li>
@@ -14,35 +14,35 @@
  * <li>Load application_bottom.php</li>
  * </ul>
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 16 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Aug 01 Modified in v1.5.8-alpha $
  */
 /**
- * Load common library stuff 
+ * Load common library stuff
  */
   require('includes/application_top.php');
 
   $language_page_directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/';
   $directory_array = $template->get_template_part($code_page_directory, '/^header_php/');
-  foreach ($directory_array as $value) { 
+  foreach ($directory_array as $value) {
 /**
- * We now load header code for a given page. 
- * Page code is stored in includes/modules/pages/PAGE_NAME/directory 
+ * We now load header code for a given page.
+ * Page code is stored in includes/modules/pages/PAGE_NAME/directory
  * 'header_php.php' files in that directory are loaded now.
  */
     require($code_page_directory . '/' . $value);
   }
 /**
- * We now load the html_header.php file. This file contains code that would appear within the HTML <head></head> code 
- * it is overridable on a template and page basis. 
- * In that a custom template can define its own common/html_header.php file 
+ * We now load the html_header.php file. This file contains code that would appear within the HTML <head></head> code
+ * it is overridable on a template and page basis.
+ * In that a custom template can define its own common/html_header.php file
  */
   require($template->get_template_dir('html_header.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/html_header.php');
 /**
- * Define Template Variables picked up from includes/main_template_vars.php unless a file exists in the
- * includes/pages/{page_name}/directory to overide. Allowing different pages to have different overall
+ * Define Template Variables are picked up from includes/main_template_vars.php unless a file exists in the
+ * includes/pages/{page_name}/directory to override. This allows different pages to have different overall
  * templates.
  */
   require($template->get_template_dir('main_template_vars.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/main_template_vars.php');
@@ -52,7 +52,7 @@
  * Looking in "/includes/modules/pages" for files named "on_load_*.js"
  */
   $directory_array = $template->get_template_part(DIR_WS_MODULES . 'pages/' . $current_page_base, '/^on_load_/', '.js');
-  foreach ($directory_array as $value) { 
+  foreach ($directory_array as $value) {
     $onload_file = DIR_WS_MODULES . 'pages/' . $current_page_base . '/' . $value;
     $read_contents='';
     if ($lines = @file($onload_file)) {
@@ -66,7 +66,7 @@
   $directory_array=array();
   $tpl_dir=$template->get_template_dir('.js', DIR_WS_TEMPLATE, 'jscript/on_load', 'jscript/on_load_');
   $directory_array = $template->get_template_part($tpl_dir ,'/^on_load_/', '.js');
-  foreach ($directory_array as $value) { 
+  foreach ($directory_array as $value) {
     $onload_file = $tpl_dir . '/' . $value;
     $read_contents='';
     if ($lines = @file($onload_file)) {

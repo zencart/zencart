@@ -1,9 +1,9 @@
 <?php
 /**
  * file contains systemChecker Class
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021 Jan 07 Modified in v1.5.7c $
+ * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
  */
 
 /**
@@ -11,6 +11,13 @@
  */
 class systemChecker
 {
+    protected $adminDirectoryList = [];
+    protected $errorList = [];
+    protected $extraRunLevels = [];
+    protected $localErrors;
+    protected $selectedAdminDir;
+    protected $serverConfig;
+    protected $systemChecks;
     public function __construct($selectedAdminDir = 'UNSPECIFIED')
     {
         $this->adminDirectoryList = self::getAdminDirectoryList();
@@ -665,13 +672,13 @@ class systemChecker
                 if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
                 //check for patch #1
                 if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
-                    // if ($new_version != '') $new_version .= '<br />';
-                    $new_version .= (($new_version != '') ? '<br />' : '') .
+                    // if ($new_version != '') $new_version .= '<br>';
+                    $new_version .= (($new_version != '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
                 }
                 if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
-                    // if ($new_version != '') $new_version .= '<br />';
-                    $new_version .= (($new_version != '') ? '<br />' : '') .
+                    // if ($new_version != '') $new_version .= '<br>';
+                    $new_version .= (($new_version != '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
                 }
             }

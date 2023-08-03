@@ -2,9 +2,9 @@
 /**
  * Javascript to prep functionality for Square payment module
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Dec 17 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Feb 18 Modified in v1.5.8-alpha $
  */
 if (!defined('MODULE_PAYMENT_SQUARE_STATUS') || MODULE_PAYMENT_SQUARE_STATUS != 'True' || (!defined('MODULE_PAYMENT_SQUARE_APPLICATION_ID') || MODULE_PAYMENT_SQUARE_ACCESS_TOKEN == '')) {
     return false;
@@ -19,10 +19,10 @@ if (MODULE_PAYMENT_SQUARE_TESTING_MODE === 'Sandbox') {
 }
 
 ?>
-<script type="text/javascript" src="<?php echo $jsurl; ?>" title="square js"></script>
+<script src="<?php echo $jsurl; ?>" title="square js"></script>
 
 
-<script type="text/javascript" title="square">
+<script title="square">
     var cardNonce;
     var paymentForm = new SqPaymentForm({
         applicationId: '<?php echo MODULE_PAYMENT_SQUARE_APPLICATION_ID; ?>',

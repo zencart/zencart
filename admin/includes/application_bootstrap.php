@@ -3,13 +3,14 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2021 Jul 31 Modified in v1.5.7d $
+ * @version $Id: Zcwilt 2022 Aug 09 Modified in v1.5.8-alpha2 $
  */
 
+use App\Models\PluginControl;
+use App\Models\PluginControlVersion;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
-
-/* @var $db queryFactory */
+use Zencart\PageLoader\PageLoader;
 
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
@@ -30,7 +31,7 @@ $PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $serverScript : 'home.php';
 if (basename($PHP_SELF, '.php') === 'index') {
     $PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
 }
-$PHP_SELF = htmlspecialchars($PHP_SELF);
+$PHP_SELF = htmlspecialchars($PHP_SELF, ENT_COMPAT);
 $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']) . $PHP_SELF;
 // Suppress html from error messages
 @ini_set("html_errors","0");
@@ -39,25 +40,34 @@ $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']
 */
 @date_default_timezone_set(date_default_timezone_get());
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
  * set the level of error reporting
  *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site. <br />
- * It is mainly there to show php warnings during testing/bug fixing phases.<br />
- * note for strict error reporting we also turn on show_errors as this may be disabled<br />
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
+ * It is mainly there to show php warnings during testing/bug fixing phases.
+ * note for strict error reporting we also turn on show_errors as this may be disabled
  * in php.ini. Otherwise we respect the php.ini setting
  *
  */
-if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
+if ((defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING === true)) {
     @ini_set('display_errors', TRUE);
-    error_reporting(E_ALL);
+    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
 } else {
     error_reporting(0);
 }
 
+/**
+ * Ensure minimum PHP version.
+ * This is intended to run before any dependencies are required
+ * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
+ */
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 70205) {
+    chdir(realpath(__DIR__ . '/../'));
+    require 'includes/application_top.php';
+    exit(0);
+}
 /**
  * Set the local configuration parameters - mainly for developers
  */
@@ -67,6 +77,7 @@ if (file_exists('includes/local/configure.php')) {
      */
     include('includes/local/configure.php');
 }
+
 /**
  * check for and load application configuration parameters
  */
@@ -100,6 +111,7 @@ if (file_exists('includes/defined_paths.php')) {
     exit;
 }
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
 /**
  * ignore version-check if INI file setting has been set
  */
@@ -111,28 +123,8 @@ if (file_exists($file) && $lines = @file($file)) {
         }
     }
 }
-/*
-// turned off for now
-  if ($check_cfg != 'off') {
-    // if the admin/includes/configure.php file doesn't contain admin-related content, throw error
-    $zc_pagepath = str_replace(basename($PHP_SELF),'',__FILE__); //remove page name from full path of current page
-    $zc_pagepath = str_replace(array('\\','\\\\'),'/',$zc_pagepath); // convert '\' marks to '/'
-    $zc_pagepath = str_replace('//','/',$zc_pagepath); //convert doubles to single
-    $zc_pagepath = str_replace(strrchr($zc_pagepath,'/'),'',$zc_pagepath); // remove trailing '/'
-    $zc_adminpage = str_replace('\\','/',DIR_FS_ADMIN); //convert "\" to '/'
-    $zc_adminpage = str_replace('//','/',$zc_adminpage); // remove doubles
-    $zc_adminpage = str_replace(strrchr($zc_adminpage,'/'),'',$zc_adminpage); // remove trailing '/'
-    if (!defined('DIR_WS_ADMIN') || $zc_pagepath != $zc_adminpage ) {
-      echo ('ERROR: The admin/includes/configure.php file has invalid configuration. Please rebuild, or verify specified paths.');
-      if (file_exists('../zc_install/index.php')) {
-        echo '<br /><a href="../zc_install/index.php">Click here for installation</a>';
-      }
-      echo '<br /><br /><br /><br />['.$zc_pagepath.']&nbsp;&nbsp;&nbsp;&laquo;&raquo;&nbsp;&nbsp;&nbsp;[' .$zc_adminpage.']<br />';
-    }
-  }
-*/
 /**
- * include the list of extra configure files
+ * include the extra_configures files
  */
 if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
     while ($zv_file = $za_dir->read()) {
@@ -149,29 +141,32 @@ if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
  * init some vars
  */
 $template_dir = '';
-define('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
+zen_define_default('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
 /**
  * psr-4 autoloading
  */
-require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
+require DIR_FS_CATALOG . 'laravel/vendor/autoload.php';
 $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
-require('includes/psr4Autoload.php');
+require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 
 require 'includes/classes/AdminRequestSanitizer.php';
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
+require (DIR_FS_CATALOG . 'includes/application_laravel.php');
 
-
-$pluginManager = new PluginManager($db);
-
+$pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
 $installedPlugins = $pluginManager->getInstalledPlugins();
+$pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
+$pageLoader = PageLoader::getInstance();
+$pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem);
 
-$fs = FileSystem::getInstance();
-$fs->setInstalledPlugins($installedPlugins);
+$fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
+$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/functions/extra_functions', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 22 Modified in v1.5.7a $
+ * @version $Id: lat9 2022 Jun 22 Modified in v1.5.8-alpha $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -36,11 +36,12 @@ $option_order_by = !empty($_GET['option_order_by']) && $_GET['option_order_by'] 
 if (!empty($_POST['options_id'])) { // selected Option Name from Global Tools dropdowns (not used for ADD ALL/DELETE ALL)
     $_SESSION['selectedOptionId'] = (int)$_POST['options_id'];
 }
+$form_id = '';
 if (!empty($_POST['form_wrapper_id'])) { // id of surrounding div of the submitted form: on redirect, focus browser viewport on same id/anchor
     $form_id = zen_db_prepare_input($_POST['form_wrapper_id']);
 }
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
     switch ($action) {
         case 'add_product_options': // insert a new Option Name
             $option_name_array = $_POST['option_name']; // array
@@ -95,6 +96,7 @@ if (zen_not_null($action)) {
 
             $products_options_length_array = $_POST['products_options_length'];
             $products_options_comment_array = $_POST['products_options_comment'];
+            $products_options_comment_position_array = $_POST['products_options_comment_position'];
             $products_options_size_array = $_POST['products_options_size'];
 
             $products_options_images_per_row_array = $_POST['products_options_images_per_row'];
@@ -108,6 +110,7 @@ if (zen_not_null($action)) {
 
                 $products_options_length = zen_db_prepare_input($products_options_length_array[$languages[$i]['id']]);
                 $products_options_comment = zen_db_prepare_input($products_options_comment_array[$languages[$i]['id']]);
+                $products_options_comment_position = zen_db_prepare_input($products_options_comment_position_array[$languages[$i]['id']]);
                 $products_options_size = zen_db_prepare_input($products_options_size_array[$languages[$i]['id']]);
 
                 $products_options_images_per_row = (int)$products_options_images_per_row_array[$languages[$i]['id']];
@@ -119,6 +122,7 @@ if (zen_not_null($action)) {
                           products_options_type = '" . $option_type . "',
                           products_options_length = '" . zen_db_input($products_options_length) . "',
                           products_options_comment = '" . zen_db_input($products_options_comment) . "',
+                          products_options_comment_position = '" . zen_db_input($products_options_comment_position) . "',
                           products_options_size = '" . zen_db_input($products_options_size) . "',
                           products_options_sort_order = " . $products_options_sort_order . ",
                           products_options_images_per_row = " . $products_options_images_per_row . ",
@@ -138,9 +142,9 @@ if (zen_not_null($action)) {
                                       FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
                                       WHERE products_options_id = " . (int)$_POST['option_id'] . "
                                       AND products_options_values_id = 0");
-                    if ($check_type->fields['count'] === 0) {
-                        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_values_to_products_options_id, products_options_id, products_options_values_id)
-                          VALUES (NULL, " . (int)$_POST['option_id'] . ", " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ")");
+                    if ($check_type->fields['count'] === '0') {
+                        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
+                          VALUES (" . (int)$_POST['option_id'] . ", " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ")");
                     }
                     break;
                 default:
@@ -386,11 +390,7 @@ function translate_type_to_name($opt_type)
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
 <body>
 <?php require DIR_WS_INCLUDES . 'header.php'; ?>
@@ -435,7 +435,7 @@ function translate_type_to_name($opt_type)
             <table class="table table-striped">
                 <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent text-center"><?php echo TEXT_OPTION_ID; ?></th>
-                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCT; ?></th>
+                    <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
                     <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></th>
                     <th class="dataTableHeadingContent">&nbsp;</th>
                 </tr>
@@ -525,7 +525,7 @@ function translate_type_to_name($opt_type)
                             $sort_order_input = '';
                             $inputs2 = '';
                             for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                                $option_name = $db->Execute("SELECT products_options_name, products_options_sort_order, products_options_size, products_options_length, products_options_comment, products_options_images_per_row, products_options_images_style, products_options_rows
+                                $option_name = $db->Execute("SELECT products_options_name, products_options_sort_order, products_options_size, products_options_length, products_options_comment, products_options_comment_position, products_options_images_per_row, products_options_images_style, products_options_rows
                                                    FROM " . TABLE_PRODUCTS_OPTIONS . "
                                                    WHERE products_options_id = " . (int)$options_name['products_options_id'] . "
                                                    AND language_id = " . (int)$languages[$i]['id']);
@@ -543,6 +543,9 @@ function translate_type_to_name($opt_type)
                                 $inputs2 .= '<div class="col-sm-12">';
                                 $inputs2 .= zen_draw_label(TEXT_OPTION_NAME_COMMENTS . ':', 'products_options_comment[' . $languages[$i]['id'] . ']', 'class="control-label"');
                                 $inputs2 .= zen_draw_input_field('products_options_comment[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_comment'], 'class="form-control" style="width:100%" id="products_options_comment[' . $languages[$i]['id'] . ']"');
+
+                                $inputs2 .= zen_draw_label(TEXT_OPTION_NAME_COMMENTS_POSITION. ':', 'products_options_comment_position[' . $languages[$i]['id'] . ']', 'class="control-label"');
+                                $inputs2 .= zen_draw_input_field('products_options_comment_position[' . $languages[$i]['id'] . ']', $option_name->fields['products_options_comment_position'], 'class="form-control" id="products_options_comment_position[' . $languages[$i]['id'] . ']"', '', 'number');
                                 $inputs2 .= '</div>';
                                 $inputs2 .= '</div>';
                                 $inputs2 .= '<div class="row">';
@@ -582,7 +585,7 @@ function translate_type_to_name($opt_type)
                                     <td><?php echo $option_name_input; ?></td>
                                     <td><?php echo $sort_order_input; ?></td>
                                     <td><?php echo zen_draw_label(TABLE_HEADING_OPTION_TYPE . ':', 'edit_options_type', 'class="control-label"') . zen_draw_pull_down_menu('option_type', $optionTypeValuesArray, $options_name['products_options_type'], 'class="form-control" id="edit_options_type"'); ?></td>
-                                    <td class="text-center" style="vertical-align: bottom">
+                                    <td class="text-center align-bottom">
                                         <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
                                         <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . 'option_order_by=' . $option_order_by); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                                     </td>
@@ -682,7 +685,7 @@ function translate_type_to_name($opt_type)
     } else {
         $category_path = false;
     }
-    $selectedOptionId = !empty($_SESSION['selectedOptionId']) ? (int)$_SESSION['selectedOptionId'] : ''; // set after change of Option Name select dropdopwn
+    $selectedOptionId = !empty($_SESSION['selectedOptionId']) ? (int)$_SESSION['selectedOptionId'] : ''; // set after change of Option Name select dropdown
 
     $options_names = $db->Execute("SELECT products_options_id, products_options_name
                                         FROM " . TABLE_PRODUCTS_OPTIONS . "
@@ -750,7 +753,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_PRODUCT, 'product_to_update_add', 'class="control-label"') . '<br>';
-                            echo zen_draw_products_pull_down_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_add" required', '', $products_order_by, $selectedOptionId);
+                            echo zen_draw_pulldown_products_having_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_add" required', [], $products_order_by, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $products_sort_link = ($products_order_by === 'name' ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['products_order_by']) . '&products_order_by=model#addOptionValuesOneWrapper') . '">' . TEXT_ORDER_BY . ' ' . TABLE_HEADING_MODEL . '</a>' :
@@ -784,7 +787,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_CATEGORY, 'category_to_update_add', 'class="control-label"') . '<br>';
-                            echo zen_draw_products_pull_down_categories_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_add" required', '', $category_path, $selectedOptionId);
+                            echo zen_draw_pulldown_categories_having_products_with_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_add" required', [], $category_path, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $show_category_path_link = ($category_path ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['category_path']) . '&category_path=0#addOptionValuesCategoryWrapper') . '">' . TEXT_SHOW_CATEGORY_NAME . '</a>' :
@@ -849,7 +852,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_PRODUCT, 'product_to_update_delete', 'class="control-label"') . '<br>';
-                            echo zen_draw_products_pull_down_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_delete" required', '', $products_order_by, $selectedOptionId);
+                            echo zen_draw_pulldown_products_having_attributes('product_to_update', 'size="5" class="form-control" id="product_to_update_delete" required', [], $products_order_by, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $products_sort_link = ($products_order_by === 'name' ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['products_order_by']) . '&products_order_by=model#deleteOptionValuesOneWrapper') . '">' . TEXT_ORDER_BY . ' ' . TABLE_HEADING_MODEL . '</a>' :
@@ -884,7 +887,7 @@ function translate_type_to_name($opt_type)
                         <div class="col-sm-7">
                             <?php
                             echo zen_draw_label(TEXT_SELECT_CATEGORY, 'category_to_update_delete', 'class="control-label"') . '<br>';
-                            echo zen_draw_products_pull_down_categories_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_delete" required', '', $category_path, $selectedOptionId);
+                            echo zen_draw_pulldown_categories_having_products_with_attributes('category_to_update', 'size="5" class="form-control" id="category_to_update_delete" required', [], $category_path, $selectedOptionId);
                             if ($selectedOptionId !== '') {
                                 $show_category_path_link = ($category_path ?
                                     '<a href="' . zen_href_link(FILENAME_OPTIONS_NAME_MANAGER, zen_get_all_get_params(['category_path']) . '&category_path=0#deleteOptionValuesCategoryWrapper') . '">' . TEXT_SHOW_CATEGORY_NAME . '</a>' :

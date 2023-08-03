@@ -2,11 +2,10 @@
 /**
  * category_icon_display module
  *
- * @package modules
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -29,11 +28,11 @@ switch(true) {
   $align='right';
   break;
 }
-//$category_icon_display_name = zen_get_categories_name(zen_get_products_category_id((int)$_GET['products_id']), $_SESSION['languages_id']);
+//$category_icon_display_name = zen_get_category_name(zen_get_products_category_id((int)$_GET['products_id']), $_SESSION['languages_id']);
 //$category_icon_display_image = zen_get_categories_image(zen_get_products_category_id((int)$_GET['products_id']));
 
 
-$category_icon_display_name = zen_get_categories_name((int)$current_category_id);
+$category_icon_display_name = zen_get_category_name((int)$current_category_id);
 $category_icon_display_image = zen_get_categories_image((int)$current_category_id);
 
 switch(true) {
@@ -47,7 +46,7 @@ switch(true) {
     break;
   default:
     // name and image always display image regardless
-    $category_icon_display_image = zen_image(DIR_WS_IMAGES . $category_icon_display_image, $category_icon_display_name, CATEGORY_ICON_IMAGE_WIDTH, CATEGORY_ICON_IMAGE_HEIGHT) . '<br />';
+    $category_icon_display_image = zen_image(DIR_WS_IMAGES . $category_icon_display_image, $category_icon_display_name, CATEGORY_ICON_IMAGE_WIDTH, CATEGORY_ICON_IMAGE_HEIGHT) . '<br>';
     break;
 }
 //    }

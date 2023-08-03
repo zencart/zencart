@@ -2,10 +2,9 @@
 /**
  * Load in any specialized developer and/or unit-testing scripts
  *
- * @package initSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Apr 11 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 // must be called appropriately
 if (!defined('IS_ADMIN_FLAG')) {

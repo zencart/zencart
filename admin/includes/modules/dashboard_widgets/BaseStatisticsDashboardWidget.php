@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 15 Modified in v1.5.7 $
+ * @version $Id: lat9 2022 May 05 Modified in v1.5.8-alpha $
  */
 
 // to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
@@ -32,7 +32,7 @@ $result = $db->Execute("SELECT startdate, counter FROM " . TABLE_COUNTER, false,
 if ($result->RecordCount()) {
     $counter_startdate = $result->fields['startdate'];
     $counter = $result->fields['counter'];
-    $counter_startdate_formatted = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
+    $counter_startdate_formatted = $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
 }
 
 

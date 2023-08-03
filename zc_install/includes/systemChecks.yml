@@ -1,7 +1,7 @@
 #
-# @copyright Copyright 2003-2020 Zen Cart Development Team
+# @copyright Copyright 2003-2022 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: DrByte 2020 Oct 30 Modified in v1.5.7a $
+# @version $Id: brittainmark 2022 Aug 06 Modified in v1.5.8-alpha2 $
 #
 
 systemChecks:
@@ -39,24 +39,24 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 5.6.0
+          version: 7.3.0
           versionTest: ge
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '5.6.0') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '7.3') . PHP_EOL; ?>
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 8.1.0
+          version: 8.2.0
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.0.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.1.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '7.3') . PHP_EOL; ?>
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '8.0') . PHP_EOL; ?>
     methods:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 7.3.12
+          version: 8.0.0
           versionTest: ge
   checkZCversion:
     runLevel: always
@@ -73,6 +73,23 @@ systemChecks:
       checkExtension:
         parameters:
           extension: mysqli
+  pdomysqlExt:
+    runLevel: always
+    errorLevel: FAIL
+    criticalError: true
+    mainErrorText: <?php echo TEXT_ERROR_PDOMYSQL_SUPPORT .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: pdo_mysql
+  phpzipExt:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_PHPZIP_SUPPORT .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: zip
   logFolder:
     runLevel: always
     errorLevel: FAIL
@@ -127,6 +144,15 @@ systemChecks:
       checkWriteableDir:
         parameters:
           fileDir: <?php echo DIR_FS_DOWNLOAD_PUBLIC . PHP_EOL; ?>
+  nginxFolder:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_NGINX_FOLDER .PHP_EOL; ?>
+    mainErrorTextHelpId: helpIdFolderPerms
+    methods:
+      checkWriteableDir:
+        parameters:
+          fileDir: <?php echo DIR_FS_ROOT . 'zc_install/includes/nginx_conf' . PHP_EOL; ?>
   htaccessSupport:
     runLevel: always
     errorLevel: WARN
@@ -173,6 +199,22 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
     methods:
       checkDBConnection:
+  checkjson:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_JSON .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: json
+  checkfileinfo:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_FILEINFO .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: fileinfo
   checkGD:
     runLevel: always
     errorLevel: WARN
@@ -239,6 +281,20 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_HTTPS .PHP_EOL; ?>
     methods:
       checkHttpsRequest:
+
+  checkDBVersion158:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '1.5.8-dev'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.8-dev') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configKeyExists
+            keyName: PRODUCT_LISTING_COLUMNS_PER_ROW
+          - checkType: configValue
+            fieldName: CATEGORIES_TABS_STATUS
+            expectedResult: 'Category Header Menu ON/OFF'
 
   checkDBVersion157:
     runLevel: dbVersion
@@ -496,6 +552,5 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          - checkType: configValue
-            fieldName: CATEGORIES_TABS_STATUS
-            expectedResult: 'Categories-Tabs Menu ON/OFF'
+          - checkType: configKeyExists
+            keyName: CATEGORIES_TABS_STATUS

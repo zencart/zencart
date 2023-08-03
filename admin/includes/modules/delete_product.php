@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 Apr 20 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Jun 16 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -15,7 +15,7 @@ $product_categories = zen_generate_category_path($pInfo->products_id, 'product')
 if (!isset($category_path)) {
     $category_path = '';
 }
-$preselect_master_category = true; // set to false to prevent accidental deletion
+$preselect_master_category = false; // to prevent accidental deletion
 for ($i = 0, $n = count($product_categories); $i < $n; $i++) {
     $category_path = '';
     for ($j = 0, $k = count($product_categories[$i]); $j < $k; $j++) {
@@ -31,6 +31,7 @@ for ($i = 0, $n = count($product_categories); $i < $n; $i++) {
         $product_categories_string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field('product_categories[]', $product_categories[$i][count($product_categories[$i]) - 1]['id'], true) . $category_path . '</label></div>';
     }
 }
+if (!isset($product_master_category_string)) $product_master_category_string = zen_get_category_name($pInfo->master_categories_id, (int)$_SESSION['languages_id']);
 
 $heading = [];
 $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_PRODUCT . '</h4>'];

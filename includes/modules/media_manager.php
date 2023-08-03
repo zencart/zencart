@@ -2,9 +2,9 @@
 /**
  * iterates thru media collections/clips
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Nov 20 Modified in v1.5.7b $
+ * @version $Id: DrByte 2020 Nov 19 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $zv_collection_query = "select media_id, product_id from " . TABLE_MEDIA_TO_PRODUCTS . "
                         where product_id = '" . (int)$_GET['products_id'] . "'";
 $zq_collections = $db->Execute($zv_collection_query);
-$za_media_manager = array();
+$za_media_manager = [];
 $zv_product_has_media = false;
 /**
  * loop thru collections to identify actual media clips

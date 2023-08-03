@@ -1,12 +1,23 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 May 01 New in v1.5.7 $
+ * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
  */
 
 class LanguageManager
 {
+    /**
+     * $langPath is the directory path to languages files
+     * @var type string
+     */
+    protected $langPath;
+    /**
+     * $languagesInstalled is an array of the languages installed
+     * @var array
+     */
+    protected $languagesInstalled = [];
+          
     public function __construct($langPath = 'includes/languages/')
     {
         $this->langPath = $langPath;

@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2020 Jun 17 Modified in v1.5.7 $
+ * @version $Id: lat9 2022 May 05 Modified in v1.5.8-alpha $
  */
 
 // to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
@@ -20,13 +20,13 @@ $counterData = '';
 foreach ($visits as $data) {
     // table
     $countdate = $data['startdate'];
-    $visit_date = strftime(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($countdate, 4, 2), substr($countdate, -2), substr($countdate, 0, 4)));
+    $visit_date = $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($countdate, 4, 2), substr($countdate, -2), substr($countdate, 0, 4)));
     $visit_history[] = array('date' => $visit_date, 'sessions' => $data['session_counter'], 'count' => $data['counter']);
     // graph
     if ($i > 0) {
         $counterData = "," . $counterData;
     }
-    $date = strftime('%a %d', mktime(0, 0, 0, substr($data['startdate'], 4, 2), substr($data['startdate'], -2)));
+    $date = $zcDate->output('%a %d', mktime(0, 0, 0, substr($data['startdate'], 4, 2), substr($data['startdate'], -2)));
     $counterData = "['$date'," . $data['session_counter'] . "," . $data['counter'] . "]" . $counterData;
     $i++;
 }

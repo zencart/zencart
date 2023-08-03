@@ -22,9 +22,9 @@
 //
 
 class zen_categories_ul_generator {
-    var $root_category_id = 0,
+    protected $root_category_id = TOPMOST_CATEGORY_PARENT_ID,
     $max_level = 0,
-    $data = array(),
+    $data = [],
     $parent_group_start_string = '<ul%s>',
     $parent_group_end_string = '</ul>',
     $child_start_string = '<li%s>',
@@ -32,10 +32,7 @@ class zen_categories_ul_generator {
     $spacer_string = '
 ',
     $spacer_multiplier = 1;
-    
-    var $document_types_list = ' (3) ';
-    // acceptable format example: ' (3, 4, 9, 22, 18) '
-    
+
     function __construct($load_from_database = true)
     {
         global $db;
@@ -52,12 +49,13 @@ class zen_categories_ul_generator {
             $categories->MoveNext();
         }
     }
-    
+
     function buildBranch($parent_id, $level = 0, $submenu=true, $parent_link='')
     {
+        $parent_id = (int)$parent_id;
         $level = (int)$level;
         $result = sprintf($this->parent_group_start_string, ($submenu==true) ? ' class="level'. ($level+1) . '"' : '' );
-        
+
         if (($this->data[$parent_id])) {
             foreach($this->data[$parent_id] as $category_id => $category) {
                 $category_link = $parent_link . $category_id;
@@ -76,11 +74,11 @@ class zen_categories_ul_generator {
                 $result .= $this->child_end_string;
             }
         }
-        
+
         $result .= $this->parent_group_end_string;
         return $result;
     }
-    
+
     function buildTree($submenu=false)
     {
         return $this->buildBranch($this->root_category_id, '', $submenu);

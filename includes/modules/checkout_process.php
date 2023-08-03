@@ -2,10 +2,10 @@
 /**
  * module to process a completed checkout
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 23 Modified in v1.5.7a $
+ * @version $Id: torvista 2022 Jul 06 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -72,12 +72,19 @@ if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
 }
 
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PRE_CONFIRMATION_CHECK');
-if (strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
-  $order_totals = $order_total_modules->pre_confirmation_check();
+if (empty($_SESSION['payment']) || strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
+    $order_totals = $order_total_modules->pre_confirmation_check();
 }
-if ($credit_covers === TRUE)
-{
-	$order->info['payment_method'] = $order->info['payment_module_code'] = '';
+
+// -----
+// The order-totals::pre_confirmation_check method could have set the indication that
+// either a Gift Certificate or coupon has 'covered' the payment.  Let the payment
+// class perform any updates needed for its proper follow-on operation.
+//
+$payment_modules->checkCreditCovered();
+
+if ($credit_covers === true) {
+    $order->info['payment_method'] = $order->info['payment_module_code'] = '';
 }
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PROCESS');
 $order_totals = $order_total_modules->process();
@@ -91,7 +98,7 @@ if (!isset($_SESSION['payment']) && $credit_covers === FALSE) {
 $payment_modules->before_process();
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_PAYMENT_MODULES_BEFOREPROCESS');
 // create the order record
-$insert_id = $order->create($order_totals, 2);
+$insert_id = $order->create($order_totals);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE', $insert_id);
 $payment_modules->after_order_create($insert_id);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_PAYMENT_MODULES_AFTER_ORDER_CREATE', $insert_id);

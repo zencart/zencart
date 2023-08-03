@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 16 Modified in v1.5.8-alpha2 $
  */
 
   require('includes/application_top.php');
@@ -13,7 +13,7 @@
 
 // the following is for display later
   $sinfo =  '<div class="sysinfo wrapper">' .
-         '  <div class="center"><a href="https://www.zen-cart.com"><img border="0" src="images/small_zen_logo.gif" alt=" Zen Cart " /></a></div>' .
+         '  <div class="center"><a href="https://www.zen-cart.com"><img src="images/small_zen_logo.gif" alt=" Zen Cart "></a></div>' .
          '  <div class="center"><h2> ' . PROJECT_VERSION_NAME . ' ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '</h2>' .
                ((PROJECT_VERSION_PATCH1 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH1 . '::' . PROJECT_VERSION_PATCH1_SOURCE . '</h3>') .
                ((PROJECT_VERSION_PATCH2 =='') ? '' : '<h3>Patch: ' . PROJECT_VERSION_PATCH2 . '::' . PROJECT_VERSION_PATCH2_SOURCE . '</h3>') .
@@ -26,7 +26,7 @@
       $sinfo .=  'v' . $hist_details->fields['project_version_major'] . '.' . $hist_details->fields['project_version_minor'];
       if (isset($hist_details->fields['project_version_patch']) && zen_not_null($hist_details->fields['project_version_patch'])) $sinfo .= '&nbsp;&nbsp;Patch: ' . $hist_details->fields['project_version_patch'];
       if (isset($hist_details->fields['project_version_date_applied']) && zen_not_null($hist_details->fields['project_version_date_applied'])) $sinfo .= ' &nbsp;&nbsp;[' . $hist_details->fields['project_version_date_applied'] . '] ';
-      if (isset($hist_details->fields['project_version_comment']) && zen_not_null($hist_details->fields['project_version_comment'])) $sinfo .= ' &nbsp;&nbsp;(' . $hist_details->fields['project_version_comment'] . ')';
+      if (isset($hist_details->fields['project_version_comment']) && !empty($hist_details->fields['project_version_comment'])) $sinfo .= ' &nbsp;&nbsp;(' . $hist_details->fields['project_version_comment'] . ')';
       $sinfo .=  '<br>';
   $hist_query = "SELECT * from " . TABLE_PROJECT_VERSION_HISTORY . " WHERE project_version_key = 'Zen-Cart Main' ORDER BY project_version_date_applied DESC, project_version_major DESC, project_version_minor DESC, project_version_patch DESC";
   $hist_details = $db->Execute($hist_query);
@@ -34,62 +34,19 @@
       $sinfo .=  'v' . $hist_details->fields['project_version_major'] . '.' . $hist_details->fields['project_version_minor'];
       if (zen_not_null($hist_details->fields['project_version_patch'])) $sinfo .= '&nbsp;&nbsp;Patch: ' . $hist_details->fields['project_version_patch'];
       if (zen_not_null($hist_details->fields['project_version_date_applied'])) $sinfo .= ' &nbsp;&nbsp;[' . $hist_details->fields['project_version_date_applied'] . '] ';
-      if (zen_not_null($hist_details->fields['project_version_comment'])) $sinfo .= ' &nbsp;&nbsp;(' . $hist_details->fields['project_version_comment'] . ')';
+      if (!empty($hist_details->fields['project_version_comment'])) $sinfo .= ' &nbsp;&nbsp;(' . $hist_details->fields['project_version_comment'] . ')';
       $sinfo .=  '<br>';
       $hist_details->MoveNext();
     }
     $sinfo .= '<br><a href="https://docs.zen-cart.com/user/first_steps/server_requirements/" rel="noopener" target="_blank">Zen Cart documentation: Server Requirements</a>';
     $sinfo .= '</div></div>';
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script type="text/javascript" src="includes/menu.js"></script>
-<script type="text/javascript">
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-</script>
-<style type="text/css">
-.pageHeading {font-size: 2em;}
-.serverInfo{max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1em;}
-.infocell {float:left; width: 380px;margin-right:10px;}
-.sysinfo {max-width:700px; margin: auto;border: 2px solid black;padding:1.5em;margin-top:2em;}
-.clearBoth{clear:both}
-
-.phpinfo table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
-.phpinfo table {width: 768px !important;}
-.phpinfo {margin:auto;}
-.phpinfo hr {display: none;}
-.phpinfo DIV {background-color: #fff; color: #222; font-family: sans-serif;}
-pre {margin: 0; font-family: monospace;}
-.phpinfo table {border-collapse: collapse; border: 0; width: 934px; box-shadow: 1px 2px 3px #ccc;}
-.center {text-align: center;}
-.center table {margin: 1em auto; text-align: left;}
-.center th {text-align: center !important;}
-
-.phpinfo h1, .phpinfo h1 a {font-size: 150%;}
-.phpinfo h2, .phpinfo h2 a {font-size: 125%;}
-.p {text-align: left;}
-.e {background-color: #ccf; width: 300px; font-weight: bold;}
-.h {background-color: #99c; font-weight: bold;}
-.v {background-color: #ddd; max-width: 300px; overflow-x: auto; word-wrap: break-word;}
-.v i {color: #999;}
-.phpinfo img {float: right; border: 0;}
-.phpinfo-is-disabled {color: red; font-weight: bold; text-align: center; padding-top: 1em; border: 1px solid red; height: 4em; width: 75%;}
-</style>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
-<body onLoad="init()" class="sysinfoBody">
+<body class="sysinfoBody">
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -99,6 +56,7 @@ pre {margin: 0; font-family: monospace;}
 <div class="serverInfo">
       <div class="infocell"><strong><?php echo TITLE_SERVER_HOST; ?></strong> <?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE; ?></strong> <?php echo zen_output_string_protected(DB_DATABASE); ?></div>
+      <div class="infocell"><strong><?php echo STORE_HOME; ?></strong> <?php echo zen_output_string_protected(DIR_FS_CATALOG); ?></div>
       <div class="infocell"><strong><?php echo TITLE_SERVER_OS; ?></strong> <?php echo $system['system'] . ' ' . $system['kernel']; ?> </div>
       <div class="infocell"><strong><?php echo TITLE_SERVER_DATE; ?></strong> <?php echo $system['date']; ?> &nbsp;</div>
       <div class="infocell"><strong><?php echo TITLE_SERVER_UP_TIME; ?></strong> <?php echo $system['uptime']; ?></div>
@@ -113,9 +71,10 @@ pre {margin: 0; font-family: monospace;}
       <div class="infocell"><strong><?php echo TITLE_DATABASE_DATE; ?></strong> <?php echo $system['db_date']; ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_DATA_SIZE; ?></strong> <?php echo number_format(($system['database_size']/1024),0); ?> kB</div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_INDEX_SIZE; ?></strong> <?php echo number_format(($system['index_size']/1024),0); ?> kB</div>
-      <div class="infocell"><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS; ?></strong> <?php echo $system['mysql_slow_query_log_status'] != '0' ? 'On' : 'Off'; ?></div>
+      <div class="infocell"><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_STATUS; ?></strong> <?php echo $system['mysql_slow_query_log_status'] == '1' ? 'On' : 'Off'; ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_MYSQL_SLOW_LOG_FILE; ?></strong> <?php echo zen_output_string_protected($system['mysql_slow_query_log_file']); ?></div>
       <div class="infocell"><strong><?php echo TITLE_DATABASE_MYSQL_MODE; ?></strong> <?php echo $system['mysql_mode'] == '' ? '(None set)' : zen_output_string_protected(str_replace(',', ', ', $system['mysql_mode'])); ?></div>
+      <div class="infocell"><strong><?php echo TEXT_DATABASE_VARIABLES_LINK; ?></strong></div>
 </div>
 <br class="clearBoth">
 <?php echo $sinfo; ?>
@@ -133,7 +92,10 @@ if (strpos($disabled_functions,"phpinfo") === false) {
     ob_end_clean();
     $regs = '';
     preg_match('/<body>(.*)<\/body>/msi', $phpinfo, $regs);
-    echo $regs[1];
+    // clean up html to html 5
+    // replace font with span, replace name with id in <a> tag, remove border="0" from <img> tag, add colspan for missing td element
+    $phpinfo = preg_replace(['/<(\/)?font/','/<a name=/','/<img border="0"/','/<tr><td class="e">Features <\/td><\/tr>/'],['<$1span','<a id=','<img ','<tr><td class="e" colspan=2>Features </td></tr>'],$regs[1]);
+    echo $phpinfo;
   } else {
     phpinfo();
   }
@@ -142,6 +104,24 @@ if (strpos($disabled_functions,"phpinfo") === false) {
 <?php } else { ?>
 <div class="phpinfo phpinfo-is-disabled"><?php echo ERROR_UNABLE_TO_DISPLAY_SERVER_INFORMATION; ?></div>
 <?php } ?>
+<h2 id="db-h2"><?php echo TITLE_DATABASE_VARIABLES . $system['db_version'] . ($system['mysql_strict_mode'] === true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''); ?></h2>
+<table class="table" id="database-info">
+    <tr class="db-row">
+        <th class="db-name db-head db-info"><?php echo HEADING_DATABASE_VARIABLE; ?></th>
+        <th class="db-value db-head db-info"><?php echo HEADING_DATABASE_VALUE; ?></th>
+    </tr>
+    <?php
+    $show_variables = $db->Execute("SHOW VARIABLES");
+    foreach ($show_variables as $variable) {
+        ?>
+        <tr class="db-row">
+            <td class="db-info db-name"><?php echo $variable['Variable_name']; ?></td>
+            <td class="db-info db-value"><?php echo empty($variable['Value']) ? '$nbsp;' : htmlspecialchars($variable['Value']); ?></td>
+        </tr>
+        <?php
+    }
+    ?>
+</table>
 <!-- body_text_eof //-->
 
 <!-- body_eof //-->

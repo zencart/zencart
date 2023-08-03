@@ -5,10 +5,10 @@
  * Used to allow customer to send GV to their friends/family by way of email.
  * They can send up to the amount of GV accumlated in their account by way of purchased GV's or GV's sent to them.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jul 05 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 
 // This should be first line of the script:
@@ -17,7 +17,7 @@ if (isset($_POST['message'])) $_POST['message'] = zen_output_string_protected($_
 
 require_once('includes/classes/http_client.php');
 
-if (!isset($_GET['action'])) $_GET['action'] = '';  
+if (!isset($_GET['action'])) $_GET['action'] = '';
 // verify no timeout has occurred on the send or process
 if (!zen_is_logged_in() && isset($_GET['action']) && ($_GET['action'] == 'send' or $_GET['action'] == 'process')) {
   zen_redirect(zen_href_link(FILENAME_TIME_OUT));
@@ -148,11 +148,11 @@ if ($_GET['action'] == 'process') {
 
       if (isset($_POST['message'])) {
         $gv_email .= EMAIL_GV_MESSAGE . "\n\n";
-        $html_msg['EMAIL_GV_MESSAGE'] = EMAIL_GV_MESSAGE . '<br />';
+        $html_msg['EMAIL_GV_MESSAGE'] = EMAIL_GV_MESSAGE . '<br>';
 
         if (isset($_POST['to_name'])) {
           $gv_email .= sprintf(EMAIL_GV_SEND_TO, $_POST['to_name']) . "\n\n";
-          $html_msg['EMAIL_GV_SEND_TO'] = '<tt>'.sprintf(EMAIL_GV_SEND_TO, $_POST['to_name']). '</tt><br />';
+          $html_msg['EMAIL_GV_SEND_TO'] = '<tt>'.sprintf(EMAIL_GV_SEND_TO, $_POST['to_name']). '</tt><br>';
         }
         $gv_email .= stripslashes($_POST['message']) . "\n\n";
         $gv_email .= EMAIL_SEPARATOR . "\n\n";
@@ -208,7 +208,7 @@ if ($_GET['action'] == 'complete') zen_redirect(zen_href_link(FILENAME_GV_SEND, 
 $breadcrumb->add(NAVBAR_TITLE);
 
 // validate entries
-if (empty($gv_amount)) $gv_amount = 0; 
+if (empty($gv_amount)) $gv_amount = 0;
 $gv_amount = (float)$gv_amount;
 
 // This should be last line of the script:

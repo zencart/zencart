@@ -1,13 +1,11 @@
 <?php
 /**
  * ajaxLoadMainSql.php
- * @package Installer
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jun 10 23:03:21 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2021 Jul 13 Modified in v1.5.8-alpha $
  */
 define('IS_ADMIN_FLAG', false);
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
@@ -55,6 +53,12 @@ if (isset($_POST['demoData']))
   $file = DIR_FS_INSTALL . 'sql/demo/mysql_demo.sql';
   logDetails('processing file ' . $file);
   $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
+  // system('unzip --q demo_images/images.zip -d ../images/'); 
+  $za = new ZipArchive;
+  if ($za->open('demo_images/images.zip') === TRUE) {
+    $za->extractTo('../images');
+    $za->close();
+  }
 }
 if ($error)
 {

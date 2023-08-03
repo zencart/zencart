@@ -1,15 +1,17 @@
 <?php
 
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Nov 9 12:37:01 2017 +0100 Modified in v1.5.6 $
+ * @version $Id: brittainmark 2022 Aug 22 Modified in v1.5.8-alpha2 $
  */
 class boxTableBlock {
-
-  function tableBlock($contents) {
+    protected 
+        $table_row_parameters,
+        $table_data_parameters;
+     
+function tableBlock($contents) {
     $tableBox_string = '';
 
     $form_set = false;

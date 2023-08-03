@@ -1,24 +1,18 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Sat Jun 1 13:30:37 2013 -0400 Modified in v1.5.2 $
+ * @version $Id: Zen4All 2020 Jul 01 Modified in v1.5.8-alpha $
  */
 require('includes/application_top.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<meta name="robots" content="noindex, nofollow" />
-<script src="includes/menu.js" type="text/javaScript"></script>
-<link href="includes/stylesheet.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS" />
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
-<body onLoad="cssjsmenu('navbar')">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->

@@ -656,6 +656,7 @@ class CreatePaymentRequest implements ArrayAccess
      * @param  integer $offset Offset 
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->$offset);
@@ -666,6 +667,7 @@ class CreatePaymentRequest implements ArrayAccess
      * @param  integer $offset Offset 
      * @return mixed 
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->$offset;
@@ -677,6 +679,7 @@ class CreatePaymentRequest implements ArrayAccess
      * @param  mixed   $value  Value to be set
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->$offset = $value;
@@ -687,6 +690,7 @@ class CreatePaymentRequest implements ArrayAccess
      * @param  integer $offset Offset 
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->$offset);

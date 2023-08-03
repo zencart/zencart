@@ -2,15 +2,18 @@
 /**
  * initialise template system variables
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
- * Determines current template name for current language, from database<br />
- * Then loads template-specific language file, followed by master/default language file<br />
+ * Determines current template name for current language, from database
+ * Then loads template-specific language file, followed by master/default language file
  * ie: includes/languages/classic/english.php followed by includes/languages/english.php
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Sep 30 Modified in v1.5.7a $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
+
+use Zencart\LanguageLoader\LanguageLoaderFactory;
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -62,25 +65,28 @@ if (zen_is_whitelisted_admin_ip()) {
  * Load the appropriate Language files, based on the currently-selected template
  */
 
-  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'].'.php', 'false'));
+//  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'].'.php', 'false'));
 
 /**
  * include the template language master (to catch all items not defined in the override file).
- * The intent here is to: load the override version to catch preferencial changes; 
+ * The intent here is to: load the override version to catch preferencial changes;
  * then load the original/master version to catch any defines that didn't get set into the override version during upgrades, etc.
  */
 // THE FOLLOWING MIGHT NEED TO BE DISABLED DUE TO THE EXISTENCE OF function() DECLARATIONS IN MASTER ENGLISH.PHP FILE
 // THE FOLLOWING MAY ALSO SEND NUMEROUS ERRORS IF YOU HAVE ERROR_REPORTING ENABLED, DUE TO REPETITION OF SEVERAL DEFINE STATEMENTS
-  include_once(DIR_WS_LANGUAGES .  $_SESSION['language'] . '.php');
+//  include_once(DIR_WS_LANGUAGES .  $_SESSION['language'] . '.php');
 
-
-/**
- * send the content charset "now" so that all content is impacted by it
- */
-  header("Content-Type: text/html; charset=" . CHARSET);
 
 /**
  * include the extra language definitions
  */
-  include(DIR_WS_MODULES . zen_get_module_directory('extra_definitions.php'));
-?>
+//  include(DIR_WS_MODULES . zen_get_module_directory('extra_definitions.php'));
+
+$languageLoaderFactory = new LanguageLoaderFactory();
+$languageLoader = $languageLoaderFactory->make('catalog', $installedPlugins, $current_page, $template_dir);
+$languageLoader->loadInitialLanguageDefines();
+$languageLoader->finalizeLanguageDefines();
+/**
+ * send the content charset "now" so that all content is impacted by it
+ */
+header("Content-Type: text/html; charset=" . CHARSET);

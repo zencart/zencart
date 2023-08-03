@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: Zcwilt 2020 Jul 01 Modified in v1.5.8-alpha $
  */
 
 @ini_set("arg_separator.output", "&");
@@ -137,6 +137,8 @@ if ($za_dir = @dir(DIR_FS_INSTALL . 'includes/extra_configures')) {
     $za_dir->close();
 }
 
+require DIR_FS_ROOT . 'includes/classes/traits/ObserverManager.php';
+require DIR_FS_ROOT . 'includes/classes/traits/NotifierManager.php';
 require DIR_FS_ROOT . 'includes/classes/class.base.php';
 require DIR_FS_ROOT . 'includes/classes/class.notifier.php';
 require DIR_FS_INSTALL . 'includes/functions/general.php';

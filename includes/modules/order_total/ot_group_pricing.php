@@ -2,15 +2,74 @@
 /**
  * ot_group_pricing order-total module
  *
- * @package orderTotal
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 Tue May 8 00:42:18 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: Scott C Wilson 2022 Oct 08 Modified in v1.5.8 $
  */
 
 class ot_group_pricing {
-  var $title, $output;
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" order total module
+     * @var string
+     */
+    public $code;
+    /**
+     * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
+     * @var string
+     */
+    public $calculate_tax;
+    /**
+     * $credit_class flag to indicate order totals method is a credit class
+     * @var boolean
+     */
+    public $credit_class;
+    /**
+     * $deduction amount of deduction calculated/afforded while being applied to an order
+     * @var float|null
+     */
+    protected $deduction;
+    /**
+     * $description is a soft name for this order total method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $include_shipping allow shipping costs to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_shipping;
+    /**
+     * $include_tax allow tax to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_tax;
+    /**
+     * $sort_order is the order priority of this order total module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $tax_class is the Tax class to be applied to the coupon cost
+     * @var
+     */
+    public $tax_class;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $output is an array of the display elements used on checkout pages
+     * @var array
+     */
+    public $output = [];
 
   function __construct() {
     $this->code = 'ot_group_pricing';
@@ -35,7 +94,7 @@ class ot_group_pricing {
     if (isset($od_amount['total']) && $od_amount['total'] > 0) {
       $tax = 0;
       foreach($order->info['tax_groups'] as $key => $value) {
-        if ($od_amount['tax_groups'][$key]) {
+        if (isset($od_amount['tax_groups'][$key])) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $tax += $od_amount['tax_groups'][$key];
         }
@@ -81,7 +140,9 @@ class ot_group_pricing {
   function calculate_deductions($order_total) {
     global $db, $order;
     $od_amount = array();
-    if ($order_total == 0) return $od_amount;
+    if ($order_total == 0 || !zen_is_logged_in() || zen_in_guest_checkout()) {
+        return $od_amount;
+    }
     $orderTotal = $this->get_order_total();
     $orderTotalTax = $orderTotal['tax'];
     $taxGroups = $orderTotal['taxGroups'];
@@ -129,6 +190,10 @@ class ot_group_pricing {
     }
     return $od_amount;
   }
+
+  /**
+   * @TODO - Per order_total class, this function is not used. See process() instead.
+   */
   function pre_confirmation_check($order_total) {
     global $order;
     $od_amount = $this->calculate_deductions($order_total);
@@ -177,6 +242,10 @@ class ot_group_pricing {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Include Tax', 'MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX', 'true', 'Include Tax value in amount before discount calculation?', '6', '6','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Re-calculate Tax', 'MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX', 'Standard', 'Re-Calculate Tax', '6', '7','zen_cfg_select_option(array(\'None\', \'Standard\', \'Credit Note\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_ORDER_TOTAL_GROUP_PRICING_TAX_CLASS', '0', 'Use the following tax class when treating Group Discount as Credit Note.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
+  }
+
+  function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/order_total/group_pricing/'); 
   }
 
   function remove() {

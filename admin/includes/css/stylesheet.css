@@ -1,8 +1,8 @@
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2020 Apr 14 New in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 May 28 Modified in v1.5.8-alpha $
  */
 
 body {
@@ -159,6 +159,12 @@ a.splitPageLink:active {
     text-decoration: none;
 }
 
+a.splitPageLinkCurrent {
+    font-weight: bold;
+    border: 1px solid #0000FF;
+    padding: 2px;
+}
+
 body {
     background-color: #ffffff;
     color: #333333;
@@ -166,52 +172,6 @@ body {
 
 .clearBoth {
     clear: both;
-}
-
-body#login {
-    margin-top: 100px;
-    text-align: center;
-}
-
-body#login .button {
-    cursor: pointer;
-    padding: 5px 20px;
-    background: #fff;
-    border: 0;
-    font-weight: bold;
-    margin: 5px;
-}
-
-body#login .button:hover {
-    color: #fff;
-    background-color: #333;
-}
-
-body#login fieldset {
-    margin: 0 auto;
-    background-color: #05a5cb;
-    padding-bottom: 30px;
-}
-
-.loginLabel {
-    margin-left: 60px;
-    margin-right: 5px;
-    text-align: right;
-    line-height: 1.5;
-}
-
-body#login legend {
-    background: #333;
-    border: 1px solid #333;
-    color: #fff;
-    padding: 0.2em 0.5em;
-}
-
-#login a {
-    float: right;
-    color: #fff;
-    font-size: 1em;
-    margin: 20px;
 }
 
 input, select, textarea {
@@ -719,6 +679,11 @@ a.btn-pricemanager-on {
     color: #eee;
 }
 
+a.btn-pricemanager-on-enabled {
+    background-color: #006400;
+    color: #eee;
+}
+
 a.btn-pricemanager-off {
     background-color: #d3d3d3;
     color: #eee;
@@ -727,6 +692,20 @@ a.btn-pricemanager-off {
 a.btn-metatags-on {
   background-color: #000;
   color: #ffa500;
+}
+
+.btn-status {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+.btn-status:active {
+  webkit-box-shadow: none;
+  box-shadow: none;
+}
+.btn-status:focus, .btn-status:active:focus {
+  outline: none;
+  outline-offset: 0;
 }
 
 .fa-folder, .fa-folder-open {color: #deb887;}
@@ -858,11 +837,53 @@ input.faint {
     color: #333;
 }
 
-/* Forms - put this last */
-.form-control {
-    width: 90%;
-    display: inline-block;
-}
 .control-label {/*for multiple inputs*/
     font-weight: 700;
+}
+
+.txt-black {
+  color:#000;
+}
+.txt-yellow {
+  color: #ff0;
+}
+.txt-orange {
+  color: #ffa500
+}
+.txt-lime {
+  color:#5ce400
+}
+.txt-red {
+  color:#f00;
+}
+.txt-navy {
+  color: #000080;
+}
+.txt-blue {
+  color: #00f;
+}
+.txt-white {
+  color:#fff;
+}
+.txt-pink {
+  color: #ffbaba;
+}
+.txt-transparent {
+  color: transparent;
+}
+.opacity-25 {
+  opacity: 25%;
+}
+/* The classes below are copied from Bootstrap 4 and 5 */
+.font-weight-bold {
+  font-weight: 700;
+}
+.align-middle {
+  vertical-align: middle;
+}
+.align-top {
+  vertical-align: top;
+}
+tbody>tr>td.align-bottom {
+  vertical-align: bottom;
 }

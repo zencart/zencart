@@ -2,10 +2,10 @@
 /**
  * authorize.net SIM payment method class
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 23 Modified in v1.5.8 $
  */
 /**
  * authorize.net SIM payment method class
@@ -17,45 +17,45 @@ class authorizenet extends base {
    *
    * @var string
    */
-  var $code = 'authorizenet'; // SIM
+  public $code = 'authorizenet'; // SIM
   /**
    * Internal module version string
    * @var string
    */
-  var $version = '2019-02-26';
+  protected $version = '2019-02-26';
   /**
    * $title is the displayed name for this payment method
    *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * $description is a soft name for this payment method
    *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * $enabled determines whether this module shows or not... in catalog.
    *
    * @var boolean
    */
-  var $enabled = false;
+  public $enabled = false;
   /**
    * log file folder
    *
    * @var string
    */
-  var $_logDir = '';
+  private $_logDir = '';
   /**
    * vars
    */
-  var $gateway_mode;
-  var $reportable_submit_data;
-  var $authorize;
-  var $auth_code;
-  var $transaction_id;
-  var $order_status;
+  protected $gateway_mode;
+  protected $reportable_submit_data;
+  protected $authorize;
+  public $auth_code;
+  public $transaction_id;
+  public $order_status;
   /**
    * @var string the currency enabled in this gateway's merchant account
    */
@@ -64,8 +64,15 @@ class authorizenet extends base {
    * What order this module displays in relation to other enabled modules
    * @var int $sort_order
    */
-  var $sort_order = 0;
+  public $sort_order = 0;
 
+    private $_check;
+    protected $cc_card_number;
+    protected $cc_card_type;
+    protected $cc_expiry_month;
+    protected $cc_expiry_year;
+    public $form_action_url;
+    public $submit_extras;
 
   /**
    * Constructor
@@ -194,15 +201,15 @@ class authorizenet extends base {
    * @return array
    */
   function selection() {
-    global $order;
+    global $order, $zcDate;
 
     for ($i=1; $i<13; $i++) {
-      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B - (%m)',mktime(0,0,0,$i,1,2000)));
+      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => $zcDate->output('%B - (%m)', mktime(0,0,0,$i,1,2000)));
     }
 
     $today = getdate();
     for ($i=$today['year']; $i < $today['year']+10; $i++) {
-      $expires_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+      $expires_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
     }
 
     $onFocus = ' onfocus="methodSelect(\'pmt-' . $this->code . '\')"';
@@ -220,7 +227,7 @@ class authorizenet extends base {
                                                'field' => zen_draw_input_field('authorizenet_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
                                                'tag' => $this->code.'-cc-number'),
                                          array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_EXPIRES,
-                                               'field' => zen_draw_pull_down_menu('authorizenet_cc_expires_month', $expires_month, strftime('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('authorizenet_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
+                                               'field' => zen_draw_pull_down_menu('authorizenet_cc_expires_month', $expires_month, $zcDate->output('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('authorizenet_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
                                                'tag' => $this->code.'-cc-expires-month')));
       if (MODULE_PAYMENT_AUTHORIZENET_USE_CVV == 'True') {
         $selection['fields'][] = array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CVV,
@@ -273,6 +280,7 @@ class authorizenet extends base {
    * @return array
    */
   function confirmation() {
+    global $zcDate;
     if (isset($_POST['authorizenet_cc_number'])) {
       $confirmation = array('title' => $this->title . ': ' . $this->cc_card_type,
                             'fields' => array(array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_OWNER,
@@ -280,7 +288,7 @@ class authorizenet extends base {
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_NUMBER,
                                                     'field' => substr($this->cc_card_number, 0, 4) . str_repeat('X', (strlen($this->cc_card_number) - 8)) . substr($this->cc_card_number, -4)),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_EXPIRES,
-                                                    'field' => strftime('%B, %Y', mktime(0,0,0,$_POST['authorizenet_cc_expires_month'], 1, '20' . $_POST['authorizenet_cc_expires_year'])))));
+                                                    'field' => $zcDate->output('%B, %Y', mktime(0,0,0,$_POST['authorizenet_cc_expires_month'], 1, '20' . $_POST['authorizenet_cc_expires_year'])))));
     } else {
       $confirmation = array(); //array('title' => $this->title);
     }
@@ -422,7 +430,7 @@ class authorizenet extends base {
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') {
-      echo 'Returned Response Codes:<br /><pre>' . print_r($_POST, true) . '</pre><br />';
+      echo 'Returned Response Codes:<br><pre>' . print_r($_POST, true) . '</pre><br>';
       die('Press the BACK button in your browser to return to the previous page.');
     }
 
@@ -503,7 +511,7 @@ class authorizenet extends base {
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Sort order of display.', 'MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER', '0', 'Sort order of displaying payment options to the customer. Lowest is displayed first.', '6', '0', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('Payment Zone', 'MODULE_PAYMENT_AUTHORIZENET_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('Set Order Status', 'MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID', '2', 'Set the status of orders made with this payment module to this value', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Gateway Mode', 'MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE', 'offsite', 'Where should customer credit card info be collected?<br /><b>onsite</b> = here (requires SSL)<br /><b>offsite</b> = authorize.net site', '6', '0', 'zen_cfg_select_option(array(\'onsite\', \'offsite\'), ', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Gateway Mode', 'MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE', 'offsite', 'Where should customer credit card info be collected?<br><b>onsite</b> = here (requires SSL)<br><b>offsite</b> = authorize.net site', '6', '0', 'zen_cfg_select_option(array(\'onsite\', \'offsite\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Database Storage', 'MODULE_PAYMENT_AUTHORIZENET_STORE_DATA', 'True', 'Do you want to save the gateway communications data to the database?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Debug Mode', 'MODULE_PAYMENT_AUTHORIZENET_DEBUGGING', 'Alerts Only', 'Would you like to enable debug mode?  A  detailed log of failed transactions may be emailed to the store owner.', '6', '0', 'zen_cfg_select_option(array(\'Off\', \'Alerts Only\', \'Log File\', \'Log and Email\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Supported', 'MODULE_PAYMENT_AUTHORIZENET_CURRENCY', 'USD', 'Which currency is your Authnet Gateway Account configured to accept?<br>(Purchases in any other currency will be pre-converted to this currency before submission using the exchange rates in your store admin.)', '6', '0', 'zen_cfg_select_option(array(\'USD\', \'CAD\', \'GBP\', \'EUR\', \'AUD\', \'NZD\'), ', now())");

@@ -1,12 +1,11 @@
 <?php
 /**
  * Initialise database driver and connect
- * see {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
- *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Mar 14 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Aug 04 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -17,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 require('includes/classes/db/' .DB_TYPE . '/query_factory.php');
 $db = new queryFactory();
 
-$down_for_maint_source = 'nddbc.html';
+$down_for_maint_source = FILENAME_DATABASE_TEMPORARILY_DOWN; 
 
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false'); 
 if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {

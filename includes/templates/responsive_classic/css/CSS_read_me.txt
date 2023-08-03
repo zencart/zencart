@@ -47,7 +47,7 @@ DON'T HACK the core code. Use your CSS files to do the work for you. When the st
 the ZenCart code and people have to decide if they want to go without the upgrade ~or~ undo all their hacks and 
 finally learn about CSS... your site will still be up and running.
 
-Additional information is contained in the Zen Cart wiki.
+Additional information is contained in the Zen Cart documentation.
 
 Adapted from ideas presented by
 Juxi Zoza

@@ -2,10 +2,9 @@
 /**
  * template_func Class.
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: brittainmark 2022 Aug 30 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -14,44 +13,29 @@ if (!defined('IS_ADMIN_FLAG')) {
  * template_func Class.
  * This class is used to for template-override calculations
  *
- * @package classes
  */
 class template_func extends base {
 
+        private $info = [];
+        
   function __construct($template_dir = 'default') {
-    $this->info = array();
+    $this->info = [];
   }
 
   function get_template_part($page_directory, $template_part, $file_extension = '.php') {
-    $directory_array = array();
-    if ($dir = @dir($page_directory)) {
-      while ($file = $dir->read()) {
-        if (!is_dir($page_directory . $file)) {
-          if (substr($file, strrpos($file, '.')) == $file_extension && preg_match($template_part, $file)) {
-            $directory_array[] = $file;
-          }
-        }
-      }
-
-      sort($directory_array);
-      $dir->close();
-    }
-    return $directory_array;
+      $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
+      $directory_array = $pageLoader->getTemplatePart($page_directory, $template_part, $file_extension);
+      return $directory_array;
   }
 
   function get_template_dir($template_code, $current_template, $current_page, $template_dir, $debug=false) {
-    //	echo 'template_default/' . $template_dir . '=' . $template_code;
-    if ($this->file_exists($current_template . $current_page, $template_code)) {
-      return $current_template . $current_page . '/';
-    } elseif ($this->file_exists(DIR_WS_TEMPLATES . 'template_default/' . $current_page, preg_replace('/\//', '', $template_code), $debug)) {
-      return DIR_WS_TEMPLATES . 'template_default/' . $current_page;
-    } elseif ($this->file_exists($current_template . $template_dir, preg_replace('/\//', '', $template_code), $debug)) {
-      return $current_template . $template_dir;
-    } else {
-      return DIR_WS_TEMPLATES . 'template_default/' . $template_dir;
-      //        return $current_template . $template_dir;
-    }
+      $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
+
+      $path = $pageLoader->getTemplateDirectory($template_code, $current_template, $current_page, $template_dir);
+
+      return $path;
   }
+
   function file_exists($file_dir, $file_pattern, $debug=false) {
     $file_found = false;
     $file_pattern = '/'.str_replace("/", "\/", $file_pattern).'$/';

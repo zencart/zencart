@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 09 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Feb 07 Modified in v1.5.8-alpha $
  */
 require('includes/application_top.php');
 
@@ -18,7 +18,7 @@ if (isset($_GET['spage'])) {
   $_GET['spage'] = (int)$_GET['spage'];
 }
 
-if (zen_not_null($saction)) {
+if (!empty($saction)) {
   switch ($saction) {
     case 'insert_sub':
       $zID = zen_db_prepare_input($_GET['zID']);
@@ -45,7 +45,7 @@ if (zen_not_null($saction)) {
       $db->Execute("UPDATE " . TABLE_ZONES_TO_GEO_ZONES . "
                     SET geo_zone_id = " . (int)$zID . ",
                         zone_country_id = " . (int)$zone_country_id . ",
-                        zone_id = " . (zen_not_null($zone_id) ? (int)$zone_id : 'null') . ",
+                        zone_id = " . (!empty($zone_id) ? (int)$zone_id : 'null') . ",
                         last_modified = now()
                     WHERE association_id = " . (int)$sID);
 
@@ -65,7 +65,7 @@ if (zen_not_null($saction)) {
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert_zone':
       $geo_zone_name = zen_db_prepare_input($_POST['geo_zone_name']);
@@ -117,15 +117,8 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <?php
-    if (isset($_GET['zID']) && (($saction == 'edit') || ($saction == 'new'))) {
-      ?>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+    <?php if (isset($_GET['zID']) && (($saction == 'edit') || ($saction == 'new'))) { ?>
       <script>
         function resetZoneSelected(theForm) {
             if (theForm.state.value != '') {
@@ -151,21 +144,9 @@ if (zen_not_null($action)) {
 
         }
       </script>
-      <?php
-    }
-    ?>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-      // -->
-    </script>
+      <?php } ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -183,7 +164,7 @@ if (zen_not_null($action)) {
             <table class="table table-hover">
               <thead>
                 <tr class="dataTableHeadingRow">
-                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY; ?></th>
+                  <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_ZONE; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
                 </tr>
@@ -198,9 +179,9 @@ if (zen_not_null($action)) {
                                       ORDER BY c.countries_name, association_id";
 // Split Page
 // reset page when page is unknown
-                  if ((!isset($_GET['spage']) or $_GET['spage'] == '' or $_GET['spage'] == '1') && !empty($_GET['sID'])) {
+                  if ((empty($_GET['spage']) || $_GET['spage'] == '1') && !empty($_GET['sID'])) {
                     $check_page = $db->Execute($zones_query_raw);
-                    $check_count = 1;
+                    $check_count = 0;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                       foreach ($check_page as $item) {
                         if ($item['association_id'] == $_GET['sID']) {
@@ -267,9 +248,9 @@ if (zen_not_null($action)) {
                                         ORDER BY geo_zone_name";
 // Split Page
 // reset page when page is unknown
-                    if ((!isset($_GET['zpage']) or $_GET['zpage'] == '' or $_GET['zpage'] == '1') && !empty($_GET['zID'])) {
+                    if ((empty($_GET['zpage']) ||$_GET['zpage'] == '1') && !empty($_GET['zID'])) {
                       $check_page = $db->Execute($zones_query_raw);
-                      $check_count = 1;
+                      $check_count = 0;
                       if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
                         foreach ($check_page as $item) {
                           if ($item['geo_zone_id'] == $_GET['zID']) {
@@ -301,7 +282,7 @@ if (zen_not_null($action)) {
                                                      WHERE tax_zone_id = " . (int)$zone['geo_zone_id'] . "
                                                      GROUP BY tax_zone_id");
 
-                      if (!$num_tax_rates->EOF) { 
+                      if (!$num_tax_rates->EOF) {
                         $zone['num_tax_rates'] = $num_tax_rates->fields['num_tax_rates'];
                       } else {
                         $zone['num_tax_rates'] = 0;
@@ -359,7 +340,7 @@ if (zen_not_null($action)) {
 
                     $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&' . (isset($_GET['sID']) ? 'sID=' . $_GET['sID'] . '&' : '') . '&saction=insert_sub', 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_NEW_SUB_ZONE_INTRO);
-                    $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries(TEXT_ALL_COUNTRIES), '', 'onChange="update_zone(this.form);"' . ' class="form-control"'));
+                    $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(TEXT_ALL_COUNTRIES), '', 'onChange="update_zone(this.form);"' . ' class="form-control"'));
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_ZONE, 'zone_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down(), '', 'class="form-control"'));
                     $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&' . (isset($_GET['sID']) ? 'sID=' . $_GET['sID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                     break;
@@ -368,7 +349,7 @@ if (zen_not_null($action)) {
 
                     $contents = array('form' => zen_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=save_sub', 'post', 'class="form-horizontal"'));
                     $contents[] = array('text' => TEXT_INFO_EDIT_SUB_ZONE_INTRO);
-                    $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries(TEXT_ALL_COUNTRIES), $sInfo->zone_country_id, 'onChange="update_zone(this.form);" class="form-control"'));
+                    $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY, 'zone_country_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(TEXT_ALL_COUNTRIES), $sInfo->zone_country_id, 'onChange="update_zone(this.form);" class="form-control"'));
                     $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_ZONE, 'zone_id', 'class="control-label"') . zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($sInfo->zone_country_id), $sInfo->zone_id, 'class="form-control"'));
                     $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                     break;
@@ -386,7 +367,7 @@ if (zen_not_null($action)) {
 
                       $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
                       $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->date_added));
-                      if (zen_not_null($sInfo->last_modified)) {
+                      if (!empty($sInfo->last_modified)) {
                         $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($sInfo->last_modified));
                       }
                     }
@@ -429,7 +410,7 @@ if (zen_not_null($action)) {
                       $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_ZONES . ' ' . $zInfo->num_zones);
                       $contents[] = array('text' => '<br>' . TEXT_INFO_NUMBER_TAX_RATES . ' ' . $zInfo->num_tax_rates);
                       $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($zInfo->date_added));
-                      if (zen_not_null($zInfo->last_modified)) {
+                      if (!empty($zInfo->last_modified)) {
                         $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($zInfo->last_modified));
                       }
                       $contents[] = array('text' => '<br>' . TEXT_INFO_ZONE_DESCRIPTION . '<br>' . $zInfo->geo_zone_description);
@@ -438,7 +419,7 @@ if (zen_not_null($action)) {
                 }
               }
 
-              if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+              if (!empty($heading) && !empty($contents)) {
                 $box = new box;
                 echo $box->infoBox($heading, $contents);
               }
@@ -450,7 +431,7 @@ if (zen_not_null($action)) {
             <?php if ($action == 'list') { ?>
             <table class="table">
               <tr>
-                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></td>
+                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_GEO_ZONES); ?></td>
                 <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></td>
               </tr>
               <tr>
@@ -460,7 +441,7 @@ if (zen_not_null($action)) {
           <?php } else { ?>
             <table class="table">
               <tr>
-                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></td>
+                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_GEO_ZONES); ?></td>
                 <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></td>
               </tr>
               <tr>

@@ -2,11 +2,10 @@
 /**
  * cc_validation Class.
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Mon Jul 27 18:24:22 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: brittainmark 2022 Sep 27 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,10 +14,9 @@ if (!defined('IS_ADMIN_FLAG')) {
  * cc_validation Class.
  * Class to validate credit card numbers etc
  *
- * @package classes
  */
 class cc_validation extends base {
-  var $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
+  public $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
 
   function validate($number, $expiry_m, $expiry_y, $start_m = null, $start_y = null) {
     $this->cc_number = preg_replace('/[^0-9]/', '', $number);

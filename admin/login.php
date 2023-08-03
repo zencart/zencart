@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2020 Apr 15 Modified in v1.5.7 $
+ * @version $Id: Zen4All 2020 Jul 01 Modified in v1.5.8-alpha $
  */
 require 'includes/application_top.php';
 
@@ -69,13 +69,7 @@ if ($expired && $message == '') {
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/css/bootstrap.min.css">
-    <link rel="stylesheet" href="includes/css/font-awesome.min.css">
-    <link href="includes/css/login.css" rel="stylesheet">
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <meta name="robots" content="noindex, nofollow">
   </head>
   <body id="login">

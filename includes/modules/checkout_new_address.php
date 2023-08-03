@@ -2,10 +2,10 @@
 /**
  * checkout_new_address.php
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Oct 29 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 07 Modified in v1.5.8 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CHECKOUT_NEW_ADDRESS');
@@ -176,9 +176,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
     switch($addressType) {
       case 'billto':
       $reset_payment = false;
-      if ($_SESSION['billto']) {
+      if (isset($_SESSION['billto'])) {
         if ($_SESSION['billto'] != $_POST['address']) {
-          if ($_SESSION['payment']) {
+          if (isset($_SESSION['payment'])) {
             $reset_payment = true;
           }
         }
@@ -204,7 +204,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
       break;
       case 'shipto':
       $reset_shipping = false;
-      if ($_SESSION['sendto']) {
+      if (isset($_SESSION['sendto'])) {
         if ($_SESSION['sendto'] != $_POST['address']) {
           if (isset($_SESSION['shipping'])) {
             $reset_shipping = true;

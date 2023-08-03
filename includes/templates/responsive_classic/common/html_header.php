@@ -2,12 +2,12 @@
 /**
  * Common Template
  *
- * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
+ * outputs the html header. i,e, everything that comes before the \</head\> tag
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2020 May 12 Modified in v1.5.7 $
+ * @version $Id: DrByte 2022 Oct 05 Modified in v1.5.8 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -46,25 +46,27 @@ if (!class_exists('Mobile_Detect')) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
   <meta charset="<?php echo CHARSET; ?>">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://code.jquery.com">
   <title><?php echo META_TAG_TITLE; ?></title>
-  <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
-  <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
-  <meta name="author" content="<?php echo STORE_NAME ?>" />
-  <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce" />
+  <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>">
+  <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>">
+  <meta name="author" content="<?php echo STORE_NAME ?>">
+  <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce">
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
-  <meta name="robots" content="noindex, nofollow" />
+  <meta name="robots" content="noindex, nofollow">
 <?php } ?>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
 
 <?php if (defined('FAVICON')) { ?>
-  <link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
-  <link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon" />
+  <link rel="icon" href="<?php echo FAVICON; ?>" type="image/x-icon">
+  <link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon">
 <?php } //endif FAVICON ?>
 
-  <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ); ?>" />
+  <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ); ?>">
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
-  <link rel="canonical" href="<?php echo $canonicalLink; ?>" />
+  <link rel="canonical" href="<?php echo $canonicalLink; ?>">
 <?php } ?>
 <?php
   // BOF hreflang for multilingual sites
@@ -73,7 +75,7 @@ if (!class_exists('Mobile_Detect')) {
   }
 if (count($lng->catalog_languages) > 1) {
   foreach($lng->catalog_languages as $key => $value) {
-    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '" />' . "\n";
+    echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '">' . "\n";
   }
   }
   // EOF hreflang for multilingual sites
@@ -85,7 +87,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^style/', '.css');
   foreach($directory_array as $key => $value) {
-    echo '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
+    echo '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '">'."\n";
   }
 /**
  * load stylesheets on a per-page/per-language/per-product/per-manufacturer/per-category basis. Concept by Juxi Zoza.
@@ -107,7 +109,7 @@ if (count($lng->catalog_languages) > 1) {
   foreach($sheets_array as $key => $value) {
     //echo "<!--looking for: $value-->\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'">'."\n";
   }
 
 /**
@@ -118,9 +120,9 @@ if (count($lng->catalog_languages) > 1) {
   foreach($tmp_cats as $val) {
     $value .= $val;
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/c_' . $value . '_children.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'">'."\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $_SESSION['language'] . '_c_' . $value . '_children.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'">'."\n";
     $value .= '_';
   }
 
@@ -130,16 +132,16 @@ if (count($lng->catalog_languages) > 1) {
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
   sort($directory_array);
   foreach($directory_array as $key => $value) {
-    echo '<link rel="stylesheet" type="text/css" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
+    echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '">'."\n";
   }
 
 /** CDN for jQuery core **/
 ?>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <?php if (file_exists(DIR_WS_TEMPLATE . "jscript/jquery.min.js")) { ?>
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+<script>window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 <?php } ?>
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js','template_default', $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+<script>window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js','template_default', $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
 /**
@@ -147,7 +149,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.js');
   foreach($directory_array as $key => $value) {
-    echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
+    echo '<script src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
 
 /**
@@ -155,7 +157,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/', '.js');
   foreach($directory_array as $key => $value) {
-    echo '<script type="text/javascript" src="' . $page_directory . '/' . $value . '"></script>' . "\n";
+    echo '<script src="' . $page_directory . '/' . $value . '"></script>' . "\n";
   }
 
 /**
@@ -183,9 +185,9 @@ if (count($lng->catalog_languages) > 1) {
 ?>
 
 <?php // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 2 of 2)
-$responsive_mobile = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_mobile.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />';
-$responsive_tablet = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_tablet.css' . '" /><link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '" />';
-$responsive_default = '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_default.css' . '" />';
+$responsive_mobile = '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_mobile.css' . '"><link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '">';
+$responsive_tablet = '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_tablet.css' . '"><link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'jquery.mmenu.all.css' . '">';
+$responsive_default = '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive_default.css' . '">';
 
 if (!isset($_SESSION['layoutType'])) {
   $_SESSION['layoutType'] = 'legacy';
@@ -194,7 +196,7 @@ if (!isset($_SESSION['layoutType'])) {
 if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional')) ) {
   echo '';
 } else {
-  echo '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive.css' . '" />';
+  echo '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . 'responsive.css' . '">';
   if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) {
     echo $responsive_mobile;
   } else if ( $detect->isTablet() || $_SESSION['layoutType'] == 'tablet' ){
@@ -206,8 +208,8 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
   }
 }
 ?>
-  <script type="text/javascript">document.documentElement.className = 'no-fouc';</script>
-  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <script>document.documentElement.className = 'no-fouc';</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" />
 <?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 2 of 2) ?>
 <?php
   $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);

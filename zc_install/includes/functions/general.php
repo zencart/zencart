@@ -2,10 +2,10 @@
 /**
  * general functions
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Mar 05 Modified in v1.5.8-alpha $
  */
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS','upgrade_exceptions');
@@ -22,19 +22,6 @@ function zen_get_select_options($optionList, $setDefault)
   }
   return $optionString;
 }
-
-  function zen_not_null($value) {
-    if (null === $value) {
-        return false;
-    }
-    if (is_array($value)) {
-        return count($value) > 0;
-    }
-    if (is_a($value, 'queryFactoryResult')) {
-        return count($value->result) > 0;
-    }
-    return trim($value) !== '' && strtolower($value) != 'null';
-  }
 
   function logDetails($details, $location = "General") {
       if (!isset($_SESSION['logfilename']) || $_SESSION['logfilename'] == '') $_SESSION['logfilename'] = date('m-d-Y_h-i-s-') . zen_create_random_value(6);
@@ -129,9 +116,9 @@ function zen_get_select_options($optionList, $setDefault)
       return htmlspecialchars($string, ENT_COMPAT, 'utf-8', TRUE);
     } else {
       if ($translate == false) {
-        return zen_parse_input_field_data($string, array('"' => '&quot;'));
+        return strtr($string, array('"' => '&quot;'));
       } else {
-        return zen_parse_input_field_data($string, $translate);
+        return strtr($string, $translate);
       }
     }
   }

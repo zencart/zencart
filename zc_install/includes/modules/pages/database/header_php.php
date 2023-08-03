@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Apr 29 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jul 28 Modified in v1.5.8-alpha $
  */
 
 $dbCharset = array(
@@ -38,6 +38,11 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
         $db_name_fallback = (defined('DEVELOPER_DBNAME_DEFAULT') ? DEVELOPER_DBNAME_DEFAULT : 'zencart');
     }
     $db_name = isset($db_name) ? $db_name : $db_name_fallback;
+
+    if (empty($db_host_fallback)) {
+        $db_host_fallback = (defined('DEVELOPER_DBHOST_DEFAULT') ? DEVELOPER_DBHOST_DEFAULT : 'localhost');
+    }
+    $db_host = isset($db_host) ? $db_host : $db_host_fallback;
 
     if (defined('DEVELOPER_INSTALL_DEMO_DATA')) $install_demo_data = !empty(DEVELOPER_INSTALL_DEMO_DATA);
 

@@ -857,7 +857,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
 
             strOutput += '<\/SELECT>&nbsp;<a href="javascript:' + this.varName + '.scrollMonth(1);" class="cal-DayLink">&gt;</a>&nbsp;&nbsp;<a href="javascript:' + this.varName + '.hide();"><i class="fa fa-close fa-lg"></i></a><\/td>';
         } else {
-            strOutput += '<td class="cal-HeadCell" align="center" colspan="7">' + msNames[intWhatMonth] + '-' + intWhatYear + '<\/td><\/tr>';
+            strOutput += '<td class="cal-HeadCell text-center" colspan="7">' + msNames[intWhatMonth] + '-' + intWhatYear + '<\/td><\/tr>';
         }
 
 
@@ -873,7 +873,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
         strOutput += '<tr>';
         // Header ROW showing days of week here
         for (intLoop = 0; intLoop < 7; intLoop++) {
-            strOutput += '<td class="cal-HeadCell text-center" valign="middle">' + msDOW[intLoop] + '<\/td>';
+            strOutput += '<td class="cal-HeadCell text-center align-middle>' + msDOW[intLoop] + '<\/td>';
         }
 
         strOutput += '<\/tr><tr>';

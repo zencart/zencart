@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Sep 19 Modified in v1.5.7a $
+ * @version $Id: brittainmark 2022 Sep 17 Modified in v1.5.8 $
  */
 //
 define('AUTOCHECK', 'False');
@@ -25,7 +25,7 @@ $deduction_type_array = array(
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'setflag':
       if (isset($_POST['flag']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0)) {
@@ -98,7 +98,7 @@ if (zen_not_null($action)) {
       break;
     case 'copyconfirm':
       $newname = zen_db_prepare_input($_POST['newname']);
-      if (zen_not_null($newname)) {
+      if (!empty($newname)) {
         $salemaker_sales = $db->Execute("SELECT *
                                          FROM " . TABLE_SALEMAKER_SALES . "
                                          WHERE sale_id = " . zen_db_input($_GET['sID']));
@@ -153,21 +153,7 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php
     if (($action == 'new') || ($action == 'edit')) {
       ?>
@@ -175,23 +161,16 @@ if (zen_not_null($action)) {
       <script src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
       <script>
         function session_win() {
-            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes,noreferrer").focus();
+            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_INFO); ?>", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
         }
         function popupWindow(url) {
-            window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150,noreferrer')
+            window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
         }
 <?php /*
 //        function session_win1() {
-//            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes,noreferrer").focus();
+//            window.open("<?php echo zen_href_link(FILENAME_SALEMAKER_POPUP, 'cid=' . $category['categories_id']); ?>//", "salemaker_info", "height=460,width=600,scrollbars=yes,resizable=yes").focus();
 //        }
 */?>
-        function init() {
-            cssjsmenu('navbar');
-            if (document.getElementById) {
-                var kill = document.getElementById('hoverJS');
-                kill.disabled = true;
-            }
-        }
         function RowClick(RowValue) {
             for (i = 0; i < document.sale_form.length; i++) {
                 if (document.sale_form.elements[i].type == 'checkbox') {
@@ -259,10 +238,10 @@ if (zen_not_null($action)) {
     </head>
 <?php } ?>
 <?php if ($action == 'new' || $action == 'edit') { ?>
-       <body onload="SetCategories(); SetFocus(); init()">
+       <body onload="SetCategories();">
        <div id="spiffycalendar" class="text"></div>
 <?php } else { ?>
-       <body onload="SetFocus(); init()">
+       <body>
 <?php } ?>
   <!-- header //-->
   <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
@@ -299,12 +278,12 @@ if (zen_not_null($action)) {
       <div class="row">
         <div class="col-sm-6"><?php echo TEXT_SALEMAKER_POPUP; ?></div>
         <div class="col-sm-6 text-right">
-          <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . ($_GET['sID'] > 0 ? '&sID=' . $_GET['sID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
+          <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . (!empty($_GET['sID']) ? '&sID=' . $_GET['sID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
       </div>
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_SALEMAKER_NAME, 'name', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_input_field('name', htmlspecialchars($sInfo->sale_name, ENT_COMPAT, CHARSET, TRUE), 'size="37" class="form-control"'); ?>
+            <?php echo zen_draw_input_field('name', htmlspecialchars($sInfo->sale_name, ENT_COMPAT, CHARSET, TRUE), 'size="37" class="form-control" autofocus'); ?>
         </div>
       </div>
       <div class="form-group">
@@ -348,7 +327,7 @@ if (zen_not_null($action)) {
         </div>
       </div>
       <?php
-      $categories_array = zen_get_category_tree('0', '&nbsp;&nbsp;', '0');
+      $categories_array = zen_get_category_tree(TOPMOST_CATEGORY_PARENT_ID, '&nbsp;&nbsp;', TOPMOST_CATEGORY_PARENT_ID);
       $n = sizeof($categories_array);
       for ($i = 0; $i < $n; $i++) {
         $parents = $db->Execute("SELECT parent_id
@@ -373,7 +352,7 @@ if (zen_not_null($action)) {
       }
       $categories_selected = explode(',', $sInfo->sale_categories_selected);
       if (zen_not_null($sInfo->sale_categories_selected)) {
-        $selected = in_array(0, $categories_selected);
+        $selected = in_array(TOPMOST_CATEGORY_PARENT_ID, $categories_selected);
       } else {
         $selected = false;
       }
@@ -454,7 +433,7 @@ if (zen_not_null($action)) {
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SALE_NAME; ?></th>
                 <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_SALE_DEDUCTION; ?></th>
-                <th class="dataTableHeadingContent"></td>
+                <th class="dataTableHeadingContent"></th>
                 <th class="dataTableHeadingContent center"><?php echo TABLE_HEADING_SALE_DATE_START; ?></th>
                 <th class="dataTableHeadingContent center"><?php echo TABLE_HEADING_SALE_DATE_END; ?></th>
                 <th class="dataTableHeadingContent center"><?php echo TABLE_HEADING_STATUS; ?></th>
@@ -482,31 +461,31 @@ if (zen_not_null($action)) {
                     <?php } else { ?>
                   <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sale['sale_id']); ?>'">
                     <?php } ?>
-                  <td  class="dataTableContent" align="left"><?php echo $salemaker_sale['sale_name']; ?></td>
-                  <td  class="dataTableContent" align="right"><?php echo $salemaker_sale['sale_deduction_value']; ?></td>
-                  <td  class="dataTableContent" align="left"><?php echo $deduction_type_array[$salemaker_sale['sale_deduction_type']]['text']; ?></td>
-                  <td  class="dataTableContent" align="center"><?php echo (($salemaker_sale['sale_date_start'] == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sale['sale_date_start'])); ?></td>
-                  <td  class="dataTableContent" align="center"><?php echo (($salemaker_sale['sale_date_end'] == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sale['sale_date_end'])); ?></td>
-                  <td  class="dataTableContent" align="center">
+                  <td  class="dataTableContent text-left"><?php echo $salemaker_sale['sale_name']; ?></td>
+                  <td  class="dataTableContent text-right"><?php echo $salemaker_sale['sale_deduction_value']; ?></td>
+                  <td  class="dataTableContent text-left"><?php echo $deduction_type_array[$salemaker_sale['sale_deduction_type']]['text']; ?></td>
+                  <td  class="dataTableContent text-center"><?php echo (($salemaker_sale['sale_date_start'] == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($salemaker_sale['sale_date_start'])); ?></td>
+                  <td  class="dataTableContent text-center"><?php echo (($salemaker_sale['sale_date_end'] == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sale['sale_date_end'])); ?></td>
+                  <td  class="dataTableContent text-center">
                       <?php
                       if ($salemaker_sale['sale_status'] == '1') {
                         echo zen_draw_form('setflag_products', FILENAME_SALEMAKER, 'action=setflag&sID=' . $salemaker_sale['sale_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                         ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>" />
-                      <input type="hidden" name="flag" value="0" />
+                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>">
+                      <input type="hidden" name="flag" value="0">
                       <?php echo '</form>'; ?>
                       <?php
                     } else {
                       echo zen_draw_form('setflag_products', FILENAME_SALEMAKER, 'action=setflag&sID=' . $salemaker_sale['sale_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                       ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>" />
-                      <input type="hidden" name="flag" value="1" />
+                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>">
+                      <input type="hidden" name="flag" value="1">
                       <?php echo '</form>'; ?>
                       <?php
                     }
                     ?>
                   </td>
-                  <td class="dataTableContent" align="right"><?php
+                  <td class="dataTableContent text-right"><?php
                       if (!empty($sInfo) && (is_object($sInfo)) && !empty($salemaker_sale) && isset($salemaker_sale['sale_id']) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                       } else {
@@ -540,27 +519,27 @@ if (zen_not_null($action)) {
                 $contents = array('form' => zen_draw_form('sales', FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('sID', $sInfo->sale_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $sInfo->sale_name . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . '&nbsp;<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br>' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>' . '&nbsp;<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id) . '"' . ' class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
-                if (is_object($sInfo)) {
+                if (!empty($sInfo) && is_object($sInfo)) {
                   $heading[] = array('text' => '<h4>' . $sInfo->sale_name . '</h4>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=copy') . '" class="btn btn-primary" role="button">' . IMAGE_COPY_TO . '</a> <a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $sInfo->sale_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
                   $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->sale_date_added));
-                  $contents[] = array('text' => '' . TEXT_INFO_DATE_MODIFIED . ' ' . (($sInfo->sale_date_last_modified == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_last_modified)));
+                  $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . (($sInfo->sale_date_last_modified == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_last_modified)));
                   $contents[] = array('text' => '' . TEXT_INFO_DATE_STATUS_CHANGE . ' ' . (($sInfo->sale_date_status_change == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_status_change)));
 
                   $contents[] = array('text' => '<br>' . TEXT_INFO_DEDUCTION . ' ' . $sInfo->sale_deduction_value . ' ' . $deduction_type_array[$sInfo->sale_deduction_type]['text']);
                   $contents[] = array('text' => '' . TEXT_INFO_PRICERANGE_FROM . ' ' . $currencies->format($sInfo->sale_pricerange_from) . TEXT_INFO_PRICERANGE_TO . $currencies->format($sInfo->sale_pricerange_to));
-                  $contents[] = array('text' => '<table class="dataTableContent" border="0" width="100%" cellspacing="0" cellpadding="0"><tr><td valign="top">' . TEXT_INFO_SPECIALS_CONDITION . '&nbsp;</td><td>' . $specials_condition_array[$sInfo->sale_specials_condition]['text'] . '</td></tr></table>');
+                  $contents[] = array('text' => '<table class="dataTableContent col-sm-12" border="0" cellspacing="0" cellpadding="0"><tr><td valign="top">' . TEXT_INFO_SPECIALS_CONDITION . '&nbsp;</td><td>' . $specials_condition_array[$sInfo->sale_specials_condition]['text'] . '</td></tr></table>');
 
                   $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_START . ' ' . (($sInfo->sale_date_start == '0001-01-01') ? TEXT_SALEMAKER_IMMEDIATELY : zen_date_short($sInfo->sale_date_start)));
                   $contents[] = array('text' => '' . TEXT_INFO_DATE_END . ' ' . (($sInfo->sale_date_end == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($sInfo->sale_date_end)));
                 }
                 break;
             }
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }
@@ -596,4 +575,4 @@ if (zen_not_null($action)) {
   <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');

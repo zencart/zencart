@@ -1,14 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 $adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
-<input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
+<input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
 <?php if ($hasMultipleAdmins) { ?>
 	<?php $adjustWarnIssues = True ?>
     <div class="alert-box alert">
@@ -20,7 +20,7 @@ $adjustWarnIssues = false;
     </div>
     <select name="adminDir"><?php echo zen_get_select_options($adminOptionList, $selectedAdminDir)?></select><br><br>
 <?php } else { ?>
-<input type="hidden" name="adminDir" value="<?php echo $selectedAdminDir; ?>" >
+<input type="hidden" name="adminDir" value="<?php echo $selectedAdminDir; ?>">
 <?php } ?>
 <?php if ($selectedAdminDir != '') { ?>
 <?php if ($hasSaneConfigFile && !$isCurrentDb && !$otherConfigErrors && $hasUpdatedConfigFile) { ?>
@@ -126,14 +126,14 @@ $adjustWarnIssues = false;
 <?php } ?>
 <?php } ?>
 <?php if (!$hasUpdatedConfigFile && $hasSaneConfigFile) { ?>
-    <input type="hidden" name="updateConfigure" value="true" >
+    <input type="hidden" name="updateConfigure" value="true">
     <input type="submit" class="zc-admin radius button" id="btnsubmit2" name="btnsubmit" value="<?php echo TEXT_UPDATE_CONFIGURE; ?>" tabindex="4">
 <?php } ?>
 <?php if ($hasMultipleAdmins) { ?>
   <input type="submit" class="zc-admin radius button right" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_REFRESH; ?>" autofocus="autofocus" tabindex="5">
 <?php } else { ?>
   <?php if ($hasFatalErrors || $hasWarnErrors) { ?>
-    <a href="" class="radius button secondary right" ><?php echo TEXT_REFRESH; ?></a>
+    <a href="" class="radius button secondary right"><?php echo TEXT_REFRESH; ?></a>
   <?php } ?>
 <?php }?>
 <br style="clear:both">

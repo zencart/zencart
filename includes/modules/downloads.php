@@ -2,11 +2,10 @@
 /**
  * downloads module - prepares information for use in downloadable files delivery
  *
- * @package modules
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jan 04 Modified in v1.5.6a $
+ * @version $Id: Scott C Wilson 2020 Aug 13 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -91,7 +90,7 @@ if ($downloadsOnThisOrder) {
     $zv_filesize = TEXT_FILESIZE_UNKNOWN;
     if ($data['filesize'] > 0) {
       $zv_filesize = $data['filesize'];
-      if ($zv_filesize >= 11000) {
+      if ($zv_filesize >= 1024*1024/10) {
         $zv_filesize = number_format($zv_filesize/1024/1024,1);
         $zv_filesize_units = TEXT_FILESIZE_MEGS;
       } else if ($zv_filesize >= 1024) {

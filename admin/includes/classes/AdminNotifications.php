@@ -1,16 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Feb 13 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 31 Modified in v1.5.8 $
  */
 
 class AdminNotifications
 {
-    protected $notificationServer = 'https://versionserver.zen-cart.com/api/notifications';
-
     protected $enabled = true;
+    private $projectNotificationServer;
 
     public function __construct()
     {
@@ -22,8 +21,8 @@ class AdminNotifications
             $this->enabled = false;
         }
 
-        global $sniffer;  
-        if (!$sniffer->table_exists(TABLE_ADMIN_NOTIFICATIONS)) { 
+        global $sniffer;
+        if (!$sniffer->table_exists(TABLE_ADMIN_NOTIFICATIONS)) {
             $this->enabled = false;
         }
     }
@@ -52,6 +51,9 @@ class AdminNotifications
 
     protected function getNotificationInfo()
     {
+        if (empty($this->projectNotificationServer)){
+            return [];
+        }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->projectNotificationServer);
         curl_setopt($ch, CURLOPT_VERBOSE, 0);

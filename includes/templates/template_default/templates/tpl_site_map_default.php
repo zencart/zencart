@@ -2,13 +2,13 @@
 /**
  * Page Template
  *
- * Loaded by index.php?main_page=site_map <br />
+ * Loaded by index.php?main_page=site_map
  * Displays site-map and some hard-coded navigation components
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 ?>
 <div class="centerColumn" id="siteMap">
@@ -28,6 +28,8 @@
 
     <div id="siteMapList"><?php echo $zen_SiteMapTree->buildTree(); ?>
       <ul>
+          <li><?php echo '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>'; ?></li>
+
 <?php if (SHOW_ACCOUNT_LINKS_ON_SITE_MAP=='Yes') { ?>
         <li><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . PAGE_ACCOUNT . '</a>'; ?>
         <ul>
@@ -39,9 +41,11 @@
           <li><?php echo '<a href="' . zen_href_link(FILENAME_SHOPPING_CART) . '">' . PAGE_SHOPPING_CART . '</a>'; ?></li>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '">' . PAGE_CHECKOUT_SHIPPING . '</a>'; ?></li>
 <?php } //endif ?>
-          <li><?php echo '<a href="' . zen_href_link(FILENAME_ADVANCED_SEARCH) . '">' . PAGE_ADVANCED_SEARCH . '</a>'; ?></li>
+          <li><?php echo '<a href="' . zen_href_link(FILENAME_SEARCH) . '">' . PAGE_ADVANCED_SEARCH . '</a>'; ?></li>
+          <li><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_ALL) . '">' . PAGE_PRODUCTS_ALL. '</a>'; ?></li>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . PAGE_PRODUCTS_NEW . '</a>'; ?></li>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_SPECIALS) . '">' . PAGE_SPECIALS . '</a>'; ?></li>
+          <li><?php echo '<a href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . PAGE_FEATURED . '</a>'; ?></li>
           <li><?php echo '<a href="' . zen_href_link(FILENAME_REVIEWS) . '">' . PAGE_REVIEWS . '</a>'; ?></li>
           <li><?php echo BOX_HEADING_INFORMATION; ?>
           <ul>
@@ -80,16 +84,16 @@
 <?php } ?>
 
          </ul></li>
-<?php 
+<?php
     $pages_query = $db->Execute("SELECT e.*, ec.*
                                 FROM " . TABLE_EZPAGES . " e,
                                      " . TABLE_EZPAGES_CONTENT . " ec
                                 WHERE e.pages_id = ec.pages_id
                                 AND ec.languages_id = " . (int)$_SESSION['languages_id'] . "
-                                AND ( 
-                                  (e.status_sidebox = 1 AND e.sidebox_sort_order > 0) OR 
-                                  (e.status_header = 1 AND e.header_sort_order > 0) OR 
-                                  (e.status_footer = 1 AND e.footer_sort_order > 0) OR 
+                                AND (
+                                  (e.status_sidebox = 1 AND e.sidebox_sort_order > 0) OR
+                                  (e.status_header = 1 AND e.header_sort_order > 0) OR
+                                  (e.status_footer = 1 AND e.footer_sort_order > 0) OR
                                   (e.status_visible = 1) )
                                 ORDER BY e.sidebox_sort_order, ec.pages_title");
     if ($pages_query->RecordCount()>0) {
@@ -125,9 +129,9 @@
         $page_query_list[$rows]['altURL'];
         $page_query_list[$rows]['link'] .= ($page_query['page_open_new_window'] == '1' ? '" rel="noreferrer noopener" target="_blank' : '');
       }
-      if (!empty($page_query_list)) { 
+      if (!empty($page_query_list)) {
 ?>
-          <li><?php echo BOX_HEADING_MORE_INFORMATION; ?>
+          <li><?php echo BOX_HEADING_EZPAGES; ?>
           <ul>
 <?php foreach ($page_query_list as $item) {  ?>
             <li><?php echo '<a href="' . $item['link'] . '">' . $item['name'] . '</a>'; ?></li>
@@ -138,6 +142,6 @@
           <ul>
      </ul>
 </div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>'; ?></div>
 </div>

@@ -2,11 +2,10 @@
 /**
  * Page Template
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 13:13:41 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: Steve 2021 Jan 16 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="allProductsDefault">
@@ -14,9 +13,12 @@
 <h1 id="allProductsDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
+/**
+ * display the product sort dropdown
+ */
 require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php'); ?>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if (PRODUCT_ALL_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $products_all_split->number_of_rows > 0) {
@@ -24,7 +26,7 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
 
 <?php
     if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
-      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_PRODUCTS_ALL, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
+      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_PRODUCTS_ALL, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product', 'SSL'), 'post', 'enctype="multipart/form-data"');
     }
   }
 ?>
@@ -38,7 +40,7 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
 <?php
   } // top submit button
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if (($products_all_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'))) {
@@ -48,7 +50,7 @@ require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 /**
@@ -64,7 +66,7 @@ require($template->get_template_dir('/tpl_modules_products_all_listing.php',DIR_
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if ($show_bottom_submit_button == true) {

@@ -2,20 +2,19 @@
 /**
  * Page Template
  *
- * Loaded by main_page=index<br />
- * Displays category/sub-category listing<br />
+ * Loaded by main_page=index
+ * Displays category/sub-category listing
  * Uses tpl_index_category_row.php to render individual items
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: picaflor-azul Sat Mar 5 12:24:13 2016 -0500 New in v1.5.5 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="indexCategories">
 <?php if ($show_welcome == true) { ?>
-<h1 id="indexCategoriesHeading"><?php echo HEADING_TITLE; ?></h1>
+<h1 id="indexCategoriesHeading"><?php echo HEADING_TITLE_NESTED; ?></h1>
 
 <?php if (SHOW_CUSTOMER_GREETING == 1) { ?>
 <h2 class="greeting"><?php echo zen_customer_greeting(); ?></h2>
@@ -65,7 +64,7 @@ if ($show_welcome != true) { ?>
     if ($current_categories_description != '') {
 ?>
 <div id="categoryDescription" class="catDescContent"><?php echo $current_categories_description;  ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php } // categories_description ?>
 
 <?php

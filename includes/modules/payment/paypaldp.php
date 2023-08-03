@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2021 Sep 01 Modified in v1.5.7d $
+ * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -27,111 +27,231 @@ require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_curl.php')
 class paypaldp extends base {
   /**
    * name of this module
-   *
    * @var string
    */
-  var $code;
+  public $code;
   /**
    * displayed module title
-   *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * displayed module description
-   *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * module status - set based on various config and zone criteria
-   *
    * @var string
    */
-  var $enabled;
+  public $enabled;
   /**
    * the zone to which this module is restricted for use
-   *
    * @var string
    */
-  var $zone;
+  protected $zone;
   /**
    * array holding accepted DP/gateway card types
-   *
    * @var array
    */
-  var $cards = array();
+  protected $cards = [];
   /**
-   * JS code used for gateway/DP mode
-   *
+   * JS code used for gateway/DP mode ***NOT USED?***
    * @var string
    */
-  var $cc_type_javascript = '';
+  public $cc_type_javascript = '';
   /**
    * JS code used for gateway/DP mode
-   *
    * @var string
    */
-  var $cc_type_check = '';
+  protected $cc_type_check = '';
   /**
    * debugging flag
-   *
    * @var boolean
    */
-  var $enableDebugging = false;
+  protected $enableDebugging = false;
   /**
    * is DP enabled ?
-   *
    * @var boolean
    */
-  var $enableDirectPayment = true;
+  public $enableDirectPayment = true;
   /**
    * sort order of display
-   *
    * @var int
    */
-  var $sort_order = 0;
+  public $sort_order = 0;
   /**
    * Button Source / BN code -- enables the module to work for Zen Cart sites
-   *
    * @var string
    */
-  var $buttonSource = 'ZenCart-DP_us';
+  protected $buttonSource = 'ZenCart-DP_us';
   /**
    * order status setting for pending orders
-   *
    * @var int
    */
-  var $order_pending_status = 1;
+  protected $order_pending_status = 1;
   /**
    * order status setting for completed orders
-   *
    * @var int
    */
-  var $order_status = DEFAULT_ORDERS_STATUS_ID;
+  public $order_status = DEFAULT_ORDERS_STATUS_ID;
   /**
    * Debug tools
    */
-  var $_logDir = DIR_FS_LOGS;
-  var $_logLevel = 0;
+  protected $_logDir = DIR_FS_LOGS;
+  protected $_logLevel = 0;
   /**
    * FMF
    */
-  var $fmfResponse = '';
-  var $fmfErrors = array();
+  protected $fmfResponse = '';
+  public $fmfErrors = [];
   /**
-   * this module collects card-info onsite
+   * this module collects card-info onsite, unless operating in PayFlow-UK mode!
    */
-  var $collectsCardDataOnsite = TRUE;
+  public $collectsCardDataOnsite = TRUE;
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $amt is the order amount to display
+     * @var string
+     */
+     protected  $amt;
+    /**
+     * $auth_code is the authorisation code returned by PayPal
+     * @var string
+     */
+    public $auth_code;
+    /**
+     * $avs is the PayPal payment advice response code
+     * @var string
+     */
+     public  $avs;
+    /**
+     * $cc_card_number is the number of the credit card being processed
+     * @var string
+     */
+    protected $cc_card_number;
+    /**
+     * $cc_card_type is the card issue type visa...
+     * @var string
+     */
+    protected $cc_card_type;
+    /**
+     * $cc_checkcode the verification code entered buy the user in the credit card payment screen
+     * @var string
+     */
+    protected $cc_checkcode;
+    /**
+     * $cc_expiry_month is the credit card expiry month
+     * @var int
+     */
+    protected $cc_expiry_month;
+    /**
+     * $cc_expiry_year is the credit card expiry year
+     * @var int
+     */
+    protected $cc_expiry_year;
+    /**
+     * $codeTitle is title of PayPal payment method
+     * @var string
+     */
+    protected $codeTitle;
+    /**
+     * $codeVersion is the version of this module
+     * @var string
+     */
+    protected $codeVersion;
+    /**
+     * $correlationid is the correlation ID returned by PayPal
+     * @var string
+     */
+    protected $correlationid;
+    /**
+     * $cvv2 is the cvv2 match response from PayPal
+     * @var string
+     */
+     public  $cvv2;
+    /**
+     * $emailAlerts is a flag to indicate if email alerts are required
+     * @var boolean
+     */
+    protected $emailAlerts;
+    /**
+     * $feeamt is the fee charged by PayPal
+     * @var string
+     */
+     protected  $feeamt;
+    /**
+    * $form_action_url is the URL to process the payment or not set for local processing
+    * @var string
+    */
+    public $form_action_url;
+    /**
+     * $numitems is the number of items in the shopping cart
+     * @var int
+     */
+     protected  $numitems;
+    /**
+     * $ot_merge allows notifier to additional items to the subtotal array $optionsST
+     * @var array
+     */
+    public $ot_merge = [];
+    /**
+     * $payment_status PayPal status values 'Authorization' : 'Completed'
+     * @var string
+     */
+    protected $payment_status;
+    /**
+     * $payment_time payment time stamp
+     * @var string
+     */
+     protected  $payment_time;
+    /**
+     * $payment_type name of payment type
+     * @var string
+     */
+     protected  $payment_type;
+    /**
+     * $pendingreason is reason transaction is pending
+     * @var string
+     */
+     protected  $pendingreason;
+    /**
+     * $reasoncode is the reason code returned by PayPal
+     * @var string
+     */
+     protected  $reasoncode;
+    /**
+     * $responsedata is an array of info returned by PayPal request
+     * @var array
+     */
+    protected $responsedata = [];
+    /**
+     * $taxamt is the value of tax on the transaction
+     * @var float
+     */
+     protected  $taxamt;
+    /**
+     * $transaction_id the transaction id returned by PzyPal
+     * @var string
+     */
+    public $transaction_id;
+    /**
+     * $transactiontype is the PayPal transaction type = 'cart'
+     * @var string
+     */
+     public  $transactiontype;
   /**
    * class constructor
    */
   function __construct() {
-    include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', 'paypaldp.php', 'false'));
     global $order;
     $this->code = 'paypaldp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
-    $this->codeVersion = '1.5.7';
+    $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True');
     // Set the title & description text based on the mode we're in
@@ -181,6 +301,16 @@ class paypaldp extends base {
       if (CC_ENABLED_MC=='1')      $this->cards[] = array('id' => 'MasterCard', 'text' => 'MasterCard');
       if (CC_ENABLED_MAESTRO=='1') $this->cards[] = array('id' => 'Maestro', 'text' => 'Maestro');
       if (CC_ENABLED_SOLO=='1')    $this->cards[] = array('id' => 'Solo', 'text' => 'Solo');
+    }
+
+    // -----
+    // For PayFlow-UK with the 3Dauth processing, an iframe is displayed for the 3DS challenge which
+    // is not compatible with the AJAX interface used when a payment method 'collectsCardDataOnsite'.  If
+    // the PayFlow-UK mode is currently in use, that class variable is 'reset' to enable the 3DS handling
+    // to proceed without issue.
+    //
+    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY === 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR !== '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD !== '')) {
+      $this->collectsCardDataOnsite = false;
     }
 
     // debug setup
@@ -282,7 +412,7 @@ class paypaldp extends base {
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
    */
   function selection() {
-    global $order;
+    global $order, $zcDate;
     $this->cc_type_check =
             'var value = document.checkout_payment.paypalwpp_cc_type.value;' .
             'if (value == "Solo" || value == "Maestro") {' .
@@ -305,12 +435,12 @@ class paypaldp extends base {
     $expires_year = array();
     $issue_year = array();
     for ($i = 1; $i < 13; $i++) {
-      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B - (%m)',mktime(0,0,0,$i,1,2000)));
+      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => $zcDate->output('%B - (%m)', mktime(0,0,0,$i,1,2000)));
     }
 
     $today = getdate();
     for ($i = $today['year']; $i < $today['year'] + 15; $i++) {
-      $expires_year[] = array('id' => strftime('%y', mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+      $expires_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
     }
 
     $onFocus = ' onfocus="methodSelect(\'pmt-' . $this->code . '\')"';
@@ -318,7 +448,7 @@ class paypaldp extends base {
     $fieldsArray = array();
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_FIRSTNAME,
                            'field' => zen_draw_input_field('paypalwpp_cc_firstname', $order->billing['firstname'], 'id="'.$this->code.'-cc-ownerf"'. $onFocus . ' autocomplete="off"') .
-                           '<script type="text/javascript">function paypalwpp_cc_type_check() { ' . $this->cc_type_check . ' } </script>',
+                           '<script>function paypalwpp_cc_type_check() { ' . $this->cc_type_check . ' } </script>',
                            'tag' => $this->code.'-cc-ownerf');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_LASTNAME,
                            'field' => zen_draw_input_field('paypalwpp_cc_lastname', $order->billing['lastname'], 'id="'.$this->code.'-cc-ownerl"'. $onFocus . ' autocomplete="off"'),
@@ -330,10 +460,10 @@ class paypaldp extends base {
                            'field' => zen_draw_input_field('paypalwpp_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
                            'tag' => $this->code.'-cc-number');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_EXPIRES,
-                           'field' => zen_draw_pull_down_menu('paypalwpp_cc_expires_month', $expires_month, strftime('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('paypalwpp_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
+                           'field' => zen_draw_pull_down_menu('paypalwpp_cc_expires_month', $expires_month, $zcDate->output('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('paypalwpp_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
                            'tag' => $this->code.'-cc-expires-month');
     $fieldsArray[] = array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER,
-                           'field' => zen_draw_input_field('paypalwpp_cc_checkcode', '', 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-cvv"' . $onFocus . ' autocomplete="off"') . '&nbsp;<small>' . MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER_LOCATION . '</small><script type="text/javascript">paypalwpp_cc_type_check();</script>',
+                           'field' => zen_draw_input_field('paypalwpp_cc_checkcode', '', 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-cvv"' . $onFocus . ' autocomplete="off"') . '&nbsp;<small>' . MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_CHECKNUMBER_LOCATION . '</small><script>paypalwpp_cc_type_check();</script>',
                            'tag' => $this->code.'-cc-cvv');
 
     $selection = array('id' => $this->code,
@@ -343,7 +473,7 @@ class paypaldp extends base {
     if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SOLO=='1')) {
       // add extra fields for UK cards
       for ($i = $today['year'] - 10; $i <= $today['year']; $i++) {
-        $issue_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+        $issue_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
       }
       array_splice($selection['fields'], 4, 0,
                    array(array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_ISSUE,
@@ -540,6 +670,7 @@ class paypaldp extends base {
    * Display Credit Card Information for review on the Checkout Confirmation Page
    */
   function confirmation() {
+    global $zcDate;
     $confirmation = array('title' => '',
                           'fields' => array(array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_FIRSTNAME,
                                                   'field' => $_POST['paypalwpp_cc_firstname']),
@@ -550,7 +681,7 @@ class paypaldp extends base {
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_NUMBER,
                                                   'field' => substr($_POST['paypalwpp_cc_number'], 0, 4) . str_repeat('X', (strlen($_POST['paypalwpp_cc_number']) - 8)) . substr($_POST['paypalwpp_cc_number'], -4)),
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_EXPIRES,
-                                                  'field' => strftime('%B, %Y', mktime(0,0,0,$_POST['paypalwpp_cc_expires_month'], 1, '20' . $_POST['paypalwpp_cc_expires_year'])),
+                                                  'field' => $zcDate->output('%B, %Y', mktime(0,0,0,$_POST['paypalwpp_cc_expires_month'], 1, '20' . $_POST['paypalwpp_cc_expires_year'])),
                                             (isset($_POST['paypalwpp_cc_issuenumber']) ? array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_ISSUE_NUMBER,
                                                   'field' => $_POST['paypalwpp_cc_issuenumber']) : '')
                                             )));
@@ -624,7 +755,7 @@ class paypaldp extends base {
       $this->zcLog('before_process - DP-1', 'Beginning DP mode' /* . print_r($_POST, TRUE)*/);
       // Set state fields depending on what PayPal wants to see for that country
       $this->setStateAndCountry($order->billing);
-      if (zen_not_null($order->delivery['street_address'])) {
+      if (!empty($order->delivery['street_address'])) {
         $this->setStateAndCountry($order->delivery);
       }
 
@@ -703,7 +834,6 @@ class paypaldp extends base {
                 }
             }
             $this->zcLog('3Ds processing starts', json_encode($secureflags));
-
           // validate an acceptable lookup result
           if (isset($_SESSION['3Dsecure_enroll_lookup_attempted']) == false || strcasecmp($_SESSION['3Dsecure_enroll_lookup_attempted'], 'Y') != 0) {
             // lookup never attempted for required card, so need to redirect to payment-selection page
@@ -856,7 +986,7 @@ class paypaldp extends base {
         $this->payment_time = date('Y-m-d h:i:s');
         $this->responsedata['CURRENCYCODE'] = $my_currency;
         $this->responsedata['EXCHANGERATE'] = $order->info['currency_value'];
-        $this->auth_code = $this->response['AUTHCODE'];
+        $this->auth_code = $this->responsedata['AUTHCODE'];
       } else {
         // here we're in NVP mode
         $this->transaction_id = $response['TRANSACTIONID'];
@@ -868,7 +998,7 @@ class paypaldp extends base {
         $this->correlationid = $response['CORRELATIONID'];
         $this->payment_time = urldecode($response['TIMESTAMP']);
         $this->amt = urldecode($response['AMT'] . ' ' . $response['CURRENCYCODE']);
-        $this->auth_code = (isset($this->response['AUTHCODE'])) ? $this->response['AUTHCODE'] : $this->response['TOKEN'];
+        $this->auth_code = (isset($this->responsedata['AUTHCODE'])) ? $this->responsedata['AUTHCODE'] : $this->responsedata['TOKEN'];
         $this->transactiontype = 'cart';
       }
   }
@@ -1049,6 +1179,9 @@ class paypaldp extends base {
    */
   function check() {
     global $db;
+    if (!defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) {
+       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Merchant Country', 'MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY', 'USA', 'Which country is your PayPal Account registered to? <br /><u>Choices:</u><br /><font color=green>You will need to supply <strong>API Settings</strong> in the Express Checkout module.</font><br /><strong>USA and Canada merchants</strong> need PayPal API credentials and a PayPal Payments Pro account.<br /><strong>UK merchants</strong> need to supply <strong>PAYFLOW settings</strong> (and have a Payflow account)<br><strong>Australia merchants</strong> choose Canada<br><em>(This setting is really about the internal PayPal API specification, and not so much about country: US=1.5, UK=2.0, Canada/Australia=3.0)</em>', '6', '25',  'zen_cfg_select_option(array(\'USA\', \'UK\', \'Canada\'), ', now())");
+    }
     if (!isset($this->_check)) {
       $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_PAYPALDP_STATUS'");
       $this->_check = !$check_query->EOF;
@@ -1067,7 +1200,7 @@ class paypaldp extends base {
     }
     // cannot install DP if EC not already enabled:
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True') {
-      $messageStack->add_session('<strong>Sorry, you must install and configure PayPal Express Checkout first.</strong> PayPal Website Payments Pro requires that you offer Express Checkout to your customers.<br /><a href="' . zen_href_link('modules.php?set=payment&module=paypalwpp', '', 'NONSSL') . '">Click here to set up Express Checkout.</a>' , 'error');
+      $messageStack->add_session('<strong>Sorry, you must install and configure PayPal Express Checkout first.</strong> PayPal Website Payments Pro requires that you offer Express Checkout to your customers.<br><a href="' . zen_href_link('modules.php?set=payment&module=paypalwpp', '', 'NONSSL') . '">Click here to set up Express Checkout.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypaldp', 'NONSSL'));
       return 'failed';
     }
@@ -1092,6 +1225,10 @@ class paypaldp extends base {
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Only Accept Chargeback-Protected Orders via Cardinal?', 'MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ', 'No', 'Only proceed with authorization when the Cardinal authentication result provides chargeback protection? ', '6', '25', 'zen_cfg_select_option(array(\'Yes\', \'No\'), ', now())");
 
     $this->notify('NOTIFY_PAYMENT_PAYPALDP_INSTALLED');
+  }
+
+  function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/payment/paypal/');
   }
 
   function keys() {
@@ -1141,7 +1278,7 @@ class paypaldp extends base {
   /**
    * Debug Emailing support
    */
-  function _doDebug($subject = 'PayPal debug data', $data='', $useSession = true) {
+  function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
     if (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
@@ -1504,7 +1641,7 @@ class paypaldp extends base {
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
       $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      if (zen_not_null($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (!empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
         if ($GLOBALS[$module]->tax_class > 0) {
           $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
@@ -1831,7 +1968,7 @@ class paypaldp extends base {
       }
       return (sizeof($this->fmfErrors)>0) ? $this->fmfErrors : FALSE;
     }
-    //echo '<br />basicError='.$basicError.'<br />' . urldecode(print_r($response,true)); die('halted');
+    //echo '<br>basicError='.$basicError.'<br>' . urldecode(print_r($response,true)); die('halted');
     if (!isset($response['L_SHORTMESSAGE0']) && isset($response['RESPMSG']) && $response['RESPMSG'] != '') $response['L_SHORTMESSAGE0'] = $response['RESPMSG'];
     if (IS_ADMIN_FLAG === false) {
     $errorInfo = 'Problem occurred while customer ' . zen_output_string_protected($_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']) . ' was attempting checkout with PayPal Website Payments Pro.';
@@ -2426,7 +2563,7 @@ class paypaldp extends base {
   //   MAPs will return the appropriate error code.
   function getISOCurrency($curr) {
     $out = "";
-    if(ctype_digit($curr) || is_int($curr)) {
+    if(is_int($curr) || ctype_digit((string)$curr)) {
       $numCurr = $curr + 0;
       if($numCurr < 10) {
         $out = "00" . $numCurr;

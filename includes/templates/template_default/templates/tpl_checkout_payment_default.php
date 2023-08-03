@@ -2,13 +2,13 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=checkout_payment.<br />
+ * Loaded automatically by index.php?main_page=checkout_payment.
  * Displays the allowed payment modules, for selection by customer.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 29 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
  */
 ?>
 <?php echo $payment_modules->javascript_validation(); ?>
@@ -31,7 +31,7 @@
 <?php if (MAX_ADDRESS_BOOK_ENTRIES >= 2) { ?>
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_CHANGE_ADDRESS, BUTTON_CHANGE_ADDRESS_ALT) . '</a>'; ?></div>
 <?php } ?>
-<address><?php echo zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?></address>
+<address><?php echo zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br>'); ?></address>
 </div>
 
 <div class="floatingBox important forward"><?php echo TEXT_SELECTED_BILLING_DESTINATION; ?></div>
@@ -85,7 +85,7 @@
       if (!$payment_modules->in_special_checkout()) {
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
 <fieldset class="payment">
-<legend><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></legend>
+<legend><?php echo HEADING_PAYMENT_METHOD; ?></legend>
 
 <?php
   if (SHOW_ACCEPTED_CREDIT_CARDS != '0') {
@@ -99,7 +99,7 @@
       echo TEXT_ACCEPTED_CREDIT_CARDS . zen_get_cc_enabled('IMAGE_');
     }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php } ?>
 
 <?php
@@ -125,7 +125,7 @@
     if (sizeof($selection) > 1) {
         if (empty($selection[$i]['noradio'])) {
  ?>
-<?php echo zen_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == (isset($_SESSION['payment']) ? $_SESSION['payment'] : '')), 'id="pmt-'.$selection[$i]['id'].'"'); ?>
+<?php echo zen_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == ($_SESSION['payment'] ?? '')), 'id="pmt-'.$selection[$i]['id'].'"'); ?>
 <?php   } ?>
 <?php
     } else {
@@ -148,7 +148,7 @@
 <?php
     }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
     if (isset($selection[$i]['error'])) {
@@ -163,18 +163,18 @@
 <?php
       for ($j=0, $n2=sizeof($selection[$i]['fields']); $j<$n2; $j++) {
 ?>
-<label <?php echo (isset($selection[$i]['fields'][$j]['tag']) ? 'for="'.$selection[$i]['fields'][$j]['tag'] . '" ' : ''); ?>class="inputLabelPayment"><?php echo isset($selection[$i]['fields'][$j]['title']) ? $selection[$i]['fields'][$j]['title'] : ''; ?></label><?php echo $selection[$i]['fields'][$j]['field']; ?>
-<br class="clearBoth" />
+<label <?php echo (isset($selection[$i]['fields'][$j]['tag']) ? 'for="'.$selection[$i]['fields'][$j]['tag'] . '" ' : ''); ?>class="inputLabelPayment"><?php echo $selection[$i]['fields'][$j]['title']; ?></label><?php echo $selection[$i]['fields'][$j]['field']; ?>
+<br class="clearBoth">
 <?php
       }
 ?>
 </div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
     }
     $radio_buttons++;
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
   }
 ?>
@@ -182,12 +182,12 @@
 </fieldset>
 <?php // ** BEGIN PAYPAL EXPRESS CHECKOUT **
       } else {
-        ?><input type="hidden" name="payment" value="<?php echo $_SESSION['payment']; ?>" /><?php
+        ?><input type="hidden" name="payment" value="<?php echo $_SESSION['payment']; ?>"><?php
       }
       // ** END PAYPAL EXPRESS CHECKOUT ** ?>
 <fieldset>
-<legend><?php echo TABLE_HEADING_COMMENTS; ?></legend>
-<?php echo zen_draw_textarea_field('comments', '45', '3', (isset($comments) ? $comments : ''), 'aria-label="' . TABLE_HEADING_COMMENTS . '"'); ?>
+<legend><?php echo HEADING_ORDER_COMMENTS; ?></legend>
+<?php echo zen_draw_textarea_field('comments', '45', '3', (isset($comments) ? $comments : ''), 'aria-label="' . HEADING_ORDER_COMMENTS . '"'); ?>
 </fieldset>
 
 <?php
@@ -196,7 +196,7 @@
 <fieldset>
 <legend><?php echo TABLE_HEADING_CONDITIONS; ?></legend>
 <div><?php echo TEXT_CONDITIONS_DESCRIPTION;?></div>
-<?php echo  zen_draw_checkbox_field('conditions', '1', false, 'id="conditions"');?>
+<?php echo  zen_draw_checkbox_field('conditions', '1', (isset($_SESSION['conditions']) && ($_SESSION['conditions'] === '1')), 'id="conditions" required  oninput="this.setCustomValidity(\'\')" oninvalid="this.setCustomValidity(\'' . ERROR_CONDITIONS_NOT_ACCEPTED . '\')"');?>
 <label class="checkboxLabel" for="conditions"><?php echo TEXT_CONDITIONS_CONFIRM; ?></label>
 </fieldset>
 <?php
@@ -205,7 +205,7 @@
 
 <div class="buttonRow forward" id="paymentSubmit"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT, 'onclick="submitFunction('.zen_user_has_gv_account($_SESSION['customer_id']).','.$order->info['total'].')"'); ?></div>
 
-<div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
+<div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </form>
 </div>

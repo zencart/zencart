@@ -2,10 +2,10 @@
 /**
  * meta_tags module
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 08 Modified in v1.5.7 $
+ * @version $Id: marco-pm 2021 Nov 10 Modified in v1.5.8-alpha $
  */
 $meta_tags_over_ride = false;
 $metatag_page_name = $current_page_base;
@@ -45,6 +45,7 @@ if ($metatag_page_name != 'index') {
 // Get different meta tag values depending on main_page values
 switch ($metatag_page_name) {
   case 'advanced_search':
+  case 'search':
   case 'account_edit':
   case 'account_history':
   case 'account_history_info':
@@ -58,11 +59,18 @@ switch ($metatag_page_name) {
   break;
 
   case 'address_book_process':
-  define('META_TAG_TITLE', NAVBAR_TITLE_ADD_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
+    define('META_TAG_TITLE', NAVBAR_TITLE_MODIFY_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
+    define('META_TAG_TITLE', NAVBAR_TITLE_DELETE_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  } else {
+    define('META_TAG_TITLE', NAVBAR_TITLE_ADD_ENTRY . PRIMARY_SECTION . TITLE . TAGLINE);
+  }
   define('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . NAVBAR_TITLE_ADD_ENTRY . SECONDARY_SECTION . KEYWORDS);
   define('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . NAVBAR_TITLE_ADD_ENTRY);
   break;
 
+  case 'search_result':
   case 'advanced_search_result':
   define('META_TAG_TITLE', NAVBAR_TITLE_2 . ' -> ' . zen_output_string_protected($keywords) . ' ' . PRIMARY_SECTION . TITLE . TAGLINE);
   define('META_TAG_DESCRIPTION', '');
@@ -268,7 +276,7 @@ switch ($metatag_page_name) {
         $meta_products_price = '';
       }
 
-      if (META_TAG_INCLUDE_MODEL == '1' && zen_not_null($product_info_metatags->fields['products_model'])) {
+      if (META_TAG_INCLUDE_MODEL == '1' && !empty($product_info_metatags->fields['products_model'])) {
         $meta_products_name = $product_info_metatags->fields['products_name'] . ' [' . $product_info_metatags->fields['products_model'] . ']';
       } else {
         $meta_products_name = $product_info_metatags->fields['products_name'];
@@ -304,7 +312,7 @@ switch ($metatag_page_name) {
       $meta_products_price = '';
     }
 
-    if (zen_not_null($review_metatags->fields['products_model'])) {
+    if (!empty($review_metatags->fields['products_model'])) {
       $meta_products_name = $review_metatags->fields['products_name'] . ' [' . $review_metatags->fields['products_model'] . ']';
     } else {
       $meta_products_name = $review_metatags->fields['products_name'];

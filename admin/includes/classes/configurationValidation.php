@@ -1,11 +1,11 @@
 <?php
 /**
  * configurationValidation.php
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Copyright 2019 mc12345678 @ mc12345678.com
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Apr 14 New in v1.5.7 $
+ * @version $Id: lat9 2022 Jun 19 Modified in v1.5.8-alpha $
  *
  */
 
@@ -13,106 +13,127 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
-
 class configurationValidation extends base
 {
-    public function __construct() {
-        if (!empty($_SESSION['language'])) {
-            require_once zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/', 'configuration_validation.php', 'false');
+    /**
+     * Validate a configuration value that is an optional collection of email addresses.  If the value
+     * input is other than an empty string, it's validated as a collection (possibly single) of email
+     * address(es).
+     *
+     * @param string $val
+     * @return bool
+     */
+    static public function sanitizeEmailNullOK(string $val)
+    {
+        if ($val === '') {
+            return true;
         }
+        return configurationValidation::sanitizeEmail($val, false); 
     }
 
-    static public function sanitizeEmail(&$val) {
-        $results = array();
-        $send_email_array = array();
-        $send_to_array = array();
-        $send_to_email = '';
-        $send_to_name = '';
-        $response = array();
+    /**
+     * Validate a configuration value that 'should' be an email-address representation.
+     *
+     * If the $single_email_only input is set to (bool)false (as it is when called from the
+     * sanitizeEmailNullOK method, above), then multiple addresses can be supplied.  In this case,
+     * the value is expected to be a comma-separated list of email addresses, each either in the format
+     * 'email@address', e.g. joe@example.com, or 'Email Name <email@address>', e.g.
+     * 'Joe Example <joe@example.com>'.
+     *
+     * Otherwise, the configured email address *must* be supplied as a single email address, e.g.
+     * joe@example.com.
+     *
+     * Side-effect: Sets the global $configuration_value variable to contain the sanitized result.
+     *
+     * @param string $val
+     * @param bool $single_email_only
+     * @return bool
+     */
+    static public function sanitizeEmail(string $val, bool $single_email_only = true)
+    {
         $final_result = '';
-        $options = array(
-                         'options' => array(
-                                      'default' => false,
-                                      ),
-                         'flags' => '',
-                         );
-        
-        if (isset($val)) {
-            $send_to_array = explode(",", $val);
-            // If count($send_to_array) > 1 then there are multiple addresses to be parsed.
-            foreach ($send_to_array as $key => $address) {
+        $options = [
+            'options' => [
+                'default' => false,
+            ],
+        ];
+
+        if ($val !== '') {
+            if ($single_email_only === true) {
+                $send_to_array = [$val];
+            } else {
+                $send_to_array = explode(',', $val);
+            }
+
+            $email_error = false;
+            foreach ($send_to_array as $address) {
                 $send_to_name = '';
                 $send_to_email = trim($address);
-                // Collect the portion within <> symbols
-                preg_match('/\<[^>]+\>/', $address, $send_email_array);
-                // If there are parts to the above, then set/collect them.
-                if (!empty($send_email_array)) {
-                    $send_to_email = preg_replace ("/>/", "", $send_email_array[0]);
-                    $send_to_email = trim(preg_replace("/</", "", $send_to_email));
-                    $send_to_name  = trim(preg_replace('/\<[^*]*/', '', $address));
-                }
-                
-                // Collect the individual name/email as part of an array.
-                $results[$key]['send_to_name'] = filter_var($send_to_name, FILTER_SANITIZE_STRING, $options);
-                $results[$key]['send_to_email'] = filter_var($send_to_email, FILTER_VALIDATE_EMAIL, $options);
-                
-                // Restore the inner email address back to its state for capture.
-                if (!empty($send_email_array) && $results[$key]['send_to_email'] !== false) {
-                    $results[$key]['send_to_email'] = '<' . $results[$key]['send_to_email'] . '>';
-                }
-                
-                // If the email address is not assigned, but there is content in the name, validate that the name is a correct email address.
-                if ($results[$key]['send_to_email'] === false && !empty($results[$key]['send_to_name'])) {
-                    $results[$key]['send_to_name'] = filter_var($results[$key]['send_to_name'], FILTER_VALIDATE_EMAIL, $options);
-                }
-                
-                // Remove array parameters that have failed validation.
-                foreach ($results[$key] as $key2 => $value2) {
-                    if (empty($value2)) {
-                        unset($results[$key][$key2]);
+
+                // -----
+                // If multiple emails are allowed for the configuration ...
+                //
+                $email_has_parts = false;
+                if ($single_email_only === false) {
+                    // ----
+                    // Gather any email address that's presented within a <> pair, e.g. if
+                    // the value was like 'Name 1 <joe@example.com>'; the value includes the leading <
+                    // and trailing >.
+                    //
+                    preg_match('/\<[^>]+\>/', $send_to_email, $send_email_array);
+
+                    // If there are parts to the above, then set/collect them.
+                    if (!empty($send_email_array)) {
+                        $email_has_parts = true;
+                        $send_to_email = trim($send_email_array[0], " <>\t\n\r\0");
+                        $send_to_name  = trim(str_replace($send_email_array[0], '', $address));
                     }
                 }
-                unset($key2, $value2);
-                
+
+                // Collect the individual name/email as part of an array.
+                $send_to_email = filter_var($send_to_email, FILTER_VALIDATE_EMAIL, $options);
+
                 // If this round of review identified no record, then move to the next record.
-                if (empty($results[$key])) {
+                if ($send_to_email === false) {
+                    $email_error = true;
                     continue;
                 }
-                
+
+                // Restore the inner email address back to its state for capture.
+                if ($email_has_parts === true) {
+                    $send_to_email = '<' . $send_to_email . '>';
+                }
+
                 // Collect the filtered email information into a single record.
-                $response[$key] = implode(" ", $results[$key]);
+                $final_result .= $send_to_name . ' ' . $send_to_email . ', ';
             }
-            
-            // Collect email addresses entered as a string.
-            $final_result = implode(", ", $response);
         }
-        
-        // If there are no email addresses that are valid, then identify that failed validation.
-        if (empty($final_result)) {
+
+        // If one or more of the email addresses are not valid, then identify that failed validation.
+        if ($final_result === '' || $email_error === true) {
             return false;
         }
-        
-        // Provide the filtered value back as $val.
-        $val = $final_result;
-        
-        // Set $configuration_value that is to be stored as the filtered email address.
-        return $GLOBALS['configuration_value'] = $final_result;
+
+        // Provide the filtered value back as the global configuration value.
+        $GLOBALS['configuration_value'] = trim($final_result, ' ,');
+
+        return true;
     }
-    
-    
+
     /**
      *  Usage setting val_function  for the configuration key to something similar
      *    to the below will call on this code to support storage of the boolean related value.
      *    val_function = '{"error":"TEXT_BOOLEAN_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeBoolean"]}}'
      **/
-    static public function sanitizeBoolean(&$val) {
-        $options = array(
-                         'options' => array(
-                                      'default' => null,
-                                      ),
-                         'flags' => FILTER_NULL_ON_FAILURE,
-                         );
-        
+    static public function sanitizeBoolean(string $val)
+    {
+        $options = [
+            'options' => [
+                'default' => null,
+            ],
+            'flags' => FILTER_NULL_ON_FAILURE,
+        ];
+
         // If the value is truly a boolean response then need to not return false, but need to update
         //   the value as false and allow the change.  If the value is not a boolean, then need
         //   to return false so that it is not permitted.
@@ -122,12 +143,12 @@ class configurationValidation extends base
         if (null === $result) {
             return false;
         }
-        
+
         $GLOBALS['configuration_value'] = $val;
-        
+
         // Based on processing of filter_var on FILTER_VALIDATE_BOOLEAN that result
         //   in a return of true/false for the boolean value with
         //   null if it is not boolean.
         return is_bool($result);
     }
-}//end of class
+} //end of class

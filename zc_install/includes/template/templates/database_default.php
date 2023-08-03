@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 ?>
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_progress_bar.php'); ?>
@@ -14,11 +14,11 @@
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
 <form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" data-abide="ajax">
-  <input type="hidden" name="action" value="process" >
-  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
+  <input type="hidden" name="action" value="process">
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
   <?php foreach ($_POST as $key=>$value) {  ?>
   <?php if ($key != 'action') { ?>
-    <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" >
+    <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
   <?php }?>
   <?php }?>
   <fieldset>
@@ -87,11 +87,11 @@
         <label class="inline" for="sql_cache_method"><a href="#" class="hasHelpText" id="SQLCACHEMETHOD"><?php echo TEXT_DATABASE_SETUP_SQL_CACHE_METHOD; ?></a></label>
       </div>
       <div class="small-9 columns">
-        <select name="sql_cache_method" id="sql_cache_method" tabindex="8" ><?php echo $sqlCacheTypeOptions; ?></select>
+        <select name="sql_cache_method" id="sql_cache_method" tabindex="8"><?php echo $sqlCacheTypeOptions; ?></select>
       </div>
     </div>
   </fieldset>
-  <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="10" >
+  <input type="submit" class="radius button" id="btnsubmit" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="10">
 </form>
 <script>
 $().ready(function() {

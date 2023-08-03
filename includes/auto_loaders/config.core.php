@@ -1,11 +1,10 @@
 <?php
 /**
  * autoloader array for catalog application_top.php
- * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2019 Sep 10 Modified in v1.5.7 $
+ * @version $Id: lat9 2022 Jul 23 Modified in v1.5.8-alpha2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
  die('Illegal Access');
@@ -30,6 +29,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
  * require(DIR_WS_CLASSES . 'split_page_results.php');
  * require(DIR_WS_CLASSES . 'breadcrumb.php');
  * require(DIR_WS_CLASSES . 'language.php');
+ * require DIR_WS_CLASSES . 'zcDate.php';
  *
  */
   $autoLoadConfig[0][] = array('autoType'=>'include',
@@ -70,8 +70,23 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'classInstantiate',
                                'className'=>'zcPassword',
                                'objectName'=>'zcPassword');
-
-
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'Customer.php');
+  $autoLoadConfig[0][] = [
+    'autoType' => 'class',
+    'loadFile' => 'zcDate.php'
+  ];
+/**
+ * Breakpoint 5.
+ *
+ * $zcDate = new zcDate(); ... will be re-initialized when/if the require_languages.php module is run.
+ *
+ */
+  $autoLoadConfig[5][] = [
+    'autoType' => 'classInstantiate',
+    'className' => 'zcDate',
+    'objectName' => 'zcDate'
+  ];
 
 /**
  * Breakpoint 30.
@@ -91,6 +106,16 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[40][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_db_config_read.php');
 /**
+ * Breakpoint 45.
+ *
+ * require 'includes/init_includes/init_non_db_settings.php';
+ *
+ */
+  $autoLoadConfig[45][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_non_db_settings.php'
+  ];
+/**
  * Breakpoint 50.
  *
  * $sniffer = new sniffer();
@@ -104,6 +129,15 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
                                 'loadFile'=> 'init_gzip.php');
   $autoLoadConfig[50][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_sefu.php');
+/**
+ * Breakpoint 55.
+ *
+ * require('includes/init_includes/init_common_elements.php');
+ */
+$autoLoadConfig[55][] = [
+'autoType' => 'init_script',
+'loadFile' => 'init_common_elements.php',
+];
 /**
  * Breakpoint 60.
  *
@@ -194,14 +228,19 @@ $autoLoadConfig[96][] = array('autoType'=>'init_script',
 /**
  * Breakpoint 130.
  *
- * require('includes/init_includes/init_customer_auth.php');
  * messageStack = new messageStack();
  *
  */
   $autoLoadConfig[130][] = array('autoType'=>'classInstantiate',
                                  'className'=>'messageStack',
                                  'objectName'=>'messageStack');
-  $autoLoadConfig[130][] = array('autoType'=>'init_script',
+/**
+ * Breakpoint 135.
+ *
+ * require('includes/init_includes/init_customer_auth.php');
+ *
+ */
+  $autoLoadConfig[135][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_customer_auth.php');
 /**
  * Breakpoint 140.

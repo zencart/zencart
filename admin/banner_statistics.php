@@ -1,15 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2020 Apr 14 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
  *
  * @TODO - align .flot_chart.flot-x-axis smarter in relation to .flot_chart, and add styling, such as slightly larger font and bold, etc
  * @TODO - expand the functionality to enable hover-points and hover-text describing each point on the graphs
  */
 require('includes/application_top.php');
-require('includes/functions/functions_graphs.php');
+require('includes/functions/functions_banner_graphs.php');
 
 $banner_id = (isset($_GET['bID'])) ? (int)$_GET['bID'] : 0;
 $type = (isset($_GET['type']) ? preg_replace('/[^a-z]/', '', $_GET['type']) : '');
@@ -18,7 +18,7 @@ $months_array = array();
 for ($i = 1; $i < 13; $i++) {
   $months_array[] = array(
     'id' => $i,
-    'text' => strftime('%B', mktime(0, 0, 0, $i)));
+    'text' => $zcDate->output('%B', mktime(0, 0, 0, $i)));
 }
 $type_array = array(array(
     'id' => 'daily',
@@ -212,7 +212,7 @@ $opts = array(
       <div class="form-group">
           <?php echo zen_draw_label(TITLE_TYPE, 'type', 'class="control-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_pull_down_menu('type', $type_array, (zen_not_null($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control"'); ?>
+            <?php echo zen_draw_pull_down_menu('type', $type_array, (!empty($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control"'); ?>
           <noscript><input type="submit" value="GO"></noscript>
         </div>
       </div>
@@ -315,14 +315,14 @@ $opts = array(
     <table caption="<?php echo TABLE_HEADING_SOURCE; ?>">
       <tr class="headingRow dataTableHeadingRow">
         <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SOURCE; ?></th>
-        <th class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_VIEWS; ?></th>
-        <th class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_CLICKS; ?></th>
+        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_VIEWS; ?></th>
+        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_CLICKS; ?></th>
       </tr>
   <?php for ($i=0, $n=sizeof($stats[2]); $i<$n; $i++) { ?>
         <tr class="dataTableRow">
           <td class="dataTableContent"><?php echo $stats[2][$i][0]; ?></td>
-          <td class="dataTableContent" align="right"><?php echo $stats[2][$i][1]; ?></td>
-          <td class="dataTableContent" align="right"><?php echo $stats[2][$i][2]; ?></td>
+          <td class="dataTableContent text-right"><?php echo $stats[2][$i][1]; ?></td>
+          <td class="dataTableContent text-right"><?php echo $stats[2][$i][2]; ?></td>
         </tr>
   <?php } ?>
     </table>

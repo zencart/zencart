@@ -1,21 +1,21 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Apr 27 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 24 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $languages = zen_get_languages();
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
-      if (isset($_GET['oID']))
-        $orders_status_id = zen_db_prepare_input($_GET['oID']);
+      if (isset($_GET['oSID']))
+        $orders_status_id = zen_db_prepare_input($_GET['oSID']);
 
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $orders_status_name_array = $_POST['orders_status_name'];
@@ -52,35 +52,35 @@ if (zen_not_null($action)) {
                       WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
       }
 
-      zen_redirect(zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $orders_status_id));
+      zen_redirect(zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $orders_status_id));
       break;
     case 'deleteconfirm':
-      $oID = zen_db_prepare_input($_POST['oID']);
+      $oSID = zen_db_prepare_input($_POST['oSID']);
 
       $orders_status = $db->Execute("SELECT configuration_value
                                      FROM " . TABLE_CONFIGURATION . "
                                      WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
 
-      if ($status['configuration_value'] == $oID) {
+      if ($orders_status->fields['configuration_value'] == $oSID) {
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                       SET configuration_value = ''
                       WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
       }
 
       $db->Execute("DELETE FROM " . TABLE_ORDERS_STATUS . "
-                    WHERE orders_status_id = " . zen_db_input($oID));
+                    WHERE orders_status_id = " . zen_db_input($oSID));
 
       zen_redirect(zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']));
       break;
     case 'delete':
-      $oID = zen_db_prepare_input($_GET['oID']);
+      $oSID = zen_db_prepare_input($_GET['oSID']);
 
       $status = $db->Execute("SELECT COUNT(*) AS count
                               FROM " . TABLE_ORDERS . "
-                              WHERE orders_status = " . (int)$oID);
+                              WHERE orders_status = " . (int)$oSID);
 
       $remove_status = true;
-      if ($oID == DEFAULT_ORDERS_STATUS_ID) {
+      if ($oSID == DEFAULT_ORDERS_STATUS_ID) {
         $remove_status = false;
         $messageStack->add($error_message = ERROR_REMOVE_DEFAULT_ORDER_STATUS, 'error');
       } elseif ($status->fields['count'] > 0) {
@@ -89,7 +89,7 @@ if (zen_not_null($action)) {
       } else {
         $history = $db->Execute("SELECT COUNT(*) AS count
                                  FROM " . TABLE_ORDERS_STATUS_HISTORY . "
-                                 WHERE orders_status_id = " . (int)$oID);
+                                 WHERE orders_status_id = " . (int)$oSID);
 
         if ($history->fields['count'] > 0) {
           $remove_status = false;
@@ -103,23 +103,9 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -148,14 +134,14 @@ if (zen_not_null($action)) {
                 $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
                 $orders_status = $db->Execute($orders_status_query_raw);
                 foreach ($orders_status as $status) {
-                  if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $status['orders_status_id']))) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {
+                  if ((!isset($_GET['oSID']) || (isset($_GET['oSID']) && ($_GET['oSID'] == $status['orders_status_id']))) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {
                     $oInfo = new objectInfo($status);
                   }
 
                   if (isset($oInfo) && is_object($oInfo) && ($status['orders_status_id'] == $oInfo->orders_status_id)) {
-                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=edit') . '\'" role="button">' . "\n";
+                    echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=edit') . '\'" role="button">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $status['orders_status_id']) . '\'" role="button">' . "\n";
+                    echo '                  <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $status['orders_status_id']) . '\'" role="button">' . "\n";
                   }
                   echo '                    <td class="dataTableContent">' . $status['orders_status_id'] . '</td>';
 
@@ -170,7 +156,7 @@ if (zen_not_null($action)) {
                   if (isset($oInfo) && is_object($oInfo) && ($status['orders_status_id'] == $oInfo->orders_status_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $status['orders_status_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $status['orders_status_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                   }
                   ?>&nbsp;</td>
               </tr>
@@ -205,7 +191,7 @@ if (zen_not_null($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_ORDERS_STATUS . '</h4>');
 
-                $contents = array('form' => zen_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=save', 'post', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
 
                 $orders_status_inputs_string = '';
@@ -217,17 +203,17 @@ if (zen_not_null($action)) {
                 if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) {
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 }
-                $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br />&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', $oInfo->sort_order, 'class="form-control"'));
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', $oInfo->sort_order, 'class="form-control"'));
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_ORDERS_STATUS . '</h4>');
 
-                $contents = array('form' => zen_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('oID', $oInfo->orders_status_id));
+                $contents = array('form' => zen_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('oSID', $oInfo->orders_status_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $oInfo->orders_status_name . '</b>');
                 if ($remove_status) {
-                  $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                  $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 } elseif (!empty($error_message)) {
                     $contents[] = array('text' => '<br><b class="alert-danger">' . $error_message . '</b>');
                 }
@@ -236,7 +222,7 @@ if (zen_not_null($action)) {
                 if (isset($oInfo) && is_object($oInfo)) {
                   $heading[] = array('text' => '<h4>' . $oInfo->orders_status_name . '</h4>');
 
-                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
 
                   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                     $contents[] = array('text' => zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']));
@@ -245,7 +231,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

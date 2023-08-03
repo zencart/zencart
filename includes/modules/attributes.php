@@ -5,10 +5,10 @@
  * Prepares attributes content for rendering in the template system
  * Prepares HTML for input fields with required uniqueness so template can display them as needed and keep collected data in proper fields
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2020 Oct 06 Modified in v1.5.7a $
+ * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -50,13 +50,13 @@ if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
 }
 
 $sql = "SELECT DISTINCT popt.products_options_id, popt.products_options_name, popt.products_options_sort_order,
-            popt.products_options_type, popt.products_options_length, popt.products_options_comment,
+            popt.products_options_type, popt.products_options_length, popt.products_options_comment, popt.products_options_comment_position,
             popt.products_options_size,
             popt.products_options_images_per_row,
             popt.products_options_images_style,
             popt.products_options_rows
         FROM " . TABLE_PRODUCTS_OPTIONS . " popt
-        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " patrib ON (patrib.options_id = popt.products_options_id) 
+        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " patrib ON (patrib.options_id = popt.products_options_id)
         WHERE patrib.products_id= :products_id
         AND popt.language_id = :language_id " .
         $options_order_by;
@@ -109,7 +109,6 @@ while (!$products_options_names->EOF) {
     $tmp_radio = '';
     $tmp_checkbox = '';
     $tmp_html = '';
-    $selected_attribute = $selected_dropdown_attribute = false; // boolean, used for radio/checkbox/select
 
     $tmp_attributes_image = '';
     $tmp_attributes_image_row = 0;
@@ -117,10 +116,6 @@ while (!$products_options_names->EOF) {
     $i = 0;
 
     $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $products_options_names->fields);
-
-    if (!isset($products_options_names->fields['products_options_comment_position'])) {
-        $products_options_names->fields['products_options_comment_position'] = '0';
-    }
 
     // loop through each Attribute
     while (!$products_options->EOF) {
@@ -168,12 +163,12 @@ while (!$products_options_names->EOF) {
             // collect price information if it exists
             if ($products_options->fields['attributes_discounted'] == 1) {
                 // apply product discount to attributes if discount is on
-                $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', 'false', $products_price_is_priced_by_attributes);
+                $new_attributes_price = zen_get_attributes_price_final($products_options->fields["products_attributes_id"], 1, '', false, $products_price_is_priced_by_attributes);
                 //$new_attributes_price = zen_get_discount_calc((int)$_GET['products_id'], true, $new_attributes_price);
             } else {
                 // discount is off do not apply
                 $new_attributes_price = $products_options->fields['options_values_price'];
-                
+
                 // -----
                 // If the attribute's price is 0, set it to an (int) 0 so that follow-on checks
                 // using empty() will find that value 'empty'.
@@ -456,7 +451,7 @@ while (!$products_options_names->EOF) {
                         // use text area or input box based on setting of products_options_rows in the products_options table
                         if ($products_options_names->fields['products_options_rows'] > 1) {
                             $tmp_html = '  <input disabled="disabled" type="text" name="remaining' . TEXT_PREFIX . $products_options_id . '" size="3" maxlength="3" value="' . $products_options_names->fields['products_options_length'] . '"> ' . TEXT_MAXIMUM_CHARACTERS_ALLOWED . '<br>';
-                            $tmp_html .= '<textarea class="attribsTextarea" name="id[' . TEXT_PREFIX . $products_options_id . ']" rows="' . $products_options_names->fields['products_options_rows'] . '" cols="' . $products_options_names->fields['products_options_size'] . '" onKeyDown="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" onKeyUp="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" id="' . $inputFieldId . '" >' . stripslashes($value) . '</textarea>' . "\n";
+                            $tmp_html .= '<textarea class="attribsTextarea" name="id[' . TEXT_PREFIX . $products_options_id . ']" rows="' . $products_options_names->fields['products_options_rows'] . '" cols="' . $products_options_names->fields['products_options_size'] . '" onKeyDown="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" onKeyUp="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" id="' . $inputFieldId . '">' . stripslashes($value) . '</textarea>' . "\n";
                         } else {
                             $tmp_html = '<input type="text" name="id[' . TEXT_PREFIX . $products_options_id . ']" size="' . $products_options_names->fields['products_options_size'] . '" maxlength="' . $products_options_names->fields['products_options_length'] . '" value="' . htmlspecialchars($value, ENT_COMPAT, CHARSET, true) . '" id="' . $inputFieldId . '"'  . $data_properties . $field_disabled . '>  ';
                         }
@@ -469,12 +464,14 @@ while (!$products_options_names->EOF) {
                 // use text area or input box based on setting of products_options_rows in the products_options table
                 if ($products_options_names->fields['products_options_rows'] > 1) {
                     $tmp_html = '  <input disabled="disabled" type="text" name="remaining' . TEXT_PREFIX . $products_options_id . '" size="3" maxlength="3" value="' . $products_options_names->fields['products_options_length'] . '"> ' . TEXT_MAXIMUM_CHARACTERS_ALLOWED . '<br>';
-                    $tmp_html .= '<textarea class="attribsTextarea" name="id[' . TEXT_PREFIX . $products_options_id . ']" rows="' . $products_options_names->fields['products_options_rows'] . '" cols="' . $products_options_names->fields['products_options_size'] . '" onkeydown="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" onkeyup="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" id="' . $inputFieldId . '" >' . stripslashes($tmp_value) . '</textarea>' . "\n";
+                    $tmp_html .= '<textarea class="attribsTextarea" name="id[' . TEXT_PREFIX . $products_options_id . ']" rows="' . $products_options_names->fields['products_options_rows'] . '" cols="' . $products_options_names->fields['products_options_size'] . '" onkeydown="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" onkeyup="characterCount(this.form[\'' . 'id[' . TEXT_PREFIX . $products_options_id . ']\'],this.form.remaining' . TEXT_PREFIX . $products_options_id . ',' . $products_options_names->fields['products_options_length'] . ');" id="' . $inputFieldId . '">' . stripslashes($tmp_value) . '</textarea>' . "\n";
                     // $tmp_html .= '  <input type="reset">';
                 } else {
                     $tmp_html = '<input type="text" name="id[' . TEXT_PREFIX . $products_options_id . ']" size="' . $products_options_names->fields['products_options_size'] . '" maxlength="' . $products_options_names->fields['products_options_length'] . '" value="' . htmlspecialchars($tmp_value, ENT_COMPAT, CHARSET, true) . '" id="' . $inputFieldId . '"'  . $data_properties . $field_disabled . '>  ';
                 }
                 $tmp_html .= $products_options_details;
+
+               if (defined('ATTRIBUTES_ENABLED_TEXT_PRICES') && ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { // test ATTRIBUTES_ENABLED_TEXT_PRICES
                 $tmp_word_cnt_string = '';
                 // calculate word charges
                 $tmp_word_cnt = 0;
@@ -502,6 +499,7 @@ while (!$products_options_names->EOF) {
                     $tmp_letters_price = $currencies->display_price($tmp_letters_price, zen_get_tax_rate($product_info->fields['products_tax_class_id']));
                     $tmp_html .= '<br>' . TEXT_CHARGES_LETTERS . ' ' . $tmp_letters_cnt . ' = ' . $tmp_letters_price;
                 }
+               } // test ATTRIBUTES_ENABLED_TEXT_PRICES
                 $tmp_html .= "\n";
             }
         }
@@ -548,11 +546,10 @@ while (!$products_options_names->EOF) {
 
 
         // default
-        // find default attribute if set. Intended for dropdown's default
+        // find default attribute if set for default dropdown
         if ($products_options->fields['attributes_default'] == '1') {
-            $selected_dropdown_attribute = $products_options_value_id;
+            $selected_attribute = $products_options_value_id;
         }
-        $selected_attribute = $selected_dropdown_attribute;
 
         $products_options->MoveNext();
         // end of inner while() loop

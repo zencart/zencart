@@ -1,7 +1,7 @@
 #
-# @copyright Copyright 2003-2013 Zen Cart Development Team
+# @copyright Copyright 2003-2022 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version GIT: $Id: Author: DrByte  Fri May 17 14:29:18 2013 -0400 Modified in v1.5.2 $
+# @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
 #
 # This is used with Apache WebServers
 #
@@ -29,7 +29,7 @@
 </FilesMatch>
 
 # but now allow just *certain* necessary files:
-<FilesMatch "(?i).*\.(mp3|mp4|swf|avi|mpg|wma|rm|ra|ram|wmv|epub|flv|ogg|m4v|m4a|webm)$" >
+<FilesMatch "(?i).*\.(mp3|mp4|swf|avi|mpg|wma|rm|ra|ram|wmv|epub|flv|ogg|m4v|m4a|webm)$">
   <IfModule mod_authz_core.c>
     Require all granted
   </IfModule>

@@ -2,10 +2,10 @@
 /**
  * authorize.net AIM payment method class
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 23 Modified in v1.5.8 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -17,25 +17,25 @@ class authorizenet_aim extends base {
    *
    * @var string
    */
-  var $code;
+  public $code;
   /**
    * $title is the displayed name for this payment method
    *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * $description is a soft name for this payment method
    *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * $enabled determines whether this module shows or not... in catalog.
    *
    * @var boolean
    */
-  var $enabled;
+  public $enabled;
   /**
    * Do we display specific info about CVV and/or Expiry Date errors?
    * The default is no, as Authorize.net also defaults to no.
@@ -60,22 +60,22 @@ class authorizenet_aim extends base {
    *
    * @var string
    */
-  var $_logDir = '';
+  private $_logDir = '';
   /**
    * communication vars
    */
-  var $authorize = '';
-  var $commErrNo = 0;
-  var $commError = '';
-  var $transaction_id = null;
+  protected $authorize = '';
+  protected $commErrNo = 0;
+  protected $commError = '';
+  public $transaction_id = null;
   /**
    * this module collects card-info onsite
    */
-  var $collectsCardDataOnsite = TRUE;
+  public $collectsCardDataOnsite = TRUE;
   /**
    * debug content var
    */
-  var $reportable_submit_data = array();
+  protected $reportable_submit_data = array();
   /**
    * Given that this module can be used to interact with other gateways (authnet emulators),
    * this var is used to declare which gateway to work with
@@ -85,6 +85,22 @@ class authorizenet_aim extends base {
    * @var string the currency enabled in this gateway's merchant account
    */
   private $gateway_currency;
+  
+    private $_check;
+    public $auth_code;
+    protected $avs_response;
+    protected $cc_card_number;
+    protected $cc_card_type;
+    protected $cc_expiry_month;
+    protected $cc_expiry_year;
+    protected $ccv_response;
+    protected $commInfo;
+    public $form_action_url;
+    protected $include_x_type;
+    public $order_status;
+    protected $proxy_tunnel_flag;
+    public $sort_order;
+    public $submit_extras;
 
   /**
    * Constructor
@@ -204,15 +220,15 @@ class authorizenet_aim extends base {
    * @return array
    */
   function selection() {
-    global $order;
+    global $order, $zcDate;
 
     for ($i=1; $i<13; $i++) {
-      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B - (%m)',mktime(0,0,0,$i,1,2000)));
+      $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => $zcDate->output('%B - (%m)',mktime(0,0,0,$i,1,2000)));
     }
 
     $today = getdate();
     for ($i=$today['year']; $i < $today['year']+15; $i++) {
-      $expires_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+      $expires_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
     }
     $onFocus = ' onfocus="methodSelect(\'pmt-' . $this->code . '\')"';
 
@@ -225,7 +241,7 @@ class authorizenet_aim extends base {
                                                'field' => zen_draw_input_field('authorizenet_aim_cc_number', '', 'id="'.$this->code.'-cc-number"' . $onFocus . ' autocomplete="off"'),
                                                'tag' => $this->code.'-cc-number'),
                                          array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_EXPIRES,
-                                               'field' => zen_draw_pull_down_menu('authorizenet_aim_cc_expires_month', $expires_month, strftime('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('authorizenet_aim_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
+                                               'field' => zen_draw_pull_down_menu('authorizenet_aim_cc_expires_month', $expires_month, $zcDate->output('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('authorizenet_aim_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
                                                'tag' => $this->code.'-cc-expires-month')));
     if (MODULE_PAYMENT_AUTHORIZENET_AIM_USE_CVV == 'True') {
       $selection['fields'][] = array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CVV,
@@ -276,6 +292,7 @@ class authorizenet_aim extends base {
    * @return array
    */
   function confirmation() {
+    global $zcDate;
     $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_TYPE,
                                                   'field' => $this->cc_card_type),
                                             array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_OWNER,
@@ -283,7 +300,7 @@ class authorizenet_aim extends base {
                                             array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_NUMBER,
                                                   'field' => substr($this->cc_card_number, 0, 4) . str_repeat('X', (strlen($this->cc_card_number) - 8)) . substr($this->cc_card_number, -4)),
                                             array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_CREDIT_CARD_EXPIRES,
-                                                  'field' => strftime('%B, %Y', mktime(0,0,0,$_POST['authorizenet_aim_cc_expires_month'], 1, '20' . $_POST['authorizenet_aim_cc_expires_year']))) ));
+                                                  'field' => $zcDate->output('%B, %Y', mktime(0,0,0,$_POST['authorizenet_aim_cc_expires_month'], 1, '20' . $_POST['authorizenet_aim_cc_expires_year']))) ));
     return $confirmation;
   }
   /**
@@ -678,7 +695,7 @@ class authorizenet_aim extends base {
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') {
-      echo $this->authorize . ($this->commErrNo != 0 ? '<br />' . $this->commErrNo . ' ' . $this->commError : '') . '<br />';
+      echo $this->authorize . ($this->commErrNo != 0 ? '<br>' . $this->commErrNo . ' ' . $this->commError : '') . '<br>';
       die('Press the BACK button in your browser to return to the previous page.');
     }
 

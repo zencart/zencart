@@ -1,15 +1,15 @@
 <?php
 /**
  * index.php -- This is the main controller file for the Zen Cart installer
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jul 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Mar 05 Modified in v1.5.8-alpha $
  */
 
   // Actual version check is more strict; this is just to start the program
   // For true minimum, see includes/systemChecks.yml under checkPhpVersionMin
-  if (PHP_VERSION_ID < 50500) {
-    die('Sorry, requires minimum PHP 5.5');
+  if (PHP_VERSION_ID < 70100) { // only checking for 7.1 here as a basic check. zc_install itself doesn't need higher than this at this time
+    die('Sorry, requires minimum PHP 7.3'); // the actual zc_install pages have a prettier and more informative explanation of requirements
   }
 
   define('IS_ADMIN_FLAG',false);

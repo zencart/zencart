@@ -2,12 +2,11 @@
 /**
  * ot_cod_fee order-total module
  *
- * @package orderTotal
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2002 Thomas Plänkers http://www.oscommerce.at
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:31:50 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: brittainmark 2022 Sep 07 Modified in v1.5.8 $
  */
 /**
  * COD-FEE Order Totals Module
@@ -15,7 +14,42 @@
  */
 
   class ot_cod_fee {
-    var $title, $output;
+      
+   /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" order module
+     * @var string
+     */
+    public $code;
+    /**
+     * $description is a soft name for this order total method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $enabled determines whether this module shows or not... during checkout.
+     * @var boolean
+     */
+    public $enabled;
+    /**
+     * $sort_order is the order priority of this order total module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $output is an array of the display elements used on checkout pages
+     * @var array
+     */
+    public $output = [];
 
     function __construct() {
       $this->code = 'ot_cod_fee';
@@ -37,7 +71,7 @@
 
         //check if payment method is cod. If yes, check if cod is possible.
 
-        if ($_SESSION['payment'] == 'cod') {
+        if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'cod') {
           //process installed shipping modules
           if (substr_count($_SESSION['shipping']['id'], 'flat') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FLAT));
           if (substr_count($_SESSION['shipping']['id'], 'free') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FREE));

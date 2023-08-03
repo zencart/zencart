@@ -20,7 +20,7 @@
 // $Id: jscript_main.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
 ?>
-<script type="text/javascript">
+<script>
 var form = "";
 var submitted = false;
 var error = false;
@@ -84,6 +84,6 @@ function checkForm(form_name) {
 }
 
 function popupWindow(url) {
-  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150,noreferrer')
+  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
 }
 </script>

@@ -2,11 +2,10 @@
 /**
  * Side Box Template
  *
- * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
   $content = "";
 
@@ -54,19 +53,19 @@
         }
       }
 
-      $content .= '<br />' . "\n";
+      $content .= '<br>' . "\n";
     }
   }
 
   if (SHOW_CATEGORIES_BOX_SPECIALS == 'true' or SHOW_CATEGORIES_BOX_PRODUCTS_NEW == 'true' or SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true' or SHOW_CATEGORIES_BOX_PRODUCTS_ALL == 'true') {
 // display a separator between categories and links
     if (SHOW_CATEGORIES_SEPARATOR_LINK == '1') {
-      $content .= '<hr id="catBoxDivider" />' . "\n";
+      $content .= '<hr id="catBoxDivider">' . "\n";
     }
     if (SHOW_CATEGORIES_BOX_SPECIALS == 'true') {
       $show_this = $db->Execute("select s.products_id from " . TABLE_SPECIALS . " s where s.status= 1 limit 1");
       if ($show_this->RecordCount() > 0) {
-        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_SPECIALS) . '">' . CATEGORIES_BOX_HEADING_SPECIALS . '</a>' . '<br />' . "\n";
+        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_SPECIALS) . '">' . CATEGORIES_BOX_HEADING_SPECIALS . '</a>' . '<br>' . "\n";
       }
     }
     if (SHOW_CATEGORIES_BOX_PRODUCTS_NEW == 'true') {
@@ -78,13 +77,13 @@
                                  from " . TABLE_PRODUCTS . " p
                                  where p.products_status = 1 " . $display_limit . " limit 1");
       if ($show_this->RecordCount() > 0) {
-        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a>' . '<br />' . "\n";
+        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a>' . '<br>' . "\n";
       }
     }
     if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
       $show_this = $db->Execute("select products_id from " . TABLE_FEATURED . " where status= 1 limit 1");
       if ($show_this->RecordCount() > 0) {
-        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a>' . '<br />' . "\n";
+        $content .= '<a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a>' . '<br>' . "\n";
       }
     }
     if (SHOW_CATEGORIES_BOX_PRODUCTS_ALL == 'true') {

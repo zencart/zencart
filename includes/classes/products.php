@@ -2,11 +2,10 @@
 /**
  * products class
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: brittainmark 2022 Sep 30 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,10 +14,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  * products class
  * Class used for managing various product information
  *
- * @package classes
  */
 class products extends base {
-  var $modules, $selected_module;
 
   // class constructor
   function __construct() {

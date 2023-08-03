@@ -1,0 +1,57 @@
+  /*hack to limit the width of the "Copy Linked Categories to Another Product" drop-down surrounding container, otherwise over-long option values push page layout to the right */
+select#target_product_id {
+
+  width: 600px;
+  text-overflow: ellipsis;
+}
+
+/*override bootstrap*/
+label, input[type="checkbox"] {
+  font-weight: normal;
+  padding: 0;
+  margin: 0;
+}
+
+/*highlight linked category checkboxes*/
+.TargetCategoryCheckbox:checked + span {
+  background: yellow;
+}
+
+.floatButton {
+  -webkit-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
+  bottom: 200px;
+}
+
+/*product name and model in Update Categories button*/
+.floatButton span {
+  font-style: italic;
+}
+
+#infoBox {
+  border: 1px solid darkgrey;
+}
+
+.dataTableHeadingRow {
+  padding: 0 0 5px 5px;
+  border: 1px black solid;
+  margin-bottom: 10px;
+}
+
+/*to get three boxes bottom-aligned*/
+.form-group-row div {
+  float: none;
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+/*to get three boxes bottom-aligned*/
+.form-group-row div label {
+  font-weight: bold;
+  text-align: left !important;
+}
+
+.form-control {
+  width: 100%;
+}

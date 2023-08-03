@@ -2,14 +2,13 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=account_notifications.<br />
+ * Loaded automatically by index.php?main_page=account_notifications.
  * Allows customer to manage product notifications
  *
- * @package templateSystem
- * @copyright Copyright 2003-2006 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_account_notifications_default.php 3206 2006-03-19 04:04:09Z birdbrain $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="accountNotifications">
@@ -24,7 +23,7 @@
 
 <?php echo zen_draw_checkbox_field('product_global', '1', (($global->fields['global_product_notifications'] == '1') ? true : false), 'id="globalnotify"'); ?>
 <label class="checkboxLabel" for="globalnotify"><?php echo GLOBAL_NOTIFICATIONS_DESCRIPTION; ?></label>
-<br class="clearBoth" />
+<br class="clearBoth">
 </fieldset>
 
 <?php
@@ -41,11 +40,11 @@
 /**
  * Used to loop thru and display product notifications
  */
-  foreach ($notificationsArray as $notifications) { 
+  foreach ($notificationsArray as $notifications) {
 ?>
 <?php echo zen_draw_checkbox_field('notify[]', $notifications['products_id'], true, 'id="notify-' . $notifications['counter'] . '"'); ?>
 <label class="checkboxLabel" for="<?php echo 'notify-' . $notifications['counter']; ?>"><?php echo $notifications['products_name']; ?></label>
-<br />
+<br>
 <?php
   }
 ?>
@@ -69,5 +68,5 @@
   }
 ?>
 
-</form>    
+</form>
 </div>

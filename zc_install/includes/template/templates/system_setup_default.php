@@ -1,14 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php');
 ?>
 <form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" data-abide="ajax">
   <input type="hidden" name="action" value="process">
-  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
   <input type="hidden" name="dir_ws_http_catalog" value="<?php echo $dir_ws_http_catalog; ?>">
   <input type="hidden" name="dir_ws_https_catalog" value="<?php echo $dir_ws_https_catalog; ?>">
   <input type="hidden" name="detected_detected_http_server_catalog" value="<?php echo $catalogHttpServer; ?>">
@@ -95,7 +95,7 @@ require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
       </div>
     </div>
   </fieldset>
-  <input type="submit" id="btnsubmit" class="radius button" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="9" >
+  <input type="submit" id="btnsubmit" class="radius button" name="btnsubmit" value="<?php echo TEXT_CONTINUE; ?>" tabindex="9">
 </form>
 
 <?php

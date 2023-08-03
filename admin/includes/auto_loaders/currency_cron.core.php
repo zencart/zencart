@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 May 14 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jul 06 Modified in v1.5.8-alpha $
  */
 if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
 /**
@@ -32,7 +32,7 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[70][] = array('autoType'=>'init_script',
                                 'loadFile'=> 'init_languages.php');
   $autoLoadConfig[90][] = array('autoType'=>'require',
-                                 'loadFile'=> DIR_WS_FUNCTIONS . 'localization.php');
+                                'loadFile'=> DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_exchange_rates.php');
   $autoLoadConfig[120][] = array('autoType'=>'init_script',
                                  'loadFile'=> 'init_special_funcs.php');
 //   $autoLoadConfig[140][] = array('autoType'=>'init_script',

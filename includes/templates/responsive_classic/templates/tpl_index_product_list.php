@@ -2,14 +2,13 @@
 /**
  * Page Template
  *
- * Loaded by main_page=index<br />
+ * Loaded by main_page=index
  * Displays product-listing when a particular category/subcategory is selected for browsing
  *
- * @package templateSystem
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 Apr 07 Modified in v1.5.6b $
+ * @version $Id: DrByte 2020 Dec 29 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="indexProductList">
@@ -38,7 +37,7 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
 <?php } // categories_description ?>
 </div>
 
-<?php if ($listing->RecordCount()) { ?>
+<?php if (!empty($listing)) { ?>
 <div id="filter-wrapper" class="group">
 <?php } ?>
 
@@ -97,7 +96,7 @@ require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA
 ?>
 
 <?php // end wrapper ?>
-<?php if ($listing->RecordCount()) { ?>
+<?php if (!empty($listing)) { ?>
 </div>
 <?php } ?>
 

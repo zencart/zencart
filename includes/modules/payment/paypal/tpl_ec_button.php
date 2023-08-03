@@ -2,9 +2,9 @@
 /**
  * paypal EC button display template
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Dec 16 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Feb 02 Modified in v1.5.8-alpha $
  */
 
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
@@ -57,7 +57,7 @@ if ($paypalec_enabled) {
     unset($_SESSION['paypal_ec_payer_info']);
     unset($_SESSION['paypal_ec_markflow']);
 
-    include zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/','paypalwpp.php', 'false');
+    zen_include_language_file('paypalwpp.php', '/modules/payment/', 'inline'); 
 ?>
 <div id="PPECbutton" class="buttonRow">
   <a href="<?php echo zen_href_link('ipn_main_handler.php', 'type=ec', 'SSL', true, true, true); ?>"><img src="<?php echo MODULE_PAYMENT_PAYPALWPP_EC_BUTTON_IMG ?>" alt="<?php echo MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT; ?>" id="ecButton"></a>

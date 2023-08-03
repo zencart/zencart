@@ -2,11 +2,11 @@
 /**
  * functions used by payment module class for Paypal IPN payment method
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
+ * @version $Id: lat9 2022 Jun 23 Modified in v1.5.8-alpha $
  */
 
 // Functions for paypal processing
@@ -179,7 +179,7 @@
 
   // determine acceptable currencies
   function select_pp_currency() {
-    if (MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
+    if (!defined('MODULE_PAYMENT_PAYPAL_CURRENCY') || MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
       $my_currency = $_SESSION['currency'];
     } else {
       $my_currency = substr(MODULE_PAYMENT_PAYPAL_CURRENCY, 5);
@@ -209,125 +209,153 @@
  *    (1) we find a matching record in the "paypal" table
  *    (2) we check for valid txn_types or payment_status such as Denied, Refunded, Partially-Refunded, Reversed, Voided, Expired
  */
-  function ipn_determine_txn_type($postArray, $txn_type = 'unknown') {
-    global $db, $parentLookup;
-    if (substr($txn_type,0,8) == 'cleared-') return $txn_type;
-    if ($postArray['txn_type'] == 'send_money') return $postArray['txn_type'];
-    if ($postArray['txn_type'] == 'express_checkout' || $postArray['txn_type'] == 'cart') $txn_type = $postArray['txn_type'];
-// if it's not unique or linked to a parent, then:
-// 1. could be an e-check denied / cleared
-// 2. could be an express-checkout "pending" transaction which has been Accepted in the merchant's PayPal console and needs activation in Zen Cart
-    if ($postArray['payment_status']=='Completed' && $txn_type=='express_checkout' && $postArray['payment_type']=='echeck') {
-      $txn_type = 'express-checkout-cleared';
-      return $txn_type;
+function ipn_determine_txn_type($postArray, $txn_type = 'unknown')
+{
+    global $parentLookup;
+
+    if (strpos($txn_type, 'cleared-') === 0) {
+        return $txn_type;
     }
-    if ($postArray['payment_status']=='Completed' && $postArray['payment_type']=='echeck') {
-      $txn_type = 'echeck-cleared';
-      return $txn_type;
+
+    if (isset($postArray['txn_type'])) {
+        if ($postArray['txn_type'] === 'send_money') {
+            return 'send_money';
+        } elseif ($postArray['txn_type'] === 'express_checkout' || $postArray['txn_type'] === 'cart') {
+            $txn_type = $postArray['txn_type'];
+        }
     }
-    if (($postArray['payment_status']=='Denied' || $postArray['payment_status']=='Failed') && $postArray['payment_type']=='echeck') {
-      $txn_type = 'echeck-denied';
-      return $txn_type;
-    }
-    if ($postArray['payment_status']=='Denied') {
-      $txn_type = 'denied';
-      return $txn_type;
-    }
-    if (($postArray['payment_status']=='Pending') && $postArray['pending_reason']=='echeck') {
-      $txn_type = 'pending-echeck';
-      return $txn_type;
-    }
-    if (($postArray['payment_status']=='Pending') && $postArray['pending_reason']=='address') {
-      $txn_type = 'pending-address';
-      return $txn_type;
-    }
-    if (($postArray['payment_status']=='Pending') && $postArray['pending_reason']=='intl') {
-      $txn_type = 'pending-intl';
-      return $txn_type;
-    }
-    if (($postArray['payment_status']=='Pending') && $postArray['pending_reason']=='multi_currency') {
-      $txn_type = 'pending-multicurrency';
-      return $txn_type;
-    }
-    if (($postArray['payment_status']=='Pending') && $postArray['pending_reason']=='paymentreview') {
-      $txn_type = 'pending-paymentreview';
-      return $txn_type;
-    }
-    if (($postArray['payment_status']=='Pending') && $postArray['pending_reason']=='verify') {
-      $txn_type = 'pending-verify';
-      return $txn_type;
-    }
-    if ($parentLookup == 'parent' && $postArray['payment_status']=='Completed' && $postArray['payment_type']=='instant') {
-      $txn_type = 'cleared-authorization';
-      return $txn_type;
-    }
-    if (($postArray['payment_status']=='Voided') && $postArray['payment_type']=='instant') {
-      $txn_type = 'voided';
-      return $txn_type;
+
+    // if it's not unique or linked to a parent, then:
+    // 1. could be an e-check denied / cleared
+    // 2. could be an express-checkout "pending" transaction which has been Accepted in the merchant's PayPal console and needs activation in Zen Cart
+    $payment_status = $postArray['payment_status'] ?? '';
+    $payment_type = $postArray['payment_type'] ?? '';
+    $pending_reason = $postArray['pending_reason'] ?? '';
+
+    switch (true) {
+        case ($payment_status === 'Completed' && $payment_type === 'echeck'):
+            $txn_type = ($txn_type === 'express-checkout') ? 'express-checkout-cleared' : 'echeck-cleared';
+            break;
+        case ($payment_status === 'Denied'):
+            $txn_type = ($payment_status === 'Failed' && $payment_type === 'echeck') ? 'echeck-denied' : 'denied';
+            break;
+        case ($payment_status === 'Pending' && $pending_reason === 'echeck'):
+            $txn_type = 'pending-echeck';
+            break;
+        case ($payment_status === 'Pending' && $pending_reason === 'address'):
+            $txn_type = 'pending-address';
+            break;
+        case ($payment_status === 'Pending' && $pending_reason === 'intl'):
+            $txn_type = 'pending-intl';
+            break;
+        case ($payment_status === 'Pending' && $pending_reason === 'multi_currency'):
+            $txn_type = 'pending-multicurrency';
+            break;
+        case ($payment_status === 'Pending' && $pending_reason === 'paymentreview'):
+            $txn_type = 'pending-paymentreview';
+            break;
+        case ($payment_status === 'Pending' && $pending_reason === 'verify'):
+            $txn_type = 'pending-verify';
+            break;
+        case ($parentLookup === 'parent' && $payment_status === 'Completed' && $payment_type === 'instant'):
+            $txn_type = 'cleared-authorization';
+            break;
+        case ($payment_status === 'Voided' && $payment_type === 'instant'):
+            $txn_type = 'voided';
+            break;
+        default:
+            break;
     }
     return $txn_type;
-  }
+}
+
 /**
  * Create order record from IPN data
  */
-  function ipn_create_order_array($new_order_id, $txn_type) {
-    $sql_data_array = array('order_id' => $new_order_id,
-                            'txn_type' => $txn_type,
-                            'module_name' => 'paypal (ipn-handler)',
-                            'module_mode' => 'IPN',
-                            'reason_code' => $_POST['reason_code'],
-                            'payment_type' => $_POST['payment_type'],
-                            'payment_status' => $_POST['payment_status'],
-                            'pending_reason' => $_POST['pending_reason'],
-                            'invoice' => $_POST['invoice'],
-                            'mc_currency' => $_POST['mc_currency'],
-                            'first_name' => $_POST['first_name'],
-                            'last_name' => $_POST['last_name'],
-                            'payer_business_name' => $_POST['payer_business_name'],
-                            'address_name' => $_POST['address_name'],
-                            'address_street' => $_POST['address_street'],
-                            'address_city' => $_POST['address_city'],
-                            'address_state' => $_POST['address_state'],
-                            'address_zip' => $_POST['address_zip'],
-                            'address_country' => $_POST['address_country'],
-                            'address_status' => $_POST['address_status'],
-                            'payer_email' => $_POST['payer_email'],
-                            'payer_id' => $_POST['payer_id'],
-                            'payer_status' => $_POST['payer_status'],
-                            'payment_date' => datetime_to_sql_format($_POST['payment_date']),
-                            'business' => $_POST['business'],
-                            'receiver_email' => $_POST['receiver_email'],
-                            'receiver_id' => $_POST['receiver_id'],
-                            'txn_id' => $_POST['txn_id'],
-                            'parent_txn_id' => $_POST['parent_txn_id'],
-                            'num_cart_items' => (int)$_POST['num_cart_items'],
-                            'mc_gross' => $_POST['mc_gross'],
-                            'mc_fee' => $_POST['mc_fee'],
-                            'settle_amount' => (isset($_POST['settle_amount']) && $_POST['settle_amount'] != '' ? $_POST['settle_amount'] : 0),
-                            'settle_currency' => $_POST['settle_currency'],
-                            'exchange_rate' => (isset($_POST['exchange_rate']) && $_POST['exchange_rate'] != '' ? $_POST['exchange_rate'] : 1),
-                            'notify_version' => $_POST['notify_version'],
-                            'verify_sign' => $_POST['verify_sign'],
-                            'date_added' => 'now()',
-                            'memo' => '{Record generated by IPN}'
-                             );
-    if (isset($_POST['protection_eligibility']) && $_POST['protection_eligibility'] != '') $sql_data_array['memo'] .= ' [ProtectionEligibility:' . $_POST['protection_eligibility'] .']';
-    if (isset($_POST['memo']) && $_POST['memo'] != '') $sql_data_array['memo'] .= ' [Customer Comments:' . $_POST['memo'] .']';
-     return $sql_data_array;
-  }
+function ipn_create_order_array($new_order_id, $txn_type)
+{
+    // -----
+    // First, set elements of the to-be-returned array that are *always* present.
+    //
+    $sql_data_array = [
+        'order_id' => $new_order_id,
+        'txn_type' => $txn_type,
+        'module_name' => 'paypal (ipn-handler)',
+        'module_mode' => 'IPN',
+        'payment_date' => datetime_to_sql_format($_POST['payment_date']),
+        'num_cart_items' => (int)$_POST['num_cart_items'],
+        'date_added' => 'now()',
+        'memo' => '{Record generated by IPN}',
+    ];
+
+    // -----
+    // Next, for each of the other posted values, let them go to the database default if they're
+    // not set, noting that *some* of the values have been preset by ipn_main_handler.php.
+    //
+    $post_varnames = [
+        'reason_code',
+        'payment_type',
+        'payment_status',
+        'pending_reason',
+        'invoice',
+        'mc_currency',
+        'first_name',
+        'last_name',
+        'payer_business_name',
+        'address_name',
+        'address_street',
+        'address_city',
+        'address_state',
+        'address_zip',
+        'address_country',
+        'address_status',
+        'payer_email',
+        'payer_id',
+        'payer_status',
+        'business',
+        'receiver_email',
+        'receiver_id',
+        'txn_id',
+        'parent_txn_id',
+        'mc_gross',
+        'mc_fee', 
+        'settle_amount',
+        'settle_currency',
+        'exchange_rate',
+        'notify_version',
+        'verify_sign',
+    ];
+    foreach ($post_varnames as $varname) {
+        if (isset($_POST[$varname])) {
+            $sql_data_array[$varname] = $_POST[$varname];
+        }
+    }
+
+    if (isset($_POST['protection_eligibility']) && $_POST['protection_eligibility'] !== '') {
+        $sql_data_array['memo'] .= ' [ProtectionEligibility:' . $_POST['protection_eligibility'] . ']';
+    }
+    if (isset($_POST['memo']) && $_POST['memo'] !== '') {
+        $sql_data_array['memo'] .= ' [Customer Comments:' . $_POST['memo'] .']';
+    }
+    return $sql_data_array;
+}
+
 /**
  * Create order-history record from IPN data
  */
-  function ipn_create_order_history_array($insert_id) {
-    $sql_data_array = array ('paypal_ipn_id' => (int)$insert_id,
-                             'txn_id' => $_POST['txn_id'],
-                             'parent_txn_id' => $_POST['parent_txn_id'],
-                             'payment_status' => $_POST['payment_status'],
-                             'pending_reason' => $_POST['pending_reason'],
-                             'date_added' => 'now()'
-                             );
+function ipn_create_order_history_array($insert_id)
+{
+    $sql_data_array = [
+        'paypal_ipn_id' => (int)$insert_id,
+        'txn_id' => $_POST['txn_id'],
+        'parent_txn_id' => $_POST['parent_txn_id'],
+        'payment_status' => $_POST['payment_status'],
+        'pending_reason' => $_POST['pending_reason'] ?? '',
+        'date_added' => 'now()',
+    ];
     return $sql_data_array;
-  }
+}
+
 /**
  * Create order-update from IPN data
  */
@@ -731,7 +759,7 @@
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
       $module = strpos($_SESSION['shipping']['id'], '_') > 0 ? substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_')) : $_SESSION['shipping']['id'];
-      if (isset($GLOBALS[$module]) && zen_not_null($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (isset($GLOBALS[$module]) && !empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
         if ($GLOBALS[$module]->tax_class > 0) {
           $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);

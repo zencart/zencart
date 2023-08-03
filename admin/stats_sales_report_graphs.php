@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @author inspired from sales_report_graphs.php,v 0.01 2002/11/27 19:02:22 cwi Exp  Released under the GNU General Public License $
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 14 Modified in v1.5.7a $
+ * @version $Id: brittainmark 2022 Sep 17 Modified in v1.5.8 $
  */
 require 'includes/application_top.php';
 
@@ -80,9 +80,7 @@ if (strlen($sales_report_filter) == 0) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <?php require 'includes/admin_html_head.php'; ?>
+      <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script title="build_graphs">
       // Load the Visualization API and the piechart package.
@@ -92,15 +90,19 @@ if (strlen($sales_report_filter) == 0) {
       google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
-
+<?php for ($j = 0; $j < 2; $j++) {  ?>
           // Create the data table.
           var data = new google.visualization.DataTable();
           data.addColumn('string', 'label');
-          data.addColumn('number', '<?php echo html_entity_decode(CHART_TOTAL_SALES); ?>');
-<?php if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) { ?>
-            data.addColumn('number', '<?php echo html_entity_decode(CHART_AVERAGE_SALE_AMOUNT); ?>');
+<?php if ($j == 0) { ?>
+          data.addColumn('number', '<?php echo CHART_TOTAL_SALES; ?>');
+<?php } else { ?>
+<?php    if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) { ?>
+            data.addColumn('number', '<?php echo CHART_AVERAGE_SALE_AMOUNT; ?>');
+<?php    } else { ?>
+   <?php    if ($j == 1) break; // don't show avg sale ?>
+<?php    } ?>
 <?php } ?>
-
           data.addRows([
 <?php
 for ($i = 0; $i < $report->size; $i++) {
@@ -124,15 +126,15 @@ for ($i = 0; $i < $report->size; $i++) {
 
   echo "', ";
 
+  if ($j == 0) {
   // first value
   echo round($report->info[$i]['sum'], 2);
-
-  // second value
-  if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
-    echo ',';
-    echo round($report->info[$i]['avg'], 2);
+  } else { 
+    // second value
+    if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
+      echo round($report->info[$i]['avg'], 2);
+    }
   }
-
   echo ']';
   if (($i + 1) < $report->size) {
     echo ',' . "\n";
@@ -144,16 +146,24 @@ for ($i = 0; $i < $report->size; $i++) {
 
           // Set chart options
           var options = {
-              'title': '<?php echo html_entity_decode($report_desc); ?>',
+              'title': '<?php echo $report_desc; ?>',
               'legend': 'bottom',
               'is3D': false,
               'width': 600,
-              'height': 450
+              'height': 450,
+              'colors': ['<?php if ($j == 0) echo "#0000FF"; else echo "#FF0000"; ?>'],
+              vAxis: {minValue: 0}
           };
 
           // Instantiate and draw our chart, passing in some options.
+<?php if ($j == 0) { ?>
           var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+<?php } else { ?>
+          var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+<?php } ?>
           chart.draw(data, options);
+<?php   } ?>
       }
     </script>
   </head>
@@ -175,6 +185,7 @@ for ($i = 0; $i < $report->size; $i++) {
 
       <div class="col-sm-12 col-md-6">
         <div id="chart_div"></div>
+        <div id="chart_div2"></div>
       </div>
       <div class="col-sm-12 col-md-6">
         <div class="table-responsive">
@@ -277,8 +288,8 @@ for ($i = 0; $i < $report->size; $i++) {
         </table>
         <table class="table table-condensed">
           <tr class="dataTableRow">
-            <td class="dataTableContent" width="80%" align="left"><?php echo FILTER_STATUS ?></td>
-            <td class="dataTableContent" align="right"><?php echo FILTER_VALUE ?></td>
+            <td class="dataTableContent text-left col-sm-10"><?php echo FILTER_STATUS ?></td>
+            <td class="dataTableContent text-right"><?php echo FILTER_VALUE ?></td>
           </tr>
           <?php
           if (($sales_report_filter) == 0) {
@@ -289,13 +300,13 @@ for ($i = 0; $i < $report->size; $i++) {
           for ($i = 0; $i < $report->status_available_size; $i++) {
             ?>
             <tr>
-              <td class="dataTableContent" align="left"><?php echo $report->status_available[$i]['value'] ?></a></td>
+              <td class="dataTableContent text-left"><?php echo $report->status_available[$i]['value'] ?></a></td>
               <?php
               if (substr($sales_report_filter, $i, 1) == "0") {
                 $tmp = substr($sales_report_filter, 0, $i) . "1" . substr($sales_report_filter, $i + 1, $report->status_available_size - ($i + 1));
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
-                <td class="dataTableContent" width="100%" align="right">
+                <td class="dataTableContent text-right col-sm-12">
                   <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?>&nbsp;
                   <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></a></td>
                 <?php
@@ -303,7 +314,7 @@ for ($i = 0; $i < $report->size; $i++) {
                 $tmp = substr($sales_report_filter, 0, $i) . "0" . substr($sales_report_filter, $i + 1);
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
-                <td class="dataTableContent" width="100%" align="right">
+                <td class="dataTableContent text-right col-sm-12">
                   <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?></a>
                   &nbsp;<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></td>
                 <?php

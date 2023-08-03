@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 Apr 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Aug 09 Modified in v1.5.8-alpha $
  */
 if (isset($_GET['action']) && $_GET['action'] == 'update') {
 
@@ -72,27 +72,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
   $store_address = STORE_NAME_ADDRESS;
 }
 
-$country_string = zen_draw_pull_down_menu('zone_country_id', zen_get_countries(), $store_country, 'id="zone_country_id" class="form-control" onchange="update_zone(this.form);"');
+$country_string = zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(), $store_country, 'id="zone_country_id" class="form-control" onchange="update_zone(this.form);"');
 $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_country), $store_zone, 'id="zone_id" class="form-control"');
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <meta name="robots" content="noindex, nofollow">
-    <script src="includes/menu.js"></script>
-    <link href="includes/stylesheet.css" rel="stylesheet">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <link rel="stylesheet" href="includes/css/admin_access.css">
     <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
       function update_zone(theForm) {
           // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates
           if (!theForm || !theForm.elements["zone_id"])

@@ -12,7 +12,7 @@ if (file_exists(basename($cmd . '.php'))) {
     exit();
 }
 
-$adminPage = FileSystem::getInstance()->findPluginAdminPage($installedPlugins, $cmd);
+$adminPage = (new FileSystem)->findPluginAdminPage($installedPlugins, $cmd);
 
 if (!isset($adminPage)) {
     require 'includes/application_top.php';

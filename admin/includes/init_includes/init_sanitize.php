@@ -2,10 +2,12 @@
 /**
  * init_sanitize
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Sep 30 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Sep 25 Modified in v1.5.8 $
  */
+
+use Zencart\Request\Request;
 
 if (!defined('DO_STRICT_SANITIZATION')) {
     DEFINE('DO_STRICT_SANITIZATION', true);
@@ -210,7 +212,7 @@ $group = array(
     'group_name', 'geo_zone_name', 'geo_zone_description',
     'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
     'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name',
+    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'zone_page',
 );
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 
@@ -264,7 +266,11 @@ if (!empty($_GET['cID'])) {
         'PRODUCT_LIST_SORT_ORDER_ASCENDING',
         'PRODUCT_LIST_SORT_ORDER_DESCENDING',
     );
-
+    $extra_configs_with_special_characters = false; 
+    $zco_notifier->notify('NOTIFY_ADMIN_CONFIGURATION_SPECIAL_CHARACTERS', [], $extra_configs_with_special_characters);
+    if (is_array($extra_configs_with_special_characters)) {
+       $configs_with_special_characters = $configs_with_special_characters + $extra_configs_with_special_characters; 
+    }
     $checks = $db->Execute("SELECT configuration_key, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . (int)$cID);
     if (!$checks->EOF) {
         if (!empty($checks->fields['val_function'])) {
@@ -298,3 +304,5 @@ $group = array(
 $sanitizer->addComplexSanitization($group);
 
 $sanitizer->runSanitizers();
+
+$sanitizedRequest = Request::capture();

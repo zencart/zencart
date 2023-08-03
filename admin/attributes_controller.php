@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021 Jan 11 Modified in v1.5.7c $
+ * @version $Id: lat9 2022 Apr 23 Modified in v1.5.8-alpha $
  */
 require('includes/application_top.php');
 
@@ -82,43 +82,28 @@ if (isset($_POST['categories_update_id'])) {
 }
 
 if ($action == 'new_cat') {
-  $sql = "SELECT products_id
-          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-          WHERE categories_id = " . (int)$current_category_id . "
-          ORDER BY products_id";
-  $new_product_query = $db->Execute($sql);
-  $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
+  $products_filter = zen_get_linked_products_for_category($current_category_id, true);
   zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
 }
 
 // set categories and products if not set
-if ($products_filter == '' && !empty($current_category_id)) {
-  $sql = "SELECT *
-          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-          WHERE categories_id = " . (int)$current_category_id . "
-          ORDER BY products_id";
-  $new_product_query = $db->Execute($sql);
-  $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
-  if ($products_filter != '') {
+if ($products_filter === 0 && !empty($current_category_id)) {
+  $products_filter = zen_get_linked_products_for_category($current_category_id, true);
+  if ($products_filter !== 0) {
     zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
   }
 } else {
-  if ($products_filter == '' && empty($current_category_id)) {
+  if ($products_filter === 0 && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', '0', '', '', true);
     $current_category_id = $reset_categories_id[0]['id'];
-    $sql = "SELECT *
-            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-            WHERE categories_id = " . (int)$current_category_id . "
-            ORDER BY products_id";
-    $new_product_query = $db->Execute($sql);
-    $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';
+    $products_filter = zen_get_linked_products_for_category($current_category_id, true);
     $_GET['products_filter'] = $products_filter;
   }
 }
 
 require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
 /////////////////////////////////////////
 //// BOF OF FLAGS
@@ -197,7 +182,7 @@ if (zen_not_null($action)) {
 // update by product
     case 'update_attribute_sort':
       if (isset($_POST['confirm']) && $_POST['confirm'] == 'y') {
-        if (!zen_has_product_attributes($products_filter, 'false')) {
+        if (!zen_has_product_attributes($products_filter, false)) {
           $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT_NONE . $products_filter . ' ' . zen_get_products_name($products_filter, $_SESSION['languages_id']), 'error');
         } else {
           zen_update_attributes_products_option_values_sort_order($products_filter);
@@ -209,15 +194,17 @@ if (zen_not_null($action)) {
       break;
     case 'add_product_attributes':
       $current_image_name = '';
+      if (!isset($_POST['options_id'], $_POST['products_id']) || empty($_POST['values_id'])) {
+           break;
+      }
+
+      $options_id = (int)$_POST['options_id'];
+      $products_id = (int)$_POST['products_id'];
       for ($i = 0; $i < count($_POST['values_id']); $i++) {
         if (isset($_POST['values_id'][$i])) {
           $value_id = (int)$_POST['values_id'][$i];
-        }
-        if (isset($_POST['options_id'])) {
-          $options_id = (int)$_POST['options_id'];
-        }
-        if (isset($_POST['products_id'])) {
-          $products_id = (int)$_POST['products_id'];
+        } else {
+           continue;
         }
 // check for duplicate and block them
         $check_duplicate = $db->Execute("SELECT products_id, options_id, options_values_id
@@ -280,7 +267,7 @@ if (zen_not_null($action)) {
 // when set to none remove from database
 // only processes image once for multiple selection of options_values_id
           if ($i == 0) {
-            if (isset($_POST['attributes_image']) && zen_not_null($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
+            if (!empty($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
               $attributes_image = zen_db_prepare_input($_POST['attributes_image']);
             } else {
               $attributes_image = '';
@@ -420,7 +407,7 @@ if (zen_not_null($action)) {
 // edit
 // attributes images
 // when set to none remove from database
-          if (isset($_POST['attributes_image']) && zen_not_null($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
+          if (!empty($_POST['attributes_image']) && ($_POST['attributes_image'] != 'none')) {
             $attributes_image = zen_db_prepare_input($_POST['attributes_image']);
             $attributes_image_none = false;
           } else {
@@ -482,7 +469,7 @@ if (zen_not_null($action)) {
             $products_attributes_maxdays = (int)$_POST['products_attributes_maxdays'];
             $products_attributes_maxcount = (int)$_POST['products_attributes_maxcount'];
 
-            if (zen_not_null($products_attributes_filename)) {
+            if (!empty($products_attributes_filename)) {
               $db->Execute("REPLACE INTO " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                             SET products_attributes_id = " . $attribute_id . ",
                                 products_attributes_filename = '" . zen_db_input($products_attributes_filename) . "',
@@ -580,11 +567,9 @@ if (zen_not_null($action)) {
       if ($_POST['categories_update_id'] == '') {
         $messageStack->add_session(WARNING_PRODUCT_COPY_TO_CATEGORY_NONE . ' ID#' . $_POST['products_filter'], 'warning');
       } else {
-        $copy_to_category = $db->Execute("SELECT products_id
-                                          FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                          WHERE categories_id = " . (int)$_POST['categories_update_id']);
+        $copy_to_category = zen_get_linked_products_for_category((int)$_POST['categories_update_id']);
         foreach ($copy_to_category as $item) {
-          zen_copy_products_attributes($_POST['products_filter'], $item['products_id']);
+          zen_copy_products_attributes($_POST['products_filter'], $item);
         }
       }
       $_GET['action'] = '';
@@ -601,21 +586,6 @@ $products_options_type_array = $db->Execute("SELECT products_options_types_id, p
                                              ORDER BY products_options_types_id");
 foreach ($products_options_type_array as $products_options_type) {
   $products_options_types_list[$products_options_type['products_options_types_id']] = $products_options_type['products_options_types_name'];
-}
-
-//CLR 030312 add function to draw pulldown list of option types
-// Draw a pulldown for Option Types
-//iii 031103 modified to use results of database option type query from above
-function draw_optiontype_pulldown($name, $default = '')
-{
-  global $products_options_types_list;
-  $values = [];
-  foreach ($products_options_types_list as $id => $text) {
-    $values[] = [
-      'id' => $id,
-      'text' => $text];
-  }
-  return zen_draw_pull_down_menu($name, $values, $default);
 }
 
 //CLR 030312 add function to translate type_id to name
@@ -681,48 +651,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <style>
-      .menuItemButton {
-        background: none;
-        color: #333;
-        border: none;
-        padding: 3px 20px;
-        font: inherit;
-        display: block;
-        font-weight: 400;
-        line-height: 1.42857143;
-        white-space: nowrap;
-        font-size: 11px;
-      }
-      .menuItemButton:hover {
-        color: #262626;
-        text-decoration: none;
-        background-color: #f5f5f5;
-      }
-      .read-only-attr {background-color: #ff0;}
-      .is-free-attr {background-color: #2c54f5;}
-      .default-attr {background-color: #ffa346;}
-      .is-discounted-attr {background-color: #f0f;}
-      .base-included-attr {background-color: #d200f0;}
-      .required-attr {background-color: #ff0606;}
-      .read-only-attr-txt {color: #ff0;}
-      .is-free-attr-txt {color: #2c54f5;}
-      .default-attr-txt {color: #ffa346;}
-      .is-discounted-attr-txt {color: #f0f;}
-      .base-included-attr-txt {color: #d200f0;}
-      .required-attr-txt {color: #ff0606;}
-      .opacity-25 {opacity: 0.25;}
-      .red-txt {color: #f00;}
-      .black-txt {color: #000;}
-    </style>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <script>
       function popupWindow(url) {
-        window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150,noreferrer')
+        window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=600,height=460,screenX=150,screenY=150,top=150,left=150')
       }
     </script>
   </head>
@@ -749,7 +681,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <?php
               $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id);
               ?>
-              <?php if ($products_filter != '' && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
+              <?php if ($products_filter !== 0 && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
                 <?php
@@ -759,7 +691,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo IMAGE_PRODUCTS_PRICE_MANAGER; ?></a></li>
                 <?php } ?>
                 <?php
-                if (zen_has_product_attributes($products_filter, 'false')) {
+                if (zen_has_product_attributes($products_filter, false)) {
                   ?>
                   <li role="presentation">
                     <?php echo zen_draw_form('update_sort', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute_sort' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>
@@ -781,7 +713,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           echo zen_draw_form('searchForm', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get');
           echo zen_draw_hidden_field('cmd', FILENAME_CATEGORY_PRODUCT_LISTING);
           if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-            echo '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING) . '">' . zen_image_button('button_reset.gif', IMAGE_RESET) . '</a>&nbsp;&nbsp;';
+            echo '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING) . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>&nbsp;&nbsp;';
           }
           echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search') . ' ' . zen_draw_input_field('search', '', 'id="search"') . zen_hide_session_id();
           if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
@@ -800,7 +732,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_form('delete_all', FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_all_attributes'); ?>
           <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
           <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
-          <div class="col-xs-6 col-sm-4 text-danger"><strong><?php echo TEXT_DELETE_ALL_ATTRIBUTES . $products_filter . '<br />' . zen_get_products_name($products_filter); ?></strong></div>
+          <div class="col-xs-6 col-sm-4 text-danger"><strong><?php echo TEXT_DELETE_ALL_ATTRIBUTES . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></strong></div>
           <div class="col-xs-6 col-sm-8">
             <button type="submit" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
             <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
@@ -821,7 +753,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_hidden_field('products_options_id_all', $_GET['products_options_id_all']); ?>
           <div class="row alert text-danger"><strong><?php echo TEXT_DELETE_ATTRIBUTES_OPTION_NAME_VALUES; ?></strong></div>
           <div class="row">
-            <div class="col-sm-4"><?php echo TEXT_INFO_PRODUCT_NAME . zen_get_products_name($products_filter) . '<br />' . TEXT_INFO_PRODUCTS_OPTION_ID . $_GET['products_options_id_all'] . '&nbsp;' . TEXT_INFO_PRODUCTS_OPTION_NAME . '&nbsp;' . zen_options_name($_GET['products_options_id_all']); ?></div>
+            <div class="col-sm-4"><?php echo TEXT_INFO_PRODUCT_NAME . zen_get_products_name($products_filter) . '<br>' . TEXT_INFO_PRODUCTS_OPTION_ID . $_GET['products_options_id_all'] . '&nbsp;' . TEXT_INFO_PRODUCTS_OPTION_NAME . '&nbsp;' . zen_options_name($_GET['products_options_id_all']); ?></div>
             <div class="col-sm-8">
               <button type="submit" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
@@ -847,7 +779,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
           <?php echo zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes']); ?>
           <div class="form-group">
-            <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT . $products_filter . '<br />' . zen_get_products_name($products_filter); ?></div>
+            <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></div>
             <div class="col-sm-6">
               <?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS; ?>
               <div class="radio">
@@ -863,8 +795,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
           </div>
           <div class="form-group">
             <div class="col-sm-6 text-center">
-              <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO; ?></strong></span><br />
-              <?php echo zen_draw_products_pull_down('products_update_id', 'size="15" class="form-control"', $products_exclude_array, true, '', true); ?></div>
+              <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_COPY_TO; ?></strong></span><br>
+              <?php echo zen_draw_pulldown_products('products_update_id', 'size="15" class="form-control"', $products_exclude_array, true, '', true); ?></div>
             <div class="col-sm-6 text-center">
               <button type="submit" class="btn btn-primary"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
@@ -881,9 +813,9 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes']); ?>
           <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
           <div class="form-group">
-            <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_CATEGORY . $products_filter . '<br />' . zen_get_products_name($products_filter); ?></div>
+            <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_CATEGORY . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></div>
             <div class="col-sm-6">
-              <?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS; ?><br />
+              <?php echo TEXT_COPY_ATTRIBUTES_CONDITIONS; ?><br>
               <div class="radio">
                 <label><?php echo zen_draw_radio_field('copy_attributes', 'copy_attributes_delete', true) . TEXT_COPY_ATTRIBUTES_DELETE; ?></label>
               </div>
@@ -897,8 +829,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
           </div>
           <div class="form-group">
             <div class="col-sm-6 text-center">
-              <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO; ?></strong></span><br />
-              <?php echo zen_draw_products_pull_down_categories('categories_update_id', 'size="5" class="form-control"', '', true, true); ?></div>
+              <span class="text-danger"><strong><?php echo TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO; ?></strong></span><br>
+              <?php echo zen_draw_pulldown_categories_having_products('categories_update_id', 'size="5" class="form-control"', '', true, true); ?></div>
             <div class="col-sm-6 text-center">
               <button type="submit" class="btn btn-primary"><i class="fa fa-copy" aria-hidden="true"></i> <?php echo IMAGE_COPY; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
@@ -921,7 +853,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
             <?php echo zen_draw_hidden_field('products_filter', $products_filter); ?>
             <?php echo zen_draw_hidden_field('current_category_id', $current_category_id); ?>
             <?php
-            if ($_GET['products_filter'] != '') {
+            if ($_GET['products_filter'] !== 0) {
               ?>
               <div class="form-group">
                 <div class="col-xs-offset-2 col-offset-sm-1 col-xs-7 col-sm-7"><?php echo TEXT_PRODUCT_TO_VIEW; ?></div>
@@ -930,12 +862,12 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 text-center">
                   <?php
                   $display_priced_by_attributes = zen_get_products_price_is_priced_by_attributes($_GET['products_filter']);
-                  echo ($display_priced_by_attributes ? '<span class="text-warning"><strong>' . TEXT_PRICED_BY_ATTRIBUTES . '</strong></span>' . '<br />' : '');
-                  echo zen_get_products_display_price($_GET['products_filter']) . '<br /><br />';
+                  echo ($display_priced_by_attributes ? '<span class="text-warning"><strong>' . TEXT_PRICED_BY_ATTRIBUTES . '</strong></span>' . '<br>' : '');
+                  echo zen_get_products_display_price($_GET['products_filter']) . '<br><br>';
                   echo zen_get_products_quantity_min_units_display($_GET['products_filter'], $include_break = true);
                   ?>
                 </div>
-                <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 text-center"><?php echo zen_draw_products_pull_down('products_filter', 'class="form-control"', '', true, $_GET['products_filter'], true, true); ?></div>
+                <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 text-center"><?php echo zen_draw_pulldown_products('products_filter', 'class="form-control"', '', true, $_GET['products_filter'], true, true); ?></div>
                 <div class="col-xs-2 col-sm-3 col-md-5 col-lg-7">
                   <button type="submit" class="btn btn-primary"><?php echo IMAGE_DISPLAY; ?></button>
                 </div>
@@ -947,7 +879,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
       <?php } // $action == '' ?>
       <?php
 // start of attributes display
-      if ($_GET['products_filter'] == '') {
+      if ($_GET['products_filter'] === 0) {
         ?>
         <div class="row">
           <h2 class="text-center"><?php echo HEADING_TITLE_ATRIB_SELECT; ?></h2>
@@ -1046,17 +978,17 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #fc0;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
                   <td class="text-center">
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #5ce400;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                     <span class="fa-stack">
-                      <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #f00;"></i>
+                      <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
                       <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                     </span>
                   </td>
@@ -1089,11 +1021,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ID; ?></td>
                 <td class="dataTableHeadingContent">&nbsp;</td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_NAME; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPT_VALUE; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_WEIGHT_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPT_WEIGHT; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPT_SORT_ORDER; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_PRICE; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_WEIGHT_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_WEIGHT; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo LEGEND_BOX; ?></td>
                 <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRICE_TOTAL; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ACTION; ?></td>
@@ -1107,7 +1039,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 ?>
                 <tr>
                   <td colspan="10" class="pageHeading text-center">
-                    <?php echo ($products_filter == '' ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
+                    <?php echo ($products_filter === 0 ? TEXT_NO_PRODUCTS_SELECTED : TEXT_NO_ATTRIBUTES_DEFINED . $products_filter . ' ' . zen_get_products_model($products_filter) . ' - ' . zen_get_products_name($products_filter)); ?>
                   </td>
                 </tr>
 
@@ -1182,7 +1114,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <div class="col-xs-5 col-sm-2">
                           <strong><?php echo zen_get_option_name_language($attributes_value['options_id'], $_SESSION['languages_id']); ?>:</strong>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5"><?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'values_id', 'class="control-label"'); ?>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5"><?php echo zen_draw_label(TABLE_HEADING_OPTION_VALUE, 'values_id', 'class="control-label"'); ?>
                           <?php
 // FIX HERE 2 - editing
                           $values_values = $db->Execute("SELECT pov.products_options_values_id, pov.products_options_values_name
@@ -1205,7 +1137,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                             ];
                           }
                           ?>
-                          <?php echo zen_draw_pull_down_menu('values_id', $optionValuesArray, $attributes_value['options_values_id'], 'class="form-control"'); ?>
+                          <?php echo zen_draw_pull_down_menu('values_id', $optionValuesArray, $attributes_value['options_values_id'], 'class="form-control" id="values_id"'); ?>
                         </div>
                       </div>
                       <hr style="border: inherit; margin: 10px 0;">
@@ -1241,23 +1173,23 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         $products_attributes_weight_prefix = ($attributes_value['products_attributes_weight_prefix'] == '+' ? 1 : ($attributes_value['price_prefix'] == '-' ? 2 : 0));
                         ?>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                           <div class="input-group">
-                            <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $attributes_value_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_PRICE_PREFIX . '"'); ?>
+                            <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $attributes_value_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
                             <span class="input-group-btn" style="width:0px;"></span>
-                            <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'class="form-control"'); ?>
+                            <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'class="form-control" id="value_price"'); ?>
                           </div>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                           <div class="input-group">
-                            <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_WEIGHT_PREFIX . '"'); ?>
+                            <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
                             <span class="input-group-btn" style="width:0px;"></span>
                             <?php echo zen_draw_input_field('products_attributes_weight', $attributes_value['products_attributes_weight'], 'class="form-control" id="products_attributes_weight"'); ?>
                           </div>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                          <?php echo zen_draw_label(TABLE_HEADING_OPT_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
+                          <?php echo zen_draw_label(TABLE_HEADING_OPTION_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
                           <?php echo zen_draw_input_field('products_options_sort_order', $attributes_value['products_options_sort_order'], 'size="4" class="form-control" id="products_options_sort_order"'); ?>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -1431,8 +1363,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         </div>
                         <div class="row">
                           <div class="form-group">
-                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_ATTRIBUTES_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'); ?></div>
-                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_OVERWRITE, 'overwrite'); ?>
+                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_ATTRIBUTES_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?></div>
+                            <div class="col-sm-4"><?php echo TEXT_IMAGES_OVERWRITE; ?>
                               <div class="radio">
                                 <label><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
                               </div>
@@ -1440,7 +1372,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                                 <label><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
                               </div>
                             </div>
-                            <div class="col-sm-4"><?php echo zen_draw_label(TEXT_IMAGES_DELETE, 'image_delete'); ?>
+                            <div class="col-sm-4"><?php echo TEXT_IMAGES_DELETE; ?>
                               <div class="radio">
                                 <label><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
                               </div>
@@ -1476,15 +1408,15 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         <div class="row">
                           <div class="col-sm-4 col-lg-2">
                             <?php echo zen_draw_label(TABLE_TEXT_FILENAME, 'products_attributes_filename', 'class="control-label"'); ?>
-                            <?php echo zen_draw_input_field('products_attributes_filename', $products_attributes_filename, zen_set_field_length(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename', 35) . 'class="form-control"'); ?>
+                            <?php echo zen_draw_input_field('products_attributes_filename', $products_attributes_filename, zen_set_field_length(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename', 35) . ' class="form-control" id="products_attributes_filename"'); ?>
                           </div>
                           <div class="col-sm-4 col-lg-2">
                             <?php echo zen_draw_label(TABLE_TEXT_MAX_DAYS, 'products_attributes_maxdays', 'class="control-label"'); ?>
-                            <?php echo zen_draw_input_field('products_attributes_maxdays', $products_attributes_maxdays, 'size="5" class="form-control"'); ?>
+                            <?php echo zen_draw_input_field('products_attributes_maxdays', $products_attributes_maxdays, 'size="5" class="form-control" id="products_attributes_maxdays"'); ?>
                           </div>
                           <div class="col-sm-4 col-lg-2">
                             <?php echo zen_draw_label(TABLE_TEXT_MAX_COUNT, 'products_attributes_maxcount', 'class="control-label"'); ?>
-                            <?php echo zen_draw_input_field('products_attributes_maxcount', $products_attributes_maxcount, 'size="5" class="form-control"'); ?>
+                            <?php echo zen_draw_input_field('products_attributes_maxcount', $products_attributes_maxcount, 'size="5" class="form-control" id="products_attributes_maxcount"'); ?>
                           </div>
                         </div>
                         <?php
@@ -1536,7 +1468,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
 // calculate current total attribute price
 // $attributes_values
 
-                  $attributes_price_final = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, $attributes_values, 'false');
+                  $attributes_price_final = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, $attributes_values, false);
                   $attributes_price_final_value = $attributes_price_final;
                   $attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
                   $attributes_price_final_onetime = zen_get_attributes_price_final_onetime($attributes_value['products_attributes_id'], 1, $attributes_values);
@@ -1550,7 +1482,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     <td>
                       <?php if ($attributes_value['attributes_image'] != '') { ?>
                         <span class="fa-stack">
-                          <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #fc0;"></i>
+                          <i class="fa fa-circle fa-stack-1x txt-orange" aria-hidden="true"></i>
                           <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                         </span>
                       <?php } ?>
@@ -1634,7 +1566,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     <?php
                     $new_attributes_price = '';
                     if ($attributes_value['attributes_discounted']) {
-                      $new_attributes_price = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, '', 'false');
+                      $new_attributes_price = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, '', false);
                       $new_attributes_price2 = zen_get_discount_calc($products_filter, true, $new_attributes_price);
                       if ($new_attributes_price != $attributes_price_final_value) {
                         $new_attributes_price = '|' . $currencies->display_price($new_attributes_price2, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
@@ -1645,7 +1577,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     ?>
                     <td class="text-right"><?php echo $attributes_price_final . $new_attributes_price . ' ' . $attributes_price_final_onetime; ?></td>
                     <?php if ($action != '') { ?>
-                      <td width="120">&nbsp;</td>
+                      <td>&nbsp;</td>
                     <?php } else { ?>
                       <td class="text-right">
                         <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute&attribute_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_EDIT_OPTION_VALUE; ?>"><?php echo IMAGE_EDIT; ?></a>
@@ -1668,10 +1600,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           <span class="smallText">
                             <span class="fa-stack">
                               <?php if (zen_orders_products_downloads($download_display->fields['products_attributes_filename'])) { ?>
-                                <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #5ce400;"></i>
+                                <i class="fa fa-circle fa-stack-1x txt-lime" aria-hidden="true"></i>
                                 <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                               <?php } else { ?>
-                                <i class="fa fa-circle fa-stack-1x" aria-hidden="true" style="color: #f00;"></i>
+                                <i class="fa fa-circle fa-stack-1x txt-red" aria-hidden="true"></i>
                                 <i class="fa fa-circle-o fa-stack-1x" aria-hidden="true"></i>
                               <?php } ?>
                             </span>
@@ -1751,11 +1683,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       }
                       ?>
                       <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_NAME, 'OptionName') . "\n"; ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_NAME, 'OptionName') . "\n"; ?>
                         <?php echo zen_draw_pull_down_menu('options_id', $optionsDropDownArray, '', 'id="OptionName" size="' . ($action != 'delete_attribute' ? "15" : "1") . '" onchange="update_option(this.form)" class="form-control"'); ?>
                       </div>
                       <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_VALUE, 'OptionValue', 'class="control-label"') . "\n"; ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_VALUE, 'OptionValue', 'class="control-label"') . "\n"; ?>
                         <select name="values_id[]" id="OptionValue" class="form-control" multiple="multiple" <?php echo 'size="' . ($action != 'delete_attribute' ? "15" : "1") . '"'; ?>>
                           <option selected>&lt;-- <?php echo PLEASE_SELECT; ?></option>
                         </select>
@@ -1806,23 +1738,23 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       ];
                       ?>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_PRICE, 'value_price', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE, 'value_price', 'class="control-label"'); ?>
                         <div class="input-group">
-                          <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $default_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_PRICE_PREFIX . '"'); ?>
+                          <?php echo zen_draw_pull_down_menu('price_prefix', $price_prefix_array, $default_price_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_PRICE_PREFIX . '"'); ?>
                           <span class="input-group-btn" style="width:0px;"></span>
                           <?php echo zen_draw_input_field('value_price', '', 'class="form-control" id="value_price"'); ?>
                         </div>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                         <div class="input-group">
-                          <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $default_products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPT_WEIGHT_PREFIX . '"'); ?>
+                          <?php echo zen_draw_pull_down_menu('products_attributes_weight_prefix', $weight_prefix_array, $default_products_attributes_weight_prefix, 'class="form-control" title="' . TABLE_HEADING_OPTION_WEIGHT_PREFIX . '"'); ?>
                           <span class="input-group-btn" style="width:0px;"></span>
                           <?php echo zen_draw_input_field('products_attributes_weight', '', 'class="form-control" id="products_attributes_weight"'); ?>
                         </div>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <?php echo zen_draw_label(TABLE_HEADING_OPT_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_SORT_ORDER, 'products_options_sort_order', 'class="control-label"'); ?>
                         <?php echo zen_draw_input_field('products_options_sort_order', '', 'size="4" class="form-control" id="products_options_sort_order"'); ?>
                       </div>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -1849,6 +1781,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                         </div>
 
                         <?php
+                      } else {
+                        echo zen_draw_hidden_field('attributes_price_factor', '0.0');
+                        echo zen_draw_hidden_field('attributes_price_factor_offset', '0');
+                        echo zen_draw_hidden_field('attributes_price_factor_onetime', '0.0');
+                        echo zen_draw_hidden_field('attributes_price_factor_onetime_offset', '0');
                       } // ATTRIBUTES_ENABLED_PRICE_FACTOR
                       ?>
                     </div>
@@ -1866,6 +1803,9 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       </div>
                       <hr style="border: inherit; margin: 10px 0;">
                       <?php
+                    } else {
+                      echo zen_draw_hidden_field('attributes_qty_prices', '');
+                      echo zen_draw_hidden_field('attributes_qty_prices_onetime', '');
                     } // ATTRIBUTES_ENABLED_QTY_PRICES
                     ?>
                     <?php if (ATTRIBUTES_ENABLED_TEXT_PRICES == 'true') { ?>
@@ -1889,6 +1829,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       </div>
                       <hr style="border: inherit; margin: 10px 0;">
                       <?php
+                    } else {
+                      echo zen_draw_hidden_field('attributes_price_words', '0.0');
+                      echo zen_draw_hidden_field('attributes_price_words_free', '0');
+                      echo zen_draw_hidden_field('attributes_price_letters', '0.0');
+                      echo zen_draw_hidden_field('attributes_price_letters_free', '0');
                     } // ATTRIBUTES_ENABLED_TEXT_PRICES
                     ?>
                     <!-- eof: Edit Prices -->
@@ -1989,6 +1934,10 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       </div>
                       <hr style="border: inherit; margin: 10px 0;">
                       <?php
+                    } else {
+                        echo zen_draw_hidden_field('attributes_image', '');
+                        echo zen_draw_hidden_field('img_dir', '');
+                        echo zen_draw_hidden_field('overwrite', '0');
                     } // ATTRIBUTES_ENABLED_IMAGES
                     ?>
                     <?php

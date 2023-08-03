@@ -2,12 +2,12 @@
 /**
  * Common Template
  *
- * outputs the html header. i,e, everything that comes before the \</head\> tag <br />
+ * outputs the html header. i,e, everything that comes before the \</head\> tag
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2020 May 12 Modified in v1.5.7 $
+ * @version $Id: DrByte 2022 Oct 05 Modified in v1.5.8 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -30,13 +30,15 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
 <head>
+<meta charset="<?php echo CHARSET; ?>" />
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://code.jquery.com">
 <title><?php echo META_TAG_TITLE; ?></title>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
 <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>" />
 <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>" />
 <meta http-equiv="imagetoolbar" content="no" />
 <meta name="author" content="<?php echo STORE_NAME ?>" />
-<meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com eCommerce" />
+<meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce" />
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
 <meta name="robots" content="noindex, nofollow" />
 <?php } ?>
@@ -71,7 +73,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^style/', '.css');
   foreach($directory_array as $key => $value) {
-    echo '<link rel="stylesheet" type="text/css" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
+    echo '<link rel="stylesheet" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
   }
 /**
  * load stylesheets on a per-page/per-language/per-product/per-manufacturer/per-category basis. Concept by Juxi Zoza.
@@ -93,7 +95,7 @@ if (count($lng->catalog_languages) > 1) {
   foreach($sheets_array as $key => $value) {
     //echo "<!--looking for: $value-->\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'" />'."\n";
   }
 
 /**
@@ -104,9 +106,9 @@ if (count($lng->catalog_languages) > 1) {
   foreach($tmp_cats as $val) {
     $value .= $val;
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/c_' . $value . '_children.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'" />'."\n";
     $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $_SESSION['language'] . '_c_' . $value . '_children.css';
-    if (file_exists($perpagefile)) echo '<link rel="stylesheet" type="text/css" href="' . $perpagefile .'" />'."\n";
+    if (file_exists($perpagefile)) echo '<link rel="stylesheet" href="' . $perpagefile .'" />'."\n";
     $value .= '_';
   }
 
@@ -116,13 +118,13 @@ if (count($lng->catalog_languages) > 1) {
   $directory_array = $template->get_template_part($template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^print/', '.css');
   sort($directory_array);
   foreach($directory_array as $key => $value) {
-    echo '<link rel="stylesheet" type="text/css" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
+    echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '" />'."\n";
   }
 
 /** CDN for jQuery core **/
 ?>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-<script type="text/javascript">window.jQuery || document.write(unescape('%3Cscript type="text/javascript" src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
 /**
@@ -130,7 +132,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'), '/^jscript_/', '.js');
   foreach($directory_array as $key => $value) {
-    echo '<script type="text/javascript" src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
+    echo '<script src="' .  $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/' . $value . '"></script>'."\n";
   }
 
 /**
@@ -138,7 +140,7 @@ if (count($lng->catalog_languages) > 1) {
  */
   $directory_array = $template->get_template_part($page_directory, '/^jscript_/', '.js');
   foreach($directory_array as $key => $value) {
-    echo '<script type="text/javascript" src="' . $page_directory . '/' . $value . '"></script>' . "\n";
+    echo '<script src="' . $page_directory . '/' . $value . '"></script>' . "\n";
   }
 
 /**

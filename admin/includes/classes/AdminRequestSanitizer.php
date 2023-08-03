@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jun 04 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 24 Modified in v1.5.8-alpha2 $
  */
 
 /**
@@ -52,6 +52,10 @@ class AdminRequestSanitizer extends base
      * @var string
      */
     private $charset;
+    /**
+     * @var string
+     */
+    private $arrayName;
 
     /**
      * @return AdminRequestSanitizer
@@ -529,7 +533,7 @@ class AdminRequestSanitizer extends base
         if (isset($_POST[$parameterName])) {
             // Add the parameterName to the base arrayname.
             $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $this->arrayName;
+            $this->debugMessages[] = 'PROCESSING FILE_PATH_OR_URL_REGEX == ' . $this->arrayName;
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {

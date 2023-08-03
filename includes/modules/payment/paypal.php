@@ -2,10 +2,10 @@
 /**
  * paypal.php payment module class for PayPal Payments Standard (IPN) method
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 23 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
  */
 
 define('MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE', 'true');
@@ -20,30 +20,80 @@ define('MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE', 'true');
  *
  */
 class paypal extends base {
-  /**
-   * string representing the payment method
-   *
-   * @var string
-   */
-  var $code;
-  /**
-   * $title is the displayed name for this payment method
-   *
-   * @var string
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" payment module
+     * @var string
+     */
+    public $code;
+    /**
+     * $codeVersion is the version of this module
+     * @var string
+     */
+    public $codeVersion;
+    /**
+     * $description is a soft name for this payment method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $enabled determines whether this module shows or not... in catalog.
+     *
+     * @var boolean
     */
-  var $title;
-  /**
-   * $description is a soft name for this payment method
-   *
-   * @var string
+    public $enabled;
+    /**
+    * $form_action_url is the URL to process the payment or not set for local processing
+    * @var string
     */
-  var $description;
-  /**
-   * $enabled determines whether this module shows or not... in catalog.
-   *
-   * @var boolean
+    public $form_action_url;
+    /**
+     * $order_status is the order status to set after processing the payment
+     * @var int
+     */
+    public $order_status;
+    /**
+     * $pdtData is an array of data returned from PayPal
+     * @var array
+     */
+    protected $pdtData = [];
+    /**
+     * $sort_order is the order priority of this payment module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $title is the displayed name for this payment method
+     *
+     * @var string
     */
-  var $enabled;
+    public $title;
+    /**
+     * $totalsum is the order total being processed
+     * @var float 
+     */
+    protected $totalsum;
+    /**
+     * $transaction_amount is the value of the PayPal transaction in the $transaction_currency
+     * @var float
+     */
+    protected $transaction_amount;
+    /**
+     * $transaction_currency is the valid PayPal currency to use default USD
+     * @var string
+     */
+    protected $transaction_currency;
+    /**
+     * $transaction_id is the PayPal transaction id
+     * @var string
+     */
+    public $transaction_id;
+
   /**
     * constructor
     *
@@ -53,7 +103,7 @@ class paypal extends base {
   function __construct($paypal_ipn_id = '') {
     global $order, $messageStack;
     $this->code = 'paypal';
-    $this->codeVersion = '1.5.7';
+    $this->codeVersion = '1.5.8';
     $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_SORT_ORDER : null;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS == 'True');
     if (IS_ADMIN_FLAG === true) {
@@ -673,4 +723,7 @@ class paypal extends base {
     }
   }
 
+  function help() {
+       return array('body' => '<a href="https://docs.zen-cart.com/user/payment/paypal/" target="_blank" rel="noreferrer noopener">' . TEXT_DOCS_HELP . '</a><br>' .  MODULES_PAYMENT_PAYPALSTD_NOT_RECOMMENDED . '<br>');  
+    }
 }

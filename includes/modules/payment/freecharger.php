@@ -2,14 +2,53 @@
 /**
  * FreeCharger Payment Module
  *
- * @package paymentMethod
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:30:21 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: brittainmark 2022 Sep 10 Modified in v1.5.8 $
  */
   class freecharger {
-    var $code, $title, $description, $enabled;
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" payment module
+     * @var string
+     */
+    public $code;
+    /**
+     * $description is a soft name for this payment method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $email_footer is the text to me placed in the footer of the email
+     * @var string
+     */
+    public $email_footer;
+    /**
+     * $enabled determines whether this module shows or not... during checkout.
+     * @var boolean
+     */
+    public $enabled;
+    /**
+     * $order_status is the order status to set after processing the payment
+     * @var int
+     */
+    public $order_status;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $sort_order is the order priority of this payment module when displayed
+     * @var int
+     */
+    public $sort_order;
 
 // class constructor
     function __construct() {

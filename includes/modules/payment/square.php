@@ -7,9 +7,9 @@
  *
  * REQUIRES PHP 5.4 or newer
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 22 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
  */
 
 if (!defined('TABLE_SQUARE_PAYMENTS')) define('TABLE_SQUARE_PAYMENTS', DB_PREFIX . 'square_payments');
@@ -58,8 +58,8 @@ class square extends base
     /**
      * transaction vars hold the IDs of the completed payment
      */
-    public $transaction_id, $transaction_messages, $auth_code;
-    protected $currency_comment, $transaction_date;
+    public $transaction_id, $transaction_messages, $auth_code, $order_status;
+    protected $currency_comment, $transaction_date, $_logDir, $transaction_status, $sdkApiVersion, $_check, $gateway_currency;
     /**
      * Square configuration/connection
      * @var SquareConnect\Configuration
@@ -602,9 +602,9 @@ class square extends base
     {
         global $db;
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'False' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_STATUS'");
-        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN', 'MODULE_PAYMENT_SQUARE_TOKEN_EXPIRES_AT', 'MODULE_PAYMENT_SQUARE_REFRESH_TOKEN'");
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_ACCESS_TOKEN', 'MODULE_PAYMENT_SQUARE_TOKEN_EXPIRES_AT', 'MODULE_PAYMENT_SQUARE_REFRESH_TOKEN')");
         if ($include_sandbox) {
-            $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_SANDBOX_TOKEN'");
+            $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '' WHERE configuration_key in ('MODULE_PAYMENT_SQUARE_SANDBOX_TOKEN')");
             $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'Live' WHERE configuration_key = 'MODULE_PAYMENT_SQUARE_TESTING_MODE'");
         }
     }
@@ -674,7 +674,7 @@ class square extends base
         }
 
         $this->saveAccessToken($response);
-        echo 'Token set. You may now continue configuring the module. <script type="text/javascript">window.close()</script>';
+        echo 'Token set. You may now continue configuring the module. <script>window.close()</script>';
     }
 
     /**
@@ -998,6 +998,10 @@ class square extends base
         }
 
         return $keys;
+    }
+
+    function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/payment/square/');
     }
 
     /**

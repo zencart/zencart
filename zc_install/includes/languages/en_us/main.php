@@ -1,11 +1,10 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jun 19 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Jan 16 Modified in v1.5.8-alpha $
  */
-
 
 return [
 'META_TAG_TITLE' => 'Zen Cart&reg; Installer',
@@ -133,17 +132,21 @@ return [
 'TEXT_ERROR_COULD_NOT_WRITE_CONFIGFILE' => 'Could not write the generated config file: %s. Please ensure the file exists and is writable.',
 'TEXT_ERROR_STORE_CONFIGURE' => 'Catalog /includes/configure.php file either does not exist, is not readable or is not writeable',
 'TEXT_ERROR_ADMIN_CONFIGURE' => 'Admin /admin/includes/configure.php file either does not exist, is not readable or is not writeable',
-'TEXT_ERROR_PHP_VERSION' => str_replace(["\n", "\r"], '', 'Incorrect PHP Version.<p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p><p>This version of Zen Cart&reg; is compatible with PHP versions 5.6 to 7.4.x, although 7.2.x or higher is recommended.<br>Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p><p>For more information about version compatibility and server requirements see <a href="https://docs.zen-cart.com/user/first_steps/server_requirements/">Zen Cart Server Requirements</a></p>'),
-'TEXT_ERROR_PHP_VERSION_RECOMMENDED' => '<p>For maximum security and compatibility you should be using PHP %s or newer. This installation can proceed, but note that your site will not be PCI Compliant when running out-of-date software.</p><p>Consult the <a href="https://php.net">PHP Website</a> for specifics.</p><p>For more information about version compatibility and server requirements see <a href="https://docs.zen-cart.com/user/first_steps/server_requirements/">Zen Cart Server Requirements</a></p>',
+'TEXT_ERROR_PHP_VERSION' => str_replace(["\n", "\r"], '', 'Incorrect PHP Version.<p>The PHP version you are using (' . PHP_VERSION . ') is not suitable.</p><p>This version of Zen Cart&reg; is compatible with PHP versions 7.3 to 8.0, although 7.4.x or higher is recommended.<br>Check the <a href="https://www.zen-cart.com">www.zen-cart.com</a> website for the latest version of Zen Cart&reg;.</p><p>For more information about version compatibility and server requirements see <a href="https://docs.zen-cart.com/user/first_steps/server_requirements/">Zen Cart Server Requirements</a></p>'),
+'TEXT_ERROR_PHP_VERSION_RECOMMENDED' => '<p>For maximum security and compatibility you should be using PHP %s or newer. This installation can proceed, but note that your site will not be PCI Compliant when running out-of-date software.</p><p>Consult the <a href="https://www.php.net/supported-versions">PHP Website</a> for specifics.</p><p>For more information about version compatibility and server requirements see <a href="https://docs.zen-cart.com/user/first_steps/server_requirements/">Zen Cart Server Requirements</a></p>',
 'TEXT_ERROR_PHP_VERSION_MIN' => 'PHP Version should be greater than %s',
 'TEXT_ERROR_PHP_VERSION_MAX' => 'PHP Version should be less than %s',
 'TEXT_ERROR_MYSQL_SUPPORT' => 'Problems with your MySQL (mysqli) support. Your server appears to be missing the mysqli extension for PHP, and without it we cannot connect to your database. Talk to your hosting company for assistance.',
+'TEXT_ERROR_PDOMYSQL_SUPPORT' => 'Problems with your MySQL (pdo_mysql) support. Your server appears to be missing the pdo_mysql extension for PHP, and without it we cannot connect to your database. Talk to your hosting company for assistance.',
+'TEXT_ERROR_PDOSQLITE_SUPPORT' => 'Your server appears to be missing the pdo_sqlite extension for PHP which is used for small temporary storage and for application testing. Talk to your hosting company for assistance.',
+'TEXT_ERROR_PHPZIP_SUPPORT' => 'Your server appears to be missing the php-zip extension for PHP which is used for unpacking zip files when installing the Demo data Images. Talk to your hosting company for assistance.',
 'TEXT_ERROR_LOG_FOLDER' => DIR_FS_LOGS . ' folder is not writeable',
 'TEXT_ERROR_CACHE_FOLDER' => DIR_FS_SQL_CACHE . ' folder is not writeable',
 'TEXT_ERROR_IMAGES_FOLDER' => '/images/ folder is not writeable',
 'TEXT_ERROR_DEFINEPAGES_FOLDER' => '/includes/languages/english/html_includes/ folder is not writeable',
 'TEXT_ERROR_MEDIA_FOLDER' => '/media/ folder is not writeable',
 'TEXT_ERROR_PUB_FOLDER' => DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable',
+'TEXT_ERROR_NGINX_FOLDER' => '/zc_install/includes/nginx_conf/ folder is not writeable',
 'TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE' => 'Your configure.php file is an old version and requires updating before we can continue.',
 'TEXT_ERROR_HTACCESS_SUPPORT' => 'Support for ".htaccess" files is not enabled or is not operating correctly.<br>[ <i><strong>NOTE:</strong> If you are using Nginx, continue to the <u>END</u> of this Installation Wizard for information on resolving this issue.<i> ]',
 'TEXT_ERROR_SESSION_SUPPORT' => 'Problems with session support',
@@ -154,6 +157,8 @@ return [
 'TEXT_ERROR_DB_CONNECTION_UPGRADE' => 'Problems with database connection based on the entries in your current configure.php',
 'TEXT_ERROR_SET_TIME_LIMIT' => 'max_execution_time setting disabled',
 'TEXT_ERROR_GD' => 'GD Extension not enabled',
+'TEXT_ERROR_JSON' => 'JSON Extension not enabled. Required for parsing data in many parts of the application.',
+'TEXT_ERROR_FILEINFO' => 'Fileinfo extension not enabled. Used for calculating file sizes.',
 'TEXT_ERROR_ZLIB' => 'Zlib Extension not enabled',
 'TEXT_ERROR_OPENSSL' => 'Openssl Extension not enabled',
 'TEXT_ERROR_CURL' => 'Problems with the CURL extension - PHP is reporting that CURL is not present.',
@@ -176,7 +181,6 @@ return [
 'TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL' => 'A URL is required here, even if you have temporarily opted not to enable SSL yet. Try using your normal domain name.',
 'TEXT_NAVBAR_INSTALLATION_INSTRUCTIONS' => 'Installation Instructions',
 'TEXT_NAVBAR_FORUM_LINK' => 'Forum',
-'TEXT_NAVBAR_WIKI_LINK' => 'Wiki',
 'TEXT_HELP_TITLE_HTACCESSSUPPORT' => '.htaccess support',
 'TEXT_HELP_CONTENT_HTACCESSSUPPORT' => 'There appears to be a problem with support for ".htaccess" files.<br>Sensitive files and folders on your site, that should normally be blocked by security rules in the built-in ".htaccess" files that come with Zen Cart, are currently accessible.<br><br>Possible causes:
 <ul style="list-style-type:square"><li>You may not be using Apache as your Web Server (".htaccess" files are unique to the Apache Web Server), or,</li><li>Support for ".htaccess" is disabled or misconfigured, or,</li><li>The ".htaccess" files that come with Zen Cart have not been uploaded to your site.<br><strong><i>Files starting with ".", such as ".htaccess" files, are usually treated as "hidden" files and your FTP program may have failed to upload these if you have turned off the display and/or transfer of such hidden files in its settings.</i></strong></li></ul><br>

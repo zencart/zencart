@@ -2,13 +2,13 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=product_info.<br />
+ * Loaded automatically by index.php?main_page=product_info.
  * Displays details of a typical product
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Marco Ponchia 2020 May 20 Modified in v1.5.7 $
+ * @version $Id: Steve 2021 Jun 14 Modified in v1.5.8-alpha $
  */
 
 //require(DIR_WS_MODULES . '/debug_blocks/product_info_prices.php');
@@ -16,7 +16,7 @@
 <div class="centerColumn" id="productGeneral">
 
 <!--bof Form start-->
-<?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data"') . "\n"; ?>
+<?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data" id="addToCartForm"') . "\n"; ?>
 <!--eof Form start-->
 
 <?php if ($messageStack->size('product_info') > 0) echo $messageStack->output('product_info'); ?>
@@ -49,7 +49,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <div id="pinfo-left" class="group">
 <!--bof Main Product Image -->
 <?php
-  if (zen_not_null($products_image)) {
+  if (!empty($products_image)) {
   ?>
 <?php
 /**
@@ -91,7 +91,7 @@ if ($flag_show_ask_a_question) {
 <!-- bof Ask a Question -->
 <br>
 <span id="productQuestions" class="">
-<?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT) . '</a>'; ?>
+<?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT, ' id="askAQuestionButton"') . '</a>'; ?>
 </span>
 <br class="clearBoth">
 <br>
@@ -113,7 +113,7 @@ if ($flag_show_ask_a_question) {
 <?php
 // base price
   if ($show_onetime_charges_description == 'true') {
-    $one_time = '<span >' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br />';
+    $one_time = '<span>' . TEXT_ONETIME_CHARGE_SYMBOL . TEXT_ONETIME_CHARGE_DESCRIPTION . '</span><br>';
   } else {
     $one_time = '';
   }
@@ -158,11 +158,13 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
     $display_qty = (($flag_show_product_info_in_cart_qty == 1 and $_SESSION['cart']->in_cart($_GET['products_id'])) ? '<p>' . PRODUCTS_ORDER_QTY_TEXT_IN_CART . $_SESSION['cart']->get_quantity($_GET['products_id']) . '</p>' : '');
     if ($products_qty_box_status == 0 or $products_quantity_order_max== 1) {
       // hide the quantity box and default to 1
-      $the_button = '<input type="hidden" name="cart_quantity" value="1" />' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
+      $the_button = '<input type="hidden" name="cart_quantity" value="1">';
     } else {
       // show the quantity box
-      $the_button = '<div class="max-qty">' . zen_get_products_quantity_min_units_display((int)$_GET['products_id']) . '</div><span class="qty-text">' . PRODUCTS_ORDER_QTY_TEXT . '</span><input type="text" name="cart_quantity" value="' . $products_get_buy_now_qty . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">' . zen_draw_hidden_field('products_id', (int)$_GET['products_id']) . zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
+      $the_button = '<div class="max-qty">' . zen_get_products_quantity_min_units_display((int)$_GET['products_id']) . '</div><span class="qty-text">' . PRODUCTS_ORDER_QTY_TEXT . '</span><input type="text" name="cart_quantity" value="' . $products_get_buy_now_qty . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">';
     }
+    $the_button .= zen_draw_hidden_field('products_id', (int)$_GET['products_id']);
+    $the_button .= zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT, ' id="addToCartButton"');
     $display_button = zen_get_buy_now_button($_GET['products_id'], $the_button);
 ?>
 <?php if ($display_qty != '' or $display_button != '') { ?>
@@ -203,11 +205,11 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
     // if more than 0 reviews, then show reviews button; otherwise, show the "write review" button
     if ($reviews->fields['count'] > 0 ) { ?>
 <div id="productReviewLink" class="buttonRow back"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS, zen_get_all_get_params()) . '">' . zen_image_button(BUTTON_IMAGE_REVIEWS, BUTTON_REVIEWS_ALT) . '</a>'; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <p class="reviewCount"><?php echo ($flag_show_product_info_reviews_count == 1 ? TEXT_CURRENT_REVIEWS . ' ' . $reviews->fields['count'] : ''); ?></p>
 <?php } else { ?>
 <div id="productReviewLink" class="buttonRow back"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, zen_get_all_get_params(array())) . '">' . zen_image_button(BUTTON_IMAGE_WRITE_REVIEW, BUTTON_WRITE_REVIEW_ALT) . '</a>'; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 <?php
   }
 }
@@ -235,7 +237,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 
 <!--bof Product URL -->
 <?php
-  if (zen_not_null($products_url)) {
+  if (!empty($products_url)) {
     if ($flag_show_product_info_url == 1) {
 ?>
     <p id="productInfoLink" class="productGeneral centeredContent"><?php echo sprintf(TEXT_MORE_INFORMATION, zen_href_link(FILENAME_REDIRECT, 'action=product&products_id=' . zen_output_string_protected($_GET['products_id']), 'NONSSL', true, false)); ?></p>

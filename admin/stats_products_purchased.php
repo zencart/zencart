@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 May 14 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
@@ -15,24 +15,10 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
+      <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -63,7 +49,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
           <?php
           if (isset($products_filter_name_model) && zen_not_null($products_filter_name_model)) {
             $products_filter_name_model = zen_db_input(zen_db_prepare_input($products_filter_name_model));
-            echo '<br/ >' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_db_prepare_input($products_filter_name_model);
+            echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_db_prepare_input($products_filter_name_model);
             ?>
             <br><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL'); ?>" class="btn btn-default btn-xs"><?php echo IMAGE_RESET; ?></a>
           <?php } ?>
@@ -112,7 +98,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
           <tbody>
               <?php if ($chk_orders_products->EOF) { ?>
               <tr class="dataTableRowSelectedBot">
-                <td colspan="7" class="dataTableContent" align="center"><?php echo NONE; ?></td>
+                <td colspan="7" class="dataTableContent text-center"><?php echo NONE; ?></td>
               </tr>
             <?php } ?>
             <?php
@@ -133,7 +119,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
                 <td class="dataTableContent"><?php echo zen_date_short($orders_products['date_purchased']); ?></td>
                 <td class="dataTableContent"><?php echo $orders_products['customers_name'] . ($orders_products['customers_company'] != '' ? '<br>' . $orders_products['customers_company'] : '') . '<br>' . $orders_products['customers_email_address']; ?></td>
                 <td class="dataTableContent text-center"><?php echo $orders_products['products_quantity']; ?></td>
-                <td class="dataTableContent text-center"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $orders_products['products_id'] . '&action=new_product'); ?>"><?php echo $orders_products['products_name']; ?></a></td>
+                <td class="dataTableContent text-center"><a href="<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $orders_products['products_id'] . '&action=new_product'); ?>"><?php echo $orders_products['products_name']; ?></a></td>
                 <td class="dataTableContent text-center"><?php echo $orders_products['products_model']; ?></td>
               </tr>
             <?php } ?>
@@ -171,9 +157,9 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             $product_type = zen_get_products_type($product['products_id']);
             $type_handler = $zc_products->get_admin_handler($product_type);
             ?>
-            <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
+            <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
               <td class="dataTableContent text-right"><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $product['products_id']); ?>"><?php echo $product['products_id']; ?></a></td>
-              <td class="dataTableContent"><a href="<?php echo zen_href_link($type_handler, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $product['products_name']; ?></a></td>
+              <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>"><?php echo $product['products_name']; ?></a></td>
               <td class="dataTableContent text-center"><?php echo $product['products_ordered']; ?></td>
             </tr>
           <?php } ?>

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Mar 01 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -28,12 +28,12 @@ if (!defined('IS_ADMIN_FLAG')) {
     $messageStack->add(WARNING_EMAIL_SYSTEM_DISABLED, 'error');
   }
 // check if email sending has been disabled by developer switch
-  if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS == 'false') {
-      $messageStack->add(WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE, 'info');
+if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS === 'false') {
+    $messageStack->add(WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE, 'info');
 // check if email destinations have been diverted by developer switch
-  } elseif (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS != '') {
-      $messageStack->add(sprintf(zen_output_string_protected(WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL), DEVELOPER_OVERRIDE_EMAIL_ADDRESS), 'info');
-  }
+} elseif (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS !== '') {
+    $messageStack->add(sprintf(WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL, zen_output_string_protected(DEVELOPER_OVERRIDE_EMAIL_ADDRESS), EMAIL_TRANSPORT), 'info');
+}
 
   // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
   if (DOWN_FOR_MAINTENANCE == 'true') {
@@ -119,8 +119,6 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
 }
 
 // check for insecure default passwords, and present warning if found
-// include the password crypto functions
-  require_once(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'password_funcs.php');
   $admin_security = false;
   $demo_check = $db->Execute("SELECT * FROM " . TABLE_ADMIN . " WHERE admin_name='demo' OR admin_name='Admin'");
   if (!$demo_check->EOF) {

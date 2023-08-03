@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Mar 22 Modified in v1.5.6b $
+ * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
@@ -78,23 +77,9 @@ switch ($_GET['action']) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script type="text/javascript" src="includes/menu.js"></script>
-    <script type="text/javascript" src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -110,7 +95,7 @@ switch ($_GET['action']) {
           <?php echo zen_draw_form('quick_jump', FILENAME_PRODUCTS_OPTIONS_VALUES, '', 'get', 'class="form-horizontal"'); ?>
           <table class="table table-condensed">
             <tr class="dataTableHeadingRow">
-              <td colspan="2" align="center" class="dataTableHeadingContent"><?php echo TEXT_UPDATE_OPTION_VALUES; ?></td>
+              <td colspan="2" class="dataTableHeadingContent text-center"><?php echo TEXT_UPDATE_OPTION_VALUES; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent">
@@ -145,7 +130,7 @@ switch ($_GET['action']) {
           <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id'], 'post', 'class="form-horizontal"'); ?>
           <table class="table table-condensed table-striped">
             <tr class="dataTableHeadingRow">
-              <td colspan="3" class="dataTableHeadingContent" align="center">
+              <td colspan="3" class="dataTableHeadingContent text-center">
                 <?php echo TEXT_EDIT_OPTION_NAME; ?> <?php echo zen_options_name($_GET['options_id']); ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
@@ -230,7 +215,7 @@ switch ($_GET['action']) {
         <div class="row">
             <?php echo zen_draw_form('update_product_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_product', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('products_update_id'); ?>
-          <div class="col-sm-6"><?php echo zen_draw_products_pull_down_attributes('products_update_id', 'class="form-control"'); ?></div>
+          <div class="col-sm-6"><?php echo zen_draw_pulldown_products_having_attributes('products_update_id', 'class="form-control"'); ?></div>
           <div class="col-sm-2">
             <button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button>
           </div>
@@ -249,7 +234,7 @@ switch ($_GET['action']) {
         <div class="row">
             <?php echo zen_draw_form('update_categories_attributes', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_categories_attributes', 'post', 'class="form-horizontal"'); ?>
             <?php echo zen_draw_hidden_field('categories_update_id'); ?>
-          <div class="col-sm-3"><?php echo zen_draw_products_pull_down_categories_attributes('categories_update_id', 'class="form-control"'); ?></div>
+          <div class="col-sm-3"><?php echo zen_draw_pulldown_categories_having_products_with_attributes('categories_update_id', 'class="form-control"'); ?></div>
           <div class="col-sm-2"><button type="submit" class="btn btn-warning"><?php echo IMAGE_UPDATE; ?></button></div>
           <?php echo '</form>'; ?>
         </div>

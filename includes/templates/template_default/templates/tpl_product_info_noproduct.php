@@ -4,11 +4,10 @@
  *
  * Displays simple "product not found" message if the selected product's details cannot be located in the database
  *
- * @package templateSystem
- * @copyright Copyright 2003-2013 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version GIT: $Id: Author: DrByte  Mon Feb 11 23:15:15 2013 -0500 Modified in v1.5.2 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="productInfoNoProduct">
@@ -17,7 +16,7 @@
 
 <div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT) . '</a>'; ?></div>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 //// bof: missing

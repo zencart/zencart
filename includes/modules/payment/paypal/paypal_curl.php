@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2021 Sep 01 Modified in v1.5.7d $
+ * @version $Id: brittainmark 2022 Oct 09 Modified in v1.5.8 $
  */
 
 /**
@@ -23,7 +23,7 @@ class paypal_curl extends base {
    *
    * @var integer $_logLevel
    */
-  var $_logLevel = 3;
+  public $_logLevel = 3;
 
   /**
    * If we're logging, what directory should we create log files in?
@@ -35,22 +35,27 @@ class paypal_curl extends base {
    *
    * @var string $_logFile
    */
-  var $_logDir = DIR_FS_LOGS;
+  public $_logDir = DIR_FS_LOGS;
+  /**
+   * log output destination
+   * @var string
+   */
+  protected $outputDestination;
 
   /**
    * Debug or production?
    */
-  var $_server = 'sandbox';
+  protected $_server = 'sandbox';
 
   /**
    * URL endpoints -- defaults here are for three-token NVP implementation
    */
-  var $_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
+  public $_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                           'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
   /**
    * Options for cURL. Defaults to preferred (constant) options.
    */
-  var $_curlOptions = array(CURLOPT_HEADER => 0,
+  protected $_curlOptions = array(CURLOPT_HEADER => 0,
                             CURLOPT_RETURNTRANSFER => TRUE,
                             CURLOPT_TIMEOUT => 45,
                             CURLOPT_CONNECTTIMEOUT => 10,
@@ -66,17 +71,17 @@ class paypal_curl extends base {
    * Parameters that are always required and that don't change
    * request to request.
    */
-  var $_partner;
-  var $_vendor;
-  var $_user;
-  var $_pwd;
-  var $_version;
-  var $_signature;
+  protected $_partner;
+  protected $_vendor;
+  protected $_user;
+  protected $_pwd;
+  protected $_version;
+  protected $_signature;
 
   /**
    * nvp or payflow?
    */
-  var $_mode = 'nvp';
+  public $_mode = 'nvp';
 
   /**
    * Sales or authorizations? For the U.K. this will always be 'S'
@@ -84,21 +89,21 @@ class paypal_curl extends base {
    * authorizations. The other option is 'A' for Authorization.
    * NOTE: 'A' is not supported for pre-signup-EC-boarding.
    */
-  var $_trxtype = 'S';
+  public $_trxtype = 'S';
 
   /**
    * Store the last-generated name/value list for debugging.
    */
-  var $lastParamList = null;
+  public $lastParamList = null;
 
   /**
    * Store the last-generated headers for debugging.
    */
-  var $lastHeaders = null;
+  protected $lastHeaders = null;
   /**
    * submission values
    */
-  var $values = array();
+  protected $values = array();
   /**
    * Constructor. Sets up communication infrastructure.
    */
@@ -252,7 +257,7 @@ class paypal_curl extends base {
       $values['TENDER'] = 'C';
       $values['TRXTYPE'] = 'C';
       $values['AMT'] = round((float)$amount, 2);
-      if ($note != '') $values['COMMENT2'] = $note;
+      if ($note != '') $values['COMMENT2'] = substr($note, 0, 128);
     } elseif ($this->_mode == 'nvp') {
       $values['TRANSACTIONID'] = $txnID;
       if ($amount != 'Full' && (float)$amount > 0) {
@@ -262,7 +267,7 @@ class paypal_curl extends base {
       } else {
         $values['REFUNDTYPE'] = 'Full';
       }
-      if ($note != '') $values['NOTE'] = $note;
+      if ($note != '') $values['NOTE'] = substr($note, 0, 255);
     }
     return $this->_request($values, 'RefundTransaction');
   }
@@ -277,10 +282,10 @@ class paypal_curl extends base {
       $values['ORIGID'] = $txnID;
       $values['TENDER'] = 'C';
       $values['TRXTYPE'] = 'V';
-      if ($note != '') $values['COMMENT2'] = $note;
+      if ($note != '') $values['COMMENT2'] = substr($note, 0, 128);
     } elseif ($this->_mode == 'nvp') {
       $values['AUTHORIZATIONID'] = $txnID;
-      if ($note != '') $values['NOTE'] = $note;
+      if ($note != '') $values['NOTE'] = substr($note, 0, 255);
     }
     return $this->_request($values, 'DoVoid');
   }
@@ -321,14 +326,14 @@ class paypal_curl extends base {
       $values['TRXTYPE'] = 'D';
       $values['VERBOSITY'] = 'MEDIUM';
       if ($invNum != '') $values['INVNUM'] = $invNum;
-      if ($note != '') $values['COMMENT2'] = $note;
+      if ($note != '') $values['COMMENT2'] = substr($note, 0, 128);
     } elseif ($this->_mode == 'nvp') {
       $values['AUTHORIZATIONID'] = $txnID;
       $values['COMPLETETYPE'] = $captureType;
       $values['AMT'] = round((float)$amount, 2);
       $values['CURRENCYCODE'] = $currency;
       if ($invNum != '') $values['INVNUM'] = $invNum;
-      if ($note != '') $values['NOTE'] = $note;
+      if ($note != '') $values['NOTE'] = substr($note, 0, 255);
     }
     return $this->_request($values, 'DoCapture');
   }
@@ -437,7 +442,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.7';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.8';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();

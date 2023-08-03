@@ -4,10 +4,10 @@
  * Processes all outbound email from Zen Cart
  * Hooks into phpMailer class for actual email encoding and sending
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Apr 26 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Jun 20 Modified in v1.5.8-alpha $
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -70,7 +70,7 @@ use PHPMailer\PHPMailer\SMTP;
     }
 
     // if no text or html-msg supplied, exit
-    if (trim($email_text) == '' && (!zen_not_null($block) || (isset($block['EMAIL_MESSAGE_HTML']) && $block['EMAIL_MESSAGE_HTML'] == '')) ) return false;
+    if (trim($email_text) == '' && (empty($block) || (isset($block['EMAIL_MESSAGE_HTML']) && $block['EMAIL_MESSAGE_HTML'] == '')) ) return false;
 
     // Parse "from" addresses for "name" <email@address.com> structure, and supply name/address info from it.
     if (preg_match("/ *([^<]*) *<([^>]*)> */i",$from_email_address,$regs)) {
@@ -112,7 +112,7 @@ use PHPMailer\PHPMailer\SMTP;
       // Build the email based on whether customer has selected HTML or TEXT, and whether we have supplied HTML or TEXT-only components
       // special handling for XML content
       if ($email_text == '') {
-        $email_text = str_replace(array('<br>','<br />'), "<br />\n", $block['EMAIL_MESSAGE_HTML']);
+        $email_text = str_replace(array('<br>','<br />'), "<br>\n", $block['EMAIL_MESSAGE_HTML']);
         $email_text = str_replace('</p>', "</p>\n", $email_text);
         $email_text = ($module != 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
       } else if ($module != 'xml_record') {
@@ -133,14 +133,19 @@ use PHPMailer\PHPMailer\SMTP;
       $email_text = preg_replace('/&{2,}/', '&', $email_text);
 
       // clean up currencies for text emails
-      $zen_fix_currencies = preg_split("/[:,]/" , str_replace(' ', '', CURRENCIES_TRANSLATIONS));
-      $size = sizeof($zen_fix_currencies);
-      for ($i=0, $n=$size; $i<$n; $i+=2) {
-        $zen_fix_current = $zen_fix_currencies[$i];
-        $zen_fix_replace = $zen_fix_currencies[$i+1];
-        if (strlen($zen_fix_current)>0) {
-          while (strpos($email_text, $zen_fix_current)) $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
-        }
+      if (defined('CURRENCIES_TRANSLATIONS') && !empty(CURRENCIES_TRANSLATIONS)) {
+          $zen_fix_currencies = preg_split("/[:,]/" , str_replace(' ', '', CURRENCIES_TRANSLATIONS));
+          $size = sizeof($zen_fix_currencies);
+          for ($i=0, $n=$size; $i<$n; $i+=2) {
+              if (empty($zen_fix_currencies[$i+1])) {
+                  break;
+              }
+              $zen_fix_current = $zen_fix_currencies[$i];
+              $zen_fix_replace = $zen_fix_currencies[$i+1];
+              if (strlen($zen_fix_current)>0) {
+                  while (strpos($email_text, $zen_fix_current)) $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
+              }
+          }
       }
 
       // fix double quotes
@@ -162,16 +167,16 @@ use PHPMailer\PHPMailer\SMTP;
       $sql = $db->bindVars($sql, ':custEmailAddress:', $to_email_address, 'string');
       $result = $db->Execute($sql);
       $customers_email_format = ($result->RecordCount() > 0) ? $result->fields['customers_email_format'] : '';
-      
+
       /**
-       * Valid formats: 
+       * Valid formats:
        * HTML - if HTML content has been provided/prepared, it will be used. EMAIL_USE_HTML must be set to true in configs
        * TEXT - a text-only version of the email will be sent, and the HTML version ignored
        * NONE or OUT - implies opt-out, ie: send no emails, so aborts sending
        */
       $zco_notifier->notify('NOTIFY_EMAIL_DETERMINING_EMAIL_FORMAT', $to_email_address, $customers_email_format, $module);
 
-      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') return false; //if requested no mail, then don't send.
+      if ($customers_email_format == 'NONE' || $customers_email_format == 'OUT') continue; //if requested no mail, then don't send, but continue processing others.
 
       // handling admin/"extra"/copy emails:
       if (ADMIN_EXTRA_EMAIL_FORMAT == 'TEXT' && substr($module,-6)=='_extra') {
@@ -201,35 +206,60 @@ use PHPMailer\PHPMailer\SMTP;
       if ((int)EMAIL_SYSTEM_DEBUG > 0 ) $mail->SMTPDebug = (int)EMAIL_SYSTEM_DEBUG;
       if ((int)EMAIL_SYSTEM_DEBUG > 4 ) $mail->Debugoutput = 'error_log';
 
-      switch (EMAIL_TRANSPORT) {
+      $sending_newsletter = false; 
+      $email_transport = EMAIL_TRANSPORT; 
+      $email_mailbox = EMAIL_SMTPAUTH_MAILBOX; 
+      $email_password = EMAIL_SMTPAUTH_PASSWORD; 
+      $email_mail_server = EMAIL_SMTPAUTH_MAIL_SERVER; 
+      $email_mail_server_port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT; 
+      if (defined('NEWSLETTER_MODULES') && !empty(NEWSLETTER_MODULES) && defined('NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER') && !empty(NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER)) {
+        $modules = explode(',', str_replace(' ', '', NEWSLETTER_MODULES));
+        if (in_array($module, $modules)) { 
+            $sending_newsletter = true; 
+            $email_transport = 'smtpauth'; 
+            $email_mailbox = NEWSLETTER_EMAIL_SMTPAUTH_MAILBOX; 
+            $email_password = NEWSLETTER_EMAIL_SMTPAUTH_PASSWORD; 
+            $email_mail_server = NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER; 
+            $email_mail_server_port = (int)NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER_PORT; 
+        }
+      }
+
+      switch ($email_transport) {
         case ('Gmail'):
           $mail->isSMTP();
           $mail->SMTPAuth = true;
           $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
           $mail->Port = 587;
           $mail->Host = 'smtp.gmail.com';
-          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
-          if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
+          $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : EMAIL_FROM;
+          if (trim($email_password) != '') $mail->Password = trim($email_password);
           break;
         case 'smtpauth':
           $mail->isSMTP();
           $mail->SMTPAuth = true;
-          $mail->Username = (zen_not_null(trim(EMAIL_SMTPAUTH_MAILBOX))) ? trim(EMAIL_SMTPAUTH_MAILBOX) : EMAIL_FROM;
-          if (trim(EMAIL_SMTPAUTH_PASSWORD) != '') $mail->Password = trim(EMAIL_SMTPAUTH_PASSWORD);
-          $mail->Host = (trim(EMAIL_SMTPAUTH_MAIL_SERVER) != '') ? trim(EMAIL_SMTPAUTH_MAIL_SERVER) : 'localhost';
-          if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
+          $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : EMAIL_FROM;
+          if (trim($email_password) != '') $mail->Password = trim($email_password);
+          $mail->Host = (trim($email_mail_server) != '') ? trim($email_mail_server) : 'localhost';
+          if ((int)$email_mail_server_port != 25 && (int)$email_mail_server_port != 0) $mail->Port = (int)$email_mail_server_port;
           if ((int)$mail->Port < 30 && $mail->Host == 'smtp.gmail.com') $mail->Port = 587;
           //set encryption protocol to allow support for secured email protocols
           if ($mail->Port == '465') $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
           if ($mail->Port == '587') $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-          if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
-            $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
+
+          if (!$sending_newsletter) { 
+             if (defined('SMTPAUTH_EMAIL_PROTOCOL') && SMTPAUTH_EMAIL_PROTOCOL != 'none') {
+               $mail->SMTPSecure = SMTPAUTH_EMAIL_PROTOCOL;
+             }
+          } else {
+             if (defined('NEWSLETTER_SMTPAUTH_EMAIL_PROTOCOL') && NEWSLETTER_SMTPAUTH_EMAIL_PROTOCOL != 'none') {
+               $mail->SMTPSecure = NEWSLETTER_SMTPAUTH_EMAIL_PROTOCOL;
+             }
           }
           break;
         case 'smtp':
           $mail->isSMTP();
-          $mail->Host = trim(EMAIL_SMTPAUTH_MAIL_SERVER);
-          if ((int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 25 && (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT != 0) $mail->Port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
+          $mail->Host = trim($email_mail_server);
+          if ((int)$email_mail_server_port != 25 && (int)$email_mail_server_port != 0) $mail->Port = (int)$email_mail_server_port;
           break;
         case 'PHP':
           $mail->isMail();
@@ -247,7 +277,7 @@ use PHPMailer\PHPMailer\SMTP;
 
       $mail->Subject  = $email_subject;
 
-      if (EMAIL_TRANSPORT=='sendmail-f' || EMAIL_SEND_MUST_BE_STORE=='Yes') {
+      if ($email_transport =='sendmail-f' || EMAIL_SEND_MUST_BE_STORE=='Yes') {
         $mail->Sender = EMAIL_FROM;
       }
 
@@ -356,7 +386,12 @@ use PHPMailer\PHPMailer\SMTP;
       /**
        * Send the email. If an error occurs, trap it and display it in the messageStack
        */
-      if (!$mail->send()) {
+      $success = false;
+      try {
+         $success = $mail->send();
+      } catch (Exception $e) {
+      }
+      if (!$success) {
         $msg = sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject);
         if ($messageStack !== NULL) {
           if (IS_ADMIN_FLAG === true) {
@@ -367,7 +402,7 @@ use PHPMailer\PHPMailer\SMTP;
         } else {
           error_log($msg);
         }
-        $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . '<br />' : '';
+        $ErrorInfo .= ($mail->ErrorInfo != '') ? $mail->ErrorInfo . "\n" : '';
       }
       $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND');
       foreach($oldVars as $key => $val) {
@@ -380,14 +415,26 @@ use PHPMailer\PHPMailer\SMTP;
       if (EMAIL_ARCHIVE == 'true'  && $module != 'password_forgotten_admin' && $module != 'cc_middle_digs' && $module != 'no_archive') {
         zen_mail_archive_write($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo );
       } // endif archiving
+
+      // -----
+      // If a mail-related error (reported by PHPMailer) occurred, treat the 'recipients_failed' message as a special
+      // case, logging to a differently-named log file to make finding these issues easier.  Otherwise, log a PHP notice.
+      //
+      if ($ErrorInfo !== '') {
+          $mail_langs = $mail->getTranslations();
+          if (strpos($ErrorInfo, $mail_langs['recipients_failed']) === false) {
+              trigger_error('Email Error: ' . $ErrorInfo);
+          } else {
+              $log_prefix = (IS_ADMIN_FLAG === true) ? '/myDEBUG-bounced-email-adm-' : '/myDEBUG-bounced-email-';
+              $log_date = new DateTime();
+              error_log('Request URI: ' . $_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL . $ErrorInfo, 3, DIR_FS_LOGS . $log_prefix . $log_date->format('Ymd-His-u') . '.log');
+          }
+      }
     } // end foreach loop thru possible multiple email addresses
+
     $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_ALL_SPECIFIED_ADDRESSES');
 
-    if (!empty($ErrorInfo)) {
-      trigger_error('Email Error: ' . $ErrorInfo);
-    }
-
-    return isset($ErrorInfo) ? $ErrorInfo : '';
+    return isset($ErrorInfo) ? nl2br($ErrorInfo) : '';
   }  // end function
 
 /**
@@ -450,31 +497,6 @@ use PHPMailer\PHPMailer\SMTP;
       ));
   }
 
-  //DEFINE EMAIL-ARCHIVABLE-MODULES LIST // this array will likely be used by the email archive log VIEWER module in future
-  $emodules_array = array();
-  $emodules_array[] = array('id' => 'newsletters', 'text' => 'Newsletters');
-  $emodules_array[] = array('id' => 'product_notification', 'text' => 'Product Notifications');
-  $emodules_array[] = array('id' => 'direct_email', 'text' => 'One-Time Email');
-  $emodules_array[] = array('id' => 'contact_us', 'text' => 'Contact Us');
-  $emodules_array[] = array('id' => 'ask_a_question', 'text' => 'Ask A Question');
-  $emodules_array[] = array('id' => 'coupon', 'text' => 'Send Coupon');
-  $emodules_array[] = array('id' => 'coupon_extra', 'text' => 'Send Coupon');
-  $emodules_array[] = array('id' => 'gv_queue', 'text' => 'Send-GV-Queue');
-  $emodules_array[] = array('id' => 'gv_mail', 'text' => 'Send-GV');
-  $emodules_array[] = array('id' => 'gv_mail_extra', 'text' => 'Send-GV-Extra');
-  $emodules_array[] = array('id' => 'welcome', 'text' => 'New Customer Welcome');
-  $emodules_array[] = array('id' => 'welcome_extra', 'text' => 'New Customer Welcome-Extra');
-  $emodules_array[] = array('id' => 'password_forgotten', 'text' => 'Password Forgotten');
-  $emodules_array[] = array('id' => 'password_forgotten_admin', 'text' => 'Password Forgotten');
-  $emodules_array[] = array('id' => 'checkout', 'text' => 'Checkout');
-  $emodules_array[] = array('id' => 'checkout_extra', 'text' => 'Checkout-Extra');
-  $emodules_array[] = array('id' => 'order_status', 'text' => 'Order Status');
-  $emodules_array[] = array('id' => 'order_status_extra', 'text' => 'Order Status-Extra');
-  $emodules_array[] = array('id' => 'low_stock', 'text' => 'Low Stock Notices');
-  $emodules_array[] = array('id' => 'cc_middle_digs', 'text' => 'CC - Middle-Digits');
-  $emodules_array[] = array('id' => 'purchase_order', 'text' => 'Purchase Order');
-  $emodules_array[] = array('id' => 'payment_modules', 'text' => 'Payment Modules');
-  $emodules_array[] = array('id' => 'payment_modules_extra', 'text' => 'Payment Modules-Extra');
   /////////////////////////////////////////////////////////////////////////////////////////
   ////////END SECTION FOR EMAIL FUNCTIONS//////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////////////////
@@ -533,17 +555,18 @@ use PHPMailer\PHPMailer\SMTP;
     $template_filename_base_en = DIR_FS_EMAIL_TEMPLATES . "email_template_";
     $template_filename = DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html";
 
-    $filesToTest = array(DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html",
-                         DIR_FS_EMAIL_TEMPLATES . "email_template_" . $current_page_base . ".html",
-                         (isset($block['EMAIL_TEMPLATE_FILENAME']) && $block['EMAIL_TEMPLATE_FILENAME'] != '' ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : NULL),
-                         $template_filename_base . str_replace(array('_extra','_admin'),'',$module) . '.html',
-                         $template_filename_base_en . str_replace(array('_extra','_admin'),'',$module) . '.html',
-                         $template_filename_base . 'default' . '.html',
-                         $template_filename_base_en . 'default' . '.html',
-                        );
+    $filesToTest = array(
+       $template_filename_base . str_replace(array('_extra','_admin'),'',$module) . '.html',
+       $template_filename_base_en . str_replace(array('_extra','_admin'),'',$module) . '.html',
+       DIR_FS_EMAIL_TEMPLATES . $langfolder . "email_template_" . $current_page_base . ".html",
+       DIR_FS_EMAIL_TEMPLATES . "email_template_" . $current_page_base . ".html",
+       (isset($block['EMAIL_TEMPLATE_FILENAME']) && $block['EMAIL_TEMPLATE_FILENAME'] != '' ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : NULL),
+       $template_filename_base . 'default' . '.html',
+       $template_filename_base_en . 'default' . '.html',
+       );
     $found = FALSE;
     foreach($filesToTest as $val) {
-      if (file_exists($val)) {
+      if (!empty($val) && file_exists($val)) {
         $template_filename = $val;
         $found = TRUE;
         break;
@@ -588,12 +611,12 @@ use PHPMailer\PHPMailer\SMTP;
 
     $block['COUPON_BLOCK'] = '';
     if (isset($block['COUPON_TEXT_VOUCHER_IS']) && $block['COUPON_TEXT_VOUCHER_IS'] != '' && isset($block['COUPON_TEXT_TO_REDEEM']) && $block['COUPON_TEXT_TO_REDEEM'] != '') {
-      $block['COUPON_BLOCK'] = '<div class="coupon-block">' . $block['COUPON_TEXT_VOUCHER_IS'] . $block['COUPON_DESCRIPTION'] . '<br />' . $block['COUPON_TEXT_TO_REDEEM'] . '<span class="coupon-code">' . $block['COUPON_CODE'] . '</span></div>';
+      $block['COUPON_BLOCK'] = '<div class="coupon-block">' . $block['COUPON_TEXT_VOUCHER_IS'] . $block['COUPON_DESCRIPTION'] . '<br>' . $block['COUPON_TEXT_TO_REDEEM'] . '<span class="coupon-code">' . $block['COUPON_CODE'] . '</span></div>';
     }
 
     $block['GV_BLOCK'] = '';
       if ( (isset($block['GV_ANNOUNCE']) && $block['GV_ANNOUNCE'] != '') && (isset($block['GV_REDEEM']) && $block['GV_REDEEM'] != '') ) {
-          $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_ANNOUNCE'] . '<br />' . $block['GV_REDEEM'] . '</div>';
+          $block['GV_BLOCK'] = '<div class="gv-block">' . $block['GV_ANNOUNCE'] . '<br>' . $block['GV_REDEEM'] . '</div>';
       }
 
     //prepare the "unsubscribe" link:
@@ -686,12 +709,12 @@ use PHPMailer\PHPMailer\SMTP;
  *     first last@host.com
  *     'first@host.com
  *
- * @param string The email address to validate
- * @return boolean true if valid else false
+ * @param string $email address to validate
+ * @return boolean
 **/
   function zen_validate_email($email) {
     global $zco_notifier;
-    $valid_address = TRUE;
+    $valid_address = true;
 
     // fail if contains no @ symbol or more than one @ symbol
     if (substr_count($email,'@') != 1) return false;
@@ -721,13 +744,11 @@ use PHPMailer\PHPMailer\SMTP;
         if ($digit[$i] > 255) {
           $valid_address = false;
           return $valid_address;
-          exit;
         }
         // stop crafty people from using internal IP addresses
         if (($digit[0] == 192) || ($digit[0] == 10)) {
           $valid_address = false;
           return $valid_address;
-          exit;
         }
       }
     }
@@ -735,7 +756,6 @@ use PHPMailer\PHPMailer\SMTP;
     if (!preg_match('/'.$valid_email_pattern.'/i', $email)) { // validate against valid email pattern
       $valid_address = false;
       return $valid_address;
-      exit;
     }
 
     $zco_notifier->notify('NOTIFY_EMAIL_VALIDATION_TEST', array($email, $valid_address));

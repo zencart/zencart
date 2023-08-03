@@ -3,10 +3,10 @@
  * database_tables.php
  * Defines the database table names used in the project
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2021 Apr 26 Modified in v1.5.8-alpha $
  * @private
  */
 
@@ -43,6 +43,8 @@ define('TABLE_CUSTOMERS', DB_PREFIX . 'customers');
 define('TABLE_CUSTOMERS_BASKET', DB_PREFIX . 'customers_basket');
 define('TABLE_CUSTOMERS_BASKET_ATTRIBUTES', DB_PREFIX . 'customers_basket_attributes');
 define('TABLE_CUSTOMERS_INFO', DB_PREFIX . 'customers_info');
+define('TABLE_CUSTOMER_GROUPS', DB_PREFIX . 'customer_groups');
+define('TABLE_CUSTOMERS_TO_GROUPS', DB_PREFIX . 'customers_to_groups');
 define('TABLE_DB_CACHE', DB_PREFIX . 'db_cache');
 define('TABLE_EMAIL_ARCHIVE', DB_PREFIX . 'email_archive');
 define('TABLE_EZPAGES', DB_PREFIX . 'ezpages');
@@ -64,7 +66,6 @@ define('TABLE_ORDERS_PRODUCTS_ATTRIBUTES', DB_PREFIX . 'orders_products_attribut
 define('TABLE_ORDERS_PRODUCTS_DOWNLOAD', DB_PREFIX . 'orders_products_download');
 define('TABLE_ORDERS_STATUS', DB_PREFIX . 'orders_status');
 define('TABLE_ORDERS_STATUS_HISTORY', DB_PREFIX . 'orders_status_history');
-define('TABLE_ORDERS_TYPE', DB_PREFIX . 'orders_type');
 define('TABLE_ORDERS_TOTAL', DB_PREFIX . 'orders_total');
 define('TABLE_PAYPAL', DB_PREFIX . 'paypal');
 define('TABLE_PAYPAL_SESSION', DB_PREFIX . 'paypal_session');
@@ -102,6 +103,5 @@ define('TABLE_TAX_RATES', DB_PREFIX . 'tax_rates');
 define('TABLE_GEO_ZONES', DB_PREFIX . 'geo_zones');
 define('TABLE_ZONES_TO_GEO_ZONES', DB_PREFIX . 'zones_to_geo_zones');
 define('TABLE_UPGRADE_EXCEPTIONS', DB_PREFIX . 'upgrade_exceptions');
-define('TABLE_WISHLIST', DB_PREFIX . 'customers_wishlist');
 define('TABLE_WHOS_ONLINE', DB_PREFIX . 'whos_online');
 define('TABLE_ZONES', DB_PREFIX . 'zones');

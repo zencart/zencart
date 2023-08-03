@@ -2,11 +2,10 @@
 /**
  * Module Template
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Jan 8 00:33:36 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 
 ?>
@@ -47,12 +46,12 @@
     </tr>
 
     <tr>
-      <td class="alignCenter"><?php echo $show_qty . '<br />' . $currencies->display_price($show_price, zen_get_tax_rate($products_tax_class_id)); ?></td>
+      <td class="alignCenter"><?php echo $show_qty . '<br>' . $currencies->display_price($show_price, zen_get_tax_rate($products_tax_class_id)); ?></td>
 
 <?php
   foreach($quantityDiscounts as $key=>$quantityDiscount) {
 ?>
-<td class="alignCenter"><?php echo $quantityDiscount['show_qty'] . '<br />' . $currencies->display_price($quantityDiscount['discounted_price'], zen_get_tax_rate($products_tax_class_id)); ?></td>
+<td class="alignCenter"><?php echo $quantityDiscount['show_qty'] . '<br>' . $currencies->display_price($quantityDiscount['discounted_price'], zen_get_tax_rate($products_tax_class_id)); ?></td>
 <?php
     $disc_cnt++;
     if ($discount_col_cnt == $disc_cnt && !($key == sizeof($quantityDiscount))) {

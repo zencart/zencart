@@ -1,4 +1,4 @@
-[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dm/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v157)
+[![Download Zen Cart E-Commerce Shopping Cart ](https://img.shields.io/sourceforge/dm/zencart.svg)](https://sourceforge.net/projects/zencart/files/latest/download) ![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v158)
 
 
 Zen Cart&reg; - The Art of E-Commerce
@@ -6,24 +6,23 @@ Zen Cart&reg; - The Art of E-Commerce
 
 Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
 
-Zen Cart&reg; v1.5.7 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
+Zen Cart&reg; v1.5.8 is an update with several bugfix patches applied on top of the PA-DSS Certified version v1.5.4.
 
-It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at [zen-cart.com/forum/](https://www.zen-cart.com/forum.php)
+It's free software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at [zen-cart.com/forum](https://www.zen-cart.com/forum.php)
 
 --------------------
 
 
-Zen Cart&reg; v1.5.7c
+Zen Cart&reg; v1.5.8-dev
 ---------------------
 
 Compatibility
 -------------
-Zen Cart v1.5.7 is designed for:
-
- * PHP 5.6 to PHP 8.0 (older plugins may show various "warnings" on PHP 8.0)
+Zen Cart v1.5.8 is designed for:
+ * PHP 7.3 to PHP 8.2
+ * MySQL 5.7.8+ or MariaDB 10.2.7+
  * Apache 2.2 and 2.4
- * MySQL 5.1 to 8.0 or MariaDB 10.0 to 10.5
-
+ 
 Refer to [compatibility requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/) for additional details.
 
 
@@ -42,7 +41,7 @@ Installation is simple:
 7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
-If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf) PDF.
+If some of the terms used in these brief instructions are things you don't understand, there is a much more detailed set of instructions in the [/docs/Implementation-Guide](https://www.zen-cart.com/docs/) PDF.
 
 Upgrading
 ---------
@@ -56,7 +55,7 @@ __The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-
 
 Documentation
 -------------
-Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
+Use your browser to open the [/docs/index.html](https://www.zen-cart.com/docs/index.html) page for links to release documentation and the [Implementation Guide](https://www.zen-cart.com/docs/).  A storeowner documentation repository also exists at [docs.zen-cart.com/user/](https://docs.zen-cart.com/user/). 
 
 Developer Documentation
 -----------------------
@@ -67,6 +66,7 @@ Visit [docs.zen-cart.com/dev/](https://docs.zen-cart.com/dev/) for guidance on i
 Developers wishing to contribute documentation should fork [zencart/documentation](https://github.com/zencart/documentation) and contribute PRs.  Please see [CONTRIBUTING to documentation](https://github.com/zencart/documentation/blob/master/CONTRIBUTING.md).
 
 
+
 Source
 ------
 
@@ -74,7 +74,26 @@ The Zen Cart source code is available at: https://github.com/zencart/zencart
 
 Support
 -------
-For free support, visit our support site: https://www.zen-cart.com/forum.php
+For free community-driven support with Zen Cart, visit our support site: https://www.zen-cart.com/forum.php
+
+
+Donations/Sponsorship
+---------------------
+Sponsorship through GitHub is a simple and convenient way to say "thank you" to Zen Cart's maintainers and contributors, and to help fund its ongoing development.
+
+Just click the "Sponsor" button [on the Zen Cart page on GitHub](https://github.com/zencart/zencart). 
+
+If your company uses Zen Cart, note that sponsorship and donations to the project are a valid regular business expense.
+
+You may also donate via our website at https://www.zen-cart.com/donate
+
+
+Security
+--------
+We take security very seriously.
+
+If you have discovered a critical security bug in Zen Cart, please email security [at] zen-cart [.] com with the details of the problem and how to trigger it.  Issues will be responded to in a timely manner.
+
 
 Follow Us
 ---------
@@ -84,8 +103,16 @@ Sign up for our free [Newsletter](http://eepurl.com/bafnNj)
 
 Subscribe to [Critical News Updates And Release Announcements](https://www.zen-cart.com/subscription.php?do=addsubscription&f=2)
 
+&nbsp;  
+
+<p>This project is supported by:</p>
+<p>
+  <a href="https://www.digitalocean.com/">
+    <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="201px">
+  </a>
+</p>
 
 &nbsp;  
 
-*&copy;Copyright 2003-2021, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2022, Zen Cart&reg;. All rights reserved.*
 

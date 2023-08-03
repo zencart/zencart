@@ -2,10 +2,10 @@
 /**
  * Payment Class.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 Jul 20 Modified in v1.5.7a $
+ * @version $Id: brittainmark 2022 Sep 09 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,10 +16,35 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class payment extends base {
-  var $modules, $selected_module, $doesCollectsCardDataOnsite;
+
+   /**
+    * $doesCollectsCardDataOnsite is a flag to indicate if card details are collected on site
+    * @var boolean
+    */
+   public $doesCollectsCardDataOnsite;
+   /**
+    * $form_action_url is the URL to process the payment or not set for local processing
+    * @var string
+    */
+   public $form_action_url;
+    /**
+     * $modules array of payment module names
+     * @var array 
+     */
+   public $modules;
+   /**
+    * $paymentClass is a payment class
+    * @var class
+    */
+   public $paymentClass;
+   /**
+    * $selected_module is the selected payment module
+    * @var string
+    */
+   public $selected_module;
 
   function __construct($module = '') {
-      global $PHP_SELF, $language, $credit_covers, $messageStack;
+      global $PHP_SELF, $language, $credit_covers, $messageStack, $languageLoader;
       $this->doesCollectsCardDataOnsite = false;
 
       if (defined('MODULE_PAYMENT_INSTALLED') && !empty(MODULE_PAYMENT_INSTALLED)) {
@@ -31,12 +56,11 @@ class payment extends base {
 
       $include_modules = array();
 
-      if ( (zen_not_null($module)) && (in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
+      if (!empty($module) && (in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
         $this->selected_module = $module;
 
         $include_modules[] = array('class' => $module, 'file' => $module . '.php');
       } else {
-
         // Free Payment Only shows
         $freecharger_enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS == 'True');
         if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
@@ -61,8 +85,8 @@ class payment extends base {
 
       for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
         $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', $include_modules[$i]['file'], 'false');
-        if (@file_exists($lang_file)) {
-          include_once($lang_file);
+        if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $include_modules[$i]['file'], '/modules/payment')) {
+          $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $include_modules[$i]['file'], '/modules/payment');
         } else {
           if (is_object($messageStack)) {
             if (IS_ADMIN_FLAG === false) {
@@ -95,9 +119,21 @@ class payment extends base {
         if (!isset($credit_covers) || $credit_covers == FALSE) $_SESSION['payment'] = $include_modules[0]['class'];
       }
 
-      if (zen_not_null($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
+      if (!empty($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
         $this->form_action_url = $GLOBALS[$module]->form_action_url;
       }
+  }
+
+  public function checkCreditCovered()
+  {
+      global $credit_covers;
+      $credit_is_covered = false;
+      if (isset($credit_covers) && $credit_covers === true) {
+          $credit_is_covered = true;
+          $this->modules = '';
+          $this->selected_method = '';
+      }
+      return $credit_is_covered;
   }
 
   /**
@@ -120,7 +156,7 @@ class payment extends base {
 
   function javascript_validation() {
     if (!is_array($this->modules) || empty($this->selection())) return '';
-      $js = '<script type="text/javascript">' . "\n" .
+      $js = '<script>' . "\n" .
       'function check_form() {' . "\n" .
       '  var error = 0;' . "\n" .
       '  var error_message = "' . JS_ERROR . '";' . "\n" .
@@ -299,7 +335,9 @@ class payment extends base {
 
   function clear_payment()
   {
-    if (!is_array($this->modules)) return;
+    if (empty($this->selected_module) || !is_array($this->modules)) {
+        return;
+    }
     if (!is_object($GLOBALS[$this->selected_module])) return;
     if (!$GLOBALS[$this->selected_module]->enabled) return;
     $function = __FUNCTION__;

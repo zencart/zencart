@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 Jun 30 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Jan 22 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="askAQuestion">
@@ -64,8 +64,8 @@
 <?php echo zen_draw_input_field('email', ($email_address), ' size="40" id="email-address" autocomplete="off" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required', 'email'); ?>
 <br class="clearBoth">
 
-<label class="inputLabel" for="telephone"><?php echo ENTRY_TELEPHONE; ?></label>
-<?php echo zen_draw_input_field('telephone', ($telephone), ' size="20" id="telephone" autocomplete="off" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required', 'telephone'); ?>
+<label class="inputLabel" for="telephone"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
+<?php echo zen_draw_input_field('telephone', ($telephone), ' size="20" id="telephone" autocomplete="off" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required', 'tel'); ?>
 <br class="clearBoth">
 
 <label for="enquiry"><?php echo ENTRY_ENQUIRY; ?></label>

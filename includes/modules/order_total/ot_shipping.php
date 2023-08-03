@@ -2,19 +2,43 @@
 /**
  * ot_shipping order-total module
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Aug 21 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 07 Modified in v1.5.8 $
  */
 class ot_shipping extends base
 {
-    public    $code,
-              $title,
-              $description,
-              $sort_order,
-              $output;
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
     protected $_check;
+    /**
+     * $code determines the internal 'code' name used to designate "this" order total module
+     * @var string
+     */
+    public $code;
+    /**
+     * $description is a soft name for this order total method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $sort_order is the order priority of this order total module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $output is an array of the display elements used on checkout pages
+     * @var array
+     */
+    public $output = [];
 
     public function __construct() 
     {
@@ -78,7 +102,7 @@ class ot_shipping extends base
                 $shipping_tax_description
             );
 
-            if ($external_shipping_tax_handler === true || ($module !== 'free' && $GLOBALS[$module]->tax_class > 0)) {
+            if ($external_shipping_tax_handler === true || (!empty($module) && $module !== 'free' && isset($GLOBALS[$module]->tax_class) && $GLOBALS[$module]->tax_class > 0)) {
                 if ($external_shipping_tax_handler !== true) {
                     if (!isset($GLOBALS[$module]->tax_basis)) {
                         $shipping_tax_basis = STORE_SHIPPING_TAX_BASIS;

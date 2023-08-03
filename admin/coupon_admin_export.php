@@ -2,10 +2,10 @@
 /**
  * Coupon Exporter
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 21 Modified in v1.5.7a $
+ * @version $Id: brittainmark 2022 Sep 17 Modified in v1.5.8 $
  *
  */
 require ('includes/application_top.php');
@@ -20,8 +20,8 @@ $available_export_formats[0] = array('id' => '0' , 'text' => 'Export as HTML (id
 $available_export_formats[1] = array('id' => '1' , 'text' => 'Export to CSV (ideal for importing to spreadsheets)', 'format' => 'CSV'); // export to CSV
 //  $available_export_formats[2]=array('id' => '2', 'text' => 'Export to TXT', 'format' => 'TXT');
 //  $available_export_formats[3]=array('id' => '3', 'text' => 'Export to XML', 'format' => 'XML');
-$save_to_file_checked = (isset($_POST['savetofile']) && zen_not_null($_POST['savetofile']) ? $_POST['savetofile'] : 0);
-$post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
+$save_to_file_checked = (isset($_POST['savetofile']) && !empty($_POST['savetofile']) ? $_POST['savetofile'] : 0);
+$post_format = (isset($_POST['format']) && !empty($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
 $file = (isset($_POST['filename']) ? preg_replace('/[^\w\.\-]/', '', $_POST['filename']) : 'coupon_export_' . date('Y-m-d_H-i-s') . '.csv');
 if (!preg_match('/.*\.(csv|txt|html?|xml)$/', $file)) $file .= '.txt';
@@ -79,7 +79,7 @@ if ($action != '')
                  uses_per_coupon, uses_per_user, coupon_zone_restriction, coupon_active, coupon_calc_base, coupon_order_limit,
                  coupon_is_valid_for_sales, coupon_product_count
                  , coupon_name, coupon_description
-              FROM " . TABLE_COUPONS . " c 
+              FROM " . TABLE_COUPONS . " c
               LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON (c.coupon_id = cd.coupon_id AND cd.language_id = :language)
               WHERE c.coupon_code LIKE :search ORDER BY c.coupon_active, c.coupon_id " . $sort;
       $sql = $db->bindVars($sql, ':search', $_GET['codebase'] . '%', 'string');
@@ -261,9 +261,7 @@ if ($action != '')
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta charset="<?php echo CHARSET; ?>">
-<title><?php echo HEADING_TITLE; ?></title>
-<link href="includes/css/stylesheet.css" rel="stylesheet" type="text/css"/>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
 <body>
 <?php
@@ -299,27 +297,12 @@ if ($action != '')
 } //endif $action
 
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/css/stylesheet.css">
-<link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-<script type="text/javascript" src="includes/menu.js"></script>
-<script type="text/javascript">
-  function init()
-  {
-    cssjsmenu('navbar');
-    if (document.getElementById)
-    {
-      var kill = document.getElementById('hoverJS');
-      kill.disabled = true;
-    }
-  }
-</script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
-<body onload="init()">
+<body>
 <!-- header //-->
 <?php
 require (DIR_WS_INCLUDES . 'header.php');
@@ -327,17 +310,17 @@ require (DIR_WS_INCLUDES . 'header.php');
 <!-- header_eof //-->
 
 <!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
+<table class="col-sm-12" border="0" cellspacing="2" cellpadding="2">
   <tr>
     <!-- body_text //-->
-    <td width="100%" valign="top">
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+    <td class="align-top col-sm-12">
+    <table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="100%">
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td class="col-sm-12">
+        <table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table>
         </td>
@@ -355,24 +338,24 @@ require (DIR_WS_INCLUDES . 'header.php');
             <td class="main" colspan="2"><?php echo TEXT_INSTRUCTIONS; ?></td>
           </tr>
           <tr>
-            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br /><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FORMAT; ?></strong><br><?php echo zen_draw_pull_down_menu('format', $available_export_formats, $format); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br /><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
+            <td class="main"><strong><?php echo TEXT_ACTIVITY_EXPORT_FILENAME; ?></strong><br><?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), ' size="60"'); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?> <strong><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></strong><br />
+            <td class="main"><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?> <strong><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></strong><br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TEXT_ACTIVITY_EXPORT_DEST; ?></strong> <em><?php echo DIR_FS_COUPON_EXPORT; ?></em>
               </td>
           </tr>
           <tr>
-            <td class="main" align="right"><?php echo zen_image_submit('button_go.gif', IMAGE_GO) . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
+            <td class="main text-right"><?php echo '<input type="submit" name="submit" value="'. (defined('BUTTON_TEXT_EXPORT') ? BUTTON_TEXT_EXPORT : IMAGE_GO) . '" id="export_btn" class="btn btn-danger">' . '&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-warning" role="button">' . IMAGE_CANCEL . '</a>'; ?></td>
           </tr>
         </table>
         </td>
@@ -385,7 +368,7 @@ require (DIR_WS_INCLUDES . 'header.php');
     </table>
     <!-- body_eof //--> <!-- footer //-->
 <?php require (DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //--> <br />
+<!-- footer_eof //--> <br>
 
 </body>
 </html>

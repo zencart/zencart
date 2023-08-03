@@ -2,10 +2,10 @@
 /**
  * checkout_confirmation header_php.php
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Jun 30 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
  */
 
 // This should be first line of the script:
@@ -28,8 +28,8 @@ if ($_SESSION['cart']->count_contents() <= 0) {
     }
   }
 
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
+// Ensure no cart content changes during the checkout procedure by checking the internal cartID
+if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
   if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
@@ -45,16 +45,14 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
 
 if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
 
-$_SESSION['comments'] = $_POST['comments'];
+$_SESSION['comments'] = !empty($_POST['comments']) ? $_POST['comments'] : '';
 
 //'checkout_payment_discounts'
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
 
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-  if (!isset($_POST['conditions']) || ($_POST['conditions'] != '1')) {
-    $messageStack->add_session('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
-  }
+    $_SESSION['conditions'] = $_POST['conditions'] ?? NULL;
 }
 //echo $messageStack->size('checkout_payment');
 
@@ -73,29 +71,33 @@ $order_total_modules->pre_confirmation_check();
 // load the selected payment module
 require(DIR_WS_CLASSES . 'payment.php');
 
-if (!isset($credit_covers)) $credit_covers = FALSE;
+if (!isset($credit_covers)) {
+    $credit_covers = false;
+}
 
 //echo 'credit covers'.$credit_covers;
 
-if ($credit_covers) {
-  unset($_SESSION['payment']);
-  $_SESSION['payment'] = '';
-}
-
-//@debug echo ($credit_covers == true) ? 'TRUE' : 'FALSE';
-
-$payment_modules = new payment($_SESSION['payment']);
-$payment_modules->update_status();
-if ( ($_SESSION['payment'] == '' || !is_object(${$_SESSION['payment']}) ) && $credit_covers === FALSE) {
-  $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
-}
-
-if (is_array($payment_modules->modules)) {
-  $payment_modules->pre_confirmation_check();
+if ($credit_covers === true) {
+    unset($_SESSION['payment']);
+    $_SESSION['payment'] = '';
+    $payment_title = PAYMENT_METHOD_GV;
+} else {
+    if (!empty($_SESSION['payment'])) {
+        $payment_modules = new payment($_SESSION['payment']);
+        $payment_modules->update_status();
+        if (is_array($payment_modules->modules)) {
+            $payment_modules->pre_confirmation_check();
+        }
+    }
+    if (!empty($_SESSION['payment']) && is_object(${$_SESSION['payment']})) {
+        $payment_title = ${$_SESSION['payment']}->title;
+    } else {
+        $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
+    }
 }
 
 if ($messageStack->size('checkout_payment') > 0) {
-  zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 
 // Stock Check
@@ -143,21 +145,21 @@ if (!empty($_SESSION['cc_id'])) {
   }
 }
 
-if (isset(${$_SESSION['payment']}->form_action_url)) {
-  $form_action_url = ${$_SESSION['payment']}->form_action_url;
+if ($credit_covers === false && isset(${$_SESSION['payment']}->form_action_url)) {
+    $form_action_url = ${$_SESSION['payment']}->form_action_url;
 } else {
-  $form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
+    $form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
 
 // if shipping-edit button should be overridden, do so
 $editShippingButtonLink = zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
-if (method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
+if ($credit_covers === false && method_exists(${$_SESSION['payment']}, 'alterShippingEditButton')) {
   $theLink = ${$_SESSION['payment']}->alterShippingEditButton();
   if ($theLink) $editShippingButtonLink = $theLink;
 }
 // deal with billing address edit button
 $flagDisablePaymentAddressChange = false;
-if (isset(${$_SESSION['payment']}->flagDisablePaymentAddressChange)) {
+if ($credit_covers === false && isset(${$_SESSION['payment']}->flagDisablePaymentAddressChange)) {
   $flagDisablePaymentAddressChange = ${$_SESSION['payment']}->flagDisablePaymentAddressChange;
 }
 

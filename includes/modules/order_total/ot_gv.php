@@ -2,30 +2,105 @@
 /**
  * ot_gv order-total module
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Aug 08 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Oct 08 Modified in v1.5.8 $
  */
 /**
  * Enter description here...
  *
  */
 class ot_gv {
+
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+     * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
+     * @var string
+     */
+    public $calculate_tax;
+    /**
+     * $checkbox is the output to request the amount of gift vouchers the user wants to redeem
+     * @var string
+     */
+    public $checkbox;
+    /**
+     * $code determines the internal 'code' name used to designate "this" order total module
+     * @var string
+     */
+    public $code;
+    /**
+     * $credit_class flag to indicate order totals method is a credit class
+     * @var boolean
+     */
+    public $credit_class;
+    /**
+     * $credit_tax if 'true' tax is to be calculated on purchased GVs
+     * @var string
+     */
+    public $credit_tax;
+    /**
+     * $deduction amount of deduction calculated/afforded while being applied to an order
+     * @var float|null
+     */
+    protected $deduction;
+    /**
+     * $description is a soft name for this order total method
+     * @var string 
+     */
+    public $description;
+    /**
+     * $header the module box header 
+     * @var string
+     */
+    public $header;
+    /**
+     * $include_shipping allow shipping costs to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_shipping;
+    /**
+     * $include_tax allow tax to be discounted by coupon if 'true'
+     * @var string
+     */
+    public $include_tax;
+    /**
+     * $sort_order is the order priority of this order total module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $tax_class is the Tax class to be applied to the coupon cost
+     * @var
+     */
+    public $tax_class;
+    /**
+     * $title is the displayed name for this order total method
+     * @var string
+     */
+    public $title;
+    /**
+     * $output is an array of the display elements used on checkout pages
+     * @var array
+     */
+    public $output = [];
+    /**
+     * $user_prompt string to request redemption of gift vouchers
+     * @var string
+     */
+    public $user_prompt;
+    /**
+     * $validation_errors is an array of error messages from coupon validation
+     * @var array
+     */
+    protected $validation_errors = [];
+  
   /**
-   * Enter description here...
-   *
-   * @var unknown_type
-   */
-  var $title;
-  /**
-   * Enter description here...
-   *
-   * @var unknown_type
-   */
-  var $output;
-  /**
-   * Enter description here...
+   * process gift vouchers
    *
    * @return ot_gv
    */
@@ -46,8 +121,8 @@ class ot_gv {
     $this->tax_class  = MODULE_ORDER_TOTAL_GV_TAX_CLASS;
     $this->credit_class = true;
     if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
-    if (IS_ADMIN_FLAG !== true) {
-      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';" />' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br />' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
+    if (IS_ADMIN_FLAG !== true && zen_is_logged_in() && !zen_in_guest_checkout()) {
+      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';">' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
     }
     $this->output = array();
     if (IS_ADMIN_FLAG === true) {
@@ -102,6 +177,8 @@ class ot_gv {
   }
   /**
    * Check for validity of redemption amounts and recalculate order totals to include proposed GV redemption deductions
+   *
+   * @TODO - Per order_total class, this function is not used. See process() instead.
    */
   function pre_confirmation_check($order_total) {
     global $order, $currencies, $messageStack;
@@ -391,12 +468,12 @@ class ot_gv {
    */
   function check() {
     global $db;
-    if (!isset($this->check)) {
+    if (!isset($this->_check)) {
       $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_STATUS'");
-      $this->check = $check_query->RecordCount();
+      $this->_check = $check_query->RecordCount();
     }
 
-    if ($this->check) {
+    if ($this->_check) {
       // move switch for admin-display of queue in header from lang file to module settings
       if (!defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN')) {
           $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show Queue in Admin header?', 'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'true', 'Show Queue button on all pages of Admin?<br>(Will auto-hide if nothing in queue, and will auto-display on \'Orders\' screen, regardless of this setting)', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
@@ -407,7 +484,7 @@ class ot_gv {
 
     }
 
-    return $this->check;
+    return $this->_check;
   }
   /**
    * Enter description here...
@@ -415,9 +492,9 @@ class ot_gv {
    * @return unknown
    */
   function keys() {
-    return array('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE', 
-        'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 
-        'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX',  
+    return array('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE',
+        'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'MODULE_ORDER_TOTAL_GV_INC_TAX',
+        'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX',
         'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID', 'MODULE_ORDER_TOTAL_GV_SPECIAL');
   }
   /**
@@ -438,6 +515,11 @@ class ot_gv {
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('Set Order Status', 'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID', '0', 'Set the status of orders made where GV covers full payment', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Allow Gift Voucher Specials', 'MODULE_ORDER_TOTAL_GV_SPECIAL', 'false', 'Do you want to allow Gift Voucher to be placed on Special?', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
+
+  function help() {
+       return array('link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/'); 
+  }
+
   /**
    * Enter description here...
    *

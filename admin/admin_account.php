@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce<br />
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2020 Apr 14 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 require('includes/application_top.php');
 
@@ -129,7 +129,7 @@ $userDetails = $userList[0];
                     <?php } ?>
                 <?php } else { ?>
                     <td class="actions">
-                        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a> 
+                        <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a>
                         <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>
                     </td>
                 </tr>

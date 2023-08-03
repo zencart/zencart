@@ -2,10 +2,10 @@
 /**
  * ipn_main_handler.php callback handler for PayPal IPN notifications
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 11 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Jul 04 Modified in v1.5.8-alpha $
  */
 if (!defined('TEXT_RESELECT_SHIPPING')) define('TEXT_RESELECT_SHIPPING', 'You have changed the items in your cart since shipping was last calculated, and costs may have changed. Please verify/re-select your shipping method.');
 
@@ -99,11 +99,20 @@ Processing...
       $_POST[$key] = urldecode($_POST[$key]);
     }
   }
+
+  // -----
+  // Account for POST'd values that might not be present.
+  //
+  $posted_txn_type = $_POST['txn_type'] ?? '';
+  $posted_custom = $_POST['custom'] ?? '  ';
+  $posted_pending_reason = $_POST['pending_reason'] ?? '';
+
   /**
    * detect type of transaction
    */
-  $isECtransaction = ((isset($_POST['txn_type']) && $_POST['txn_type']=='express_checkout') || (isset($_POST['custom']) && in_array(substr($_POST['custom'], 0, 3), array('EC-', 'DP-', 'WPP')))); /*|| $_POST['txn_type']=='cart'*/
-  $isDPtransaction = (isset($_POST['custom']) && in_array(substr($_POST['custom'], 0, 3), array('DP-', 'WPP', 'PF-')));
+  $isECtransaction = $posted_txn_type === 'express_checkout' || in_array(substr($posted_custom, 0, 3), ['EC-', 'DP-', 'WPP']); /*|| $_POST['txn_type']=='cart'*/
+  $isDPtransaction = in_array(substr($posted_custom, 0, 3), ['DP-', 'WPP', 'PF-']);
+
   /**
    * set paypal-specific application_top parameters
    */
@@ -114,9 +123,10 @@ Processing...
 
   $extraDebug = (defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS == 'All');
 
-  if (  (defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && strstr(MODULE_PAYMENT_PAYPALWPP_DEBUGGING, 'Log')) ||
-      (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && strstr(MODULE_PAYMENT_PAYPAL_IPN_DEBUG, 'Log')) ||
-      ($_REQUEST['ppdebug'] == 'on' && strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])) || $extraDebug  ) {
+  if ((defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && strstr(MODULE_PAYMENT_PAYPALWPP_DEBUGGING, 'Log'))
+      || (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && strstr(MODULE_PAYMENT_PAYPAL_IPN_DEBUG, 'Log'))
+      || (!empty($_REQUEST['ppdebug']) && $_REQUEST['ppdebug'] == 'on' && strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))
+      || $extraDebug) {
     $show_all_errors = true;
     $debug_logfile_path = ipn_debug_email('Breakpoint: 0 - Initializing debugging.');
     $logdir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : 'includes/modules/payment/paypal/logs';
@@ -140,7 +150,7 @@ Processing...
    * validate transaction -- email address, matching txn record, etc
    */
   if (!ipn_validate_transaction($info, $_POST, 'IPN') === true) {
-    if (!$isECtransaction && $_POST['txn_type'] != '') {
+    if (!$isECtransaction && $posted_txn_type !== '') {
       ipn_debug_email('IPN FATAL ERROR :: Transaction did not validate. ABORTED.');
       die();
     }
@@ -151,9 +161,22 @@ Processing...
   }
 
   ipn_debug_email('Breakpoint: 2 - Validated transaction components');
-  if ($_POST['exchange_rate'] == '')  $_POST['exchange_rate'] = 1;
-  if ($_POST['num_cart_items'] == '') $_POST['num_cart_items'] = 1;
-  if ($_POST['settle_amount'] == '')  $_POST['settle_amount'] = 0;
+
+  // -----
+  // Initialize values for use by ipn_create_order_array.
+  //
+  if (empty($_POST['exchange_rate'])) {
+      $_POST['exchange_rate'] = 1;
+  }
+  if (empty($_POST['num_cart_items'])) {
+      $_POST['num_cart_items'] = 1;
+  }
+  if (empty($_POST['settle_amount'])) {
+      $_POST['settle_amount'] = 0;
+  }
+  if (empty($_POST['mc_fee'])) {
+      $_POST['mc_fee'] = 0;
+  }
 
   /**
    * is this a sandbox transaction?
@@ -164,7 +187,7 @@ Processing...
   if (isset($_POST['test_internal']) && $_POST['test_internal'] == 1) {
     ipn_debug_email('IPN NOTICE :: Processing INTERNAL TESTING transaction.');
   }
-  if (isset($_POST['pending_reason']) && $_POST['pending_reason'] == 'unilateral') {
+  if ($posted_pending_reason === 'unilateral') {
     ipn_debug_email('*** NOTE: TRANSACTION IS IN *unilateral* STATUS, pending creation of a PayPal account for this receiver_email address.' . "\n" . 'Please create the account, or make sure the PayPal account is *Verified*.');
   }
 
@@ -178,10 +201,10 @@ Processing...
   $txn_type    = $lookupData['txn_type'];
   $parentLookup = $txn_type;
 
-  ipn_debug_email('Breakpoint: 4 - ' . 'Details:  txn_type=' . $txn_type . '    ordersID = '. $ordersID . '  IPN_id=' . $paypalipnID . "\n\n" . '   Relevant data from POST:' . "\n     " . 'txn_type = ' . $txn_type . "\n     " . 'parent_txn_id = ' . ($_POST['parent_txn_id'] =='' ? 'None' : $_POST['parent_txn_id']) . "\n     " . 'txn_id = ' . $_POST['txn_id']);
+  ipn_debug_email('Breakpoint: 4 - ' . 'Details:  txn_type=' . $txn_type . '    ordersID = '. $ordersID . '  IPN_id=' . $paypalipnID . "\n\n" . '   Relevant data from POST:' . "\n     " . 'txn_type = ' . $txn_type . "\n     " . 'parent_txn_id = ' . (empty($_POST['parent_txn_id']) ? 'None' : $_POST['parent_txn_id']) . "\n     " . 'txn_id = ' . $_POST['txn_id']);
 
   // ignore auth_status == 'Expired'
-  if ($_POST['auth_status'] === 'Expired' && $_POST['txn_type'] === 'web_accept') {
+  if (isset($_POST['auth_status']) && $_POST['auth_status'] === 'Expired' && $posted_txn_type === 'web_accept') {
     ipn_debug_email('NOTICE :: IPN Processing Aborted -- we do not need to do anything with an "Expired" auth notification.');
     die();
   }
@@ -219,15 +242,16 @@ Processing...
    * take action based on transaction type and corresponding requirements
    */
   switch ($txn_type) {
-    case ($_POST['txn_type'] == 'send_money'):
-    case ($_POST['txn_type'] == 'merch_payment'):
-    case ($_POST['txn_type'] == 'new_case'):
-    case ($_POST['txn_type'] == 'masspay'):
+    case ($posted_txn_type === 'send_money'):
+    case ($posted_txn_type === 'merch_payment'):
+    case ($posted_txn_type === 'new_case'):
+    case ($posted_txn_type === 'masspay'):
+    case ($posted_txn_type === 'paypal_here'):
       // these types are irrelevant to ZC transactions
-      ipn_debug_email('IPN NOTICE :: Transaction txn_type not relevant to Zen Cart processing. IPN handler aborted.' . $_POST['txn_type']);
+      ipn_debug_email('IPN NOTICE :: Transaction txn_type not relevant to Zen Cart processing. IPN handler aborted.' . $posted_txn_type);
       die();
       break;
-    case (substr($_POST['txn_type'],0,7) == 'subscr_'):
+    case (strpos($posted_txn_type, 'subscr_') === 0):
       // For now we filter out subscription payments
       ipn_debug_email('IPN NOTICE :: Subscription payment - Not currently supported by Zen Cart. IPN handler aborted.');
       die();
@@ -281,7 +305,7 @@ Processing...
       /**
        * delete IPN session from PayPal table -- housekeeping
        */
-      $db->Execute("delete from " . TABLE_PAYPAL_SESSION . " where session_id = '" . zen_db_input(str_replace('zenid=', '', $_POST['custom'])) . "'");
+      $db->Execute("delete from " . TABLE_PAYPAL_SESSION . " where session_id = '" . zen_db_input(str_replace($zenSessionId . '=', '', $posted_custom)) . "'");
       /**
        * require shipping class
        */
@@ -335,8 +359,8 @@ Processing...
           $new_status = (defined('MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID') && (int)MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID > 0 ? (int)MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID : 2);
           ipn_debug_email('Breakpoint: 5h - newer status code: ' . (int)$new_status);
         }
-        
-        $comments = 'PayPal status: ' . $_POST['payment_status'] . ' ' . $_POST['pending_reason']. ' @ '.$_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'];
+
+        $comments = 'PayPal status: ' . $_POST['payment_status'] . ' ' . $posted_pending_reason . ' @ '.$_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'];
         zen_update_orders_history($insert_id, $comments, null, $new_status, 0);
         ipn_debug_email("Breakpoint: 5j - order stat hist update: order-id: $insert_id, status-id: $new_status, comments: $comments");
 
@@ -344,14 +368,14 @@ Processing...
             $comments = '**** ADDRESS OVERRIDE ALERT!!! **** CHECK PAYPAL ORDER DETAILS FOR ACTUAL ADDRESS SELECTED BY CUSTOMER!!';
             zen_update_orders_history($insert_id, $comments, null, -1, -1);
         }
-        
+
         ipn_debug_email('Breakpoint: 5k - OSH update done');
         $order->create_add_products($insert_id, 2);
         ipn_debug_email('Breakpoint: 5L - adding products');
         $_SESSION['order_number_created'] = $insert_id;
         $GLOBALS[$_SESSION['payment']]->transaction_id = $_POST['txn_id'];
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE_ADD_PRODUCTS');
-        $order->send_order_email($insert_id, 2);
+        $order->send_order_email($insert_id);
         ipn_debug_email('Breakpoint: 5m - emailing customer');
         $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
 
@@ -463,7 +487,7 @@ Processing...
           break;
       }
       // update order status history with new information
-      ipn_debug_email('IPN NOTICE :: Set new status ' . $new_status . " for order ID = " .  $ordersID . ($_POST['pending_reason'] != '' ? '.   Reason_code = ' . $_POST['pending_reason'] : '') );
+      ipn_debug_email('IPN NOTICE :: Set new status ' . $new_status . " for order ID = " .  $ordersID . ($posted_pending_reason !== '' ? '.   Reason_code = ' . $posted_pending_reason : '') );
       if ((int)$new_status == 0) $new_status = 1;
       if (in_array($_POST['payment_status'], array('Refunded', 'Reversed', 'Denied', 'Failed'))
            || substr($txn_type,0,8) == 'cleared-' || $txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared') {

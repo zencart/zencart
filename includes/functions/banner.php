@@ -2,10 +2,10 @@
 /**
  * banner functions
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 24 Modified in v1.5.8-alpha $
  */
 
   /**
@@ -64,10 +64,8 @@
           if (date('Y-m-d H:i:s') >= $banners->fields['expires_date']) {
             zen_set_banner_status($banners->fields['banners_id'], 0);
           }
-        } elseif (zen_not_null($banners->fields['expires_impressions'])) {
-          if ( ($banners->fields['expires_impressions'] > 0) && ($banners->fields['banners_shown'] >= $banners->fields['expires_impressions']) ) {
+        } elseif (!empty($banners->fields['expires_impressions']) && $banners->fields['banners_shown'] >= $banners->fields['expires_impressions']) {
             zen_set_banner_status($banners->fields['banners_id'], 0);
-          }
         }
         $banners->MoveNext();
       }
@@ -136,7 +134,7 @@
       return '<strong>ZEN ERROR! (zen_display_banner(' . $action . ') failed.)</strong>';
     }
 
-    if (zen_not_null($banner->fields['banners_html_text'])) {
+    if (!empty($banner->fields['banners_html_text'])) {
       $banner_string = $banner->fields['banners_html_text'];
     } else {
       if ($banner->fields['banners_url'] == '') {

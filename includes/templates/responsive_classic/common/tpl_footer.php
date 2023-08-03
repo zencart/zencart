@@ -2,18 +2,18 @@
 /**
  * Common Template - tpl_footer.php
  *
- * this file can be copied to /templates/your_template_dir/pagename<br />
- * example: to override the privacy page<br />
- * make a directory /templates/my_template/privacy<br />
- * copy /templates/templates_defaults/common/tpl_footer.php to /templates/my_template/privacy/tpl_footer.php<br />
- * to override the global settings and turn off the footer un-comment the following line:<br />
- * <br />
- * $flag_disable_footer = true;<br />
+ * this file can be copied to /templates/your_template_dir/pagename
+ * example: to override the privacy page
+ * make a directory /templates/my_template/privacy
+ * copy /templates/templates_defaults/common/tpl_footer.php to /templates/my_template/privacy/tpl_footer.php
+ * to override the global settings and turn off the footer un-comment the following line:
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * $flag_disable_footer = true;
+ *
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
 require(DIR_WS_MODULES . zen_get_module_directory('footer.php'));
 ?>

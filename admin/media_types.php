@@ -1,16 +1,15 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 May 08 Modified in v1.5.6b $
+ * @version $Id: brittainmark 2022 Aug 12 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
@@ -23,7 +22,7 @@ if (zen_not_null($action)) {
       if (isset($_POST['type_name'])) {
         $type_name = zen_db_prepare_input($_POST['type_name']);
       }
-      
+
       $sql_data_array = array('type_ext' => $type_ext);
 
       if ($action == 'insert') {
@@ -58,23 +57,9 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -107,7 +92,7 @@ if (zen_not_null($action)) {
                     ?>
                   <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $media_type['type_id'] . '&action=edit'); ?>'">
                     <?php } else { ?>
-                  <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $media_type->fields['type_id'] . '&action=edit'); ?>'">
+                  <tr class="dataTableRow" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $media_type['type_id'] . '&action=edit'); ?>'">
                     <?php } ?>
                   <td class="dataTableContent"><?php echo $media_type['type_name']; ?></td>
                   <td class="dataTableContent"><?php echo $media_type['type_ext']; ?></td>
@@ -116,7 +101,7 @@ if (zen_not_null($action)) {
                       if (isset($mInfo) && is_object($mInfo) && ($media_type['type_id'] == $mInfo->type_id)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                       } else {
-                      echo '<a href="' . zen_href_link(FILENAME_MEDIA_TYPES, zen_get_all_get_params(array('mID')) . 'mID=' . $media_type->fields['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                      echo '<a href="' . zen_href_link(FILENAME_MEDIA_TYPES, zen_get_all_get_params(array('mID')) . 'mID=' . $media_type['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                       }
                       ?>
                   </td>
@@ -143,7 +128,7 @@ if (zen_not_null($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_MEDIA_TYPE . '</h4>');
                 $contents = array('form' => zen_draw_form('media_type', FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
-                $contents[] = array('text' => TEXT_EDIT_INTRO);
+                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', $mInfo->type_name, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"'));
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="control-label"') . zen_draw_input_field('type_ext', $mInfo->type_ext, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"'));
                 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
@@ -167,7 +152,7 @@ if (zen_not_null($action)) {
                   break;
                 }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

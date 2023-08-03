@@ -1,12 +1,11 @@
 <?php
 /**
  * Load extra user defined language files
- * see  {@link  http://www.zen-cart.com/wiki/index.php/Developers_API_Tutorials#InitSystem wikitutorials} for more details.
- *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Jul 15 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Aug 01 Modified in v1.5.8-alpha $
  */
 // must be called appropriately
 if (!defined('IS_ADMIN_FLAG')) {

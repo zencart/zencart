@@ -5,9 +5,9 @@
  * This page is auto-displayed if the configure.php file cannot be read properly.
  * It is intended simply to recommend clicking on the zc_install link to begin installation.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: John 2022 Jul 07 Modified in v1.5.8-alpha $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');
@@ -25,7 +25,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
     <meta name="generator" content="shopping cart program by Zen Cart&reg;, http://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <style type="text/css">
+    <style>
         body {
         	background: #fff;
         	color: #777;
@@ -215,7 +215,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
 
   <body>
   <div class="container">
-    <img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" class="h-img"/>
+    <img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg; Header Logo" title="Zen Cart&reg; Header Logo" class="h-img">
     <h1>Welcome to Zen Cart<sup>&reg;</sup></h1>
     <div>
       <h2>You are seeing this page for one or more reasons</h2>

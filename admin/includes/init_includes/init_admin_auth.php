@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2019 Sep 08 Modified in v1.5.7 $
+ * @version $Id: Leonard 2022 Apr 30 Modified in v1.5.8-alpha $
  */
 
 if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
@@ -69,6 +69,7 @@ if (basename($PHP_SELF) != FILENAME_ALERT_PAGE . '.php')
         zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
       }
+        $zco_notifier->notify('NOTIFY_ADMIN_NONSUPERUSER_ACTION');
     }
 
   }

@@ -3,10 +3,10 @@
  * functions/audience.php
  * Builds output queries for customer segments
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Oct 16 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Feb 02 Modified in v1.5.8-alpha $
  */
 
 //
@@ -17,7 +17,7 @@
   // ie: mail, gv_main, coupon_admin... and eventually newsletters too.
   // gets info from query_builder table
 
-  include_once(zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . "/", 'audience.php', 'false'));
+  zen_include_language_file('audience.php', '/', 'inline');
 
   global $db;
   $count_array = array();
@@ -32,7 +32,6 @@
   if ($queries_list->RecordCount() > 1) {  // if more than one query record found
     $audience_list[] = array('id' => '', 'text' => TEXT_SELECT_AN_OPTION); //provide a "not-selected" value
   }
-
   $show_count = false;
   if ($display_count === 'true' || $display_count === true) {  // if it's literal 'true' or logical true
      $show_count = true;

@@ -2,11 +2,10 @@
 /**
  * site_map.php
  *
- * @package general
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Mon Nov 5 09:42:04 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: brittainmark 2022 Sep 30 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -14,22 +13,74 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * site_map.php
  *
- * @package general
  */
  class zen_SiteMapTree {
-   var $root_category_id = 0,
-       $max_level = 0,
-       $data = array(),
-       $root_start_string = '',
-       $root_end_string = '',
-       $parent_start_string = '',
-       $parent_end_string = '',
-       $parent_group_start_string = "\n<ul>",
-       $parent_group_end_string = "</ul>\n",
-       $child_start_string = '<li>',
-       $child_end_string = "</li>\n",
-       $spacer_string = '',
-       $spacer_multiplier = 1;
+     
+     /**
+      * The root category name
+      * @var string
+      */
+    protected $root_category_id = TOPMOST_CATEGORY_PARENT_ID;
+    /**
+     * The maximum number of levels to display 0 = all;
+     * @var int
+     */
+    protected  $max_level = 0;
+    /**
+     * The data required to build the sitemap tree
+     * @var array
+     */
+    protected  $data = [];
+    /**
+     * String to proceed root category
+     * @var string
+     */
+    protected   $root_start_string = '';
+    /**
+     * String to follow root category
+     * @var string
+     */
+    protected   $root_end_string = '';
+    /**
+     * String to proceed parent string
+     * @var string
+     */
+    protected   $parent_start_string = '';
+    /**
+     * String to follow parent string
+     * @var string
+     */
+    protected  $parent_end_string = '';
+    /**
+     * String to proceed start of a parent group
+     * @var string
+     */
+    protected   $parent_group_start_string = "\n<ul>";
+    /**
+     * String to follow end of a parent group
+     * @var string
+     */
+    protected   $parent_group_end_string = "</ul>\n";
+    /**
+     * String to proceed start of a child entry
+     * @var string
+     */
+    protected   $child_start_string = '<li>';
+    /**
+     * String to follow end of a child entry
+     * @var string
+     */
+    protected  $child_end_string = "</li>\n";
+    /**
+     * String to use as separator 
+     * @var string
+     */
+    protected  $spacer_string = '';
+    /**
+     * Number of separators to use
+     * @var int
+     */
+    protected  $spacer_multiplier = 1;
 
    function __construct() {
      global $db;
@@ -48,6 +99,8 @@ if (!defined('IS_ADMIN_FLAG')) {
    }
 
    function buildBranch($parent_id, $level = 0, $parent_link = '') {
+    $parent_id = (int)$parent_id;
+    $level = (int)$level;
     $result = $this->parent_group_start_string;
 
     if (isset($this->data[$parent_id])) {

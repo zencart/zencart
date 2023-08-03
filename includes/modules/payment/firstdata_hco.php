@@ -2,10 +2,10 @@
 /**
  * First Data Hosted Checkout Payment Pages Module
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 10 Modified in v1.5.8 $
  */
 /**
  * First Data Hosted Checkout Payment Pages Module
@@ -16,30 +16,30 @@ class firstdata_hco extends base {
    *
    * @var string
    */
-  var $code;
+  public $code;
   /**
    * $moduleVersion is the plugin version number
    */
-  var $moduleVersion = '1.04';
+  public $moduleVersion = '1.04';
 
   /**
    * $title is the displayed name for this payment method
    *
    * @var string
    */
-  var $title;
+  public $title;
   /**
    * $description is used to display instructions in the admin
    *
    * @var string
    */
-  var $description;
+  public $description;
   /**
    * $enabled determines whether this module shows or not... in catalog.
    *
    * @var boolean
    */
-  var $enabled;
+  public $enabled;
   /**
    * log file folder
    *
@@ -49,18 +49,38 @@ class firstdata_hco extends base {
   /**
    * vars for internal processing and debug/logging
    */
-  protected $reportable_submit_data;
+  protected $reportable_submit_data = [];
   protected $authorize;
-  var $auth_code;
-  var $transaction_id;
+  public $auth_code;
+  public $transaction_id;
   /**
    * $order_status determines the status assigned to orders paid-for using this module
    */
-  var $order_status;
+  public $order_status;
   /**
    * @var the currency enabled in this gateway's merchant account. Transactions will be converted to this currency.
    */
   protected $gateway_currency;
+    /**
+     * $_check is used to check the configuration key set up
+     * @var int
+     */
+    protected $_check;
+    /**
+    * $form_action_url is the URL to process the payment or not set for local processing
+    * @var string
+    */
+    public $form_action_url;
+    /**
+     * $sort_order is the order priority of this payment module when displayed
+     * @var int
+     */
+    public $sort_order;
+    /**
+     * $submit_extras is an array of additional information to be added to the submit created by a notifier
+     * @var array
+     */
+    public $submit_extras = [];
 
 
   /**
@@ -350,7 +370,7 @@ class firstdata_hco extends base {
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if (MODULE_PAYMENT_FIRSTDATA_PAYMENTPAGES_DEBUGGING == 'echo') {
-      echo 'Returned Response Codes:<br /><pre>' . print_r($_POST, true) . '</pre><br />';
+      echo 'Returned Response Codes:<br><pre>' . print_r($_POST, true) . '</pre><br>';
       die('Press the BACK button in your browser to return to the previous page.');
     }
 

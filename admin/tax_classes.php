@@ -1,15 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 13 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'insert':
       $tax_class_title = zen_db_prepare_input($_POST['tax_class_title']);
@@ -67,23 +67,9 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+      <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -121,7 +107,7 @@ if (zen_not_null($action)) {
                   ?>
               <td class="dataTableContent"><?php echo $class['tax_class_id']; ?></td>
               <td class="dataTableContent"><?php echo $class['tax_class_title']; ?></td>
-              <td class="dataTableContent" align="right"><?php
+              <td class="dataTableContent text-right"><?php
                   if (isset($tcInfo) && is_object($tcInfo) && ($class['tax_class_id'] == $tcInfo->tax_class_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
@@ -179,7 +165,7 @@ if (zen_not_null($action)) {
                 }
                 break;
             }
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

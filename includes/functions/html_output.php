@@ -3,10 +3,10 @@
  * html_output.php
  * HTML-generating functions used throughout the core
  *
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2021 Feb 16 Modified in v1.5.7c $
+ * @version $Id: pRose on charmes 2022 Oct 01 Modified in v1.5.8 $
  */
 
 /*
@@ -18,15 +18,15 @@
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT', array(), $link, $page, $parameters, $connection, $add_session_id, $static, $use_dir_ws_catalog);
     if($link !== null) return $link;
 
-    if (!zen_not_null($page)) {
+    if (empty($page)) {
       trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
             E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine the page link!</strong><br /><br /><!--' . $page . '<br />' . $parameters . ' -->');
+      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine the page link!</strong><br><br><!--' . $page . '<br>' . $parameters . ' -->');
     }
 
     if ($connection == 'NONSSL') {
       $link = HTTP_SERVER;
-    } elseif ($connection == 'SSL') {
+    } elseif ($connection == 'SSL' || $connection == '') {
       if (ENABLE_SSL == 'true') {
         $link = HTTPS_SERVER ;
       } else {
@@ -34,7 +34,7 @@
       }
     } else {
       trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br /><br /><strong class="note">Error!<br /><br />Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
+      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL</strong><br><br>');
     }
 
     if ($use_dir_ws_catalog) {
@@ -46,13 +46,13 @@
     }
 
     if (!$static) {
-      if (zen_not_null($parameters)) {
+      if (!empty($parameters)) {
         $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
       } else {
         $link .= 'index.php?main_page=' . $page;
       }
     } else {
-      if (zen_not_null($parameters)) {
+      if (!empty($parameters)) {
         $link .= $page . "?" . zen_output_string($parameters);
       } else {
         $link .= $page;
@@ -64,7 +64,7 @@
     while (substr($link, -1) == '&' || substr($link, -1) == '?') $link = substr($link, 0, -1);
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ($add_session_id == true && $session_started == true && SESSION_FORCE_COOKIE_USE == 'False') {
-      if (defined('SID') && zen_not_null(constant('SID'))) {
+      if (defined('SID') && !empty(constant('SID'))) {
         $sid = constant('SID');
       } elseif ( ($request_type == 'NONSSL' && $connection == 'SSL' && ENABLE_SSL == 'true') || ($request_type == 'SSL' && $connection == 'NONSSL') ) {
         if ($http_domain != $https_domain) {
@@ -114,165 +114,189 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
  * The HTML image wrapper function for non-proportional images
  * used when "proportional images" is turned off or if calling from a template directory
  */
-  function zen_image_OLD($src, $alt = '', $width = '', $height = '', $parameters = '') {
+function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters = '')
+{
     global $template_dir;
 
-//auto replace with defined missing image
-    if ($src == DIR_WS_IMAGES and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
-      $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    //auto replace with defined missing image
+    if ($src === DIR_WS_IMAGES && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
 
-    if ( (empty($src) || $src == DIR_WS_IMAGES) && (IMAGE_REQUIRED == 'false') ) {
-      return false;
+    if ((empty($src) || $src === DIR_WS_IMAGES) && IMAGE_REQUIRED === 'false') {
+        return false;
     }
 
     // if not in current template switch to template_default
-    if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+    $file_exists = is_file($src);
+    if ($file_exists === false) {
+        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+        $file_exists = is_file($src);
     }
-
-// alt is added to the img tag even if it is null to prevent browsers from outputting
-// the image filename as default
-    $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
-
-    if (zen_not_null($alt)) {
-      $image .= ' title="' . zen_output_string($alt) . '"';
-    }
-
-    if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height)) ) {
-      if ($image_size = @getimagesize($src)) {
-        if (empty($width) && zen_not_null($height)) {
-          $ratio = $height / $image_size[1];
-          $width = $image_size[0] * $ratio;
-        } elseif (zen_not_null($width) && empty($height)) {
-          $ratio = $width / $image_size[0];
-          $height = $image_size[1] * $ratio;
-        } elseif (empty($width) && empty($height)) {
-          $width = $image_size[0];
-          $height = $image_size[1];
-        }
-      } elseif (IMAGE_REQUIRED == 'false') {
+    if ($file_exists === false && IMAGE_REQUIRED === 'false') {
         return false;
-      }
     }
 
-    if (zen_not_null($width) && zen_not_null($height)) {
-      $image .= ' width="' . zen_output_string($width) . '" height="' . zen_output_string($height) . '"';
+    // The alt attribute is now provided as an empty string, with the addition of a
+    // role="presentation", since most browsers see an empty alt attribute as presentational
+    // and now-current browsers also accept the 'role=' attribute.
+    $image = '<img src="' . zen_output_string($src) . '" alt=""';
+    if (strpos($parameters, 'role="presentation"') === false) {
+        $image .= ' role="presentation"';
     }
 
-    if (zen_not_null($parameters)) $image .= ' ' . $parameters;
+    if (!empty($title)) {
+        $image .= ' title="' . zen_output_string($title) . '"';
+    }
 
-    $image .= ' />';
+    $width = (int)$width;
+    $height = (int)$height;
+    if ($file_exists === true && CONFIG_CALCULATE_IMAGE_SIZE === 'true' && ($width === 0 || $height === 0)) {
+        $image_size = getimagesize($src);
+        if ($image_size === false) {
+            if (IMAGE_REQUIRED === 'false') {
+                return false;
+            }
+        } elseif ($width === 0 && $height === 0) {
+            $width = (int)$image_size[0];
+            $height = (int)$image_size[1];
+        } elseif ($width === 0) {
+            $ratio = $height / $image_size[1];
+            $width = (int)($image_size[0] * $ratio);
+        } else {
+            $ratio = $width / $image_size[0];
+            $height = (int)($image_size[1] * $ratio);
+        }
+    }
+
+    if ($width !== 0 && $height !== 0) {
+        $image .= ' width="' . $width . '" height="' . $height . '"';
+    }
+
+    if (!empty($parameters)) {
+        $image .= ' ' . $parameters;
+    }
+
+    $image .= '>';
 
     return $image;
-  }
-
+}
 
 /*
  * The HTML image wrapper function
  */
-  function zen_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
+function zen_image($src, $title = '', $width = '', $height = '', $parameters = '')
+{
     global $template_dir, $zco_notifier;
 
-    // soft clean the alt tag
-    $alt = zen_clean_html($alt);
+    // soft clean the title attribute's value
+    $title = zen_clean_html($title);
 
     // use old method on template images
-    if (strstr($src, 'includes/templates') || strstr($src, 'includes/languages') || PROPORTIONAL_IMAGES_STATUS == '0') {
-      return zen_image_OLD($src, $alt, $width, $height, $parameters);
+    if (strpos($src, 'includes/templates') !== false || strpos($src, 'includes/languages') !== false || PROPORTIONAL_IMAGES_STATUS === '0') {
+        return zen_image_OLD($src, $title, $width, $height, $parameters);
     }
 
-//auto replace with defined missing image
-    if ($src == DIR_WS_IMAGES and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
-      $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    //auto replace with defined missing image
+    if ($src === DIR_WS_IMAGES && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
 
-    if ( (empty($src) || ($src == DIR_WS_IMAGES)) && IMAGE_REQUIRED == 'false') {
-      return false;
+    if ((empty($src) || ($src === DIR_WS_IMAGES)) && IMAGE_REQUIRED === 'false') {
+        return false;
     }
 
     // if not in current template switch to template_default
-    if (!file_exists($src)) {
-      $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+    if (!is_file($src)) {
+        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
     }
 
     // hook for handle_image() function such as Image Handler etc
     if (function_exists('handle_image')) {
-      $newimg = handle_image($src, $alt, $width, $height, $parameters);
-      list($src, $alt, $width, $height, $parameters) = $newimg;
-      $zco_notifier->notify('NOTIFY_HANDLE_IMAGE', array($newimg));
+        $newimg = handle_image($src, $title, $width, $height, $parameters);
+        list($src, $title, $width, $height, $parameters) = $newimg;
+        $zco_notifier->notify('NOTIFY_HANDLE_IMAGE', [$newimg]);
     }
 
-    $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $alt, $width, $height, $parameters);
+    //image is defined but is missing
+    if (PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !is_file($src)) {
+        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    }
+    
+    $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $title, $width, $height, $parameters);
+
+    // Determine if the source-file exists.
+    $file_exists = is_file($src);
+    $image_size = false;
+    if ($file_exists === true) {
+        $image_size = getimagesize($src);
+    }
+    if ($image_size === false && IMAGE_REQUIRED === 'false') {
+        return false;
+    }
 
     // Convert width/height to int for proper validation.
-    // intval() used to support compatibility with plugins like image-handler
-    $width = empty($width) ? $width : (int)$width;
-    $height = empty($height) ? $height : (int)$height;
+    $width = empty($width) ? 0 : (int)$width;
+    $height = empty($height) ? 0 : (int)$height;
 
-// alt is added to the img tag even if it is null to prevent browsers from outputting
-// the image filename as default
-    $image = '<img src="' . zen_output_string($src) . '" alt="' . zen_output_string($alt) . '"';
-
-    if (zen_not_null($alt)) {
-      $image .= ' title="' . zen_output_string($alt) . '"';
+    // The alt attribute is now provided as an empty string, with the addition of a
+    // role="presentation", since most browsers see an empty alt attribute as presentational
+    // and now-current browsers also accept the 'role=' attribute.
+    $image = '<img src="' . zen_output_string($src) . '" alt=""';
+    if (strpos($parameters, 'role="presentation"') === false) {
+        $image .= ' role="presentation"';
     }
 
-    if (CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height))) {
-      if ($image_size = @getimagesize($src)) {
-        if (empty($width) && !empty($height)) {
-          $ratio = $height / $image_size[1];
-          $width = $image_size[0] * $ratio;
-        } elseif (!empty($width) && empty($height)) {
-          $ratio = $width / $image_size[0];
-          $height = $image_size[1] * $ratio;
-        } elseif (empty($width) && empty($height)) {
-          $width = $image_size[0];
-          $height = $image_size[1];
+    if (!empty($title)) {
+        $image .= ' title="' . zen_output_string($title) . '"';
+    }
+
+    if ($image_size !== false && CONFIG_CALCULATE_IMAGE_SIZE === 'true' && ($width === 0 || $height === 0)) {
+        if ($width === 0 && $height === 0) {
+            $width = $image_size[0];
+            $height = $image_size[1];
+        } elseif ($width === 0) {
+            $ratio = $height / $image_size[1];
+            $width = (int)($image_size[0] * $ratio);
+        } else {
+            $ratio = $width / $image_size[0];
+            $height = (int)($image_size[1] * $ratio);
         }
-      } elseif (IMAGE_REQUIRED == 'false') {
-        return false;
-      }
     }
 
+    if ($image_size !== false && $width !== 0 && $height !== 0) {
+        // fix division by zero error
+        $ratio = ($image_size[0] !== 0) ? $width / $image_size[0] : 1;
+        if ($image_size[1] * $ratio > $height) {
+            $ratio = $height / $image_size[1];
+            $width = (int)($image_size[0] * $ratio);
+        } else {
+            $height = (int)($image_size[1] * $ratio);
+        }
 
-    if (!empty($width) && !empty($height) && file_exists($src)) {
-// proportional images
-      $image_size = @getimagesize($src);
-      // fix division by zero error
-      $ratio = ($image_size[0] != 0 ? $width / $image_size[0] : 1);
-      if ($image_size[1]*$ratio > $height) {
-        $ratio = $height / $image_size[1];
-        $width = $image_size[0] * $ratio;
-      } else {
-        $height = $image_size[1] * $ratio;
-      }
-// only use proportional image when image is larger than proportional size
-      if ($image_size[0] < $width and $image_size[1] < $height) {
-        $image .= ' width="' . $image_size[0] . '" height="' . (int)$image_size[1] . '"';
-      } else {
-        $image .= ' width="' . round($width) . '" height="' . round($height) . '"';
-      }
-    } else {
-       // override on missing image to allow for proportional and required/not required
-      if (IMAGE_REQUIRED == 'false') {
-        return false;
-      } else if (substr($src, 0, 4) != 'http') {
+        // only use proportional image when image is larger than proportional size
+        if ($image_size[0] < $width && $image_size[1] < $height) {
+            $image .= ' width="' . $image_size[0] . '" height="' . $image_size[1] . '"';
+        } else {
+            $image .= ' width="' . (int)round($width) . '" height="' . (int)round($height) . '"';
+        }
+    } elseif (strpos($src, 'http') !== 0) {
         $image .= ' width="' . (int)SMALL_IMAGE_WIDTH . '" height="' . (int)SMALL_IMAGE_HEIGHT . '"';
-      }
     }
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
-    if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS != '') {
-      $parameters .= (zen_not_null($parameters) ? ' ' : '') . 'class="rollover"';
+    if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS !== '') {
+        $parameters .= (!empty($parameters) ? ' ' : '') . 'class="rollover"';
     }
     // add $parameters to the tag output
-    if (zen_not_null($parameters)) $image .= ' ' . $parameters;
+    if (!empty($parameters)) {
+        $image .= ' ' . $parameters;
+    }
 
-    $image .= ' />';
+    $image .= '>';
 
     return $image;
-  }
+}
 
 /*
  * The HTML form submit button wrapper function
@@ -285,11 +309,11 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($alt)) $image_submit .= ' title="' . zen_output_string($alt) . '"';
+    if (!empty($alt)) $image_submit .= ' title="' . zen_output_string($alt) . '"';
 
-    if (zen_not_null($parameters)) $image_submit .= ' ' . $parameters;
+    if (!empty($parameters)) $image_submit .= ' ' . $parameters;
 
-    $image_submit .= ' />';
+    $image_submit .= '>';
 
     return $image_submit;
   }
@@ -302,24 +326,84 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
     if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS != '') {
-      $parameters .= (zen_not_null($parameters) ? ' ' : '') . 'class="rollover"';
+      $parameters .= (!empty($parameters) ? ' ' : '') . 'class="rollover"';
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
+        if (preg_match('/\.(png|gif|jpe?g|webp)/i', $image)) {
+            return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
+        } else {
+            return zen_draw_button($image, $sec_class, '', $parameters, $alt, 'button');
+        }
+    }
     return zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', $parameters);
   }
 
 
 /**
+ * Draw a <button> element
+ **/
+function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters = '', $title = '', $type = 'button')
+{
+    global $zco_notifier;
+
+    // legacy support
+    // remove .gif etc suffix if any
+    $text = preg_replace('/\.(png|gif|jpe?g|webp)$/', '', $text);
+    $text = str_replace('_', ' ', Illuminate\Support\Str::title($text));
+
+    $classes = '';
+    // optionally force something like 'btn' into the current template's buttons by defining a constant for the template:
+    if (defined('TEMPLATE_BASE_CSS_BUTTON_CLASSES')) {
+        $classes .= constant('TEMPLATE_BASE_CSS_BUTTON_CLASSES');
+    }
+
+    $the_button = '';
+
+    $zco_notifier->notify('NOTIFY_ZEN_DRAW_BUTTON', null, $text, $classes, $added_classes, $id, $parameters, $title, $type, $the_button);
+
+    if (empty($the_button)) {
+        $the_button = '<button class="' . $classes;
+        if (!empty($added_classes)) {
+            $the_button .= (empty($classes) ? '' : ' ') . $added_classes;
+        }
+        $the_button .= '"';
+
+        if (!empty($id)) {
+            $the_button .= ' id="' . $id . '"';
+        }
+
+        if ($type != 'button') {
+            $the_button .= ' type="' . $type . '"';
+        }
+
+        if (!empty($parameters)) {
+            $the_button .= ' ' . $parameters;
+        }
+
+        if (!empty($title)) {
+            $the_button .= ' title="' . $title . '"';
+        }
+
+        $the_button .= '>';
+        $the_button .= $text;
+        $the_button .= '</button>';
+    }
+
+    return $the_button;
+}
+
+/**
  * generate CSS buttons in the current language
  * concept from contributions by Seb Rouleau and paulm, subsequently adapted to Zen Cart
  * note: any hard-coded buttons will not be able to use this function
-**/
+ **/
   function zenCssButton($image = '', $text = '', $type = 'button', $sec_class = '', $parameters = '') {
    global $css_button_text, $css_button_opts, $template, $current_page_base, $language;
 
-   $button_name = basename($image, '.gif');
+   $button_name = basename($image);
+   $button_name = preg_replace('/\.(png|gif|jpe?g|webp)$/', '', $button_name);
 
     // if no secondary class is set use the image name for the sec_class
     if (empty($sec_class)) $sec_class = $button_name;
@@ -342,7 +426,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     if ($type == 'submit'){
       // form input button
       if ($parameters != '') {
-        // If the input parameters include a "name" attribute, need to emulate an <input type="image" /> return value by adding a _x to the name parameter (creds to paulm)
+        // If the input parameters include a "name" attribute, need to emulate an <input type="image"> return value by adding a _x to the name parameter (creds to paulm)
         if (preg_match('/name="([a-zA-Z0-9\-_]+)"/', $parameters, $matches)) {
           $parameters = str_replace('name="' . $matches[1], 'name="' . $matches[1] . '_x', $parameters);
         }
@@ -352,11 +436,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
         }
       }
 
-      // -----
       // Give an observer the chance to provide alternate formatting for the button (it's set to an empty
       // string above).  If the value is still empty after the notification, create the standard-format
       // of the button.
-      //
       $GLOBALS['zco_notifier']->notify(
             'NOTIFY_ZEN_CSS_BUTTON_SUBMIT',
             array(
@@ -368,7 +450,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
             $css_button
       );
       if ($css_button == '') {
-        $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . ' />';
+        $css_button = '<input class="' . $mouse_out_class . '" ' . $css_button_js . ' type="submit" value="' . $text . '"' . $tooltip . $parameters . '>';
       }
     }
 
@@ -378,7 +460,6 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       // Give an observer the chance to provide alternate formatting for the button (it's set to an empty string
       // above).  If the value is still empty after the notification, create the standard-format
       // of the button.
-      //
       $GLOBALS['zco_notifier']->notify(
             'NOTIFY_ZEN_CSS_BUTTON_BUTTON',
             array(
@@ -413,16 +494,63 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
     return zen_image($image, '', $width, $height);
   }
 
+
+/**
+ * generates javascript for dynamically updating the states/provinces list when the country is changed
+ *
+ * @param string $country number
+ * @param string $form html form name to attach to
+ * @param string $field html field to attach to
+ * @return string javascript segment
+ */
+function zen_js_zone_list(string $country, string $form, string $field) {
+    global $db;
+    $sql = "SELECT DISTINCT zone_country_id
+            FROM " . TABLE_ZONES . "
+            ORDER BY zone_country_id";
+    $countries = $db->Execute($sql);
+    $num_country = 1;
+    $output_string = '';
+    while (!$countries->EOF) {
+        if ($num_country == 1) {
+            $output_string .= '  if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
+        } else {
+            $output_string .= '  } else if (' . $country . ' == "' . $countries->fields['zone_country_id'] . '") {' . "\n";
+        }
+
+        $sql = "SELECT zone_name, zone_id
+                FROM " . TABLE_ZONES . "
+                WHERE zone_country_id = " . (int)$countries->fields['zone_country_id'] . "
+                ORDER BY zone_name";
+        $results = $db->Execute($sql);
+        $num_state = 1;
+        foreach ($results as $state) {
+            if ($num_state == 1) $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+            $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $state['zone_name'] . '", "' . $state['zone_id'] . '");' . "\n";
+            $num_state++;
+        }
+        $num_country++;
+        $countries->MoveNext();
+        $output_string .= '    hideStateField(' . $form . ');' . "\n" ;
+    }
+    $output_string .= '  } else {' . "\n" .
+        '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+        '    showStateField(' . $form . ');' . "\n" .
+        '  }' . "\n";
+    return $output_string;
+}
+
+
 /*
  *  Output a form
  */
   function zen_draw_form($name, $action, $method = 'post', $parameters = '') {
     $form = '<form name="' . zen_output_string($name) . '" action="' . zen_output_string($action) . '" method="' . zen_output_string($method) . '"';
 
-    if (zen_not_null($parameters)) $form .= ' ' . $parameters;
+    if (!empty($parameters)) $form .= ' ' . $parameters;
 
     $form .= '>';
-    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '" />';
+    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
     return $form;
   }
 
@@ -457,9 +585,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $field .= ' value="' . zen_output_string($value) . '"';
     }
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
-    $field .= ' />';
+    $field .= '>';
 
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
@@ -527,9 +655,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $selection .= ' checked="checked"';
     }
 
-    if (zen_not_null($parameters)) $selection .= ' ' . $parameters;
+    if (!empty($parameters)) $selection .= ' ' . $parameters;
 
-    $selection .= ' />';
+    $selection .= '>';
 
     // -----
     // Give an observer the opportunity to modify the just-rendered field.
@@ -588,7 +716,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
 
     $field = '<textarea name="' . zen_output_string($name) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
@@ -630,9 +758,9 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
     }
 
-    if (zen_not_null($parameters)) $field .= ' ' . $parameters;
+    if (!empty($parameters)) $field .= ' ' . $parameters;
 
-    $field .= ' />';
+    $field .= '>';
 
     return $field;
   }
@@ -657,7 +785,7 @@ function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONS
   function zen_hide_session_id() {
     global $session_started;
 
-    if ($session_started == true && defined('SID') && zen_not_null(SID) ) {
+    if ($session_started == true && defined('SID') && !empty(SID) ) {
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
   }
@@ -693,7 +821,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
     return $field;
   }
 
-  $field = '<select rel="dropdown"';
+  $field = '<select ';
 
   if (strpos($parameters, 'id=') === false) {
     $field .= ' id="select-' . zen_output_string($name) . '"';
@@ -701,7 +829,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
 
   $field .= ' name="' . zen_output_string($name) . '"';
 
-  if (zen_not_null($parameters)) {
+  if (!empty($parameters)) {
     $field .= ' ' . $parameters;
   }
 
@@ -750,7 +878,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
     $countries = zen_get_countries();
 
     // Set some default entries at top of list:
-    if (STORE_COUNTRY != SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY) $countriesAtTopOfList[] = SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
+    if (SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY !== '' && STORE_COUNTRY !== SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY) $countriesAtTopOfList[] = SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
     $countriesAtTopOfList[] = STORE_COUNTRY;
     // IF YOU WANT TO ADD MORE DEFAULTS TO THE TOP OF THIS LIST, SIMPLY ENTER THEIR NUMBERS HERE.
     // Duplicate more lines as needed
@@ -761,7 +889,16 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
 
     //process array of top-of-list entries:
     foreach ($countriesAtTopOfList as $key=>$val) {
-      $countries_array[] = array('id' => $val, 'text' => zen_get_country_name($val));
+      // -----
+      // Account for the possibility that one of the top-of-list countries has been disabled.  If
+      // that's the case, issue a PHP notice since the condition really shouldn't happen!
+      //
+      $country_name = zen_get_country_name($val);
+      if ($country_name === '') {
+        trigger_error('Country with countries_id = ' . $val . ' is either disabled or does not exist.', E_USER_NOTICE);
+      } else {
+        $countries_array[] = array('id' => $val, 'text' => $country_name);
+      }
     }
     // now add anything not in the defaults list:
     for ($i=0, $n=count($countries); $i<$n; $i++) {

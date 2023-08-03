@@ -1,57 +1,78 @@
 <?php
 /**
- * Temporary cache for sql
+ * Memoization cache for MySQL SELECT queries
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Created by Data-Diggers.com http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
- *
+ * @version $Id: DrByte 2020 Aug 08 Modified in v1.5.8-alpha $
  */
+
 /**
- * QueryCache
- *
+ * QueryCache memoization cache for SELECT queries
  */
- class QueryCache {
+class QueryCache
+{
+    protected $queries = [];
 
-    function __construct() {
-        $this->queries = array();
+    /**
+     * Cache SELECT statement query resources in application memory
+     * returns TRUE if and only if query has been stored in cache
+     * @param string $query query string, used as a key
+     * @param mysqli_result $valueToStore result from mysqli_query
+     * @return bool
+     */
+    public function cache(string $query, $valueToStore)
+    {
+        if ($this->isSelectStatement($query) === true) {
+            $this->queries[$query] = $valueToStore;
+        } else {
+            return false;
+        }
+        return true;
     }
 
-    // cache queries if and only if query is 'SELECT' statement
-    // returns:
-    //	TRUE - if and only if query has been stored in cache
-    //	FALSE - otherwise
-    function cache($query, $result) {
-        if ($this->isSelectStatement($query) === TRUE) $this->queries[$query] = $result;
-        else return(FALSE);
-        return(TRUE);
-    }
-
-    function getFromCache($query) {
+    /**
+     * @param string $query
+     * @return mixed
+     */
+    public function getFromCache(string $query)
+    {
         $ret = $this->queries[$query];
         mysqli_data_seek($ret, 0);
-        return($ret);
+        return ($ret);
     }
 
-    function inCache($query) {
-        return(isset($this->queries[$query]));
+    /**
+     * @param string $query used as a cache key
+     * @return bool
+     */
+    public function inCache(string $query)
+    {
+        return (isset($this->queries[$query]));
     }
 
-    function isSelectStatement($q) {
-        if(($q[0] == 's' || $q[0] == 'S')
-                && ($q[1] == 'e' || $q[1] == 'E')
-                && ($q[2] == 'l' || $q[2] == 'L'))
-            return(true);
-        return(false);
+    /**
+     * ensure the query is a SELECT query
+     * @param string $q
+     * @return bool
+     */
+    protected function isSelectStatement(string $q)
+    {
+        return 0 === stripos($q, "SELECT");
     }
 
-    function reset($query) {
-      if ('ALL' == $query) {
-        $this->queries = array();
-        return FALSE;
-      }
-      unset ($this->queries[$query]);
+    /**
+     * Remove query from cache. Pass ALL to reset entire cache
+     * @param string $query
+     * @return bool
+     */
+    public function reset(string $query)
+    {
+        if ('ALL' == $query) {
+            $this->queries = [];
+            return false;
+        }
+        unset ($this->queries[$query]);
     }
 }

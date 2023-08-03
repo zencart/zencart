@@ -2,13 +2,13 @@
 /**
  * Page Template
  *
- * Loaded automatically by index.php?main_page=checkout_confirmation.<br />
+ * Loaded automatically by index.php?main_page=checkout_confirmation.
  * Displays final checkout details, cart, payment and shipping info details.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 19 Modified in v1.5.7a $
+ * @version $Id: lat9 2022 Jul 01 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -25,17 +25,13 @@
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
 <?php } ?>
 
-<address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></address>
-
-<?php
-  $class =& $_SESSION['payment'];
-?>
+<address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br>'); ?></address>
 
 <h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3>
-<h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $GLOBALS[$class]->title; ?></h4>
+<h4 id="checkoutConfirmDefaultPaymentTitle"><?php $payment_title; ?></h4>
 
 <?php
-  if (is_array($payment_modules->modules)) {
+  if ($credit_covers === false && is_array($payment_modules->modules)) {
     if ($confirmation = $payment_modules->confirmation()) {
 ?>
 <div class="important"><?php echo $confirmation['title']; ?></div>
@@ -56,7 +52,7 @@
   }
 ?>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 </div>
 
 <?php
@@ -66,7 +62,7 @@
 <h2 id="checkoutConfirmDefaultShippingAddress"><?php echo HEADING_DELIVERY_ADDRESS; ?></h2>
 <div class="buttonRow forward"><?php echo '<a href="' . $editShippingButtonLink . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
 
-<address><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></address>
+<address><?php echo zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br>'); ?></address>
 
 <?php
     if ($order->info['shipping_method']) {
@@ -81,19 +77,19 @@
 <?php
   }
 ?>
-<br class="clearBoth" />
-<hr />
+<br class="clearBoth">
+<hr>
 
 <h2 id="checkoutConfirmDefaultHeadingComments"><?php echo HEADING_ORDER_COMMENTS; ?></h2>
 <div class="buttonRow forward"><?php echo  '<a href="' . zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
 <div><?php echo (empty($order->info['comments']) ? NO_COMMENTS_TEXT : nl2br(zen_output_string_protected($order->info['comments'])) . zen_draw_hidden_field('comments', $order->info['comments'])); ?></div>
-<br class="clearBoth" />
-<hr />
+<br class="clearBoth">
+<hr>
 
 <h2 id="checkoutConfirmDefaultHeadingCart"><?php echo HEADING_PRODUCTS; ?></h2>
 
 <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_SHOPPING_CART, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_EDIT_SMALL, BUTTON_EDIT_SMALL_ALT) . '</a>'; ?></div>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php  if ($flagAnyOutOfStock) { ?>
 <?php    if (STOCK_ALLOW_CHECKOUT == 'true') {  ?>
@@ -150,13 +146,13 @@
 <?php    }  // endif tax info display  ?>
         <td class="cartTotalDisplay">
           <?php echo $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']);
-          if ($order->products[$i]['onetime_charges'] != 0 ) echo '<br /> ' . $currencies->display_price($order->products[$i]['onetime_charges'], $order->products[$i]['tax'], 1);
+          if ($order->products[$i]['onetime_charges'] != 0 ) echo '<br> ' . $currencies->display_price($order->products[$i]['onetime_charges'], $order->products[$i]['tax'], 1);
 ?>
         </td>
       </tr>
 <?php  }  // end for loopthru all products ?>
       </table>
-      <hr />
+      <hr>
 
 <?php
   if (MODULE_ORDER_TOTAL_INSTALLED) {
@@ -170,12 +166,12 @@
 <?php
   echo zen_draw_form('checkout_confirmation', $form_action_url, 'post', 'id="checkout_confirmation" onsubmit="submitonce();"');
 
-  if (is_array($payment_modules->modules)) {
+  if ($credit_covers === false && is_array($payment_modules->modules)) {
     echo $payment_modules->process_button();
   }
 ?>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONFIRM_ORDER, BUTTON_CONFIRM_ORDER_ALT, 'name="btn_submit" id="btn_submit"') ;?></div>
 </form>
-<div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br />' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
+<div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </div>

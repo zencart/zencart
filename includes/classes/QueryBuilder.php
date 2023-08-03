@@ -2,9 +2,9 @@
 /**
  * Class QueryBuilder
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 20 New in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Jul 27 Modified in v1.5.8-alpha2 $
  */
 
 /**
@@ -98,7 +98,7 @@ class QueryBuilder extends \base
             $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($listingQuery, 'isDistinct', false) ? "DISTINCT " : '') .
                 $this->parts ['mainTableName'] . "." . $this->parts ['countField'] . ")
                                  AS total " . $this->query ['table'] . $this->query ['joins'] .
-                $this->query ['where'];;
+                $this->query ['where'];
         }
         $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_END');
     }

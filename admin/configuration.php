@@ -1,15 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 May 05 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2021 Dec 30 Modified in v1.5.8-alpha $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'save':
       $cID = zen_db_prepare_input($_GET['cID']);
@@ -54,16 +54,30 @@ $cfg_group = $db->Execute("SELECT configuration_group_title
                            FROM " . TABLE_CONFIGURATION_GROUP . "
                            WHERE configuration_group_id = " . (int)$gID);
 
+if ($cfg_group->RecordCount() == 0) {
+    $cfg_group->fields['configuration_group_title'] = '';
+} else {
+    // multilanguage support:
+    // For example, in admin/includes/languages/spanish/configuration.php
+    // define('CFG_GRP_TITLE_MY_STORE', 'Mi Tienda');
+    $str = $cfg_group->fields['configuration_group_title'];
+    $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '_', $str);
+    $const = 'CFG_GRP_TITLE_' . strtoupper($str);
+    if (defined($const)) {
+        $cfg_group->fields['configuration_group_title'] = constant($const);
+    }
+}
+
 if ($gID == 7) {
   $shipping_errors = '';
   if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == 'NONE' or zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') == '') {
-    $shipping_errors .= '<br />' . ERROR_SHIPPING_ORIGIN_ZIP;
+    $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
   }
   if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') == '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS != 'True')) {
-    $shipping_errors .= '<br />' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
+    $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
   }
   if (defined('MODULE_SHIPPING_USPS_STATUS') and ( MODULE_SHIPPING_USPS_USERID == 'NONE' or MODULE_SHIPPING_USPS_SERVER == 'test')) {
-    $shipping_errors .= '<br />' . ERROR_USPS_STATUS;
+    $shipping_errors .= '<br>' . ERROR_USPS_STATUS;
   }
   if ($shipping_errors != '') {
     $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
@@ -77,23 +91,9 @@ if ($gID == 7) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -114,12 +114,25 @@ if ($gID == 7) {
             </thead>
             <tbody>
                 <?php
-                $configuration = $db->Execute("SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
+                $query = "SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
                                                FROM " . TABLE_CONFIGURATION . "
-                                               WHERE configuration_group_id = " . (int)$gID . "
-                                               ORDER BY sort_order");
+                                               WHERE configuration_group_id = " . (int)$gID; 
+
+                $default_sort = true; 
+                if (defined('CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME') && !empty(CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME)) {
+                   $sorted_menus = explode(",", CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME);
+                   if (in_array($gID, $sorted_menus)) {
+                     $default_sort = false; 
+                   }
+                }
+                if ($default_sort) { 
+                   $query .= " ORDER BY sort_order";
+                } else {
+                   $query .= " ORDER BY configuration_title";
+                }
+                $configuration = $db->Execute($query); 
                 foreach ($configuration as $item) {
-                  if (zen_not_null($item['use_function'])) {
+                  if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
                       $class_method = explode('->', $use_function);
@@ -162,13 +175,13 @@ if ($gID == 7) {
                   }
                   ?>
               <td class="dataTableContent"><?php echo $item['configuration_title']; ?></td>
-              <td class="dataTableContent"><?php 
-                   $setting = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); 
-                   if (strlen($setting) > 40) { 
+              <td class="dataTableContent"><?php
+                   $setting = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE);
+                   if (strlen($setting) > 40) {
 
-                      echo htmlspecialchars(substr($cfgValue,0,35), ENT_COMPAT, CHARSET, TRUE) . "..."; 
-                   } else { 
-                      echo $setting; 
+                      echo htmlspecialchars(substr($cfgValue,0,35), ENT_COMPAT, CHARSET, TRUE) . "...";
+                   } else {
+                      echo $setting;
                    }
               ?></td>
               <td class="dataTableContent text-right">
@@ -192,10 +205,10 @@ if ($gID == 7) {
           $contents = array();
 
           // Translation for contents
-          if (defined('CFGTITLE_' . $cInfo->configuration_key)) {
+          if (isset($cInfo) && isset($cInfo->configuration_key) && defined('CFGTITLE_' . $cInfo->configuration_key)) {
             $cInfo->configuration_title = constant('CFGTITLE_' . $cInfo->configuration_key);
           }
-          if (defined('CFGDESC_' . $cInfo->configuration_key)) {
+          if (isset($cInfo) && isset($cInfo->configuration_key) && defined('CFGDESC_' . $cInfo->configuration_key)) {
             $cInfo->configuration_description = constant('CFGDESC_' . $cInfo->configuration_key);
           }
 
@@ -233,7 +246,7 @@ if ($gID == 7) {
               break;
           }
 
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+          if (!empty($heading) && !empty($contents)) {
             $box = new box;
             echo $box->infoBox($heading, $contents);
           }

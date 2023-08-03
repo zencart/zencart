@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 Apr 01 Modified in v1.5.7 $
+ * @version $Id: Erik Kerkhoven 2021 May 02 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -13,7 +13,7 @@ if (empty($products_description)) $products_description = [];
 if (empty($products_name)) $products_name = [];
 if (empty($products_url)) $products_url = [];
 
-if (zen_not_null($_POST)) {
+if (!empty($_POST)) {
   $pInfo = new objectInfo($_POST);
   $products_name = $_POST['products_name'];
   $products_description = $_POST['products_description'];
@@ -73,9 +73,9 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           $pInfo->products_name = $products_image_name;
         }
         if ((isset($_POST['image_delete']) && $_POST['image_delete'] == '1') || ($products_image_name == '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1')) {
-          echo zen_image(DIR_WS_CATALOG_IMAGES . PRODUCTS_IMAGE_NO_IMAGE, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail" style="float:right;"') . $pInfo->products_description;
+          echo zen_image(DIR_WS_CATALOG_IMAGES . PRODUCTS_IMAGE_NO_IMAGE, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"') . $pInfo->products_description;
         } else {
-          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail" style="float:right;"') . $pInfo->products_description;
+          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"') . $pInfo->products_description;
         }
         ?>
     </div>

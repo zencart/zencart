@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 12 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
@@ -11,7 +11,7 @@ $action = (isset($_GET['action']) ? $_GET['action'] : '');
 if (!isset($_GET['cID'])) $_GET['cID'] = '';
 if (!isset($_GET['gID'])) $_GET['gID'] = '';
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
   switch ($action) {
     case 'layout_save':
       $configuration_value = zen_db_prepare_input($_POST['configuration_value']);
@@ -34,8 +34,7 @@ if (zen_not_null($action)) {
       if (isset($_GET['ptID'])) $type_id = zen_db_prepare_input($_GET['ptID']);
       $type_name = zen_db_prepare_input($_POST['type_name']);
       $handler = zen_db_prepare_input($_POST['handler']);
-      $allow_add_to_cart = zen_db_prepare_input(($_POST['catalog_add_to_cart'] ? 'Y' : 'N'));
-
+      $allow_add_to_cart = zen_db_prepare_input(isset($_POST['catalog_add_to_cart']) ? 'Y' : 'N');
       $sql_data_array = array(
         'type_name' => $type_name,
         'type_handler' => $handler,
@@ -120,23 +119,9 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-        cssjsmenu('navbar');
-        if (document.getElementById) {
-          var kill = document.getElementById('hoverJS');
-          kill.disabled = true;
-        }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -169,7 +154,7 @@ if (zen_not_null($action)) {
                                                WHERE product_type_id = " . (int)$_GET['ptID'] . "
                                                ORDER BY sort_order");
                 foreach ($configuration as $item) {
-                  if (zen_not_null($item['use_function'])) {
+                  if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
                       $class_method = explode('->', $use_function);
@@ -234,7 +219,7 @@ if (zen_not_null($action)) {
                 if (ADMIN_CONFIGURATION_KEY_ON == 1) {
                   $contents[] = array('text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>');
                 }
-                $contents[] = array('text' => TEXT_EDIT_INTRO);
+                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br><b>' . $cInfo->configuration_title . '</b><br>' . $cInfo->configuration_description . '<br>' . $value_field);
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'action=layout&ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
@@ -247,15 +232,15 @@ if (zen_not_null($action)) {
                   }
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                   $contents[] = array('text' => '<br>' . $cInfo->configuration_description);
-                  $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($cInfo->date_added));
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($cInfo->date_added));
                   if (zen_not_null($cInfo->last_modified)) {
-                    $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($cInfo->last_modified));
+                    $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($cInfo->last_modified));
                   }
                 }
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }
@@ -302,8 +287,8 @@ if (zen_not_null($action)) {
                   }
                   ?>
                 <td class="dataTableContent"><?php echo $product_type['type_name']; ?></td>
-                <td class="dataTableContent" align="center"><?php echo $product_type['allow_add_to_cart']; ?></td>
-                <td class="dataTableContent" align="right"><?php
+                <td class="dataTableContent text-center"><?php echo $product_type['allow_add_to_cart']; ?></td>
+                <td class="dataTableContent text-right"><?php
                   if ((isset($ptInfo) && is_object($ptInfo)) && ($product_type['type_id'] == $ptInfo->type_id)) {
                     echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                   } else {
@@ -333,12 +318,12 @@ if (zen_not_null($action)) {
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_PRODUCT_TYPE . ' :: ' . $ptInfo->type_name . '</h4>');
 
                 $contents = array('form' => zen_draw_form('product_types', FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=save', 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
-                $contents[] = array('text' => TEXT_EDIT_INTRO);
+                $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', $ptInfo->type_name, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_name') . ' class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_IMAGE, 'default_image', 'class="control-label"') . zen_draw_file_field('default_image') . '<br />' . $ptInfo->default_image);
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_IMAGE, 'default_image', 'class="control-label"') . zen_draw_file_field('default_image') . '<br>' . $ptInfo->default_image);
                 $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
                 $default_directory = substr($ptInfo->default_image, 0, strpos($ptInfo->default_image, '/') + 1);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCTS_IMAGE_DIR, 'img_dir' ,'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir' ,'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_info_image($ptInfo->default_image, $ptInfo->type_name));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_HANDLER, 'handler', 'class="control-label"') . zen_draw_input_field('handler', $ptInfo->type_handler, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_handler') . ' class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_ALLOW_ADD_CART, 'catalog_add_to_cart', 'class="control-label"') . zen_draw_checkbox_field('catalog_add_to_cart', $ptInfo->allow_add_to_cart, ($ptInfo->allow_add_to_cart == 'Y' ? true : false), 'class="form-control"'));
@@ -366,17 +351,17 @@ if (zen_not_null($action)) {
                   $contents[] = array('text' => '<br>' . sprintf(TEXT_DELETE_WARNING_PRODUCTS, $ptInfo->products_count));
                 }
 
-                $contents[] = array('align' => 'text-center', 'text' => '<br>' . zen_image_submit('button_delete.gif', IMAGE_DELETE) . ' <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<br>' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>' . ' <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;*/
               default:
                 if (isset($ptInfo) && is_object($ptInfo)) {
                   $heading[] = array('text' => '<h4>' . $ptInfo->type_name . '</h4>');
 // remove delete for now to avoid issues
-//        $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=delete') . '">' . zen_image_button('button_delete.gif', IMAGE_DELETE) . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '">' . zen_image_button('button_layout.gif', IMAGE_LAYOUT) . '</a>' );
+//                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=delete') . '" class="btn btn-danger" role="button">' . IMAGE_DELETE . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '" class="btn btn-default" role="button">' . IMAGE_LAYOUT . '</a>');
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '" class="btn btn-default" role="button">' . IMAGE_LAYOUT . '</a>');
-                  $contents[] = array('text' => '<br>' . TEXT_DATE_ADDED . ' ' . zen_date_short($ptInfo->date_added));
+                  $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($ptInfo->date_added));
                   if (zen_not_null($ptInfo->last_modified)) {
-                    $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . zen_date_short($ptInfo->last_modified));
+                    $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($ptInfo->last_modified));
                   }
                   $contents[] = array('text' => '<br>' . zen_info_image($ptInfo->manufacturers_image, $ptInfo->manufacturers_name));
                   $contents[] = array('text' => '<br>' . TEXT_PRODUCTS . ' ' . $ptInfo->products_count);
@@ -384,7 +369,7 @@ if (zen_not_null($action)) {
                 break;
             }
 
-            if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+            if (!empty($heading) && !empty($contents)) {
               $box = new box;
               echo $box->infoBox($heading, $contents);
             }

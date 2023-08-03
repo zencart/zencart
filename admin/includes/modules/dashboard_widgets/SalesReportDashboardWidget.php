@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 14 Modified in v1.5.7a $
+ * @version $Id: Erik Kerkhoven 2020 Jun 17 Modified in v1.5.7 $
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_STATS_SALES_REPORT_GRAPHS, '')) return;
@@ -47,8 +47,8 @@ $currencies = new currencies();
 
   function drawSalesGraph() {
       data = new google.visualization.DataTable();
-      data.addColumn('string', '<?php echo html_entity_decode(DASHBOARD_MONTH); ?>');
-      data.addColumn('number', '<?php echo html_entity_decode(DASHBOARD_SALES); ?>');
+      data.addColumn('string', '<?php echo DASHBOARD_MONTH; ?>');
+      data.addColumn('number', '<?php echo DASHBOARD_SALES; ?>');
       data.addRows(<?php echo "[" . $salesData . "]"; ?>);
 
       var options = {

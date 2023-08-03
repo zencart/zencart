@@ -1,13 +1,16 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Apr 12 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_templates.php';
+
 // Set theme related directories
 if (!isset($template_dir) || $template_dir == '') {
   $template_query = $db->Execute("SELECT template_dir FROM " . TABLE_TEMPLATE_SELECT . " WHERE template_language in (" . (int)$_SESSION['languages_id'] . ', 0' . ") order by template_language DESC");

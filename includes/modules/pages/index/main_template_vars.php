@@ -2,11 +2,10 @@
 /**
  * index main_template_vars.php
  *
- * @package page
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson Wed Oct 10 07:03:50 2018 -0400 Modified in v1.5.6 $
+ * @version $Id: lat9 2022 Jun 27 Modified in v1.5.8-alpha $
  */
 
 // This should be first line of the script:
@@ -14,9 +13,9 @@ $zco_notifier->notify('NOTIFY_HEADER_START_INDEX_MAIN_TEMPLATE_VARS');
 
 // release manufacturers_id when nothing is there so a blank filter is not setup.
 // this will result in the home page, if used
-if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] <= 0) {
-  unset($_GET['manufacturers_id']);
-  unset($manufacturers_id);
+if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] <= 0) {
+    unset($_GET['manufacturers_id']);
+    $manufacturers_id = '';
 }
 
 // release music_genre_id when nothing is there so a blank filter is not setup.

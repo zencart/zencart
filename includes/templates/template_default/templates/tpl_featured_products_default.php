@@ -2,11 +2,10 @@
 /**
  * Page Template - Featured Products listing
  *
- * @package templateSystem
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 13:13:41 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2020 Dec 29 Modified in v1.5.8-alpha $
  */
 ?>
 <div class="centerColumn" id="featuredDefault">
@@ -15,17 +14,17 @@
 
  <?php
   /**
-   * require code to display the list-display-order dropdown
+   * display the product sort dropdown
    */
   require($template->get_template_dir('/tpl_modules_listing_display_order.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_listing_display_order.php');
 ?>
 
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if (PRODUCT_FEATURED_LISTING_MULTIPLE_ADD_TO_CART > 0 and $show_submit == true and $featured_products_split->number_of_rows > 0) {
     if ($show_top_submit_button == true or $show_bottom_submit_button == true) {
-      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_FEATURED_PRODUCTS, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
+      echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_FEATURED_PRODUCTS, zen_get_all_get_params(array('action')) . 'action=multiple_products_add_product', 'SSL'), 'post', 'enctype="multipart/form-data"');
     }
   }
 ?>
@@ -37,7 +36,7 @@
 <?php
   } // end show top button
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 
@@ -48,7 +47,7 @@
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
 /**
@@ -64,7 +63,7 @@ require($template->get_template_dir('/tpl_modules_products_featured_listing.php'
 <?php
   }
 ?>
-<br class="clearBoth" />
+<br class="clearBoth">
 
 <?php
   if ($show_bottom_submit_button == true) {

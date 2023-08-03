@@ -2,10 +2,10 @@
 /**
  * upload Class.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2019 Dec 15 Modified in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 30 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -24,22 +24,29 @@ if (!defined('UPLOAD_FILENAME_EXTENSIONS_LIST')) {
 
 class upload extends base
 {
-    var $file, $filename, $destination, $permissions, $extensions, $tmp_filename, $message_location;
 
+    protected $file;
+    protected $destination;
+    protected $extensions;
+    public $filename;
+    protected $message_location;
+    protected $permissions;
+    protected $tmp_filename;
+    
     function __construct($file = '', $destination = '', $permissions = '644', $extensions = array())
     {
         $this->set_file($file);
         $this->set_destination($destination);
         $this->set_permissions($permissions);
 
-        if (!zen_not_null($extensions)) {
+        if (!!empty($extensions)) {
             $extensions = explode(" ", preg_replace('/[.,;\s]+/', ' ', UPLOAD_FILENAME_EXTENSIONS_LIST));
         }
         $this->set_extensions($extensions);
 
         $this->set_output_messages('direct');
 
-        if (zen_not_null($this->file) && zen_not_null($this->destination)) {
+        if (!empty($this->file) && !empty($this->destination)) {
             $this->set_output_messages('session');
 
             if (($this->parse() == true) && ($this->save() == true)) {
@@ -193,7 +200,7 @@ class upload extends base
      */
     function set_extensions($extensions)
     {
-        if (zen_not_null($extensions)) {
+        if (!empty($extensions)) {
             if (is_array($extensions)) {
                 $this->extensions = $extensions;
             } else {

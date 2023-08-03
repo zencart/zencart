@@ -2,11 +2,10 @@
 /**
  * cache Class.
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Fri Dec 12 13:59:38 2014 -0500 Modified in v1.5.5 $
+ * @version $Id: DrByte 2021 Aug 31 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,18 +14,17 @@ if (!defined('IS_ADMIN_FLAG')) {
  * cache Class.
  * handles query caching
  *
- * @package classes
  */
 class cache extends base {
 
-  function sql_cache_exists($zf_query, $zf_cachetime) {
+  function sql_cache_exists($zf_query, $zf_cachetime=null) {
     global $db;
     $zp_cache_name = $this->cache_generate_cache_name($zf_query);
     switch (SQL_CACHE_METHOD) {
       case 'file':
       // where using a single directory at the moment. Need to look at splitting into subdirectories
       // like adodb
-      if (file_exists(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql') && !$this->sql_cache_is_expired($zf_query, $zf_cachetime)) {
+      if (file_exists(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql') && (is_null($zf_cachetime) || !$this->sql_cache_is_expired($zf_query, $zf_cachetime))) {
         return true;
       } else {
         return false;
@@ -35,7 +33,7 @@ class cache extends base {
       case 'database':
       $sql = "select * from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
       $zp_cache_exists = $db->Execute($sql);
-      if ($zp_cache_exists->RecordCount() > 0 && !$this->sql_cache_is_expired($zf_query, $zf_cachetime)) {
+      if ($zp_cache_exists->RecordCount() > 0 && (is_null($zf_cachetime) || !$this->sql_cache_is_expired($zf_query, $zf_cachetime))) {
         return true;
       } else {
         return false;
@@ -86,25 +84,27 @@ class cache extends base {
   function sql_cache_expire_now($zf_query) {
     global $db;
     $zp_cache_name = $this->cache_generate_cache_name($zf_query);
-    switch (SQL_CACHE_METHOD) {
-      case 'file':
-      @unlink(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql');
-      return true;
-      break;
-      case 'database':
-      $sql = "delete from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
-      $db->Execute($sql);
-      return true;
-      break;
-      case 'memory':
-      unset($this->cache_array[$zp_cache_name]);
-      return true;
-      break;
-      case 'none':
-      default:
-      return true;
-      break;
-    }
+      if ($this->sql_cache_exists($zf_query)) {
+          switch (SQL_CACHE_METHOD) {
+              case 'file':
+                  @unlink(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql');
+                  return true;
+                  break;
+              case 'database':
+                  $sql = "delete from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
+                  $db->Execute($sql);
+                  return true;
+                  break;
+              case 'memory':
+                  unset($this->cache_array[$zp_cache_name]);
+                  return true;
+                  break;
+              case 'none':
+              default:
+                  return true;
+                  break;
+          }
+      }
   }
 
   function sql_cache_store($zf_query, $zf_result_array) {
@@ -147,6 +147,7 @@ class cache extends base {
     switch (SQL_CACHE_METHOD) {
       case 'file':
       $zp_fa = file(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql');
+      if ($zp_fa === false) return false;
       $zp_result_array = unserialize(implode('', $zp_fa));
       return $zp_result_array;
       break;

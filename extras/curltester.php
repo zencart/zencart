@@ -7,9 +7,9 @@
  *   i=1 -- in conjunction with [d] or [r], will show the detailed curlinfo certificate data from the host being connected to. Helpful for advanced debugging.
  *
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 08 Modified in v1.5.7a $
+ * @version $Id: DrByte 2020 Jul 08 Modified in v1.5.8-alpha $
  */
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');
@@ -175,7 +175,7 @@ function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', 
   curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
   curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-  curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart(tm) - CURL TEST v157');
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Zen Cart(tm) - CURL TEST v158');
 
   if (isset($_GET['i'])) curl_setopt($ch, CURLOPT_CERTINFO, TRUE);
 

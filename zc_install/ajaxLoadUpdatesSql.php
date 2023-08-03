@@ -3,7 +3,7 @@
  * ajaxLoadUpdatesSql.php
  * @copyright Copyright 2003-2020 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 Jul 08 Modified in v1.5.7 $
+ * @version $Id: DrByte 2019 Jul 08 Modified in v1.5.8 $
  */
 define('IS_ADMIN_FLAG', false);
 define('DIR_FS_INSTALL', __DIR__ . '/');
@@ -30,6 +30,7 @@ $updateList = array(
         '1.5.5'=>array('required'=>'1.5.4'),
         '1.5.6'=>array('required'=>'1.5.5'),
         '1.5.7'=>array('required'=>'1.5.6'),
+        '1.5.8'=>array('required'=>'1.5.7'),
         );
 
 $systemChecker = new systemChecker();

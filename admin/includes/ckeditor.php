@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2010 Kuroi Web Design
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 15 Modified in v1.5.7 $
+ * @version $Id: DrByte 2022 Oct 05 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -16,7 +16,7 @@ foreach ($var as $key)
   $jsLanguageLookupArray .= "        lang[" . $key['id'] . "] = '" . $key['code'] . "';\n";
 }
 ?>
-<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"><\/script>');</script>
+<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"><\/script>');</script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
 <script src="https://cdn.ckeditor.com/4.14.0/standard-all/ckeditor.js" title="CKEditorCDN"></script>
 

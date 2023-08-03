@@ -4,13 +4,13 @@
  *
  * This page is auto-displayed if the PHP version is too old.
  * It's primarily intended to be a friendlier face than just a blank page
- * which would appear if short-array-syntax is used on PHP 5.3 or older.
+ * which would appear if incompatible PHP expectations were triggered.
  * This way someone installing Zen Cart on an ancient PHP version will at least
  * know this basic need and be able to make the change before proceeding.
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: DrByte 2020 May 16 New in v1.5.7 $
+ * @version $Id: John 2022 Jul 07 Modified in v1.5.8-alpha $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 include 'includes/version.php';
@@ -27,7 +27,7 @@ include 'includes/version.php';
     <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <style type="text/css">
+    <style>
         body {
         	background: #fff;
         	color: #777;
@@ -217,14 +217,14 @@ include 'includes/version.php';
 
   <body>
   <div class="container">
-    <img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg;" title="Zen Cart&reg;" width="192" height="68" border="0" class="h-img"/>
+    <img src="<?php echo $relPath; ?>includes/templates/template_default/images/logo.gif" alt="Zen Cart&reg; Header Logo" title="Zen Cart&reg; Header Logo" class="h_image">
     <h1>Welcome to Zen Cart<sup>&reg;</sup></h1>
     <div>
       <h2>We would love to have you use Zen Cart ... however your server is incompatible.</h2>
-        <p>Your PHP version (<?php echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;?>) is too old to support modern PHP syntax conventions such as short-array-syntax.</p>
+        <p>Your PHP version (<?php echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;?>) is too old to support the modern PHP capabilities required.</p>
         <p>You are currently using Zen Cart version <?php echo PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR; ?>.</p>
         <p>In order to proceed with Zen Cart you must upgrade your PHP version.</p>
-        <p>We recommend using PHP 7.4 or newer. <a href="https://www.zen-cart.com/requirements" rel="noopener" target="_blank">Please refer to our website</a> for the PHP versions supported.</p>
+        <p><a href="https://www.zen-cart.com/requirements" rel="noopener" target="_blank">Please refer to our website</a> for the PHP versions supported.</p>
         <br><br>
     </div>
     <section id="footerBlock">

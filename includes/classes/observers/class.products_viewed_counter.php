@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Jul 28 Modified in v1.5.8-alpha $
  *
  * Designed for v1.5.7
  */
@@ -33,8 +33,10 @@ class products_viewed_counter extends base
 
     protected function should_be_excluded()
     {
+        global $spider_flag;
+        
         // exclude search-engine spiders
-        if ($this->exclude_spiders && $GLOBALS['spider_flag'] === true) {
+        if ($this->exclude_spiders && $spider_flag === true) {
             return true;
         }
 

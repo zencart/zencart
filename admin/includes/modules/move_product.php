@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 Mar 15 Modified in v1.5.7 $
+ * @version $Id: torvista 2021 Dec 14 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -24,10 +24,12 @@ if (!isset($category_path)) $category_path = '';
         $product_current_category_string = $category_path;
     }
 }
+if (!isset($product_master_category_string)) $product_master_category_string = zen_get_category_name($pInfo->master_categories_id, (int)$_SESSION['languages_id']);
+
 
 $heading = [];
 $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_MOVE_PRODUCT . '</h4>'];
-$contents = ['form' => zen_draw_form('products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=move_product_confirm&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id)];
+$contents = ['form' => zen_draw_form('products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=move_product_confirm&cPath=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id)];
 $contents[] = ['text' => '<h3>' . 'ID#' . $pInfo->products_id . ': ' . $pInfo->products_name . '</h3>'];
 $contents[] = ['text' => TEXT_MOVE_PRODUCTS_INTRO];
 $contents[] = ['text' => zen_draw_label(sprintf(TEXT_MOVE_PRODUCT, $pInfo->products_id, $pInfo->products_name, $current_category_id, $product_current_category_string), 'move_to_category_id', 'style="font-weight:normal;font-size:larger;"') . zen_draw_pull_down_menu('move_to_category_id', zen_get_category_tree(), $current_category_id, 'id="move_to_category_id" class="form-control"')];

@@ -2,22 +2,22 @@
 /**
  * Login Page
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Oct 15 Modified in v1.5.7a $
+ * @version $Id: pRose on charmes 2022 Mar 02 Modified in v1.5.8-alpha $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_LOGIN');
-$login_page = true; 
+$login_page = true;
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
 if ($session_started == false) {
   zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
 }
 
-// if the customer is logged in already (and not in guest-checkout), redirect them to the My account page
-if (!zen_in_guest_checkout() && zen_is_logged_in()) {
+// if the customer is logged in already, not in guest-checkout, and not a new EMP Automatic Login, redirect them to the My account page
+if (!zen_in_guest_checkout() && zen_is_logged_in() && !isset($_GET['hmac'])) {
     zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
@@ -58,26 +58,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   }
   */
 
-    // Check if email exists
-    $check_customer_query = "SELECT customers_id, customers_firstname, customers_lastname, customers_password,
-                                    customers_email_address, customers_default_address_id,
-                                    customers_authorization, customers_referral
-                           FROM " . TABLE_CUSTOMERS . "
-                           WHERE customers_email_address = :emailAddress";
 
-    $check_customer_query  =$db->bindVars($check_customer_query, ':emailAddress', $email_address, 'string');
-    $check_customer = $db->Execute($check_customer_query);
+    $customer = new Customer;
+    $login_attempt = $customer->doLoginLookupByEmail($email_address);
 
-    if (!$check_customer->RecordCount()) {
+    if ($login_attempt === false) {
       $error = true;
       $messageStack->add('login', TEXT_LOGIN_ERROR);
-    } elseif ($check_customer->fields['customers_authorization'] == '4') {
+    } elseif ($login_attempt['customers_authorization'] == '4') {
       // this account is banned
       $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
       $messageStack->add('login', TEXT_LOGIN_BANNED);
     } else {
       if (!$loginAuthorized) {
-          $dbPassword = $check_customer->fields['customers_password'];
+          $dbPassword = $login_attempt['customers_password'];
           // Check whether the password is good
           if (zen_validate_password($password, $dbPassword)) {
               $loginAuthorized = true;
@@ -95,62 +89,25 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
         $error = true;
         $messageStack->add('login', TEXT_LOGIN_ERROR);
       } else {
+
+        $zc_check_basket_before = 0;
+        // save current cart contents count if required
+        if (SHOW_SHOPPING_CART_COMBINED > 0) {
+            $zc_check_basket_before = $_SESSION['cart']->count_contents();
+        }
+
+        // login and restore cart
+        $customer->login($login_attempt['customers_id'], $restore_cart = true);
+
         if (SESSION_RECREATE == 'True') {
           zen_session_recreate();
         }
 
-        $check_country_query = "SELECT entry_country_id, entry_zone_id
-                              FROM " . TABLE_ADDRESS_BOOK . "
-                              WHERE customers_id = :customersID
-                              AND address_book_id = :addressBookID";
-
-        $check_country_query = $db->bindVars($check_country_query, ':customersID', $check_customer->fields['customers_id'], 'integer');
-        $check_country_query = $db->bindVars($check_country_query, ':addressBookID', $check_customer->fields['customers_default_address_id'], 'integer');
-        $check_country = $db->Execute($check_country_query);
-
-        $_SESSION['customer_id'] = $check_customer->fields['customers_id'];
-        $_SESSION['customers_email_address'] = $check_customer->fields['customers_email_address'];
-        $_SESSION['customer_default_address_id'] = $check_customer->fields['customers_default_address_id'];
-        $_SESSION['customers_authorization'] = $check_customer->fields['customers_authorization'];
-        $_SESSION['customer_first_name'] = $check_customer->fields['customers_firstname'];
-        $_SESSION['customer_last_name'] = $check_customer->fields['customers_lastname'];
-        $_SESSION['customer_country_id'] = $check_country->fields['entry_country_id'];
-        $_SESSION['customer_zone_id'] = $check_country->fields['entry_zone_id'];
-
-        // enforce db integrity: make sure related record exists
-        $sql = "SELECT customers_info_date_of_last_logon FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_id = :customersID";
-        $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
-        $result = $db->Execute($sql);
-        if ($result->RecordCount() == 0) {
-          $sql = "insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id) values (:customersID)";
-          $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
-          $db->Execute($sql);
-        }
-
-        // update login count
-        $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
-              SET customers_info_date_of_last_logon = now(),
-                  customers_info_number_of_logons = IF(customers_info_number_of_logons, customers_info_number_of_logons+1, 1)
-              WHERE customers_info_id = :customersID";
-
-        $sql = $db->bindVars($sql, ':customersID',  $_SESSION['customer_id'], 'integer');
-        $db->Execute($sql);
         $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS');
-
-        // bof: contents merge notice
-        // save current cart contents count if required
-        if (SHOW_SHOPPING_CART_COMBINED > 0) {
-          $zc_check_basket_before = $_SESSION['cart']->count_contents();
-        }
-
-        // bof: not require part of contents merge notice
-        // restore cart contents
-        $_SESSION['cart']->restore_contents();
-        // eof: not require part of contents merge notice
 
         // check current cart contents count if required
         $zc_check_basket_after = $_SESSION['cart']->count_contents();
-        if (($zc_check_basket_before != $zc_check_basket_after) && $_SESSION['cart']->count_contents() > 0 && SHOW_SHOPPING_CART_COMBINED > 0) {
+        if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_after > 0 && $zc_check_basket_before != $zc_check_basket_after) {
           if (SHOW_SHOPPING_CART_COMBINED == 2) {
             // warning only do not send to cart
             $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
@@ -165,9 +122,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
             }
           }
         }
-        // eof: contents merge notice
+        // end contents merge notice
 
-        if (sizeof($_SESSION['navigation']->snapshot) > 0) {
+        if (count($_SESSION['navigation']->snapshot) > 0) {
           //    $back = sizeof($_SESSION['navigation']->path)-2;
           $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], array(zen_session_name())), $_SESSION['navigation']->snapshot['mode']);
           //            $origin_href = zen_back_link_only(true);

@@ -1,14 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 ?>
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<?php if (count($errors)) { ?>
+<?php if (!empty($errors)) { ?>
     <div class="alert-box alert">
 <?php
       foreach ($errors as $errormessage) {
@@ -20,11 +20,11 @@
 <?php } ?>
 
 <form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" data-abide>
-  <input type="hidden" name="action" value="process" >
-  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>" >
+  <input type="hidden" name="action" value="process">
+  <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
   <?php foreach ($_POST as $key=>$value) {  ?>
     <?php if ($key != 'action') { ?>
-    <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>" >
+    <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
     <?php }?>
   <?php }?>
   <fieldset>

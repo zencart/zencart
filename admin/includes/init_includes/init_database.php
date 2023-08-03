@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2020 Aug 04 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -18,7 +18,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE)) {
     // If can't connect, send 503 Service Unavailable header and redirect to install or message page
     header("HTTP/1.1 503 Service Unavailable");
-    $down_for_maint_source = 'nddbc.html';
+    $down_for_maint_source = FILENAME_DATABASE_TEMPORARILY_DOWN; 
 
     if (file_exists('../zc_install/index.php')) {
       header('location: ../zc_install/index.php');

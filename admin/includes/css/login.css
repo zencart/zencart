@@ -1,16 +1,24 @@
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: Erik Kerkhoven 2020 Jan 21 New in v1.5.7 $
+ * @version $Id: Zen4All 2020 Jul 02 Modified in v1.5.8-alpha $
  */
 
 body {
   background-color: #feffef;
+  padding : 0;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
 }
 
 h2 {
   border-bottom: 1px solid #e3e3e3;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 30px;
 }
 
 a {
@@ -38,6 +46,11 @@ a:hover {
   background: #ffc107;
   border: 1px solid #ccc;
   color: #333;
+}
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
 }
 
 @media screen and (max-width: 63.999rem) {

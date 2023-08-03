@@ -2,10 +2,10 @@
 /**
  * Module Template for responsive mobile support
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 May 01 Modified in v1.5.8-alpha $
  */
 ?>
 
@@ -15,8 +15,9 @@
 <?php  if (DEFINE_CONTACT_US_STATUS <= 1) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_CONTACT_US, '', 'SSL'); ?>"><?php echo BOX_INFORMATION_CONTACT; ?></a></li>
 <?php  } ?>
+    <li><?php echo '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>'; ?></li>
 
-<?php if (zen_is_logged_in()) { ?>
+<?php if (zen_is_logged_in() && !zen_in_guest_checkout()) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
     <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
 <?php
@@ -42,7 +43,7 @@ $menulist = str_replace('"level1"','"level2"',$menulist);
 $menulist = str_replace('<li>','<li>',$menulist);
 $menulist = str_replace("</li>\n</ul>\n</li>\n</ul>\n","</li>\n</ul>\n",$menulist);
 echo $menulist;
-?>       
+?>
     </li>
 
 <?php
@@ -50,7 +51,7 @@ echo $menulist;
    $show_this = $db->Execute("select s.products_id from " . TABLE_SPECIALS . " s where s.status= 1 limit 1");
    if ($show_this->RecordCount() > 0) { ?>
     <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_SPECIALS); ?>"><?php echo CATEGORIES_BOX_HEADING_SPECIALS; ?></a></li>
-<?php  
+<?php
     }
   }
 ?>
@@ -63,16 +64,16 @@ echo $menulist;
       $show_this = $db->Execute("select p.products_id
                                  from " . TABLE_PRODUCTS . " p
                                  where p.products_status = 1 " . $display_limit . " limit 1");
-      if ($show_this->RecordCount() > 0) { 
+      if ($show_this->RecordCount() > 0) {
 ?>
     <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_PRODUCTS_NEW); ?>"><?php echo CATEGORIES_BOX_HEADING_WHATS_NEW; ?></a></li>
-<?php 
+<?php
     }
-  } 
+  }
 ?>
 <?php if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
        $show_this = $db->Execute("select products_id from " . TABLE_FEATURED . " where status= 1 limit 1");
-       if ($show_this->RecordCount() > 0) { 
+       if ($show_this->RecordCount() > 0) {
 ?>
     <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_FEATURED_PRODUCTS); ?>"><?php echo CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS; ?></a></li>
 <?php
@@ -121,19 +122,22 @@ echo $menulist;
       </ul>
     </li>
 
-    <li><span><?php echo BOX_HEADING_EZPAGES; ?></span>
-      <ul>
 <?php
   include(DIR_WS_MODULES . zen_get_module_directory('ezpages_bar_header.php'));
   if (!empty($var_linksList)) {
+?>
+    <li><span><?php echo BOX_HEADING_EZPAGES; ?></span>
+      <ul>
+<?php 
     for ($i=1, $n=sizeof($var_linksList); $i<=$n; $i++) {
       echo '<li><a href="' . $var_linksList[$i]['link'] . '">' . $var_linksList[$i]['name'] . '</a></li>' . "\n";
     }
-  }
 ?>
       </ul>
     </li>
-
+<?php
+  }
+?>
 
     <li id="menu-search">
       <?php require(DIR_WS_MODULES . zen_get_module_sidebox_directory('search_header.php')); ?>
@@ -142,9 +146,9 @@ echo $menulist;
   </ul>
 </nav>
 
-<script src="<?php echo $template->get_template_dir('jquery.mmenu.min.all.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.min.all.js' ?>" type="text/javascript"></script>
-<script src="<?php echo $template->get_template_dir('jquery.mmenu.fixedelements.min.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.fixedelements.min.js' ?>" type="text/javascript"></script>
-<script type="text/javascript">
+<script src="<?php echo $template->get_template_dir('jquery.mmenu.min.all.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.min.all.js' ?>"></script>
+<script src="<?php echo $template->get_template_dir('jquery.mmenu.fixedelements.min.js',DIR_WS_TEMPLATE, $current_page_base,'jscript') . '/jquery.mmenu.fixedelements.min.js' ?>"></script>
+<script>
   $(function() {
     $("#menu")
       .mmenu({

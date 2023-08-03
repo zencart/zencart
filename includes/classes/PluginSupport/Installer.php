@@ -1,15 +1,30 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 May 20 New in v1.5.7 $
+ * @version $Id: brittainmark 2022 Sep 18 Modified in v1.5.8 $
  */
 
 namespace Zencart\PluginSupport;
 
 class Installer
 {
-    protected $errors = [];
+
+    /**
+     * $errorContainer is a PluginErrorContainer object
+     * @var object
+     */
+    protected $errorContainer;
+    /**
+     * $errorContainer is a patchInstaller object
+     * @var object
+     */
+    protected $patchInstaller;
+    /**
+     * $errorContainer is a scriptedInstallerFactory object
+     * @var object
+     */
+    protected $scriptedInstallerFactory;
 
     public function __construct($patchInstaller, $scriptedInstallerFactory, $errorContainer)
     {
@@ -34,6 +49,11 @@ class Installer
             return;
         }
         $this->executeScriptedUninstaller($pluginDir);
+    }
+
+    public function executeUpgraders($pluginDir, $oldVersion)
+    {
+        $this->executeScriptedUpgrader($pluginDir, $oldVersion);
     }
 
     protected function executePatchInstaller($pluginDir)
@@ -78,5 +98,14 @@ class Installer
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
         $scriptedInstaller->doUninstall();
+    }
+
+    protected function executeScriptedUpgrader($pluginDir, $oldVersion)
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return;
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->doUpgrade($oldVersion);
     }
 }

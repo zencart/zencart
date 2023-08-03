@@ -1,11 +1,11 @@
 /**
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: Scott C Wilson 2020 Mar 03 Modified in v1.5.7 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  *
  */
 
@@ -157,8 +157,8 @@ div#loginDefault fieldset { float:none;width:97%;margin-bottom:20px;min-height:0
 div#createAcctDefault input[type="text"], div#createAcctDefault input[type="password"], div#createAcctDefault select {width:85%;}
 div#createAcctDefault fieldset {float:none;width:97%;}
 
-/*bof advanced search*/
-div#advSearchDefault fieldset {float:none;width:95%;}
+/*bof search*/
+div#searchDefault fieldset {float:none;width:95%;}
 
 /*bof shopping cart*/
 div#shoppingCartDefault tr {display:block;clear:both;height:auto;}

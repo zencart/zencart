@@ -1,13 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Aug 10 Modified in v1.5.7a $
+ * @version $Id: Scott C Wilson 2022 Jun 04 Modified in v1.5.8-alpha $
  */
 
 function page_has_help()
 {
     global $PHP_SELF;
+    global $zco_notifier; 
 
     $page = basename($PHP_SELF, '.php');
 
@@ -113,6 +114,7 @@ function page_has_help()
         FILENAME_MODULES => 'https://docs.zen-cart.com/user/admin_pages/modules/',
         FILENAME_PLUGIN_MANAGER=> 'https://docs.zen-cart.com/user/admin_pages/modules/plugin_manager',
         FILENAME_CUSTOMERS => 'https://docs.zen-cart.com/user/admin_pages/customers/customers/',
+        FILENAME_CUSTOMER_GROUPS => 'https://docs.zen-cart.com/user/admin_pages/customers/customer_groups/',
         FILENAME_ORDERS => 'https://docs.zen-cart.com/user/admin_pages/customers/orders/',
         FILENAME_GROUP_PRICING => 'https://docs.zen-cart.com/user/admin_pages/customers/group_pricing/',
         FILENAME_PAYPAL => '',
@@ -163,5 +165,7 @@ function page_has_help()
     if (isset($pagelist[$page])) {
         return $pagelist[$page];
     }
-    return false;
+    $help_page = false; 
+    $zco_notifier->notify('NOTIFIER_PLUGIN_HELP_PAGE_URL_LOOKUP', $page, $help_page); 
+    return $help_page;
 }

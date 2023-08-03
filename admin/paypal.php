@@ -1,10 +1,10 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @copyright Portions Copyright (c) 2004 DevosC.com    
+ * @copyright Portions Copyright (c) 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2020 May 22 Modified in v1.5.7 $
+ * @version $Id: pRose on charmes 2022 Feb 05 Modified in v1.5.8-alpha $
  */
 
   require('includes/application_top.php');
@@ -101,11 +101,11 @@ $paypal_ipn_sort_order_array = [
       case 'Pending':
       case 'Completed':
       default:
-        $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p, " .TABLE_ORDERS . " AS o  WHERE o.orders_id = p.order_id " . $ipn_search . $order_by;
+        $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p, " .TABLE_ORDERS . " AS o  WHERE o.orders_id = p.order_id " . $ipn_search . $order_by;
         break;
     }
   } else {
-        $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.mc_currency, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p LEFT JOIN " .TABLE_ORDERS . " AS o ON o.orders_id = p.order_id" . $order_by;
+        $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p LEFT JOIN " .TABLE_ORDERS . " AS o ON o.orders_id = p.order_id" . $order_by;
   }
   $ipn_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $ipn_query_raw, $ipn_query_numrows);
   $ipn_trans = $db->Execute($ipn_query_raw);
@@ -153,7 +153,7 @@ $paypal_ipn_sort_order_array = [
         $ipn = $db->Execute("SELECT * FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . " WHERE paypal_ipn_id = '" . $ipnInfo->paypal_ipn_id . "'");
         $ipn_count = $ipn->RecordCount();
 
-        $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '">' . zen_image_button('button_orders.gif', IMAGE_ORDERS) . '</a>'];
+        $contents[] = ['align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['ipnID', 'action']) . 'oID=' . $ipnInfo->order_id .'&' . 'ipnID=' . $ipnInfo->paypal_ipn_id .'&action=edit' . '&referer=ipn') . '" class="btn btn-default" role="button">' . IMAGE_ORDERS . '</a>'];
         $contents[] = ['text' => TABLE_HEADING_NUM_HISTORY_ENTRIES . ': '. $ipn_count];
         $count = 1;
         foreach ($ipn as $ipn_status_history) {
@@ -168,7 +168,7 @@ $paypal_ipn_sort_order_array = [
       break;
   }
 
-  if ( (zen_not_null($heading)) && (zen_not_null($contents)) ) {
+  if (!empty($heading) && !empty($contents)) {
     $box = new box();
       echo '<div class="col-sm-12 col-md-3 configurationColumnRight">';
     echo $box->infoBox($heading, $contents);

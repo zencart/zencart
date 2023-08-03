@@ -2,11 +2,10 @@
 /**
  * language Class.
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Thu Apr 2 14:27:45 2015 -0400 Modified in v1.5.5 $
+ * @version $Id: brittainmark 2022 Sep 29 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,12 +14,15 @@ if (!defined('IS_ADMIN_FLAG')) {
  * language Class.
  * Class to handle language settings for customer viewing
  *
- * @package classes
  */
 class language extends base {
-  var $languages, $catalog_languages, $browser_languages, $language;
 
-  function __construct($lng = '') {
+    protected $browser_languages;
+    public $catalog_languages = [];
+    public $language = [];
+    protected $languages;
+
+    function __construct($lng = '') {
     global $db;
 
     $this->catalog_languages = array();
@@ -47,7 +49,7 @@ class language extends base {
   }
 
   function set_language($language) {
-    if ( (zen_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
+    if (!empty($language) && isset($this->catalog_languages[$language])) {
       $this->language = $this->catalog_languages[$language];
     } else {
       $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];

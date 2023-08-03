@@ -1,17 +1,16 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2019 May 26 Modified in v1.5.6b $
+ * @version $Id: brittainmark 2022 Aug 27 Modified in v1.5.8 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $languages = zen_get_languages();
 
-if (zen_not_null($_POST)) {
+if (!empty($_POST)) {
   $pInfo = new objectInfo($_POST);
   $metatags_title = $_POST['metatags_title'];
   $metatags_keywords = $_POST['metatags_keywords'];
@@ -47,29 +46,29 @@ $form_action = (isset($_GET['pID'])) ? 'update_product_meta_tags' : 'insert_prod
 
     <table class="table table-bordered">
       <tr>
-        <td class="main" valign="top">
+        <td class="main align-top">
             <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . '<strong>' . TEXT_PRODUCTS_NAME . '</strong>' . '&nbsp;' . ($pInfo->metatags_products_name_status == '1' ? zen_get_products_name($_GET['pID'], $languages[$i]['id']) : TEXT_META_EXCLUDED); ?>
         </td>
-        <td class="main" valign="top">
+        <td class="main align-top">
             <?php echo '<strong>' . TEXT_PRODUCTS_MODEL . '</strong>&nbsp;' . ($pInfo->metatags_model_status == '1' ? $pInfo->products_model : TEXT_META_EXCLUDED); ?>
         </td>
-        <td class="main" valign="top">
+        <td class="main align-top">
             <?php echo '<strong>' . TEXT_PRODUCTS_PRICE_INFO . '</strong>&nbsp;' . ($pInfo->metatags_price_status == '1' ? $currencies->format($pInfo->products_price_sorter) : TEXT_META_EXCLUDED); ?>
         </td>
-        <td class="main" valign="top">
+        <td class="main align-top">
             <?php echo '<strong>' . TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS . '</strong>&nbsp;' . ($pInfo->metatags_title_tagline_status == '1' ? TEXT_TITLE_PLUS_TAGLINE : TEXT_META_EXCLUDED); ?>
         </td>
       </tr>
       <tr>
-        <td class="main" valign="top"><?php echo TEXT_META_TAGS_TITLE; ?>&nbsp;</td>
+        <td class="main align-top"><?php echo TEXT_META_TAGS_TITLE; ?>&nbsp;</td>
         <td class="main" colspan="3"><?php echo ($pInfo->metatags_title_status == '1' ? $pInfo->metatags_title : TEXT_META_EXCLUDED); ?></td>
       </tr>
       <tr>
-        <td class="main" valign="top"><?php echo TEXT_META_TAGS_KEYWORDS; ?>&nbsp;</td>
+        <td class="main align-top"><?php echo TEXT_META_TAGS_KEYWORDS; ?>&nbsp;</td>
         <td class="main" colspan="3"><?php echo $pInfo->metatags_keywords; ?></td>
       </tr>
       <tr>
-        <td class="main" valign="top"><?php echo TEXT_META_TAGS_DESCRIPTION; ?>&nbsp;</td>
+        <td class="main align-top"><?php echo TEXT_META_TAGS_DESCRIPTION; ?>&nbsp;</td>
         <td class="main" colspan="3"><?php echo $pInfo->metatags_description; ?></td>
       </tr>
     </table>

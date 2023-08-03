@@ -2,11 +2,10 @@
 /**
  * Side Box Template
  *
- * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
   $content = "";
   $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent centeredContent">';
@@ -17,7 +16,7 @@
     $lng_cnt ++;
     if ($lng_cnt >= MAX_LANGUAGE_FLAGS_COLUMNS) {
       $lng_cnt = 0;
-      $content .= '<br />';
+      $content .= '<br>';
     }
   }
 $content .= '</div>';

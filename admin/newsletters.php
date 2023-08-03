@@ -1,16 +1,15 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2019 May 08 Modified in v1.5.6b $
+ * @version $Id: brittainmark 2022 Sep 24 Modified in v1.5.8 $
  */
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-if (zen_not_null($action)) {
+if (!empty($action)) {
 
   switch ($action) {
     case 'set_editor':
@@ -81,21 +80,7 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <script>
       var form = "";
       var submitted = false;
@@ -147,7 +132,7 @@ if (zen_not_null($action)) {
     </script>
     <?php if ($editor_handler != '') include ($editor_handler); ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <div id="spiffycalendar" class="text"></div>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
@@ -272,7 +257,7 @@ if (zen_not_null($action)) {
         </div>
         <div class="row">
           <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT), '', 'class="control-label"'); ?></div>
-          <div class="col-sm-9 col-md-6"><tt><?php echo nl2br($nInfo->content); ?></tt></div>
+          <div class="col-sm-9 col-md-6 tt"><?php echo nl2br($nInfo->content); ?></div>
         </div>
         <div class="row"><?php echo zen_draw_separator(); ?></div>
         <div class="row text-right">
@@ -288,7 +273,7 @@ if (zen_not_null($action)) {
 
         $nInfo = new objectInfo($newsletter->fields);
 
-        include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+        $languageLoader->loadExtraLanguageFiles( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
         include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
         $module_name = $nInfo->module;
         $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html);
@@ -312,7 +297,7 @@ if (zen_not_null($action)) {
 
         $nInfo = new objectInfo($newsletter->fields);
 
-        include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+        $languageLoader->loadExtraLanguageFiles( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
         include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
         $module_name = $nInfo->module;
         $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html);
@@ -328,10 +313,10 @@ if (zen_not_null($action)) {
 
         $nInfo = new objectInfo($newsletter->fields);
 
-        include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+        $languageLoader->loadExtraLanguageFiles( DIR_WS_LANGUAGES, $_SESSION['language'],  $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')), '/modules/newsletters/');
         include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
         $module_name = $nInfo->module;
-        $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html, $_POST['audience_selected']);
+        $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html, $_POST['audience_selected'] ?? '');
         ?>
         <div class="row">
           <div class="col-sm-12"><strong><?php echo TEXT_PLEASE_WAIT; ?></strong></div>
@@ -385,16 +370,16 @@ if (zen_not_null($action)) {
                     <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id']); ?>'">
                       <?php } ?>
                     <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id'] . '&action=preview') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $newsletter['title']; ?></td>
-                    <td class="dataTableContent" align="right"><?php echo number_format($newsletter['content_length'] + $newsletter['content_html_length']) . ' bytes'; ?></td>
-                    <td class="dataTableContent" align="right"><?php echo $newsletter['module']; ?></td>
-                    <td class="dataTableContent" align="center"><?php
+                    <td class="dataTableContent text-right"><?php echo number_format($newsletter['content_length'] + $newsletter['content_html_length']) . ' bytes'; ?></td>
+                    <td class="dataTableContent text-right"><?php echo $newsletter['module']; ?></td>
+                    <td class="dataTableContent text-center"><?php
                         if ($newsletter['status'] == '1') {
                           echo zen_image(DIR_WS_ICONS . 'tick.gif', ICON_TICK);
                         } else {
                           echo zen_image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS);
                         }
                         ?></td>
-                    <td class="dataTableContent" align="right"><?php
+                    <td class="dataTableContent text-right"><?php
                         if (isset($nInfo) && is_object($nInfo) && ($newsletter['newsletters_id'] == $nInfo->newsletters_id)) {
                           echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
                         } else {
@@ -435,7 +420,7 @@ if (zen_not_null($action)) {
                   break;
               }
 
-              if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+              if (!empty($heading) && !empty($contents)) {
                 $box = new box;
                 echo $box->infoBox($heading, $contents);
               }

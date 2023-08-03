@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jan 23 Modified in v1.5.7d $
+ * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
  */
 require('includes/application_top.php');
 
@@ -13,21 +13,30 @@ if (!empty($_POST) && !isset($_POST['context_lines'])) {
   $_POST['context_lines'] = abs((int)$default_context_lines);
 }
 
-if (isset($_GET['configuration_key_lookup']) && $_GET['configuration_key_lookup'] != '') {
+if (!empty($_GET['configuration_key_lookup']))  {
   $_POST['configuration_key'] = strtoupper($_GET['configuration_key_lookup']);
   $_POST['zv_files'] = 1;
   $_POST['zv_filestype'] = !empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : 0;
   $_POST['case_sensitive'] = !empty($_POST['case_sensitive']) ? $_POST['case_sensitive'] : 0;
 }
-$configuration_key_lookup = (isset($_POST['configuration_key'])) ? $_POST['configuration_key'] : '';
-$default_context_lines = isset($_POST['context_lines']) ? (int)$_POST['context_lines'] : $default_context_lines;
-$case_sensitive = (isset($_POST['case_sensitive']) && $_POST['case_sensitive']);
-$include_plugins = (isset($_POST['include_plugins']) && $_POST['include_plugins']);
+$configuration_key_lookup = $_POST['configuration_key'] ?? '';
+$default_context_lines = (int)($_POST['context_lines'] ?? $default_context_lines);
+$case_sensitive = !empty($_POST['case_sensitive']);
 $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
 function getDirList($dirName, $filetypes = 1) {
   global $directory_array, $sub_dir_files;
-// add directory name to the sub_dir_files list;
+
+  $dirName = str_replace('//', '/', $dirName);
+
+  $excluded = [];
+  $excluded[] = DIR_FS_CATALOG . 'includes/classes/vendors';
+  $excluded[] = DIR_FS_CATALOG . 'zc_install';
+  if (in_array(rtrim($dirName, '/'), $excluded)) {
+      return $sub_dir_files;
+  }
+
+  // add directory name to the sub_dir_files list;
   $sub_dir_files[] = $dirName;
   $d = @dir($dirName);
   if ($d) {
@@ -51,7 +60,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
   $max_context_lines_before = $max_context_lines_after = abs((int)$_POST['context_lines']);
 
   $directory_array = array();
-  for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
+  for ($i = 0, $n = count($check_directory); $i < $n; $i++) {
 
     $dir_check = $check_directory[$i];
 
@@ -89,7 +98,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
           }
         }
       }
-      if (sizeof($directory_array)) {
+      if (count($directory_array)) {
         sort($directory_array);
       }
       $dir->close();
@@ -102,12 +111,14 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     $root_array = array();
 // if not html/txt
     if ($filetypesincluded != 3 && $filetypesincluded != 4 && $filetypesincluded != 5) {
+      $root_array[] = DIR_FS_CATALOG . 'ajax.php';
       $root_array[] = DIR_FS_CATALOG . 'index.php';
       $root_array[] = DIR_FS_CATALOG . 'ipn_main_handler.php';
       $root_array[] = DIR_FS_CATALOG . 'page_not_found.php';
+      $root_array[] = DIR_FS_CATALOG . 'square_handler.php';
     }
 
-    $root_array[] = DIR_FS_CATALOG . 'nddbc.html';
+    $root_array[] = DIR_FS_CATALOG . FILENAME_DATABASE_TEMPORARILY_DOWN;
     $new_array = array_merge($root_array, $original_array);
     $directory_array = $new_array;
   }
@@ -131,7 +142,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       $check_configure = $db->Execute($sql);
     }
     if ($check_configure->RecordCount() >= 1) {
-      $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br /><br />';
+      $links = '<strong><span class="alert">' . TEXT_SEARCH_DATABASE_TABLES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_configuration' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup)) . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br><br>';
     } else {
       // do nothing
     }
@@ -139,19 +150,18 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     // don't ask about configuration table
   }
   echo '<table class="table">' . "\n";
-  if (isset($check_database) && ($check_database == true && $check_configure->RecordCount() >= 1)) {
+  if (!empty($check_database) && $check_configure->RecordCount() >= 1) {
     // only ask if found
     echo '<tr><td>' . $links . '</td></tr>';
   }
-  echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>' . "\n\n";
+  echo '<tr class="infoBoxContent"><td class="dataTableHeadingContent">' . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . TEXT_INFO_SEARCHING . count($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>' . "\n\n";
   echo '<tr><td>&nbsp;</td></tr>';
 
 // check all files located
   $file_cnt = 0;
   $cnt_found = 0;
-  $case_sensitive = (isset($_POST['case_sensitive']) && $_POST['case_sensitive']);
-  $include_plugins = (isset($_POST['include_plugins']) && $_POST['include_plugins']);
-  for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
+  $case_sensitive = !empty($_POST['case_sensitive']);
+  for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
     // build file content of matching lines
     $file_cnt++;
     $file = $directory_array[$i];
@@ -172,14 +182,14 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       // loop through the array, show line and line numbers
       $cnt_lines = 0;
       foreach ($lines as $line_num => $line) {
-        $padding_length = strlen(strval(sizeof($lines)));
+        $padding_length = strlen((string)count($lines));
         $cnt_lines++;
 
         // determine correct search pattern rule
-        // uses '#' as regex delimeter
+        // uses '#' as regex delimiter
         $search_pattern = preg_quote($configuration_key_lookup, '#');
-        if (isset($_GET['action']) && $_GET['action'] == 'locate_all_files' && isset($_GET['m']) && $_GET['m'] != '') {
-          // escape the delimeter character:
+        if (isset($_GET['action']) && $_GET['action'] == 'locate_all_files' && !empty($_GET['m'])) {
+          // escape the delimiter character:
           $search_pattern = str_replace('#', '\#', $configuration_key_lookup);
         }
 
@@ -219,7 +229,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
           if ($max_context_lines_before > 0)
             $show_file .= '</strong>';
 
-          for ($j = 1, $m = min($max_context_lines_after, sizeof($lines) - $line_numpos); $j < $m + 1; $j++) {
+          for ($j = 1, $m = min($max_context_lines_after, count($lines) - $line_numpos); $j < $m + 1; $j++) {
             $show_file .= '<br>Line #<span class="dtk-linenum">' . number_pad_with_spaces($line_numpos + $j, $padding_length) . '</span> : ';
             $show_file .= '<span class="dtk-contextline">';
             $show_file .= cleanup_dtk_output_text($lines[($line_num + $j)]);
@@ -241,7 +251,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
       echo $show_file . '<div class="row"></div>';
     } // show file
   }
-  echo '<table class="table"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . sizeof($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
+  echo '<table class="table"><tr class="infoBoxContent"><td class="dataTableHeadingContent">' . TEXT_INFO_MATCHES_FOUND . $cnt_found . ' --- ' . TEXT_INFO_SEARCHING . count($directory_array) . TEXT_INFO_FILES_FOR . zen_output_string_protected($configuration_key_lookup) . '</td></tr></table>';
   return true;
 }
 
@@ -293,22 +303,24 @@ function number_pad_with_spaces($number, $n = 0) {
 
 /* ==================================================================== */
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = $_GET['action'] ?? '';
 // don't do any 'action' if clicked on the Check for Updates button
-if (isset($_GET['vcheck']) && $_GET['vcheck'] == 'yes')
-  $action = '';
+    if (isset($_GET['vcheck']) && $_GET['vcheck'] == 'yes') {
+        $action = '';
+    }
 
 $found = true;
 
-$search = (isset($_POST['search']) ? $_POST['search'] : '');
+$search = $_POST['search'] ?? '';
 $flags = (isset($_GET['v']) ? '&v=' : '') . (isset($_GET['s']) ? '&s=' . preg_replace('/[^a-z]/', '', $_GET['s']) : '');
 
 switch ($action) {
   case ('search_config_keys'):
     // credits Benjamin Bellamy, torvista
     $search_type = (isset($_GET['t']) && $_GET['t'] == 'all') ? 'all' : 'keyword';
-    if ($search_type == 'all')
-      $search = '';
+      if ($search_type == 'all') {
+          $search = '';
+      }
     // The request that returns the configuration keys:
     // Product-Type info is limited to products_type=1 (general)
     $sql = "(SELECT configuration_id, configuration_key, c.configuration_group_id AS configuration_group_id, configuration_group_title,
@@ -352,7 +364,11 @@ switch ($action) {
     }
     $keySearchResults = $db->Execute($sql);
     if ($keySearchResults->RecordCount() == 0) {
-      $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
+        if (empty($search)) {
+            $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_ENTERED, 'caution');
+        } else {
+            $messageStack->add(ERROR_CONFIGURATION_KEY_NOT_FOUND, 'caution');
+        }
     }
     break;
 
@@ -491,7 +507,7 @@ switch ($action) {
 
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
-        for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+        for ($i = 0, $n = count($sub_dir_files); $i < $n; $i++) {
           $check_directory[] = $sub_dir_files[$i] . '/';
         }
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
@@ -500,7 +516,7 @@ switch ($action) {
         $check_directory = array();
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
-        for ($i = 0, $n = sizeof($sub_dir_files); $i < $n; $i++) {
+        for ($i = 0, $n = count($sub_dir_files); $i < $n; $i++) {
           $check_directory[] = $sub_dir_files[$i] . '/';
         }
         break;
@@ -546,7 +562,7 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG_MODULES . 'pages');
         $check_dir = $sub_dir_files;
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
 
@@ -570,7 +586,7 @@ switch ($action) {
         getDirList(DIR_FS_CATALOG_MODULES . 'pages');
 
         $check_dir = array_merge($check_directory, $sub_dir_files);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
 
@@ -621,16 +637,14 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
-        
+
 // get zc_plugins
         $sub_dir_files = array();
-        if ($include_plugins) {
-          getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
-        }
+        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         $sub_dir_files_plugins = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin, $sub_dir_files_plugins);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
         break;
@@ -651,7 +665,7 @@ switch ($action) {
         $sub_dir_files_email = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $zv_add_dir = str_replace('//', '/', $check_dir[$i] . '/');
           if (strstr($zv_add_dir, DIR_WS_ADMIN) == '') {
             $check_directory[] = $zv_add_dir;
@@ -668,16 +682,14 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
-        
+
 // get zc_plugins
         $sub_dir_files = array();
-        if ($include_plugins) {
-          getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
-        }
+        getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         $sub_dir_files_plugins = $sub_dir_files;
 
         $check_dir = array_merge($sub_dir_files_admin, $sub_dir_files_plugins);
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
         break;
@@ -691,7 +703,7 @@ switch ($action) {
         $sub_dir_files = array();
         getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         $check_dir = $sub_dir_files;
-        for ($i = 0, $n = sizeof($check_dir); $i < $n; $i++) {
+        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
         break;
@@ -726,12 +738,12 @@ if ($found == false) {
 
       <!-- body_text //-->
       <?php
-      if (isset($show_configuration_info) && $show_configuration_info == true) {
+      if (!empty($show_configuration_info)) {
         $show_configuration_info = false;
         ?>
         <table border="3" cellspacing="4" cellpadding="4">
           <tr class="infoBoxContent">
-            <td colspan="2" class="pageHeading" align="center"><?php echo TABLE_CONFIGURATION_TABLE; ?></td>
+            <td colspan="2" class="pageHeading text-center"><?php echo TABLE_CONFIGURATION_TABLE; ?></td>
           </tr>
           <tr>
             <td class="infoBoxHeading"><?php echo TABLE_TITLE_KEY; ?></td>
@@ -779,10 +791,11 @@ if ($found == false) {
             </tr>
           <?php } ?>
           <tr>
-            <td class="main" align="center" valign="middle">
+              <td>&nbsp;</td>
+            <td class="main text-center">
                 <?php
                 if ($show_products_type_layout == false and ( $check_configure->fields['configuration_id'] != 0 and $check_configure_group->fields['visible'] != 0)) {
-                  echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                  echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                 } else {
                   $page = '';
                   if (strstr($check_configure->fields['configuration_key'], 'MODULE_SHIPPING'))
@@ -793,23 +806,23 @@ if ($found == false) {
                     $page .= 'ordertotal';
 
                   if ($show_products_type_layout == true) {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                   } else {
                     if ($page != '') {
-                      echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $page) . '">' . zen_image_button('button_edit.gif', IMAGE_EDIT) . '</a>';
+                      echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $page) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                     } else {
-                      echo TEXT_INFO_NO_EDIT_AVAILABLE . '<br />';
+                      echo TEXT_INFO_NO_EDIT_AVAILABLE . '<br>';
                     }
                   }
                 }
                 ?>
+                <?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
             </td>
-            <td class="main" align="center" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '">' . zen_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
           </tr>
           <tr class="infoBoxContent">
-            <td colspan="2" class="pageHeading" align="center">
+            <td colspan="2" class="pageHeading text-center">
                 <?php
-                $links = '<br /><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br />';
+                $links = '<br><strong><span class="alert">' . TEXT_SEARCH_ALL_FILES . '</span></strong> ' . '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=' . 'locate_all_files' . '&configuration_key_lookup=' . zen_output_string_protected($configuration_key_lookup) . '&zv_files=1') . '">' . zen_output_string_protected($configuration_key_lookup) . '</a><br>';
                 echo $links;
                 ?>
             </td>
@@ -827,8 +840,8 @@ if ($found == false) {
           <!-- bof: update all products price sorter -->
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
-              <td class="main" align="left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-              <td class="main" align="right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '">' . zen_image_button('button_update.gif', IMAGE_UPDATE) . '</a>'; ?></td>
+              <td class="main text-left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
+              <td class="main text-right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '" class="btn btn-primary" role="button">' . IMAGE_UPDATE . '</a>'; ?></td>
             </tr>
           </table>
           <!-- eof: update all products price sorter -->
@@ -860,7 +873,7 @@ if ($found == false) {
             ?>
             <?php echo zen_draw_label(TEXT_LANGUAGE_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_configuration' ? (int)$_POST['zv_files'] : '0'), 'class="form-control" aria-label="zv_files_language"'); ?>
+              <?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_configuration' ? (int)$_POST['zv_files'] : '0'), 'class="form-control"'); ?>
           </div>
         </div>
         <div class="form-group">
@@ -943,8 +956,8 @@ if ($found == false) {
 
                     <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_description']; ?> &nbsp;</td>
                     <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_key']; ?></td>
-                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_value']; /* implode("<br />\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value'])) */ ?></td>
-                    <td class="<?php echo $tdClass; ?> text-center" onclick="document.location.href = '<?php echo $viewlink; ?>'"><a href="<?php echo $editlink; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_edit.gif', IMAGE_EDIT); ?></a></td>
+                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_value']; /* implode("<br>\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value'])) */ ?></td>
+                    <td class="<?php echo $tdClass; ?> text-center" onclick="document.location.href = '<?php echo $viewlink; ?>'"><a href="<?php echo $editlink; ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a></td>
                   </tr>
                   <?php
                   $groupChanged = FALSE;
@@ -978,7 +991,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_FUNCTION_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_function' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_function"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_function' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
@@ -1006,7 +1019,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_CLASS_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_class' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_class"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_class' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
@@ -1035,7 +1048,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_TEMPLATE_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_template' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_template"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_template' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
         </div>
         <div class="form-group">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
@@ -1064,15 +1077,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILES_LOOKUPS, 'zv_files', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_all_files' ? (int)$_POST['zv_files'] : '1'), 'class="form-control" aria-label="zv_files_all"'); ?></div>
-        </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_INCLUDE_PLUGINS, 'include_plugins', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6">
-            <div class="checkbox">
-              <label for="include_zc_plugins"><?php echo zen_draw_checkbox_field('include_plugins', true, $include_plugins, '', 'id="include_zc_plugins" aria-label="include_zc_plugins"'); ?></label>
-            </div>
-          </div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_all_files' ? (int)$_POST['zv_files'] : '1'), 'class="form-control"'); ?></div>
         </div>
         <div class="form-group">
             <?php
@@ -1086,7 +1091,7 @@ if ($found == false) {
             );
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILESTYPE_LOOKUPS, 'zv_filestype', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, (!empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : '1'), 'class="form-control" aria-label="zv_filestype"'); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, (!empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : '1'), 'class="form-control"'); ?></div>
         </div>
         <div class="form-group">
             <?php echo zen_draw_label(TEXT_CONTEXT_LINES, 'context_lines', 'class="control-label col-sm-3"'); ?>
@@ -1096,7 +1101,7 @@ if ($found == false) {
             <?php echo zen_draw_label(TEXT_CASE_SENSITIVE, 'case_sensitive', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
             <div class="checkbox">
-              <label for="locate-cs"><?php echo zen_draw_checkbox_field('case_sensitive', true, $case_sensitive, '', 'id="locate-cs"'); ?></label>
+              <label><?php echo zen_draw_checkbox_field('case_sensitive', true, $case_sensitive, '', 'id="locate-cs"'); ?></label>
             </div>
           </div>
         </div>

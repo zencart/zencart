@@ -2,10 +2,10 @@
 /**
  * functions_osh_update
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Apr 12 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Feb 16 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
@@ -29,13 +29,14 @@ if (!defined('IS_ADMIN_FLAG')) {
 // - $email_subject ........... If specified, overrides the default email subject line.
 // - $send_extra_mails_to ..... If specified, overrides the "standard" database settings SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS and
 //                              SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO.
+// - $filename ................ If specified, passes a filename to zen_mail
 //
 // Returns:
 // - $osh_id ............ A value > 0 if the record has been written (the orders_status_history_id number)
 //                        -2 if no order record was found for the specified $orders_id
 //                        -1 if no status change was detected (i.e. no record written).
 //
-function zen_update_orders_history($orders_id, $message = '', $updated_by = null, $orders_new_status = -1, $notify_customer = -1, $email_include_message = true, $email_subject = '', $send_extra_emails_to = '') 
+function zen_update_orders_history($orders_id, $message = '', $updated_by = null, $orders_new_status = -1, $notify_customer = -1, $email_include_message = true, $email_subject = '', $send_extra_emails_to = '', $filename = '') 
 {
     global $osh_sql, $osh_additional_comments;
     
@@ -147,7 +148,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 }
 
                 if ($notify_customer == 1) { 
-                    zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status');
+                    zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status', $filename);
                 } 
 
                 // PayPal Trans ID, if any
@@ -167,14 +168,16 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                     $send_extra_emails_to = (string)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO;
                 }
                 if (!empty($send_extra_emails_to)) {
-                    zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra');
+                    zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra', $filename);
                 }
             }
     
             if (empty($updated_by)) {
                 if (IS_ADMIN_FLAG === true && isset($_SESSION['admin_id'])) {
                     $updated_by = zen_updated_by_admin();
-                } elseif (IS_ADMIN_FLAG === false && isset($_SESSION['customers_id'])) {
+                } else if (isset($_SESSION['emp_admin_id'])) {
+                   $updated_by = zen_updated_by_admin($_SESSION['emp_admin_id']);
+                } elseif (IS_ADMIN_FLAG === false && isset($_SESSION['customer_id'])) {
                     $updated_by = '';
                 } else {
                     $updated_by = 'N/A';

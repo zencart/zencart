@@ -1,0 +1,36 @@
+.pageHeading {font-size: 2em;}
+.serverInfo{max-width: 800px; margin-left: auto; margin-right: auto; font-size: 1.1em;}
+.infocell {float:left; width: 380px;margin-right:10px;}
+.infocell a {font-size: 1.1em;}
+.sysinfo {max-width:700px; margin: auto;border: 2px solid black;padding:1.5em;margin-top:2em;}
+.clearBoth{clear:both}
+
+.phpinfo table{border:none;padding:0;margin:0; border-spacing:0;border-collapse:collapse;}
+.phpinfo table {width: 768px !important;}
+.phpinfo {margin:auto;}
+.phpinfo hr {display: none;}
+.phpinfo DIV {background-color: #fff; color: #222; font-family: sans-serif;}
+pre {margin: 0; font-family: monospace;}
+.phpinfo table {border-collapse: collapse; border: 0; width: 934px; box-shadow: 1px 2px 3px #ccc;}
+.center {text-align: center;}
+.center table {margin: 1em auto; text-align: left;}
+.center th {text-align: center !important;}
+
+.phpinfo h1, .phpinfo h1 a {font-size: 150%;}
+.phpinfo h2, .phpinfo h2 a {font-size: 125%;}
+.p {text-align: left;}
+.e {background-color: #ccf; width: 300px; font-weight: bold;}
+.h {background-color: #99c; font-weight: bold;}
+.v {background-color: #ddd; max-width: 300px; overflow-x: auto; word-wrap: break-word;}
+.v i {color: #999;}
+.phpinfo img {float: right; border: 0;}
+.phpinfo-is-disabled {color: red; font-weight: bold; text-align: center; padding-top: 1em; border: 1px solid red; height: 4em; width: 75%;}
+
+#db-h2 { text-align: center; font-size: 20px; }
+#database-info { width: 768px!important; margin: 0 auto; border: 1px solid #737ca1; border-collapse: collapse; }
+.db-row { }
+.db-row:nth-child(odd) .db-info { background-color: #e5e4e2; }
+.db-info { width: 50%; padding: 5px; border: 1px solid #737ca1; }
+.db-name { text-align: right; font-weight: bold; height: inherit; }
+.db-value { text-align: left; word-wrap: break-word; max-width: 50%; word-break: break-all; }
+.db-head { font-weight: bold; color: #737ca1; }

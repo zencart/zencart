@@ -1,10 +1,9 @@
 <?php
 /**
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Thu Nov 15 22:35:14 2018 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 require('includes/application_top.php');
 
@@ -89,21 +88,9 @@ switch ($action) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" href="includes/stylesheet.css">
-    <link rel="stylesheet" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
+      <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <link rel="stylesheet" href="includes/css/admin_access.css">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
     <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
       function checkAll(form, header, value) {
           for (var i = 0; i < form.elements.length; i++) {
               if (form.elements[i].className == header) {
@@ -113,7 +100,7 @@ switch ($action) {
       }
     </script>
   </head>
-  <body onload="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->

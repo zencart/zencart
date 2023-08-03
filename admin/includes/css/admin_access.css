@@ -1,9 +1,8 @@
 /*
- * @package Admin Access
- * @copyright Copyright 2003-2011 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: admin_access.css 19326 2011-08-02 22:11:40Z kuroi $
+ * @version $Id: Scott C Wilson 2020 Jun 23 Modified in v1.5.8-alpha $
  */
 
 #pageWrapper {padding:20px}
@@ -31,3 +30,11 @@ label {width:15em; float:left}
 .profile {width:20em}
 
 #profile-update input {float:left; margin-right:8px}
+
+input[type=checkbox] {
+  margin-right: 5px;
+}
+
+.checkButton {
+  margin-right: 5px;
+}

@@ -2,11 +2,10 @@
 /**
  * split_page_results Class.
  *
- * @package classes
- * @copyright Copyright 2003-2016 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Author: DrByte  Sat Jan 9 13:13:41 2016 -0500 Modified in v1.5.5 $
+ * @version $Id: brittainmark 2022 Sep 24 Modified in v1.5.8 $
  */
 
 namespace Zencart\Paginator;
@@ -20,10 +19,16 @@ if (!defined('IS_ADMIN_FLAG')) {
  * An sql paging class, that allows for sql result to be shown over a number of pages using simple navigation system
  * Overhaul scheduled for subsequent release
  *
- * @package classes
  */
 class Paginator extends \base {
-  var $sql_query, $number_of_rows, $current_page_number, $number_of_pages, $number_of_rows_per_page, $page_name;
+    protected $cmd;
+    protected $countQuery;
+    protected $current_page_number;
+    protected $number_of_pages;
+    protected $number_of_rows_per_page;
+    protected $number_of_rows;
+    protected $page_name;
+    protected $sql_query;
 
   /* class constructor */
   function __construct($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
@@ -112,7 +117,7 @@ class Paginator extends \base {
 
     $class = '';
 
-    if (zen_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
+    if (!empty($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
 
     // previous button - not displayed on first page
     $link = '<a href="' . zen_href_link($this->cmd, $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';

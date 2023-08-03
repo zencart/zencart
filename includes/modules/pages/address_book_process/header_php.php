@@ -2,10 +2,10 @@
 /**
  * Header code file for the Address Book Process page
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Nov 16 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 May 25 Modified in v1.5.8-alpha $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ADDRESS_BOOK_PROCESS');
@@ -20,7 +20,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 /**
  * Process deletes
  */
-if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete'])) 
+if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete']))
 {
   $sql = "DELETE FROM " . TABLE_ADDRESS_BOOK . "
           WHERE  address_book_id = :delete
@@ -67,7 +67,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
    * error checking when updating or adding an entry
    */
   if (ACCOUNT_STATE == 'true') {
-    $state = (isset($_POST['state'])) ? zen_db_prepare_input($_POST['state']) : FALSE;
+    $state = (isset($_POST['state'])) ? zen_db_prepare_input($_POST['state']) : '';
     if (isset($_POST['zone_id'])) {
       $zone_id = zen_db_prepare_input($_POST['zone_id']);
     } else {
@@ -255,9 +255,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
 }
 
 if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-  $entry_query = "SELECT entry_gender, entry_company, entry_firstname, entry_lastname,
-                         entry_street_address, entry_suburb, entry_postcode, entry_city,
-                         entry_state, entry_zone_id, entry_country_id
+  $entry_query = "SELECT *
                   FROM   " . TABLE_ADDRESS_BOOK . "
                   WHERE  customers_id = :customersID
                   AND    address_book_id = :addressBookID";
@@ -271,7 +269,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 
     zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
   }
-  if (!isset($zone_name) || (int)$zone_name == 0) $zone_name = zen_get_zone_name($entry->fields['entry_country_id'], $entry->fields['entry_zone_id'], $entry->fields['entry_state']);
+  if (!isset($zone_name) || (int)$zone_name == 0) $zone_name = zen_get_zone_name((int)$entry->fields['entry_country_id'], (int)$entry->fields['entry_zone_id'], $entry->fields['entry_state']);
   if (!isset($zone_id) || (int)$zone_id == 0) $zone_id = $entry->fields['entry_zone_id'];
 
 } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
@@ -304,7 +302,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 
   $entry_query = $db->bindVars($entry_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $entry = $db->Execute($entry_query);
-  
+
   $entry->fields['entry_gender'] = 'm';
   $entry->fields['entry_firstname'] = '';
   $entry->fields['entry_lastname'] = '';
@@ -327,16 +325,13 @@ if (!isset($_GET['delete'])) {
     $entry->fields['entry_country_id'] = $selected_country;
   }
   $flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN == 'true' || $error_state_input) ? true : false;
-  $state = ($flag_show_pulldown_states && $state != FALSE) ? $state : $zone_name;
+  $state = ($flag_show_pulldown_states && $state !== '') ? $state : $zone_name;
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
 }
 
-
-if (!isset($_GET['delete']) && !isset($_GET['edit'])) {
-  if (zen_count_customer_address_book_entries() >= MAX_ADDRESS_BOOK_ENTRIES) {
-    $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
-    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
-  }
+if (!isset($_GET['delete']) && !isset($_GET['edit']) && count(zen_get_customer_address_book_entries($_SESSION['customer_id'])) >= MAX_ADDRESS_BOOK_ENTRIES) {
+  $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
+  zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));

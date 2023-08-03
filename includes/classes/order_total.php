@@ -2,28 +2,30 @@
 /**
  * File contains the order-totals-processing class ("order-total")
  *
- * @package classes
- * @copyright Copyright 2003-2019 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2019 Mar 10 Modified in v1.5.6b $
+ * @version $Id: brittainmark 2022 Sep 07 Modified in v1.5.8 $
  */
 /**
  * order-total class
  *
  * Handles all order-total processing functions
  *
- * @package classes
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 class order_total extends base {
-  var $modules = array();
+  /**
+     * $modules is an array of installed order totals module names 
+     * @var array
+     */
+    public $modules;
 
   // class constructor
   function __construct() {
-    global $messageStack;
+    global $messageStack, $languageLoader;
     if (defined('MODULE_ORDER_TOTAL_INSTALLED') && zen_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
@@ -36,8 +38,8 @@ class order_total extends base {
         } else {
           $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/', $value, 'false');
         }
-        if (@file_exists($lang_file)) {
-          include_once($lang_file);
+          if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $value, '/modules/order_total')) {
+              $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $value, '/modules/order_total');
         } else {
           if (IS_ADMIN_FLAG === false && is_object($messageStack)) {
             $messageStack->add('header', WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
@@ -63,6 +65,9 @@ class order_total extends base {
         $class = substr($value, 0, strrpos($value, '.'));
         if (!isset($GLOBALS[$class])) continue;
         $GLOBALS[$class]->process();
+        if (empty($GLOBALS[$class]->output)) {
+           continue; 
+        }
         for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
           if (zen_not_null($GLOBALS[$class]->output[$i]['title']) && zen_not_null($GLOBALS[$class]->output[$i]['text'])) {
             $order_total_array[] = array('code' => $GLOBALS[$class]->code,
@@ -128,7 +133,7 @@ class order_total extends base {
   }
 
 
-  // update_credit_account is called in checkout process on a per product basis. It's purpose
+  // update_credit_account is called in checkout process on a per product basis. Its purpose
   // is to decide whether each product in the cart should add something to a credit account.
   // e.g. for the Gift Voucher it checks whether the product is a Gift voucher and then adds the amount
   // to the Gift Voucher account.
@@ -147,7 +152,7 @@ class order_total extends base {
 
 
   // This function is called in checkout confirmation.
-  // It's main use is for credit classes that use the credit_selection() method. This is usually for
+  // Its main use is for credit classes that use the credit_selection() method. This is usually for
   // entering redeem codes(Gift Vouchers/Discount Coupons). This function is used to validate these codes.
   // If they are valid then the necessary actions are taken, if not valid we are returned to checkout payment
   // with an error
@@ -164,7 +169,7 @@ class order_total extends base {
       }
     }
   }
-  // pre_confirmation_check is called on checkout confirmation. It's function is to decide whether the
+  // pre_confirmation_check is called on checkout confirmation. Its function is to decide whether the
   // credits available are greater than the order total. If they are then a variable (credit_covers) is set to
   // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
   // total, we don't want to go to paypal etc.
@@ -179,7 +184,7 @@ class order_total extends base {
         $GLOBALS[$class]->output = array();
       }
       $reCalculatedOrderTotal = $order->info['total'];
-      if ($reCalculatedOrderTotal <= 0.009 && $_SESSION['payment'] != 'freecharger') {
+      if ($reCalculatedOrderTotal <= 0.009 && !(isset($_SESSION['payment']) && $_SESSION['payment'] === 'freecharger')) {
         $credit_covers = true;
       }
       $order->info = $orderInfoSaved;

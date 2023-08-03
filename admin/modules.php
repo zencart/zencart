@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2021 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021 Feb 19 Modified in v1.5.7c $
+ * @version $Id: Scott C Wilson 2022 Jan 08 Modified in v1.5.8-alpha $
  */
 require('includes/application_top.php');
 if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) {
@@ -14,7 +14,7 @@ $set = (isset($_GET['set']) ? $_GET['set'] : (isset($_POST['set']) ? $_POST['set
 
 $is_ssl_protected = (substr(HTTP_SERVER, 0, 5) == 'https') ? TRUE : FALSE;
 
-if (zen_not_null($set)) {
+if (!empty($set)) {
   switch ($set) {
     case 'shipping':
       $module_type = 'shipping';
@@ -58,7 +58,7 @@ $notifications = new AdminNotifications();
 $availableNotifications = $notifications->getNotifications($notificationType, $_SESSION['admin_id']);
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
-if (zen_not_null($action)) {
+if (!empty($action)) {
   $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
   switch ($action) {
     case 'save':
@@ -89,7 +89,7 @@ if (zen_not_null($action)) {
       }
       $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED, preg_replace('/[^\w]/', '*', (!empty($_GET['module']) ? $_GET['module'] : (!empty($_GET['set']) ? $_GET['set'] : 'UNKNOWN'))), $admname);
       zen_record_admin_activity($msg, 'warning');
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $msg], 'admin_settings_changed');
+      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => nl2br($msg)], 'admin_settings_changed');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . (!empty($_GET['module']) ? '&module=' . $_GET['module'] : ''), 'SSL'));
       break;
     case 'install':
@@ -100,13 +100,12 @@ if (zen_not_null($action)) {
           break;
       }
       if (file_exists($module_directory . $class . $file_extension)) {
-          if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
-            include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
+          if ($languageLoader->loadModuleDefinesFromFile( '/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
             include $module_directory . $class . $file_extension;
             $module = new $class();
             $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
             zen_record_admin_activity($msg, 'warning');
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $msg], 'admin_settings_changed');
+            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => nl2br($msg) ], 'admin_settings_changed');
             $result = $module->install();
           }
       }
@@ -118,13 +117,12 @@ if (zen_not_null($action)) {
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
       $class = basename($_POST['module']);
       if (file_exists($module_directory . $class . $file_extension)) {
-          if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension)) {
-              include DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . $file_extension;
+          if ($languageLoader->loadModuleDefinesFromFile( '/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
               include $module_directory . $class . $file_extension;
               $module = new $class();
               $msg    = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
               zen_record_admin_activity($msg, 'warning');
-              zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML'=>$msg], 'admin_settings_changed');
+              zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED, $msg, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => nl2br($msg) ], 'admin_settings_changed');
               $result = $module->remove();
           }
       }
@@ -136,23 +134,9 @@ if (zen_not_null($action)) {
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
-    <meta charset="<?php echo CHARSET; ?>">
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="includes/cssjsmenuhover.css" media="all" id="hoverJS">
-    <script src="includes/menu.js"></script>
-    <script src="includes/general.js"></script>
-    <script>
-      function init() {
-          cssjsmenu('navbar');
-          if (document.getElementById) {
-              var kill = document.getElementById('hoverJS');
-              kill.disabled = true;
-          }
-      }
-    </script>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
-  <body onLoad="init()">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
@@ -192,12 +176,11 @@ if (zen_not_null($action)) {
                   sort($directory_array);
                   $dir->close();
                 }
-
                 $installed_modules = $temp_for_sort = [];
                 for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
                   $file = $directory_array[$i];
-                  if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
-                    include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+                  if ($languageLoader->hasLanguageFile( DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type)) {
+                      $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type);
                     include($module_directory . $file);
                     $class = substr($file, 0, strrpos($file, '.'));
                     if (class_exists($class)) {
@@ -230,6 +213,10 @@ if (zen_not_null($action)) {
                           }
                         }
                         $module_info['keys'] = $keys_extra;
+                        if (method_exists($module, 'get_configuration_errors')) { 
+                          $module_info['configuration_errors'] = $module->get_configuration_errors(); 
+                        }
+
                         $mInfo = new objectInfo($module_info);
                       }
                         if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) { // a module row is selected
@@ -246,7 +233,7 @@ if (zen_not_null($action)) {
                             <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'); ?>'">
                         <?php } ?>
                   <td class="dataTableContent"><?php echo $module->title; ?></td>
-                  <td class="dataTableContent"><?php echo(strstr($module->code, 'paypal') ? 'PayPal' : $module->code); ?></td>
+                  <td class="dataTableContent"><?php echo $module->code; ?></td>
                   <td class="dataTableContent text-right">
                       <?php if (is_numeric($module->sort_order)) {
                           echo $module->sort_order;
@@ -265,7 +252,7 @@ if (zen_not_null($action)) {
                     if (!isset($module->order_status)) {
                         $module->order_status = 0;
                     }
-                    
+
                     $orders_status_name = $db->Execute("SELECT orders_status_id, orders_status_name
                                                         FROM " . TABLE_ORDERS_STATUS . "
                                                         WHERE orders_status_id = " . (int)$module->order_status . "
@@ -277,7 +264,7 @@ if (zen_not_null($action)) {
                       <?php
                       if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
                         echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
-                        $_GET['module'] = !isset($_GET['module']) ? $mInfo->code : $_GET['module'];
+                        $_GET['module'] = $_GET['module'] ?? $mInfo->code;
                       } else {
                         echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                       }
@@ -350,6 +337,24 @@ if (zen_not_null($action)) {
             default:
               $heading[] = ['text' => '<h4>' . $mInfo->title . '</h4>'];
 
+              $help_button = [];
+              $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+              $class = basename($_GET['module']);
+              if (file_exists($module_directory . $class . $file_extension)) {
+                  if ($languageLoader->loadModuleDefinesFromFile( '/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
+                    include_once $module_directory . $class . $file_extension;
+                    $module = new $class;
+                    if (method_exists($module, 'help')) { 
+                       $help_text = $module->help();
+                       if (isset($help_text['link'])) { 
+                          $help_button = array('align' => 'text-center', 'text' => '<a href="' . $help_text['link'] . '" target="_blank" rel="noreferrer noopener">' . '<button type="submit" class="btn btn-primary " id="helpButton">' . IMAGE_MODULE_HELP. '</button></a>'); 
+                       } else if (isset($help_text['body'])) { 
+                          $help_title = $module->title; 
+                          $help_button = array('align' => 'text-center', 'text' => '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal">' . IMAGE_MODULE_HELP . '</button>');
+                       }
+                    }
+                  }
+              }
               if ($mInfo->status == '1') {
                 $keys = '';
                 foreach($mInfo->keys as $value) {
@@ -384,7 +389,14 @@ if (zen_not_null($action)) {
                   $contents[] = ['align' => 'text-center', 'text' => TEXT_WARNING_SSL_EDIT];
                 }
                 $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove', 'SSL') . '" class="btn btn-warning" role="button" id="removeButton"><i class="fa fa-minus"></i> ' . IMAGE_MODULE_REMOVE . '</a>'];
+                if (!empty($help_button)) { 
+                   $contents[] = $help_button; 
+                }
                 $contents[] = ['text' => '<br>' . $mInfo->description];
+
+                if (!empty($mInfo->configuration_errors)) { 
+                  $contents[] = ['text' => $mInfo->configuration_errors . '<br>'];  // warnings, etc. 
+                }
                 $contents[] = ['text' => '<br>' . $keys];
               } else {
                 if (!(!$is_ssl_protected && in_array($mInfo->code, ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck']))) {
@@ -392,13 +404,16 @@ if (zen_not_null($action)) {
                 } else {
                   $contents[] = ['align' => 'text-center', 'text' => TEXT_WARNING_SSL_INSTALL];
                 }
+                if (!empty($help_button)) { 
+                   $contents[] = $help_button; 
+                }
                 $contents[] = ['text' => '<br>' . $mInfo->description];
               }
               break;
           }
           ?>
           <?php
-          if ((zen_not_null($heading)) && (zen_not_null($contents))) {
+          if (!empty($heading) && !empty($contents)) {
             $box = new box();
             echo $box->infoBox($heading, $contents);
           }
@@ -412,6 +427,26 @@ if (zen_not_null($action)) {
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
+
+<?php if (!empty($help_text['body'])) { ?>
+<div id="helpModal" class="modal fade">
+      <div class="modal-dialog">
+           <div class="modal-content">
+                <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                     <h4 class="modal-title"><?php echo $help_title . ' ' . IMAGE_MODULE_HELP; ?></h4>
+                </div>
+                <div class="modal-body">
+<?php echo $help_text['body']; ?> 
+                </div>
+                <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+           </div>
+      </div>
+</div>
+<?php } ?>
+
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

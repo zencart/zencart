@@ -2,17 +2,18 @@
 /**
  * admin subtemplate for Paypal Website Payments Standard payment method
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 16 Modified in v1.5.7 $
+ * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 
-// strip slashes in case they were added to handle apostrophes:
-  foreach ($ipn->fields as $key=>$value){
-    $ipn->fields[$key] = stripslashes($value);
-  }
+// strip slashes in case they were added to handle apostrophes, noting that some of the fields
+// from the "paypal" table might be NULL:
+foreach ($ipn->fields as $key => $value) {
+    $ipn->fields[$key] = stripslashes($value ?? '');
+}
 
 // display all paypal status fields (in admin Orders page):
           $output = '<table>'."\n";
@@ -189,7 +190,7 @@
           $output .= '</tr>'."\n";
         if ($ipn->fields['memo'] != '') {
           $output .= '<tr style="background-color : #cccccc; border-style : dotted;">'."\n";
-          $output .= '<td valign="top" colspan="4" ><table>'."\n";
+          $output .= '<td valign="top" colspan="4"><table>'."\n";
           $output .= '<tr><td valign="top" class="main">'."\n";
           $output .= MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS."\n";
           $output .= '</td><td valign="top" class="main">'."\n";
