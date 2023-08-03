@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Oct 11 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2022 Oct 21 Modified in v1.5.8a $
  *
  */
 
@@ -479,7 +479,7 @@ class zcDatabaseInstaller
     {
         if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
         $check = $this->db->Execute(
-            'SHOW COLUMNS FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
+            'SHOW COLUMNS FROM `' . DB_DATABASE . '`.`' . $this->dbPrefix . $this->db->prepare_input($table) . '` ' .
             'WHERE `Field` = \'' . $this->db->prepare_input($column) . '\''
         );
         return !$check->EOF;
@@ -489,7 +489,7 @@ class zcDatabaseInstaller
     {
         if (!defined('DB_DATABASE')) define('DB_DATABASE', $this->dbName);
         $check = $this->db->Execute(
-            'SHOW INDEX FROM `' . DB_DATABASE . '`.`' . $this->db->prepare_input($table) . '` ' .
+            'SHOW INDEX FROM `' . DB_DATABASE . '`.`' . $this->dbPrefix . $this->db->prepare_input($table) . '` ' .
             'WHERE `Key_name` = \'' . $this->db->prepare_input($index) . '\''
         );
         return !$check->EOF;

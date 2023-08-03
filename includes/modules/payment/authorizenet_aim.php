@@ -2,10 +2,10 @@
 /**
  * authorize.net AIM payment method class
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Sep 23 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2023 Mar 15 Modified in v1.5.8a $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -260,7 +260,7 @@ class authorizenet_aim extends base {
     include(DIR_WS_CLASSES . 'cc_validation.php');
 
     $cc_validation = new cc_validation();
-    $result = $cc_validation->validate($_POST['authorizenet_aim_cc_number'], $_POST['authorizenet_aim_cc_expires_month'], $_POST['authorizenet_aim_cc_expires_year'], $_POST['authorizenet_aim_cc_cvv']);
+    $result = $cc_validation->validate(($_POST['authorizenet_aim_cc_number'] ?? ''), ($_POST['authorizenet_aim_cc_expires_month'] ?? ''), ($_POST['authorizenet_aim_cc_expires_year'] ?? ''), ($_POST['authorizenet_aim_cc_cvv'] ?? ''));
     $error = '';
     switch ($result) {
       case -1:
@@ -485,7 +485,7 @@ class authorizenet_aim extends base {
     if ($response_code == '4'){
         $this->order_status = (int)MODULE_PAYMENT_AUTHORIZENET_AIM_REVIEW_ORDER_STATUS_ID;
     }
-    if ($response[88] != '') {
+    if (!empty($response[88])) {
       $_SESSION['payment_method_messages'] = $response[88];
     }
     $order->info['cc_type'] = $response[51];
@@ -644,10 +644,10 @@ class authorizenet_aim extends base {
     // concatenate the submission data into $data variable after sanitizing to protect delimiters
     $data = '';
     foreach($submit_data as $key => $value) {
-      if ($key != 'x_delim_char' && $key != 'x_encap_char') {
+      if ($key != 'x_delim_char' && $key != 'x_encap_char' && !empty($value)) {
         $value = str_replace(array($this->delimiter, $this->encapChar,'"',"'",'&amp;','&', '='), '', $value);
       }
-      $data .= $key . '=' . urlencode($value) . '&';
+      $data .= $key . '=' . (!empty($value) ? urlencode($value) : '') . '&';
     }
     // Remove the last "&" from the string
     $data = substr($data, 0, -1);
@@ -752,12 +752,12 @@ class authorizenet_aim extends base {
 
       // Insert the data into the database
       $sql = "INSERT INTO " . TABLE_AUTHORIZENET . "  (id, customer_id, order_id, response_code, response_text, authorization_type, transaction_id, sent, received, time, session_id) VALUES (NULL, :custID, :orderID, :respCode, :respText, :authType, :transID, :sentData, :recvData, :orderTime, :sessID )";
-      $sql = $db->bindVars($sql, ':custID', $_SESSION['customer_id'], 'integer');
+      $sql = $db->bindVars($sql, ':custID', ($_SESSION['customer_id'] ?? '-1'), 'integer');
       $sql = $db->bindVars($sql, ':orderID', preg_replace('/[^0-9]/', '', $response[7]), 'integer');
       $sql = $db->bindVars($sql, ':respCode', $response[0], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', $response[11], 'string');
-      if (trim($this->transaction_id) != '') {
+      if (!empty($this->transaction_id)) {
         $sql = $db->bindVars($sql, ':transID', substr($this->transaction_id, 0, strpos($this->transaction_id, ' ')), 'string');
       } else {
         $sql = $db->bindVars($sql, ':transID', 'NULL', 'passthru');

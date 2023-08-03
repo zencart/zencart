@@ -2,10 +2,10 @@
 /**
  * product_listing module for v1.5.7/1.5.8
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
+ * @version $Id: brittainmark 2022 Oct 29 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -204,16 +204,12 @@ if ($num_products_count > 0) {
         if (!empty($_GET['cPath'])) $linkCpath = $_GET['cPath'];
         if (!empty($_GET['manufacturers_id']) && !empty($_GET['filter_id'])) $linkCpath = $_GET['filter_id'];
 
-        for ($col = 0, $n = count($column_list); $col < $n; $col++) {
-            $lc_align = '';
-            $lc_text = '';
 
             $href = zen_href_link(zen_get_info_page($record['products_id']), 'cPath=' . zen_get_generated_category_path_rev($linkCpath) . '&products_id=' . $record['products_id']);
             $listing_product_name = (isset($record['products_name'])) ? $record['products_name'] : '';
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
                 $listing_description = zen_trunc_string(zen_clean_html(stripslashes(zen_get_products_description($record['products_id'], $_SESSION['languages_id']))), PRODUCT_LIST_DESCRIPTION);
-                $lc_text .= '<div class="listingDescription">' . $listing_description . '</div>';
             }
             $listing_model = (isset($record['products_model'])) ? $record['products_model'] : '';
             $listing_mfg_name = (isset($record['manufacturers_name'])) ? $record['manufacturers_name'] : '';
@@ -273,7 +269,12 @@ if ($num_products_count > 0) {
             }
             $zco_notifier->notify('NOTIFY_MODULES_PRODUCT_LISTING_PRODUCTS_BUTTON', [], $record, $lc_button);
 
-
+        for ($col = 0, $n = count($column_list); $col < $n; $col++) {
+            $lc_align = '';
+            $lc_text = '';
+            if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
+                $lc_text .= '<div class="listingDescription">' . $listing_description . '</div>';
+            }
             switch ($column_list[$col]) {
                 case 'PRODUCT_LIST_MODEL':
                     $lc_align = 'center';

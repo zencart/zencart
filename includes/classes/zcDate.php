@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 30 Modified in v1.5.8 $
+ * @version $Id: piloujp 2023 Jan 21 Modified in v1.5.8a $
  */
 class zcDate extends base
 {
@@ -111,8 +111,8 @@ class zcDate extends base
                 '%T' => 'HH:mm:ss',
                 '%x' => $date_short,
                 '%X' => $time_short,
-                '%y' => 'YY',
-                '%Y' => 'YYYY',
+                '%y' => 'yy',
+                '%Y' => 'y',
             ];
             $this->strftime2intl = [
                 'from' => array_keys($strftime2intl),

@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=checkout_confirmation.
  * Displays final checkout details, cart, payment and shipping info details.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 01 Modified in v1.5.8-alpha $
+ * @version $Id: Steve 2023 Feb 23 Modified in v1.5.8a $
  */
 ?>
 <div class="centerColumn" id="checkoutConfirmDefault">
@@ -28,7 +28,7 @@
 <address><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br>'); ?></address>
 
 <h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3>
-<h4 id="checkoutConfirmDefaultPaymentTitle"><?php $payment_title; ?></h4>
+<h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $payment_title; ?></h4>
 
 <?php
   if ($credit_covers === false && is_array($payment_modules->modules)) {
@@ -172,6 +172,6 @@
 ?>
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONFIRM_ORDER, BUTTON_CONFIRM_ORDER_ALT, 'name="btn_submit" id="btn_submit"') ;?></div>
 </form>
-<div class="buttonRow back"><?php echo TITLE_CONTINUE_CHECKOUT_PROCEDURE . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
+<div class="buttonRow back"><?php echo '<strong>' . TITLE_CONTINUE_CHECKOUT_PROCEDURE . '</strong>' . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </div>

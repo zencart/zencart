@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jun 04 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Dec 09 Modified in v1.5.8a $
  */
 
 function page_has_help()
@@ -136,6 +136,7 @@ function page_has_help()
         FILENAME_TEMPLATE_SELECT => 'https://docs.zen-cart.com/user/admin_pages/tools/template_selection/',
         FILENAME_LAYOUT_CONTROLLER => 'https://docs.zen-cart.com/user/admin_pages/tools/layout_boxes_controller/',
         FILENAME_BANNER_MANAGER => 'https://docs.zen-cart.com/user/admin_pages/tools/banner_manager/',
+        FILENAME_BANNER_STATISTICS => 'https://docs.zen-cart.com/user/admin_pages/tools/banner_statistics/',
         FILENAME_MAIL => 'https://docs.zen-cart.com/user/admin_pages/tools/send_email/',
         FILENAME_NEWSLETTERS => 'https://docs.zen-cart.com/user/admin_pages/tools/newsletter/',
         FILENAME_SERVER_INFO => 'https://docs.zen-cart.com/user/admin_pages/tools/server_info/',

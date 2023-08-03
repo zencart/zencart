@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=checkout_shipping.
  * Displays allowed shipping modules for selection by customer.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
+ * @version $Id: Steve 2023 Feb 23 Modified in v1.5.8a $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">
@@ -130,7 +130,7 @@
 </fieldset>
 
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT); ?></div>
-<div class="buttonRow back"><?php echo '<strong>' . TITLE_CONTINUE_CHECKOUT_PROCEDURE . '</strong><br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
+<div class="buttonRow back"><?php echo '<strong>' . TITLE_CONTINUE_CHECKOUT_PROCEDURE . '</strong>' . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
 
 </form>
 </div>

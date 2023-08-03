@@ -1,8 +1,8 @@
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 May 28 Modified in v1.5.8-alpha $
+ * @version $Id: torvista 2022 Dec 16 Modified in v1.5.8a $
  */
 
 body {
@@ -391,7 +391,7 @@ tr.attributeBoxContent {
     background-color: #e7e6e0;
     color: #333;
     padding: 5px;
-    word-break: break-word; 
+    word-break: break-word;
 }
 
 .infoBoxContent a img, .infoBoxContent input[type="image"] {
@@ -700,7 +700,7 @@ a.btn-metatags-on {
   border: none;
 }
 .btn-status:active {
-  webkit-box-shadow: none;
+  -webkit-box-shadow: none;
   box-shadow: none;
 }
 .btn-status:focus, .btn-status:active:focus {
@@ -808,8 +808,8 @@ input.faint {
 .btn-help {
   margin-right: 4px;
   margin-bottom: 8px;
-  background-color: #337ab7; 
-  color: white; 
+  background-color: #337ab7;
+  color: white;
 }
 
 /* End of css buttons */

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 May 26 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Dec 15 Modified in v1.5.8a $
  */
 
 /**
@@ -1061,6 +1061,9 @@ function zen_get_products_sale_discount_type($product_id = false, $categories_id
     $sql = "SELECT * FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status=1";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
+       if (empty($result['sale_categories_all'])) {
+          continue; 
+       }
         $categories = explode(',', $result['sale_categories_all']);
         foreach ($categories as $key => $value) {
             if ($value == $check_category) {
@@ -1536,6 +1539,9 @@ function zen_update_products_price_sorter($product_id)
  */
 function zen_parse_salemaker_categories($categories_csv)
 {
+    if (empty($categories_csv)) {
+       return []; 
+    }
     $clist_array = explode(',', $categories_csv);
     return array_unique($clist_array);
 }
@@ -1549,7 +1555,9 @@ function zen_update_salemaker_product_prices($salemaker_id)
 {
     global $db;
     $zv_categories = $db->Execute("SELECT sale_categories_selected FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_id = " . (int)$salemaker_id);
-    if ($zv_categories->EOF) return false;
+    if ($zv_categories->EOF || empty($zv_categories->fields['sale_categories_selected'])) {
+       return false;
+    }
 
     $za_salemaker_categories = zen_parse_salemaker_categories($zv_categories->fields['sale_categories_selected']);
     foreach ($za_salemaker_categories as $category) {

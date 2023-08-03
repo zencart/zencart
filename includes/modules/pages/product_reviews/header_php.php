@@ -2,10 +2,10 @@
 /**
  * Product Reviews
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2023 Mar 03 Modified in v1.5.8a $
  */
 
   // This should be first line of the script:
@@ -56,7 +56,7 @@
 
   $review_status = " and r.status = 1";
 
-  $reviews_query_raw = "SELECT r.reviews_id, left(rd.reviews_text, 100) as reviews_text, r.reviews_rating, r.date_added, r.customers_name
+  $reviews_query_raw = "SELECT r.reviews_id, rd.reviews_text, r.reviews_rating, r.date_added, r.customers_name
                         FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
                         WHERE r.products_id = :productsID
                         AND r.reviews_id = rd.reviews_id

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Sep 17 Modified in v1.5.8 $
+ * @version $Id: lat9 2023 Feb 24 Modified in v1.5.8a $
  */
 require 'includes/application_top.php';
 require DIR_WS_CLASSES . 'currencies.php';
@@ -623,8 +623,8 @@ switch ($_GET['action']) {
                   $cc_list = $db->Execute($cc_query_raw);
 
                   foreach ($cc_list as $item) {
-                    if (((!$_GET['uid']) || (@$_GET['uid'] == $item['unique_id'])) && (!$cInfo)) {
-                      $cInfo = new objectInfo($item);
+                    if (empty($_GET['uid']) || ($_GET['uid'] === $item['unique_id'] && !isset($cInfo))) {
+                        $cInfo = new objectInfo($item);
                     }
                     if ((isset($cInfo)) && ($item['unique_id'] == $cInfo->unique_id)) {
                       ?>
@@ -783,7 +783,7 @@ switch ($_GET['action']) {
             <?php if (EMAIL_USE_HTML == 'true') { ?>
               <div class="form-group">
                 <?php echo zen_draw_label(TEXT_RICH_TEXT_MESSAGE, 'message_html', 'class="control-label col-sm-3"'); ?>
-                <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('message_html', 'soft', '100%', '25', htmlspecialchars(empty($_POST['message_html']) ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control" id="message_html"'); ?></div>
+                <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('message_html', 'soft', '', '25', htmlspecialchars(empty($_POST['message_html']) ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control" id="message_html"'); ?></div>
               </div>
             <?php } ?>
             <div class="form-group">
@@ -1197,17 +1197,7 @@ switch ($_GET['action']) {
               ?>
             </div>
             <div class="col-sm-4 text-right">
-              <?php echo zen_draw_form('search', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"', true); ?>
-              <div class="form-group">
-                <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
-                <div class="col-sm-9">
-                  <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"'); ?>
-                </div>
-              </div>
-              <?php
-              echo zen_hide_session_id();
-              echo '</form>';
-              ?>
+            <?php require DIR_WS_MODULES . 'search_box.php'; ?>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
               <table class="table table-hover table-striped">
@@ -1318,7 +1308,7 @@ switch ($_GET['action']) {
                   <td class="text-right"><?php echo $cc_split->display_links($cc_query_numrows, $maxDisplaySearchResults, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], (isset($_GET['status']) ? 'status=' . $_GET['status'] : '')); ?></td>
                 </tr>
                 <tr>
-                  <td class="text-right" colspan="2"><a name="couponInsert" href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (int)$cInfo->coupon_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
+                  <td class="text-right" colspan="2"><a id="couponInsert" href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (int)$cInfo->coupon_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
                 </tr>
               </table>
             </div>

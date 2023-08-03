@@ -8,48 +8,96 @@
  * For use on YOUR site, make a copy of this file (which has all entries commented-out) to /admin/includes/extra_datafiles/site_specific_admin_overrides.php
  * and make your edits there.  Otherwise, your overrides might get "lost" on a future Zen Cart upgrade.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jul 01 New in v1.5.8-alpha $
+ * @version $Id: brittainmark 2022 Dec 23 Modified in v1.5.8a $
  */
 // -----
-// The flag show_attrib_images is used by the files 
-// admin/invoice.php and admin/packingslip.php 
-// to determine whether attribute images should be displayed. 
+// The flags to indicate if attribute images should be displayed in invoice and packing slip.
+// Used in: admin/invoice.php, admin/packingslip.php 
 //
-// true ...... attribute images are shown on invoice and packingslip (the default) 
-// false ..... attribute images are not shown on invoice and packingslip 
-// $show_attrib_images = false;
+// $show_attrib_images   $show_attrib_images_pack
+// true or unset         true or unset            ...... attribute images are shown on invoice and packingslip (the default).
+// false                 false or unset           ...... attribute images are NOT shown on invoice or packingslip.
+// false                 true                     ...... attribute images are NOT shown on invoice but are shown packingslip.
+// true or unset         false                    ...... attribute images are shown on invoice but are NOT shown packingslip.
+//$show_attrib_images = true;
+//$show_attrib_images_pack = true;
 
 // Set the width of the attribute image used in packingslip and invoice.
-// the default is 25. if $show_attrinb_images = false is set above then setting this value will have no effect
-// Change 25 below to the number of px you require.
-// $attr_img_width = '25';
+// Used in: admin/invoice.php, admin/packingslip.php
+// 
+// The default is 25. if $show_attrinb_images = false is set above then setting this value will have no effect
+// Change 25 below to the number of px you require. Do NOT remove the quotes!
+//$attr_img_width = '25';
 
-// The flag show_product_images is used by the files 
-// admin/invoice.php and admin/packingslip.php 
-// to determine whether product images should be displayed. 
-//
-// true ...... product images are shown on invoice and packingslip (the default) 
-// false ..... product images are not shown on invoice and packingslip 
-// $show_product_images = false;
+// The flags to indicate if product images should be displayed in invoice and packing slip.
+// Used in: admin/invoice.php, admin/packingslip.php 
+// 
+// $show_product_images  $show_product_images_pack
+// true or unset         true or unset            ...... product images are shown on invoice and packingslip (the default).
+// false                 false or unset           ...... product images are NOT shown on invoice or packingslip.
+// false                 true                     ...... product images are NOT shown on invoice  but are shown packingslip.
+// true or unset         false                    ...... product images are shown on invoice and but are NOT shown packingslip.
+//$show_product_images = true;
+//$show_product_images_pack = true;
 
-// The flag show_product_tax is used by the file 
-// admin/invoice.php 
-// to determine whether product tax should be shown.
+ // Flag to indicate if the product tax is displayed on the order details screen and invoice
+ // Used in: admin/invoice.php, admin/orders.php
+ //
+ // true ..... Display the products tax amounts (the default).
+ // false .... The products Tax amount is NOT displayed.
+ //$show_product_tax = true;
+
+// Indicate if the downloads manager page should show the file date.
+// Used in: admin/downloads_manager.php
+// 
+// true ...... Show the file date.
+// false ..... Do NOT show the file date (the default).
+//$show_download_date = false; 
+
+// Flag to identify if attribute details should be displayed in the popup from the new orders dashboard widget.
+// Used in: admin/includes/modules/RecentOrdersDashboardWidget.php
+// 
+// true ...... Attributes are displayed in the popup (the default).
+// false ..... Attributes are NOT displayed in the popup.
+//$includeAttributesInPopoverRows = true;
+
+// Maximum number of rows to display in the new orders section of the dashboard widget
+// Used in: admin/includes/modules/RecentOrdersDashboardWidget.php
+// 
+// Change 25 below to the number of rows you require.
+//$recentOrdersMaxRows = 25;
+
+ //Flag to indicate if the Quick view popup should be displayed on the order page.
+// Used in: admin/orders.php
+ //
+ // true ..... Quick view popup icon is displayed.
+ // false .... Quick view popuo icon is NOT displayed (the default).
+ //$quick_view_popover_enabled = false;
+
+// Flag to indicate if the attributes info is displayed in Order Quick view popup.
+// Has no effect if $quick_view_popover_enabled = false;
+// Used in: admin/orders.php
 //
-// true ...... product tax is shown on invoice (the default) 
-// false ..... product tax is not shown on invoice 
-// $show_product_tax = false;
+// true ...... Attributes are displayed in the popup (the default).
+// false ..... Attributes are NOT displayed in the popup.
+//$includeAttributesInProductDetailRows = true;
+
+// Flag to indicate id the Zone information is to be displayed on the Order screen.
+// Used in: admin/orders.php
+// 
+// true ..... Display the zone information column (the default).
+// false .... Do NOT display the zone information column.
+//$show_zone_info = true;
+
+//
+//Developer Debugging flags
+//
 
 // Identify whether the zcDate class' (added in Zen Cart 1.5.8) debug-output is initially enabled.
+// Used in: includes/zcDate.php
 //
 // true ...... The zcDate debug is enabled.
 // false ..... The zcDate debug is disabled (the default).
-//
 //$zen_date_debug = false;
-
-// Indicate whether the downloads manager page should show the file date
-// true ...... Show the file date 
-// false ..... Do not show the file date (the default).
-// $show_download_date = false; 

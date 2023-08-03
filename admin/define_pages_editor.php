@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: Steve 2023 Feb 19 Modified in v1.5.8a $
  */
 require('includes/application_top.php');
 
@@ -171,7 +171,7 @@ if (!$lng_exists) {
             <div class="row"><strong><?php echo TEXT_INFO_CAUTION . '<br><br>' . TEXT_INFO_EDITING . '<br>' . $file . '<br>'; ?></strong></div>
             <div class="row">
                 <?php echo zen_draw_form('language', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save'); ?>
-              <div class="col-sm-6"><?php echo zen_draw_textarea_field('file_contents', 'soft', '100%', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' class="editorHook form-control"'); ?>
+              <div class="col-sm-6"><?php echo zen_draw_textarea_field('file_contents', 'soft', '', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' class="editorHook form-control"'); ?>
               </div>
               <div class="col-sm-6">&nbsp;</div>
               <div class="col-sm-12"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>

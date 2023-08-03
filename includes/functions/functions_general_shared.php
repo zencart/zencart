@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 May 12 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Dec 06 Modified in v1.5.8a $
  */
 
 function zen_get_zcversion()
@@ -164,7 +164,7 @@ function zen_get_all_get_params($exclude_array = array())
         foreach ($_GET as $key => $value) {
             if (!in_array($key, $exclude_array)) {
                 if (!is_array($value)) {
-                    if (strlen($value) > 0) {
+                    if (!empty($value)) {
                         $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
                     }
                 } else {
@@ -203,7 +203,7 @@ function zen_post_all_get_params($exclude_array = array(), $hidden = true, $para
         foreach ($_GET as $key => $value) {
             if (!in_array($key, $exclude_array)) {
                 if (!is_array($value)) {
-                    if (strlen($value) > 0) {
+                    if (!empty($value)) {
                         if ($hidden) {
                             $fields .= zen_draw_hidden_field($key, $value);
                         } else {
@@ -412,3 +412,34 @@ function zen_get_admin_name($id = null)
     $result = $db->Execute($sql);
     return $result->RecordCount() ? $result->fields['admin_name'] : null;
 }
+
+// Compatibility 
+
+function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
+{
+   trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
+   return zen_draw_pulldown_products($field_name, $parameters, $exclude, $show_id, $set_selected, $show_model, $show_current_category, $order_by, $filter_by_option_name); 
+}
+
+function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
+{
+   trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
+   return zen_draw_pulldown_products_having_attributes($field_name, $parameters, $exclude, $order_by, $filter_by_option_name); 
+}
+ 
+function zen_draw_products_pull_down_categories($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false) {
+   trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
+   return zen_draw_pulldown_categories_having_products($field_name, $parameters, $exclude, $show_id, $show_parent); 
+}
+
+function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null){
+   trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
+   return zen_draw_pulldown_categories_having_products_with_attributes($field_name, $parameters, $exclude, $show_full_path, $filter_by_option_name);
+}
+
+function zen_get_orders_status() 
+{
+   trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
+   return zen_get_orders_status_pulldown_array(); 
+}
+

@@ -2,9 +2,9 @@
 /**
  * brands header_php.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Apr 30 New in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Feb 28 Modified in v1.5.8a $
  */
 
 // This should be first line of the script:
@@ -16,10 +16,20 @@ $breadcrumb->add(BREADCRUMB_BRANDS, zen_href_link(FILENAME_BRANDS));
 $category_depth = 'brands';
 $typefilter = $_GET['typefilter'] = 'brands';
 
-$listing_sql =
-    "SELECT manufacturers_name, manufacturers_image, manufacturers_id, featured
-       FROM " . TABLE_MANUFACTURERS . " m
-      ORDER BY featured DESC, manufacturers_name";
+if (PRODUCTS_MANUFACTURERS_STATUS === '1') {
+    $listing_sql =
+        "SELECT DISTINCT m.manufacturers_name, m.manufacturers_image, m.manufacturers_id, m.featured
+           FROM " . TABLE_MANUFACTURERS . " m
+                LEFT JOIN " . TABLE_PRODUCTS . " p
+                    ON m.manufacturers_id = p.manufacturers_id
+          WHERE p.products_status = 1
+          ORDER BY m.featured DESC, m.manufacturers_name";
+} else {
+    $listing_sql =
+        "SELECT m.manufacturers_name, m.manufacturers_image, m.manufacturers_id, m.featured
+           FROM " . TABLE_MANUFACTURERS . " m
+           ORDER BY m.featured DESC, m.manufacturers_name";
+}
 
 $brands = [
     'featured' => [],

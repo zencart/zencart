@@ -4,10 +4,10 @@
  *
  * outputs the html header. i,e, everything that comes before the \</head\> tag
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2022 Oct 05 Modified in v1.5.8 $
+ * @version $Id: lat9 2022 Dec 15 Modified in v1.5.8a $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -45,6 +45,13 @@ if (!class_exists('Mobile_Detect')) {
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
   <head>
+<?php
+// -----
+// Provide a notification that the <head> tag has been rendered for the current page; some scripts need to be
+// inserted just after that tag's rendered.
+//
+$zco_notifier->notify('NOTIFY_HTML_HEAD_TAG_START', $current_page_base);
+?>
   <meta charset="<?php echo CHARSET; ?>">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="dns-prefetch" href="https://code.jquery.com">
@@ -209,7 +216,7 @@ if (in_array($current_page_base,explode(",",'popup_image,popup_image_additional'
 }
 ?>
   <script>document.documentElement.className = 'no-fouc';</script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous"/>
 <?php // ZCAdditions.com, ZCA Responsive Template Default (EOF-addition 2 of 2) ?>
 <?php
   $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);

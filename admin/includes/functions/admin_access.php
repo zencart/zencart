@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Feb 16 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Nov 24 Modified in v1.5.8a $
  */
 
 if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7);
@@ -835,7 +835,9 @@ function zen_get_menu_titles()
     $sql = "SELECT menu_key, language_key FROM " . TABLE_ADMIN_MENUS . " ORDER BY sort_order";
     $result = $db->Execute($sql);
     foreach ($result as $row) {
-        $retVal[$row['menu_key']] = constant($row['language_key']);
+       if (defined($row['language_key'])) {
+          $retVal[$row['menu_key']] = constant($row['language_key']);
+       }
     }
     $retVal['_productTypes'] = BOX_HEADING_PRODUCT_TYPES;
     return $retVal;

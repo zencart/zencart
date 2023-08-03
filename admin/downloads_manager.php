@@ -1,9 +1,9 @@
 <?php
 /*
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 14 Modified in v1.5.8-alpha2 $
+ * @version $Id: Erik Kerkhoven 2023 Jan 26 Modified in v1.5.8a $
  */
 require 'includes/application_top.php';
 
@@ -17,9 +17,8 @@ $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page']
 
 // Override instructions in:
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
-if (!isset($show_download_date)) {
-   $show_download_date = false;
-}
+$show_download_date = $show_download_date ?? false;
+
 if (!empty($action)) {
   switch ($action) {
     case 'insert':
@@ -54,29 +53,7 @@ if (!empty($action)) {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
         <div class="col-sm-offset-8 col-sm-4">
-          <?php echo zen_draw_form('search', FILENAME_DOWNLOADS_MANAGER, '', 'get', 'class="form-horizontal"'); ?>
-          <?php $keywords = (isset($_GET['search']) && zen_not_null($_GET['search'])) ? zen_db_input(zen_db_prepare_input($_GET['search'])) : ''; ?>
-          <div class="form-group">
-            <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
-            <div class="col-sm-9">
-              <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"'); ?>
-            </div>
-          </div>
-          <?php
-          echo zen_hide_session_id();
-          if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-            $keywords = zen_db_prepare_input($_GET['search']);
-            ?>
-            <div class="form-group">
-              <div class="col-sm-3">
-                <p class="control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></p>
-              </div>
-              <div class="col-sm-9 text-right">
-                <?php echo zen_output_string_protected($keywords); ?>&nbsp;<a href="<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER); ?>" class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>
-              </div>
-            </div>
-          <?php } ?>
-          <?php echo '</form>'; ?>
+         <?php require DIR_WS_MODULES . 'search_box.php'; ?>
         </div>
       </div>
       <div class="row">

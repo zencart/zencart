@@ -2,10 +2,10 @@
 /**
  * downloads module - prepares information for use in downloadable files delivery
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Aug 13 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2023 Mar 11 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -60,7 +60,7 @@ if ($downloadsOnThisOrder) {
   // Now get all downloadable products in that order
   $downloads_query = "select date_format(o.date_purchased, '%Y-%m-%d') as date_purchased_day,
                              opd.download_maxdays, op.products_name, opd.orders_products_download_id,
-                             opd.orders_products_filename, opd.download_count, opd.download_maxdays
+                             opd.orders_products_filename, opd.download_count 
                         from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
                         where o.orders_id = '" . (int)$last_order . "'
                         and (o.orders_status >= '" . DOWNLOADS_CONTROLLER_ORDERS_STATUS . "'

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2021 Feb 07 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Feb 23 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -29,7 +29,13 @@ if (empty($pInfo->products_id)) {
 $contents = array('form' => zen_draw_form('copy_product', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=copy_product_confirm&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id));
 $contents[] = array('text' => TEXT_INFO_CURRENT_PRODUCT . '<br><strong>' . $pInfo->products_model . ' - ' . $pInfo->products_name . ' [ID#' . $pInfo->products_id . ']</strong>');
 $contents[] = array('text' => TEXT_INFO_CURRENT_CATEGORIES . '<br><strong>' . zen_output_generated_category_path($pInfo->products_id, 'product') . '</strong>');
-$contents[] = array('text' => zen_draw_label(TEXT_CATEGORIES, 'categories_id', 'class="control-label"') . zen_draw_pull_down_menu('categories_id', zen_get_category_tree(), $current_category_id, 'class="form-control" id="categories_id"'));
+
+// -----
+// Determine if the site already has products in the top-most category. If so,
+// the topmost category will be included in the list of categories to which the product can be copied.
+//
+$exclude_category = (zen_count_products_in_category(TOPMOST_CATEGORY_PARENT_ID, true) === 0) ? '' : TOPMOST_CATEGORY_PARENT_ID;
+$contents[] = array('text' => zen_draw_label(TEXT_CATEGORIES, 'categories_id', 'class="control-label"') . zen_draw_pull_down_menu('categories_id', zen_get_category_tree('', '', $exclude_category), $current_category_id, 'class="form-control" id="categories_id"'));
 
 $contents[] = array(
     'text' => '<h5>' . TEXT_HOW_TO_COPY . '</h5>' .

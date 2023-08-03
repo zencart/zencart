@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=search_result.
  * Displays results of search
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 New in v1.5.8-alpha $
+ * @version $Id: Marco Ponchia 2023 Jan 11 Modified in v1.5.8a $
  */
 ?>
 <div class="centerColumn" id="searchResultsDefault">
@@ -16,18 +16,20 @@
 <h1 id="searchResultsDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
-  if ($do_filter_list || PRODUCT_LIST_ALPHA_SORTER == 'true') {
-  $form = zen_draw_form('filter', zen_href_link(FILENAME_SEARCH_RESULT), 'get');
-    //$form .= '<label class="inputLabel">' .TEXT_SHOW . '</label>';
-?>
-<?php echo $form; ?>
+  if ($do_filter_list || PRODUCT_LIST_ALPHA_SORTER == 'true') { ?>
+      <div id="filter-wrapper" class="group">
 <?php
-/* Redisplay all $_GET variables, except currency */
-  echo zen_post_all_get_params('currency');
+      $form = zen_draw_form('filter', zen_href_link(FILENAME_SEARCH_RESULT), 'get');
+      $form .= '<label class="inputLabel">' .TEXT_SHOW . '</label>';
+      echo $form;
 
-  require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA_SORTER));
+      /* Redisplay all $_GET variables, except currency */
+      echo zen_post_all_get_params('currency');
+      require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA_SORTER));
+
+      echo '</form>';
 ?>
-</form>
+    </div>
 <?php
   }
 ?>

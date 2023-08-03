@@ -2,10 +2,10 @@
 /**
  * functions_categories.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Oct 10 Modified in v1.5.8 $
+ * @version $Id: pRose on charmes 2023 Feb 02 Modified in v1.5.8a $
  */
 
 /**
@@ -336,10 +336,10 @@ function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = []
     }
 
     if (empty($order_by)) {
-        $order_by = $prev_next_order;
+        $order_by = zen_products_sort_order(false);
     }
 
-    $sort_array = array_filter(explode(',', str_ireplace('order by ', '', trim($order_by))));
+    $sort_array = array_map('trim', array_filter(explode(',', str_ireplace('order by ', '', $order_by))));
 
     $pulldown = new productPulldown();
 
@@ -389,15 +389,13 @@ function zen_draw_pulldown_products_having_attributes($field_name, $parameters =
  */
 function zen_draw_pulldown_categories_having_products($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false, $show_full_path = false, $filter_by_option_name = null)
 {
-    global $db, $currencies;
-
     if (!is_array($exclude)) {
         $exclude = [];
     }
 
     $pulldown = new categoryPulldown();
 
-    $pulldown->showID($show_id)->showParent($show_parent)->showFullPath($show_full_path)->exclude($exclude);
+    $pulldown->showID($show_id)->showParent($show_parent)->showFullPath($show_full_path)->exclude($exclude)->includeAttributes($show_full_path);
 
     if ((int) $filter_by_option_name > 0) {
         $pulldown->setOptionFilter((int) $filter_by_option_name);

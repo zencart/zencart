@@ -2,10 +2,10 @@
 /**
  * Header code file for the Search Results page
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 New in v1.5.8-alpha $
+ * @version $Id: pRose on charmes 2023 Feb 03 Modified in v1.5.8a $
  */
 
 // This should be first line of the script:
@@ -128,7 +128,7 @@ if ($search_additional_clause === false &&
     }
 }
 
-if (empty($dfrom) && empty($dto) && empty($pfrom) && empty($pto) && empty($keywords)) {
+if (empty($dfrom) && empty($dto) && empty($pfrom) && empty($pto) && empty($keywords) && $search_additional_clause === false) {
     $error = true;
     // redundant should be able to remove this
     if (!$missing_one_input) {
@@ -208,7 +208,7 @@ if (!empty($select_column_list)) {
 }
 
 // Notifier Point
-$zco_notifier->notify('NOTIFY_SEARCH_COLUMNLIST_STRING');
+$zco_notifier->notify('NOTIFY_SEARCH_COLUMNLIST_STRING', $select_column_list, $select_column_list);
 
 
 //  $select_str = "select distinct " . $select_column_list . " m.manufacturers_id, p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, IF(s.status = 1, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status = 1, s.specials_new_products_price, p.products_price) as final_price ";
@@ -222,7 +222,7 @@ if ((DISPLAY_PRICE_WITH_TAX == 'true') && ((isset($_GET['pfrom']) && zen_not_nul
 }
 
 // Notifier Point
-$zco_notifier->notify('NOTIFY_SEARCH_SELECT_STRING');
+$zco_notifier->notify('NOTIFY_SEARCH_SELECT_STRING', $select_str, $select_str);
 
 
 //  $from_str = "from " . TABLE_PRODUCTS . " p left join " . TABLE_MANUFACTURERS . " m using(manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c";
@@ -254,7 +254,7 @@ if ((DISPLAY_PRICE_WITH_TAX == 'true') && ((isset($_GET['pfrom']) && zen_not_nul
 }
 
 // Notifier Point
-$zco_notifier->notify('NOTIFY_SEARCH_FROM_STRING');
+$zco_notifier->notify('NOTIFY_SEARCH_FROM_STRING', $from_str, $from_str);
 
 $where_str = " WHERE (p.products_status = 1
                AND p.products_id = pd.products_id
@@ -325,6 +325,8 @@ if (isset($keywords) && zen_not_null($keywords)) {
         $keyword_search_fields[] = 'pd.products_description';
     }
 
+    $zco_notifier->notify('NOTIFY_SEARCH_MATCHING_KEYWORD_FIELDS', '', $keyword_search_fields);
+
     $where_str .= zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
 }
 $where_str .= ')';
@@ -383,7 +385,7 @@ if (DISPLAY_PRICE_WITH_TAX == 'true') {
 $order_str = '';
 
 // Notifier Point
-$zco_notifier->notify('NOTIFY_SEARCH_WHERE_STRING');
+$zco_notifier->notify('NOTIFY_SEARCH_WHERE_STRING', $keywords, $where_str, $keyword_search_fields);
 
 
 if ((DISPLAY_PRICE_WITH_TAX == 'true') && ((isset($_GET['pfrom']) && zen_not_null($_GET['pfrom'])) || (isset($_GET['pto']) && zen_not_null($_GET['pto'])))) {
@@ -442,10 +444,13 @@ if ((!isset($_GET['sort'])) || (!preg_match('/[1-8][ad]/', $_GET['sort'])) || (s
     }
 }
 //$_GET['keyword'] = zen_output_string_protected($_GET['keyword']);
+$zco_notifier->notify('NOTIFY_SEARCH_REAL_ORDERBY_STRING', $order_str, $order_str);
 
 $listing_sql = $select_str . $from_str . $where_str . $order_str;
 // Notifier Point
-$zco_notifier->notify('NOTIFY_SEARCH_ORDERBY_STRING', $listing_sql);
+$zco_notifier->notify('NOTIFY_SEARCH_ORDERBY_STRING', $listing_sql, $listing_sql);
+
+
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_SEARCH));
 //$breadcrumb->add(NAVBAR_TITLE_2);

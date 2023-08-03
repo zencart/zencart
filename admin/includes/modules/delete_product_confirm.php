@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 07 Modified in v1.5.8-alpha $
+ * @version $Id: John 2022 Nov 06 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // NOTE: Debug code left in to help with creating additional product type delete-scripts
 
 $do_delete_flag = false;
-//echo 'products_id=' . $_POST['products_id'] . '<br />';
+//echo 'products_id=' . $_POST['products_id'] . '<br>';
 if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_array($_POST['product_categories'])) {
   $product_id = zen_db_prepare_input($_POST['products_id']);
   $product_categories = $_POST['product_categories'];
@@ -39,7 +39,7 @@ if ($do_delete_flag) {
   }
   // confirm that product is no longer linked to any categories
   $count_categories = zen_get_linked_categories_for_product((int)$product_id);
-  // echo 'count of category links for this product=' . count($count_categories . '<br />';
+  // echo 'count of category links for this product=' . count($count_categories . '<br>';
   // if not linked to any categories, do delete:
   if (count($count_categories) === 0) {
     zen_remove_product($product_id, $delete_linked);

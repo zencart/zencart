@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 30 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2023 Feb 16 Modified in v1.5.8a $
 */
 
 @setlocale(LC_TIME, ['en_US', 'en_US.utf8', 'en', 'English_United States.1252']);
@@ -218,6 +218,7 @@ $define = [
     'ERROR_DESTINATION_DOES_NOT_EXIST' => 'Error: Destination does not exist %s',
     'ERROR_DESTINATION_NOT_WRITEABLE' => 'Error: Destination not writeable %s',
     'ERROR_DIRECTORY_NOT_REMOVEABLE' => 'Error: Could not remove the directory specified. You may have to use FTP to remove the directory, due to a server-permissions configuration limitation.',
+    'ERROR_EDITOR_NOT_FOUND' => 'The HTML editor currently selected (%s) in \'My Store\' is not available. The site\'s default editor will be plain-text until you update that selection to an available HTML editor.',
     'ERROR_EDITORS_FOLDER_NOT_FOUND' => 'You have an HTML editor selected in \'My Store\' but the \'/editors/\' folder cannot be located. Please disable your selection or move your editor files into the \'' . DIR_WS_CATALOG . 'editors/\' folder',
     'ERROR_FILETYPE_NOT_ALLOWED' => 'Error: File upload type not allowed (%s). See &quot;Maximum Values&quot; settings.',
     'ERROR_FILE_NOT_REMOVEABLE' => 'Error: Could not remove the file specified. You may have to use FTP to remove the file, due to a server-permissions configuration limitation.',
@@ -239,9 +240,9 @@ $define = [
     'ERROR_USPS_STATUS' => '<strong>Warning:</strong> USPS shipping module is either missing the username, or it is set to TEST rather than PRODUCTION and will not work.<br>If you cannot retrieve USPS Shipping Quotes, contact USPS to activate your Web Tools account on their production server. 1-800-344-7779 or icustomercare@usps.com',
     'FEMALE' => 'Female',
     'HEADER_ALT_TEXT' => 'Admin Powered by Zen Cart :: The Art of E-Commerce',
-    'HEADER_LOGO_HEIGHT' => '68',
     'HEADER_LOGO_IMAGE' => 'logo.gif',
     'HEADER_LOGO_WIDTH' => '192',
+    'HEADER_LOGO_HEIGHT' => '68',
     'HEADER_TITLE_ACCOUNT' => 'Account',
     'HEADER_TITLE_LOGOFF' => 'Logoff',
     'HEADER_TITLE_ONLINE_CATALOG' => 'Storefront',
@@ -348,6 +349,7 @@ $define = [
     'NOT_INSTALLED_TEXT' => 'Not Installed',
     'OTHER_IMAGE_CALL_FOR_PRICE' => 'call_for_prices.png',
     'OTHER_IMAGE_PRICE_IS_FREE' => 'free.png',
+    'PAYMENT_MODULE_GV' => 'GV/DC',     //- NOTE: This value is also defined in the storefront's lang.english.php, be sure to update both if this one's changed!
     'PHP_DATE_TIME_FORMAT' => 'm/d/Y H:i:s',
     'PLEASE_SELECT' => 'Please select ...',
     'PLUGIN_INSTALL_SQL_FAILURE' => 'one or more database errors occured',
@@ -372,7 +374,7 @@ $define = [
     'PRODUCTS_ATTRIBUTES_DELETE' => 'DELETING',
     'PRODUCTS_ATTRIBUTES_EDITING' => 'EDITING',
     'RESET_ADMIN_ACTIVITY_LOG' => 'You can view and archive Admin Activity details via the Admin Access Management menu, if you have appropriate permissions.',
-    'STORE_HOME' => 'Store Home:', 
+    'STORE_HOME' => 'Store Home:',
     'SUCCESS_CATEGORY_MOVED' => 'Success! Category has successfully been moved ...',
     'SUCCESS_FILE_SAVED_SUCCESSFULLY' => 'Success: File upload saved successfully %s',
     'SUCCESS_PRODUCT_UPDATE_SORT' => 'Successful Attribute Sort Order Update for ID# ',
@@ -534,6 +536,8 @@ $define = [
     'TEXT_INFO_NO_EDIT_AVAILABLE' => 'No edit available',
     'TEXT_INFO_OPTION_NAMES_VALUES_COPIER_STATUS' => 'All Global Copy, Add and Delete Features Status is currently OFF',
     'TEXT_INFO_SEARCH_DETAIL_FILTER' => 'Search Filter: ',
+    'TEXT_INFO_SEARCH_FILTER_REPOPULATE' => 'Re-populate Search Terms: ',
+    'TEXT_INFO_SEARCH_FILTER_RESTRICT_IDS' => 'Restrict Search to Product/Category IDs',
     'TEXT_INFO_SET_MASTER_CATEGORIES_ID' => 'Invalid Master Category ID',
     'TEXT_LEGEND' => 'LEGEND: ',
     'TEXT_LEGEND_LINKED' => 'Linked Product',

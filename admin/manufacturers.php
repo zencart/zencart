@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 09 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Nov 08 Modified in v1.5.8a $
  */
 require 'includes/application_top.php';
 
@@ -270,7 +270,7 @@ if (!empty($action)) {
               $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured', '1', $mInfo->featured) . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
               $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_IMAGE, 'manufacturers_image', 'class="control-label"') . zen_draw_file_field('manufacturers_image', '', ' class="form-control" id="manufacturers_image"') . '<br>' . $mInfo->manufacturers_image];
               $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
-              $default_directory = substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image ?? '', '/') + 1);
+              $default_directory = ($mInfo->manufacturers_image === null) ? '/' : substr($mInfo->manufacturers_image, 0, strpos($mInfo->manufacturers_image, '/') + 1);
 
               $contents[] = ['text' => zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"')];
 
@@ -326,7 +326,7 @@ if (!empty($action)) {
         </div>
         <!-- body_text_eof //-->
       </div>
-      <?php if (empty($action)) { ?>
+      <?php if (empty($action) && !empty($mInfo)) { ?>
         <div class="col-sm-12 text-right">
           <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $mInfo->manufacturers_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a>
         </div>

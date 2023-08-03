@@ -8,7 +8,7 @@ $define = [
     'TITLE_PAYMENT_ADDRESS' => 'Billing Address',
     'TITLE_PLEASE_SELECT' => 'Change the Billing Address for This Order',
     'TABLE_HEADING_NEW_PAYMENT_ADDRESS' => '...Or Choose From Your Address Book Entries',
-    'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => '<strong>Continue</strong>',
+    'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => 'Continue',
     'TEXT_CONTINUE_CHECKOUT_PROCEDURE' => '- to payment method.',
 ];
 

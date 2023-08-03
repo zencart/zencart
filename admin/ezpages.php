@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 30 Modified in v1.5.8 $
+ * @version $Id: Steve 2023 Feb 19 Modified in v1.5.8a $
  */
 require 'includes/application_top.php';
 
@@ -479,7 +479,7 @@ if (!empty($action)) {
               ?>
               <div class="input-group">
                 <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
-                <?php echo zen_draw_textarea_field('pages_html_text[' . $languages[$i]['id'] . ']', 'soft', '100%', '20', htmlspecialchars($pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
+                <?php echo zen_draw_textarea_field('pages_html_text[' . $languages[$i]['id'] . ']', 'soft', '', '20', htmlspecialchars($pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
               </div>
               <br>
               <?php
@@ -505,6 +505,13 @@ if (!empty($action)) {
         </div>
         <?php echo '</form>'; ?>
       <?php } else { ?>
+<?php
+        // Additional notification, allowing admin-observers to include additional legend icons
+        $extra_legends = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_MENU_LEGEND', [], $extra_legends);
+?>
+
+        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_WARNING_MULTIPLE_SETTINGS, 10, 10) . ' ' . TEXT_WARNING_MULTIPLE_SETTINGS .  $extra_legends; ?></div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover">
@@ -758,7 +765,7 @@ if (!empty($action)) {
                 $contents[] = array('align' => 'center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $_GET['ezID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
-                if (is_object($ezInfo)) {
+                if (!empty($ezInfo) && is_object($ezInfo)) {
                   $heading[] = array('text' => '<h4>' . TEXT_PAGE_TITLE . '&nbsp;' . $ezInfo->pages_title . '&nbsp;|&nbsp;' . TEXT_CHAPTER . '&nbsp;' . $ezInfo->toc_chapter . '</h4>');
 
                   $zv_link_method_cnt = 0;
@@ -773,7 +780,7 @@ if (!empty($action)) {
                   }
 
                   if ($zv_link_method_cnt > 1) {
-                    $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) . ' &nbsp;' . TEXT_WARNING_MULTIPLE_SETTINGS);
+                    $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) . ' &nbsp;' . '<b>' . TEXT_WARNING_MULTIPLE_SETTINGS . '</b>');
                   }
 
                   $contents[] = array('text' => TEXT_ALT_URL . (empty($ezInfo->alt_url) ? '&nbsp;' . TEXT_NONE : '<br>' . $ezInfo->alt_url));

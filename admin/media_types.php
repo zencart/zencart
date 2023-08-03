@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 12 Modified in v1.5.8-alpha2 $
+ * @version $Id: Scott C Wilson 2022 Oct 25 Modified in v1.5.8a $
  */
 require('includes/application_top.php');
 
@@ -164,7 +164,7 @@ if (!empty($action)) {
           <td><?php echo $media_type_split->display_count($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES); ?></td>
           <td class="text-right"><?php echo $media_type_split->display_links($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
         </tr>
-        <?php if (empty($action)) { ?>
+        <?php if (empty($action) && !empty($mInfo)) { ?>
           <tr>
             <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
           </tr>

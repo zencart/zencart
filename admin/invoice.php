@@ -1,23 +1,20 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
+ * @version $Id: brittainmark 2022 Dec 23 Modified in v1.5.8a $
  */
 require('includes/application_top.php');
 // To override the $show_* or $attr_img_width values, see 
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
-if (!isset($show_product_images)) {
-    $show_product_images = true;
-}
-if (!isset($show_attrib_images)) {
-    $show_attrib_images = true;
-}
+$show_product_images = $show_product_images ?? true;
+$show_attrib_images =  $show_attrib_images ?? true;
+$attr_img_width = $attr_img_width ?? '25';
+$show_product_tax = $show_product_tax ?? true;
+
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
-if (!isset($attr_img_width)) {
-    $attr_img_width = '25';
-}
+
 
 require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
@@ -27,9 +24,6 @@ $oID = zen_db_prepare_input($_GET['oID']);
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
-if (!isset($show_product_tax)) {
-    $show_product_tax = true;
-}
 
 // prepare order-status pulldown list
 $orders_statuses = array();

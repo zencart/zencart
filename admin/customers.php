@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Aug 27 Modified in v1.5.8-alpha2 $
+ * @version $Id: Scott C Wilson 2022 Dec 23 Modified in v1.5.8a $
  */
 require('includes/application_top.php');
 
@@ -720,7 +720,7 @@ if (!empty($action)) {
                             <?php
                             echo zen_draw_input_field(
                                 'entry_company',
-                                htmlspecialchars($cInfo->company, ENT_COMPAT, CHARSET, true),
+                                htmlspecialchars(($cInfo->company ?? ''), ENT_COMPAT, CHARSET, true),
                                 zen_set_field_length(
                                     TABLE_ADDRESS_BOOK,
                                     'entry_company',

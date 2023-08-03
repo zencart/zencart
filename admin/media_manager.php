@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Sep 17 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2022 Oct 25 Modified in v1.5.8a $
  */
 
   require('includes/application_top.php');
@@ -189,7 +189,7 @@
                 </table></td>
               </tr>
 <?php
-  if (empty($action)) {
+  if (empty($action) && !empty($mInfo)) {
 ?>
               <tr>
                 <td align="right" colspan="2" class="smallText"><?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $mInfo->media_id . '&action=new') . '" class="btn btn-primary" role="button">' . IMAGE_INSERT . '</a>'; ?></td>

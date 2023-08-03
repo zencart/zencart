@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
+ * @version $Id: mc12345678 2023 Jan 16 Modified in v1.5.8a $
 */
 
 $define = [
@@ -55,6 +55,7 @@ $define = [
     'TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG' => 'All Files - Catalog',
     'TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN' => 'All Files - Admin',
     'TEXT_ALL_FILES_LOOKUP_CURRENT_PLUGINS' => 'All Files - Plugins',
+    'TEXT_ALL_FILES_LOOKUP_CURRENT_LARAVEL' => 'All Files - Laravel',
     'TEXT_INFO_CONFIGURATION_HIDDEN' => ' or, HIDDEN',
     'TEXT_SEARCH_ALL_FILES' => 'Search ALL files for: ',
     'TEXT_SEARCH_DATABASE_TABLES' => 'Search database configuration tables for: ',
@@ -66,6 +67,8 @@ $define = [
     'TEXT_ALL_FILES_LOOKUP_JS' => '.js only',
     'TEXT_ALL_FILES_LOOKUP_ALL_TYPES' => 'Everything',
     'TEXT_CASE_SENSITIVE' => 'Case Sensitive?',
+    'TEXT_INCLUDE_PLUGINS' => 'Add Plugins?',
+    'TEXT_INCLUDE_LARAVEL' => 'Add Laravel Directory?',
     'TEXT_CONTEXT_LINES' => 'Context lines: ',
     'TEXT_SEARCH_LOOKUP_PLACEHOLDER' => 'Enter search phrase or pattern',
     'TEXT_SEARCH_KEY_PLACEHOLDER' => 'Enter key name or phrase to search for',

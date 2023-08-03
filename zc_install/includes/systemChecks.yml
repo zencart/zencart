@@ -1,7 +1,7 @@
 #
-# @copyright Copyright 2003-2022 Zen Cart Development Team
+# @copyright Copyright 2003-2023 Zen Cart Development Team
 # @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# @version $Id: brittainmark 2022 Aug 06 Modified in v1.5.8-alpha2 $
+# @version $Id: mc12345678 2022 Dec 14 Modified in v1.5.8a $
 #
 
 systemChecks:
@@ -45,9 +45,9 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 8.2.0
+          version: 8.3
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.1.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.2.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
@@ -285,8 +285,8 @@ systemChecks:
   checkDBVersion158:
     runLevel: dbVersion
     errorLevel: WARN
-    version: '1.5.8-dev'
-    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.8-dev') . PHP_EOL; ?>
+    version: '1.5.8'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v1.5.8') . PHP_EOL; ?>
     methods:
       dbVersionChecker:
         parameters:

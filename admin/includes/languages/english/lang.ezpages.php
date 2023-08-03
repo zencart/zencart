@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 09 New in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Nov 13 Modified in v1.5.8a $
 */
 
 $define = [
@@ -60,7 +60,7 @@ $define = [
     'TEXT_SORT_PAGE_TITLE' => 'Page Title',
     'TEXT_SORT_PAGE_ID_TITLE' => 'Page ID, Title',
     'TEXT_PAGE_TITLE' => 'Title:',
-    'TEXT_WARNING_MULTIPLE_SETTINGS' => '<strong>WARNING: Multiple Link Definition</strong>',
+    'TEXT_WARNING_MULTIPLE_SETTINGS' => 'WARNING: Multiple Link Definition',
 ];
 
 return $define;

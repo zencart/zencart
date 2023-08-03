@@ -9,12 +9,12 @@
  * and make your edits there.  Otherwise, your overrides might get "lost" on a future Zen Cart upgrade.  The 'base' Zen Cart definitions
  * for most of these variables are set by /includes/init_includes/init_common_elements.php.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 May 06 New in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Nov 20 Modified in v1.5.8a $
  */
 // -----
-// Idenfify whether the link to the 'about_us' page is included in the "Information" sidebox.
+// Identify whether the link to the 'about_us' page is included in the "Information" sidebox.
 //
 // true .... Show in the sidebox (default)
 // false ... Don't show in the sidebox
@@ -38,3 +38,8 @@
 // false ..... The zcDate debug is disabled (the default).
 //
 //$zen_date_debug = false;
+
+// Identify if some pages should not load matching language file substrings
+// In this example, loading page "video" will not load "video_info" files
+// define('NO_LANGUAGE_SUBSTRING_MATCH', ['video']);
+

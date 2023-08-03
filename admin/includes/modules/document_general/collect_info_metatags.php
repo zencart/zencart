@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 13 Modified in v1.5.8-alpha2 $
+ * @version $Id: Steve 2023 Feb 19 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -155,13 +155,13 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_META_TAGS_KEYWORDS, 'metatags_keywords[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', htmlspecialchars((isset($metatags_keywords[$languages[$i]['id']])) ? stripslashes($metatags_keywords[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_keywords'), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); //,'id="'.'metatags_keywords' . $languages[$i]['id'] . '"');   ?>
+                <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '', '10', htmlspecialchars((isset($metatags_keywords[$languages[$i]['id']])) ? stripslashes($metatags_keywords[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_keywords'), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); //,'id="'.'metatags_keywords' . $languages[$i]['id'] . '"');   ?>
             </div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_META_TAGS_DESCRIPTION, 'metatags_description[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '100%', '10', htmlspecialchars((isset($metatags_description[$languages[$i]['id']])) ? stripslashes($metatags_description[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_description'), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); //,'id="'.'metatags_description' . $languages[$i]['id'] . '"');   ?>
+                <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '', '10', htmlspecialchars((isset($metatags_description[$languages[$i]['id']])) ? stripslashes($metatags_description[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_description'), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); //,'id="'.'metatags_description' . $languages[$i]['id'] . '"');   ?>
             </div>
           </div>
         </div>

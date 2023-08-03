@@ -2,10 +2,10 @@
 /**
  * reviews header_php.php 
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2023 Mar 03 Modified in v1.5.8a $
  */
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
@@ -13,7 +13,7 @@ require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 // if review must be approved or is disabled, do not show review
 $review_status = " AND r.status = 1";
-$reviews_query_raw = "SELECT r.reviews_id, left(rd.reviews_text, 100) AS reviews_text, r.reviews_rating, r.date_added, p.products_id, pd.products_name, p.products_image, r.customers_name 
+$reviews_query_raw = "SELECT r.reviews_id, rd.reviews_text, r.reviews_rating, r.date_added, p.products_id, pd.products_name, p.products_image, r.customers_name 
                       FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd, " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd 
                       WHERE p.products_status = '1' 
                       AND p.products_id = r.products_id 

@@ -21,7 +21,7 @@ label, input[type="checkbox"] {
   -webkit-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
   -moz-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.8);
-  bottom: 200px;
+  bottom: 10px;
 }
 
 /*product name and model in Update Categories button*/

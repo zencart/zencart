@@ -2,10 +2,10 @@
 /**
  * sanitize the GET parameters
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 02 Modified in v1.5.8-alpha $
+ * @version $Id: pRose on charmes 2022 Nov 23 Modified in v1.5.8a $
  */
 
 use Zencart\PageLoader\PageLoader;
@@ -18,10 +18,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 $zco_notifier->notify('NOTIFY_INIT_SANITIZE_STARTS');
 
-foreach ($_GET as $getvar) {
-    if (is_array($getvar)) {
+foreach ($_GET as $varname => $varvalue) {
+    if (is_array($varvalue)) {
         $site_array_override = false;
-        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['getvarname' => $getvar], $site_array_override);
+        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $site_array_override);
         if ($site_array_override === false) {
             zen_redirect(zen_href_link(FILENAME_DEFAULT));
         }
@@ -63,7 +63,7 @@ $saniGroup1 = [
     'pID',          //- main/additional images' pop-ups
 ];
 foreach ($saniGroup1 as $key) {
-    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', $_GET[$key])) {
+    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', (string)$_GET[$key])) {
         $_GET[$key] = '';
         if (isset($_REQUEST[$key])) {
             $_REQUEST[$key] = '';
@@ -101,7 +101,7 @@ $saniGroup2 = [
     'search_in_description',    //- Searches indicator
 ];
 foreach ($saniGroup2 as $key) {
-    if (isset($_GET[$key]) && !ctype_digit($_GET[$key])) {
+    if (isset($_GET[$key]) && !ctype_digit((string)$_GET[$key])) {
         $_GET[$key] = ($key === 'page') ? '1' : '';
         if (isset($_REQUEST[$key])) {
             $_REQUEST[$key] = $_GET[$key];
@@ -128,7 +128,7 @@ foreach ($saniGroup3 as $key) {
 // -----
 // The cPath value is of the form "nnnn[_nnnn]...", e.g. 2454 or 2544_0284.
 //
-if (isset($_GET['cPath']) && !preg_match('/^\d+(_\d+)*/', $_GET['cPath'])) {
+if (isset($_GET['cPath']) && !preg_match('/^\d+(_\d+)*/', (string)$_GET['cPath'])) {
     $_GET['cPath'] = '';
 }
 

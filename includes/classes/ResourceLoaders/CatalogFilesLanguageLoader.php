@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 07 New in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Nov 20 Modified in v1.5.8a $
  */
 
 namespace Zencart\LanguageLoader;
@@ -36,13 +36,18 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         }
 
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
-        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $this->currentPage  . '(.*)\.php$~i');
+        if (defined('NO_LANGUAGE_SUBSTRING_MATCH') && in_array($this->currentPage, NO_LANGUAGE_SUBSTRING_MATCH)) {
+            $files_to_match = $this->currentPage;
+        } else {
+            $files_to_match = $this->currentPage . '(.*)';
+        }
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $files_to_match  . '\.php$~i');
         foreach ($files as $file) {
             $this->loadFileDefineFile($directory . '/' . $file);
         }
 
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
-        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $this->currentPage . '(.*)\.php$~i');
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . $files_to_match  . '\.php$~i');
         foreach ($files as $file) {
             $this->loadFileDefineFile($directory . '/' . $file);
         }

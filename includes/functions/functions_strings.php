@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 24 New in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Feb 28 Modified in v1.5.8a $
  */
 
 
@@ -15,6 +15,10 @@
  */
 function zen_output_string($string, $translate = false, $protected = false): string
 {
+    if (is_null($string) === true) {
+        return '';
+    }
+
     if ($protected === true) {
         $double_encode = (IS_ADMIN_FLAG ? FALSE : TRUE);
         return htmlspecialchars($string, ENT_COMPAT, CHARSET, $double_encode);
@@ -82,6 +86,9 @@ function zen_not_null($value)
  */
 function zen_break_string($string, $len, $break_char = '-')
 {
+    if (is_null($string) === true) {
+        return '';
+    }
     $l = 0;
     $output = '';
     for ($i = 0, $n = strlen($string); $i < $n; $i++) {
@@ -111,6 +118,9 @@ function zen_break_string($string, $len, $break_char = '-')
  */
 function zen_trunc_string($str = "", $len = 150, $more = 'true')
 {
+    if (is_null($str) === true) {
+        return '';
+    }
     if ($str == "") return $str;
     if (is_array($str)) return $str;
     $str = trim($str);
@@ -368,8 +378,10 @@ function zen_clean_html($clean_it, $extraTags = '')
  */
 function fixup_url($url)
 {
+    global $request_type;
+
     if (!preg_match('#^https?://#', $url)) {
-        $url = 'http://' . $url;
+        $url = '//' . $url;
     }
     return $url;
 }

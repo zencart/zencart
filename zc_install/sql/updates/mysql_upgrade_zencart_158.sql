@@ -2,10 +2,10 @@
 # * This SQL script upgrades the core Zen Cart database structure from v1.5.7 to v1.5.8
 # *
 # * @access private
-# * @copyright Copyright 2003-2022 Zen Cart Development Team
+# * @copyright Copyright 2003-2023 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: mc12345678 2022 Oct 17 Modified in v1.5.8 $
+# * @version $Id: Scott C Wilson 2023 Mar 18 Modified in v1.5.8a $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -232,6 +232,16 @@ ALTER TABLE orders MODIFY COLUMN customers_company varchar(64) default NULL;
 ALTER TABLE orders MODIFY COLUMN delivery_company varchar(64) default NULL;
 ALTER TABLE orders MODIFY COLUMN billing_company varchar(64) default NULL;
 
+## DROP commands which did not work in prior releases
+## This will need to be done YET AGAIN in the next version upgrade script
+## to catch upgraders who used the initial 1.5.8 upgrade script.
+## Root cause fix: PR #5342
+## Upgraders using 1.5.8a and later will get this fix
+ALTER TABLE customers_basket DROP final_price;
+ALTER TABLE ezpages DROP languages_id;
+ALTER TABLE ezpages DROP pages_title;
+ALTER TABLE ezpages DROP pages_html_text;
+
 
 #############
 ### Added to correct storepickup tax basis description
@@ -246,7 +256,7 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='1', project_version_minor='5.8', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.7->1.5.8', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='1', project_version_minor='5.8', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.7->1.5.8a', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
 UPDATE project_version SET project_version_major='1', project_version_minor='5.8', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.7->1.5.8', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 ##### END OF UPGRADE SCRIPT

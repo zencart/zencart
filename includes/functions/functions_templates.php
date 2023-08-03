@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021 May 08 New in v1.5.8-alpha $
+ * @version $Id: lat9 2022 Nov 27 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -32,6 +32,7 @@ function zen_get_catalog_template_directories($include_template_default = false)
             continue;
         }
         if (file_exists($path . '/template_info.php')) {
+            unset($uses_single_column_layout_settings);
             require $path . '/template_info.php';
             // expects the following variables to be set inside each respective template_info.php file
             $template_info[$tpl_dir_name] = [
@@ -40,6 +41,7 @@ function zen_get_catalog_template_directories($include_template_default = false)
                 'author' => $template_author,
                 'description' => $template_description,
                 'screenshot' => $template_screenshot,
+                'uses_single_column_layout_settings' => !empty($uses_single_column_layout_settings),
             ];
         }
     }

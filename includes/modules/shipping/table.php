@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Sep 05 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2022 Nov 20 Modified in v1.5.8a $
  */
 /**
  * Enter description here...
@@ -152,6 +152,7 @@ class table extends base {
 
     $table_cost = preg_split("/[:,]/" , MODULE_SHIPPING_TABLE_COST);
     $size = sizeof($table_cost);
+    $shipping = 0; 
     for ($i=0, $n=$size; $i<$n; $i+=2) {
       if (round($order_total,9) <= $table_cost[$i]) {
         if (strstr($table_cost[$i+1], '%')) {
@@ -163,6 +164,7 @@ class table extends base {
       }
     }
 
+    $show_box_weight = ''; 
     if (MODULE_SHIPPING_TABLE_MODE == 'weight') {
       $shipping = $shipping * $shipping_num_boxes;
       // show boxes if weight

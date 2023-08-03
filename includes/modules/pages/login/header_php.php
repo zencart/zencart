@@ -2,10 +2,10 @@
 /**
  * Login Page
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2022 Mar 02 Modified in v1.5.8-alpha $
+ * @version $Id: brittainmark 2022 Oct 15 Modified in v1.5.8a $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_LOGIN');
@@ -145,8 +145,8 @@ $breadcrumb->add(NAVBAR_TITLE);
 // Check for PayPal express checkout button suitability:
 $paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True' && defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') && MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON == 'On');
 // Check for express checkout button suitability (must have cart contents, value > 0, and value < 10000USD):
-$ec_button_enabled = ($paypalec_enabled && $_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0 && $currencies->value($_SESSION['cart']->total, true, 'USD') <= 10000);
-
+require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
+$ec_button_enabled = ($paypalec_enabled && $_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0 && paypalUSDCheck($_SESSION['cart']->total) === true);
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_LOGIN');

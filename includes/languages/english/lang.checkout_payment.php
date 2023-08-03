@@ -8,7 +8,7 @@ $define = [
     'TEXT_SELECT_PAYMENT_METHOD' => 'Please select a payment method for this order.',
     'TITLE_PLEASE_SELECT' => 'Please Select',
     'TEXT_NO_PAYMENT_OPTIONS_AVAILABLE' => '<span class="alert">Sorry, we are not accepting payments from your region at this time.</span><br>Please contact us for alternate arrangements.',
-    'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => '<strong>Continue to Step 3</strong>',
+    'TITLE_CONTINUE_CHECKOUT_PROCEDURE' => 'Continue to Step 3',
     'TEXT_CONTINUE_CHECKOUT_PROCEDURE' => '- to confirm your order.',
     'TABLE_HEADING_CONDITIONS' => '<span class="termsconditions">Terms and Conditions</span>',
     'TEXT_CONDITIONS_DESCRIPTION' => '<span class="termsdescription">Please acknowledge the terms and conditions bound to this order by ticking the following box. The terms and conditions can be read <a href="' . zen_href_link(FILENAME_CONDITIONS) . '" rel="noopener" target="_blank"><span class="pseudolink">here</span></a>.</span>',

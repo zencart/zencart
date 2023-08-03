@@ -2,10 +2,10 @@
 /**
  * Header code file for the customer's Account-Edit page
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021 Feb 19 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2023 Mar 14 Modified in v1.5.8a $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_EDIT');
@@ -30,7 +30,10 @@ if (!empty($_POST['action']) && $_POST['action'] == 'process') {
   $fax = isset($_POST['fax']) ? zen_db_prepare_input($_POST['fax']) : '';
   $email_format = in_array($_POST['email_format'], array('HTML', 'TEXT', 'NONE', 'OUT'), true) ? $_POST['email_format'] : 'TEXT';
 
-  if (CUSTOMERS_REFERRAL_STATUS == '2' and $_POST['customers_referral'] != '') $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
+  $customers_referral = ''; 
+  if (CUSTOMERS_REFERRAL_STATUS === '2' && !empty($_POST['customers_referral']) ) {
+     $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
+  }
 
   if (ACCOUNT_GENDER == 'true') {
     if ( ($gender != 'm') && ($gender != 'f') ) {

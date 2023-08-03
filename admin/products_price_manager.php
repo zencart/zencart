@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Oct 02 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2022 Oct 24 Modified in v1.5.8a $
  */
 require 'includes/application_top.php';
 
@@ -105,11 +105,11 @@ if (!empty($action)) {
 // Set date to null if empty or in the past
       $products_date_available = zen_prepare_date($_POST['products_date_available'], 'null');
 // Set dates empty equivelent '0001-01-01' if empty or in the past
-      $specials_date_available = zen_prepare_date($_POST['specials_date_available'], '0001-01-01');
-      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'], '0001-01-01');
+      $specials_date_available = zen_prepare_date($_POST['specials_date_available'] ?? '', '0001-01-01');
+      $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'] ?? '', '0001-01-01');
 
-      $featured_date_available = zen_prepare_date($_POST['featured_date_available'],'0001-01-01');
-      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'], '0001-01-01');
+      $featured_date_available = zen_prepare_date($_POST['featured_date_available'] ?? '','0001-01-01');
+      $featured_expires_date = zen_prepare_date($_POST['featured_expires_date'] ?? '', '0001-01-01');
 
       $tmp_value = (isset($_POST['products_price_sorter']) ? zen_db_prepare_input($_POST['products_price_sorter']) : '');
       $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value == '' || $tmp_value == 0) ? 0 : $tmp_value;

@@ -16,6 +16,7 @@ class Configuration extends Eloquent
     public $timestamps = false;
     protected $guarded = ['configuration_id'];
     protected $configAsIntArray = ['SECURITY_CODE_LENGTH',];
+    protected $keepAsStringArray = ['PRODUCTS_MANUFACTURERS_STATUS',];
 
     // @todo relocate to service class
     public function loadConfigSettings()
@@ -23,7 +24,14 @@ class Configuration extends Eloquent
         $configs = self::all();
         foreach ($configs as $config) {
             $configValue = $config['configuration_value'];
-            if (in_array($config['configuration_group_id'], [2,3]) || in_array($config['configuration_key'],$this->configAsIntArray)) {
+            $convert_to_int = false; 
+            if (in_array($config['configuration_key'], $this->configAsIntArray)) {
+               $convert_to_int = true; 
+
+            } else if (in_array($config['configuration_group_id'], [2,3]) && !in_array($config['configuration_key'], $this->keepAsStringArray)) {
+               $convert_to_int = true; 
+            }
+            if ($convert_to_int) { 
                 $configValue = (int)$configValue;
             }
             if (!defined(strtoupper($config['configuration_key']))) {

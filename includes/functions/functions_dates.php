@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 17 Modified in v1.5.8 $
+ * @version $Id: brittainmark 2023 Feb 22 Modified in v1.5.8a $
  */
 
 // Normally this zen_date_raw function will ONLY be defined here.
@@ -12,8 +12,8 @@ if (!function_exists('zen_date_raw')) {
     /**
      * Return date in raw format
      *
-     * $date should be in format mm/dd/yyyy
-     * raw date is in format YYYYMMDD, or DDMMYYYY
+     * $date should be in format mm/dd/yyyy or dd/mm/yyyy
+     * raw date is in format YYYYMMDD, or DDMMYYYY or YYYYMMDD
      *
      * @param string $date
      * @param bool $reverse
@@ -25,7 +25,19 @@ if (!function_exists('zen_date_raw')) {
             $date = '01/01/0001';
         }
 
-        if ($reverse) {
+        if (DATE_FORMAT === 'd/m/Y') {
+            if ($reverse) {
+                return substr($date, 0, 2) . substr($date, 3, 2) . substr($date, 6, 4);
+            } else {
+                return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
+            }
+        } elseif (DATE_FORMAT === 'Y/m/d') {
+            if ($reverse) {
+                return substr($date, 8, 2) . substr($date, 5, 2) . substr($date, 0, 4);
+            } else {
+                return substr($date, 0, 4) . substr($date, 5, 2) . substr($date, 8, 2);
+            }
+        } elseif ($reverse) {
             return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
         } else {
             return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);

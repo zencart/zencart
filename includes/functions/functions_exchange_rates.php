@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 06 New in v1.5.8-alpha $
+ * @version $Id: dbltoe 2022 Nov 10 Modified in v1.5.8a $
  */
 /**
  * Dependencies:
@@ -151,8 +151,8 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
 
 
   function doCurlCurrencyRequest($method, $url, $vars = '') {
-    //echo '-----------------<br />';
-    //echo 'URL: ' . $url . ' VARS: ' . $vars . '<br />';
+    //echo '-----------------<br>';
+    //echo 'URL: ' . $url . ' VARS: ' . $vars . '<br>';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
@@ -180,8 +180,8 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
       global $messageStack;
       if (is_object($messageStack)) $messageStack->add_session('cURL communication ERROR: ' . $error, 'error');
     }
-    //echo 'INFO: <pre>'; print_r($info); echo '</pre><br />';
-    //echo 'ERROR: ' . $error . '<br />';
+    //echo 'INFO: <pre>'; print_r($info); echo '</pre><br>';
+    //echo 'ERROR: ' . $error . '<br>';
     //print_r($data) ;
 
     if ($data != '') {

@@ -2,9 +2,9 @@
 /**
  * Attribute functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2022 Apr 13 New in v1.5.8-alpha $
+ * @version $Id: torvista 2022 Dec 08 Modified in v1.5.8a $
  */
 
 /**
@@ -470,7 +470,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
         if ($copy_attributes_duplicates_skipped == '1' and $check_duplicate->RecordCount() != 0) {
             $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_SKIPPING, (int)$copy_from['products_attributes_id'], (int)$products_id_to), 'caution');
             // skip it
-            $copy_from();
+            continue;
         }
 
         // New attribute - insert it

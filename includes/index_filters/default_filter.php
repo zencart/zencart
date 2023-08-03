@@ -1,16 +1,16 @@
 <?php
 
 /**
- * default_filter.php  for index filters
+ * default_filter.php for index filters
  *
  * index filter for the default product type
  * show the products of a specified manufacturer
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
+ * @version $Id: Steve 2022 Nov 22 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -69,8 +69,10 @@ if (!isset($_GET['sort']) and PRODUCT_LISTING_DEFAULT_SORT_ORDER != '') {
 }
 
 if (isset($column_list)) {
-  if ((!isset($_GET['sort'])) || (isset($_GET['sort']) && !preg_match('/[1-8][ad]/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list))) {
-    for ($i = 0, $n = sizeof($column_list); $i < $n; $i++) {
+  if (!isset($_GET['sort'])
+      || !preg_match('/[1-8][ad]/', $_GET['sort'])
+      || (substr($_GET['sort'], 0, 1) > count($column_list))) {
+    for ($i = 0, $n = count($column_list); $i < $n; $i++) {
       if (isset($column_list[$i]) && $column_list[$i] == 'PRODUCT_LIST_NAME') {
         $_GET['sort'] = $i + 1 . 'a';
         $listing_sql .= " ORDER BY p.products_sort_order, pd.products_name";
@@ -145,21 +147,25 @@ if (PRODUCT_LIST_FILTER > 0) {
     if (isset($_GET['manufacturers_id'])) {
       $getoption_set = true;
       $get_option_variable = 'manufacturers_id';
-      $options = array(array(
+      $options = [
+          [
           'id' => '',
           'text' => TEXT_ALL_CATEGORIES
-      ));
+          ]
+      ];
     } else {
-      $options = array(array(
+      $options = [
+          [
           'id' => '',
           'text' => TEXT_ALL_MANUFACTURERS
-      ));
+          ]
+      ];
     }
     foreach ($filterlist as $item) {
-      $options[] = array(
+      $options[] = [
         'id' => $item['id'],
         'text' => $item['name']
-      );
+      ];
     }
   }
 }

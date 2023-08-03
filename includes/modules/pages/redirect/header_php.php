@@ -2,10 +2,10 @@
 /**
  * redirect handler
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2021 Dec 29 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Feb 28 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -114,7 +114,7 @@ switch ($_GET['action']) {
         $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
         $db->Execute($sql);
-        zen_redirect($manufacturer->fields['manufacturers_url']);
+        zen_redirect(fixup_url($manufacturer->fields['manufacturers_url']));
       }
     } else {
       // no url exists for the selected language, lets use the default language then
@@ -138,7 +138,7 @@ switch ($_GET['action']) {
           $sql = $db->bindVars($sql, ':manufacturersID', $_GET['manufacturers_id'], 'integer');
           $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
           $db->Execute($sql);
-          zen_redirect($manufacturer->fields['manufacturers_url']);
+          zen_redirect(fixup_url($manufacturer->fields['manufacturers_url']));
         }
       }
     }

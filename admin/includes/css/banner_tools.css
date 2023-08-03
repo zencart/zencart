@@ -1,8 +1,7 @@
 /*
- * @package admin
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte Sat Jul 5 15:44:37 2014 -0400 New in v1.5.6 $
+ * @version $Id: torvista 2022 Dec 08 Modified in v1.5.8a $
  */
 
 /* Resets */
@@ -153,3 +152,6 @@
   border: 1px solid #e1e1e1;
 }
 
+.dataTableRow, .dataTableRowSelected {
+    cursor: pointer;
+}

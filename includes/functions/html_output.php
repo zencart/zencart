@@ -3,10 +3,10 @@
  * html_output.php
  * HTML-generating functions used throughout the core
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2022 Oct 01 Modified in v1.5.8 $
+ * @version $Id: lat9 2023 Feb 15 Modified in v1.5.8a $
  */
 
 /*
@@ -137,17 +137,16 @@ function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters
         return false;
     }
 
-    // The alt attribute is now provided as an empty string, with the addition of a
-    // role="presentation", since most browsers see an empty alt attribute as presentational
-    // and now-current browsers also accept the 'role=' attribute.
-    $image = '<img src="' . zen_output_string($src) . '" alt=""';
-    if (strpos($parameters, 'role="presentation"') === false) {
-        $image .= ' role="presentation"';
-    }
+    $image = '<img src="' . zen_output_string($src) . '"';
 
-    if (!empty($title)) {
-        $image .= ' title="' . zen_output_string($title) . '"';
+    if (empty($title)) {
+        $alt_text = (defined('IMAGE_ALT_TEXT_NO_TITLE')) ? IMAGE_ALT_TEXT_NO_TITLE : 'n/a';
+    } else {
+        $title_text = zen_output_string($title);
+        $alt_text = ((defined('IMAGE_ALT_PREFIX')) ? (IMAGE_ALT_PREFIX . ' ') : '') . $title_text;
+        $image .= ' title="' . $title_text . '"';
     }
+    $image .= ' alt="' . $alt_text . '"';
 
     $width = (int)$width;
     $height = (int)$height;
@@ -239,17 +238,16 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     $width = empty($width) ? 0 : (int)$width;
     $height = empty($height) ? 0 : (int)$height;
 
-    // The alt attribute is now provided as an empty string, with the addition of a
-    // role="presentation", since most browsers see an empty alt attribute as presentational
-    // and now-current browsers also accept the 'role=' attribute.
-    $image = '<img src="' . zen_output_string($src) . '" alt=""';
-    if (strpos($parameters, 'role="presentation"') === false) {
-        $image .= ' role="presentation"';
-    }
+    $image = '<img src="' . zen_output_string($src) . '"';
 
-    if (!empty($title)) {
-        $image .= ' title="' . zen_output_string($title) . '"';
+    if (empty($title)) {
+        $alt_text = (defined('IMAGE_ALT_TEXT_NO_TITLE')) ? IMAGE_ALT_TEXT_NO_TITLE : 'n/a';
+    } else {
+        $title_text = zen_output_string($title);
+        $alt_text = ((defined('IMAGE_ALT_PREFIX')) ? (IMAGE_ALT_PREFIX . ' ') : '') . $title_text;
+        $image .= ' title="' . $title_text . '"';
     }
+    $image .= ' alt="' . $alt_text . '"';
 
     if ($image_size !== false && CONFIG_CALCULATE_IMAGE_SIZE === 'true' && ($width === 0 || $height === 0)) {
         if ($width === 0 && $height === 0) {

@@ -7,9 +7,9 @@
  * Using this method, the debug details are stored at: /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log (see below for details).
  * Credits to @lat9 for adding backtrace functionality
  *
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2020 May 19 Modified in v1.5.7 $
+ * @version $Id: Scott C Wilson 2022 Nov 20 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
@@ -81,7 +81,8 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
     if (!empty($backtrace)) {
         $backtrace = PHP_EOL . rtrim($backtrace);
     }
-    $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set')  . $backtrace;
+    $language_info = ', Language id ' . $_SESSION['languages_id'];
+    $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . ($_SERVER['REQUEST_URI'] ?? 'not set') . ', IP address: ' . ($_SERVER['REMOTE_ADDR'] ?? 'not set')  . $language_info . $backtrace;
 
     $message .= PHP_EOL . "--> PHP $error_type: $errstr in $errfile on line $errline.";
     
@@ -95,7 +96,7 @@ function zen_fatal_error_handler()
     $last_error = error_get_last();
 
     if (!empty($last_error) && in_array($last_error['type'], [E_ERROR, E_USER_ERROR, E_PARSE])) {
-        $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . $_SERVER['REQUEST_URI'] . ', IP address: ' . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'not set') . PHP_EOL;
+        $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . ($_SERVER['REQUEST_URI'] ?? 'not set') . ', IP address: ' . ($_SERVER['REMOTE_ADDR'] ?? 'not set') . PHP_EOL;
         $message_type = ($last_error['type'] == E_PARSE) ? 'Parse' : (($last_error['type'] == E_RECOVERABLE_ERROR) ? 'Catchable Fatal' : 'Fatal');
         $message .= "--> PHP $message_type error: {$last_error['message']} in {$last_error['file']} on line {$last_error['line']}.";
         error_log(PHP_EOL . $message . PHP_EOL, 3, $GLOBALS['debug_logfile_path']);

@@ -3,10 +3,10 @@
  * initialise currencies
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Aug 01 Modified in v1.5.8-alpha $
+ * @version $Id: dbltoe 2022 Nov 10 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -23,7 +23,7 @@ if ($new_currency == false || isset($_GET['language'])) $new_currency = (USE_DEF
 
 // Final check -- if selected currency is bad and the "default" is bad, default to the first-found currency in order of exch rate.
 if ($new_currency == false) $new_currency = zen_currency_exists(DEFAULT_CURRENCY, true);
-//echo '<br />NEW = ' . $new_currency . '<br />';
+//echo '<br>NEW = ' . $new_currency . '<br>';
 
 // Now apply currency update
 if (

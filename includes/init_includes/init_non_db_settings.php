@@ -6,9 +6,9 @@
  *
  * Note: These settings apply to both the storefront and the admin!
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 23 New in v1.5.8-alpha2 $
+ * @version $Id: lat9 2023 Feb 23 Modified in v1.5.8a $
  */
 // -----
 // If the site has provided a set of overrides for these base values, they will
@@ -25,12 +25,14 @@ $non_db_settings = [
     //
     'CART_SHIPPING_METHOD_ZIP_REQUIRED' => 'true',  //- Either 'true' or 'false'.  Used by tpl_modules_shipping_estimator.php
 
+    // Shared - Storefront and Admin 
+    'TOPMOST_CATEGORY_PARENT_ID' => '0',
+
     // -----
     // Admin settings.
     //
     'MAX_DISPLAY_RESTRICT_ENTRIES' => 10,           //- Note, an integer value!.  Used by /admin/coupon_restrict.php
     'WARN_DATABASE_VERSION_PROBLEM' => 'true',      //- Either 'true' or 'false'.  Used by /admin/init_includes/init_errors.php
-
 ];
 $non_db_settings = array_merge($non_db_settings, $site_specific_non_db_settings);
 

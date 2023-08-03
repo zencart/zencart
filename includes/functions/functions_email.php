@@ -4,10 +4,10 @@
  * Processes all outbound email from Zen Cart
  * Hooks into phpMailer class for actual email encoding and sending
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jun 20 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2022 Nov 23 Modified in v1.5.8a $
  */
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -392,7 +392,7 @@ use PHPMailer\PHPMailer\SMTP;
       } catch (Exception $e) {
       }
       if (!$success) {
-        $msg = sprintf(EMAIL_SEND_FAILED . '&nbsp;'. $mail->ErrorInfo, $to_name, $to_email_address, $email_subject);
+        $msg = sprintf(EMAIL_SEND_FAILED , $to_name, $to_email_address, $email_subject) . '&nbsp;' . $mail->ErrorInfo;
         if ($messageStack !== NULL) {
           if (IS_ADMIN_FLAG === true) {
             $messageStack->add_session($msg, 'error');

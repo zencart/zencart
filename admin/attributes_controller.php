@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Apr 23 Modified in v1.5.8-alpha $
+ * @version $Id: torvista 2022 Dec 19 Modified in v1.5.8a $
  */
 require('includes/application_top.php');
 
@@ -556,6 +556,7 @@ if (!empty($action)) {
       zen_copy_products_attributes($_POST['products_filter'], $_POST['products_update_id']);
       $_GET['action'] = '';
       $products_filter = $_POST['products_update_id'];
+      $_POST['current_category_id'] = zen_products_lookup($products_filter, 'master_categories_id');
       zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $_POST['current_category_id']));
       break;
 
@@ -574,6 +575,10 @@ if (!empty($action)) {
       }
       $_GET['action'] = '';
       $products_filter = $_POST['products_filter'];
+      if ($_POST['categories_update_id'] !== '') {
+          $_POST['current_category_id'] = $_POST['categories_update_id'];
+          $products_filter = '';
+      }
       zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $_POST['current_category_id']));
       break;
   }
@@ -679,13 +684,31 @@ function zen_js_option_values_list($selectedName, $fieldName)
               <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER) ?>" target="_blank"><?php echo IMAGE_OPTION_NAMES; ?></a></li>
               <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER) ?>" target="_blank"><?php echo IMAGE_OPTION_VALUES; ?></a></li>
               <?php
-              $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id);
+              // -----
+              // Enable an observer to provide additional-action link/text pairs, which are output here.
+              //
+              $additional_actions = [];
+              $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_UPPER', $zc_products, $action, $products_filter, $current_category_id, $additional_actions);
+              foreach ($additional_actions as $next_action) {
+              ?>
+                <li role="presentation"><a role="menuitem" href="<?php echo $next_action['link']; ?>"><?php echo $next_action['text']; ?></a></li>
+              <?php
+              }
               ?>
               <?php if ($products_filter !== 0 && $action != 'attribute_features_copy_to_product' && $action != 'attribute_features_copy_to_category' && $action != 'delete_all_attributes_confirm') { ?>
                 <li role="presentation" class="divider"></li>
                 <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCT, 'action=new_product' . '&cPath=' . zen_get_product_path($products_filter) . '&pID=' . $products_filter . '&product_type=' . zen_get_products_type($products_filter)); ?>"><?php echo IMAGE_EDIT_PRODUCT; ?></a></li>
                 <?php
-                $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_SUBMENU', $zc_products, $action, $products_filter, $current_category_id);
+                // -----
+                // Enable an observer to provide additional-action link/text pairs, which are output here.
+                //
+                $additional_actions = [];
+                $zco_notifier->notify('NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_SUBMENU', $zc_products, $action, $products_filter, $current_category_id, $additional_actions);
+                foreach ($additional_actions as $next_action) {
+                ?>
+                  <li role="presentation"><a role="menuitem" href="<?php echo $next_action['link']; ?>"><?php echo $next_action['text']; ?></a></li>
+                <?php
+                }
                 ?>
                 <?php if ($zc_products->get_allow_add_to_cart($products_filter) == "Y") { ?>
                   <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo IMAGE_PRODUCTS_PRICE_MANAGER; ?></a></li>
@@ -777,7 +800,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
           <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); ?>
           <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
-          <?php echo zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes']); ?>
+          <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
           <div class="form-group">
             <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></div>
             <div class="col-sm-6">
@@ -809,8 +832,6 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <?php echo zen_draw_form('product_copy_to_category', FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attributes_copy_to_category', 'post', 'class="form-horizontal"'); ?>
           <?php echo zen_draw_hidden_field('products_filter', $_GET['products_filter']); ?>
           <?php echo zen_draw_hidden_field('products_id', $_GET['products_filter']); ?>
-          <?php echo zen_draw_hidden_field('products_update_id', $_GET['products_update_id']); ?>
-          <?php echo zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes']); ?>
           <?php echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']); ?>
           <div class="form-group">
             <div class="col-sm-6 text-center"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_CATEGORY . $products_filter . '<br>' . zen_get_products_name($products_filter); ?></div>

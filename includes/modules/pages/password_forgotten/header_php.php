@@ -2,10 +2,10 @@
 /**
  * Password Forgotten
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Mar 28 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2022 Nov 30 Modified in v1.5.8a $
  */
 
 // This should be first line of the script:
@@ -28,6 +28,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     if (! isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
     $_SESSION['login_attempt'] ++;
   } // END SLAM PREVENTION
+
+  if (empty($_POST['email_address'])) { 
+    $messageStack->add_session('password_forgotten', ENTRY_EMAIL_ADDRESS_ERROR, 'error');
+    zen_redirect(zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'));
+  }
 
   $email_address = zen_db_prepare_input(trim($_POST['email_address']));
 

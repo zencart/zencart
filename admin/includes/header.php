@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2022 Jul 07 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2023 Mar 14 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -151,7 +151,7 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
     }
 }
 ?>
-<!-- All HEADER_ definitions in the columns below are defined in includes/languages/english.php //-->
+<!-- All HEADER_ definitions in the columns below are defined in includes/languages/lang.english.php //-->
   <div class="row">
     <div class="col-xs-8 col-sm-3" id="adminHeaderLogo">
         <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>

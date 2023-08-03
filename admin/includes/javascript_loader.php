@@ -2,10 +2,10 @@
 /**
  * This file is inserted at the start of the body tag, just above the header menu, and loads most of the admin javascript components
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2022 Oct 05 Modified in v1.5.8 $
+ * @version $Id: proseLA 2023 Feb 16 Modified in v1.5.8a $
  */
 ?>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -29,6 +29,23 @@
     }));
   });
 </script>
+<?php
+$searchBoxScriptArray = [
+    'specials',
+    'coupon_admin',
+    'reviews',
+    'featured',
+    'customers',
+    'category_product_listing',
+    'downloads_manager',
+];
+$searchBoxJs = 'includes/javascript/searchBox.js';
+if (in_array(basename($PHP_SELF, '.php'), $searchBoxScriptArray) && file_exists($searchBoxJs)) {
+    ?>
+    <script defer src="<?= $searchBoxJs; ?>"></script>
+    <?php
+}
+?>
 
 <?php if (file_exists($jsFile = 'includes/javascript/' . basename($PHP_SELF, '.php') . '.js')) { ?>
 <script src="<?php echo $jsFile; ?>"></script>

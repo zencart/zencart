@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 May 11 New in v1.5.7 $
+ * @version $Id: pRose on charmes 2022 Dec 03 Modified in v1.5.8a $
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;
@@ -21,7 +21,7 @@ if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;
           $orders_pending = $db->Execute("SELECT count(*) as count FROM " . TABLE_ORDERS . " WHERE orders_status = " . (int)$row['orders_status_id'], false, true, 1800);
           ?>
         <tr>
-          <td><a href="<?php echo zen_href_link(FILENAME_ORDERS, 'selected_box=customers&status=' . $row['orders_status_id']); ?>"><?php echo $row['orders_status_name']; ?></a>:</td>
+          <td><a href="<?php echo zen_href_link(FILENAME_ORDERS, 'selected_box=customers&statusFilterSelect=' . $row['orders_status_id']); ?>"><?php echo $row['orders_status_name']; ?></a>:</td>
           <td class="text-right"> <?php echo $orders_pending->fields['count']; ?></td>
         </tr>
         <?php

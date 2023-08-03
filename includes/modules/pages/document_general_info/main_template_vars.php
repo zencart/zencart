@@ -2,10 +2,10 @@
 /**
  *  document_general_info main_template_vars.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Oct 22 Modified in v1.5.8-alpha $
+ * @version $Id: Nick Fenwick 2022 Dec 19 Modified in v1.5.8a $
  */
 /*
  * Extracts and constructs the data to be used in the product-type template tpl_TYPEHANDLER_info_display.php
@@ -14,7 +14,7 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_DOCUMENT_GENERAL_INFO');
 
-  if (!isset($product_info->EOF, $product_info->fields['products_id'], $product_info->fields['products_status']) || $product_info->fields['products_id'] !== (int)$_GET['products_id']) {
+  if (!isset($product_info->EOF, $product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$_GET['products_id']) {
     $product_info = zen_get_product_details($_GET['products_id']);
   }
 

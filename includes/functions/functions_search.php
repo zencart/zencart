@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Sep 28 Modified in v1.5.8 $
+ * @version $Id: pRose on charmes 2023 Feb 02 Modified in v1.5.8a $
  */
 
 
@@ -159,7 +159,9 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
 
     function zen_build_keyword_where_clause($fields, $string, $startWithWhere = false)
     {
-        global $db;
+        global $db, $zco_notifier;
+
+        $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
             if ($startWithWhere) {
@@ -205,6 +207,9 @@ function zen_parse_search_string($search_str = '', &$objects = array()) {
                 }
             }
             $where_str .= " )";
+        }
+        if (substr($where_str, -7) === '( ()  )') {
+            return ' ';
         }
         return $where_str ?? ' ';
     }

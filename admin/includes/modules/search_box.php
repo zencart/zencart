@@ -1,11 +1,11 @@
 <?php
 /*
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2020 Sep 09 New in v1.5.8-alpha $
+ * @version $Id: proseLA 2023 Feb 16 Modified in v1.5.8a $
  */
 ?>
-<?php echo zen_draw_form('search', basename($PHP_SELF, '.php'), '', 'get', 'class="form-horizontal"', true); ?>
+<?php echo zen_draw_form('searchForm', basename($PHP_SELF, '.php'), '', 'get', 'class="form-horizontal"', true); ?>
 <div class="form-group">
   <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
   <div class="col-sm-9">
@@ -34,5 +34,28 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
       </div>
     </div>
   </div>
-<?php } ?>
+    <?php
+    if (file_exists($searchBoxJs)) {
+        ?>
+        <div class="row">
+            <div class="form-group col-md-4" id="searchRestrictIds">
+                <div class="col-sm-9 control-label"><label for="restrictIDs"><?= TEXT_INFO_SEARCH_FILTER_RESTRICT_IDS; ?></label></div>
+                <div class="col-sm-1">
+                    <?= zen_draw_checkbox_field('restrictIDs', '', (!empty($_GET['restrictIDs']) && $_GET['restrictIDs'] === 'on'), '', ' id="restrictIDs"'); ?>
+                </div>
+            </div>
+            <div class="form-group col-md-4" id="searchTermRepopulate">
+                <div class="col-sm-9 control-label"><label for="repopulateSearch"><?= TEXT_INFO_SEARCH_FILTER_REPOPULATE; ?></label></div>
+                <div class="col-sm-1">
+                    <?= zen_draw_checkbox_field('repopulateSearch', '', (!empty($_GET['repopulateSearch']) && $_GET['repopulateSearch'] === 'on'), '', ' id="repopulateSearch"'); ?>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+}
+$extra_form_group = '';
+$zco_notifier->notify('NOTIFY_ADMIN_SEARCH_BOX_FORM_GROUP', '', $extra_form_group);
+echo $extra_form_group;
+?>
 <?php echo '</form>'; ?>

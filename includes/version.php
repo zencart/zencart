@@ -7,15 +7,15 @@
  *
  * THIS FILE SHOULD NEVER BE EDITED MANUALLY !!!!!!!!
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 14 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2023 Mar 18 Modified in v1.5.8a $
  * @private
  */
 
 define('PROJECT_VERSION_NAME', 'Zen Cart');
 define('PROJECT_VERSION_MAJOR', '1');
-define('PROJECT_VERSION_MINOR', '5.8');
+define('PROJECT_VERSION_MINOR', '5.8a');
 define('PROJECT_VERSION_PATCH1', '');
 define('PROJECT_VERSION_PATCH2', '');
 define('PROJECT_VERSION_PATCH1_SOURCE', '');

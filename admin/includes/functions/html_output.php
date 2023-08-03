@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2022 Oct 01 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2023 Feb 17 Modified in v1.5.8a $
  */
 
 ////
@@ -230,24 +230,27 @@ function zen_image_submit($image, $alt = '', $parameters = '')
 
 ////
 // Output a form
-  function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false') {
+function zen_draw_form($name, $action, $parameters = '', $method = 'post', $params = '', $usessl = 'false')
+{
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (!empty($parameters)) {
-      $form .= zen_href_link($action, $parameters, 'NONSSL');
+        $form .= zen_href_link($action, $parameters, 'NONSSL');
     } else {
-      $form .= zen_href_link($action, '', 'NONSSL');
+        $form .= zen_href_link($action, '', 'NONSSL');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (!empty($params)) {
-      $form .= ' ' . $params;
+        $form .= ' ' . $params;
     }
     $form .= '>';
-    if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
-    if (strtolower($method) == 'get') {
-      $form .= '<input type="hidden" name="cmd" value="' . (isset($_GET['cmd']) ? $_GET['cmd'] : 'home') . '">';
+    if (strtolower($method) === 'post') {
+        $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
+    }
+    if (strtolower($method) === 'get') {
+        $form .= '<input type="hidden" name="cmd" value="' . str_replace('.php', '', $action) . '">';
     }
     return $form;
-  }
+}
 
   /**
  *
@@ -348,8 +351,9 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 
 ////
 // Output a form textarea field
-  function zen_draw_textarea_field($name, $wrap, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
-    $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) . '" cols="' . zen_output_string($width) . '" rows="' . zen_output_string($height) . '"';
+  function zen_draw_textarea_field($name, $wrap, $cols, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
+    $cols = (int)$cols;
+    $field = '<textarea name="' . zen_output_string($name) . '" wrap="' . zen_output_string($wrap) . '"' . ($cols > 0 ? ' cols="' . $cols . '"' : '') . ' rows="' . zen_output_string($height) . '"';
 
     if (!empty($parameters)) $field .= ' ' . $parameters;
 

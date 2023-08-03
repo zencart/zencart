@@ -3,9 +3,9 @@
  * Functions related to products
  * Note: Several product-related lookup functions are located in functions_lookups.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Sep 26 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2023 Feb 18 Modified in v1.5.8a $
  */
 
 /**
@@ -17,7 +17,7 @@
  */
 function zen_get_product_details($product_id, $language_id = null)
 {
-    global $db;
+    global $db, $zco_notifier;
 
     if ($language_id === null) $language_id = $_SESSION['languages_id'];
 
@@ -26,7 +26,10 @@ function zen_get_product_details($product_id, $language_id = null)
             LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (p.products_type = pt.type_id)
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$language_id . ")
             WHERE p.products_id = " . (int)$product_id;
-    return $db->Execute($sql, 1, true, 900);
+    $product = $db->Execute($sql, 1, true, 900);
+    //Allow an observer to modify details
+    $zco_notifier->notify('NOTIFY_GET_PRODUCT_DETAILS', $product_id, $product);
+    return $product;
 }
 
 /**
@@ -42,7 +45,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
         $product_info = zen_get_product_details($product_id);
     }
     // make sure it's for the current product
-    if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || $product_info->fields['products_id'] !== $product_id) {
+    if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== $product_id) {
         $product_info = zen_get_product_details($product_id);
     }
 
@@ -129,7 +132,7 @@ function zen_enable_disabled_upcoming($datetime = null)
             FROM " . TABLE_PRODUCTS . "
             WHERE products_status = 0
             AND products_date_available <= " . $zc_disabled_upcoming_date . "
-            AND products_date_available >= '0001-01-01'
+            AND products_date_available != '0001-01-01'
             AND products_date_available IS NOT NULL
             ";
 
@@ -402,9 +405,25 @@ function zen_unlink_product_from_all_linked_categories($product_id, $master_cate
  */
 function zen_get_uprid($prid, $params)
 {
-    $uprid = $prid;
-    if (!is_array($params) || empty($params) || strstr($prid, ':')) return $prid;
+    // -----
+    // The string version of the supplied $prid is returned if:
+    //
+    // 1. The supplied $params is not an array or is an empty array, implying
+    //    that no attributes are associated with the product-selection.
+    // 2. The supplied $prid is already in uprid-format (ppp:xxxx), where
+    //    ppp is the product's id and xxx is a hash of the associated attributes.
+    //
+    $prid = (string)$prid;
+    if (!is_array($params) || $params === [] || strpos($prid, ':') !== false) {
+        return $prid;
+    }
 
+    // -----
+    // Otherwise, the $params array is expected to contain option/value
+    // pairs which are concatenated to the supplied $prid, hashed and then
+    // appended to the supplied $prid.
+    //
+    $uprid = $prid;
     foreach ($params as $option => $value) {
         if (is_array($value)) {
             foreach ($value as $opt => $val) {
@@ -617,7 +636,7 @@ function zen_get_products_manufacturers_image($product_id)
 
     $product_query = "SELECT m.manufacturers_image
                       FROM " . TABLE_PRODUCTS . " p
-                      INNER JOIN " . TABLE_MANUFACTURERS . " m ON manufacturers_id
+                      INNER JOIN " . TABLE_MANUFACTURERS . " m USING (manufacturers_id)
                       WHERE p.products_id = " . (int)$product_id;
 
     $product = $db->Execute($product_query, 1);
@@ -667,16 +686,19 @@ function zen_get_products_url($product_id, $language_id)
  */
 function zen_get_products_description($product_id, $language_id = 0)
 {
-    global $db;
+    global $db, $zco_notifier;
 
-    if (empty($language_id)) $language = $_SESSION['languages_id'];
+    if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
+    }
 
     $product = $db->Execute("SELECT products_description
                              FROM " . TABLE_PRODUCTS_DESCRIPTION . "
                              WHERE products_id = " . (int)$product_id . "
                              AND language_id = " . (int)$language_id, 1);
-    if ($product->EOF) return '';
-    return $product->fields['products_description'];
+//Allow an observer to modify the description
+    $zco_notifier->notify('NOTIFY_GET_PRODUCTS_DESCRIPTION', $product_id, $product);
+    return ($product->EOF) ? '' : $product->fields['products_description'];
 }
 
 /**
@@ -1042,7 +1064,7 @@ function zen_remove_product($product_id, $ptc = 'true')
                   WHERE products_id = " . (int)$product_id);
 
     $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
-                  WHERE products_id = " . (int)$product_id);
+                  WHERE products_id LIKE '" . (int)$product_id . ":%'");
 
 
     $product_reviews = $db->Execute("SELECT reviews_id
@@ -1116,4 +1138,40 @@ function zen_copy_discounts_to_product($copy_from, $copy_to)
                   VALUES (" . (int)$cnt_discount . ", " . (int)$copy_to . ", '" . $result['discount_qty'] . "', '" . $result['discount_price'] . "')");
         $cnt_discount++;
     }
+}
+
+function zen_products_sort_order($includeOrderBy = true): string
+{
+    switch(PRODUCT_INFO_PREVIOUS_NEXT_SORT) {
+        case (0):
+            $productSort = 'LPAD(p.products_id,11,"0")';
+            $productSort = 'p.products_id';
+            break;
+        case (1):
+            $productSort = 'pd.products_name';
+            break;
+        case (2):
+            $productSort = 'p.products_model';
+            break;
+        case (3):
+            $productSort = 'p.products_price_sorter, pd.products_name';
+            break;
+        case (4):
+            $productSort = 'p.products_price_sorter, p.products_model';
+            break;
+        case (5):
+            $productSort = 'pd.products_name, p.products_model';
+            break;
+        case (6):
+            $productSort = 'LPAD(p.products_sort_order,11,"0"), pd.products_name';
+            $productSort = 'products_sort_order, pd.products_name';
+            break;
+        default:
+            $productSort = 'pd.products_name';
+            break;
+    }
+    if ($includeOrderBy) {
+        return ' ORDER BY ' . $productSort;
+    }
+    return $productSort;
 }

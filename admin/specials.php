@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 28 Modified in v1.5.8-alpha2 $
+ * @version $Id: Erik Kerkhoven 2023 Jan 26 Modified in v1.5.8a $
  * structurally identical to featured.php, modifications should be replicated
  */
 require 'includes/application_top.php';
@@ -283,7 +283,7 @@ if (!empty($action)) {
 //            $specials_array[] = $item['products_id'];
 //          }
         }
-          if ($action === 'new') {
+          if ($action === 'new' && !isset($_GET['preID'])) {
               $form = addSearchKeywordForm(FILENAME_SPECIALS, $action);
               echo $form;
           }
@@ -388,29 +388,7 @@ if (!empty($action)) {
             <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=pre_add'); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_INFO_PRE_ADD_INTRO; ?>"><?php echo TEXT_ADD_SPECIAL_PID; ?></a>
           </div>
           <div class="col-sm-offset-2 col-sm-4">
-            <?php echo zen_draw_form('search', FILENAME_SPECIALS, '', 'get', 'class="form-horizontal"'); ?>
-            <?php $keywords = (isset($_GET['search']) && zen_not_null($_GET['search'])) ? zen_db_input(zen_db_prepare_input($_GET['search'])) : ''; ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SEARCH_SPECIALS, 'search', 'class="control-label col-sm-3"'); ?>
-              <div class="col-sm-9">
-                <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"'); ?>
-              </div>
-            </div>
-            <?php
-            echo zen_hide_session_id();
-            if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-              $keywords = zen_db_prepare_input($_GET['search']);
-              ?>
-              <div class="form-group">
-                <div class="col-sm-3">
-                  <p class="control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></p>
-                </div>
-                <div class="col-sm-9 text-right">
-                  <?php echo zen_output_string_protected($keywords); ?>&nbsp;<a href="<?php echo zen_href_link(FILENAME_SPECIALS); ?>" class="btn btn-default" role="button"><?php echo IMAGE_RESET; ?></a>
-                </div>
-              </div>
-            <?php } ?>
-            <?php echo '</form>'; ?>
+          <?php require DIR_WS_MODULES . 'search_box.php'; ?>
           </div>
         </div>
         <div class="row">

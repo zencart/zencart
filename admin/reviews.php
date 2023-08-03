@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2022 Apr 22 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Feb 08 Modified in v1.5.8a $
  */
 require 'includes/application_top.php';
 
@@ -250,7 +250,7 @@ if (!empty($action)) {
             <?php echo '</form>'; ?>
           </div>
           <div class="col-sm-4">
-            <?php include DIR_WS_MODULES . 'search_box.php'; ?>
+            <?php require DIR_WS_MODULES . 'search_box.php'; ?>
           </div>
         </div>
         <div class="row">
@@ -407,7 +407,7 @@ if (!empty($action)) {
                   $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif'));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');
-                  $contents[] = array('text' => TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format($rInfo->average_rating, 2) . '%');
+                  $contents[] = array('text' => TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format((float)$rInfo->average_rating, 2) . '%');
                 }
                 break;
             }

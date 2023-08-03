@@ -5,10 +5,10 @@
  * Prepares attributes content for rendering in the template system
  * Prepares HTML for input fields with required uniqueness so template can display them as needed and keep collected data in proper fields
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
+ * @version $Id: nickwhaley 2022 Dec 12 Modified in v1.5.8a $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -109,6 +109,7 @@ while (!$products_options_names->EOF) {
     $tmp_radio = '';
     $tmp_checkbox = '';
     $tmp_html = '';
+    $selected_attribute = $selected_dropdown_attribute = false; // boolean, used for radio/checkbox/select
 
     $tmp_attributes_image = '';
     $tmp_attributes_image_row = 0;
@@ -548,8 +549,9 @@ while (!$products_options_names->EOF) {
         // default
         // find default attribute if set for default dropdown
         if ($products_options->fields['attributes_default'] == '1') {
-            $selected_attribute = $products_options_value_id;
+            $selected_dropdown_attribute = $products_options_value_id;
         }
+        $selected_attribute = $selected_dropdown_attribute;
 
         $products_options->MoveNext();
         // end of inner while() loop

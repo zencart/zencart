@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Sep 17 Modified in v1.5.8 $
+ * @version $Id: Scott C Wilson 2022 Nov 26 Modified in v1.5.8a $
  */
 //
 define('AUTOCHECK', 'False');
@@ -43,7 +43,7 @@ if (!empty($action)) {
     case 'update':
 // insert a new sale or update an existing sale
 // Create a string of all affected (sub-)categories
-      if (zen_not_null($_POST['categories'])) {
+      if (!empty($_POST['categories'])) {
         $categories_selected = array();
         $categories_all = array();
         foreach (zen_db_prepare_input($_POST['categories']) as $category_path) {
@@ -283,7 +283,7 @@ if (!empty($action)) {
       <div class="form-group">
           <?php echo zen_draw_label(TEXT_SALEMAKER_NAME, 'name', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-6">
-            <?php echo zen_draw_input_field('name', htmlspecialchars($sInfo->sale_name, ENT_COMPAT, CHARSET, TRUE), 'size="37" class="form-control" autofocus'); ?>
+            <?php echo zen_draw_input_field('name', htmlspecialchars(($sInfo->sale_name ?? ''), ENT_COMPAT, CHARSET, TRUE), 'size="37" class="form-control" autofocus'); ?>
         </div>
       </div>
       <div class="form-group">
@@ -350,24 +350,26 @@ if (!empty($action)) {
         }
         $categories_array[$i]['path'] = $categories_array[$i]['path'] . '_';
       }
-      $categories_selected = explode(',', $sInfo->sale_categories_selected);
       if (zen_not_null($sInfo->sale_categories_selected)) {
+        $categories_selected = explode(',', $sInfo->sale_categories_selected);
         $selected = in_array(TOPMOST_CATEGORY_PARENT_ID, $categories_selected);
       } else {
         $selected = false;
       }
 
-      $prev_sales = $db->Execute("SELECT sale_categories_all
-                                  FROM " . TABLE_SALEMAKER_SALES);
-      foreach ($prev_sales as $prev_sale) {
-        $prev_categories = explode(',', $prev_sale['sale_categories_all']);
-        foreach ($prev_categories as $key => $value) {
-            if ($value && isset($prev_categories_array[$value])) {
-                $prev_categories_array[$value] ++;
-            } else {
-                $prev_categories_array[$value] = 1;
-            }
-        }
+      if (!empty($_GET['sID'])) {
+         $prev_sales = $db->Execute("SELECT sale_categories_all
+                                     FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1 AND sale_id != " . (int)$_GET['sID']);
+         foreach ($prev_sales as $prev_sale) {
+           $prev_categories = explode(',', $prev_sale['sale_categories_all']);
+           foreach ($prev_categories as $key => $value) {
+               if ($value && isset($prev_categories_array[$value])) {
+                   $prev_categories_array[$value] ++;
+               } else {
+                   $prev_categories_array[$value] = 1;
+               }
+           }
+         }
       }
 
 // set Entire Catalog when set

@@ -4,6 +4,8 @@ namespace Tests\Support\DatabaseFixtures;
 
 abstract class DatabaseFixture
 {
+    protected $tables;
+    protected $connection;
 
     public function __construct($tables, $connection)
     {

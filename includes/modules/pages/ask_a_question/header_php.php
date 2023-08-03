@@ -2,10 +2,10 @@
 /**
  * Ask a Question Page (based on Contact Us Page)
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2021 Apr 09 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Jan 10 Modified in v1.5.8a $
  */
 $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
 
@@ -16,23 +16,33 @@ $pid = (isset($_GET['pid'])) ? (int)$_GET['pid'] : false;
 //
 if ($pid === false) {
     zen_redirect(zen_href_link(FILENAME_DEFAULT));
-} else {
-    $sql = "SELECT pd.products_name, p.products_image, p.products_model
-            FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
-            WHERE p.products_id = pd.products_id
-            AND p.products_id = " . (int)$_GET['pid'] . "
-            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-            AND p.products_status = 1
-            LIMIT 1";
-
-    $result = $db->Execute($sql);
-
-    if ($result->EOF) {
-        zen_redirect(zen_href_link(zen_get_info_page($pid), 'pid=' . $pid));
-    }
-
-    $product_details = $result->fields;
 }
+
+// -----
+// Check to see if the "Show Ask a Question" button is enabled for the product's
+// type.  If not, redirect to the product's information page.
+//
+$info_page = zen_get_info_page($pid);
+$show_info_page_ask_a_question = 'SHOW_' . strtoupper($info_page) . '_ASK_A_QUESTION';
+if (!defined($show_info_page_ask_a_question) || constant($show_info_page_ask_a_question) === '0') {
+    zen_redirect(zen_href_link($info_page, 'products_id=' . $_GET['pid']));
+}
+
+$sql = "SELECT pd.products_name, p.products_image, p.products_model
+        FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
+        WHERE p.products_id = pd.products_id
+        AND p.products_id = " . (int)$_GET['pid'] . "
+        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+        AND p.products_status = 1
+        LIMIT 1";
+
+$result = $db->Execute($sql);
+
+if ($result->EOF) {
+    zen_redirect(zen_href_link($info_page, 'products_id=' . $pid));
+}
+
+$product_details = $result->fields;
 
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 

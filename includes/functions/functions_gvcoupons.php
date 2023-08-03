@@ -3,10 +3,10 @@
  * functions_gvcoupons.php
  * Functions related to processing Gift Vouchers/Certificates and coupons
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Jun 16 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Feb 23 Modified in v1.5.8a $
  */
 
 /**
@@ -151,6 +151,9 @@ function is_coupon_valid_for_sales($product_id, $coupon_id): bool
 function is_product_valid($product_id, $coupon_id): bool
 {
     global $db;
+
+    $product_id = (int)$product_id;
+
     $coupons_query = "SELECT * FROM " . TABLE_COUPON_RESTRICT . "
                       WHERE coupon_id = " . (int)$coupon_id . "
                       ORDER BY coupon_restrict ASC";
@@ -158,7 +161,7 @@ function is_product_valid($product_id, $coupon_id): bool
     $coupons = $db->Execute($coupons_query);
 
     $product_query = "SELECT products_model FROM " . TABLE_PRODUCTS . "
-                      WHERE products_id = " . (int)$product_id;
+                      WHERE products_id = $product_id";
 
     $product = $db->Execute($product_query);
 
@@ -170,9 +173,9 @@ function is_product_valid($product_id, $coupon_id): bool
     if ($coupons->RecordCount() == 0) return true;
     if ($coupons->RecordCount() == 1) {
         // If product is restricted(deny) and is same as tested product deny
-        if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] == (int)$product_id && $coupons->fields['coupon_restrict'] == 'Y') return false;
+        if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] == $product_id && $coupons->fields['coupon_restrict'] == 'Y') return false;
         // If product is not restricted(allow) and is not same as tested product deny
-        if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] != (int)$product_id && $coupons->fields['coupon_restrict'] == 'N') return false;
+        if (($coupons->fields['product_id'] != 0) && $coupons->fields['product_id'] != $product_id && $coupons->fields['coupon_restrict'] == 'N') return false;
         // if category is restricted(deny) and product in category deny
         if (($coupons->fields['category_id'] != 0) && (zen_product_in_category($product_id, $coupons->fields['category_id'])) && ($coupons->fields['coupon_restrict'] == 'Y')) return false;
         // if category is not restricted(allow) and product not in category deny
