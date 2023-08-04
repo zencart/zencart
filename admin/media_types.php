@@ -106,7 +106,13 @@ if (!empty($action)) {
                       ?>
                   </td>
                 </tr>
-              <?php } ?>
+                    <?php
+                }
+                    $mType_parameter = '';
+                    if (!$media_types->EOF) {
+                        $mType_parameter = '&mID=' . $mInfo->type_id;
+                    }
+                ?>
             </tbody>
           </table>
         </div>
@@ -123,15 +129,15 @@ if (!empty($action)) {
                 $contents[] = array('text' => TEXT_NEW_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', '', zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"'));
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="control-label"') . '<br>' . zen_draw_input_field('type_ext', '', zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"'));
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $_GET['mID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_MEDIA_TYPE . '</h4>');
-                $contents = array('form' => zen_draw_form('media_type', FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
+                $contents = array('form' => zen_draw_form('media_type', FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter . '&action=save', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', $mInfo->type_name, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"'));
                 $contents[] = array('text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="control-label"') . zen_draw_input_field('type_ext', $mInfo->type_ext, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"'));
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_DELETE_MEDIA_TYPES . '</h4>');
@@ -140,13 +146,13 @@ if (!empty($action)) {
                 $contents[] = array('text' => TEXT_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $mInfo->type_name . '</b>');
 
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (isset($mInfo) && is_object($mInfo)) {
                   $heading[] = array('text' => '<h4>' . $mInfo->type_name . '</h4>');
 
-                  $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
                   $contents[] = array('text' => '<br>' . TEXT_EXTENSION . ' ' . $mInfo->type_ext);
                   }
                   break;
@@ -164,9 +170,9 @@ if (!empty($action)) {
           <td><?php echo $media_type_split->display_count($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES); ?></td>
           <td class="text-right"><?php echo $media_type_split->display_links($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
         </tr>
-        <?php if (empty($action) && !empty($mInfo)) { ?>
+        <?php if (empty($action)) { ?>
           <tr>
-            <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . '&mID=' . $mInfo->type_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
+            <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
           </tr>
         <?php } ?>
       </table>
@@ -179,4 +185,4 @@ if (!empty($action)) {
     <!-- footer_eof //-->
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php');
