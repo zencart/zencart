@@ -83,9 +83,11 @@ if (!empty($action)) {
                                          ORDER BY type_name";
                     $media_type_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $media_type_query_raw, $media_type_query_numrows);
                     $media_types = $db->Execute($media_type_query_raw);
+                    $mType_parameter = '';
                     foreach ($media_types as $media_type) {
                         if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $media_type['type_id']))) && !isset($mInfo) && (substr($action, 0, 3) != 'new')) {
                             $mInfo = new objectInfo($media_type);
+                            $mType_parameter = '&mID=' . $mInfo->type_id;
                         }
 
                         if (isset($mInfo) && is_object($mInfo) && ($media_type['type_id'] == $mInfo->type_id)) {
@@ -107,10 +109,6 @@ if (!empty($action)) {
                         </td>
                         </tr>
                         <?php
-                    }
-                    $mType_parameter = '';
-                    if (!$media_types->EOF) {
-                        $mType_parameter = '&mID=' . $mInfo->type_id;
                     }
                     ?>
                     </tbody>
