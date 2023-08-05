@@ -114,19 +114,31 @@ if (!empty($action)) {
                         $role = 'role="option" aria-selected="true"';
                     } 
                     ?>
-                    <tr <?php echo $class_and_id; ?> onclick="document.location.href='<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=edit'); ?>'" <?php echo $role;?>>
+                    <tr <?php echo $class_and_id; ?> onclick="document.location.href='<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id']); ?>'" <?php echo $role;?>>
                         <td class="dataTableContent text-center"><?php echo $group['group_id']; ?></td>
                         <td class="dataTableContent"><?php echo $group['group_name']; ?></td>
                         <td class="dataTableContent text-center"><?php echo $group['customer_count']; ?></td>
                         <td class="dataTableContent"><?php echo $group['group_comment']; ?></td>
                         <td class="dataTableContent text-right"><div>
-                            <?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=edit') . '" class="btn btn-primary" role="button">' . ICON_EDIT . '</a>'; ?>
-                            <?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=delete') . '" class="btn btn-warning" role="button">' . ICON_DELETE . '</a>'; ?>
-                            <?php 
-                              if (!isset($gInfo) || (isset($gInfo) && is_object($gInfo) && ($group['group_id'] != $gInfo->group_id))) {
-                                 echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); 
-                              }
-                             ?>
+                            <a href="<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=edit')?>" role="button" title="<?php echo ICON_EDIT; ?>">
+                                <i class="fa-solid fa-pencil fa-2x fa-fw txt-blue align-middle"></i>
+                            </a>
+                            <a href="<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id'] . '&action=delete')?>" role="button" title="<?php echo ICON_DELETE;?>">
+                                <i class="fa-solid fa-trash-can fa-2x fa-fw txt-red align-middle"></i>
+                            </a>
+<?php 
+                    if (isset($gInfo) && is_object($gInfo) && ($group['group_id'] == $gInfo->group_id)) {
+?>
+                            <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle" title="<?php echo ICON_SELECTED;?>"></i>
+<?php
+                    } else {
+?>
+                            <a href="<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS,  $href_page_param . 'gID=' . $group['group_id']);?>" role="button" title="<?php echo IMAGE_ICON_INFO;?>">
+                                <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                            </a>
+<?php
+                    }
+?>
                             </div>
                         </td>
                     </tr>

@@ -263,6 +263,7 @@ $define = [
     'ICON_FOLDER' => 'Folder',
     'ICON_MOVE' => 'Move',
     'ICON_PREVIEW' => 'Preview',
+    'ICON_SELECTED' => 'Selected Row',
     'ICON_STATISTICS' => 'Statistics',
     'ICON_SUCCESS' => 'Success',
     'ICON_TICK' => 'True',
