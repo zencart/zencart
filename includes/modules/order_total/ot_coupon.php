@@ -133,6 +133,11 @@ class ot_coupon extends base
     function process()
     {
         global $order, $currencies;
+
+        if (empty($_SESSION['cc_id'])) {
+            return;
+        }
+
         $od_amount = ['tax' => 0, 'total' => 0];
 
         $order_total = $this->get_order_total(isset($_SESSION['cc_id']) ? $_SESSION['cc_id'] : '');
@@ -209,6 +214,12 @@ class ot_coupon extends base
     function credit_selection()
     {
         global $discount_coupon;
+
+        $valid = true;
+        $this->notify('NOTIFY_OT_COUPON_CREDIT_SELECTION', true, $valid);
+        if (!$valid) {
+            return;
+        }
 
         $couponLink = '';
         if (!empty($discount_coupon->fields['coupon_code']) && !empty($_SESSION['cc_id'])) {
