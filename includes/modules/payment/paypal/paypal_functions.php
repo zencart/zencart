@@ -10,16 +10,19 @@
  */
 
 // Functions for paypal processing
-  function datetime_to_sql_format($paypalDateTime) {
-    //Copyright (c) 2004 DevosC.com
-    $months = array('Jan' => '01', 'Feb' => '02', 'Mar' => '03', 'Apr' => '04', 'May' => '05',  'Jun' => '06',  'Jul' => '07', 'Aug' => '08', 'Sep' => '09', 'Oct' => '10', 'Nov' => '11', 'Dec' => '12');
-    $hour = substr($paypalDateTime, 0, 2);$minute = substr($paypalDateTime, 3, 2);$second = substr($paypalDateTime, 6, 2);
-    $month = $months[substr($paypalDateTime, 9, 3)];
-    $day = (strlen($day = preg_replace("/,/" , '' , substr($paypalDateTime, 13, 2))) < 2) ? '0'.$day: $day;
-    $year = substr($paypalDateTime, -8, 4);
-    if (strlen($day)<2) $day = '0'.$day;
-    return ($year . "-" . $month . "-" . $day . " " . $hour . ":" . $minute . ":" . $second);
-  }
+function datetime_to_sql_format(string $dateString): string
+{
+    $dateTime = DateTime::createFromFormat('H:i:s M d, Y e', $dateString);
+    $dateTime->setTimezone((new DateTime)->getTimezone());
+    return $dateTime->format('Y-m-d H:i:s');
+}
+
+function convertToLocalTime(string $dateTime, string $fromTz = 'UTC'): string
+{
+    $localDateTime = new DateTime($dateTime, new DateTimeZone($fromTz));
+    $localDateTime->setTimezone((new DateTime)->getTimezone());
+    return $localDateTime->format('Y-m-d H:i:s');
+}
 
   function ipn_debug_email($message, $email_address = '', $always_send = false, $subjecttext = 'IPN DEBUG message') {
     static $paypal_error_counter;
@@ -318,7 +321,7 @@ function ipn_create_order_array($new_order_id, $txn_type)
         'txn_id',
         'parent_txn_id',
         'mc_gross',
-        'mc_fee', 
+        'mc_fee',
         'settle_amount',
         'settle_currency',
         'exchange_rate',

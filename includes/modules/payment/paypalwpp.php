@@ -121,9 +121,9 @@ class paypalwpp extends base {
   protected $reasoncode;
   protected $numitems;
   protected $amt;
-  public $auth_code; // used in order class 
+  public $auth_code; // used in order class
   protected $responsedata;
-  public $transaction_id; // used in order class 
+  public $transaction_id; // used in order class
   public $ot_merge;     //-Public, since might be referenced by an observer.
   protected $requestPrefix;
   protected $infoPrefix;
@@ -568,7 +568,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'payer_email' => $_SESSION['paypal_ec_payer_info']['payer_email'],
                           'payer_id' => $_SESSION['paypal_ec_payer_id'],
                           'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'],
-                          'payment_date' => trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time)),
+                          'payment_date' => convertToLocalTime(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
                           'receiver_email' => (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow' ? MODULE_PAYMENT_PAYPALWPP_PFVENDOR : str_replace('_api1', '', MODULE_PAYMENT_PAYPALWPP_APIUSERNAME)),
                           'receiver_id' => '',

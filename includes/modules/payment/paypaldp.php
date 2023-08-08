@@ -1029,7 +1029,7 @@ class paypaldp extends base {
     if ($this->requiresLookup($order->info['cc_type']) == true) {
       // CardinalCommerce Liability Protection Status
       // Inserts 'PROTECTED' or 'NOT PROTECTED' status, ECI, CAVV values in the order status history comments
-      if (!empty($_SESSION['3Dsecure_auth_eci'])) { 
+      if (!empty($_SESSION['3Dsecure_auth_eci'])) {
          $auth_proc_status = $this->determine3DSecureProtection($order->info['cc_type'], $_SESSION['3Dsecure_auth_eci']);
          $commentString = "3D-Secure: " . $auth_proc_status . "\n" . 'ECI Value = ' . $_SESSION['3Dsecure_auth_eci'] . "\n" . 'CAVV Value = ' . $_SESSION['3Dsecure_auth_cavv'];
          zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], -1);
@@ -1059,7 +1059,7 @@ class paypaldp extends base {
                           'payer_email' => $_SESSION['paypal_ec_payer_info']['payer_email'],
                           'payer_id' => $_SESSION['paypal_ec_payer_id'],
                           'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'],
-                          'payment_date' => trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time)),
+                          'payment_date' => convertToLocalTime(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
                           'receiver_email' => (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' ? MODULE_PAYMENT_PAYPALWPP_PFVENDOR : str_replace('_api1', '', MODULE_PAYMENT_PAYPALWPP_APIUSERNAME)),
                           'receiver_id' => '',
