@@ -568,7 +568,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'payer_email' => $_SESSION['paypal_ec_payer_info']['payer_email'],
                           'payer_id' => $_SESSION['paypal_ec_payer_id'],
                           'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'],
-                          'payment_date' => convertToLocalTime(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
+                          'payment_date' => convertToLocalTimeZone(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
                           'receiver_email' => (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow' ? MODULE_PAYMENT_PAYPALWPP_PFVENDOR : str_replace('_api1', '', MODULE_PAYMENT_PAYPALWPP_APIUSERNAME)),
                           'receiver_id' => '',
