@@ -616,7 +616,7 @@ if (!empty($action) && $order_exists === true) {
                 <?php
                 if (!empty($order->info['ip_address'])) {
                   $lookup_ip = substr($order->info['ip_address'], 0, strpos($order->info['ip_address'], ' '));
-                  $whois_url = 'https://tools.dnsstuff.com/#whois|type=ipv4&&value=' . $lookup_ip;
+                  $whois_url = 'https://ipdata.co/' . $lookup_ip . '?utm_source=zen_cart';
                   //$whois_url = 'https://whois.domaintools.com/' . $lookup_ip;
                   $zco_notifier->notify('ADMIN_ORDERS_IP_LINKS', $lookup_ip, $whois_url);
                   ?>
