@@ -158,7 +158,7 @@ if (!empty($action)) {
 
                     $aInfo_array = array_merge($record_company, $record_company_products->fields);
                     $aInfo = new objectInfo($aInfo_array);
-					$rCompany_parameter = '&mID=' . $aInfo->record_company_id;
+                    $rCompany_parameter = '&mID=' . $aInfo->record_company_id;
                   }
 
                   if (isset($aInfo) && is_object($aInfo) && ($record_company['record_company_id'] == $aInfo->record_company_id)) {
@@ -208,7 +208,7 @@ if (!empty($action)) {
                 }
 
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url', 'class="control-label"') . $record_company_inputs_string);
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_RECORD_COMPANY . '</h4>');

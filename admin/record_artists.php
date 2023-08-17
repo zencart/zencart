@@ -157,7 +157,7 @@ if (!empty($action)) {
 
                     $aInfo_array = array_merge($artist, $artists_products->fields);
                     $aInfo = new objectInfo($aInfo_array);
-					$rArtists_parameter = '&mID=' . $aInfo->artists_id;
+                    $rArtists_parameter = '&mID=' . $aInfo->artists_id;
                   }
 
                   if (isset($aInfo) && is_object($aInfo) && ($artist['artists_id'] == $aInfo->artists_id)) {
