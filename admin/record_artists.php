@@ -148,7 +148,7 @@ if (!empty($action)) {
                                       ORDER BY artists_name";
                 $artists_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $artists_query_raw, $artists_query_numrows);
                 $artists = $db->Execute($artists_query_raw);
-
+                $rArtists_parameter = '';
                 foreach ($artists as $artist) {
                   if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $artist['artists_id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
                     $artists_products = $db->Execute("SELECT COUNT(*) AS products_count
@@ -157,6 +157,7 @@ if (!empty($action)) {
 
                     $aInfo_array = array_merge($artist, $artists_products->fields);
                     $aInfo = new objectInfo($aInfo_array);
+                    $rArtists_parameter = '&mID=' . $aInfo->artists_id;
                   }
 
                   if (isset($aInfo) && is_object($aInfo) && ($artist['artists_id'] == $aInfo->artists_id)) {
@@ -206,11 +207,11 @@ if (!empty($action)) {
                 }
 
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_ARTIST_URL, 'artists_url', 'class="control-label"') . $manufacturer_inputs_string);
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $_GET['mID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_RECORD_ARTIST . '</h4>');
-                $contents = array('form' => zen_draw_form('artists', FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $aInfo->artists_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
+                $contents = array('form' => zen_draw_form('artists', FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . $rArtists_parameter . '&action=save', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_ARTIST_NAME, 'artists_name', 'class="control-label"') . zen_draw_input_field('artists_name', htmlspecialchars($aInfo->artists_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_RECORD_ARTISTS, 'artists_name') . ' class="form-control"'));
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_ARTIST_IMAGE, 'artists_image', 'class="control-label"') . zen_draw_file_field('artists_image', '', 'class="form-control"') . '<br>' . $aInfo->artists_image);
@@ -228,7 +229,7 @@ if (!empty($action)) {
                 }
 
                 $contents[] = array('text' => zen_draw_label(TEXT_RECORD_ARTIST_URL, 'artists_url', 'class="control-label"') . $manufacturer_inputs_string);
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $aInfo->artists_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . $rArtists_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_DELETE_RECORD_ARTIST . '</h4>');
@@ -243,13 +244,13 @@ if (!empty($action)) {
                   $contents[] = array('text' => '<br>' . sprintf(TEXT_DELETE_WARNING_PRODUCTS, $aInfo->products_count));
                 }
 
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $aInfo->artists_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . $rArtists_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (isset($aInfo) && is_object($aInfo)) {
                   $heading[] = array('text' => '<h4>' . $aInfo->artists_name . '</h4>');
 
-                  $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $aInfo->artists_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $aInfo->artists_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . $rArtists_parameter . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . $rArtists_parameter . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
                   $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($aInfo->date_added));
                   if (zen_not_null($aInfo->last_modified)) {
                     $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($aInfo->last_modified));
@@ -272,9 +273,9 @@ if (!empty($action)) {
           <td><?php echo $artists_split->display_count($artists_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ARTISTS); ?></td>
           <td class="text-right"><?php echo $artists_split->display_links($artists_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
         </tr>
-        <?php if (empty($action) && !empty($aInfo)) { ?>
+        <?php if (empty($action)) { ?>
           <tr>
-            <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] . '&mID=' . $aInfo->artists_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
+            <td colspan="2" class="text-right"><a href="<?php echo zen_href_link(FILENAME_RECORD_ARTISTS, 'page=' . $_GET['page'] .  $rArtists_parameter . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
           </tr>
         <?php } ?>
       </table>
