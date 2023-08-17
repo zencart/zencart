@@ -143,6 +143,8 @@ class ot_shipping extends base
                 }
             }
 
+            $order->info['shipping_tax_rate'] = ($order->content_type === 'virtual') ? null : $shipping_tax;
+
             if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] === 'free_free') {
                 $order->info['shipping_method'] = FREE_SHIPPING_TITLE;
                 $order->info['shipping_cost'] = 0;
