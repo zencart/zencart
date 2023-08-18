@@ -344,9 +344,9 @@ function zen_get_system_information($privacy = false)
         }
     }
     if (!$exec_disabled) {
-        list($system, $host, $kernel) = array('', $_SERVER['SERVER_NAME'], php_uname());
+        [$system, $host, $kernel] = array('', $_SERVER['SERVER_NAME'], php_uname());
         @exec('uname -a 2>&1', $output, $errnum);
-        if ($errnum == 0 && count($output)) list($system, $host, $kernel) = preg_split('/[\s,]+/', $output[0], 5);
+        if ($errnum == 0 && count($output)) [$system, $host, $kernel] = preg_split('/[\s,]+/', $output[0], 5);
         $output = '';
         if (DISPLAY_SERVER_UPTIME == 'true') {
             @exec('uptime 2>&1', $output, $errnum);
@@ -738,23 +738,30 @@ function zen_set_ezpage_status(int $pages_id, int $status, string $status_field)
  */
 function zen_get_orders_status_pulldown_array()
 {
+    $ordersStatus = zen_getOrdersStatuses();
+    return $ordersStatus['orders_statuses'];
+}
+
+function zen_getOrdersStatuses(bool $keyed = false): array
+{
     global $db;
-
+    $orders_statuses = [];
     $orders_status_array = [];
-    $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
-                                   FROM " . TABLE_ORDERS_STATUS . "
-                                   WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                                   ORDER BY orders_status_id");
-
-    while (!$orders_status->EOF) {
-        $orders_status_array[] = [
-            'id' => $orders_status->fields['orders_status_id'],
-            'text' => $orders_status->fields['orders_status_name']
-        ];
-        $orders_status->MoveNext();
+    $orders_status_query = $db->Execute('SELECT orders_status_id, orders_status_name FROM ' . TABLE_ORDERS_STATUS . '
+                                 WHERE language_id = "' . (int)$_SESSION['languages_id'] . '" ORDER BY sort_order, orders_status_id');
+    foreach ($orders_status_query as $next_status) {
+        if (!$keyed) {
+            $orders_statuses[] = [
+                'id' => $next_status['orders_status_id'],
+                'text' => $next_status['orders_status_name'] . ' [' . $next_status['orders_status_id'] . ']',
+            ];
+            $orders_status_array[$next_status['orders_status_id']] = $next_status['orders_status_name'] . ' [' . $next_status['orders_status_id'] . ']';
+        } else {
+            $orders_statuses[$next_status['orders_status_id']] = $next_status['orders_status_name'];
+            $orders_status_array[$next_status['orders_status_id']] = $next_status['orders_status_name'];
+        }
     }
-
-    return $orders_status_array;
+    return ['orders_statuses' => $orders_statuses, 'orders_status_array' => $orders_status_array,];
 }
 
 function zen_get_customer_email_from_id($cid) {

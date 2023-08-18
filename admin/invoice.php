@@ -6,7 +6,7 @@
  * @version $Id: brittainmark 2022 Dec 23 Modified in v1.5.8a $
  */
 require('includes/application_top.php');
-// To override the $show_* or $attr_img_width values, see 
+// To override the $show_* or $attr_img_width values, see
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 $show_product_images = $show_product_images ?? true;
 $show_attrib_images =  $show_attrib_images ?? true;
@@ -26,18 +26,9 @@ $order = new order($oID);
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
 
 // prepare order-status pulldown list
-$orders_statuses = array();
-$orders_status_array = array();
-$orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
-                               FROM " . TABLE_ORDERS_STATUS . "
-                               WHERE language_id = " . (int)$_SESSION['languages_id']);
-foreach ($orders_status as $order_status) {
-  $orders_statuses[] = array(
-    'id' => $order_status['orders_status_id'],
-    'text' => $order_status['orders_status_name'] . ' [' . $order_status['orders_status_id'] . ']'
-  );
-  $orders_status_array[$order_status['orders_status_id']] = $order_status['orders_status_name'];
-}
+$ordersStatus = zen_getOrdersStatuses();
+$orders_statuses = $ordersStatus['orders_statuses'];
+$orders_status_array = $ordersStatus['orders_status_array'];
 
 $show_customer = false;
 if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
@@ -66,7 +57,7 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
       </table>
       <div><?php echo zen_draw_separator(); ?></div>
       <?php
-        $additional_content = false; 
+        $additional_content = false;
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_INVOICE_ADDITIONAL_DATA_TOP', $oID, $additional_content);
           if ($additional_content !== false) {
       ?>
@@ -348,7 +339,7 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
                   ?>
                 </strong>
               </td>
-<?php } 
+<?php }
               // -----
               // Additional fields can be added into columns after the Tax columns.
               //
@@ -426,14 +417,14 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
                   <td class="text-left"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
                   <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
                   <td class="text-left">
-                  <?php 
+                  <?php
                   if (empty($order_history['comments'])) {
                      echo TEXT_NONE;
                   } else {
                      if ($count_comments == 1) {
-                        echo nl2br(zen_output_string_protected($order_history['comments'])); 
+                        echo nl2br(zen_output_string_protected($order_history['comments']));
                      } else {
-                        echo $order_history['comments']; 
+                        echo $order_history['comments'];
                      }
                   }
                   ?>
@@ -457,7 +448,7 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
         </table>
       <?php } // order comments ?>
       <?php
-        $additional_content = false; 
+        $additional_content = false;
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_INVOICE_ADDITIONAL_DATA_BOTTOM', $oID, $additional_content);
           if ($additional_content !== false) {
       ?>
