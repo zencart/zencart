@@ -35,6 +35,8 @@ if (!empty($action)) {
 
             if (is_string($result)) {
                 $messageStack->add_session(ERROR_GROUP_STILL_HAS_CUSTOMERS, 'error');
+            } else {
+                unset($group_id);
             }
             zen_redirect(zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . (!empty($group_id) ?  'gID=' . $group_id : '')));
             break;
