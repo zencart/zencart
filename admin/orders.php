@@ -35,14 +35,8 @@ if (!isset($_GET['page'])) $_GET['page'] = '';
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $show_including_tax = (DISPLAY_PRICE_WITH_TAX === 'true');
 // prepare order-status look-up list
-$orders_status_array = [];
-$orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
-                               FROM " . TABLE_ORDERS_STATUS . "
-                               WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                               ORDER BY orders_status_id");
-foreach ($orders_status as $status) {
-  $orders_status_array[$status['orders_status_id']] = $status['orders_status_name'];
-}
+$ordersStatus = zen_getOrdersStatuses();
+$orders_status_array = $ordersStatus['orders_status_array'];
 
 $action = ($_GET['action'] ?? '');
 $order_exists = false;
