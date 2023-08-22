@@ -123,8 +123,7 @@
 ?>
          <td colspan="2"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['error']; ?>)</td>
 <?php
-          }else{
-            if($selected_shipping['id'] == $thisquoteid){
+          }elseif($selected_shipping['id'] == $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][0]['title']; ?>)</td>
          <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
@@ -134,8 +133,7 @@
           <td><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][0]['title']; ?>)</td>
           <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
 <?php
-            }
-          } ?>
+            } ?>
     </tr>
 <?php     } else {
           // shipping method with sub methods (multipickup) or none
@@ -151,8 +149,7 @@
 ?>
          <td colspan="2"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['error']; ?>)</td>
 <?php
-            }else{
-              if($selected_shipping['id'] == $thisquoteid){
+            }elseif($selected_shipping['id'] == $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][$j]['title']; ?>)</td>
          <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
@@ -162,8 +159,7 @@
         <td><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][$j]['title']; ?>)</td>
         <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
 <?php
-              }
-            } ?>
+              } ?>
        </tr>
 <?php      }
         }
