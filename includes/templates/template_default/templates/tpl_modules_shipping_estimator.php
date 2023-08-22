@@ -69,7 +69,7 @@
 <br class="clearBoth">
 
 <?php
-        if(CART_SHIPPING_METHOD_ZIP_REQUIRED == 'true'){
+        if(CART_SHIPPING_METHOD_ZIP_REQUIRED === 'true'){
 ?>
 <label class="inputLabel" for="postcode"><?php echo ENTRY_POST_CODE; ?></label>
 <?php echo zen_draw_input_field('postcode', $postcode, 'size="7" id="postcode"'); ?>
@@ -82,7 +82,7 @@
 <?php
       }
     }
-    if($_SESSION['cart']->get_content_type() == 'virtual'){
+    if($_SESSION['cart']->get_content_type() === 'virtual'){
 ?>
 <?php echo CART_SHIPPING_METHOD_FREE_TEXT . ' ' . CART_SHIPPING_METHOD_ALL_DOWNLOADS; ?>
 <?php
@@ -113,7 +113,7 @@
 <?php
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         $thisquoteid = '';
-        if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods'])==1 && isset($quotes[$i]['methods'][0]['id'])){
+        if(isset($quotes[$i]['id']) && sizeof($quotes[$i]['methods']) === 1 && isset($quotes[$i]['methods'][0]['id'])){
           // simple shipping method
           $thisquoteid = $quotes[$i]['id'].'_'.$quotes[$i]['methods'][0]['id'];
 ?>
