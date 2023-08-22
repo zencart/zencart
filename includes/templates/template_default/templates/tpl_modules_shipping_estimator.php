@@ -69,7 +69,7 @@
 <br class="clearBoth">
 
 <?php
-        if(CART_SHIPPING_METHOD_ZIP_REQUIRED == "true"){
+        if(CART_SHIPPING_METHOD_ZIP_REQUIRED == 'true'){
 ?>
 <label class="inputLabel"><?php echo ENTRY_POST_CODE; ?></label>
 <?php echo zen_draw_input_field('postcode', $postcode, 'size="7" id="postcode"'); ?>
