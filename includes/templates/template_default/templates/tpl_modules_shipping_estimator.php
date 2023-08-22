@@ -77,14 +77,14 @@
 <?php
         }
 ?>
-<div class="buttonRow forward"><?php echo  zen_image_submit(BUTTON_IMAGE_UPDATE, BUTTON_UPDATE_ALT); ?></div>
+<div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_UPDATE, BUTTON_UPDATE_ALT); ?></div>
 <br class="clearBoth">
 <?php
       }
     }
     if($_SESSION['cart']->get_content_type() == 'virtual'){
 ?>
-<?php echo CART_SHIPPING_METHOD_FREE_TEXT .  ' ' . CART_SHIPPING_METHOD_ALL_DOWNLOADS; ?>
+<?php echo CART_SHIPPING_METHOD_FREE_TEXT . ' ' . CART_SHIPPING_METHOD_ALL_DOWNLOADS; ?>
 <?php
     }elseif ($free_shipping==1) {
 ?>
@@ -122,24 +122,22 @@
           if(isset($quotes[$i]['error']) && $quotes[$i]['error']){
 ?>
          <td colspan="2"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['error']; ?>)</td>
-       </tr>
 <?php
           }else{
             if($selected_shipping['id'] == $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][0]['title']; ?>)</td>
          <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
-       </tr>
 <?php
             }else{
 ?>
           <td><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][0]['title']; ?>)</td>
           <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
-       </tr>
 <?php
             }
-          }
-        } else {
+          } ?>
+    </tr>
+<?php     } else {
           // shipping method with sub methods (multipickup) or none
           for ($j=0, $n2=(empty($quotes[$i]['methods']) ? 0 : sizeof($quotes[$i]['methods'])); $j<$n2; $j++) {
             $thisquoteid = '';
@@ -152,24 +150,22 @@
             if(!empty($quotes[$i]['error'])){
 ?>
          <td colspan="2"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['error']; ?>)</td>
-       </tr>
 <?php
             }else{
               if($selected_shipping['id'] == $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][$j]['title']; ?>)</td>
          <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
-       </tr>
 <?php
               }else{
 ?>
         <td><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][$j]['title']; ?>)</td>
         <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
-      </tr>
 <?php
               }
-            }
-          }
+            } ?>
+       </tr>
+<?php      }
         }
       }
 ?>
@@ -177,6 +173,5 @@
 <?php
    }
   }
-?>
-</form>
+echo '</form>'; ?>
 </div>
