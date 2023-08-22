@@ -123,7 +123,7 @@
 ?>
          <td colspan="2"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['error']; ?>)</td>
 <?php
-          }elseif($selected_shipping['id'] == $thisquoteid){
+          }elseif($selected_shipping['id'] === $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][0]['title']; ?>)</td>
          <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
@@ -149,7 +149,7 @@
 ?>
          <td colspan="2"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['error']; ?>)</td>
 <?php
-            }elseif($selected_shipping['id'] == $thisquoteid){
+            }elseif($selected_shipping['id'] === $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][$j]['title']; ?>)</td>
          <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
