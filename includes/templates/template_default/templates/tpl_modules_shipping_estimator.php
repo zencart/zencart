@@ -64,7 +64,7 @@
 <?php
           }
 ?>
-<label class="inputLabel" for="state" id="stateLabel"><?php echo (isset($state_field_label) ? $state_field_label : ''); ?></label>
+<label class="inputLabel" for="state" id="stateLabel"><?php echo ($state_field_label ?? ''); ?></label>
 <?php echo zen_draw_input_field('state', $selectedState, zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"') .'&nbsp;<span class="alert" id="stText">&nbsp;</span>'; ?>
 <br class="clearBoth">
 
@@ -100,7 +100,7 @@
         <?php echo '<span class="seDisplayedAddressInfo">' .
             zen_get_zone_name((int)$selected_country, (int)$state_zone_id, '') .
             ($selectedState != '' ? ' ' . $selectedState : '') . ' ' .
-            (isset($order->delivery['postcode']) ? $order->delivery['postcode'] : '') . ' ' .
+            ($order->delivery['postcode'] ?? '') . ' ' .
             zen_get_country_name($order->delivery['country_id']) .
             '</span>'; ?>
       </td>
@@ -127,12 +127,12 @@
             if($selected_shipping['id'] == $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][0]['title']; ?>)</td>
-         <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
+         <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
 <?php
             }else{
 ?>
           <td><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][0]['title']; ?>)</td>
-          <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
+          <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][0]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
 <?php
             }
           } ?>
@@ -155,12 +155,12 @@
               if($selected_shipping['id'] == $thisquoteid){
 ?>
          <td class="bold"><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][$j]['title']; ?>)</td>
-         <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
+         <td class="cartTotalDisplay bold"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
 <?php
               }else{
 ?>
         <td><?php echo $quotes[$i]['module']; ?>&nbsp;(<?php echo $quotes[$i]['methods'][$j]['title']; ?>)</td>
-        <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0)); ?></td>
+        <td class="cartTotalDisplay"><?php echo $currencies->format(zen_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax'] ?? 0)); ?></td>
 <?php
               }
             } ?>
