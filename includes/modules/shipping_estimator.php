@@ -85,7 +85,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         $order = new order();
         if (!empty($_POST['zone_country_id'])) {
             // country is selected
-            $_SESSION['country_info'] = zen_get_countries($_POST['zone_country_id'], true);
+            $_SESSION['country_info'] = zen_get_countries((int)$_POST['zone_country_id'], true);
             $country_info = $_SESSION['country_info'];
             $order->delivery = [
                 'postcode' => $postcode,
@@ -106,7 +106,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
             $_SESSION['cart_postcode'] = $postcode;
         } elseif (!empty($_SESSION['cart_country_id'])) {
             // session is available
-            $_SESSION['country_info'] = zen_get_countries($_SESSION['cart_country_id'], true);
+            $_SESSION['country_info'] = zen_get_countries((int)$_SESSION['cart_country_id'], true);
             $country_info = $_SESSION['country_info'];
             // fix here - check for error on $cart_country_id
             $order->delivery = [
@@ -124,7 +124,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         } else {
             // first timer
             $_SESSION['cart_country_id'] = STORE_COUNTRY;
-            $_SESSION['country_info'] = zen_get_countries(STORE_COUNTRY, true);
+            $_SESSION['country_info'] = zen_get_countries((int)STORE_COUNTRY, true);
             $country_info = $_SESSION['country_info'];
             $order->delivery = [
                 //'postcode' => '',

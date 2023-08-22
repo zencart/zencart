@@ -38,7 +38,7 @@ class paypal extends base {
     public $codeVersion;
     /**
      * $description is a soft name for this payment method
-     * @var string 
+     * @var string
      */
     public $description;
     /**
@@ -75,7 +75,7 @@ class paypal extends base {
     public $title;
     /**
      * $totalsum is the order total being processed
-     * @var float 
+     * @var float
      */
     protected $totalsum;
     /**
@@ -377,13 +377,13 @@ class paypal extends base {
       $user_locale_info = $locales;
     }
     $user_locale_info[] = strtoupper($_SESSION['languages_code']);
-    $shippingISO = zen_get_countries($order->delivery['country']['id'], true);
+    $shippingISO = zen_get_countries((int)$order->delivery['country']['id'], true);
     $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2']);
-    $billingISO = zen_get_countries($order->billing['country']['id'], true);
+    $billingISO = zen_get_countries((int)$order->billing['country']['id'], true);
     $user_locale_info[] = strtoupper($billingISO['countries_iso_code_2']);
-    $custISO = zen_get_countries($order->customer['country']['id'], true);
+    $custISO = zen_get_countries((int)$order->customer['country']['id'], true);
     $user_locale_info[] = strtoupper($custISO['countries_iso_code_2']);
-    $storeISO = zen_get_countries(STORE_COUNTRY, true);
+    $storeISO = zen_get_countries((int)STORE_COUNTRY, true);
     $user_locale_info[] = strtoupper($storeISO['countries_iso_code_2']);
 
     $to_match = array_map('strtoupper', array_merge($allowed_country_codes, $allowed_language_codes));
@@ -724,6 +724,6 @@ class paypal extends base {
   }
 
   function help() {
-       return array('body' => '<a href="https://docs.zen-cart.com/user/payment/paypal/" target="_blank" rel="noreferrer noopener">' . TEXT_DOCS_HELP . '</a><br>' .  MODULES_PAYMENT_PAYPALSTD_NOT_RECOMMENDED . '<br>');  
+       return array('body' => '<a href="https://docs.zen-cart.com/user/payment/paypal/" target="_blank" rel="noreferrer noopener">' . TEXT_DOCS_HELP . '</a><br>' .  MODULES_PAYMENT_PAYPALSTD_NOT_RECOMMENDED . '<br>');
     }
 }
