@@ -392,7 +392,7 @@ function zen_address_label($customers_id, $address_id = 1, $html = false, $boln 
 
     $zco_notifier->notify('NOTIFY_ZEN_ADDRESS_LABEL', null, $customers_id, $address_id, $address->fields);
 
-    $format_id = zen_get_address_format_id($address->fields['country_id']);
+    $format_id = zen_get_address_format_id((int)$address->fields['country_id']);
 
     return zen_address_format($format_id, $address->fields, $html, $boln, $eoln);
 }

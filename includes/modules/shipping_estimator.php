@@ -98,7 +98,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 'country_id' => $_POST['zone_country_id'],
                 //add state zone_id
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id($_POST['zone_country_id']),
+                'format_id' => zen_get_address_format_id((int)$_POST['zone_country_id']),
             ];
             $_SESSION['cart_country_id'] = $_POST['zone_country_id'];
             //add state zone_id
@@ -119,7 +119,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 ],
                 'country_id' => $_SESSION['cart_country_id'],
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id($_SESSION['cart_country_id']),
+                'format_id' => zen_get_address_format_id((int)$_SESSION['cart_country_id']),
             ];
         } else {
             // first timer
@@ -136,7 +136,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 ],
                 'country_id' => STORE_COUNTRY,
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id($_POST['zone_country_id'] ?? 0),
+                'format_id' => zen_get_address_format_id((int)$_POST['zone_country_id'] ?? 0),
             ];
         }
         // set the cost to be able to calculate free shipping
@@ -257,7 +257,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         // only display addresses if more than 1
         if ($addresses->RecordCount() > 1) {
             while (!$addresses->EOF) {
-                $addresses_array[] = ['id' => $addresses->fields['address_book_id'], 'text' => zen_address_format(zen_get_address_format_id($addresses->fields['country_id']), $addresses->fields, 0, ' ', ' ')];
+                $addresses_array[] = ['id' => $addresses->fields['address_book_id'], 'text' => zen_address_format(zen_get_address_format_id((int)$addresses->fields['country_id']), $addresses->fields, 0, ' ', ' ')];
                 $addresses->MoveNext();
             }
         }

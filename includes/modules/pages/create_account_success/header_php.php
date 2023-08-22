@@ -51,7 +51,7 @@ $addresses = $db->Execute($addresses_query);
 
 $addressArray = array();
 while (!$addresses->EOF) {
-  $format_id = zen_get_address_format_id($addresses->fields['country_id']);
+  $format_id = zen_get_address_format_id((int)$addresses->fields['country_id']);
 
   $addressArray[] = array('firstname'=>$addresses->fields['firstname'],
                           'lastname'=>$addresses->fields['lastname'],
