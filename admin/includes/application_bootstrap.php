@@ -128,16 +128,8 @@ if (file_exists($file) && $lines = @file($file)) {
 /**
  * include the extra_configures files
  */
-if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
-    while ($zv_file = $za_dir->read()) {
-        if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-            /**
-             * load any user/contribution specific configuration files.
-             */
-            include(DIR_WS_INCLUDES . 'extra_configures/' . $zv_file);
-        }
-    }
-    $za_dir->close();
+foreach (glob(DIR_WS_INCLUDES . 'extra_configures/*.php') ?? [] as $file) {
+    include($file);
 }
 /**
  * init some vars

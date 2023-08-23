@@ -50,14 +50,10 @@ require DIR_WS_FUNCTIONS . 'functions_metatags.php';
 
 
 // include the list of extra functions
-  if ($za_dir = @dir(DIR_WS_FUNCTIONS . 'extra_functions')) {
-    while ($zv_file = $za_dir->read()) {
-      if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-        require DIR_WS_FUNCTIONS . 'extra_functions/' . $zv_file;
-      }
-    }
-    $za_dir->close();
-  }
+foreach (zen_get_files_in_directory(DIR_WS_FUNCTIONS . 'extra_functions') as $file) {
+    require $file;
+}
+
 if (isset($_GET) & sizeof($_GET) > 0 ) {
   foreach ($_GET as $key=>$value) {
     $_GET[$key] = strip_tags($value);

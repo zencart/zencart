@@ -7,27 +7,20 @@
  */
 require('includes/application_top.php');
 
-function zen_display_files() {
-  global $check_directory, $found, $configuration_key_lookup;
-    for ($i = 0, $n = sizeof($check_directory); $i < $n; $i++) {
+function zen_display_files(): array
+{
+    global $check_directory, $found, $configuration_key_lookup;
+    $directory_array = [];
 
-    $dir_check = $check_directory[$i];
-
-    if ($dir = @dir($dir_check)) {
-      while ($file = $dir->read()) {
-        if (!is_dir($dir_check . $file)) {
-          if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-            $directory_array[] = $file;
-          }
+    foreach ($check_directory as $dir_check) {
+        $dir = glob(rtrim($dir_check, '/') . '/*.php') ?? [];
+        foreach ($dir as $file) {
+            $directory_array[] = basename($file);
         }
-      }
-        if (sizeof($directory_array)) {
-        sort($directory_array);
-      }
-      $dir->close();
     }
-  }
-  return $directory_array;
+    sort($directory_array);
+
+    return $directory_array;
 }
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');

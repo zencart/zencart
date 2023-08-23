@@ -6,7 +6,7 @@ namespace Zencart\ResourceLoaders;
 class SideboxFinder
 {
     private $filesystem;
-    
+
     public function __construct($filesystem)
     {
         $this->filesystem = $filesystem;
@@ -18,18 +18,18 @@ class SideboxFinder
         foreach ($installedPlugins as $plugin)
         {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/modules/sideboxes/';
-            $files = $this->filesystem->listFilesFromDirectory($pluginDir);
+            $files = $this->filesystem->listFilesFromDirectoryAlphaSorted($pluginDir);
             foreach ($files as $file) {
                 $sideboxes[$file] = $plugin['unique_key'] . '/' . $plugin['version'];
             }
        }
         $mainDir = DIR_FS_CATALOG_MODULES . 'sideboxes/';
         $mainDirTpl = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $templateDir . '/';
-        $files = $this->filesystem->listFilesFromDirectory($mainDir);
+        $files = $this->filesystem->listFilesFromDirectoryAlphaSorted($mainDir);
         foreach ($files as $file) {
             $sideboxes[$file] = '';
         }
-        $files = $this->filesystem->listFilesFromDirectory($mainDirTpl);
+        $files = $this->filesystem->listFilesFromDirectoryAlphaSorted($mainDirTpl);
         foreach ($files as $file) {
             $sideboxes[$file] = '';
         }

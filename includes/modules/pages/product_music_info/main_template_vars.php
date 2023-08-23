@@ -114,21 +114,10 @@
  * Load all *.PHP files from the /includes/templates/MYTEMPLATE/PAGENAME/extra_main_template_vars
  */
   $extras_dir = $template->get_template_dir('.php', DIR_WS_TEMPLATE, $current_page_base . 'extra_main_template_vars', $current_page_base . '/' . 'extra_main_template_vars');
-  if ($dir = @dir($extras_dir)) {
-    while ($file = $dir->read()) {
-      if (!is_dir($extras_dir . '/' . $file)) {
-        if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-          $directory_array[] = '/' . $file;
-        }
-      }
-    }
-    $dir->close();
+  foreach(zen_get_files_in_directory($extras_dir) as $file) {
+      include($file);
   }
-  if (sizeof($directory_array)) sort($directory_array);
 
-  for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
-    if (file_exists($extras_dir . $directory_array[$i])) include($extras_dir . $directory_array[$i]);
-  }
 
 // build show flags from product type layout settings
   $flag_show_product_info_starting_at = zen_get_show_product_switch($_GET['products_id'], 'starting_at');

@@ -156,17 +156,8 @@ require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
 /**
  * include the list of extra configure files
  */
-if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_configures')) {
-  while ($zv_file = $za_dir->read()) {
-    if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-      /**
-       * load any user/contribution specific configuration files.
-       */
-      include(DIR_WS_INCLUDES . 'extra_configures/' . $zv_file);
-    }
-  }
-  $za_dir->close();
-  unset($za_dir);
+foreach (glob(DIR_WS_INCLUDES . 'extra_configures/*.php') ?? [] as $file) {
+    include($file);
 }
 $autoLoadConfig = [];
 if (isset($loaderPrefix)) {

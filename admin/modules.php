@@ -164,21 +164,10 @@ if (!empty($action)) {
             </thead>
             <tbody>
                 <?php
-                $directory_array = [];
-                if ($dir = @dir($module_directory)) {
-                  while ($file = $dir->read()) {
-                    if (!is_dir($module_directory . $file)) {
-                      if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-                        $directory_array[] = $file;
-                      }
-                    }
-                  }
-                  sort($directory_array);
-                  $dir->close();
-                }
+                $directory_array = zen_get_files_in_directory($module_directory);
                 $installed_modules = $temp_for_sort = [];
                 for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
-                  $file = $directory_array[$i];
+                  $file = basename($directory_array[$i]);
                   if ($languageLoader->hasLanguageFile( DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type)) {
                       $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type);
                     include($module_directory . $file);
