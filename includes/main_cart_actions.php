@@ -21,17 +21,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * include the list of extra cart action files  (*.php in the extra_cart_actions folder)
  */
-if ($za_dir = @dir(DIR_WS_INCLUDES . 'extra_cart_actions')) {
-    while ($zv_file = $za_dir->read()) {
-        if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-            /**
-             * get user/contribution defined cart actions
-             */
-            include(DIR_WS_INCLUDES . 'extra_cart_actions/' . $zv_file);
-        }
-    }
-    $za_dir->close();
+foreach (zen_get_files_in_directory(DIR_WS_INCLUDES . 'extra_cart_actions') as $file) {
+    include($file);
 }
+
 switch ($_GET['action']) {
     /**
      * customer wants to update the product quantity in their shopping cart

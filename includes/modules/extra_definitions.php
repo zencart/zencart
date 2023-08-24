@@ -16,30 +16,22 @@ if (!defined('IS_ADMIN_FLAG')) {
 $lang_extra_defs_dir = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/';
 $lang_extra_defs_dir_template = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/' . $template_dir . '/';
 
-$file_array = array(); 
+$file_array = array();
 $folderlist = array($lang_extra_defs_dir_template, $lang_extra_defs_dir);
 
-foreach ($folderlist as $folder) { 
-  $this_folder = DIR_FS_CATALOG . $folder; 
-  if ($dir = @dir($this_folder)) {
-    while (false !== ($file = $dir->read())) {
-      if (!is_dir($this_folder. $file)) {
-        if (!array_key_exists($file, $file_array)) {
-          if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-             $file_array[$file] = $folder . $file;
-          }
+foreach ($folderlist as $folder) {
+    $this_folder = DIR_FS_CATALOG . $folder;
+    foreach (zen_get_files_in_directory($this_folder) as $file) {
+        if (!array_key_exists(basename($file), $file_array)) {
+            $file_array[basename($file)] = $file;
         }
-      }
     }
-    $dir->close();
-  }
 }
 
-if (sizeof($file_array)) {
+if (!empty($file_array)) {
     ksort($file_array);
 }
 
-
-foreach ($file_array as $file => $include_file) { 
+foreach ($file_array as $file => $include_file) {
   include($include_file);
 }

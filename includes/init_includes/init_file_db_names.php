@@ -49,32 +49,7 @@ require(DIR_WS_FUNCTIONS . 'compatibility.php');
 $extra_datafiles_directory = DIR_FS_CATALOG . DIR_WS_INCLUDES . 'extra_datafiles/';
 $ws_extra_datafiles_directory = DIR_WS_INCLUDES . 'extra_datafiles/';
 
-// Check for new databases and filename etc in extra_datafiles directory
-$directory_array = array();
-
-if ($dir = @dir($extra_datafiles_directory)) {
-  while ($file = $dir->read()) {
-    if (!is_dir($extra_datafiles_directory . $file)) {
-      if (preg_match('~^[^\._].*\.php$~', $file) > 0) {
-        $directory_array[] = $file;
-      }
-    }
-  }
-  if (sizeof($directory_array)) {
-    sort($directory_array);
-  }
-  $dir->close();
-}
-
-$file_cnt=0;
-for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
-  $file_cnt++;
-  $file = $directory_array[$i];
-
-  if (file_exists($ws_extra_datafiles_directory . $file)) {
-      /**
-       * require 3rd party datafiles (ussually to add extra filename/DB Table name definitions)
-       */
-    include($ws_extra_datafiles_directory . $file);
-  }
+// Check for new database tables and filenames etc in extra_datafiles directory, usually for plugins
+foreach (glob($extra_datafiles_directory . '*.php') ?? [] as $file) {
+    include($ws_extra_datafiles_directory . basename($file));
 }

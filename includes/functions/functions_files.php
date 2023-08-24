@@ -16,26 +16,81 @@
  * @param string $default_text
  * @return array (id/text pairs)
  *
- * @todo convert to a directory-iterator instead
  */
 function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Main Directory')
 {
-    if ($parent_folder == '') $parent_folder = DIR_FS_CATALOG_IMAGES;
+    if (empty($parent_folder)) {
+        $parent_folder = DIR_FS_CATALOG_IMAGES;
+    }
+
+    $dir = glob($parent_folder, GLOB_ONLYDIR);
+
+    if (empty($dir)) {
+        return [];
+    }
+
     $dir_info = [];
     $dir_info[] = ['id' => '', 'text' => $default_text];
-
-    $dir = @dir($parent_folder);
-    if ($dir == null) return [];
-    while ($file = $dir->read()) {
-        if (is_dir($parent_folder . $file) && $file != "." && $file != "..") {
-            $dir_info[] = ['id' => $file . '/', 'text' => $file];
-        }
+    foreach ($dir as $file) {
+        $file = basename($file);
+        $dir_info[] = ['id' => $file . '/', 'text' => $file];
     }
-    $dir->close();
-    sort($dir_info);
+
     return $dir_info;
 }
 
+/**
+ * Get an array of filenames found in the specified directory, having the specified extension.
+ * Includes full path of folders and filename. To get just filename, call basename() on each entry in returned result
+ * Sorted alphabetically. Ignores subdirectories.
+ *
+ * @param string $directory_path
+ * @param string $extension
+ * @return array
+ */
+function zen_get_files_in_directory(string $directory_path, string $extension = 'php'): array
+{
+    if (false === zen_directory_is_in_application_dir($directory_path)) {
+        return [];
+    }
+
+    if (!is_dir($directory_path)) {
+        return [];
+    }
+
+    $pattern = $directory_path;
+    if (!empty($extension)) {
+        $pattern = rtrim($pattern, '/') . '/*.' . trim($extension, './');
+    }
+
+    return glob($pattern) ?? [];
+}
+
+/**
+ * security check: ensure requested directory relates to this application
+ */
+function zen_directory_is_in_application_dir(string $dir_to_check): bool
+{
+    if (IS_ADMIN_FLAG === true) {
+        if (is_dir(DIR_FS_ADMIN . $dir_to_check)) {
+            return true;
+        }
+        // make sure it's within the application subtree
+        if (str_starts_with($dir_to_check, DIR_FS_ADMIN)) {
+            return true;
+        }
+    }
+
+    if (is_dir(DIR_FS_CATALOG . $dir_to_check)) {
+        return true;
+    }
+    // make sure it's within the application subtree
+    if (str_starts_with($dir_to_check, DIR_FS_CATALOG)) {
+        return true;
+    }
+
+    return false;
+}
 
 /**
  * find template or default file

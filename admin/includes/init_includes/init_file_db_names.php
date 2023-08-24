@@ -38,13 +38,6 @@ $request_type = (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) ==
 
 // include the list of extra database tables and filenames
 $extra_datafiles_dir = DIR_WS_INCLUDES . 'extra_datafiles/';
-if ($dir = @dir($extra_datafiles_dir)) {
-  while ($file = $dir->read()) {
-    if (!is_dir($extra_datafiles_dir . $file)) {
-      if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-        require($extra_datafiles_dir . $file);
-      }
-    }
-  }
-  $dir->close();
+foreach (glob($extra_datafiles_dir . '*.php') ?? [] as $file) {
+    require($file);
 }

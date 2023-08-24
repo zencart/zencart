@@ -33,14 +33,14 @@ class AdminFilesLanguageLoader extends FilesLanguageLoader
     protected function loadLanguageExtraDefinitions()
     {
         $dirPath = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions';
-        $fileList = $this->fileSystem->listFilesFromDirectory($dirPath, '~^(?!lang\.).*\.php$~i');
+        $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($dirPath, '~^(?!lang\.).*\.php$~i');
         foreach ($fileList as $file) {
             $this->loadFileDefineFile($dirPath . '/' . $file);
         }
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
             $dirPath = $pluginDir . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions';
-            $fileList = $this->fileSystem->listFilesFromDirectory($dirPath, '~^(?!lang\.).*\.php$~i');
+            $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($dirPath, '~^(?!lang\.).*\.php$~i');
             foreach ($fileList as $file) {
                 $this->loadFileDefineFile($dirPath . '/' . $file);
             }

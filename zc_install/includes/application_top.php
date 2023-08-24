@@ -123,18 +123,10 @@ if (!isset($_GET['cacheignore'])) {
 }
 
 /**
- * include the list of extra configure files
+ * include any extra_configures files
  */
-if ($za_dir = @dir(DIR_FS_INSTALL . 'includes/extra_configures')) {
-    while ($zv_file = $za_dir->read()) {
-        if (preg_match('~^[^\._].*\.php$~i', $zv_file) > 0) {
-            /**
-             * load any user/contribution specific configuration files.
-             */
-            include DIR_FS_INSTALL . 'includes/extra_configures/' . $zv_file;
-        }
-    }
-    $za_dir->close();
+foreach (glob(DIR_FS_INSTALL . 'includes/extra_configures/*.php') ?? [] as $file) {
+    include $file;
 }
 
 require DIR_FS_ROOT . 'includes/classes/traits/ObserverManager.php';

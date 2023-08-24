@@ -185,23 +185,11 @@ if (!empty($action)) {
           $nInfo->updateObjectInfo($_POST);
         }
 
-        $directory_array = array();
-        if ($dir = dir(DIR_WS_MODULES . 'newsletters/')) {
-          while ($file = $dir->read()) {
-            if (!is_dir(DIR_WS_MODULES . 'newsletters/' . $file)) {
-              if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-                $directory_array[] = $file;
-              }
-            }
-          }
-          sort($directory_array);
-          $dir->close();
-        }
-
-        for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
-          $modules_array[] = array(
-            'id' => substr($directory_array[$i], 0, strrpos($directory_array[$i], '.')),
-            'text' => substr($directory_array[$i], 0, strrpos($directory_array[$i], '.')));
+        foreach (zen_get_files_in_directory(DIR_WS_MODULES . 'newsletters') as $file) {
+            $modules_array[] = [
+                'id' => basename($file, '.php'),
+                'text' => basename($file, '.php'),
+            ];
         }
         ?>
         <?php

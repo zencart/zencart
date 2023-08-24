@@ -11,12 +11,12 @@ namespace Zencart\InitSystem;
 class InitSystem
 {
 
-    private 
+    private
         $installedPlugins,
         $debug,
         $debugList,
         $actionList;
-        
+
     private $context;
     private $loaderPrefix;
     private $fileSystem;
@@ -174,7 +174,7 @@ class InitSystem
 
     protected function loadAutoLoadersFromSystem($loaderType, $rootDir, $plugin = [])
     {
-        $fileList = $this->fileSystem->listFilesFromDirectory($rootDir, '~^[^\._].*\.php$~i');
+        $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($rootDir);
         $fileList = $this->processForOverrides($fileList, $rootDir);
         $loaderList = $this->getLoadersFromFileList($fileList);
         $loaderList = $this->processLoaderListForType($loaderType, $loaderList, $plugin);
