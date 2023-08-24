@@ -322,7 +322,7 @@ if (!empty($action)) {
               $heading[] = ['text' => '<h4>' . $mInfo->title . '</h4>'];
               $contents = ['form' => zen_draw_form('modules', FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : '') . '&action=save', 'post', 'class="form-horizontal"', true)];
               if (ADMIN_CONFIGURATION_KEY_ON == 1) {
-                $contents[] = ['text' => '<strong>Key: ' . $mInfo->code . '</strong><br>'];
+                $contents[] = ['text' => '<strong>Module code: ' . $mInfo->code . '</strong><br>'];
               }
               $contents[] = ['text' => $keys];
               $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger" id="saveButton">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" id="cancelButton">' . IMAGE_CANCEL . '</a>'];
@@ -377,7 +377,7 @@ if (!empty($action)) {
                 }
 
                 if (ADMIN_CONFIGURATION_KEY_ON == 1) {
-                  $contents[] = ['text' => '<strong>Key: ' . $mInfo->code . '</strong><br>'];
+                  $contents[] = ['text' => '<strong>Module code: ' . $mInfo->code . '</strong><br>'];
                 }
                 $keys = substr($keys, 0, strrpos($keys, '<br><br>'));
                 if (!(!$is_ssl_protected && in_array($mInfo->code, ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck']))) {
