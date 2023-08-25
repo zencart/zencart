@@ -136,7 +136,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 ],
                 'country_id' => STORE_COUNTRY,
                 'zone_id' => $state_zone_id,
-                'format_id' => zen_get_address_format_id((int)$_POST['zone_country_id'] ?? 0),
+                'format_id' => zen_get_address_format_id((int)STORE_COUNTRY),
             ];
         }
         // set the cost to be able to calculate free shipping
