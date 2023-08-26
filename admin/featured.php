@@ -15,6 +15,11 @@ $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
 
 if (!empty($action)) {
+  // -----
+  // Set an indicator for init_special_funcs.php to perform auto-enable/expiration.
+  //
+  $_SESSION['expirationsNeedUpdate'] = true;
+
   switch ($action) {
     case 'setflag':
       if (isset($_POST['flag']) && ($_POST['flag'] === '1' || $_POST['flag'] === '0')) {
