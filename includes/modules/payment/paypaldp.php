@@ -292,8 +292,6 @@ class paypaldp extends base {
     $this->zone = (int)MODULE_PAYMENT_PAYPALDP_ZONE;
     if (is_object($order)) $this->update_status();
 
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.6') $this->enabled = false;
-
     // offer credit card choices for pull-down menu -- only needed for UK version
     $this->cards = array();
     if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') {
