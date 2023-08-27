@@ -11,6 +11,11 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_REVIEWS');
 
+  // if no product specified, go to all reviews page
+  if (empty($_GET['products_id'])) {
+      zen_redirect(zen_href_link(FILENAME_REVIEWS)); 
+  }
+
 // check product exists and current
 // if product does not exist or is status 0 send to _info page
     $products_reviews_check_query = "SELECT count(*) AS count
