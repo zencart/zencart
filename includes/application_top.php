@@ -153,6 +153,13 @@ if (file_exists('includes/defined_paths.php')) {
 }
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
+
+/**
+ * Register error-handling functions
+ */
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_error_handling.php';
+zen_enable_error_logging();
+
 /**
  * include the list of extra configure files
  */

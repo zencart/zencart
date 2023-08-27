@@ -25,3 +25,6 @@ if (empty($TZ)) {
     putenv('TZ=' . $TZ);
     @date_default_timezone_set($TZ);
 }
+
+// Now incorporate TZ change into log filenames
+zen_set_error_logging_filename();

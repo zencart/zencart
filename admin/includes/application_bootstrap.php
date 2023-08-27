@@ -125,6 +125,13 @@ if (file_exists($file) && $lines = @file($file)) {
         }
     }
 }
+
+/**
+ * Register error-handling functions
+ */
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_error_handling.php';
+zen_enable_error_logging();
+
 /**
  * include the extra_configures files
  */
