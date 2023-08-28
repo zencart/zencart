@@ -38,13 +38,13 @@ class paypalwpp extends base {
   /**
    * module status - set based on various config and zone criteria
    *
-   * @var boolean
+   * @var bool
    */
   public $enabled;
   /**
    * Installation 'check' flag
    *
-   * @var boolean
+   * @var bool
    */
   protected $_check;
   /**
@@ -56,14 +56,14 @@ class paypalwpp extends base {
   /**
    * debugging flag
    *
-   * @var boolean
+   * @var bool
    */
   public $enableDebugging = false;
   public $emailAlerts;
   /**
    * Determines whether payment page is displayed or not
    *
-   * @var boolean
+   * @var bool
    */
   public $showPaymentPage = false;
   public $flagDisablePaymentAddressChange = false;
@@ -140,7 +140,7 @@ class paypalwpp extends base {
   /**
    * Flag to enable the modern in-context checkout.
    * https://developer.paypal.com/docs/classic/express-checkout/in-context/integration/
-   * @var boolean
+   * @var bool
    */
   public $use_incontext_checkout = true;
   /**
@@ -2548,7 +2548,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      *
      * @param int $customer_id
      * @param array $address_question_arr
-     * @return int|boolean
+     * @return int|bool
      */
   function findMatchingAddressBookEntry($customer_id, $address_question_arr) {
     global $db;
