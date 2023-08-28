@@ -308,8 +308,10 @@ class paypalwpp extends base {
     /**
      * since we are NOT processing via the gateway, we will only display MarkFlow payment option, and no CC fields
      */
-    return array('id' => $this->code,
-                 'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '"><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>');
+    return [
+        'id' => $this->code,
+                 'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '"><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>'
+    ];
   }
   function pre_confirmation_check(): bool
   {
@@ -321,7 +323,7 @@ class paypalwpp extends base {
    */
   function confirmation(): array
   {
-    $confirmation = array('title' => '', 'fields' => array());
+    $confirmation = ['title' => '', 'fields' => []];
     return $confirmation;
   }
   /**
@@ -358,9 +360,9 @@ class paypalwpp extends base {
    */
   function before_process() {
     global $order, $doPayPal, $messageStack;
-    $options = array();
-    $optionsShip = array();
-    $optionsNVP = array();
+    $options = [];
+    $optionsShip = [];
+    $optionsNVP = [];
 
     $options = $this->getLineItemDetails($this->selectCurrency($order->info['currency']));
 
@@ -386,14 +388,16 @@ class paypalwpp extends base {
       // do not allow blank address to be sent to PayPal
       if ($_SESSION['paypal_ec_payer_info']['ship_street_1'] != '' && strtoupper($_SESSION['paypal_ec_payer_info']['ship_address_status']) != 'NONE') {
         $options = array_merge($options,
-                 array('PAYMENTREQUEST_0_SHIPTONAME'   => $_SESSION['paypal_ec_payer_info']['ship_name'],
+                 [
+                     'PAYMENTREQUEST_0_SHIPTONAME'   => $_SESSION['paypal_ec_payer_info']['ship_name'],
                        'PAYMENTREQUEST_0_SHIPTOSTREET' => $_SESSION['paypal_ec_payer_info']['ship_street_1'],
                        'PAYMENTREQUEST_0_SHIPTOSTREET2'=> $_SESSION['paypal_ec_payer_info']['ship_street_2'],
                        'PAYMENTREQUEST_0_SHIPTOCITY'   => $_SESSION['paypal_ec_payer_info']['ship_city'],
                        'PAYMENTREQUEST_0_SHIPTOSTATE'  => $_SESSION['paypal_ec_payer_info']['ship_state'],
                        'PAYMENTREQUEST_0_SHIPTOZIP'    => $_SESSION['paypal_ec_payer_info']['ship_postal_code'],
                        'PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'=> $_SESSION['paypal_ec_payer_info']['ship_country_code'],
-                       ));
+                 ]
+        );
         $this->zcLog('before_process - EC-2', 'address overrides added:' . "\n" . print_r($options, true));
       }
 
@@ -451,7 +455,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       global $order_totals;
       if (sizeof($order_totals)) {
         for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
-          if (in_array($order_totals[$i]['code'], array('ot_coupon','ot_gv'))) {
+          if (in_array($order_totals[$i]['code'], ['ot_coupon','ot_gv'])) {
             $j++;
             $options["L_PAYMENTREQUEST_0_REDEEMEDOFFERTYPE$j"] = 'MERCHANT_COUPON';
             $options["L_PAYMENTREQUEST_0_REDEEMEDOFFERNAME$j"] = substr($order_totals[$i]['title'], 0, 127);
@@ -533,7 +537,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // FMF
     if ($this->fmfResponse != '') {
       $detailedMessage = $insert_id . "\n" . $this->fmfResponse . "\n" . MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_INTRO . "\n" . print_r($this->fmfErrors, TRUE);
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_SUBJECT . ' (' . $insert_id . ')', $detailedMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($detailedMessage)), 'paymentalert');
+      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_SUBJECT . ' (' . $insert_id . ')', $detailedMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, ['EMAIL_MESSAGE_HTML'=>nl2br($detailedMessage)], 'paymentalert');
     }
 
     // add a new OSH record for this order's PP details
@@ -549,7 +553,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     zen_update_orders_history($insert_id, $commentString, null, $order->info['order_status'], 0);
 
     // store the PayPal order meta data -- used for later matching and back-end processing activities
-    $paypal_order = array('order_id' => $insert_id,
+    $paypal_order = [
+        'order_id' => $insert_id,
                           'txn_type' => $this->transactiontype,
                           'module_name' => $this->code,
                           'module_mode' => MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,
@@ -588,7 +593,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'verify_sign' =>'',
                           'date_added' => 'now()',
                           'memo' => (sizeof($this->fmfErrors) > 0 ? 'FMF Details ' . print_r($this->fmfErrors, TRUE) : '{Record generated by payment module}'),
-                         );
+    ];
     zen_db_perform(TABLE_PAYPAL, $paypal_order);
 
     $this->notify('NOTIFY_PAYPALWPP_AFTER_PROCESS_FINISHED', $paypal_order);
@@ -622,7 +627,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $ipn = $db->Execute($sql);
     if ($ipn->EOF) {
       $ipn = new stdClass();
-      $ipn->fields = array();
+      $ipn->fields = [];
     }
     if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php')) require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php');
     return $output;
@@ -771,9 +776,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Use InContext Checkout?', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'InContext', 'PayPal now offers a newer friendlier InContext (in-page) checkout mode (Requires that you enter your MerchantID in the Merchant ID Setting above). Or you can use the older checkout style which offers Pay Without Account by default but with a full-page-redirect.', '6', '25', 'zen_cfg_select_option(array(\'InContext\', \'Old\'), ', now())");
       }
     }
-    $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
+    $keys_list = [
+        'MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING'
+    ];
     if (defined('PAYPAL_DEV_MODE') && IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow'))) {
-      $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'));
+      $keys_list = array_merge($keys_list, ['MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD']);
     }
     return $keys_list;
   }
@@ -797,7 +804,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
   function help(): array
   {
-       return array('link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/');
+       return ['link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/'];
   }
 
   /**
@@ -846,7 +853,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, $subject, $this->code . "\n" . $data, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($this->code . "\n" . $data)), 'debug');
+      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, $subject, $this->code . "\n" . $data, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, ['EMAIL_MESSAGE_HTML'=>nl2br($this->code . "\n" . $data)], 'debug');
     }
   }
   /**
@@ -855,7 +862,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   function paypal_init(): paypal_curl
   {
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || !defined('MODULE_PAYMENT_PAYPALWPP_SERVER')) {
-      $doPayPal = new paypal_curl(array('mode' => 'NOTCONFIGURED'));
+      $doPayPal = new paypal_curl(['mode' => 'NOTCONFIGURED']);
       return $doPayPal;
     }
     $ec_uses_gateway = (defined('MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD') && MODULE_PAYMENT_PAYPALWPP_PRO20_EC_METHOD == 'Payflow') ? true : false;
@@ -865,26 +872,34 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // uses the PAYMENTREQUEST_0_ and PAYMENT_INFO_0_ prefixes!
     //
     if (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow') {
-      $doPayPal = new paypal_curl(array('mode' => 'payflow',
+      $doPayPal = new paypal_curl([
+          'mode' => 'payflow',
                                         'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
                                         'vendor' => trim(MODULE_PAYMENT_PAYPALWPP_PFVENDOR),
                                         'partner'=> trim(MODULE_PAYMENT_PAYPALWPP_PFPARTNER),
                                         'pwd' =>    trim(MODULE_PAYMENT_PAYPALWPP_PFPASSWORD),
-                                        'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
-      $doPayPal->_endpoints = array('live'    => 'https://payflowpro.paypal.com/transaction',
-                                    'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction');
+                                        'server' => MODULE_PAYMENT_PAYPALWPP_SERVER
+      ]);
+      $doPayPal->_endpoints = [
+          'live'    => 'https://payflowpro.paypal.com/transaction',
+                                    'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction'
+      ];
 
       $this->requestPrefix = '';
       $this->infoPrefix = '';
     } else {
-      $doPayPal = new paypal_curl(array('mode' => 'nvp',
+      $doPayPal = new paypal_curl([
+          'mode' => 'nvp',
                                         'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
                                         'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
                                         'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
                                         'version' => '124.0',
-                                        'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
-      $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
-                                    'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
+                                        'server' => MODULE_PAYMENT_PAYPALWPP_SERVER
+      ]);
+      $doPayPal->_endpoints = [
+          'live'    => 'https://api-3t.paypal.com/nvp',
+                                    'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp'
+      ];
 
       $this->requestPrefix = 'PAYMENTREQUEST_0_';
       $this->infoPrefix = 'PAYMENTINFO_0_';
@@ -903,7 +918,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
 
     // transaction processing mode
-    $doPayPal->_trxtype = (in_array(MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE, array('Auth Only', 'Order'))) ? 'A' : 'S';
+    $doPayPal->_trxtype = (in_array(MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE, ['Auth Only', 'Order'])) ? 'A' : 'S';
 
     return $doPayPal;
   }
@@ -1201,8 +1216,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
    */
   function selectCurrency($val = '', $subset = 'EC') {
-    $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB', 'INR');
-    $dp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD');
+    $ec_currencies = ['CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB', 'INR'];
+    $dp_currencies = ['CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD'];
     $paypalSupportedCurrencies = ($subset == 'EC') ? $ec_currencies : $dp_currencies;
 
     // if using Pro 2.0 (UK), only the 6 currencies are supported.
@@ -1224,7 +1239,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   function calc_order_amount($amount, $paypalCurrency, $applyFormatting = false) {
     global $currencies;
     $amount = ($amount * $currencies->get_value($paypalCurrency));
-    if (in_array($paypalCurrency, array('JPY', 'HUF', 'TWD')) || (int)$currencies->get_decimal_places($paypalCurrency) == 0) {
+    if (in_array($paypalCurrency, ['JPY', 'HUF', 'TWD']) || (int)$currencies->get_decimal_places($paypalCurrency) == 0) {
       $amount = (int)$amount;
       $applyFormatting = FALSE;
     }
@@ -1277,16 +1292,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // if not default currency, do not send subtotals or line-item details
     if (DEFAULT_CURRENCY != $order->info['currency'] || $restrictedCurrency != DEFAULT_CURRENCY) {
       $this->zcLog('getLineItemDetails 1', 'Not using default currency. Thus, no line-item details can be submitted.');
-      return array();
+      return [];
     }
     if ($currencies->currencies[$_SESSION['currency']]['value'] != 1 || $currencies->currencies[$order->info['currency']]['value'] != 1) {
       $this->zcLog('getLineItemDetails 2', 'currency val not equal to 1.0000 - cannot proceed without coping with currency conversions. Aborting line-item details.');
-      return array();
+      return [];
     }
 
-    $optionsST = array();
-    $optionsLI = array();
-    $optionsNB = array();
+    $optionsST = [];
+    $optionsLI = [];
+    $optionsNB = [];
     $numberOfLineItemsProcessed = 0;
     $creditsApplied = 0;
     $surcharges = 0;
@@ -1303,7 +1318,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $subTotalLI = 0;
     $subTotalTax = 0;
     $subTotalShipping = 0;
-    $subtotalPRE = array('no data');
+    $subtotalPRE = ['no data'];
     $discountProblemsFlag = FALSE;
     $flag_treat_as_partial = FALSE;
 
@@ -1311,7 +1326,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       // prepare subtotals
       for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
         if ($order_totals[$i]['code'] == '') continue;
-        if (in_array($order_totals[$i]['code'], array('ot_total','ot_subtotal','ot_tax','ot_shipping')) || strstr($order_totals[$i]['code'], 'insurance')) {
+        if (in_array($order_totals[$i]['code'], ['ot_total','ot_subtotal','ot_tax','ot_shipping']) || strstr($order_totals[$i]['code'], 'insurance')) {
           if ($order_totals[$i]['code'] == 'ot_shipping') $optionsST['PAYMENTREQUEST_0_SHIPPINGAMT'] = round($order_totals[$i]['value'],2);
           if ($order_totals[$i]['code'] == 'ot_total')    $optionsST['PAYMENTREQUEST_0_AMT']         = round($order_totals[$i]['value'],2);
           if ($order_totals[$i]['code'] == 'ot_tax')      $optionsST['PAYMENTREQUEST_0_TAXAMT']     += round($order_totals[$i]['value'],2);
@@ -1331,7 +1346,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         }
       }
 
-      $this->ot_merge = array();
+      $this->ot_merge = [];
       $this->notify('NOTIFY_PAYMENT_PAYPALEC_SUBTOTALS_TAX', $order, $order_totals);
       if (sizeof($this->ot_merge)) $optionsST = array_merge($optionsST, $this->ot_merge);
 
@@ -1454,7 +1469,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // reformat properly according to API specs
     // Remove HTML markup from name if found
     for ($k=0, $n=$numberOfLineItemsProcessed+1; $k<$n; $k++) {
-      $optionsLI["L_PAYMENTREQUEST_0_NAME$k"] = str_replace(array('&','=','%'), '*', $optionsLI["L_PAYMENTREQUEST_0_NAME$k"]);
+      $optionsLI["L_PAYMENTREQUEST_0_NAME$k"] = str_replace(['&','=','%'], '*', $optionsLI["L_PAYMENTREQUEST_0_NAME$k"]);
       $optionsLI["L_PAYMENTREQUEST_0_NAME$k"] = zen_clean_html($optionsLI["L_PAYMENTREQUEST_0_NAME$k"], 'strong');
       $optionsLI["L_PAYMENTREQUEST_0_NAME$k"]   = substr($optionsLI["L_PAYMENTREQUEST_0_NAME$k"], 0, 127);
       $optionsLI["L_PAYMENTREQUEST_0_AMT$k"] = round($optionsLI["L_PAYMENTREQUEST_0_AMT$k"], 2);
@@ -1463,7 +1478,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         if ($optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"] == '') {
           unset($optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"]);
         } else {
-          $optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"] = str_replace(array('&','=','%'), '*', $optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"]);
+          $optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"] = str_replace(['&','=','%'], '*', $optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"]);
           $optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"] = substr($optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"], 0, 127);
         }
       }
@@ -1486,7 +1501,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     if ($sumOfLineItems == 0) {
       $sumOfLineTax = 0;
-      $optionsLI = array();
+      $optionsLI = [];
       $discountProblemsFlag = TRUE;
       if ($optionsST['PAYMENTREQUEST_0_SHIPPINGAMT'] == $optionsST['PAYMENTREQUEST_0_AMT']) {
         $optionsST['PAYMENTREQUEST_0_SHIPPINGAMT'] = 0;
@@ -1534,16 +1549,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // check subtotals
     if ((strval($optionsST['PAYMENTREQUEST_0_ITEMAMT']) > 0 && strval($subTotalLI) > 0 && strval($subTotalLI) != strval($optionsST['PAYMENTREQUEST_0_ITEMAMT'])) || strval($subTotalLI) - strval($sumOfLineItems) != 0) {
       $this->zcLog('getLineItemDetails 5', 'Line-item subtotals do not add up properly. Line-item-details skipped.' . "\n" . strval($sumOfLineItems) . ' ' . strval($subTotalLI) . ' ' . print_r(array_merge($optionsST, $optionsLI), true));
-      $optionsLI = array();
+      $optionsLI = [];
       $optionsLI["L_PAYMENTREQUEST_0_NAME0"] = MODULES_PAYMENT_PAYPALWPP_AGGREGATE_CART_CONTENTS;
       $optionsLI["L_PAYMENTREQUEST_0_AMT0"]  = $sumOfLineItems = $subTotalLI = $optionsST['PAYMENTREQUEST_0_ITEMAMT'];
     }
 
     // check whether discounts are causing a problem
     if (strval($optionsST['PAYMENTREQUEST_0_ITEMAMT']) <= 0) {
-      $pre = array ( 'ST' => $optionsST, 'LI' => $optionsLI );
+      $pre = ['ST' => $optionsST, 'LI' => $optionsLI];
       $optionsST['PAYMENTREQUEST_0_ITEMAMT'] = $optionsST['PAYMENTREQUEST_0_AMT'];
-      $optionsLI = array();
+      $optionsLI = [];
       $optionsLI["L_PAYMENTREQUEST_0_NAME0"] = MODULES_PAYMENT_PAYPALWPP_AGGREGATE_CART_CONTENTS;
       $optionsLI["L_PAYMENTREQUEST_0_AMT0"]  = $sumOfLineItems = $subTotalLI = $optionsST['PAYMENTREQUEST_0_ITEMAMT'];
       /*if ($optionsST['AMT'] < $optionsST['TAXAMT']) */ $optionsST['PAYMENTREQUEST_0_TAXAMT'] = 0;
@@ -1575,7 +1590,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if (isset($optionsST['PAYMENTREQUEST_0_INSURANCEAMT']) && $optionsST['PAYMENTREQUEST_0_INSURANCEAMT'] == 0) unset($optionsST['PAYMENTREQUEST_0_INSURANCEAMT']);
 
     // tidy up all values so that they comply with proper format (rounded to 2 decimals for PayPal US use )
-    if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], array('JPY', 'NOK', 'HUF', 'TWD'))) {
+    if (!defined('PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING') || PAYPALWPP_SKIP_LINE_ITEM_DETAIL_FORMATTING != 'true' || in_array($order->info['currency'], ['JPY', 'NOK', 'HUF', 'TWD'])) {
       if (is_array($optionsST)) foreach ($optionsST as $key=>$value) {
         $optionsST[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
       }
@@ -1586,11 +1601,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
     }
 
-    $this->zcLog('getLineItemDetails 8', 'checking subtotals... ' . "\n" . print_r(array_merge(array('calculated total'=>round($stAll, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2))), $optionsST), true) . "\n-------------------\ndifference: " . ($stDiff + 0) . '  (abs+rounded: ' . ($stDiffRounded + 0) . ')');
+    $this->zcLog('getLineItemDetails 8', 'checking subtotals... ' . "\n" . print_r(array_merge(['calculated total'=>round($stAll, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2))], $optionsST), true) . "\n-------------------\ndifference: " . ($stDiff + 0) . '  (abs+rounded: ' . ($stDiffRounded + 0) . ')');
 
     if ( $stDiffRounded != 0) {
       $this->zcLog('getLineItemDetails 9', 'Subtotals Bad. Skipping line-item/subtotal details');
-      return array();
+      return [];
     }
 
     $this->zcLog('getLineItemDetails 10', 'subtotals balance - okay');
@@ -1728,7 +1743,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       // @TODO: consider using address-validation against Paypal's addresses via API to help customers understand why they may be having difficulties during checkout
       if (MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS != 'Yes' && ($address_arr = $this->getOverrideAddress()) !== false) {
         $address_error = false;
-        foreach(array('entry_firstname','entry_lastname','entry_street_address','entry_city','entry_postcode','zone_code','countries_iso_code_2') as $val) {
+        foreach(['entry_firstname','entry_lastname','entry_street_address','entry_city','entry_postcode','zone_code','countries_iso_code_2'] as $val) {
           if ($address_arr[$val] == '') $address_error = true;
           if ($address_error == true) $this->zcLog('ec-step1-addr_check2', '$address_error = true because ' .$val . ' is blank.');
         }
@@ -1771,9 +1786,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     if (!isset($options['PAYMENTREQUEST_0_AMT'])) $options['PAYMENTREQUEST_0_AMT'] = round($order_amount, 2);
 
-    $this->zcLog('ec_step1 - 2 -submit', print_r(array_merge($options, array('RETURNURL' => $return_url, 'CANCELURL' => $cancel_url)), true));
+    $this->zcLog('ec_step1 - 2 -submit', print_r(array_merge($options, ['RETURNURL' => $return_url, 'CANCELURL' => $cancel_url]), true));
 
-    $this->notify('NOTIFY_PAYMENT_PAYPALEC_BEFORE_SETEC', array(), $options, $order, $order_totals);
+    $this->notify('NOTIFY_PAYMENT_PAYPALEC_BEFORE_SETEC', [], $options, $order, $order_totals);
 
 
     /**
@@ -1898,7 +1913,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // with the token we retrieve the data about this user
     $response = $doPayPal->GetExpressCheckoutDetails($_SESSION['paypal_ec_token']);
 
-    $this->notify('NOTIFY_PAYPALEC_PARSE_GETEC_RESULT', array(), $response);
+    $this->notify('NOTIFY_PAYPALEC_PARSE_GETEC_RESULT', [], $response);
 
     //$this->zcLog('ec_step2 - GetExpressCheckout response', print_r($response, true));
 
@@ -1908,7 +1923,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $error = $this->_errorHandler($response, 'GetExpressCheckoutDetails');
 
     // Fill in possibly blank return values, prevents PHP notices in follow-on checking clause.
-    $response_vars = array(
+    $response_vars = [
         $this->requestPrefix . 'SHIPTONAME',
         $this->requestPrefix . 'SHIPTOSTREET',
         $this->requestPrefix . 'SHIPTOSTREET2',
@@ -1916,7 +1931,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $this->requestPrefix . 'SHIPTOSTATE',
         $this->requestPrefix . 'SHIPTOZIP',
         $this->requestPrefix . 'SHIPTOCOUNTRYCODE',
-    );
+    ];
 
     $address_received = '';
     foreach ($response_vars as $response_var) {
@@ -1932,18 +1947,18 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
 
     // will we be creating an account for this customer?  We must if the cart contents are virtual, so can login to download etc.
-    if ($_SESSION['cart']->get_content_type('true') > 0 || in_array($_SESSION['cart']->get_content_type(), array('mixed', 'virtual'))) $this->new_acct_notify = 'Yes';
+    if ($_SESSION['cart']->get_content_type('true') > 0 || in_array($_SESSION['cart']->get_content_type(), ['mixed', 'virtual'])) $this->new_acct_notify = 'Yes';
 
     // get the payer_id from the customer's info as returned from PayPal
     $_SESSION['paypal_ec_payer_id'] = $response['PAYERID'];
     $this->notify('NOTIFY_PAYPAL_EXPRESS_CHECKOUT_PAYERID_DETERMINED', $response['PAYERID']);
 
     // More optional response elements; initialize them to prevent follow-on PHP notices.
-    $response_optional = array(
+    $response_optional = [
         'PAYMENTREQUEST_0_SHIPTOPHONENUM',
         'PHONENUM',
         'BUSINESS',
-    );
+    ];
     foreach ($response_optional as $optional) {
         if (!isset($response[$optional])) {
             $response[$optional] = '';
@@ -1978,14 +1993,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if ($response[$this->requestPrefix . 'SHIPTOSTATE'] == 'NF') $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'NL';
 
       // process address details supplied
-      $step2_shipto = array('ship_name'     => urldecode($response[$this->requestPrefix . 'SHIPTONAME']),
+      $step2_shipto = [
+          'ship_name'     => urldecode($response[$this->requestPrefix . 'SHIPTONAME']),
                             'ship_street_1' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET']),
                             'ship_street_2' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET2']),
                             'ship_city'     => urldecode($response[$this->requestPrefix . 'SHIPTOCITY']),
                             'ship_state'    => (isset($response[$this->requestPrefix . 'SHIPTOSTATE']) && $response[$this->requestPrefix . 'SHIPTOSTATE'] !='' ? urldecode($response[$this->requestPrefix . 'SHIPTOSTATE']) : urldecode($response[$this->requestPrefix . 'SHIPTOCITY'])),
                             'ship_postal_code' => urldecode($response[$this->requestPrefix . 'SHIPTOZIP']),
                             'ship_country_code'  => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
-                            'ship_country_name'  => (isset($response['SHIPTOCOUNTRY']) ? urldecode($response['SHIPTOCOUNTRY']) : (isset($response['SHIPTOCOUNTRYNAME']) ? urldecode($response['SHIPTOCOUNTRYNAME']) : '')));
+                            'ship_country_name'  => (isset($response['SHIPTOCOUNTRY']) ? urldecode($response['SHIPTOCOUNTRY']) : (isset($response['SHIPTOCOUNTRYNAME']) ? urldecode($response['SHIPTOCOUNTRYNAME']) : ''))
+      ];
 //    }
 
     // reset all previously-selected shipping choices, because cart contents may have been changed
@@ -2105,7 +2122,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $order->customer['city']            = $paypal_ec_payer_info['ship_city'];
     $order->customer['postcode']        = $paypal_ec_payer_info['ship_postal_code'];
     $order->customer['state']           = $paypal_ec_payer_info['ship_state'];
-    $order->customer['country']         = array('id' => $country_id, 'title' => $paypal_ec_payer_info['ship_country_name'], 'iso_code_2' => $paypal_ec_payer_info['ship_country_code'], 'iso_code_3' => $country_code3);
+    $order->customer['country']         = ['id' => $country_id, 'title' => $paypal_ec_payer_info['ship_country_name'], 'iso_code_2' => $paypal_ec_payer_info['ship_country_code'], 'iso_code_3' => $country_code3];
     $order->customer['format_id']       = $address_format_id;
     $order->customer['email_address']   = $paypal_ec_payer_info['payer_email'];
     $order->customer['telephone']       = $paypal_ec_payer_info['ship_phone'];
@@ -2119,7 +2136,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $order->billing['city']             = $paypal_ec_payer_info['ship_city'];
     $order->billing['postcode']         = $paypal_ec_payer_info['ship_postal_code'];
     $order->billing['state']            = $paypal_ec_payer_info['ship_state'];
-    $order->billing['country']          = array('id' => $country_id, 'title' => $paypal_ec_payer_info['ship_country_name'], 'iso_code_2' => $paypal_ec_payer_info['ship_country_code'], 'iso_code_3' => $country_code3);
+    $order->billing['country']          = ['id' => $country_id, 'title' => $paypal_ec_payer_info['ship_country_name'], 'iso_code_2' => $paypal_ec_payer_info['ship_country_code'], 'iso_code_3' => $country_code3];
     $order->billing['format_id']        = $address_format_id;
     $order->billing['zone_id']          = $state_id;
 
@@ -2132,7 +2149,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $order->delivery['city']          = $paypal_ec_payer_info['ship_city'];
       $order->delivery['postcode']      = $paypal_ec_payer_info['ship_postal_code'];
       $order->delivery['state']         = $paypal_ec_payer_info['ship_state'];
-      $order->delivery['country']       = array('id' => $country_id, 'title' => $paypal_ec_payer_info['ship_country_name'], 'iso_code_2' => $paypal_ec_payer_info['ship_country_code'], 'iso_code_3' => $country_code3);
+      $order->delivery['country']       = ['id' => $country_id, 'title' => $paypal_ec_payer_info['ship_country_name'], 'iso_code_2' => $paypal_ec_payer_info['ship_country_code'], 'iso_code_3' => $country_code3];
       $order->delivery['country_id']    = $country_id;
       $order->delivery['format_id']     = $address_format_id;
       $order->delivery['zone_id']       = $state_id;
@@ -2259,10 +2276,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // Generate a random 8-char password
         $password = zen_create_random_value(8);
 
-        $sql_data_array = array();
+        $sql_data_array = [];
 
         // set the customer information in the array for the table insertion
-        $sql_data_array = array(
+        $sql_data_array = [
             'customers_firstname'           => $paypal_ec_payer_info['payer_firstname'],
             'customers_lastname'            => $paypal_ec_payer_info['payer_lastname'],
             'customers_email_address'       => $paypal_ec_payer_info['payer_email'],
@@ -2272,7 +2289,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             'customers_gender'              => $paypal_ec_payer_info['payer_gender'],
             'customers_newsletter'          => '0',
             'customers_password'            => zen_encrypt_password($password),
-            'customers_paypal_payerid'      => $_SESSION['paypal_ec_payer_id']);
+            'customers_paypal_payerid'      => $_SESSION['paypal_ec_payer_id']
+        ];
 
         // insert the data
         $result = zen_db_perform(TABLE_CUSTOMERS, $sql_data_array);
@@ -2286,7 +2304,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', $customer_id, $sql_data_array);
 
         // set the customer address information in the array for the table insertion
-        $sql_data_array = array(
+        $sql_data_array = [
             'customers_id'              => $customer_id,
             'entry_gender'              => $paypal_ec_payer_info['payer_gender'],
             'entry_firstname'           => $paypal_ec_payer_info['payer_firstname'],
@@ -2296,7 +2314,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             'entry_city'                => $paypal_ec_payer_info['ship_city'],
             'entry_zone_id'             => $state_id,
             'entry_postcode'            => $paypal_ec_payer_info['ship_postal_code'],
-            'entry_country_id'          => $country_id);
+            'entry_country_id'          => $country_id
+        ];
         if (isset($paypal_ec_payer_info['ship_name']) && $paypal_ec_payer_info['ship_name'] != ''  && $paypal_ec_payer_info['ship_name'] != $paypal_ec_payer_info['payer_firstname'] . ' ' . $paypal_ec_payer_info['payer_lastname']) {
           $sql_data_array['entry_company'] = $paypal_ec_payer_info['ship_name'];
         }
@@ -2314,7 +2333,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // grab the address_id (last insert id)
         $address_id = $db->Insert_ID();
 
-        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array(), $address_id, $sql_data_array);
+        $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', [], $address_id, $sql_data_array);
 
         // set the address id lookup for the customer
         $sql = "UPDATE " . TABLE_CUSTOMERS . "
@@ -2341,7 +2360,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $email_text .= EMAIL_CONTACT;
           // include create-account-specific disclaimer
           $email_text .= "\n\n" . sprintf(EMAIL_DISCLAIMER_NEW_CUSTOMER, STORE_OWNER_EMAIL_ADDRESS). "\n\n";
-          $email_html = array();
+          $email_html = [];
           $email_html['EMAIL_GREETING']      = sprintf(EMAIL_GREET_NONE, $paypal_ec_payer_info['payer_firstname']) ;
           $email_html['EMAIL_WELCOME']       = EMAIL_WELCOME;
           $email_html['EMAIL_MESSAGE_HTML']  = nl2br(EMAIL_TEXT . "\n\n" . EMAIL_EC_ACCOUNT_INFORMATION . "\nUsername: " . $paypal_ec_payer_info['payer_email'] . "\nPassword: " . $password . "\n\n");
@@ -2589,7 +2608,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $check_zone = $country_zone_check->RecordCount();
 
     $zone_id = 0;
-    $logMsg = array('zone_id' => '-not found-');
+    $logMsg = ['zone_id' => '-not found-'];
 
     // now try and find the zone_id (state/province code)
     // use the country id above
@@ -2612,7 +2631,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
     }
     // debug
-    $this->zcLog('findMatchingAddressBookEntry - 1-stats', 'lookups:' . "\n" . print_r(array_merge($country->fields, array('zone_country_id' => $country_zone_check->fields), $logMsg), true) . "\n" . 'check_zone: ' . $check_zone . "\n" . 'zone:' . $zone_id . "\nSubmittedAddress:".print_r($address_question_arr, TRUE));
+    $this->zcLog('findMatchingAddressBookEntry - 1-stats', 'lookups:' . "\n" . print_r(array_merge($country->fields, ['zone_country_id' => $country_zone_check->fields], $logMsg), true) . "\n" . 'check_zone: ' . $check_zone . "\n" . 'zone:' . $zone_id . "\nSubmittedAddress:".print_r($address_question_arr, TRUE));
 
     // do a match on address, street, street2, city
     $sql = "SELECT address_book_id, entry_street_address, entry_suburb, entry_city, entry_company, entry_firstname, entry_lastname
@@ -2786,25 +2805,27 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // this isn't the best way to get fname/lname but it will get the majority of cases
     list($fname, $lname) = explode(' ', $address_question_arr['name']);
 
-    $sql_data_array= array(array('fieldName'=>'entry_firstname', 'value'=>$fname, 'type'=>'string'),
-                           array('fieldName'=>'entry_lastname', 'value'=>$lname, 'type'=>'string'),
-                           array('fieldName'=>'entry_street_address', 'value'=>$address_question_arr['street_address'], 'type'=>'string'),
-                           array('fieldName'=>'entry_postcode', 'value'=>$address_question_arr['postcode'], 'type'=>'string'),
-                           array('fieldName'=>'entry_city', 'value'=>$address_question_arr['city'], 'type'=>'string'),
-                           array('fieldName'=>'entry_country_id', 'value'=>$country_id, 'type'=>'integer'));
-    if ($address_question_arr['company'] != '' && $address_question_arr['company'] != $address_question_arr['name']) array('fieldName'=>'entry_company', 'value'=>$address_question_arr['company'], 'type'=>'string');
+    $sql_data_array= [
+        ['fieldName'=>'entry_firstname', 'value'=>$fname, 'type'=>'string'],
+                           ['fieldName'=>'entry_lastname', 'value'=>$lname, 'type'=>'string'],
+                           ['fieldName'=>'entry_street_address', 'value'=>$address_question_arr['street_address'], 'type'=>'string'],
+                           ['fieldName'=>'entry_postcode', 'value'=>$address_question_arr['postcode'], 'type'=>'string'],
+                           ['fieldName'=>'entry_city', 'value'=>$address_question_arr['city'], 'type'=>'string'],
+                           ['fieldName'=>'entry_country_id', 'value'=>$country_id, 'type'=>'integer']
+    ];
+    if ($address_question_arr['company'] != '' && $address_question_arr['company'] != $address_question_arr['name']) ['fieldName'=>'entry_company', 'value'=>$address_question_arr['company'], 'type'=>'string'];
     if (!empty($address_question_arr['payer_gender'])) {
-    $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$address_question_arr['payer_gender'], 'type'=>'enum:m|f');
+    $sql_data_array[] = ['fieldName'=>'entry_gender', 'value'=>$address_question_arr['payer_gender'], 'type'=>'enum:m|f'];
     }
-    $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$address_question_arr['suburb'], 'type'=>'string');
+    $sql_data_array[] = ['fieldName'=>'entry_suburb', 'value'=>$address_question_arr['suburb'], 'type'=>'string'];
     if ($zone_id > 0) {
-      $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer');
-      $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'string');
+      $sql_data_array[] = ['fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer'];
+      $sql_data_array[] = ['fieldName'=>'entry_state', 'value'=>'', 'type'=>'string'];
     } else {
-      $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>'0', 'type'=>'integer');
-      $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>$address_question_arr['state'], 'type'=>'string');
+      $sql_data_array[] = ['fieldName'=>'entry_zone_id', 'value'=>'0', 'type'=>'integer'];
+      $sql_data_array[] = ['fieldName'=>'entry_state', 'value'=>$address_question_arr['state'], 'type'=>'string'];
     }
-    $sql_data_array[] = array('fieldName'=>'customers_id', 'value'=>$customer_id, 'type'=>'integer');
+    $sql_data_array[] = ['fieldName'=>'customers_id', 'value'=>$customer_id, 'type'=>'integer'];
     $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
     $new_address_book_id = $db->Insert_ID();
@@ -2813,8 +2834,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // make default if set, update
     if ($make_default) {
-      $sql_data_array = array();
-      $sql_data_array[] = array('fieldName'=>'customers_default_address_id', 'value'=>$new_address_book_id, 'type'=>'integer');
+      $sql_data_array = [];
+      $sql_data_array[] = ['fieldName'=>'customers_default_address_id', 'value'=>$new_address_book_id, 'type'=>'integer'];
       $where_clause = "customers_id = :customersID";
       $where_clause = $db->bindVars($where_clause, ':customersID', $customer_id, 'integer');
       $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', $where_clause);
@@ -3063,20 +3084,20 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     /** Handle FMF Scenarios **/
       $response['L_ERRORCODE0'] = empty($response['L_ERRORCODE0']) ? 0 : $response['L_ERRORCODE0'];
       $response['L_LONGMESSAGE2'] = empty($response['L_LONGMESSAGE2']) ? '' : $response['L_LONGMESSAGE2'];
-    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment'))
+    if (in_array($operation, ['DoExpressCheckoutPayment', 'DoDirectPayment'])
         && ((isset($response['PAYMENTINFO_0_PAYMENTSTATUS']) && $response['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Pending')
             || (isset($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] == 'Pending')
            )
         && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
-      $this->fmfErrors = array();
+      $this->fmfErrors = [];
       if ($response['ACK'] == 'SuccessWithWarning' && isset($response['L_PAYMENTINFO_0_FMFPENDINGID0'])) {
         for ($i=0; $i<20; $i++) {
           if (!isset($response["L_PAYMENTINFO_0_FMFPENDINGID$i"])) {
             break;
           }
           $pendingid = $response["L_PAYMENTINFO_0_FMFPENDINGID$i"];
-          $this->fmfErrors[] = array('key' => $pendingid, 'status' => $pendingid, 'desc' => $response["L_PAYMENTINFO_0_FMFPENDINGDESCRIPTION$i"]);
+          $this->fmfErrors[] = ['key' => $pendingid, 'status' => $pendingid, 'desc' => $response["L_PAYMENTINFO_0_FMFPENDINGDESCRIPTION$i"]];
         }
       }
       return (sizeof($this->fmfErrors)>0) ? $this->fmfErrors : FALSE;
@@ -3120,7 +3141,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_ERROR || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? $errorNum . ' ' . urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . (isset($response['RESPMSG']) ? ' ' . $response['RESPMSG'] : '') . ' ' . $response['CURL_ERRORS']) : '';
           $detailedEmailMessage = ($detailedMessage == '') ? '' : $errorInfo . MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $errorText);
           if (!isset($response['L_ERRORCODE0']) && isset($response['RESULT'])) $detailedEmailMessage .= "\n\n" . print_r($response, TRUE);
-          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)), 'paymentalert');
+          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, ['EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)], 'paymentalert');
           $this->terminateEC($errorText . ' (' . $errorNum . ') ' . $detailedMessage, true);
           return true;
         }
@@ -3166,7 +3187,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALWPP_INVALID_RESPONSE || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? $errorNum . ' ' . urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ($response['RESULT'] ?? '') . ' ' . $response['CURL_ERRORS']) : '';
           $detailedEmailMessage = ($detailedMessage == '') ? '' : $errorInfo . MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . ($response['L_ERRORCODE1'] ?? '') . "\n" . ($response['L_SHORTMESSAGE1'] ?? '') . "\n" . ($response['L_LONGMESSAGE1'] ?? '') . ($response['L_ERRORCODE2'] ?? '') . "\n" . ($response['L_SHORTMESSAGE2'] ?? '') . "\n" . ($response['L_LONGMESSAGE2'] ?? '') . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $errorText);
           if (!isset($response['L_ERRORCODE0']) && isset($response['RESULT'])) $detailedEmailMessage .= "\n\n" . print_r($response, TRUE);
-          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)), 'paymentalert');
+          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, ['EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)], 'paymentalert');
           $this->terminateEC(($detailedEmailMessage == '' ? $errorText . ' (' . urldecode($response['L_SHORTMESSAGE0'] . $response['RESULT']) . ') ' : $detailedMessage), true);
           return true;
         }
@@ -3264,7 +3285,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $errorNum .= ' (' . urldecode($response['L_SHORTMESSAGE0'] . ' <!-- ' . $response['RESPMSG']) . ' -->) ' . $response['L_ERRORCODE0'];
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_API_ERROR || $errorText == MODULE_PAYMENT_PAYPALWPP_TEXT_DECLINED || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ' ' . $response['CURL_ERRORS']) : '';
           $detailedEmailMessage = ($detailedMessage == '') ? '' : MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_MESSAGE .  ' ' . $response['RESPMSG'] . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));
-          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($this->uncomment($detailedEmailMessage))), 'paymentalert');
+          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, ['EMAIL_MESSAGE_HTML'=>nl2br($this->uncomment($detailedEmailMessage))], 'paymentalert');
           $messageStack->add_session($errorText . $errorNum . $detailedMessage, 'error');
           return true;
         }
@@ -3329,7 +3350,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    */
   function uncomment($string): string
   {
-    return str_replace(array('<!-- ', ' -->'), array('[', ']'), $string);
+    return str_replace(['<!-- ', ' -->'], ['[', ']'], $string);
   }
 
 }
