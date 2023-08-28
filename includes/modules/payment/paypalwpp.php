@@ -1570,9 +1570,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if (is_array($optionsLI)) foreach ($optionsLI as $key=>$value) {
         if (substr($key, -6) == 'TAXAMT' && ($value == '' || $value == 0)) {
           unset($optionsLI[$key]);
-        } else {
-          if (strstr($key, 'AMT')) $optionsLI[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
-        }
+        } elseif (strstr($key, 'AMT')) $optionsLI[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
       }
     }
 
@@ -2669,16 +2667,14 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             $this->zcLog('findMatchingAddressBookEntry - 3b', "partial match (PP):\n" . print_r($answers_arr->fields, true));
             return $answers_arr->fields['address_book_id'];
           }
-        } else {
-          if ($fromDb == substr($matchQuestion, 0, strlen($fromDb))) {
+        } elseif ($fromDb == substr($matchQuestion, 0, strlen($fromDb))) {
             // we have a match return it (DB)
             // debug
             $this->zcLog('findMatchingAddressBookEntry - 3b', "partial match (DB):\n" . print_r($answers_arr->fields, true));
             return $answers_arr->fields['address_book_id'];
-          }
         }
-
         $answers_arr->MoveNext();
+
       }
     }
     // debug
