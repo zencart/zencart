@@ -489,7 +489,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       //
       if ($response[$this->infoPrefix . 'PAYMENTTYPE'] != '') $this->payment_type .=  ' (' . urldecode($response[$this->infoPrefix . 'PAYMENTTYPE']) . ')';
 
-      $this->transaction_id = trim((isset($response['PNREF']) ? $response['PNREF'] : '') . ' ' . $response[$this->infoPrefix . 'TRANSACTIONID']);
+      $this->transaction_id = trim(($response['PNREF'] ?? '') . ' ' . $response[$this->infoPrefix . 'TRANSACTIONID']);
       if (empty($response[$this->infoPrefix . 'PENDINGREASON']) ||
           $response[$this->infoPrefix . 'PENDINGREASON'] == 'none' ||
           $response[$this->infoPrefix . 'PENDINGREASON'] == 'completed' ||
@@ -552,7 +552,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'payment_type' => $this->payment_type,
                           'payment_status' => $this->payment_status,
                           'pending_reason' => $this->pendingreason,
-                          'invoice' => urldecode($_SESSION['paypal_ec_token'] . (isset($this->responsedata['PPREF']) ? $this->responsedata['PPREF'] : '')),
+                          'invoice' => urldecode($_SESSION['paypal_ec_token'] . ($this->responsedata['PPREF'] ?? '')),
                           'first_name' => $_SESSION['paypal_ec_payer_info']['payer_firstname'],
                           'last_name' => $_SESSION['paypal_ec_payer_info']['payer_lastname'],
                           'payer_business_name' => $_SESSION['paypal_ec_payer_info']['payer_business'],
@@ -961,10 +961,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if (!$error) {
         if (!isset($response['GROSSREFUNDAMT'])) $response['GROSSREFUNDAMT'] = $refundAmt;
         // Success, so save the results
-        $comments = 'REFUND INITIATED. Trans ID:' . $response['REFUNDTRANSACTIONID'] . (isset($response['PNREF']) ? $response['PNREF'] : '') . "\n" . ' Gross Refund Amt: ' . urldecode($response['GROSSREFUNDAMT']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $refundNote;
+        $comments = 'REFUND INITIATED. Trans ID:' . $response['REFUNDTRANSACTIONID'] . ($response['PNREF'] ?? '') . "\n" . ' Gross Refund Amt: ' . urldecode($response['GROSSREFUNDAMT']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $refundNote;
         zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
 
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_INITIATED, urldecode($response['GROSSREFUNDAMT']), urldecode($response['REFUNDTRANSACTIONID']). (isset($response['PNREF']) ? $response['PNREF'] : '')), 'success');
+        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_INITIATED, urldecode($response['GROSSREFUNDAMT']), urldecode($response['REFUNDTRANSACTIONID']). ($response['PNREF'] ?? '')), 'success');
         return true;
       }
     }
@@ -1073,10 +1073,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           if (!isset($response['ORDERTIME'])) $response['ORDERTIME'] = date("M-d-Y h:i:s");
         }
         // Success, so save the results
-        $comments = 'FUNDS CAPTURED. Trans ID: ' . urldecode($response['TRANSACTIONID']) . (isset($response['PNREF']) ? $response['PNREF'] : ''). "\n" . ' Amount: ' . urldecode($response['AMT']) . ' ' . $currency . "\n" . 'Time: ' . urldecode($response['ORDERTIME']) . "\n" . 'Auth Code: ' . (!empty($response['AUTHCODE']) ? $response['AUTHCODE'] : $response['CORRELATIONID']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $captureNote;
+        $comments = 'FUNDS CAPTURED. Trans ID: ' . urldecode($response['TRANSACTIONID']) . ($response['PNREF'] ?? ''). "\n" . ' Amount: ' . urldecode($response['AMT']) . ' ' . $currency . "\n" . 'Time: ' . urldecode($response['ORDERTIME']) . "\n" . 'Auth Code: ' . (!empty($response['AUTHCODE']) ? $response['AUTHCODE'] : $response['CORRELATIONID']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $captureNote;
         zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
 
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_CAPT_INITIATED, urldecode($response['AMT']), urldecode(!empty($response['AUTHCODE']) ? $response['AUTHCODE'] : $response['CORRELATIONID']). (isset($response['PNREF']) ? $response['PNREF'] : '')), 'success');
+        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_CAPT_INITIATED, urldecode($response['AMT']), urldecode(!empty($response['AUTHCODE']) ? $response['AUTHCODE'] : $response['CORRELATIONID']). ($response['PNREF'] ?? '')), 'success');
         return true;
       }
     }
@@ -1117,10 +1117,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $new_order_status = ($new_order_status > 0 ? $new_order_status : 1);
       if (!$error) {
         // Success, so save the results
-        $comments = 'VOIDED. Trans ID: ' . urldecode($response['AUTHORIZATIONID']). (isset($response['PNREF']) ? $response['PNREF'] : '') . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $voidNote;
+        $comments = 'VOIDED. Trans ID: ' . urldecode($response['AUTHORIZATIONID']). ($response['PNREF'] ?? '') . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $voidNote;
         zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
 
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_VOID_INITIATED, urldecode($response['AUTHORIZATIONID']) . (isset($response['PNREF']) ? $response['PNREF'] : '')), 'success');
+        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_VOID_INITIATED, urldecode($response['AUTHORIZATIONID']) . ($response['PNREF'] ?? '')), 'success');
         return true;
       }
     }
@@ -1465,7 +1465,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     for ($j=0; $j<$k; $j++) {
       $itemAMT = $optionsLI["L_PAYMENTREQUEST_0_AMT$j"];
       $itemQTY = $optionsLI["L_PAYMENTREQUEST_0_QTY$j"];
-      $itemTAX = (isset($optionsLI["L_PAYMENTREQUEST_0_TAXAMT$j"]) ? $optionsLI["L_PAYMENTREQUEST_0_TAXAMT$j"] : 0);
+      $itemTAX = ($optionsLI["L_PAYMENTREQUEST_0_TAXAMT$j"] ?? 0);
       $sumOfLineItems += ($itemQTY * $itemAMT);
       $sumOfLineTax += ($itemQTY * $itemTAX);
     }
@@ -2176,11 +2176,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // This is the address matching section
         // try to match it first
         // note: this is by no means 100%
-        $address_book_id = $this->findMatchingAddressBookEntry($_SESSION['customer_id'], (isset($order->delivery) ? $order->delivery : $order->billing));
+        $address_book_id = $this->findMatchingAddressBookEntry($_SESSION['customer_id'], ($order->delivery ?? $order->billing));
 
         // no match, so add the record
         if (!$address_book_id) {
-          $address_book_id = $this->addAddressBookEntry($_SESSION['customer_id'], (isset($order->delivery) ? $order->delivery : $order->billing), false);
+          $address_book_id = $this->addAddressBookEntry($_SESSION['customer_id'], ($order->delivery ?? $order->billing), false);
         }
         // if couldn't add the record, perhaps due to removed country, or some other error, abort with message
         if (!$address_book_id) {
@@ -2374,10 +2374,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       // This is the address matching section
       // try to match it first
       // note: this is by no means 100%
-      $address_book_id = $this->findMatchingAddressBookEntry($_SESSION['customer_id'], (isset($order->delivery) ? $order->delivery : $order->billing));
+      $address_book_id = $this->findMatchingAddressBookEntry($_SESSION['customer_id'], ($order->delivery ?? $order->billing));
       // no match add the record
       if (!$address_book_id) {
-        $address_book_id = $this->addAddressBookEntry($_SESSION['customer_id'], (isset($order->delivery) ? $order->delivery : $order->billing), false);
+        $address_book_id = $this->addAddressBookEntry($_SESSION['customer_id'], ($order->delivery ?? $order->billing), false);
         if (!$address_book_id) {
           $address_book_id = $_SESSION['customer_default_address_id'];
         }
