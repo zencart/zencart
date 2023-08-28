@@ -6,29 +6,54 @@
  * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
+
 // set a default time limit
-  zen_set_time_limit(GLOBAL_SET_TIME_LIMIT);
+zen_set_time_limit(GLOBAL_SET_TIME_LIMIT);
+
+// -----
+// Load required "special" function-files, associated with features that
+// auto-expire and auto-activate.
+//
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'banner.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'specials.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'featured.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'salemaker.php';
 
 // auto activate and expire banners
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'banner.php');
-  zen_activate_banners();
-  zen_expire_banners();
+zen_activate_banners();
+zen_expire_banners();
 
-// auto expire special products
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'specials.php');
-  zen_start_specials();
-  zen_expire_specials();
+/**
+ * only process once per session, do not include banners as banners expire per click as well as per date
+ */
+// check if a reset on one time sessions settings should occur due to the midnight hour happening
+if (!isset($_SESSION['today_is'])) {
+    $_SESSION['today_is'] = date('Y-m-d');
+}
 
-// auto expire featured products
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'featured.php');
-  zen_start_featured();
-  zen_expire_featured();
+if ($_SESSION['today_is'] !== date('Y-m-d')) {
+    $_SESSION['today_is'] = date('Y-m-d');
+    $_SESSION['expirationsNeedUpdate'] = true;
+}
 
-// auto expire salemaker sales
-  require(DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'salemaker.php');
-  zen_start_salemaker();
-  zen_expire_salemaker();
+// -----
+// Note: the expirationsNeedUpdate is also set while an admin is working on
+// Specials, Featured Products and SaleMaker sales.
+//
+if (!isset($_SESSION['expirationsNeedUpdate']) || $_SESSION['expirationsNeedUpdate'] === true) {
+    // auto expire special products
+    zen_start_specials();
+    zen_expire_specials();
 
-?>
+    // auto expire featured products
+    zen_start_featured();
+    zen_expire_featured();
+
+    // auto expire salemaker sales
+    zen_start_salemaker();
+    zen_expire_salemaker();
+
+    $_SESSION['expirationsNeedUpdate'] = false;
+}
