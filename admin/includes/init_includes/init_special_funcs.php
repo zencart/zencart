@@ -12,24 +12,21 @@ if (!defined('IS_ADMIN_FLAG')) {
 // set a default time limit
 zen_set_time_limit(GLOBAL_SET_TIME_LIMIT);
 
-// auto activate and expire banners
-require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'banner.php';
-zen_activate_banners();
-zen_expire_banners();
-
 // -----
-// Functions are still needed for specials/featured/salemaker tools'
-// processing!
+// Load required "special" function-files, associated with features that
+// auto-expire and auto-activate.
 //
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'banner.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'specials.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'featured.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'salemaker.php';
 
+// auto activate and expire banners
+zen_activate_banners();
+zen_expire_banners();
+
 /**
- * only process once per session do not include banners as banners expire per click as well as per date
- * require the banner functions, auto-activate and auto-expire.
- *
- * this is processed in the admin for dates that expire while being worked on
+ * only process once per session, do not include banners as banners expire per click as well as per date
  */
 // check if a reset on one time sessions settings should occur due to the midnight hour happening
 if (!isset($_SESSION['today_is'])) {
@@ -41,6 +38,10 @@ if ($_SESSION['today_is'] !== date('Y-m-d')) {
     $_SESSION['expirationsNeedUpdate'] = true;
 }
 
+// -----
+// Note: the expirationsNeedUpdate is also set while an admin is working on
+// Specials, Featured Products and SaleMaker sales.
+//
 if (!isset($_SESSION['expirationsNeedUpdate']) || $_SESSION['expirationsNeedUpdate'] === true) {
     // auto expire special products
     zen_start_specials();
