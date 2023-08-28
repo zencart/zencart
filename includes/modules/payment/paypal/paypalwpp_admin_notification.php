@@ -11,7 +11,10 @@
 if (!defined('TEXT_MAXIMUM_CHARACTERS_ALLOWED')) {
     define('TEXT_MAXIMUM_CHARACTERS_ALLOWED', ' chars allowed');
 }
-
+if (empty($ipn->fields)) {
+    $output = '<p class="h4 errorText">' . MODULE_PAYMENT_PAYPALWPP_TEXT_NODETAILS_ERROR . '</p>';
+    return;
+}
 $outputPayPal = '';
 $outputPFmain = '';
 $outputAuth = '';

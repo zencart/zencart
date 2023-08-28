@@ -47,6 +47,7 @@ $define = [
     'MODULE_PAYMENT_PAYPALWPP_TEXT_WPP_BAD_COUNTRY_ERROR' => 'We are sorry -- the PayPal account configured by the store administrator is based in a country that is not supported for Website Payments Pro at the present time. Please choose another payment method to complete your order.',
     'MODULE_PAYMENT_PAYPALWPP_TEXT_NOT_CONFIGURED' => '<span class="alert">&nbsp;(NOTE: Module is not configured yet)</span>',
     'MODULE_PAYMENT_PAYPALWPP_TEXT_GETDETAILS_ERROR' => 'There was a problem retrieving transaction details. ',
+    'MODULE_PAYMENT_PAYPALWPP_TEXT_NODETAILS_ERROR' => 'No PayPal transaction data found.',
     'MODULE_PAYMENT_PAYPALWPP_TEXT_TRANSSEARCH_ERROR' => 'There was a problem locating transactions matching the criteria you specified. ',
     'MODULE_PAYMENT_PAYPALWPP_TEXT_VOID_ERROR' => 'There was a problem voiding the transaction. ',
     'MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_ERROR' => 'There was a problem refunding the transaction amount specified. ',
