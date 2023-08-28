@@ -296,34 +296,39 @@ class paypalwpp extends base {
   /**
    *  Validate the credit card information via javascript (Number, Owner, and CVV Lengths)
    */
-  function javascript_validation() {
+  function javascript_validation(): bool
+  {
     return false;
   }
   /**
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
    */
-  function selection() {
+  function selection(): array
+  {
     /**
      * since we are NOT processing via the gateway, we will only display MarkFlow payment option, and no CC fields
      */
     return array('id' => $this->code,
                  'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '"><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>');
   }
-  function pre_confirmation_check() {
+  function pre_confirmation_check(): bool
+  {
     // Since this is an EC checkout, do nothing.
     return false;
   }
   /**
    * Display Payment Information for review on the Checkout Confirmation Page
    */
-  function confirmation() {
+  function confirmation(): array
+  {
     $confirmation = array('title' => '', 'fields' => array());
     return $confirmation;
   }
   /**
    * Prepare the hidden fields comprising the parameters for the Submit button on the checkout confirmation page
    */
-  function process_button() {
+  function process_button(): string
+  {
     // When hitting the checkout-confirm button, we are going into markflow mode
     $_SESSION['paypal_ec_markflow'] = 1;
 
@@ -602,7 +607,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     * @param int $zf_order_id
     * @return string
     */
-  function admin_notification($zf_order_id) {
+  function admin_notification($zf_order_id): string
+  {
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS')) return '';
     global $db;
     $module = $this->code;
@@ -681,7 +687,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Evaluate installation status of this module. Returns true if the status key is found.
    */
-  function check() {
+  function check(): bool
+  {
     global $db;
     if (!isset($this->_check)) {
       $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_STATUS'");
@@ -744,7 +751,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_INSTALLED');
   }
 
-  function keys() {
+  function keys(): array
+  {
     if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS')) {
       global $db;
       if (!defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON')) {
@@ -787,7 +795,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_UNINSTALLED');
   }
 
-  function help() {
+  function help(): array
+  {
        return array('link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/');
   }
 
@@ -843,7 +852,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Initialize the PayPal/PayflowPro object for communication to the processing gateways
    */
-  function paypal_init() {
+  function paypal_init(): paypal_curl
+  {
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || !defined('MODULE_PAYMENT_PAYPALWPP_SERVER')) {
       $doPayPal = new paypal_curl(array('mode' => 'NOTCONFIGURED'));
       return $doPayPal;
@@ -900,7 +910,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Determine which PayPal URL to direct the customer's browser to when needed
    */
-  function getPayPalLoginServer() {
+  function getPayPalLoginServer(): string
+  {
     if (MODULE_PAYMENT_PAYPALWPP_SERVER == 'live') {
       // live url
       $paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
@@ -1259,7 +1270,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Prepare subtotal and line-item detail content to send to PayPal
    */
-  function getLineItemDetails($restrictedCurrency) {
+  function getLineItemDetails($restrictedCurrency): array
+  {
     global $order, $currencies, $order_totals, $order_total_modules;
 
     // if not default currency, do not send subtotals or line-item details
@@ -2823,7 +2835,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * If we created an account for the customer, this logs them in and notes that the record was created for PayPal EC purposes
    */
-  function user_login($email_address, $redirect = true) {
+  function user_login($email_address, $redirect = true): bool
+  {
     global $db, $order, $messageStack;
     global $session_started;
     if ($session_started == false) {
@@ -3314,7 +3327,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * @param string $string
    * @return string
    */
-  function uncomment($string) {
+  function uncomment($string): string
+  {
     return str_replace(array('<!-- ', ' -->'), array('[', ']'), $string);
   }
 
