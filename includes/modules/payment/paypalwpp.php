@@ -1568,7 +1568,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $optionsST[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
       }
       if (is_array($optionsLI)) foreach ($optionsLI as $key=>$value) {
-        if (substr($key, -6) == 'TAXAMT' && ($optionsLI[$key] == '' || $optionsLI[$key] == 0)) {
+        if (substr($key, -6) == 'TAXAMT' && ($value == '' || $value == 0)) {
           unset($optionsLI[$key]);
         } else {
           if (strstr($key, 'AMT')) $optionsLI[$key] = round($value, ((int)$currencies->get_decimal_places($restrictedCurrency) == 0 ? 0 : 2));
