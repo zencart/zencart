@@ -615,7 +615,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $sql = $db->bindVars($sql, ':orderID', $zf_order_id, 'integer');
     $ipn = $db->Execute($sql);
     if ($ipn->EOF) {
-      $ipn = new stdClass;
+      $ipn = new stdClass();
       $ipn->fields = array();
     }
     if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php')) require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php');
@@ -1134,7 +1134,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         global $order, $locales, $lng;
 
         if (!isset($lng) || !is_object($lng)) {
-            $lng = new language;
+            $lng = new language();
         }
         $allowed_country_codes = ['US', 'AU', 'DE', 'FR', 'IT', 'GB', 'ES', 'AT', 'BE', 'CA', 'CH', 'CN', 'NL', 'PL', 'PT', 'BR', 'RU'];
         $allowed_language_codes = ['da_DK', 'he_IL', 'id_ID', 'ja_JP', 'no_NO', 'pt_BR', 'ru_RU', 'sv_SE', 'th_TH', 'tr_TR', 'zh_CN', 'zh_HK', 'zh_TW'];
@@ -1616,7 +1616,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // init new order object
     require(DIR_WS_CLASSES . 'order.php');
-    $order = new order;
+    $order = new order();
 
     // -----
     // If we're just starting the checkout process via the PPEC button, there's
@@ -1631,7 +1631,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     // load OT modules so that discounts and taxes can be assessed
     require(DIR_WS_CLASSES . 'order_total.php');
-    $order_total_modules = new order_total;
+    $order_total_modules = new order_total();
     $order_totals = $order_total_modules->pre_confirmation_check();
     $order_totals = $order_total_modules->process();
 
@@ -1985,7 +1985,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->zcLog('ec_step2 ', 'Re-instantiating $order object.');
       // init new order object
       if (!class_exists('order')) require(DIR_WS_CLASSES . 'order.php');
-      $order = new order;
+      $order = new order();
 
       // load the selected shipping module so that shipping taxes can be assessed
       if (isset($_SESSION['shipping'])) {
@@ -1997,7 +1997,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
       // load OT modules so that discounts and taxes can be assessed
       if (!class_exists('order_total')) require(DIR_WS_CLASSES . 'order_total.php');
-      $order_total_modules = new order_total;
+      $order_total_modules = new order_total();
       $order_totals = $order_total_modules->pre_confirmation_check();
       $order_totals = $order_total_modules->process();
       $this->zcLog('ec_step2 ', 'Instantiated $order object contents: ' . print_r($order, true));
@@ -2420,7 +2420,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if ((!isset($_SESSION['shipping']) || (!isset($_SESSION['shipping']['id']) || $_SESSION['shipping']['id'] == '') && zen_count_shipping_modules() >= 1)) {
       require_once(DIR_WS_CLASSES . 'http_client.php');
       require_once(DIR_WS_CLASSES . 'shipping.php');
-      $shipping_Obj = new shipping;
+      $shipping_Obj = new shipping();
 
       // generate the quotes
       $shipping_Obj->quote();
@@ -2968,9 +2968,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // force display of payment page if GV/DC active for this customer
     if (MODULE_ORDER_TOTAL_INSTALLED && $this->showPaymentPage !== true && isset($_SESSION['paypal_ec_token']) ) {
       require_once(DIR_WS_CLASSES . 'order.php');
-      $order = new order;
+      $order = new order();
       require_once(DIR_WS_CLASSES . 'order_total.php');
-      $order_total_modules = new order_total;
+      $order_total_modules = new order_total();
       $order_totals = $order_total_modules->process();
       $selection =  $order_total_modules->credit_selection();
       if (sizeof($selection)>0) $this->showPaymentPage = true;
