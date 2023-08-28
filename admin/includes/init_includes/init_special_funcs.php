@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
@@ -13,8 +13,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 zen_set_time_limit(GLOBAL_SET_TIME_LIMIT);
 
 // -----
-// Load required "special" function-files, associated with features that
-// auto-expire and auto-activate.
+// Load required sales/specials/etc function-files for core use, in preparation to
+// run associated functions which handle features that auto-expire and auto-activate.
 //
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'banner.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'specials.php';
