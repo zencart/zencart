@@ -350,9 +350,7 @@ switch ($action) {
     if (zen_not_null($search) && $search_type != 'all') {
       $searchClause = "AND (configuration_title LIKE '%:search:%' OR configuration_description LIKE '%:search:%' :cfgKeySearch:)";
       // support configuration_key constants
-      $cfgKeySearch = " OR configuration_key = :zcconfigkey:";
-      if (strtoupper($search) == $search && preg_match('/^(%?).*(%?)$/', $search))
-        $cfgKeySearch = " OR configuration_key like :zcconfigkey: ";
+      $cfgKeySearch = " OR configuration_key like '%:zcconfigkey:%' ";
     }
     $cfgAndClause = $searchClause;
     $ptypeAndClause = $searchClause;
@@ -360,7 +358,7 @@ switch ($action) {
     $sql = $db->bindVars($sql, ':ptypeAndClause:', $ptypeAndClause, 'passthru');
     $sql = $db->bindVars($sql, ':typeRestriction:', ' and t.type_id=1 ', 'passthru');
     $sql = $db->BindVars($sql, ':cfgKeySearch:', $cfgKeySearch, 'passthru');
-    $sql = $db->BindVars($sql, ':zcconfigkey:', str_replace('_', '\_', strtoupper($search)), 'string');
+    $sql = $db->BindVars($sql, ':zcconfigkey:', str_replace('_', '\_', strtoupper($search)), 'noquotestring');
     $sql = $db->bindVars($sql, ':search:', $search, 'noquotestring');
     if (isset($_GET['s']) && $_GET['s'] == 'k')
       $sql .= ' ORDER BY configuration_key';
