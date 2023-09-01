@@ -60,10 +60,14 @@ class FileSystem extends IlluminateFilesystem
         foreach ($installedPlugins as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
             $adminFile = $pluginDir . '/admin/' . $page . '.php';
-            if (!file_exists($adminFile)) {
+            $realPath = $this->realpath($adminFile);
+            if ($realPath === false || strpos($realPath, $pluginDir) !== 0) {
+                continue; // Skip this file if it's not under the intended directory
+            }
+            if (!file_exists($realPath)) {
                 continue;
             }
-            $found = $adminFile;
+            $found = $realPath;
         }
         return $found;
     }
@@ -148,5 +152,13 @@ class FileSystem extends IlluminateFilesystem
         }
         $extraPath = $extraPath . '/' . $templateDir;
         return $extraPath;
+    }
+
+    protected function realpath($path)
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return str_replace('\\', '/', realpath($path));
+        }
+        return realpath($path);
     }
 }
