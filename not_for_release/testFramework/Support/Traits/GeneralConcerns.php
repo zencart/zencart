@@ -29,6 +29,8 @@ trait GeneralConcerns
         echo $configFile . PHP_EOL;
 
         require($configFile);
+        require_once(DIR_FS_CATALOG . 'includes/database_tables.php');
+
     }
 
 
