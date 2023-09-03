@@ -8,19 +8,25 @@
  * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 
+  $gv_balance = 0.00;
+  if (zen_is_logged_in() && !zen_in_guest_checkout()) {
+    $customer = new Customer;
+    $gv_balance = $customer->getData('gv_balance');
+  }
+
   switch (true) {
     case (SHOW_SHOPPING_CART_BOX_STATUS == '0'):
       $show_shopping_cart_box = true;
       break;
     case (SHOW_SHOPPING_CART_BOX_STATUS == '1'):
-      if ($_SESSION['cart']->count_contents() > 0 || (isset($_SESSION['customer_id']) && zen_user_has_gv_account($_SESSION['customer_id']) > 0)) {
+      if ($_SESSION['cart']->count_contents() > 0 || (isset($_SESSION['customer_id']) && $gv_balance > 0)) {
         $show_shopping_cart_box = true;
       } else {
         $show_shopping_cart_box = false;
       }
       break;
     case (SHOW_SHOPPING_CART_BOX_STATUS == '2'):
-      if ( ( (isset($_SESSION['cart']) && $_SESSION['cart']->count_contents() > 0) || (isset($_SESSION['customer_id']) && zen_user_has_gv_account($_SESSION['customer_id']) > 0) ) && ($_GET['main_page'] != FILENAME_SHOPPING_CART) ) {
+      if ( ( (isset($_SESSION['cart']) && $_SESSION['cart']->count_contents() > 0) || (isset($_SESSION['customer_id']) && $gv_balance > 0) ) && ($_GET['main_page'] != FILENAME_SHOPPING_CART) ) {
         $show_shopping_cart_box = true;
       } else {
         $show_shopping_cart_box = false;
@@ -37,4 +43,3 @@
 
     require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default);
   }
-?>

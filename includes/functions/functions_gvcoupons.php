@@ -58,7 +58,7 @@ function zen_user_has_gv_account(int $customer_id)
         return '0.00';
     }
 
-    if (isset($customer) && ($customer_id === (int)$customer->getData('customers_id'))) {
+    if (isset($customer) && is_a($customer, Customer::class) && ($customer_id === (int)$customer->getData('customers_id'))) {
         return $customer->getData('gv_balance');
     }
 

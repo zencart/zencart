@@ -43,7 +43,7 @@ $customer_query = "SELECT customers_firstname, CONCAT(LEFT(customers_lastname,1)
                    FROM " . TABLE_CUSTOMERS . "
                    WHERE customers_id = :customersID";
 $customer_query = $db->bindVars($customer_query, ':customersID', $_SESSION['customer_id'], 'integer');
-$customer = $db->Execute($customer_query);
+$reviewer = $db->Execute($customer_query);
 
 $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
@@ -78,7 +78,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
       $sql = $db->bindVars($sql, ':productsID', (!empty($_GET['products_id']) ? $_GET['products_id'] : 0), 'integer');
       $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
-      $sql = $db->bindVars($sql, ':customersName', $customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname'], 'string');
+      $sql = $db->bindVars($sql, ':customersName', $reviewer->fields['customers_firstname'] . ' ' . $reviewer->fields['customers_lastname'], 'string');
       $sql = $db->bindVars($sql, ':rating', $rating, 'string');
 
       $db->Execute($sql);
@@ -108,7 +108,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $html_msg['EMAIL_MESSAGE_HTML'] = str_replace('\n','',sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_INTRO, $product_info->fields['products_name']));
         $html_msg['EMAIL_MESSAGE_HTML'] .= '<br>';
         $html_msg['EMAIL_MESSAGE_HTML'] .= str_replace('\n','',sprintf(EMAIL_PRODUCT_REVIEW_CONTENT_DETAILS, $review_text));
-        $extra_info=email_collect_extra_info('', '', $customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname'] , $customer->fields['customers_email_address'] );
+        $extra_info=email_collect_extra_info('', '', $reviewer->fields['customers_firstname'] . ' ' . $reviewer->fields['customers_lastname'] , $reviewer->fields['customers_email_address'] );
         $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
         $zco_notifier->notify('NOTIFY_EMAIL_READY_WRITE_REVIEW');
         zen_mail('', SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO, $email_subject, $email_text . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'reviews_extra');
