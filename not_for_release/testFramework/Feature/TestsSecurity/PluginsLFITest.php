@@ -48,6 +48,6 @@ class PluginsLFITest extends zcFeatureTestCaseAdmin
         $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=display_logs');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Admin Display Logs', (string)$response->getContent() );
-        //unlink($dir . 'security_test.php');
+        unlink($dir . 'security_test.php');
     }
 }
