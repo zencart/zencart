@@ -23,7 +23,7 @@ function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Ma
         $parent_folder = DIR_FS_CATALOG_IMAGES;
     }
 
-    $dir = glob($parent_folder, GLOB_ONLYDIR);
+    $dir = glob($parent_folder . '*', GLOB_ONLYDIR);
 
     if (empty($dir)) {
         return [];
