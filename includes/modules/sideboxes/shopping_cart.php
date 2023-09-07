@@ -8,11 +8,7 @@
  * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 
-  $gv_balance = 0.00;
-  if (zen_is_logged_in() && !zen_in_guest_checkout()) {
-    $customer = new Customer;
-    $gv_balance = $customer->getData('gv_balance');
-  }
+  $gv_balance = zen_user_has_gv_account($_SESSION['customer_id']);
 
   switch (true) {
     case (SHOW_SHOPPING_CART_BOX_STATUS == '0'):

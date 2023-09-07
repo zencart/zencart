@@ -20,13 +20,14 @@ if ($_SESSION['cart']->count_contents() <= 0) {
   if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  } else {
-    // validate customer
-    if (zen_get_customer_validate_session($_SESSION['customer_id']) == false) {
-      $_SESSION['navigation']->set_snapshot();
-      zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-    }
   }
+
+$customer = new Customer($_SESSION['customer_id']);
+// validate customer
+if (zen_get_customer_validate_session($_SESSION['customer_id']) == false) {
+    $_SESSION['navigation']->set_snapshot();
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
 
 // Ensure no cart content changes during the checkout procedure by checking the internal cartID
 if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {

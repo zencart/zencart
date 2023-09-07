@@ -125,8 +125,15 @@ function zen_check_email_address_not_already_used(string $email, int $customer_i
  */
 function zen_get_customer_validate_session(int $customer_id): bool
 {
-    global $messageStack;
-    $customer = new Customer($customer_id);
+    global $messageStack, $customer;
+
+    if (!zen_is_logged_in()) {
+        return false;
+    }
+
+    if (!isset($customer) || !is_a($customer, Customer::class)) {
+        $customer = new Customer($customer_id);
+    }
 
     $banned = $customer->isBanned($customer_id);
 
