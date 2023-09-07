@@ -1509,8 +1509,7 @@ if ($action === 'edit' || $action === 'update') {
             'a.entry_city',
             'a.entry_postcode',
         ];
-        $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
-        $search = (trim($search) !== '') ? preg_replace('/ *AND /i', ' WHERE ', $search, 1) : '';
+        $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
     }
     $new_fields = '';
 
