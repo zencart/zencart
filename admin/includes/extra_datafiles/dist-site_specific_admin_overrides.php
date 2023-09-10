@@ -91,16 +91,6 @@
 // false .... Do NOT display the zone information column.
 //$show_zone_info = true;
 
-// Flag to indicate that the FontAwesome v4 shim CSS file should NOT be loaded
-// in the head of every admin page, to make obsolete FontAwesome icon names
-// like fa-star-o work.
-// Useful when no addons using FontAwesome v4 are deployed.
-// Used in: admin/includes/admin_html_head.php
-//
-// true ..... no link will be created.
-// false .... a <link> element will load the v4-shims.min.css file.
-//$disableFontAwesomeV4Compatibility = true;
-
 // Display the registration IP address in the customer listing
 // Used in: admin/includes/customers.php
 //
@@ -118,3 +108,13 @@
 // true ...... The zcDate debug is enabled.
 // false ..... The zcDate debug is disabled (the default).
 //$zen_date_debug = false;
+
+// Flag to indicate that the FontAwesome v4 shim CSS file should NOT be loaded
+// in the head of every admin page, to make obsolete FontAwesome icon names
+// like fa-star-o work.
+// Useful when no addons using FontAwesome v4 are deployed.
+// Used in: admin/includes/admin_html_head.php
+//
+// true ..... no link will be created.
+// false .... a <link> element will load the v4-shims.min.css file.
+//$disableFontAwesomeV4Compatibility = true;
