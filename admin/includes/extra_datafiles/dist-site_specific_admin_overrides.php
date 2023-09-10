@@ -37,44 +37,44 @@
 // $show_product_images  $show_product_images_pack
 // true or unset         true or unset            ...... product images are shown on invoice and packingslip (the default).
 // false                 false or unset           ...... product images are NOT shown on invoice or packingslip.
-// false                 true                     ...... product images are NOT shown on invoice  but are shown packingslip.
-// true or unset         false                    ...... product images are shown on invoice and but are NOT shown packingslip.
+// false                 true                     ...... product images are NOT shown on invoice but are shown on packingslip.
+// true or unset         false                    ...... product images are shown on invoice and but are NOT shown on packingslip.
 //$show_product_images = true;
 //$show_product_images_pack = true;
 
- // Flag to indicate if the product tax is displayed on the order details screen and invoice
- // Used in: admin/invoice.php, admin/orders.php
- //
- // true ..... Display the products tax amounts (the default).
- // false .... The products Tax amount is NOT displayed.
- //$show_product_tax = true;
+// Flag to indicate if the product tax is displayed on the order details screen and invoice
+// Used in: admin/invoice.php, admin/orders.php
+//
+// true ..... Display the products tax amounts (the default).
+// false .... The products Tax amount is NOT displayed.
+//$show_product_tax = true;
 
 // Indicate if the downloads manager page should show the file date.
 // Used in: admin/downloads_manager.php
-// 
+//
 // true ...... Show the file date.
 // false ..... Do NOT show the file date (the default).
-//$show_download_date = false; 
+//$show_download_date = false;
 
 // Flag to identify if attribute details should be displayed in the popup from the new orders dashboard widget.
 // Used in: admin/includes/modules/RecentOrdersDashboardWidget.php
-// 
+//
 // true ...... Attributes are displayed in the popup (the default).
 // false ..... Attributes are NOT displayed in the popup.
 //$includeAttributesInPopoverRows = true;
 
 // Maximum number of rows to display in the new orders section of the dashboard widget
 // Used in: admin/includes/modules/RecentOrdersDashboardWidget.php
-// 
+//
 // Change 25 below to the number of rows you require.
 //$recentOrdersMaxRows = 25;
 
- //Flag to indicate if the Quick view popup should be displayed on the order page.
+//Flag to indicate if the Quick view popup should be displayed on the order page.
 // Used in: admin/orders.php
- //
- // true ..... Quick view popup icon is displayed.
- // false .... Quick view popuo icon is NOT displayed (the default).
- //$quick_view_popover_enabled = false;
+//
+// true ..... Quick view popup icon is displayed.
+// false .... Quick view popup icon is NOT displayed (the default).
+//$quick_view_popover_enabled = false;
 
 // Flag to indicate if the attributes info is displayed in Order Quick view popup.
 // Has no effect if $quick_view_popover_enabled = false;
@@ -100,6 +100,13 @@
 // true ..... no link will be created.
 // false .... a <link> element will load the v4-shims.min.css file.
 //$disableFontAwesomeV4Compatibility = true;
+
+// Display the registration IP address in the customer listing
+// Used in: admin/includes/customers.php
+//
+// true ..... show IP address
+// false .... hide IP address (default)
+// $show_registration_ip_in_listing = false;
 
 //
 //Developer Debugging flags
