@@ -675,7 +675,7 @@ function zen_get_products_url($product_id, $language_id)
                              WHERE products_id = " . (int)$product_id . "
                              AND language_id = " . (int)$language_id, 1);
     if ($product->EOF) return '';
-    return $product->fields['products_url'];
+    return (string)$product->fields['products_url'];
 }
 
 /**
