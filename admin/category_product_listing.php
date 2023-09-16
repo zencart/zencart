@@ -18,6 +18,12 @@ if (isset($_POST['products_id'])) {
     $product_type = 1;
 }
 
+if (!isset($_SESSION['imageView'])) {
+    $_SESSION['imageView'] = true;
+}
+$buttonText = $_SESSION['imageView'] ?  TEXT_HIDE_IMAGES : TEXT_SHOW_IMAGES ;
+$additionalClass = $_SESSION['imageView'] ? '' : ' hidden ';
+
 $action = $_GET['action'] ?? '';
 $search_result = isset($_GET['search']) && zen_not_null($_GET['search']);
 
@@ -341,6 +347,12 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     </div>
                   </td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="button" id="imageView" class="btn btn-info btn-xs" value="<?= $buttonText; ?>">
+                    </td>
+                    <td colspan="3"></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -524,7 +536,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               <tr>
                 <th class="text-right shrink"><?php echo TABLE_HEADING_ID; ?></th>
                 <th><?php echo TABLE_HEADING_CATEGORIES_PRODUCTS; ?></th>
-                <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_IMAGE; ?></th>
+                <th class="hidden-sm hidden-xs imageView <?= $additionalClass; ?>"><?php echo TABLE_HEADING_IMAGE; ?></th>
                 <?php if ($show_prod_labels) { ?>
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
                   <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
@@ -673,7 +685,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <a href="<?php echo zen_catalog_href_link('index', zen_get_path($category['categories_id'])); ?>" rel="noopener" target="_blank" title="<?php echo BOX_HEADING_CATALOG; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_popup.gif', BOX_HEADING_CATALOG); ?></a>
                   <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])); ?>" class="folder"><i class="fa-solid fa-lg fa-folder"></i>&nbsp;<strong><?php echo $category['categories_name']; ?></strong></a>
                 </td>
-                  <td class="hidden-sm hidden-xs"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
+                  <td class="hidden-sm hidden-xs imageView <?= $additionalClass; ?>"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
                 <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
                   <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
@@ -896,7 +908,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <?php echo $product['products_name']; ?>
                     </a>
                 </td>
-                <td class="hidden-sm hidden-xs"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
+                <td class="hidden-sm hidden-xs imageView <?= $additionalClass; ?>"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
 <?php
@@ -1293,7 +1305,24 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', (function() {
                 window.location.href = productEditLink.replace('[*]', jQuery(this).parent().attr('data-pid'));
             })).css('cursor', 'pointer');
-        })
+        });
+        $(document).ready(function () {
+            $('#imageView').on('click', function() {
+                if ($('#imageView').val() == '<?= TEXT_HIDE_IMAGES; ?>') {
+                    $('.imageView').addClass('hidden');
+                    $('#imageView').val('<?= TEXT_SHOW_IMAGES; ?>');
+                } else {
+                    $('.imageView').removeClass('hidden');
+                    $('#imageView').val('<?= TEXT_HIDE_IMAGES; ?>');
+                }
+                zcJS.ajax({
+                    url: "ajax.php?act=ajaxAdminSessionChange&method=change",
+                    data: {'name': 'imageView'}
+                }).done(function( response ) {
+                    console.log(response);
+                });
+            });
+        });
     </script>
     <!-- footer //-->
     <?php require DIR_WS_INCLUDES . 'footer.php'; ?>

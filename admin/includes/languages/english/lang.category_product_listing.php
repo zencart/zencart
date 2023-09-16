@@ -79,6 +79,8 @@ $define = [
     'TEXT_SORT_PRODUCTS_ID' => 'Products ID',
     'TEXT_SORT_PRODUCTS_ID_DESC' => 'Products ID (desc)',
     'TEXT_SORT_PRODUCTS_WEIGHT' => 'Weight',
+    'TEXT_HIDE_IMAGES' => 'Hide Images',
+    'TEXT_SHOW_IMAGES' => 'Show Images',
 ];
 
 return $define;
