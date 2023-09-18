@@ -49,7 +49,7 @@ if (!empty($action)) {
                     $customer = new Customer($customers_id);
                     $old = $customer->getData('customers_authorization');
                     $custinfo = $customer->setCustomerAuthorizationStatus($customers_authorization);
-                    if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current'] > 0 && $old != $customers_authorization) {
+                    if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current_status'] > 0 && $old != $customers_authorization) {
                         $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
                         $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
                         zen_mail(
