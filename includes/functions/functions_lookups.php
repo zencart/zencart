@@ -28,12 +28,12 @@ function zen_get_handler_from_type($product_type)
 /*
  * List manufacturers (returned in an array)
  */
-function zen_get_manufacturers($manufacturers_array = array(), $have_products = false)
+function zen_get_manufacturers($manufacturers_array = [], $only_those_with_products = false)
 {
     global $db;
-    if (!is_array($manufacturers_array)) $manufacturers_array = array();
+    if (!is_array($manufacturers_array)) $manufacturers_array = [];
 
-    if ($have_products == true) {
+    if (!empty($only_those_with_products)) {
         $manufacturers_query = "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
                               FROM " . TABLE_MANUFACTURERS . " m
                               LEFT JOIN " . TABLE_PRODUCTS . " p ON m.manufacturers_id = p.manufacturers_id

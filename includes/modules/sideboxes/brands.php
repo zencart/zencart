@@ -15,7 +15,7 @@ if ($current_page_base === FILENAME_DEFAULT && !empty($_GET['manufacturers_id'])
     return;
 }
 
-if (PRODUCTS_MANUFACTURERS_STATUS === '1') {
+if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
     // retrieve with featured manufacturers first
     $sql =
         "SELECT DISTINCT m.manufacturers_name, m.manufacturers_image, m.manufacturers_id, m.featured, (m.featured=1) AS weighted

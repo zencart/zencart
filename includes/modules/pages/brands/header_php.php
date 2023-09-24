@@ -16,7 +16,7 @@ $breadcrumb->add(BREADCRUMB_BRANDS, zen_href_link(FILENAME_BRANDS));
 $category_depth = 'brands';
 $typefilter = $_GET['typefilter'] = 'brands';
 
-if (PRODUCTS_MANUFACTURERS_STATUS === '1') {
+if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
     $listing_sql =
         "SELECT DISTINCT m.manufacturers_name, m.manufacturers_image, m.manufacturers_id, m.featured
            FROM " . TABLE_MANUFACTURERS . " m
