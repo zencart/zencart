@@ -8,7 +8,7 @@
  * @version $Id: lat9 2022 Jul 05 Modified in v1.5.8-alpha $
  */
 // only check products if requested - this may slow down the processing of the manufacturers sidebox
-if (PRODUCTS_MANUFACTURERS_STATUS === 1) {
+if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
     $manufacturer_sidebox_query =
         "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
                     FROM " . TABLE_MANUFACTURERS . " m
