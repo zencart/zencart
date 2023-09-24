@@ -1,6 +1,6 @@
 <?php
 /**
- * column_right module
+ * column_right module 
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -14,7 +14,7 @@ use App\Models\LayoutBox;
 use Zencart\ResourceLoaders\SideboxFinder;
 use Zencart\FileSystem\FileSystem;
 
-$column_box_default='tpl_box_default_left.php';
+$column_box_default='tpl_box_default_right.php';
 // Check if there are boxes for the column
 $sideboxes = LayoutBox::where('layout_box_location', 1)
                       ->where('layout_box_status', 1)
@@ -22,12 +22,12 @@ $sideboxes = LayoutBox::where('layout_box_location', 1)
                       ->orderBy('layout_box_sort_order')
                       ->limit(100)->get();
 
-$column_width = (int)BOX_WIDTH_LEFT;
+$column_width = (int)BOX_WIDTH_RIGHT;
 foreach ($sideboxes as $sidebox) {
     $boxFile = (new SideboxFinder(new FileSystem))->sideboxPath($sidebox, $template_dir, true);
     if ($boxFile !== false) {
         $box_id = zen_get_box_id($sidebox['layout_box_name']);
         include($boxFile . $sidebox['layout_box_name']);
-    }
+  }
 }
-$box_id = '';
+$box_id = ''; 
