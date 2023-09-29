@@ -15,8 +15,17 @@
 <?php  if (DEFINE_CONTACT_US_STATUS <= 1) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_CONTACT_US, '', 'SSL'); ?>"><?php echo BOX_INFORMATION_CONTACT; ?></a></li>
 <?php  } ?>
+<?php
+// -----
+// The following flag is set by /includes/init_includes/init_common_elements.php; refer to that module's
+// comments for the way to override this setting.
+//
+if ($flag_show_about_us_sidebox_link === true) {
+?>
     <li><?php echo '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>'; ?></li>
-
+<?php
+}
+?>
 <?php if (zen_is_logged_in() && !zen_in_guest_checkout()) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
     <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
