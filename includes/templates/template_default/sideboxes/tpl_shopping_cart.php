@@ -40,13 +40,9 @@
     $content .= '<br class="clearBoth">';
   }
 
-  if (zen_is_logged_in() && !zen_in_guest_checkout()) {
-    $customer = new Customer;
-    $gv_balance = $customer->getData('gv_balance');
-
-    if (!empty($gv_balance)) {
-      $content .= '<div id="cartBoxGVButton"><a href="' . zen_href_link(FILENAME_GV_SEND, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_SEND_A_GIFT_CERT , BUTTON_SEND_A_GIFT_CERT_ALT) . '</a></div>';
-      $content .= '<div id="cartBoxVoucherBalance">' . VOUCHER_BALANCE . $currencies->format($gv_balance) . '</div>';
-    }
+  if (!empty($gv_balance)) {
+    $content .= '<div id="cartBoxGVButton"><a href="' . zen_href_link(FILENAME_GV_SEND, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_SEND_A_GIFT_CERT , BUTTON_SEND_A_GIFT_CERT_ALT) . '</a></div>';
+    $content .= '<div id="cartBoxVoucherBalance">' . VOUCHER_BALANCE . $currencies->format($gv_balance) . '</div>';
   }
+
   $content .= '</div>';

@@ -53,12 +53,12 @@ function zen_gv_account_update(int $customer_id, int $gv_id)
  */
 function zen_user_has_gv_account(int $customer_id)
 {
-    global $db, $customer;
+    global $customer;
     if (!zen_is_logged_in() || zen_in_guest_checkout()) {
-        return '0.00';
+        return 0.00;
     }
 
-    if (isset($customer) && ($customer_id === (int)$customer->getData('customers_id'))) {
+    if (isset($customer) && is_a($customer, Customer::class) && ($customer_id === (int)$customer->getData('customers_id'))) {
         return $customer->getData('gv_balance');
     }
 
