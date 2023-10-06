@@ -24,7 +24,7 @@ if ($_SESSION['cart']->count_contents() <= 0) {
 
 $customer = new Customer($_SESSION['customer_id']);
 // validate customer
-if (zen_get_customer_validate_session($_SESSION['customer_id']) == false) {
+if (zen_get_customer_validate_session($_SESSION['customer_id']) === false) {
     $_SESSION['navigation']->set_snapshot();
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
