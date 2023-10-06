@@ -730,4 +730,41 @@ class systemChecker
             }
         }
     }
+    /**
+     * Check installed Database version
+     * The check is only validated if the information is available.
+     * There are other checks that will fail so don't issue spurious error message
+     */
+    public function checkMysqlVersion($parameters) {
+        if (function_exists('mysqli_connect')) {
+            $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+            $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+            $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+            $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+            require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+            $db = new queryFactory();
+            $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+            if ($db->error_number == '2002') {
+                // Cannot connect to database don't fail test
+                return true;
+            }
+            $version = $db->get_server_info();
+            if ($version === 'UNKNOWN') {
+                // versions not found don't fail
+                return true;
+            } elseif (strripos($version, '-MariaDB') === false) {
+                // mysql database check version
+                $checkVersion = $parameters['mysqlVersion'];
+            } else {
+                // mariaDb Check version must remove -MariaDB from the version 
+                // as version compare treates -... as a lower version than N.N.N
+                $version = substr($version, 0, strripos($version, '-MariaDB'));
+                $checkVersion = $parameters['mariaDBVersion'];
+            }
+            return version_compare($version, $checkVersion) >= 0;
+        } else {
+            // mysqli_connect not available don't fail test
+            return true;
+        }
+    }
 }
