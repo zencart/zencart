@@ -8,7 +8,7 @@
  * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
  */
 
-  $gv_balance = zen_user_has_gv_account($_SESSION['customer_id']);
+  $gv_balance = zen_user_has_gv_account($_SESSION['customer_id'] ?? 0);
 
   switch (true) {
     case (SHOW_SHOPPING_CART_BOX_STATUS == '0'):
