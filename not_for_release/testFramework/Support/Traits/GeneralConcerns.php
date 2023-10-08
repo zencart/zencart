@@ -29,8 +29,6 @@ trait GeneralConcerns
         echo $configFile . PHP_EOL;
 
         require($configFile);
-        require_once('database_tables.php');
-
     }
 
 
