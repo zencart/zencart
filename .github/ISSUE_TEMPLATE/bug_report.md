@@ -6,6 +6,7 @@ labels: ''
 assignees: ''
 
 ---
+<!--NOTE These lines starting with the <!-- and ending with -- > are instructions. Replace these lines with your answers to the requested information within each section. DO NOT TYPE IN BETWEEN THESE OPEN/CLOSE COMMENT TAGS OR WE WON'T SEE WHAT YOU PROVIDED! -->
 
 **Describe the bug**
 <!--A clear and concise description of what the bug is. Be sure to explain the business problem that this bug is affecting.-->
