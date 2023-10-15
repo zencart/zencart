@@ -35,6 +35,55 @@ class Customer extends base
         }
     }
 
+    protected static function getCustomerWholesaleInfo(): array
+    {
+        static $wholesaleInfo;
+        if (!isset($wholesaleInfo)) {
+            $wholesaleInfo = [
+                'is_wholesale' => false,
+                'wholesale_tier' => 0,
+                'is_tax_exempt' => false,
+            ];
+            if (WHOLESALE_PRICING_CONFIG !== 'false' && zen_is_logged_in() && !zen_in_guest_checkout()) {
+                global $db;
+                $wholesale = $db->Execute(
+                    "SELECT customers_whole
+                       FROM " . TABLE_CUSTOMERS . "
+                      WHERE customers_id = " . (int)$_SESSION['customer_id'] . "
+                      LIMIT 1"
+                );
+                if (!$wholesale->EOF && $wholesale->fields['customers_whole'] !== '0') {
+                    $wholesaleInfo = [
+                        'is_wholesale' => true,
+                        'wholesale_tier' => (int)$wholesale->fields['customers_whole'],
+                        'is_tax_exempt' => (WHOLESALE_PRICING_CONFIG === 'Tax Exempt'),
+                    ];
+                }
+            }
+        }
+        return $wholesaleInfo;
+    }
+    public static function isWholesaleCustomer(): bool
+    {
+        $wholesale_info = Customer::getCustomerWholesaleInfo();
+        return $wholesale_info['is_wholesale'];
+    }
+    public static function isTaxExempt(): bool
+    {
+        $wholesale_info = Customer::getCustomerWholesaleInfo();
+        $is_tax_exempt = $wholesale_info['is_tax_exempt'];
+
+        global $zco_notifier;
+        $zco_notifier->notify('NOTIFY_CUSTOMER_IS_TAX_EXEMPT', [], $is_tax_exempt);
+
+        return (bool)$is_tax_exempt;
+    }
+    public static function getCustomerWholesaleTier(): int
+    {
+        $wholesale_info = Customer::getCustomerWholesaleInfo();
+        return $wholesale_info['wholesale_tier'];
+    }
+
     public function getData(string $element = null)
     {
         if (empty($element)) {

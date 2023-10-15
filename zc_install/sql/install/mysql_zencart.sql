@@ -604,6 +604,7 @@ CREATE TABLE customers (
   last_login_ip varchar(45) NOT NULL default '',
   customers_paypal_payerid VARCHAR(20) NOT NULL default '',
   customers_paypal_ec TINYINT(1) UNSIGNED DEFAULT 0 NOT NULL,
+  customers_whole tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY  (customers_id),
   KEY idx_email_address_zen (customers_email_address),
   KEY idx_referral_zen (customers_referral(10)),
@@ -1137,6 +1138,7 @@ CREATE TABLE orders (
   ip_address varchar(96) NOT NULL default '',
   order_weight float default NULL,
   language_code char(2) NOT NULL default '',
+  is_wholesale tinyint(1) DEFAULT NULL,
   PRIMARY KEY  (orders_id),
   KEY idx_status_orders_cust_zen (orders_status,orders_id,customers_id),
   KEY idx_date_purchased_zen (date_purchased),
@@ -1624,6 +1626,7 @@ CREATE TABLE products (
   products_mpn varchar(32) DEFAULT NULL,
   products_image varchar(255) default NULL,
   products_price decimal(15,4) NOT NULL default '0.0000',
+  products_price_w varchar(150) NOT NULL DEFAULT '0',
   products_virtual tinyint(1) NOT NULL default '0',
   products_date_added datetime NOT NULL default '0001-01-01 00:00:00',
   products_last_modified datetime default NULL,
@@ -1677,6 +1680,7 @@ CREATE TABLE products_attributes (
   options_id int(11) NOT NULL default '0',
   options_values_id int(11) NOT NULL default '0',
   options_values_price decimal(15,4) NOT NULL default '0.0000',
+  options_values_price_w varchar(150) NOT NULL DEFAULT '0',
   price_prefix char(1) NOT NULL default '',
   products_options_sort_order int(11) NOT NULL default '0',
   product_attribute_is_free tinyint(1) NOT NULL default '0',
@@ -1747,6 +1751,7 @@ CREATE TABLE products_discount_quantity (
   discount_id int(4) NOT NULL default '0',
   products_id int(11) NOT NULL default '0',
   discount_qty float NOT NULL default '0',
+  discount_price_w varchar(150) NOT NULL DEFAULT '0',
   discount_price decimal(15,4) NOT NULL default '0.0000',
   KEY idx_id_qty_zen (products_id,discount_qty)
 ) ENGINE=MyISAM;
@@ -2408,6 +2413,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Basis of Shipping Tax', 'STORE_SHIPPING_TAX_BASIS', 'Shipping', 'On what basis is Shipping Tax calculated. Options are<br />Shipping - Based on customers Shipping Address<br />Billing Based on customers Billing address<br />Store - Based on Store address if Billing/Shipping Zone equals Store zone - Can be overridden by correctly written Shipping Module', '1', '21', 'zen_cfg_select_option(array(\'Shipping\', \'Billing\', \'Store\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Sales Tax Display Status', 'STORE_TAX_DISPLAY_STATUS', '0', 'Always show Sales Tax even when amount is $0.00?<br />0= Off<br />1= On', '1', '21', 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show Split Tax Lines', 'SHOW_SPLIT_TAX_CHECKOUT', 'false', 'If multiple tax rates apply, show each rate as a separate line at checkout', '1', '22', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
+
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Wholesale Pricing', 'WHOLESALE_PRICING_CONFIG', 'false', 'Should <em>Wholesale Pricing</em> be enabled for your site?  Choose <b>false</b> (the default) if you don\'t want that feature enabled. Otherwise, choose <b>Tax Exempt</b> to enable with tax-exemptions for all wholesale customers or <b>Pricing Only</b> to apply tax as usual for wholesale customers.', 1, 23, now(), 'zen_cfg_select_option([\'false\', \'Tax Exempt\', \'Pricing Only\'],');
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Admin Session Timeout Enforced?', 'PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED', '1', 'PA-DSS Compliance requires that any Admin login sessions expire after 15 minutes of inactivity. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Strong Password Rules Enforced?', 'PADSS_PWD_EXPIRY_ENFORCED', '1', 'PA-DSS Compliance requires that admin passwords must be changed after 90 days and cannot re-use the last 4 passwords. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
