@@ -324,12 +324,7 @@ if (!empty($action)) {
             <div class="form-group">
               <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                <?php
-                if (empty($prev_next_order)) {
-                  $prev_next_order = ' ORDER BY products_model'; // set sort order of dropdown
-                }
-                echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
-                ?>
+                <?= zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true); ?>
               </div>
             </div>
           <?php } ?>
