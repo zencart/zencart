@@ -47,7 +47,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
         $product_info = zen_get_product_details($product_id);
     }
     // make sure it's for the current product
-    if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== $product_id) {
+    if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$product_id) {
         $product_info = zen_get_product_details($product_id);
     }
 
@@ -61,8 +61,8 @@ function zen_product_set_header_response($product_id, $product_info = null)
     }
 
     global $product_status;
-    $product_status = !$product_not_found && $product_info->fields['products_status'] ? (int)$product_info->fields['products_status'] : 0;
 
+    $product_status = (int)($product_not_found === false && $product_info->fields['products_status'] !== '0') ? $product_info->fields['products_status'] : 0;
     if ($product_status === 0) {
         $response_code = 410;
     }
@@ -596,8 +596,7 @@ function zen_get_products_manufacturers_name($product_id)
             WHERE p.products_id = " . (int)$product_id;
 
     $product = $db->Execute($sql, 1);
-
-    return (!$product->EOF) ? $product->fields['manufacturers_name'] : '';
+    return ($product->EOF) ? '' : $product->fields['manufacturers_name'];
 }
 
 /**
@@ -615,8 +614,7 @@ function zen_get_products_manufacturers_image($product_id)
                       WHERE p.products_id = " . (int)$product_id;
 
     $product = $db->Execute($product_query, 1);
-    if ($product->EOF) return '';
-    return $product->fields['manufacturers_image'];
+    return ($product->EOF) '' : $product->fields['manufacturers_image'];
 }
 
 /**
@@ -665,16 +663,8 @@ function zen_get_products_description($product_id, $language_id = null)
  */
 function zen_get_info_page($product_id)
 {
-    global $db;
-
     $result = zen_get_product_details($product_id);
-    if ($result->EOF) {
-        return 'product_info';
-    }
-
-    $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$result->fields['products_type'];
-    $result = $db->Execute($sql, 1);
-    return $result->fields['type_handler'] . '_info';
+    return ($result->EOF) ? 'product_info' : ($result->fields['type_handler'] . '_info');
 }
 
 /**
@@ -721,7 +711,7 @@ function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height
 function zen_get_products_virtual($product_id)
 {
     $result = zen_get_product_details($product_id);
-    return !empty($result->fields['products_virtual']);
+    return (!$result->EOF && $result->fields['products_virtual'] === '1');
 }
 
 /**
@@ -731,13 +721,12 @@ function zen_get_products_virtual($product_id)
  */
 function zen_get_products_allow_add_to_cart($product_id)
 {
-    global $db, $zco_notifier;
+    global $zco_notifier;
 
     $product_query_results = zen_get_product_details($product_id);
 
     // If product found, and product_type's allow_add_to_cart is not 'N', allow
     $allow_add_to_cart = !$product_query_results->EOF && $product_query_results->fields['allow_add_to_cart'] !== 'N';
-
 
     // If product is encoded as GV but GV feature is turned off, disallow add-to-cart
     if ($allow_add_to_cart === true && strpos($product_query_results->fields['products_model'], 'GIFT') === 0) {
@@ -765,16 +754,16 @@ function zen_get_show_product_switch($lookup, $field, $prefix = 'SHOW_', $suffix
 {
     global $db;
     $keyName = zen_get_show_product_switch_name($lookup, $field, $prefix, $suffix, $field_prefix, $field_suffix);
-    $sql = "SELECT configuration_key, configuration_value FROM " . TABLE_PRODUCT_TYPE_LAYOUT . " WHERE configuration_key='" . zen_db_input($keyName) . "'";
+    $sql = "SELECT configuration_key, configuration_value FROM " . TABLE_PRODUCT_TYPE_LAYOUT . " WHERE configuration_key = '" . zen_db_input($keyName) . "'";
     $zv_key_value = $db->Execute($sql, 1);
-//echo 'I CAN SEE - look ' . $lookup . ' - field ' . $field . ' - key ' . $keyName . ' value ' . $zv_key_value->fields['configuration_value'] .'<br>';
 
     if (!$zv_key_value->EOF) {
         return $zv_key_value->fields['configuration_value'];
     }
-    $sql = "SELECT configuration_key, configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key='" . zen_db_input($keyName) . "'";
+
+    $sql = "SELECT configuration_key, configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . zen_db_input($keyName) . "'";
     $zv_key_value = $db->Execute($sql, 1);
-    if ($zv_key_value->RecordCount() > 0) {
+    if (!$zv_key_value->EOF) {
         return $zv_key_value->fields['configuration_value'];
     }
     return '';
@@ -785,23 +774,10 @@ function zen_get_show_product_switch($lookup, $field, $prefix = 'SHOW_', $suffix
  */
 function zen_get_show_product_switch_name($lookup, $field, $prefix = 'SHOW_', $suffix = '_INFO', $field_prefix = '_', $field_suffix = '')
 {
-    global $db;
-    $type_lookup = 0;
-    $type_handler = '';
-    $sql = "SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$lookup;
-    $result = $db->Execute($sql, 1);
-    if (!$result->EOF) {
-        $type_lookup = $result->fields['products_type'];
-    }
+    $product = zen_get_product_details((int)$lookup);
+    $type_handler = ($product->EOF) ? 'product' : $product->fields['type_handler'];
 
-    $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$type_lookup;
-    $result = $db->Execute($sql, 1);
-    if (!$result->EOF) {
-        $type_handler = $result->fields['type_handler'];
-    }
-    $keyName = strtoupper($prefix . $type_handler . $suffix . $field_prefix . $field . $field_suffix);
-
-    return $keyName;
+    return strtoupper($prefix . $type_handler . $suffix . $field_prefix . $field . $field_suffix);
 }
 
 /**

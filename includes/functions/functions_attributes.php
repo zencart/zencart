@@ -322,7 +322,7 @@ function zen_get_attributes_options_sort_order($products_id, $options_id, $optio
     $check_options_id = zen_get_attribute_details((int)$products_id, (int)$options_id, (int)$options_values_id);
     $check_options_sort_order = ($check_options_id->EOF) ? '0' : $check_options_id->fields['products_options_sort_order'];
  
-    return $check_sort_order . '.' . str_pad($check_options_id_sort_order, 5, '0', STR_PAD_LEFT);
+    return $check_sort_order . '.' . str_pad($check_options_sort_order, 5, '0', STR_PAD_LEFT);
 }
 
 /**

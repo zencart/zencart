@@ -105,6 +105,11 @@ foreach ($products_discounts_query as $next_discount) {
     $columnCount++;
 
     // -----
+    // Determine the discount's pricing (retail vs. wholesale).
+    //
+    $next_discount_price = zen_get_retail_or_wholesale_price($next_discount['discount_price'], $next_discount['discount_price_w']);
+
+    // -----
     // The $products_discount_type is set by the product page's main_template_vars.php.
     //
     switch ($products_discount_type) {
@@ -115,17 +120,17 @@ foreach ($products_discounts_query as $next_discount) {
 
         // percentage discount
         case '1':
-            $discounted_price = $discount_price_basis - ($discount_price_basis * ($next_discount['discount_price'] / 100));
+            $discounted_price = $discount_price_basis - ($discount_price_basis * ($next_discount_price / 100));
             break;
 
         // actual price
         case '2':
-            $discounted_price = $next_discount['discount_price'];
+            $discounted_price = $next_discount_price;
             break;
 
         // amount offprice
         case '3':
-            $discounted_price = $discount_price_basis - $next_discount['discount_price'];
+            $discounted_price = $discount_price_basis - $next_discount_price;
             break;
     }
 
