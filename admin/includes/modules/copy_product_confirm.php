@@ -26,38 +26,40 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         // fix Product copy from if Unit is 0
         if ($product->fields['products_quantity_order_units'] == 0) {
-            $sql = "UPDATE " . TABLE_PRODUCTS . "
+            $sql =
+                "UPDATE " . TABLE_PRODUCTS . "
                     SET products_quantity_order_units = 1
-                    WHERE products_id = " . $products_id;
-            $results = $db->Execute($sql);
+                  WHERE products_id = $products_id";
+            $results = $db->Execute($sql, 1);
             $product->fields['products_quantity_order_units'] = 1;
         }
         // fix Product copy from if Minimum is 0
         if ($product->fields['products_quantity_order_min'] == 0) {
-            $sql = "UPDATE " . TABLE_PRODUCTS . "
+            $sql =
+                "UPDATE " . TABLE_PRODUCTS . "
                     SET products_quantity_order_min = 1
-                    WHERE products_id = " . $products_id;
-            $results = $db->Execute($sql);
+                  WHERE products_id = $products_id";
+            $results = $db->Execute($sql, 1);
             $product->fields['products_quantity_order_min'] = 1;
         }
 
         $sql_data_array = [];
         $separately_updated_fields = [
-          'products_id',
-          'products_status',
-          'products_last_modified',
-          'products_date_added',
-          'products_date_available',
+            'products_id',
+            'products_status',
+            'products_last_modified',
+            'products_date_added',
+            'products_date_available',
         ];
         $casted_fields = [
-          'products_quantity' =>  'float',
-          'products_price' =>  'float',
-          'products_weight' =>  'float',
-          'products_tax_class_id' =>  'int',
-          'manufacturers_id' =>  'int',
-          'product_is_free' =>  'int',
-          'product_is_call' =>  'int',
-          'products_quantity_mixed' =>  'int',
+            'products_quantity' =>  'float',
+            'products_price' =>  'float',
+            'products_weight' =>  'float',
+            'products_tax_class_id' =>  'int',
+            'manufacturers_id' =>  'int',
+            'product_is_free' =>  'int',
+            'product_is_call' =>  'int',
+            'products_quantity_mixed' =>  'int',
         ];
 
         // -----
@@ -77,7 +79,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
                 } elseif ($casted_fields[$key] === 'float') {
                     $sql_data_array[$key] = (float)$value;
                 } else {
-                    $sql_data_array[$key] = (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : $value;
+                    $sql_data_array[$key] = (empty($value)) ? 0 : $value;
                 }
             } else {
                 $sql_data_array[$key] = $value;
@@ -110,12 +112,14 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         $dup_products_id = (int)$db->insert_ID();
 
-        $descriptions = $db->Execute("SELECT language_id, products_name, products_description, products_url
-                                      FROM " . TABLE_PRODUCTS_DESCRIPTION . "
-                                      WHERE products_id = " . $products_id);
+        $descriptions = $db->Execute(
+            "SELECT language_id, products_name, products_description, products_url
+               FROM " . TABLE_PRODUCTS_DESCRIPTION . "
+              WHERE products_id = $products_id"
+        );
+        $maxlen = zen_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name');
         foreach ($descriptions as $description) {
             $name = TEXT_DUPLICATE_IDENTIFIER . " " . $description['products_name'];
-            $maxlen = zen_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name');
             if (strlen($name) > $maxlen) {
                $name = substr($name, 0, $maxlen-1);
             }
@@ -136,7 +140,6 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
 // copy attributes to Duplicate
         if (!empty($_POST['copy_attributes']) && $_POST['copy_attributes'] === 'copy_attributes_yes') {
-
             if (DOWNLOAD_ENABLED === 'true') {
                 $copy_attributes_include_downloads = '1';
                 $copy_attributes_include_filename = '1';
@@ -153,34 +156,44 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
 // copy meta tags to Duplicate
         if (!empty($_POST['copy_metatags']) && $_POST['copy_metatags'] === 'copy_metatags_yes') {
-            $metatags_status = $db->Execute("SELECT metatags_title_status, metatags_products_name_status, metatags_model_status, metatags_price_status, metatags_title_tagline_status
-                                             FROM " . TABLE_PRODUCTS . "
-                                             WHERE products_id = '" . $products_id . "'");
+            $metatags_status = $db->Execute(
+                "SELECT metatags_title_status, metatags_products_name_status, metatags_model_status, metatags_price_status, metatags_title_tagline_status
+                   FROM " . TABLE_PRODUCTS . "
+                  WHERE products_id = $products_id",
+                1
+            );
 
-            $db->Execute("UPDATE " . TABLE_PRODUCTS . " SET
-                metatags_title_status = '" . zen_db_input($metatags_status->fields['metatags_title_status']) . "',
-                metatags_products_name_status = '" . zen_db_input($metatags_status->fields['metatags_products_name_status']) . "',
-                metatags_model_status = '" . zen_db_input($metatags_status->fields['metatags_model_status']) . "',
-                metatags_price_status= '" . zen_db_input($metatags_status->fields['metatags_price_status']) . "',
-                metatags_title_tagline_status = '" . zen_db_input($metatags_status->fields['metatags_title_tagline_status']) . "'
-                WHERE products_id = " . $dup_products_id);
+            $db->Execute(
+                "UPDATE " . TABLE_PRODUCTS . "
+                    SET metatags_title_status = '" . zen_db_input($metatags_status->fields['metatags_title_status']) . "',
+                        metatags_products_name_status = '" . zen_db_input($metatags_status->fields['metatags_products_name_status']) . "',
+                        metatags_model_status = '" . zen_db_input($metatags_status->fields['metatags_model_status']) . "',
+                        metatags_price_status= '" . zen_db_input($metatags_status->fields['metatags_price_status']) . "',
+                        metatags_title_tagline_status = '" . zen_db_input($metatags_status->fields['metatags_title_tagline_status']) . "'
+                  WHERE products_id = $dup_products_id",
+                 1
+            );
 
-            $metatags_descriptions = $db->Execute("SELECT language_id, metatags_title, metatags_keywords, metatags_description
-                                                   FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
-                                                   WHERE products_id = " . $products_id);
+            $metatags_descriptions = $db->Execute(
+                "SELECT language_id, metatags_title, metatags_keywords, metatags_description
+                   FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
+                  WHERE products_id = $products_id"
+            );
 
-            while (!$metatags_descriptions->EOF) {//one row per language
-                $db->Execute("INSERT INTO " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " (products_id, language_id, metatags_title, metatags_keywords, metatags_description)
-                        VALUES (
-                        '" . $dup_products_id . "',
-                        '" . (int)$metatags_descriptions->fields['language_id'] . "',
+            foreach ($metatags_descriptions as $next_description) {//one row per language
+                $db->Execute(
+                    "INSERT INTO " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . "
+                        (products_id, language_id, metatags_title, metatags_keywords, metatags_description)
+                     VALUES (
+                        $dup_products_id, " .
+                        (int)$metatags_descriptions->fields['language_id'] . ",
                         '" . zen_db_input($metatags_descriptions->fields['metatags_title']) . "',
                         '" . zen_db_input($metatags_descriptions->fields['metatags_keywords']) . "',
-                        '" . zen_db_input($metatags_descriptions->fields['metatags_description']) . "')");
+                        '" . zen_db_input($metatags_descriptions->fields['metatags_description']) . "'
+                     )"
+                );
 
                 $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_METATAGS, (int)$metatags_descriptions->fields['language_id'], $products_id, $dup_products_id), 'success');
-
-                $metatags_descriptions->MoveNext();
             }
         }
 

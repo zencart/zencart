@@ -449,12 +449,14 @@ function zen_get_attributes_image(int $product_id, $option_id, $value_id)
  */
 function zen_copy_products_attributes($products_id_from, $products_id_to)
 {
-    global $db, $zco_notifier;
-    global $messageStack;
+    global $db, $zco_notifier, $messageStack;
     global $copy_attributes_delete_first, $copy_attributes_duplicates_skipped, $copy_attributes_duplicates_overwrite, $copy_attributes_include_downloads, $copy_attributes_include_filename;
 
+    $products_id_from = (int)$products_id_from;
+    $products_id_to = (int)$products_id_to;
+
     // same products_id
-    if ($products_id_to == $products_id_from) {
+    if ($products_id_to === $products_id_from) {
         $messageStack->add_session(sprintf(WARNING_ATTRIBUTE_COPY_SAME_ID, $products_id_from, $products_id_to), 'caution');
         return false;
     }
@@ -470,39 +472,39 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
     }
 
     // Notify that the attribute-copying has started for the product.
-    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_START', ['from' => (int)$products_id_from, 'to' => (int)$products_id_to]);
+    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_START', ['from' => $products_id_from, 'to' => $products_id_to]);
 
     // check if product already has attributes
     $already_has_attributes = zen_has_product_attributes($products_id_to, false);
 
-    if ($copy_attributes_delete_first == '1' && $already_has_attributes == true) {
+    if ($copy_attributes_delete_first == '1' && $already_has_attributes === true) {
         // delete all attributes first from destination products_id_to
         zen_products_attributes_download_delete($products_id_to);
         // delete the attributes
-        $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = " . (int)$products_id_to);
+        $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = $products_id_to");
 
         // Notify that attributes have been deleted for the product.
-        $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_DELETE', (int)$products_id_to);
+        $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_DELETE', $products_id_to);
     }
 
     // get attributes to copy from
-    $products_copy_from = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id=" . (int)$products_id_from . " ORDER BY products_attributes_id");
+    $products_copy_from = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = $products_id_from ORDER BY products_attributes_id");
 
     foreach ($products_copy_from as $copy_from) {
         $update_attribute = false;
         $add_attribute = true;
 
-        $check_duplicate = zen_get_attribute_details((int)$products_id_to, (int)$copy_from['options_id'], (int)$copy_from['options_values_id']);
+        $check_duplicate = zen_get_attribute_details($products_id_to, (int)$copy_from['options_id'], (int)$copy_from['options_values_id']);
 
         $update_attribute = false;
         $add_attribute = true;
-        if ($already_has_attributes == true && !$check_duplicate->EOF) {
+        if ($already_has_attributes === true && !$check_duplicate->EOF) {
             $update_attribute = true;
             $add_attribute = false;
         }
 
         if ($copy_attributes_duplicates_skipped == '1' && !$check_duplicate->EOF) {
-            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_SKIPPING, (int)$copy_from['products_attributes_id'], (int)$products_id_to), 'caution');
+            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_SKIPPING, (int)$copy_from['products_attributes_id'], $products_id_to), 'caution');
             // skip it
             continue;
         }
@@ -510,17 +512,18 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
         // New attribute - insert it
         if ($add_attribute === true) {
             $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . "
-              (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order,
+              (products_id, options_id, options_values_id, options_values_price, options_values_price_w, price_prefix, products_options_sort_order,
               product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only,
               attributes_default, attributes_discounted, attributes_image, attributes_price_base_included,
               attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime,
               attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime,
               attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free,
               attributes_required)
-              VALUES (" . (int)$products_id_to . ",
+              VALUES (" . $products_id_to . ",
               '" . $copy_from['options_id'] . "',
               '" . $copy_from['options_values_id'] . "',
               '" . $copy_from['options_values_price'] . "',
+              '" . $copy_from['options_values_price_w'] . "',
               '" . $copy_from['price_prefix'] . "',
               '" . $copy_from['products_options_sort_order'] . "',
               '" . $copy_from['product_attribute_is_free'] . "',
@@ -544,12 +547,12 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
               '" . $copy_from['attributes_price_letters_free'] . "',
               '" . $copy_from['attributes_required'] . "')"
             );
-            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$copy_from['products_attributes_id'], (int)$products_id_from, (int)$products_id_to), 'success');
+            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$copy_from['products_attributes_id'], $products_id_from, $products_id_to), 'success');
 
             $new_products_attributes_id = $db->Insert_ID();
 
             // Notify that an attribute has been added for the product.
-            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADD', ['pID' => (int)$products_id_to, 'fields' => $copy_from]);
+            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADD', ['pID' => $products_id_to, 'fields' => $copy_from]);
 
 
             // Downloads
@@ -567,7 +570,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
                                 " . (int)$result['products_attributes_maxcount'] . ")");
 
                     $new_attribute_id = $db->Insert_ID();
-                    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADDED_DOWNLOAD', (int)$products_id_to, $new_products_attributes_id, $new_attribute_id);
+                    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADDED_DOWNLOAD', $products_id_to, $new_products_attributes_id, $new_attribute_id);
                 }
             }
         }
@@ -575,44 +578,45 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
         // Update attribute - Just attribute settings not ids
         if ($update_attribute === true) {
             $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " SET
-                  options_values_price='" . $copy_from['options_values_price'] . "',
-                  price_prefix='" . $copy_from['price_prefix'] . "',
-                  products_options_sort_order='" . $copy_from['products_options_sort_order'] . "',
-                  product_attribute_is_free='" . $copy_from['product_attribute_is_free'] . "',
-                  products_attributes_weight='" . $copy_from['products_attributes_weight'] . "',
-                  products_attributes_weight_prefix='" . $copy_from['products_attributes_weight_prefix'] . "',
-                  attributes_display_only='" . $copy_from['attributes_display_only'] . "',
-                  attributes_default='" . $copy_from['attributes_default'] . "',
-                  attributes_discounted='" . $copy_from['attributes_discounted'] . "',
-                  attributes_image='" . $copy_from['attributes_image'] . "',
-                  attributes_price_base_included='" . $copy_from['attributes_price_base_included'] . "',
-                  attributes_price_onetime='" . $copy_from['attributes_price_onetime'] . "',
-                  attributes_price_factor='" . $copy_from['attributes_price_factor'] . "',
-                  attributes_price_factor_offset='" . $copy_from['attributes_price_factor_offset'] . "',
-                  attributes_price_factor_onetime='" . $copy_from['attributes_price_factor_onetime'] . "',
-                  attributes_price_factor_onetime_offset='" . $copy_from['attributes_price_factor_onetime_offset'] . "',
-                  attributes_qty_prices='" . $copy_from['attributes_qty_prices'] . "',
-                  attributes_qty_prices_onetime='" . $copy_from['attributes_qty_prices_onetime'] . "',
-                  attributes_price_words='" . $copy_from['attributes_price_words'] . "',
-                  attributes_price_words_free='" . $copy_from['attributes_price_words_free'] . "',
-                  attributes_price_letters='" . $copy_from['attributes_price_letters'] . "',
-                  attributes_price_letters_free='" . $copy_from['attributes_price_letters_free'] . "',
-                  attributes_required='" . $copy_from['attributes_required'] . "'
-                  WHERE products_id=" . (int)$products_id_to . "
-                   AND options_id=" . (int)$copy_from['options_id'] . "
-                   AND options_values_id=" . (int)$copy_from['options_values_id']
+                  options_values_price = '" . $copy_from['options_values_price'] . "',
+                  options_values_price_w = '" . $copy_from['options_values_price_w'] . "',
+                  price_prefix = '" . $copy_from['price_prefix'] . "',
+                  products_options_sort_order = '" . $copy_from['products_options_sort_order'] . "',
+                  product_attribute_is_free = '" . $copy_from['product_attribute_is_free'] . "',
+                  products_attributes_weight = '" . $copy_from['products_attributes_weight'] . "',
+                  products_attributes_weight_prefix = '" . $copy_from['products_attributes_weight_prefix'] . "',
+                  attributes_display_only = '" . $copy_from['attributes_display_only'] . "',
+                  attributes_default = '" . $copy_from['attributes_default'] . "',
+                  attributes_discounted = '" . $copy_from['attributes_discounted'] . "',
+                  attributes_image = '" . $copy_from['attributes_image'] . "',
+                  attributes_price_base_included = '" . $copy_from['attributes_price_base_included'] . "',
+                  attributes_price_onetime = '" . $copy_from['attributes_price_onetime'] . "',
+                  attributes_price_factor = '" . $copy_from['attributes_price_factor'] . "',
+                  attributes_price_factor_offset = '" . $copy_from['attributes_price_factor_offset'] . "',
+                  attributes_price_factor_onetime = '" . $copy_from['attributes_price_factor_onetime'] . "',
+                  attributes_price_factor_onetime_offset = '" . $copy_from['attributes_price_factor_onetime_offset'] . "',
+                  attributes_qty_prices = '" . $copy_from['attributes_qty_prices'] . "',
+                  attributes_qty_prices_onetime = '" . $copy_from['attributes_qty_prices_onetime'] . "',
+                  attributes_price_words = '" . $copy_from['attributes_price_words'] . "',
+                  attributes_price_words_free = '" . $copy_from['attributes_price_words_free'] . "',
+                  attributes_price_letters = '" . $copy_from['attributes_price_letters'] . "',
+                  attributes_price_letters_free = '" . $copy_from['attributes_price_letters_free'] . "',
+                  attributes_required = '" . $copy_from['attributes_required'] . "'
+                  WHERE products_id = " . $products_id_to . "
+                   AND options_id = " . (int)$copy_from['options_id'] . "
+                   AND options_values_id = " . (int)$copy_from['options_values_id']
 // and attributes_image='" . $copy_from['attributes_image'] . "'
 // and attributes_price_base_included=" . $copy_from['attributes_price_base_included']
             );
-            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_UPDATING, (int)$copy_from['products_attributes_id'], (int)$products_id_to), 'success');
+            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_UPDATING, (int)$copy_from['products_attributes_id'], $products_id_to), 'success');
 
             // Notify that an attribute has been updated for the product.
-            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_UPDATE', ['pID' => (int)$products_id_to, 'fields' => $copy_from]);
+            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_UPDATE', ['pID' => $products_id_to, 'fields' => $copy_from]);
         }
     }
 
     // Notify that the attribute-copying has been completed for the product.
-    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_COMPLETE', ['from' => (int)$products_id_from, 'to' => (int)$products_id_to]);
+    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_COMPLETE', ['from' => $products_id_from, 'to' => $products_id_to]);
 
     // reset products_price_sorter for searches etc.
     zen_update_products_price_sorter($products_id_to);

@@ -223,6 +223,8 @@ if (!empty($action)) {
           $values_id = (int)(($products_options_array->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_TEXT) || ( $products_options_array->fields['products_options_type'] == PRODUCTS_OPTIONS_TYPE_FILE)) ? PRODUCTS_OPTIONS_VALUES_TEXT_ID : $value_id;
 
           $value_price = (float)$_POST['value_price'];
+          $value_price_w = $_POST['value_price_w'] ?? '0';  //- Not present if wholesale pricing isn't enabled for the site
+          $value_price_w = ($value_price_w === '') ? '0' : $value_price_w;    //- Convert an empty entry into '0'
           $price_prefix = (int)$_POST['price_prefix'];
           $price_prefix = ($price_prefix == 1 ? '+' : ($price_prefix == 2 ? '-' : ''));
 
@@ -287,11 +289,12 @@ if (!empty($action)) {
           }
           $attributes_image_name = zen_limit_image_filename($attributes_image_name, TABLE_PRODUCTS_ATTRIBUTES, 'attributes_image');
 
-          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
+          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . " (products_id, options_id, options_values_id, options_values_price, options_values_price_w, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
                         VALUES (" . (int)$products_id . ",
                                 " . (int)$options_id . ",
                                 " . (int)$values_id . ",
                                 " . (float)$value_price . ",
+                                '" . zen_db_input($value_price_w) . "',
                                 '" . zen_db_input($price_prefix) . "',
                                 " . (int)$products_options_sort_order . ",
                                 " . (int)$product_attribute_is_free . ",
@@ -375,6 +378,8 @@ if (!empty($action)) {
           $products_id = (int)$_POST['products_id'];
           $options_id = (int)$_POST['options_id'];
           $value_price = (float)$_POST['value_price'];
+          $value_price_w = $_POST['value_price_w'] ?? '0';  //- Not present if wholesale pricing isn't enabled for the site
+          $value_price_w = ($value_price_w === '') ? '0' : $value_price_w;    //- Convert an empty entry into '0'
           $price_prefix = (int)$_POST['price_prefix'];
           $price_prefix = ($price_prefix == 1 ? '+' : ($price_prefix == 2 ? '-' : ''));
 
@@ -440,6 +445,7 @@ if (!empty($action)) {
                             options_id = " . (int)$options_id . ",
                             options_values_id = " . (int)$values_id . ",
                             options_values_price = " . (float)$value_price . ",
+                            options_values_price_w = '" . zen_db_input($value_price_w) . "',
                             price_prefix = '" . zen_db_input($price_prefix) . "',
                             products_options_sort_order = " . (int)$products_options_sort_order . ",
                             product_attribute_is_free = " . (int)$product_attribute_is_free . ",
@@ -898,6 +904,13 @@ function zen_js_option_values_list($selectedName, $fieldName)
         </div>
       <?php } // $action == '' ?>
       <?php
+      // -----
+      // Defining variables common to various display layouts.
+      //
+      $wholesale_pricing_enabled = (WHOLESALE_PRICING_CONFIG !== 'false');
+      $wholesale_pricing_indicator = '<span class="text-danger">*</span>';
+      $wholesale_pricing_heading = ($wholesale_pricing_enabled === true) ? '<br>' . $wholesale_pricing_indicator . '<small>' . TABLE_HEADING_HAS_WHOLESALE_PRICE . '</small>' : '';
+
 // start of attributes display
       if ($_GET['products_filter'] === 0) {
         ?>
@@ -1043,7 +1056,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 <td class="dataTableHeadingContent">&nbsp;</td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_NAME; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_OPTION_VALUE; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_PRICE; ?></td>
+                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_PRICE_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_PRICE . $wholesale_pricing_heading; ?></td>
                 <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_WEIGHT_PREFIX; ?>&nbsp;<?php echo TABLE_HEADING_OPTION_WEIGHT; ?></td>
                 <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_OPTION_SORT_ORDER; ?></td>
                 <td class="dataTableHeadingContent text-center"><?php echo LEGEND_BOX; ?></td>
@@ -1200,6 +1213,21 @@ function zen_js_option_values_list($selectedName, $fieldName)
                             <?php echo zen_draw_input_field('value_price', $attributes_value['options_values_price'], 'class="form-control" id="value_price"'); ?>
                           </div>
                         </div>
+<?php
+                        if ($wholesale_pricing_enabled === true) {
+?>
+                      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE_W, 'value-price-w', 'class="control-label"'); ?>
+                        <a href="#" class="pop-help" data-toggle="popover" data-placement="top" title="<?php echo HELPTEXT_WHOLESALE_POPUP_TITLE; ?>" data-content="<?php echo HELPTEXT_WHOLESALE_PRICES; ?>">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </a>
+                        <div class="input-group">
+                          <?php echo zen_draw_input_field('value_price_w', $attributes_value['options_values_price_w'], 'class="form-control" id="value-price-w"'); ?>
+                        </div>
+                      </div>
+<?php
+                        }
+?>
                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                           <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                           <div class="input-group">
@@ -1493,6 +1521,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   $attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
                   $attributes_price_final_onetime = zen_get_attributes_price_final_onetime($attributes_value['products_attributes_id'], 1, $attributes_values);
                   $attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
+                  
+                  $attribute_has_wholesale = ($wholesale_pricing_enabled === true && $attributes_value['options_values_price_w'] !== '0') ? $wholesale_pricing_indicator : '';
                   ?>
 
                   <tr>
@@ -1508,7 +1538,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       <?php } ?>
                       <?php echo $values_name; ?>
                     </td>
-                    <td class="text-right"><?php echo $attributes_value['price_prefix']; ?>&nbsp;<?php echo $attributes_value['options_values_price']; ?></td>
+                    <td class="text-right"><?php echo $attributes_value['price_prefix']; ?>&nbsp;<?php echo $attributes_value['options_values_price'] . $attribute_has_wholesale; ?></td>
                     <td class="text-right"><?php echo $attributes_value['products_attributes_weight_prefix']; ?>&nbsp;<?php echo $attributes_value['products_attributes_weight']; ?></td>
                     <td class="text-right"><?php echo $attributes_value['products_options_sort_order']; ?></td>
                     <?php if ($action == '') { ?>
@@ -1765,6 +1795,21 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           <?php echo zen_draw_input_field('value_price', '', 'class="form-control" id="value_price"'); ?>
                         </div>
                       </div>
+<?php
+                        if ($wholesale_pricing_enabled === true) {
+?>
+                      <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                        <?php echo zen_draw_label(TABLE_HEADING_OPTION_PRICE_W, 'value-price-w', 'class="control-label"'); ?>
+                        <a href="#" class="pop-help" data-toggle="popover" data-placement="top" title="<?php echo HELPTEXT_WHOLESALE_POPUP_TITLE; ?>" data-content="<?php echo HELPTEXT_WHOLESALE_PRICES; ?>">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </a>
+                        <div class="input-group">
+                          <?php echo zen_draw_input_field('value_price_w', '0', 'class="form-control" id="value-price-w"'); ?>
+                        </div>
+                      </div>
+<?php
+                        }
+?>
                       <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                         <?php echo zen_draw_label(TABLE_HEADING_OPTION_WEIGHT, 'products_attributes_weight', 'class="control-label"'); ?>
                         <div class="input-group">
@@ -2040,6 +2085,11 @@ function zen_js_option_values_list($selectedName, $fieldName)
         // turn off hourglass
         document.body.style.cursor = "default";
       }
+
+      $('[data-toggle="popover"]').popover();
+      $('a.pop-help').click(function(e) {
+        e.preventDefault();
+      });
     </script>
   </body>
 </html>

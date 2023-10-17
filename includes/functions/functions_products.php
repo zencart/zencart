@@ -614,7 +614,7 @@ function zen_get_products_manufacturers_image($product_id)
                       WHERE p.products_id = " . (int)$product_id;
 
     $product = $db->Execute($product_query, 1);
-    return ($product->EOF) '' : $product->fields['manufacturers_image'];
+    return ($product->EOF) ? '' : $product->fields['manufacturers_image'];
 }
 
 /**
@@ -972,19 +972,33 @@ function zen_copy_discounts_to_product($copy_from, $copy_to)
 {
     global $db;
 
-    $check_discount_type_query = "SELECT products_discount_type, products_discount_type_from, products_mixed_discount_quantity FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$copy_from;
-    $check_discount_type = $db->Execute($check_discount_type_query);
-    if ($check_discount_type->EOF) return FALSE;
+    $copy_from = (int)$copy_from;
+    $check_discount_type_query = "SELECT products_discount_type, products_discount_type_from, products_mixed_discount_quantity FROM " . TABLE_PRODUCTS . " WHERE products_id = $copy_from";
+    $check_discount_type = $db->Execute($check_discount_type_query, 1);
+    if ($check_discount_type->EOF) {
+        return false;
+    }
 
-    $db->Execute("update " . TABLE_PRODUCTS . " set products_discount_type='" . $check_discount_type->fields['products_discount_type'] . "', products_discount_type_from='" . $check_discount_type->fields['products_discount_type_from'] . "', products_mixed_discount_quantity='" . $check_discount_type->fields['products_mixed_discount_quantity'] . "' where products_id=" . (int)$copy_to);
+    $copy_to = (int)$copy_to;
+    $db->Execute(
+        "UPDATE " . TABLE_PRODUCTS . "
+            SET products_discount_type = " . $check_discount_type->fields['products_discount_type'] . ",
+                products_discount_type_from = " . $check_discount_type->fields['products_discount_type_from'] . ",
+                products_mixed_discount_quantity = " . $check_discount_type->fields['products_mixed_discount_quantity'] . "
+          WHERE products_id = $copy_to",
+         1
+    );
 
-    $check_discount_query = "SELECT * FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$copy_from . " ORDER BY discount_id";
+    $check_discount_query = "SELECT * FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id = $copy_from ORDER BY discount_id";
     $results = $db->Execute($check_discount_query);
     $cnt_discount = 1;
     foreach ($results as $result) {
-        $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
-                  (discount_id, products_id, discount_qty, discount_price )
-                  VALUES (" . (int)$cnt_discount . ", " . (int)$copy_to . ", '" . $result['discount_qty'] . "', '" . $result['discount_price'] . "')");
+        $db->Execute(
+            "INSERT INTO " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
+                (discount_id, products_id, discount_qty, discount_price, discount_price_w)
+             VALUES
+                ($cnt_discount, $copy_to, " . $result['discount_qty'] . ", " . $result['discount_price'] . ", '" . $result['discount_price_w'] . "')"
+        );
         $cnt_discount++;
     }
 }

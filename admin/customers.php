@@ -91,7 +91,7 @@ if (!empty($action)) {
                 $customers_fax = zen_db_prepare_input($_POST['customers_fax']);
             }
             $customers_newsletter = zen_db_prepare_input($_POST['customers_newsletter']);
-            $customers_group_pricing = (int)$_POST['customers_group_pricing'];
+            $customers_group_pricing = (int)$_POST['customers_group_pricing'] ?? 0; //- No present if wholesale pricing is selected!
             $customers_email_format = zen_db_prepare_input($_POST['customers_email_format']);
             $customers_gender = !empty($_POST['customers_gender']) ?
                 zen_db_prepare_input($_POST['customers_gender']) : '';
@@ -100,6 +100,7 @@ if (!empty($action)) {
 
             $customers_authorization = (int)$_POST['customers_authorization'];
             $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
+            $customers_whole = (int)$_POST['customers_whole'] ?? 0; //- Not present if Wholesale Pricing isn't enabled for the site or a group-pricing group's selected!
 
             if (CUSTOMERS_APPROVAL_AUTHORIZATION === '2' && $customers_authorization === 1) {
                 $customers_authorization = 2;
@@ -230,6 +231,11 @@ if (!empty($action)) {
                     [
                         'fieldName' => 'customers_referral',
                         'value' => $customers_referral,
+                        'type' => 'stringIgnoreNull'
+                    ],
+                    [
+                        'fieldName' => 'customers_whole',
+                        'value' => $customers_whole,
                         'type' => 'stringIgnoreNull'
                     ],
                 ];
@@ -997,6 +1003,26 @@ if ($action === 'edit' || $action === 'update') {
 ?>
                 </div>
             </div>
+<?php
+    if (WHOLESALE_PRICING_CONFIG !== 'false') {
+?>
+            <div class="form-group">
+                <?php echo zen_draw_label(TEXT_WHOLESALE_LEVEL, 'customers-whole', 'class="col-sm-3 control-label"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <?php
+                    echo zen_draw_input_field(
+                        'customers_whole',
+                        $cInfo->customers_whole,
+                        ' class="form-control" id="customers-whole" min="0"',
+                        false,
+                        'number'
+                    ); ?>
+                    <span class="help-block" id="whole-help"><?php echo HELPTEXT_WHOLESALE_LEVEL; ?></span>
+                </div>
+            </div>
+<?php
+    }
+?>
             <div class="form-group">
                 <?php echo zen_draw_label(ENTRY_PRICING_GROUP, 'customers_group_pricing', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-9 col-md-6">
@@ -1059,6 +1085,7 @@ if ($action === 'edit' || $action === 'update') {
                     ); ?>
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="col-sm-3">
                     <p class="control-label"><?php echo TEXT_CUSTOMER_GROUPS; ?></p>
@@ -1205,6 +1232,12 @@ if ($action === 'edit' || $action === 'update') {
             break;
         case 'gv_balance-desc':
             $disp_order = "cgc.amount DESC, c.customers_lastname, c.customers_firstname";
+            break;
+        case 'wholesale-asc':
+            $disp_order = 'c.customers_whole, c.customers_lastname, c.customers_firstname';
+            break;
+        case 'wholesale-desc':
+            $disp_order = 'c.customers_whole DESC, c.customers_lastname, c.customers_firstname';
             break;
         default:
             $disp_order = "ci.customers_info_date_account_created DESC";
@@ -1400,7 +1433,38 @@ if ($action === 'edit' || $action === 'update') {
                                         '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
                                 </a>
                             </th>
-
+<?php
+    if (WHOLESALE_PRICING_CONFIG !== 'false') {
+?>
+                            <th class="dataTableHeadingContent">
+                                <?php echo ($_GET['list_order'] === 'wholesale-asc' || $_GET['list_order'] === 'wholesale-desc') ?
+                                    '<span class="SortOrderHeader">' . TABLE_HEADING_WHOLESALE_LEVEL . '</span>' :
+                                    TABLE_HEADING_WHOLESALE_LEVEL; ?>
+                                <br>
+                                <a href="<?php
+                                echo zen_href_link(
+                                    basename($PHP_SELF),
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-asc',
+                                    'NONSSL'
+                                ); ?>">
+                                    <?php echo ($_GET['list_order'] === 'wholesale-asc') ?
+                                        '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                </a>&nbsp;
+                                <a href="<?php
+                                echo zen_href_link(
+                                    basename($PHP_SELF),
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-desc',
+                                    'NONSSL'
+                                ); ?>">
+                                    <?php echo ($_GET['list_order'] === 'wholesale-desc') ?
+                                        '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                </a>
+                            </th>
+<?php
+    }
+?>
                             <th class="dataTableHeadingContent">
                                 <?php echo ($_GET['list_order'] === 'group-asc' || $_GET['list_order'] === 'group-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_PRICING_GROUP . '</span>' :
@@ -1666,6 +1730,15 @@ if ($action === 'edit' || $action === 'update') {
                                 <td class="dataTableContent">
                                     <?php echo zen_date_short($customer['date_of_last_login']); ?>
                                 </td>
+<?php
+        if (WHOLESALE_PRICING_CONFIG !== 'false') {
+?>
+                                <td class="dataTableContent text-center">
+                                    <?php echo $customer['customers_whole']; ?>
+                                </td>
+<?php
+        }
+?>
                                 <td class="dataTableContent">
                                     <?php echo $customer['pricing_group_name']; ?>
                                 </td>

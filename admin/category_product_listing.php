@@ -530,6 +530,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           $categories = $db->Execute($sql);
 
           $show_prod_labels = ($search_result || $categories->EOF);
+          
+          $wholesale_pricing_enabled = (WHOLESALE_PRICING_CONFIG !== 'false');
+          $wholesale_pricing_indicator = '<span class="text-danger">*</span>';
+          $wholesale_pricing_heading = ($wholesale_pricing_enabled === true) ? '<br>' . $wholesale_pricing_indicator . '<small>' . TABLE_HEADING_HAS_WHOLESALE_PRICE . '</small>' : '';
           ?>
           <table id="categories-products-table" class="table table-striped">
             <thead>
@@ -539,7 +543,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 <th class="hidden-sm hidden-xs imageView <?= $additionalClass; ?>"><?php echo TABLE_HEADING_IMAGE; ?></th>
                 <?php if ($show_prod_labels) { ?>
                   <th class="hidden-sm hidden-xs"><?php echo TABLE_HEADING_MODEL; ?></th>
-                  <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></th>
+                  <th class="text-right hidden-sm hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_PRICE . $wholesale_pricing_heading; ?></th>
                 <?php } ?>
 <?php
           // -----
@@ -834,7 +838,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY', '', $extra_select, $extra_from, $extra_joins, $extra_ands, $order_by, $extra_search_fields);
 
             $products_query_raw = "SELECT DISTINCT p.products_type, p.products_id, pd.products_name, p.products_quantity,
-                                          p.products_price, p.products_status, p.products_model, p.products_sort_order, p.products_price_sorter, p.products_weight,
+                                          p.products_price, p.products_price_w, p.products_status, p.products_model, p.products_sort_order, p.products_price_sorter, p.products_weight,
                                           p.master_categories_id";
             $products_query_raw .= $extra_select;
 
@@ -898,6 +902,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               }
 
               $type_handler = $zc_products->get_handler($product['products_type']);
+              $products_wholesale_indicator = ($wholesale_pricing_enabled === true && $product['products_price_w'] !== '0') ? $wholesale_pricing_indicator : '';
               ?>
               <tr class="product-listing-row" data-pid="<?php echo $product['products_id']; ?>">
                 <td class="text-right"><?php echo $product['products_id']; ?></td>
@@ -910,7 +915,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 </td>
                 <td class="hidden-sm hidden-xs imageView <?= $additionalClass; ?>"><?php echo zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT); ?></td>
                 <td class="hidden-sm hidden-xs"><?php echo $product['products_model']; ?></td>
-                <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']); ?></td>
+                <td class="text-right hidden-sm hidden-xs"><?php echo zen_get_products_display_price($product['products_id']) . $products_wholesale_indicator; ?></td>
 <?php
               // -----
               // Additional fields can be added into columns before the Quantity column.
