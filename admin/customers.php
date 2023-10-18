@@ -100,7 +100,7 @@ if (!empty($action)) {
 
             $customers_authorization = (int)$_POST['customers_authorization'];
             $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
-            $customers_whole = (int)$_POST['customers_whole'] ?? 0; //- Not present if Wholesale Pricing isn't enabled for the site or a group-pricing group's selected!
+            $customers_whole = (int)($_POST['customers_whole'] ?? 0); //- Not present if Wholesale Pricing isn't enabled for the site or a group-pricing group's selected!
 
             if (CUSTOMERS_APPROVAL_AUTHORIZATION === '2' && $customers_authorization === 1) {
                 $customers_authorization = 2;
