@@ -679,12 +679,13 @@ class shoppingCart extends base
 
             $product = zen_get_product_details($prid);
             if ($product->EOF) {
-                continue;   //-TODO: Should the product be removed from the cart if this is detected?
+                $this->removeUprid($uprid);
+                continue;
             }
 
             $product = $product->fields;
             $this->notify('NOTIFY_CART_CALCULATE_PRODUCT_PRICE', $uprid, $product);
-            $prid = (int)$product['products_id'];   //-TODO: Needed?  Just in case the id was changed by the observer?
+            $prid = zen_get_prid($product['products_id']);   //-TODO: Needed?  Just in case the id was changed by the observer?
 
             $products_tax = zen_get_tax_rate($product['products_tax_class_id']);
             $products_price = $product['products_price'];
@@ -832,7 +833,7 @@ class shoppingCart extends base
                     $chk_price = zen_get_products_base_price($uprid);
                     $chk_special = zen_get_products_special_price($uprid, false);
                     // products_options_value_text
-                    if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && zen_get_attributes_type($check_attribute) == PRODUCTS_OPTIONS_TYPE_TEXT) {
+                    if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && zen_get_attributes_type($attributes_id) == PRODUCTS_OPTIONS_TYPE_TEXT) {
                         $text_words = zen_get_word_count_price(
                             $this->contents[$uprid]['attributes_values'][$attribute_price->fields['options_id']],
                             $attribute_price->fields['attributes_price_words_free'],
@@ -1062,15 +1063,9 @@ class shoppingCart extends base
                     // calculate proper discount for attributes
                     $discount_type_id = '';
                     $sale_maker_discount = '';
-                    $new_attributes_price = zen_get_discount_calc(
-                        $prid,
-                        $attribute_price->fields['products_attributes_id'],
-                        $attribute_price->fields['options_values_price'] +
-                            (zen_get_products_price_is_priced_by_attributes($attribute_price->fields['products_id']) ?
-                                zen_products_lookup($attribute_price->fields['products_id'], 'products_price') : 0.0),
-                        $qty
-                    );
-                    $new_attributes_price -= (zen_get_products_price_is_priced_by_attributes($prid)) ? zen_products_lookup($prid, 'products_price') : 0;
+                    $products_raw_attribute_base_price = (zen_get_products_price_is_priced_by_attributes($prid)) ? zen_products_lookup($prid, 'products_price') : 0.0;
+                    $new_attributes_price = zen_get_discount_calc($prid, $attribute_price->fields['products_attributes_id'], $attribute_price->fields['options_values_price'] + $products_raw_attribute_base_price, $qty);
+                    $new_attributes_price -= $products_raw_attribute_base_price;
                     $attributes_price += $new_attributes_price;
                 } else {
                     $attributes_price += $attribute_price->fields['options_values_price'];
@@ -1141,14 +1136,13 @@ class shoppingCart extends base
     {
         global $db;
 
-        $attributes_price_onetime = 0;
-
         $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_START', $uprid);
 
         if (!isset($this->contents[$uprid]['attributes'])) {
             return 0;
         }
 
+        $attributes_price_onetime = 0;
         $prid = (int)$uprid;
         foreach ($this->contents[$uprid]['attributes'] as $option => $value) {
             $sql = "SELECT *
@@ -1267,7 +1261,8 @@ class shoppingCart extends base
         foreach ($this->contents as $uprid => $data) {
             $products = zen_get_product_details((int)$uprid);
             if ($products->EOF) {
-                continue;   //-TODO: Product not found, should it be removed from the cart?
+                $this->removeUprid($uprid);
+                continue;
             }
 
             $this->notify('NOTIFY_CART_GET_PRODUCTS_NEXT', $uprid, $products->fields);
@@ -1571,7 +1566,7 @@ class shoppingCart extends base
 
                         // -----
                         // If the product doesn't have downloads, its virtual setting dictates
-                        // whether it' a virtual/physical product.
+                        // whether it's a virtual/physical product.
                         //
                         switch ($this->content_type) {
                             case 'virtual':
@@ -1903,7 +1898,7 @@ class shoppingCart extends base
                     }
 
                     // -----
-                    // Message the customer regarind the quantity adjustment.
+                    // Message the customer regarding the quantity adjustment.
                     //
                     if ($adjust_max === 'true') {
                         $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
