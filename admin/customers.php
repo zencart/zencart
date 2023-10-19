@@ -91,7 +91,7 @@ if (!empty($action)) {
                 $customers_fax = zen_db_prepare_input($_POST['customers_fax']);
             }
             $customers_newsletter = zen_db_prepare_input($_POST['customers_newsletter']);
-            $customers_group_pricing = (int)$_POST['customers_group_pricing'] ?? 0; //- No present if wholesale pricing is selected!
+            $customers_group_pricing = (int)($_POST['customers_group_pricing'] ?? 0); //- Not present if wholesale pricing is selected!
             $customers_email_format = zen_db_prepare_input($_POST['customers_email_format']);
             $customers_gender = !empty($_POST['customers_gender']) ?
                 zen_db_prepare_input($_POST['customers_gender']) : '';
