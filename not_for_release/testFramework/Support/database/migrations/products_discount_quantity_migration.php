@@ -19,6 +19,7 @@ class CreateProductsDiscountQuantityTable extends Migration
             $table->integer('discount_id')->default(0);
             $table->integer('products_id')->default(0);
             $table->float('discount_qty')->default(0);
+            $table->string('discount_price_w', 150)->default('0');
             $table->decimal('discount_price', 15, 4)->default(0.0000);
 
             $table->index(['products_id', 'discount_qty'], 'idx_id_qty_zen');

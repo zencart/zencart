@@ -8290,8 +8290,22 @@ Phone',
                     'use_function' => NULL,
                     'val_function' => NULL,
                 ),
+            51 =>
+                array(
+                    'configuration_description' => 'Should <em>Wholesale Pricing</em> be enabled for your site?  Choose <b>false</b> (the default) if you don\'t want that feature enabled. Otherwise, choose <b>Tax Exempt</b> to enable with tax-exemptions for all wholesale customers or <b>Pricing Only</b> to apply tax as usual for wholesale customers.',
+                    'configuration_group_id' => 1,
+                    'configuration_id' => 552,
+                    'configuration_key' => 'WHOLESALE_PRICING_CONFIG',
+                    'configuration_title' => 'Wholesale Pricing',
+                    'configuration_value' => 'false™',
+                    'date_added' => '2003-11-21 00:00:00',
+                    'last_modified' => NULL,
+                    'set_function' => 'zen_cfg_select_option([\'false\', \'Tax Exempt\', \'Pricing Only\'],',
+                    'sort_order' => 23,
+                    'use_function' => NULL,
+                    'val_function' => NULL,
+                ),
         ));
-
 
     }
 }

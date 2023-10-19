@@ -22,6 +22,7 @@ class CreateProductsTable extends Migration
             $table->string('products_model', 32)->nullable()->index('idx_products_model_zen');
             $table->string('products_image')->nullable();
             $table->decimal('products_price', 15, 4)->default(0.0000);
+            $table->string('products_price_w', 150)->default('0');
             $table->boolean('products_virtual')->default(0);
             $table->dateTime('products_date_added')->default('0001-01-01 00:00:00')->index('idx_products_date_added_zen');
             $table->dateTime('products_last_modified')->nullable();
