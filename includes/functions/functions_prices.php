@@ -588,7 +588,7 @@ function zen_get_products_quantity_order_max($product_id)
 function zen_get_products_qty_box_status($product_id)
 {
     $result = zen_get_product_details($product_id);
-    if (!$result->EOF && $result->fields['products_qty_box_status'] === '1');
+    return (!$result->EOF && $result->fields['products_qty_box_status'] === '1');
 }
 
 /**
