@@ -24,26 +24,26 @@ $state = '';
 $zone_id = 0;
 $error = false;
 
-if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
+if (isset($_POST['action']) && ($_POST['action'] === 'submit')) {
     // process a new address
     if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['street_address'])) {
         $process = true;
-        if (ACCOUNT_GENDER == 'true') {
+        if (ACCOUNT_GENDER === 'true') {
             $gender = zen_db_prepare_input($_POST['gender']);
         }
-        if (ACCOUNT_COMPANY == 'true') {
+        if (ACCOUNT_COMPANY === 'true') {
             $company = zen_db_prepare_input($_POST['company']);
         }
         $firstname = zen_db_prepare_input($_POST['firstname']);
         $lastname = zen_db_prepare_input($_POST['lastname']);
         $street_address = zen_db_prepare_input($_POST['street_address']);
-        if (ACCOUNT_SUBURB == 'true') {
+        if (ACCOUNT_SUBURB === 'true') {
             $suburb = zen_db_prepare_input($_POST['suburb']);
         }
         $postcode = zen_db_prepare_input($_POST['postcode']);
         $city = zen_db_prepare_input($_POST['city']);
-        if (ACCOUNT_STATE == 'true') {
-            $state = (isset($_POST['state'])) ? zen_db_prepare_input($_POST['state']) : '';
+        if (ACCOUNT_STATE === 'true') {
+            $state = zen_db_prepare_input($_POST['state'] ?? '');
             if (isset($_POST['zone_id'])) {
                 $zone_id = zen_db_prepare_input($_POST['zone_id']);
             } else {
@@ -51,8 +51,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
             }
         }
         $country = zen_db_prepare_input($_POST['zone_country_id']);
-        if (ACCOUNT_GENDER == 'true') {
-            if ( ($gender != 'm') && ($gender != 'f') ) {
+        if (ACCOUNT_GENDER === 'true') {
+            if ( ($gender !== 'm') && ($gender !== 'f') ) {
                 $error = true;
                 $messageStack->add('checkout_address', ENTRY_GENDER_ERROR);
             }
@@ -78,7 +78,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
             $messageStack->add('checkout_address', ENTRY_CITY_ERROR);
         }
 
-        if (ACCOUNT_STATE == 'true') {
+        if (ACCOUNT_STATE === 'true') {
             $check_query =
                 "SELECT COUNT(*) AS total
                    FROM " . TABLE_ZONES . "
@@ -86,7 +86,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
             $check_query = $db->bindVars($check_query, ':zoneCountryID', $country, 'integer');
             $check = $db->Execute($check_query);
             $entry_state_has_zones = ($check->fields['total'] > 0);
-            if ($entry_state_has_zones == true && ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
+            if ($entry_state_has_zones === true && ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
                 $zone_query =
                     "SELECT DISTINCT zone_id, zone_name, zone_code
                        FROM " . TABLE_ZONES . "
@@ -102,18 +102,17 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
                 $zone = $db->Execute($zone_query);
 
                 //look for an exact match on zone ISO code
-                $found_exact_iso_match = ($zone->RecordCount() == 1);
-                if ($zone->RecordCount() > 1) {
-                    while (!$zone->EOF && !$found_exact_iso_match) {
-                        if (strtoupper($zone->fields['zone_code']) == strtoupper($state) ) {
+                $found_exact_iso_match = ((int)$zone->RecordCount() === 1);
+                if ((int)$zone->RecordCount() > 1) {
+                    foreach ($zone as $next_zone) {
+                        if (strtoupper($next_zone['zone_code']) === strtoupper($state)) {
                             $found_exact_iso_match = true;
-                            continue;
+                            break;
                         }
-                        $zone->MoveNext();
                     }
                 }
 
-                if ($found_exact_iso_match) {
+                if ($found_exact_iso_match === true) {
                     $zone_id = $zone->fields['zone_id'];
                     $zone_name = $zone->fields['zone_name'];
                 } else {
@@ -121,12 +120,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
                     $error_state_input = true;
                     $messageStack->add('checkout_address', ENTRY_STATE_ERROR_SELECT);
                 }
-            } else {
-                if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
-                    $error = true;
-                    $error_state_input = true;
-                    $messageStack->add('checkout_address', ENTRY_STATE_ERROR);
-                }
+            } elseif (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+                $error = true;
+                $error_state_input = true;
+                $messageStack->add('checkout_address', ENTRY_STATE_ERROR);
             }
         }
 
@@ -135,14 +132,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
             $messageStack->add('checkout_address', ENTRY_POST_CODE_ERROR);
         }
 
-        if ( (is_numeric($country) == false) || ($country < 1) ) {
+        if (is_numeric($country) === false || $country < 1) {
             $error = true;
             $messageStack->add('checkout_address', ENTRY_COUNTRY_ERROR);
         }
 
         $zco_notifier->notify('NOTIFY_MODULE_CHECKOUT_NEW_ADDRESS_VALIDATION', [], $error);
 
-        if ($error == false) {
+        if ($error === false) {
             $sql_data_array = [
                 ['fieldName' => 'customers_id', 'value' => $_SESSION['customer_id'], 'type' => 'integer'],
                 ['fieldName' => 'entry_firstname', 'value' => $firstname, 'type' => 'stringIgnoreNull'],
@@ -153,16 +150,16 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
                 ['fieldName' => 'entry_country_id', 'value' => $country, 'type' => 'integer'],
             ];
 
-            if (ACCOUNT_GENDER == 'true') {
+            if (ACCOUNT_GENDER === 'true') {
                 $sql_data_array[] = ['fieldName' => 'entry_gender', 'value' => $gender, 'type' => 'enum:m|f'];
             }
-            if (ACCOUNT_COMPANY == 'true') {
+            if (ACCOUNT_COMPANY === 'true') {
                 $sql_data_array[] = ['fieldName' => 'entry_company', 'value' => $company, 'type' => 'stringIgnoreNull'];
             }
-            if (ACCOUNT_SUBURB == 'true') {
+            if (ACCOUNT_SUBURB === 'true') {
                 $sql_data_array[] = ['fieldName' => 'entry_suburb', 'value' => $suburb, 'type' => 'stringIgnoreNull'];
             }
-            if (ACCOUNT_STATE == 'true') {
+            if (ACCOUNT_STATE === 'true') {
                 if ($zone_id > 0) {
                     $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => $zone_id, 'type' => 'integer'];
                     $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => '', 'type' => 'stringIgnoreNull'];
@@ -210,7 +207,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
                 $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['billto'], 'integer');
                 $check_address = $db->Execute($check_address_query);
 
-                if ($check_address->fields['total'] == '1') {
+                if ($check_address->fields['total'] === '1') {
                     if ($reset_payment == true) {
                         $_SESSION['payment'] = '';
                     }
@@ -239,7 +236,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
                 $check_address_query = $db->bindVars($check_address_query, ':customersID', $_SESSION['customer_id'], 'integer');
                 $check_address_query = $db->bindVars($check_address_query, ':addressBookID', $_SESSION['sendto'], 'integer');
                 $check_address = $db->Execute($check_address_query);
-                if ($check_address->fields['total'] == '1') {
+                if ($check_address->fields['total'] === '1') {
                     if ($reset_shipping == true) {
                         unset($_SESSION['shipping']);
                     }
@@ -266,10 +263,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'submit')) {
 /*
  * Set flags for template use:
  */
-$selected_country = (isset($_POST['zone_country_id']) && $_POST['zone_country_id'] != '') ? $country : SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
-$flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN == 'true' || $error_state_input) ? true : false;
-$state = ($flag_show_pulldown_states) ? $state : $zone_name;
-$state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
+$selected_country = (!empty($_POST['zone_country_id'])) ? $country : SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
+$flag_show_pulldown_states = ((($process === true || $entry_state_has_zones === true) && $zone_name === '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true' || $error_state_input);
+$state = ($flag_show_pulldown_states === true) ? $state : $zone_name;
+$state_field_label = ($flag_show_pulldown_states === true) ? '' : ENTRY_STATE;
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_END_CHECKOUT_NEW_ADDRESS');
