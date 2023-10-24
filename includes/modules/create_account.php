@@ -59,14 +59,20 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
 
     $company = $dob = $suburb = $state = '';
     $zone_id = false;
-    if (ACCOUNT_COMPANY == 'true') $company = zen_db_prepare_input($_POST['company']);
+    if (ACCOUNT_COMPANY == 'true') {
+        $company = zen_db_prepare_input($_POST['company']);
+    }
     $firstname = zen_db_prepare_input(zen_sanitize_string($_POST['firstname']));
     $lastname = zen_db_prepare_input(zen_sanitize_string($_POST['lastname']));
     $nick = (isset($_POST['nick'])) ? zen_db_prepare_input($_POST['nick']) : '';
-    if (ACCOUNT_DOB == 'true') $dob = zen_db_prepare_input($_POST['dob']);
+    if (ACCOUNT_DOB == 'true') {
+        $dob = zen_db_prepare_input($_POST['dob']);
+    }
     $email_address = zen_db_prepare_input($_POST['email_address']);
     $street_address = zen_db_prepare_input($_POST['street_address']);
-    if (ACCOUNT_SUBURB == 'true') $suburb = zen_db_prepare_input($_POST['suburb']);
+    if (ACCOUNT_SUBURB == 'true') {
+        $suburb = zen_db_prepare_input($_POST['suburb']);
+    }
     $postcode = zen_db_prepare_input($_POST['postcode']);
     $city = zen_db_prepare_input($_POST['city']);
     if (ACCOUNT_STATE == 'true') {
@@ -198,14 +204,15 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
         $check_query = $db->bindVars($check_query, ':zoneCountryID', $country, 'integer');
         $check = $db->Execute($check_query);
         $entry_state_has_zones = ($check->fields['total'] > 0);
-		if ($entry_state_has_zones == true && ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
-            $zone_query = "SELECT distinct zone_id, zone_name, zone_code
-                     FROM " . TABLE_ZONES . "
-                     WHERE zone_country_id = :zoneCountryID
-                     AND " .
-                ((trim($state) != '' && $zone_id == 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
-                "zone_id = :zoneID
-                     ORDER BY zone_code ASC, zone_name";
+        if ($entry_state_has_zones == true && ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
+            $zone_query =
+                "SELECT DISTINCT zone_id, zone_name, zone_code
+                   FROM " . TABLE_ZONES . "
+                  WHERE zone_country_id = :zoneCountryID
+                    AND " .
+                        ((trim($state) != '' && $zone_id == 0) ? "(UPPER(zone_name) LIKE ':zoneState%' OR UPPER(zone_code) LIKE '%:zoneState%') OR " : "") .
+                        "zone_id = :zoneID
+                  ORDER BY zone_code ASC, zone_name";
 
             $zone_query = $db->bindVars($zone_query, ':zoneCountryID', $country, 'integer');
             $zone_query = $db->bindVars($zone_query, ':zoneState', strtoupper($state), 'noquotestring');
@@ -256,7 +263,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process') && !isset($login_
         $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
     }
 
-    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_VALIDATION_CHECK', array(), $error, $send_welcome_email);
+    $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_VALIDATION_CHECK', [], $error, $send_welcome_email);
 
     if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
         $error = true;
@@ -405,7 +412,6 @@ $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
 
 $display_nick_field = false;
 $zco_notifier->notify('NOTIFY_NICK_SET_TEMPLATE_FLAG', 0, $display_nick_field);
-
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_END_CREATE_ACCOUNT');
