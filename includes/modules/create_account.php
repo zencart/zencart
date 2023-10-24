@@ -209,14 +209,14 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
               WHERE zone_country_id = :zoneCountryID";
         $check_query = $db->bindVars($check_query, ':zoneCountryID', $country, 'integer');
         $check = $db->Execute($check_query);
-        $entry_state_has_zones = ($check->fields['total'] > 0);
-        if ($entry_state_has_zones === true && ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
+        $entry_state_has_zones = ($check->fields['total'] !== '0');
+        if ($entry_state_has_zones === true) {
             $zone_query =
                 "SELECT DISTINCT zone_id, zone_name, zone_code
                    FROM " . TABLE_ZONES . "
                   WHERE zone_country_id = :zoneCountryID
                     AND " .
-                        ((trim($state) != '' && $zone_id == 0) ? "(UPPER(zone_name) LIKE ':zoneState%' OR UPPER(zone_code) LIKE '%:zoneState%') OR " : "") .
+                        ((trim($state) !== '' && (int)$zone_id === 0) ? "(UPPER(zone_name) LIKE ':zoneState%' OR UPPER(zone_code) LIKE '%:zoneState%') OR " : '') .
                         "zone_id = :zoneID
                   ORDER BY zone_code ASC, zone_name";
 
@@ -228,8 +228,9 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
             //look for an exact match on zone ISO code
             $found_exact_iso_match = ((int)$zone->RecordCount() === 1);
             if ((int)$zone->RecordCount() > 1) {
+                $state_uppercased = strtoupper($state);
                 foreach ($zone as $next_zone) {
-                    if (strtoupper($next_zone['zone_code']) === strtoupper($state)) {
+                    if (strtoupper($next_zone['zone_code']) === $state_uppercased || strtoupper($next_zone['zone_name']) === $state_uppercased) {
                         $found_exact_iso_match = true;
                         break;
                     }
@@ -418,7 +419,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
  * Set flags for template use:
  */
 $selected_country = (!empty($_POST['zone_country_id'])) ? $country : SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
-$flag_show_pulldown_states = ((($process === true || $entry_state_has_zones === true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true' || $error_state_input);
+$flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true' || ($process === true && $entry_state_has_zones === true && $zone_name === '' && $error_state_input === true));
 $state = ($flag_show_pulldown_states === true) ? ($state == '' ? '&nbsp;' : $state) : $zone_name;
 $state_field_label = ($flag_show_pulldown_states === true) ? '' : ENTRY_STATE;
 
