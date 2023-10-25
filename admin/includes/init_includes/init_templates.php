@@ -46,4 +46,4 @@ if ($pagename == '') {
   $pagename = STORE_NAME;
 }
 $title = TEXT_ADMIN_TAB_PREFIX . ' ' . $pagename;
-define('TITLE', $title);
+zen_define_default('TITLE', $title);
