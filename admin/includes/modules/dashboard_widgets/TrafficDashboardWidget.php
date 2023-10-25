@@ -10,9 +10,8 @@
 
 $maxRows = 15;
 
-
 $i = 0;
-$visit_history = array();
+$visit_history = [];
 //  Get the visitor history data
 $visits_query = "SELECT startdate, counter, session_counter FROM " . TABLE_COUNTER_HISTORY . " ORDER BY startdate DESC";
 $visits = $db->Execute($visits_query, (int)$maxRows, true, 1800);
@@ -20,13 +19,13 @@ $counterData = '';
 foreach ($visits as $data) {
     // table
     $countdate = $data['startdate'];
-    $visit_date = $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($countdate, 4, 2), substr($countdate, -2), substr($countdate, 0, 4)));
-    $visit_history[] = array('date' => $visit_date, 'sessions' => $data['session_counter'], 'count' => $data['counter']);
+    $visit_date = $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, (int)substr($countdate, 4, 2), (int)substr($countdate, -2), (int)substr($countdate, 0, 4)));
+    $visit_history[] = ['date' => $visit_date, 'sessions' => $data['session_counter'], 'count' => $data['counter']];
     // graph
     if ($i > 0) {
-        $counterData = "," . $counterData;
+        $counterData = ',' . $counterData;
     }
-    $date = $zcDate->output('%a %d', mktime(0, 0, 0, substr($data['startdate'], 4, 2), substr($data['startdate'], -2)));
+    $date = $zcDate->output('%a %d', mktime(0, 0, 0, (int)substr($data['startdate'], 4, 2), (int)substr($data['startdate'], -2)));
     $counterData = "['$date'," . $data['session_counter'] . "," . $data['counter'] . "]" . $counterData;
     $i++;
 }
