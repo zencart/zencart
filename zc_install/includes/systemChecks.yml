@@ -199,6 +199,16 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
     methods:
       checkDBConnection:
+  checkMysqlVersion:
+    runLevel: always
+    errorLevel: FAIL
+    criticalError: true
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_MYSQL_VERSION, '5.7.8', '10.2.7') . PHP_EOL; ?>
+    methods:
+      checkMysqlVersion:
+        parameters:
+          mysqlVersion: 5.7.8
+          mariaDBVersion: 10.2.7
   checkjson:
     runLevel: always
     errorLevel: FAIL
