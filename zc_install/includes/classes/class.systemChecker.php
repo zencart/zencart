@@ -757,7 +757,7 @@ class systemChecker
                 $checkVersion = $parameters['mysqlVersion'];
             } else {
                 // mariaDb Check version must remove -MariaDB from the version 
-                // as version compare treates -... as a lower version than N.N.N
+                // as version compare treats -... as a lower version than N.N.N
                 $version = substr($version, 0, strripos($version, '-MariaDB'));
                 $checkVersion = $parameters['mariaDBVersion'];
             }
