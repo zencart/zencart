@@ -131,7 +131,7 @@ class payment extends base {
       if (isset($credit_covers) && $credit_covers === true) {
           $credit_is_covered = true;
           $this->modules = '';
-          $this->selected_method = '';
+          $this->selected_module = '';
       }
       return $credit_is_covered;
   }
