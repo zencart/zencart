@@ -618,6 +618,7 @@ $define = [
     'WARNING_ATTRIBUTE_COPY_INVALID_ID' => 'Warning: Attribute Copy to Product ID#%u aborted. Invalid ID',
     'WARNING_ATTRIBUTE_COPY_NO_ATTRIBUTES' => 'Warning: Attribute Copy aborted. No Attributes found for source Product ID#%u, "%s".',
     'WARNING_ATTRIBUTE_COPY_SAME_ID' => 'Warning: Attribute Copy aborted. Cannot copy from Product ID#%u to Product ID#%u (same ID).',
+    'WARNING_CATEGORY_DOES_NOT_EXIST' => 'Warning: Category ID#%u is invalid, it does not exist.',
     'WARNING_CONFIG_FILE_WRITEABLE' => 'Warning: Your configuration file: %s is writeable. This is a potential security risk - please set the right user permissions on this file (read-only, CHMOD 644 or 444 are typical). You may need to use your webhost control panel/file-manager to change the permissions effectively. Contact your webhost for assistance. <a href="https://docs.zen-cart.com/user/miscellaneous/configure/" rel="noopener" target="_blank">See this FAQ</a>',
     'WARNING_COULD_NOT_LOCATE_LANG_FILE' => 'WARNING: Could not locate language file: ',
     'WARNING_DATABASE_VERSION_OUT_OF_DATE' => 'Your database appears to need patching to a higher level. See Tools->' . '%%BOX_TOOLS_SERVER_INFO%%' . ' to review patch levels.',
