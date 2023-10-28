@@ -685,6 +685,11 @@ function zen_get_info_page($product_id)
 function zen_get_products_type($product_id)
 {
     $result = zen_get_product_details($product_id);
+
+    // -----
+    // NOTE: Empty string return is used by the admin/product.php to identify a product
+    // that doesn't exist in the database!
+    //
     return ($result->EOF) ? '' : (int)$result->fields['products_type'];
 }
 
