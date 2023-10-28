@@ -8,9 +8,21 @@
 require 'includes/application_top.php';
 
 $action = $_GET['action'] ?? '';
+
 require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
+
 $product_type = (isset($_POST['product_type']) ? (int)$_POST['product_type'] : (isset($_GET['pID']) ? zen_get_products_type($_GET['pID']) : 1));
+
+// -----
+// If the product_type is an empty string, zen_get_products_type has indicated that the
+// requested product is not found in the database.
+//
+if ($product_type === '') {
+    $messageStack->add_session(sprintf(WARNING_PRODUCT_DOES_NOT_EXIST, (int)($_GET['pID'] ?? 0)), 'warning');
+    zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+}
+
 $type_handler = $zc_products->get_admin_handler($product_type);
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action, $action);
 

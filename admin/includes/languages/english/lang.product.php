@@ -65,6 +65,7 @@ $define = [
     'TEXT_META_EXCLUDED' => '<span class="alert">EXCLUDED</span>',
     'TEXT_TITLE_PLUS_TAGLINE' => 'Store Title+Tagline',
     'TEXT_PRODUCTS_PRICE_INFO' => 'Price:',
+    'WARNING_PRODUCT_DOES_NOT_EXIST' => 'Warning: Product ID#%u cannot be modified, it does not exist.',
 ];
 
 return $define;
