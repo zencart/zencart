@@ -219,10 +219,12 @@ class shipping extends base
         }
         $rates = [];
 
+        $modules_with_quotes = [];
+
         foreach($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
-                $quotes = isset($GLOBALS[$class]->quotes) ? $GLOBALS[$class]->quotes : null;
+                $quotes = $GLOBALS[$class]->quotes ?? null;
                 if (empty($quotes['methods']) || isset($quotes['error'])) {
                     continue;
                 }
@@ -235,31 +237,44 @@ class shipping extends base
                             'cost' => $quotes['methods'][$i]['cost'],
                             'module' => $quotes['id']
                         ];
+                        // track distinct list of modules, in order to be able to check whether storepickup is the only module
+                        $modules_with_quotes[$quotes['id']] = $quotes['id'];
                     }
                 }
             }
         }
 
+        $exclude_store_pickup_module = true;
+        if (count($modules_with_quotes) === 1 && array_key_first($modules_with_quotes) === 'storepickup') {
+            $exclude_store_pickup_module = false;
+        }
+
         $cheapest = false;
         $size = count($rates);
-        for ($i = 0; $i < $size; $i++) {
+        foreach ($rates as $rate) {
             if ($cheapest !== false) {
-                // never quote storepickup as lowest - needs to be configured in shipping module
-                if ($rates[$i]['cost'] < $cheapest['cost'] && $rates[$i]['module'] !== 'storepickup') {
+                if ($rate['cost'] < $cheapest['cost']) {
+                    if ($exclude_store_pickup_module && $rate['module'] === 'storepickup') {
+                        continue;
+                    }
                     // -----
                     // Give a customized shipping module the opportunity to exclude itself from being quoted
                     // as the cheapest.  The observer must set the $exclude_from_cheapest to specifically
                     // (bool)true to be excluded.
                     //
                     $exclude_from_cheapest = false;
-                    $this->notify('NOTIFY_SHIPPING_EXCLUDE_FROM_CHEAPEST', $rates[$i]['module'], $exclude_from_cheapest);
+                    $this->notify('NOTIFY_SHIPPING_EXCLUDE_FROM_CHEAPEST', $rate['module'], $exclude_from_cheapest);
                     if ($exclude_from_cheapest === true) {
                         continue;
                     }
-                    $cheapest = $rates[$i];
+                    $cheapest = $rate;
                 }
-            } elseif ($size === 1 || $rates[$i]['module'] !== 'storepickup') {
-                $cheapest = $rates[$i];
+            } elseif ($size === 1) {
+                if ($exclude_store_pickup_module && $rate['module'] === 'storepickup') {
+                    continue;
+                }
+
+                $cheapest = $rate;
             }
         }
         $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_CHEAPEST', $cheapest, $cheapest, $rates);
