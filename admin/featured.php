@@ -42,7 +42,8 @@ if (!empty($action)) {
             $featured_date_available_raw = $dt->format('Y-m-d');
           }
         }
-        $featured_date_available = (date('Y-m-d') < $featured_date_available_raw) ? $featured_date_available_raw : '0001-01-01';
+        $featured_date_available = (date('Y-m-d') <= $featured_date_available_raw) ? $featured_date_available_raw : '0001-01-01';
+
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
         if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($expires_date_raw)) {
           $local_fmt = zen_datepicker_format_fordate();
@@ -52,7 +53,7 @@ if (!empty($action)) {
             $expires_date_raw = $dt->format('Y-m-d');
           }
         }
-        $expires_date = (date('Y-m-d') < $expires_date_raw) ? $expires_date_raw : '0001-01-01';
+        $expires_date = (date('Y-m-d') <= $expires_date_raw) ? $expires_date_raw : '0001-01-01';
 
         $db->Execute("INSERT INTO " . TABLE_FEATURED . " (products_id, featured_date_added, expires_date, status, featured_date_available)
                       VALUES (" . (int)$products_id . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($featured_date_available) . "')");
@@ -79,7 +80,8 @@ if (!empty($action)) {
           $featured_date_available_raw = $dt->format('Y-m-d');
         }
       }
-      $featured_date_available = (date('Y-m-d') < $featured_date_available_raw) ? $featured_date_available_raw : '0001-01-01';
+      $featured_date_available = (date('Y-m-d') <= $featured_date_available_raw) ? $featured_date_available_raw : '0001-01-01';
+
       $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
       if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($expires_date_raw)) {
         $local_fmt = zen_datepicker_format_fordate();
@@ -89,7 +91,7 @@ if (!empty($action)) {
           $expires_date_raw = $dt->format('Y-m-d');
         }
       }
-      $expires_date = (date('Y-m-d') < $expires_date_raw) ? $expires_date_raw : '0001-01-01';
+      $expires_date = (date('Y-m-d') <= $expires_date_raw) ? $expires_date_raw : '0001-01-01';
 
       $db->Execute("UPDATE " . TABLE_FEATURED . "
                     SET featured_last_modified = now(),
