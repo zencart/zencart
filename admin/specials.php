@@ -66,7 +66,8 @@ if (!empty($action)) {
             $specials_date_available_raw = $dt->format('Y-m-d');
           }
         }
-        $specials_date_available = (date('Y-m-d') < $specials_date_available_raw) ? $specials_date_available_raw : '0001-01-01';
+        $specials_date_available = (date('Y-m-d') <= $specials_date_available_raw) ? $specials_date_available_raw : '0001-01-01';
+
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
         if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($expires_date_raw)) {
           $local_fmt = zen_datepicker_format_fordate();
@@ -76,7 +77,7 @@ if (!empty($action)) {
             $expires_date_raw = $dt->format('Y-m-d');
           }
         }
-        $expires_date = (date('Y-m-d') < $expires_date_raw) ? $expires_date_raw : '0001-01-01';
+        $expires_date = (date('Y-m-d') <= $expires_date_raw) ? $expires_date_raw : '0001-01-01';
 
         $db->Execute("INSERT INTO " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
                       VALUES (" . (int)$products_id . ", " . (float)$specials_price . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($specials_date_available) . "')");
@@ -119,7 +120,8 @@ if (!empty($action)) {
           $specials_date_available_raw = $dt->format('Y-m-d');
         }
       }
-      $specials_date_available = (date('Y-m-d') < $specials_date_available_raw) ? $specials_date_available_raw : '0001-01-01';
+      $specials_date_available = (date('Y-m-d') <= $specials_date_available_raw) ? $specials_date_available_raw : '0001-01-01';
+
       $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
       if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($expires_date_raw)) {
         $local_fmt = zen_datepicker_format_fordate();
@@ -129,7 +131,7 @@ if (!empty($action)) {
           $expires_date_raw = $dt->format('Y-m-d');
         }
       }
-      $expires_date = (date('Y-m-d') < $expires_date_raw) ? $expires_date_raw : '0001-01-01';
+      $expires_date = (date('Y-m-d') <= $expires_date_raw) ? $expires_date_raw : '0001-01-01';
 
       $db->Execute("UPDATE " . TABLE_SPECIALS . "
                     SET specials_new_products_price = '" . zen_db_input($specials_price) . "',
