@@ -315,7 +315,7 @@ function zen_validate_hmac_login()
     ksort($params);
     $hmacData = implode('&', $params);
     $hmac = hash_hmac('sha256', $hmacData, $secret);
-    return ($hmac === $secret);
+    return hash_equals($secret, $hmac);
 }
 
 function zen_validate_hmac_timestamp()
