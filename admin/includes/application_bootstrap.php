@@ -37,7 +37,16 @@ $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']
 /*
  * Get time zone info from PHP config
 */
-@date_default_timezone_set(date_default_timezone_get());
+date_default_timezone_set(date_default_timezone_get());
+
+/*
+ * Check for a valid system locale, and override if invalid or set to 'C' which means 'unconfigured'
+ * It will be overridden later via language-selection operations anyway, but a valid default must be set for zcDate class methods to work
+ */
+$detected_locale = setlocale(LC_TIME, 0);
+if ($detected_locale === false || $detected_locale === 'C') {
+    setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
+}
 
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 

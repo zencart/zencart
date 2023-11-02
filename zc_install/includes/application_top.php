@@ -9,6 +9,14 @@
 @ini_set("arg_separator.output", "&");
 @set_time_limit(250);
 
+/*
+ * Check for a valid system locale, and override if invalid or set to 'C' which means 'unconfigured'
+ */
+$detected_locale = setlocale(LC_TIME, 0);
+if ($detected_locale === false || $detected_locale === 'C') {
+    setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
+}
+
 // define the project version
 require DIR_FS_INSTALL . 'includes/version.php';
 
