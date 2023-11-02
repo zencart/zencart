@@ -73,6 +73,10 @@ if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                'loadFile'=>'Customer.php');
   $autoLoadConfig[0][] = [
+    'autoType'=>'class',
+    'loadFile'=>'class.search.php'
+  ];
+  $autoLoadConfig[0][] = [
     'autoType' => 'class',
     'loadFile' => 'zcDate.php'
   ];
@@ -170,6 +174,11 @@ $autoLoadConfig[55][] = [
                                 'objectName'=>'cart',
                                 'checkInstantiated'=>true,
                                 'classSession'=>true);
+  $autoLoadConfig[80][] = [
+    'autoType'=>'classInstantiate',
+    'className'=>'Zencart\Search\Search',
+    'objectName'=>'search'
+  ];
 /**
  * Breakpoint 90.
  *
