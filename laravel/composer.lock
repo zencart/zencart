@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e24a77874773d5ab7dfddd6d67b1d64d",
+    "content-hash": "d6af834cdaa65254f7bcd0eb62c7596e",
     "packages": [
         {
             "name": "akaunting/laravel-money",
@@ -183,6 +183,95 @@
                 "source": "https://github.com/Bacon/BaconQrCode/tree/2.0.8"
             },
             "time": "2022-12-07T17:46:57+00:00"
+        },
+        {
+            "name": "bezhansalleh/filament-shield",
+            "version": "2.4.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bezhanSalleh/filament-shield.git",
+                "reference": "d43bbc518db44b0bf4656d131a781df63c5d7d13"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bezhanSalleh/filament-shield/zipball/d43bbc518db44b0bf4656d131a781df63c5d7d13",
+                "reference": "d43bbc518db44b0bf4656d131a781df63c5d7d13",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^2.13",
+                "illuminate/contracts": "^8.6|^9.0|^10.0",
+                "php": "^8.0|^8.1",
+                "spatie/invade": "^1.0",
+                "spatie/laravel-package-tools": "^1.9.2",
+                "spatie/laravel-permission": "^5.0"
+            },
+            "require-dev": {
+                "barryvdh/laravel-ide-helper": "^2.12",
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^5.0|^6.0",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^6.0|^7.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BezhanSalleh\\FilamentShield\\FilamentShieldServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentShield": "BezhanSalleh\\FilamentShield\\Facades\\FilamentShield"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BezhanSalleh\\FilamentShield\\": "src",
+                    "BezhanSalleh\\FilamentShield\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bezhan Salleh",
+                    "email": "bezhan_salleh@yahoo.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Filament support for `spatie/laravel-permission`.",
+            "homepage": "https://github.com/bezhansalleh/filament-shield",
+            "keywords": [
+                "acl",
+                "bezhanSalleh",
+                "filament",
+                "filament-shield",
+                "laravel",
+                "permission",
+                "permissions",
+                "rbac",
+                "roles",
+                "security"
+            ],
+            "support": {
+                "issues": "https://github.com/bezhanSalleh/filament-shield/issues",
+                "source": "https://github.com/bezhanSalleh/filament-shield/tree/2.4.8"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/bezhanSalleh",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-07-31T16:37:59+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",

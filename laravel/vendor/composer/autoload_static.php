@@ -26,18 +26,19 @@ class ComposerStaticInite24a77874773d5ab7dfddd6d67b1d64d
         '9261e07cd92c53dcc971c7c88c176c04' => __DIR__ . '/..' . '/danharrin/date-format-converter/src/helpers.php',
         '9720327d09ed9a4ba00c9b5071b71c7d' => __DIR__ . '/..' . '/danharrin/date-format-converter/src/standards.php',
         '2ad94ea6f6f6013119e9abcf4e302a08' => __DIR__ . '/..' . '/filament/forms/src/helpers.php',
-        'eee56a36884c3af04e64bac85043e771' => __DIR__ . '/..' . '/akaunting/laravel-money/src/helpers.php',
         '2c620c99f96a2b964346b45a4d1d1e64' => __DIR__ . '/..' . '/spatie/invade/src/functions.php',
+        'eee56a36884c3af04e64bac85043e771' => __DIR__ . '/..' . '/akaunting/laravel-money/src/helpers.php',
         '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
+        'ebb446bb6d02e998480945fbbb73dc64' => __DIR__ . '/..' . '/filament/filament/src/helpers.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '9cdd7b9056abc3081735233ba9dd9c7f' => __DIR__ . '/..' . '/facade/flare-client-php/src/helpers.php',
-        'ebb446bb6d02e998480945fbbb73dc64' => __DIR__ . '/..' . '/filament/filament/src/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
+        '377b22b161c09ed6e5152de788ca020a' => __DIR__ . '/..' . '/spatie/laravel-permission/src/helpers.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'ed962a97bd972bc82007176b647d4e36' => __DIR__ . '/..' . '/facade/ignition/src/helpers.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
@@ -48,7 +49,6 @@ class ComposerStaticInite24a77874773d5ab7dfddd6d67b1d64d
         'c72349b1fe8d0deeedd3a52e8aa814d8' => __DIR__ . '/..' . '/mockery/mockery/library/helpers.php',
         'ce9671a430e4846b44e1c68c7611f9f5' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
-        '377b22b161c09ed6e5152de788ca020a' => __DIR__ . '/..' . '/spatie/laravel-permission/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -217,6 +217,8 @@ class ComposerStaticInite24a77874773d5ab7dfddd6d67b1d64d
             'Brick\\Math\\' => 11,
             'BladeUI\\Icons\\' => 14,
             'BladeUI\\Heroicons\\' => 18,
+            'BezhanSalleh\\FilamentShield\\Database\\Factories\\' => 47,
+            'BezhanSalleh\\FilamentShield\\' => 28,
             'BaconQrCode\\' => 12,
         ),
         'A' => 
@@ -406,8 +408,8 @@ class ComposerStaticInite24a77874773d5ab7dfddd6d67b1d64d
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -666,6 +668,14 @@ class ComposerStaticInite24a77874773d5ab7dfddd6d67b1d64d
         array (
             0 => __DIR__ . '/..' . '/blade-ui-kit/blade-heroicons/src',
         ),
+        'BezhanSalleh\\FilamentShield\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bezhansalleh/filament-shield/database/factories',
+        ),
+        'BezhanSalleh\\FilamentShield\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src',
+        ),
         'BaconQrCode\\' => 
         array (
             0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
@@ -818,6 +828,29 @@ class ComposerStaticInite24a77874773d5ab7dfddd6d67b1d64d
         'BaconQrCode\\Renderer\\RendererStyle\\GradientType' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Renderer/RendererStyle/GradientType.php',
         'BaconQrCode\\Renderer\\RendererStyle\\RendererStyle' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Renderer/RendererStyle/RendererStyle.php',
         'BaconQrCode\\Writer' => __DIR__ . '/..' . '/bacon/bacon-qr-code/src/Writer.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\Concerns\\CanGeneratePolicy' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/Concerns/CanGeneratePolicy.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\Concerns\\CanManipulateFiles' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/Concerns/CanManipulateFiles.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\Concerns\\CanValidateInput' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/Concerns/CanValidateInput.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\MakeShieldDoctorCommand' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/MakeShieldDoctorCommand.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\MakeShieldGenerateCommand' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/MakeShieldGenerateCommand.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\MakeShieldInstallCommand' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/MakeShieldInstallCommand.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\MakeShieldPublishCommand' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/MakeShieldPublishCommand.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\MakeShieldSeederCommand' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/MakeShieldSeederCommand.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\MakeShieldSuperAdminCommand' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/MakeShieldSuperAdminCommand.php',
+        'BezhanSalleh\\FilamentShield\\Commands\\MakeShieldUpgradeCommand' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Commands/MakeShieldUpgradeCommand.php',
+        'BezhanSalleh\\FilamentShield\\Contracts\\HasShieldPermissions' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Contracts/HasShieldPermissions.php',
+        'BezhanSalleh\\FilamentShield\\Facades\\FilamentShield' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Facades/FilamentShield.php',
+        'BezhanSalleh\\FilamentShield\\FilamentShield' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/FilamentShield.php',
+        'BezhanSalleh\\FilamentShield\\FilamentShieldServiceProvider' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/FilamentShieldServiceProvider.php',
+        'BezhanSalleh\\FilamentShield\\Resources\\RoleResource' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Resources/RoleResource.php',
+        'BezhanSalleh\\FilamentShield\\Resources\\RoleResource\\Pages\\CreateRole' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Resources/RoleResource/Pages/CreateRole.php',
+        'BezhanSalleh\\FilamentShield\\Resources\\RoleResource\\Pages\\EditRole' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Resources/RoleResource/Pages/EditRole.php',
+        'BezhanSalleh\\FilamentShield\\Resources\\RoleResource\\Pages\\ListRoles' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Resources/RoleResource/Pages/ListRoles.php',
+        'BezhanSalleh\\FilamentShield\\Resources\\RoleResource\\Pages\\ViewRole' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Resources/RoleResource/Pages/ViewRole.php',
+        'BezhanSalleh\\FilamentShield\\Support\\Utils' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Support/Utils.php',
+        'BezhanSalleh\\FilamentShield\\Traits\\HasFilamentShield' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Traits/HasFilamentShield.php',
+        'BezhanSalleh\\FilamentShield\\Traits\\HasPageShield' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Traits/HasPageShield.php',
+        'BezhanSalleh\\FilamentShield\\Traits\\HasWidgetShield' => __DIR__ . '/..' . '/bezhansalleh/filament-shield/src/Traits/HasWidgetShield.php',
         'BladeUI\\Heroicons\\BladeHeroiconsServiceProvider' => __DIR__ . '/..' . '/blade-ui-kit/blade-heroicons/src/BladeHeroiconsServiceProvider.php',
         'BladeUI\\Icons\\BladeIconsServiceProvider' => __DIR__ . '/..' . '/blade-ui-kit/blade-icons/src/BladeIconsServiceProvider.php',
         'BladeUI\\Icons\\Components\\Icon' => __DIR__ . '/..' . '/blade-ui-kit/blade-icons/src/Components/Icon.php',
@@ -957,6 +990,7 @@ class ComposerStaticInite24a77874773d5ab7dfddd6d67b1d64d
         'Database\\Factories\\DeveloperFactory' => __DIR__ . '/../..' . '/database/factories/DeveloperFactory.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\ShieldSeeder' => __DIR__ . '/../..' . '/database/seeders/ShieldSeeder.php',
         'Database\\Seeders\\laravel\\DeveloperSeeder' => __DIR__ . '/../..' . '/database/seeders/laravel/DeveloperSeeder.php',
         'Database\\Seeders\\laravel\\RoleSeeder' => __DIR__ . '/../..' . '/database/seeders/laravel/RoleSeeder.php',
         'Database\\Seeders\\laravel\\TestSeeder' => __DIR__ . '/../..' . '/database/seeders/laravel/TestSeeder.php',

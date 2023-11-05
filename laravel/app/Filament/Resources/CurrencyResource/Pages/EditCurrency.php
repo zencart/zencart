@@ -19,7 +19,7 @@ class EditCurrency extends EditRecord
     }
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        if ($data['is_default']) {
+        if (isset($data['is_default'])) {
             Configuration::updateConfigurationValue('DEFAULT_CURRENCY', $data['code']);
         }
         unset($data['is_default']);

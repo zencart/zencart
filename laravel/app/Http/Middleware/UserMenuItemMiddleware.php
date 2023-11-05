@@ -46,14 +46,14 @@ class UserMenuItemMiddleware
             ]);
         }
         if (auth()->user()->hasRole(['dashboard.user', 'superadmin'])) {
-        Filament::registerNavigationItems([
-            NavigationItem::make('Developers')
-                ->url(route('filament.resources.developers.index'), shouldOpenInNewTab: false)
-                ->icon('heroicon-o-presentation-chart-line')
-                ->activeIcon('heroicon-s-presentation-chart-line')
-                ->sort(3),
-        ]);
-    }
+            Filament::registerNavigationItems([
+                NavigationItem::make('Developers')
+                    ->url(route('filament.resources.developers.index'), shouldOpenInNewTab: false)
+                    ->icon('heroicon-o-presentation-chart-line')
+                    ->activeIcon('heroicon-s-presentation-chart-line')
+                    ->sort(3),
+            ]);
+        }
 
         return $next($request);
     }

@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '9fd5d82f8df7c2653a6c0b4b7183046cda8db460',
+        'reference' => '0498469e540fc2ee45d153f16b47b2de55261dd7',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -34,6 +34,15 @@
             'reference' => '8674e51bb65af933a5ffaf1c308a660387c35c22',
             'type' => 'library',
             'install_path' => __DIR__ . '/../bacon/bacon-qr-code',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'bezhansalleh/filament-shield' => array(
+            'pretty_version' => '2.4.8',
+            'version' => '2.4.8.0',
+            'reference' => 'd43bbc518db44b0bf4656d131a781df63c5d7d13',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../bezhansalleh/filament-shield',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -550,7 +559,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9fd5d82f8df7c2653a6c0b4b7183046cda8db460',
+            'reference' => '0498469e540fc2ee45d153f16b47b2de55261dd7',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -952,8 +961,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0',
             ),
         ),
         'psr/simple-cache' => array(
