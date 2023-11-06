@@ -42,10 +42,17 @@
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
   }
 
-  $products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
-  $products_image_base = str_replace($products_image_extension, '', $products_image);
-  $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
-  $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
+  if ($products_image === '') {
+      $products_image_extension = '';
+      $products_image_base = '';
+      $products_image_medium = '';
+      $products_image_large = '';
+  } else {
+      $products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
+      $products_image_base = substr($products_image_extension, 0, -strlen($products_image_extension));
+      $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
+      $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
+  }
 
   // check for a medium image else use small
   if (!file_exists(DIR_WS_IMAGES . 'medium/' . $products_image_medium)) {
