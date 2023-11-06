@@ -18,8 +18,10 @@ if (isset($_GET['cid'])) {
 if (isset($_GET['reports_page'])) {
   $_GET['reports_page'] = (int)$_GET['reports_page'];
 }
+$active = '';
 if (isset($_GET['status'])) {
   $_GET['status'] = preg_replace('/[^YNA]/', '', $_GET['status']);
+  $active = $_GET['status'] != 'A' ? " AND coupon_active = '" . $_GET['status'] . "' " : '';
 }
 if (isset($_GET['codebase'])) {
   $_GET['codebase'] = preg_replace('/[^A-Za-z0-9\-\][\^!@#$%&*)(+=}{]/', '', $_GET['codebase']);
@@ -28,20 +30,29 @@ if (empty($_POST['coupon_amount'])) {
   $_POST['coupon_amount'] = '0';
 }
 
+$inSearch = '';
+$delimiter = '';
+
 if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
-  $sql = "SELECT coupon_id, coupon_active
-          FROM " . TABLE_COUPONS . "
-          WHERE coupon_code = :couponCode:";
-  $sql = $db->bindVars($sql, ':couponCode:', $_GET['search'], 'string');
+    $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+    $keyword_search_fields = [
+        'cd.coupon_name',
+        'cd.coupon_description',
+        'c.coupon_code',
+    ];
+    $searchWords = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
+    $sql = "SELECT c.coupon_id, c.coupon_active
+          FROM " . TABLE_COUPONS . " c
+          LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON cd.coupon_id = c.coupon_id
+          " . $searchWords . $active;
   $search = $db->Execute($sql);
-  if (!$search->EOF) {
-    $_GET['cid'] = $search->fields['coupon_id'];
-    $_GET['status'] = $search->fields['coupon_active'];
-    $messageStack->add_session(SUCCESS_COUPON_FOUND . ($_GET['status'] == 'N' ? ' - ' . TEXT_COUPON_INACTIVE : ''), 'success');
-    zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . '&status=' . $_GET['status']));
-  } else {
-    $messageStack->add_session(ERROR_COUPON_NOT_FOUND, 'caution');
-    zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
+  if ($search->EOF) {
+      $messageStack->add_session(ERROR_COUPON_NOT_FOUND, 'caution');
+      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
+  }
+  foreach ($search as $searchResult) {
+      $inSearch .= $delimiter . $searchResult['coupon_id'];
+      $delimiter = ',';
   }
 }
 
@@ -1210,21 +1221,23 @@ switch ($_GET['action']) {
                 </thead>
                 <tbody>
                   <?php
-                  if ($status != 'A') {
-                     if (isset($_GET['cid'])) {
-                       $cc_query_raw = "SELECT *
+                  $mysqlSearch = '';
+                  $mysqlActive = '';
+                  if ($status !== 'A') {
+                      $mysqlActive = " AND coupon_active = '" . zen_db_input($status) . "'";
+                  }
+                  if (!empty($inSearch)) {
+                      $mysqlSearch = " AND coupon_id in ($inSearch) ";
+                      $mysqlActive = '';
+                  }
+                  if (isset($_GET['cid']) && empty($inSearch)) {
+                      $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
                                      WHERE coupon_id = " . (int)$_GET['cid'];
-                     } else {
-                       $cc_query_raw = "SELECT *
-                                     FROM " . TABLE_COUPONS . "
-                                     WHERE coupon_active = '" . zen_db_input($status) . "'
-                                     AND coupon_type != 'G'";
-                     }
                   } else {
-                    $cc_query_raw = "SELECT *
+                      $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
-                                     WHERE coupon_type != 'G'";
+                                     WHERE coupon_type != 'G'" . $mysqlSearch . $mysqlActive;
                   }
                   $maxDisplaySearchResults = ((defined('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') && (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS > 0) ? (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS : 20);
 
@@ -1288,7 +1301,7 @@ switch ($_GET['action']) {
                         if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
                           echo '<i class="fa-solid fa-caret-right fa-fw fa-2x align-middle"></i>';
                         } else {
-                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $item['coupon_id'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) . '"><i class="fa-solid fa-circle-info fa-fw fa-2x align-middle"></i></a>';
+                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(['cid',]) . 'cid=' . $item['coupon_id']) . '"><i class="fa-solid fa-circle-info fa-fw fa-2x align-middle"></i></a>';
                         }
                         ?>
                       </td>
