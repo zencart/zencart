@@ -20,7 +20,7 @@
                             and p.products_id = :productsID
                             and pd.language_id = :languagesID ";
 
-  $products_values_query = $db->bindVars($products_values_query, ':productsID', $_GET['pID'], 'integer');
+  $products_values_query = $db->bindVars($products_values_query, ':productsID', $_GET['pID'] ?? 0, 'integer');
   $products_values_query = $db->bindVars($products_values_query, ':languagesID', $_SESSION['languages_id'], 'integer');
 
   $products_values = $db->Execute($products_values_query);
