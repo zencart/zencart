@@ -270,28 +270,27 @@ function zen_create_hmac_uri($data, $secret)
     foreach ($data as $k => $val) {
         unset($params[$k]);
     }
-    $hmac = hash_hmac('sha256', $hmacData, $secret);
-    $params['hmac'] = $hmac;
+
+    $params['hmac'] = hash_hmac('sha256', $hmacData, $secret);
     return http_build_query($params);
 }
 
 function zen_is_hmac_login()
 {
-    if (!isset($_GET['main_page']) || $_GET['main_page'] != FILENAME_LOGIN) {
+    if (!isset($_GET['main_page'], $_GET['hmac'], $_POST['timestamp']) || $_GET['main_page'] !== FILENAME_LOGIN) {
         return false;
     }
-    if (!isset($_GET['hmac'])) return false;
-    if (!isset($_POST['timestamp'])) return false;
     return true;
 }
 
 function zen_validate_hmac_login()
 {
     global $db, $zenSessionId;
-    $postCheck = ['cid', 'aid', 'email_address'];
-    foreach ($postCheck as $entry) {
-        if (!isset($_POST[$entry])) return false;
+    
+    if (!isset($_POST['aid'], $_POST['cid'], $_POST['email_address'], $_POST['timestamp'])) {
+        return false;
     }
+
     $data = $_REQUEST;
     $unsetArray = ['action', 'main_page', 'securityToken', 'zenid', 'zenInstallerId', $zenSessionId];
     foreach ($unsetArray as $entry) {
@@ -305,6 +304,7 @@ function zen_validate_hmac_login()
         $val = str_replace('&', '%26', $val);
         $params[$k] = $val;
     }
+
     $sql = "SELECT customers_secret FROM " . TABLE_CUSTOMERS . " WHERE customers_id = :id: LIMIT 1";
     $sql = $db->bindVars($sql, ':id:', $params['cid'], 'integer');
     $result = $db->Execute($sql);
@@ -314,8 +314,8 @@ function zen_validate_hmac_login()
     unset($params['hmac']);
     ksort($params);
     $hmacData = implode('&', $params);
-    $hmac = hash_hmac('sha256', $hmacData, $secret);
-    return hash_equals($secret, $hmac);
+
+    return hash_equals(hash_hmac('sha256', $hmacData, $secret), $hmacOriginal);
 }
 
 function zen_validate_hmac_timestamp()
