@@ -1933,7 +1933,8 @@ if ($action === 'edit' || $action === 'update') {
                         $hmacpostdata = [
                             'cid' => $cInfo->customers_id,
                             'aid' => $_SESSION['admin_id'],
-                            'email_address' => $cInfo->customers_email_address
+                            'email_address' => $cInfo->customers_email_address,
+                            'timestamp' => $timestamp,
                         ];
                         $hmacUri = zen_create_hmac_uri($hmacpostdata, $secret);
                         $login_form_start = '<form id="loginform" rel="noopener" target="_blank" name="login" action="' .
@@ -1945,7 +1946,7 @@ if ($action === 'edit' || $action === 'update') {
                         $hiddenFields .=
                             zen_draw_hidden_field('aid', $_SESSION['admin_id']) .
                             zen_draw_hidden_field('cid', $cInfo->customers_id) .
-                            zen_draw_hidden_field('timestamp', $timestamp, 'id="emp-timestamp"');
+                            zen_draw_hidden_field('timestamp', $timestamp);
                     }
                     $contents[] = [
                         'align' => 'text-center',
