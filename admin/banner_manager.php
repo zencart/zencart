@@ -80,33 +80,56 @@ if (!empty($action)) {
       $banners_image_local = zen_db_prepare_input($_POST['banners_image_local']);
       $banners_image_target = zen_db_prepare_input($_POST['banners_image_target']);
       $db_image_location = '';
+
+      $banner_error = false;
+
       $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-      if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($expires_date_raw)) {
-        $local_fmt = zen_datepicker_format_fordate();
-        $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
-        $expires_date_raw = 'null';
-        if (!empty($dt)) {
-          $expires_date_raw = $dt->format('Y-m-d');
-        }
+      if ($expires_date_raw === '') {
+          $expires_date = 'null';
+      } else {
+          if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
+            $local_fmt = zen_datepicker_format_fordate();
+            $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
+            $expires_date_raw = 'null';
+            if (!empty($dt)) {
+              $expires_date_raw = $dt->format('Y-m-d');
+            }
+          }
+          if (zcDate::validateDate($expires_date_raw) === true) {
+            $expires_date = $expires_date_raw;
+          } else {
+            $banner_error = true;
+            $messageStack->add(ERROR_INVALID_EXPIRES_DATE, 'error');
+          }
       }
-      $expires_date = (date('Y-m-d') < $expires_date_raw) ? $expires_date_raw : 'null';
+
       $expires_impressions = (int)$_POST['expires_impressions'];
+
       $date_scheduled_raw = zen_db_prepare_input($_POST['date_scheduled']);
-      if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($date_scheduled_raw)) {
-        $local_fmt = zen_datepicker_format_fordate();
-        $dt = DateTime::createFromFormat($local_fmt, $date_scheduled_raw);
-        $date_scheduled_raw = 'null';
-        if (!empty($dt)) {
-          $date_scheduled_raw = $dt->format('Y-m-d');
-        }
+      if ($date_scheduled_raw === '') {
+          $date_scheduled = 'null';
+      } else {
+          if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($date_scheduled_raw)) {
+            $local_fmt = zen_datepicker_format_fordate();
+            $dt = DateTime::createFromFormat($local_fmt, $date_scheduled_raw);
+            $date_scheduled_raw = 'null';
+            if (!empty($dt)) {
+              $date_scheduled_raw = $dt->format('Y-m-d');
+            }
+          }
+          if (zcDate::validateDate($date_scheduled_raw) === true) {
+            $date_scheduled = $date_scheduled_raw;
+          } else {
+            $banner_error = true;
+            $messageStack->add(ERROR_INVALID_SCHEDULED_DATE, 'error');
+          }
       }
-      $date_scheduled = (date('Y-m-d') < $date_scheduled_raw) ? $date_scheduled_raw : 'null';
+
       $status = (int)$_POST['status'];
       $banners_open_new_windows = (int)$_POST['banners_open_new_windows'];
       $banners_on_ssl = (int)$_POST['banners_on_ssl'];
       $banners_sort_order = (int)$_POST['banners_sort_order'];
 
-      $banner_error = false;
       if (empty($banners_title)) {
         $messageStack->add(ERROR_BANNER_TITLE_REQUIRED, 'error');
         $banner_error = true;
@@ -417,7 +440,7 @@ if (!empty($action)) {
                 </span>
                 <?php echo zen_draw_input_field('date_scheduled', $bInfo->date_scheduled, 'class="form-control" id="date_scheduled" autocomplete="off"'); ?>
               </div>
-              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
+              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_SCHEDULED_DATE; ?></span></span>
             </div>
           </div>
           <div class="form-group">
@@ -429,10 +452,11 @@ if (!empty($action)) {
                 </span>
                 <?php echo zen_draw_input_field('expires_date', $bInfo->expires_date, 'class="form-control" id="expires_date" autocomplete="off"'); ?>
               </div>
-              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
+              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_EXPIRES_DATE; ?></span></span>
               <?php echo TEXT_BANNERS_OR_AT; ?>
             </div>
           </div>
+          <?php require DIR_WS_INCLUDES . 'javascript/dateChecker.php'; ?>
           <div class="form-group">
             <?php echo zen_draw_label(TEXT_BANNERS_IMPRESSIONS, 'expires_impressions', 'class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">

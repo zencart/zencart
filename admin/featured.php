@@ -33,27 +33,51 @@ if (!empty($action)) {
       } else {
         $products_id = (int)$_POST['products_id'];
 
+        $error = false;
         $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
-        if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($featured_date_available_raw)) {
-          $local_fmt = zen_datepicker_format_fordate();
-          $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
-          $featured_date_available_raw = 'null';
-          if (!empty($dt)) {
-            $featured_date_available_raw = $dt->format('Y-m-d');
-          }
+        if ($featured_date_available_raw === '') {
+            $featured_date_available = '0001-01-01';
+        } else {
+            if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
+                $local_fmt = zen_datepicker_format_fordate();
+                $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
+                $featured_date_available_raw = 'null';
+                if (!empty($dt)) {
+                    $featured_date_available_raw = $dt->format('Y-m-d');
+                }
+            }
+            if (zcDate::validateDate($featured_date_available_raw) === true) {
+                $featured_date_available = $featured_date_available_raw;
+            } else {
+                $error = true;
+                $messageStack->add(ERROR_INVALID_AVAILABLE_DATE, 'error');
+            }
         }
-        $featured_date_available = (date('Y-m-d') <= $featured_date_available_raw) ? $featured_date_available_raw : '0001-01-01';
 
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-        if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($expires_date_raw)) {
-          $local_fmt = zen_datepicker_format_fordate();
-          $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
-          $expires_date_raw = 'null';
-          if (!empty($dt)) {
-            $expires_date_raw = $dt->format('Y-m-d');
-          }
+        if ($expires_date_raw === '') {
+            $expires_date = '0001-01-01';
+        } else {
+            if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
+                $local_fmt = zen_datepicker_format_fordate();
+                $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
+                $expires_date_raw = 'null';
+                if (!empty($dt)) {
+                    $expires_date_raw = $dt->format('Y-m-d');
+                }
+            }
+            if (zcDate::validateDate($expires_date_raw) === true) {
+                $expires_date = $expires_date_raw;
+            } else {
+                $error = true;
+                $messageStack->add(ERROR_INVALID_EXPIRES_DATE, 'error');
+            }
         }
-        $expires_date = (date('Y-m-d') <= $expires_date_raw) ? $expires_date_raw : '0001-01-01';
+
+        if ($error === true) {
+            $action = 'new';
+            break;
+        }
 
         $db->Execute("INSERT INTO " . TABLE_FEATURED . " (products_id, featured_date_added, expires_date, status, featured_date_available)
                       VALUES (" . (int)$products_id . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($featured_date_available) . "')");
@@ -69,38 +93,62 @@ if (!empty($action)) {
       }
       break;
     case 'update':
-      $featured_id = (int)$_POST['featured_id'];
+        $featured_id = (int)$_POST['featured_id'];
+        $error = false;
 
-      $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
-      if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($featured_date_available_raw)) {
-        $local_fmt = zen_datepicker_format_fordate();
-        $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
-        $featured_date_available_raw = 'null';
-        if (!empty($dt)) {
-          $featured_date_available_raw = $dt->format('Y-m-d');
+        $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
+        if ($featured_date_available_raw === '') {
+            $featured_date_available = '0001-01-01';
+        } else {
+            if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
+                $local_fmt = zen_datepicker_format_fordate();
+                $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
+                $featured_date_available_raw = 'null';
+                if (!empty($dt)) {
+                    $featured_date_available_raw = $dt->format('Y-m-d');
+                }
+            }
+            if (zcDate::validateDate($featured_date_available_raw) === true) {
+                $featured_date_available = $featured_date_available_raw;
+            } else {
+                $error = true;
+                $messageStack->add(ERROR_INVALID_AVAILABLE_DATE, 'error');
+            }
         }
-      }
-      $featured_date_available = (date('Y-m-d') <= $featured_date_available_raw) ? $featured_date_available_raw : '0001-01-01';
 
-      $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-      if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($expires_date_raw)) {
-        $local_fmt = zen_datepicker_format_fordate();
-        $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
-        $expires_date_raw = 'null';
-        if (!empty($dt)) {
-          $expires_date_raw = $dt->format('Y-m-d');
+        $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
+        if ($expires_date_raw === '') {
+            $expires_date = '0001-01-01';
+        } else {
+            if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
+                $local_fmt = zen_datepicker_format_fordate();
+                $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
+                $expires_date_raw = 'null';
+                if (!empty($dt)) {
+                    $expires_date_raw = $dt->format('Y-m-d');
+                }
+            }
+            if (zcDate::validateDate($expires_date_raw) === true) {
+                $expires_date = $expires_date_raw;
+            } else {
+                $error = true;
+                $messageStack->add(ERROR_INVALID_EXPIRES_DATE, 'error');
+            }
         }
-      }
-      $expires_date = (date('Y-m-d') <= $expires_date_raw) ? $expires_date_raw : '0001-01-01';
 
-      $db->Execute("UPDATE " . TABLE_FEATURED . "
+        if ($error === true) {
+            $action = 'edit';
+            break;
+        }
+
+        $db->Execute("UPDATE " . TABLE_FEATURED . "
                     SET featured_last_modified = now(),
                         expires_date = '" . zen_db_input($expires_date) . "',
                         featured_date_available = '" . zen_db_input($featured_date_available) . "'
                     WHERE featured_id = " . (int)$featured_id);
 
-      zen_redirect(zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'fID=' . (int)$featured_id));
-      break;
+        zen_redirect(zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'fID=' . (int)$featured_id));
+        break;
     case 'deleteconfirm':
       $featured_id = (int)$_POST['fID'];
 
@@ -269,7 +317,7 @@ if (!empty($action)) {
                 </span>
                 <?php echo zen_draw_input_field('featured_date_available', (($fInfo->featured_date_available == '0001-01-01') ? '' : $fInfo->featured_date_available), 'class="form-control" id="featured_date_available"'); ?>
               </div>
-              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
+              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_ACTIVE_DATE; ?></span></span>
             </div>
           </div>
           <div class="form-group">
@@ -281,7 +329,7 @@ if (!empty($action)) {
                 </span>
                 <?php echo zen_draw_input_field('expires_date', (($fInfo->expires_date == '0001-01-01') ? '' : $fInfo->expires_date), 'class="form-control" id="expires_date"'); ?>
               </div>
-              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
+              <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_EXPIRES_DATE; ?></span></span>
             </div>
           </div>
           <?php
@@ -291,6 +339,7 @@ if (!empty($action)) {
             $cancel_link = zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (!empty($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . (!empty($_GET['fID']) ? 'fID=' . $_GET['fID'] : ''));
           }
           ?>
+          <?php require DIR_WS_INCLUDES . 'javascript/dateChecker.php'; ?>
           <div class="col-sm-12 text-right">
             <button type="submit" class="btn btn-primary"><?php echo(($form_action === 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a class="btn btn-default" role="button" href="<?php echo $cancel_link; ?>"><?php echo IMAGE_CANCEL; ?></a>
           </div>
