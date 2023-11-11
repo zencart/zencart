@@ -24,7 +24,7 @@
                             and p.products_id = :productsID
                             and pd.language_id = :languagesID ";
 
-  $products_values_query = $db->bindVars($products_values_query, ':productsID', $_GET['pID'], 'integer');
+  $products_values_query = $db->bindVars($products_values_query, ':productsID', $_GET['pID'] ?? 0, 'integer');
   $products_values_query = $db->bindVars($products_values_query, ':languagesID', $_SESSION['languages_id'], 'integer');
 
   $products_values = $db->Execute($products_values_query);
@@ -38,14 +38,21 @@
   $products_image = $products_values->fields['products_image'];
 
   //auto replace with defined missing image
-  if ($products_image == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
+  if ($products_image === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
   }
 
-  $products_image_extension = substr($products_image, strrpos($products_image, '.'));
-  $products_image_base = preg_replace('|'.$products_image_extension.'$|', '', $products_image);
-  $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
-  $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
+  if ($products_image === '') {
+      $products_image_extension = '';
+      $products_image_base = '';
+      $products_image_medium = '';
+      $products_image_large = '';
+  } else {
+      $products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
+      $products_image_base = substr($products_image, 0, -strlen($products_image_extension));
+      $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
+      $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
+  }
 
   // check for a medium image else use small
   if (!file_exists(DIR_WS_IMAGES . 'medium/' . $products_image_medium)) {
