@@ -15,6 +15,12 @@
 
 <?php if ($current_page != FILENAME_CHECKOUT_SUCCESS) { ?>
 <h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, zen_output_string_protected($_GET['order_id'])); ?></h2>
+
+<?php
+$extra_headings = [];
+$zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order, $extra_headings);
+?>
+
 <?php } ?>
 
 <table id="orderHistoryHeading">
@@ -29,9 +35,20 @@
  }
 ?>
         <th scope="col" id="myAccountTotal"><?php echo HEADING_TOTAL; ?></th>
+<?php
+  if (is_array($extra_headings)) {
+    foreach ($extra_headings as $heading_info) {
+?>
+        <th scope="col"<?php echo empty($heading_info['params']) ? '' : " {$heading_info['params']}" ?>><?php echo $heading_info['text']; ?></th>
+<?php
+    }
+  }
+?>
     </tr>
 <?php
   foreach($order->products as $op) {
+    $extra_data = [];
+    $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_DATA', [ 'order' => $order, 'orders_product' => $op ], $extra_data);
   ?>
     <tr>
         <td class="accountQuantityDisplay"><?php echo $op['qty'] . CART_QUANTITY_SUFFIX; ?></td>
@@ -61,6 +78,15 @@
         //        echo $currencies->format(zen_add_tax($op['final_price'], $op['tax']) * $op['qty'], true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '')
         echo $currencies->format($ppt, true, $order->info['currency'], $order->info['currency_value']) . ($op['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($op['onetime_charges'], $op['tax']), true, $order->info['currency'], $order->info['currency_value']) : '');
         ?></td>
+<?php
+    if (!empty($extra_data)) {
+      foreach ($extra_data as $data_info) {
+?>
+        <td<?php echo empty($data_info['params']) ? '' : " {$data_info['params']}" ?>><?php echo $data_info['text']; ?></td>
+<?php
+      }
+    }
+?>
     </tr>
 <?php
   }
