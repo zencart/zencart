@@ -24,7 +24,7 @@ return [
 
     'filament_user' => [
         'enabled' => true,
-        'name' => 'filament_user',
+        'name' => 'dashboard.user',
     ],
 
     'permission_prefixes' => [

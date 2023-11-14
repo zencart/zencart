@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CurrencyResource\Pages;
 use App\Filament\Resources\CurrencyResource\RelationManagers;
 use App\Models\Currency;
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -19,7 +20,8 @@ class CurrencyResource extends Resource
     protected static ?string $model = Currency::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
+    protected static ?string $navigationGroup = 'Localization';
 
     public static function form(Form $form): Form
     {
@@ -67,8 +69,6 @@ class CurrencyResource extends Resource
                 Tables\Columns\TextColumn::make('thousands_point'),
                 Tables\Columns\TextColumn::make('decimal_places'),
                 Tables\Columns\TextColumn::make('value'),
-                //Tables\Columns\TextColumn::make('last_updated')
-                //    ->dateTime(),
             ])
             ->filters([
                 //
@@ -96,4 +96,12 @@ class CurrencyResource extends Resource
             'edit' => Pages\EditCurrency::route('/{record}/edit'),
         ];
     }
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return Utils::isResourceNavigationBadgeEnabled()
+            ? static::getModel()::count()
+            : null;
+    }
+
 }

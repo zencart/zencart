@@ -17,14 +17,14 @@ class RoleSeeder extends Seeder
     {
         Role::create(['name' => 'dashboard.user']);
         Role::create(['name' => 'developer.user']);
-        Role::create(['name' => 'superadmin']);
+        Role::create(['name' => 'super_admin']);
 
         $users = User::all();
         foreach ($users as $user) {
             if ($user->user_type === 'developer') {
                 $user->assignRole('developer.user');
             } else {
-                $user->assignRole('dashboard.user');
+                //$user->assignRole('dashboard.user');
             }
         }
     }

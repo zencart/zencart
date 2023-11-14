@@ -20,41 +20,38 @@ class UserMenuItemMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user()->hasRole(['dashboard.user', 'superadmin'])) {
-            Filament::registerNavigationItems([
-                NavigationItem::make('Users')
-                    ->url(route('filament.resources.users.index'), shouldOpenInNewTab: false)
-                    ->icon('heroicon-o-presentation-chart-line')
-                    ->activeIcon('heroicon-s-presentation-chart-line')
-                    ->sort(3),
-            ]);
-            Filament::registerNavigationItems([
-                NavigationItem::make('Countries')
-                    ->url(route('filament.resources.countries.index'), shouldOpenInNewTab: false)
-                    ->icon('heroicon-o-presentation-chart-line')
-                    ->activeIcon('heroicon-s-presentation-chart-line')
-                    ->group(__('Localization'))
-                    ->sort(3),
-            ]);
-            Filament::registerNavigationItems([
-                NavigationItem::make('Currencies')
-                    ->url(route('filament.resources.currencies.index'), shouldOpenInNewTab: false)
-                    ->icon('heroicon-o-presentation-chart-line')
-                    ->activeIcon('heroicon-s-presentation-chart-line')
-                    ->group(__('Localization'))
-                    ->sort(3),
-            ]);
-        }
-        if (auth()->user()->hasRole(['dashboard.user', 'superadmin'])) {
-            Filament::registerNavigationItems([
-                NavigationItem::make('Developers')
-                    ->url(route('filament.resources.developers.index'), shouldOpenInNewTab: false)
-                    ->icon('heroicon-o-presentation-chart-line')
-                    ->activeIcon('heroicon-s-presentation-chart-line')
-                    ->sort(3),
-            ]);
-        }
-
+//        if (auth()->user()->hasRole(['dashboard.user', 'superadmin'])) {
+//            Filament::registerNavigationItems([
+//                NavigationItem::make('Users')
+//                    ->url(route('filament.resources.users.index'), shouldOpenInNewTab: false)
+//                    ->icon('heroicon-o-users')
+//                    ->activeIcon('heroicon-s-users')
+//                    ->sort(3),
+//            ]);
+//            Filament::registerNavigationItems([
+//                NavigationItem::make('Countries')
+//                    ->url(route('filament.resources.countries.index'), shouldOpenInNewTab: false)
+//                    ->icon('heroicon-o-map')
+//                    ->group(__('Localization'))
+//                    ->sort(3),
+//            ]);
+//            Filament::registerNavigationItems([
+//                NavigationItem::make('Currencies')
+//                    ->url(route('filament.resources.currencies.index'), shouldOpenInNewTab: false)
+//                    ->icon('heroicon-o-cash')
+//                    ->group(__('Localization'))
+//                    ->sort(3),
+//            ]);
+//        }
+//        if (auth()->user()->hasRole(['dashboard.user', 'superadmin'])) {
+//            Filament::registerNavigationItems([
+//                NavigationItem::make('Developers')
+//                    ->url(route('filament.resources.developers.index'), shouldOpenInNewTab: false)
+//                    ->icon('heroicon-o-users')
+//                    ->sort(3),
+//            ]);
+//        }
+//
         return $next($request);
     }
 }

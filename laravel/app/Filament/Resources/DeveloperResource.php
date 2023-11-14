@@ -17,7 +17,7 @@ class DeveloperResource extends Resource
 {
     protected static ?string $model = Developer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static bool $shouldRegisterNavigation = false;
     public static function form(Form $form): Form
     {

@@ -26,23 +26,26 @@ final class WrappedListener
     private string $name;
     private bool $called = false;
     private bool $stoppedPropagation = false;
-    private $stopwatch;
-    private $dispatcher;
+    private Stopwatch $stopwatch;
+    private ?EventDispatcherInterface $dispatcher;
     private string $pretty;
-    private $stub;
+    private string $callableRef;
+    private ClassStub|string $stub;
     private ?int $priority = null;
     private static bool $hasClassStub;
 
-    public function __construct(callable|array $listener, ?string $name, Stopwatch $stopwatch, EventDispatcherInterface $dispatcher = null)
+    public function __construct(callable|array $listener, ?string $name, Stopwatch $stopwatch, EventDispatcherInterface $dispatcher = null, int $priority = null)
     {
         $this->listener = $listener;
-        $this->optimizedListener = $listener instanceof \Closure ? $listener : (\is_callable($listener) ? \Closure::fromCallable($listener) : null);
+        $this->optimizedListener = $listener instanceof \Closure ? $listener : (\is_callable($listener) ? $listener(...) : null);
         $this->stopwatch = $stopwatch;
         $this->dispatcher = $dispatcher;
+        $this->priority = $priority;
 
         if (\is_array($listener)) {
-            $this->name = \is_object($listener[0]) ? get_debug_type($listener[0]) : $listener[0];
+            [$this->name, $this->callableRef] = $this->parseListener($listener);
             $this->pretty = $this->name.'::'.$listener[1];
+            $this->callableRef .= '::'.$listener[1];
         } elseif ($listener instanceof \Closure) {
             $r = new \ReflectionFunction($listener);
             if (str_contains($r->name, '{closure}')) {
@@ -58,6 +61,7 @@ final class WrappedListener
         } else {
             $this->name = get_debug_type($listener);
             $this->pretty = $this->name.'::__invoke';
+            $this->callableRef = $listener::class.'::__invoke';
         }
 
         if (null !== $name) {
@@ -89,11 +93,11 @@ final class WrappedListener
 
     public function getInfo(string $eventName): array
     {
-        $this->stub ??= self::$hasClassStub ? new ClassStub($this->pretty.'()', $this->listener) : $this->pretty.'()';
+        $this->stub ??= self::$hasClassStub ? new ClassStub($this->pretty.'()', $this->callableRef ?? $this->listener) : $this->pretty.'()';
 
         return [
             'event' => $eventName,
-            'priority' => null !== $this->priority ? $this->priority : (null !== $this->dispatcher ? $this->dispatcher->getListenerPriority($eventName, $this->listener) : null),
+            'priority' => $this->priority ??= $this->dispatcher?->getListenerPriority($eventName, $this->listener),
             'pretty' => $this->pretty,
             'stub' => $this->stub,
         ];
@@ -104,18 +108,37 @@ final class WrappedListener
         $dispatcher = $this->dispatcher ?: $dispatcher;
 
         $this->called = true;
-        $this->priority = $dispatcher->getListenerPriority($eventName, $this->listener);
+        $this->priority ??= $dispatcher->getListenerPriority($eventName, $this->listener);
 
         $e = $this->stopwatch->start($this->name, 'event_listener');
 
-        ($this->optimizedListener ?? $this->listener)($event, $eventName, $dispatcher);
-
-        if ($e->isStarted()) {
-            $e->stop();
+        try {
+            ($this->optimizedListener ?? $this->listener)($event, $eventName, $dispatcher);
+        } finally {
+            if ($e->isStarted()) {
+                $e->stop();
+            }
         }
 
         if ($event instanceof StoppableEventInterface && $event->isPropagationStopped()) {
             $this->stoppedPropagation = true;
         }
+    }
+
+    private function parseListener(array $listener): array
+    {
+        if ($listener[0] instanceof \Closure) {
+            foreach ((new \ReflectionFunction($listener[0]))->getAttributes(\Closure::class) as $attribute) {
+                if ($name = $attribute->getArguments()['name'] ?? false) {
+                    return [$name, $attribute->getArguments()['class'] ?? $name];
+                }
+            }
+        }
+
+        if (\is_object($listener[0])) {
+            return [get_debug_type($listener[0]), $listener[0]::class];
+        }
+
+        return [$listener[0], $listener[0]];
     }
 }
