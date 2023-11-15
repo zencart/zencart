@@ -112,7 +112,17 @@ if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTI
     error_reporting(0);
 }
 
-@date_default_timezone_set(date_default_timezone_get());
+date_default_timezone_set(date_default_timezone_get());
+
+/*
+ * Check for a valid system locale, and override if invalid or set to 'C' which means 'unconfigured'
+ * It will be overridden later via language-selection operations anyway, but a valid default must be set for zcDate class methods to work
+ */
+$detected_locale = setlocale(LC_TIME, 0);
+if ($detected_locale === false || $detected_locale === 'C') {
+    setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
+}
+
 require('includes/application_testing.php');
 /**
  * check for and include load application parameters
