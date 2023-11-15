@@ -10,6 +10,10 @@ class VersionServer
     protected $projectVersionServer = 'https://ping.zen-cart.com/zcversioncheck';
     protected $pluginVersionServer = 'https://ping.zen-cart.com/plugincheck';
 
+    const TIMEOUT = 3;
+
+    const CONNECTTIMEOUT = 1;
+
     public function __construct()
     {
         if (defined('PROJECT_VERSIONSERVER_URL')) {
@@ -34,8 +38,8 @@ class VersionServer
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($currentInfo));
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 9);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
+        curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Core Version Check ' . HTTP_SERVER);
         $response = curl_exec($ch);
@@ -67,8 +71,8 @@ class VersionServer
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($currentInfo));
         curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 9);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
+        curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check ' . $type . ' ' . HTTP_SERVER);
         $response = curl_exec($ch);
