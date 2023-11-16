@@ -10,9 +10,9 @@ class VersionServer
     protected $projectVersionServer = 'https://ping.zen-cart.com/zcversioncheck';
     protected $pluginVersionServer = 'https://ping.zen-cart.com/plugincheck';
 
-    const TIMEOUT = 3;
+    protected const TIMEOUT = 3;
 
-    const CONNECTTIMEOUT = 1;
+    protected const CONNECTTIMEOUT = 1;
 
     public function __construct()
     {
