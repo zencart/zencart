@@ -60,9 +60,8 @@ if (isset($_POST[zen_session_name()])) {
 /**
  * Sanitize the IP address, and resolve any proxies.
  */
-$ipAddressArray = explode(',', zen_get_ip_address());
-$ipAddress = (sizeof($ipAddressArray) > 0) ? $ipAddressArray[0] : '.';
-$_SERVER['REMOTE_ADDR'] = $ipAddress;
+$_SERVER['REMOTE_ADDR'] = zen_get_ip_address();
+
 /**
  * start the session
  */
