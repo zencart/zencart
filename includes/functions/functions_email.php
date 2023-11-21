@@ -777,7 +777,7 @@
         $email_host_address = '';
         // get host_address from either session or one time for both email types to save server load
         if (empty($_SESSION['customers_host_address'])) {
-            if (SESSION_IP_TO_HOST_ADDRESS === 'true') {
+            if (SESSION_IP_TO_HOST_ADDRESS === 'true' && !empty(trim($_SERVER['REMOTE_ADDR'], '.'))) {
                 $email_host_address = gethostbyaddr($_SERVER['REMOTE_ADDR']);
             }
         } else {
