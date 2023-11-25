@@ -169,6 +169,102 @@ function zen_image_submit($image, $alt = '', $parameters = '')
     return $image_submit;
 }
 
+/**
+ * Provide a mapping from simple icon names to the FontAwesome classes that achieve them.
+ * Borrow colour styles: Red: txt-status-on, Yellow: txt-linked, Green: txt-status-on
+ */
+$iconMap = [
+  'caret-right' => 'fa-caret-right txt-navy',
+  'circle-info' => 'fa-circle-info txt-black',
+  'edit' => 'fa-pencil text-success',
+  'popup' => 'fa-up-right-from-square txt-black',
+  'enabled' => 'fa-square txt-status-on',
+  'linked' => 'fa-square txt-linked',
+  'disabled' => 'fa-square txt-status-off',
+  'new-window' => 'fa-square txt-orange',
+  'new-window-off' => [
+    'fa-square fa-stack-2x opacity-25 txt-orange',
+    'fa-xmark fa-stack-1x txt-red'
+  ],
+  'ssl-on' => 'fa-square txt-blue',
+  'ssl-off' => [
+    'fa-square fa-stack-2x opacity-25 txt-blue',
+    'fa-xmark fa-stack-1x txt-red'
+  ],
+  'line-chart' => 'fa-line-chart txt-black',
+  'calendar-days' => 'fa-regular fa-calendar-days',
+  'status-green' => [
+    'fa-solid fa-circle fa-stack-1x txt-status-on',
+    'fa-regular fa-circle fa-stack-1x txt-black'
+  ],
+  'status-yellow' => [
+    'fa-solid fa-circle fa-stack-1x txt-linked',
+    'fa-regular fa-circle fa-stack-1x txt-black'
+  ],
+  'status-red' => [
+    'fa-solid fa-circle fa-stack-1x txt-status-off',
+    'fa-regular fa-circle fa-stack-1x txt-black'
+  ],
+  'status-red-light' => [
+    'fa-solid fa-circle fa-stack-1x txt-status-off txt-light',
+    'fa-regular fa-circle fa-stack-1x txt-black'
+  ],
+  'pencil' => 'fa-pencil',
+  'trash' => 'fa-trash-alt',
+  'preview' => 'fa-magnifying-glass',
+  'move' => 'fa-arrow-right-to-bracket',
+  'metatags' => 'fa-asterisk',
+  'image' => 'fa-image',
+  'tick' => 'fa-check txt-status-on',
+  'cross' => 'fa-xmark txt-status-off',
+  'star' => 'fa-star txt-gold',
+  'star-shadow' => 'fa-star txt-gold star-shadow',
+  'locked' => 'fa-lock',
+  'unlocked' => 'fa-lock-open',
+  'loading' => 'fa-gear fa-spin'
+];
+
+/**
+ * Return a FontAwesome icon according to $icon, with optional tooltip and size specifier.
+ *
+ * @param string $icon Nickname for the icon to return.
+ * @param string $tooltip Optional tooltip to show on hover.  Uses Bootstrap `data-toggle`.
+ * @param string $size One of `2x`, `lg` or blank.  Most icons are 2x but some need to be less intrusive.
+ * @param bool   $fixedWidth If true, include fa-fw to maintain icon width in a column of different icons.
+ * @param bool   $hidden If true, aria-hidden=true is included to hide the element from assistive technologies.
+ * Only use when the icon is in a focussable parent e.g. an anchor, so the parent takes focus and the icon
+ * itself is not declared by screen readers and the like. Note that in these cases, the tooltip text should
+ * go on the parent anchor and not on this icon element using $tooltip.
+ * @return string
+ */
+function zen_icon(string $icon, ?string $tooltip = null, string $size = '', bool $fixedWidth = false, bool $hidden = false): string
+{
+  global $iconMap;
+  if (!array_key_exists($icon, $iconMap)) {
+    return '';
+  }
+  $tooltip = empty($tooltip) ? '' : (' data-toggle="tooltip" title="' . str_replace('"', '\"', $tooltip) . '"');
+  $fw = empty($fixedWidth) ? '' : ' fa-fw';
+  $classes = $iconMap[$icon];
+  if (is_array($classes)) {
+    return "<div class=\"icon-{$icon} fa-stack\"{$tooltip}{$fw}>" .
+      join(
+        '',
+        array_map(
+          function ($cls) {
+            return '<i class="fa-solid ' . $cls . '"></i>';
+          }, $classes
+        )
+      ) .
+      '</div>';
+  }
+  // If the classes looked up have an override, use it (add nothing), otherwise default to fa-solid
+  $iconSet = str_contains($classes, 'fa-regular') ? '' : 'fa-solid';
+  $sizeClass = $size === '2x' ? ' fa-2x' : ($size === 'lg' ? ' fa-lg' : '');
+  $ariaHidden = $hidden ? ' aria-hidden="true"' : '';
+  return "<i class=\"${iconSet}$sizeClass align-middle {$classes}${fw}\"{$tooltip}{$ariaHidden}></i>";
+}
+
 ////
 // Draw a 1 pixel black line
   function zen_black_line() {

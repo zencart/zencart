@@ -497,8 +497,9 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                                 echo zen_draw_hidden_field('products_filter', $products_filter);
                                 echo zen_draw_hidden_field('current_category_id', $_GET['current_category_id']);
                                 echo zen_hide_session_id();
-                                zen_draw_label(zen_image(DIR_WS_IMAGES . ($product_to_copy->fields['master_categories_id'] > 0 ? 'icon_green_on.gif' : 'icon_red_on.gif'),
-                                        IMAGE_ICON_LINKED) . '&nbsp;' . TEXT_MASTER_CATEGORIES_ID, 'master_category');
+                                zen_draw_label(
+                                    zen_icon($product_to_copy->fields['master_categories_id'] > 0 ? 'enabled' : 'disabled', IMAGE_ICON_LINKED, 'lg') .
+                                    '&nbsp;' . TEXT_MASTER_CATEGORIES_ID, 'master_category');
                                 echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter, true), $product_to_copy->fields['master_categories_id'],
                                     'class="form-control" id="master_category"'); ?>
                                 <button type="submit" class="btn btn-info"><?php echo IMAGE_UPDATE; ?></button>
@@ -699,7 +700,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                         }
 
                         if ((int)$product_to_copy->fields['master_categories_id'] === (int)$categories_list->fields['categories_id']) {
-                            echo '  <td class="dataTableContent" title="' . TEXT_VALID_CATEGORIES_ID . ': ' . $categories_list->fields['categories_id'] . '">' . zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', TEXT_MASTER_CATEGORIES_ID . $product_to_copy->fields['master_categories_id']) . '&nbsp;' . htmlspecialchars($categories_list->fields['categories_name'], ENT_COMPAT, CHARSET) . '</td>' . "\n";
+                            echo '  <td class="dataTableContent" title="' . TEXT_VALID_CATEGORIES_ID . ': ' . $categories_list->fields['categories_id'] . '">' . zen_icon('enabled', TEXT_MASTER_CATEGORIES_ID . ' ' . $product_to_copy->fields['master_categories_id'], 'lg') . '&nbsp;' . htmlspecialchars($categories_list->fields['categories_name'], ENT_COMPAT, CHARSET) . '</td>' . "\n";
                         } else {
                             echo '  <td class="dataTableContent"><label class="labelForCheck" title="' . TEXT_VALID_CATEGORIES_ID . ': ' . $categories_list->fields['categories_id'] . '">' . $zc_categories_checkbox . '<span>' . htmlspecialchars($categories_list->fields['categories_name'], ENT_COMPAT, CHARSET) . '</span></label></td>' . "\n";
                         } // span is required inside label to allow css selection for highlighting when input checked

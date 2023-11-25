@@ -230,9 +230,9 @@ if (!empty($action)) {
                       <?php
                       // show current status
                       if ($set == 'payment' || $set == 'shipping') {
-                        echo ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif')));
+                        echo ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_icon('status-green') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_icon('status-yellow') : zen_icon('status-red')));
                       } else {
-                        echo (is_numeric($module->sort_order) ? zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') : zen_image(DIR_WS_IMAGES . 'icon_status_red.gif'));
+                        echo (is_numeric($module->sort_order) ? zen_icon('status-green') : zen_icon('status-red'));
                       }
                       ?>
                   </td>
@@ -252,10 +252,10 @@ if (!empty($action)) {
                   <td class="dataTableContent text-right">
                       <?php
                       if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
+                        echo zen_icon('caret-right', '', '2x', true);
                         $_GET['module'] = $_GET['module'] ?? $mInfo->code;
                       } else {
-                        echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                        echo '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
                       }
                       ?>&nbsp;</td>
                   </tr>

@@ -116,21 +116,21 @@ if ($gID == 7) {
                 <?php
                 $query = "SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
                                                FROM " . TABLE_CONFIGURATION . "
-                                               WHERE configuration_group_id = " . (int)$gID; 
+                                               WHERE configuration_group_id = " . (int)$gID;
 
-                $default_sort = true; 
+                $default_sort = true;
                 if (defined('CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME') && !empty(CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME)) {
                    $sorted_menus = explode(",", CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME);
                    if (in_array($gID, $sorted_menus)) {
-                     $default_sort = false; 
+                     $default_sort = false;
                    }
                 }
-                if ($default_sort) { 
+                if ($default_sort) {
                    $query .= " ORDER BY sort_order";
                 } else {
                    $query .= " ORDER BY configuration_title";
                 }
-                $configuration = $db->Execute($query); 
+                $configuration = $db->Execute($query);
                 foreach ($configuration as $item) {
                   if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
@@ -187,9 +187,9 @@ if ($gID == 7) {
               <td class="dataTableContent text-right">
                   <?php
                   if ((isset($cInfo) && is_object($cInfo)) && ($item['configuration_id'] == $cInfo->configuration_id)) {
-                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                    echo zen_icon('caret-right', '', '2x', true);
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $item['configuration_id']) . '" id="link_' . $item['configuration_key'] . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $item['configuration_id']) . '" id="link_' . $item['configuration_key'] . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true, false) . '</a>';
                   }
                   ?>&nbsp;</td>
               </tr>
@@ -228,7 +228,7 @@ if ($gID == 7) {
               }
               $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
               $contents[] = array('text' => '<br><strong>' . $cInfo->configuration_title . '</strong><br>' . $cInfo->configuration_description . '<br>' . $value_field);
-              $contents[] = array('align' => 'text-center', 'text' => '<br>' . '<button type="submit" name="submit' . $cInfo->configuration_key . '" class="btn btn-primary">' . IMAGE_UPDATE . '</button>' . '&nbsp;<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => '<br>' . '<button type="submit" name="submit' . $cInfo->configuration_key . '" class="btn btn-primary"><i class="fa-solid fa-check"></i> ' . IMAGE_UPDATE . '</button>' . '&nbsp;<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id) . '" class="btn btn-default" role="button"><i class="fa-solid fa-xmark"></i> ' . IMAGE_CANCEL . '</a>');
               break;
             default:
               if (isset($cInfo) && is_object($cInfo)) {

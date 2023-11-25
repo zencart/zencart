@@ -307,16 +307,16 @@ for ($i = 0; $i < $report->size; $i++) {
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
                 <td class="dataTableContent text-right col-sm-12">
-                  <?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?>&nbsp;
-                  <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></a></td>
+                  <?php echo zen_icon('status-green', IMAGE_ICON_STATUS_GREEN) ?>&nbsp;
+                  <a href="<?php echo $tmp; ?>"><?php echo zen_icon('status-red-light', IMAGE_ICON_STATUS_RED_LIGHT) ?></a></td>
                 <?php
               } else {
                 $tmp = substr($sales_report_filter, 0, $i) . "0" . substr($sales_report_filter, $i + 1);
                 $tmp = zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->filter_link . "&filter=" . $tmp);
                 ?>
                 <td class="dataTableContent text-right col-sm-12">
-                  <a href="<?php echo $tmp; ?>"><?php echo zen_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) ?></a>
-                  &nbsp;<?php echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) ?></td>
+                  <a href="<?php echo $tmp; ?>"><?php echo zen_icon('status-green-light', IMAGE_ICON_STATUS_GREEN) ?></a>
+                  &nbsp;<?php echo zen_icon('status-red', IMAGE_ICON_STATUS_RED_LIGHT) ?></td>
                 <?php
               }
               ?>

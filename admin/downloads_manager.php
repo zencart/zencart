@@ -182,11 +182,11 @@ if (!empty($action)) {
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxdays']; ?></td>
                   <td class="text-right"><?php echo $products_downloads['products_attributes_maxcount']; ?></td>
                   <td class="text-right">
-                    <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) { ?>
-                      <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
-                    <?php } else { ?>
-                      <a href="<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                    <?php if (isset($padInfo) && is_object($padInfo) && ($products_downloads['products_attributes_id'] == $padInfo->products_attributes_id)) {
+                      echo zen_icon('caret-right', '', '2x', true);
+                    } else { ?>
+                      <a href="<?php echo zen_href_link(FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $products_downloads['products_attributes_id']); ?>" data-toggle="tooltip" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
+                        <?php echo zen_icon('circle-info', '', '2x', true, false) ?>
                       </a>
                     <?php } ?>
                   </td>

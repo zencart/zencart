@@ -319,9 +319,9 @@ if (!empty($action)) {
               <td class="dataTableContent"><?php echo $language['code']; ?></td>
               <td class="dataTableContent text-right"><?php
                   if (isset($lInfo) && is_object($lInfo) && ($language['languages_id'] == $lInfo->languages_id)) {
-                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
+                    echo zen_icon('caret-right', '', '2x', true);
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $language['languages_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $language['languages_id']) . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '">' . zen_icon('circle-info', '', '2x', true, true) . '</a>';
                   }
                   ?>&nbsp;</td>
               </tr>

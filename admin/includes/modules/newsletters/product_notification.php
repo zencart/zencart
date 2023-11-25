@@ -280,7 +280,7 @@ function selectAll(FormName, SelectBox) {
       $html_msg['EMAIL_LAST_NAME'] = $value['lastname'];
       $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
       zen_mail($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'product_notification', '');
-      echo zen_image(DIR_WS_ICONS . 'tick.gif', $value['email_address']);
+      echo zen_icon('tick', $value['email_address'], 'lg');
 
       //force output to the screen to show status indicator each time a message is sent...
       if (function_exists('ob_flush')) {

@@ -186,11 +186,11 @@ if (!empty($action)) {
                     ?>
                   </td>
                   <td class="dataTableContent text-right">
-                    <?php if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) { ?>
-                      <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
-                    <?php } else { ?>
+                    <?php if (isset($cInfo) && is_object($cInfo) && ($country['countries_id'] == $cInfo->countries_id)) {
+                      echo zen_icon('caret-right', '', '2x', true);
+                    } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $country['countries_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                        <?php echo zen_icon('circle-info', '', '2x', true, false) ?>
                       </a>
                     <?php } ?>
                   </td>

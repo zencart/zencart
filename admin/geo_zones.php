@@ -211,9 +211,9 @@ if (!empty($action)) {
                 <td class="dataTableContent text-right">
                     <?php
                     if (isset($sInfo) && is_object($sInfo) && ($zone['association_id'] == $sInfo->association_id)) {
-                      echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                      echo zen_icon('caret-right', '', '2x', true);
                     } else {
-                      echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zone['association_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                      echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zone['association_id']) . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true, false) . '</a>';
                     }
                     ?>&nbsp;
                 </td>
@@ -228,7 +228,7 @@ if (!empty($action)) {
         } else {
           ?>
           <div class="row">
-              <?php echo TEXT_LEGEND . '&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_green.gif') . TEXT_LEGEND_TAX_AND_ZONES . '&nbsp;&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif') . TEXT_LEGEND_ONLY_ZONES . '&nbsp;&nbsp;&nbsp;' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif') . TEXT_LEGEND_NOT_CONF; ?>
+              <?php echo TEXT_LEGEND . '&nbsp;' . zen_icon('status-green') . TEXT_LEGEND_TAX_AND_ZONES . '&nbsp;&nbsp;&nbsp;' . zen_icon('status-yellow') . TEXT_LEGEND_ONLY_ZONES . '&nbsp;&nbsp;&nbsp;' . zen_icon('status-red') . TEXT_LEGEND_NOT_CONF; ?>
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
@@ -302,19 +302,19 @@ if (!empty($action)) {
                   <td class="dataTableContent text-center"><?php
                       // show current status
                       if ($zone['num_tax_rates'] && $zone['num_zones']) {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
+                        echo zen_icon('status-green');
                       } elseif ($zone['num_zones']) {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif');
+                        echo zen_icon('status-yellow');
                       } else {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+                        echo zen_icon('status-red');
                       }
                       ?></td>
                   <td class="dataTableContent text-right">
                       <?php
                       if (isset($zInfo) && is_object($zInfo) && ($zone['geo_zone_id'] == $zInfo->geo_zone_id)) {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
+                        echo zen_icon('caret-right', '', '2x', true);
                       } else {
-                        echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zone['geo_zone_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                        echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zone['geo_zone_id']) . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true, false) . '</a>';
                       }
                       ?>&nbsp;
                   </td>

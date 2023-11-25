@@ -172,10 +172,16 @@
     }
 ?>
                 <td class="dataTableContent"><?php echo $media->fields['media_name']; ?></td>
-                <td class="dataTableContent text-right">
-                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
-                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=delete') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
-                  <?php if (isset($mInfo) && is_object($mInfo) && ($media->fields['media_id'] == $mInfo->media_id)) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, zen_get_all_get_params(array('mID')) . 'mID=' . $media->fields['media_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>
+                <td class="dataTableContent text-right actions">
+                  <div class="btn-group">
+                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=edit') . '" class="btn btn-sm btn-default btn-edit" role="button">' . zen_icon('pencil', ICON_EDIT, hidden: true). '</a>'; ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=delete') . '" class="btn btn-sm btn-default btn-delete" role="button">' . zen_icon('trash', ICON_DELETE, hidden: true). '</a>'; ?>
+                  </div>
+                  <?php if (isset($mInfo) && is_object($mInfo) && ($media->fields['media_id'] == $mInfo->media_id)) {
+                    echo zen_icon('caret-right', '', '2x', true);
+                  } else {
+                    echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, zen_get_all_get_params(array('mID')) . 'mID=' . $media->fields['media_id']) . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true, false) . '</a>';
+                  } ?>
                 </td>
               </tr>
 <?php
@@ -266,18 +272,18 @@
       $contents[] = array('text' => TEXT_PRODUCTS_INTRO . '<br><br>');
       $contents[] = array('text' => zen_draw_form('new_category', FILENAME_MEDIA_MANAGER, '', 'get') . '&nbsp;&nbsp;' .
                            zen_draw_pull_down_menu('current_category_id', zen_get_category_tree('', '', '0'), (isset($current_category_id)? $current_category_id : ''), 'onChange="this.form.submit();"') . zen_hide_session_id() . zen_draw_hidden_field('products_filter', $_GET['products_filter']) . zen_draw_hidden_field('action', 'new_cat') . zen_draw_hidden_field('mID', $mInfo->media_id) . zen_draw_hidden_field('page', $_GET['page']) . '&nbsp;&nbsp;</form>');
-      // product_array should be products in this category that do not already 
-      // have a media_to_products entry for this media id. 
+      // product_array should be products in this category that do not already
+      // have a media_to_products entry for this media id.
      $products_query = "SELECT ptc.*, pd.products_name
                             FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc
                             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
                             ON ptc.products_id = pd.products_id
                             AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                             WHERE ptc.categories_id='" . (int)$current_category_id. "'
-                            AND NOT EXISTS (SELECT pmp.product_id FROM " . TABLE_MEDIA_TO_PRODUCTS . " pmp WHERE pmp.product_id = pd.products_id) 
+                            AND NOT EXISTS (SELECT pmp.product_id FROM " . TABLE_MEDIA_TO_PRODUCTS . " pmp WHERE pmp.product_id = pd.products_id)
                             ORDER BY pd.products_name";
       $product_list = $db->Execute($products_query);
-      $products_array = []; 
+      $products_array = [];
       foreach ($product_list as $product) {
          $product_array[] = array(
             'id' => $product['products_id'],

@@ -357,21 +357,21 @@ if (!empty($action)) {
                       <?php } else { ?>
                     <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id']); ?>'">
                       <?php } ?>
-                    <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id'] . '&action=preview') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $newsletter['title']; ?></td>
+                    <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id'] . '&action=preview') . '">' . zen_icon('preview', ICON_PREVIEW) . '</a>&nbsp;' . $newsletter['title']; ?></td>
                     <td class="dataTableContent text-right"><?php echo number_format($newsletter['content_length'] + $newsletter['content_html_length']) . ' bytes'; ?></td>
                     <td class="dataTableContent text-right"><?php echo $newsletter['module']; ?></td>
                     <td class="dataTableContent text-center"><?php
                         if ($newsletter['status'] == '1') {
-                          echo zen_image(DIR_WS_ICONS . 'tick.gif', ICON_TICK);
+                          echo zen_icon('tick', ICON_TICK, '2x', true);
                         } else {
-                          echo zen_image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS);
+                          echo zen_icon('cross', ICON_CROSS, '2x', true);
                         }
                         ?></td>
                     <td class="dataTableContent text-right"><?php
                         if (isset($nInfo) && is_object($nInfo) && ($newsletter['newsletters_id'] == $nInfo->newsletters_id)) {
-                          echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                          echo zen_icon('caret-right', '', '2x', true);
                         } else {
-                          echo '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                          echo '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletter['newsletters_id']) . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
                         }
                         ?>
                     </td>

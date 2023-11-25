@@ -252,22 +252,20 @@ if (!empty($action)) {
             <tr>
               <td class="text-right"></td>
               <td class="text-center">
-                <i class="fa-solid fa-square fa-2x txt-status-on align-middle" aria-hidden="true" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>&nbsp;<i class="fa-solid fa-square fa-2x txt-status-off align-middle" aria-hidden="true" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                <?php echo zen_icon('enabled', IMAGE_ICON_STATUS_ON, '2x', hidden: true) ?>
+                &nbsp;
+                <?php echo zen_icon('disabled', IMAGE_ICON_STATUS_OFF, '2x', hidden: true) ?>
               </td>
-              <td class="text-center">
-                <i class="fa-solid fa-square fa-2x txt-orange align-middle" aria-hidden="true" title="<?php echo IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON; ?>"></i>&nbsp;
-                <span class="fa-stack" title="<?php echo IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF; ?>">
-                  <i class="fa-solid fa-square fa-stack-2x opacity-25 txt-orange align-middle" aria-hidden="true"></i>
-                  <i class="fa-solid fa-xmark fa-stack-1x txt-red" aria-hidden="true"></i>
-                </span>
-              </td>
-              <td class="text-center">
-                <i class="fa-solid fa-square fa-2x txt-blue align-middle" aria-hidden="true" title="<?php echo IMAGE_ICON_BANNER_ON_SSL_ON; ?>"></i>&nbsp;
-                <span class="fa-stack" title="<?php echo IMAGE_ICON_BANNER_ON_SSL_OFF; ?>">
-                  <i class="fa-solid fa-square fa-stack-2x opacity-25 txt-blue align-middle" aria-hidden="true"></i>
-                  <i class="fa-solid fa-xmark fa-stack-1x txt-red" aria-hidden="true"></i>
-                </span>
-              </td>
+              <td class="text-center actions"><div class="btn-group">
+                <?php echo zen_icon('new-window', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON, '2x', hidden: true) ?>
+                &nbsp;
+                <?php echo zen_icon('new-window-off', IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF, hidden: true) ?>
+              </div></td>
+              <td class="text-center actions"><div class="btn-group">
+                <?php echo zen_icon('ssl-on', IMAGE_ICON_BANNER_ON_SSL_ON, '2x', hidden: true) ?>
+                &nbsp;
+                <?php echo zen_icon('ssl-off', IMAGE_ICON_BANNER_ON_SSL_OFF, hidden: true) ?>
+              </div></td>
             </tr>
           </table>
         </div>
@@ -413,7 +411,7 @@ if (!empty($action)) {
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_date_scheduled">
                 <span class="input-group-addon datepicker_icon">
-                  <i class="fa-regular fa-calendar-days fa-lg"></i>
+                  <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                 <?php echo zen_draw_input_field('date_scheduled', $bInfo->date_scheduled, 'class="form-control" id="date_scheduled" autocomplete="off"'); ?>
               </div>
@@ -425,7 +423,7 @@ if (!empty($action)) {
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_expires_date">
                 <span class="input-group-addon datepicker_icon">
-                  <i class="fa-regular fa-calendar-days fa-lg"></i>
+                  <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                 <?php echo zen_draw_input_field('expires_date', $bInfo->expires_date, 'class="form-control" id="expires_date" autocomplete="off"'); ?>
               </div>
@@ -525,42 +523,41 @@ if (!empty($action)) {
                     <td class="dataTableContent text-right"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
                     <td class="dataTableContent text-center">
                       <?php if ($banner['status'] == '1') { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=0'); ?>"><i class="fa-solid fa-square fa-2x txt-status-on" aria-hidden="true" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i></a>
+                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=0'); ?>" data-toggle="tooltip" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"><?php echo zen_icon('enabled', '', '2x', false, true) ?></a>
                       <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=1'); ?>"><i class="fa-solid fa-square fa-2x txt-status-off" aria-hidden="true" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i></a>
+                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=1'); ?>" data-toggle="tooltip" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"><?php echo zen_icon('disabled', '', '2x', false, true) ?></a>
                       <?php } ?>
                     </td>
                     <td class="dataTableContent text-center">
                       <?php if ($banner['banners_open_new_windows'] == '1') { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=0'); ?>"><i class="fa-solid fa-square fa-2x txt-orange align-middle" aria-hidden="true" title="<?php echo IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON; ?>"></i></a>
+                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=0'); ?>" data-toggle="tooltip" title="<?php echo IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON; ?>">
+                          <?php echo zen_icon('new-window', '', '2x', false, true) ?>
+                        </a>
                       <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=1'); ?>"><span class="fa-stack" title="<?php echo IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_OFF; ?>">
-                            <i class="fa-solid fa-square fa-stack-2x opacity-25 txt-orange" aria-hidden="true"></i>
-                            <i class="fa-solid fa-xmark fa-stack-1x txt-red" aria-hidden="true"></i>
-                          </span>
+                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=1'); ?>">
+                          <?php echo zen_icon('new-window-off', '', '2x', false, true) ?>
                         </a>
                       <?php } ?>
                     </td>
                     <td class="dataTableContent text-center">
                       <?php if ($banner['banners_on_ssl'] == '1') { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=0'); ?>"><i class="fa-solid fa-square fa-2x txt-blue align-middle" aria-hidden="true" title="<?php echo IMAGE_ICON_BANNER_ON_SSL_ON; ?>"></i></a>
+                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=0'); ?>" data-toggle="tooltip" title="<?php echo IMAGE_ICON_BANNER_ON_SSL_ON; ?>">
+                          <?php echo zen_icon('ssl-on', '', '2x', false, true) ?>
+                        </a>
                       <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=1'); ?>">
-                          <span class="fa-stack" title="<?php echo IMAGE_ICON_BANNER_ON_SSL_OFF; ?>">
-                            <i class="fa-solid fa-square fa-stack-2x opacity-25 txt-blue" aria-hidden="true"></i>
-                            <i class="fa-solid fa-xmark fa-stack-1x txt-red" aria-hidden="true"></i>
-                          </span>
+                        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=1'); ?>" data-toggle="tooltip" title="<?php echo IMAGE_ICON_BANNER_ON_SSL_OFF; ?>">
+                          <?php echo zen_icon('ssl-off', '2x', false, true) ?>
                         </a>
                       <?php } ?>
                     </td>
                     <td class="dataTableContent text-right"><?php echo $banner['banners_sort_order']; ?></td>
                     <td class="dataTableContent text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id']); ?>"><i class="fa-solid fa-line-chart fa-lg txt-black" aria-hidden="true"></i></a>
-                      <?php if (isset($bInfo) && is_object($bInfo) && ($banner['banners_id'] == $bInfo->banners_id)) { ?>
-                        <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
-                      <?php } else { ?>
+                      <a href="<?php echo zen_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id']); ?>"><?php echo zen_icon('line-chart', '', 'lg', false, true) ?></a>
+                      <?php if (isset($bInfo) && is_object($bInfo) && ($banner['banners_id'] == $bInfo->banners_id)) {
+                        echo zen_icon('caret-right', '', '2x', true);
+                      } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id']); ?>">
-                          <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                          <?php echo zen_icon('circle-info', '', '2x', true) ?>
                         </a>
                       <?php } ?>
                     </td>

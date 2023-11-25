@@ -69,9 +69,9 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
               <td class="dataTableContent text-center"><?php echo zen_date_short($product['products_date_available']); ?></td>
               <td class="dataTableContent text-right"><?php
                   if (isset($pInfo) && is_object($pInfo) && ($product['products_id'] == $pInfo->products_id)) {
-                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
+                    echo zen_icon('caret-right', '', '2x', true);
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $product['products_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $product['products_id']) . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
                   }
                   ?>&nbsp;</td>
               </tr>

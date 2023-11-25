@@ -216,7 +216,9 @@ if (!empty($action)) {
                 <p class="control-label"><?php echo ENTRY_RATING; ?></p>
               </div>
               <div class="col-sm-9 col-md-6">
-                <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></span>
+                <span class="form-control" style="border:none; -webkit-box-shadow: none" title="<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating) ?>">
+                  <?php echo str_repeat(zen_icon('star-shadow', size: 'lg'), $rInfo->reviews_rating); ?>
+                  &nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></span>
               </div>
             </div>
             <?php
@@ -345,7 +347,7 @@ if (!empty($action)) {
                     <?php if (count($languages_array) > 1) { ?>
                       <td class="dataTableContent text-center"><?php echo zen_get_language_icon($review['languages_id']); ?></td>
                     <?php } ?>
-                    <td class="dataTableContent"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $review['reviews_rating'] . '.gif'); ?></td>
+                    <td class="dataTableContent"><?php echo str_repeat(zen_icon('star-shadow', size: 'lg'), $review['reviews_rating']) ?></td>
                     <td class="dataTableContent text-center"><?php echo zen_date_short($review['date_added']); ?></td>
                     <td  class="dataTableContent text-center">
                       <?php echo zen_draw_form('setflag_products', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=setflag&rID=' . $review['reviews_id']); ?>
@@ -363,11 +365,11 @@ if (!empty($action)) {
                       <?php echo '</form>'; ?>
                     </td>
                     <td class="dataTableContent text-right">
-                      <?php if (isset($rinfo) && is_object($rInfo) && ($review['reviews_id'] === $rInfo->reviews_id)) { ?>
-                        <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
-                      <?php } else { ?>
+                      <?php if (isset($rinfo) && is_object($rInfo) && ($review['reviews_id'] === $rInfo->reviews_id)) {
+                        echo zen_icon('caret-right', '', '2x', true);
+                      } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_REVIEWS, zen_get_all_get_params(['rID']) . 'rID=' . $review['reviews_id']); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                          <?php echo zen_icon('circle-info') ?>
                         </a>
                       <?php } ?>
                     </td>
@@ -404,7 +406,8 @@ if (!empty($action)) {
                   $contents[] = array('text' => zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
                   $contents[] = array('text' => ENTRY_REVIEW . '<br>' . zen_output_string_protected($rInfo->reviews_text));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
-                  $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif'));
+                  $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' .
+                    str_repeat(zen_icon('star-shadow', size: 'lg'), $rInfo->reviews_rating));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');
                   $contents[] = array('text' => TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format((float)$rInfo->average_rating, 2) . '%');
