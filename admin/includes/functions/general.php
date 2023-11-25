@@ -515,27 +515,21 @@ function zen_draw_order_status_dropdown($field_name, $default_value, $first_sele
 
 
 /**
- * return the size and maxlength settings in the form size="blah" maxlength="blah" based on maximum size being 50
- * uses $tbl = table name, $fld = field name
+ * Generate form attributes for size="foo" maxlength="bar" based on maximum size (default 50)
  * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
- * @param string $tbl
- * @param string $fld
- * @param int $max
- * @param bool $override
- * @return string
  */
-function zen_set_field_length($tbl, $fld, $max = 50, $override = false)
+function zen_set_field_length(string $table_name, string $field_name, $max = 50, bool $override = false): string
 {
-    $field_length = zen_field_length($tbl, $fld);
-    switch (true) {
-        case (($override == false and $field_length > $max)):
-            $length = 'size="' . ($max + 1) . '" maxlength="' . $field_length . '"';
-            break;
-        default:
-            $length = 'size="' . ($field_length + 1) . '" maxlength="' . $field_length . '"';
-            break;
+    $max = (int)$max;
+
+    $field_length = zen_field_length($table_name, $field_name);
+    $size = $field_length + 1;
+
+    if ($override !== true && $field_length > $max) {
+        $size = $max + 1;
     }
-    return $length;
+
+    return 'size="' . $size . '" maxlength="' . $field_length . '"';
 }
 
 /**
