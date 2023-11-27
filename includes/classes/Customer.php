@@ -606,7 +606,7 @@ class Customer extends base
                 'order_name' => $order_name,
                 'order_country' => $order_country,
                 'orders_status_name' => $result['orders_status_name'],
-                'order_total' => $currencies->format($result['order_total'], false, $result['currency'], $result['currency_value']),
+                'order_total' => $currencies->format($result['order_total'], true, $result['currency'], $result['currency_value']),
                 'order_total_raw' => $result['order_total'],
                 'currency' => $result['currency'],
                 'currency_value' => $result['currency_value'],
