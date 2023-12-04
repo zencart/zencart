@@ -49,7 +49,7 @@ class order extends base
      */
     public $delivery = [];
     /**
-     * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing 
+     * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing
      * @var boolean
      */
     public $doStockDecrement;
@@ -80,7 +80,7 @@ class order extends base
     protected $orderId = null;
     /**
      * $products is an array containing details of the products for the order
-     * @var array 
+     * @var array
      */
     public $products = [];
     /**
@@ -115,17 +115,17 @@ class order extends base
     public $statuses = [];
     /**
      * $total_cost is the total cost of the order
-     * @var float 
+     * @var float
      */
     public $total_cost;
     /**
      * $total_tax is the total amount of tax for the order
-     * @var float 
+     * @var float
      */
     public $total_tax;
     /**
      * $total_weight is the total weight of the order
-     * @var float 
+     * @var float
      */
     public $total_weight;
     /**
@@ -448,7 +448,7 @@ class order extends base
     protected function getCountryZoneId(int $countries_id, string $state)
     {
         global $db;
-        
+
         $sql =
             "SELECT zone_id
                FROM " . TABLE_ZONES . "
@@ -781,15 +781,18 @@ class order extends base
                                   WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
                                   AND ab.address_book_id = " . $address_book_id;
 
-            if ($tax_address_query != '') {
+
+
                 $tax_address = $db->Execute($tax_address_query);
                 if ($tax_address->RecordCount() > 0) {
                     $taxCountryId = $tax_address->fields['entry_country_id'];
                     $taxZoneId = $tax_address->fields['entry_zone_id'];
                 }
+            if ((int)$taxZoneId === 0) {
+                $taxZoneId = $this->getTaxZoneIdFromState($address_book_id);
             }
-        }
 
+        }
         return [$taxCountryId, $taxZoneId];
     }
 
@@ -1455,4 +1458,21 @@ class order extends base
         $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
     }
 
+    protected function getTaxZoneIdFromState($address_book_id)
+    {
+        $ta = \App\Models\AddressBook::find($address_book_id);
+        $zone_id = $this->findZoneIdFromState($ta->entry_country_id, $ta->entry_state);
+        return $zone_id;
+    }
+
+    protected function findZoneIdFromState($country_id, $state)
+    {
+        $tateShort = strtoupper($state);
+        $stateLong = ucfirst(strtolower($state));
+        $zone = \App\Models\Zone::where('zone_country_id', $country_id)
+            ->where('zone_code', $tateShort)
+            ->orWhere('zone_name', $stateLong)
+            ->first();
+        return $zone->zone_id;
+    }
 }

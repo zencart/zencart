@@ -41,16 +41,14 @@ class BasicTaxShippingBillingWithShippingTest extends zcFeatureTestCaseStore
         ]);
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
-        $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
+        $this->assertStringContainsString('4.90', (string)$response->getContent() );
+        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
-        $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
+        $this->assertStringContainsString('4.90', (string)$response->getContent() );
+        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
@@ -80,16 +78,14 @@ class BasicTaxShippingBillingWithShippingTest extends zcFeatureTestCaseStore
         ]);
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
-        $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
+        $this->assertStringContainsString('4.90', (string)$response->getContent() );
+        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
-        $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
+        $this->assertStringContainsString('4.90', (string)$response->getContent() );
+        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
