@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Support\helpers;
 
 class ProfileManager
 {
-
     public static function getProfile($profileName)
     {
         $profile = [];
@@ -30,6 +29,30 @@ class ProfileManager
         $profile['florida-basic2']['email_address'] = 'dirk1@example.com';
         $profile['florida-basic2']['zone_id'] = '18';
 
+        $profile['US-not-florida-basic'] = [
+            'firstname' => 'Dirk',
+            'lastname' => 'Gently',
+            'zone_country_id' => '223',
+            'street_address' => '1234 Main St',
+            'city' => 'Albuquerque',
+            'state' => 'New Mexico',
+            'postcode' => '87101',
+            'telephone' => '3055551212',
+            'email_address' => 'dirk2@example.com',
+            'password' => 'password',
+            'confirmation' => 'password',
+            'zone_id' => '42',
+        ];
+
         return $profile[$profileName];
+    }
+
+    public static function getProfileForLogin($profileName)
+    {
+        $profile = self::getProfile($profileName);
+        $emailProfile = [];
+        $emailProfile['email_address'] = $profile['email_address'];
+        $emailProfile['password'] = $profile['password'];
+        return $emailProfile;
     }
 }
