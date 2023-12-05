@@ -583,6 +583,7 @@ class order extends base
                 'telephone' => $customer_address->fields['customers_telephone'],
                 'email_address' => $customer_address->fields['customers_email_address'],
             ];
+            $this->customer['zone_id'] = $this->getCanonicalZoneId($this->customer['zone_id'], (int)$this->customer['country']['id'], $this->customer['state']);
         }
 
         if ($this->content_type == 'virtual') {
@@ -621,6 +622,7 @@ class order extends base
                 'country_id' => $shipping_address->fields['entry_country_id'],
                 'format_id' => (int)$shipping_address->fields['address_format_id'],
             ];
+            $this->delivery['zone_id'] = $this->getCanonicalZoneId($this->delivery['zone_id'], (int)$this->delivery['country']['id'], $this->delivery['state']);
         }
 
         if ($billing_address->RecordCount() > 0) {
@@ -639,6 +641,7 @@ class order extends base
                 'country_id' => $billing_address->fields['entry_country_id'],
                 'format_id' => (int)$billing_address->fields['address_format_id'],
             ];
+            $this->billing['zone_id'] = $this->getCanonicalZoneId($this->billing['zone_id'], (int)$this->billing['country']['id'], $this->billing['state']);
         }
 
         list($taxCountryId, $taxZoneId) = $this->determineTaxAddressZones($billto, $sendto);
@@ -1458,6 +1461,14 @@ class order extends base
         $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
     }
 
+    protected function getCanonicalZoneId($zoneId,$countryId, $state)
+    {
+        if ($zoneId > 0) {
+            return $zoneId;
+        }
+        $zoneId = $this->findZoneIdFromState($countryId, $state);
+        return $zoneId;
+    }
     protected function getTaxZoneIdFromState($address_book_id)
     {
         $ta = \App\Models\AddressBook::find($address_book_id);
