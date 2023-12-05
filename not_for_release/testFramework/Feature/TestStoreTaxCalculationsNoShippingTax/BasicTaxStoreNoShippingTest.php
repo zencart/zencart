@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\TestBasicTaxCalculationsNoShippingTax;
+namespace Feature\TestStoreTaxCalculationsNoShippingTax;
 
 use Tests\Support\zcFeatureTestCaseStore;
 
@@ -38,12 +38,12 @@ class BasicTaxStoreNoShippingTest extends zcFeatureTestCaseStore
         ]);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Payment Information', (string)$response->getContent() );
-        $this->browser->submitForm('Continue', [
-        ]);
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
         $this->assertStringContainsString('4.90', (string)$response->getContent() );
         $this->assertStringContainsString('77.39', (string)$response->getContent() );
+        $this->browser->submitForm('Continue', [
+        ]);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
