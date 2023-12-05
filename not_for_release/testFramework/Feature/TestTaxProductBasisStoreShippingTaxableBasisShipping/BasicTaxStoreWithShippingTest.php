@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\TestStoreTaxCalculationsWithShippingTax;
+namespace Feature\TestTaxProductBasisStoreShippingTaxableBasisShipping;
 
 use Tests\Support\zcFeatureTestCaseStore;
 

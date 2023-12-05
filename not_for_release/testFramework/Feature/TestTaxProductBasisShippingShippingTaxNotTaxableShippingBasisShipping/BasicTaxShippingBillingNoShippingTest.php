@@ -1,6 +1,6 @@
 <?php
 
-namespace Feature\TestBasicTaxCalculationsNoShippingTax;
+namespace Feature\TestTaxProductBasisShippingShippingTaxNotTaxableShippingBasisShipping;
 
 use Tests\Support\zcFeatureTestCaseStore;
 class BasicTaxShippingBillingNoShippingTest extends zcFeatureTestCaseStore
@@ -16,6 +16,7 @@ class BasicTaxShippingBillingNoShippingTest extends zcFeatureTestCaseStore
         static::$ready = true;
         $this->createCustomerAccount('florida-basic1');
         $this->createCustomerAccount('US-not-florida-basic');
+        $this->setConfiguration('STORE_PRODUCT_TAX_BASIS', 'Shipping');
     }
 
     public function testBasicCheckoutFloridaCustomer()
