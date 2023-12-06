@@ -341,6 +341,16 @@ $autoLoadConfig[135][] = [
     'loadFile' => 'init_customer_auth.php',
 ];
 /**
+ * Breakpoint 138.
+ *
+ * require('includes/init_includes/init_coupons.php');
+ *
+ */
+$autoLoadConfig[138][] = [
+  'autoType'=>'init_script',
+  'loadFile'=> 'init_coupons.php'
+];
+/**
  * Breakpoint 140.
  *
  * require 'includes/init_includes/init_cart_handler.php';
