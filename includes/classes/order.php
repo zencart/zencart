@@ -11,6 +11,10 @@
  * Stores new orders and sends order confirmation emails
  *
  */
+
+use \App\Models\AddressBook;
+use \App\Models\Zone;
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -1461,25 +1465,23 @@ class order extends base
         $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
     }
 
-    protected function getCanonicalZoneId($zoneId,$countryId, $state)
+    protected function getCanonicalZoneId(int $zoneId, int $countryId, string $state): int
     {
         if ($zoneId > 0) {
             return $zoneId;
         }
-        $zoneId = $this->findZoneIdFromState($countryId, $state);
-        return $zoneId;
+        return $this->findZoneIdFromState($countryId, $state);
     }
-    protected function getTaxZoneIdFromState($address_book_id)
+    protected function getTaxZoneIdFromState(int $address_book_id): int
     {
-        $ta = \App\Models\AddressBook::find($address_book_id);
-        $zone_id = $this->findZoneIdFromState($ta->entry_country_id, $ta->entry_state);
-        return $zone_id;
+        $ta = AddressBook::find($address_book_id);
+        return $this->findZoneIdFromState($ta->entry_country_id, $ta->entry_state);
     }
 
-    protected function findZoneIdFromState($country_id, $state)
+    protected function findZoneIdFromState(int $country_id, string $state): int
     {
         $tateShort = strtoupper($state);
-        $zone = \App\Models\Zone::where('zone_country_id', $country_id)
+        $zone = Zone::where('zone_country_id', $country_id)
             ->where('zone_code', $tateShort)
             ->orWhere('zone_name', $state)
             ->first();
