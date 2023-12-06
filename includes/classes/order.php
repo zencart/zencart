@@ -1479,10 +1479,9 @@ class order extends base
     protected function findZoneIdFromState($country_id, $state)
     {
         $tateShort = strtoupper($state);
-        $stateLong = ucfirst(strtolower($state));
         $zone = \App\Models\Zone::where('zone_country_id', $country_id)
             ->where('zone_code', $tateShort)
-            ->orWhere('zone_name', $stateLong)
+            ->orWhere('zone_name', $state)
             ->first();
         return $zone->zone_id;
     }
