@@ -262,7 +262,7 @@ function zen_icon(string $icon, ?string $tooltip = null, string $size = '', bool
   $iconSet = str_contains($classes, 'fa-regular') ? '' : 'fa-solid';
   $sizeClass = $size === '2x' ? ' fa-2x' : ($size === 'lg' ? ' fa-lg' : '');
   $ariaHidden = $hidden ? ' aria-hidden="true"' : '';
-  return "<i class=\"${iconSet}$sizeClass align-middle {$classes}${fw}\"{$tooltip}{$ariaHidden}></i>";
+  return "<i class=\"$iconSet$sizeClass align-middle $classes$fw\"$tooltip$ariaHidden></i>";
 }
 
 ////
