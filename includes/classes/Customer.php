@@ -651,22 +651,25 @@ class Customer extends base
      * @param integer $limit Optional limit of the number of orders to return.
      * @return array
      */
-    public function getOrdersSummary(int $limit = 0): array {
+    public function getRecentOrderRecords(int $limit = 0): array 
+    {
         global $db;
         if (empty($this->customer_id)) {
             return [];
         }
-        $rs = $db->Execute("SELECT orders_id, date_purchased, orders_status_name
+        
+        $result = $db->Execute("SELECT orders_id, date_purchased, orders_status_name
             FROM " . TABLE_ORDERS . " o
             INNER JOIN " . TABLE_ORDERS_STATUS . " os
                 ON o.orders_status = os.orders_status_id AND os.language_id = {$_SESSION['languages_id']}
             WHERE customers_id = {$this->customer_id}
             ORDER BY date_purchased DESC" . (!empty($limit) ? " LIMIT $limit" : '') . ';');
-        $result = [];
-        foreach ($rs as $row) {
-            $result[] = $row;
+        
+        $orders = [];
+        foreach ($result as $row) {
+            $orders[] = $row;
         }
-        return $result;
+        return $orders;
     }
 
     public function setPassword(string $new_password)
