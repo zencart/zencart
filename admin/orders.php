@@ -1328,7 +1328,7 @@ if (!empty($action) && $order_exists === true) {
                     ?>
                 <td class="dataTableContent text-center"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '"><i class="fa-solid fa-magnifying-glass"></i></a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
 <?php if ($show_zone_info) { ?>
                 <td class="dataTableContent text-left">
 <?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
@@ -1466,7 +1466,7 @@ if (!empty($action) && $order_exists === true) {
                         '</fieldset></form>' . "\n"];
 
                     $contents[] = ['text' => '<br>' . TEXT_DATE_ORDER_CREATED . ' ' . zen_date_short($oInfo->date_purchased)];
-                    $contents[] = ['text' => '<br>' . $oInfo->customers_email_address];
+                    $contents[] = ['text' => '<br>' . '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $oInfo->customers_id, 'NONSSL') . '">' . $oInfo->customers_email_address . '</a>' ];
                     $contents[] = ['text' => TEXT_INFO_IP_ADDRESS . ' ' . $oInfo->ip_address];
                     if (zen_not_null($oInfo->last_modified)) {
                       $contents[] = ['text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . zen_date_short($oInfo->last_modified)];
