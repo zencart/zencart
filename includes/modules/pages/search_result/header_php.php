@@ -5,8 +5,9 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 New in v1.5.8-alpha $
+ * @version $Id:  Modified in v2.0.0 $
  */
+
 use Zencart\Search\SearchOptions;
 use Zencart\Exceptions\SearchException;
 
@@ -60,8 +61,8 @@ try {
         zen_redirect(zen_href_link(zen_get_info_page($result->fields['products_id']), 'cPath=' . zen_get_product_path($result->fields['products_id']) . '&products_id=' . $result->fields['products_id']));
     }
 
-} catch (SearchException $ex) {
-    $messageStack->add_session('search', $ex->getMessage());
+} catch (SearchException $e) {
+    $messageStack->add_session('search', $e->getMessage());
     zen_redirect(zen_href_link(FILENAME_SEARCH, zen_get_all_get_params(), 'NONSSL', true, false));
 }
 
