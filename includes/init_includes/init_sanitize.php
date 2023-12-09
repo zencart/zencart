@@ -117,7 +117,7 @@ $saniGroup3 = [
     'pto',   //- Searches, price-to (float)
 ];
 foreach ($saniGroup3 as $key) {
-    if (isset($_GET[$key]) && !preg_match('/^\d+(\.\d+)/', $_GET[$key])) {
+    if (isset($_GET[$key]) && !preg_match('/^\d+(\.\d+)?/', $_GET[$key])) {
         $_GET[$key] = '';
         if (isset($_REQUEST[$key])) {
             $_REQUEST[$key] = '';

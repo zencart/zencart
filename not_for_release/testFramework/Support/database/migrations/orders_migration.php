@@ -56,7 +56,7 @@ class CreateOrdersTable extends Migration
             $table->string('cc_owner', 64)->nullable();
             $table->string('cc_number', 32)->nullable();
             $table->string('cc_expires', 4)->nullable();
-            $table->binary('cc_cvv');
+            $table->binary('cc_cvv')->nullable();
             $table->dateTime('last_modified')->nullable();
             $table->dateTime('date_purchased')->nullable()->index('idx_date_purchased_zen');
             $table->integer('orders_status')->default(0);
@@ -65,6 +65,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('currency_value', 14, 6)->nullable();
             $table->decimal('order_total', 15, 4)->nullable();
             $table->decimal('order_tax', 15, 4)->nullable();
+            $table->decimal('shipping_tax_rate', 15, 4)->nullable();
             $table->integer('paypal_ipn_id')->default(0);
             $table->string('ip_address', 96)->default('');
             $table->float('order_weight')->nullable();

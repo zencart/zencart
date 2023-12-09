@@ -187,6 +187,7 @@ $define = [
     'ERROR_INVALID_KEYWORDS' => 'Invalid keywords.',
     'ERROR_INVALID_TO_DATE' => 'Invalid To Date.',
     'ERROR_MAXIMUM_QTY' => 'The quantity added to your cart has been adjusted because of a restriction on maximum you are allowed. See this item:<br>',
+    'ERROR_MISSING_SEARCH_OPTIONS' => 'Missing search options',
     'ERROR_NO_PAYMENT_MODULE_SELECTED' => 'Please select a payment method for your order.',
     'ERROR_PRICE_FROM_MUST_BE_NUM' => 'Price From must be a number.',
     'ERROR_PRICE_TO_LESS_THAN_PRICE_FROM' => 'Price To must be greater than or equal to Price From.',

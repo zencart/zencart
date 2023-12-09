@@ -49,7 +49,7 @@ define('DIR_WS_HTTPS_CATALOG', '/');
  * This is the complete physical path to your store's files.  eg: /var/www/vhost/accountname/public_html/store/
  * Should have a closing / on it.
  */
-define('DIR_FS_CATALOG', $_SERVER['DOCUMENT_ROOT'] . '/');
+define('DIR_FS_CATALOG', '/home/runner/work/zencart/zencart/');
 
 /**
  * NOTE about DIR_FS_ADMIN

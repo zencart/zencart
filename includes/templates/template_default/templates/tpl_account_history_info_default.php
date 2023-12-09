@@ -22,6 +22,7 @@ $zco_notifier->insertContent('CONTENT_ACCOUNT_HISTORY_INFO_INTRO', $order);
 $extra_headings = [];
 $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order, $extra_headings);
 ?>
+
 <table id="orderHistoryHeading">
     <tr class="tableHeading">
         <th scope="col" id="myAccountQuantity"><?php echo HEADING_QUANTITY; ?></th>

@@ -8,6 +8,8 @@ namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestResult;
+use Tests\Support\Traits\ConfigurationSettingsConcerns;
+use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\DatabaseConcerns;
 use Tests\Support\Traits\GeneralConcerns;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -17,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 abstract class zcFeatureTestCase extends WebTestCase
 {
-    use DatabaseConcerns, GeneralConcerns;
+    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns;
 
     static $firstrun = false;
 

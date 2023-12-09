@@ -361,8 +361,8 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
     // If we're just starting the checkout process via the PPEC button, there's
     // no customer or shipping-address currently defined.  Use the store values for tax calculation.
     if (!zen_is_logged_in())  {
-        $tax_address['zone_id'] = (int)STORE_COUNTRY;
-        $tax_address['country_id'] = (int)STORE_ZONE;
+        $tax_address['zone_id'] = (int)STORE_ZONE;
+        $tax_address['country_id'] = (int)STORE_COUNTRY;
         return $tax_address;
     }
     switch (STORE_PRODUCT_TAX_BASIS) {
