@@ -272,24 +272,20 @@ if (is_array($extra_data)) {
     }
 }
 ?>
-                  <td class="dataTableContent text-right">
-                    <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>" title="<?php echo ICON_EDIT; ?>" role="button">
-                      <div class="fa-stack fa-fw">
-                        <i class="fa-solid fa-circle fa-stack-2x txt-status-on"></i>
-                        <i class="fa-solid fa-pencil fa-stack-1x fa-inverse"></i>
-                      </div>
+                  <td class="dataTableContent text-right actions">
+                    <div class="btn-group">
+                    <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>" class="btn btn-sm btn-default btn-edit" role="button" data-toggle="tooltip" title="<?php echo ICON_EDIT ?>">
+                      <?php echo zen_icon('pencil', hidden: true) ?>
                     </a>
-                    <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=delete'); ?>" title="<?php echo ICON_DELETE; ?>">
-                      <div class="fa-stack fa-fw">
-                        <i class="fa-solid fa-circle fa-stack-2x txt-status-off"></i>
-                        <i class="fa-solid fa-trash fa-stack-1x fa-inverse"></i>
-                      </div>
+                    <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=delete'); ?>" class="btn btn-sm btn-default btn-delete" role="button" data-toggle="tooltip" title="<?php echo ICON_DELETE ?>">
+                      <?php echo zen_icon('trash', hidden: true) ?>
                     </a>
-                    <?php if (isset($mInfo) && is_object($mInfo) && ($manufacturer['manufacturers_id'] == $mInfo->manufacturers_id)) { ?>
-                      <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
-                    <?php } else { ?>
+                    </div>
+                    <?php if (isset($mInfo) && is_object($mInfo) && ($manufacturer['manufacturers_id'] == $mInfo->manufacturers_id)) {
+                      echo zen_icon('caret-right', '', '2x', true);
+                    } else { ?>
                       <a href="<?php echo zen_href_link(FILENAME_MANUFACTURERS, zen_get_all_get_params(['mID']) . 'mID=' . $manufacturer['manufacturers_id']); ?>">
-                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                        <?php echo zen_icon('circle-info', '', '2x', true, true) ?>
                       </a>
                     <?php } ?>
                   </td>

@@ -20,7 +20,7 @@ if (!empty($action)) {
 
     case 'save':
       zen_update_template_name_for_id($selected_template, $_POST['ln']);
-      $init_file = DIR_FS_CATALOG . 'includes/templates/' . $_POST['ln'] . '/template_init.php';  
+      $init_file = DIR_FS_CATALOG . 'includes/templates/' . $_POST['ln'] . '/template_init.php';
       if (file_exists($init_file)) {
          require $init_file;
       }
@@ -101,9 +101,9 @@ if (!empty($action)) {
               <td class="dataTableContent text-right">
                   <?php
                   if (isset($tInfo) && is_object($tInfo) && ($template['template_id'] == $tInfo->template_id)) {
-                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                    echo zen_icon('caret-right', '', '2x', true);
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $template['template_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $template['template_id']) . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
                   }
                   ?>
                 &nbsp;</td>

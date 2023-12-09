@@ -52,6 +52,21 @@ a {
     white-space: nowrap;
     width: 1%;
 }
+/* Keep action buttons together and centered in TD */
+.table-condensed td.actions,
+.table td.actions {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+/* Fix hyperlink underline on hover */
+.table td.actions a[role=button] {
+    display: inline-block;
+    user-select: none;
+}
+a[role=button] .fa-inverse {
+    color: var(--fa-inverse,#eee);
+}
+
 
 td, th {
     padding: 1px;
@@ -664,12 +679,12 @@ a.btn-imagehandler {
     color: #000;
 }
 
-a.btn-attributes-on {
+.btn-attributes-on {
     background-color: #87cefa;
     color: #000;
 }
 
-a.btn-attributes-off, a.btn-metatags-off {
+.btn-attributes-off, a.btn-metatags-off {
     background-color: #000;
     color: #eee;
 }
@@ -689,7 +704,7 @@ a.btn-pricemanager-off {
     color: #eee;
 }
 
-a.btn-metatags-on {
+.btn-metatags-on {
   background-color: #000;
   color: #ffa500;
 }
@@ -708,6 +723,11 @@ a.btn-metatags-on {
   outline-offset: 0;
 }
 
+/* Ensure FontAwesome glyphs for statuses occupy space so Bootstrap tooltip doesn't glitch. */
+i.fa-square[data-toggle=tooltip] {
+    line-height: 1em;
+}
+
 .fa-folder, .fa-folder-open {color: #deb887;}
 .folder, .folder:hover {
   text-decoration: none;
@@ -724,6 +744,9 @@ a.btn-metatags-on {
 }
 .txt-linked{
   color: #f0ad4e;
+}
+.txt-light {
+  opacity: 0.3;
 }
 .tt {
     font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;
@@ -867,6 +890,12 @@ input.faint {
 }
 .txt-pink {
   color: #ffbaba;
+}
+.txt-gold {
+  color: gold;
+}
+.star-shadow {
+  text-shadow: 1px 1px 2px grey;
 }
 .txt-transparent {
   color: transparent;

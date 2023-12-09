@@ -386,8 +386,8 @@ if ($pr_list->EOF) {
             </tr>
 <?php
 } else {
-    $products_status_disabled = zen_image(DIR_WS_IMAGES . 'icon_red_on.gif', IMAGE_ICON_STATUS_OFF);
-    $products_status_enabled = zen_image(DIR_WS_IMAGES . 'icon_green_on.gif', IMAGE_ICON_STATUS_ON);
+    $products_status_disabled = zen_icon('disabled', IMAGE_ICON_STATUS_OFF);
+    $products_status_enabled = zen_icon('enabled', IMAGE_ICON_STATUS_ON);
     while (!$pr_list->EOF) {
         $prArrayList[] = $pr_list->fields['product_id'];
         $products_id = $pr_list->fields['product_id'];

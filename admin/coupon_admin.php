@@ -556,9 +556,9 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['unique_id'] == $cInfo->unique_id)) {
-                          echo '<i class="fa-solid fa-caret-right fa-fw fa-2x align-middle"></i>';
+                          echo zen_icon('caret-right', '', '2x', true);
                         } else {
-                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '"><i class="fa-solid fa-circle-info fa-fw fa-2x align-middle"></i></a>';
+                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'reports_page=' . $_GET['reports_page'] . '&cid=' . $item['coupon_id']) . '">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
                         }
                         ?>
                       </td>
@@ -1144,14 +1144,6 @@ switch ($_GET['action']) {
               </div>
             </div>
             <?php echo '</form>'; ?>
-            <script>
-              $(function () {
-                $('[data-toggle="tooltip"]').tooltip({
-                  html: true,
-                  container: 'body'
-                });
-              })
-            </script>
             <?php
             break;
           default:
@@ -1299,9 +1291,11 @@ switch ($_GET['action']) {
                       <td class="dataTableContent text-right">
                         <?php
                         if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
-                          echo '<i class="fa-solid fa-caret-right fa-fw fa-2x align-middle"></i>';
+                          echo zen_icon('caret-right', '', '2x', true);
                         } else {
-                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(['cid',]) . 'cid=' . $item['coupon_id']) . '"><i class="fa-solid fa-circle-info fa-fw fa-2x align-middle"></i></a>';
+                          echo '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(['cid',]) . 'cid=' . $item['coupon_id']) . '">' .
+                            zen_icon('circle-info', '', '2x', true, false) .
+                          '</a>';
                         }
                         ?>
                       </td>

@@ -135,14 +135,20 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
               <td class="dataTableContent"><?php echo $group['group_id']; ?></td>
               <td class="dataTableContent"><?php echo $group['group_name']; ?></td>
               <td class="dataTableContent"><?php echo $group['group_percentage']; ?></td>
-              <td class="dataTableContent text-right">
-                  <?php echo '<a href="' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=edit') . '">' . zen_image(DIR_WS_IMAGES . 'icon_edit.gif', ICON_EDIT) . '</a>'; ?>
-                  <?php echo '<a href="' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=delete') . '">' . zen_image(DIR_WS_IMAGES . 'icon_delete.gif', ICON_DELETE) . '</a>'; ?>
+              <td class="dataTableContent text-right actions">
+                <div class="btn-group">
+                  <?php echo '<a href="' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=edit') . '" class="btn btn-sm btn-default btn-edit" data-toggle="tooltip" title="' . ICON_EDIT . '">' .
+                    zen_icon('pencil', hidden: true) .
+                    '</a>'; ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_GROUP_PRICING, 'page=' . $_GET['page'] . '&gID=' . $group['group_id'] . '&action=delete') . '" class="btn btn-sm btn-default btn-delete" data-toggle="tooltip" title="' . ICON_DELETE . '">' .
+                    zen_icon('trash', hidden: true) .
+                    '</a>'; ?>
+                </div>
                   <?php
                   if (isset($gInfo) && is_object($gInfo) && ($group['group_id'] == $gInfo->group_id)) {
-                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                    echo zen_icon('caret-right', '', '2x', true);
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_GROUP_PRICING, zen_get_all_get_params(array('gID')) . 'gID=' . $group['group_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_GROUP_PRICING, zen_get_all_get_params(array('gID')) . 'gID=' . $group['group_id']) . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true, false) . '</a>';
                   }
                   ?>
               </td>

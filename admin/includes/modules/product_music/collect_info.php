@@ -158,7 +158,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         <div class="input-group">
           <span class="input-group-addon">
               <?php
-              echo zen_image(DIR_WS_IMAGES . 'icon_yellow_on.gif', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;';
+              echo zen_icon('linked', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;';
               ?>
           </span>
           <?php

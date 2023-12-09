@@ -386,19 +386,19 @@ if (!empty($action)) {
       ?>
       <div class="form-group">
         <div class="col-sm-offset-3">
-            <?php echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); ?><?php echo TEXT_SALEMAKER_ENTIRE_CATALOG; ?>
+          <?php echo zen_icon('caret-right', size: 'lg'); ?>&nbsp;<?php echo TEXT_SALEMAKER_ENTIRE_CATALOG; ?>
         </div>
       </div>
       <div class="form-group" onClick="RowClick('0')">
         <div class="col-sm-offset-3">
           <div>
-            <label><?php echo zen_draw_checkbox_field('categories[]', '0', $zc_check_all_cats); ?><?php echo TEXT_SALEMAKER_TOP; ?></label>
+            <label><?php echo zen_draw_checkbox_field('categories[]', '0', $zc_check_all_cats); ?>&nbsp;<?php echo TEXT_SALEMAKER_TOP; ?></label>
           </div>
         </div>
       </div>
       <div class="form-group">
         <div class="col-sm-offset-3">
-            <?php echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); ?><?php echo TEXT_SALEMAKER_CATEGORIES; ?>
+          <?php echo zen_icon('caret-right', size: 'lg'); ?>&nbsp;<?php echo TEXT_SALEMAKER_CATEGORIES; ?>
         </div>
       </div>
       <?php
@@ -478,14 +478,14 @@ if (!empty($action)) {
                       if ($salemaker_sale['sale_status'] == '1') {
                         echo zen_draw_form('setflag_products', FILENAME_SALEMAKER, 'action=setflag&sID=' . $salemaker_sale['sale_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                         ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_green_on.gif" title="<?php echo IMAGE_ICON_STATUS_ON; ?>">
+                      <?php echo zen_icon('enabled', IMAGE_ICON_STATUS_ON, 'lg', true); ?>
                       <input type="hidden" name="flag" value="0">
                       <?php echo '</form>'; ?>
                       <?php
                     } else {
                       echo zen_draw_form('setflag_products', FILENAME_SALEMAKER, 'action=setflag&sID=' . $salemaker_sale['sale_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
                       ?>
-                      <input type="image" src="<?php echo DIR_WS_IMAGES ?>icon_red_on.gif" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>">
+                      <?php echo zen_icon('disabled', IMAGE_ICON_STATUS_OFF, 'lg', true); ?>
                       <input type="hidden" name="flag" value="1">
                       <?php echo '</form>'; ?>
                       <?php
@@ -494,9 +494,9 @@ if (!empty($action)) {
                   </td>
                   <td class="dataTableContent text-right"><?php
                       if (!empty($sInfo) && (is_object($sInfo)) && !empty($salemaker_sale) && isset($salemaker_sale['sale_id']) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                        echo zen_icon('caret-right', '', '2x', true);
                       } else {
-                        echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sale['sale_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                        echo '<a href="' . zen_href_link(FILENAME_SALEMAKER, 'page=' . $_GET['page'] . '&sID=' . $salemaker_sale['sale_id']) . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
                       }
                       ?>&nbsp;</td>
                 </tr>

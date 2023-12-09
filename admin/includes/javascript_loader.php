@@ -27,6 +27,10 @@
       selectOtherMonths: true,
       showButtonPanel: true
     }));
+    jQuery('[data-toggle="tooltip"]').tooltip({
+        html: true,
+        container: 'body'
+    });
   });
 </script>
 <?php

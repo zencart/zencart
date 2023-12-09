@@ -511,7 +511,7 @@ if (!empty($action)) {
         $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_MENU_LEGEND', [], $extra_legends);
 ?>
 
-        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', TEXT_WARNING_MULTIPLE_SETTINGS, 10, 10) . ' ' . TEXT_WARNING_MULTIPLE_SETTINGS .  $extra_legends; ?></div>
+        <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_icon('status-red', TEXT_WARNING_MULTIPLE_SETTINGS) . ' ' . TEXT_WARNING_MULTIPLE_SETTINGS .  $extra_legends; ?></div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover" role="listbox">
@@ -605,7 +605,7 @@ if (!empty($action)) {
                     <?php } else { ?>
                     <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id']); ?>'" role="option" aria-selected="false">
                     <?php } ?>
-                    <td class="dataTableContent text-right"><?php echo ($zv_link_method_cnt > 1 ? zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) : '') . '&nbsp;' . $page['pages_id']; ?></td>
+                    <td class="dataTableContent text-right"><?php echo ($zv_link_method_cnt > 1 ? zen_icon('status-red', IMAGE_ICON_STATUS_RED_EZPAGES) : '') . '&nbsp;' . $page['pages_id']; ?></td>
                     <td class="dataTableContent"><?php echo $page['pages_title']; ?></td>
                     <td class="dataTableContent text-center">
                       <?php echo zen_draw_form('page_open_new_window', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
@@ -727,21 +727,20 @@ if (!empty($action)) {
                     $extra_action_icons = '';
                     $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_EXTRA_ACTION_ICONS', $page, $extra_action_icons);
                     ?>
-                    <td class="dataTableContent text-right">
-                      <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id'] . '&action=new'); ?>" title="<?php echo ICON_EDIT; ?>" role="button" style="text-decoration: none">
-                        <div class="fa-stack fa-fw">
-                          <i class="fa-solid fa-circle fa-stack-2x txt-status-on"></i>
-                          <i class="fa-solid fa-pencil fa-stack-1x fa-inverse"></i>
-                        </div>
-                      </a>
-                      <?php echo $extra_action_icons; ?>
-                      <?php if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) { ?>
-                        <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
-                      <?php } else { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($page['pages_id']) ? 'ezID=' . $page['pages_id'] : '')); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                          <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                    <td class="dataTableContent text-right actions">
+                      <div class="btn-group">
+                        <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id'] . '&action=new'); ?>" title="<?php echo ICON_EDIT; ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                          <?php echo zen_icon('pencil', '', 'lg', hidden: true) ?>
                         </a>
-                      <?php } ?>
+                        <?php echo $extra_action_icons; ?>
+                        <?php if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) {
+                          echo zen_icon('caret-right', '', '2x', true);
+                        } else { ?>
+                          <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($page['pages_id']) ? 'ezID=' . $page['pages_id'] : '')); ?>" title="<?php echo IMAGE_ICON_INFO ?>" role="button">
+                            <?php echo zen_icon('circle-info', '', '2x', true) ?>
+                          </a>
+                        <?php } ?>
+                      </div>
                     </td>
                   </tr>
                   <?php
@@ -780,7 +779,7 @@ if (!empty($action)) {
                   }
 
                   if ($zv_link_method_cnt > 1) {
-                    $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED_EZPAGES, 10, 10) . ' &nbsp;' . '<b>' . TEXT_WARNING_MULTIPLE_SETTINGS . '</b>');
+                    $contents[] = array('text' => zen_icon('status-red', IMAGE_ICON_STATUS_RED_EZPAGES) . ' &nbsp;' . '<b>' . TEXT_WARNING_MULTIPLE_SETTINGS . '</b>');
                   }
 
                   $contents[] = array('text' => TEXT_ALT_URL . (empty($ezInfo->alt_url) ? '&nbsp;' . TEXT_NONE : '<br>' . $ezInfo->alt_url));

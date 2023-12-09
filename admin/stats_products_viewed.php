@@ -67,7 +67,7 @@ $products = $db->Execute($sql);
                 <div class="col-sm-4 col-md-3">
                     <div class="date input-group" id="datepicker_start_date">
                 <span class="input-group-addon datepicker_icon">
-                  <i class="fa-regular fa-calendar-days fa-lg"></i>
+                  <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                         <?php echo zen_draw_input_field('start_date', $startdate, 'class="form-control" id="start_date"'); ?>
                     </div>
@@ -79,7 +79,7 @@ $products = $db->Execute($sql);
                 <div class="col-sm-4 col-md-3">
                     <div class="date input-group" id="datepicker_end_date">
                 <span class="input-group-addon datepicker_icon">
-                  <i class="fa-regular fa-calendar-days fa-lg"></i>
+                  <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                         <?php echo zen_draw_input_field('end_date', $enddate, 'class="form-control" id="end_date"'); ?>
                     </div>

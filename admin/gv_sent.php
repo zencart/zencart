@@ -64,9 +64,9 @@ $currencies = new currencies();
                     <td class="dataTableContent text-right">
                       <?php
                       if (isset($gInfo) && (is_object($gInfo)) && ($gv_list['coupon_id'] == $gInfo->coupon_id)) {
-                        echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
+                        echo zen_icon('caret-right', '', '2x', true);
                       } else {
-                        echo '<a href="' . zen_href_link(FILENAME_GV_SENT, 'page=' . $_GET['page'] . '&gid=' . $gv_list['coupon_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                        echo '<a href="' . zen_href_link(FILENAME_GV_SENT, 'page=' . $_GET['page'] . '&gid=' . $gv_list['coupon_id']) . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true, false) . '</a>';
                       }
                       ?>
                     </td>

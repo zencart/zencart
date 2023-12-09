@@ -128,7 +128,7 @@ class WhosOnline extends base
         }
         $sql = "SELECT customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent, s.value as session_data
                 FROM " . TABLE_WHOS_ONLINE . " w
-                LEFT OUTER JOIN " . TABLE_SESSIONS . " s ON (s.sesskey = w.session_id) 
+                LEFT OUTER JOIN " . TABLE_SESSIONS . " s ON (s.sesskey = w.session_id)
                 :where:
                 ORDER BY :orderby:";
 
@@ -191,14 +191,14 @@ class WhosOnline extends base
     {
         switch ($status_code) {
             case 3:
-                return zen_image(DIR_WS_IMAGES . 'icon_status_red_light.gif');
+                return zen_icon('status-red-light');
             case 2:
-                return zen_image(DIR_WS_IMAGES . 'icon_status_red.gif');
+                return zen_icon('status-red');
             case 1:
-                return zen_image(DIR_WS_IMAGES . 'icon_status_yellow.gif');
+                return zen_icon('status-yellow');
             default:
             case 0:
-                return zen_image(DIR_WS_IMAGES . 'icon_status_green.gif');
+                return zen_icon('status-green');
         }
     }
 

@@ -189,9 +189,9 @@ if (!empty($action)) {
                 <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, TRUE); ?></td>
                 <td class="dataTableContent text-right"><?php
                   if ((isset($cInfo) && is_object($cInfo)) && ($item['configuration_id'] == $cInfo->configuration_id)) {
-                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                    echo zen_icon('caret-right', '', '2x', true);
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $item['configuration_id'] . '&action=layout') . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $item['configuration_id'] . '&action=layout') . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true) . '</a>';
                   }
                   ?>&nbsp;</td>
                 </tr>
@@ -291,9 +291,9 @@ if (!empty($action)) {
                 <td class="dataTableContent text-center"><?php echo $product_type['allow_add_to_cart']; ?></td>
                 <td class="dataTableContent text-right"><?php
                   if ((isset($ptInfo) && is_object($ptInfo)) && ($product_type['type_id'] == $ptInfo->type_id)) {
-                    echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');
+                    echo zen_icon('caret-right', '', '2x', true);
                   } else {
-                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_type['type_id']) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
+                    echo '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $product_type['type_id']) . '">' . zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true) . '</a>';
                   }
                   ?>&nbsp;</td>
                 </tr>
