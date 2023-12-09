@@ -15,6 +15,8 @@
 
 <h1 id="searchResultsDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
+<?php if ($messageStack->size('search_result') > 0) echo $messageStack->output('search_result'); ?>
+
 <?php
   if ($do_filter_list || PRODUCT_LIST_ALPHA_SORTER == 'true') { ?>
       <div id="filter-wrapper" class="group">
