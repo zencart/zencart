@@ -45,8 +45,8 @@ if ($_SESSION['cart']->count_contents() > 0) {
             'SELECT zone_id
                FROM ' . TABLE_ZONES . '
               WHERE zone_country_id = '. (int)$_POST['zone_country_id'] . '
-                AND (zone_name = %%state%% OR zone_code = %%state%%) LIMIT 1';
-        $state_value_sql = $db->bindVars($state_value_sql, '%%state%%', $_POST['state'], 'stringIgnoreNull');
+                AND (zone_name = :state OR zone_code = :state) LIMIT 1';
+        $state_value_sql = $db->bindVars($state_value_sql, ':state', $_POST['state'], 'stringIgnoreNull');
         $state_value_id = $db->Execute($state_value_sql);
         $state_zone_id = (isset($state_value_id->fields['zone_id'])) ? (int)$state_value_id->fields['zone_id'] : $state_zone_id;
     }
