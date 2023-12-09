@@ -66,6 +66,10 @@ class zen_categories_ul_generator {
 
     function buildTree($submenu=false)
     {
+        if (empty($this->data)) {
+            return '';
+        }
+
         return $this->buildBranch($this->root_category_id, '', $submenu);
     }
 }
