@@ -105,7 +105,7 @@ jQuery(document).ready(function() {
             }
         });
         if (countryHasZones) {
-            var split = countryZones.split('<option');
+            var split = countryZones.split('<option').filter(function(el) {return el.length != 0});
             var sorted = split.sort();
             countryZones = '<option selected="selected" value="0"><?php echo addslashes(PLEASE_SELECT); ?><' + '/option><option' + sorted.join('<option');
             jQuery('#state').hide();

@@ -1842,6 +1842,8 @@ if ($action === 'edit' || $action === 'update') {
             ];
             break;
         default:
+            $customer = new Customer($cInfo->customers_id);
+
             if (isset($_GET['search'])) {
                 $_GET['search'] = zen_output_string_protected($_GET['search']);
             }
@@ -2005,11 +2007,25 @@ if ($action === 'edit' || $action === 'update') {
                         $currencies->format($cInfo->gv_balance)
                 ];
 
+                $text = '<br>' .
+                    TEXT_INFO_NUMBER_OF_ORDERS . ' ' .
+                    $cInfo->number_of_orders;
+                if ($cInfo->number_of_orders > 0) {
+                    $text .= ' [ ';
+                    foreach ($customer->getRecentOrderRecords(5) as $order) {
+                        $text .= '<a href="' . zen_href_link(
+                            FILENAME_ORDERS,
+                            'cID=' . $cInfo->customers_id . '&oID=' . $order['orders_id'] . '&action=edit',
+                            'NONSSL'
+                        ) . '" title="Purchased: ' . zen_date_short($order['date_purchased']) . ', status ' . $order['orders_status_name'] . '">' . $order['orders_id'] . '</a> ';
+                    }
+                    if ($cInfo->number_of_orders > 5) {
+                        $text .= ' ... ';
+                    }
+                    $text .= ' ]';
+                }
                 $contents[] = [
-                    'text' =>
-                        '<br>' .
-                        TEXT_INFO_NUMBER_OF_ORDERS . ' ' .
-                        $cInfo->number_of_orders
+                    'text' => $text
                 ];
 
                 if (!empty($cInfo->lifetime_value)) {

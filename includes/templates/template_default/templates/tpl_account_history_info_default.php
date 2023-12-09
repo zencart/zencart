@@ -16,12 +16,11 @@
 <?php if ($current_page != FILENAME_CHECKOUT_SUCCESS) { ?>
 <h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, zen_output_string_protected($_GET['order_id'])); ?></h2>
 
-<?php
+<?php }
+
 $extra_headings = [];
 $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order, $extra_headings);
 ?>
-
-<?php } ?>
 
 <table id="orderHistoryHeading">
     <tr class="tableHeading">

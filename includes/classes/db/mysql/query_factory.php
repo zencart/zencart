@@ -1008,7 +1008,7 @@ class queryFactoryMeta extends base
         $type = $field['Type'];
         $rgx = preg_match('/^[a-z]*/', $type, $matches);
         $this->type = $matches[0];
-        $this->max_length = preg_replace('/[a-z\(\)]/', '', $type);
+        $this->max_length = (int)preg_replace('/[a-z\(\)]/', '', $type);
         if (empty($this->max_length)) {
            switch (strtoupper($type)) {
               case 'DATE':
