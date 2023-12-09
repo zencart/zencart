@@ -231,3 +231,5 @@ modified_files.txt
 # ddev
 
 .ddev
+**/security_test.php
+
