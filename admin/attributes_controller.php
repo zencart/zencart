@@ -783,7 +783,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <div class="row">
             <div class="col-sm-4"><?php echo TEXT_INFO_PRODUCT_NAME . zen_get_products_name($products_filter) . '<br>' . TEXT_INFO_PRODUCTS_OPTION_ID . $_GET['products_options_id_all'] . '&nbsp;' . TEXT_INFO_PRODUCTS_OPTION_NAME . '&nbsp;' . zen_options_name($_GET['products_options_id_all']); ?></div>
             <div class="col-sm-8">
-              <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash" aria-hidden="true"></i> <?php echo IMAGE_DELETE; ?></button>
+              <button type="submit" class="btn btn-danger">
+                <?php echo zen_icon('trash', size: '', hidden: true) . '&nbsp;' . IMAGE_DELETE; ?></button>
               <?php echo '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
             </div>
           </div>
@@ -1116,7 +1117,9 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   <tr>
                     <td>
                       <?php if ($action == '') { ?>
-                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_option_name_values_confirm&products_options_id_all=' . $current_attributes_options_id . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-danger" role="button"><i class="fa-solid fa-trash" aria-hidden="true" title="<?php echo TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT; ?>"></i></a>
+                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_option_name_values_confirm&products_options_id_all=' . $current_attributes_options_id . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-danger" data-toggle="tooltip" title="<?php echo TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT ?>" role="button">
+                          <?php echo zen_icon('trash', size: '', hidden: true) ?>
+                        </a>
                       <?php } ?>
                     </td>
                     <td class="pageHeading" colspan="9"><?php echo $current_options_name; ?></td>
@@ -1629,9 +1632,13 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     <?php if ($action != '') { ?>
                       <td>&nbsp;</td>
                     <?php } else { ?>
-                      <td class="text-right">
-                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute&attribute_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_EDIT_OPTION_VALUE; ?>"><?php echo IMAGE_EDIT; ?></a>
-                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_product_attribute&attribute_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-danger" role="button" title="<?php echo TEXT_DELETE_OPTION_VALUE; ?>"><?php echo IMAGE_DELETE; ?></a>
+                      <td class="text-right actions">
+                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=update_attribute&attribute_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button" data-toggle="tooltip" title="<?php echo TEXT_EDIT_OPTION_VALUE; ?>">
+                        <?php echo zen_icon('pencil', size: '', hidden: true) ?>
+                        </a>
+                        <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'action=delete_product_attribute&attribute_id=' . $attributes_value['products_attributes_id'] . '&' . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-danger" role="button" data-toggle="tooltip" title="<?php echo TEXT_DELETE_OPTION_VALUE; ?>">
+                          <?php echo zen_icon('trash', size: '', hidden: true) ?>
+                        </a>
                       </td>
                     <?php } ?>
                   </tr>

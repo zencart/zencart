@@ -1777,9 +1777,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <td class="dataTableContent text-right">
 <?php
         if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] === (int)$cInfo->customers_id)) {
-?>
-                                    <i class="fa-solid fa-caret-right fa-2x fa-fw txt-navy align-middle"></i>
-<?php
+                                    echo zen_icon('caret-right', '', '2x', true);
         } else {
 ?>
                                     <a href="<?php
@@ -1788,7 +1786,7 @@ if ($action === 'edit' || $action === 'update') {
                                                 zen_get_all_get_params(['cID']) . 'cID=' . $customer['customers_id'],
                                                 'NONSSL'
                                         ); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                                        <i class="fa-solid fa-circle-info fa-2x fa-fw txt-black align-middle"></i>
+                                        <?php echo zen_icon('circle-info', '', '2x', true, false) ?>
                                     </a>
 <?php
         }
@@ -1917,6 +1915,8 @@ if ($action === 'edit' || $action === 'update') {
             ];
             break;
         default:
+            $customer = new Customer($cInfo->customers_id);
+
             if (isset($_GET['search'])) {
                 $_GET['search'] = zen_output_string_protected($_GET['search']);
             }
@@ -2006,7 +2006,8 @@ if ($action === 'edit' || $action === 'update') {
                         $hmacpostdata = [
                             'cid' => $cInfo->customers_id,
                             'aid' => $_SESSION['admin_id'],
-                            'email_address' => $cInfo->customers_email_address
+                            'email_address' => $cInfo->customers_email_address,
+                            'timestamp' => $timestamp,
                         ];
                         $hmacUri = zen_create_hmac_uri($hmacpostdata, $secret);
                         $login_form_start = '<form id="loginform" rel="noopener" target="_blank" name="login" action="' .
@@ -2018,7 +2019,7 @@ if ($action === 'edit' || $action === 'update') {
                         $hiddenFields .=
                             zen_draw_hidden_field('aid', $_SESSION['admin_id']) .
                             zen_draw_hidden_field('cid', $cInfo->customers_id) .
-                            zen_draw_hidden_field('timestamp', $timestamp, 'id="emp-timestamp"');
+                            zen_draw_hidden_field('timestamp', $timestamp);
                     }
                     $contents[] = [
                         'align' => 'text-center',
@@ -2079,11 +2080,25 @@ if ($action === 'edit' || $action === 'update') {
                         $currencies->format($cInfo->gv_balance)
                 ];
 
+                $text = '<br>' .
+                    TEXT_INFO_NUMBER_OF_ORDERS . ' ' .
+                    $cInfo->number_of_orders;
+                if ($cInfo->number_of_orders > 0) {
+                    $text .= ' [ ';
+                    foreach ($customer->getRecentOrderRecords(5) as $order) {
+                        $text .= '<a href="' . zen_href_link(
+                            FILENAME_ORDERS,
+                            'cID=' . $cInfo->customers_id . '&oID=' . $order['orders_id'] . '&action=edit',
+                            'NONSSL'
+                        ) . '" title="Purchased: ' . zen_date_short($order['date_purchased']) . ', status ' . $order['orders_status_name'] . '">' . $order['orders_id'] . '</a> ';
+                    }
+                    if ($cInfo->number_of_orders > 5) {
+                        $text .= ' ... ';
+                    }
+                    $text .= ' ]';
+                }
                 $contents[] = [
-                    'text' =>
-                        '<br>' .
-                        TEXT_INFO_NUMBER_OF_ORDERS . ' ' .
-                        $cInfo->number_of_orders
+                    'text' => $text
                 ];
 
                 if (!empty($cInfo->lifetime_value)) {
