@@ -19,6 +19,13 @@ function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
 {
     global $db, $zco_notifier;
 
+    // -----
+    // If the current customer is tax-exempt, unconditionally return a tax-rate of 0.
+    //
+    if (Customer::isTaxExempt() === true) {
+        return 0;
+    }
+
     // Give an observer a chance to override this function's return.
     $tax_rate = false;
     $zco_notifier->notify(

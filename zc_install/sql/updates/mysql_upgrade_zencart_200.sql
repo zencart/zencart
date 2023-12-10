@@ -37,9 +37,19 @@ TRUNCATE TABLE db_cache;
 
 #############
 
-ALTER TABLE products ADD products_mpn varchar(32) DEFAULT NULL AFTER products_model; 
+ALTER TABLE products ADD products_mpn varchar(32) DEFAULT NULL AFTER products_model;
 
-ALTER TABLE orders ADD shipping_tax_rate decimal(15,4) DEFAULT NULL AFTER order_tax; 
+ALTER TABLE orders ADD shipping_tax_rate decimal(15,4) DEFAULT NULL AFTER order_tax;
+
+#############
+#### Updates for the Wholesale Pricing feature
+ALTER TABLE customers ADD customers_whole tinyint(1) NOT NULL DEFAULT 0;
+ALTER TABLE customers MODIFY customers_whole tinyint(1) NOT NULL DEFAULT 0;
+ALTER TABLE orders ADD is_wholesale tinyint(1) DEFAULT NULL;
+ALTER TABLE products ADD products_price_w varchar(150) NOT NULL DEFAULT '0' AFTER products_price;
+ALTER TABLE products_attributes ADD options_values_price_w varchar(150) NOT NULL DEFAULT '0' AFTER options_values_price;
+ALTER TABLE products_discount_quantity ADD discount_price_w varchar(150) NOT NULL DEFAULT '0' AFTER discount_price;
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Wholesale Pricing', 'WHOLESALE_PRICING_CONFIG', 'false', 'Should <em>Wholesale Pricing</em> be enabled for your site?  Choose <b>false</b> (the default) if you don\'t want that feature enabled. Otherwise, choose <b>Tax Exempt</b> to enable with tax-exemptions for all wholesale customers or <b>Pricing Only</b> to apply tax as usual for wholesale customers.', 1, 23, now(), 'zen_cfg_select_option([\'false\', \'Tax Exempt\', \'Pricing Only\'],');
 
 #############
 #### Updated country information that has changed.

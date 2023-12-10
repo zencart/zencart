@@ -17,6 +17,7 @@ $parameters = [
   'products_model' => '',
   'products_image' => '',
   'products_price' => '0.0000',
+  'products_price_w' => '0',
   'products_virtual' => 0,
   'products_weight' => '0',
   'products_date_added' => '',

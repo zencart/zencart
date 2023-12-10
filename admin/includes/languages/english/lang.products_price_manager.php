@@ -65,6 +65,7 @@ $define = [
     'TEXT_PRODUCTS_DISCOUNT' => 'Discount',
     'TEXT_PRODUCTS_DISCOUNT_QTY' => 'Minimum Qty',
     'TEXT_PRODUCTS_DISCOUNT_PRICE' => 'Discount Value',
+    'TEXT_PRODUCTS_DISCOUNT_PRICE_W' => 'Wholesale Discount Values',
     'TEXT_PRODUCTS_DISCOUNT_PRICE_EACH' => 'Calculate Price:',
     'TEXT_PRODUCTS_DISCOUNT_PRICE_EXTENDED' => 'Extended Price:',
     'TEXT_PRODUCTS_DISCOUNT_PRICE_EACH_TAX' => 'Calculate<br>Price: &nbsp; Taxed:',

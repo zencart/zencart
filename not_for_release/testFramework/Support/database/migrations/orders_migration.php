@@ -70,6 +70,7 @@ class CreateOrdersTable extends Migration
             $table->string('ip_address', 96)->default('');
             $table->float('order_weight')->nullable();
             $table->char('language_code', 2)->default('');
+            $table->tinyInteger('is_wholesale')->nullable();
 
             $table->index(['orders_status', 'orders_id', 'customers_id'], 'idx_status_orders_cust_zen');
             $table->index(['customers_id', 'orders_id'], 'idx_cust_id_orders_id_zen');

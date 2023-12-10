@@ -63,6 +63,9 @@ $define = [
     'EMP_BUTTON_PLACEORDER_ALT' => 'Place an order for this customer',
     'EMP_BUTTON_PLACEORDER' => 'Place Order',
     'TEXT_CUSTOMER_GROUPS' => 'Customer Groups',
+    'TABLE_HEADING_WHOLESALE_LEVEL' => 'Wholesale Level',
+    'TEXT_WHOLESALE_LEVEL' => 'Wholesale Level:',
+    'HELPTEXT_WHOLESALE_LEVEL' => 'Enter 0 for "Retail" customers or a "Wholesale" pricing level. A customer can have either a wholesale pricing level or be part of a discount pricing group, but not both.',
 ];
 
 return $define;

@@ -318,6 +318,7 @@ $define = [
     'PRODUCT_PRICE_DISCOUNT_PERCENTAGE' => '% off',
     'PRODUCT_PRICE_DISCOUNT_PREFIX' => 'Save:&nbsp;',
     'PRODUCT_PRICE_SALE' => 'Sale:&nbsp;',
+    'PRODUCT_PRICE_WHOLESALE' => 'Your Price:&nbsp;',
     'PULL_DOWN_ALL' => 'Please Select',
     'PULL_DOWN_ALL_RESET' => '- RESET - ',
     'PULL_DOWN_DEFAULT' => 'Please Choose Your Country',

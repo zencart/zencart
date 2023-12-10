@@ -177,8 +177,17 @@ if (!empty($action)) {
         for ($i = 1, $n = sizeof($_POST['discount_qty']); $i <= $n; $i++) {
           if ($_POST['discount_qty'][$i] > 0) {
             $new_id++;
-            $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " (discount_id, products_id, discount_qty, discount_price)
-                          VALUES (" . (int)$new_id . ", " . (int)$products_filter . ", '" . zen_db_input($_POST['discount_qty'][$i]) . "', '" . zen_db_input($_POST['discount_price'][$i]) . "')");
+            $db->Execute(
+                "INSERT INTO " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . "
+                    (discount_id, products_id, discount_qty, discount_price, discount_price_w)
+                 VALUES (" .
+                    (int)$new_id . ', ' .
+                    (int)$products_filter . ",
+                    '" . zen_db_input($_POST['discount_qty'][$i]) . "',
+                    '" . zen_db_input($_POST['discount_price'][$i]) . "',
+                    '" . zen_db_input($_POST['discount_price_w'][$i] ?? '0') . "'
+                 )"
+            );
             $discount_cnt++;
           }
         }
@@ -892,7 +901,8 @@ if (!empty($action)) {
                   $discount_name[] = [
                     'id' => $i,
                     'discount_qty' => $discount_qty['discount_qty'],
-                    'discount_price' => $discount_qty['discount_price']
+                    'discount_price' => $discount_qty['discount_price'],
+                    'discount_price_w' => $discount_qty['discount_price_w'],
                   ];
                 }
                 ?>
@@ -932,6 +942,18 @@ if (!empty($action)) {
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_QTY_TITLE; ?></th>
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_QTY; ?></th>
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_PRICE; ?></th>
+<?php
+                        if (WHOLESALE_PRICING_CONFIG !== 'false') {
+?>
+                        <th class="main">
+                            <?php echo TEXT_PRODUCTS_DISCOUNT_PRICE_W; ?>
+                            <a href="#" class="pop-help" data-toggle="popover" data-placement="top" title="<?php echo HELPTEXT_WHOLESALE_POPUP_TITLE; ?>" data-content="<?php echo HELPTEXT_WHOLESALE_PRICES; ?>">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </a>
+                        </th>
+<?php
+                        }
+?>
                         <?php
                         if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
                           ?>
@@ -996,6 +1018,13 @@ if (!empty($action)) {
                           <td class="main"><?php echo TEXT_PRODUCTS_DISCOUNT . ' ' . $discount_name[$i]['id']; ?></td>
                           <td class="main"><?php echo zen_draw_input_field('discount_qty[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_qty'], 'class="form-control"' . $readonly); ?></td>
                           <td class="main"><?php echo zen_draw_input_field('discount_price[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price'], 'class="form-control"' . $readonly); ?></td>
+<?php
+                        if (WHOLESALE_PRICING_CONFIG !== 'false') {
+?>
+                          <td class="main"><?php echo zen_draw_input_field('discount_price_w[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price_w'], 'class="form-control"' . $readonly); ?></td>
+<?php
+                        }
+?>
                           <?php
                           if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
                             ?>
@@ -1084,6 +1113,12 @@ if (!empty($action)) {
     <!-- footer //-->
     <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->
+    <script>
+        $('[data-toggle="popover"]').popover();
+        $('a.pop-help').click(function(e) {
+            e.preventDefault();
+        });
+    </script>
   </body>
 </html>
 <?php

@@ -37,6 +37,7 @@ class CreateCustomersTable extends Migration
             $table->string('last_login_ip', 45)->default('');
             $table->string('customers_paypal_payerid', 20)->default('');
             $table->unsignedTinyInteger('customers_paypal_ec')->default(0);
+            $table->tinyInteger('customers_whole')->default(0);
 
             $table->index([Capsule::raw('customers_referral(10)')], 'idx_referral_zen');
             //$table->index(['customers_referral`(10'], 'idx_referral_zen');

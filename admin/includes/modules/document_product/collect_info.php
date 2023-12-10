@@ -17,6 +17,7 @@ $parameters = [
   'products_model' => '',
   'products_image' => '',
   'products_price' => '0.0000',
+  'products_price_w' => '0',
   'products_virtual' => DEFAULT_DOCUMENT_PRODUCT_PRODUCTS_VIRTUAL,
   'products_weight' => '0',
   'products_date_added' => '',
@@ -271,6 +272,19 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <?php echo zen_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control" id="products_price_gross" inputmode="decimal"'); ?>
       </div>
     </div>
+<?php
+    if (WHOLESALE_PRICING_CONFIG !== 'false') {
+?>
+    <div class="form-group">
+        <?php echo zen_draw_label(TEXT_PRODUCTS_WHOLESALE_PRICE, 'products-price-w', 'class="col-sm-3 control-label"'); ?>
+      <div class="col-sm-9 col-md-6">
+          <?php echo zen_draw_input_field('products_price_w', $pInfo->products_price_w, 'class="form-control" id="products-price-w"'); ?>
+          <span class="help-block"><?php echo HELPTEXT_WHOLESALE_PRICES; ?></span>
+      </div>
+    </div>
+<?php
+    }
+?>
   </div>
   <script>
     updateGross();

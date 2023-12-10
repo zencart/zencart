@@ -21,6 +21,7 @@ class CreateProductsAttributesTable extends Migration
             $table->integer('options_id')->default(0);
             $table->integer('options_values_id')->default(0);
             $table->decimal('options_values_price', 15, 4)->default(0.0000);
+            $table->string('options_values_price_w', 150)->default(0);
             $table->char('price_prefix', 1)->default('');
             $table->integer('products_options_sort_order')->default(0)->index('idx_opt_sort_order_zen');
             $table->boolean('product_attribute_is_free')->default(0);

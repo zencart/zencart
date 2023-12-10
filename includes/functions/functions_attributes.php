@@ -7,6 +7,58 @@
  * @version $Id: torvista 2022 Dec 08 Modified in v1.5.8a $
  */
 
+/*
+ * Query a 'known' (i.e. by the attributes_id) attribute's details,
+ * returning a db QueryFactory response.
+ *
+ * @param int $attributes_id
+ * @return queryFactoryResult
+ */
+function zen_get_attribute_details_by_id(int $attributes_id)
+{
+    global $db, $zco_notifier;
+
+    $sql =
+        "SELECT *
+           FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+          WHERE products_attributes_id = $attributes_id";
+    $result = $db->Execute($sql, 1);
+
+    // -----
+    // Enable an observer to modify the result.
+    //
+    $zco_notifier->notify('NOTIFY_GET_ATTRIBUTE_DETAILS_BY_ID', [$attributes_id], $result);
+    return $result;
+}
+
+/*
+ * Query a specific attribute's details, based on the products_id, options_id and
+ * options_values_id, returning a db QueryFactory response.
+ *
+ * @param int $products_id
+ * @param int $options_id
+ * @param int $options_values_id
+ * @return queryFactoryResult
+ */
+function zen_get_attribute_details(int $products_id, int $options_id, int $options_values_id)
+{
+    global $db, $zco_notifier;
+
+    $sql =
+        "SELECT *
+           FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+          WHERE products_id = $products_id
+            AND options_id = $options_id
+            AND options_values_id = $options_values_id";
+    $result = $db->Execute($sql, 1);
+
+    // -----
+    // Enable an observer to modify the result.
+    //
+    $zco_notifier->notify('NOTIFY_GET_ATTRIBUTE_DETAILS', [$products_id, $options_id, $options_values_id], $result);
+    return $result;
+}
+
 /**
  * Check if product has attributes
  *
@@ -32,7 +84,7 @@ function zen_has_product_attributes($product_id, $not_readonly = true)
 
     $exclude_readonly = ($not_readonly === true || $not_readonly === 'true');
 
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '1' && $exclude_readonly) {
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED === '1' && $exclude_readonly === true) {
         // don't include READONLY attributes
         $sql = "SELECT pa.products_attributes_id
                 FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -48,7 +100,7 @@ function zen_has_product_attributes($product_id, $not_readonly = true)
 
     $result = $db->Execute($sql, 1);
 
-    return $result->RecordCount() > 0 && $result->fields['products_attributes_id'] > 0;
+    return !$result->EOF && $result->fields['products_attributes_id'] > 0;
 }
 
 
@@ -74,19 +126,21 @@ function zen_requires_attribute_selection($products_id)
           return true;
     }
 
-    $noDoubles = array();
-    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_RADIO;
-    $noDoubles[] = PRODUCTS_OPTIONS_TYPE_SELECT;
+    $noDoubles = [
+        PRODUCTS_OPTIONS_TYPE_RADIO,
+        PRODUCTS_OPTIONS_TYPE_SELECT,
+    ];
 
-    $noSingles = array();
-    $noSingles[] = PRODUCTS_OPTIONS_TYPE_CHECKBOX;
-    $noSingles[] = PRODUCTS_OPTIONS_TYPE_FILE;
-    $noSingles[] = PRODUCTS_OPTIONS_TYPE_TEXT;
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED == '0') {
+    $noSingles = [
+        PRODUCTS_OPTIONS_TYPE_CHECKBOX,
+        PRODUCTS_OPTIONS_TYPE_FILE,
+        PRODUCTS_OPTIONS_TYPE_TEXT,
+    ];
+    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED === '0') {
         $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
     }
 
-    $query = "SELECT products_options_id, count(pa.options_values_id) AS number_of_choices, po.products_options_type AS options_type
+    $query = "SELECT products_options_id, COUNT(pa.options_values_id) AS number_of_choices, po.products_options_type AS options_type
               FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
               LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON (pa.options_id = po.products_options_id AND po.language_id = " . (int)$_SESSION['languages_id'] . ")
               WHERE pa.products_id = " . (int)$products_id . "
@@ -97,7 +151,9 @@ function zen_requires_attribute_selection($products_id)
     $result = $db->Execute($query);
 
     // if no attributes found, return false
-    if ($result->RecordCount() == 0) return false;
+    if ($result->EOF) {
+        return false;
+    }
 
     // loop through the results, auditing for whether each kind of attribute requires "selection" or not
     // return whether selections must be made, so a more-info button needs to be presented, if true
@@ -197,7 +253,7 @@ function zen_has_product_attributes_values($product_id)
  */
 function zen_has_product_attributes_downloads_status($product_id)
 {
-    if (!defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
+    if (DOWNLOAD_ENABLED !== 'true') {
         return false;
     }
 
@@ -217,19 +273,37 @@ function zen_has_product_attributes_downloads_status($product_id)
  * @param int $products_id
  * @param int $options_id
  * @param int $options_values_id
- * @return string|int
+ * @return string
  */
 function zen_get_attributes_sort_order($products_id, $options_id, $options_values_id)
 {
-    global $db;
-    $sql = "SELECT products_options_sort_order
-            FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-            WHERE products_id = " . (int)$products_id . "
-            AND options_id = " . (int)$options_id . "
-            AND options_values_id = " . (int)$options_values_id;
-    $result = $db->Execute($sql, 1);
+    $result = zen_get_attribute_details((int)$products_id, (int)$options_id, (int)$options_values_id);
+    return ($result->EOF) ? '0' : $result->fields['products_options_sort_order'];
+}
 
-    return $result->fields['products_options_sort_order'];
+/*
+ * Query a specific option's, based on an options_id and an
+ * optional language_id, returning a db QueryFactory response.
+ *
+ * @param int $options_id
+ * @param int $language_id (optional)
+ * @return queryFactoryResult
+ */
+function zen_get_option_details(int $options_id, int $language_id = 0)
+{
+    global $db;
+
+    if ($language_id === 0) {
+        $language_id = (int)$_SESSION['languages_id'];
+    }
+
+    $sql =
+        "SELECT *
+           FROM " . TABLE_PRODUCTS_OPTIONS . "
+          WHERE products_options_id = $options_id
+            AND language_id = $language_id";
+
+    return $db->Execute($sql, 1);
 }
 
 /**
@@ -242,21 +316,13 @@ function zen_get_attributes_sort_order($products_id, $options_id, $options_value
  */
 function zen_get_attributes_options_sort_order($products_id, $options_id, $options_values_id, $language_id = 0)
 {
-    global $db;
-    if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
+    $check = zen_get_option_details((int)$options_id, (int)$language_id);
+    $check_sort_order = ($check->EOF) ? '0' : $check->fields['products_options_sort_order'];
 
-    $check = $db->Execute("SELECT products_options_sort_order
-                             FROM " . TABLE_PRODUCTS_OPTIONS . "
-                             WHERE products_options_id = " . (int)$options_id . "
-                             AND language_id = " . $language_id, 1);
-
-    $check_options_id = $db->Execute("SELECT products_id, options_id, options_values_id, products_options_sort_order
-                             FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                             WHERE products_id=" . (int)$products_id . "
-                             AND options_id=" . (int)$options_id . "
-                             AND options_values_id = " . (int)$options_values_id, 1);
-
-    return $check->fields['products_options_sort_order'] . '.' . str_pad($check_options_id->fields['products_options_sort_order'], 5, '0', STR_PAD_LEFT);
+    $check_options_id = zen_get_attribute_details((int)$products_id, (int)$options_id, (int)$options_values_id);
+    $check_options_sort_order = ($check_options_id->EOF) ? '0' : $check_options_id->fields['products_options_sort_order'];
+ 
+    return $check_sort_order . '.' . str_pad($check_options_sort_order, 5, '0', STR_PAD_LEFT);
 }
 
 /**
@@ -268,24 +334,23 @@ function zen_get_attributes_options_sort_order($products_id, $options_id, $optio
  */
 function zen_get_attributes_valid($product_id, $option, $value)
 {
-    global $db;
-
     // regular attribute validation
-    $check_attributes = $db->Execute("SELECT attributes_display_only, attributes_required FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id=" . (int)$product_id . " AND options_id=" . (int)$option . " AND options_values_id=" . (int)$value, 1);
+    $check_attributes = zen_get_attribute_details((int)$product_id, (int)$option, (int)$value);
 
     $check_valid = true;
 
     // display only cannot be selected
-    if (!$check_attributes->EOF && $check_attributes->fields['attributes_display_only'] == '1') {
+    if (!$check_attributes->EOF && $check_attributes->fields['attributes_display_only'] === '1') {
         $check_valid = false;
     }
 
     // text required validation
-    if (preg_match('/^txt_/', $option)) {
-        $lookup = preg_replace('/^txt_/', '', $option);
-        $check_attributes = $db->Execute("SELECT attributes_display_only, attributes_required FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id=" . (int)$product_id . " AND options_id=" . (int)$lookup . " AND options_values_id=0", 1);
+    if (strpos($option, 'txt_') === 0) {
+        $lookup = str_replace('txt_', '', $option);
+        $check_attributes = zen_get_attribute_details((int)$product_id, (int)$lookup, 0);
+
         // TEXT attribute cannot be blank
-        if ($check_attributes->fields['attributes_required'] == '1' && (empty($value) && !is_numeric($value))) {
+        if ($check_attributes->fields['attributes_required'] === '1' && (empty($value) && !is_numeric($value))) {
             $check_valid = false;
         }
     }
@@ -300,16 +365,10 @@ function zen_get_attributes_valid($product_id, $option, $value)
  */
 function zen_options_name($options_id)
 {
-    global $db;
-
     $options_id = str_replace('txt_', '', $options_id);
 
-    $options_values = $db->Execute("SELECT products_options_name
-                                    FROM " . TABLE_PRODUCTS_OPTIONS . "
-                                    WHERE products_options_id = " . (int)$options_id . "
-                                    AND language_id = " . (int)$_SESSION['languages_id']);
-    if ($options_values->EOF) return '';
-    return $options_values->fields['products_options_name'];
+    $options_values = zen_get_option_details((int)$options_id);
+    return ($options_values->EOF) ? '' : $options_values->fields['products_options_name'];
 }
 
 
@@ -325,9 +384,8 @@ function zen_values_name($values_id)
     $values_values = $db->Execute("SELECT products_options_values_name
                                    FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                                    WHERE products_options_values_id = " . (int)$values_id . "
-                                   AND language_id = " . (int)$_SESSION['languages_id']);
-    if ($values_values->EOF) return '';
-    return $values_values->fields['products_options_values_name'];
+                                   AND language_id = " . (int)$_SESSION['languages_id'], 1);
+    return ($values_values->EOF) ? '' : $values_values->fields['products_options_values_name'];
 }
 
 
@@ -345,7 +403,7 @@ function zen_validate_options_to_options_value($products_options_id, $products_o
             WHERE products_options_id= " . (int)$products_options_id . "
             AND products_options_values_id=" . (int)$products_options_values_id;
     $result = $db->Execute($sql, 1);
-    return $result->RecordCount() > 0;
+    return !$result->EOF;
 }
 
 /**
@@ -364,33 +422,24 @@ function zen_get_products_options_name_from_value($option_values_id)
     $result = $db->Execute("SELECT products_options_id
                             FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
                             WHERE products_options_values_id=" . (int)$option_values_id, 1);
-    if ($result->EOF) return '';
+    if ($result->EOF) {
+        return '';
+    }
 
-    $sql = "SELECT products_options_name
-            FROM " . TABLE_PRODUCTS_OPTIONS . "
-            WHERE products_options_id=" . (int)$result->fields['products_options_id'] . "
-            AND language_id=" . (int)$_SESSION['languages_id'];
-    $result2 = $db->Execute($sql, 1);
-    if ($result2->EOF) return '';
-    return $result2->fields['products_options_name'];
+    $result2 = zen_get_option_details((int)$result->fields['products_options_id']);
+    return ($result2->EOF) ? '' : $result2->fields['products_options_name'];
 }
 
 /**
  * @param int $product_id
  * @param int $option_id
  * @param int $value_id
- * @return mixed|string
+ * @return string
  */
 function zen_get_attributes_image(int $product_id, $option_id, $value_id)
 {
-    global $db;
-    $sql = "SELECT attributes_image FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-            WHERE products_id = " . (int)$product_id . "
-            AND options_id = " . (int)$option_id . "
-            AND options_values_id = " . (int)$value_id;
-    $result = $db->Execute($sql, 1);
-    if ($result->EOF) return '';
-    return $result->fields['attributes_image'];
+    $result = zen_get_attribute_details($product_id, (int)$option_id, (int)$value_id);
+    return ($result->EOF) ? '' : $result->fields['attributes_image'];
 }
 
 /**
@@ -400,12 +449,14 @@ function zen_get_attributes_image(int $product_id, $option_id, $value_id)
  */
 function zen_copy_products_attributes($products_id_from, $products_id_to)
 {
-    global $db, $zco_notifier;
-    global $messageStack;
+    global $db, $zco_notifier, $messageStack;
     global $copy_attributes_delete_first, $copy_attributes_duplicates_skipped, $copy_attributes_duplicates_overwrite, $copy_attributes_include_downloads, $copy_attributes_include_filename;
 
+    $products_id_from = (int)$products_id_from;
+    $products_id_to = (int)$products_id_to;
+
     // same products_id
-    if ($products_id_to == $products_id_from) {
+    if ($products_id_to === $products_id_from) {
         $messageStack->add_session(sprintf(WARNING_ATTRIBUTE_COPY_SAME_ID, $products_id_from, $products_id_to), 'caution');
         return false;
     }
@@ -421,72 +472,58 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
     }
 
     // Notify that the attribute-copying has started for the product.
-    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_START', ['from' => (int)$products_id_from, 'to' => (int)$products_id_to]);
+    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_START', ['from' => $products_id_from, 'to' => $products_id_to]);
 
     // check if product already has attributes
     $already_has_attributes = zen_has_product_attributes($products_id_to, false);
 
-    if ($copy_attributes_delete_first == '1' and $already_has_attributes == true) {
+    if ($copy_attributes_delete_first == '1' && $already_has_attributes === true) {
         // delete all attributes first from destination products_id_to
         zen_products_attributes_download_delete($products_id_to);
         // delete the attributes
-        $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = " . (int)$products_id_to);
+        $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = $products_id_to");
 
         // Notify that attributes have been deleted for the product.
-        $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_DELETE', (int)$products_id_to);
+        $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_DELETE', $products_id_to);
     }
 
     // get attributes to copy from
-    $products_copy_from = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id=" . (int)$products_id_from . " ORDER BY products_attributes_id");
+    $products_copy_from = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE products_id = $products_id_from ORDER BY products_attributes_id");
 
     foreach ($products_copy_from as $copy_from) {
         $update_attribute = false;
         $add_attribute = true;
 
-        $sql = "SELECT * from " . TABLE_PRODUCTS_ATTRIBUTES . "
-                WHERE products_id=" . (int)$products_id_to . "
-                AND options_id=" . (int)$copy_from['options_id'] . "
-                AND options_values_id=" . (int)$copy_from['options_values_id'];
-        $check_duplicate = $db->Execute($sql);
+        $check_duplicate = zen_get_attribute_details($products_id_to, (int)$copy_from['options_id'], (int)$copy_from['options_values_id']);
 
-        if ($already_has_attributes == true) {
-            if ($check_duplicate->RecordCount() == 0) {
-                $update_attribute = false;
-                $add_attribute = true;
-            } else {
-                if ($check_duplicate->RecordCount() == 0) {
-                    $update_attribute = false;
-                    $add_attribute = true;
-                } else {
-                    $update_attribute = true;
-                    $add_attribute = false;
-                }
-            }
-        } else {
-            $update_attribute = false;
-            $add_attribute = true;
+        $update_attribute = false;
+        $add_attribute = true;
+        if ($already_has_attributes === true && !$check_duplicate->EOF) {
+            $update_attribute = true;
+            $add_attribute = false;
         }
 
-        if ($copy_attributes_duplicates_skipped == '1' and $check_duplicate->RecordCount() != 0) {
-            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_SKIPPING, (int)$copy_from['products_attributes_id'], (int)$products_id_to), 'caution');
+        if ($copy_attributes_duplicates_skipped == '1' && !$check_duplicate->EOF) {
+            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_SKIPPING, (int)$copy_from['products_attributes_id'], $products_id_to), 'caution');
             // skip it
             continue;
         }
 
         // New attribute - insert it
-        if ($add_attribute == true) {
+        if ($add_attribute === true) {
             $db->Execute("INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . "
-              (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order,
+              (products_id, options_id, options_values_id, options_values_price, options_values_price_w, price_prefix, products_options_sort_order,
               product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only,
               attributes_default, attributes_discounted, attributes_image, attributes_price_base_included,
               attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime,
               attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime,
               attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free,
               attributes_required)
-              VALUES (" . (int)$products_id_to . ",
+              VALUES (" . $products_id_to . ",
               '" . $copy_from['options_id'] . "',
               '" . $copy_from['options_values_id'] . "',
               '" . $copy_from['options_values_price'] . "',
+              '" . $copy_from['options_values_price_w'] . "',
               '" . $copy_from['price_prefix'] . "',
               '" . $copy_from['products_options_sort_order'] . "',
               '" . $copy_from['product_attribute_is_free'] . "',
@@ -510,16 +547,16 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
               '" . $copy_from['attributes_price_letters_free'] . "',
               '" . $copy_from['attributes_required'] . "')"
             );
-            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$copy_from['products_attributes_id'], (int)$products_id_from, (int)$products_id_to), 'success');
+            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$copy_from['products_attributes_id'], $products_id_from, $products_id_to), 'success');
 
             $new_products_attributes_id = $db->Insert_ID();
 
             // Notify that an attribute has been added for the product.
-            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADD', ['pID' => (int)$products_id_to, 'fields' => $copy_from]);
+            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADD', ['pID' => $products_id_to, 'fields' => $copy_from]);
 
 
             // Downloads
-            if (DOWNLOAD_ENABLED == 'true') {
+            if (DOWNLOAD_ENABLED === 'true') {
                 $sql = "SELECT products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
                         FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                         WHERE products_attributes_id = " . (int)$copy_from['products_attributes_id'];
@@ -533,52 +570,53 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
                                 " . (int)$result['products_attributes_maxcount'] . ")");
 
                     $new_attribute_id = $db->Insert_ID();
-                    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADDED_DOWNLOAD', (int)$products_id_to, $new_products_attributes_id, $new_attribute_id);
+                    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADDED_DOWNLOAD', $products_id_to, $new_products_attributes_id, $new_attribute_id);
                 }
             }
         }
 
         // Update attribute - Just attribute settings not ids
-        if ($update_attribute == true) {
+        if ($update_attribute === true) {
             $db->Execute("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " SET
-                  options_values_price='" . $copy_from['options_values_price'] . "',
-                  price_prefix='" . $copy_from['price_prefix'] . "',
-                  products_options_sort_order='" . $copy_from['products_options_sort_order'] . "',
-                  product_attribute_is_free='" . $copy_from['product_attribute_is_free'] . "',
-                  products_attributes_weight='" . $copy_from['products_attributes_weight'] . "',
-                  products_attributes_weight_prefix='" . $copy_from['products_attributes_weight_prefix'] . "',
-                  attributes_display_only='" . $copy_from['attributes_display_only'] . "',
-                  attributes_default='" . $copy_from['attributes_default'] . "',
-                  attributes_discounted='" . $copy_from['attributes_discounted'] . "',
-                  attributes_image='" . $copy_from['attributes_image'] . "',
-                  attributes_price_base_included='" . $copy_from['attributes_price_base_included'] . "',
-                  attributes_price_onetime='" . $copy_from['attributes_price_onetime'] . "',
-                  attributes_price_factor='" . $copy_from['attributes_price_factor'] . "',
-                  attributes_price_factor_offset='" . $copy_from['attributes_price_factor_offset'] . "',
-                  attributes_price_factor_onetime='" . $copy_from['attributes_price_factor_onetime'] . "',
-                  attributes_price_factor_onetime_offset='" . $copy_from['attributes_price_factor_onetime_offset'] . "',
-                  attributes_qty_prices='" . $copy_from['attributes_qty_prices'] . "',
-                  attributes_qty_prices_onetime='" . $copy_from['attributes_qty_prices_onetime'] . "',
-                  attributes_price_words='" . $copy_from['attributes_price_words'] . "',
-                  attributes_price_words_free='" . $copy_from['attributes_price_words_free'] . "',
-                  attributes_price_letters='" . $copy_from['attributes_price_letters'] . "',
-                  attributes_price_letters_free='" . $copy_from['attributes_price_letters_free'] . "',
-                  attributes_required='" . $copy_from['attributes_required'] . "'
-                  WHERE products_id=" . (int)$products_id_to . "
-                   AND options_id=" . (int)$copy_from['options_id'] . "
-                   AND options_values_id=" . (int)$copy_from['options_values_id']
+                  options_values_price = '" . $copy_from['options_values_price'] . "',
+                  options_values_price_w = '" . $copy_from['options_values_price_w'] . "',
+                  price_prefix = '" . $copy_from['price_prefix'] . "',
+                  products_options_sort_order = '" . $copy_from['products_options_sort_order'] . "',
+                  product_attribute_is_free = '" . $copy_from['product_attribute_is_free'] . "',
+                  products_attributes_weight = '" . $copy_from['products_attributes_weight'] . "',
+                  products_attributes_weight_prefix = '" . $copy_from['products_attributes_weight_prefix'] . "',
+                  attributes_display_only = '" . $copy_from['attributes_display_only'] . "',
+                  attributes_default = '" . $copy_from['attributes_default'] . "',
+                  attributes_discounted = '" . $copy_from['attributes_discounted'] . "',
+                  attributes_image = '" . $copy_from['attributes_image'] . "',
+                  attributes_price_base_included = '" . $copy_from['attributes_price_base_included'] . "',
+                  attributes_price_onetime = '" . $copy_from['attributes_price_onetime'] . "',
+                  attributes_price_factor = '" . $copy_from['attributes_price_factor'] . "',
+                  attributes_price_factor_offset = '" . $copy_from['attributes_price_factor_offset'] . "',
+                  attributes_price_factor_onetime = '" . $copy_from['attributes_price_factor_onetime'] . "',
+                  attributes_price_factor_onetime_offset = '" . $copy_from['attributes_price_factor_onetime_offset'] . "',
+                  attributes_qty_prices = '" . $copy_from['attributes_qty_prices'] . "',
+                  attributes_qty_prices_onetime = '" . $copy_from['attributes_qty_prices_onetime'] . "',
+                  attributes_price_words = '" . $copy_from['attributes_price_words'] . "',
+                  attributes_price_words_free = '" . $copy_from['attributes_price_words_free'] . "',
+                  attributes_price_letters = '" . $copy_from['attributes_price_letters'] . "',
+                  attributes_price_letters_free = '" . $copy_from['attributes_price_letters_free'] . "',
+                  attributes_required = '" . $copy_from['attributes_required'] . "'
+                  WHERE products_id = " . $products_id_to . "
+                   AND options_id = " . (int)$copy_from['options_id'] . "
+                   AND options_values_id = " . (int)$copy_from['options_values_id']
 // and attributes_image='" . $copy_from['attributes_image'] . "'
 // and attributes_price_base_included=" . $copy_from['attributes_price_base_included']
             );
-            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_UPDATING, (int)$copy_from['products_attributes_id'], (int)$products_id_to), 'success');
+            $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_UPDATING, (int)$copy_from['products_attributes_id'], $products_id_to), 'success');
 
             // Notify that an attribute has been updated for the product.
-            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_UPDATE', ['pID' => (int)$products_id_to, 'fields' => $copy_from]);
+            $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_UPDATE', ['pID' => $products_id_to, 'fields' => $copy_from]);
         }
     }
 
     // Notify that the attribute-copying has been completed for the product.
-    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_COMPLETE', ['from' => (int)$products_id_from, 'to' => (int)$products_id_to]);
+    $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_COMPLETE', ['from' => $products_id_from, 'to' => $products_id_to]);
 
     // reset products_price_sorter for searches etc.
     zen_update_products_price_sorter($products_id_to);
@@ -595,11 +633,8 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
  */
 function zen_get_option_name_language($option_id, $language_id)
 {
-    global $db;
-    $sql = "SELECT products_options_id, products_options_name FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id= " . (int)$option_id . " AND language_id = " . (int)$language_id;
-    $result = $db->Execute($sql);
-    if ($result->EOF) return '';
-    return $result->fields['products_options_name'];
+    $result = zen_get_option_details((int)$option_id, (int)$language_id);
+    return ($result->EOF) ? '' : $result->fields['products_options_name'];
 }
 
 /**
@@ -610,11 +645,8 @@ function zen_get_option_name_language($option_id, $language_id)
  */
 function zen_get_option_name_language_sort_order($option_id, $language_id)
 {
-    global $db;
-    $sql = "SELECT products_options_id, products_options_name, products_options_sort_order FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id= " . (int)$option_id . " AND language_id = " . (int)$language_id;
-    $result = $db->Execute($sql);
-    if ($result->EOF) return '';
-    return $result->fields['products_options_sort_order'];
+    $result = zen_get_option_details((int)$option_id, (int)$language_id);
+    return ($result->EOF) ? '' : $result->fields['products_options_sort_order'];
 }
 
 
@@ -668,7 +700,7 @@ function zen_update_attributes_products_option_values_sort_order($product_id)
 function zen_has_product_attributes_downloads($product_id, $check_if_valid = false)
 {
     global $db;
-    if (DOWNLOAD_ENABLED != 'true') {
+    if (DOWNLOAD_ENABLED !== 'true') {
         return 'disabled';
     }
     $sql = "SELECT pa.products_attributes_id, pad.products_attributes_filename
@@ -689,7 +721,7 @@ function zen_has_product_attributes_downloads($product_id, $check_if_valid = fal
         return $valid_downloads;
     }
 
-    if ($results->RecordCount()) {
+    if (!$results->EOF) {
         return $results->RecordCount() . ' files';
     }
     return 'none';
@@ -704,10 +736,14 @@ function zen_has_product_attributes_downloads($product_id, $check_if_valid = fal
 function zen_is_option_file($option_id)
 {
     global $db;
-    $result = $db->Execute("SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option_id);
+    $result = zen_get_option_details((int)$option_id);
+    if ($result->EOF) {
+        return false;
+    }
+
     $option_type = $result->fields['products_options_type'];
-    $result = $db->Execute("SELECT products_options_types_name FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . " WHERE products_options_types_id = " . (int)$option_type);
-    return ($result->fields['products_options_types_name'] == 'File');
+    $result = $db->Execute("SELECT products_options_types_name FROM " . TABLE_PRODUCTS_OPTIONS_TYPES . " WHERE products_options_types_id = " . (int)$option_type, 1);
+    return (!$result->EOF && $result->fields['products_options_types_name'] === 'File');
 }
 
 /**
@@ -719,7 +755,9 @@ function zen_orders_products_downloads($check_filename)
 {
     global $zco_notifier;
 
-    if (empty($check_filename)) return false;
+    if (empty($check_filename)) {
+        return false;
+    }
 
     $handler = zen_get_download_handler($check_filename);
 
@@ -763,7 +801,9 @@ function zen_get_download_handler($filename)
  */
 function zen_check_for_misconfigured_downloads() {
    global $db;
-   if (DOWNLOAD_ENABLED == 'false') return true;
+   if (DOWNLOAD_ENABLED === 'false') {
+       return true;
+   }
    // use SELECT from admin/downloads_manager.php
    $sql = "SELECT pad.*, pa.*, pd.*, p.*
                       FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
@@ -775,8 +815,7 @@ function zen_check_for_misconfigured_downloads() {
 
    $results = $db->Execute($sql);
    foreach ($results as $result) {
-
-      if ($result['product_is_always_free_shipping'] == 1 || $result['products_virtual'] == 1) {
+      if ($result['product_is_always_free_shipping'] === '1' || $result['products_virtual'] === '1') {
          return false;
       }
    }
