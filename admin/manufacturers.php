@@ -133,6 +133,14 @@ if (!empty($action)) {
 
       zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '')));
       break;
+
+    default:
+      // -----
+      // Give a watching observer the opportunity to add/update additional fields in the
+      // manufacturers table.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_DEFAULT_ACTION', ['action' => $action]);
+      break;
   }
 }
 ?>

@@ -116,7 +116,7 @@ if (strpos($disabled_functions,"phpinfo") === false) {
         ?>
         <tr class="db-row">
             <td class="db-info db-name"><?php echo $variable['Variable_name']; ?></td>
-            <td class="db-info db-value"><?php echo empty($variable['Value']) ? '$nbsp;' : htmlspecialchars($variable['Value']); ?></td>
+            <td class="db-info db-value"><?php echo empty($variable['Value']) ? '&nbsp;' : htmlspecialchars($variable['Value']); ?></td>
         </tr>
         <?php
     }

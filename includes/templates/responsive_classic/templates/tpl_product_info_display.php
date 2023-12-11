@@ -49,7 +49,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <div id="pinfo-left" class="group">
 <!--bof Main Product Image -->
 <?php
-  if (!empty($products_image)) {
+  if (!empty($products_image) || !empty($enable_additional_images_without_main_image)) {
   ?>
 <?php
 /**

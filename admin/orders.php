@@ -189,7 +189,7 @@ if (!empty($action) && $order_exists === true) {
         $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
         if ($chk_products_download_time->EOF) {
-          $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + intval(DOWNLOAD_MAX_DAYS);
+          $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + (int)DOWNLOAD_MAX_DAYS;
           $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                      SET download_maxdays = " . (int)$zc_max_days . ",
                                          download_count = " . (int)DOWNLOAD_MAX_COUNT . "
@@ -281,7 +281,7 @@ if (!empty($action) && $order_exists === true) {
             $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
             if ($chk_products_download_time->EOF) {
-              $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + intval(DOWNLOAD_MAX_DAYS);
+              $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + (int)DOWNLOAD_MAX_DAYS;
               $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                          SET download_maxdays = " . (int)$zc_max_days . ",
                                              download_count = " . (int)DOWNLOAD_MAX_COUNT . "
@@ -1340,7 +1340,7 @@ if (!empty($action) && $order_exists === true) {
 <?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
                 </td>
 <?php } ?>
-                <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '', '<hr>' => "----\n"]); ?>">
+                <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '', '<br />' => '', '<hr>' => "----\n"]); ?>">
                   <?php echo strip_tags($currencies->format($orders->fields['order_total'], true, $orders->fields['currency'], $orders->fields['currency_value'])); ?>
                 </td>
 <?php if ($quick_view_popover_enabled) { ?>
@@ -1349,7 +1349,7 @@ if (!empty($action) && $order_exists === true) {
                        data-trigger="focus"
                        data-placement="left"
                        title="<?php echo TEXT_PRODUCT_POPUP_TITLE; ?>"
-                       data-content="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '<br>']); ?>"
+                       data-content="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br />' => '<br>']); ?>"
                     >
                         <?php echo TEXT_PRODUCT_POPUP_BUTTON; ?>
                     </a>

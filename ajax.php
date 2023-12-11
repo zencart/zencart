@@ -33,23 +33,6 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 
 
 // --- support functions ------------------
-if (!function_exists('utf8_encode_recurse')) {
-    function utf8_encode_recurse($mixed_value)
-    {
-        if (strtolower(CHARSET) == 'utf-8') {
-            return $mixed_value;
-        }
-        if (!is_array($mixed_value)) {
-            return utf8_encode((string)$mixed_value);
-        }
-        $result = array();
-        foreach ($mixed_value as $key => $value) {
-            $result[$key] = utf8_encode($value);
-        }
-        return $result;
-    }
-}
-
 function ajaxAbort($status = 400, $msg = null)
 {
     global $zc_ajax_base_dir;
@@ -86,6 +69,5 @@ if (!method_exists($class, $_GET['method'])) {
 
 // Accepted request, so execute and return appropriate response:
 $result = call_user_func(array($class, $_GET['method']));
-$result = utf8_encode_recurse($result);
 echo json_encode($result);
 require $zc_ajax_base_dir . 'includes/application_bottom.php';

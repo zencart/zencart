@@ -37,6 +37,16 @@ class queryFactory extends base
     private $user = '';
     private $password = '';
     private $zf_sql = '';
+    private $ignored_error_codes = [
+        2002, // connection refused via socket
+        2003, // cannot connect to host
+        2006, // server has gone away
+        2013, // lost connection during query
+        1040, // too many connections
+        1053, // server shutdown in progress
+        1141, // grant-type not allowed
+        1203, // too many user connections
+    ];
 
     function __construct()
     {
@@ -75,8 +85,8 @@ class queryFactory extends base
         while (!isset($this->link) || ($this->link == false && $connectionRetry > 0)) {
             $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
 
-            // mariadb connection down or incorrect
-            if (in_array(mysqli_connect_errno(), [2002, 2003])) {
+            // handle MySQL connection errors/failures
+            if (in_array(mysqli_connect_errno(), $this->ignored_error_codes)) {
                 if ($connectionRetry > 1) {
                     // if service is down, try only one more time
                     $connectionRetry = 1;
@@ -625,6 +635,7 @@ class queryFactory extends base
     public function close(): void
     {
         if (!$this->link) return;
+        // @ suppression is intentional here
         @mysqli_close($this->link);
         unset($this->link);
     }
@@ -674,7 +685,7 @@ class queryFactory extends base
         }
 
         // suppress backtrace for MariaDB connection errors: not logging these because they usually come hundreds at a time
-        if (in_array($this->error_number, [2002, 2003]) || defined('DIR_FS_INSTALL')) {
+        if (in_array($this->error_number, $this->ignored_error_codes) || defined('DIR_FS_INSTALL')) {
             return;
         }
 

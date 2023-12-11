@@ -222,14 +222,16 @@ class AdminRequestSanitizer extends base
      */
     private function findSanitizerFromContext($parameterDefinitions)
     {
+        $result = false;
         foreach ($parameterDefinitions as $parameterDefinition) {
-            $result = false;
-            if (!empty($parameterDefinition['pages'])) {
-                if (in_array($this->currentPage, $parameterDefinition['pages'])) {
-                    $result = $parameterDefinition;
-                    break;
-                }
+            if (empty($parameterDefinition['pages'])) {
+                continue;
             }
+            if (!in_array($this->currentPage, $parameterDefinition['pages'])) {
+                continue;
+            }
+            $result = $parameterDefinition;
+            break;
         }
         return $result;
     }
@@ -241,8 +243,8 @@ class AdminRequestSanitizer extends base
      */
     private function findSanitizerFromRequestMethod($parameterName, $parameterDefinitions)
     {
+        $result = false;
         foreach ($parameterDefinitions as $parameterDefinition) {
-            $result = false;
             if (!empty($parameterDefinition['pages'])) {
                 continue;
             }
@@ -261,8 +263,8 @@ class AdminRequestSanitizer extends base
      */
     private function parameterExistsForMethod($parameterName, $parameterDefinition)
     {
-        $hasGet = isset($_GET[$parameterName]) ? true : false;
-        $hasPost = isset($_POST[$parameterName]) ? true : false;
+        $hasGet = isset($_GET[$parameterName]);
+        $hasPost = isset($_POST[$parameterName]);
         if ($parameterDefinition['method'] == 'both' && ($hasGet || $hasPost)) {
             return true;
         }
@@ -329,7 +331,6 @@ class AdminRequestSanitizer extends base
             $this->debugMessages[] = 'PROCESSING NULL ACTION(POST) == ' . $this->arrayName;
             $this->postKeysAlreadySanitized[] = $this->arrayName;
         }
-
     }
 
     /**
@@ -367,7 +368,6 @@ class AdminRequestSanitizer extends base
             $this->debugMessages[] = 'PROCESSING CONVERT_INT (GET) == ' . $parameterName;
             $_GET[$parameterName] = (int)$_GET[$parameterName];
             $this->getKeysAlreadySanitized[] = $parameterName;
-
         }
     }
 
@@ -377,13 +377,14 @@ class AdminRequestSanitizer extends base
     private function filterFileDirRegex($parameterName)
     {
         $filedirRegex = '~[^0-9a-z' . preg_quote('.!@#$%&()_-~/`+^ ' . '\\', '~') . ']~i';
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING FILE_DIR_REGEX == ' . $this->arrayName;
-            $_POST[$parameterName] = preg_replace($filedirRegex, '', $_POST[$parameterName]);
-            $this->postKeysAlreadySanitized[] = $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
         }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING FILE_DIR_REGEX == ' . $this->arrayName;
+        $_POST[$parameterName] = preg_replace($filedirRegex, '', $_POST[$parameterName]);
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
 
     }
 
@@ -434,21 +435,22 @@ class AdminRequestSanitizer extends base
     private function filterProductDescRegex($parameterName)
     {
         $prodDescRegex = '~(load=|= ?\(|<![^-])~i';
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING PRODUCT_DESC_REGEX == ' . $parameterName;
-            if (is_array($_POST[$parameterName])) {
-                foreach ($_POST[$parameterName] as $pKey => $pValue) {
-                    $currentArrayName = $this->setCurrentArrayName($pKey);
-                    $_POST[$parameterName][$pKey] = preg_replace($prodDescRegex, '', $_POST[$parameterName][$pKey]);
-                    $this->postKeysAlreadySanitized[] = $currentArrayName;
-                }
-            } else {
-                $_POST[$parameterName] = preg_replace($prodDescRegex, '', $_POST[$parameterName]);
-                $this->postKeysAlreadySanitized[] = $this->arrayName;
-            }
+        if (!isset($_POST[$parameterName])) {
+            return;
         }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING PRODUCT_DESC_REGEX == ' . $parameterName;
+        if (is_array($_POST[$parameterName])) {
+          foreach ($_POST[$parameterName] as $pKey => $pValue) {
+              $currentArrayName = $this->setCurrentArrayName($pKey);
+              $_POST[$parameterName][$pKey] = preg_replace($prodDescRegex, '', $_POST[$parameterName][$pKey]);
+              $this->postKeysAlreadySanitized[] = $currentArrayName;
+          }
+          return;
+        }
+        $_POST[$parameterName] = preg_replace($prodDescRegex, '', $_POST[$parameterName]);
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
@@ -456,16 +458,22 @@ class AdminRequestSanitizer extends base
      */
     private function filterMetaTags($parameterName)
     {
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING META_TAGS == ' . $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
+        }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING META_TAGS == ' . $this->arrayName;
+        if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $currentArrayName = $this->setCurrentArrayName($pKey);
                 $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], ENT_COMPAT, $this->charset, false);
                 $this->postKeysAlreadySanitized[] = $currentArrayName;
             }
+            return;
         }
+        $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], ENT_COMPAT, $this->charset, false);
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
@@ -493,13 +501,14 @@ class AdminRequestSanitizer extends base
      */
     private function filterSanitizeEmailAudience($parameterName)
     {
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING SANITIZE_EMAIL_AUDIENCE (POST) == ' . $this->arrayName;
-            $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], ENT_COMPAT, $this->charset, true);
-            $this->postKeysAlreadySanitized[] = $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
         }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING SANITIZE_EMAIL_AUDIENCE (POST) == ' . $this->arrayName;
+        $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], ENT_COMPAT, $this->charset, true);
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
@@ -508,12 +517,15 @@ class AdminRequestSanitizer extends base
     private function filterProductUrlRegex($parameterName)
     {
         $urlRegex = '~([^0-9a-z' . preg_quote("'.!@#$%&()_-~/;:=?[]", '~') . ']|[><])~i';
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
+        }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING PRODUCT_URL_REGEX == ' . $this->arrayName;
+        if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
-                $currentArrayName = $this->setCurrentArrayname($pKey);
+                $currentArrayName = $this->setCurrentArrayName($pKey);
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {
                     $newValue = preg_replace($urlRegex, '', $_POST[$parameterName][$pKey]);
@@ -521,7 +533,15 @@ class AdminRequestSanitizer extends base
                 $_POST[$parameterName][$pKey] = $newValue;
                 $this->postKeysAlreadySanitized[] = $currentArrayName;
             }
+            return;
         }
+        // Perform similar sanitization for $_POST of non-array value.
+        $newValue = filter_var($_POST[$parameterName], FILTER_SANITIZE_URL);
+        if ($newValue === false) {
+            $newValue = preg_replace($urlRegex, '', $_POST[$parameterName]);
+        }
+        $_POST[$parameterName] = $newValue;
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
@@ -530,10 +550,13 @@ class AdminRequestSanitizer extends base
     private function filterFilePathOrUrlRegex($parameterName)
     {
         $regex = '~([^0-9a-z' . preg_quote("'.!@#$%&()_-~/;:=?[]`+^ " . '\\', '~') . ']|[><])~i';
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING FILE_PATH_OR_URL_REGEX == ' . $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
+        }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING FILE_PATH_OR_URL_REGEX == ' . $this->arrayName;
+        if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
                 if ($newValue === false) {
@@ -542,7 +565,14 @@ class AdminRequestSanitizer extends base
                 $_POST[$parameterName][$pKey] = $newValue;
                 $this->postKeysAlreadySanitized[] = $this->arrayName;
             }
+            return;
         }
+        $newValue = filter_var($_POST[$parameterName], FILTER_SANITIZE_URL);
+        if ($newValue === false) {
+            $newValue = preg_replace($regex, '', $_POST[$parameterName]);
+        }
+        $_POST[$parameterName] = $newValue;
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
@@ -550,13 +580,14 @@ class AdminRequestSanitizer extends base
      */
     private function filterCurrencyValueRegex($parameterName)
     {
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING CURRENCY_VALUE_REGEX == ' . $this->arrayName;
-            $_POST[$parameterName] = preg_replace('/[^a-z0-9_,\.\-]/i', '', $_POST[$parameterName]);
-            $this->postKeysAlreadySanitized[] = $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
         }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING CURRENCY_VALUE_REGEX == ' . $this->arrayName;
+        $_POST[$parameterName] = preg_replace('/[^a-z0-9_,\.\-]/i', '', $_POST[$parameterName]);
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
@@ -564,13 +595,14 @@ class AdminRequestSanitizer extends base
      */
     private function filterFloatValueRegex($parameterName)
     {
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING FLOAT_VALUE_REGEX == ' . $this->arrayName;
-            $_POST[$parameterName] = preg_replace('/[^0-9,\.\-\+]/', '', $_POST[$parameterName]);
-            $this->postKeysAlreadySanitized[] = $this->arrayName;
+        if (!isset($_POST[$parameterName])) {
+            return;
         }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING FLOAT_VALUE_REGEX == ' . $this->arrayName;
+        $_POST[$parameterName] = preg_replace('/[^0-9,\.\-\+]/', '', $_POST[$parameterName]);
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
@@ -600,31 +632,30 @@ class AdminRequestSanitizer extends base
                 // $this->arrayName = $currentArrayName; // Don't need here because set below.
 //                $newKey = $_POST[$parameterName]; // Moved to below to reduce redundancy
 //                $requestPost[$parameterName][$newKey] = $hacked; // Moved to below to reduce redundancy
-            } else if ($this->doStrictSanitization) {
+            } elseif ($this->doStrictSanitization) {
                 unset($requestPost[$parameterName][$key]);
                 unset($_POST);
                 $_POST[$key] = $key;
                 // $this->arrayName = $currentArrayName; // Unnecessary as already set above.
                 $this->filterStrictSanitizeKeys();
-                if (array_key_exists($key, $_POST)) {
-                    $this->arrayName = $currentArrayName;
-                    $currentPostKeysAlreadySanitized = $this->postKeysAlreadySanitized;
-                    $this->filterStrictSanitizeValues();
-                    unset($this->postKeysAlreadySanitized);
-                    $this->postKeysAlreadySanitized = $currentPostKeysAlreadySanitized;
-                    unset($currentPostKeysAlreadySanitized);
-                    $this->postKeysAlreadySanitized[] = $this->setCurrentArrayName($key);
-                    $temp_val = $_POST[$key];
-                    unset($_POST[$key]);
-                    $_POST[$parameterName] = $temp_val;
-                    unset($temp_val);
-                    $key = $_POST[$key];
-//                    $newKey = $_POST[$parameterName]; // Moved to below to reduce redundancy
-                    //$this->arrayName = $currentArrayName; // Don't need here because set below
-//                    $requestPost[$parameterName][$newKey] = $hacked; // Moved to below to reduce redundancy
-                } else {
+                if (!array_key_exists($key, $_POST)) {
                     continue; // Key is "unclean" and therefore should use the next key.
                 }
+                $this->arrayName = $currentArrayName;
+                $currentPostKeysAlreadySanitized = $this->postKeysAlreadySanitized;
+                $this->filterStrictSanitizeValues();
+                unset($this->postKeysAlreadySanitized);
+                $this->postKeysAlreadySanitized = $currentPostKeysAlreadySanitized;
+                unset($currentPostKeysAlreadySanitized);
+                $this->postKeysAlreadySanitized[] = $this->setCurrentArrayName($key);
+                $temp_val = $_POST[$key];
+                unset($_POST[$key]);
+                $_POST[$parameterName] = $temp_val;
+                unset($temp_val);
+                $key = $_POST[$key];
+//                $newKey = $_POST[$parameterName]; // Moved to below to reduce redundancy
+                //$this->arrayName = $currentArrayName; // Don't need here because set below
+//                $requestPost[$parameterName][$newKey] = $hacked; // Moved to below to reduce redundancy
             }
             $newKey = $_POST[$parameterName]; // Moved from above to reduce redundancy
             $requestPost[$parameterName][$newKey] = $hacked; // Moved from above to reduce redundancy
@@ -644,7 +675,7 @@ class AdminRequestSanitizer extends base
                     $this->runSpecificSanitizer($pkey, $newParameterDefinition);
 //                    $this->arrayName = $newCurrentArrayName; // Unnecessary as set below or in next loop
                     $requestPost[$parameterName][$newKey][$pkey] = $_POST[$pkey];
-                } else if ($this->doStrictSanitization) {
+                } elseif ($this->doStrictSanitization) {
                     unset($requestPost[$parameterName][$newKey][$pkey]);
                     unset($_POST);
                     $_POST[$pkey] = $pvalue;
@@ -692,7 +723,7 @@ class AdminRequestSanitizer extends base
                 $this->runSpecificSanitizer($pkey, $newParameterDefinition);
                 $this->arrayName = $currentArrayName; // Restore the internal pointer back to the base array.
                 $requestPost[$parameterName][$pkey] = $_POST[$pkey];
-            } else if ($this->doStrictSanitization) {
+            } elseif ($this->doStrictSanitization) {
                 unset($requestPost[$parameterName][$pkey]);
                 unset($_POST);
                 $_POST[$pkey] = $pkey;
@@ -741,16 +772,23 @@ class AdminRequestSanitizer extends base
     private function filterProductNameDeepRegex($parameterName)
     {
         $prodNameRegex = '~<\/?scri|on(load|mouse|error|read|key)(up|down)? ?=|[^(class|style)] ?= ?(\(|")|<!~i';
-        if (isset($_POST[$parameterName])) {
-            // Add the parameterName to the base arrayname.
-            $this->arrayName = $this->setCurrentArrayName($parameterName);
-            $this->debugMessages[] = 'PROCESSING PRODUCT_NAME_DEEP_REGEX == ' . $parameterName;
+        if (!isset($_POST[$parameterName])) {
+            return;
+        }
+        // Add the parameterName to the base arrayname.
+        $this->arrayName = $this->setCurrentArrayName($parameterName);
+        $this->debugMessages[] = 'PROCESSING PRODUCT_NAME_DEEP_REGEX == ' . $parameterName;
+        if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $currentArrayName = $this->setCurrentArrayName($pKey);
                 $_POST[$parameterName][$pKey] = preg_replace($prodNameRegex, '', $_POST[$parameterName][$pKey]);
                 $this->postKeysAlreadySanitized[] = $currentArrayName;
             }
+            return;
         }
+        //$currentArrayName = $this->setCurrentArrayName($pKey);
+        $_POST[$parameterName] = preg_replace($prodNameRegex, '', $_POST[$parameterName]);
+        $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
     /**
