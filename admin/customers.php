@@ -2085,7 +2085,7 @@ if ($action === 'edit' || $action === 'update') {
                     $cInfo->number_of_orders;
                 if ($cInfo->number_of_orders > 0) {
                     $text .= ' [ ';
-                    foreach ($customer->getRecentOrderRecords(5) as $order) {
+                    foreach ($customer->getOrderHistory(5) as $order) {
                         $text .= '<a href="' . zen_href_link(
                             FILENAME_ORDERS,
                             'cID=' . $cInfo->customers_id . '&oID=' . $order['orders_id'] . '&action=edit',
