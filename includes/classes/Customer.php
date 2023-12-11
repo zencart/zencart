@@ -623,11 +623,13 @@ class Customer extends base
 
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $language, 'integer');
-        $history_split = new splitPageResults($sql, $max_number_to_return);
         if ($returned_history_split !== null) {
+            $history_split = new splitPageResults($sql, $max_number_to_return);
             $returned_history_split = $history_split;
+            $results = $db->Execute($history_split->sql_query);
+        } else {
+            $results = $db->Execute($sql, $max_number_to_return);
         }
-        $results = $db->Execute($history_split->sql_query);
 
         $ordersArray = [];
         foreach ($results as $result) {
@@ -692,33 +694,6 @@ class Customer extends base
         $result = $db->Execute($sql);
 
         return $result->fields['total'];
-    }
-
-    /**
-     * Return a simple summary of orders for this customer, ordered most recent first.
-     *
-     * @param integer $limit Optional limit of the number of orders to return.
-     * @return array
-     */
-    public function getRecentOrderRecords(int $limit = 0): array 
-    {
-        global $db;
-        if (empty($this->customer_id)) {
-            return [];
-        }
-        
-        $result = $db->Execute("SELECT orders_id, date_purchased, orders_status_name
-            FROM " . TABLE_ORDERS . " o
-            INNER JOIN " . TABLE_ORDERS_STATUS . " os
-                ON o.orders_status = os.orders_status_id AND os.language_id = {$_SESSION['languages_id']}
-            WHERE customers_id = {$this->customer_id}
-            ORDER BY date_purchased DESC" . (!empty($limit) ? " LIMIT $limit" : '') . ';');
-        
-        $orders = [];
-        foreach ($result as $row) {
-            $orders[] = $row;
-        }
-        return $orders;
     }
 
     public function setPassword(string $new_password)
