@@ -16,7 +16,7 @@ class CreateAccountTest extends zcFeatureTestCaseStore
         $this->assertEquals($profile['firstname'], $customer->customers_firstname);
         $ab = $customer->addressBooks->toArray();
         $this->assertEquals($profile['street_address'], $ab[0]['entry_street_address']);
-        $this->assertEquals(0, $ab[0]['entry_zone_id']);
+        $this->assertEquals(18, $ab[0]['entry_zone_id']);
     }
 
     public function testCreateAccountWithDropdown()
