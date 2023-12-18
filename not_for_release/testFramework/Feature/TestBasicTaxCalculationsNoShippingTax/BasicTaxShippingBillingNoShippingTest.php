@@ -41,16 +41,14 @@ class BasicTaxShippingBillingNoShippingTest extends zcFeatureTestCaseStore
         ]);
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
-        $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
+        $this->assertStringContainsString('4.90', (string)$response->getContent() );
+        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
-        $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
+        $this->assertStringContainsString('4.90', (string)$response->getContent() );
+        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
@@ -59,7 +57,7 @@ class BasicTaxShippingBillingNoShippingTest extends zcFeatureTestCaseStore
 
     public function testBasicCheckoutNonFloridaCustomer()
     {
-        $this->loginCustomer('florida-basic1');
+        $this->loginCustomer('US-not-florida-basic');
         $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&products_id=25');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Microsoft', (string)$response->getContent() );
@@ -80,16 +78,12 @@ class BasicTaxShippingBillingNoShippingTest extends zcFeatureTestCaseStore
         ]);
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
         $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
         $this->assertStringContainsString('69.99', (string)$response->getContent() );
         $this->assertStringContainsString('2.50', (string)$response->getContent() );
-//        $this->assertStringContainsString('4.90', (string)$response->getContent() );
         $this->assertStringContainsString('72.49', (string)$response->getContent() );
-//        $this->assertStringContainsString('77.39', (string)$response->getContent() );
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
