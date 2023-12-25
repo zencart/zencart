@@ -49,7 +49,7 @@ class order extends base
      */
     public $delivery = [];
     /**
-     * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing 
+     * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing
      * @var boolean
      */
     public $doStockDecrement;
@@ -80,7 +80,7 @@ class order extends base
     protected $orderId = null;
     /**
      * $products is an array containing details of the products for the order
-     * @var array 
+     * @var array
      */
     public $products = [];
     /**
@@ -115,17 +115,17 @@ class order extends base
     public $statuses = [];
     /**
      * $total_cost is the total cost of the order
-     * @var float 
+     * @var float
      */
     public $total_cost;
     /**
      * $total_tax is the total amount of tax for the order
-     * @var float 
+     * @var float
      */
     public $total_tax;
     /**
      * $total_weight is the total weight of the order
-     * @var float 
+     * @var float
      */
     public $total_weight;
     /**
@@ -448,7 +448,7 @@ class order extends base
     protected function getCountryZoneId(int $countries_id, string $state)
     {
         global $db;
-        
+
         $sql =
             "SELECT zone_id
                FROM " . TABLE_ZONES . "

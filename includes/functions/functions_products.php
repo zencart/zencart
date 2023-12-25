@@ -52,7 +52,7 @@ function zen_product_set_header_response($product_id, $product_info = null)
     }
 
     $response_code = 200;
-    
+
     $product_not_found = $product_info->EOF;
     $should_throw_404 = $product_not_found;
 
