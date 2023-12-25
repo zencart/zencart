@@ -397,3 +397,34 @@ function zen_string_to_int($string) {
     trigger_error('Call to deprecated function zen_string_to_int. Use a closure instead', E_USER_DEPRECATED);
     return (int)$string;
 }
+
+/**
+ * Converts a numeric string to int or float depending on whether it is a whole number or not.
+ * Basically performs PHP's coercive string conversion to float or int based on its content,
+ * to accommodate what strict_types mode cannot do.
+ *
+ * @param mixed $string
+ * @return int|float
+ */
+function zen_str_to_numeric($string) {
+    if (is_null($string)) {
+        return 0;
+    }
+    if (is_int($string) || is_float($string)) {
+        return $string;
+    }
+    if (is_bool($string)) {
+        return (int)$string;
+    }
+    if (! is_string($string)) {
+        throw new TypeError('Value is not a string.');
+    }
+    if (! is_numeric($string)) {
+        throw new TypeError('Value is not a numeric string.');
+    }
+    if (strpos($string, '.') === false) {
+        return (int)$string;
+    }
+
+    return (float)$string;
+}
