@@ -182,6 +182,8 @@ class order extends base
 
         $totals = $db->Execute($totals_query);
 
+        $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
+
         while (!$totals->EOF) {
             if ($totals->fields['class'] == 'ot_coupon') {
                 $coupon_link_query = "SELECT coupon_id
@@ -292,7 +294,7 @@ class order extends base
 
         while (!$orders_products->EOF) {
             // convert quantity to proper decimals - account history
-            if (QUANTITY_DECIMALS != 0) {
+            if ($precision !== 0) {
                 $fix_qty = $orders_products->fields['products_quantity'];
                 switch (true) {
                     case (false === strpos($fix_qty, '.')):
@@ -306,7 +308,7 @@ class order extends base
                 $new_qty = $orders_products->fields['products_quantity'];
             }
 
-            $new_qty = round($new_qty, QUANTITY_DECIMALS);
+            $new_qty = round($new_qty, $precision);
 
             if ($new_qty == (int)$new_qty) {
                 $new_qty = (int)$new_qty;

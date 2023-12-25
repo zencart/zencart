@@ -1366,7 +1366,8 @@ $productsPriceArray = [
             }
 
             // convert quantity to proper decimals
-            if (QUANTITY_DECIMALS === '0') {
+            $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
+            if ($precision === 0) {
                 $new_qty = $data['qty'];
             } else {
                 $fix_qty = $data['qty'];
@@ -1381,7 +1382,7 @@ $productsPriceArray = [
             }
             $check_unit_decimals = $product['products_quantity_order_units'];
             if (strpos($check_unit_decimals, '.') !== false) {
-                $new_qty = round($new_qty, QUANTITY_DECIMALS);
+                $new_qty = round($new_qty, $precision);
             } else {
                 $new_qty = round($new_qty, 0);
             }
@@ -2376,15 +2377,16 @@ $productsPriceArray = [
             $messageStackPosition = 'shopping_cart';
         }
         $old_quantity = $check_qty;
-        if (QUANTITY_DECIMALS !== '0') {
+        $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
+        if ($precision !== 0) {
             $fix_qty = $check_qty;
             if (strpos($fix_qty, '.') !== false) {
                 $new_qty = $fix_qty;
             } else {
                 $new_qty = preg_replace('/[0]+$/', '', $check_qty);
             }
-        } elseif ($check_qty != round($check_qty, QUANTITY_DECIMALS)) {
-            $new_qty = round($check_qty, QUANTITY_DECIMALS);
+        } elseif ($check_qty != round($check_qty, $precision)) {
+            $new_qty = round($check_qty, $precision);
             $messageStack->add_session($messageStackPosition, ERROR_QUANTITY_ADJUSTED . zen_get_products_name($product_id) . ERROR_QUANTITY_CHANGED_FROM . $old_quantity . ERROR_QUANTITY_CHANGED_TO . $new_qty, 'caution');
         } else {
             $new_qty = $check_qty;
