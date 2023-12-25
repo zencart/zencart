@@ -308,6 +308,12 @@ systemChecks:
             tableName: orders
             fieldName: shipping_tax_rate
             fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: is_wholesale
+            fieldCheck: Exists
+          - checkType: configKeyExists
+            keyName: WHOLESALE_PRICING_CONFIG
 
   checkDBVersion158:
     runLevel: dbVersion
