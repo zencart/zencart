@@ -66,7 +66,7 @@ systemChecks:
       checkIsZCVersionCurrent:
   mysqlExt:
     runLevel: always
-    errorLevel: FAIL
+    errorLevel: WARN
     criticalError: true
     mainErrorText: <?php echo TEXT_ERROR_MYSQL_SUPPORT .PHP_EOL; ?>
     methods:
