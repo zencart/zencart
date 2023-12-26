@@ -133,6 +133,9 @@
                 if (empty($block['EMAIL_FROM_ADDRESS'])) {
                     $block['EMAIL_FROM_ADDRESS'] = $from_email_address;
                 }
+                if (empty($block['EMAIL_MESSAGE_HTML'])) {
+                    $block['EMAIL_MESSAGE_HTML'] = $email_text;
+                }
             }
             $email_html = (!is_array($block) && substr($block, 0, 6) == '<html>') ? $block : zen_build_html_email_from_template($module, $block);
             if (!is_array($block) && ($block === '' || $block === 'none')) {
