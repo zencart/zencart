@@ -67,7 +67,6 @@ systemChecks:
   mysqlExt:
     runLevel: always
     errorLevel: WARN
-    criticalError: true
     mainErrorText: <?php echo TEXT_ERROR_MYSQL_SUPPORT .PHP_EOL; ?>
     methods:
       checkExtension:
