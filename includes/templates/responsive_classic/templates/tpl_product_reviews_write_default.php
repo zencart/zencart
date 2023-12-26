@@ -40,7 +40,7 @@
 
 <div id="reviews-right">
 
-<h3 id="reviewsWriteReviewer" class=""><?php echo SUB_TITLE_FROM . '&nbsp;&nbsp;', zen_output_string_protected($customer->fields['customers_firstname'] . ' ' . $customer->fields['customers_lastname']); ?></h3>
+<h3 id="reviewsWriteReviewer" class=""><?php echo SUB_TITLE_FROM . '&nbsp;&nbsp;', zen_output_string_protected($reviewer->fields['customers_firstname'] . ' ' . $reviewer->fields['customers_lastname']); ?></h3>
 <br class="clearBoth">
 
 <?php if ($messageStack->size('review_text') > 0) echo $messageStack->output('review_text'); ?>
