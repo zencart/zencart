@@ -271,6 +271,7 @@ class Customer extends base
 
         $sql =
             "SELECT c.*,
+                    CONCAT(customers_firstname,' ',LEFT(customers_lastname,1),'.') as name_with_initial,
                     cgc.amount as gv_balance,
                     customers_info_date_account_created AS date_account_created,
                     customers_info_date_account_last_modified AS date_account_last_modified,
