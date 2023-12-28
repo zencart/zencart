@@ -35,6 +35,8 @@ if (!defined('IS_ADMIN_FLAG')) {
                                 'loadFile'=>'message_stack.php');
   $autoLoadConfig[0][] = array('autoType'=>'class',
                                 'loadFile'=>'breadcrumb.php');
+  $autoLoadConfig[0][] = array('autoType'=>'class',
+                               'loadFile'=>'Customer.php');
   $autoLoadConfig[0][] = ['autoType' => 'class', 'loadFile' => 'zcDate.php'];
 /**
  * Breakpoint 5.
