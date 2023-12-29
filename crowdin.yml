@@ -1,6 +1,6 @@
 files:
   # Admin
-  - source: /admin/includes/languages/lang.*.php
+  - source: /admin/includes/languages/lang.english.php
     translation: /admin/includes/languages/lang.%language%.php
     update_option: update_as_unapproved
   - source: /admin/includes/languages/english/extra_definitions/*.php
@@ -14,7 +14,7 @@ files:
     update_option: update_as_unapproved
 
   # Store Front
-  - source: /includes/languages/lang.*.php
+  - source: /includes/languages/lang.english.php
     translation: /includes/languages/lang.%language%.php
     update_option: update_as_unapproved
   - source: /includes/languages/english/*.php
