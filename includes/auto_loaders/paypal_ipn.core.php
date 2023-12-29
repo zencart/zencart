@@ -13,60 +13,60 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 $autoLoadConfig[0][] = [
     'autoType' => 'include',
-    'loadFile' => DIR_WS_INCLUDES . 'version.php'
+    'loadFile' => DIR_WS_INCLUDES . 'version.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'class.notifier.php'
+    'loadFile' => 'class.notifier.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'classInstantiate',
     'className' => 'notifier',
-    'objectName' => 'zco_notifier'
+    'objectName' => 'zco_notifier',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'class.phpmailer.php'
+    'loadFile' => 'class.phpmailer.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'template_func.php'
+    'loadFile' => 'template_func.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'language.php'
+    'loadFile' => 'language.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'sniffer.php'
+    'loadFile' => 'sniffer.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'shopping_cart.php'
+    'loadFile' => 'shopping_cart.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'navigation_history.php'
+    'loadFile' => 'navigation_history.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'currencies.php'
+    'loadFile' => 'currencies.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'message_stack.php'
+    'loadFile' => 'message_stack.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'breadcrumb.php'
+    'loadFile' => 'breadcrumb.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'Customer.php'
+    'loadFile' => 'Customer.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'zcDate.php'
+    'loadFile' => 'zcDate.php',
 ];
 /**
  * Breakpoint 5.
@@ -77,7 +77,7 @@ $autoLoadConfig[0][] = [
 $autoLoadConfig[5][] = [
     'autoType' => 'classInstantiate',
     'className' => 'zcDate',
-    'objectName' => 'zcDate'
+    'objectName' => 'zcDate',
 ];
 /**
  * Breakpoint 30.
@@ -88,7 +88,7 @@ $autoLoadConfig[5][] = [
 $autoLoadConfig[30][] = [
     'autoType' => 'classInstantiate',
     'className' => 'cache',
-    'objectName' => 'zc_cache'
+    'objectName' => 'zc_cache',
 ];
 /**
  * Breakpoint 40.
@@ -98,7 +98,7 @@ $autoLoadConfig[30][] = [
  */
 $autoLoadConfig[40][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_db_config_read.php'
+    'loadFile' => 'init_db_config_read.php',
 ];
 /**
  * Breakpoint 50.
@@ -109,11 +109,11 @@ $autoLoadConfig[40][] = [
 $autoLoadConfig[50][] = [
     'autoType' => 'classInstantiate',
     'className' => 'sniffer',
-    'objectName' => 'sniffer'
+    'objectName' => 'sniffer',
 ];
 $autoLoadConfig[50][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_sefu.php'
+    'loadFile' => 'init_sefu.php',
 ];
 /**
  * Breakpoint 60.
@@ -124,15 +124,15 @@ $autoLoadConfig[50][] = [
  */
 $autoLoadConfig[60][] = [
     'autoType' => 'require',
-    'loadFile' => DIR_WS_FUNCTIONS . 'functions_osh_update.php'
+    'loadFile' => DIR_WS_FUNCTIONS . 'functions_osh_update.php',
 ];
 $autoLoadConfig[60][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_general_funcs.php'
+    'loadFile' => 'init_general_funcs.php',
 ];
 $autoLoadConfig[60][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_tlds.php'
+    'loadFile' => 'init_tlds.php',
 ];
 /**
  * Include PayPal-specific functions
@@ -140,7 +140,7 @@ $autoLoadConfig[60][] = [
  */
 $autoLoadConfig[60][] = [
     'autoType' => 'include',
-    'loadFile' => DIR_WS_MODULES . 'payment/paypal/paypal_functions.php'
+    'loadFile' => DIR_WS_MODULES . 'payment/paypal/paypal_functions.php',
 ];
 /**
  * Breakpoint 70.
@@ -150,11 +150,11 @@ $autoLoadConfig[60][] = [
  */
 $autoLoadConfig[70][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_sessions.php'
+    'loadFile' => 'init_sessions.php',
 ];
 $autoLoadConfig[71][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_paypal_ipn_sessions.php'
+    'loadFile' => 'init_paypal_ipn_sessions.php',
 ];
 /**
  * Breakpoint 80.
@@ -167,7 +167,7 @@ $autoLoadConfig[80][] = [
     'className' => 'shoppingCart',
     'objectName' => 'cart',
     'checkInstantiated' => true,
-    'classSession' => true
+    'classSession' => true,
 ];
 /**
  * Breakpoint 90.
@@ -178,7 +178,7 @@ $autoLoadConfig[80][] = [
 $autoLoadConfig[90][] = [
     'autoType' => 'classInstantiate',
     'className' => 'currencies',
-    'objectName' => 'currencies'
+    'objectName' => 'currencies',
 ];
 /**
  * Breakpoint 100.
@@ -190,11 +190,11 @@ $autoLoadConfig[90][] = [
 $autoLoadConfig[100][] = [
     'autoType' => 'classInstantiate',
     'className' => 'template_func',
-    'objectName' => 'template'
+    'objectName' => 'template',
 ];
 $autoLoadConfig[100][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_sanitize.php'
+    'loadFile' => 'init_sanitize.php',
 ];
 /**
  * Breakpoint 110.
@@ -205,11 +205,11 @@ $autoLoadConfig[100][] = [
  */
 $autoLoadConfig[110][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_languages.php'
+    'loadFile' => 'init_languages.php',
 ];
 $autoLoadConfig[110][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_templates.php'
+    'loadFile' => 'init_templates.php',
 ];
 /**
  * Breakpoint 120.
@@ -219,7 +219,7 @@ $autoLoadConfig[110][] = [
  */
 $autoLoadConfig[120][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_currencies.php'
+    'loadFile' => 'init_currencies.php',
 ];
 /**
  * Breakpoint 130.
@@ -230,7 +230,7 @@ $autoLoadConfig[120][] = [
 $autoLoadConfig[130][] = [
     'autoType' => 'classInstantiate',
     'className' => 'messageStack',
-    'objectName' => 'messageStack'
+    'objectName' => 'messageStack',
 ];
 /**
  * Breakpoint 170.
@@ -240,5 +240,5 @@ $autoLoadConfig[130][] = [
  */
 $autoLoadConfig[170][] = [
     'autoType' => 'init_script',
-    'loadFile' => 'init_ipn_postcfg.php'
+    'loadFile' => 'init_ipn_postcfg.php',
 ];
