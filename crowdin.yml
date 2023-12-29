@@ -2,4 +2,34 @@ files:
   - source: /admin/includes/languages/lang.*.php
     translation: /admin/includes/languages/lang.%language%.php
   - source: /admin/includes/languages/english/extra_definitions/*.php
+    translation: /admin/includes/languages/%language%/%original_file_name%
+  - source: /admin/includes/languages/english/extra_definitions/*.php
     translation: /admin/includes/languages/%language%/extra_definitions/%original_file_name%
+  - source: /admin/includes/languages/english/modules/newsletters/*.php
+    translation: /admin/includes/languages/%language%/modules/newsletters/%original_file_name%
+  - source: /includes/languages/lang.*.php
+    translation: /includes/languages/lang.%language%.php
+  - source: /includes/languages/english/*.php
+    translation: /includes/languages/%language%/%original_file_name%
+  - source: /includes/languages/english/classic/*.php
+    translation: /includes/languages/%language%/classic/%original_file_name%
+  - source: /includes/languages/english/extra_definitions/*.php
+    translation: /includes/languages/%language%/extra_definitions/%original_file_name%
+  - source: /includes/languages/english/extra_definitions/classic/*.php
+    translation: /includes/languages/%language%/extra_definitions/classic/%original_file_name%
+  - source: /includes/languages/english/extra_definitions/responsive_classic/*.php
+    translation: /includes/languages/%language%/extra_definitions/responsive_classic/%original_file_name%
+  - source: /includes/languages/english/html_includes/*.php
+    translation: /includes/languages/%language%/html_includes/%original_file_name%
+  - source: /includes/languages/english/html_includes/classic/*.php
+    translation: /includes/languages/%language%/html_includes/classic/%original_file_name%
+  - source: /includes/languages/english/html_includes/responsive_classic/*.php
+    translation: /includes/languages/%language%/html_includes/responsive_classic/%original_file_name%
+  - source: /includes/languages/english/modules/order_total/*.php
+    translation: /includes/languages/%language%/modules/order_total/%original_file_name%
+  - source: /includes/languages/english/modules/payment/*.php
+    translation: /includes/languages/%language%/modules/payment/%original_file_name%
+  - source: /includes/languages/english/modules/shipping/*.php
+    translation: /includes/languages/%language%/modules/shipping/%original_file_name%
+  - source: /includes/languages/english/responsive_classic/*.php
+    translation: /includes/languages/%language%/responsive_classic/%original_file_name%
