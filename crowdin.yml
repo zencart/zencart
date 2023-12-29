@@ -1,0 +1,3 @@
+files:
+  - source: /admin/includes/languages/lang.*.php
+    translation: /admin/includes/languages/lang.%language%.php
