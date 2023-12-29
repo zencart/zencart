@@ -35,15 +35,15 @@ files:
     update_option: update_as_unapproved
   - source: /includes/languages/english/html_includes/*.php
     dest: /includes/languages/english/html_includes/%file_name%.txt
-    translation: /includes/languages/%language%/html_includes/%original_file_name%
+    translation: /includes/languages/%language%/html_includes/%file_name%.php
     update_option: update_as_unapproved
   - source: /includes/languages/english/html_includes/classic/*.php
     dest: /includes/languages/english/html_includes/classic/%file_name%.txt
-    translation: /includes/languages/%language%/html_includes/classic/%original_file_name%
+    translation: /includes/languages/%language%/html_includes/classic/%file_name%.php
     update_option: update_as_unapproved
   - source: /includes/languages/english/html_includes/responsive_classic/*.php
     dest: /includes/languages/english/html_includes/responsive_classic/%file_name%.txt
-    translation: /includes/languages/%language%/html_includes/responsive_classic/%original_file_name%
+    translation: /includes/languages/%language%/html_includes/responsive_classic/%file_name%.php
     update_option: update_as_unapproved
   - source: /includes/languages/english/modules/order_total/*.php
     translation: /includes/languages/%language%/modules/order_total/%original_file_name%
