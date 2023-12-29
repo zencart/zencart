@@ -1,6 +1,6 @@
-export_languages: ["english"]
+export_languages:
+  - english
 files:
-  # Admin
   - source: /admin/includes/languages/lang.english.php
     translation: /admin/includes/languages/lang.%language%.php
     update_option: update_as_unapproved
@@ -13,8 +13,6 @@ files:
   - source: /admin/includes/languages/english/modules/newsletters/*.php
     translation: /admin/includes/languages/%language%/modules/newsletters/%original_file_name%
     update_option: update_as_unapproved
-
-  # Store Front
   - source: /includes/languages/lang.english.php
     translation: /includes/languages/lang.%language%.php
     update_option: update_as_unapproved
