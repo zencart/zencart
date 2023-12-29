@@ -1,3 +1,4 @@
+export_languages: ["english"]
 files:
   # Admin
   - source: /admin/includes/languages/lang.english.php
