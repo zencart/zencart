@@ -55,3 +55,10 @@ files:
   - source: /includes/languages/english/responsive_classic/*.php
     translation: /includes/languages/%language%/responsive_classic/%original_file_name%
     update_option: update_as_unapproved
+  - source: /zc_install/includes/languages/en_us/*.php
+    translation: /zc_install/includes/languages/%locale_with_underscore%/%original_file_name%
+    update_option: update_as_unapproved
+  - source: /zc_install/includes/languages/lng_info_en_us.php
+    dest: /zc_install/includes/languages/%file_name%.txt
+    translation: /zc_install/includes/languages/lng_info_%locale_with_underscore%.php
+    update_option: update_as_unapproved
