@@ -39,7 +39,7 @@ systemChecks:
       checkPhpVersionMin:
         method: checkPhpVersion
         parameters:
-          version: 8.0.0
+          version: 8.0.2
           versionTest: ge
           localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MIN, '8.0') . PHP_EOL; ?>
       checkPhpVersionMax:
