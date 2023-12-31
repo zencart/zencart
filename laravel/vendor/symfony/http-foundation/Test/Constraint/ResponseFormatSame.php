@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class ResponseFormatSame extends Constraint
 {
     private $request;
-    private $format;
+    private ?string $format;
 
     public function __construct(Request $request, ?string $format)
     {

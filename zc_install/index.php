@@ -9,7 +9,7 @@
   // Actual version check is more strict; this is just to start the program
   // For true minimum, see includes/systemChecks.yml under checkPhpVersionMin
   if (PHP_VERSION_ID < 70100) { // only checking for 7.1 here as a basic check. zc_install itself doesn't need higher than this at this time
-    die('Sorry, requires minimum PHP 7.3'); // the actual zc_install pages have a prettier and more informative explanation of requirements
+    die('Sorry, requires minimum PHP 8.0'); // the actual zc_install pages have a prettier and more informative explanation of requirements
   }
 
   define('IS_ADMIN_FLAG',false);

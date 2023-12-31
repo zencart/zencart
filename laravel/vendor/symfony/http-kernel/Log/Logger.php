@@ -33,8 +33,8 @@ class Logger extends AbstractLogger
         LogLevel::EMERGENCY => 7,
     ];
 
-    private $minLevelIndex;
-    private $formatter;
+    private int $minLevelIndex;
+    private \Closure $formatter;
 
     /** @var resource|null */
     private $handle;
@@ -49,10 +49,14 @@ class Logger extends AbstractLogger
 
             if (isset($_ENV['SHELL_VERBOSITY']) || isset($_SERVER['SHELL_VERBOSITY'])) {
                 switch ((int) ($_ENV['SHELL_VERBOSITY'] ?? $_SERVER['SHELL_VERBOSITY'])) {
-                    case -1: $minLevel = LogLevel::ERROR; break;
-                    case 1: $minLevel = LogLevel::NOTICE; break;
-                    case 2: $minLevel = LogLevel::INFO; break;
-                    case 3: $minLevel = LogLevel::DEBUG; break;
+                    case -1: $minLevel = LogLevel::ERROR;
+                        break;
+                    case 1: $minLevel = LogLevel::NOTICE;
+                        break;
+                    case 2: $minLevel = LogLevel::INFO;
+                        break;
+                    case 3: $minLevel = LogLevel::DEBUG;
+                        break;
                 }
             }
         }
@@ -62,7 +66,7 @@ class Logger extends AbstractLogger
         }
 
         $this->minLevelIndex = self::LEVELS[$minLevel];
-        $this->formatter = $formatter ?: [$this, 'format'];
+        $this->formatter = $formatter instanceof \Closure ? $formatter : \Closure::fromCallable($formatter ?? [$this, 'format']);
         if ($output && false === $this->handle = \is_resource($output) ? $output : @fopen($output, 'a')) {
             throw new InvalidArgumentException(sprintf('Unable to open "%s".', $output));
         }
@@ -70,10 +74,8 @@ class Logger extends AbstractLogger
 
     /**
      * {@inheritdoc}
-     *
-     * @return void
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         if (!isset(self::LEVELS[$level])) {
             throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
@@ -85,7 +87,7 @@ class Logger extends AbstractLogger
 
         $formatter = $this->formatter;
         if ($this->handle) {
-            @fwrite($this->handle, $formatter($level, $message, $context));
+            @fwrite($this->handle, $formatter($level, $message, $context).\PHP_EOL);
         } else {
             error_log($formatter($level, $message, $context, false));
         }
@@ -96,7 +98,7 @@ class Logger extends AbstractLogger
         if (str_contains($message, '{')) {
             $replacements = [];
             foreach ($context as $key => $val) {
-                if (null === $val || \is_scalar($val) || (\is_object($val) && method_exists($val, '__toString'))) {
+                if (null === $val || \is_scalar($val) || $val instanceof \Stringable) {
                     $replacements["{{$key}}"] = $val;
                 } elseif ($val instanceof \DateTimeInterface) {
                     $replacements["{{$key}}"] = $val->format(\DateTime::RFC3339);
@@ -110,7 +112,7 @@ class Logger extends AbstractLogger
             $message = strtr($message, $replacements);
         }
 
-        $log = sprintf('[%s] %s', $level, $message).\PHP_EOL;
+        $log = sprintf('[%s] %s', $level, $message);
         if ($prefixDate) {
             $log = date(\DateTime::RFC3339).' '.$log;
         }

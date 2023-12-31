@@ -56,7 +56,7 @@ class DebugClassLoader
         'null' => 'null',
         'resource' => 'resource',
         'boolean' => 'bool',
-        'true' => 'bool',
+        'true' => 'true',
         'false' => 'false',
         'integer' => 'int',
         'array' => 'array',
@@ -74,6 +74,7 @@ class DebugClassLoader
         '$this' => 'static',
         'list' => 'array',
         'class-string' => 'string',
+        'never' => 'never',
     ];
 
     private const BUILTIN_RETURN_TYPES = [
@@ -91,6 +92,9 @@ class DebugClassLoader
         'parent' => true,
         'mixed' => true,
         'static' => true,
+        'null' => true,
+        'true' => true,
+        'never' => true,
     ];
 
     private const MAGIC_METHODS = [
@@ -101,24 +105,27 @@ class DebugClassLoader
         '__serialize' => 'array',
     ];
 
+    /**
+     * @var callable
+     */
     private $classLoader;
-    private $isFinder;
-    private $loaded = [];
-    private $patchTypes;
+    private bool $isFinder;
+    private array $loaded = [];
+    private array $patchTypes = [];
 
-    private static $caseCheck;
-    private static $checkedClasses = [];
-    private static $final = [];
-    private static $finalMethods = [];
-    private static $deprecated = [];
-    private static $internal = [];
-    private static $internalMethods = [];
-    private static $annotatedParameters = [];
-    private static $darwinCache = ['/' => ['/', []]];
-    private static $method = [];
-    private static $returnTypes = [];
-    private static $methodTraits = [];
-    private static $fileOffsets = [];
+    private static int $caseCheck;
+    private static array $checkedClasses = [];
+    private static array $final = [];
+    private static array $finalMethods = [];
+    private static array $deprecated = [];
+    private static array $internal = [];
+    private static array $internalMethods = [];
+    private static array $annotatedParameters = [];
+    private static array $darwinCache = ['/' => ['/', []]];
+    private static array $method = [];
+    private static array $returnTypes = [];
+    private static array $methodTraits = [];
+    private static array $fileOffsets = [];
 
     public function __construct(callable $classLoader)
     {
@@ -128,7 +135,7 @@ class DebugClassLoader
         $this->patchTypes += [
             'force' => null,
             'php' => \PHP_MAJOR_VERSION.'.'.\PHP_MINOR_VERSION,
-            'deprecations' => \PHP_VERSION_ID >= 70400,
+            'deprecations' => true,
         ];
 
         if ('phpdoc' === $this->patchTypes['force']) {
@@ -146,7 +153,7 @@ class DebugClassLoader
             if (false === $test || false === $i) {
                 // filesystem is case sensitive
                 self::$caseCheck = 0;
-            } elseif (substr($test, -\strlen($file)) === $file) {
+            } elseif (str_ends_with($test, $file)) {
                 // filesystem is case insensitive and realpath() normalizes the case of characters
                 self::$caseCheck = 1;
             } elseif ('Darwin' === \PHP_OS_FAMILY) {
@@ -332,7 +339,7 @@ class DebugClassLoader
         }
 
         if (!$exists) {
-            if (false !== strpos($class, '/')) {
+            if (str_contains($class, '/')) {
                 throw new \RuntimeException(sprintf('Trying to autoload a class with an invalid name "%s". Be careful that the namespace separator is "\" in PHP, not "/".', $class));
             }
 
@@ -354,7 +361,7 @@ class DebugClassLoader
         }
         $deprecations = [];
 
-        $className = false !== strpos($class, "@anonymous\0") ? (get_parent_class($class) ?: key(class_implements($class)) ?: 'class').'@anonymous' : $class;
+        $className = str_contains($class, "@anonymous\0") ? (get_parent_class($class) ?: key(class_implements($class)) ?: 'class').'@anonymous' : $class;
 
         // Don't trigger deprecations for classes in the same vendor
         if ($class !== $className) {
@@ -428,7 +435,7 @@ class DebugClassLoader
                     }
                 } elseif (!$refl->isInterface()) {
                     if (!strncmp($vendor, str_replace('_', '\\', $use), $vendorLen)
-                        && 0 === strpos($className, 'Symfony\\')
+                        && str_starts_with($className, 'Symfony\\')
                         && (!class_exists(InstalledVersions::class)
                             || 'symfony/symfony' !== InstalledVersions::getRootPackage()['name'])
                     ) {
@@ -537,7 +544,7 @@ class DebugClassLoader
 
             $forcePatchTypes = $this->patchTypes['force'];
 
-            if ($canAddReturnType = null !== $forcePatchTypes && false === strpos($method->getFileName(), \DIRECTORY_SEPARATOR.'vendor'.\DIRECTORY_SEPARATOR)) {
+            if ($canAddReturnType = null !== $forcePatchTypes && !str_contains($method->getFileName(), \DIRECTORY_SEPARATOR.'vendor'.\DIRECTORY_SEPARATOR)) {
                 if ('void' !== (self::MAGIC_METHODS[$method->name] ?? 'void')) {
                     $this->patchTypes['force'] = $forcePatchTypes ?: 'docblock';
                 }
@@ -762,6 +769,12 @@ class DebugClassLoader
             return;
         }
 
+        if ('null' === $types) {
+            self::$returnTypes[$class][$method] = ['null', 'null', $class, $filename];
+
+            return;
+        }
+
         if ($nullable = 0 === strpos($types, 'null|')) {
             $types = substr($types, 5);
         } elseif ($nullable = '|null' === substr($types, -5)) {
@@ -794,7 +807,7 @@ class DebugClassLoader
         $iterable = $object = true;
         foreach ($typesMap as $n => $t) {
             if ('null' !== $n) {
-                $iterable = $iterable && (\in_array($n, ['array', 'iterable']) || false !== strpos($n, 'Iterator'));
+                $iterable = $iterable && (\in_array($n, ['array', 'iterable']) || str_contains($n, 'Iterator'));
                 $object = $object && (\in_array($n, ['callable', 'object', '$this', 'static']) || !isset(self::SPECIAL_RETURN_TYPES[$n]));
             }
         }
@@ -883,7 +896,7 @@ class DebugClassLoader
      */
     private function patchReturnTypeWillChange(\ReflectionMethod $method)
     {
-        if (\PHP_VERSION_ID >= 80000 && \count($method->getAttributes(\ReturnTypeWillChange::class))) {
+        if (\count($method->getAttributes(\ReturnTypeWillChange::class))) {
             return;
         }
 
@@ -1022,15 +1035,15 @@ EOTXT;
                 break;
             }
 
-            if (0 === strpos($file[$i], 'namespace ')) {
+            if (str_starts_with($file[$i], 'namespace ')) {
                 $namespace = substr($file[$i], \strlen('namespace '), -2).'\\';
                 $useOffset = $i + 2;
             }
 
-            if (0 === strpos($file[$i], 'use ')) {
+            if (str_starts_with($file[$i], 'use ')) {
                 $useOffset = $i;
 
-                for (; 0 === strpos($file[$i], 'use '); ++$i) {
+                for (; str_starts_with($file[$i], 'use '); ++$i) {
                     $u = explode(' as ', substr($file[$i], 4, -2), 2);
 
                     if (1 === \count($u)) {

@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\UriSigner;
  */
 final class FragmentUriGenerator implements FragmentUriGeneratorInterface
 {
-    private $fragmentPath;
+    private string $fragmentPath;
     private $signer;
     private $requestStack;
 

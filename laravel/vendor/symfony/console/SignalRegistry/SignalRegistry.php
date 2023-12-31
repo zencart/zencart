@@ -13,7 +13,7 @@ namespace Symfony\Component\Console\SignalRegistry;
 
 final class SignalRegistry
 {
-    private $signalHandlers = [];
+    private array $signalHandlers = [];
 
     public function __construct()
     {
@@ -43,7 +43,7 @@ final class SignalRegistry
             return false;
         }
 
-        if (\in_array('pcntl_signal', explode(',', ini_get('disable_functions')))) {
+        if (\in_array('pcntl_signal', explode(',', \ini_get('disable_functions')))) {
             return false;
         }
 

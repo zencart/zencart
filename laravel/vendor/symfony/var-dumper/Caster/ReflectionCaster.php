@@ -96,7 +96,7 @@ class ReflectionCaster
     {
         $prefix = Caster::PREFIX_VIRTUAL;
 
-        if ($c instanceof \ReflectionNamedType || \PHP_VERSION_ID < 80000) {
+        if ($c instanceof \ReflectionNamedType) {
             $a += [
                 $prefix.'name' => $c instanceof \ReflectionNamedType ? $c->getName() : (string) $c,
                 $prefix.'allowsNull' => $c->allowsNull(),
@@ -197,7 +197,7 @@ class ReflectionCaster
         self::addMap($a, $c, [
             'returnsReference' => 'returnsReference',
             'returnType' => 'getReturnType',
-            'class' => 'getClosureScopeClass',
+            'class' => \PHP_VERSION_ID >= 80111 ? 'getClosureCalledClass' : 'getClosureScopeClass',
             'this' => 'getClosureThis',
         ]);
 
@@ -421,7 +421,7 @@ class ReflectionCaster
     private static function addMap(array &$a, object $c, array $map, string $prefix = Caster::PREFIX_VIRTUAL)
     {
         foreach ($map as $k => $m) {
-            if (\PHP_VERSION_ID >= 80000 && 'isDisabled' === $k) {
+            if ('isDisabled' === $k) {
                 continue;
             }
 
@@ -433,10 +433,8 @@ class ReflectionCaster
 
     private static function addAttributes(array &$a, \Reflector $c, string $prefix = Caster::PREFIX_VIRTUAL): void
     {
-        if (\PHP_VERSION_ID >= 80000) {
-            foreach ($c->getAttributes() as $n) {
-                $a[$prefix.'attributes'][] = $n;
-            }
+        foreach ($c->getAttributes() as $n) {
+            $a[$prefix.'attributes'][] = $n;
         }
     }
 }

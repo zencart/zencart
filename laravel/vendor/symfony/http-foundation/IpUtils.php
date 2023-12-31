@@ -18,7 +18,7 @@ namespace Symfony\Component\HttpFoundation;
  */
 class IpUtils
 {
-    private static $checkedIps = [];
+    private static array $checkedIps = [];
 
     /**
      * This class should not be instantiated.
@@ -31,17 +31,9 @@ class IpUtils
      * Checks if an IPv4 or IPv6 address is contained in the list of given IPs or subnets.
      *
      * @param string|array $ips List of IPs or subnets (can be a string if only a single one)
-     *
-     * @return bool
      */
-    public static function checkIp(?string $requestIp, $ips)
+    public static function checkIp(string $requestIp, string|array $ips): bool
     {
-        if (null === $requestIp) {
-            trigger_deprecation('symfony/http-foundation', '5.4', 'Passing null as $requestIp to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
-
-            return false;
-        }
-
         if (!\is_array($ips)) {
             $ips = [$ips];
         }
@@ -65,14 +57,8 @@ class IpUtils
      *
      * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
      */
-    public static function checkIp4(?string $requestIp, string $ip)
+    public static function checkIp4(string $requestIp, string $ip): bool
     {
-        if (null === $requestIp) {
-            trigger_deprecation('symfony/http-foundation', '5.4', 'Passing null as $requestIp to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
-
-            return false;
-        }
-
         $cacheKey = $requestIp.'-'.$ip;
         if (isset(self::$checkedIps[$cacheKey])) {
             return self::$checkedIps[$cacheKey];
@@ -86,7 +72,7 @@ class IpUtils
             [$address, $netmask] = explode('/', $ip, 2);
 
             if ('0' === $netmask) {
-                return self::$checkedIps[$cacheKey] = filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4);
+                return self::$checkedIps[$cacheKey] = false !== filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4);
             }
 
             if ($netmask < 0 || $netmask > 32) {
@@ -114,18 +100,10 @@ class IpUtils
      *
      * @param string $ip IPv6 address or subnet in CIDR notation
      *
-     * @return bool
-     *
      * @throws \RuntimeException When IPV6 support is not enabled
      */
-    public static function checkIp6(?string $requestIp, string $ip)
+    public static function checkIp6(string $requestIp, string $ip): bool
     {
-        if (null === $requestIp) {
-            trigger_deprecation('symfony/http-foundation', '5.4', 'Passing null as $requestIp to "%s()" is deprecated, pass an empty string instead.', __METHOD__);
-
-            return false;
-        }
-
         $cacheKey = $requestIp.'-'.$ip;
         if (isset(self::$checkedIps[$cacheKey])) {
             return self::$checkedIps[$cacheKey];
@@ -135,8 +113,17 @@ class IpUtils
             throw new \RuntimeException('Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".');
         }
 
+        // Check to see if we were given a IP4 $requestIp or $ip by mistake
+        if (!filter_var($requestIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+            return self::$checkedIps[$cacheKey] = false;
+        }
+
         if (str_contains($ip, '/')) {
             [$address, $netmask] = explode('/', $ip, 2);
+
+            if (!filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+                return self::$checkedIps[$cacheKey] = false;
+            }
 
             if ('0' === $netmask) {
                 return (bool) unpack('n*', @inet_pton($address));
@@ -146,6 +133,10 @@ class IpUtils
                 return self::$checkedIps[$cacheKey] = false;
             }
         } else {
+            if (!filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
+                return self::$checkedIps[$cacheKey] = false;
+            }
+
             $address = $ip;
             $netmask = 128;
         }

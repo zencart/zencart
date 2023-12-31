@@ -21,8 +21,8 @@ class_exists(MockFileSessionStorage::class);
  */
 class MockFileSessionStorageFactory implements SessionStorageFactoryInterface
 {
-    private $savePath;
-    private $name;
+    private ?string $savePath;
+    private string $name;
     private $metaBag;
 
     /**
