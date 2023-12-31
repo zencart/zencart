@@ -515,24 +515,6 @@ function zen_draw_order_status_dropdown($field_name, $default_value, $first_sele
 
 
 /**
- * Generate form attributes for size="foo" maxlength="bar" based on maximum size (default 50)
- * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
- */
-function zen_set_field_length(string $table_name, string $field_name, $max = 50, bool $override = false): string
-{
-    $max = (int)$max;
-
-    $field_length = zen_field_length($table_name, $field_name);
-    $size = $field_length + 1;
-
-    if ($override !== true && $field_length > $max) {
-        $size = $max + 1;
-    }
-
-    return 'size="' . $size . '" maxlength="' . $field_length . '"';
-}
-
-/**
  * @TODO - move to language class
  * Lookup Languages Icon by id or code
  * @param $lookup
