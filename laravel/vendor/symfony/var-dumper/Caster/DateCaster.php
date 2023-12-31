@@ -27,7 +27,7 @@ class DateCaster
     public static function castDateTime(\DateTimeInterface $d, array $a, Stub $stub, bool $isNested, int $filter)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
-        $location = $d->getTimezone() ? $d->getTimezone()->getLocation() : null;
+        $location = $d->getTimezone()->getLocation();
         $fromNow = (new \DateTime())->diff($d);
 
         $title = $d->format('l, F j, Y')

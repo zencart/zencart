@@ -17,7 +17,7 @@
         "illuminate/pagination": "^9.52",
         "illuminate/routing": "^9.52",
         "illuminate/view": "^9.52",
-        "symfony/var-dumper": "^5.2"
+        "symfony/var-dumper": "^6.0"
     },
     "config": {
         "optimize-autoloader": true,
