@@ -24,9 +24,6 @@ use Symfony\Component\VarDumper\Caster\ClassStub;
  */
 class ConfigDataCollector extends DataCollector implements LateDataCollectorInterface
 {
-    /**
-     * @var KernelInterface
-     */
     private $kernel;
 
     /**
@@ -108,9 +105,8 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
     }
 
     /**
-     * Returns the state of the current Symfony release.
-     *
-     * @return string One of: unknown, dev, stable, eom, eol
+     * Returns the state of the current Symfony release
+     * as one of: unknown, dev, stable, eom, eol.
      */
     public function getSymfonyState(): string
     {
@@ -126,9 +122,6 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
         return $this->data['symfony_minor_version'];
     }
 
-    /**
-     * Returns if the current Symfony version is a Long-Term Support one.
-     */
     public function isSymfonyLts(): bool
     {
         return $this->data['symfony_lts'];
@@ -168,9 +161,6 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
         return $this->data['php_version_extra'] ?? null;
     }
 
-    /**
-     * @return int The PHP architecture as number of bits (e.g. 32 or 64)
-     */
     public function getPhpArchitecture(): int
     {
         return $this->data['php_architecture'];
@@ -199,7 +189,7 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
      *
      * @return bool|string true if debug is enabled, false otherwise or a string if no kernel was set
      */
-    public function isDebug()
+    public function isDebug(): bool|string
     {
         return $this->data['debug'];
     }
@@ -249,11 +239,6 @@ class ConfigDataCollector extends DataCollector implements LateDataCollectorInte
         return 'config';
     }
 
-    /**
-     * Tries to retrieve information about the current Symfony version.
-     *
-     * @return string One of: dev, stable, eom, eol
-     */
     private function determineSymfonyState(): string
     {
         $now = new \DateTime();

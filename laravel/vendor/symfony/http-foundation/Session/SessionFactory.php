@@ -24,13 +24,13 @@ class SessionFactory implements SessionFactoryInterface
 {
     private $requestStack;
     private $storageFactory;
-    private $usageReporter;
+    private ?\Closure $usageReporter;
 
     public function __construct(RequestStack $requestStack, SessionStorageFactoryInterface $storageFactory, callable $usageReporter = null)
     {
         $this->requestStack = $requestStack;
         $this->storageFactory = $storageFactory;
-        $this->usageReporter = $usageReporter;
+        $this->usageReporter = $usageReporter instanceof \Closure || !\is_callable($usageReporter) ? $usageReporter : \Closure::fromCallable($usageReporter);
     }
 
     public function createSession(): SessionInterface

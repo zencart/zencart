@@ -21,26 +21,24 @@ use Symfony\Component\VarDumper\Caster\ClassStub;
  */
 final class WrappedListener
 {
-    private $listener;
-    private $optimizedListener;
-    private $name;
-    private $called;
-    private $stoppedPropagation;
+    private string|array|object $listener;
+    private ?\Closure $optimizedListener;
+    private string $name;
+    private bool $called = false;
+    private bool $stoppedPropagation = false;
     private $stopwatch;
     private $dispatcher;
-    private $pretty;
+    private string $pretty;
     private $stub;
-    private $priority;
-    private static $hasClassStub;
+    private ?int $priority = null;
+    private static bool $hasClassStub;
 
-    public function __construct($listener, ?string $name, Stopwatch $stopwatch, EventDispatcherInterface $dispatcher = null)
+    public function __construct(callable|array $listener, ?string $name, Stopwatch $stopwatch, EventDispatcherInterface $dispatcher = null)
     {
         $this->listener = $listener;
         $this->optimizedListener = $listener instanceof \Closure ? $listener : (\is_callable($listener) ? \Closure::fromCallable($listener) : null);
         $this->stopwatch = $stopwatch;
         $this->dispatcher = $dispatcher;
-        $this->called = false;
-        $this->stoppedPropagation = false;
 
         if (\is_array($listener)) {
             $this->name = \is_object($listener[0]) ? get_debug_type($listener[0]) : $listener[0];
@@ -49,7 +47,7 @@ final class WrappedListener
             $r = new \ReflectionFunction($listener);
             if (str_contains($r->name, '{closure}')) {
                 $this->pretty = $this->name = 'closure';
-            } elseif ($class = $r->getClosureScopeClass()) {
+            } elseif ($class = \PHP_VERSION_ID >= 80111 ? $r->getClosureCalledClass() : $r->getClosureScopeClass()) {
                 $this->name = $class->name;
                 $this->pretty = $this->name.'::'.$r->name;
             } else {
@@ -66,12 +64,10 @@ final class WrappedListener
             $this->name = $name;
         }
 
-        if (null === self::$hasClassStub) {
-            self::$hasClassStub = class_exists(ClassStub::class);
-        }
+        self::$hasClassStub ??= class_exists(ClassStub::class);
     }
 
-    public function getWrappedListener()
+    public function getWrappedListener(): callable|array
     {
         return $this->listener;
     }
@@ -93,9 +89,7 @@ final class WrappedListener
 
     public function getInfo(string $eventName): array
     {
-        if (null === $this->stub) {
-            $this->stub = self::$hasClassStub ? new ClassStub($this->pretty.'()', $this->listener) : $this->pretty.'()';
-        }
+        $this->stub ??= self::$hasClassStub ? new ClassStub($this->pretty.'()', $this->listener) : $this->pretty.'()';
 
         return [
             'event' => $eventName,

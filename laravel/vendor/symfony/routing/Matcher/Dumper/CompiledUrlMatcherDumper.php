@@ -27,17 +27,17 @@ use Symfony\Component\Routing\RouteCollection;
 class CompiledUrlMatcherDumper extends MatcherDumper
 {
     private $expressionLanguage;
-    private $signalingException;
+    private ?\Exception $signalingException = null;
 
     /**
      * @var ExpressionFunctionProviderInterface[]
      */
-    private $expressionLanguageProviders = [];
+    private array $expressionLanguageProviders = [];
 
     /**
      * {@inheritdoc}
      */
-    public function dump(array $options = [])
+    public function dump(array $options = []): string
     {
         return <<<EOF
 <?php
@@ -416,7 +416,7 @@ EOF;
     /**
      * Compiles a single Route to PHP code used to match it against the path info.
      */
-    private function compileRoute(Route $route, string $name, $vars, bool $hasTrailingSlash, bool $hasTrailingVar, array &$conditions): array
+    private function compileRoute(Route $route, string $name, string|array|null $vars, bool $hasTrailingSlash, bool $hasTrailingVar, array &$conditions): array
     {
         $defaults = $route->getDefaults();
 
@@ -445,7 +445,7 @@ EOF;
 
     private function getExpressionLanguage(): ExpressionLanguage
     {
-        if (null === $this->expressionLanguage) {
+        if (!isset($this->expressionLanguage)) {
             if (!class_exists(ExpressionLanguage::class)) {
                 throw new \LogicException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
             }
@@ -463,7 +463,7 @@ EOF;
     /**
      * @internal
      */
-    public static function export($value): string
+    public static function export(mixed $value): string
     {
         if (null === $value) {
             return 'null';

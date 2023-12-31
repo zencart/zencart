@@ -21,9 +21,9 @@ use Symfony\Component\Console\Terminal;
  */
 class ConsoleSectionOutput extends StreamOutput
 {
-    private $content = [];
-    private $lines = 0;
-    private $sections;
+    private array $content = [];
+    private int $lines = 0;
+    private array $sections;
     private $terminal;
 
     /**
@@ -63,10 +63,8 @@ class ConsoleSectionOutput extends StreamOutput
 
     /**
      * Overwrites the previous output with a new message.
-     *
-     * @param array|string $message
      */
-    public function overwrite($message)
+    public function overwrite(string|iterable $message)
     {
         $this->clear();
         $this->writeln($message);

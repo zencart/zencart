@@ -34,8 +34,8 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
     /**
      * @var \SplObjectStorage<Request, callable>
      */
-    private $controllers;
-    private $sessionUsages = [];
+    private \SplObjectStorage $controllers;
+    private array $sessionUsages = [];
     private $requestStack;
 
     public function __construct(RequestStack $requestStack = null)
@@ -110,7 +110,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             'session_metadata' => $sessionMetadata,
             'session_attributes' => $sessionAttributes,
             'session_usages' => array_values($this->sessionUsages),
-            'stateless_check' => $this->requestStack && $this->requestStack->getMainRequest()->attributes->get('_stateless', false),
+            'stateless_check' => $this->requestStack?->getMainRequest()?->attributes->get('_stateless') ?? false,
             'flashes' => $flashes,
             'path_info' => $request->getPathInfo(),
             'controller' => 'n/a',
@@ -346,7 +346,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
      * @return array|string|Data The controller as a string or array of data
      *                           with keys 'class', 'method', 'file' and 'line'
      */
-    public function getController()
+    public function getController(): array|string|Data
     {
         return $this->data['controller'];
     }
@@ -357,7 +357,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
      * @return array|Data|false A legacy array of data from the previous redirection response
      *                          or false otherwise
      */
-    public function getRedirect()
+    public function getRedirect(): array|Data|false
     {
         return $this->data['redirect'] ?? false;
     }
@@ -431,11 +431,9 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
     }
 
     /**
-     * @param string|object|array|null $controller The controller to parse
-     *
      * @return array|string An array of controller data or a simple string
      */
-    private function parseController($controller)
+    private function parseController(array|object|string|null $controller): array|string
     {
         if (\is_string($controller) && str_contains($controller, '::')) {
             $controller = explode('::', $controller);
@@ -479,7 +477,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
             }
             $controller['method'] = $r->name;
 
-            if ($class = $r->getClosureScopeClass()) {
+            if ($class = \PHP_VERSION_ID >= 80111 ? $r->getClosureCalledClass() : $r->getClosureScopeClass()) {
                 $controller['class'] = $class->name;
             } else {
                 return $r->name;

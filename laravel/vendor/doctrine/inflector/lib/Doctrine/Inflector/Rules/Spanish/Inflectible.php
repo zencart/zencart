@@ -11,10 +11,8 @@ use Doctrine\Inflector\Rules\Word;
 
 class Inflectible
 {
-    /**
-     * @return Transformation[]
-     */
-    public static function getSingular() : iterable
+    /** @return Transformation[] */
+    public static function getSingular(): iterable
     {
         yield new Transformation(new Pattern('/ereses$/'), 'erés');
         yield new Transformation(new Pattern('/iones$/'), 'ión');
@@ -23,10 +21,8 @@ class Inflectible
         yield new Transformation(new Pattern('/s$/'), '');
     }
 
-    /**
-     * @return Transformation[]
-     */
-    public static function getPlural() : iterable
+    /** @return Transformation[] */
+    public static function getPlural(): iterable
     {
         yield new Transformation(new Pattern('/ú([sn])$/i'), 'u\1es');
         yield new Transformation(new Pattern('/ó([sn])$/i'), 'o\1es');
@@ -39,10 +35,8 @@ class Inflectible
         yield new Transformation(new Pattern('/$/'), 's');
     }
 
-    /**
-     * @return Substitution[]
-     */
-    public static function getIrregular() : iterable
+    /** @return Substitution[] */
+    public static function getIrregular(): iterable
     {
         yield new Substitution(new Word('el'), new Word('los'));
         yield new Substitution(new Word('papá'), new Word('papás'));
