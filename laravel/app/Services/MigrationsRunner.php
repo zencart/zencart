@@ -6,15 +6,12 @@ use Illuminate\Support\Str;
 
 class MigrationsRunner
 {
-
-    public function __construct($migrationsDir)
+    public function __construct(protected $migrationDir)
     {
-        $this->migrationDir = $migrationsDir;
     }
 
     public function  run()
     {
-
         $files = glob($this->migrationDir . '*_migration.php');
         foreach ($files as $migration)
         {
