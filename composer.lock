@@ -8,8 +8,6 @@
     "packages": [],
     "packages-dev": [
         {
-<<<<<<< HEAD
-=======
             "name": "brick/math",
             "version": "0.11.0",
             "source": {
@@ -65,7 +63,6 @@
             "time": "2023-01-15T23:15:59+00:00"
         },
         {
->>>>>>> master
             "name": "carbonphp/carbon-doctrine-types",
             "version": "2.1.0",
             "source": {
@@ -1637,17 +1634,6 @@
             "time": "2023-06-11T21:11:53+00:00"
         },
         {
-<<<<<<< HEAD
-            "name": "kitloong/laravel-migrations-generator",
-            "version": "v6.11.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kitloong/laravel-migrations-generator.git",
-                "reference": "220b5f17fcb16610a3e9757d68c197319c0f7444"
-            },
-            "dist": {
-                "type": "zip",
-=======
             "name": "illuminate/view",
             "version": "v9.52.16",
             "source": {
@@ -1711,7 +1697,6 @@
             },
             "dist": {
                 "type": "zip",
->>>>>>> master
                 "url": "https://api.github.com/repos/kitloong/laravel-migrations-generator/zipball/220b5f17fcb16610a3e9757d68c197319c0f7444",
                 "reference": "220b5f17fcb16610a3e9757d68c197319c0f7444",
                 "shasum": ""
@@ -2112,8 +2097,6 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v4.18.0"
             },
             "time": "2023-12-10T21:03:43+00:00"
-<<<<<<< HEAD
-=======
         },
         {
             "name": "nunomaduro/termwind",
@@ -2200,7 +2183,6 @@
                 }
             ],
             "time": "2023-02-08T01:06:31+00:00"
->>>>>>> master
         },
         {
             "name": "phar-io/manifest",
@@ -2787,57 +2769,6 @@
         {
             "name": "psr/clock",
             "version": "1.0.0",
-<<<<<<< HEAD
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/clock.git",
-                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/clock/zipball/e41a24703d4560fd0acb709162f73b8adfc3aa0d",
-                "reference": "e41a24703d4560fd0acb709162f73b8adfc3aa0d",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.0 || ^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Clock\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for reading the clock.",
-            "homepage": "https://github.com/php-fig/clock",
-            "keywords": [
-                "clock",
-                "now",
-                "psr",
-                "psr-20",
-                "time"
-            ],
-            "support": {
-                "issues": "https://github.com/php-fig/clock/issues",
-                "source": "https://github.com/php-fig/clock/tree/1.0.0"
-            },
-            "time": "2022-11-25T14:36:26+00:00"
-        },
-        {
-            "name": "psr/container",
-            "version": "1.1.2",
-=======
->>>>>>> master
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/clock.git",
@@ -4616,18 +4547,6 @@
         },
         {
             "name": "symfony/console",
-<<<<<<< HEAD
-            "version": "v5.4.34",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/console.git",
-                "reference": "4b4d8cd118484aa604ec519062113dd87abde18c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/4b4d8cd118484aa604ec519062113dd87abde18c",
-                "reference": "4b4d8cd118484aa604ec519062113dd87abde18c",
-=======
             "version": "v6.0.19",
             "source": {
                 "type": "git",
@@ -4638,7 +4557,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/console/zipball/c3ebc83d031b71c39da318ca8b7a07ecc67507ed",
                 "reference": "c3ebc83d031b71c39da318ca8b7a07ecc67507ed",
->>>>>>> master
                 "shasum": ""
             },
             "require": {
@@ -4704,11 +4622,7 @@
                 "terminal"
             ],
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/console/tree/v5.4.34"
-=======
                 "source": "https://github.com/symfony/console/tree/v6.0.19"
->>>>>>> master
             },
             "funding": [
                 {
@@ -4724,11 +4638,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-12-08T13:33:03+00:00"
-=======
             "time": "2023-01-01T08:36:10+00:00"
->>>>>>> master
         },
         {
             "name": "symfony/css-selector",
@@ -6052,18 +5962,6 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-<<<<<<< HEAD
-            "version": "v6.4.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "bd0455b7888e4adac29cf175d819c51f88fed942"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/bd0455b7888e4adac29cf175d819c51f88fed942",
-                "reference": "bd0455b7888e4adac29cf175d819c51f88fed942",
-=======
             "version": "v7.0.2",
             "source": {
                 "type": "git",
@@ -6074,7 +5972,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/92df075808c9437beca9540e25ae0c40eea1c061",
                 "reference": "92df075808c9437beca9540e25ae0c40eea1c061",
->>>>>>> master
                 "shasum": ""
             },
             "require": {
@@ -6085,11 +5982,7 @@
             },
             "require-dev": {
                 "symfony/deprecation-contracts": "^2.5|^3.0",
-<<<<<<< HEAD
-                "symfony/error-handler": "^5.4|^6.0|^7.0",
-=======
                 "symfony/error-handler": "^5.4|^6.4|^7.0",
->>>>>>> master
                 "symfony/polyfill-php81": "^1.27"
             },
             "bin": [
@@ -6130,11 +6023,7 @@
             "description": "Provides utilities for PHPUnit, especially user deprecation notices management",
             "homepage": "https://symfony.com",
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/phpunit-bridge/tree/v6.4.2"
-=======
                 "source": "https://github.com/symfony/phpunit-bridge/tree/v7.0.2"
->>>>>>> master
             },
             "funding": [
                 {
@@ -6150,11 +6039,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-12-19T09:12:31+00:00"
-=======
             "time": "2023-12-19T11:23:03+00:00"
->>>>>>> master
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -6648,88 +6533,6 @@
                 }
             ],
             "time": "2023-01-26T09:26:14+00:00"
-<<<<<<< HEAD
-        },
-        {
-            "name": "symfony/polyfill-php73",
-            "version": "v1.28.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-php73.git",
-                "reference": "fe2f306d1d9d346a7fee353d0d5012e401e984b5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/fe2f306d1d9d346a7fee353d0d5012e401e984b5",
-                "reference": "fe2f306d1d9d346a7fee353d0d5012e401e984b5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "1.28-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ],
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php73\\": ""
-                },
-                "classmap": [
-                    "Resources/stubs"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compatibility",
-                "polyfill",
-                "portable",
-                "shim"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/polyfill-php73/tree/v1.28.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2023-01-26T09:26:14+00:00"
-=======
->>>>>>> master
         },
         {
             "name": "symfony/polyfill-php80",
@@ -6895,18 +6698,6 @@
         },
         {
             "name": "symfony/process",
-<<<<<<< HEAD
-            "version": "v5.4.34",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "8fa22178dfc368911dbd513b431cd9b06f9afe7a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/8fa22178dfc368911dbd513b431cd9b06f9afe7a",
-                "reference": "8fa22178dfc368911dbd513b431cd9b06f9afe7a",
-=======
             "version": "v6.0.19",
             "source": {
                 "type": "git",
@@ -6917,7 +6708,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/process/zipball/2114fd60f26a296cc403a7939ab91478475a33d4",
                 "reference": "2114fd60f26a296cc403a7939ab91478475a33d4",
->>>>>>> master
                 "shasum": ""
             },
             "require": {
@@ -6949,11 +6739,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/symfony/process/tree/v5.4.34"
-=======
                 "source": "https://github.com/symfony/process/tree/v6.0.19"
->>>>>>> master
             },
             "funding": [
                 {
@@ -6969,11 +6755,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-            "time": "2023-12-02T08:41:43+00:00"
-=======
             "time": "2023-01-01T08:36:10+00:00"
->>>>>>> master
         },
         {
             "name": "symfony/routing",
