@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7b54d91e55b1bd411973f4c25aa7ddb2
+class ComposerStaticInit651508df208966c7113b55d895ba1c51
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -721,7 +721,11 @@ class ComposerStaticInit7b54d91e55b1bd411973f4c25aa7ddb2
         'App\\Filament\\Resources\\UserResource\\Pages\\CreateUser' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/CreateUser.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\EditUser' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/EditUser.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\ListUsers' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/ListUsers.php',
+        'App\\Http\\Controllers\\Api\\AddressBookController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/AddressBookController.php',
+        'App\\Http\\Controllers\\Api\\CountryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/CountryController.php',
         'App\\Http\\Controllers\\Api\\CurrencyController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/CurrencyController.php',
+        'App\\Http\\Controllers\\Api\\CustomerController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/CustomerController.php',
+        'App\\Http\\Controllers\\Api\\LanguageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LanguageController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
@@ -749,6 +753,7 @@ class ComposerStaticInit7b54d91e55b1bd411973f4c25aa7ddb2
         'App\\Models\\CustomerInfo' => __DIR__ . '/../..' . '/app/Models/CustomerInfo.php',
         'App\\Models\\Developer' => __DIR__ . '/../..' . '/app/Models/Developer.php',
         'App\\Models\\DeveloperApplication' => __DIR__ . '/../..' . '/app/Models/DeveloperApplication.php',
+        'App\\Models\\Language' => __DIR__ . '/../..' . '/app/Models/Language.php',
         'App\\Models\\LayoutBox' => __DIR__ . '/../..' . '/app/Models/LayoutBox.php',
         'App\\Models\\ModelFactory' => __DIR__ . '/../..' . '/app/Models/ModelFactory.php',
         'App\\Models\\PluginControl' => __DIR__ . '/../..' . '/app/Models/PluginControl.php',
@@ -7136,9 +7141,9 @@ class ComposerStaticInit7b54d91e55b1bd411973f4c25aa7ddb2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7b54d91e55b1bd411973f4c25aa7ddb2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7b54d91e55b1bd411973f4c25aa7ddb2::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7b54d91e55b1bd411973f4c25aa7ddb2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit651508df208966c7113b55d895ba1c51::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit651508df208966c7113b55d895ba1c51::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit651508df208966c7113b55d895ba1c51::$classMap;
 
         }, null, ClassLoader::class);
     }

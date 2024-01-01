@@ -26,7 +26,7 @@ class ApiControllerMethodTests extends TestCase
         $request = Request::create('/users', 'GET');
         $controller = new UserController(new ApiQueryParser(new ParserFactory()), new ComponentFactory());
         $response = $controller->index($request);
-        $response = json_decode($response->getContent(), true);
+        $response = json_decode($response->getContent(), true)['data'];
         $query = User::query()->paginate(10);
         $this->assertEquals(count($response), count($query));
     }
@@ -38,7 +38,7 @@ class ApiControllerMethodTests extends TestCase
         $request = Request::create('/users?whereBetween[]=age:1:30', 'GET');
         $controller = new UserController(new ApiQueryParser(new ParserFactory()), new ComponentFactory());
         $response = $controller->index($request);
-        $response = json_decode($response->getContent(), true);
+        $response = json_decode($response->getContent(), true)['data'];
         $query = User::query()->whereBetween('age', [1,30])->paginate(10);
         $this->assertEquals(count($response),count($query));
     }

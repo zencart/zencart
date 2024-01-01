@@ -8,6 +8,8 @@ use Symfony\Component\HttpClient\HttpClient;
 
 trait GeneralConcerns
 {
+    protected HttpBrowser $browser;
+
     public static function detectUser()
     {
         $user = $_SERVER['USER'] ?? $_SERVER['MY_USER'];

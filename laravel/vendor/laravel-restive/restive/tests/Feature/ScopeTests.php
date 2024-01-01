@@ -14,7 +14,7 @@ class ScopeTests extends DatabaseTestCase
         $user = (new User())->teenager()->count();
         $response = $this->get("/user?scope[]=teenager");
         $response->assertStatus(200);
-        $responseResult = count(json_decode($response->getContent()));
+        $responseResult = count(json_decode($response->getContent(), true)['data']);
         $this->assertEquals($user, $responseResult);
     }
 

@@ -2724,12 +2724,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-restive/restive.git",
-                "reference": "9972c164f7a9bf7ad89b80624716b5e71f2515e2"
+                "reference": "bad710e4c570ae106937407615cf1d04243daf1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-restive/restive/zipball/9972c164f7a9bf7ad89b80624716b5e71f2515e2",
-                "reference": "9972c164f7a9bf7ad89b80624716b5e71f2515e2",
+                "url": "https://api.github.com/repos/laravel-restive/restive/zipball/bad710e4c570ae106937407615cf1d04243daf1f",
+                "reference": "bad710e4c570ae106937407615cf1d04243daf1f",
                 "shasum": ""
             },
             "require": {
@@ -2743,7 +2743,7 @@
                 "orchestra/testbench": "~5.0|~6.0",
                 "phpunit/phpunit": "^8.0|^9.0"
             },
-            "time": "2023-12-29T17:25:01+00:00",
+            "time": "2024-01-01T18:22:29+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {

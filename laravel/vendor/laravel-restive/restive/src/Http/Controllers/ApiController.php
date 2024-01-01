@@ -10,7 +10,7 @@ use Restive\Http\Requests\Request;
 
 class ApiController extends AbstractApiController
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request)
     {
         $parser = new ApiQueryParser(new ParserFactory());
         try {
@@ -24,7 +24,7 @@ class ApiController extends AbstractApiController
         } catch (\Exception $e) {
             return response()->json(['errors' => 'Internal Error'], 500);
         }
-        return response()->json($resource);
+        return $resource->toResponse($request);
     }
 
     public function show(Request $request, $id): JsonResponse

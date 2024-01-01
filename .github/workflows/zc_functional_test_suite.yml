@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ['8.0']
+        php-version: ['8.0', '8.3']
 
     services:
       mysql:
@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2

@@ -2,9 +2,10 @@
 
 return [
     'blacklist' => [],
+    'whitelist' => [],
     'alias' => [],
     'pagination_links' => 'envelope',
     'pagination_safety' => true,
-    'pagination_limit' => 1000,
+    'pagination_limit' => 10000,
     'log_errors' => false,
 ];

@@ -6,9 +6,9 @@ use Restive\Http\Controllers\ApiController;
 
 class {{ class }} extends ApiController
 {
-    protected $modelName = '{{ model }}';
-    protected $request = '{{ request }}';
-    protected $resource = '{{ resource }}'
-    protected $collection = '{{ resourceCollection }}'
-    protected $paginator = '{{ paginator }}'
+    protected string $modelName = '{{ model }}';
+    protected string $request = '{{ request }}';
+    protected string $resource = '{{ resource }}'
+    protected string $collection = '{{ resourceCollection }}'
+    protected string $paginator = '{{ paginator }}'
 }

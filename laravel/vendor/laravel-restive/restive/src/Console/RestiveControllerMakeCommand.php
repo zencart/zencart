@@ -172,9 +172,17 @@ class RestiveControllerMakeCommand extends GeneratorCommand
     protected function replaceClass($stub, $name)
     {
         $modelName = $this->argument('model');
+        $requestName = $this->argument('request');
+        $resourceName = $this->argument('resource');
+        $resourceCollectionName = $this->argument('resourceCollection');
+        $paginatorName = $this->argument('paginator');
 
         $stub = parent::replaceClass($stub, $name);
         $stub = str_replace('{{ model }}', $modelName, $stub);
+        $stub = str_replace('{{ request }}', $requestName, $stub);
+        $stub = str_replace('{{ resource }}', $resourceName, $stub);
+        $stub = str_replace('{{ resourceCollection }}', $resourceCollectionName, $stub);
+        $stub = str_replace('{{ paginator }}', $paginatorName, $stub);
 
         return $stub;
     }

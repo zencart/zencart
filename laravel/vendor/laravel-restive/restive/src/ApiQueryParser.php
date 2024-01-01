@@ -57,7 +57,8 @@ class ApiQueryParser
 
     protected function parseQueryString(string $queryString): array
     {
-        $ignoreKeys = ['page', 'per_page', 'paginate'];
+        $whitelist = ['page', 'per_page', 'limit'];
+        $whitelist = array_merge($whitelist, config('restive.whitelist', []));
         $queryParameters = [];
         if (trim($queryString) === '') {
             return $queryParameters;
@@ -66,7 +67,7 @@ class ApiQueryParser
         foreach ($queryParts as $queryPart) {
             $parts = explode('=', $queryPart);
             $queryKey = $parts[0] ?? '';
-            if (in_array($queryKey, $ignoreKeys)) {
+            if (in_array($queryKey, $whitelist)) {
                 continue;
             }
             $queryKey = rtrim($queryKey, '[]');

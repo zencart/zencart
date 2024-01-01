@@ -4,6 +4,7 @@
 *not_for_release* export-ignore
 /phpunit.xml      export-ignore
 /phpunit.xml.dist export-ignore
+/crowdin.yml      export-ignore
 
 # Auto detect text files and perform LF normalization
 * text=auto

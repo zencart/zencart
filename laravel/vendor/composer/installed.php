@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c33619ca0cb3071b558206cad16886302bd6d724',
+        'reference' => 'db6b297bfd7e742896aaae29bca58f0a641a8039',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -550,7 +550,7 @@
         'laravel-restive/restive' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9972c164f7a9bf7ad89b80624716b5e71f2515e2',
+            'reference' => 'bad710e4c570ae106937407615cf1d04243daf1f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel-restive/restive',
             'aliases' => array(
@@ -570,7 +570,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c33619ca0cb3071b558206cad16886302bd6d724',
+            'reference' => 'db6b297bfd7e742896aaae29bca58f0a641a8039',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
