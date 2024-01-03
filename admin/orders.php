@@ -679,6 +679,20 @@ if (!empty($action) && $order_exists === true) {
               <td class="main"><?php echo $order->info['payment_method']; ?></td>
             </tr>
             <?php
+            // -----
+            // Note: Using loose comparison since the value is recorded (currently) as decimal(14,6)
+            // and shows up in the order as (string)1.00000 if the order's placed in the store's
+            // default currency.
+            //
+            if ($order->info['currency_value'] != 1) {
+?>
+            <tr>
+              <td class="main"><strong><?php echo ENTRY_CURRENCY_VALUE; ?></strong></td>
+              <td class="main"><?php echo $order->info['currency_value']; ?></td>
+            </tr>
+<?php
+            }
+
             if (!empty($order->info['cc_type']) || !empty($order->info['cc_owner']) || !empty($order->info['cc_number'])) {
               ?>
               <tr class="noprint">
