@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * ajaxTestDBConnection.php
  * @package Installer
@@ -14,24 +16,21 @@ require(DIR_FS_INSTALL . 'includes/application_top.php');
 
 $systemChecker = new systemChecker();
 
-$error = TRUE;
-$errorList = array();
-if (isset($_POST['db_name']))
-{
-  zcRegistry::setValue('db_host', $_POST['db_host']);
-  zcRegistry::setValue('db_user', $_POST['db_user']);
-  zcRegistry::setValue('db_password', $_POST['db_password']);
-  zcRegistry::setValue('db_name', $_POST['db_name']);
-  zcRegistry::setValue('db_charset', $_POST['db_charset']);
-  $results = $systemChecker -> runTests('database');
-  if (count($results) != 0)
-  {
-    $keys = array_keys($results);
-    $errorList = $results[$keys[0]];
-    $error = TRUE;
-  } else
-  {
-    $error  = FALSE;
-  }
+$error = true;
+$errorList = [];
+if (isset($_POST['db_name'])) {
+    zcRegistry::setValue('db_host', $_POST['db_host']);
+    zcRegistry::setValue('db_user', $_POST['db_user']);
+    zcRegistry::setValue('db_password', $_POST['db_password']);
+    zcRegistry::setValue('db_name', $_POST['db_name']);
+    zcRegistry::setValue('db_charset', $_POST['db_charset']);
+    $results = $systemChecker->runTests('database');
+    if (count($results) !== 0) {
+        $keys = array_keys($results);
+        $errorList = $results[$keys[0]];
+        $error = true;
+    } else {
+        $error = false;
+    }
 }
-echo json_encode(array('error'=>$error, 'errorList'=>$errorList));
+echo json_encode(['error' => $error, 'errorList' => $errorList]);

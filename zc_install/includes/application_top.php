@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -57,7 +58,7 @@ if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
 if (!isset($debug_logging)) $debug_logging = 'file';
 if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE'))) $debug_logging = 'screen';
 define('VERBOSE_SYSTEMCHECKER', $debug_logging);
-if (VERBOSE_SYSTEMCHECKER == 'screen' && $controller == 'cli') echo 'Verbose mode enabled.' . "\n";
+if (VERBOSE_SYSTEMCHECKER === 'screen' && $controller === 'cli') echo 'Verbose mode enabled.' . "\n";
 
 /**
  * read some file locations from the "store / catalog" configure.php
