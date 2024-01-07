@@ -18,6 +18,7 @@
 #
 #####################################################
 
+#PROGRESS_FEEDBACK:!TEXT=Running Table Creation
 
 # --------------------------------------------------------
 #
@@ -2216,6 +2217,8 @@ CREATE TABLE zones_to_geo_zones (
 
 
 # default data
+
+#PROGRESS_FEEDBACK:!TEXT=Running Initial Seeders
 
 INSERT INTO template_select (template_id, template_dir, template_language) VALUES (1, 'responsive_classic', '0');
 

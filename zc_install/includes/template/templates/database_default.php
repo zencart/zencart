@@ -123,7 +123,7 @@ function ajaxTestDBConnection(form) {
       } else
       {
         $("#progress-bar-dialog").foundation('reveal', 'open', {close_on_background_click:false});
-        t = setTimeout("updateStatus()", 300);
+        t = setTimeout("updateStatus()", 10);
         $.ajax({
           type: "POST",
           timeout: 0,
@@ -183,9 +183,15 @@ function updateStatus() {
     success: function(data) {
       if (data.progress)
       {
+          if(data.progressFeedback)
+          {
+              writeProgressInfo(data.progressFeedback)
+          } else {
+              writeProgressInfo('')
+          }
         if (data.message)
         {
-          $('#dialog-title').html(data.message + ' ' + data.progress.toFixed( 0 ) + '%');
+          $('#dialog-title').html(' ' + data.message + ' ' + data.progress.toFixed( 0 ) + '%');
         }
         if (data.progress >= 0 && data.progress < 99) {
           $("#progress-bar").html('<span class="meter" style="width:'+data.progress+'%;"></span>');
@@ -226,4 +232,9 @@ $(function()
         e.preventDefault();
       })
     });
+
+    function writeProgressInfo(text) {
+        $('#progress-info').text(text);
+        $('#progress-container').scrollTop($('#progress-info').height());
+    }
 </script>

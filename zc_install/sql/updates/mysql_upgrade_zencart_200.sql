@@ -36,16 +36,27 @@ TRUNCATE TABLE db_cache;
 
 
 #############
+#PROGRESS_FEEDBACK:!TEXT=Altering Product table - may take some time
 
 ALTER TABLE products ADD products_mpn varchar(32) DEFAULT NULL AFTER products_model;
+
+#PROGRESS_FEEDBACK:!TEXT=Altering Order table - may take some time
 
 ALTER TABLE orders ADD shipping_tax_rate decimal(15,4) DEFAULT NULL AFTER order_tax;
 
 #############
 #### Updates for the Wholesale Pricing feature
+#PROGRESS_FEEDBACK:!TEXT=Altering Customer table - may take some time
+
 ALTER TABLE customers ADD customers_whole tinyint(1) NOT NULL DEFAULT 0;
 ALTER TABLE customers MODIFY customers_whole tinyint(1) NOT NULL DEFAULT 0;
+
+#PROGRESS_FEEDBACK:!TEXT=Altering Order table - may take some time
+
 ALTER TABLE orders ADD is_wholesale tinyint(1) DEFAULT NULL;
+
+#PROGRESS_FEEDBACK:!TEXT=Altering Product tables - may take some time
+
 ALTER TABLE products ADD products_price_w varchar(150) NOT NULL DEFAULT '0' AFTER products_price;
 ALTER TABLE products_attributes ADD options_values_price_w varchar(150) NOT NULL DEFAULT '0' AFTER options_values_price;
 ALTER TABLE products_discount_quantity ADD discount_price_w varchar(150) NOT NULL DEFAULT '0' AFTER discount_price;

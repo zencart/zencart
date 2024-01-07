@@ -3,6 +3,8 @@
 # $Id: mysql_demo.sql  Aug 2017 $
 #
 
+#PROGRESS_FEEDBACK:!TEXT=Running Demo Seeder
+
 # Configuration Settings:
 UPDATE configuration SET configuration_value='true' WHERE configuration_key='DOWNLOAD_ENABLED';
 

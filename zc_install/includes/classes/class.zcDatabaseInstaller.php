@@ -35,7 +35,9 @@ class zcDatabaseInstaller
     protected string $newLine;
     protected array $upgradeExceptions;
 
-    public function __construct(array $options)
+    protected string $progressFeedback = '';
+
+    public function __construct($options, $progressFeedbackParser = null)
     {
         $this->func = static fn($matches): string => strtoupper($matches[1]);
         $dbtypes = [];
@@ -95,6 +97,7 @@ class zcDatabaseInstaller
     public function parseSqlFile($fileName, $options = null): bool
     {
         $this->extendedOptions = $options ?? [];
+        $this->progressFeedback = '';
         $lines = file($fileName);
         if (false === $lines) {
             logDetails('COULD NOT OPEN FILE: ' . $fileName, $fileName);
@@ -109,11 +112,12 @@ class zcDatabaseInstaller
         $this->doJSONProgressLoggingStart(count($lines));
         $this->keepTogetherCount = 0;
         $this->newLine = "";
+        $usleep = defined('USLEEP_DB_INSTALLER') ? USLEEP_DB_INSTALLER : 3000;
         foreach ($lines as $line) {
+            usleep($usleep);
             $this->jsonProgressLoggingCount++;
             $this->processline($line);
         }
-//if (count($lines) < 200) sleep(5);
         $this->doJsonProgressLoggingEnd();
 
         return false;
@@ -128,12 +132,15 @@ class zcDatabaseInstaller
     private function doJsonProgressLoggingStart($count): void
     {
         if (isset($this->extendedOptions['doJsonProgressLogging'])) {
+            $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
+            if (file_exists($fileName)) {
+                unlink($fileName);
+            }
             $this->jsonProgressLoggingTotal = $count;
             $this->jsonProgressLoggingCount = 0;
-            $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
             $fp = fopen($fileName, "w");
             if ($fp) {
-                $arr = ['total' => $count, 'progress' => 0, 'message' => $this->extendedOptions['message']];
+                $arr = ['total' => $count, 'progress' => 0, 'message' => $this->extendedOptions['message'], 'progressFeedback' => ''];
                 fwrite($fp, json_encode($arr));
                 fclose($fp);
             }
@@ -146,6 +153,13 @@ class zcDatabaseInstaller
         $this->line = trim($line);
         if (str_starts_with($this->line, '#NEXT_X_ROWS_AS_ONE_COMMAND:')) {
             $this->keepTogetherLines = (int)substr($this->line, 28);
+        }
+        if (str_starts_with($this->line, '#PROGRESS_FEEDBACK:!')) {
+            $this->processProgressFeedback();
+            $this->progressFeedback = $this->processProgressFeedback();
+            $this->completeLine = true;
+            $this->doJsonProgressLoggingUpdate();
+            return;
         }
         if (!str_starts_with($this->line, '#') && !str_starts_with($this->line, '-') && $this->line !== '') {
             $this->parseLineContent();
@@ -171,7 +185,6 @@ class zcDatabaseInstaller
                     $this->completeLine = false;
                 }
             }
-//      echo $this->newLine;
             if ($this->completeLine) {
                 $output = (trim(str_replace(';', '', $this->newLine)) !== '' && !$this->ignoreLine) ? $this->tryExecute($this->newLine) : '';
                 $this->doJsonProgressLoggingUpdate();
@@ -269,7 +282,7 @@ class zcDatabaseInstaller
             $progress = ($this->jsonProgressLoggingCount / $this->jsonProgressLoggingTotal * 100);
             $fp = fopen($fileName, "w");
             if ($fp) {
-                $arr = ['total' => '0', 'progress' => $progress, 'message' => $this->extendedOptions['message']];
+                $arr = ['total' => $this->jsonProgressLoggingTotal, 'progress' => $progress, 'message' => $this->extendedOptions['message'], 'progressFeedback' => $this->progressFeedback];
                 fwrite($fp, json_encode($arr));
                 fclose($fp);
             }
@@ -283,7 +296,7 @@ class zcDatabaseInstaller
             $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
             $fp = fopen($fileName, "w");
             if ($fp) {
-                $arr = ['total' => '0', 'progress' => 100, 'message' => $this->extendedOptions['message']];
+                $arr = ['total' => '0', 'progress' => 100, 'message' => $this->extendedOptions['message'], 'progressFeedback' => TEXT_PROGRESS_FINISHED];
                 fwrite($fp, json_encode($arr));
                 fclose($fp);
             }
@@ -634,5 +647,19 @@ class zcDatabaseInstaller
                 $this->db->Execute($sql);
             }
         }
+    }
+
+    private function processProgressFeedback()
+    {
+        $matches = explode(':!', $this->line);
+        array_shift($matches);
+        $feedback = $matches[0] ?? '';
+        $feedback = str_replace('TEXT=', '', $feedback);
+        return $feedback;
+    }
+
+    public function getProgressFeedback()
+    {
+        return $this->progressFeedback;
     }
 }
