@@ -331,9 +331,9 @@ switch ($_GET['action']) {
     foreach ($new_coupon_descriptions as $new_coupon_description) {
       $sql_mdata_array = [
         'coupon_id' => (int)$cid,
-        'language_id' => (int)$new_coupon_descriptions->fields['language_id'],
-        'coupon_name' => zen_db_prepare_input('COPY: ' . $new_coupon_descriptions->fields['coupon_name']),
-        'coupon_description' => zen_db_prepare_input($new_coupon_descriptions->fields['coupon_description'])
+        'language_id' => (int)$new_coupon_description['language_id'],
+        'coupon_name' => zen_db_prepare_input('COPY: ' . $new_coupon_description['coupon_name']),
+        'coupon_description' => zen_db_prepare_input($new_coupon_description['coupon_description'])
       ];
       zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_mdata_array);
     }
@@ -347,9 +347,9 @@ switch ($_GET['action']) {
     foreach ($copy_coupon_restrictions as $copy_coupon_restriction) {
       $sql_rdata_array = [
         'coupon_id' => (int)$cid,
-        'product_id' => (int)$copy_coupon_restrictions->fields['product_id'],
-        'category_id' => zen_db_prepare_input($copy_coupon_restrictions->fields['category_id']),
-        'coupon_restrict' => zen_db_prepare_input($copy_coupon_restrictions->fields['coupon_restrict'])
+        'product_id' => (int)$copy_coupon_restriction['product_id'],
+        'category_id' => zen_db_prepare_input($copy_coupon_restriction['category_id']),
+        'coupon_restrict' => zen_db_prepare_input($copy_coupon_restriction['coupon_restrict'])
       ];
       zen_db_perform(TABLE_COUPON_RESTRICT, $sql_rdata_array);
     }
