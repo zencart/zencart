@@ -151,7 +151,7 @@ class paypalwpp extends base {
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
     $this->codeVersion = '1.5.8';
-    $this->enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True');
+
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
@@ -176,6 +176,8 @@ class paypalwpp extends base {
       $this->sort_order = defined('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALWPP_SORT_ORDER : null;
 
       if (null === $this->sort_order) return false;
+
+      $this->enabled = (MODULE_PAYMENT_PAYPALWPP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALWPP_STATUS === 'Retired'));
 
       if ($this->enabled) {
         if ( (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'PayPal' && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
@@ -3312,6 +3314,13 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $db->Execute("ALTER TABLE " . TABLE_PAYPAL . " CHANGE zen_order_id order_id int(11) NOT NULL default '0'");
     }
 
+    $db->Execute(
+        "UPDATE " . TABLE_CONFIGURATION . "
+            SET configuration_description = 'Do you want to enable this payment module? Use the <b>Retired</b> setting if you are planning to remove this payment module but still have administrative actions to perform against orders placed with this module.',
+                set_function = 'zen_cfg_select_option(array(\'True\', \'False\', \'Retired\'), '
+          WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_STATUS'
+          LIMIT 1"
+    );
   }
   /**
    * Convert HTML comments to readable text
