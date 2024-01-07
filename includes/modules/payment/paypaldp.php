@@ -253,7 +253,7 @@ class paypaldp extends base {
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
-    $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True');
+
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
@@ -276,6 +276,8 @@ class paypaldp extends base {
     $this->sort_order = defined('MODULE_PAYMENT_PAYPALDP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALDP_SORT_ORDER : null;
 
     if (null === $this->sort_order) return false;
+
+    $this->enabled = (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired'));
 
     if ((!defined('PAYPAL_OVERRIDE_CURL_WARNING') || (defined('PAYPAL_OVERRIDE_CURL_WARNING') && PAYPAL_OVERRIDE_CURL_WARNING != 'True')) && !function_exists('curl_init')) $this->enabled = false;
 
@@ -2178,6 +2180,16 @@ class paypaldp extends base {
       $db->Execute("ALTER TABLE " . TABLE_PAYPAL . " CHANGE zen_order_id order_id int(11) NOT NULL default '0'");
     }
 
+    global $current_page;
+    if ($current_page === (FILENAME_MODULES . '.php')) {
+        $db->Execute(
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_description = 'Do you want to enable this payment module? Use the <b>Retired</b> setting if you are planning to remove this payment module but still have administrative actions to perform against orders placed with this module.',
+                    set_function = 'zen_cfg_select_option(array(\'True\', \'False\', \'Retired\'), '
+              WHERE configuration_key = 'MODULE_PAYMENT_PAYPALDP_STATUS'
+              LIMIT 1"
+        );
+    }
   }
 
   /****************************************************************************************************************************
