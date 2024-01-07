@@ -3314,13 +3314,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $db->Execute("ALTER TABLE " . TABLE_PAYPAL . " CHANGE zen_order_id order_id int(11) NOT NULL default '0'");
     }
 
-    $db->Execute(
-        "UPDATE " . TABLE_CONFIGURATION . "
-            SET configuration_description = 'Do you want to enable this payment module? Use the <b>Retired</b> setting if you are planning to remove this payment module but still have administrative actions to perform against orders placed with this module.',
-                set_function = 'zen_cfg_select_option(array(\'True\', \'False\', \'Retired\'), '
-          WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_STATUS'
-          LIMIT 1"
-    );
+    global $current_page;
+    if ($current_page === (FILENAME_MODULES . '.php')) {
+        $db->Execute(
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_description = 'Do you want to enable this payment module? Use the <b>Retired</b> setting if you are planning to remove this payment module but still have administrative actions to perform against orders placed with this module.',
+                    set_function = 'zen_cfg_select_option(array(\'True\', \'False\', \'Retired\'), '
+              WHERE configuration_key = 'MODULE_PAYMENT_PAYPALWPP_STATUS'
+              LIMIT 1"
+        );
+    }
   }
   /**
    * Convert HTML comments to readable text
