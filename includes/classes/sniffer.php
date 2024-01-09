@@ -40,11 +40,10 @@ class sniffer extends base
         global $db;
         $sql = "SHOW FIELDS FROM " . $table_name;
         $result = $db->Execute($sql);
-        while (!$result->EOF) {
-            if ($result->fields['Field'] === $field_name) {
+        foreach ($result as $record) {
+            if ($record['Field'] === $field_name) {
                 return true; // exists, so return with no error
             }
-            $result->MoveNext();
         }
         return false;
     }
@@ -52,25 +51,22 @@ class sniffer extends base
     /**
      * Check whether a field is a specific type
      * and optionally return what type it is, if not matching what is being checked for.
-     *
-     * @return bool|string
      */
-    public function field_type(string $table_name, string $field_name, string $field_type, bool $return_found = false)
+    public function field_type(string $table_name, string $field_name, string $field_type, bool $return_found = false): bool|string
     {
         global $db;
         $sql = "SHOW FIELDS FROM " . $table_name;
         $result = $db->Execute($sql);
-        while (!$result->EOF) {
-            if ($result->fields['Field'] === $field_name) {
-                if ($result->fields['Type'] === $field_type) {
+        foreach($result as $record) {
+            if ($record['Field'] === $field_name) {
+                if ($record['Type'] === $field_type) {
                     return true; // exists and matches required type, so return with no error
                 }
 
                 if ($return_found) {
-                    return $result->fields['Type']; // doesn't match, so return what it "is", if requested
+                    return $record['Type']; // doesn't match, so return what it "is", if requested
                 }
             }
-            $result->MoveNext();
         }
         return false;
     }
