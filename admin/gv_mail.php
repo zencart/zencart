@@ -79,7 +79,7 @@ if ($action != '') {
       }
 
       foreach ($mail as $row) {
-        $id1 = zen_create_coupon_code($row['customers_email_address']);
+        $id1 = Coupon::generateRandomCouponCode($row['customers_email_address']);
         $insert_query = $db->Execute("INSERT INTO " . TABLE_COUPONS . " (coupon_code, coupon_type, coupon_amount, date_created)
                                       VALUES ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 

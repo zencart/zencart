@@ -121,6 +121,14 @@ $autoLoadConfig[0][] = [
     'autoType' => 'class',
     'loadFile' => 'zcDate.php',
 ];
+$autoLoadConfig[0][] = [
+    'autoType' => 'class',
+    'loadFile' => 'Coupon.php',
+];
+$autoLoadConfig[0][] = [
+    'autoType' => 'class',
+    'loadFile' => 'CouponValidation.php',
+];
 /**
  * Breakpoint 5.
  *

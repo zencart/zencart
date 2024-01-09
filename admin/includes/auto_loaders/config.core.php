@@ -129,6 +129,16 @@ $autoLoadConfig[0][] = [
     'loadFile' => 'zcDate.php',
     'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
 ];
+$autoLoadConfig[0][] = [
+    'autoType' => 'class',
+    'loadFile' => 'Coupon.php',
+    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
+];
+$autoLoadConfig[0][] = [
+    'autoType' => 'class',
+    'loadFile' => 'CouponValidation.php',
+    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
+];
 /**
  * Breakpoint 5.
  *

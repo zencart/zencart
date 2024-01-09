@@ -21,6 +21,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         require_once DIR_FS_CATALOG . 'includes/classes/shopping_cart.php';
         require_once DIR_FS_CATALOG . 'includes/classes/currencies.php';
         require_once DIR_FS_CATALOG . 'includes/classes/db/mysql/query_factory.php';
+        require_once DIR_FS_CATALOG . 'includes/classes/CouponValidation.php';
         $_SESSION['currency'] = 'USD';
         $_SESSION['cc_id'] = '1';
         define('MODULE_ORDER_TOTAL_COUPON_HEADER', '');
