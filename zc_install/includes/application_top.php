@@ -125,10 +125,6 @@ if (!isset($_GET['cacheignore'])) {
     if (function_exists('xcache_clear_cache')) {
         @ini_set('xcache.cacher', 'OFF');
     }
-    //EA
-    if (@ini_get('eaccelerator.enable') == 1) {
-        @ini_set('eaccelerator.enable', 0);
-    }
 }
 
 /**
