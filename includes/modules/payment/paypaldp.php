@@ -277,8 +277,6 @@ class paypaldp extends base {
 
     if (null === $this->sort_order) return false;
 
-    $this->enabled = (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired'));
-
     if ((!defined('PAYPAL_OVERRIDE_CURL_WARNING') || (defined('PAYPAL_OVERRIDE_CURL_WARNING') && PAYPAL_OVERRIDE_CURL_WARNING != 'True')) && !function_exists('curl_init')) $this->enabled = false;
 
     $this->enableDebugging = (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email');
