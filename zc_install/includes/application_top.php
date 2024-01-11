@@ -96,7 +96,6 @@ if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
 error_reporting(E_ALL);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);
-@ini_set('log_errors_max_len', 0);
 @ini_set('error_log', $debug_logfile_path);
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
     @ini_set('display_errors', 1);  // to screen

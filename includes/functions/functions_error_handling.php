@@ -145,7 +145,6 @@ function zen_enable_error_logging(array $pages_to_debug = ['*'], $logging_level 
 
     if (in_array('*', $pages_to_debug, true) || in_array($current_page_base, $pages_to_debug, true)) {
         @ini_set('log_errors', 1);          // store to file
-        @ini_set('log_errors_max_len', 0);  // unlimited length of message output
         @ini_set('display_errors', 0);      // do not output errors to screen/browser/client
         @ini_set('error_log', $debug_logfile_path);  // the filename to log errors into
         @ini_set('error_reporting', $logging_level ); // log only errors according to defined rules
