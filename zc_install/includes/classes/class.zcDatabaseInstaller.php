@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -95,7 +94,7 @@ class zcDatabaseInstaller
 
     public function parseSqlFile($fileName, $options = null): bool
     {
-        $this->extendedOptions = (isset($options)) ? $options : [];
+        $this->extendedOptions = $options ?? [];
         $lines = file($fileName);
         if (false === $lines) {
             logDetails('COULD NOT OPEN FILE: ' . $fileName, $fileName);
@@ -200,7 +199,7 @@ class zcDatabaseInstaller
             $parseMethod = 'parser' . trim($this->camelize($parseString));
 
             if (str_starts_with(strtoupper($this->line), $parseString)) {
-                if ($parseMethod == 'parser)Engine=myisam') {
+                if ($parseMethod === 'parser)Engine=myisam') {
                     $parseMethod = 'parserEngineInnodb';
                 }
                 if (method_exists($this, $parseMethod)) {
@@ -217,7 +216,7 @@ class zcDatabaseInstaller
         return $parseString;
     }
 
-    public function tryExecute(string $sql): void
+    public function tryExecute(string $sql)
     {
 //    echo $sql;
 //    $this->writeUpgradeExceptions($this->line, '', $this->sqlFile);
@@ -599,7 +598,7 @@ class zcDatabaseInstaller
 
     public function updateConfigKeys(): bool
     {
-        if (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] != '') {
+        if (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] !== '') {
             $email_stub = preg_replace('~.*\/\/(www.)*~', 'YOUR_EMAIL@', $_POST['http_server_catalog']);
             $sql = "UPDATE " . $this->dbPrefix . "configuration SET configuration_value=:emailStub: WHERE configuration_key IN ('STORE_OWNER_EMAIL_ADDRESS', 'EMAIL_FROM')";
             $sql = $this->db->bindVars($sql, ':emailStub:', $email_stub, 'string');

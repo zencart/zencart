@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * file contains systemChecker Class
  * @copyright Copyright 2003-2023 Zen Cart Development Team
@@ -374,6 +373,7 @@ class systemChecker
         $sql = "SELECT configuration_description FROM " . $dbPrefix . "configuration WHERE configuration_key = '" . $parameters['fieldName'] . "'";
         $result = $db->Execute($sql);
         if ($result && isset($result->fields['configuration_description'])) {
+            // intentionally using == here
             return $result->fields['configuration_description'] == $parameters['expectedResult'];
         }
         return false;
@@ -623,11 +623,11 @@ class systemChecker
 
         // Take full URI and ping https version of same to see if expected response comes back. If so, redirect install to https.
         // In case multiple-redirects happen on oddly-configured hosts, this can be bypassed by adding ?noredirect=1 to the URL
-        if ($request_type != 'SSL' && function_exists('curl_init') && !isset($_GET['noredirect'])) {
+        if ($request_type !== 'SSL' && function_exists('curl_init') && !isset($_GET['noredirect'])) {
             $test_uri = 'https://' . str_replace(['http://', 'https://'], '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
             $resultCurl = self::curlGetUrl($test_uri);
             //error_log(print_r($resultCurl, true) . print_r($_SERVER, true));
-            if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '200') {
+            if (isset($resultCurl['http_code']) && $resultCurl['http_code'] === '200') {
                 header('Location: ' . $test_uri);
                 exit();
             }
@@ -691,7 +691,7 @@ class systemChecker
                 FROM " . $dbPrefixVal . "admin
                 ORDER BY admin_profile";
         $result = $db->Execute($sql);
-        if ($result->EOF || ($result->RecordCount() === 1 && $result->fields['admin_profile'] == 0)) {
+        if ($result->EOF || ($result->RecordCount() === 1 && (int)$result->fields['admin_profile'] === 0)) {
             $sql = "SELECT admin_id, admin_name, admin_pass
                     FROM " . $dbPrefixVal . "admin
                     WHERE admin_name = '" . $adminUser . "'";
@@ -727,9 +727,8 @@ class systemChecker
     {
         $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
 
-        $url = NEW_VERSION_CHECKUP_URL . '?v=' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '&p=' . PHP_VERSION . '&a=' . $_SERVER['SERVER_SOFTWARE'] . '&r=' . urlencode(
-                $_SERVER['HTTP_HOST']
-            ) . '&m=zc_install';
+        $url = NEW_VERSION_CHECKUP_URL . '?v=' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '&p=' . PHP_VERSION
+            . '&a=' . $_SERVER['SERVER_SOFTWARE'] . '&r=' . urlencode($_SERVER['HTTP_HOST']) . '&m=zc_install';
         $lines = @file($url);
 
         // silently ignore if online check fails
@@ -741,28 +740,28 @@ class systemChecker
         }
 
         //check for major/minor version info
-        if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
+        if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) === PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
             $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];
         }
         //check for patch version info
         // first confirm that we're at latest major/minor -- otherwise no need to check patches:
-        if (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) == PROJECT_VERSION_MINOR) {
+        if (trim($lines[0]) === PROJECT_VERSION_MAJOR && trim($lines[1]) === PROJECT_VERSION_MINOR) {
             //check to see if either patch needs to be applied
             if (trim($lines[3]) > (int)PROJECT_VERSION_PATCH1 || trim($lines[4]) > (int)PROJECT_VERSION_PATCH2) {
                 // reset update message, since we WILL be advising of an available upgrade
-                if ($new_version == TEXT_VERSION_CHECK_CURRENT) {
+                if ($new_version === TEXT_VERSION_CHECK_CURRENT) {
                     $new_version = '';
                 }
                 //check for patch #1
                 if (trim($lines[3]) > (int)PROJECT_VERSION_PATCH1) {
                     // if ($new_version != '') $new_version .= '<br>';
-                    $new_version .= (($new_version != '') ? '<br>' : '') .
+                    $new_version .= (($new_version !== '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) .
                         ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
                 }
                 if (trim($lines[4]) > (int)PROJECT_VERSION_PATCH2) {
                     // if ($new_version != '') $new_version .= '<br>';
-                    $new_version .= (($new_version != '') ? '<br>' : '') .
+                    $new_version .= (($new_version !== '') ? '<br>' : '') .
                         '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) .
                         ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
                 }
@@ -772,7 +771,7 @@ class systemChecker
         $this->log('Present: ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '; Latest release online: ' . trim($lines[0]) . '.' . trim($lines[1]), __METHOD__, []);
 
         // prepare displayable download link
-        if ($new_version !== '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
+        if ($new_version !== '' && $new_version !== TEXT_VERSION_CHECK_CURRENT) {
             $new_version .= '<a href="' . $lines[6] . '" rel="noopener" target="_blank">' . TEXT_VERSION_CHECK_DOWNLOAD . '</a>';
             $this->localErrors = $new_version;
             return false;

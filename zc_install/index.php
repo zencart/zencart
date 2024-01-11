@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * index.php -- This is the main controller file for the Zen Cart installer
  * @copyright Copyright 2003-2022 Zen Cart Development Team
@@ -35,7 +34,7 @@ define('DIR_FS_ROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 require DIR_FS_INSTALL . 'includes/application_top.php';
 
-if ($controller === 'cli') {
+if (isset($controller) && $controller === 'cli') {
     require DIR_FS_INSTALL . 'includes/cli_controller.php';
 } else {
     require DIR_FS_INSTALL . $page_directory . '/header_php.php';

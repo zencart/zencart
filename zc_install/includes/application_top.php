@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -7,7 +6,7 @@ declare(strict_types=1);
  * @version $Id: Zcwilt 2020 Jul 01 Modified in v1.5.8-alpha $
  */
 
-@ini_set("arg_separator.output", "&");
+@ini_set('arg_separator.output', '&');
 @set_time_limit(250);
 
 /*
@@ -26,7 +25,7 @@ if (file_exists(DIR_FS_INSTALL . 'includes/localConfig.php')) {
 }
 
 $val = getenv('HABITAT');
-$habitat = ($val == 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] == 'vagrant'));
+$habitat = ($val === 'zencart' || (isset($_SERVER['USER']) && $_SERVER['USER'] === 'vagrant'));
 if ($habitat && !defined('DEVELOPER_MODE')) {
     define('DEVELOPER_MODE', true);
 }
@@ -35,20 +34,20 @@ $controller = 'main';
 /* detect CLI params */
 if (isset($argc) && $argc > 0) {
     for ($i = 1; $i < $argc; $i++) {
-        $it = preg_split("/=/", $argv[$i]);
-        $_GET[$it[0]] = (isset($it[1])) ? $it[1] : $it[0];
+        $it = explode("=", $argv[$i]);
+        $_GET[$it[0]] = $it[1] ?? $it[0];
         // parse_str($argv[$i],$tmp);
         // $_REQUEST = array_merge($_REQUEST, $tmp);
-        if ($it[0] == 'cli') $controller = 'cli';
-        if ($it[0] == 'v' || $it[0] == 'verbose') $debug_logging = 'screen';
+        if ($it[0] === 'cli') $controller = 'cli';
+        if ($it[0] === 'v' || $it[0] === 'verbose') $debug_logging = 'screen';
     }
 }
 if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
     for ($i = 1; $i < $_SERVER["argc"]; $i++) {
         list($key, $val) = explode('=', $_SERVER["argv"][$i]);
         $_GET[$key] = $_REQUEST[$key] = $val;
-        if ($key == 'cli') $controller = 'cli';
-        if ($key == 'v' || $key == 'verbose') $debug_logging = 'screen';
+        if ($key === 'cli') $controller = 'cli';
+        if ($key === 'v' || $key === 'verbose') $debug_logging = 'screen';
     }
 }
 
@@ -56,7 +55,7 @@ if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
  * set the level of system-inspection logging -- can by overridden by adding ?v={mode} to command line, for non-ajax steps, or generically set in localConfig.php
  */
 if (!isset($debug_logging)) $debug_logging = 'file';
-if (isset($_GET['v']) && in_array($_GET['v'], array('screen', '1', 'true', 'TRUE'))) $debug_logging = 'screen';
+if (isset($_GET['v']) && in_array($_GET['v'], ['screen', '1', 1, 'true', 'TRUE'], true)) $debug_logging = 'screen';
 define('VERBOSE_SYSTEMCHECKER', $debug_logging);
 if (VERBOSE_SYSTEMCHECKER === 'screen' && $controller === 'cli') echo 'Verbose mode enabled.' . "\n";
 
@@ -105,11 +104,11 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
 /**
  * Timezone problem detection
  */
-if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '') {
+if (ini_get('date.timezone') === '' && @date_default_timezone_get() === '') {
     include DIR_FS_ROOT . '/includes/extra_configures/set_time_zone.php';
 }
 // re-test
-if (ini_get('date.timezone') == '' && @date_default_timezone_get() == '') {
+if (ini_get('date.timezone') === '' && @date_default_timezone_get() === '') {
     die('ERROR: date.timezone is not set in php.ini. You have two options: 1-Edit /includes/extra_configures/set_time_zone.php to set the $TZ variable manually, or 2-Contact your hosting company to set the timezone correctly in the server PHP configuration before continuing.');
 }
 @date_default_timezone_set(date_default_timezone_get());
