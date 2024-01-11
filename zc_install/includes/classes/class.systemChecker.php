@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * file contains systemChecker Class
  * @copyright Copyright 2003-2023 Zen Cart Development Team
@@ -11,46 +12,85 @@
  */
 class systemChecker
 {
-    protected $adminDirectoryList = [];
-    protected $errorList = [];
-    protected $extraRunLevels = [];
-    protected $localErrors;
-    protected $selectedAdminDir;
-    protected $serverConfig;
-    protected $systemChecks;
+    protected array $adminDirectoryList = [];
+    protected array $errorList = [];
+    protected array $extraRunLevels = [];
+    protected ?string $localErrors;
+    protected string $selectedAdminDir;
+    protected zcConfigureFileReader $serverConfig;
+    protected array $systemChecks;
+
     public function __construct($selectedAdminDir = 'UNSPECIFIED')
     {
         $this->adminDirectoryList = self::getAdminDirectoryList();
         $res = sfYaml::load(DIR_FS_INSTALL . 'includes/systemChecks.yml');
         $this->systemChecks = $res['systemChecks'];
-        $this->extraRunLevels = array();
+        $this->extraRunLevels = [];
 
         if (file_exists(DIR_FS_ROOT . 'includes/local/configure.php')) {
             $this->extraRunLevels[] = 'localdev';
         }
 
-        if ($selectedAdminDir == 'UNSPECIFIED' || $selectedAdminDir == '' || !file_exists(DIR_FS_ROOT . $selectedAdminDir)) {
-            if (count($this->adminDirectoryList) == 1) $selectedAdminDir = $this->adminDirectoryList[0];
+        if ($selectedAdminDir === 'UNSPECIFIED' || empty($selectedAdminDir) || !file_exists(DIR_FS_ROOT . $selectedAdminDir)) {
+            if (count($this->adminDirectoryList) === 1) {
+                $selectedAdminDir = $this->adminDirectoryList[0];
+            }
         }
         $this->selectedAdminDir = $selectedAdminDir;
     }
 
-    public function runTests($runLevel = 'always')
+    public static function getAdminDirectoryList(): array
     {
-        $runLevels = array_merge(array($runLevel), $this->extraRunLevels);
-        $this->errorList = array();
+        $adminDirectoryList = [];
+
+        $ignoreArray = [
+            '.',
+            '..',
+            'cache',
+            'logs',
+            'installer',
+            'zc_install',
+            'includes',
+            'testFramework',
+            'editors',
+            'extras',
+            'images',
+            'docs',
+            'pub',
+            'email',
+            'download',
+            'media',
+        ];
+        $d = @dir(DIR_FS_ROOT);
+        while (false !== ($entry = $d->read())) {
+            if (is_dir(DIR_FS_ROOT . $entry) && !in_array($entry, $ignoreArray, false)) {
+                // uses banner_manager.php as indicator that this tree is an "admin" dir
+                if (file_exists(DIR_FS_ROOT . $entry . '/' . 'banner_manager.php')) {
+                    $adminDirectoryList[] = $entry;
+                }
+            }
+        }
+        return $adminDirectoryList;
+    }
+
+    public function runTests($runLevel = 'always'): array
+    {
+        $runLevels = array_merge([$runLevel], $this->extraRunLevels);
+        $this->errorList = [];
 //echo print_r($this->systemChecks);
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
 //echo print_r($systemCheck);
-            if (in_array($systemCheck['runLevel'], $runLevels)) {
-                $resultCombined = TRUE;
+            if (in_array($systemCheck['runLevel'], $runLevels, false)) {
+                $resultCombined = true;
                 $criticalError = false;
                 foreach ($systemCheck['methods'] as $methodName => $methodDetail) {
-                    $this->localErrors = NULL;
-                    if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
-                    $result = $this->{$methodName}(isset($methodDetail['parameters']) ? $methodDetail['parameters'] : null);
+                    $this->localErrors = null;
+                    if (isset($methodDetail['method'])) {
+                        $methodName = $methodDetail['method'];
+                    }
+                    $result = $this->{$methodName}($methodDetail['parameters'] ?? null);
                     $resultCombined &= $result;
-                    if ($result == false && (isset($this->systemChecks[$systemCheckName]['criticalError']))) {
+                    if ($result === false && (isset($this->systemChecks[$systemCheckName]['criticalError']))) {
                         $criticalError = true;
                     }
                     $this->log($result, $methodName, $methodDetail);
@@ -65,77 +105,163 @@ class systemChecker
                 if (!$resultCombined) {
                     $this->errorList[$systemCheckName] = $systemCheck;
                 }
-                if ($criticalError) break 1;
+                if ($criticalError) {
+                    break 1;
+                }
             }
         }
         return $this->errorList;
     }
 
-    public function getErrorList($condition = 'FAIL')
+    public function log($result, $methodName, $methodDetail): void
     {
-        $result = FALSE;
-        $resultList = array();
+        $status = $result;
+        if (is_bool($result)) {
+            $status = ($result === true) ? 'PASSED' : 'FAILED';
+        }
+        if (VERBOSE_SYSTEMCHECKER === 'screen' || VERBOSE_SYSTEMCHECKER === true || VERBOSE_SYSTEMCHECKER === 'TRUE') {
+            echo $methodName . "<br>";
+            if (is_array($methodDetail['parameters'])) {
+                foreach ($methodDetail['parameters'] as $key => $value) {
+                    echo $key . " : " . $value . "<br>";
+                }
+            }
+            echo $status . "<br>";
+            echo "------------------<br><br>";
+        }
+        if (!in_array(VERBOSE_SYSTEMCHECKER, ['silent', 'none', 'off', 'OFF', 'NONE', 'SILENT'])) {
+            $loggedString = isset($methodDetail['parameters']) ? substr(print_r($methodDetail['parameters'], true), 5) : '';
+            logDetails($status . $loggedString, $methodName);
+        }
+    }
+
+    public function getErrorList($condition = 'FAIL'): array
+    {
+        $result = false;
+        $resultList = [];
         foreach ($this->errorList as $entry) {
-            if ($entry['errorLevel'] == $condition) {
-                $result = TRUE;
+            if ($entry['errorLevel'] === $condition) {
+                $result = true;
                 $resultList[] = $entry;
             }
         }
-        return array($result, $resultList);
+        return [$result, $resultList];
     }
 
-    public function hasTables()
+    public function hasTables(): bool
     {
-        $result = FALSE;
+        $result = false;
         if ($this->hasSaneConfigFile()) {
-            $parameters = array(array('checkType' => 'fieldSchema', 'tableName' => 'admin', 'fieldName' => 'admin_id', 'fieldCheck' => 'Type', 'expectedResult' => 'INT(11)'));
+            $parameters = [
+                [
+                    'checkType' => 'fieldSchema',
+                    'tableName' => 'admin',
+                    'fieldName' => 'admin_id',
+                    'fieldCheck' => 'Type',
+                    'expectedResult' => 'INT(11)',
+                ],
+            ];
             $result = $this->dbVersionChecker($parameters);
         }
         return $result;
     }
 
-    public function hasSaneConfigFile()
+    public function hasSaneConfigFile(): bool
     {
-        $result = FALSE;
+        $result = false;
         if ($this->getServerConfig()->fileLoaded()) {
             $httpServerVal = $this->getServerConfig()->getDefine('HTTP_SERVER');
             $fsCatalogVal = $this->getServerConfig()->getDefine('DIR_FS_CATALOG');
             $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-            if ($httpServerVal != "" && $fsCatalogVal != "" && $dbUserVal != "") {
-                $result = TRUE;
+            if ($httpServerVal !== '' && $fsCatalogVal !== '' && $dbUserVal !== '') {
+                $result = true;
             }
         }
         $this->log(($result ? 'TRUE' : 'FALSE'), __METHOD__, []);
         return $result;
     }
 
-    public function hasUpdatedConfigFile()
+    public function getServerConfig(): ?zcConfigureFileReader
     {
-        $result = FALSE;
-        if ($this->getServerConfig()->fileLoaded()) {
+        if (!isset($this->serverConfig)) {
+            $configFile = DIR_FS_ROOT . 'includes/configure.php';
+            $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
+            if (file_exists($configFileLocal)) {
+                $configFile = $configFileLocal;
+            }
+            $this->serverConfig = new zcConfigureFileReader($configFile);
+        }
+        return $this->serverConfig;
+    }
 
+    public function dbVersionChecker($parameters): bool
+    {
+        // queryFactory depends on mysqli_ functions
+        if (!function_exists('mysqli_connect')) {
+            return false;
+        }
+
+        if (!$this->getServerConfig()->fileLoaded()) {
+            return false;
+        }
+        $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+        $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+        $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+        $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+        $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+        $db = new queryFactory();
+        $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+        if (!$result) {
+            $systemCheck['extraErrors'][] = $db->error_number . ':' . $db->error_text;
+        } else {
+            $result = $db->selectdb($dbNameVal);
+        }
+        if (!$result) {
+            $systemCheck['extraErrors'][] = $db->error_number . ':' . $db->error_text;
+        }
+        if ($result === false) {
+            return false;
+        }
+        $valid = true;
+        foreach ($parameters as $parameter) {
+            $method = 'dbVersionCheck' . ucfirst($parameter['checkType']);
+            $result = $this->$method($db, $dbPrefixVal, $parameter);
+//echo ($parameter['tableName'] ? $parameter['tableName'] . '-' : '') . $parameter['checkType'] . ': ' . var_export($result, true) . '<br>' . "\n";
+            $valid = $valid && $result;
+        }
+
+//echo 'Valid: ' . var_export($valid, true) . '<br>' . "\n";
+        return $valid;
+    }
+
+    public function hasUpdatedConfigFile(): bool
+    {
+        if ($this->getServerConfig()->fileLoaded()) {
             // if the new define added in v155 is present, then this deems the file to be already updated
             $sessionStorage = $this->getServerConfig()->getDefine('SESSION_STORAGE');
             if (isset($sessionStorage)) {
-                $result = TRUE;
+                return true;
             }
         }
-        return $result;
+        return false;
     }
 
-    public function removeConfigureErrors()
+    public function removeConfigureErrors(): array
     {
-        $listFatalErrors = array();
+        $listFatalErrors = [];
         foreach ($this->errorList as $key => $value) {
-            if ($key != 'checkStoreConfigureFile' && $key != 'checkAdminConfigureFile') {
-                if ($value['errorLevel'] == 'FAIL') $listFatalErrors[$key] = $value;
+            if ($key !== 'checkStoreConfigureFile' && $key !== 'checkAdminConfigureFile') {
+                if ($value['errorLevel'] === 'FAIL') {
+                    $listFatalErrors[$key] = $value;
+                }
             }
         }
-        $hasFatalErrors = (count($listFatalErrors) > 0) ? TRUE : FALSE;
-        return (array($hasFatalErrors, $listFatalErrors));
+        $hasFatalErrors = count($listFatalErrors) > 0;
+        return ([$hasFatalErrors, $listFatalErrors]);
     }
 
-    public function getDbConfigOptions()
+    public function getDbConfigOptions(): array
     {
         $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
@@ -144,30 +270,32 @@ class systemChecker
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
         $dbCharsetVal = $this->getServerConfig()->getDefine('DB_CHARSET');
         $dbTypeVal = $this->getServerConfig()->getDefine('DB_TYPE');
-        $retVal = array('db_host' => $dbServerVal, 'db_user' => $dbUserVal, 'db_password' => $dbPasswordVal, 'db_name' => $dbNameVal, 'db_charset' => $dbCharsetVal, 'db_prefix' => $dbPrefixVal, 'db_type' => $dbTypeVal);
-        return $retVal;
+
+        return [
+            'db_host' => $dbServerVal,
+            'db_user' => $dbUserVal,
+            'db_password' => $dbPasswordVal,
+            'db_name' => $dbNameVal,
+            'db_charset' => $dbCharsetVal,
+            'db_prefix' => $dbPrefixVal,
+            'db_type' => $dbTypeVal,
+        ];
     }
 
-    public function getServerConfig()
+    public function findCurrentDbVersion(): ?string
     {
-        if (!isset($this->serverConfig)) {
-            $configFile = DIR_FS_ROOT . 'includes/configure.php';
-            $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
-            if (file_exists($configFileLocal)) $configFile = $configFileLocal;
-            $this->serverConfig = new zcConfigureFileReader($configFile);
-        }
-        return $this->serverConfig;
-    }
-
-    public function findCurrentDbVersion()
-    {
+        $version = null;
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
-            $version = NULL;
-            if ($systemCheck['runLevel'] == 'dbVersion') {
-                $resultCombined = TRUE;
-                if (!isset($systemCheck['methods'])) $systemCheck['methods'] = array();
+            $version = null;
+            if ($systemCheck['runLevel'] === 'dbVersion') {
+                $resultCombined = true;
+                if (!isset($systemCheck['methods'])) {
+                    $systemCheck['methods'] = [];
+                }
                 foreach ($systemCheck['methods'] as $methodName => $methodDetail) {
-                    if (isset($methodDetail['method'])) $methodName = $methodDetail['method'];
+                    if (isset($methodDetail['method'])) {
+                        $methodName = $methodDetail['method'];
+                    }
                     $result = $this->{$methodName}($methodDetail['parameters']);
                     $resultCombined &= $result;
                     if (!$result) {
@@ -182,7 +310,9 @@ class systemChecker
                 if (!$resultCombined) {
                     $this->errorList[] = $systemCheck;
                 }
-                if (isset($version)) break;
+                if (isset($version)) {
+                    break;
+                }
             }
         }
 
@@ -192,50 +322,15 @@ class systemChecker
         return $version;
     }
 
-    public function dbVersionChecker($parameters)
+    public function dbVersionCheckFieldSchema($db, $dbPrefix, $parameters): bool
     {
-        if (function_exists('mysqli_connect')) {
-            if (!$this->getServerConfig()->fileLoaded()) return FALSE;
-            $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
-            $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
-            $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
-            $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-            $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
-            require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
-            $db = new queryFactory();
-            $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
-            if (!$result) {
-                $systemCheck['extraErrors'][] = $db->error_number . ':' . $db->error_text;
-            } else {
-                $result = $db->selectdb($dbNameVal);
-            }
-            if (!$result) {
-                $systemCheck['extraErrors'][] = $db->error_number . ':' . $db->error_text;
-            }
-            if ($result == false) return $result;
-            $valid = TRUE;
-            foreach ($parameters as $parameter) {
-                $method = 'dbVersionCheck' . ucfirst($parameter['checkType']);
-                $result = $this->$method($db, $dbPrefixVal, $parameter);
-//echo ($parameter['tableName'] ? $parameter['tableName'] . '-' : '') . $parameter['checkType'] . ': ' . var_export($result, true) . '<br>' . "\n";
-                $valid = $valid && $result;
-            }
-//echo 'Valid: ' . var_export($valid, true) . '<br>' . "\n";
-        } else {
-            $valid = false;
-        }
-        return $valid;
-    }
-
-    public function dbVersionCheckFieldSchema($db, $dbPrefix, $parameters)
-    {
-        $sql = "show fields from " . $dbPrefix . $parameters['tableName'];
-        $result = $db->execute($sql);
+        $sql = "SHOW FIELDS FROM " . $dbPrefix . $parameters['tableName'];
+        $result = $db->Execute($sql);
         while (!$result->EOF) {
             // if found the specified field ...
-            if ($result->fields['Field'] == $parameters['fieldName']) {
+            if ($result->fields['Field'] === $parameters['fieldName']) {
                 // then return true if the test was simply "Exists"
-                if ($parameters['fieldCheck'] == 'Exists') {
+                if ($parameters['fieldCheck'] === 'Exists') {
                     return true;
                 }
 
@@ -256,102 +351,100 @@ class systemChecker
         return false;
     }
 
-    public function dbVersionCheckConfigKeyExists($db, $dbPrefix, $parameters)
+    public function dbVersionCheckConfigKeyExists($db, $dbPrefix, $parameters): bool
     {
-        $sql = "select configuration_key from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['keyName'] . "'";
+        $sql = "SELECT configuration_key FROM " . $dbPrefix . "configuration WHERE configuration_key = '" . $parameters['keyName'] . "'";
         $result = $db->Execute($sql, 1);
 
         return $result->RecordCount() > 0;
     }
 
-    public function dbVersionCheckConfigValue($db, $dbPrefix, $parameters)
+    public function dbVersionCheckConfigValue($db, $dbPrefix, $parameters): bool
     {
-        $retVal = FALSE;
-        $sql = "select configuration_title from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
-        $result = $db->execute($sql);
+        $sql = "SELECT configuration_title FROM " . $dbPrefix . "configuration WHERE configuration_key = '" . $parameters['fieldName'] . "'";
+        $result = $db->Execute($sql);
         if ($result && isset($result->fields['configuration_title'])) {
-            $retVal = ($result->fields['configuration_title'] == $parameters['expectedResult']) ? TRUE : FALSE;
+            return $result->fields['configuration_title'] === $parameters['expectedResult'];
         }
-        return $retVal;
+        return false;
     }
 
-    public function dbVersionCheckConfigDescription($db, $dbPrefix, $parameters)
+    public function dbVersionCheckConfigDescription($db, $dbPrefix, $parameters): bool
     {
-        $retVal = FALSE;
-        $sql = "select configuration_description from " . $dbPrefix . "configuration where configuration_key = '" . $parameters['fieldName'] . "'";
-        $result = $db->execute($sql);
+        $sql = "SELECT configuration_description FROM " . $dbPrefix . "configuration WHERE configuration_key = '" . $parameters['fieldName'] . "'";
+        $result = $db->Execute($sql);
         if ($result && isset($result->fields['configuration_description'])) {
-            $retVal = ($result->fields['configuration_description'] == $parameters['expectedResult']) ? TRUE : FALSE;
+            return $result->fields['configuration_description'] == $parameters['expectedResult'];
         }
-        return $retVal;
+        return false;
     }
 
-    public function checkFileExists($parameters)
+    public function checkFileExists($parameters): bool
     {
         return file_exists($parameters['fileDir']);
     }
 
-    public function checkWriteableDir($parameters)
+    public function checkWriteableDir($parameters): bool
     {
-        return is_writeable($parameters['fileDir']);
+        return is_writable($parameters['fileDir']);
     }
 
-    public function checkWriteableFile($parameters)
+    public function checkWriteableFile($parameters): bool
     {
-        if (isset($parameters['changePerms']) && $parameters['changePerms'] !== FALSE) {
+        if (isset($parameters['changePerms']) && $parameters['changePerms'] !== false) {
             if (file_exists($parameters['fileDir'])) {
                 @chmod($parameters['fileDir'], octdec($parameters['changePerms']));
-            } else {
-                if ($fp = @fopen($parameters['fileDir'], 'c')) {
-                    fclose($fp);
-                    chmod($parameters['fileDir'], octdec($parameters['changePerms']));
-                }
-            }
-        }
-        return (is_writeable($parameters['fileDir']));
-    }
-
-    public function checkWriteableAdminFile($parameters)
-    {
-        if (is_writeable(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) return TRUE;
-        if (!file_exists(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) {
-            if ($fp = @fopen(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], 'c')) {
+            } elseif ($fp = @fopen($parameters['fileDir'], 'c')) {
                 fclose($fp);
+                chmod($parameters['fileDir'], octdec($parameters['changePerms']));
             }
         }
-        if (file_exists(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) {
-            if (isset($parameters['changePerms']) && $parameters['changePerms'] !== FALSE) {
-                @chmod(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], octdec($parameters['changePerms']));
-            }
-            if (is_writeable(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'])) return TRUE;
+        return is_writable($parameters['fileDir']);
+    }
+
+    public function checkWriteableAdminFile($parameters): bool
+    {
+        $file = DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'];
+        if (is_writable($file)) {
+            return true;
         }
-        logDetails(DIR_FS_ROOT . $this->selectedAdminDir . '/' . $parameters['fileDir'], 'ADMIN FILE TEST');
-        return FALSE;
+        if (!file_exists($file) && $fp = @fopen($file, 'c')) {
+            fclose($fp);
+        }
+        if (file_exists($file)) {
+            if (isset($parameters['changePerms']) && $parameters['changePerms'] !== false) {
+                @chmod($file, octdec($parameters['changePerms']));
+            }
+            if (is_writable($file)) {
+                return true;
+            }
+        }
+        logDetails($file, 'ADMIN FILE TEST');
+        return false;
     }
 
-    public function checkExtension($parameters)
+    public function checkExtension($parameters): bool
     {
-        return (extension_loaded($parameters['extension']));
+        return extension_loaded($parameters['extension']);
     }
 
-    public function checkFunctionExists($parameters)
+    public function checkFunctionExists($parameters): bool
     {
-        return (function_exists($parameters['functionName']));
+        return function_exists($parameters['functionName']);
     }
 
-    public function checkPhpVersion($parameters)
+    public function checkPhpVersion($parameters): bool|int
     {
-        $result = version_compare(PHP_VERSION, $parameters['version'], $parameters['versionTest']);
-        return $result;
+        return version_compare((string)PHP_VERSION, (string)$parameters['version'], (string)$parameters['versionTest']);
     }
 
-    public function checkHtaccessSupport($parameters)
+    public function checkHtaccessSupport($parameters): bool
     {
-        if (!function_exists('curl_init')) {
+        if (!function_exists('curl_init')) { // can't test if this fails
             return true;
         }
 
-        if (preg_match('/nginx/i', $_SERVER['SERVER_SOFTWARE'])) {
+        if (false !== stripos($_SERVER['SERVER_SOFTWARE'], "nginx")) { // not relevant if nginx
             return true;
         }
 
@@ -360,18 +453,18 @@ class systemChecker
 
         $testPath = preg_replace('~/zc_install.*$~', '/includes/filenames.php', $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME']);
         // first element added to the $tests array is based on $request_type
-        $tests[] = ($request_type == 'SSL' ? 'https://' : 'http://') . $testPath;
+        $tests[] = ($request_type === 'SSL' ? 'https://' : 'http://') . $testPath;
         // add inverse test as fallback
-        $tests[] = ($request_type == 'SSL' ? 'http://' : 'https://') . $testPath;
+        $tests[] = ($request_type === 'SSL' ? 'http://' : 'https://') . $testPath;
 
         foreach ($tests as $test) {
             $resultCurl = self::curlGetUrl($test, false);
-            if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403') {
+            if (isset($resultCurl['http_code']) && (int)$resultCurl['http_code'] === 403) {
                 return true;
             }
             // test again with redirects enabled
             $resultCurl = self::curlGetUrl($test, true);
-            if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '403') {
+            if (isset($resultCurl['http_code']) && (int)$resultCurl['http_code'] === 403) {
                 return true;
             }
         }
@@ -379,131 +472,159 @@ class systemChecker
         return false;
     }
 
-    public function checkInitialSession($parameters)
+    public static function curlGetUrl($url, $follow_redirects = false): array|bool
+    {
+        $options = [
+            CURLOPT_RETURNTRANSFER => true, // return web page
+            CURLOPT_HEADER => false,        // don't return headers
+            CURLOPT_FOLLOWLOCATION => $follow_redirects,    // follow redirects
+            CURLOPT_ENCODING => "",         // handle all encodings
+            CURLOPT_AUTOREFERER => true,    // set referer on redirect
+            CURLOPT_CONNECTTIMEOUT => 3,    // timeout on connect
+            CURLOPT_TIMEOUT => 3,           // timeout on response
+            CURLOPT_MAXREDIRS => 10,        // stop after 10 redirects
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, $options);
+        $content = curl_exec($ch);
+        $err = curl_errno($ch);
+        $errmsg = curl_error($ch);
+        $header = curl_getinfo($ch);
+        curl_close($ch);
+
+        $header['errno'] = $err;
+        $header['errmsg'] = $errmsg;
+        $header['content'] = $content;
+        return $header;
+    }
+
+    public function checkInitialSession($parameters): bool
     {
         session_name($parameters['sessionName']);
         $result = @session_start();
-        if (!$result)
-            return FALSE;
+        if (!$result) {
+            return false;
+        }
 //    if (defined('SID') && constant('SID') != "")
 //      return FALSE;
 //    if (session_status() == PHP_SESSION_DISABLED)
 //      return FALSE;
         $_SESSION['testSession'] = 'testSession';
-        return TRUE;
+        return true;
     }
 
-    public function checkUpgradeDBConnection($parameters)
+    public function checkUpgradeDBConnection($parameters): bool
     {
-        if (function_exists('mysqli_connect')) {
-            $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
-            $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
-            $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
-            $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-            require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
-            $db = new queryFactory();
-            $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
-            if (!$result) {
-                $this->localErrors = $db->error_number . ':' . $db->error_text;
-            } else {
-                $result = $db->selectdb($dbNameVal);
-            }
-            if (!$result) {
-                $this->localErrors = $db->error_number . ':' . $db->error_text;
-            }
+        if (!function_exists('mysqli_connect')) {
+            return false;
+        }
+
+        $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+        $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+        $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+        $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+        $db = new queryFactory();
+        $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+        if (!$result) {
+            $this->localErrors = $db->error_number . ':' . $db->error_text;
         } else {
-            $result = false;
+            $result = $db->selectdb($dbNameVal);
+        }
+        if (!$result) {
+            $this->localErrors = $db->error_number . ':' . $db->error_text;
+        }
+
+        return $result;
+    }
+
+    public function checkDBConnection($parameters): bool
+    {
+        if (! function_exists('mysqli_connect')) {
+            return false;
+        }
+        $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+        $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+        $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+        $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+        $db = new queryFactory();
+        $result = @$db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+        if ((int)$db->error_number !== 2002) {
+            return true;
         }
         return $result;
     }
 
-    public function checkDBConnection($parameters)
-    {
-        if (function_exists('mysqli_connect')) {
-            $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
-            $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
-            $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
-            $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-            require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
-            $db = new queryFactory();
-            $result = @$db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
-            if ($db->error_number != '2002') {
-                $result = TRUE;
-            }
-        } else {
-            $result = false;
-        }
-        return $result;
-    }
-
-    public function checkNewDBConnection($parameters)
+    public function checkNewDBConnection($parameters): bool|queryFactoryResult
     {
         require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
         $db = new queryFactory();
         $result = $db->simpleConnect(zcRegistry::getValue('db_host'), zcRegistry::getValue('db_user'), zcRegistry::getValue('db_password'), zcRegistry::getValue('db_name'));
         if (!$result) {
             $this->localErrors = $db->error_number . ':' . $db->error_text;
-        } else {
-            $result = $db->selectdb(zcRegistry::getValue('db_name'));
-            if (!$result) {
-                $sql = "CREATE DATABASE " . zcRegistry::getValue('db_name') . " CHARACTER SET " . zcRegistry::getValue('db_charset');
-                $result = $db->execute($sql);
-                if ($result) {
-                    return TRUE;
-                } else {
-                    $this->localErrors = $db->error_number . ':' . $db->error_text;
-                }
+            return false;
+        }
+        $result = $db->selectdb(zcRegistry::getValue('db_name'));
+        if (!$result) {
+            $sql = "CREATE DATABASE " . zcRegistry::getValue('db_name') . " CHARACTER SET " . zcRegistry::getValue('db_charset');
+            $result = $db->Execute($sql);
+            if ($result) { // success
+                return true;
             }
+            $this->localErrors = $db->error_number . ':' . $db->error_text;
         }
         return $result;
     }
 
-    public function checkIniGet($parameters)
+    public function checkIniGet($parameters): bool
     {
-        $result = @ini_get($parameters['inigetName']);
-        return ($result != $parameters['expectedValue']) ? FALSE : TRUE;
+        // NOTE: intentionally using loose comparison here:
+        return @ini_get($parameters['inigetName']) == $parameters['expectedValue'];
     }
 
-    public function checkLiveCurl($parameters)
+    public function checkLiveCurl($parameters): bool
     {
-        if (function_exists('curl_init')) {
-            $url = (!preg_match('~^http?s:.*~i', $parameters['testUrl'])) ? 'http://' . $parameters['testUrl'] : $parameters['testUrl'];
-            $data = $parameters['testData'];
-            $ch = curl_init();
+        if (!function_exists('curl_init')) {
+            return false;
+        }
+        $url = (!preg_match('~^http?s:.*~i', $parameters['testUrl'])) ? 'http://' . $parameters['testUrl'] : $parameters['testUrl'];
+        $data = $parameters['testData'];
+        $ch = curl_init();
 // error_log('CURL Test URL: ' . $url);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
 //       curl_setopt($ch, CURLOPT_POST, 1);
 //       curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 11);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // This is intentionally set to FALSE within zc_install since this test is not about whether certificates are good.
-            $result = curl_exec($ch);
-            $errtext = curl_error($ch);
-            $errnum = curl_errno($ch);
-            $commInfo = @curl_getinfo($ch);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 11);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // This is intentionally set to FALSE within zc_install since this test is not about whether certificates are good.
+
+        $result = curl_exec($ch);
+        $errtext = curl_error($ch);
+        $errnum = curl_errno($ch);
+        $commInfo = @curl_getinfo($ch);
 // error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" . print_r($commInfo, TRUE));
 // error_log('CURL Response: ' . $result);
-            curl_close($ch);
-            if ($errnum != 0 || trim($result) != 'PASS') {
-                return FALSE;
-            } else {
-                return TRUE;
-            }
-        } else {
-            return FALSE;
+        curl_close($ch);
+        if ($errnum !== 0 || trim($result) !== 'PASS') {
+            return false;
         }
+
+        return true;
     }
 
-    public function checkHttpsRequest($parameters)
+    public function checkHttpsRequest($parameters): bool
     {
         global $request_type;
 
         // Take full URI and ping https version of same to see if expected response comes back. If so, redirect install to https.
         // In case multiple-redirects happen on oddly-configured hosts, this can be bypassed by adding ?noredirect=1 to the URL
         if ($request_type != 'SSL' && function_exists('curl_init') && !isset($_GET['noredirect'])) {
-            $test_uri = 'https://' . str_replace(array('http://', 'https://'), '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+            $test_uri = 'https://' . str_replace(['http://', 'https://'], '', $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
             $resultCurl = self::curlGetUrl($test_uri);
             //error_log(print_r($resultCurl, true) . print_r($_SERVER, true));
             if (isset($resultCurl['http_code']) && $resultCurl['http_code'] == '200') {
@@ -512,17 +633,25 @@ class systemChecker
             }
         }
         // otherwise, return the https status so the inspector can report it along with suggestions
-        return ($request_type == 'SSL') ? TRUE : FALSE;
+        return $request_type === 'SSL';
     }
 
-    public function addRunlevel($runLevel)
+    public function addRunlevel($runLevel): void
     {
         $this->extraRunLevels[] = $runLevel;
     }
 
-    public function validateAdminCredentials($adminUser, $adminPassword)
+    public function validateAdminCredentials($adminUser, $adminPassword): bool|string|int
     {
-        $parameters = array(array('checkType' => 'fieldSchema', 'tableName' => 'admin', 'fieldName' => 'admin_profile', 'fieldCheck' => 'Type', 'expectedResult' => 'INT(11)'));
+        $parameters = [
+            [
+                'checkType' => 'fieldSchema',
+                'tableName' => 'admin',
+                'fieldName' => 'admin_profile',
+                'fieldCheck' => 'Type',
+                'expectedResult' => 'INT(11)',
+            ]
+        ];
         $hasAdminProfiles = $this->dbVersionChecker($parameters);
         $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
@@ -540,132 +669,76 @@ class systemChecker
         if (!$result) {
             $systemCheck['extraErrors'][] = $db->error_number . ':' . $db->error_text;
         }
-        if ($result == false) return $result;
+        if ($result === false) {
+            return false;
+        }
+
+        $adminUser = $db->prepare_input($adminUser);
+        $adminPassword = $db->prepare_input($adminPassword);
+
 //    echo ($hasAdminProfiles) ? 'YES' : 'NO';
         if (!$hasAdminProfiles) {
-            $sql = "select admin_id, admin_name, admin_pass from " . $dbPrefixVal . "admin where admin_name = '" . $adminUser . "'";
-            $result = $db->execute($sql);
+            $sql = "SELECT admin_id, admin_name, admin_pass FROM " . $dbPrefixVal . "admin WHERE admin_name = '" . $adminUser . "'";
+            $result = $db->Execute($sql);
             if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
                 return false;
-            } else {
+            }
+            return $result->fields['admin_id'];
+        }
+
+// first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
+        $sql = "SELECT DISTINCT(admin_profile)
+                FROM " . $dbPrefixVal . "admin
+                ORDER BY admin_profile";
+        $result = $db->Execute($sql);
+        if ($result->EOF || ($result->RecordCount() === 1 && $result->fields['admin_profile'] == 0)) {
+            $sql = "SELECT admin_id, admin_name, admin_pass
+                    FROM " . $dbPrefixVal . "admin
+                    WHERE admin_name = '" . $adminUser . "'";
+            $result = $db->Execute($sql);
+            if (!$result->EOF && zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
+                $sql = "UPDATE " . $dbPrefixVal . "admin
+                        SET admin_profile = 1
+                        WHERE admin_id = " . $result->fields['admin_id'];
+                $db->Execute($sql);
                 return $result->fields['admin_id'];
             }
         } else {
-            // first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
-            $sql = "select distinct(admin_profile)
-              from " . $dbPrefixVal . "admin
-              order by admin_profile";
-            $result = $db->execute($sql);
-            if ($result->EOF || ($result->RecordCount() == 1 && $result->fields['admin_profile'] == 0)) {
-                $sql = "select admin_id, admin_name, admin_pass
-              from " . $dbPrefixVal . "admin
-              where admin_name = '" . $adminUser . "'";
-                $result = $db->execute($sql);
-                if (!$result->EOF && zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
-                    $sql = "update " . $dbPrefixVal . "admin
-                            set admin_profile = 1
-                            where admin_id = " . $result->fields['admin_id'];
-                    $db->execute($sql);
-                    return $result->fields['admin_id'];
-                }
-            } else {
-
-                $sql = "select a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
-                from " . $dbPrefixVal . "admin as a
-                left join " . $dbPrefixVal . "admin_profiles as ap on a.admin_profile = ap.profile_id
-                where a.admin_name = '" . $adminUser . "'
-                and ap.profile_name = 'Superuser'";
-                $result = $db->execute($sql);
-                if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
-                    return false;
-                }
-                return $result->fields['admin_id'];
+            $sql = "SELECT a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
+                    FROM " . $dbPrefixVal . "admin AS a
+                    LEFT JOIN " . $dbPrefixVal . "admin_profiles AS ap ON a.admin_profile = ap.profile_id
+                    WHERE a.admin_name = '" . $adminUser . "'
+                    AND ap.profile_name = 'Superuser'";
+            $result = $db->Execute($sql);
+            if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
+                return false;
             }
+            return $result->fields['admin_id'];
         }
         return false;
     }
 
-    function curlGetUrl($url, $follow_redirects = false)
+    function backupConfigureFiles($parameters): bool
     {
-        $options = array(
-            CURLOPT_RETURNTRANSFER => true,     // return web page
-            CURLOPT_HEADER => false,    // don't return headers
-            CURLOPT_FOLLOWLOCATION => $follow_redirects,    // follow redirects
-            CURLOPT_ENCODING => "",       // handle all encodings
-            CURLOPT_AUTOREFERER => true,     // set referer on redirect
-            CURLOPT_CONNECTTIMEOUT => 3,        // timeout on connect
-            CURLOPT_TIMEOUT => 3,        // timeout on response
-            CURLOPT_MAXREDIRS => 10,       // stop after 10 redirects
-        );
-
-        $ch = curl_init($url);
-        curl_setopt_array($ch, $options);
-        $content = curl_exec($ch);
-        $err = curl_errno($ch);
-        $errmsg = curl_error($ch);
-        $header = curl_getinfo($ch);
-        curl_close($ch);
-
-        $header['errno'] = $err;
-        $header['errmsg'] = $errmsg;
-        $header['content'] = $content;
-        return $header;
+        return true;
     }
 
-    static function getAdminDirectoryList()
-    {
-        $adminDirectoryList = array();
-
-        $ignoreArray = array('.', '..', 'cache', 'logs', 'installer', 'zc_install', 'includes', 'testFramework', 'editors', 'extras', 'images', 'docs', 'pub', 'email', 'download', 'media');
-        $d = @dir(DIR_FS_ROOT);
-        while (false !== ($entry = $d->read())) {
-            if (is_dir(DIR_FS_ROOT . $entry) && !in_array($entry, $ignoreArray)) {
-                if (file_exists(DIR_FS_ROOT . $entry . '/' . 'banner_manager.php')) {
-                    $adminDirectoryList[] = $entry;
-                }
-            }
-        }
-        return $adminDirectoryList;
-    }
-
-    function backupConfigureFiles($parameters)
-    {
-        return TRUE;
-    }
-
-    function log($result, $methodName, $methodDetail)
-    {
-        $status = $result;
-        if (is_bool($result)) {
-            $status = ($result === true) ? 'PASSED' : 'FAILED';
-        }
-        if (VERBOSE_SYSTEMCHECKER == 'screen' || VERBOSE_SYSTEMCHECKER === TRUE || VERBOSE_SYSTEMCHECKER == 'TRUE') {
-            echo $methodName . "<br>";
-            if (is_array($methodDetail['parameters'])) {
-                foreach ($methodDetail['parameters'] as $key => $value) {
-                    echo $key . " : " . $value . "<br>";
-                }
-            }
-            echo $status  . "<br>";
-            echo "------------------<br><br>";
-        }
-        if (!in_array(VERBOSE_SYSTEMCHECKER, array('silent', 'none', 'off', 'OFF', 'NONE', 'SILENT'))) {
-            logDetails($status .
-                (isset($methodDetail['parameters']) ? substr(print_r($methodDetail['parameters'], TRUE), 5) : ''),
-                $methodName);
-        }
-    }
-
-    function checkIsZCVersionCurrent()
+    function checkIsZCVersionCurrent(): bool
     {
         $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
 
-        $url = NEW_VERSION_CHECKUP_URL . '?v=' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '&p=' . PHP_VERSION . '&a=' . $_SERVER['SERVER_SOFTWARE'] . '&r=' . urlencode($_SERVER['HTTP_HOST']) . '&m=zc_install';
+        $url = NEW_VERSION_CHECKUP_URL . '?v=' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '&p=' . PHP_VERSION . '&a=' . $_SERVER['SERVER_SOFTWARE'] . '&r=' . urlencode(
+                $_SERVER['HTTP_HOST']
+            ) . '&m=zc_install';
         $lines = @file($url);
 
         // silently ignore if online check fails
-        if (empty($lines)) return true;
-        if (!in_array(trim($lines[0]), ['1', '2', '3'])) return true;
+        if (empty($lines)) {
+            return true;
+        }
+        if (!in_array(trim($lines[0]), ['1', '2', '3'])) {
+            return true;
+        }
 
         //check for major/minor version info
         if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
@@ -675,38 +748,42 @@ class systemChecker
         // first confirm that we're at latest major/minor -- otherwise no need to check patches:
         if (trim($lines[0]) == PROJECT_VERSION_MAJOR && trim($lines[1]) == PROJECT_VERSION_MINOR) {
             //check to see if either patch needs to be applied
-            if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1) || trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
+            if (trim($lines[3]) > (int)PROJECT_VERSION_PATCH1 || trim($lines[4]) > (int)PROJECT_VERSION_PATCH2) {
                 // reset update message, since we WILL be advising of an available upgrade
-                if ($new_version == TEXT_VERSION_CHECK_CURRENT) $new_version = '';
-                //check for patch #1
-                if (trim($lines[3]) > intval(PROJECT_VERSION_PATCH1)) {
-                    // if ($new_version != '') $new_version .= '<br>';
-                    $new_version .= (($new_version != '') ? '<br>' : '') .
-                        '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
+                if ($new_version == TEXT_VERSION_CHECK_CURRENT) {
+                    $new_version = '';
                 }
-                if (trim($lines[4]) > intval(PROJECT_VERSION_PATCH2)) {
+                //check for patch #1
+                if (trim($lines[3]) > (int)PROJECT_VERSION_PATCH1) {
                     // if ($new_version != '') $new_version .= '<br>';
                     $new_version .= (($new_version != '') ? '<br>' : '') .
-                        '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
+                        '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) .
+                        ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
+                }
+                if (trim($lines[4]) > (int)PROJECT_VERSION_PATCH2) {
+                    // if ($new_version != '') $new_version .= '<br>';
+                    $new_version .= (($new_version != '') ? '<br>' : '') .
+                        '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) .
+                        ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
                 }
             }
         }
 
-        $this->log('Present: ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '; Latest release online: ' . trim($lines[0]) . '.'. trim($lines[1]), __METHOD__, []);
+        $this->log('Present: ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '; Latest release online: ' . trim($lines[0]) . '.' . trim($lines[1]), __METHOD__, []);
 
         // prepare displayable download link
-        if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
+        if ($new_version !== '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
             $new_version .= '<a href="' . $lines[6] . '" rel="noopener" target="_blank">' . TEXT_VERSION_CHECK_DOWNLOAD . '</a>';
             $this->localErrors = $new_version;
-            return FALSE;
+            return false;
         }
-        return TRUE;
+        return true;
     }
 
     /**
      * add current user IP to allowed-in-maintenance list
      */
-    public function updateAdminIpList()
+    public function updateAdminIpList(): void
     {
         if (isset($_SERVER['REMOTE_ADDR']) && strlen($_SERVER['REMOTE_ADDR']) > 4) {
             $checkip = $_SERVER['REMOTE_ADDR'];
@@ -723,48 +800,52 @@ class systemChecker
 
             $sql = "select configuration_value from " . $dbPrefixVal . "configuration where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
             $result = $db->Execute($sql);
-            if (!strstr($result->fields['configuration_value'], $checkip)) {
+            if (!str_contains($result->fields['configuration_value'], $checkip)) {
                 $newip = $result->fields['configuration_value'] . ',' . $checkip;
-                $sql = "update " . $dbPrefixVal . "configuration set configuration_value = '" . $db->prepare_input($newip) . "' where configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
+                $sql = "UPDATE " . $dbPrefixVal . "configuration SET configuration_value = '" . $db->prepare_input($newip) . "'
+                        WHERE configuration_key = 'EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'";
                 $db->Execute($sql);
             }
         }
     }
+
     /**
      * Check installed Database version
      * The check is only validated if the information is available.
      * There are other checks that will fail so don't issue spurious error message
      */
-    public function checkMysqlVersion($parameters) {
-        if (function_exists('mysqli_connect')) {
-            $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
-            $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
-            $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
-            $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-            require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
-            $db = new queryFactory();
-            $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
-            if ($db->error_number == '2002') {
-                // Cannot connect to database don't fail test
-                return true;
-            }
-            $version = $db->get_server_info();
-            if ($version === 'UNKNOWN') {
-                // versions not found don't fail
-                return true;
-            } elseif (strripos($version, '-MariaDB') === false) {
-                // mysql database check version
-                $checkVersion = $parameters['mysqlVersion'];
-            } else {
-                // mariaDb Check version must remove -MariaDB from the version 
-                // as version compare treats -... as a lower version than N.N.N
-                $version = substr($version, 0, strripos($version, '-MariaDB'));
-                $checkVersion = $parameters['mariaDBVersion'];
-            }
-            return version_compare($version, $checkVersion) >= 0;
-        } else {
+    public function checkMysqlVersion($parameters): bool
+    {
+        if (!function_exists('mysqli_connect')) {
             // mysqli_connect not available don't fail test
             return true;
         }
+        $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+        $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+        $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+        $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+        $db = new queryFactory();
+        $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+        if ((int)$db->error_number === 2002) {
+            // Cannot connect to database; don't fail check
+            return true;
+        }
+        $version = $db->get_server_info();
+        if ($version === 'UNKNOWN') {
+            // versions not found don't fail check
+            return true;
+        }
+
+        if (strripos($version, '-MariaDB') === false) {
+            // mysql database check version
+            $checkVersion = $parameters['mysqlVersion'];
+        } else {
+            // mariaDb Check version must remove -MariaDB from the version
+            // as version compare treats -... as a lower version than N.N.N
+            $version = substr($version, 0, strripos($version, '-MariaDB'));
+            $checkVersion = $parameters['mariaDBVersion'];
+        }
+        return version_compare($version, $checkVersion) >= 0;
     }
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * ajaxGetHelpText.php
  * @package Installer
@@ -12,13 +14,12 @@ define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require(DIR_FS_INSTALL . 'includes/application_top.php');
 
-if (isset($_POST['id']))
-{
-  $result = str_replace('helpId', '' , zen_output_string_protected($_POST['id']));
-  $content = "TEXT_HELP_CONTENT_" . strtoupper($result);
-  $content = "<p>".constant($content) . "</p>";
-  $title = "TEXT_HELP_TITLE_" . strtoupper($result);
-  $title = constant($title);
+if (isset($_POST['id'])) {
+    $result = str_replace('helpId', '', zen_output_string_protected($_POST['id']));
+    $content = "TEXT_HELP_CONTENT_" . strtoupper($result);
+    $content = "<p>" . constant($content) . "</p>";
+    $title = "TEXT_HELP_TITLE_" . strtoupper($result);
+    $title = constant($title);
 }
 
-echo json_encode(array('text'=>$content, 'title'=>$title));
+echo json_encode(['text' => $content, 'title' => $title]);
