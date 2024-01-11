@@ -253,38 +253,31 @@ class paypaldp extends base {
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
-
+    $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired')));
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
       $country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : STORE_COUNTRY;
       $this->title = $country == '223' || $country == 'USA' ? MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP : MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_NONUSA;
       $this->title .= (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') ? ' (' . MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY . ')' : '');
-     } else {
+      if ($this->enabled) {
+        if ( ((MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'US' || MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'Canada') && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
+              || (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True')
+          ) $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
+        if (MODULE_PAYMENT_PAYPALDP_SERVER =='sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
+        if (MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email') $this->title .= '<strong> (Debug)</strong>';
+        if (!function_exists('curl_init')) $this->title .= '<strong><span class="alert"> CURL NOT FOUND. Cannot Use.</span></strong>';
+      }
+    } else {
       $this->description = MODULE_PAYMENT_PAYPALDP_TEXT_DESCRIPTION;
       $this->title = MODULE_PAYMENT_PAYPALDP_TEXT_TITLE; //cc
     }
 
     $this->sort_order = defined('MODULE_PAYMENT_PAYPALDP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALDP_SORT_ORDER : null;
-    if (null === $this->sort_order) {
-        return false;
-    }
+
+    if (null === $this->sort_order) return false;
 
     $this->enabled = (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired'));
-    if ($this->enabled === true && IS_ADMIN_FLAG === true) {
-        if ((MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY === 'US' || MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY === 'Canada') && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE === '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME === '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD === '')) {
-            $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
-        }
-        if (MODULE_PAYMENT_PAYPALDP_SERVER === 'sandbox') {
-            $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
-        }
-        if (MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email') {
-            $this->title .= '<strong> (Debug)</strong>';
-        }
-        if (!function_exists('curl_init')) {
-            $this->title .= '<strong><span class="alert"> CURL NOT FOUND. Cannot Use.</span></strong>';
-        }
-    }
 
     if ((!defined('PAYPAL_OVERRIDE_CURL_WARNING') || (defined('PAYPAL_OVERRIDE_CURL_WARNING') && PAYPAL_OVERRIDE_CURL_WARNING != 'True')) && !function_exists('curl_init')) $this->enabled = false;
 

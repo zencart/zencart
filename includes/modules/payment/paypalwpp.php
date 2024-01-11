@@ -151,53 +151,43 @@ class paypalwpp extends base {
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
     $this->codeVersion = '1.5.8';
-
+    $this->enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && (MODULE_PAYMENT_PAYPALWPP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALWPP_STATUS === 'Retired')));
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
-      $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
+      switch (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE) {
+        case ('PayPal'):
+          $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
+        break;
+        case ('Payflow-UK'):
+          $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_PRO20;
+        break;
+        case ('Payflow-US'):
+          if (defined('MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC') && MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC == 'Yes') {
+            $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_PF_EC;
+          } else {
+            $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_PF_GATEWAY;
+          }
+        break;
+        default:
+          $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
+      }
+
+      $this->sort_order = defined('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALWPP_SORT_ORDER : null;
+
+      if (null === $this->sort_order) return false;
+
+      if ($this->enabled) {
+        if ( (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'PayPal' && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
+          || (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow' && (MODULE_PAYMENT_PAYPALWPP_PFPARTNER == '' || MODULE_PAYMENT_PAYPALWPP_PFVENDOR == '' || MODULE_PAYMENT_PAYPALWPP_PFUSER == '' || MODULE_PAYMENT_PAYPALWPP_PFPASSWORD == ''))
+          ) $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
+        if (MODULE_PAYMENT_PAYPALWPP_SERVER =='sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
+        if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email') $this->title .= '<strong> (Debug)</strong>';
+        if (!function_exists('curl_init')) $this->title .= '<strong><span class="alert"> CURL NOT FOUND. Cannot Use.</span></strong>';
+      }
     } else {
       $this->description = MODULE_PAYMENT_PAYPALWPP_TEXT_DESCRIPTION;
       $this->title = MODULE_PAYMENT_PAYPALWPP_EC_TEXT_TITLE; //pp
-    }
-
-    $this->sort_order = defined('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALWPP_SORT_ORDER : null;
-    if (null === $this->sort_order) return false;
-
-    $this->enabled = (MODULE_PAYMENT_PAYPALWPP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALWPP_STATUS === 'Retired'));
-
-    if ($this->enabled === true && IS_ADMIN_FLAG === true) {
-        switch (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE) {
-            case ('PayPal'):
-                if (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE === '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME === '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD === '') {
-                    $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
-                }
-                break;
-            case ('Payflow-UK'):
-                $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_PRO20;
-                break;
-            case ('Payflow-US'):
-                if (defined('MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC') && MODULE_PAYMENT_PAYPALWPP_PAYFLOW_EC == 'Yes') {
-                    $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_PF_EC;
-                } else {
-                    $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_PF_GATEWAY;
-                }
-                break;
-            default:
-                break;
-        }
-        if (strpos(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow') === 0 && (MODULE_PAYMENT_PAYPALWPP_PFPARTNER === '' || MODULE_PAYMENT_PAYPALWPP_PFVENDOR === '' || MODULE_PAYMENT_PAYPALWPP_PFUSER === '' || MODULE_PAYMENT_PAYPALWPP_PFPASSWORD === '')) {
-            $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
-        }
-        if (MODULE_PAYMENT_PAYPALWPP_SERVER === 'sandbox') {
-            $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
-        }
-        if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email') {
-            $this->title .= '<strong> (Debug)</strong>';
-        }
-        if (!function_exists('curl_init')) {
-            $this->title .= '<strong><span class="alert"> CURL NOT FOUND. Cannot Use.</span></strong>';
-        }
     }
 
     if ((!defined('PAYPAL_OVERRIDE_CURL_WARNING') || (defined('PAYPAL_OVERRIDE_CURL_WARNING') && PAYPAL_OVERRIDE_CURL_WARNING != 'True')) && !function_exists('curl_init')) $this->enabled = false;
