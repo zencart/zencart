@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * ajaxLoadMainSql.php
  * @copyright Copyright 2003-2022 Zen Cart Development Team

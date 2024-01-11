@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * zc_install password_funcs functions
  *

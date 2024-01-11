@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 /**
  * ajaxLoadUpdatesSql.php
  * @copyright Copyright 2003-2020 Zen Cart Development Team

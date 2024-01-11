@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 /**
  * file contains zcConfigureFileWriter class
  * @copyright Copyright 2003-2023 Zen Cart Development Team
