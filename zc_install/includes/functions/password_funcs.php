@@ -214,7 +214,7 @@ function zen_create_PADSS_password(int $length = 8): string
     return $password;
 }
 
-function zen_pwd_rand(int $min = 0, int $max = 10): float|int
+function zen_pwd_rand(int $min = 0, int $max = 10): int
 {
     static $seed;
     if (!isset($seed)) {

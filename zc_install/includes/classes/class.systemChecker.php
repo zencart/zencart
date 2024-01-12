@@ -472,7 +472,7 @@ class systemChecker
         return false;
     }
 
-    public static function curlGetUrl($url, $follow_redirects = false): array|bool
+    public static function curlGetUrl($url, $follow_redirects = false): array
     {
         $options = [
             CURLOPT_RETURNTRANSFER => true, // return web page
@@ -493,6 +493,9 @@ class systemChecker
         $header = curl_getinfo($ch);
         curl_close($ch);
 
+        if ($header === false) {
+            $header = [];
+        }
         $header['errno'] = $err;
         $header['errmsg'] = $errmsg;
         $header['content'] = $content;
@@ -641,7 +644,7 @@ class systemChecker
         $this->extraRunLevels[] = $runLevel;
     }
 
-    public function validateAdminCredentials($adminUser, $adminPassword): bool|string|int
+    public function validateAdminCredentials($adminUser, $adminPassword): bool|int
     {
         $parameters = [
             [
@@ -680,10 +683,10 @@ class systemChecker
         if (!$hasAdminProfiles) {
             $sql = "SELECT admin_id, admin_name, admin_pass FROM " . $dbPrefixVal . "admin WHERE admin_name = '" . $adminUser . "'";
             $result = $db->Execute($sql);
-            if ($result->EOF || $adminUser != $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
+            if ($result->EOF || $adminUser !== $result->fields['admin_name'] || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
                 return false;
             }
-            return $result->fields['admin_id'];
+            return (int)$result->fields['admin_id'];
         }
 
 // first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
@@ -701,7 +704,7 @@ class systemChecker
                         SET admin_profile = 1
                         WHERE admin_id = " . $result->fields['admin_id'];
                 $db->Execute($sql);
-                return $result->fields['admin_id'];
+                return (int)$result->fields['admin_id'];
             }
         } else {
             $sql = "SELECT a.admin_id, a.admin_name, a.admin_pass, a.admin_profile
@@ -713,7 +716,7 @@ class systemChecker
             if ($result->EOF || !zen_validate_password($adminPassword, $result->fields['admin_pass'])) {
                 return false;
             }
-            return $result->fields['admin_id'];
+            return (int)$result->fields['admin_id'];
         }
         return false;
     }

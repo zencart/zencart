@@ -596,15 +596,17 @@ class zcDatabaseInstaller
         $this->line = str_replace('MyISAM', 'InnoDb', $this->line);
     }
 
-    public function updateConfigKeys(): bool
+    public function updateConfigKeys(): false|string
     {
+        $error_message = false;
         if (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] !== '') {
+            // not tracking errors for this; if it fails, it fails silently; the storeowner can/will override these in Admin anyway.
             $email_stub = preg_replace('~.*\/\/(www.)*~', 'YOUR_EMAIL@', $_POST['http_server_catalog']);
             $sql = "UPDATE " . $this->dbPrefix . "configuration SET configuration_value=:emailStub: WHERE configuration_key IN ('STORE_OWNER_EMAIL_ADDRESS', 'EMAIL_FROM')";
             $sql = $this->db->bindVars($sql, ':emailStub:', $email_stub, 'string');
             $this->db->Execute($sql);
         }
-        return false;
+        return $error_message;
     }
 
     public function doCompletion($options): void

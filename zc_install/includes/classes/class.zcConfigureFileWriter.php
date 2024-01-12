@@ -54,7 +54,7 @@ class zcConfigureFileWriter
         $this->processAllConfigureFiles($adminDir);
     }
 
-    protected function processAllConfigureFiles($adminDir): int|string
+    protected function processAllConfigureFiles($adminDir): int
     {
         $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
         $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
