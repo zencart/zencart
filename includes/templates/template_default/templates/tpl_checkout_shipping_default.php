@@ -129,8 +129,13 @@
 <?php echo zen_draw_textarea_field('comments', '45', '3', (isset($comments) ? $comments : ''), 'aria-label="' . HEADING_ORDER_COMMENTS . '"'); ?>
 </fieldset>
 
-<div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT); ?></div>
-<div class="buttonRow back"><?php echo '<strong>' . TITLE_CONTINUE_CHECKOUT_PROCEDURE . '</strong>' . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
-
+<?php if (zen_count_shipping_modules() > 0) { ?>
+    <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE_CHECKOUT, BUTTON_CONTINUE_ALT); ?></div>
+<?php } else { ?>
+    <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_ERROR, BUTTON_ERROR_ALT, 'disabled="disabled"'); ?></div>
+<?php } ?>
+<?php if (zen_count_shipping_modules() > 0) { ?>
+    <div class="buttonRow back"><?php echo '<strong>' . TITLE_CONTINUE_CHECKOUT_PROCEDURE . '</strong>' . '<br>' . TEXT_CONTINUE_CHECKOUT_PROCEDURE; ?></div>
+<?php } ?>
 </form>
 </div>

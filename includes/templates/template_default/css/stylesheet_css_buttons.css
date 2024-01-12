@@ -41,3 +41,12 @@ span.button_sold_out, span.button_sold_out:hover{
   background:#8b0000;
   color:#ffffff;
 }
+
+input.submit_button.button_error {
+    background: #8b0000;
+    color:#ffffff;
+}
+input.submit_button.button_error:hover, input.cssButtonHover.button_error {
+    background: #990000;
+    color:#404040;
+}

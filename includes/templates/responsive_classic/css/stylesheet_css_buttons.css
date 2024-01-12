@@ -21,3 +21,5 @@ span.cssButton.normal_button.button.button_continue_shopping, .button_continue_s
 #reviewsDefault .button_in_cart:hover{text-align:center;padding:12px 20px;}
 span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.button.small_edit{background:#666;}
 span.button_sold_out, span.button_sold_out:hover{background:#8b0000;}
+input.submit_button.button_error{background:#8b0000;}
+input.submit_button.button_error:hover, input.cssButtonHover.button_error{background:#990000;}
