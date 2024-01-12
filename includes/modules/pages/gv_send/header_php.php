@@ -97,7 +97,7 @@ if ($_GET['action'] == 'send') {
 
 if ($_GET['action'] == 'process') {
   if (!isset($_POST['back'])) { // customer didn't click the back button
-    $id1 = zen_create_coupon_code($account->fields['customers_email_address']);
+    $id1 = Coupon::generateRandomCouponCode($account->fields['customers_email_address']);
     // sanitize and remove non-numeric characters
     $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
