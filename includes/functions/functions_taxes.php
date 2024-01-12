@@ -373,7 +373,6 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
         return $tax_address;
     }
     switch (STORE_PRODUCT_TAX_BASIS) {
-
         case 'Shipping':
             $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
                                   FROM " . TABLE_ADDRESS_BOOK . " ab
@@ -407,9 +406,10 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
                                       AND ab.address_book_id = " . (int)$_SESSION['sendto'];
                 $tax_address_result = $db->Execute($tax_address_query);
             }
+            break;
     }
-    $tax_address['zone_id'] = $tax_address_result->fields['entry_zone_id'];
-    $tax_address['country_id'] = $tax_address_result->fields['entry_country_id'];
+    $tax_address['zone_id'] = $tax_address_result->fields['entry_zone_id'] ?? '0';
+    $tax_address['country_id'] = $tax_address_result->fields['entry_country_id'] ?? '0';
     return $tax_address;
 }
 
