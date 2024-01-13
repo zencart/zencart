@@ -29,6 +29,27 @@ class AdminTest extends zcFeatureTestCaseAdmin
         'salemaker' => "Admin Salemaker",
         'products_expected' => "Admin Products Expected",
         'products_to_categories' => "Admin Products To Categories",
+
+        'modules&set=payment' => 'Authorize.net',
+        'modules&set=shipping' => 'Free Shipping Options',
+        'modules&set=ordertotal' => 'Low Order Fee',
+        'plugin_manager' => 'Display logs',
+
+        'customers' => 'Account Created',
+        'orders' => 'Date Purchased',
+        'group_pricing' => 'Group Name',
+        'customer_groups' => '# of Customers',
+
+        'countries' => 'Address Format',
+        'zones' => 'Zones Name:',
+        'geo_zones' => 'Number of Zones:',
+        'tax_classes' => 'Tax Classes',
+        'tax_rates' => 'Priority',
+
+        'currencies' => 'Symbol Left:',
+        'languages' => 'Code:',
+        'orders_status' => 'Orders Status ID',
+
     ];
 
     public function testSimpleAdmin()
