@@ -50,6 +50,16 @@ class AdminTest extends zcFeatureTestCaseAdmin
         'languages' => 'Code:',
         'orders_status' => 'Orders Status ID',
 
+        'stats_customers' => 'Best Customer Orders-Total',
+        'stats_customers_referrals' => 'Customers Referral Report',
+        'stats_products_lowstock' => 'Product Stock Report',
+        'stats_products_purchased' => 'Best Products Purchased',
+        'stats_products_viewed' => 'Most-Viewed Products',
+        'stats_sales_report_graphs' => 'Monthly Sales Reports',
+
+        'banner_manager' => 'Banner Manager',
+        'define_pages_editor' => 'Define Pages Editor for:',
+
     ];
 
     public function testSimpleAdmin()
