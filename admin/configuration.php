@@ -222,7 +222,7 @@ if ($gID == 7) {
                 $value_field = zen_draw_input_field('configuration_value', htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, TRUE), 'size="60" class="cfgInput form-control" autofocus');
               }
 
-              $contents = array('form' => zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=save', 'post', 'class="from-horizontal"'));
+              $contents = array('form' => zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=save', 'post', 'class="form-horizontal"'));
               if (ADMIN_CONFIGURATION_KEY_ON == 1) {
                 $contents[] = array('text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>');
               }
