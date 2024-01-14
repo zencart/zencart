@@ -59,6 +59,34 @@ class AdminTest extends zcFeatureTestCaseAdmin
 
         'banner_manager' => 'Banner Manager',
         'define_pages_editor' => 'Define Pages Editor for:',
+        'developers_tool_kit' => 'Look-up CONSTANT or Language File defines',
+        'ezpages' => 'EZ-Pages Select a page',
+        'sqlpatch' => 'SQL Query Executor',
+        'layout_controller' => 'Editing Sideboxes for template:',
+        'newsletters' => 'Newsletter and Product Notifications Manager',
+        'mail' => 'Send Email To Customers',
+        'server_info' => 'Database Engine:',
+        'store_manager' => 'Update ALL Products Price Sorter',
+        'template_select' => 'Template Directory',
+        'whos_online' => 'Updating Manually',
+
+        'coupon_admin' => 'Coupon Code',
+        'gv_queue' => 'Gift Certificate Release Queue',
+        'gv_mail' => 'Send a Gift Certificate To Customers',
+        'gv_sent' => 'Gift Certificate Value',
+
+        'profiles' => 'User Profiles',
+        'users' => 'Reset Password',
+        'admin_page_registration' => 'Page Parameters',
+        'admin_activity' => 'Review or Export Logs',
+
+        'record_artists' => 'Recording Artists',
+        'record_company' => 'Record Companies',
+        'music_genre' => 'Music Genres',
+        'media_manager' => 'Assign to Product',
+        'media_types' => 'Extension',
+
+
 
     ];
 
