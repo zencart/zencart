@@ -874,7 +874,7 @@ class order extends base
 
         foreach ($taxRates as $taxDescription => $taxRate) {
             if (DISPLAY_PRICE_WITH_TAX === 'true') {
-                $taxAdd = $currencies->value(zen_calculate_tax($product_final_price, $taxRate)) * $product_qty + $currencies->value(zen_calculate_tax($product_onetime_charges, $taxRate));
+                $taxAdd = $currencies->value(zen_calculate_tax($product_final_price * $product_qty, $taxRate)) + $currencies->value(zen_calculate_tax($product_onetime_charges, $taxRate));
             } else {
                 $taxAdd = zen_calculate_tax($product_final_price * $product_qty, $taxRate) + zen_calculate_tax($product_onetime_charges, $taxRate);
             }
