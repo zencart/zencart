@@ -1266,10 +1266,7 @@ class shoppingCart extends base
             } elseif ($product['products_discount_type'] !== '0') {  // discount qty pricing
                 $products_price = zen_get_products_discount_price_qty($prid, $data['qty']);
             }
-global $productsPriceArray;
-$productsPriceArray = [
-    'priorToValidate' => $products_price,
-];
+
             // validate cart contents for checkout
 
             if ($check_for_valid_cart == true) {
