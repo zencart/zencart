@@ -259,7 +259,7 @@ class paypaldp extends base {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
 
       $merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : null;
-      $country = ($merchant_country !== null) ? $merchant_country : STORE_COUNTRY;
+      $country = $merchant_country ?? STORE_COUNTRY;
       $this->title = $country == '223' || $country == 'USA' ? MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP : MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_NONUSA;
       $this->title .= ($merchant_country !== null) ? " ($merchant_country)" : '';
       if ($this->enabled) {
