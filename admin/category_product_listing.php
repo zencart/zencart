@@ -988,10 +988,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   ?>
                   <?php if (zen_get_product_is_linked($product['products_id']) === 'true') {
                     echo zen_icon('linked', IMAGE_ICON_LINKED, 'lg');
-                    // TODO remove the following.. check alignment.consider align-middle on all zen_icon output.
-                    ?>
-                    <i class="fa-solid fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i>
-                  <?php } else { ?>
+                  } else { ?>
                     <i class="fa-solid fa-square fa-lg txt-transparent"></i> <!-- blank icon to preserve vertical alignment with additional icons -->
                     <?php
                   }
