@@ -42,7 +42,7 @@ $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PRE
 if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) {
     $domainPrefix = '';
 }
-$secureFlag = ((ENABLE_SSL === 'true' && substr(HTTP_SERVER, 0, 6) == 'https:' && substr(HTTPS_SERVER, 0, 6) == 'https:') || (ENABLE_SSL === 'false' && substr(HTTP_SERVER, 0, 6) == 'https:'));
+$secureFlag = ((ENABLE_SSL === 'true' && strpos(HTTP_SERVER, 'https:') === 0 && strpos(HTTPS_SERVER, 'https:') === 0) || (ENABLE_SSL === 'false' && strpos(HTTP_SERVER, 'https:') === 0));
 
 $samesite = (defined('COOKIE_SAMESITE')) ? COOKIE_SAMESITE : 'lax';
 if (!in_array($samesite, ['lax', 'strict', 'none'])) {
@@ -94,7 +94,7 @@ if (SESSION_FORCE_COOKIE_USE === 'True') {
     if (!empty($user_agent)) {
         $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
         for ($i=0, $n = count($spiders); $i < $n; $i++) {
-            if (!empty($spiders[$i]) && substr($spiders[$i], 0, 4) != '$Id:') {
+            if (!empty($spiders[$i]) && strpos($spiders[$i], '$Id:') !== 0) {
                 if (is_integer(strpos($user_agent, trim($spiders[$i])))) {
                     $spider_flag = true;
                     break;
