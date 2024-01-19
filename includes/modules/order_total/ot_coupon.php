@@ -659,10 +659,7 @@ class ot_coupon extends base
 
                 $orderTotal -= $product['final_price'] * $product['quantity'];
 
-                if ($this->include_tax == 'true') {
-                    $orderTotal -= $productsTaxAmount;
-                }
-                if (DISPLAY_PRICE_WITH_TAX == 'true') {
+                if ($this->include_tax === 'true' || DISPLAY_PRICE_WITH_TAX === 'true') {
                     $orderTotal -= $productsTaxAmount;
                 }
                 $orderTotalTax -= $productsTaxAmount;
