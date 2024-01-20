@@ -519,7 +519,7 @@ class ot_coupon extends base
                     $products = $_SESSION['cart']->get_products();
                     $coupon_product_count = 0;
                     foreach ($products as $product) {
-                        if (is_product_valid($product['id'], $coupon_details['coupon_id'])) {
+                        if (CouponValidation::is_product_valid($product['id'], $coupon_details['coupon_id'])) {
                             $coupon_product_count += $_SESSION['cart']->get_quantity($product['id']);
                         }
                     }
@@ -648,7 +648,7 @@ class ot_coupon extends base
         $i = 0;
         foreach ($products as $product) {
             $i++;
-            $is_product_valid = (is_product_valid($product['id'], $coupon_id) && is_coupon_valid_for_sales($product['id'], $coupon_id));
+            $is_product_valid = (CouponValidation::is_product_valid($product['id'], $coupon_id) && CouponValidation::is_coupon_valid_for_sales($product['id'], $coupon_id));
 
             $this->notify('NOTIFY_OT_COUPON_PRODUCT_VALIDITY', ['is_product_valid' => $is_product_valid, 'i' => $i]);
 
@@ -659,10 +659,7 @@ class ot_coupon extends base
 
                 $orderTotal -= $product['final_price'] * $product['quantity'];
 
-                if ($this->include_tax == 'true') {
-                    $orderTotal -= $productsTaxAmount;
-                }
-                if (DISPLAY_PRICE_WITH_TAX == 'true') {
+                if ($this->include_tax === 'true' || DISPLAY_PRICE_WITH_TAX === 'true') {
                     $orderTotal -= $productsTaxAmount;
                 }
                 $orderTotalTax -= $productsTaxAmount;
@@ -826,7 +823,7 @@ class ot_coupon extends base
 
         $found_valid = false;
         foreach ($products as $product) {
-            if (is_product_valid($product['id'], $coupon_id) && is_coupon_valid_for_sales($product['id'], $coupon_id)) {
+            if (CouponValidation::is_product_valid($product['id'], $coupon_id) && CouponValidation::is_coupon_valid_for_sales($product['id'], $coupon_id)) {
                 $found_valid = true;
                 break;
             }

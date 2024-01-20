@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ajaxGetProgressValues.php
  * @package Installer

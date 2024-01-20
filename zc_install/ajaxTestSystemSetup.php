@@ -12,15 +12,14 @@ define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require(DIR_FS_INSTALL . 'includes/application_top.php');
 
-$error = FALSE;
-$errorList = array();
+$error = false;
+$errorList = [];
 
 //physical path tests
 
-if (!file_exists($_POST['physical_path']. '/includes/vers' . 'ion.php'))
-{
-  $error = TRUE;
-  $errorList[] = TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH;
+if (!file_exists($_POST['physical_path'] . '/includes/vers' . 'ion.php')) {
+    $error = true;
+    $errorList[] = TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH;
 }
 
-echo json_encode(array('error'=>$error, 'errorList'=>$errorList));
+echo json_encode(['error' => $error, 'errorList' => $errorList]);

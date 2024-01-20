@@ -9,7 +9,7 @@
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
 
-<?php if (sizeof($newArray)) { ?>
+<?php if (count($newArray)) { ?>
 <div class="upgrade-progress-area">
   <div class="alert-box" id="upgradeHeaderMessage"><?php echo TEXT_DATABASE_UPGRADE_STEPS_DETECTED; ?></div>
 </div>
@@ -19,7 +19,7 @@
 <form id="db_upgrade<?php echo (count($newArray)) ? '' : '_done'; ?>" name="db_upgrade" method="post" action="index.php?main_page=completion" data-abide="ajax">
   <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
   <input type="hidden" name="action" value="process">
-<?php if (sizeof($newArray)) { ?>
+<?php if (count($newArray)) { ?>
   <input type="hidden" name="upgrade_mode" value="yes">
   <fieldset id="availableUpgradeSteps">
     <legend><?php echo TEXT_DATABASE_UPGRADE_LEGEND_UPGRADE_STEPS; ?></legend>
@@ -27,7 +27,7 @@
 
     <div class="small-12 columns">
     <?php foreach ($newArray as $key => $value)  { ?>
-      <?php $from = ($key == 0) ? $dbVersion : $newArray[($key - 1)]; ?>
+      <?php $from = ($key === 0) ? $dbVersion : $newArray[($key - 1)]; ?>
       <?php $to = $newArray[$key]; ?>
        <div id="label-version-<?php echo str_replace('.', '_', $newArray[$key]); ?>" class="checkbox-wrapper">
           <label for="version-<?php echo str_replace('.', '_', $newArray[$key]); ?>">

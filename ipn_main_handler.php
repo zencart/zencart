@@ -132,7 +132,6 @@ Processing...
     $logdir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : 'includes/modules/payment/paypal/logs';
     if ($debug_logfile_path == '') $debug_logfile_path = $logdir . '/ipn_debug_php_errors-'.time().'.log';
     @ini_set('log_errors', 1);
-    @ini_set('log_errors_max_len', 0);
     @ini_set('display_errors', 0); // do not output errors to screen/browser/client (only to log file)
     @ini_set('error_log', DIR_FS_CATALOG . $debug_logfile_path);
     error_reporting(version_compare(PHP_VERSION, 5.3, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE : (version_compare(PHP_VERSION, 5.4, '>=') ? E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT : E_ALL & ~E_NOTICE));

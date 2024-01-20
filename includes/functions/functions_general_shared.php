@@ -142,6 +142,30 @@ function zen_field_length(string $table_name, string $field_name): int
     return (int)$query[strtoupper($field_name)]->max_length;
 }
 
+/**
+ * Generate HTML FORM attributes for size="foo" maxlength="bar" based on maximum size (default 50)
+ * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ */
+function zen_set_field_length(string $table_name, string $field_name, $max = null, bool $override = false): string
+{
+    if (is_null($max)) {
+        $max = 70;
+        if (IS_ADMIN_FLAG === true) {
+            $max = 50;
+        }
+    }
+    $max = (int)$max;
+
+    $field_length = zen_field_length($table_name, $field_name);
+    $size = $field_length + 1;
+
+    if ($override !== true && $field_length > $max) {
+        $size = $max + 1;
+    }
+
+    return 'size="' . $size . '" maxlength="' . $field_length . '"';
+}
+
 
 /**
  * Return all HTTP GET variables, except those passed as a parameter

@@ -10,9 +10,9 @@ $adjustWarnIssues = false;
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?php echo $formAction; ?>">
 <input type="hidden" name="lng" value="<?php echo $installer_lng; ?>">
 <?php if ($hasMultipleAdmins) { ?>
-	<?php $adjustWarnIssues = True ?>
+	<?php $adjustWarnIssues = true ?>
     <div class="alert-box alert">
-    <?php if ($selectedAdminDir != '') { ?>
+    <?php if ($selectedAdminDir !== '') { ?>
     <?php  echo TEXT_ERROR_MULTIPLE_ADMINS_SELECTED; ?>
     <?php } else { ?>
     <?php  echo TEXT_ERROR_MULTIPLE_ADMINS_NONE_SELECTED; ?>
@@ -22,9 +22,9 @@ $adjustWarnIssues = false;
 <?php } else { ?>
 <input type="hidden" name="adminDir" value="<?php echo $selectedAdminDir; ?>">
 <?php } ?>
-<?php if ($selectedAdminDir != '') { ?>
+<?php if ($selectedAdminDir !== '') { ?>
 <?php if ($hasSaneConfigFile && !$isCurrentDb && !$otherConfigErrors && $hasUpdatedConfigFile) { ?>
-	<?php $adjustWarnIssues = True ?>
+	<?php $adjustWarnIssues = true ?>
     <div class="alert-box success">
     <?php  echo TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE; ?>
     </div>
@@ -34,14 +34,14 @@ $adjustWarnIssues = false;
     </div>
 <?php } ?>
 <?php if (!$hasUpdatedConfigFile && $hasSaneConfigFile) { ?>
-	<?php $adjustWarnIssues = True ?>
+	<?php $adjustWarnIssues = true ?>
         <div class="alert-box alert">
             <?php  echo TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE; ?>
         </div>
 
 <?php } ?>
 <?php if ($hasFatalErrors) { ?>
-	<?php $adjustWarnIssues = True ?>
+	<?php $adjustWarnIssues = true ?>
 <div id="fatalErrors" class="errorList">
   <h2><?php echo TEXT_INDEX_FATAL_ERRORS; ?></h2>
     <?php foreach ($listFatalErrors as $error) { ?>
@@ -57,7 +57,7 @@ $adjustWarnIssues = false;
 </div>
 <?php } ?>
 <?php if ($hasLocalAlerts) { ?>
-	<?php $adjustWarnIssues = True ?>
+	<?php $adjustWarnIssues = true ?>
 <div id="alerts" class="errorList">
   <h2><?php echo TEXT_INDEX_ALERTS; ?></h2>
     <?php foreach ($listLocalAlerts as $error) { ?>

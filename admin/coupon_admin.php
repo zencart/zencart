@@ -42,9 +42,9 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
     ];
     $searchWords = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
     $sql = "SELECT c.coupon_id, c.coupon_active
-          FROM " . TABLE_COUPONS . " c
-          LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON cd.coupon_id = c.coupon_id
-          " . $searchWords . $active;
+            FROM " . TABLE_COUPONS . " c
+            LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON cd.coupon_id = c.coupon_id
+            " . $searchWords . $active;
   $search = $db->Execute($sql);
   if ($search->EOF) {
       $messageStack->add_session(ERROR_COUPON_NOT_FOUND, 'caution');
@@ -130,6 +130,10 @@ if (!empty($_GET['mail_sent_to'])) {
   $_GET['mail_sent_to'] = '';
 }
 
+if (empty($_GET['cid']) && $_GET['action'] === 'voucheredit') {
+    $_GET['action'] = '';
+}
+
 switch ($_GET['action']) {
   case 'set_editor':
     // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
@@ -138,226 +142,65 @@ switch ($_GET['action']) {
     break;
 
   case 'confirmdelete':
-// do not allow change if set to welcome coupon
+    // do not allow change if set to welcome coupon
     if ($_GET['cid'] == NEW_SIGNUP_DISCOUNT_COUPON) {
       $messageStack->add_session(ERROR_DISCOUNT_COUPON_WELCOME, 'caution');
       zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
     }
 
-    $db->Execute("UPDATE " . TABLE_COUPONS . "
-                  SET coupon_active = 'N'
-                  WHERE coupon_id = " . (int)$_GET['cid']);
+    Coupon::disable((int)$_GET['cid']);
     $messageStack->add_session(SUCCESS_COUPON_DISABLED, 'success');
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
     break;
 
   case 'confirmreactivate':
-    $db->Execute("UPDATE " . TABLE_COUPONS . "
-                  SET coupon_active = 'Y'
-                  WHERE coupon_id = " . (int)$_GET['cid']);
+    Coupon::enable((int)$_GET['cid']);
     $messageStack->add_session(SUCCESS_COUPON_REACTIVATE, 'success');
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid']));
     break;
 
   case 'confirmdeleteduplicate':
-// base code - confirm base code for duplicate codes
-// do not allow change if matches welcome coupon
-    $delete_duplicate_coupons_check = $db->Execute("SELECT coupon_id
-                                                    FROM " . TABLE_COUPONS . "
-                                                    WHERE coupon_code LIKE '" . $_POST['coupon_delete_duplicate_code'] . "%'
-                                                    AND coupon_id = " . (int)NEW_SIGNUP_DISCOUNT_COUPON);
-    if ($delete_duplicate_coupons_check->RecordCount() > 0) {
-      $messageStack->add_session(ERROR_DISCOUNT_COUPON_WELCOME, 'caution');
-    }
-    $delete_duplicate_coupons = $db->Execute("SELECT coupon_id, coupon_code
-                                              FROM " . TABLE_COUPONS . "
-                                              WHERE coupon_code LIKE '" . $_POST['coupon_delete_duplicate_code'] . "%'
-                                              AND coupon_active = 'Y'
-                                              AND coupon_id !=  " . (int)NEW_SIGNUP_DISCOUNT_COUPON . "
-                                              AND coupon_type != 'G'");
-    foreach ($delete_duplicate_coupons as $delete_duplicate_coupon) {
-//        echo 'Delete: ' . $delete_duplicate_coupons->fields['coupon_code'] . '<br>';
-      $messageStack->add_session(TEXT_DISCOUNT_COUPON_DEACTIVATED . $delete_duplicate_coupon['coupon_code'], 'caution');
-      $db->Execute("UPDATE " . TABLE_COUPONS . "
-                    SET coupon_active = 'N'
-                    WHERE coupon_code = '" . $delete_duplicate_coupon['coupon_code'] . "'
-                    AND coupon_type != 'G'");
-    }
+      $deleted = Coupon::deleteDuplicates($_POST['coupon_delete_duplicate_code']);
+      if (isset($deleted['welcome_coupon'])) {
+          $messageStack->add_session(ERROR_DISCOUNT_COUPON_WELCOME, 'caution');
+      }
+      foreach ($deleted['deleted'] ?? [] as $duplicate) {
+          $messageStack->add_session(TEXT_DISCOUNT_COUPON_DEACTIVATED . $duplicate, 'caution');
+      }
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
     break;
 
   case 'confirmcopyduplicate':
 // base code - create duplicate codes from base code
-    /*
-      echo 'Build copies from coupon cid: ' . $_GET['cid'] . '<br>';
-      echo 'Base name coupon_copy_to_dup_name: ' . $_POST['coupon_copy_to_dup_name'] . '<br>';
-      echo 'Number to make coupon_copy_to_count: ' . $_POST['coupon_copy_to_count'] . '<br>';
-      echo 'Build Copy Duplicates' . '<br>';
-     */
     $zc_discount_coupons_create = (int)$_POST['coupon_copy_to_count'];
     if ($zc_discount_coupons_create < 1) {
-      $messageStack->add_session(WARNING_COUPON_DUPLICATE . $_POST['coupon_copy_to_dup_name'] . ' - ' . $_POST['coupon_copy_to_count'], 'caution');
+      $messageStack->add_session(WARNING_COUPON_DUPLICATE . $_POST['coupon_copy_to_dup_name'] . ' - x' . $_POST['coupon_copy_to_count'], 'caution');
     } else {
-      $check_new_coupon = $db->Execute("SELECT *
-                                        FROM " . TABLE_COUPONS . "
-                                        WHERE coupon_id = " . (int)$_GET['cid']);
-      for ($i = 1; $i <= $zc_discount_coupons_create; $i++) {
-        $old_code_length = strlen($_POST['coupon_copy_to_dup_name']);
-        $minimum_extra_chars = 7;
-        $delta_calculation = SECURITY_CODE_LENGTH - ($old_code_length + $minimum_extra_chars);
-        $new_code_length = ($delta_calculation > 0) ? $minimum_extra_chars + $delta_calculation : $minimum_extra_chars;
-        $new_code = zen_create_coupon_code($_POST['coupon_copy_to_dup_name'], $new_code_length, $_POST['coupon_copy_to_dup_name']);
-        if ($new_code != '') {
-          // make new coupon
-          $sql_data_array = [
-            'coupon_code' => zen_db_prepare_input($new_code),
-            'coupon_amount' => zen_db_prepare_input($check_new_coupon->fields['coupon_amount']),
-            'coupon_product_count' => zen_db_prepare_input($check_new_coupon->fields['coupon_product_count']),
-            'coupon_type' => zen_db_prepare_input($check_new_coupon->fields['coupon_type']),
-            'uses_per_coupon' => (int)$check_new_coupon->fields['uses_per_coupon'],
-            'uses_per_user' => (int)$check_new_coupon->fields['uses_per_user'],
-            'coupon_minimum_order' => (float)$check_new_coupon->fields['coupon_minimum_order'],
-            'restrict_to_products' => zen_db_prepare_input($check_new_coupon->fields['restrict_to_products']),
-            'restrict_to_categories' => zen_db_prepare_input($check_new_coupon->fields['restrict_to_categories']),
-            'coupon_start_date' => $check_new_coupon->fields['coupon_start_date'],
-            'coupon_expire_date' => $check_new_coupon->fields['coupon_expire_date'],
-            'date_created' => 'now()',
-            'date_modified' => 'now()',
-            'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction'],
-            'coupon_calc_base' => $check_new_coupon->fields['coupon_calc_base'],
-            'coupon_order_limit' => $check_new_coupon->fields['coupon_order_limit'],
-            'coupon_is_valid_for_sales' => $check_new_coupon->fields['coupon_is_valid_for_sales'],
-            'coupon_active' => 'Y',
-          ];
-          zen_db_perform(TABLE_COUPONS, $sql_data_array);
-          $cid = $db->insert_ID();
-
-          // make new description
-          $sql = "SELECT *
-                  FROM " . TABLE_COUPONS_DESCRIPTION . "
-                  WHERE coupon_id = " . (int)$_GET['cid'];
-          $new_coupon_descriptions = $db->Execute($sql);
-
-          foreach ($new_coupon_descriptions as $new_coupon_description) {
-            $sql_mdata_array = [
-              'coupon_id' => (int)$cid,
-              'language_id' => (int)$new_coupon_description['language_id'],
-              'coupon_name' => zen_db_prepare_input($new_coupon_description['coupon_name']),
-              'coupon_description' => zen_db_prepare_input($new_coupon_description['coupon_description']),
-            ];
-            zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_mdata_array);
-          }
-
-          // add restrictions
-          $sql = "SELECT *
-                  FROM " . TABLE_COUPON_RESTRICT . "
-                  WHERE coupon_id = " . (int)$_GET['cid'];
-          $copy_coupon_restrictions = $db->Execute($sql);
-
-          foreach ($copy_coupon_restrictions as $copy_coupon_restriction) {
-            $sql_rdata_array = [
-              'coupon_id' => (int)$cid,
-              'product_id' => (int)$copy_coupon_restriction['product_id'],
-              'category_id' => (int)$copy_coupon_restriction['category_id'],
-              'coupon_restrict' => zen_db_prepare_input($copy_coupon_restriction['coupon_restrict']),
-            ];
-            zen_db_perform(TABLE_COUPON_RESTRICT, $sql_rdata_array);
-          }
-          $success = true;
+        $status = Coupon::make_duplicates((int)$_GET['cid'], $_POST['coupon_copy_to_dup_name'], $zc_discount_coupons_create);
+        if ($status === true) {
+            $messageStack->add_session(SUCCESS_COUPON_DUPLICATE . $_POST['coupon_copy_to_dup_name'] . ' - x' . $_POST['coupon_copy_to_count'], 'success');
         } else {
           // cannot create code
-          $messageStack->add_session(WARNING_COUPON_DUPLICATE_FAILED . $_POST['coupon_copy_to_dup_name'] . ' - ' . $_POST['coupon_copy_to_count'], 'caution');
-          $success = false;
-          break;
+          $messageStack->add_session(WARNING_COUPON_DUPLICATE_FAILED . $_POST['coupon_copy_to_dup_name'] . ' - x' . $_POST['coupon_copy_to_count'], 'caution');
         }
-      } // eof for
-      if ($success) {
-        $messageStack->add_session(SUCCESS_COUPON_DUPLICATE . $_POST['coupon_copy_to_dup_name'] . ' - ' . $_POST['coupon_copy_to_count'], 'success');
-      }
     }
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
     break;
 
   case 'confirmcopy':
     $coupon_copy_to = trim($_POST['coupon_copy_to']);
-
-    // check if new coupon code exists
-    $sql = "SELECT *
-            FROM " . TABLE_COUPONS . "
-            WHERE coupon_code = :coupon_copy:";
-    $sql = $db->bindVars($sql, ':coupon_copy:', $coupon_copy_to, 'string');
-    $check_new_coupon = $db->Execute($sql);
-    if ($check_new_coupon->RecordCount() > 0) {
+    $result = Coupon::clone((int)$_GET['cid'], $coupon_copy_to);
+    if ($result === false) {
       $messageStack->add_session(ERROR_DISCOUNT_COUPON_DUPLICATE . $coupon_copy_to, 'caution');
       zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+    } else {
+        // use the new coupon id as the page to go to on success
+        $_GET['cid'] = (string)$result;
     }
-
-    $sql = "SELECT *
-            FROM " . TABLE_COUPONS . "
-            WHERE coupon_id = " . (int)$_GET['cid'];
-    $check_new_coupon = $db->Execute($sql);
-
-    // create duplicate coupon
-    $sql_data_array = [
-      'coupon_code' => zen_db_prepare_input($coupon_copy_to),
-      'coupon_amount' => zen_db_prepare_input($check_new_coupon->fields['coupon_amount']),
-      'coupon_product_count' => (int)$check_new_coupon->fields['coupon_product_count'],
-      'coupon_type' => zen_db_prepare_input($check_new_coupon->fields['coupon_type']),
-      'uses_per_coupon' => (int)$check_new_coupon->fields['uses_per_coupon'],
-      'uses_per_user' => (int)$check_new_coupon->fields['uses_per_user'],
-      'coupon_minimum_order' => (float)$check_new_coupon->fields['coupon_minimum_order'],
-      'restrict_to_products' => zen_db_prepare_input($check_new_coupon->fields['restrict_to_products']),
-      'restrict_to_categories' => zen_db_prepare_input($check_new_coupon->fields['restrict_to_categories']),
-      'coupon_start_date' => $check_new_coupon->fields['coupon_start_date'],
-      'coupon_expire_date' => $check_new_coupon->fields['coupon_expire_date'],
-      'date_created' => 'now()',
-      'date_modified' => 'now()',
-      'coupon_zone_restriction' => $check_new_coupon->fields['coupon_zone_restriction'],
-      'coupon_calc_base' => (int)$check_new_coupon->fields['coupon_calc_base'],
-      'coupon_order_limit' => $check_new_coupon->fields['coupon_order_limit'],
-      'coupon_is_valid_for_sales' => (int)$check_new_coupon->fields['coupon_is_valid_for_sales'],
-      'coupon_active' => 'Y',
-    ];
-
-    zen_db_perform(TABLE_COUPONS, $sql_data_array);
-    $cid = $db->insert_ID();
-
-    // create duplicate coupon description
-    $sql = "SELECT *
-            FROM " . TABLE_COUPONS_DESCRIPTION . "
-            WHERE coupon_id = " . (int)$_GET['cid'];
-    $new_coupon_descriptions = $db->Execute($sql);
-
-    foreach ($new_coupon_descriptions as $new_coupon_description) {
-      $sql_mdata_array = [
-        'coupon_id' => (int)$cid,
-        'language_id' => (int)$new_coupon_descriptions->fields['language_id'],
-        'coupon_name' => zen_db_prepare_input('COPY: ' . $new_coupon_descriptions->fields['coupon_name']),
-        'coupon_description' => zen_db_prepare_input($new_coupon_descriptions->fields['coupon_description'])
-      ];
-      zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_mdata_array);
-    }
-
-    // copy restrictions
-    $sql = "SELECT *
-            FROM " . TABLE_COUPON_RESTRICT . "
-            WHERE coupon_id = " . (int)$_GET['cid'];
-    $copy_coupon_restrictions = $db->Execute($sql);
-
-    foreach ($copy_coupon_restrictions as $copy_coupon_restriction) {
-      $sql_rdata_array = [
-        'coupon_id' => (int)$cid,
-        'product_id' => (int)$copy_coupon_restrictions->fields['product_id'],
-        'category_id' => zen_db_prepare_input($copy_coupon_restrictions->fields['category_id']),
-        'coupon_restrict' => zen_db_prepare_input($copy_coupon_restrictions->fields['coupon_restrict'])
-      ];
-      zen_db_perform(TABLE_COUPON_RESTRICT, $sql_rdata_array);
-    }
-
-    $_GET['cid'] = $cid;
     $messageStack->add_session(SUCCESS_COUPON_DUPLICATE . $coupon_copy_to, 'success');
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'action=voucheredit' . '&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')));
     break;
+
   case 'update':
     $update_errors = 0;
     $_POST['coupon_code'] = trim($_POST['coupon_code']);
@@ -390,7 +233,7 @@ switch ($_GET['action']) {
       $messageStack->add(ERROR_NO_COUPON_CODE, 'error');
     }
     if (!$_POST['coupon_code']) {
-      $coupon_code = zen_create_coupon_code();
+      $coupon_code = Coupon::generateRandomCouponCode();
     }
     if ($_POST['coupon_code']) {
       $coupon_code = $_POST['coupon_code'];

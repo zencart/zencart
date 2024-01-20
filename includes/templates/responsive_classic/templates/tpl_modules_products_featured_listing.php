@@ -100,7 +100,7 @@
         $link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($featured_products->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($featured_products->fields['master_categories_id']) . '&products_id=' . $featured_products->fields['products_id']) . '" title="' . $featured_products->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
         $the_button = $link;
         $products_link = '<a class="list-more" href="' . zen_href_link(zen_get_info_page($featured_products->fields['products_id']), 'cPath=' . zen_get_generated_category_path_rev($featured_products->fields['master_categories_id']) . '&products_id=' . $featured_products->fields['products_id']) . '" title="' . $featured_products->fields['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
-        $display_products_button = zen_get_buy_now_button($featured_products->fields['products_id'], $the_button, $products_link) . '<br>' . zen_get_products_quantity_min_units_display($featured_products->fields['products_id']) . str_repeat('<br>', substr(PRODUCT_FEATURED_BUY_NOW, 3, 1));
+        $display_products_button = zen_get_buy_now_button($featured_products->fields['products_id'], $the_button, $products_link) . '<br>' . zen_get_products_quantity_min_units_display($featured_products->fields['products_id']) . '<br>';
       }
 
       if (PRODUCT_FEATURED_LIST_DESCRIPTION > '0') {

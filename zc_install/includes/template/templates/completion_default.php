@@ -12,7 +12,7 @@
 			<h6><?php echo TEXT_COMPLETION_NGINX_TEXT; ?></h6>
 		</div>
 
-<?php if ($adminDir == 'admin' && !defined('DEVELOPER_MODE')) { ?>
+<?php if ($adminDir === 'admin' && !defined('DEVELOPER_MODE')) { ?>
 		<br><br>
 		<div class="alert-box  secondary">
 			<h6><?php echo TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING; ?></h6>
@@ -37,11 +37,11 @@
 		<?php echo TEXT_COMPLETION_INSTALL_COMPLETE; ?>
 
 		<br>
-	<?php if ($catalogLink != '#') echo TEXT_COMPLETION_INSTALL_LINKS_BELOW; ?>
+	<?php if ($catalogLink !== '#') echo TEXT_COMPLETION_INSTALL_LINKS_BELOW; ?>
 <?php } ?>
 
 		</h5>
-<?php if (!$isUpgrade && $catalogLink != '#') { ?>
+<?php if (!$isUpgrade && $catalogLink !== '#') { ?>
 
 		<div class="text-center">
 			<a class="radius button" href="<?php echo $adminLink; ?>" rel="noopener" target="_blank" tabindex="1">

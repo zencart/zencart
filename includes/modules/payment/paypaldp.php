@@ -253,15 +253,17 @@ class paypaldp extends base {
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
-    $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True');
+    $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired')));
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
-      $country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : STORE_COUNTRY;
+
+      $merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : null;
+      $country = $merchant_country ?? STORE_COUNTRY;
       $this->title = $country == '223' || $country == 'USA' ? MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP : MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_NONUSA;
-      $this->title .= (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') ? ' (' . MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY . ')' : '');
+      $this->title .= ($merchant_country !== null) ? " ($merchant_country)" : '';
       if ($this->enabled) {
-        if ( ((MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'US' || MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'Canada') && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
+        if ((($merchant_country === 'USA' || $merchant_country === 'Canada') && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
               || (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True')
           ) $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
         if (MODULE_PAYMENT_PAYPALDP_SERVER =='sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
@@ -2178,6 +2180,16 @@ class paypaldp extends base {
       $db->Execute("ALTER TABLE " . TABLE_PAYPAL . " CHANGE zen_order_id order_id int(11) NOT NULL default '0'");
     }
 
+    global $current_page;
+    if ($current_page === (FILENAME_MODULES . '.php')) {
+        $db->Execute(
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_description = 'Do you want to enable this payment module? Use the <b>Retired</b> setting if you are planning to remove this payment module but still have administrative actions to perform against orders placed with this module.',
+                    set_function = 'zen_cfg_select_option(array(\'True\', \'False\', \'Retired\'), '
+              WHERE configuration_key = 'MODULE_PAYMENT_PAYPALDP_STATUS'
+              LIMIT 1"
+        );
+    }
   }
 
   /****************************************************************************************************************************
