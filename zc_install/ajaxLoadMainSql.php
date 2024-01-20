@@ -17,6 +17,7 @@ $db_type = 'mysql';
 
 
 require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+
 $options = [
     'db_host' => $_POST['db_host'],
     'db_user' => $_POST['db_user'],

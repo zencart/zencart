@@ -5,6 +5,8 @@
  * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
  */
 ?>
+<?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_progress_bar.php'); ?>
+
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_admin_validation_errors.php'); ?>
 
 <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php'); ?>
@@ -78,7 +80,7 @@ $().ready(function() {
     $('#upgradeResponsesHolder').html('');
     var myform = this;
     var str = $(this).serialize();
-    $.ajax({
+      $.ajax({
       type: "POST",
       dataType: "json",
       data: str,
@@ -95,6 +97,8 @@ $().ready(function() {
           $('#upgradeHeaderMessage').addClass('secondary');
           $('.upgrade-hide-area').hide();
           $('.upgrade-continue-button').hide();
+          $("#progress-bar-dialog").foundation('reveal', 'open', {close_on_background_click:false});
+          t = setTimeout("updateStatus()", 10);
           doAjaxUpdateSql(myform);
         }
       }
@@ -151,7 +155,7 @@ function doAjaxUpdateSql(form)
   promise.done(function(response) {
     $('.upgrade-progress-area').hide();
     var length = $('input[type=checkbox]:not(:checked)').length;
-    console.log('DB Upgrade progress. Remaining checkboxes: '+length);
+    //console.log('DB Upgrade progress. Remaining checkboxes: '+length);
     if (length == 0) {
       $('#availableUpgradeSteps').hide();
       $('.upgrade-continue-button').show();
@@ -199,4 +203,44 @@ $(function()
       e.preventDefault();
     })
   });
+
+function updateStatus() {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        cache : false,
+        url: '<?php echo "ajaxGetProgressValues.php"; ?>',
+        success: function(data) {
+            if (data.progress)
+            {
+                if(data.progressFeedback)
+                {
+                    writeProgressInfo(data.progressFeedback)
+                } else {
+                    writeProgressInfo('')
+                }
+                if (data.message)
+                {
+                    $('#dialog-title').html(data.message + ' ' + data.progress.toFixed( 0 ) + '%');
+                }
+                if (data.progress >= 0 && data.progress < 99) {
+                    $("#progress-bar").html('<span class="meter" style="width:'+data.progress+'%;"></span>');
+                    t = setTimeout("updateStatus()", 10);
+                }
+            } else
+            {
+                t = setTimeout("updateStatus()", 10);
+            }
+        },
+        error: function(data) {
+            t = setTimeout("updateStatus()", 10);
+        }
+    });
+}
+
+function writeProgressInfo(text) {
+    $('#progress-info').text(text);
+    $('#progress-container').scrollTop($('#progress-info').height());
+}
+
 </script>
