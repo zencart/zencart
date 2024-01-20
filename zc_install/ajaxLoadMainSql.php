@@ -17,6 +17,7 @@ $db_type = 'mysql';
 
 
 require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+
 $options = [
     'db_host' => $_POST['db_host'],
     'db_user' => $_POST['db_user'],
@@ -76,11 +77,15 @@ if (isset($_POST['demoData'])) {
     $file = DIR_FS_INSTALL . 'sql/demo/mysql_demo.sql';
     logDetails('processing file ' . $file);
     $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
-    // system('unzip --q demo_images/images.zip -d ../images/');
-    $za = new ZipArchive;
-    if ($za->open('demo_images/images.zip') === true) {
-        $za->extractTo('../images');
-        $za->close();
+
+    // attempt to unzip demo images, failing silently if Zip extension isn't installed
+    if (class_exists('ZipArchive')) {
+        // system('unzip --q demo_images/images.zip -d ../images/');
+        $za = new ZipArchive;
+        if ($za->open('demo_images/images.zip') === true) {
+            $za->extractTo('../images');
+            $za->close();
+        }
     }
 }
 if ($error) {

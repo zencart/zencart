@@ -132,5 +132,18 @@ ul.breadcrumbs li.current a:after {
     border-left-color: #3A87AD;
 }
 
+#progress-container {
+    width: 80%;
+    max-width: 600px;
+    height: 80px;
+    background-color: #fff;
+    border: 2px solid #000;
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
 
+#progress-info {
+    white-space: pre-line;
+}
 

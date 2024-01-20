@@ -7,10 +7,13 @@
  */
 ?>
 <div id="progress-bar-dialog" class="reveal-modal" data-reveal tabindex="-1">
-<div class="modal-header">
-<h3 id="dialog-title"></h3>
-</div>
-<div id="progress-bar-container" class="modal-body">
-<div id="progress-bar" class="progress"></div>
-</div>
+    <div class="modal-header">
+        <h3 id="dialog-title"></h3>
+    </div>
+    <div id="progress-bar-container" class="modal-body">
+        <div id="progress-bar" class="progress"></div>
+        <div id="progress-container">
+            <div id="progress-info" class="progress-detail"></div>
+        </div>
+    </div>
 </div>

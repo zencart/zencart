@@ -36,11 +36,10 @@ $updateList = [
 
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
-$updateVersion = str_replace('version-', '', $_POST['version']);
+$postedVersion = sanitize_version($_POST['version']);
+$updateVersion = str_replace('version-', '', $postedVersion);
 $updateVersion = str_replace('_', '.', $updateVersion);
 $versionInfo = $updateList[$updateVersion];
-
-// $errorList[] = "I have $dbVersion. POST=" . $_POST['version'] . ' which asks for updateVersion=' . $updateVersion . '; therefore versionRequired=' . $versionInfo[required];
 
 if ($versionInfo['required'] !== $dbVersion) {
     $error = true;
@@ -50,19 +49,26 @@ if ($versionInfo['required'] !== $dbVersion) {
     $errorList[] = sprintf(TEXT_COULD_NOT_UPDATE_BECAUSE_ANOTHER_VERSION_REQUIRED, $updateVersion, $dbVersion, $versionInfo['required']);
 }
 if ($error) {
-    echo json_encode(['error' => $error, 'version' => $_POST['version'], 'errorList' => $errorList]);
+    echo json_encode(['error' => $error, 'version' => $updateVersion, 'errorList' => $errorList]);
     die();
 }
 
 require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+
 $file = DIR_FS_INSTALL . 'sql/updates/' . $db_type . '_upgrade_zencart_' . str_replace('.', '', $updateVersion) . '.sql';
 $options = $systemChecker->getDbConfigOptions();
 $dbInstaller = new zcDatabaseInstaller($options);
+$extendedOptions = [
+    'doJsonProgressLogging' => true,
+    'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+    'id' => 'main',
+    'message' => sprintf(TEXT_UPGRADING_TO_VERSION, $updateVersion),
+];
 $result = $dbInstaller->getConnection();
 $errDates = $dbInstaller->runZeroDateSql($options);
-$errorUpg = $dbInstaller->parseSqlFile($file);
+$errorUpg = $dbInstaller->parseSqlFile($file, $extendedOptions);
 if ($error) {
-    echo json_encode(['error' => $error, 'version' => $_POST['version'], 'errorList' => $errorList]);
+    echo json_encode(['error' => $error, 'version' => $updateVersion, 'errorList' => $errorList]);
     die();
 }
 
@@ -83,4 +89,9 @@ if ($sql_files !== false) {
     }
 }
 
-echo json_encode(['error' => $error, 'version' => $_POST['version'], 'errorList' => $errorList]);
+echo json_encode(['error' => $error, 'version' => $updateVersion, 'errorList' => $errorList]);
+
+function sanitize_version($version) {
+    $sanitizedString = preg_replace('/[^a-zA-Z0-9_-]/', '', $version);
+    return $sanitizedString;
+}
