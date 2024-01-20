@@ -112,7 +112,7 @@ class zcDatabaseInstaller
         $this->doJSONProgressLoggingStart(count($lines));
         $this->keepTogetherCount = 0;
         $this->newLine = "";
-        $usleep = defined('USLEEP_DB_INSTALLER') ? USLEEP_DB_INSTALLER : 3000;
+        $usleep = defined('USLEEP_DB_INSTALLER') ? USLEEP_DB_INSTALLER : 3;
         foreach ($lines as $line) {
             usleep($usleep);
             $this->jsonProgressLoggingCount++;
