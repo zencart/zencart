@@ -98,7 +98,7 @@ function zen_get_countries(int $country_id = 0, bool $with_iso_codes = false, bo
 function zen_get_country_name($country_id, $activeOnly = true)
 {
     $country_array = zen_get_countries((int)$country_id, false, $activeOnly);
-    return $country_array['countries_name'];
+    return $country_array['countries_name'] ?? '';
 }
 
 
