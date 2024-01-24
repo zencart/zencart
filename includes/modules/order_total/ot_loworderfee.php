@@ -122,7 +122,7 @@ class ot_loworderfee
                 $this->output[] = [
                     'title' => $this->title . ':',
                     'text' => $currencies->format($low_order_fee, true, $order->info['currency'], $order->info['currency_value']),
-                    'value' => $low_order_fee
+                    'value' => $low_order_fee,
                 ];
             }
         }
@@ -155,7 +155,7 @@ class ot_loworderfee
             'MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION',
             'MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS',
             'MODULE_ORDER_TOTAL_LOWORDERFEE_VIRTUAL',
-            'MODULE_ORDER_TOTAL_LOWORDERFEE_GV'
+            'MODULE_ORDER_TOTAL_LOWORDERFEE_GV',
         ];
     }
 
