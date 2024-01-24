@@ -53,79 +53,77 @@ class ot_loworderfee
     {
         global $order, $currencies;
 
-        if (MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE == 'true') {
-            switch (MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION) {
-                case 'national':
-                    if ($order->delivery['country_id'] == STORE_COUNTRY) {
-                        $pass = true;
-                    }
-                    break;
-                case 'international':
-                    if ($order->delivery['country_id'] != STORE_COUNTRY) {
-                        $pass = true;
-                    }
-                    break;
-                case 'both':
+        switch (MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION) {
+            case 'national':
+                if ($order->delivery['country_id'] == STORE_COUNTRY) {
                     $pass = true;
-                    break;
-                default:
-                    $pass = false;
-                    break;
-            }
+                }
+                break;
+            case 'international':
+                if ($order->delivery['country_id'] != STORE_COUNTRY) {
+                    $pass = true;
+                }
+                break;
+            case 'both':
+                $pass = true;
+                break;
+            default:
+                $pass = false;
+                break;
+        }
 
 //        if ( ($pass == true) && ( ($order->info['total'] - $order->info['shipping_cost']) < MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER) ) {
-            if ($pass == true && $order->info['subtotal'] < MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER) {
+        if ($pass == true && $order->info['subtotal'] < MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER) {
+            $charge_it = 'true';
+            $cart_content_type = $_SESSION['cart']->get_content_type();
+            $gv_content_only = $_SESSION['cart']->gv_only();
+            if ($cart_content_type === 'physical' || $cart_content_type === 'mixed') {
                 $charge_it = 'true';
-                $cart_content_type = $_SESSION['cart']->get_content_type();
-                $gv_content_only = $_SESSION['cart']->gv_only();
-                if ($cart_content_type === 'physical' || $cart_content_type === 'mixed') {
-                    $charge_it = 'true';
+            } else {
+                // check to see if everything is virtual, if so - skip the low order fee.
+                if ($cart_content_type === 'virtual' && MODULE_ORDER_TOTAL_LOWORDERFEE_VIRTUAL === 'true') {
+                    $charge_it = 'false';
+                    if ($gv_content_only > 0 && MODULE_ORDER_TOTAL_LOWORDERFEE_GV === 'false') {
+                        $charge_it = 'true';
+                    }
+                }
+
+                if ($gv_content_only > 0 && MODULE_ORDER_TOTAL_LOWORDERFEE_GV === 'true') {
+                    // check to see if everything is gift voucher, if so - skip the low order fee.
+                    $charge_it = 'false';
+                    if ($cart_content_type === 'virtual' && MODULE_ORDER_TOTAL_LOWORDERFEE_VIRTUAL === 'false') {
+                        $charge_it = 'true';
+                    }
+                }
+            }
+
+            if ($charge_it === 'true') {
+                $tax_address = zen_get_tax_locations();
+                $tax = zen_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
+                $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
+
+                // calculate from flat fee or percentage
+                if (substr(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, -1) === '%') {
+                    $low_order_fee = $order->info['subtotal'] * MODULE_ORDER_TOTAL_LOWORDERFEE_FEE / 100;
                 } else {
-                    // check to see if everything is virtual, if so - skip the low order fee.
-                    if ($cart_content_type === 'virtual' && MODULE_ORDER_TOTAL_LOWORDERFEE_VIRTUAL === 'true') {
-                        $charge_it = 'false';
-                        if ($gv_content_only > 0 && MODULE_ORDER_TOTAL_LOWORDERFEE_GV === 'false') {
-                            $charge_it = 'true';
-                        }
-                    }
-
-                    if ($gv_content_only > 0 && MODULE_ORDER_TOTAL_LOWORDERFEE_GV === 'true') {
-                        // check to see if everything is gift voucher, if so - skip the low order fee.
-                        $charge_it = 'false';
-                        if ($cart_content_type === 'virtual' && MODULE_ORDER_TOTAL_LOWORDERFEE_VIRTUAL === 'false') {
-                            $charge_it = 'true';
-                        }
-                    }
+                    $low_order_fee = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
                 }
 
-                if ($charge_it === 'true') {
-                    $tax_address = zen_get_tax_locations();
-                    $tax = zen_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
-                    $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
-
-                    // calculate from flat fee or percentage
-                    if (substr(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, -1) === '%') {
-                        $low_order_fee = $order->info['subtotal'] * MODULE_ORDER_TOTAL_LOWORDERFEE_FEE / 100;
-                    } else {
-                        $low_order_fee = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
-                    }
-
-                    $order->info['tax'] += zen_calculate_tax($low_order_fee, $tax);
-                    if (!isset($order->info['tax_groups'][$tax_description])) {
-                        $order->info['tax_groups'][$tax_description] = 0;
-                    }
-                    $order->info['tax_groups'][$tax_description] += zen_calculate_tax($low_order_fee, $tax);
-                    $order->info['total'] += $low_order_fee + zen_calculate_tax($low_order_fee, $tax);
-                    if (DISPLAY_PRICE_WITH_TAX === 'true') {
-                        $low_order_fee += zen_calculate_tax($low_order_fee, $tax);
-                    }
-
-                    $this->output[] = [
-                        'title' => $this->title . ':',
-                        'text' => $currencies->format($low_order_fee, true, $order->info['currency'], $order->info['currency_value']),
-                        'value' => $low_order_fee
-                    ];
+                $order->info['tax'] += zen_calculate_tax($low_order_fee, $tax);
+                if (!isset($order->info['tax_groups'][$tax_description])) {
+                    $order->info['tax_groups'][$tax_description] = 0;
                 }
+                $order->info['tax_groups'][$tax_description] += zen_calculate_tax($low_order_fee, $tax);
+                $order->info['total'] += $low_order_fee + zen_calculate_tax($low_order_fee, $tax);
+                if (DISPLAY_PRICE_WITH_TAX === 'true') {
+                    $low_order_fee += zen_calculate_tax($low_order_fee, $tax);
+                }
+
+                $this->output[] = [
+                    'title' => $this->title . ':',
+                    'text' => $currencies->format($low_order_fee, true, $order->info['currency'], $order->info['currency_value']),
+                    'value' => $low_order_fee
+                ];
             }
         }
     }
