@@ -2,10 +2,10 @@
 /**
  * sanitize the GET parameters
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2022 Nov 23 Modified in v1.5.8a $
+ * @version $Id:  Modified in v2.0.0-alpha $
  */
 
 use Zencart\PageLoader\PageLoader;
@@ -98,6 +98,7 @@ $saniGroup2 = [
     'page',                     //- Various, a page's number (defaults to '1' if invalid)
     'record_company_id',        //- Music products
     'reviews_id',               //- Various, a reviews_id
+    'sale_category',            //- A category_id for filtering Specials listings
     'search_in_description',    //- Searches indicator
 ];
 foreach ($saniGroup2 as $key) {
