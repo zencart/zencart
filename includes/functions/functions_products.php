@@ -451,10 +451,10 @@ function zen_get_uprid($prid, $params)
 /**
  * Return a product ID from a product ID with attributes
  * Alternate: simply (int) the product id
- * @param string $uprid ie: '11:abcdef12345'
- * @return mixed
+ * @param string|int $uprid ie: '11:abcdef12345'
+ * @return int
  */
-function zen_get_prid(string $uprid)
+function zen_get_prid(string|int $uprid): int
 {
     $pieces = explode(':', $uprid);
     return (int)$pieces[0];
