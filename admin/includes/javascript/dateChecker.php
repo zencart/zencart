@@ -2,9 +2,9 @@
 /**
  * dateChecker: A jQuery script to validate a 'datepicker' date.
  *
- * @copyright Copyright 2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 Thu Nov 10 17:28:42 2018 +0000 New in v2.0.0 $
+ * @version $Id: lat9 2023 Dec 08 New in v2.0.0-alpha1 $
  */
 // -----
 // This module validates (via AJAX call) a datepicker-controlled date.  The expected HTML layout for a date

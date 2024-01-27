@@ -3,9 +3,9 @@
  * application_testing.php
  * Carry out some actions if we are using test framework
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version
+ * @version $Id: Zcwilt 2023 Jul 13 New in v2.0.0-alpha1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');

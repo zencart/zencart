@@ -5,9 +5,9 @@
  * Loaded automatically by index.php?main_page=about_us
  * Displays About Us page.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 19 New in v1.5.8-alpha $
+ * @version $Id: Simon 2023 Sep 07 Modified in v2.0.0-alpha1 $
  */
 ?>
 <div class="centerColumn" id="aboutUs">

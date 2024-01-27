@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=document_general_info.
  * Displays template according to "document-general" product-type needs
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Aug 03 Modified in v1.5.8-alpha2 $
+ * @version $Id: lat9 2023 Jul 25 Modified in v2.0.0-alpha1 $
  */
 ?>
 <div class="centerColumn" id="docGeneralDisplay">

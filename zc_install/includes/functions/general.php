@@ -2,10 +2,10 @@
 /**
  * zc_install general functions
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2022 Dec 14 Modified in v1.5.8a $
+ * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
  */
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) {

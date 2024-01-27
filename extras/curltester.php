@@ -7,9 +7,9 @@
  *   i=1 -- in conjunction with [d] or [r], will show the detailed curlinfo certificate data from the host being connected to. Helpful for advanced debugging.
  *
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 08 Modified in v1.5.8-alpha $
+ * @version $Id: Scott C Wilson 2023 Jun 14 Modified in v2.0.0-alpha1 $
  */
 // no caching
 header('Cache-Control: no-cache, no-store, must-revalidate');

@@ -8,9 +8,9 @@
  * This way someone installing Zen Cart on an ancient PHP version will at least
  * know this basic need and be able to make the change before proceeding.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: John 2022 Jul 07 Modified in v1.5.8-alpha $
+ * @version $Id: mc12345678 2023 Jul 09 Modified in v2.0.0-alpha1 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 include 'includes/version.php';
