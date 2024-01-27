@@ -113,8 +113,7 @@ if (!empty($action)) {
                 WHERE categories_id = '" . (int)$categories_id . "'";
 
         $parent_cat = $db->Execute($sql);
-        // @TODO - should this be checking against TOPMOST_CATEGORY_PARENT_ID?
-        if ($parent_cat->fields['parent_id'] != '0') {
+        if ($parent_cat->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
           $sql = "SELECT *
                   FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
                   WHERE category_id = '" . $parent_cat->fields['parent_id'] . "'";
