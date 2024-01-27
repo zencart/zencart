@@ -1393,6 +1393,14 @@ class shoppingCart extends base
                 'price' => ($product['product_is_free'] === '1') ? 0 : $products_price,
                 'quantity' => $new_qty,
                 'weight' => $product['products_weight'] + $this->attributes_weight($uprid),
+
+                'weight_type' => $product['products_weight_type'] ?? null,
+                'dim_type' => $product['products_dim_type'] ?? null,
+                'length' => $product['products_length'] ?? null,
+                'width' => $product['products_width'] ?? null,
+                'height' => $product['products_height'] ?? null,
+                'ready_to_ship' => $product['products_ready_to_ship'] ?? null,
+
                 'final_price' => $products_price + $this->attributes_price($uprid),
                 'onetime_charges' => $this->attributes_price_onetime_charges($uprid, $new_qty),
                 'tax_class_id' => $product['products_tax_class_id'],
