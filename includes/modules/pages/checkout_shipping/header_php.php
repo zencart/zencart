@@ -186,14 +186,12 @@ if (isset($_SESSION['cart']->cartID)) {
 
   // check that the currently selected shipping method is still valid (in case a zone restriction has disabled it, etc)
   if (isset($_SESSION['shipping']['id'])) {
-    $checklist = array();
+    $checklist = [];
     foreach ($quotes as $key=>$val) {
-      if ($val['methods'] != '') {
+      if (is_array($val['methods'])) {
         foreach($val['methods'] as $key2=>$method) {
           $checklist[] = $val['id'] . '_' . $method['id'];
         }
-      } else {
-        // skip
       }
     }
     $checkval = $_SESSION['shipping']['id'];
