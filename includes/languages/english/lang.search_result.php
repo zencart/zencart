@@ -8,7 +8,7 @@ $define = [
     'ENTRY_MANUFACTURERS' => 'Manufacturers:',
     'TABLE_HEADING_IMAGE' => '',
     'TEXT_NO_PRODUCTS' => 'There is no product that matches the search criteria.',
-    'TEXT_SHOW' => 'Filter Results by:',
+    'TEXT_SHOW' => 'Filter by:',
 ];
 
 return $define;

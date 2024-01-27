@@ -2,10 +2,10 @@
 /**
  * index main_template_vars.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jun 27 Modified in v1.5.8-alpha $
+ * @version $Id:  Modified in v2.0.0-alpha $
  */
 
 // This should be first line of the script:
@@ -131,22 +131,24 @@ if ($category_depth == 'nested')
     // do not set the category
   }
   // create column list
-  $define_list = array('PRODUCT_LIST_MODEL' => PRODUCT_LIST_MODEL,
-  'PRODUCT_LIST_NAME' => PRODUCT_LIST_NAME,
-  'PRODUCT_LIST_MANUFACTURER' => PRODUCT_LIST_MANUFACTURER,
-  'PRODUCT_LIST_PRICE' => PRODUCT_LIST_PRICE,
-  'PRODUCT_LIST_QUANTITY' => PRODUCT_LIST_QUANTITY,
-  'PRODUCT_LIST_WEIGHT' => PRODUCT_LIST_WEIGHT,
-  'PRODUCT_LIST_IMAGE' => PRODUCT_LIST_IMAGE);
+  $define_list = [
+      'PRODUCT_LIST_MODEL' => PRODUCT_LIST_MODEL,
+      'PRODUCT_LIST_NAME' => PRODUCT_LIST_NAME,
+      'PRODUCT_LIST_MANUFACTURER' => PRODUCT_LIST_MANUFACTURER,
+      'PRODUCT_LIST_PRICE' => PRODUCT_LIST_PRICE,
+      'PRODUCT_LIST_QUANTITY' => PRODUCT_LIST_QUANTITY,
+      'PRODUCT_LIST_WEIGHT' => PRODUCT_LIST_WEIGHT,
+      'PRODUCT_LIST_IMAGE' => PRODUCT_LIST_IMAGE,
+//      'PRODUCT_LIST_BUY_NOW' => PRODUCT_LIST_BUY_NOW,
+  ];
 
-  /*                         ,
-  'PRODUCT_LIST_BUY_NOW' => PRODUCT_LIST_BUY_NOW);
-  */
   asort($define_list);
-  $column_list = array();
+  $column_list = [];
   foreach ($define_list as $key => $value)
   {
-    if ($value > 0) $column_list[] = $key;
+    if ($value > 0) {
+        $column_list[] = $key;
+    }
   }
 
   $select_column_list = '';
@@ -181,8 +183,7 @@ if ($category_depth == 'nested')
   }
 
   // set the product filters according to selected product type
-  $typefilter = 'default';
-  if (isset($_GET['typefilter'])) $typefilter = $_GET['typefilter'];
+  $typefilter = $_GET['typefilter'] ?? 'default';
   require(zen_get_index_filters_directory($typefilter . '_filter.php'));
 
 

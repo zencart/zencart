@@ -2,10 +2,10 @@
 /**
  * index header_php.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 30 Modified in v1.5.8-alpha $
+ * @version $Id:  Modified in v2.0.0-alpha $
  */
 
 // This should be first line of the script:
@@ -123,10 +123,7 @@ $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] .
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // set the product filters according to selected product type
-$typefilter = 'default';
-if (isset($_GET['typefilter'])) {
-    $typefilter = $_GET['typefilter'];
-}
+$typefilter = $_GET['typefilter'] ?? 'default';
 require zen_get_index_filters_directory($typefilter . '_filter.php');
 
 // query the database based on the selected filters
