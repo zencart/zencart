@@ -2,10 +2,10 @@
 /**
  * Ask a Question Page (based on Contact Us Page)
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Jan 10 Modified in v1.5.8a $
+ * @version $Id: Steve 2023 Jul 03 Modified in v2.0.0-alpha1 $
  */
 $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
 

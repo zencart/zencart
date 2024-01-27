@@ -2,9 +2,9 @@
 /**
  * brands sidebox - displays a list of manufacturers so customer can choose to filter on those products only
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Feb 28 Modified in v1.5.8a $
+ * @version $Id: DrByte 2023 Sep 24 Modified in v2.0.0-alpha1 $
  */
 
 // test if brands sidebox should show

@@ -2,9 +2,9 @@
 /**
  * File functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 May 05 New in v1.5.8-alpha $
+ * @version $Id: Steve 2023 Sep 07 Modified in v2.0.0-alpha1 $
  */
 
 
