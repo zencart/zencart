@@ -1915,12 +1915,12 @@ if ($action === 'edit' || $action === 'update') {
             ];
             break;
         default:
-            $customer = new Customer($cInfo->customers_id);
-
             if (isset($_GET['search'])) {
                 $_GET['search'] = zen_output_string_protected($_GET['search']);
             }
             if (isset($cInfo) && is_object($cInfo)) {
+                $customer = new Customer($cInfo->customers_id);
+
                 $heading[] = [
                     'text' =>
                         '<h4>' .
