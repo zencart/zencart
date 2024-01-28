@@ -1,11 +1,11 @@
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  *
  */
 
@@ -210,7 +210,6 @@ div#productListing tr.productListing-odd {clear:both;}
 #featuredProductsListingTopNumber, #allProductsListingTopNumber, #productsListingTopNumber, #newProductsDefaultListingTopNumber{margin:1.5em 0 1.0em 0;}
 #featuredProductsListingBottomNumber, #allProductsListingBottomNumber, #productsListingBottomNumber, #newProductsDefaultListingBottomNumber{margin:2.8em 0 1.0em 0;}
 #allProductsDefault input[type=text], #featuredDefault input[type=text], #newProductsDefault input[type=text]{width:50%;}
-#newProductsDefault #filter-wrapper, #featuredDefault #filter-wrapper, #allProductsDefault #filter-wrapper{text-align:center;}
 #specialsListing .prod-list-wrap{padding:20px;}
 .bottom-button{clear:both;display:block;margin-top:0;}
 #cat-top{display:block;}
@@ -218,7 +217,9 @@ div#productListing tr.productListing-odd {clear:both;}
 #productListing{margin-bottom:15px;}
 .prod-list-wrap .buttonRow{margin-top:0;}
 .productListing-rowheading a{padding:10px;background:none;}
-#filter-wrapper select{width:48%;margin-top:10px;}
+#filter-wrapper{text-align:center;}
+#filter-wrapper .inputLabel{display:none;}
+#filter-wrapper select{width:25%;margin-top:10px;}
 
 
 /*bof product info*/

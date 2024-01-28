@@ -2,10 +2,10 @@
 # * This SQL script upgrades the core Zen Cart database structure from v1.5.8 to v2.0.0
 # *
 # * @access private
-# * @copyright Copyright 2003-2023 Zen Cart Development Team
+# * @copyright Copyright 2003-2024 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Modified in v2.0.0 $
+# * @version $Id: DrByte 2024 Jan 27 New in v2.0.0-alpha1 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -87,6 +87,22 @@ DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_
 DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'OG';
 DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'OT';
 #############
+
+
+## SNAF product listing changes
+UPDATE configuration SET configuration_title = 'Sort Order Default - Product Listing' WHERE configuration_key = 'PRODUCT_LISTING_DEFAULT_SORT_ORDER';
+UPDATE configuration SET configuration_group_id = 8, sort_order = 15, configuration_title = 'Sort Order Default - New Products' WHERE configuration_key = 'PRODUCT_NEW_LIST_SORT_DEFAULT';
+UPDATE configuration SET configuration_group_id = 8, sort_order = 15, configuration_title = 'Sort Order Default - Featured Products' WHERE configuration_key = 'PRODUCT_FEATURED_LIST_SORT_DEFAULT';
+UPDATE configuration SET configuration_group_id = 8, sort_order = 15, configuration_title = 'Sort Order Default - All-Products page' WHERE configuration_key = 'PRODUCT_ALL_LIST_SORT_DEFAULT';
+UPDATE configuration SET configuration_group_id = 8, sort_order = 19 WHERE configuration_key = 'SHOW_NEW_PRODUCTS_UPCOMING_MASKED';
+UPDATE configuration_group SET visible = 0 WHERE configuration_group_id = 21;
+UPDATE configuration_group SET visible = 0 WHERE configuration_group_id = 22;
+UPDATE configuration_group SET visible = 0 WHERE configuration_group_id = 23;
+UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configNewListing';
+UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configFeaturedListing';
+UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configAllListing';
+
+
 
 #### VERSION UPDATE STATEMENTS
 ## THE FOLLOWING 2 SECTIONS SHOULD BE THE "LAST" ITEMS IN THE FILE, so that if the upgrade fails prematurely, the version info is not updated.

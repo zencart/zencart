@@ -1,10 +1,10 @@
 /**
  * Main CSS Stylesheet
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: John 2022 Jul 07 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  */
 
 /*bof basic elements*/
@@ -285,6 +285,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 #cat-top{margin-bottom:20px;}
 #cat-left{text-align:center;}
 #filter-wrapper{padding:10px;}
+#filter-wrapper .inputLabel {float:none;}
 #filter-wrapper select{width:25%;height:35px;}
 .navSplitPagesLinks {display:inline-block;}
 .navSplitPagesLinks a{padding:10px;font-weight:bold;text-decoration:none;}
@@ -302,7 +303,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .cart-add input[type=text]{width:auto !important;}
 .list-image{min-height:200px;min-width:20%;float:left;margin-right:5%;}
 .list-price{font-size:140%;margin:5px 0;}
-.list-more{display:block;padding:8px 20px;float:right;text-align:center;text-decoration:none !important;width:50%;}
+.list-more{display:block;padding:8px 20px;float:right;text-align:center;text-decoration:none !important;width:auto;}
 .list-more:hover{}
 #indexProductList .list-more{width:auto;margin-top:-50px;}
 #searchresultBody .list-more{width:auto;}
@@ -332,14 +333,14 @@ span.list-addtext{display:block;text-align:center;}
 .gridlayout .list-image {min-height: revert; min-width: revert}
 .gridlayout .list-image {margin-right: inherit;}
 .gridlayout .list-more {float: none;}
-#indexProductList .gridlayout .list-more {margin: auto; width: 30%}
+#productListing .gridlayout .list-more {margin: auto; width: 30%}
 .gridlayout .itemTitle {width:90%;margin:5px auto}
 .gridlayout .listingDescription {width:90%;margin:10px auto}
 .gridlayout .cart-add {float:none;}
 .gridlayout .list-input {float:none;width:30%;margin:auto}
 
 
-/*bof new, featured, all listing*/
+/*bof new, featured, all listing (old style when each had their own listing page, not using main .productListing */
 .listing-wrapper:nth-child(odd) {}
 .listing-wrapper{padding:20px;}
 .listing-left{width:25%;margin-right:2%;}

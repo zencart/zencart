@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Aug 17 Modified in v1.5.8-alpha2 $
+ * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  */
 require('includes/application_top.php');
 
@@ -113,8 +113,7 @@ if (!empty($action)) {
                 WHERE categories_id = '" . (int)$categories_id . "'";
 
         $parent_cat = $db->Execute($sql);
-        // @TODO - should this be checking against TOPMOST_CATEGORY_PARENT_ID?
-        if ($parent_cat->fields['parent_id'] != '0') {
+        if ($parent_cat->fields['parent_id'] != TOPMOST_CATEGORY_PARENT_ID) {
           $sql = "SELECT *
                   FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . "
                   WHERE category_id = '" . $parent_cat->fields['parent_id'] . "'";

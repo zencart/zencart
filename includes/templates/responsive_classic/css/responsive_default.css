@@ -1,11 +1,11 @@
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  *
  */
 
@@ -127,7 +127,7 @@ div#productListing tr.productListing-odd {clear:both;}
 .navSplitPagesResult{margin-top:10px;}
 .navSplitPagesLinks{margin:20px 0;}
 #filter-wrapper{text-align:center;}
-#filter-wrapper select{width:48%;}
+#filter-wrapper select{width:31%;}
 #productsListingListingBottomLinks, #productsListingListingTopLinks, #newProductsDefaultListingBottomLinks, #newProductsDefaultListingTopLinks, #featuredProductsListingBottomLinks, #featuredProductsListingTopLinks, #allProductsListingBottomLinks, #allProductsListingTopLinks{clear:both;float:none;display:block;width:100%;text-align:center;margin:0;}
 #productsListingBottomNumber, #productsListingTopNumber, #newProductsDefaultListingBottomNumber, #newProductsDefaultListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #allProductsListingTopNumber, #allProductsListingBottomNumber{clear:both;float:none;width:100%;text-align:center;margin-left:0;}
 .button-top{width:100%;margin:0;text-align:center;float:none;clear:both;}
@@ -308,7 +308,7 @@ div#productListing tr.productListing-odd {clear:both;}
 .navSplitPagesResult{margin-top:10px;}
 .navSplitPagesLinks{margin:20px 0;}
 #filter-wrapper{text-align:center;}
-#filter-wrapper select{width:48%;}
+#filter-wrapper select{width:31%;}
 #productsListingListingBottomLinks, #productsListingListingTopLinks, #newProductsDefaultListingBottomLinks, #newProductsDefaultListingTopLinks, #featuredProductsListingBottomLinks, #featuredProductsListingTopLinks, #allProductsListingBottomLinks, #allProductsListingTopLinks{clear:both;float:none;display:block;width:100%;text-align:center;margin:0;}
 #productsListingBottomNumber, #productsListingTopNumber, #newProductsDefaultListingBottomNumber, #newProductsDefaultListingTopNumber, #featuredProductsListingBottomNumber, #featuredProductsListingTopNumber, #allProductsListingTopNumber, #allProductsListingBottomNumber{clear:both;float:none;width:100%;text-align:center;margin-left:0;}
 .button-top{width:100%;margin:0;text-align:center;float:none;clear:both;}

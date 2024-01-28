@@ -2,10 +2,10 @@
 /**
  * Class for managing the Shopping Cart
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -1393,6 +1393,14 @@ class shoppingCart extends base
                 'price' => ($product['product_is_free'] === '1') ? 0 : $products_price,
                 'quantity' => $new_qty,
                 'weight' => $product['products_weight'] + $this->attributes_weight($uprid),
+
+                'weight_type' => $product['products_weight_type'] ?? null,
+                'dim_type' => $product['products_dim_type'] ?? null,
+                'length' => $product['products_length'] ?? null,
+                'width' => $product['products_width'] ?? null,
+                'height' => $product['products_height'] ?? null,
+                'ready_to_ship' => $product['products_ready_to_ship'] ?? null,
+
                 'final_price' => $products_price + $this->attributes_price($uprid),
                 'onetime_charges' => $this->attributes_price_onetime_charges($uprid, $new_qty),
                 'tax_class_id' => $product['products_tax_class_id'],

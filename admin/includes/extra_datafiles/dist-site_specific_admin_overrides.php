@@ -8,9 +8,9 @@
  * For use on YOUR site, make a copy of this file (which has all entries commented-out) to /admin/includes/extra_datafiles/site_specific_admin_overrides.php
  * and make your edits there.  Otherwise, your overrides might get "lost" on a future Zen Cart upgrade.
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Dec 23 Modified in v1.5.8a $
+ * @version $Id: Steve 2023 Sep 10 Modified in v2.0.0-alpha1 $
  */
 // -----
 // The flags to indicate if attribute images should be displayed in invoice and packing slip.

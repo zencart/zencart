@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=product_info.
  * Displays details of a typical product
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2021 Jun 14 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2023 Jul 25 Modified in v2.0.0-alpha1 $
  */
 
 //require(DIR_WS_MODULES . '/debug_blocks/product_info_prices.php');

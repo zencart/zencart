@@ -3,9 +3,9 @@
  * Functions related to products
  * Note: Several product-related lookup functions are located in functions_lookups.php
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2023 Feb 18 Modified in v1.5.8a $
+ * @version $Id: DrByte 2023 Dec 25 Modified in v2.0.0-alpha1 $
  */
 
 /**

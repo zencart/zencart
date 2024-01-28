@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Dec 23 Modified in v1.5.8a $
+ * @version $Id: DrByte 2023 Jul 28 Modified in v2.0.0-alpha1 $
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;

@@ -10,10 +10,10 @@
  *
  * $flag_disable_header = true;
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: John 2022 Jul 07 Modified in v1.5.8-alpha $
+ * @version $Id: Nick Fenwick 2023 Jul 04 Modified in v2.0.0-alpha1 $
  */
 ?>
 

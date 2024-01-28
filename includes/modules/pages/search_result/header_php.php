@@ -2,10 +2,10 @@
 /**
  * Header code file for the Search Results page
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v2.0.0 $
+ * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  */
 
 use Zencart\Search\SearchOptions;
@@ -18,10 +18,9 @@ if (!defined('KEYWORD_FORMAT_STRING')) define('KEYWORD_FORMAT_STRING', 'keywords
 if (!defined('ADVANCED_SEARCH_INCLUDE_METATAGS')) define('ADVANCED_SEARCH_INCLUDE_METATAGS', 'true');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-// set the product filters according to selected product type
 
-$typefilter = 'default';
-if (isset($_GET['typefilter'])) $typefilter = $_GET['typefilter'];
+// set the product filters according to selected product type
+$typefilter = $_GET['typefilter'] ?? 'default';
 require(zen_get_index_filters_directory($typefilter . '_filter.php'));
 
 $error = false;
