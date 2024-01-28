@@ -674,6 +674,20 @@ if (!empty($action) && $order_exists === true) {
               <td class="main"><strong><?php echo ENTRY_DATE_PURCHASED; ?></strong></td>
               <td class="main"><?php echo zen_date_long($order->info['date_purchased']); ?></td>
             </tr>
+<?php
+            // -----
+            // If the order's weight isn't null (the field was added to the stored order in
+            // zc156), display the order's weight.
+            //
+            if ($order->info['order_weight'] !== null) {
+?>
+            <tr>
+              <td class="main"><strong><?php echo ENTRY_WEIGHT; ?></strong></td>
+              <td class="main"><?php echo $order->info['order_weight'] . TEXT_PRODUCT_WEIGHT_UNIT; ?></td>
+            </tr>
+<?php
+            }
+?>
             <tr>
               <td class="main"><strong><?php echo ENTRY_PAYMENT_METHOD; ?></strong></td>
               <td class="main"><?php echo $order->info['payment_method']; ?></td>
