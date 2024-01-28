@@ -20,4 +20,13 @@ class Country extends Eloquent
     {
         return $this->hasMany(Zone::class, 'zone_country_id', 'countries_id');
     }
+
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
+    public function addressFormat()
+    {
+        return $this->belongsTo(AddressFormat::class, 'address_format_id', 'address_format_id');
+    }
 }

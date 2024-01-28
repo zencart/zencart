@@ -4,7 +4,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
-namespace Tests\Features\TestAdminFeatures;
+namespace Tests\Feature\TestAdminFeatures;
 
 use Tests\Support\zcFeatureTestCaseAdmin;
 
