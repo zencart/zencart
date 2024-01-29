@@ -1364,25 +1364,16 @@ class shoppingCart extends base
 
             // convert quantity to proper decimals
             $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
-            if ($precision === 0) {
+            if ($precision === 0 || str_contains($data['qty'], '.')) {
                 $new_qty = $data['qty'];
             } else {
-                $fix_qty = $data['qty'];
-                switch (true) {
-                    case (strpos($fix_qty, '.') === false):
-                        $new_qty = $fix_qty;
-                        break;
-                    default:
-                        $new_qty = preg_replace('/[0]+$/', '', $data['qty']);
-                        break;
-                }
+                $new_qty = preg_replace('/[0]+$/', '', $data['qty']);
             }
             $check_unit_decimals = $product['products_quantity_order_units'];
-            if (strpos($check_unit_decimals, '.') !== false) {
-                $new_qty = round($new_qty, $precision);
-            } else {
-                $new_qty = round($new_qty, 0);
+            if (!str_contains($check_unit_decimals, '.')) {
+                $precision = 0;
             }
+            $new_qty = round(zen_str_to_numeric($new_qty), $precision);
 
             $products_array[] = [
                 'id' => $uprid,
@@ -2175,7 +2166,7 @@ class shoppingCart extends base
         if (!empty($_POST['products_id']) && is_array($_POST['products_id'])) {
             $products_list = $_POST['products_id'];
             foreach ($products_list as $key => $val) {
-                $prodId = preg_replace('/[^0-9a-f:.]/', '', $key);
+                $prodId = preg_replace('/[^0-9a-f:.]/', '', (string)$key);
                 if (is_numeric($val) && $val > 0) {
                     $adjust_max = false;
                     $qty = $val;
@@ -2365,30 +2356,31 @@ class shoppingCart extends base
      * @param float $check_qty
      * @param int $product_id
      * @param string $messageStackPosition messageStack placement
-     * @return float
+     * @return float|int
      */
     public function adjust_quantity($check_qty, $product_id, $messageStackPosition = 'shopping_cart')
     {
         global $messageStack;
-        if ($messageStackPosition == '' || $messageStackPosition == false) {
+        if (empty($messageStackPosition)) {
             $messageStackPosition = 'shopping_cart';
         }
-        $old_quantity = $check_qty;
+
         $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
+
         if ($precision !== 0) {
-            $fix_qty = $check_qty;
-            if (strpos($fix_qty, '.') !== false) {
-                $new_qty = $fix_qty;
-            } else {
-                $new_qty = preg_replace('/[0]+$/', '', $check_qty);
+            if (str_contains((string)$check_qty, '.')) {
+                return $check_qty;
             }
-        } elseif ($check_qty != round($check_qty, $precision)) {
-            $new_qty = round($check_qty, $precision);
-            $messageStack->add_session($messageStackPosition, ERROR_QUANTITY_ADJUSTED . zen_get_products_name($product_id) . ERROR_QUANTITY_CHANGED_FROM . $old_quantity . ERROR_QUANTITY_CHANGED_TO . $new_qty, 'caution');
-        } else {
-            $new_qty = $check_qty;
+            return preg_replace('/[0]+$/', '', $check_qty);
         }
-        return $new_qty;
+
+        if ($check_qty != round(zen_str_to_numeric($check_qty), $precision)) {
+            $new_qty = round(zen_str_to_numeric($check_qty), $precision);
+            $messageStack->add_session($messageStackPosition, ERROR_QUANTITY_ADJUSTED . zen_get_products_name($product_id) . ERROR_QUANTITY_CHANGED_FROM . $check_qty . ERROR_QUANTITY_CHANGED_TO . $new_qty, 'caution');
+            return $new_qty;
+        }
+
+        return $check_qty;
     }
 
     /**

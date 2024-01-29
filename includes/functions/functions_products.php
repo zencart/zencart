@@ -456,8 +456,9 @@ function zen_get_uprid($prid, $params)
  */
 function zen_get_prid(string|int $uprid): int
 {
-    $pieces = explode(':', $uprid);
-    return (int)$pieces[0];
+    return (int)$uprid;
+//    $pieces = explode(':', $uprid);
+//    return (int)$pieces[0];
 }
 
 /**
