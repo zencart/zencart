@@ -692,7 +692,7 @@ class shoppingCart extends base
             $products_raw_price = zen_get_retail_or_wholesale_price($product['products_price'], $product['products_price_w']);
             $products_price = $products_raw_price;
 
-            $is_free_shipping = $product['product_is_always_free_shipping'] === '1' || $product['products_virtual'] === '1' || strpos($product['products_model'], 'GIFT') === 0;
+            $is_free_shipping = $product['product_is_always_free_shipping'] === '1' || $product['products_virtual'] === '1' || str_starts_with($product['products_model'], 'GIFT');
 
             // adjusted count for free shipping
             if ($product['product_is_always_free_shipping'] !== '1' && $product['products_virtual'] !== '1') {
@@ -1482,16 +1482,17 @@ class shoppingCart extends base
                 $free_ship_check = zen_get_product_details($prid);
                 $free_ship_check = $free_ship_check->fields;
 
-                if (strpos($free_ship_check['products_model'], 'GIFT') === 0) {
+                if (str_starts_with($free_ship_check['products_model'], 'GIFT')) {
 // @TODO - fix GIFT price in cart special/attribute
                     $gift_special = zen_get_products_special_price($prid, true);
                     $gift_pba = zen_get_products_price_is_priced_by_attributes($prid);
                     $gift_price = zen_get_retail_or_wholesale_price($free_ship_check['products_price'], $free_ship_check['products_price_w']);
-
-                    if (!$gift_pba && $gift_special != 0 && $gift_special != $gift_price) {
-                        $gift_voucher += ($gift_special * $data['qty']);
-                    } else {
-                        $gift_voucher += ($gift_price + $this->attributes_price($uprid)) * $data['qty'];
+                    if ($gift_special !== false) {
+                        if (!$gift_pba && !empty($gift_special) && (string)$gift_special !== (string)$gift_price) {
+                            $gift_voucher += ($gift_special * $data['qty']);
+                        } else {
+                            $gift_voucher += (zen_str_to_numeric($gift_price) + $this->attributes_price($uprid)) * $data['qty'];
+                        }
                     }
                 }
 
