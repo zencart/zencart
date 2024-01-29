@@ -108,6 +108,18 @@
 // false .... hide IP address (default)
 // $show_registration_ip_in_listing = false;
 
+// Display an order's overall weight and the weight of each product?  Used
+// Used in: admin/orders.php
+//
+// Note: Orders placed on Zen Cart versions prior to 1.5.6 did not record
+// the order's overall weight.  If an order's overall weight isn't recorded,
+// this setting will automatically be set to (bool)false for that order.
+//
+// true .... (default) Show the overall and product-specific weights, if present.
+// false ... Don't show the weights
+// $show_orders_weights = true;
+
+
 //
 //Developer Debugging flags
 //

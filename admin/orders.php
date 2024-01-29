@@ -659,6 +659,17 @@ if (!empty($action) && $order_exists === true) {
 <?php
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'billing', $address_footer_suffix, $order->billing);
+
+  // -----
+  // Determine, based on a 'soft' configuration setting in admin/extra_datafiles/site_specific_admin_overrides.php,
+  // whether to display the order's overall and product-specific weights.
+  //
+  // Note: Zen Cart versions *prior to* 1.5.6 stored neither orders::order_weight nor
+  // orders_products::products_weight.  If the order's weight is stored as null, don't
+  // display the weights!
+  //
+  $show_orders_weights = ($order->info['order_weight'] !== null && ((bool)($show_orders_weights ?? true)));
+
   if (!empty($address_footer_suffix)) {
   ?>
                 <tr><td>&nbsp;</td><td><?php echo $address_footer_suffix; ?></td></tr>
@@ -674,6 +685,20 @@ if (!empty($action) && $order_exists === true) {
               <td class="main"><strong><?php echo ENTRY_DATE_PURCHASED; ?></strong></td>
               <td class="main"><?php echo zen_date_long($order->info['date_purchased']); ?></td>
             </tr>
+<?php
+            // -----
+            // If the order's weight isn't null (the field was added to the stored order in
+            // zc156), display the order's weight.
+            //
+            if ($show_orders_weights === true) {
+?>
+            <tr>
+              <td class="main"><strong><?php echo ENTRY_WEIGHT; ?></strong></td>
+              <td class="main"><?php echo $order->info['order_weight'] . ' ' . ltrim(TEXT_PRODUCT_WEIGHT_UNIT, ' '); ?></td>
+            </tr>
+<?php
+            }
+?>
             <tr>
               <td class="main"><strong><?php echo ENTRY_PAYMENT_METHOD; ?></strong></td>
               <td class="main"><?php echo $order->info['payment_method']; ?></td>
@@ -756,6 +781,9 @@ if (!empty($action) && $order_exists === true) {
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
               <th class="dataTableHeadingContent hidden-xs"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
+<?php if ($show_orders_weights === true) { ?>
+              <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_WEIGHT; ?></th>
+<?php } ?>
 <?php if ($show_product_tax) { ?>
               <th class="dataTableHeadingContent text-right hidden-xs"><?php echo TABLE_HEADING_TAX; ?></th>
 <?php } ?>
@@ -809,6 +837,21 @@ if (!empty($action) && $order_exists === true) {
                 <td class="dataTableContent hidden-xs">
                   <?php echo $order->products[$i]['model']; ?>
                 </td>
+                <?php
+                    if ($show_orders_weights === true) {
+                        $products_weight = $order->products[$i]['products_weight'];
+                        if ($products_weight === null) {
+                            $products_weight = '&mdash;';
+                        } else {
+                            $products_weight .= ' ' . ltrim(TEXT_PRODUCT_WEIGHT_UNIT, ' ');
+                        }
+                ?>
+                <td class="dataTableContent text-right">
+                  <?php echo $products_weight; ?>
+                </td>
+                <?php
+                    }
+                ?>
 <?php if ($show_product_tax) { ?>
                 <td class="dataTableContent text-right hidden-xs">
                   <?php echo zen_display_tax_value($order->products[$i]['tax']); ?>%
@@ -841,11 +884,16 @@ if (!empty($action) && $order_exists === true) {
             ?>
             <tr>
 
-<?php if ($show_including_tax)  { ?>
-              <td colspan="8">
-<?php } else { ?>
-              <td colspan="6">
-<?php } ?>
+<?php
+$base_orders_columns = 6;
+if ($show_including_tax)  {
+    $base_orders_columns += 2;
+}
+if ($show_orders_weights === true) {
+    $base_orders_columns++;
+}
+?>
+              <td colspan="<?php echo $base_orders_columns; ?>">
                 <table style="margin-right: 0; margin-left: auto;">
                     <?php
                     for ($i = 0, $n = count($order->totals); $i < $n; $i++) {

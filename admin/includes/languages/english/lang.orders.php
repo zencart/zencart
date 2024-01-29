@@ -25,6 +25,8 @@ $define = [
     'TABLE_HEADING_QUANTITY' => 'Qty.',
     'TABLE_HEADING_UPDATED_BY' => 'Updated By',
     'ENTRY_CUSTOMER' => 'Customer:',
+    'TABLE_HEADING_PRODUCTS_WEIGHT' => 'Weight',
+    'ENTRY_WEIGHT' => 'Overall Weight:',
     'ENTRY_CUSTOMER_ADDRESS' => 'Customer Address:<br><i class="fa-solid fa-2x fa-user"></i>',
     'ENTRY_SHIPPING_ADDRESS' => 'Shipping Address:<br><i class="fa-solid fa-2x fa-truck"></i>',
     'ENTRY_BILLING_ADDRESS' => 'Billing Address:<br><i class="fa-regular fa-2x fa-credit-card"></i>',
