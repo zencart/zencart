@@ -313,11 +313,11 @@ class shoppingCart extends base
                     //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                     $attr_value = null;
                     $blank_value = false;
-                    if (strpos($option, TEXT_PREFIX) === 0) {
+                    if (is_string($option) && str_starts_with($option, TEXT_PREFIX)) {
                         if (trim($value) === '') {
                             $blank_value = true;
                         } else {
-                            $option = substr($option, strlen(TEXT_PREFIX));
+                            $option = substr((string)$option, strlen(TEXT_PREFIX));
                             $attr_value = stripslashes($value);
                             $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
 
@@ -441,7 +441,7 @@ class shoppingCart extends base
                 //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                 $attr_value = null;
                 $blank_value = false;
-                if (strpos($option, TEXT_PREFIX) === 0) {
+                if (is_string($option) && str_starts_with($option, TEXT_PREFIX)) {
                     if (trim($value) === '') {
                         $blank_value = true;
                     } else {

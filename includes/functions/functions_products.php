@@ -437,10 +437,10 @@ function zen_get_uprid($prid, $params)
     foreach ($params as $option => $value) {
         if (is_array($value)) {
             foreach ($value as $opt => $val) {
-                $uprid .= '{' . $option . '}' . trim($opt);
+                $uprid .= '{' . $option . '}' . trim((string)$opt);
             }
         } else {
-            $uprid .= '{' . $option . '}' . trim($value);
+            $uprid .= '{' . $option . '}' . trim((string)$value);
         }
     }
 
