@@ -86,9 +86,7 @@ if (file_exists('includes/local/configure.php')) {
     include('includes/local/configure.php');
 }
 
-if (file_exists('../includes/application_testing.php')) {
-    require('../includes/application_testing.php');
-}
+require('../includes/application_testing.php');
 /**
  * check for and load application configuration parameters
  */
