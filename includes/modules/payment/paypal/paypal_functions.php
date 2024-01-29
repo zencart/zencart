@@ -53,7 +53,7 @@ if (!function_exists('convertToLocalTimeZone')) {
 
   function ipn_get_stored_session($session_stuff) {
     global $db;
-    if (!is_array($session_stuff)) {
+    if (!is_array($session_stuff) || !isset($session_stuff[1])) {
       ipn_debug_email('IPN FATAL ERROR :: Could not find Zen Cart custom variable in POST, cannot validate or re-create session as a transaction initiated from this store. Might be from another source such as eBay or another PayPal store using this PayPal account.');
       return false;
     }
