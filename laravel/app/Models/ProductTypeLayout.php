@@ -6,13 +6,10 @@
  */
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class ProductTypeLayout extends Model
+class ProductTypeLayout extends Eloquent
 {
-    use HasFactory;
-
     protected $table = TABLE_PRODUCT_TYPE_LAYOUT;
     protected $primaryKey = 'configuration_id';
     public $timestamps = false;

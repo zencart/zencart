@@ -7,13 +7,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class AdminPage extends Model
+class AdminPage extends Eloquent
 {
-    use HasFactory;
-
     protected $table = TABLE_ADMIN_PAGES;
     protected $primaryKey = 'page_key';
     public $timestamps = false;

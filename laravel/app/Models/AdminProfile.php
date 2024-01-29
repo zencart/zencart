@@ -7,13 +7,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class AdminProfile extends Model
+class AdminProfile extends Eloquent
 {
-    use HasFactory;
-
     protected $table = TABLE_ADMIN_PROFILES;
     protected $primaryKey = 'profile_id';
     public $timestamps = false;

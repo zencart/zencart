@@ -7,13 +7,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class AdminMenu extends Model
+class AdminMenu extends Eloquent
 {
-    use HasFactory;
-
     protected $table = TABLE_ADMIN_MENUS;
     protected $primaryKey = 'menu_key';
     public $timestamps = false;

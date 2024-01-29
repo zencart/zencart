@@ -7,13 +7,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class PluginControlVersion extends Model
+class PluginControlVersion extends Eloquent
 {
-    use HasFactory;
-
     protected $table = TABLE_PLUGIN_CONTROL_VERSIONS;
     protected $primaryKey = 'unique_key';
     protected $keyType = 'string';
