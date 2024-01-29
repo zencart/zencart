@@ -7,13 +7,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class CustomerInfo extends Model
+class CustomerInfo extends Eloquent
 {
-    use HasFactory;
-
     protected $table = TABLE_CUSTOMERS_INFO;
     protected $primaryKey = 'customers_info_id';
     public $timestamps = false;
