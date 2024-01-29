@@ -62,16 +62,17 @@ function fmod_round($x, $y)
 
 
 /**
- * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
+ * Convert value to a float/int -- mainly used for sanitizing and returning non-empty strings or nulls
  * @param int|float|string $input
  * @return float|int
  */
-function convertToFloat($input = 0)
+function convertToFloat($input = 0): float|int
 {
     if ($input === null) return 0;
-    $val = preg_replace('/[^0-9,\.\-]/', '', $input);
+    if (is_float($input) || is_int($input)) return $input;
+    $val = preg_replace('/[^0-9,\.\-]/', '', (string)$input);
     // do a non-strict compare here:
-    if ($val == 0) return 0;
+    if ($val == 0 || empty($val)) return 0;
     return (float)$val;
 }
 
