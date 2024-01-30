@@ -219,7 +219,7 @@ $pluginManager = new PluginManager(new PluginControl(), new \App\Models\PluginCo
 $installedPlugins = $pluginManager->getInstalledPlugins();
 $pluginManager = new PluginManager(new PluginControl, new App\Models\PluginControlVersion);
 
-$fs = new FileSystem;
+$fs = new FiileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 

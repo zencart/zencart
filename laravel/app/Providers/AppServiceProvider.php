@@ -26,5 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $config = new Configuration();
         $config->loadConfigSettings();
+        config(['app.zencart' => false]);
     }
 }

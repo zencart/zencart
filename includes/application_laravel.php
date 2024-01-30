@@ -10,7 +10,6 @@ $kernel = $app->make(Kernel::class);
 if (!file_exists(__DIR__ . '/../laravel/.env')) {
     copy(__DIR__ . '/../laravel/.env.example', __DIR__ . '/../laravel/.env');
     exec('php ' . __DIR__ . '/../laravel/' . 'artisan key:generate ');
-    //die('HERE');
 }
 try {
     $response = $kernel->handle(
@@ -24,3 +23,4 @@ try {
 } catch (\Exception $e) {
     // do nothing here as we want to drop through to let Zen Cart handle stuff.
 }
+config(['app.zencart' => true]);

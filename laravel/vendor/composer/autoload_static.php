@@ -533,7 +533,7 @@ class ComposerStaticInit6ece7cd49bf82c9adaa9012ae26d0d5e
         'App\\Http\\Controllers\\Api\\CustomerController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/CustomerController.php',
         'App\\Http\\Controllers\\Api\\LanguageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LanguageController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
-        'App\\Http\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardController.php',
+        'App\\Http\\Controllers\\TestController' => __DIR__ . '/../..' . '/app/Http/Controllers/TestController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',

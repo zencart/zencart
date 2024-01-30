@@ -14,7 +14,7 @@ return array(
     'App\\Http\\Controllers\\Api\\CustomerController' => $baseDir . '/app/Http/Controllers/Api/CustomerController.php',
     'App\\Http\\Controllers\\Api\\LanguageController' => $baseDir . '/app/Http/Controllers/Api/LanguageController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
-    'App\\Http\\Controllers\\DashboardController' => $baseDir . '/app/Http/Controllers/DashboardController.php',
+    'App\\Http\\Controllers\\TestController' => $baseDir . '/app/Http/Controllers/TestController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',

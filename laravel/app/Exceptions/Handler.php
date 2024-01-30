@@ -54,6 +54,9 @@ class Handler extends ExceptionHandler
     }
     public function report(Throwable $exception)
     {
+        if (config('app.zencart') === true && config('zencart.use_laravel_errors') === false) {
+            throw $exception;
+        }
         // Prevent Laravel's default exception handling and logging for specific exceptions (e.g., NotFoundHttpException).
         // Add any other exceptions you want to bypass the default handling.
         if ($exception instanceof NotFoundHttpException) {
