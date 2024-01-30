@@ -10,6 +10,10 @@
 $zco_notifier->notify('NOTIFY_HEADER_START_GV_REDEEM');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+
+$_GET['gv_no'] = $_GET['gv_no'] ?? null;
+$_GET['goback'] = '';
+
 $_GET['gv_no'] = zen_sanitize_string(trim($_GET['gv_no']));
 
 // if the customer is not logged on, redirect them to the login page
