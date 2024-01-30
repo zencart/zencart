@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Dec 31 Modified in v2.0.0-alpha1 $
+ * @version $Id: Wilt 2024 Jan 30 Modified in v2.0.0-alpha1 $
  */
 
 use App\Models\PluginControl;
@@ -122,8 +122,9 @@ $detected_locale = setlocale(LC_TIME, 0);
 if ($detected_locale === false || $detected_locale === 'C') {
     setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
 }
-
-require('includes/application_testing.php');
+if (file_exists('./not_for_release/testFramework/Support/application_testing.php')) {
+    require('./not_for_release/testFramework/Support/application_testing.php');
+}
 /**
  * check for and include load application parameters
  */

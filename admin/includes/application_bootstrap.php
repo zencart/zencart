@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Dec 31 Modified in v2.0.0-alpha1 $
+ * @version $Id: Wilt 2024 Jan 30 Modified in v2.0.0-alpha1 $
  */
 
 use App\Models\PluginControl;
@@ -86,8 +86,8 @@ if (file_exists('includes/local/configure.php')) {
     include('includes/local/configure.php');
 }
 
-if (file_exists('../includes/application_testing.php')) {
-    require('../includes/application_testing.php');
+if (file_exists('../not_for_release/testFramework/Support/application_testing.php')) {
+    require('../not_for_release/testFramework/Support/application_testing.php');
 }
 /**
  * check for and load application configuration parameters
