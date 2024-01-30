@@ -220,7 +220,7 @@ class shoppingCart extends base
         $this->free_shipping_price = 0;
         $this->free_shipping_weight = 0;
 
-        if (zen_is_logged_in() && $reset_database == true) {
+        if (zen_is_logged_in() && $reset_database) {
             $sql = "DELETE FROM " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id = " . (int)$_SESSION['customer_id'];
             $db->Execute($sql);
             $sql = "DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id = " . (int)$_SESSION['customer_id'];
@@ -247,7 +247,7 @@ class shoppingCart extends base
      * @param bool $notify whether to add the product to the notify list
      * @return void
      */
-    public function add_cart($product_id, $qty = '1', $attributes = [], $notify = true)
+    public function add_cart($product_id, $qty = 1, $attributes = [], $notify = true)
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) {
@@ -391,7 +391,7 @@ class shoppingCart extends base
      * @param array $attributes product attributes attached to the item
      * @return bool
      */
-    function update_quantity($uprid, $quantity = '', $attributes = [])
+    function update_quantity($uprid, $quantity = 0, $attributes = [])
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) {
@@ -715,7 +715,7 @@ class shoppingCart extends base
 
             // adjust price for discounts when priced by attribute
             if ($product['products_priced_by_attribute'] === '1' && zen_has_product_attributes($prid, false)) {
-                $products_price = ($special_price) ? $special_price : $products_raw_price;
+                $products_price = $special_price ?: $products_raw_price;
             } elseif ($product['products_discount_type'] !== '0') {  // discount qty pricing
                 $products_price = zen_get_products_discount_price_qty($prid, $qty);
             }
@@ -733,7 +733,7 @@ class shoppingCart extends base
 
 // ****** WARNING NEED TO ADD ATTRIBUTES AND QTY
             // calculate Product Price without Specials, Sales or Discounts
-            $total_before_discounts += $products_raw_price;
+            $total_before_discounts += zen_str_to_numeric($products_raw_price);
 
             $adjust_downloads = 0;
             // attributes price
@@ -794,14 +794,14 @@ class shoppingCart extends base
                         if ($attribute_price->fields['attributes_discounted'] === '1') {
                             // calculate proper discount for attributes
                             $products_base_price = zen_get_products_price_is_priced_by_attributes($prid) ? $products_raw_price : 0;
-                            $new_attributes_price = zen_get_discount_calc($prid, $attributes_id, $options_values_price + $products_base_price, $qty);
-                            $new_attributes_price = $new_attributes_price - $products_base_price;
+                            $new_attributes_price = zen_get_discount_calc($prid, $attributes_id, zen_str_to_numeric($options_values_price) + $products_base_price, $qty);
+                            $new_attributes_price -= $products_base_price;
                             $productTotal += $new_attributes_price;
                         } else {
-                            $productTotal += $options_values_price;
+                            $productTotal += zen_str_to_numeric($options_values_price);
                         }
                         // calculate Product Price without Specials, Sales or Discounts
-                        $total_before_discounts += $options_values_price;
+                        $total_before_discounts += zen_str_to_numeric($options_values_price);
                     } // eof: attribute price
 
                     // adjust for downloads
@@ -827,7 +827,7 @@ class shoppingCart extends base
                     $chk_price = zen_get_products_base_price($uprid);
                     $chk_special = zen_get_products_special_price($uprid, false);
                     // products_options_value_text
-                    if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && zen_get_attributes_type($attributes_id) == PRODUCTS_OPTIONS_TYPE_TEXT) {
+                    if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && (string)zen_get_attributes_type($attributes_id) === (string)PRODUCTS_OPTIONS_TYPE_TEXT) {
                         $text_words = zen_get_word_count_price(
                             $this->contents[$uprid]['attributes_values'][$attribute_price->fields['options_id']],
                             $attribute_price->fields['attributes_price_words_free'],
@@ -883,7 +883,7 @@ class shoppingCart extends base
                         }
                         // calculate Product Price without Specials, Sales or Discounts
                         $added_charge = zen_get_attributes_qty_prices_onetime($attribute_price->fields['attributes_qty_prices'], 1);
-                        $total_before_discounts += $options_values_price + $added_charge;
+                        $total_before_discounts += zen_str_to_numeric($options_values_price) + $added_charge;
                     }
 
                     //// one time charges
@@ -950,7 +950,7 @@ class shoppingCart extends base
 
                     // shipping adjustments for Attributes
                     if ($is_free_shipping === true) {
-                        if ($attribute_weight->fields['products_attributes_weight_prefix'] == '-') {
+                        if ($attribute_weight->fields['products_attributes_weight_prefix'] === '-') {
                             $this->free_shipping_weight -= ($qty * $attribute_weight->fields['products_attributes_weight']);
                         } else {
                             $this->free_shipping_weight += ($qty * $attribute_weight->fields['products_attributes_weight']);
@@ -1051,17 +1051,17 @@ class shoppingCart extends base
                     $sale_maker_discount = '';
                     $products_raw_price = zen_get_product_retail_or_wholesale_price($prid);
                     $products_raw_attribute_base_price = (zen_get_products_price_is_priced_by_attributes($prid)) ? $products_raw_price : 0.0;
-                    $new_attributes_price = zen_get_discount_calc($prid, $attribute_price['products_attributes_id'], $options_values_price + $products_raw_attribute_base_price, $qty);
+                    $new_attributes_price = zen_get_discount_calc($prid, $attribute_price['products_attributes_id'], zen_str_to_numeric($options_values_price) + $products_raw_attribute_base_price, $qty);
                     $new_attributes_price -= $products_raw_attribute_base_price;
                     $attributes_price += $new_attributes_price;
                 } else {
-                    $attributes_price += $options_values_price;
+                    $attributes_price += zen_str_to_numeric($options_values_price);
                 }
 
                 //////////////////////////////////////////////////
                 // calculate additional charges
                 // products_options_value_text
-                if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && zen_get_attributes_type($attribute_price['products_attributes_id']) == PRODUCTS_OPTIONS_TYPE_TEXT) {
+                if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && (string)zen_get_attributes_type($attribute_price['products_attributes_id']) === (string)PRODUCTS_OPTIONS_TYPE_TEXT) {
                     $text_words = zen_get_word_count_price(
                         $this->contents[$uprid]['attributes_values'][$attribute_price['options_id']],
                         $attribute_price['attributes_price_words_free'],
@@ -1218,7 +1218,7 @@ class shoppingCart extends base
      * @param bool $check_for_valid_cart whether to also check if cart contents are valid
      * @return array|false
      */
-    public function get_products($check_for_valid_cart = false)
+    public function get_products(bool $check_for_valid_cart = false)
     {
         global $db;
 
@@ -1269,7 +1269,7 @@ class shoppingCart extends base
 
             // validate cart contents for checkout
 
-            if ($check_for_valid_cart == true) {
+            if ($check_for_valid_cart === true) {
                 if (empty($this->flag_duplicate_quantity_msgs_set['keep'])) {
                     $this->flag_duplicate_quantity_msgs_set = [];
                 }
@@ -1662,7 +1662,7 @@ class shoppingCart extends base
         foreach ($this->contents as $uprid => $data) {
             // check if field it true
             $product_check = zen_get_product_details(zen_get_prid($uprid));
-            if (array_key_exists($check_value, $product_check->fields) && $product_check->fields[$check_what] == $check_value) {
+            if (array_key_exists($check_value, $product_check->fields) && (string)$product_check->fields[$check_what] === (string)$check_value) {
                 $in_cart_check_qty += $data['qty'];
             }
         }
@@ -1746,7 +1746,7 @@ class shoppingCart extends base
         for ($i = 0, $n = count($_POST['products_id']); $i < $n; $i++) {
             $adjust_max = 'false';
             $products_id = $_POST['products_id'][$i];
-            if ($_POST['cart_quantity'][$i] == '') {
+            if (empty($_POST['cart_quantity'][$i])) {
                 $_POST['cart_quantity'][$i] = 0;
             }
             if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
@@ -1764,7 +1764,7 @@ class shoppingCart extends base
                 $_POST['cart_quantity'][$i] = $this->get_quantity($products_id);
                 continue;
             }
-            if (in_array($products_id, $cart_delete) || $_POST['cart_quantity'][$i] == 0) {
+            if (in_array($products_id, $cart_delete, false) || empty($_POST['cart_quantity'][$i])) {
                 $this->remove($products_id);
             } else {
                 $add_max = zen_get_products_quantity_order_max($products_id); // maximum allowed
@@ -2406,6 +2406,7 @@ class shoppingCart extends base
         foreach ($chk_products as $next_chk) {
             if (is_array($next_chk['attributes'])) {
                 foreach ($next_chk['attributes'] as $option => $value) {
+                    // these are intentionally loose-comparisons
                     if ($option == $check_option_id && $value == $check_option_values_id) {
                         $in_cart_check_qty += $next_chk['quantity'];
                     }
@@ -2503,7 +2504,7 @@ class shoppingCart extends base
      * USAGE:  $chk_category_cart_total_price_cat = $_SESSION['cart']->in_cart_product_total_price_category(9);
      *
      * @param int $category_id
-     * @return float
+     * @return float|int
      */
     public function in_cart_product_total_price_category($category_id)
     {
@@ -2511,7 +2512,7 @@ class shoppingCart extends base
         $in_cart_product_price = 0;
 
         foreach ($products as $key => $val) {
-            if ($val['category'] == $category_id) {
+            if ((int)$val['category'] === (int)$category_id) {
                 $in_cart_product_price += ($val['final_price'] * $val['quantity']) + $val['onetime_charges'];
             }
         }
@@ -2532,7 +2533,7 @@ class shoppingCart extends base
 
         $in_cart_product_quantity = 0;
         foreach ($products as $key => $val) {
-            if ($val['category'] == $category_id) {
+            if ((int)$val['category'] === (int)$category_id) {
                 $in_cart_product_quantity += $val['quantity'];
             }
         }
@@ -2633,7 +2634,7 @@ class shoppingCart extends base
         $product = zen_get_product_details((int)$pr_id);
 
         // if mixed attributes is off identify that this product is the last of its kind (which is also the first of its kind).
-        if ($product->fields['products_quantity_mixed'] === '0') {
+        if (empty($product->fields['products_quantity_mixed'])) {
             return true;
         }
 
@@ -2661,7 +2662,7 @@ class shoppingCart extends base
             if ($_POST['cart_quantity'][$i] != $current_qty) { // identify that quantity changed
                 $product_changed[$products_id] = $_POST['cart_quantity'][$i] - $current_qty;  // Identify that the specific product changed and by how much the customer increased it.
                 if (array_key_exists($prs_id, $product_total_change)) {
-                    $product_total_change[$prs_id] = $product_total_change[$prs_id] + $product_changed[$products_id];
+                    $product_total_change[$prs_id] += $product_changed[$products_id];
                 } else {
                     $product_total_change[$prs_id] = $product_changed[$products_id];
                 }
@@ -2705,7 +2706,7 @@ class shoppingCart extends base
         ];
 
         if (array_key_exists($product_id, $product_changed)) {
-            if ($product_total_change[$pr_id] == '0') {
+            if ($product_total_change[$pr_id] == 0) {
                 $changed_array['state'] = 'netzero';
                 return $changed_array;
             }
