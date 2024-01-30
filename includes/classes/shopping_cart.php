@@ -1927,15 +1927,25 @@ class shoppingCart extends base
             }
             $adjust_max = 'false';
             if (isset($_POST['id']) && is_array($_POST['id'])) {
+                // -----
+                // Check to see if any of the submitted attributes are either a required (but empty) TEXT
+                // field or a display-only (e.g. a "Please select") value.  In either case, the
+                // customer is sent back to the product's page to provide the required input.
+                //
                 foreach ($_POST['id'] as $key => $value) {
                     if (zen_get_attributes_valid($_POST['products_id'], $key, $value) === false) {
+                        if (str_starts_with($key, TEXT_PREFIX) === true && $value === '') {
+                            $selection_text = '';
+                            $value_text = ' ' . ltrim(TEXT_INVALID_USER_INPUT, ' ');
+                        } else {
+                            $selection_text = TEXT_INVALID_SELECTION;
+                            $value_text = zen_values_name($value);
+                        }
                         $the_list .=
                             TEXT_ERROR_OPTION_FOR .
                             '<span class="alertBlack">' . zen_options_name($key) . '</span>' .
-                            TEXT_INVALID_SELECTION .
-                            '<span class="alertBlack">' .
-                                ($value == (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID) ? TEXT_INVALID_USER_INPUT : zen_values_name($value) .
-                            '</span>' .
+                            $selection_text .
+                            '<span class="alertBlack">' . $value_text . '</span>' .
                             '<br>';
                     }
                 }
