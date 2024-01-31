@@ -34,6 +34,12 @@ function initCouponReferrerCheck(): ?string {
         return null;
     }
 
+    $referrers = explode(',', $result->fields['referrer']);
+    $referrers = array_map(fn ($val) => trim($val), $referrers);
+    if (! in_array($domain, $referrers)) {
+        return null;
+    }
+
     return $result->fields['coupon_code'];
 }
 
