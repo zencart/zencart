@@ -62,6 +62,8 @@ ALTER TABLE products_attributes ADD options_values_price_w varchar(150) NOT NULL
 ALTER TABLE products_discount_quantity ADD discount_price_w varchar(150) NOT NULL DEFAULT '0' AFTER discount_price;
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Wholesale Pricing', 'WHOLESALE_PRICING_CONFIG', 'false', 'Should <em>Wholesale Pricing</em> be enabled for your site?  Choose <b>false</b> (the default) if you don\'t want that feature enabled. Otherwise, choose <b>Tax Exempt</b> to enable with tax-exemptions for all wholesale customers or <b>Pricing Only</b> to apply tax as usual for wholesale customers.', 1, 23, now(), 'zen_cfg_select_option([\'false\', \'Tax Exempt\', \'Pricing Only\'],');
 
+ALTER TABLE coupons ADD referrer TEXT DEFAULT NULL AFTER uses_per_user;
+
 #############
 #### Updated country information that has changed.
 UPDATE countries SET countries_name = 'Türkiye' WHERE countries_iso_code_3 = 'TUR';

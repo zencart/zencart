@@ -285,6 +285,7 @@ switch ($_GET['action']) {
       'coupon_type' => zen_db_prepare_input($coupon_type),
       'uses_per_coupon' => (int)$_POST['coupon_uses_coupon'],
       'uses_per_user' => (int)$_POST['coupon_uses_user'],
+      'referrer' => $_POST['coupon_referrer'] ?: 'null',
       'coupon_minimum_order' => (float)$_POST['coupon_min_order'],
       'restrict_to_products' => zen_db_prepare_input($_POST['coupon_products']),
       'restrict_to_categories' => zen_db_prepare_input($_POST['coupon_categories']),
@@ -716,6 +717,10 @@ switch ($_GET['action']) {
                 <td><?php echo $_POST['coupon_uses_user']; ?></td>
               </tr>
               <tr>
+                <td><?php echo COUPON_REFERRER; ?></td>
+                <td><?php echo $_POST['coupon_referrer'] ?: 'none'; ?></td>
+              </tr>
+              <tr>
                 <td><?php echo COUPON_STARTDATE; ?></td>
                 <?php $start_date = date(DATE_FORMAT, mktime(0, 0, 0, $_POST['coupon_startdate_month'], $_POST['coupon_startdate_day'], $_POST['coupon_startdate_year'])); ?>
                 <td><?php echo $start_date; ?></td>
@@ -739,6 +744,7 @@ switch ($_GET['action']) {
               echo zen_draw_hidden_field('coupon_code', stripslashes($c_code));
               echo zen_draw_hidden_field('coupon_uses_coupon', $_POST['coupon_uses_coupon']);
               echo zen_draw_hidden_field('coupon_uses_user', $_POST['coupon_uses_user']);
+              echo zen_draw_hidden_field('coupon_referrer', $_POST['coupon_referrer']);
               echo zen_draw_hidden_field('coupon_products', (!empty($_POST['coupon_products']) ? $_POST['coupon_products'] : ''));
               echo zen_draw_hidden_field('coupon_categories', (!empty($_POST['coupon_categories']) ? $_POST['coupon_categories'] : ''));
               echo zen_draw_hidden_field('coupon_startdate', date('Y-m-d', mktime(0, 0, 0, $_POST['coupon_startdate_month'], $_POST['coupon_startdate_day'], $_POST['coupon_startdate_year'])));
@@ -784,6 +790,7 @@ switch ($_GET['action']) {
             $coupon_code = $coupon->fields['coupon_code'];
             $coupon_uses_coupon = $coupon->fields['uses_per_coupon'];
             $coupon_uses_user = $coupon->fields['uses_per_user'];
+            $coupon_referrer = $coupon->fields['referrer'];
             $coupon_startdate = $coupon->fields['coupon_start_date'];
             $coupon_finishdate = $coupon->fields['coupon_expire_date'];
             $coupon_zone_restriction = $coupon->fields['coupon_zone_restriction'];
@@ -925,6 +932,16 @@ switch ($_GET['action']) {
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_uses_user', (!empty($coupon_uses_user) && $coupon_uses_user >= 1 ? $coupon_uses_user : ''), 'class="form-control" id="coupon_uses_user"'); ?>
                   <span class="input-group-addon">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_USES_USER_HELP; ?>"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <?php echo zen_draw_label(COUPON_REFERRER, 'coupon_referrer', 'class="control-label col-sm-3"'); ?>
+              <div class="col-sm-9 col-md-6">
+                <div class="input-group"><?php echo zen_draw_input_field('coupon_referrer', (!empty($coupon_referrer) && $coupon_referrer >= 1 ? $coupon_referrer : ''), 'class="form-control" id="coupon_referrer"'); ?>
+                  <span class="input-group-addon">
+                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_REFERRER_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
@@ -1240,6 +1257,7 @@ switch ($_GET['action']) {
                                              WHERE cd.coupon_id = " . (int)$cInfo->coupon_id);
                 $uses_coupon = $cInfo->uses_per_coupon;
                 $uses_user = $cInfo->uses_per_user;
+                $referrer = $cInfo->referrer;
                 $coupon_order_limit = $cInfo->coupon_order_limit;
                 $coupon_is_valid_for_sales = $cInfo->coupon_is_valid_for_sales;
                 if ($uses_coupon == 0 || $uses_coupon == '') {
@@ -1255,6 +1273,7 @@ switch ($_GET['action']) {
                   $contents[] = array('text' => COUPON_FINISHDATE . ':&nbsp;' . zen_date_short($cInfo->coupon_expire_date));
                   $contents[] = array('text' => COUPON_USES_COUPON . ':&nbsp;' . $uses_coupon);
                   $contents[] = array('text' => COUPON_USES_USER . ':&nbsp;' . $uses_user);
+                  $contents[] = array('text' => COUPON_REFERRER . ':&nbsp;' . ($referrer ?? 'none'));
                   $contents[] = array('text' => COUPON_PRODUCTS . ':&nbsp;' . $prod_details);
                   $contents[] = array('text' => COUPON_CATEGORIES . ':&nbsp;' . $cat_details);
                   $contents[] = array('text' => COUPON_MIN_ORDER . ':&nbsp;' . $currencies->format($cInfo->coupon_minimum_order));
