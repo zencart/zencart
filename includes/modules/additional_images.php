@@ -15,7 +15,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 $GLOBALS['zco_notifier']->notify('NOTIFY_MODULES_ADDITIONAL_PRODUCT_IMAGES_START');
 
 if (!defined('IMAGE_ADDITIONAL_DISPLAY_LINK_EVEN_WHEN_NO_LARGE')) define('IMAGE_ADDITIONAL_DISPLAY_LINK_EVEN_WHEN_NO_LARGE','Yes');
-$images_array = array();
+
+$modal_images = [];
+$images_array = [];
 
 // do not check for additional images when turned off
 if ($products_image != '' && $flag_show_product_info_additional_images != 0) {
@@ -91,13 +93,15 @@ $num_images = count($images_array);
 $list_box_contents = array();
 $title = '';
 
+$max_image_grid_columns = (int)IMAGES_AUTO_ADDED; // "Number of additional-images per row"
+
 if ($num_images > 0) {
     $row = 0;
     $col = 0;
-    if ($num_images < IMAGES_AUTO_ADDED || IMAGES_AUTO_ADDED == 0 ) {
+    if ($num_images < $max_image_grid_columns || $max_image_grid_columns === 0 ) {
         $col_width = floor(100/$num_images);
     } else {
-        $col_width = floor(100/IMAGES_AUTO_ADDED);
+        $col_width = floor(100 / $max_image_grid_columns);
     }
 
     for ($i=0, $n=$num_images; $i<$n; $i++) {
@@ -137,8 +141,7 @@ if ($num_images > 0) {
         // create that value.
         //
         // $p1 ... (r/o) ... An associative array, containing the 'flag_display_large', 'products_name', 'products_image_large', 'thumb_slashes' and current 'index' values.
-        // $p2 ... (r/w) ... A reference to the $script_link value, set here to boolean false; if an observer modifies that value, the
-        //                     this module's processing is bypassed.
+        // $p2 ... (r/w) ... A reference to the $script_link value, set here to boolean false; if an observer modifies that value, then this module's processing is bypassed.
         // $p3 ... (r/w) ... A reference to the $link_parameters value, which defines the parameters associated with the above
         //                     link's display.  If the $script_link is updated, these parameters will be used for the display.
         //
@@ -173,8 +176,16 @@ if ($num_images > 0) {
             'params' => $link_parameters,
              'text' => "\n      " . $link
         );
+
+        $modal_images[] = [
+            'image' => $file,
+            'products_name' => $products_name,
+            'base_image' => $base_image,
+            'products_image_large' => $products_image_large,
+        ];
+
         $col++;
-        if ($col > (IMAGES_AUTO_ADDED -1)) {
+        if ($col > ($max_image_grid_columns - 1)) {
             $col = 0;
             $row++;
         }

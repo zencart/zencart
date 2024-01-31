@@ -128,6 +128,21 @@ if (count($lng->catalog_languages) > 1) {
     echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('.css',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value . '"/>'."\n";
   }
 
+
+/**
+ * load all DYNAMIC template-specific stylesheets, named like "style*.php", alphabetically
+ */
+$directory_array = $template->get_template_part($template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'css'), '/^style/', '.php');
+foreach($directory_array as $key => $value) {
+    require $template->get_template_dir('.php',DIR_WS_TEMPLATE, $current_page_base,'css') . '/' . $value;
+}
+
+// User defined styles come last
+$user_styles = DIR_WS_TEMPLATE . 'css/site_specific_styles.php';
+if (file_exists($user_styles)) {
+    require $user_styles;
+}
+
 /** CDN for jQuery core **/
 ?>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
