@@ -10,7 +10,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // set a default time limit
-zen_set_time_limit(GLOBAL_SET_TIME_LIMIT);
+zen_set_time_limit((int)GLOBAL_SET_TIME_LIMIT);
 
 // -----
 // Load required sales/specials/etc function-files for core use, in preparation to
