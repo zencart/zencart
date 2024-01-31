@@ -58,6 +58,9 @@ abstract class zcFeatureTestCase extends WebTestCase
         if (!defined('ROOTCWD')) {
             define('ROOTCWD', realpath(__DIR__ . '/../../../') . '/');
         }
+        if (!defined('TEXT_PROGRESS_FINISHED')) {
+            define('TEXT_PROGRESS_FINISHED', '');
+        }
 
     }
 
