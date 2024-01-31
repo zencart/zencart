@@ -23,7 +23,7 @@ function initCouponReferrerCheck(): ?string {
     }
     $domain = $matches[1];
 
-    $sql = "SELECT coupon_code
+    $sql = "SELECT coupon_code, referrer
         FROM " . TABLE_COUPONS . "
         WHERE referrer LIKE '%:referrer:%'";
     $sql = $db->bindVars($sql, ':referrer:', $domain, 'noquotestring');
