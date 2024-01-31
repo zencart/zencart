@@ -33,10 +33,10 @@ if (!defined('IS_ADMIN_FLAG')) {
     $flag_disable_right = false;
   }
 
-  if (!class_exists('Mobile_Detect')) {
+  if (!class_exists('MobileDetect')) {
     include_once(DIR_WS_CLASSES . 'Mobile_Detect.php');
   }
-  if (!isset($detect)) $detect = new Mobile_Detect;
+  if (!isset($detect)) $detect = new Detection\MobileDetect;
   if (!isset($_SESSION['layoutType'])) $_SESSION['layoutType'] = 'legacy';
 
   $display_as_mobile = ($detect->isMobile() || $detect->isTablet() || $_SESSION['layoutType'] == 'mobile' || $_SESSION['layoutType'] == 'tablet');
