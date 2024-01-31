@@ -7,6 +7,12 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Oct 30 Modified in v1.5.8-alpha $
  */
+/**
+ * @var queryFactory $db
+ * @var messageStack $messageStack
+ * @var notifier $zco_notifier
+ */
+
 $zco_notifier->notify('NOTIFY_HEADER_START_GV_REDEEM');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
