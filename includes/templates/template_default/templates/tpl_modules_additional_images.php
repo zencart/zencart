@@ -17,6 +17,17 @@ if (empty($flag_show_product_info_additional_images) || empty($modal_images)) {
 ?>
 <div id="productAdditionalImages" class="image-grid">
 <?php
+    /*
+     * Plugins for older templates, such as colorbox etc, may need to use the old manual-grid display template
+     * In such case, set $use_legacy_additional_images_columnar_template=true so that the modal grid isn't generated
+     * You will also need to remove the 'class="image-grid"' markup in the <div> above.
+     */
+    if (!empty($use_legacy_additional_images_columnar_template)) {
+        require $template->get_template_dir('tpl_columnar_display.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_columnar_display.php';
+        // reset array of modal images, so that the modal template gets skipped
+        $modal_images = [];
+    }
+
     $i = 0; // starts at zero here, and is immediately incremented in the loop because we want the modal IDs to start at '1'.
     foreach ($modal_images as $image) {
         $i++;
