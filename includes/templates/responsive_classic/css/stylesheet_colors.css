@@ -28,7 +28,7 @@ legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxCon
 .productSpecialPrice, .productSalePrice, .productSpecialPriceSale, .productPriceDiscount {color:#900404;}
 .categoryListBoxContents a:hover, .categoryListBoxContents:hover a{color:#364fb5;}
 .list-more{color:#fff !important;}
-  
+
 /* Added by dbltoe for more accent on center page items.  Comment out any not wanted */
 .categoryListBoxContents:hover, centerBoxContentsListing:hover, .centerBoxContents:hover, .centerBoxContentsNew:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsSpecials:hover, .specialsListBoxContents:hover {border-radius: 5px;background:#e2e3e4;box-shadow: 21px 21px 41px #bdbdbd, -21px -21px 41px #d9d9d9;}
 
@@ -88,3 +88,9 @@ ol.list-links li{border-bottom:1px solid #ddd;}
 .sideBoxContent optgroup {color: #db0000;}
 .sideBoxContent optgroup > option {color: #000000;}
 th#seProductsHeading, th#seTotalHeading {background: #000000;}
+
+/* CSS styles for the image modals */
+.imgmodal {background-color: rgba(0, 0, 0, 0.81);}
+.image-grid img {border: 1px solid #364fb5; box-shadow: 1px 1px 1px #364fb5;}
+.imgmodal-content {background-color: #fff;}
+
