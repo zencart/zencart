@@ -17,7 +17,7 @@ function zen_get_zcversion()
  */
 function zen_set_time_limit($limit)
 {
-    @set_time_limit($limit);
+    @set_time_limit((int)$limit);
 }
 
 /**
@@ -62,16 +62,17 @@ function fmod_round($x, $y)
 
 
 /**
- * Convert value to a float -- mainly used for sanitizing and returning non-empty strings or nulls
+ * Convert value to a float/int -- mainly used for sanitizing and returning non-empty strings or nulls
  * @param int|float|string $input
  * @return float|int
  */
-function convertToFloat($input = 0)
+function convertToFloat($input = 0): float|int
 {
     if ($input === null) return 0;
-    $val = preg_replace('/[^0-9,\.\-]/', '', $input);
+    if (is_float($input) || is_int($input)) return $input;
+    $val = preg_replace('/[^0-9,\.\-]/', '', (string)$input);
     // do a non-strict compare here:
-    if ($val == 0) return 0;
+    if ($val == 0 || empty($val)) return 0;
     return (float)$val;
 }
 
@@ -188,13 +189,13 @@ function zen_get_all_get_params($exclude_array = array())
             if (!in_array($key, $exclude_array)) {
                 if (!is_array($value)) {
                     if (!empty($value)) {
-                        $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
+                        $get_url .= rawurlencode(stripslashes((string)$key)) . '=' . rawurlencode(stripslashes((string)$value)) . '&';
                     }
                 } else {
                     if (IS_ADMIN_FLAG) continue; // admin (and maybe catalog?) doesn't support passing arrays by GET, so skipping any arrays here
                     foreach (array_filter($value) as $arr) {
                         if (is_array($arr)) continue;
-                        $get_url .= rawurlencode(stripslashes($key)) . '[]=' . rawurlencode(stripslashes($arr)) . '&';
+                        $get_url .= rawurlencode(stripslashes((string)$key)) . '[]=' . rawurlencode(stripslashes((string)$arr)) . '&';
                     }
                 }
             }
