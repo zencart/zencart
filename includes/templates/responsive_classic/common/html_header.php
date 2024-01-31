@@ -30,10 +30,10 @@ require(DIR_WS_MODULES . zen_get_module_directory('meta_tags.php'));
 <?php
 
 // ZCAdditions.com, ZCA Responsive Template Default (BOF-addition 1 of 2)
-if (!class_exists('Mobile_Detect')) {
+if (!class_exists('MobileDetect')) {
   include_once(DIR_WS_CLASSES . 'Mobile_Detect.php');
 }
-  $detect = new Mobile_Detect;
+  $detect = new Detection\MobileDetect;
   $isMobile = $detect->isMobile();
   $isTablet = $detect->isTablet();
   if (!isset($layoutType)) $layoutType = ($isMobile ? ($isTablet ? 'tablet' : 'mobile') : 'default');

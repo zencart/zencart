@@ -14,9 +14,9 @@ function layoutTypes()
 function initLayoutType()
 {
     // Safety check.
-    if (!class_exists('Mobile_Detect')) { return 'default'; }
+    if (!class_exists('MobileDetect')) { return 'default'; }
 
-    $detect = new Mobile_Detect;
+    $detect = new Detection\MobileDetect;
     $isMobile = $detect->isMobile();
     $isTablet = $detect->isTablet();
 
