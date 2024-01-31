@@ -523,6 +523,7 @@ CREATE TABLE coupons (
   coupon_expire_date datetime NOT NULL default '0001-01-01 00:00:00',
   uses_per_coupon int(5) NOT NULL default 1,
   uses_per_user int(5) NOT NULL default 0,
+  referrer TEXT DEFAULT NULL,
   restrict_to_products varchar(255) default NULL,
   restrict_to_categories varchar(255) default NULL,
   restrict_to_customers text,
