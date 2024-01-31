@@ -69,7 +69,9 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS == 'true') {
   }
 
   // draw sort
-  echo zen_draw_hidden_field('sort', $_GET['sort']);
+  if (!empty($_GET['sort'])) {
+      echo zen_draw_hidden_field('sort', $_GET['sort']);
+  }
 
   // draw filter_id (ie: category/mfg depending on $options)
   if ($do_filter_list) {

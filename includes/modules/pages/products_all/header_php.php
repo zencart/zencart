@@ -11,7 +11,7 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCTS_ALL');
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // load extra language strings used by product_listing module
 $languageLoader->setCurrentPage('index');
@@ -28,12 +28,11 @@ $define_list = [
     'PRODUCT_LIST_QUANTITY' => PRODUCT_LIST_QUANTITY,
     'PRODUCT_LIST_WEIGHT' => PRODUCT_LIST_WEIGHT,
     'PRODUCT_LIST_IMAGE' => PRODUCT_LIST_IMAGE,
-//    'PRODUCT_LIST_BUY_NOW' => PRODUCT_LIST_BUY_NOW,
+    //    'PRODUCT_LIST_BUY_NOW' => PRODUCT_LIST_BUY_NOW,
 ];
 asort($define_list);
 $column_list = [];
-foreach ($define_list as $key => $value)
-{
+foreach ($define_list as $key => $value) {
     if ((int)$value > 0) {
         $column_list[] = $key;
     }
