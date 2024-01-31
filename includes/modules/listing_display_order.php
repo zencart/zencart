@@ -25,11 +25,6 @@ if (!isset($_GET['disp_order'])) {
 }
 
 switch ((int)$_GET['disp_order']) {
-    case 0:
-        // reset and let reset continue
-        $_GET['disp_order'] = $disp_order_default;
-        $disp_order = $disp_order_default;
-        // no break here.
     case 1:
         $order_by = " ORDER BY pd.products_name";
         break;
@@ -51,7 +46,15 @@ switch ((int)$_GET['disp_order']) {
     case 7:
         $order_by = " ORDER BY p.products_date_added, pd.products_name";
         break;
+    case 8:
+        $order_by = " ORDER BY p.products_sort_order, pd.products_name ";
+        break;
+    case 0:
+        // reset
+        $_GET['disp_order'] = $disp_order_default;
+        $disp_order = $disp_order_default;
+        // no break here.
     default:
-        $order_by = " ORDER BY p.products_sort_order";
+        $order_by = " ORDER BY p.products_sort_order, pd.products_name";
         break;
 }

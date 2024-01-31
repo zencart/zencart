@@ -83,7 +83,7 @@ if (!isset($_GET['sort']) && PRODUCT_LISTING_DEFAULT_SORT_ORDER !== '') {
 $order_by = $default_sort_order ?? '';
 
 // @TODO - $_GET['sort'] which was used for sort-by-clicking-column-heading, can probably be removed since the dropdown is now used instead
-if (isset($column_list) && empty($default_sort_order)) {
+if (isset($column_list) && empty($default_sort_order) && empty($order_by)) {
     if ((!isset($_GET['sort']))
         || !preg_match('/[1-8][ad]/', $_GET['sort'])
         || (substr($_GET['sort'], 0, 1) > count($column_list))) {
@@ -134,7 +134,7 @@ if (isset($column_list) && empty($default_sort_order)) {
 }
 
 // if dropdown selector has been used to change the sort, use it to replace sort-by-column-headings
-if (!empty($_GET['disp_order'])) {
+if (!empty($_GET['disp_order']) || !empty($disp_order_default)) {
     // re-calculate $order_by from dropdown selector
     $order_by_backup = $order_by;
     $order_by = '';
@@ -145,6 +145,8 @@ if (!empty($_GET['disp_order'])) {
         $order_by = $order_by_backup;
     }
     $listing_sql = $sql . $order_by;
+} else {
+    $listing_sql .= $order_by;
 }
 
 
