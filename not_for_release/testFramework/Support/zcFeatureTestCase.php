@@ -13,13 +13,14 @@ use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\DatabaseConcerns;
 use Tests\Support\Traits\GeneralConcerns;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Support\Traits\LogFileConcerns;
 
 /**
  *
  */
 abstract class zcFeatureTestCase extends WebTestCase
 {
-    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns;
+    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns, LogFileConcerns;
 
     static $firstrun = false;
 
