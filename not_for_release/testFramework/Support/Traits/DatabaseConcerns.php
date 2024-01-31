@@ -24,13 +24,43 @@ trait DatabaseConcerns
 
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
+        if (!defined('DIR_FS_ROOT')) {
+            define('DIR_FS_ROOT', ROOTCWD);
+        }
+        if (!defined('DIR_FS_LOGS')) {
+            define('DIR_FS_LOGS', ROOTCWD);
+        }
+        if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
+        if (!defined('IS_ADMIN_FLAG')) {
+            define('IS_ADMIN_FLAG', false);
+        }
+
     }
 
     public static function runMigrations()
     {
         echo 'Running Migrations' . PHP_EOL;
-        $runner = new MigrationsRunner(ROOTCWD . 'not_for_release/testFramework/Support/database/migrations/');
-        $runner->run();
+        $options = [
+            'db_host' => DB_SERVER,
+            'db_user' => DB_SERVER_USERNAME,
+            'db_password' => DB_SERVER_PASSWORD,
+            'db_name' => DB_DATABASE,
+            'db_charset' => DB_CHARSET,
+            'db_prefix' => '',
+            'db_type' => DB_TYPE,
+        ];
+        require_once ROOTCWD . 'zc_install/includes/classes/class.zcDatabaseInstaller.php';
+        $extendedOptions = [
+            'doJsonProgressLogging' => false,
+            'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+            'id' => 'main',
+            'message' => '',
+        ];
+
+        $file = ROOTCWD . 'zc_install/sql/install/mysql_zencart.sql';
+        $dbInstaller = new \zcDatabaseInstaller($options);
+        $conn = $dbInstaller->getConnection();
+        $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
     }
 
     public static function runInitialSeeders()
