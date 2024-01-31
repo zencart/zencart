@@ -12,6 +12,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  */
+/**
+ * @var queryFactory $db
+ * @var notifier $zco_notifier
+ */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -46,12 +50,12 @@ if (!empty($_GET['music_genre_id'])) {
         $and .= ' AND p2c.categories_id = p.master_categories_id ';
     }
 } else {
-    // We show them all
     if (empty($and) && !empty($current_category_id)) {
+        // show the products in a given category
+        // We show them all
         $sql_joins .= " LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id ";
         $and .= " AND p2c.categories_id = " . (int)$current_category_id . " ";
     }
-    // show the products in a given category
     if (isset($_GET['filter_id']) && zen_not_null($_GET['filter_id'])) {
         // We are asked to show only specific category
         $and .= " AND m.music_genre_id = " . (int)$_GET['filter_id'] . " ";
@@ -69,24 +73,32 @@ $listing_sql = "SELECT " . $select_column_list . " p.products_id, p.products_typ
                 LEFT JOIN " . TABLE_MUSIC_GENRE . " m ON m.music_genre_id = pme.music_genre_id
                 ";
 $listing_sql .= $sql_joins ?? ' ';
-$listing_sql .= " WHERE p.products_status = 1
+$where_str = " WHERE p.products_status = 1
                 " . $and . "
                 " . $alpha_sort;
 
-// set the default sort order setting from Admin config when not defined by customer
-if (!isset($_GET['sort']) && PRODUCT_LISTING_DEFAULT_SORT_ORDER !== '') {
-    $_GET['sort'] = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
-}
-
 $listing_sql = str_replace('m.manufacturers_name', 'm.music_genre_name as manufacturers_name', $listing_sql);
+
 
 // $default_sort_order could be set in header_php or main_template_vars before we get here
 $order_by = $default_sort_order ?? '';
+if (empty($order_by)) {
+    // Build ORDER BY sort chosen from dropdown, or apply defaults
+    $order_by_backup = $order_by;
+    require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER));
+    if (empty($order_by)) {
+        $order_by = $order_by_backup;
+    }
+}
 
-// @TODO - $_GET['sort'] which was used for sort-by-clicking-column-heading, can probably be removed since the dropdown is now used instead
-if (isset($column_list) && empty($default_sort_order)) {
+// Legacy $_GET['sort'] which was used for sort-by-clicking-column-heading
+if (isset($column_list) && !empty($_GET['sort'])) {
+    if (!isset($_GET['sort']) && PRODUCT_LISTING_DEFAULT_SORT_ORDER !== '') {
+        $_GET['sort'] = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
+    }
+
     if ((!isset($_GET['sort']))
-        || (isset($_GET['sort']) && !preg_match('/[1-8][ad]/', $_GET['sort']))
+        || !preg_match('/[1-8][ad]/', $_GET['sort'])
         || (substr($_GET['sort'], 0, 1) > count($column_list))) {
         for ($i = 0, $n = count($column_list); $i < $n; $i++) {
             if (isset($column_list[$i]) && $column_list[$i] === 'PRODUCT_LIST_NAME') {
@@ -104,43 +116,33 @@ if (isset($column_list) && empty($default_sort_order)) {
         $sort_order = substr($_GET['sort'], -1);
         switch ($column_list[$sort_col - 1]) {
             case 'PRODUCT_LIST_MODEL':
-                $order_by .= " ORDER BY p.products_model " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
+                $order_by = " ORDER BY p.products_model " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
                 break;
             case 'PRODUCT_LIST_NAME':
-                $order_by .= " ORDER BY pd.products_name " . ($sort_order === 'd' ? 'DESC' : '');
+                $order_by = " ORDER BY pd.products_name " . ($sort_order === 'd' ? 'DESC' : '');
                 break;
             case 'PRODUCT_LIST_MANUFACTURER':
-                $order_by .= " ORDER BY m.music_genre_name " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
+                $order_by = " ORDER BY m.music_genre_name " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
                 break;
             case 'PRODUCT_LIST_QUANTITY':
-                $order_by .= " ORDER BY p.products_quantity " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
+                $order_by = " ORDER BY p.products_quantity " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
                 break;
             case 'PRODUCT_LIST_IMAGE':
-                $order_by .= " ORDER BY pd.products_name";
+                $order_by = " ORDER BY pd.products_name";
                 break;
             case 'PRODUCT_LIST_WEIGHT':
-                $order_by .= " ORDER BY p.products_weight " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
+                $order_by = " ORDER BY p.products_weight " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
                 break;
             case 'PRODUCT_LIST_PRICE':
-                $order_by .= " ORDER BY p.products_price_sorter " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
+                $order_by = " ORDER BY p.products_price_sorter " . ($sort_order === 'd' ? 'DESC' : '') . ", pd.products_name";
                 break;
         }
     }
 }
 
-// if dropdown selector has been used to change the sort, use it to replace sort-by-column-headings
-if (!empty($_GET['disp_order'])) {
-    // re-calculate $order_by from dropdown selector
-    $order_by_backup = $order_by;
-    $order_by = '';
-    require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER));
-    // strip off any existing ORDER BY, and add the one from listing_display_order module
-    [$sql,] = explode('ORDER BY', $listing_sql);
-    if (empty($order_by)) {
-        $order_by = $order_by_backup;
-    }
-    $listing_sql = $sql . $order_by;
-}
+$zco_notifier->notify('NOTIFY_PRODUCT_LISTING_QUERY_STRING', ['music_genre'], $listing_sql, $where_str, $order_by);
+$listing_sql .= ' ' . $where_str . ' ' . $order_by;
+
 
 
 // optional Product List Filter

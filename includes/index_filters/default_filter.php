@@ -12,6 +12,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
  */
+/**
+ * @var queryFactory $db
+ * @var notifier $zco_notifier
+ */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -69,21 +73,28 @@ $listing_sql = "SELECT " . $select_column_list . " p.products_id, p.products_typ
                 LEFT JOIN " . TABLE_MANUFACTURERS . " m ON m.manufacturers_id = p.manufacturers_id
                 ";
 $listing_sql .= $sql_joins ?? ' ';
-$listing_sql .= " WHERE p.products_status = 1
+$where_str = " WHERE p.products_status = 1
                 " . $and . "
                 " . $alpha_sort;
 
 
-// set the default sort order setting from Admin config when not defined by customer
-if (!isset($_GET['sort']) && PRODUCT_LISTING_DEFAULT_SORT_ORDER !== '') {
-    $_GET['sort'] = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
-}
-
 // $default_sort_order could be set in header_php or main_template_vars before we get here
 $order_by = $default_sort_order ?? '';
+if (empty($order_by)) {
+    // Build ORDER BY sort chosen from dropdown, or apply defaults
+    $order_by_backup = $order_by;
+    require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER));
+    if (empty($order_by)) {
+        $order_by = $order_by_backup;
+    }
+}
 
-// @TODO - $_GET['sort'] which was used for sort-by-clicking-column-heading, can probably be removed since the dropdown is now used instead
-if (isset($column_list) && empty($default_sort_order) && empty($order_by)) {
+// Legacy $_GET['sort'] which was used for sort-by-clicking-column-heading
+if (isset($column_list) && !empty($_GET['sort'])) {
+    if (!isset($_GET['sort']) && PRODUCT_LISTING_DEFAULT_SORT_ORDER !== '') {
+        $_GET['sort'] = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
+    }
+
     if ((!isset($_GET['sort']))
         || !preg_match('/[1-8][ad]/', $_GET['sort'])
         || (substr($_GET['sort'], 0, 1) > count($column_list))) {
@@ -133,21 +144,8 @@ if (isset($column_list) && empty($default_sort_order) && empty($order_by)) {
     }
 }
 
-// if dropdown selector has been used to change the sort, use it to replace sort-by-column-headings
-if (!empty($_GET['disp_order']) || !empty($disp_order_default)) {
-    // re-calculate $order_by from dropdown selector
-    $order_by_backup = $order_by;
-    $order_by = '';
-    require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER));
-    // strip off any existing ORDER BY, and add the one from listing_display_order module
-    [$sql,] = explode('ORDER BY', $listing_sql);
-    if (empty($order_by)) {
-        $order_by = $order_by_backup;
-    }
-    $listing_sql = $sql . $order_by;
-} else {
-    $listing_sql .= $order_by;
-}
+$zco_notifier->notify('NOTIFY_PRODUCT_LISTING_QUERY_STRING', ['default'], $listing_sql, $where_str, $order_by);
+$listing_sql .= ' ' . $where_str . ' ' . $order_by;
 
 
 // optional Product List Filter
