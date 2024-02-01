@@ -178,12 +178,17 @@ if ($num_products_count > 0) {
         // these defaults are based on Bootstrap4, but can be customized to suit your own framework
         if ($product_listing_layout_style === 'fluid') {
             $grid_cards_classes = 'row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3';
-            // this array is intentionally in reverse order, with largest index first
-            $grid_classes_matrix = [
-                '10' => 'row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-5',
-                '8' => 'row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4',
-                '6' => 'row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3',
-            ];
+            if (!isset($grid_classes_matrix)) {
+                // this array is intentionally in reverse order, with largest index first
+                $grid_classes_matrix = [
+                    '12' => 'row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6',
+                    '10' => 'row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-5',
+                    '9' => 'row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5',
+                    '8' => 'row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4',
+                    '6' => 'row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3',
+                ];
+            }
+
             // determine classes to use based on number of grid-columns used by "center" column
             if (isset($center_column_width)) {
                 foreach ($grid_classes_matrix as $width => $classes) {
