@@ -13,7 +13,7 @@
 
 @media (min-width:0px) and (max-width:480px){
 /*bof responsive*/
-.onerow-fluid {width:100% !important;} 
+.onerow-fluid {width:100% !important;}
 .onerow-fluid>[class*="col"] {float:none;display:block;width:auto;margin:0px;clear:both;}
 
 /*bof header*/
@@ -196,7 +196,7 @@ h1{text-align:center;}
 
 @media (min-width:481px) and (max-width:767px){
 /*bof responsive*/
-.onerow-fluid {width:100% !important;} 
+.onerow-fluid {width:100% !important;}
 .onerow-fluid>[class*="col"] { float:none;display:block;width:auto;margin:0px;clear:both;  }
 
 /*bof header*/
@@ -320,7 +320,7 @@ div#productListing tr.productListing-odd {clear:both;}
 .prod-list-wrap{height:auto;}
 .tabTable{display:table;}
 .productListing-odd, .productListing-even{display:table-row;height:100%;padding-top:20px;}
-.list-image{margin:20px 20px 10px auto; text-align:center;display:inline-block;height:100%;vertical-align:top;}
+.list-image{margin:20px 20px 10px auto; text-align:center;display:inline-block;height:auto;vertical-align:top;}
 .list-input{width:25%;margin-right:1.5em;}
 .list-more{margin-right:1.5em;}
 
@@ -410,4 +410,106 @@ ul.orderHistList li a{padding-left:0;}
 
 @media (min-width:1500px) {
 div#headerWrapper,div#navSuppWrapper {width:100% !important;margin:auto; clear:both;}
+}
+
+
+@media (min-width:0px) and (max-width:480px){
+    .row.row-clms-1 .gridlayout {width: 100%}
+    .row.row-clms-2 .gridlayout {width: 49%}
+    .row.row-clms-3 .gridlayout {width: 33%}
+    .row.row-clms-4 .gridlayout {width: 25%}
+    .row.row-clms-5 .gridlayout {width: 20%}
+    .row.row-clms-6 .gridlayout {width: 16.5%}
+}
+@media (min-width:481px) and (max-width:767px){
+    .row.row-clms-1 .gridlayout {width: 100%}
+    .row.row-clms-2 .gridlayout {width: 49%}
+    .row.row-clms-3 .gridlayout {width: 33%}
+    .row.row-clms-4 .gridlayout {width: 25%}
+    .row.row-clms-5 .gridlayout {width: 20%}
+    .row.row-clms-6 .gridlayout {width: 16.5%}
+    .row.row-clms-sm-1 .gridlayout {width: 100%}
+    .row.row-clms-sm-2 .gridlayout {width: 49%}
+    .row.row-clms-sm-3 .gridlayout {width: 33%}
+    .row.row-clms-sm-4 .gridlayout {width: 25%}
+    .row.row-clms-sm-5 .gridlayout {width: 20%}
+    .row.row-clms-sm-6 .gridlayout {width: 16.5%}
+}
+@media (min-width:768px) and (max-width:1500px) {
+    .row.row-clms-1 .gridlayout {width: 100%}
+    .row.row-clms-2 .gridlayout {width: 49%}
+    .row.row-clms-3 .gridlayout {width: 33%}
+    .row.row-clms-4 .gridlayout {width: 25%}
+    .row.row-clms-5 .gridlayout {width: 20%}
+    .row.row-clms-6 .gridlayout {width: 16.5%}
+    .row.row-clms-sm-1 .gridlayout {width: 100%}
+    .row.row-clms-sm-2 .gridlayout {width: 49%}
+    .row.row-clms-sm-3 .gridlayout {width: 33%}
+    .row.row-clms-sm-4 .gridlayout {width: 25%}
+    .row.row-clms-sm-5 .gridlayout {width: 20%}
+    .row.row-clms-sm-6 .gridlayout {width: 16.5%}
+    .row.row-clms-md-1 .gridlayout {width: 100%}
+    .row.row-clms-md-2 .gridlayout {width: 49%}
+    .row.row-clms-md-3 .gridlayout {width: 33%}
+    .row.row-clms-md-4 .gridlayout {width: 25%}
+    .row.row-clms-md-5 .gridlayout {width: 20%}
+    .row.row-clms-md-6 .gridlayout {width: 16.5%}
+}
+@media (min-width:1500px) and (max-width:1800px) {
+    .row.row-clms-1 .gridlayout {width: 100%}
+    .row.row-clms-2 .gridlayout {width: 49%}
+    .row.row-clms-3 .gridlayout {width: 33%}
+    .row.row-clms-4 .gridlayout {width: 25%}
+    .row.row-clms-5 .gridlayout {width: 20%}
+    .row.row-clms-6 .gridlayout {width: 16.5%}
+    .row.row-clms-sm-1 .gridlayout {width: 100%}
+    .row.row-clms-sm-2 .gridlayout {width: 49%}
+    .row.row-clms-sm-3 .gridlayout {width: 33%}
+    .row.row-clms-sm-4 .gridlayout {width: 25%}
+    .row.row-clms-sm-5 .gridlayout {width: 20%}
+    .row.row-clms-sm-6 .gridlayout {width: 16.5%}
+    .row.row-clms-md-1 .gridlayout {width: 100%}
+    .row.row-clms-md-2 .gridlayout {width: 49%}
+    .row.row-clms-md-3 .gridlayout {width: 33%}
+    .row.row-clms-md-4 .gridlayout {width: 25%}
+    .row.row-clms-md-5 .gridlayout {width: 20%}
+    .row.row-clms-md-6 .gridlayout {width: 16.5%}
+    .row.row-clms-lg-1 .gridlayout {width: 100%}
+    .row.row-clms-lg-2 .gridlayout {width: 49%}
+    .row.row-clms-lg-3 .gridlayout {width: 33%}
+    .row.row-clms-lg-4 .gridlayout {width: 25%}
+    .row.row-clms-lg-5 .gridlayout {width: 20%}
+    .row.row-clms-lg-6 .gridlayout {width: 16.5%}
+}
+@media (min-width:1800px) {
+    .row.row-clms-1 .gridlayout {width: 100%}
+    .row.row-clms-2 .gridlayout {width: 49%}
+    .row.row-clms-3 .gridlayout {width: 33%}
+    .row.row-clms-4 .gridlayout {width: 25%}
+    .row.row-clms-5 .gridlayout {width: 20%}
+    .row.row-clms-6 .gridlayout {width: 16.5%}
+    .row.row-clms-sm-1 .gridlayout {width: 100%}
+    .row.row-clms-sm-2 .gridlayout {width: 49%}
+    .row.row-clms-sm-3 .gridlayout {width: 33%}
+    .row.row-clms-sm-4 .gridlayout {width: 25%}
+    .row.row-clms-sm-5 .gridlayout {width: 20%}
+    .row.row-clms-sm-6 .gridlayout {width: 16.5%}
+    .row.row-clms-md-1 .gridlayout {width: 100%}
+    .row.row-clms-md-2 .gridlayout {width: 49%}
+    .row.row-clms-md-3 .gridlayout {width: 33%}
+    .row.row-clms-md-4 .gridlayout {width: 25%}
+    .row.row-clms-md-5 .gridlayout {width: 20%}
+    .row.row-clms-md-6 .gridlayout {width: 16.5%}
+    .row.row-clms-lg-1 .gridlayout {width: 100%}
+    .row.row-clms-lg-2 .gridlayout {width: 49%}
+    .row.row-clms-lg-3 .gridlayout {width: 33%}
+    .row.row-clms-lg-4 .gridlayout {width: 25%}
+    .row.row-clms-lg-5 .gridlayout {width: 20%}
+    .row.row-clms-lg-6 .gridlayout {width: 16.5%}
+    .row.row-clms-xl-1 .gridlayout {width: 100%}
+    .row.row-clms-xl-2 .gridlayout {width: 49%}
+    .row.row-clms-xl-3 .gridlayout {width: 33%}
+    .row.row-clms-xl-4 .gridlayout {width: 25%}
+    .row.row-clms-xl-5 .gridlayout {width: 20%}
+    .row.row-clms-xl-6 .gridlayout {width: 16.5%}
 }
