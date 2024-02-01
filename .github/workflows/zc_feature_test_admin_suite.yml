@@ -69,5 +69,5 @@ jobs:
       - name: Test Apache Status
         run: sudo service apache2 status
 
-      - name: Execute Store Feature Tests
-        run: php vendor/bin/phpunit  --verbose --testsuite FeatureStore --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+      - name: Execute Admin Feature Tests
+        run: php vendor/bin/phpunit  --verbose --testsuite FeatureAdmin --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
