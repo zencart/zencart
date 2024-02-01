@@ -1,4 +1,4 @@
-name: Zen Cart Functional  Tests
+name: Zen Cart Store Feature Tests
 
 on: [push, pull_request]
 
@@ -69,5 +69,11 @@ jobs:
       - name: Test Apache Status
         run: sudo service apache2 status
 
-      - name: Execute Functional Tests
-        run: php vendor/bin/phpunit  --verbose --testsuite Feature --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+      - name: Execute Store Feature Tests
+        run: php vendor/bin/phpunit  --verbose --testsuite FeatureStore --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+
+      - name: Archive Logs Directory
+        uses: actions/upload-artifact@v3
+        with:
+          name: Error Logs
+          path: logs/myDEBUG*

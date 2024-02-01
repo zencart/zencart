@@ -21,6 +21,10 @@ abstract class zcFeatureTestCaseStore extends zcFeatureTestCase
      *
      * set some defines where necessary
      */
+    public function setUp(): void
+    {
+        parent::setUp();
+    }
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -29,8 +33,6 @@ abstract class zcFeatureTestCaseStore extends zcFeatureTestCase
         if (!defined('TABLE_ADDRESS_BOOK')) {
             require DIR_FS_CATALOG . 'includes/database_tables.php';
         }
-        //$this->createHttpBrowser();
-
     }
 
     public function tearDown(): void
