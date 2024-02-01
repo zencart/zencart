@@ -13,8 +13,11 @@
         <testsuite name="Unit">
           <directory suffix="Test.php">./not_for_release/testFramework/Unit/</directory>
         </testsuite>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./not_for_release/testFramework/Feature/</directory>
+        <testsuite name="FeatureStore">
+            <directory suffix="Test.php">./not_for_release/testFramework/FeatureStore/</directory>
+        </testsuite>
+        <testsuite name="FeatureAdmin">
+            <directory suffix="Test.php">./not_for_release/testFramework/FeatureAdmin/</directory>
         </testsuite>
     </testsuites>
     <php>
