@@ -67,3 +67,11 @@
 // If a product is in two different sub categories of parent category it will only be counted once.
 //
 //define('COUNT_DISTINCT_PRODUCTS', true);
+
+// -----
+// Checkout Shipping: when no shipping method is available, i.e. Checkout cannot proceed to Payment
+//
+// true .... Replace the "Continue" button with a "Contact Us" button/link.
+// false ... Maintain the "Continue" button, which redirects back to Checkout Shipping; this is the default.
+//
+//$show_contact_us_instead_of_continue = false;
