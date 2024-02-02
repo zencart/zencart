@@ -340,7 +340,8 @@ class order extends base
 
             $subindex = 0;
             $attributes_query = "SELECT products_options_id, products_options_values_id, products_options, products_options_values,
-                                 options_values_price, price_prefix, product_attribute_is_free
+                                 options_values_price, price_prefix, product_attribute_is_free,
+                                 products_attributes_weight, products_attributes_weight_prefix
                                  FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                                  WHERE orders_id = " . (int)$this->orderId . "
                                  AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
@@ -358,6 +359,8 @@ class order extends base
                         'prefix' => $attributes->fields['price_prefix'],
                         'price' => $attributes->fields['options_values_price'],
                         'product_attribute_is_free' => (int)$attributes->fields['product_attribute_is_free'],
+                        'weight' => $attributes->fields['products_attributes_weight'],
+                        'weight_prefix' => $attributes->fields['products_attributes_weight_prefix'],
                     ];
 
                     $subindex++;

@@ -805,6 +805,7 @@ if (!empty($action) && $order_exists === true) {
 <?php } ?>
             </tr>
             <?php
+            $weight_unit = ' ' . ltrim(TEXT_PRODUCT_WEIGHT_UNIT, ' ');
             for ($i = 0, $n = count($order->products); $i < $n; $i++) {
               if (DISPLAY_PRICE_WITH_TAX_ADMIN === 'true') {
                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $currencies->get_decimal_places($order->info['currency'])) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
@@ -820,21 +821,29 @@ if (!empty($action) && $order_exists === true) {
                 <?php
                     echo $order->products[$i]['name'];
                     if (isset($order->products[$i]['attributes']) && (count($order->products[$i]['attributes']) > 0)) {
-                      for ($j = 0, $k = count($order->products[$i]['attributes']); $j < $k; $j++) {
-                        echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ';
-                        echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
-                        if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) {
-                          $upload_name = zen_get_uploaded_file($order->products[$i]['attributes'][$j]['value']);
-                          echo ' ' . '<a href="' . zen_href_link(FILENAME_ORDERS, 'action=download&oID=' . $oID . '&filename=' .  $upload_name) . '">' . TEXT_DOWNLOAD . '</a>' . ' ';
+                        for ($j = 0, $k = count($order->products[$i]['attributes']); $j < $k; $j++) {
+                            echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ';
+                            echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                            if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) {
+                                $upload_name = zen_get_uploaded_file($order->products[$i]['attributes'][$j]['value']);
+                                echo ' ' . '<a href="' . zen_href_link(FILENAME_ORDERS, 'action=download&oID=' . $oID . '&filename=' .  $upload_name) . '">' . TEXT_DOWNLOAD . '</a>' . ' ';
+                            }
+                            if ($order->products[$i]['attributes'][$j]['price'] != '0') {
+                                echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
+                            }
+                            if ($order->products[$i]['attributes'][$j]['product_attribute_is_free'] == '1' && $order->products[$i]['product_is_free'] == '1') {
+                                echo TEXT_INFO_ATTRIBUTE_FREE;
+                            }
+                            // -----
+                            // Uncomment the 'echo' statement below if you want to display each attribute's
+                            // contribution to the ordered-product's weight (the weights are already included
+                            // in the product's overall weight).
+                            //
+                            if ($show_orders_weights === true && $order->products[$i]['attributes'][$j]['weight'] != 0) {
+//                                echo ' (' . $order->products[$i]['attributes'][$j]['weight_prefix'] . $order->products[$i]['attributes'][$j]['weight'] . $weight_unit . ')';
+                            }
+                            echo '</i></small></span>';
                         }
-                        if ($order->products[$i]['attributes'][$j]['price'] != '0') {
-                          echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
-                        }
-                        if ($order->products[$i]['attributes'][$j]['product_attribute_is_free'] == '1' && $order->products[$i]['product_is_free'] == '1') {
-                          echo TEXT_INFO_ATTRIBUTE_FREE;
-                        }
-                        echo '</i></small></span>';
-                      }
                     }
                     // Mobile phones only
                     echo '<span class="visible-xs">';
@@ -847,11 +856,12 @@ if (!empty($action) && $order_exists === true) {
                 </td>
                 <?php
                     if ($show_orders_weights === true) {
-                        $products_weight = $order->products[$i]['products_weight'];
-                        if ($products_weight === null) {
+                        $products_weight_unit = $order->products[$i]['products_weight'];
+                        if ($products_weight_unit === null) {
                             $products_weight = '&mdash;';
                         } else {
-                            $products_weight .= ' ' . ltrim(TEXT_PRODUCT_WEIGHT_UNIT, ' ');
+                            $products_weight_total = rtrim(number_format((float)($products_weight_unit * $order->products[$i]['qty']), 4), '0.');
+                            $products_weight = "$products_weight_unit$weight_unit / $products_weight_total$weight_unit";
                         }
                 ?>
                 <td class="dataTableContent text-right">
