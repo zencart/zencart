@@ -614,7 +614,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             ORDER BY paypal_ipn_id DESC LIMIT 1";
     $sql = $db->bindVars($sql, ':orderID', $zf_order_id, 'integer');
     $ipn = $db->Execute($sql);
-    if ($ipn->EOF && file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php')) {
+    if (!$ipn->EOF && file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php')) {
         require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php');
     }
     return $output;
