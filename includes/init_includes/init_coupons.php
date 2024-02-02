@@ -8,8 +8,9 @@
 function initCouponReferrerCheck(): ?string {
     global $db;
 
-    if (empty($_SERVER['HTTP_REFERER'])) {
-        // There is no referer header, cannot do any lookup.
+    // If there is no referer header, cannot do any lookup,
+    // or if referer starts with own server it's an internal request and can be ignored.
+    if (empty($_SERVER['HTTP_REFERER']) || str_starts_with($_SERVER['HTTP_REFERER'], HTTPS_SERVER)) {
         return null;
     }
     $referrer = $_SERVER['HTTP_REFERER'];
