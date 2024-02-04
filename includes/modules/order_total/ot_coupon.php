@@ -519,7 +519,7 @@ class ot_coupon extends base
                     $products = $_SESSION['cart']->get_products();
                     $coupon_product_count = 0;
                     foreach ($products as $product) {
-                        if (CouponValidation::is_product_valid($product['id'], $coupon_details['coupon_id'])) {
+                        if (CouponValidation::is_product_valid((int)$product['id'], (int)$coupon_details['coupon_id'])) {
                             $coupon_product_count += $_SESSION['cart']->get_quantity($product['id']);
                         }
                     }
@@ -643,12 +643,14 @@ class ot_coupon extends base
         $orderTotalTax = $order->info['tax'];
         $orderTotal = $order->info['total'];
 
+        $coupon_id = (int)$coupon_id;
+
         // for products which are not applicable for this coupon, calculate their value in the cart and reduce it from the final order-total that the coupon's discounts will apply to
         $products = $_SESSION['cart']->get_products();
         $i = 0;
         foreach ($products as $product) {
             $i++;
-            $is_product_valid = (CouponValidation::is_product_valid($product['id'], $coupon_id) && CouponValidation::is_coupon_valid_for_sales($product['id'], $coupon_id));
+            $is_product_valid = (CouponValidation::is_product_valid((int)$product['id'], $coupon_id) && CouponValidation::is_coupon_valid_for_sales((int)$product['id'], $coupon_id));
 
             $this->notify('NOTIFY_OT_COUPON_PRODUCT_VALIDITY', ['is_product_valid' => $is_product_valid, 'i' => $i]);
 
@@ -820,10 +822,11 @@ class ot_coupon extends base
         if ($found_valid !== null) {
             return $found_valid;
         }
+        $coupon_id = (int)$coupon_id;
 
         $found_valid = false;
         foreach ($products as $product) {
-            if (CouponValidation::is_product_valid($product['id'], $coupon_id) && CouponValidation::is_coupon_valid_for_sales($product['id'], $coupon_id)) {
+            if (CouponValidation::is_product_valid((int)$product['id'], $coupon_id) && CouponValidation::is_coupon_valid_for_sales((int)$product['id'], $coupon_id)) {
                 $found_valid = true;
                 break;
             }
