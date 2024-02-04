@@ -80,8 +80,8 @@ $zco_notifier->notify('NOTIFY_HTML_HEAD_TAG_START', $current_page_base);
   if (!isset($lng) || (isset($lng) && !is_object($lng))) {
     $lng = new language;
   }
-if (count($lng->catalog_languages) > 1) {
-  foreach($lng->catalog_languages as $key => $value) {
+if (count($languages = $lng->get_language_list()) > 1) {
+  foreach($languages as $key) {
     echo '<link rel="alternate" href="' . ($this_is_home_page ? zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false) : $canonicalLink . (strpos($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key) . '" hreflang="' . $key . '">' . "\n";
   }
   }

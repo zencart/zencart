@@ -85,25 +85,20 @@ function zen_get_geo_zone_name($geo_zone_id)
     return $geo_zone_name;
 }
 
-// @TODO proxy into language class instead of new query
-function zen_get_languages()
+/**
+ * proxy into language class to get list of configured languages and their settings
+ */
+function zen_get_languages(): array
 {
-    global $db;
-    $languages = $db->Execute("SELECT languages_id, name, code, image, directory
-                               FROM " . TABLE_LANGUAGES . " ORDER BY sort_order");
-
-    while (!$languages->EOF) {
-        $languages_array[] = array(
-            'id' => $languages->fields['languages_id'],
-            'name' => $languages->fields['name'],
-            'code' => $languages->fields['code'],
-            'image' => $languages->fields['image'],
-            'directory' => $languages->fields['directory']
-        );
-        $languages->MoveNext();
+    /**
+     * @var language $lng
+     */
+    global $lng;
+    if ($lng === null) {
+        include_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php';
+        $lng = new language();
     }
-
-    return $languages_array;
+    return array_values($lng->get_languages_by_code());
 }
 
 
