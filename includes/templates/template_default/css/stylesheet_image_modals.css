@@ -44,9 +44,10 @@
     max-width:auto; /* Set width to 100% for fullscreen effect */
     max-height:100%; /* Set height to 100% for fullscreen effect */
     transform: translate(-50%, -50%);
-    padding: 5px;
+    padding: 20px;
     border-radius: 5px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -59,7 +60,12 @@
     cursor: pointer;
 }
 
+.imgmodal img {
+    padding-bottom: 10px;
+}
+
 /* colors for the image modals */
 .imgmodal {background-color: rgba(0, 0, 0, 0.81);}
 .image-grid img {border: 1px solid #364fb5; box-shadow: 1px 1px 1px #364fb5;}
+.imgmodal img {border: none; box-shadow: none;}
 .imgmodal-content {background-color: #fff;}

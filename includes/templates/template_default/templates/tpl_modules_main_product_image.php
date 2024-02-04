@@ -15,6 +15,8 @@ require DIR_WS_MODULES . zen_get_module_directory(FILENAME_MAIN_PRODUCT_IMAGE);
     <div class="imgmodal-content">
         <span onclick="closeModal('imageModalPrimary')">
         <?php echo zen_image($products_image_medium, $products_name, '', '', 'class="centered-image"'); ?>
+        <div class="imgmodal-close"><i class="fa-solid fa-circle-xmark"></i></div>
+        <div class="center"><?php echo $products_name; ?></div>
 <!--        <div class="imgLink center">--><?php //echo TEXT_CLOSE_WINDOW_IMAGE; ?><!--</div>-->
         </span>
     </div>

@@ -11,6 +11,8 @@
     <div id="<?php echo $modal_content_id; ?> . '" class="imgmodal-content">
         <span onclick="closeModal('<?php echo $modal_id; ?>')">
         <?php echo zen_image($image['products_image_large'], $image['products_name'], '', '', 'class="centered-image"'); ?>
+        <div class="imgmodal-close"><i class="fa-solid fa-circle-xmark"></i></div>
+        <div class="center"><?php echo $image['products_name']; ?></div>
 <!--        <div class="imgLink center">--><?php //echo TEXT_CLOSE_WINDOW_IMAGE; ?><!--</div>-->
         </span>
     </div>
