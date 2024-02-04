@@ -220,6 +220,9 @@ images/categories/subcategory_simulation.gif
 images/freedown.jpg
 images/b_g_grid.gif
 images/call_for_price.jpg
+images/large/dvd/blade_runner_01_LRG.gif
+images/medium/dvd/blade_runner_01_MED.gif
+images/dvd/blade_runner_01.gif
 
 #testing
 includes/*.config.save
