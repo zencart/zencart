@@ -92,5 +92,6 @@ th#seProductsHeading, th#seTotalHeading {background: #000000;}
 /* CSS styles for the image modals */
 .imgmodal {background-color: rgba(0, 0, 0, 0.81);}
 .image-grid img {border: 1px solid #364fb5; box-shadow: 1px 1px 1px #364fb5;}
+.imgmodal img {border: none; box-shadow: none;}
 .imgmodal-content {background-color: #fff;}
 
