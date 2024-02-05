@@ -860,7 +860,7 @@ if (!empty($action) && $order_exists === true) {
                         if ($products_weight_unit === null) {
                             $products_weight = '&mdash;';
                         } else {
-                            $products_weight_total = rtrim(number_format((float)($products_weight_unit * $order->products[$i]['qty']), 4), '0.');
+                            $products_weight_total = rtrim(number_format((float)($products_weight_unit * $order->products[$i]['qty']), 4, '.', ''), '0.');
                             $products_weight = "$products_weight_unit$weight_unit / $products_weight_total$weight_unit";
                         }
                 ?>
