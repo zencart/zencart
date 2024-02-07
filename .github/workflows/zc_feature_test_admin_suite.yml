@@ -1,4 +1,4 @@
-name: Zen Cart Functional  Tests
+name: Zen Cart Admin Feature Tests
 
 on: [push, pull_request]
 
@@ -69,5 +69,5 @@ jobs:
       - name: Test Apache Status
         run: sudo service apache2 status
 
-      - name: Execute Functional Tests
-        run: php vendor/bin/phpunit  --verbose --testsuite Feature --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+      - name: Execute Admin Feature Tests
+        run: php vendor/bin/phpunit  --verbose --testsuite FeatureAdmin --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'

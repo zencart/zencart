@@ -11,14 +11,14 @@ use Tests\Support\zcFeatureTestCaseStore;
 class StoreTest extends zcFeatureTestCaseStore
 {
     protected array $quickTestMap = [
-        'products_all' => 'Zen Cart! : All Products',
-        'about_us' => 'Zen Cart! : About Us',
-        'shippinginfo' => 'Zen Cart! : Shipping &amp; Returns',
-        'privacy' => 'Zen Cart! : Privacy Notice',
-        'conditions' => 'Zen Cart! : Conditions of Use',
-        'contact_us' => 'Zen Cart! : Contact Us',
-        'site_map' => 'Zen Cart! : Site Map',
-        'gv_faq' => 'Zen Cart! : Gift Certificate FAQ',
+        'products_all' => ['strings' => ['Zen Cart! : All Products']],
+        'about_us' => ['strings' => ['Zen Cart! : About Us']],
+        'shippinginfo' => ['strings' => ['Zen Cart! : Shipping &amp; Returns']],
+        'privacy' => ['strings' => ['Zen Cart! : Privacy Notice']],
+        'conditions' => ['strings' => ['Zen Cart! : Conditions of Use']],
+        'contact_us' => ['strings' => ['Zen Cart! : Contact Us']],
+        'site_map' => ['strings' => ['Zen Cart! : Site Map']],
+        'gv_faq' => ['strings' => ['Zen Cart! : Gift Certificate FAQ']],
     ];
 
     public function testSimpleStore()
@@ -38,8 +38,9 @@ class StoreTest extends zcFeatureTestCaseStore
             $this->browser->request('GET', $pageURI);
             $response = $this->browser->getResponse();
             $this->assertEquals(200, $response->getStatusCode());
-            $this->assertStringContainsString($contentTest, (string)$response->getContent() );
+            foreach ( $contentTest['strings'] as $contentString) {
+                $this->assertStringContainsString($contentString, (string)$response->getContent() );
+            }
         }
-
     }
 }

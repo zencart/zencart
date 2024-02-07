@@ -1,0 +1,73 @@
+name: Zen Cart Store Feature Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['8.0', '8.3']
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: db
+          MYSQL_USER: db
+          MYSQL_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Install Apache2
+        run: sudo apt-get update && sudo apt-get install apache2 -y
+
+      - name: Enable Apache2 Rewrite Module
+        run: sudo a2enmod rewrite
+
+      - name: Configure Apache2 Document Root
+        run: sudo sed -i "s|/var/www/html|$GITHUB_WORKSPACE|g" /etc/apache2/sites-available/000-default.conf
+
+      - name: Configure Apache2 Conf
+        run: sudo sed -i "s|/var/www|$GITHUB_WORKSPACE|g" /etc/apache2/apache2.conf
+
+      - name: SHOW GITHUB WORKSPACE
+        run: echo $GITHUB_WORKSPACE
+
+      - name: Open Firewall
+        run: sudo ufw allow 'Apache Full'
+
+      - name: Enable PHP Modules
+        run: sudo apt-get install libapache2-mod-php${{ matrix.php-version }} && sudo a2enmod php${{ matrix.php-version }}
+
+      - name: Install Composer Dependencies
+        run: composer install --no-progress --no-interaction --no-suggest
+
+      - name: Set Apache2 Environment Variables
+        run: |
+            echo "export APACHE_RUN_USER=$USER" | sudo tee -a /etc/apache2/envvars
+            echo "export APACHE_RUN_GROUP=$(id -g -n $USER)" | sudo tee -a /etc/apache2/envvars
+
+      - name: Set Apache User and Group on Web Server Files
+        run: sudo chown -R $USER:$(id -g -n $USER) $GITHUB_WORKSPACE
+
+      - name: Start Apache2
+        run: sudo service apache2 start
+
+      - name: Test Apache Status
+        run: sudo service apache2 status
+
+      - name: Execute Store Feature Tests
+        run: php vendor/bin/phpunit  --verbose --testsuite FeatureStore --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'

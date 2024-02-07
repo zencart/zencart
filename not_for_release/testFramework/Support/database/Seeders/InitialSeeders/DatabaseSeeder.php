@@ -11,12 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
         $this->call(AddressBookTableSeeder::class);
         $this->call(AddressFormatTableSeeder::class);
         $this->call(AdminTableSeeder::class);
@@ -84,5 +78,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TemplateSelectTableSeeder::class);
         $this->call(ZonesTableSeeder::class);
         $this->call(ZonesToGeoZonesTableSeeder::class);
+        $this->call(CouponTableSeeder::class);
     }
 }
