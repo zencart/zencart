@@ -211,4 +211,24 @@ class Coupon extends base
         // blank means couldn't generate a unique code (typically because the max length was encountered before being able to generate unique)
         return ($good_result === 1) ? $prefix . $new_code : '';
     }
+
+    public static function getAllCouponsByName(): array
+    {
+        global $db;
+        $results = $db->Execute("SELECT cd.coupon_name, c.coupon_id, c.coupon_code
+                                FROM " . TABLE_COUPONS . " c, " . TABLE_COUPONS_DESCRIPTION . " cd
+                                WHERE cd.coupon_id = c.coupon_id
+                                AND cd.language_id = " . (int)$_SESSION['languages_id']);
+
+        $coupons = [];
+        foreach ($results as $coupon) {
+            $coupons[] = [
+                'coupon_id' => $coupon['coupon_id'],
+                'coupon_name' => $coupon['coupon_name'],
+                'coupon_code' => $coupon['coupon_code'],
+            ];
+        }
+
+        return $coupons;
+    }
 }
