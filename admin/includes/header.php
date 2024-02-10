@@ -58,6 +58,18 @@ if (empty($action)) {
     $hide_languages = true;
 } // hide when other language dropdown is used
 
+// -----
+// If the current page-load did not use the admin_html_head.php for the CSS files'
+// loading, let the admin know via message and log a PHP Deprecated issue ... once for
+// each page during an admin's session.
+//
+// Note: This section will be removed in a future version of Zen Cart!
+//
+if (!isset($zen_admin_html_head_loaded) && !isset($_SESSION['pages_needing_update'][$current_page])) {
+    $_SESSION['pages_needing_update'][$current_page] = true;
+    $messageStack->add(WARNING_PAGE_REQUIRES_UPDATE, 'warning');
+    trigger_error(WARNING_PAGE_REQUIRES_UPDATE, E_USER_DEPRECATED);
+}
 
 // display alerts/error messages, if any
 if ($messageStack->size > 0) {
