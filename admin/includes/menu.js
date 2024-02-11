@@ -1,4 +1,7 @@
-/* this is only for backward compatibility - will be removed in future version */
+/*
+ * Left here TEMPORARILY for legacy pages that do not use the new admin_html_head.php file; the
+ * file will be removed in Zen Cart 2.1.0!
+ */
 function cssjsmenu() {
   viewport = document.querySelector("meta[name=viewport]");
   if (viewport != undefined) {

@@ -1,4 +1,7 @@
-
+/*
+ * Left here TEMPORARILY for legacy pages that do not use the new admin_html_head.php file; the
+ * file will be removed in Zen Cart 2.1.0!
+ */
 .headerBar {
     background-color: #333;
     color: #fff;

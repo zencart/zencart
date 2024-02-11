@@ -6,7 +6,8 @@
  */
 
 /*
- * Left here for legacy pages that do not use the new admin_html_head.php file
+ * Left here TEMPORARILY for legacy pages that do not use the new admin_html_head.php file; the
+ * file will be removed in Zen Cart 2.1.0!
  */
 /*@import url("https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css");*/
 @import url("css/bootstrap.min.css");

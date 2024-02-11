@@ -633,7 +633,7 @@ $define = [
     'WARNING_FILE_UPLOADS_DISABLED' => 'Warning: File uploads are disabled in the php.ini configuration file.',
     'WARNING_INSTALL_DIRECTORY_EXISTS' => 'SECURITY WARNING: Installation directory exists at: %s. Please remove this directory for security reasons.',
     'WARNING_NO_FILE_UPLOADED' => 'Warning: No file uploaded.',
-    'WARNING_PAGE_REQUIRES_UPDATE' => 'This page requires updates for the next Zen Cart version.  Please let your site developer or plugin author know!',
+    'WARNING_PAGE_REQUIRES_UPDATE' => 'This page requires updates for the next Zen Cart version.  Please refer your site developer or plugin author to <a href="https://docs.zen-cart.com/dev/plugins/admin_head_content/" rel="noopener noreferrer" target="_blank">this</a> documentation.',
     'WARNING_PRIMARY_SERVER_FAILED' => 'Warning: The primary exchange rate server (%s) failed for %s (%s) - trying the secondary exchange rate server.',
     'WARNING_REVIEW_ROGUE_ACTIVITY' => 'ALERT: Please review for possible XSS activity:',
     'WARNING_SESSION_AUTO_START' => 'Warning: session.auto_start is enabled - please disable this PHP feature in php.ini (restarting your webserver may be necessary to activate the change).',
