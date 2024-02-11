@@ -12,18 +12,13 @@ $disp_order_default = (int)($disp_order_default ?? 0);
 if ($disp_order === 0) {
     $disp_order = $disp_order_default;
 }
-?>
-<?php
-// NOTE: to remove a sort order option add an HTML comment around the option to be removed
-?>
 
-<?php
 echo zen_draw_form('sorter_form', zen_href_link($_GET['main_page']), 'get');
-echo zen_draw_hidden_field('main_page', $_GET['main_page']);
-if (isset($_GET['cPath'], $cPath)) {
-    echo zen_draw_hidden_field('cPath', $cPath);
+foreach($_GET as $key => $value) {
+    if (in_array($key, ['main_page', 'cPath', 'manufacturers_id', 'filter_id', 'alpha_filter_id', 'music_genre_id', 'record_company_id'])) {
+        echo zen_draw_hidden_field($key, $value);
+    }
 }
-//  echo zen_draw_hidden_field('disp_order', $_GET['disp_order']);
 echo zen_hide_session_id();
 ?>
     <label for="disp-order-sorter" class="inputLabel"><?php echo TEXT_INFO_SORT_BY; ?></label>
@@ -31,6 +26,9 @@ echo zen_hide_session_id();
 <?php if (false && $disp_order > 0) { // reset to store default ?>
     <option value="<?php echo $disp_order_default; ?>" <?php echo ($disp_order === $disp_order_default ? 'selected="selected"' : ''); ?>><?php echo PULL_DOWN_ALL_RESET; ?></option>
 <?php } ?>
+    <?php
+    // NOTE: to remove a sort order option add an HTML comment around the option to be removed
+    ?>
     <option value="8" <?php echo ($disp_order === 8 ? 'selected="selected"' : ''); ?>><?php echo TEXT_INFO_SORT_BY_RECOMMENDED; ?></option>
     <option value="1" <?php echo ($disp_order === 1 ? 'selected="selected"' : ''); ?>><?php echo TEXT_INFO_SORT_BY_PRODUCTS_NAME; ?></option>
     <option value="2" <?php echo ($disp_order === 2 ? 'selected="selected"' : ''); ?>><?php echo TEXT_INFO_SORT_BY_PRODUCTS_NAME_DESC; ?></option>
