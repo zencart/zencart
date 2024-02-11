@@ -73,7 +73,8 @@ $listing_sql = "SELECT " . $select_column_list . " p.products_id, p.products_typ
                 LEFT JOIN " . TABLE_MUSIC_GENRE . " m ON m.music_genre_id = pme.music_genre_id
                 ";
 $listing_sql .= $sql_joins ?? ' ';
-$where_str = " WHERE p.products_status = 1
+$where_str = "
+                WHERE p.products_status = 1
                 " . $and . "
                 " . $alpha_sort;
 

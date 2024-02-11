@@ -74,7 +74,8 @@ $listing_sql = "SELECT " . $select_column_list . " p.products_id, p.products_typ
                 LEFT JOIN " . TABLE_RECORD_COMPANY . " r ON r.record_company_id = pme.record_company_id
                 ";
 $listing_sql .= $sql_joins ?? ' ';
-$where_str = " WHERE p.products_status = 1
+$where_str = "
+                WHERE p.products_status = 1
                 " . $and . "
                 " . $alpha_sort;
 

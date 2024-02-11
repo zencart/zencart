@@ -125,6 +125,7 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 // set the product filters according to selected product type
 $typefilter = $_GET['typefilter'] ?? 'default';
 require zen_get_index_filters_directory($typefilter . '_filter.php');
+unset($and, $sql_joins, $order_by);
 
 // query the database based on the selected filters
 $listing = $db->Execute($listing_sql);
