@@ -102,25 +102,23 @@ function zen_get_languages(): array
 }
 
 
-//// @TODO - is there a coupon function already to do this query?
 function zen_cfg_select_coupon_id($coupon_id, $key = '')
 {
-    global $db;
-    $coupon_array = array();
+    $coupon_array = [];
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
-    $coupons = $db->execute("SELECT cd.coupon_name, c.coupon_id FROM " . TABLE_COUPONS . " c, " . TABLE_COUPONS_DESCRIPTION . " cd WHERE cd.coupon_id = c.coupon_id AND cd.language_id = " . (int)$_SESSION['languages_id']);
-    $coupon_array[] = array(
+    $coupons = Coupon::getAllCouponsByName();
+    $coupon_array[] = [
         'id' => '0',
         'text' => 'None'
-    );
+    ];
 
-    while (!$coupons->EOF) {
-        $coupon_array[] = array(
-            'id' => $coupons->fields['coupon_id'],
-            'text' => $coupons->fields['coupon_name']
-        );
-        $coupons->MoveNext();
+    foreach ($coupons as $coupon) {
+        $coupon_array[] = [
+            'id' => $coupon['coupon_id'],
+            'text' => $coupon['coupon_name']
+        ];
     }
+
     return zen_draw_pull_down_menu($name, $coupon_array, $coupon_id, 'class="form-control"');
 }
 
