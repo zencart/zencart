@@ -1,0 +1,23 @@
+/**
+ * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
+ */
+
+/*
+ * Left here TEMPORARILY for legacy pages that do not use the new admin_html_head.php file; the
+ * file will be removed in Zen Cart 2.1.0!
+ */
+/*@import url("https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css");*/
+@import url("css/bootstrap.min.css");
+/*@import url("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");*/
+@import url("fontawesome/css/fontawesome.min.css");
+@import url("fontawesome/css/solid.min.css");
+@import url("fontawesome/css/regular.min.css");
+@import url("fontawesome/css/v4-shims.min.css");
+@import url("https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css");
+/*@import url("css/jquery-ui.css");*/
+@import url("css/jAlert.css");
+@import url("menu.css");
+@import url("css/stylesheet.css");

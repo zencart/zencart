@@ -6,8 +6,16 @@
  * @version $Id: Nick Fenwick 2023 Jul 10 Modified in v2.0.0-alpha1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
+
+// -----
+// Set a processing flag that indicates that this file has been loaded.  The
+// flag is used by /admin/includes/header.php to warn admins and developers
+// if the legacy stylesheet loading is currently in effect.  That legacy-loading
+// (and this section) will be removed in a subsequent release of Zen Cart.
+//
+$zen_admin_html_head_loaded = true;
 ?>
 <meta charset="<?php echo CHARSET; ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
