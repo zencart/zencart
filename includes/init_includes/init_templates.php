@@ -62,6 +62,14 @@ if (zen_is_whitelisted_admin_ip()) {
   define('DIR_WS_TEMPLATE_ICONS', DIR_WS_TEMPLATE_IMAGES . 'icons/');
 
 /**
+ * Load template-specific configuration settings, if they exist.
+ * The tpl() helper can be used to query settings and even fallback to admin configs.
+ */
+if (file_exists(DIR_WS_TEMPLATE . 'template_settings.php')) {
+    require DIR_WS_TEMPLATE . 'template_settings.php';
+}
+
+/**
  * Load the appropriate Language files, based on the currently-selected template
  */
 $languageLoaderFactory = new LanguageLoaderFactory();
