@@ -75,3 +75,11 @@
 // false ... Maintain the "Continue" button, which redirects back to Checkout Shipping; this is the default.
 //
 //$show_contact_us_instead_of_continue = false;
+
+// -----
+// Product Listing: enable sorting by column heading
+// 
+// true .... Display the legacy clickable column headings to sort the product listing (in addition to the sorter dropdown)
+// false ... Do not show the column headings; this is the default.
+//
+//$show_table_header_row = false;
