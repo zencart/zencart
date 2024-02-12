@@ -38,3 +38,12 @@ jobs:
 
       - name: Run UnitTests suite
         run: php vendor/bin/phpunit --verbose --process-isolation --testsuite=Unit --debug
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: artifacts
+          path: not_for_release/testFramework/logs/console
+          if-no-files-found: error
+          retention-days: 90

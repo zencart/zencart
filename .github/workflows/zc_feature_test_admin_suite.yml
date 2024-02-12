@@ -30,6 +30,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
+          ini-values: log_errors=On
 
       - name: Install Apache2
         run: sudo apt-get update && sudo apt-get install apache2 -y
@@ -71,3 +72,12 @@ jobs:
 
       - name: Execute Admin Feature Tests
         run: php vendor/bin/phpunit  --verbose --testsuite FeatureAdmin --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: artifacts
+          path: not_for_release/testFramework/logs/console
+          if-no-files-found: warn
+          retention-days: 90

@@ -81,8 +81,24 @@ abstract class zcFeatureTestCase extends WebTestCase
         $files = glob($directory . $pattern);
         foreach ($files as $file) {
             if (is_file($file)) {
+                self::moveLogFileForArtifacts($file);
                 unlink($file);
             }
         }
     }
+
+    protected static function moveLogFileForArtifacts($file)
+    {
+        $context = 'store';
+        if (str_starts_with(basename($file), 'myDEBUG-adm')) {
+            $context = 'admin';
+        }
+        if (!is_dir(ROOTCWD . 'not_for_release/testFramework/logs/console/' . $context . '/')) {
+            mkdir(ROOTCWD . 'not_for_release/testFramework/logs/console/' . $context . '/');
+        }
+        copy($file,  ROOTCWD . 'not_for_release/testFramework/logs/console/' . $context . '/' . basename($file));
+    }
+
 }
+
+
