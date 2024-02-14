@@ -76,9 +76,6 @@ if ($gID == 7) {
   if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') == '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS != 'True')) {
     $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
   }
-  if (defined('MODULE_SHIPPING_USPS_STATUS') and ( MODULE_SHIPPING_USPS_USERID == 'NONE' or MODULE_SHIPPING_USPS_SERVER == 'test')) {
-    $shipping_errors .= '<br>' . ERROR_USPS_STATUS;
-  }
   if ($shipping_errors != '') {
     $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
   }
