@@ -107,48 +107,48 @@ foreach ($menu_titles as $id => $title) {
     <div class="container-fluid" id="pageWrapper">
       <h1><?php echo HEADING_TITLE ?></h1>
       <?php echo zen_draw_form('admin_page_registration_form', FILENAME_ADMIN_PAGE_REGISTRATION, 'action=insert', 'post', 'class="form-horizontal" id="adminPageRegistrationForm"'); ?>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PAGE_KEY, 'page_key', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_PAGE_KEY, 'page_key', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('page_key', $page_key, 'class="form-control" id="pageKey" required autofocus'); ?>
           <span class="help-block"><?php echo TEXT_EXAMPLE_PAGE_KEY ?></span>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_LANGUAGE_KEY, 'language_key', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_LANGUAGE_KEY, 'language_key', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('language_key', $language_key, 'class="form-control" id="languageKey" required'); ?>
           <span class="help-block"><?php echo TEXT_EXAMPLE_LANGUAGE_KEY ?></span>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_MAIN_PAGE, 'main_page', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_MAIN_PAGE, 'main_page', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('main_page', $main_page, 'class="form-control" id="mainPage" required'); ?>
           <span class="help-block"><?php echo TEXT_EXAMPLE_MAIN_PAGE ?></span>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PAGE_PARAMS, 'page_params', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_PAGE_PARAMS, 'page_params', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('page_params', $page_params, 'class="form-control" id="pageParams"'); ?>
           <span class="help-block"><?php echo TEXT_EXAMPLE_PAGE_PARAMS ?></span>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_MENU_KEY, 'menu_key', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_MENU_KEY, 'menu_key', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_pull_down_menu('menu_key', $menu_options, $menu_key, 'class="form-control" id="menuKey" required'); ?>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_DISPLAY_ON_MENU, 'display_on_menu', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_DISPLAY_ON_MENU, 'display_on_menu', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
           <input type="checkbox" name="display_on_menu" id="displayOnMenu" <?php echo $checked ?>>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_SORT_ORDER, 'sort_order', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_SORT_ORDER, 'sort_order', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-3 col-md-1">
             <?php echo zen_draw_input_field('sort_order', $sort_order, 'class="form-control" id="sortOrder" required', false, 'number'); ?>
         </div>

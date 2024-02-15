@@ -53,8 +53,8 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
       <?php echo zen_draw_hidden_field('action', 'new_date'); ?>
       <?php echo zen_draw_hidden_field('start_date', $_GET['start_date']); ?>
       <?php echo zen_draw_hidden_field('end_date', $_GET['end_date']); ?>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_INFO_SELECT_REFERRAL, 'referral_code', 'class="control-label col-sm-3"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_INFO_SELECT_REFERRAL, 'referral_code', 'class="form-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_pull_down_menu('referral_code', $customers_referrals, $_GET['referral_code'], 'onChange="this.form.submit();" class="form-control"'); ?>
         </div>
@@ -63,14 +63,14 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
       <?php echo zen_draw_form('search', FILENAME_STATS_CUSTOMERS_REFERRALS, '', 'get', 'class="form-horizontal"'); ?>
       <?php echo zen_draw_hidden_field('referral_code', $_GET['referral_code']); ?>
       <?php echo zen_hide_session_id(); ?>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_INFO_START_DATE, 'start_date', 'class="control-label col-sm-3"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_INFO_START_DATE, 'start_date', 'class="form-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('start_date', $_GET['start_date'], 'class="form-control"'); ?>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_INFO_END_DATE, 'end_date', 'class="control-label col-sm-3"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_INFO_END_DATE, 'end_date', 'class="form-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('end_date', $_GET['end_date'], 'class="form-control"'); ?>
         </div>
@@ -118,7 +118,8 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
       $customers_orders_query = $db->bindVars($customers_orders_query, ':refcode:', $_GET['referral_code'], 'string');
       $customers_orders = $db->Execute($customers_orders_query);
       ?>
-      <table class="table">
+        <div class="table-responsive">
+        <table class="table">
           <?php
           foreach ($customers_orders as $customers_order) {
             $current_orders_id = $customers_order['orders_id'];
@@ -142,6 +143,7 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
           <?php } ?>
         <?php } ?>
       </table>
+        </div>
       <!-- body_text_eof //-->
     </div>
     <!-- body_eof //-->

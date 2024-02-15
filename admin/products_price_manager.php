@@ -242,7 +242,7 @@ if (!empty($action)) {
         <div class="col-sm-4">
           <?php if (!empty($products_filter) && $products_filter !== 0) { ?>
             <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
                 <?php echo BUTTON_ADDITIONAL_ACTIONS; ?>
                 <span class="caret"></span>
               </button>
@@ -270,10 +270,10 @@ if (!empty($action)) {
           <?php
           if (!empty($_GET['products_filter'])) {
             ?>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-xs-offset-2 col-offset-sm-1 col-xs-7 col-sm-7"><?php echo TEXT_PRODUCT_TO_VIEW; ?></div>
             </div>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 text-center">
                 <?php
                 $display_priced_by_attributes = zen_get_products_price_is_priced_by_attributes($_GET['products_filter']);
@@ -526,7 +526,8 @@ if (!empty($action)) {
           switch ($action) {
             case 'delete_special':
               ?>
-              <table class="table">
+        <div class="table-responsive">
+          <table class="table">
                 <tr class="pageHeading">
                   <td class="alert text-center"><?php echo TEXT_SPECIALS_CONFIRM_DELETE; ?></td>
                 </tr>
@@ -534,12 +535,14 @@ if (!empty($action)) {
                   <td class="main">
                     <?php echo zen_draw_form('delete_special', FILENAME_PRODUCTS_PRICE_MANAGER, 'action=delete_special_confirm' . '&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>
                     <?php echo zen_draw_hidden_field('product_id', $_GET['products_filter']); ?>
-                    <button type="submit" class="btn btn-danger"><?php echo IMAGE_REMOVE_SPECIAL; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                    <button type="submit" class="btn btn-danger"><?php echo IMAGE_REMOVE_SPECIAL; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
                   </td>
                 </tr>
               </table>
+        </div>
               <?php break; ?>
             <?php case 'delete_featured': ?>
+        <div class="table-responsive">
               <table class="table">
                 <tr class="pageHeading">
                   <td class="alert text-center"><?php echo TEXT_FEATURED_CONFIRM_DELETE; ?></td>
@@ -548,10 +551,11 @@ if (!empty($action)) {
                   <td class="main">
                     <?php echo zen_draw_form('delete_featured', FILENAME_PRODUCTS_PRICE_MANAGER, 'action=delete_featured_confirm&products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>
                     <?php echo zen_draw_hidden_field('product_id', $_GET['products_filter']); ?>
-                    <button type="submit" class="btn btn-danger"><?php echo IMAGE_REMOVE_FEATURED; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                    <button type="submit" class="btn btn-danger"><?php echo IMAGE_REMOVE_FEATURED; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $_GET['current_category_id']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
                   </td>
                 </tr>
               </table>
+        </div>
               <?php break; ?>
             <?php
             case 'edit':
@@ -574,18 +578,18 @@ if (!empty($action)) {
               ?>
 
               <?php if ($action == '') { ?>
-                <div class="form-group">
+                <div class="form-group row mb-3">
                   <div class="col-sm-12 pageHeading text-center">
                     <span class="alert"><?php echo TEXT_INFO_PREVIEW_ONLY; ?></span>
                   </div>
                 </div>
               <?php } ?>
-              <div class="form-group">
+              <div class="form-group row mb-3">
                 <div class="col-sm-12 main text-center">
                   <?php if ($action == '') { ?>
                     <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT_PRODUCT; ?></a><br><?php echo TEXT_INFO_EDIT_CAUTION; ?>
                   <?php } else { ?>
-                    <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a><br><?php echo TEXT_UPDATE_COMMIT; ?>
+                    <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a><br><?php echo TEXT_UPDATE_COMMIT; ?>
                   <?php } ?>
                 </div>
               </div>
@@ -595,10 +599,10 @@ if (!empty($action)) {
 
               <?php if (zen_get_product_is_linked($products_filter) == 'true') { ?>
                 <div class="from-group">
-                  <?php echo zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"'); ?>
+                  <?php echo zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 form-label"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="input-group">
-                      <span class="input-group-addon"><i class="fa-solid fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i></span>
+                      <span class="input-group-text"><i class="fa-solid fa-square fa-lg txt-linked" aria-hidden="true" title="<?php echo IMAGE_ICON_LINKED; ?>"></i></span>
                       <?php echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($products_filter), $pInfo->master_categories_id, 'class="form-control" id="master_category"'); ?>
                     </div>
                     <span class="help-block"><?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?></span>
@@ -616,8 +620,8 @@ if (!empty($action)) {
               <?php echo zen_draw_hidden_field('master_categories_id', $pInfo->master_categories_id); ?>
               <div class="col-sm-12">
                 <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;;padding: 10px 10px 0 0;">
-                  <div class="form-group">
-                    <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
+                  <div class="form-group row mb-3">
+                    <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 form-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                       <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'class="form-control" id="products_tax_class_id"'); ?>
                     </div>
@@ -627,14 +631,14 @@ if (!empty($action)) {
               <div class="col-sm-12">
                 <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;;padding: 10px 10px 0 0;">
                   <div class="col-sm-12"><?php echo TEXT_PRODUCTS_PRICE_INFO; ?></div>
-                  <div class="form-group">
-                    <?php echo zen_draw_label(TEXT_PRICE_NET, 'products_price', 'class="col-sm-3 control-label"'); ?>
+                  <div class="form-group row mb-3">
+                    <?php echo zen_draw_label(TEXT_PRICE_NET, 'products_price', 'class="col-sm-3 form-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                       <?php echo zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateGross()" class="form-control" id="products_price"' . $readonly); ?>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <?php echo zen_draw_label(TEXT_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 control-label"'); ?>
+                  <div class="form-group row mb-3">
+                    <?php echo zen_draw_label(TEXT_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 form-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                       <?php echo zen_draw_input_field('products_price_gross', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateNet()" class="form-control" id="products_price_gross"' . $readonly); ?>
                     </div>
@@ -644,11 +648,11 @@ if (!empty($action)) {
               <script>
                 updateGross();
               </script>
-              <div class="form-group">
-                <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'products_date_available', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-9 col-md-6">
                   <div class="date input-group" id="datepicker_products_date_available">
-                    <span class="input-group-addon datepicker_icon">
+                    <span class="input-group-text datepicker_icon">
                       <?php echo zen_icon('calendar-days', size: 'lg') ?>
                     </span>
                     <?php echo zen_draw_input_field('products_date_available', (($pInfo->products_date_available == '0001-01-01') ? '' : $pInfo->products_date_available), 'class="form-control" id="products_date_available" autocomplete="off"' . $readonly); ?>
@@ -656,8 +660,8 @@ if (!empty($action)) {
                   <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                 </div>
               </div>
-              <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9 col-md-6">
+              <div class="form-group row mb-3">
+                <div class="offset-sm-3 col-sm-9 col-md-6">
                   <div class="radio-inline">
                     <label><?php echo zen_draw_radio_field('products_status', '1', $pInfo->products_status == '1', '', $jsreadonly) . TEXT_PRODUCT_AVAILABLE; ?></label>
                   </div>
@@ -666,27 +670,27 @@ if (!empty($action)) {
                   </div>
                 </div>
               </div>
-              <div class="form-group">
-                <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MIN_RETAIL, 'products_quantity_order_min', 'class="col-sm-3 control-label"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MIN_RETAIL, 'products_quantity_order_min', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_input_field('products_quantity_order_min', ($pInfo->products_quantity_order_min == 0 ? 1 : $pInfo->products_quantity_order_min), 'size="6" class="form-control" id="products_quantity_order_min"' . $readonly); ?>
                 </div>
               </div>
-              <div class="form-group">
-                <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_UNITS_RETAIL, 'products_quantity_order_units', 'class="col-sm-3 control-label"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_UNITS_RETAIL, 'products_quantity_order_units', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_input_field('products_quantity_order_units', ($pInfo->products_quantity_order_units == 0 ? 1 : $pInfo->products_quantity_order_units), 'size="6" class="form-control" id="products_quantity_order_units"' . $readonly); ?>
                 </div>
               </div>
-              <div class="form-group">
-                <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MAX_RETAIL, 'products_quantity_order_max', 'class="col-sm-3 control-label"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY_MAX_RETAIL, 'products_quantity_order_max', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_input_field('products_quantity_order_max', $pInfo->products_quantity_order_max, 'size="6" class="form-control" id="products_quantity_order_max"' . $readonly); ?><span class="help-block"><?php echo TEXT_PRODUCTS_QUANTITY_MAX_RETAIL_EDIT; ?></span>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group row mb-3">
                 <div class="col-sm-3">
-                  <p class="control-label"><?php echo TEXT_PRODUCTS_MIXED; ?></p>
+                  <p class="form-label"><?php echo TEXT_PRODUCTS_MIXED; ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
                   <div class="radio-inline">
@@ -697,9 +701,9 @@ if (!empty($action)) {
                   </div>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group row mb-3">
                 <div class="col-sm-3">
-                  <p class="control-label"><?php echo TEXT_PRODUCT_IS_FREE; ?></p>
+                  <p class="form-label"><?php echo TEXT_PRODUCT_IS_FREE; ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
                   <div class="radio-inline">
@@ -711,9 +715,9 @@ if (!empty($action)) {
                   <?php echo ($pInfo->product_is_free == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_IS_FREE_EDIT . '</span>' : ''); ?>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group row mb-3">
                 <div class="col-sm-3">
-                  <p class="control-label"><?php echo TEXT_PRODUCT_IS_CALL; ?></p>
+                  <p class="form-label"><?php echo TEXT_PRODUCT_IS_CALL; ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
                   <div class="radio-inline">
@@ -725,9 +729,9 @@ if (!empty($action)) {
                   <?php echo ($pInfo->product_is_call == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_IS_CALL_EDIT . '</span>' : ''); ?>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group row mb-3">
                 <div class="col-sm-3">
-                  <p class="control-label"><?php echo TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES; ?></p>
+                  <p class="form-label"><?php echo TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES; ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
                   <div class="radio-inline">
@@ -744,14 +748,14 @@ if (!empty($action)) {
                 <div class="col-sm-12">
                   <div class="well" style="color: #31708f;background-color: #ebebff;border-color: #bce8f1;;padding: 10px 10px 0 0;">
                     <div class="col-sm-12"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></div>
-                    <div class="form-group">
-                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_NET, 'specials_price', 'class="col-sm-3 control-label"'); ?>
+                    <div class="form-group row mb-3">
+                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_NET, 'specials_price', 'class="col-sm-3 form-label"'); ?>
                       <div class="col-sm-9 col-md-6">
                         <?php echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsGross()" class="form-control" id="specials_price"' . $readonly); ?>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_GROSS, 'specials_price_gross', 'class="col-sm-3 control-label"'); ?>
+                    <div class="form-group row mb-3">
+                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_GROSS, 'specials_price_gross', 'class="col-sm-3 form-label"'); ?>
                       <div class="col-sm-9 col-md-6">
                         <?php echo zen_draw_input_field('specials_price_gross', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsNet()" class="form-control" id="specials_price_gross"' . $readonly); ?>
                       </div>
@@ -761,11 +765,11 @@ if (!empty($action)) {
                 <script>
                   updateSpecialsGross();
                 </script>
-                <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'specials_date_available', 'class="col-sm-3 control-label"'); ?>
+                <div class="form-group row mb-3">
+                  <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'specials_date_available', 'class="col-sm-3 form-label"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_specials_date_available">
-                      <span class="input-group-addon datepicker_icon">
+                      <span class="input-group-text datepicker_icon">
                         <?php echo zen_icon('calendar-days', size: 'lg') ?>
                       </span>
                       <?php echo zen_draw_input_field('specials_date_available', (($sInfo->specials_date_available == '0001-01-01') ? '' : $sInfo->specials_date_available), 'class="form-control" id="specials_date_available" autocomplete="off"' . $readonly); ?>
@@ -773,11 +777,11 @@ if (!empty($action)) {
                     <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                   </div>
                 </div>
-                <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'specials_expires_date', 'class="col-sm-3 control-label"'); ?>
+                <div class="form-group row mb-3">
+                  <?php echo zen_draw_label(TEXT_SPECIALS_EXPIRES_DATE, 'specials_expires_date', 'class="col-sm-3 form-label"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_specials_expires_date">
-                      <span class="input-group-addon datepicker_icon">
+                      <span class="input-group-text datepicker_icon">
                         <?php echo zen_icon('calendar-days', size: 'lg') ?>
                       </span>
                       <?php echo zen_draw_input_field('specials_expires_date', (($sInfo->expires_date == '0001-01-01') ? '' : $sInfo->expires_date), 'class="form-control" id="specials_expires_date" autocomplete="off"' . $readonly); ?>
@@ -785,9 +789,9 @@ if (!empty($action)) {
                     <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row mb-3">
                   <div class="col-sm-3">
-                    <p class="control-label"><?php echo TEXT_SPECIALS_PRODUCTS_STATUS; ?></p>
+                    <p class="form-label"><?php echo TEXT_SPECIALS_PRODUCTS_STATUS; ?></p>
                   </div>
                   <div class="col-sm-9 col-md-6">
                     <div class="radio-inline">
@@ -798,8 +802,8 @@ if (!empty($action)) {
                     </div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <div class="col-sm-offset-3 col-sm-9 col-md-6 text-center">
+                <div class="form-group row mb-3">
+                  <div class="offset-sm-3 col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id . '&action=delete_special'); ?>" class="btn btn-warning" role="button"><?php echo IMAGE_REMOVE_SPECIAL; ?></a>
                   </div>
                 </div>
@@ -812,8 +816,8 @@ if (!empty($action)) {
                   <?php echo TEXT_SPECIALS_PRICE_TIP; ?>
                 </div>
               <?php } else { ?>
-                <div class="form-group">
-                    <div class="control-label col-sm-3"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></div>
+                <div class="form-group row mb-3">
+                    <div class="form-label col-sm-3"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <?php
 // Specials cannot be added to Gift Vouchers when false
@@ -829,11 +833,11 @@ if (!empty($action)) {
               <?php if (isset($fInfo->products_id) && $fInfo->products_id != '') { ?>
                 <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
                 <div class="col-sm-12"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></div>
-                <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'featured_date_available', 'class="control-label col-sm-3"'); ?>
+                <div class="form-group row mb-3">
+                  <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'featured_date_available', 'class="form-label col-sm-3"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_featured_date_available">
-                      <span class="input-group-addon datepicker_icon">
+                      <span class="input-group-text datepicker_icon">
                         <?php echo zen_icon('calendar-days', size: 'lg') ?>
                       </span>
                       <?php echo zen_draw_input_field('featured_date_available', (($fInfo->featured_date_available == '0001-01-01') ? '' : $fInfo->featured_date_available), 'class="form-control" id="featured_date_available" autocomplete="off"' . $readonly); ?>
@@ -841,11 +845,11 @@ if (!empty($action)) {
                     <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                   </div>
                 </div>
-                <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_FEATURED_EXPIRES_DATE, 'featured_expires_date', 'class="control-label col-sm-3"'); ?>
+                <div class="form-group row mb-3">
+                  <?php echo zen_draw_label(TEXT_FEATURED_EXPIRES_DATE, 'featured_expires_date', 'class="form-label col-sm-3"'); ?>
                   <div class="col-sm-9 col-md-6">
                     <div class="date input-group" id="datepicker_expires_date">
-                      <span class="input-group-addon datepicker_icon">
+                      <span class="input-group-text datepicker_icon">
                         <?php echo zen_icon('calendar-days', size: 'lg') ?>
                       </span>
                       <?php echo zen_draw_input_field('featured_expires_date', (($fInfo->expires_date == '0001-01-01') ? '' : $fInfo->expires_date), 'class="form-control" id="featured_expires_date" autocomplete="off"' . $readonly); ?>
@@ -853,9 +857,9 @@ if (!empty($action)) {
                     <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row mb-3">
                   <div class="col-md-3">
-                    <p class="control-label"><?php echo TEXT_FEATURED_PRODUCTS_STATUS; ?></p>
+                    <p class="form-label"><?php echo TEXT_FEATURED_PRODUCTS_STATUS; ?></p>
                   </div>
                   <div class="col-sm-9 col-md-6">
                     <div class="radio-inline">
@@ -866,8 +870,8 @@ if (!empty($action)) {
                     </div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <div class="col-sm-offset-3 col-sm-9 col-md-6 text-center">
+                <div class="form-group row mb-3">
+                  <div class="offset-sm-3 col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['products_filter'] . '&current_category_id=' . $current_category_id . '&action=delete_featured'); ?>" class="btn btn-warning" role="button"><?php echo IMAGE_REMOVE_FEATURED; ?></a>
                   </div>
                 </div>
@@ -878,8 +882,8 @@ if (!empty($action)) {
                 <?php } ?>
               <?php } else { ?>
                 <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
-                <div class="form-group">
-                    <div class="control-label col-sm-3"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></div>
+                <div class="form-group row mb-3">
+                    <div class="form-label col-sm-3"><?php echo TEXT_FEATURED_PRODUCT_INFO; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_FEATURED, 'add_products_id=' . $_GET['products_filter'] . '&go_back=ON' . '&action=new' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa-solid fa-plus"></i> <?php echo IMAGE_INSTALL_FEATURED; ?></a>
                   </div>
@@ -909,9 +913,9 @@ if (!empty($action)) {
 
                 <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;;padding: 10px 10px 0 0;">
                   <div class="col-sm-12"><?php echo TEXT_DISCOUNT_TYPE_INFO; ?></div>
-                  <div class="form-group">
+                  <div class="form-group row mb-3">
                     <div class="col-sm-3">
-                      <p class="control-label"><?php echo TEXT_PRODUCTS_MIXED_DISCOUNT_QUANTITY; ?></p>
+                      <p class="form-label"><?php echo TEXT_PRODUCTS_MIXED_DISCOUNT_QUANTITY; ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
                       <div class="radio-inline">
@@ -922,14 +926,14 @@ if (!empty($action)) {
                       </div>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <?php echo zen_draw_label(TEXT_DISCOUNT_TYPE, 'products_discount_type', 'class="col-sm-3 control-label"'); ?>
+                  <div class="form-group row mb-3">
+                    <?php echo zen_draw_label(TEXT_DISCOUNT_TYPE, 'products_discount_type', 'class="col-sm-3 form-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                       <?php echo zen_draw_pull_down_menu('products_discount_type', $discount_type_array, $pInfo->products_discount_type, 'class="form-control" id="products_discount_type"' . $readonly); ?>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <?php echo zen_draw_label(TEXT_DISCOUNT_TYPE_FROM, 'products_discount_type_from', 'class="col-sm-3 control-label"'); ?>
+                  <div class="form-group row mb-3">
+                    <?php echo zen_draw_label(TEXT_DISCOUNT_TYPE_FROM, 'products_discount_type_from', 'class="col-sm-3 form-label"'); ?>
                     <div class="col-sm-9 col-md-6">
                       <?php echo zen_draw_pull_down_menu('products_discount_type_from', $discount_type_from_array, $pInfo->products_discount_type_from, 'class="form-control" id="products_discount_type_from"' . $readonly); ?>
                     </div>
@@ -937,7 +941,7 @@ if (!empty($action)) {
                 </div>
                 <div class="table-responsive">
                   <table class="table table-bordered">
-                    <thead>
+                    <thead class="table-dark">
                       <tr>
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_QTY_TITLE; ?></th>
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_QTY; ?></th>
@@ -1043,8 +1047,8 @@ if (!empty($action)) {
 
 
               <?php if ($action == 'edit_update') { ?>
-                <div class="form-group">
-                  <div class="control-label col-sm-3"><?php echo TEXT_ADD_ADDITIONAL_DISCOUNT; ?></div>
+                <div class="form-group row mb-3">
+                  <div class="form-label col-sm-3"><?php echo TEXT_ADD_ADDITIONAL_DISCOUNT; ?></div>
                   <div class="col-sm-9 col-md-6 text-center">
                     <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&action=add_discount_qty_id'); ?>" class="btn btn-info" role="button"><?php echo IMAGE_ADD_BLANK_DISCOUNTS; ?></a>
                     <span class="help-block"><?php echo TEXT_BLANKS_INFO; ?></span>
@@ -1057,7 +1061,7 @@ if (!empty($action)) {
               <?php } ?>
               <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '2'); ?></div>
               <?php if ($action == '') { ?>
-                <div class="form-group">
+                <div class="form-group row mb-3">
                   <div class="col-sm-12">
                     <div class="pageHeading text-center">
                       <span class="alert"><?php echo TEXT_INFO_PREVIEW_ONLY; ?></span>
@@ -1065,13 +1069,13 @@ if (!empty($action)) {
                   </div>
                 </div>
               <?php } ?>
-              <div class="form-group">
+              <div class="form-group row mb-3">
                 <div class="col-sm-12">
                   <div class="main text-center">
                     <?php if ($action == '') { ?>
                       <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=edit' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT_PRODUCT; ?></a><br><?php echo TEXT_INFO_EDIT_CAUTION; ?>
                     <?php } else { ?>
-                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button> <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a><br><?php echo TEXT_UPDATE_COMMIT; ?>
+                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE_PRICE_CHANGES; ?></button> <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'action=cancel' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a><br><?php echo TEXT_UPDATE_COMMIT; ?>
                     <?php } ?>
                   </div>
                 </div>

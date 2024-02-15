@@ -68,8 +68,9 @@ if (!empty($action)) {
         <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+                <div class="table-responsive">
                 <table class="table table-hover table-striped">
-                    <thead>
+                    <thead class="table-dark">
                     <tr class="dataTableHeadingRow">
                         <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MEDIA_TYPE; ?></th>
                         <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MEDIA_TYPE_EXT; ?></th>
@@ -113,6 +114,7 @@ if (!empty($action)) {
                     ?>
                     </tbody>
                 </table>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
                 <?php
@@ -125,17 +127,17 @@ if (!empty($action)) {
 
                         $contents = ['form' => zen_draw_form('media_type', FILENAME_MEDIA_TYPES, 'action=insert', 'post', 'enctype="multipart/form-data"')];
                         $contents[] = ['text' => TEXT_NEW_INTRO];
-                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', '', zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"')];
-                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="control-label"') . '<br>' . zen_draw_input_field('type_ext', '', zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"')];
-                        $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="form-label"') . zen_draw_input_field('type_name', '', zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"')];
+                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="form-label"') . '<br>' . zen_draw_input_field('type_ext', '', zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"')];
+                        $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
                     case 'edit':
                         $heading[] = ['text' => '<h4>' . TEXT_HEADING_EDIT_MEDIA_TYPE . '</h4>'];
                         $contents = ['form' => zen_draw_form('media_type', FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter . '&action=save', 'post', 'enctype="multipart/form-data"')];
                         $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
-                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', $mInfo->type_name, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"')];
-                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="control-label"') . zen_draw_input_field('type_ext', $mInfo->type_ext, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"')];
-                        $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_NAME, 'type_name', 'class="form-label"') . zen_draw_input_field('type_name', $mInfo->type_name, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_name') . ' class="form-control"')];
+                        $contents[] = ['text' => zen_draw_label(TEXT_MEDIA_TYPE_EXT, 'type_ext', 'class="form-label"') . zen_draw_input_field('type_ext', $mInfo->type_ext, zen_set_field_length(TABLE_MEDIA_TYPES, 'type_ext') . ' class="form-control"')];
+                        $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
                     case 'delete':
                         $heading[] = ['text' => '<h4>' . TEXT_HEADING_DELETE_MEDIA_TYPES . '</h4>'];
@@ -144,7 +146,7 @@ if (!empty($action)) {
                         $contents[] = ['text' => TEXT_DELETE_INTRO];
                         $contents[] = ['text' => '<br><b>' . $mInfo->type_name . '</b>'];
 
-                        $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_MEDIA_TYPES, 'page=' . $_GET['page'] . $mType_parameter) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
                     default:
                         if (isset($mInfo) && is_object($mInfo)) {
@@ -163,6 +165,7 @@ if (!empty($action)) {
                 ?>
             </div>
         </div>
+        <div class="table-responsive">
         <table class="table">
             <tr>
                 <td><?php echo $media_type_split->display_count($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES); ?></td>
@@ -176,6 +179,7 @@ if (!empty($action)) {
                 </tr>
             <?php } ?>
         </table>
+        </div>
         <!-- body_text_eof //-->
 
         <!-- body_eof //-->

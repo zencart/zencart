@@ -174,8 +174,8 @@
                 <td class="dataTableContent"><?php echo $media->fields['media_name']; ?></td>
                 <td class="dataTableContent text-right actions">
                   <div class="btn-group">
-                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=edit') . '" class="btn btn-sm btn-default btn-edit" role="button">' . zen_icon('pencil', ICON_EDIT, hidden: true). '</a>'; ?>
-                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=delete') . '" class="btn btn-sm btn-default btn-delete" role="button">' . zen_icon('trash', ICON_DELETE, hidden: true). '</a>'; ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=edit') . '" class="btn btn-sm btn-secondary btn-edit" role="button">' . zen_icon('pencil', ICON_EDIT, hidden: true). '</a>'; ?>
+                  <?php echo '<a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id'] . '&action=delete') . '" class="btn btn-sm btn-secondary btn-delete" role="button">' . zen_icon('trash', ICON_DELETE, hidden: true). '</a>'; ?>
                   </div>
                   <?php if (isset($mInfo) && is_object($mInfo) && ($media->fields['media_id'] == $mInfo->media_id)) {
                     echo zen_icon('caret-right', '', '2x', true);
@@ -218,7 +218,7 @@
       $contents[] = array('text' => TEXT_NEW_INTRO);
       $contents[] = array('text' => '<br>' . TEXT_MEDIA_COLLECTION_NAME . '<br>' . zen_draw_input_field('media_name', '', zen_set_field_length(TABLE_MEDIA_MANAGER, 'media_name')));
 
-      $contents[] = array('align' => 'center', 'text' => '<br>' . '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>' . ' <a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>' . ' <a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
       break;
     case 'edit':
       $heading[] = array('text' => '<strong>' . TEXT_HEADING_EDIT_MEDIA_COLLECTION . '</strong>');
@@ -226,7 +226,7 @@
       $contents[] = array('text' => zen_draw_form('collections', FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . $mManager_parameter . '&action=save', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br>' . TEXT_MEDIA_COLLECTION_NAME . '<br>' . zen_draw_input_field('media_name', htmlspecialchars($mInfo->media_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_MEDIA_MANAGER, 'media_name')));
-      $contents[] = array('align' => 'center', 'text' => '<br>' . '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>' . ' <a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . $mManager_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+      $contents[] = array('align' => 'center', 'text' => '<br>' . '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>' . ' <a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . $mManager_parameter) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
 
       $contents[] = array('text' => zen_draw_separator('pixel_black.gif'));
       $contents[] = array('text' => TEXT_MEDIA_EDIT_INSTRUCTIONS);
@@ -306,7 +306,7 @@
         $contents[] = array('text'=>zen_draw_form('remove_product', FILENAME_MEDIA_MANAGER, 'action=remove_product&page=' . $_GET['page']) . '<input type="hidden" name="mID" value="' . $mInfo->media_id . '">' . '<input type="hidden" name="product_id" value="' . $products_linked->fields['product_id'] . '">' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>'. '&nbsp;' . $zc_products->products_name($products_linked->fields['product_id']) . '<br>' . '</form>');
         $products_linked->MoveNext();
       }
-      $contents[] = array('align' => 'center', 'text' =>  '<br><a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . $mManager_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+      $contents[] = array('align' => 'center', 'text' =>  '<br><a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . $mManager_parameter) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
       break;
     default:
       if (isset($mInfo) && is_object($mInfo)) {

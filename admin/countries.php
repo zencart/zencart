@@ -140,8 +140,9 @@ if (!empty($action)) {
       <!-- body_text //-->
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+            <div class="table-responsive">
           <table class="table table-hover" role="listbox">
-            <thead>
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent col-sm-6"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></th>
@@ -174,9 +175,9 @@ if (!empty($action)) {
                     <?php echo zen_draw_form('setstatus_' . (int)$country['countries_id'], FILENAME_COUNTRIES, zen_get_all_get_params(['action']) . 'action=setstatus'); ?>
                     <button type="submit" class="btn btn-status">
                       <?php if ($country['status'] == '0') { ?>
-                        <i class="fa-solid fa-square txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                        <i class="fa-solid fa-times-square txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                       <?php } else { ?>
-                        <i class="fa-solid fa-square txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                        <i class="fa-solid fa-check-square txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                       <?php } ?>
                     </button>
                     <?php
@@ -198,6 +199,7 @@ if (!empty($action)) {
               <?php } ?>
             </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
           <?php
@@ -209,30 +211,30 @@ if (!empty($action)) {
               $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_COUNTRY . '</h4>');
               $contents = array('form' => zen_draw_form('countries', FILENAME_COUNTRIES, $page_parameter . 'action=insert', 'post', 'class="form-horizontal"'));
               $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'countries_name', 'class="control-label"') . zen_draw_input_field('countries_name', '', 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_2, 'countries_iso_code_2', 'class="control-label"') . zen_draw_input_field('countries_iso_code_2', '', 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_3, 'countries_iso_code_3', 'class="control-label"') . zen_draw_input_field('countries_iso_code_3', '', 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ADDRESS_FORMAT, 'address_format_id', 'class="control-label"') . zen_draw_pull_down_menu('address_format_id', zen_get_address_formats(), '', 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_STATUS, 'status', 'class="control-label"') . zen_draw_checkbox_field('status', '', true, 'class="form-control"'));
-              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_COUNTRIES, rtrim($page_parameter, '&')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'countries_name', 'class="form-label"') . zen_draw_input_field('countries_name', '', 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_2, 'countries_iso_code_2', 'class="form-label"') . zen_draw_input_field('countries_iso_code_2', '', 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_3, 'countries_iso_code_3', 'class="form-label"') . zen_draw_input_field('countries_iso_code_3', '', 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ADDRESS_FORMAT, 'address_format_id', 'class="form-label"') . zen_draw_pull_down_menu('address_format_id', zen_get_address_formats(), '', 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_STATUS, 'status', 'class="form-label"') . zen_draw_checkbox_field('status', '', true, 'class="form-control"'));
+              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_COUNTRIES, rtrim($page_parameter, '&')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
               break;
             case 'edit':
               $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_COUNTRY . '</h4>');
               $contents = array('form' => zen_draw_form('countries', FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id . '&action=save', 'post', 'class="form-horizontal"'));
               $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'countries_name', 'class="control-label"') . zen_draw_input_field('countries_name', htmlspecialchars($cInfo->countries_name, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_2, 'countries_iso_code_2', 'class="control-label"') . zen_draw_input_field('countries_iso_code_2', $cInfo->countries_iso_code_2, 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_3, 'countries_iso_code_3', 'class="control-label"') . zen_draw_input_field('countries_iso_code_3', $cInfo->countries_iso_code_3, 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ADDRESS_FORMAT, 'address_format_id', 'class="control-label"') . zen_draw_pull_down_menu('address_format_id', zen_get_address_formats(), $cInfo->address_format_id, 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_STATUS, 'status', 'class="control-label"') . zen_draw_checkbox_field('status', '', $cInfo->status));
-              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_NAME, 'countries_name', 'class="form-label"') . zen_draw_input_field('countries_name', htmlspecialchars($cInfo->countries_name, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_2, 'countries_iso_code_2', 'class="form-label"') . zen_draw_input_field('countries_iso_code_2', $cInfo->countries_iso_code_2, 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_CODE_3, 'countries_iso_code_3', 'class="form-label"') . zen_draw_input_field('countries_iso_code_3', $cInfo->countries_iso_code_3, 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ADDRESS_FORMAT, 'address_format_id', 'class="form-label"') . zen_draw_pull_down_menu('address_format_id', zen_get_address_formats(), $cInfo->address_format_id, 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_COUNTRY_STATUS, 'status', 'class="form-label"') . zen_draw_checkbox_field('status', '', $cInfo->status));
+              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
               break;
             case 'delete':
               $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_COUNTRY . '</h4>');
               $contents = array('form' => zen_draw_form('countries', FILENAME_COUNTRIES, $page_parameter . 'action=deleteconfirm') . zen_draw_hidden_field('cID', $cInfo->countries_id));
               $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
               $contents[] = array('text' => '<br><b>' . zen_output_string_protected($cInfo->countries_name) . '</b>');
-              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_COUNTRIES, $page_parameter . 'cID=' . $cInfo->countries_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
               break;
             default:
               if (is_object($cInfo)) {
@@ -257,6 +259,7 @@ if (!empty($action)) {
       </div>
 
       <div class="row">
+          <div class="table-responsive">
         <table class="table">
           <tr>
             <td><?php echo $countries_split->display_count($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $currentPage, TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
@@ -268,6 +271,7 @@ if (!empty($action)) {
             </tr>
           <?php } ?>
         </table>
+          </div>
       </div>
     </div>
     <!-- body_eof //-->

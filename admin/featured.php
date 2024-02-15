@@ -283,8 +283,8 @@ if (!empty($action)) {
           }
           ?>
           <?php if (isset($fInfo->products_name)) { // Featured is already defined/this is an update ?>
-            <div class="form-group">
-              <p class="col-sm-3 control-label"><?php echo TEXT_FEATURED_PRODUCT; ?></p>
+            <div class="form-group row mb-3">
+              <p class="col-sm-3 form-label"><?php echo TEXT_FEATURED_PRODUCT; ?></p>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $fInfo->products_id . ': ' . $fInfo->products_model . ' - "' . zen_clean_html($fInfo->products_name) . '" (' . $currencies->format($fInfo->products_price) . ')'; ?></span>
               </div>
@@ -293,26 +293,26 @@ if (!empty($action)) {
           } elseif (!empty($_GET['preID'])) { // new Featured: insert by product ID
             $preID = (int)$_GET['preID'];
             ?>
-            <div class="form-group">
-              <p class="col-sm-3 control-label"><?php echo TEXT_FEATURED_PRODUCT; ?></p>
+            <div class="form-group row mb-3">
+              <p class="col-sm-3 form-label"><?php echo TEXT_FEATURED_PRODUCT; ?></p>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo 'ID#' . $preID . ': ' . zen_get_products_model($preID) . ' - "' . zen_clean_html(zen_get_products_name($preID)) . '" (' . $currencies->format(zen_get_products_base_price($preID)) . ')'; ?></span>
               </div>
             </div>
           <?php } else { ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_FEATURED_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_FEATURED_PRODUCT, 'products_id', 'class="col-sm-3 form-label"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $featured_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true); ?>
               </div>
             </div>
           <?php } ?>
           <?php echo zen_draw_hidden_field('update_products_id', $fInfo->products_id); ?>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_FEATURED_AVAILABLE_DATE, 'featured_date_available', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_FEATURED_AVAILABLE_DATE, 'featured_date_available', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_featured_date_available">
-                <span class="input-group-addon datepicker_icon">
+                <span class="input-group-text datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                 <?php echo zen_draw_input_field('featured_date_available', (($fInfo->featured_date_available == '0001-01-01') ? '' : $fInfo->featured_date_available), 'class="form-control" id="featured_date_available"'); ?>
@@ -320,11 +320,11 @@ if (!empty($action)) {
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_ACTIVE_DATE; ?></span></span>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_FEATURED_EXPIRES_DATE, 'expires_date', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_FEATURED_EXPIRES_DATE, 'expires_date', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_expires_date">
-                <span class="input-group-addon datepicker_icon">
+                <span class="input-group-text datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                 <?php echo zen_draw_input_field('expires_date', (($fInfo->expires_date == '0001-01-01') ? '' : $fInfo->expires_date), 'class="form-control" id="expires_date"'); ?>
@@ -341,7 +341,7 @@ if (!empty($action)) {
           ?>
           <?php require DIR_WS_INCLUDES . 'javascript/dateChecker.php'; ?>
           <div class="col-sm-12 text-right">
-            <button type="submit" class="btn btn-primary"><?php echo(($form_action === 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a class="btn btn-default" role="button" href="<?php echo $cancel_link; ?>"><?php echo IMAGE_CANCEL; ?></a>
+            <button type="submit" class="btn btn-primary"><?php echo(($form_action === 'insert') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a class="btn btn-secondary" role="button" href="<?php echo $cancel_link; ?>"><?php echo IMAGE_CANCEL; ?></a>
           </div>
           <?php echo '</form>'; ?>
         </div>
@@ -358,8 +358,9 @@ if (!empty($action)) {
         <div class="row">
           <div><?php echo TEXT_STATUS_WARNING; ?></div>
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+              <div class="table-responsive">
             <table class="table table-hover">
-              <thead>
+              <thead class="table-dark">
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-right"><?php echo 'ID'; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></th>
@@ -460,21 +461,21 @@ if (!empty($action)) {
                       <?php if (($featured['featured_date_available'] !== '0001-01-01' && $featured['featured_date_available'] !== '') || ($featured['expires_date'] !== '0001-01-01' && $featured['expires_date'] !== '')) { ?>
                         <button type="submit" class="btn btn-status" style="cursor: initial;">
                           <?php if ($featured['status'] === '1') { ?>
-                            <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo TEXT_FEATURED_ACTIVE; ?>: <?php echo TEXT_FEATURED_STATUS_BY_DATE; ?>"></i>
+                            <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo TEXT_FEATURED_ACTIVE; ?>: <?php echo TEXT_FEATURED_STATUS_BY_DATE; ?>"></i>
                           <?php } else { ?>
-                            <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo TEXT_FEATURED_INACTIVE; ?>: <?php echo TEXT_FEATURED_STATUS_BY_DATE; ?>"></i>
+                            <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo TEXT_FEATURED_INACTIVE; ?>: <?php echo TEXT_FEATURED_STATUS_BY_DATE; ?>"></i>
                           <?php } ?>
                         </button>
                       <?php } else { ?>
                         <?php echo zen_draw_form('setflag_products_' . $featured['products_id'], FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=setflag'); ?>
                         <?php if ($featured['status'] === '1') { ?>
                           <button type="submit" class="btn btn-status">
-                            <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo TEXT_FEATURED_ACTIVE; ?>"></i>
+                            <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo TEXT_FEATURED_ACTIVE; ?>"></i>
                           </button>
                           <?php echo zen_draw_hidden_field('flag', '0'); ?>
                         <?php } else { ?>
                           <button type="submit" class="btn btn-status">
-                            <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo TEXT_FEATURED_INACTIVE; ?>"></i>
+                            <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo TEXT_FEATURED_INACTIVE; ?>"></i>
                           </button>
                           <?php echo zen_draw_hidden_field('flag', '1'); ?>
                         <?php } ?>
@@ -484,10 +485,10 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-right actions">
                       <div class="btn-group">
-                      <a href="<?php echo zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&fID=' . $featured['featured_id']); ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&fID=' . $featured['featured_id']); ?>" class="btn btn-sm btn-secondary btn-edit" role="button">
                         <?php echo zen_icon('pencil', ICON_EDIT) ?>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&fID=' . $featured['featured_id']); ?>" class="btn btn-sm btn-default btn-delete" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&fID=' . $featured['featured_id']); ?>" class="btn btn-sm btn-secondary btn-delete" role="button">
                         <?php echo zen_icon('trash', ICON_DELETE) ?>
                       </a>
                       </div>
@@ -503,6 +504,7 @@ if (!empty($action)) {
                 <?php } ?>
               </tbody>
             </table>
+              </div>
             <div class="row">
               <div class="col-sm-6"><?php echo $featured_split->display_count($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_FEATURED); ?></div>
               <div class="col-sm-6 text-right"><?php echo $featured_split->display_links($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'fID'])); ?></div>
@@ -519,7 +521,7 @@ if (!empty($action)) {
                         $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED, 'action=deleteconfirm' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . zen_draw_hidden_field('fID', $fInfo->featured_id)];
                         $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
                         $contents[] = ['text' => '<b>' . $fInfo->products_model . ' - "' . zen_clean_html($fInfo->products_name) . '"</b>'];
-                        $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_FEATURED, 'fID=' . $fInfo->featured_id . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_FEATURED, 'fID=' . $fInfo->featured_id . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
 
                     case 'pre_add':
@@ -528,8 +530,8 @@ if (!empty($action)) {
                         $contents[] = ['text' => TEXT_INFO_PRE_ADD_INTRO];
                         $result = $db->Execute("SELECT MAX(products_id) AS lastproductid FROM " . TABLE_PRODUCTS);
                         $max_product_id = $result->fields['lastproductid'];
-                        $contents[] = ['text' => zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="control-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_FEATURED, 'products_id') . ' class="form-control" id="pre_add_products_id" required max="' . $max_product_id . '"', '', 'number')];
-                        $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_FEATURED, (!empty($fInfo->featured_id) ? '&fID=' . $fInfo->featured_id : '') . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        $contents[] = ['text' => zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="form-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_FEATURED, 'products_id') . ' class="form-control" id="pre_add_products_id" required max="' . $max_product_id . '"', '', 'number')];
+                        $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_FEATURED, (!empty($fInfo->featured_id) ? '&fID=' . $fInfo->featured_id : '') . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
 
                     default:

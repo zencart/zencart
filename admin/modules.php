@@ -145,8 +145,9 @@ if (!empty($action)) {
       <div class="row">
           <?php require_once(DIR_WS_MODULES . 'notificationsDisplay.php');?>
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></th>
                 <th class="dataTableHeadingContent">&nbsp;</th>
@@ -280,6 +281,7 @@ if (!empty($action)) {
             ?>
             </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
 
@@ -295,7 +297,7 @@ if (!empty($action)) {
               $contents[] = ['text' => zen_draw_hidden_field('module', (isset($_GET['module']) ? $_GET['module'] : ''))];
               $contents[] = ['text' => '<h5>' . TEXT_DELETE_INTRO . '</h5>'];
 
-              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger" id="removeButton">' . IMAGE_MODULE_REMOVE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" id="cancelButton">' . IMAGE_CANCEL . '</a>'];
+              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger" id="removeButton">' . IMAGE_MODULE_REMOVE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-secondary" role="button" id="cancelButton">' . IMAGE_CANCEL . '</a>'];
               break;
             case 'edit':
               if (!$is_ssl_protected && in_array($_GET['module'], ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck'])) {
@@ -322,7 +324,7 @@ if (!empty($action)) {
                 $contents[] = ['text' => '<strong>Module code: ' . $mInfo->code . '</strong><br>'];
               }
               $contents[] = ['text' => $keys];
-              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger" id="saveButton">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" id="cancelButton">' . IMAGE_CANCEL . '</a>'];
+              $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger" id="saveButton">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-secondary" role="button" id="cancelButton">' . IMAGE_CANCEL . '</a>'];
               break;
             default:
               $heading[] = ['text' => '<h4>' . $mInfo->title . '</h4>'];
@@ -434,7 +436,7 @@ if (!empty($action)) {
 <?php echo $help_text['body']; ?>
                 </div>
                 <div class="modal-footer">
-                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
            </div>
       </div>

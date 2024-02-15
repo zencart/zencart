@@ -27,10 +27,10 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
       <!-- body_text //-->
       <div class="row">
-        <div class="col-sm-offset-6 col-sm-6">
+        <div class="offset-sm-6 col-sm-6">
             <?php echo zen_draw_form('search', FILENAME_STATS_PRODUCTS_PURCHASED, '', 'get', 'class="form-horizontal"', true); ?>
             <?php echo zen_hide_session_id(); ?>
-            <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_REPORTS, 'products_filter', 'class="control-label col-sm-9"'); ?>
+            <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_REPORTS, 'products_filter', 'class="form-label col-sm-9"'); ?>
           <div class="col-sm-3"><?php echo zen_draw_input_field('products_filter', '', 'class="form-control"'); ?></div>
           <?php
           if (isset($products_filter) && zen_not_null($products_filter)) {
@@ -38,20 +38,20 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             $products_filter = zen_db_input(zen_db_prepare_input($products_filter));
             echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . $products_filter;
             ?>
-            <br><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL'); ?>" class="btn btn-default btn-xs"><?php echo IMAGE_RESET; ?></a>
+            <br><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL'); ?>" class="btn btn-secondary btn-xs"><?php echo IMAGE_RESET; ?></a>
           <?php } ?>
           <?php echo '</form>'; ?>
           <br>
           <?php echo zen_draw_form('search', FILENAME_STATS_PRODUCTS_PURCHASED, '', 'get', 'class="form-horizontal"', true); ?>
           <?php echo zen_hide_session_id(); ?>
-          <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL, 'products_filter', 'class="control-label col-sm-9"'); ?>
+          <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_REPORTS_NAME_MODEL, 'products_filter', 'class="form-label col-sm-9"'); ?>
           <div class="col-sm-3"><?php echo zen_draw_input_field('products_filter_name_model', '', 'class="form-control"'); ?></div>
           <?php
           if (isset($products_filter_name_model) && zen_not_null($products_filter_name_model)) {
             $products_filter_name_model = zen_db_input(zen_db_prepare_input($products_filter_name_model));
             echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . zen_db_prepare_input($products_filter_name_model);
             ?>
-            <br><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL'); ?>" class="btn btn-default btn-xs"><?php echo IMAGE_RESET; ?></a>
+            <br><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL'); ?>" class="btn btn-secondary btn-xs"><?php echo IMAGE_RESET; ?></a>
           <?php } ?>
           <?php echo '</form>'; ?>
         </div>
@@ -83,8 +83,9 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
 
         $chk_orders_products = $db->Execute($chk_orders_products_query);
         ?>
-        <table class="table table-hover">
-          <thead>
+        <div class="table-responsive">
+          <table class="table table-hover">
+          <thead class="table-dark">
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_CUSTOMERS_ID; ?></th>
               <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_ID; ?></th>
@@ -125,18 +126,22 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             <?php } ?>
           </tbody>
         </table>
+        </div>
 
-        <table class="table">
+        <div class="table-responsive">
+          <table class="table">
           <tr>
             <td><?php echo $chk_orders_products_split->display_count($chk_orders_products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
             <td class="text-right"><?php echo $chk_orders_products_split->display_links($chk_orders_products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'x', 'y'))); ?></td>
           </tr>
         </table>
+        </div>
 
         <?php
       } else {
 // all products by name and quantity display
         ?>
+        <div class="table-responsive">
         <table class="table">
           <tr class="dataTableHeadingRow">
             <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_NUMBER; ?></th>
@@ -164,12 +169,15 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
             </tr>
           <?php } ?>
         </table>
+        </div>
+        <div class="table-responsive">
         <table class="table">
           <tr>
             <td><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
             <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
           </tr>
         </table>
+        </div>
         <?php
       } // $products_filter > 0
       ?>

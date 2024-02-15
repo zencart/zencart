@@ -135,8 +135,9 @@ if (!empty($action)) {
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover table-striped">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover table-striped">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_RECORD_COMPANY; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
@@ -181,6 +182,7 @@ if (!empty($action)) {
               <?php } ?>
             </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
@@ -192,45 +194,45 @@ if (!empty($action)) {
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_NEW_RECORD_COMPANY . '</h4>');
                 $contents = array('form' => zen_draw_form('record_company', FILENAME_RECORD_COMPANY, 'action=insert', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array('text' => TEXT_NEW_INTRO);
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_NAME, 'record_company_name', 'class="control-label"') . zen_draw_input_field('record_company_name', '', zen_set_field_length(TABLE_RECORD_COMPANY, 'record_company_name') . ' class="form-control"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE, 'record_company_image', 'class="control-label"') . zen_draw_file_field('record_company_image', '', 'class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_NAME, 'record_company_name', 'class="form-label"') . zen_draw_input_field('record_company_name', '', zen_set_field_length(TABLE_RECORD_COMPANY, 'record_company_name') . ' class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE, 'record_company_image', 'class="form-label"') . zen_draw_file_field('record_company_image', '', 'class="form-control"'));
 
                 $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
                 $default_directory = 'record_company/';
 
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'record_company_image_manual', 'class="control-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_DIR, 'img_dir', 'class="form-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'record_company_image_manual', 'class="form-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
 
                 $record_company_inputs_string = '';
                 $languages = zen_get_languages();
                 for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                  $record_company_inputs_string .= '<br><div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('record_company_url[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_RECORD_COMPANY_INFO, 'record_company_url') . ' class="form-control"') . '</div>';
+                  $record_company_inputs_string .= '<br><div class="input-group"><span class="input-group-text">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('record_company_url[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_RECORD_COMPANY_INFO, 'record_company_url') . ' class="form-control"') . '</div>';
                 }
 
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url', 'class="control-label"') . $record_company_inputs_string);
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url', 'class="form-label"') . $record_company_inputs_string);
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . (isset($_GET['mID']) ? '&mID=' . $_GET['mID'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_EDIT_RECORD_COMPANY . '</h4>');
                 $contents = array('form' => zen_draw_form('record_company', FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . $rCompany_parameter . '&action=save', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_NAME, 'record_company_name', 'class="control-label"') . zen_draw_input_field('record_company_name', htmlspecialchars($aInfo->record_company_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_RECORD_COMPANY, 'record_company_name') . ' class="form-control"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE, 'record_company_image', 'class="control-label"') . zen_draw_file_field('record_company_image', '', 'class="form-control"') . '<br>' . $aInfo->record_company_image);
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_NAME, 'record_company_name', 'class="form-label"') . zen_draw_input_field('record_company_name', htmlspecialchars($aInfo->record_company_name, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_RECORD_COMPANY, 'record_company_name') . ' class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE, 'record_company_image', 'class="form-label"') . zen_draw_file_field('record_company_image', '', 'class="form-control"') . '<br>' . $aInfo->record_company_image);
 
                 $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
                 $default_directory = substr($aInfo->record_company_image, 0, strpos($aInfo->record_company_image, '/') + 1);
 
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_DIR, 'img_dir', 'class="control-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'record_company_image_manual', 'class="control-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_IMAGE_DIR, 'img_dir', 'class="form-label"') . zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'record_company_image_manual', 'class="form-label"') . zen_draw_input_field('record_company_image_manual', '', 'class="form-control"'));
                 $contents[] = array('text' => zen_info_image($aInfo->record_company_image, $aInfo->record_company_name));
                 $record_company_inputs_string = '';
                 $languages = zen_get_languages();
                 for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                  $record_company_inputs_string .= '<br><div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('record_company_url[' . $languages[$i]['id'] . ']', zen_get_record_company_url($aInfo->record_company_id, $languages[$i]['id']), zen_set_field_length(TABLE_RECORD_COMPANY_INFO, 'record_company_url') . ' class="form-control"') . '</div>';
+                  $record_company_inputs_string .= '<br><div class="input-group"><span class="input-group-text">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('record_company_url[' . $languages[$i]['id'] . ']', zen_get_record_company_url($aInfo->record_company_id, $languages[$i]['id']), zen_set_field_length(TABLE_RECORD_COMPANY_INFO, 'record_company_url') . ' class="form-control"') . '</div>';
                 }
 
-                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url', 'class="control-label"') . $record_company_inputs_string);
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . $rCompany_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('text' => zen_draw_label(TEXT_RECORD_COMPANY_URL, 'record_company_url', 'class="form-label"') . $record_company_inputs_string);
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . $rCompany_parameter) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_HEADING_DELETE_RECORD_COMPANY . '</h4>');
@@ -245,7 +247,7 @@ if (!empty($action)) {
                   $contents[] = array('text' => '<br>' . sprintf(TEXT_DELETE_WARNING_PRODUCTS, $aInfo->products_count));
                 }
 
-                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . $rCompany_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_RECORD_COMPANY, 'page=' . $_GET['page'] . $rCompany_parameter) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (isset($aInfo) && is_object($aInfo)) {
@@ -269,7 +271,8 @@ if (!empty($action)) {
             ?>
         </div>
       </div>
-      <table class="table">
+        <div class="table-responsive">
+        <table class="table">
         <tr>
           <td><?php echo $record_company_split->display_count($record_company_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES); ?></td>
           <td class="text-right"><?php echo $record_company_split->display_links($record_company_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
@@ -280,6 +283,7 @@ if (!empty($action)) {
           </tr>
         <?php } ?>
       </table>
+        </div>
       <!-- body_text_eof //-->
 
       <!-- body_eof //-->

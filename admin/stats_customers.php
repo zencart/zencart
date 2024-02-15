@@ -24,8 +24,9 @@ $currencies = new currencies();
 
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 
+        <div class="table-responsive">
       <table class="table table-hover">
-        <thead>
+        <thead class="table-dark">
           <tr class="dataTableHeadingRow">
             <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_NUMBER; ?></th>
             <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></th>
@@ -59,12 +60,15 @@ $currencies = new currencies();
             <?php } ?>
         </tbody>
       </table>
+        </div>
+        <div class="table-responsive">
       <table class="table">
         <tr>
           <td><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
           <td class="text-right"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
         </tr>
       </table>
+        </div>
       <!-- body_text_eof //-->
     </div>
     <!-- body_eof //-->

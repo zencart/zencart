@@ -12,7 +12,7 @@
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
 
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <!--<script src="includes/javascript/bootstrap.min.js"></script>-->
 
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>
@@ -32,6 +32,28 @@
         container: 'body'
     });
   });
+// Enable hover dropdown on desktop screens
+jQuery(document).ready(function(){
+    // Enable hover dropdown on desktop screens
+    function enableHoverDropdown() {
+        if (jQuery(window).width() > 991) {
+            jQuery('.navbar .nav-item.dropdown').hover(function() {
+                jQuery(this).find('.dropdown-menu').addClass('show');
+            }, function() {
+                jQuery(this).find('.dropdown-menu').removeClass('show');
+            });
+        } else {
+            jQuery('.navbar .nav-item.dropdown').unbind('mouseenter mouseleave');
+        }
+    }
+
+    enableHoverDropdown(); // Initial call
+
+    // Trigger hover dropdown on window resize
+    $(window).resize(function() {
+        enableHoverDropdown();
+    });
+});
 </script>
 <?php
 $searchBoxScriptArray = [

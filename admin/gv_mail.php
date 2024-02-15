@@ -58,7 +58,7 @@ if ($action != '') {
         if (!empty($_POST['email_to_name'])) {
           $mail_sent_to_names = explode(' ', zen_db_prepare_input($_POST['email_to_name']), 2);
           $customers_firstname = $mail_sent_to_names[0];
-          $customers_lastname = (!empty($mail_sent_to_names[1]) ? $mail_sent_to_names[1] : ''); 
+          $customers_lastname = (!empty($mail_sent_to_names[1]) ? $mail_sent_to_names[1] : '');
         } else {
           $customers_firstname = '';
           $customers_lastname = TEXT_CUSTOMER;
@@ -202,7 +202,8 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           }
           ?>
           <?php echo zen_draw_form('mail', FILENAME_GV_MAIL, 'action=send_email_to_user'); ?>
-          <table class="table">
+        <div class="table-responsive">
+            <table class="table">
             <tr>
               <td class="text-right col-sm-3"><b><?php echo TEXT_FROM; ?></b></td>
               <td><?php echo htmlspecialchars(stripslashes($_POST['from']), ENT_COMPAT, CHARSET, true); ?></td>
@@ -231,9 +232,10 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
               <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true)); ?></td>
             </tr>
           </table>
-          <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-9">
-              <?php echo($_POST['amount'] <= 0 ? '' : '<button type="submit" class="btn btn-primary" name="send">' . IMAGE_SEND . '</button>&nbsp;'); ?><button type="submit" class="btn btn-info" name="back"><?php echo IMAGE_BACK; ?></button>&nbsp;<button type="submit" class="btn btn-default" name="cancel"><?php echo IMAGE_CANCEL; ?></button>
+        </div>
+          <div class="form-group row mb-3">
+            <div class="offset-sm-3 col-sm-9">
+              <?php echo($_POST['amount'] <= 0 ? '' : '<button type="submit" class="btn btn-primary" name="send">' . IMAGE_SEND . '</button>&nbsp;'); ?><button type="submit" class="btn btn-info" name="back"><?php echo IMAGE_BACK; ?></button>&nbsp;<button type="submit" class="btn btn-secondary" name="cancel"><?php echo IMAGE_CANCEL; ?></button>
             </div>
           </div>
           <?php
@@ -248,10 +250,10 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
         default:
           ?>
           <div class="row">
-            <div class="col-sm-offset-8 col-sm-4 text-right">
+            <div class="offset-sm-8 col-sm-4 text-right">
               <?php echo zen_draw_form('set_editor_form', FILENAME_GV_MAIL, '', 'get', 'class="form-horizontal"'); ?>
-              <div class="form-group">
-                <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="control-label col-sm-3"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="form-label col-sm-3"'); ?>
                 <div class="col-sm-9">
                   <?php echo zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();" class="form-control" id="reset_editor"'); ?>
                 </div>
@@ -265,68 +267,68 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           echo zen_draw_form('mail', FILENAME_GV_MAIL, 'action=preview', 'post', 'onsubmit="return check_form(mail);" class="form-horizontal"');
           $customers = get_audiences_list('email');
           ?>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('from', htmlspecialchars(EMAIL_FROM, ENT_COMPAT, CHARSET, true), 'size="50" class="form-control" id="from"'); ?>
             </div>
           </div>
           <hr>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_TO_CUSTOMERS, 'customers_email_address', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_TO_CUSTOMERS, 'customers_email_address', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (!empty($_POST['customers_email_address']) ? $_POST['customers_email_address'] : ''), 'class="form-control" id="customers_email_address"'); ?>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-12"><?php echo TEXT_TO_EMAIL_INFO; ?></div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_TO_EMAIL, 'email_to', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_TO_EMAIL, 'email_to', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('email_to', (!empty($_POST['email_to']) ? $_POST['email_to'] : ''), 'size="25" class="form-control" id="email_to"', false, 'email'); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_TO_EMAIL_NAME, 'email_to_name', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_TO_EMAIL_NAME, 'email_to_name', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('email_to_name', (!empty($_POST['email_to_name']) ? $_POST['email_to_name'] : ''), 'size="25" class="form-control" id="email_to_name"', false); ?>
             </div>
           </div>
           <hr>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('subject', (!empty($_POST['subject']) ? $_POST['subject'] : ''), 'size="50" class="form-control" id="subject"', true); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_AMOUNT, 'amount', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_AMOUNT, 'amount', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'step="any" class="form-control" id="amount"', true, 'number'); ?>
               <span class="help-block"><?php echo TEXT_AMOUNT_INFO; ?></span>
             </div>
           </div>
           <hr>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-12"><?php echo TEXT_MESSAGE_INFO; ?></div>
           </div>
           <?php if (EMAIL_USE_HTML == 'true') { ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_HTML_MESSAGE, 'message_html', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_HTML_MESSAGE, 'message_html', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_textarea_field('message_html', 'soft', '', '10', htmlspecialchars(empty($_POST['message_html']) ? '' : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, true), 'id="message_html" class="editorHook form-control"'); ?>
               </div>
             </div>
           <?php } ?>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_textarea_field('message', 'soft', '', '10', htmlspecialchars(empty($_POST['message']) ? '' : stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true), 'id="message" class="noEditor tt form-control"'); ?>
             </div>
           </div>
-          <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-9 col-md-6 text-right">
+          <div class="form-group row mb-3">
+            <div class="offset-sm-3 col-sm-9 col-md-6 text-right">
               <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>
             </div>
           </div>

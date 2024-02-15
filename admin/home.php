@@ -25,7 +25,7 @@ if (STORE_NAME == '' || STORE_OWNER =='' || STORE_OWNER_EMAIL_ADDRESS =='' || ST
     require('index_dashboard.php');
 }
 ?>
-    <footer class="homeFooter">
+    <footer class="homeFooter text-center">
         <!-- The following copyright announcement is in compliance
         to section 2c of the GNU General Public License, and
         thus can not be removed, or can only be modified

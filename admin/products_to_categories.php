@@ -490,7 +490,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                                   style="font-size: larger;padding:0;"><?php echo sprintf(TEXT_PRODUCTS_ID_INVALID, $products_filter); ?></span>
 
                         <?php } else { //show drop-down for master category re-assignment ?>
-                            <div class="form-group">
+                            <div class="form-group row mb-3">
                                 <?php
                                 echo zen_draw_form('restrict_product', FILENAME_PRODUCTS_TO_CATEGORIES, '', 'get', 'class="form-horizontal"', true);
                                 echo zen_draw_hidden_field('action', 'set_master_categories_id');
@@ -533,13 +533,13 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                             $contents = ['form' => zen_draw_form('product_select_by_id', FILENAME_PRODUCTS_TO_CATEGORIES, '', 'post', 'class="form-horizontal"')];
                             $contents[] = ['text' => TEXT_SET_PRODUCTS_TO_CATEGORIES_LINKS];
                             $contents[] = [
-                                'text' => zen_draw_label(TEXT_PRODUCTS_ID, 'products_filter', 'class="control-label"') . zen_draw_input_field('products_filter', $products_filter,
+                                'text' => zen_draw_label(TEXT_PRODUCTS_ID, 'products_filter', 'class="form-label"') . zen_draw_input_field('products_filter', $products_filter,
                                         'class="form-control"')
                             ];
                             $contents[] = [
                                 'align' => 'center',
                                 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SELECT . '</button> <a href="' . zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES,
-                                        'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+                                        'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'
                             ];
                             break;
                         default:
@@ -607,7 +607,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
             <div class="col-lg-12">
                 <h3><?php echo TEXT_HEADING_LINKED_CATEGORIES; ?></h3>
                 <?php echo TEXT_INFO_PRODUCTS_TO_CATEGORIES_LINKER_INTRO; ?>
-                <div class="form-group text-center">
+                <div class="form-group row mb-3 text-center">
                     <?php if ($product_to_copy->fields['master_categories_id'] < 1) { ?>
                         <span class="alert"><?php echo TEXT_SET_MASTER_CATEGORIES_ID; ?></span>
                     <?php } ?>
@@ -658,8 +658,9 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                 </div>
                 <?php echo zen_draw_form('update', FILENAME_PRODUCTS_TO_CATEGORIES, 'action=update_product&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&target_category_id=' . $target_category_id, 'post');
                 zen_draw_hidden_field('current_master_categories_id', $product_to_copy->fields['master_categories_id']); ?>
+                <div class="table-responsive">
                 <table class="table-bordered">
-                    <thead>
+                    <thead class="table-dark">
                     <?php $cnt_columns = 0; ?>
                     <tr class="dataTableHeadingRow">
                         <?php
@@ -725,7 +726,8 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                     ?>
                     </tbody>
                 </table>
-                <div class="form-group text-center">
+                </div>
+                <div class="form-group row mb-3 text-center">
                     <button type="submit" class="btn btn-primary floatButton"
                             title="<?php echo BUTTON_UPDATE_CATEGORY_LINKS . " - " . $product_to_copy->fields['products_name']; ?>"><?php echo BUTTON_UPDATE_CATEGORY_LINKS . '<br><span>' . $product_to_copy->fields['products_model'] . '<br>' . $product_to_copy->fields['products_name'] . '<br>(#' . $products_filter . ')'; ?></span></button>
                 </div>
@@ -744,13 +746,13 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
         <!-- Copy linked categories from one product to another -->
         <div class="row dataTableHeadingRow">
             <h3><?php echo TEXT_HEADING_COPY_LINKED_CATEGORIES; ?></h3>
-            <div class="form-group-row">
+            <div class="form-group row mb-3-row">
                 <?php echo sprintf(TEXT_INFO_COPY_LINKED_CATEGORIES, ($products_filter > 0 ? ': <strong>' . $source_product_details . '</strong><br>' : ' ')); ?>
             </div>
             <?php
             if ($products_filter > 0) {
                 echo '<br>' . zen_draw_form('enable_copy_links_dropdown_form', FILENAME_PRODUCTS_TO_CATEGORIES, zen_get_all_get_params(), 'post');
-                echo zen_draw_label(TEXT_LABEL_ENABLE_COPY_LINKS, 'enable_copy_links_dropdown_checkbox', 'class="control-label"');
+                echo zen_draw_label(TEXT_LABEL_ENABLE_COPY_LINKS, 'enable_copy_links_dropdown_checkbox', 'class="form-label"');
                 echo zen_draw_checkbox_field('enable_copy_links_dropdown_checkbox', '1', $enable_copy_links_dropdown, '', 'id="enable_copy_links_dropdown_checkbox" onClick="this.form.submit();"');
                 echo zen_draw_hidden_field('enable_copy_links_dropdown', (!$enable_copy_links_dropdown ? 'true' : ''));
                 echo '</form>';
@@ -764,7 +766,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                     ];
                     $category_product_tree_array = zen_get_target_categories_products(TOPMOST_CATEGORY_PARENT_ID, '', $category_product_tree_array, 'product');
                     ?>
-                    <div class="form-group-row">
+                    <div class="form-group row mb-3-row">
                         <div class="col-lg-8">
                             <?php echo zen_draw_pull_down_menu('target_product_id', $category_product_tree_array, '', 'id="target_product_id"'); ?>
                         </div>
@@ -790,18 +792,18 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                 'action=copy_products_as_linked' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post',
                 'class="form-horizontal"'); ?>
             <h3><?php echo TEXT_HEADING_COPY_ALL_PRODUCTS_TO_CATEGORY_LINKED; ?></h3>
-            <div class="form-group-row">
+            <div class="form-group row mb-3-row">
                 <?php echo TEXT_INFO_COPY_ALL_PRODUCTS_TO_CATEGORY_LINKED; ?>
             </div>
-            <div class="form-group-row">
+            <div class="form-group row mb-3-row">
                 <div class="col-lg-4">
                     <?php echo zen_draw_label(TEXT_LABEL_COPY_ALL_PRODUCTS_TO_CATEGORY_FROM_LINKED, 'category_id_source',
-                            'class="control-label"') . zen_draw_input_field('category_id_source', '', 'id="category_id_source" class="form-control" step="1" min="1"', '',
+                            'class="form-label"') . zen_draw_input_field('category_id_source', '', 'id="category_id_source" class="form-control" step="1" min="1"', '',
                             'number'); ?>
                 </div>
                 <div class="col-lg-4">
                     <?php echo zen_draw_label(TEXT_LABEL_COPY_ALL_PRODUCTS_TO_CATEGORY_TO_LINKED, 'category_id_target',
-                            'class="control-label"') . zen_draw_input_field('category_id_target', '', 'id="category_id_target" class="form-control" step="1" min="1"', '',
+                            'class="form-label"') . zen_draw_input_field('category_id_target', '', 'id="category_id_target" class="form-control" step="1" min="1"', '',
                             'number'); ?>
                 </div>
                 <div class="col-lg-4">
@@ -818,18 +820,18 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                 'action=remove_linked_products' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post',
                 'class="form-horizontal"'); ?>
             <h3><?php echo TEXT_HEADING_REMOVE_ALL_PRODUCTS_FROM_CATEGORY_LINKED; ?></h3>
-            <div class="form-group-row">
+            <div class="form-group row mb-3-row">
                 <?php echo sprintf(TEXT_INFO_REMOVE_ALL_PRODUCTS_TO_CATEGORY_LINKED, $current_category_id); ?>
             </div>
-            <div class="form-group-row">
+            <div class="form-group row mb-3-row">
                 <div class="col-lg-4">
                     <?php echo zen_draw_label(TEXT_LABEL_REMOVE_ALL_PRODUCTS_TO_CATEGORY_FROM_LINKED, 'category_id_reference',
-                            'class="control-label"') . zen_draw_input_field('category_id_reference', '', 'id="category_id_reference" class="form-control" step="1" min="1"', '',
+                            'class="form-label"') . zen_draw_input_field('category_id_reference', '', 'id="category_id_reference" class="form-control" step="1" min="1"', '',
                             'number'); ?>
                 </div>
                 <div class="col-lg-4">
                     <?php echo zen_draw_label(TEXT_LABEL_REMOVE_ALL_PRODUCTS_TO_CATEGORY_TO_LINKED, 'category_id_target_remove',
-                            'class="control-label"') . zen_draw_input_field('category_id_target_remove', '', 'id="category_id_target_remove" class="form-control" step="1" min="1"', '',
+                            'class="form-label"') . zen_draw_input_field('category_id_target_remove', '', 'id="category_id_target_remove" class="form-control" step="1" min="1"', '',
                             'number'); ?>
                 </div>
                 <div class="col-lg-4">
@@ -846,13 +848,13 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                 'action=reset_products_category_as_master' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post',
                 'class="form-horizontal"'); ?>
             <h3><?php echo TEXT_HEADING_RESET_ALL_PRODUCTS_TO_CATEGORY_MASTER; ?></h3>
-            <div class="form-group-row">
+            <div class="form-group row mb-3-row">
                 <?php echo TEXT_INFO_RESET_ALL_PRODUCTS_TO_CATEGORY_MASTER; ?>
             </div>
-            <div class="form-group-row">
+            <div class="form-group row mb-3-row">
                 <div class="col-lg-8">
                     <?php echo zen_draw_label(TEXT_INFO_RESET_ALL_PRODUCTS_TO_CATEGORY_FROM_MASTER, 'category_id_as_master',
-                            'class="control-label"') . zen_draw_input_field('category_id_as_master', '', ' id="category_id_as_master" class="form-control" step="1" min="1"', '',
+                            'class="form-label"') . zen_draw_input_field('category_id_as_master', '', ' id="category_id_as_master" class="form-control" step="1" min="1"', '',
                             'number'); ?>
                 </div>
                 <div class="col-lg-4">

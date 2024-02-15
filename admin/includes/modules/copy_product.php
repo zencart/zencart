@@ -35,7 +35,7 @@ $contents[] = array('text' => TEXT_INFO_CURRENT_CATEGORIES . '<br><strong>' . ze
 // the topmost category will be included in the list of categories to which the product can be copied.
 //
 $exclude_category = (zen_count_products_in_category(TOPMOST_CATEGORY_PARENT_ID, true) === 0) ? '' : TOPMOST_CATEGORY_PARENT_ID;
-$contents[] = array('text' => zen_draw_label(TEXT_CATEGORIES, 'categories_id', 'class="control-label"') . zen_draw_pull_down_menu('categories_id', zen_get_category_tree('', '', $exclude_category), $current_category_id, 'class="form-control" id="categories_id"'));
+$contents[] = array('text' => zen_draw_label(TEXT_CATEGORIES, 'categories_id', 'class="form-label"') . zen_draw_pull_down_menu('categories_id', zen_get_category_tree('', '', $exclude_category), $current_category_id, 'class="form-control" id="categories_id"'));
 
 $contents[] = array(
     'text' => '<h5>' . TEXT_HOW_TO_COPY . '</h5>' .
@@ -92,7 +92,7 @@ if (zen_has_product_discounts($pInfo->products_id) == 'true') {
 $contents[] = array('text' => '<label>' . zen_draw_checkbox_field('edit_duplicate', '1', true) . TEXT_COPY_EDIT_DUPLICATE . '</label>');
 $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"'));
 $contents[] = array('align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY . '</button>
-<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'
 );
 
 $contents[] = array('text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '1', 'style="width:100%"'));

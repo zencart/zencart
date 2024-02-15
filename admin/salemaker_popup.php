@@ -23,8 +23,9 @@ $deduction_type_array = array(
   <body>
     <h1 class="text-center"><?php echo HEADING_TITLE . ' - ' . $cname; ?></h1>
     <?php echo zen_draw_separator(); ?>
+    <div class="table-responsive">
     <table class="table table-striped">
-      <thead>
+      <thead class="table-dark">
       <tr class="dataTableHeadingRow">
         <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SALE_NAME; ?></th>
         <th colspan="2" class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_SALE_DEDUCTION; ?></th>
@@ -70,6 +71,7 @@ $deduction_type_array = array(
       ?>
       </tbody>
     </table>
+    </div>
     <p class="main text-center"><a href="javascript:window.close();"><?php echo TEXT_CLOSE_WINDOW; ?></a></p>
   </body>
 </html>

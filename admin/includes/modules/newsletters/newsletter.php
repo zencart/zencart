@@ -50,8 +50,8 @@ class newsletter {
 
   function choose_audience() {
     $choose_audience_string = zen_draw_form('audience', FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm', 'post', 'onsubmit="return check_form(audience);" class="form-horizontal"') . PHP_EOL;
-    $choose_audience_string .= '<div class="form-group">' . PHP_EOL;
-    $choose_audience_string .= zen_draw_label(TEXT_PLEASE_SELECT_AUDIENCE, 'audience_selected', 'class="control-label col-sm-3"') . PHP_EOL;
+    $choose_audience_string .= '<div class="form-group row mb-3">' . PHP_EOL;
+    $choose_audience_string .= zen_draw_label(TEXT_PLEASE_SELECT_AUDIENCE, 'audience_selected', 'class="form-label col-sm-3"') . PHP_EOL;
     $choose_audience_string .= '<div class="col-sm-9 col-md-6">' . PHP_EOL;
     $choose_audience_string .= zen_draw_pull_down_menu('audience_selected', get_audiences_list('newsletters'), $this->query_name, 'class="form-control"') . PHP_EOL;
     $choose_audience_string .= '</div>' . PHP_EOL;
@@ -101,7 +101,7 @@ class newsletter {
     $confirm_string .= zen_draw_form('ready_to_send', FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send');
     $confirm_string .= zen_draw_hidden_field('audience_selected', $this->query_name) . PHP_EOL;
     $confirm_string .= '<div class="row text-right">' . PHP_EOL;
-    $confirm_string .= '<button type="submit" class="btn btn-primary">' . IMAGE_SEND_EMAIL . '</button> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' . PHP_EOL;
+    $confirm_string .= '<button type="submit" class="btn btn-primary">' . IMAGE_SEND_EMAIL . '</button> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>' . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '</form>' . PHP_EOL;
 

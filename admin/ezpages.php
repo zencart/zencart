@@ -214,10 +214,10 @@ if (!empty($action)) {
             array('id' => '5', 'text' => TEXT_SORT_PAGE_ID_TITLE),
           );
           ?>
-          <div class="col-sm-offset-4 col-sm-4">
+          <div class="offset-sm-4 col-sm-4">
             <?php echo zen_draw_form('set_ez_sort_order_form', FILENAME_EZPAGES_ADMIN, '', 'get', 'class="form-horizontal"'); ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SORT_CHAPTER_TOC_TITLE_INFO, 'reset_ez_sort_order', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_SORT_CHAPTER_TOC_TITLE_INFO, 'reset_ez_sort_order', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9">
                 <?php echo zen_draw_pull_down_menu('reset_ez_sort_order', $ez_sort_order_array, $currentSortOrder, 'onChange="this.form.submit();" class="form-control" id="reset_ez_sort_order"'); ?>
               </div>
@@ -232,8 +232,8 @@ if (!empty($action)) {
 // toggle switch for editor
             echo zen_draw_form('set_editor_form', FILENAME_EZPAGES_ADMIN, '', 'get', 'class="form-horizontal"');
             ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9">
                 <?php echo zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();" class="form-control" id="reset_editor"'); ?>
               </div>
@@ -291,14 +291,14 @@ if (!empty($action)) {
         }
         ?>
 
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12">
-            <?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
+            <?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'; ?>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-3">
-            <p class="control-label"><?php echo TEXT_PAGES_TITLE; ?></p>
+            <p class="form-label"><?php echo TEXT_PAGES_TITLE; ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
             <?php
@@ -316,9 +316,9 @@ if (!empty($action)) {
               }
               ?>
               <div class="input-group">
-                <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
+                <span class="input-group-text"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
                 <?php echo zen_draw_input_field('pages_title[' . $languages[$i]['id'] . ']', htmlspecialchars($pages_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_EZPAGES_CONTENT, 'pages_title') . ' class="form-control" id="pages_title[' . $languages[$i]['id'] . ']" required', false); ?>
-                <span class="input-group-addon alert-danger">*</span>
+                <span class="input-group-text alert-danger">*</span>
               </div>
               <br>
             <?php } ?>
@@ -346,30 +346,30 @@ if (!empty($action)) {
             $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
             $parms = (isset($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
             ?>
-            <div class="form-group">
-              <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 form-label' . $addl_class . '"' . $parms); ?>
               <div class="col-sm-9 col-md-6"><?php echo $extra_input['input']; ?></div>
             </div>
             <?php
           }
         }
         ?>
-        <div class="form-group">
-          <?php echo zen_draw_label(TABLE_HEADING_PAGE_OPEN_NEW_WINDOW, 'page_open_new_window', 'class="col-sm-3 control-label"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TABLE_HEADING_PAGE_OPEN_NEW_WINDOW, 'page_open_new_window', 'class="col-sm-3 form-label"'); ?>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '1', ($ezInfo->page_open_new_window == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_open_new_window', '0', ($ezInfo->page_open_new_window == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_SSL, 'page_is_ssl', 'class="col-sm-3 control-label"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_SSL, 'page_is_ssl', 'class="col-sm-3 form-label"'); ?>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '1', ($ezInfo->page_is_ssl == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('page_is_ssl', '0', ($ezInfo->page_is_ssl == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_VISIBLE, 'page_is_visible', 'class="col-sm-3 control-label"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TABLE_HEADING_PAGE_IS_VISIBLE, 'page_is_visible', 'class="col-sm-3 form-label"'); ?>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '1', ($ezInfo->status_visible == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_visible', '0', ($ezInfo->status_visible == 0)) . TEXT_NO; ?></label>
@@ -377,72 +377,72 @@ if (!empty($action)) {
           </div>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?></div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-3">
-            <p class="control-label"><?php echo TABLE_HEADING_STATUS_HEADER; ?></p>
+            <p class="form-label"><?php echo TABLE_HEADING_STATUS_HEADER; ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '1', ($ezInfo->status_header == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_header', '0', ($ezInfo->status_header == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TEXT_HEADER_SORT_ORDER, 'header_sort_order', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_HEADER_SORT_ORDER, 'header_sort_order', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-2">
             <?php echo zen_draw_input_field('header_sort_order', $ezInfo->header_sort_order, zen_set_field_length(TABLE_EZPAGES, 'header_sort_order') . ' class="form-control" id="header_sort_order"'); ?>
           </div>
         </div>
         <hr>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-3">
-            <p class="control-label"><?php echo zen_draw_label(TABLE_HEADING_STATUS_SIDEBOX, 'status_sidebox', 'class="control-label"'); ?></p>
+            <p class="form-label"><?php echo zen_draw_label(TABLE_HEADING_STATUS_SIDEBOX, 'status_sidebox', 'class="form-label"'); ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '1', ($ezInfo->status_sidebox == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_sidebox', '0', ($ezInfo->status_sidebox == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TEXT_SIDEBOX_SORT_ORDER, 'sidebox_sort_order', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_SIDEBOX_SORT_ORDER, 'sidebox_sort_order', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-2">
             <?php echo zen_draw_input_field('sidebox_sort_order', $ezInfo->sidebox_sort_order, zen_set_field_length(TABLE_EZPAGES, 'sidebox_sort_order') . ' class="form-control" id="sidebox_sort_order"'); ?>
           </div>
         </div>
         <hr>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-3">
-            <p class="control-label"><?php echo TABLE_HEADING_STATUS_FOOTER; ?></p>
+            <p class="form-label"><?php echo TABLE_HEADING_STATUS_FOOTER; ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '1', ($ezInfo->status_footer == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_footer', '0', ($ezInfo->status_footer == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-2">
             <?php echo zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control" id="footer_sort_order"'); ?>
           </div>
         </div>
         <hr>
-        <div class="form-group">
-          <?php echo zen_draw_label(TABLE_HEADING_CHAPTER_PREV_NEXT, 'toc_chapter', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TABLE_HEADING_CHAPTER_PREV_NEXT, 'toc_chapter', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-2">
             <?php echo zen_draw_input_field('toc_chapter', $ezInfo->toc_chapter, zen_set_field_length(TABLE_EZPAGES, 'toc_chapter', '6') . ' class="form-control" id="toc_chapter"'); ?>
           </div>
         </div>
         <hr>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-3">
-            <p class="control-label"><?php echo TABLE_HEADING_STATUS_TOC; ?></p>
+            <p class="form-label"><?php echo TABLE_HEADING_STATUS_TOC; ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '1', ($ezInfo->status_toc == 1)) . TEXT_YES; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('status_toc', '0', ($ezInfo->status_toc == 0)) . TEXT_NO; ?></label>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TEXT_TOC_SORT_ORDER, 'toc_sort_order', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_TOC_SORT_ORDER, 'toc_sort_order', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-2">
             <?php echo zen_draw_input_field('toc_sort_order', $ezInfo->toc_sort_order, zen_set_field_length(TABLE_EZPAGES, 'toc_sort_order') . ' class="form-control" id="toc_sort_order"'); ?>
           </div>
@@ -457,9 +457,9 @@ if (!empty($action)) {
           </ul>
         </div>
         <div class="row"><?php echo zen_draw_separator('pixel_black.gif', '100%', '1'); ?></div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-3">
-            <p class="control-label"><?php echo TEXT_PAGES_HTML_TEXT; ?></p>
+            <p class="form-label"><?php echo TEXT_PAGES_HTML_TEXT; ?></p>
           </div>
           <div class="col-sm-9 col-md-6">
             <?php
@@ -478,7 +478,7 @@ if (!empty($action)) {
               }
               ?>
               <div class="input-group">
-                <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
+                <span class="input-group-text"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
                 <?php echo zen_draw_textarea_field('pages_html_text[' . $languages[$i]['id'] . ']', 'soft', '', '20', htmlspecialchars($pages_html_text, ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
               </div>
               <br>
@@ -487,21 +487,21 @@ if (!empty($action)) {
             ?>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TEXT_ALT_URL, 'alt_url', 'class="col-sm-3 control-label"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_ALT_URL, 'alt_url', 'class="col-sm-3 form-label"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('alt_url', $ezInfo->alt_url, 'size="100" class="form-control" id="alt_url"'); ?>
             <span class="help-block"><?php echo TEXT_ALT_URL_EXPLAIN; ?></span>
           </div>
         </div>
-        <div class="form-group">
-          <?php echo zen_draw_label(TEXT_ALT_URL_EXTERNAL, 'alt_url_external', 'class="col-sm-3 control-label"'); ?>
+        <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_ALT_URL_EXTERNAL, 'alt_url_external', 'class="col-sm-3 form-label"'); ?>
           <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_input_field('alt_url_external', $ezInfo->alt_url_external, 'size="100" class="form-control" id="alt_url_external"'); ?>
             <span class="help-block"><?php echo TEXT_ALT_URL_EXTERNAL_EXPLAIN; ?></span>
           </div>
         </div>
-        <div class="form-group">
-          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
+        <div class="form-group row mb-3">
+          <div class="col-sm-12"><?php echo (($form_action == 'insert') ? '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button>' : '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>') . ' <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['ezID']) ? 'ezID=' . $_GET['ezID'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'; ?></div>
         </div>
         <?php echo '</form>'; ?>
       <?php } else { ?>
@@ -514,8 +514,9 @@ if (!empty($action)) {
         <div class="row"><?php echo TEXT_LEGEND . ' ' . zen_icon('status-red', TEXT_WARNING_MULTIPLE_SETTINGS) . ' ' . TEXT_WARNING_MULTIPLE_SETTINGS .  $extra_legends; ?></div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+              <div class="table-responsive">
             <table class="table table-hover" role="listbox">
-              <thead>
+              <thead class="table-dark">
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ID; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAGES; ?></th>
@@ -611,9 +612,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('page_open_new_window', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['page_open_new_window'] == '1') { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -626,9 +627,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('page_is_ssl', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['page_is_ssl'] == '1') { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -642,9 +643,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('header_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_header'] == '1') { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -658,9 +659,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('sidebox_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_sidebox'] == '1') { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -674,9 +675,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('footer_status', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_footer'] == '1') { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -691,9 +692,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('status_visible', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_visible'] == '1') { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -708,9 +709,9 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('status_toc', FILENAME_EZPAGES_ADMIN, 'action=update_status'); ?>
                       <button type="submit" class="btn btn-status">
                         <?php if ($page['status_toc'] == '1') { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         <?php } else { ?>
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         <?php } ?>
                       </button>
                       <?php
@@ -729,7 +730,7 @@ if (!empty($action)) {
                     ?>
                     <td class="dataTableContent text-right actions">
                       <div class="btn-group">
-                        <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id'] . '&action=new'); ?>" title="<?php echo ICON_EDIT; ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'ezID=' . $page['pages_id'] . '&action=new'); ?>" title="<?php echo ICON_EDIT; ?>" class="btn btn-sm btn-secondary btn-edit" role="button">
                           <?php echo zen_icon('pencil', '', 'lg', hidden: true) ?>
                         </a>
                         <?php echo $extra_action_icons; ?>
@@ -748,6 +749,7 @@ if (!empty($action)) {
                 ?>
               </tbody>
             </table>
+              </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
@@ -761,7 +763,7 @@ if (!empty($action)) {
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $ezInfo->pages_title . '</b>');
 
-                $contents[] = array('align' => 'center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $_GET['ezID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_EZPAGES_ADMIN, 'page=' . $_GET['page'] . '&ezID=' . $_GET['ezID']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (!empty($ezInfo) && is_object($ezInfo)) {
@@ -805,6 +807,7 @@ if (!empty($action)) {
           </div>
         </div>
         <div class="row">
+            <div class="table-responsive">
           <table class="table">
             <tr>
               <td><?php echo $pages_split->display_count($pages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_EZPAGE, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PAGES); ?></td>
@@ -814,6 +817,7 @@ if (!empty($action)) {
               <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_PAGE; ?></a></td>
             </tr>
           </table>
+            </div>
         </div>
         <?php
       }

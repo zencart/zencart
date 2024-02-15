@@ -164,24 +164,25 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
 }
 ?>
 <!-- All HEADER_ definitions in the columns below are defined in includes/languages/lang.english.php //-->
+<div class="container-fluid">
   <div class="row">
-    <div class="col-xs-8 col-sm-3" id="adminHeaderLogo">
+    <div class="col-6 col-md-3 order-1" id="adminHeaderLogo">
         <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
     </div>
 
-    <div class="hidden-xs col-sm-3 col-sm-push-6 noprint adminHeaderAlerts">
+    <div class="d-none d-md-block col-3 offset-sm-6 order-md-2 noprint adminHeaderAlerts">
         <?php if ($new_version) { ?>
             <?php echo $new_version; ?><br>
             <?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?>
         <?php } ?>
     </div>
 
-    <div class="hidden-sm hidden-md hidden-lg col-xs-4 noprint adminHeaderAlerts">
+    <div class="d-sm-block d-md-none d-lg-none col-6 col-sm-3 order-2 noprint adminHeaderAlerts">
         <a class="btn btn-primary" role="button" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><?php echo BOX_CUSTOMERS_ORDERS; ?></a>
     </div>
 
     <div class="clearfix visible-xs-block"></div>
-    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
+    <div class="col-6 col-sm-3 order-3 noprint adminHeaderAlerts">
         <?php
         if (isset($_SESSION['reset_admin_activity_log']) && ($_SESSION['reset_admin_activity_log'] == true && (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
         ?>
@@ -191,13 +192,13 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         ?>
     </div>
 
-    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
+    <div class="col-6 col-sm-3 order-4 noprint adminHeaderAlerts">
         <?php if (!empty($new_gv_queue_cnt)) echo $goto_gv . '<br>' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?>
     </div>
 
   </div>
   <div class="row headerBar">
-    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+    <div class="col-12 col-sm-12 col-md-2 col-lg-2">
         <?php
         if (!$hide_languages) {
             echo zen_draw_form('languages', basename($PHP_SELF), '', 'get');
@@ -210,7 +211,7 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         }
         ?>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
         <?php
         echo((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? iconv('ISO-8859-1', 'UTF-8', $zcDate->output(ADMIN_NAV_DATE_TIME_FORMAT, time())) : $zcDate->output(ADMIN_NAV_DATE_TIME_FORMAT, time())); //windows does not "do" UTF-8...so a manual conversion is necessary
         echo '&nbsp;' . date("O", time()) . ' GMT';  // time zone
@@ -222,15 +223,16 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
         ?>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 noprint">
-        <ul class="nav nav-pills upperMenu">
-            <li><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
-            <li><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
-            <li><a href="https://www.zen-cart.com/forum" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
-            <li><a href="<?php echo zen_href_link(FILENAME_SERVER_INFO, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
-            <li><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
-            <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
+    <div class="col-12 d-none d-md-block col-md-4 col-lg-4 noprint">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
+            <li class="nav-item"><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
+            <li class="nav-item"><a href="https://www.zen-cart.com/forum" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
+            <li class="nav-item"><a href="<?php echo zen_href_link(FILENAME_SERVER_INFO, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_VERSION; ?></a></li>
+            <li class="nav-item"><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
+            <li class="nav-item"><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
         </ul>
     </div>
   </div>
 <?php require DIR_WS_INCLUDES . 'header_navigation.php'; ?>
+</div>

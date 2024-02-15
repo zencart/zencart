@@ -79,8 +79,9 @@ if (!empty($action)) {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover" role="listbox">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover" role="listbox">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_CLASS_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_CLASSES; ?></th>
@@ -121,6 +122,7 @@ if (!empty($action)) {
 
             </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
@@ -133,18 +135,18 @@ if (!empty($action)) {
 
                 $contents = array('form' => zen_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_title', 'class="control-label"') . zen_draw_input_field('tax_class_title', '', zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_title') . ' class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_DESCRIPTION, 'tax_class_description', 'class="control-label"') . zen_draw_input_field('tax_class_description', '', zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_description') . ' class="form-control"'));
-                $contents[] = array('text-align' => 'center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_title', 'class="form-label"') . zen_draw_input_field('tax_class_title', '', zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_title') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_DESCRIPTION, 'tax_class_description', 'class="form-label"') . zen_draw_input_field('tax_class_description', '', zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_description') . ' class="form-control"'));
+                $contents[] = array('text-align' => 'center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_TAX_CLASS . '</h4>');
 
                 $contents = array('form' => zen_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_title', 'class="control-label"') . zen_draw_input_field('tax_class_title', htmlspecialchars($tcInfo->tax_class_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_title') . ' class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_DESCRIPTION, 'tax_class_description', 'class="control-label"') . zen_draw_input_field('tax_class_description', htmlspecialchars($tcInfo->tax_class_description, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_description') . ' class="form-control"'));
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_title', 'class="form-label"') . zen_draw_input_field('tax_class_title', htmlspecialchars($tcInfo->tax_class_title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_title') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_DESCRIPTION, 'tax_class_description', 'class="form-label"') . zen_draw_input_field('tax_class_description', htmlspecialchars($tcInfo->tax_class_description, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_TAX_CLASS, 'tax_class_description') . ' class="form-control"'));
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_TAX_CLASS . '</h4>');
@@ -152,7 +154,7 @@ if (!empty($action)) {
                 $contents = array('form' => zen_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('tID', $tcInfo->tax_class_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $tcInfo->tax_class_title . '</b>');
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (isset($tcInfo) && is_object($tcInfo)) {
@@ -173,7 +175,8 @@ if (!empty($action)) {
         </div>
       </div>
       <div class="row">
-        <table class="table">
+          <div class="table-responsive">
+          <table class="table">
           <tr>
             <td><?php echo $classes_split->display_count($classes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></td>
             <td class="text-right"><?php echo $classes_split->display_links($classes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
@@ -188,6 +191,7 @@ if (!empty($action)) {
           }
           ?>
         </table>
+          </div>
       </div>
       <!-- body_text_eof //-->
     </div>

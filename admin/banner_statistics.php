@@ -209,8 +209,8 @@ $opts = array(
       <?php echo zen_hide_session_id(); ?>
       <?php echo zen_draw_hidden_field('page', (int)$_GET['page']); ?>
       <?php echo zen_draw_hidden_field('bID', $banner_id); ?>
-      <div class="form-group">
-          <?php echo zen_draw_label(TITLE_TYPE, 'type', 'class="control-label col-sm-3"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TITLE_TYPE, 'type', 'class="form-label col-sm-3"'); ?>
         <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_pull_down_menu('type', $type_array, (!empty($type) ? $type : 'daily'), 'onChange="this.form.submit();" class="form-control" id="type"'); ?>
           <noscript><input type="submit" value="GO"></noscript>
@@ -221,8 +221,8 @@ $opts = array(
         case 'yearly': break;
         case 'monthly':
           ?>
-          <div class="form-group">
-              <?php echo zen_draw_label(TITLE_YEAR, 'year', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TITLE_YEAR, 'year', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control" id="year"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
@@ -233,15 +233,15 @@ $opts = array(
         default:
         case 'daily':
           ?>
-          <div class="form-group">
-              <?php echo zen_draw_label(TITLE_MONTH, 'month','class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TITLE_MONTH, 'month','class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_pull_down_menu('month', $months_array, (isset($_GET['month']) ? (int)$_GET['month'] : date('n')), 'onChange="this.form.submit();" class="form-control" id="month"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
             </div>
           </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TITLE_YEAR, 'year','class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TITLE_YEAR, 'year','class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_pull_down_menu('year', $years_array, (isset($_GET['year']) ? (int)$_GET['year'] : date('Y')), 'onChange="this.form.submit();" class="form-control" id="year"'); ?>
               <noscript><input type="submit" value="GO"></noscript>
@@ -254,7 +254,7 @@ $opts = array(
       <?php echo '</form>'; ?>
 
       <div class="row text-right">
-        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . $banner_id); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+        <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . $banner_id); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
       </div>
 
 
@@ -270,7 +270,7 @@ $opts = array(
 
       <div class="row">
         <h4><?php echo $title; ?></h4>
-        <div id="banner-yearly" class="col-sm-offset-3 col-sm-9 col-md-6 flot_chart" style="height:350px;"></div>
+        <div id="banner-yearly" class="offset-sm-3 col-sm-9 col-md-6 flot_chart" style="height:350px;"></div>
         <script>
           var yData = <?php echo json_encode($data); ?>;
           var yOptions = <?php echo json_encode(array_merge($opts, array('xaxis' => array('ticks' => $stats[3])))); ?>;
@@ -286,7 +286,7 @@ $opts = array(
 
       <div class="row">
         <h4><?php echo $title; ?></h4>
-        <div id="banner-monthly" class="col-sm-offset-3 col-sm-9 col-md-6 flot_chart" style="height:350px;"></div>
+        <div id="banner-monthly" class="offset-sm-3 col-sm-9 col-md-6 flot_chart" style="height:350px;"></div>
         <script>
           var mData = <?php echo json_encode($data); ?> ;
           var mOptions = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>$stats[3])))); ?> ;
@@ -306,7 +306,7 @@ $opts = array(
 
       <div class="row">
         <h4><?php echo $title; ?></h4>
-        <div id="banner-daily" class="col-sm-offset-3 col-sm-9 col-md-6 flot_chart" style="height:350px;"></div>
+        <div id="banner-daily" class="offset-sm-3 col-sm-9 col-md-6 flot_chart" style="height:350px;"></div>
         <script>
           var dData = <?php echo json_encode($data); ?> ;
           var dOptions = <?php echo json_encode(array_merge($opts, array('xaxis'=>array('ticks'=>sizeof($stats[0]),'tickDecimals' => 0)))); ?> ;
@@ -315,7 +315,7 @@ $opts = array(
       </div>
 
   <div class="row text-right">
-    <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+    <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . (int)$_GET['page'] . '&bID=' . (int)$_GET['bID']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
   </div>
 </div>
 <!-- body_eof //-->

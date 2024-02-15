@@ -26,54 +26,57 @@ if (empty($currencies)) {
       div.first { float: left; width: 90px; }
       div.col { float: left; width: 18%; }
     </style>
-  </head>
-  <body class="indexDashboard">
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
+</head>
+<body class="indexDashboard">
+<!-- header //-->
+<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<!-- header_eof //-->
 
-    <?php
-    $notifications = new AdminNotifications();
-    $availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
-    require_once(DIR_WS_MODULES . 'notificationsDisplay.php');
-    ?>
+<?php
+$notifications = new AdminNotifications();
+$availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
+require_once(DIR_WS_MODULES . 'notificationsDisplay.php');
+?>
+<div class="container-fluid">
+    <div class="row">
+        <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 
-    <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/BaseStatisticsDashboardWidget.php';
+            ?>
 
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/BaseStatisticsDashboardWidget.php';
-        ?>
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/SpecialsDashboardWidget.php';
+            ?>
 
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/SpecialsDashboardWidget.php';
-        ?>
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/OrderStatusDashboardWidget.php';
+            ?>
 
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/OrderStatusDashboardWidget.php';
-        ?>
+        </div>
+        <div id="coltwo" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/RecentCustomersDashboardWidget.php';
+            ?>
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/WhosOnlineDashboardWidget.php';
+            ?>
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/TrafficDashboardWidget.php';
+            ?>
+
+        </div>
+        <div id="colthree" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/RecentOrdersDashboardWidget.php';
+            ?>
+            <?php
+            include DIR_WS_MODULES . 'dashboard_widgets/SalesReportDashboardWidget.php';
+            ?>
+
+        </div>
 
     </div>
-    <div id="coltwo" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/RecentCustomersDashboardWidget.php';
-        ?>
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/WhosOnlineDashboardWidget.php';
-        ?>
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/TrafficDashboardWidget.php';
-        ?>
-
-    </div>
-    <div id="colthree" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/RecentOrdersDashboardWidget.php';
-        ?>
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/SalesReportDashboardWidget.php';
-        ?>
-
-    </div>
-
+</div>

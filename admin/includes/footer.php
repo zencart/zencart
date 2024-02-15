@@ -16,7 +16,7 @@
   }
 ?>
 <footer>
-  <div id="footer">
+  <div id="footer" class="text-center">
     <a href="https://www.zen-cart.com" rel="noopener" target="_blank"><img src="images/small_zen_logo.gif" alt="Zen Cart:: the art of e-commerce"></a><br>
     <br>
     E-Commerce Engine Copyright &copy; 2003-<?php echo date('Y'); ?> <a href="https://www.zen-cart.com" rel="noopener" target="_blank">Zen Cart&reg;</a><br>

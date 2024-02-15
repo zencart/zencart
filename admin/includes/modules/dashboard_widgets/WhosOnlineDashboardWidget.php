@@ -18,11 +18,12 @@ $guest_array = $whos_online_stats['guest_array'];
 $spider_array = $whos_online_stats['spider_array'];
 
 ?>
-  <div class="panel panel-default reportBox">
-    <div class="panel-heading header">
+  <div class="card reportBox mb-3">
+    <div class="card-header header">
         <?php echo WO_GRAPH_TITLE . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="' . zen_href_link(FILENAME_WHOS_ONLINE) . '">' . WO_GRAPH_MORE . '</a>'; ?>
     </div>
-    <table class="table table-striped table-condensed">
+      <div class="table-responsive">
+      <table class="table table-striped table-condensed">
       <tr>
         <td><?php echo WO_GRAPH_REGISTERED; ?></td>
         <td>
@@ -128,4 +129,5 @@ $spider_array = $whos_online_stats['spider_array'];
         </td>
       </tr>
     </table>
+      </div>
   </div>

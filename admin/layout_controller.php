@@ -149,10 +149,10 @@ if (!empty($_GET['action'])) {
       }
       ?>
         <div class="row">
-            <div class="col-sm-5 alert alert-warning pull-right">
+            <div class="col-sm-5 alert alert-warning float-end">
                 <?php
                 echo zen_draw_form('templateselect', FILENAME_LAYOUT_CONTROLLER, zen_get_all_get_params(['page']), 'post', 'class="form-inline"');
-                echo zen_draw_label(TEXT_CURRENTLY_VIEWING, 'template_select', 'class="control-label"') . ' ' . PHP_EOL;
+                echo zen_draw_label(TEXT_CURRENTLY_VIEWING, 'template_select', 'class="form-label"') . ' ' . PHP_EOL;
                 $template_array = [];
                 foreach($available_templates as $key => $value) {
                     if (isset($value['missing'])) continue;
@@ -171,8 +171,9 @@ if (!empty($_GET['action'])) {
       <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAYOUT_BOX_NAME; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo ($include_single_column_settings ? TABLE_HEADING_LAYOUT_BOX_STATUS : TABLE_HEADING_STATUS); ?></th>
@@ -248,6 +249,7 @@ if (!empty($_GET['action'])) {
           ?>
           </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
@@ -324,12 +326,12 @@ if (!empty($_GET['action'])) {
                 $contents[] = ['text' => TEXT_INFO_LAYOUT_BOX_NAME . ' ' . $bInfo->layout_box_name];
                 $contents[] = ['text' => '<b>' . TEXT_INFO_LAYOUT_BOX_STATUS . '</b><div class="radio"><label>' . zen_draw_radio_field('layout_box_status', '1', $in_status) . TEXT_ON . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_status', '0', $out_status) . TEXT_OFF . '</label></div>'];
                 $contents[] = ['text' => '<b>' . TEXT_INFO_LAYOUT_BOX_LOCATION . '</b><div class="radio"><label>' . zen_draw_radio_field('layout_box_location', '0', $left_status) . TEXT_LEFT . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_location', '1', $right_status) . TEXT_RIGHT . '</label></div>'];
-                $contents[] = ['text' => zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER, 'layout_box_sort_order' , 'class="control-label"') . zen_draw_input_field('layout_box_sort_order', $bInfo->layout_box_sort_order, 'size="4" class="form-control" id="layout_box_sort_order"')];
+                $contents[] = ['text' => zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER, 'layout_box_sort_order' , 'class="form-label"') . zen_draw_input_field('layout_box_sort_order', $bInfo->layout_box_sort_order, 'size="4" class="form-control" id="layout_box_sort_order"')];
                 if ($include_single_column_settings) {
-                  $contents[] = ['text' => zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE, 'layout_box_sort_order_single', 'class="control-label"') . zen_draw_input_field('layout_box_sort_order_single', $bInfo->layout_box_sort_order_single, 'size="4" class="form-control" id="layout_box_sort_order_single"')];
+                  $contents[] = ['text' => zen_draw_label(TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE, 'layout_box_sort_order_single', 'class="form-label"') . zen_draw_input_field('layout_box_sort_order_single', $bInfo->layout_box_sort_order_single, 'size="4" class="form-control" id="layout_box_sort_order_single"')];
                   $contents[] = ['text' => '<b>' . TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE . '</b><div class="radio"><label>' . zen_draw_radio_field('layout_box_status_single', '1', $in_status_single) . TEXT_ON . '</label></div><div class="radio"><label>' . zen_draw_radio_field('layout_box_status_single', '0', $out_status_single) . TEXT_OFF . '</label></div>'];
                 }
-                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&layout_box_name=' . $bInfo->layout_box_name) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id . '&layout_box_name=' . $bInfo->layout_box_name) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               case 'delete':
                 $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_BOX . '</h4>'];
@@ -337,7 +339,7 @@ if (!empty($_GET['action'])) {
                 $contents = ['form' => zen_draw_form('column_controller', FILENAME_LAYOUT_CONTROLLER, $cur_page . '&action=deleteconfirm' . '&layout_box_name=' . $bInfo->layout_box_name) . zen_draw_hidden_field('cID', $bInfo->layout_id)];
                 $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
                 $contents[] = ['text' => '<b>' . $bInfo->layout_box_name . '</b>'];
-                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_LAYOUT_CONTROLLER, $cur_page . '&cID=' . $bInfo->layout_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               default:
                 if (is_object($bInfo)) {
@@ -394,10 +396,10 @@ if (!empty($_GET['action'])) {
               echo zen_draw_form('templatecopysettings', FILENAME_LAYOUT_CONTROLLER, zen_get_all_get_params(['page', 'action']) . '&action=reset_defaults', 'post', 'class="form-inline"');
               echo zen_draw_hidden_field('action', 'reset_defaults');
 
-              echo zen_draw_label(TEXT_SETTINGS_COPY_FROM, 'template_select_from', 'class="control-label"') . ' ' . PHP_EOL;
+              echo zen_draw_label(TEXT_SETTINGS_COPY_FROM, 'template_select_from', 'class="form-label"') . ' ' . PHP_EOL;
               echo zen_draw_pull_down_menu('tfrom', $template_array_from, $selected_template, 'class="form-control" id="template_select_from"') . ' ' . PHP_EOL;
 
-              echo zen_draw_label(TEXT_SETTINGS_COPY_TO, 'template_select_to', 'class="control-label"') . ' ' . PHP_EOL;
+              echo zen_draw_label(TEXT_SETTINGS_COPY_TO, 'template_select_to', 'class="form-label"') . ' ' . PHP_EOL;
               echo zen_draw_pull_down_menu('tto', $template_array_to, $selected_template, 'class="form-control" id="template_select_to"') . ' ' . PHP_EOL;
               ?>
 

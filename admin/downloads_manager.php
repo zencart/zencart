@@ -51,7 +51,7 @@ if (!empty($action)) {
     <div class="container-fluid">
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
-        <div class="col-sm-offset-8 col-sm-4">
+        <div class="offset-sm-8 col-sm-4">
          <?php require DIR_WS_MODULES . 'search_box.php'; ?>
         </div>
       </div>
@@ -81,8 +81,9 @@ if (!empty($action)) {
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <!-- body_text //-->
           <!-- downloads by product_name//-->
-          <table class="table table-hover" role="listbox">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover" role="listbox">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ATTRIBUTES_ID; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></th>
@@ -194,6 +195,7 @@ if (!empty($action)) {
               <?php } ?>
             </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
 
@@ -208,10 +210,10 @@ if (!empty($action)) {
               $contents = array('form' => zen_draw_form('products_downloads_edit', FILENAME_DOWNLOADS_MANAGER, zen_get_all_get_params(array('padID', 'action')) . ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id . '&action=save', 'post', 'class="form-horizontal"'));
               $contents[] = array('text' => '<b>' . TEXT_PRODUCTS_NAME . $padInfo->products_name . '<br>' . TEXT_PRODUCTS_MODEL . $padInfo->products_model . '</b>');
               $contents[] = array('text' => '<br>' . TEXT_INFO_EDIT_INTRO);
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_FILENAME, 'products_attributes_filename', 'class="control-label"') . zen_draw_input_field('products_attributes_filename', $padInfo->products_attributes_filename, 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_MAX_DAYS, 'products_attributes_maxdays', 'class="control-label"') . zen_draw_input_field('products_attributes_maxdays', $padInfo->products_attributes_maxdays, 'class="form-control"'));
-              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_MAX_COUNT, 'products_attributes_maxcount', 'class="control-label"') . zen_draw_input_field('products_attributes_maxcount', $padInfo->products_attributes_maxcount, 'class="form-control"'));
-              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_FILENAME, 'products_attributes_filename', 'class="form-label"') . zen_draw_input_field('products_attributes_filename', $padInfo->products_attributes_filename, 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_MAX_DAYS, 'products_attributes_maxdays', 'class="form-label"') . zen_draw_input_field('products_attributes_maxdays', $padInfo->products_attributes_maxdays, 'class="form-control"'));
+              $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_MAX_COUNT, 'products_attributes_maxcount', 'class="form-label"') . zen_draw_input_field('products_attributes_maxcount', $padInfo->products_attributes_maxcount, 'class="form-control"'));
+              $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_DOWNLOADS_MANAGER, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'padID=' . $padInfo->products_attributes_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
               break;
             default:
               if (isset($padInfo) && is_object($padInfo)) {
@@ -243,6 +245,7 @@ if (!empty($action)) {
         <!-- downloads by product_name_eof //-->
       </div>
       <div class="row">
+          <div class="table-responsive">
         <table class="table">
           <tr>
             <td><?php echo $products_downloads_split->display_count($products_downloads_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_DOWNLOADS_MANAGER); ?></td>
@@ -257,6 +260,7 @@ if (!empty($action)) {
             </tr>
           <?php } ?>
         </table>
+          </div>
       </div>
     </div>
     <!-- body_text_eof //-->

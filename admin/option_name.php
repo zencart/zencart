@@ -69,8 +69,9 @@ if ($_GET['action'] == "update_sort_order") {
       <h1><?php echo HEADING_TITLE; ?></h1>
       <div class="table-responsive">
         <!-- body_text //-->
-        <table class="table table-condensed table-striped">
-          <thead>
+          <div class="table-responsive">
+          <table class="table table-condensed table-striped">
+          <thead class="table-dark">
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TEXT_EDIT_ALL; ?></th>
             </tr>
@@ -79,7 +80,7 @@ if ($_GET['action'] == "update_sort_order") {
               <th class="dataTableHeadingContent text-center">
                   <?php echo zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get'); ?>
                   <?php echo zen_hide_session_id(); ?>
-                <?php echo zen_draw_label(TEXT_SELECTED_LANGUAGE . zen_get_language_icon($_GET['lng_id']), 'lng_id', 'class="control-label"'); ?>&nbsp;&nbsp;&nbsp;
+                <?php echo zen_draw_label(TEXT_SELECTED_LANGUAGE . zen_get_language_icon($_GET['lng_id']), 'lng_id', 'class="form-label"'); ?>&nbsp;&nbsp;&nbsp;
                 <?php echo zen_draw_pull_down_menu('lng_id', $languages_array, $_GET['lng_id'], 'onChange="this.form.submit();" class="form-control"'); ?>
                 <?php echo '</form>'; ?>
               </th>
@@ -89,7 +90,7 @@ if ($_GET['action'] == "update_sort_order") {
               <td colspan="2">
             <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_NAME, 'action=update_sort_order&lng_id=' . $_GET['lng_id']); ?>
                 <table class="table table-condensed table-striped">
-                    <thead>
+                    <thead class="table-dark">
           <tr class="dataTableHeadingRow">
                 <?php
                 if ($_GET['lng_id'] != $_SESSION['languages_id']) {
@@ -153,6 +154,7 @@ if ($_GET['action'] == "update_sort_order") {
                 </td>
             </tr>
         </table>
+          </div>
         <!-- body_text_eof //-->
         <!-- body_eof //-->
       </div>

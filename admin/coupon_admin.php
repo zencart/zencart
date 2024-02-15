@@ -356,8 +356,9 @@ switch ($_GET['action']) {
           case 'voucherreport':
             ?>
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+                <div class="table-responsive">
               <table class="table table-striped table-hover">
-                <thead>
+                <thead class="table-dark">
                   <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent"><?php echo CUSTOMER_ID; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo CUSTOMER_NAME; ?></th>
@@ -410,15 +411,18 @@ switch ($_GET['action']) {
                   <?php } ?>
                 </tbody>
               </table>
+                </div>
+                <div class="table-responsive">
               <table class="table">
                 <tr>
                   <td><?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $_GET['reports_page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?></td>
                   <td class="text-right"><?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['reports_page'], 'action=voucherreport&cid=' . $cInfo->coupon_id, 'reports_page'); ?></td>
                 </tr>
                 <tr>
-                  <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']) . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></td>
+                  <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']) . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a></td>
                 </tr>
               </table>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
               <?php
@@ -447,8 +451,9 @@ switch ($_GET['action']) {
           case 'voucherreportduplicates':
             ?>
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+                <div class="table-responsive">
               <table class="table table-hover table-striped">
-                <thead>
+                <thead class="table-dark">
                   <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent"><?php echo CUSTOMER_ID; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo CUSTOMER_NAME; ?></th>
@@ -506,15 +511,18 @@ switch ($_GET['action']) {
                   <?php } ?>
                 </tbody>
               </table>
+                </div>
+                <div class="table-responsive">
               <table class="table">
                 <tr>
                   <td><?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $_GET['reports_page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?></td>
                   <td class="text-right"><?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['reports_page'], 'action=voucherreport&cid=' . $cInfo->coupon_id, 'reports_page'); ?></td>
                 </tr>
                 <tr>
-                  <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $cc_previous_cid . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></td>
+                  <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $cc_previous_cid . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a></td>
                 </tr>
               </table>
+                </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
               <?php
@@ -549,6 +557,7 @@ switch ($_GET['action']) {
             $mail_sent_to = $audience_select['query_name'];
             echo zen_draw_form('mail', FILENAME_COUPON_ADMIN, 'action=send_email_to_user&cid=' . $_GET['cid']);
             ?>
+          <div class="table-responsive">
             <table class="table">
               <tr>
                 <td class="text-right col-sm-3"><b><?php echo TEXT_CUSTOMER; ?></b></td>
@@ -588,10 +597,11 @@ switch ($_GET['action']) {
                   ?>
                 </td>
                 <td>
-                  <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                  <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
               </tr>
             </table>
+          </div>
             <?php echo '</form>'; ?>
             <?php
             break;
@@ -603,46 +613,46 @@ switch ($_GET['action']) {
                                            WHERE c.coupon_id = " . (int)$_GET['cid']);
             echo zen_draw_form('mail', FILENAME_COUPON_ADMIN, 'action=preview_email&cid=' . (int)$_GET['cid'], 'post', 'class="form-horizontal"');
             ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_COUPON, 'coupon_name', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_COUPON, 'coupon_name', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('coupon_name', $coupon_result->fields['coupon_name'], 'class="form-control" id="coupon_name" readonly'); ?></div>
             </div>
             <?php $customers = get_audiences_list('email'); ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? $_GET['customer'] : ''), 'class="form-control" id="customers_email_address"', true); ?></div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('from', EMAIL_FROM, 'size="50" class="form-control" id="from"'); ?></div>
             </div>
             <?php
             /*
-              <div class="form-group">
-              <?php echo zen_draw_label(TEXT_RESTRICT, 'customers_restrict', 'class="control-label col-sm-3"'); ?>
+              <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_RESTRICT, 'customers_restrict', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6"><?php echo zen_draw_checkbox_field('customers_restrict', $customers_restrict, 'class="form-control" id="customers_restrict"');?></div>
               </div>
              */
             ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_input_field('subject', '', 'size="50" class="form-control" id="subject"', true); ?>
               </div>
             </div>
             <?php if (EMAIL_USE_HTML == 'true') { ?>
-              <div class="form-group">
-                <?php echo zen_draw_label(TEXT_RICH_TEXT_MESSAGE, 'message_html', 'class="control-label col-sm-3"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_RICH_TEXT_MESSAGE, 'message_html', 'class="form-label col-sm-3"'); ?>
                 <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('message_html', 'soft', '', '25', htmlspecialchars(empty($_POST['message_html']) ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control" id="message_html"'); ?></div>
               </div>
             <?php } ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('message', 'soft', '60', '15', htmlspecialchars(strip_tags((!isset($_POST['message_html']) || $_POST['message_html'] == '') ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html'])), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="message"'); ?></div>
             </div>
-            <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+            <div class="form-group row mb-3">
+              <div class="offset-sm-3 col-sm-9 col-md-6">
+                <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo TEXT_CANCEL; ?></a>
               </div>
             </div>
             <?php echo '</form>'; ?>
@@ -651,6 +661,7 @@ switch ($_GET['action']) {
           case 'update_preview':
             echo zen_draw_form('coupon', FILENAME_COUPON_ADMIN, 'action=update_confirm&oldaction=' . $_GET['oldaction'] . '&cid=' . $_GET['cid'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''));
             ?>
+          <div class="table-responsive">
             <table class="table">
               <tr>
                 <td class="main col-sm-3"><?php echo COUPON_ZONE_RESTRICTION; ?></td>
@@ -756,11 +767,12 @@ switch ($_GET['action']) {
               ?>
               <tr>
                 <td class="text-right">
-                  <button type="submit" class="btn btn-primary"><?php echo COUPON_BUTTON_CONFIRM; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                  <button type="submit" class="btn btn-primary"><?php echo COUPON_BUTTON_CONFIRM; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
                 <td></td>
               </tr>
             </table>
+          </div>
             <?php echo '</form>'; ?>
             <?php
             break;
@@ -809,20 +821,20 @@ switch ($_GET['action']) {
             }
             echo zen_draw_form('coupon', FILENAME_COUPON_ADMIN, 'action=update&oldaction=' . $_GET['action'] . '&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"');
             ?>
-            <div class="form-group">
-          <?php echo zen_draw_label(COUPON_NAME, 'coupon_name[' . $languages[0]['id'] . ']', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+          <?php echo zen_draw_label(COUPON_NAME, 'coupon_name[' . $languages[0]['id'] . ']', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
                   $language_id = $languages[$i]['id'];
                   ?>
                   <div class="input-group">
-                    <span class="input-group-addon">
+                    <span class="input-group-text">
                       <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
                     </span>
                     <?php echo zen_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', (!empty($coupon_name[$language_id]) ? htmlspecialchars(stripslashes($coupon_name[$language_id]), ENT_COMPAT, CHARSET, TRUE) : ''), zen_set_field_length(TABLE_COUPONS_DESCRIPTION, 'coupon_name') . ' id="coupon_name[' . $languages[$i]['id'] . ']" class="form-control"'); ?>
                     <?php if ($i == 0) { ?>
-                      <span class="input-group-addon">
+                      <span class="input-group-text">
                         <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_NAME_HELP; ?>"></i>
                       </span>
                     <?php } ?>
@@ -831,20 +843,20 @@ switch ($_GET['action']) {
                 <?php } ?>
               </div>
             </div>
-            <div class="form-group">
-            <?php echo zen_draw_label(COUPON_DESC, 'coupon_desc[' . $languages[0]['id'] . ']', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+            <?php echo zen_draw_label(COUPON_DESC, 'coupon_desc[' . $languages[0]['id'] . ']', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <?php
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
                   $language_id = $languages[$i]['id'];
                   ?>
                   <div class="input-group">
-                    <span class="input-group-addon">
+                    <span class="input-group-text">
                       <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
                     </span>
                     <?php echo zen_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']', 'hard', '24', '8', (!empty($coupon_desc[$language_id]) ? htmlspecialchars(stripslashes($coupon_desc[$language_id]), ENT_COMPAT, CHARSET, TRUE) : ''), 'id="coupon_desc[' . $languages[$i]['id'] . ']" class="editorHook form-control"'); ?>
                     <?php if ($i == 0) { ?>
-                      <span class="input-group-addon">
+                      <span class="input-group-text">
                         <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_DESC_HELP; ?>"></i>
                       </span>
                     <?php } ?>
@@ -853,34 +865,34 @@ switch ($_GET['action']) {
                 <?php } ?>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_AMOUNT, 'coupon_amount', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_AMOUNT, 'coupon_amount', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group">
                   <?php echo zen_draw_input_field('coupon_amount', (!empty($coupon_amount) ? $coupon_amount : 0), 'class="form-control" id="coupon_amount"'); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_AMOUNT_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
-              <div class="col-sm-offset-3 col-sm-9 col-md-6">
+              <div class="offset-sm-3 col-sm-9 col-md-6">
                 <label class="radio-inline"><?php echo zen_draw_radio_field('coupon_product_count', '0', (empty($coupon_product_count))) . TEXT_COUPON_PRODUCT_COUNT_PER_ORDER; ?></label>
                 <label class="radio-inline"><?php echo zen_draw_radio_field('coupon_product_count', '1', (!empty($coupon_product_count))) . TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT; ?></label>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_MIN_ORDER, 'coupon_min_order', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_MIN_ORDER, 'coupon_min_order', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group">
                   <?php echo zen_draw_input_field('coupon_min_order', (!empty($coupon_min_order) ? $coupon_min_order : 0), 'class="form-control" id="coupon_min_order"'); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_MIN_ORDER_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <p class="control-label col-sm-3"><?php echo COUPON_TOTAL; ?></p>
+            <div class="form-group row mb-3">
+              <p class="form-label col-sm-3"><?php echo COUPON_TOTAL; ?></p>
               <div class="col-sm-9 col-md-6">
                 <div class="radio">
                   <label><?php echo zen_draw_radio_field('coupon_calc_base', '0', (empty($coupon_calc_base))) . TEXT_COUPON_TOTAL_PRODUCTS . TEXT_COUPON_TOTAL_PRODUCTS_BASED; ?></label>
@@ -889,15 +901,15 @@ switch ($_GET['action']) {
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_FREE_SHIP, 'coupon_free_ship', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_FREE_SHIP, 'coupon_free_ship', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <label><?php echo zen_draw_checkbox_field('coupon_free_ship', '', (!empty($coupon_free_ship)), '', 'id="coupon_free_ship"'); ?></label>
                 <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FREE_SHIP_HELP; ?>"></i>
               </div>
             </div>
-            <div class="form-group">
-              <p class="control-label col-sm-3"><?php echo COUPON_IS_VALID_FOR_SALES; ?></p>
+            <div class="form-group row mb-3">
+              <p class="form-label col-sm-3"><?php echo COUPON_IS_VALID_FOR_SALES; ?></p>
               <div class="col-sm-9 col-md-6">
                 <div class="radio">
                   <label><?php echo zen_draw_radio_field('coupon_is_valid_for_sales', '1', (!empty($coupon_is_valid_for_sales))) . TEXT_COUPON_IS_VALID_FOR_SALES; ?></label>
@@ -906,31 +918,31 @@ switch ($_GET['action']) {
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_CODE, 'coupon_code', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_CODE, 'coupon_code', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_code', (!empty($coupon_code) ? htmlspecialchars($coupon_code, ENT_COMPAT, CHARSET, TRUE) : ''), 'class="form-control" id="coupon_code"'); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_CODE_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_USES_COUPON, 'coupon_uses_coupon', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_USES_COUPON, 'coupon_uses_coupon', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_uses_coupon', (!empty($coupon_uses_coupon) && $coupon_uses_coupon >= 1 ? $coupon_uses_coupon : ''), 'class="form-control" id="coupon_uses_coupon"'); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_USES_COUPON_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_USES_USER, 'coupon_uses_user', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_USES_USER, 'coupon_uses_user', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_uses_user', (!empty($coupon_uses_user) && $coupon_uses_user >= 1 ? $coupon_uses_user : ''), 'class="form-control" id="coupon_uses_user"'); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_USES_USER_HELP; ?>"></i>
                   </span>
                 </div>
@@ -959,48 +971,48 @@ switch ($_GET['action']) {
               $coupon_finishdate = preg_split("/[-]/", $coupon_finishdate);
             }
             ?>
-            <div class="form-group">
-              <p class="control-label col-sm-3"><?php echo COUPON_STARTDATE; ?></p>
+            <div class="form-group row mb-3">
+              <p class="form-label col-sm-3"><?php echo COUPON_STARTDATE; ?></p>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_date_selector('coupon_startdate', mktime(0, 0, 0, $coupon_startdate[1], (int)$coupon_startdate[2], $coupon_startdate[0])); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_STARTDATE_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <p class="control-label col-sm-3"><?php echo COUPON_FINISHDATE; ?></p>
+            <div class="form-group row mb-3">
+              <p class="form-label col-sm-3"><?php echo COUPON_FINISHDATE; ?></p>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_date_selector('coupon_finishdate', mktime(0, 0, 0, $coupon_finishdate[1], (int)$coupon_finishdate[2], $coupon_finishdate[0])); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_FINISHDATE_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_ZONE_RESTRICTION, 'coupon_zone_restriction', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_ZONE_RESTRICTION, 'coupon_zone_restriction', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_geo_zones_pull_down_coupon('name="coupon_zone_restriction" class="form-control" id="coupon_zone_restriction"', (!empty($coupon_zone_restriction) ? $coupon_zone_restriction : 0)); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo TEXT_COUPON_ZONE_RESTRICTION; ?>"></i>
                   </span>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <?php echo zen_draw_label(COUPON_ORDER_LIMIT, 'coupon_order_limit', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(COUPON_ORDER_LIMIT, 'coupon_order_limit', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_order_limit', (!empty($coupon_order_limit) && $coupon_order_limit >= 1 ? $coupon_order_limit : ''), 'class="form-control" id="coupon_order_limit"'); ?>
-                  <span class="input-group-addon">
+                  <span class="input-group-text">
                     <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_ORDER_LIMIT_HELP; ?>"></i>
                   </span>
                 </div>
               </div>
             </div>
-            <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-9 col-md-6"><button type="submit" class="btn btn-primary"><?php echo COUPON_BUTTON_PREVIEW; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+            <div class="form-group row mb-3">
+              <div class="offset-sm-3 col-sm-9 col-md-6"><button type="submit" class="btn btn-primary"><?php echo COUPON_BUTTON_PREVIEW; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
               </div>
             </div>
             <?php echo '</form>'; ?>
@@ -1029,8 +1041,8 @@ switch ($_GET['action']) {
 
               echo zen_draw_form('statusForm', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"');
               ?>
-              <div class="form-group">
-                <?php echo zen_draw_label(HEADING_TITLE_STATUS, 'status', 'class="control-label col-sm-3"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(HEADING_TITLE_STATUS, 'status', 'class="form-label col-sm-3"'); ?>
                 <div class="col-sm-9">
                   <?php echo zen_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();" class="form-control" id="status"'); ?>
                 </div>
@@ -1042,8 +1054,8 @@ switch ($_GET['action']) {
             </div>
             <div class="col-sm-4">
               <?php echo zen_draw_form('set_editor_form', FILENAME_COUPON_ADMIN, '', 'get', 'class="form-horizontal"'); ?>
-              <div class="form-group">
-                <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="control-label col-sm-3"'); ?>
+              <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="form-label col-sm-3"'); ?>
                 <div class="col-sm-9">
                   <?php echo zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();" class="form-control" id="reset_editor"'); ?>
                 </div>
@@ -1058,8 +1070,9 @@ switch ($_GET['action']) {
             <?php require DIR_WS_MODULES . 'search_box.php'; ?>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+                <div class="table-responsive">
               <table class="table table-hover table-striped">
-                <thead>
+                <thead class="table-dark">
                   <tr class="dataTableHeadingRow">
                     <th class="dataTableHeadingContent"><?php echo COUPON_NAME; ?></th>
                     <th class="dataTableHeadingContent text-center"><?php echo COUPON_AMOUNT; ?></th>
@@ -1163,6 +1176,8 @@ switch ($_GET['action']) {
                   <?php } ?>
                 </tbody>
               </table>
+                </div>
+                <div class="table-responsive">
               <table class="table">
                 <tr>
                   <td><?php echo $cc_split->display_count($cc_query_numrows, $maxDisplaySearchResults, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?></td>
@@ -1172,6 +1187,7 @@ switch ($_GET['action']) {
                   <td class="text-right" colspan="2"><a id="couponInsert" href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (int)$cInfo->coupon_id . '&action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_INSERT; ?></a></td>
                 </tr>
               </table>
+                </div>
             </div>
             <?php
             $heading = [];
@@ -1183,30 +1199,30 @@ switch ($_GET['action']) {
               case 'voucherdelete':
                 $heading[] = array('text' => '<h4>[' . $cInfo->coupon_id . ']  ' . $cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : '') . '</h4>');
                 $contents[] = array('text' => TEXT_CONFIRM_DELETE);
-                $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'action=confirmdelete&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-danger" role="button">' . TEXT_DISCOUNT_COUPON_CONFIRM_DELETE . '</a>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+                $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'action=confirmdelete&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-danger" role="button">' . TEXT_DISCOUNT_COUPON_CONFIRM_DELETE . '</a>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'
                 );
                 break;
               case 'voucherreactivate':
                 $heading[] = array('text' => '<h4>[' . $cInfo->coupon_id . ']  ' . $cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : '') . '</h4>');
                 $contents[] = array('text' => TEXT_CONFIRM_REACTIVATE);
-                $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'action=confirmreactivate&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-primary" role="button">' . TEXT_DISCOUNT_COUPON_CONFIRM_RESTORE . '</a>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+                $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'action=confirmreactivate&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-primary" role="button">' . TEXT_DISCOUNT_COUPON_CONFIRM_RESTORE . '</a>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'
                 );
                 break;
               case 'vouchercopy':
                 $heading[] = array('text' => '<h4>[' . $cInfo->coupon_id . ']  ' . $cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : '') . '</h4>');
                 $contents = array('form' => zen_draw_form('new_coupon', FILENAME_COUPON_ADMIN, 'action=confirmcopy' . '&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_NEW, 'coupon_copy_to', 'class="control-label"') . zen_draw_input_field('coupon_copy_to', '', 'class="form-control" id="coupon_copy_to"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_NEW, 'coupon_copy_to', 'class="form-label"') . zen_draw_input_field('coupon_copy_to', '', 'class="form-control" id="coupon_copy_to"'));
                 $contents[] = array('text' => TEXT_CONFIRM_COPY);
-                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'voucherduplicate':
                 $heading[] = array('text' => '<h4>[' . $cInfo->coupon_id . ']  ' . $cInfo->coupon_code . ($cInfo->coupon_id == '' ? ' - (' . (!empty($_GET['cid']) ? $_GET['cid'] : 0) . ')' : '') . '</h4>');
                 $contents = array('form' => zen_draw_form('duplicate_coupon', FILENAME_COUPON_ADMIN, 'action=confirmcopyduplicate' . '&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_COUPON_COPY_INFO);
-                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_COPY_DUPLICATE, 'coupon_copy_to_dup_name', 'class="control-label"') . zen_draw_input_field('coupon_copy_to_dup_name', $cInfo->coupon_code, 'class="form-control" id="coupon_copy_to_dup_name"'));
-                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_COPY_DUPLICATE_CNT, 'coupon_copy_to_count', 'class="control-label"') . zen_draw_input_field('coupon_copy_to_count', '', 'class="form-control" id="coupon_copy_to_count"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_COPY_DUPLICATE, 'coupon_copy_to_dup_name', 'class="form-label"') . zen_draw_input_field('coupon_copy_to_dup_name', $cInfo->coupon_code, 'class="form-control" id="coupon_copy_to_dup_name"'));
+                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_COPY_DUPLICATE_CNT, 'coupon_copy_to_count', 'class="form-label"') . zen_draw_input_field('coupon_copy_to_count', '', 'class="form-control" id="coupon_copy_to_count"'));
                 $contents[] = array('text' => TEXT_CONFIRM_COPY);
-                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'voucherduplicatedelete':
                 $chk_duplicate_delete = $db->Execute("SELECT *
@@ -1216,8 +1232,8 @@ switch ($_GET['action']) {
                 $contents = array('form' => zen_draw_form('duplicate_coupon_delete', FILENAME_COUPON_ADMIN, 'action=confirmdeleteduplicate' . '&cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"'));
 
                 $contents[] = array('text' => sprintf(TEXT_CONFIRM_DELETE_DUPLICATE, $chk_duplicate_delete->fields['coupon_code'], $chk_duplicate_delete->fields['coupon_code']));
-                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_DELETE_DUPLICATE, 'coupon_delete_duplicate_code', 'class="control-label"') . zen_draw_input_field('coupon_delete_duplicate_code', $chk_duplicate_delete->fields['coupon_code'], 'class="form-control" id="coupon_copy_to_count"'));
-                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . TEXT_DISCOUNT_COUPON_CONFIRM_DELETE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('text' => zen_draw_label(TEXT_COUPON_DELETE_DUPLICATE, 'coupon_delete_duplicate_code', 'class="form-label"') . zen_draw_input_field('coupon_delete_duplicate_code', $chk_duplicate_delete->fields['coupon_code'], 'class="form-control" id="coupon_copy_to_count"'));
+                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . TEXT_DISCOUNT_COUPON_CONFIRM_DELETE . '</button>&nbsp;<a href="' . zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $cInfo->coupon_id . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if ($cc_list->RecordCount() > 0) {

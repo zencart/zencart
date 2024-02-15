@@ -136,7 +136,7 @@ if (!$lng_exists) {
             <?php
 // toggle switch for editor
             echo zen_draw_form('set_editor_form', FILENAME_DEFINE_PAGES_EDITOR, '', 'get', 'class="form-horizontal"');
-            echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="control-label"');
+            echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="form-label"');
             echo zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();" class="form-control"');
             echo zen_draw_hidden_field('action', 'set_editor');
             echo zen_hide_session_id();
@@ -172,11 +172,11 @@ if (!$lng_exists) {
                   <?php
                   if ($file_writeable) {
                     ?>
-                  <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button> <a href="<?php echo zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'define_it=' . $_GET['define_it'] . '&action=new_page'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_RESET; ?></a> <a href="<?php echo zen_href_link(FILENAME_DEFINE_PAGES_EDITOR . '.php'); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
+                  <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button> <a href="<?php echo zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'define_it=' . $_GET['define_it'] . '&action=new_page'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_RESET; ?></a> <a href="<?php echo zen_href_link(FILENAME_DEFINE_PAGES_EDITOR . '.php'); ?>" class="btn btn-secondary"><?php echo IMAGE_CANCEL; ?></a>
                   <?php
                 } else {
                   ?>
-                  <a href="<?php echo zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+                  <a href="<?php echo zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
                   <?php
                 }
                 ?>
@@ -189,13 +189,14 @@ if (!$lng_exists) {
             ?>
             <div class="row"><strong><?php echo sprintf(TEXT_FILE_DOES_NOT_EXIST, $file); ?></strong></div>
             <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-            <div class="row"><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a></div>
+            <div class="row"><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a></div>
             <?php
           }
         } else {
           $filename = $_SESSION['language'] . '.php';
           ?>
           <div class="row">
+              <div class="table-responsive">
             <table class="table">
               <tr>
                 <td><a href="<?php echo zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $filename); ?>"><strong><?php echo $filename; ?></strong></a></td>
@@ -218,6 +219,7 @@ if (!$lng_exists) {
                       ?>
               </tr>
             </table>
+              </div>
           </div>
           <?php
         }

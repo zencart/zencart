@@ -15,12 +15,12 @@
   text-decoration: none;
   background-color: #f5f5f5;
 }
-.read-only-attr {background-color: #ff0;}
-.is-free-attr {background-color: #2c54f5;}
-.default-attr {background-color: #ffa346;}
-.is-discounted-attr {background-color: #f0f;}
-.base-included-attr {background-color: #d200f0;}
-.required-attr {background-color: #ff0606;}
+.read-only-attr {background-color: #ff0 !important;}
+.is-free-attr {background-color: #2c54f5 !important;}
+.default-attr {background-color: #ffa346 !important;}
+.is-discounted-attr {background-color: #f0f !important;}
+.base-included-attr {background-color: #d200f0 !important;}
+.required-attr {background-color: #ff0606 !important;}
 .read-only-attr-txt {color: #ff0;}
 .is-free-attr-txt {color: #2c54f5;}
 .default-attr-txt {color: #ffa346;}

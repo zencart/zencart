@@ -142,13 +142,13 @@ if (!empty($action)) {
 
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
       <div class="row">
-        <div class="col-sm-offset-6 col-sm-6">
+        <div class="offset-sm-6 col-sm-6">
             <?php if ($action == 'new') { ?>
             <!-- // toggle switch for editor -->
             <?php echo zen_draw_form('set_editor_form', FILENAME_NEWSLETTERS, '', 'get', 'class="form-horizontal"'); ?>
             <?php echo zen_hide_session_id(); ?>
             <?php echo zen_draw_hidden_field('action', 'set_editor'); ?>
-            <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="control-label col-sm-6"'); ?>
+            <?php echo zen_draw_label(TEXT_EDITOR_INFO, 'reset_editor', 'class="form-label col-sm-6"'); ?>
             <div class="col-sm-6">
                 <?php echo zen_draw_pull_down_menu('reset_editor', $editors_pulldown, $current_editor_key, 'onChange="this.form.submit();" class="form-control"'); ?>
             </div>
@@ -198,32 +198,32 @@ if (!empty($action)) {
           echo zen_draw_hidden_field('newsletter_id', $nID);
         }
         ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWSLETTER_MODULE, 'modules', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_NEWSLETTER_MODULE, 'modules', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_pull_down_menu('module', $modules_array, $nInfo->module, 'class="form-control"'); ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWSLETTER_TITLE, 'title', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_NEWSLETTER_TITLE, 'title', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('title', htmlspecialchars($nInfo->title, ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"', true); ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWSLETTER_CONTENT_HTML, 'message_html', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_NEWSLETTER_CONTENT_HTML, 'message_html', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_textarea_field('message_html', 'soft', '', '30', htmlspecialchars($nInfo->content_html, ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"'); ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_NEWSLETTER_CONTENT, 'content', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_NEWSLETTER_CONTENT, 'content', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_textarea_field('content', 'soft', '', '20', htmlspecialchars($nInfo->content, ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?>
           </div>
         </div>
         <div class="main row text-right">
-          <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_SAVE : IMAGE_UPDATE); ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['nID']) ? 'nID=' . $_GET['nID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+          <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'insert') ? IMAGE_SAVE : IMAGE_UPDATE); ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['nID']) ? 'nID=' . $_GET['nID'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
       } elseif ($action == 'preview') {
@@ -236,20 +236,20 @@ if (!empty($action)) {
         $nInfo = new objectInfo($newsletter->fields);
         ?>
         <div class="row text-right">
-          <a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
         </div>
         <div class="row"><?php echo zen_draw_separator(); ?></div>
         <div class="row">
-          <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT_HTML), '', 'class="control-label"'); ?></div>
+          <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT_HTML), '', 'class="form-label"'); ?></div>
           <div class="col-sm-9 col-md-6"><?php echo nl2br($nInfo->content_html); ?></div>
         </div>
         <div class="row">
-          <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT), '', 'class="control-label"'); ?></div>
+          <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT), '', 'class="form-label"'); ?></div>
           <div class="col-sm-9 col-md-6 tt"><?php echo nl2br($nInfo->content); ?></div>
         </div>
         <div class="row"><?php echo zen_draw_separator(); ?></div>
         <div class="row text-right">
-          <a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
         </div>
         <?php
       } elseif ($action == 'send') {
@@ -321,15 +321,16 @@ if (!empty($action)) {
           <span class="text-danger"><?php echo sprintf(TEXT_AFTER_EMAIL_INSTRUCTIONS, $i); ?></span>
         </div>
         <div class="row text-center">
-          <a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
         </div>
         <?php
       } else {
         ?>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-striped table-hover">
-              <thead>
+              <div class="table-responsive">
+              <table class="table table-striped table-hover">
+              <thead class="table-dark">
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_NEWSLETTERS; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_SIZE; ?></th>
@@ -379,6 +380,7 @@ if (!empty($action)) {
                   <?php } ?>
               </tbody>
             </table>
+              </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
               <?php
@@ -392,7 +394,7 @@ if (!empty($action)) {
                   $contents = array('form' => zen_draw_form('newsletters', FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('nID', $nInfo->newsletters_id));
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                   $contents[] = array('text' => '<br><strong>' . $nInfo->title . '</strong>');
-                  $contents[] = array('align' => 'center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                   break;
                 default:
                   if (!empty($nInfo) && is_object($nInfo)) {
@@ -416,7 +418,8 @@ if (!empty($action)) {
           </div>
         </div>
         <div class="row">
-          <table class="table">
+            <div class="table-responsive">
+            <table class="table">
             <tr>
               <td><?php echo $newsletters_split->display_count($newsletters_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS); ?></td>
               <td class="text-right"><?php echo $newsletters_split->display_links($newsletters_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
@@ -425,6 +428,7 @@ if (!empty($action)) {
               <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_NEWSLETTER; ?></a></td>
             </tr>
           </table>
+            </div>
         </div>
         <?php
       }

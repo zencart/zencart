@@ -24,8 +24,9 @@ $currencies = new currencies();
       <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover table-striped">
-              <thead>
+              <div class="table-responsive">
+              <table class="table table-hover table-striped">
+              <thead class="table-dark">
                 <tr>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_SENDERS_NAME; ?></th>
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_VOUCHER_VALUE; ?></th>
@@ -74,12 +75,15 @@ $currencies = new currencies();
                 <?php } ?>
               </tbody>
             </table>
+              </div>
+              <div class="table-responsive">
             <table class="table">
               <tr>
                 <td><?php echo $gv_split->display_count($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
                 <td class="text-right"><?php echo $gv_split->display_links($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
               </tr>
             </table>
+              </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php

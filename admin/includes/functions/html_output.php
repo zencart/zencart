@@ -178,9 +178,9 @@ $iconMap = [
   'circle-info' => 'fa-circle-info txt-black',
   'edit' => 'fa-pencil text-success',
   'popup' => 'fa-up-right-from-square txt-black',
-  'enabled' => 'fa-square txt-status-on',
+  'enabled' => 'fa-check-square txt-status-on',
   'linked' => 'fa-square txt-linked',
-  'disabled' => 'fa-square txt-status-off',
+  'disabled' => 'fa-times-square txt-status-off',
   'new-window' => 'fa-square txt-orange',
   'new-window-off' => [
     'fa-square fa-stack-2x opacity-25 txt-orange',
@@ -393,7 +393,7 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 
   $field .= '>' . PHP_EOL;
   if ($required) {
-    $field .= '<span class="input-group-addon alert-danger">' . '*' . '</span>' . PHP_EOL;
+    $field .= '<span class="input-group-text alert-danger">' . '*' . '</span>' . PHP_EOL;
     $field .= '</div>' . PHP_EOL;
   }
   return $field;
@@ -435,7 +435,11 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
       $selection .= ' checked="checked"';
     }
 
-    if (!empty($parameters)) $selection .= ' ' . $parameters;
+    if (!empty($parameters)) {
+        // add form-check-input to parameters
+        $parameters = preg_replace('/class="([^"]*)"/', 'class="$1 form-check-input"', $parameters);
+        $selection .= ' ' . $parameters;
+    }
 
     $selection .= '>';
 
@@ -511,6 +515,8 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   $field .= '<select name="' . zen_output_string($name) . '"';
 
   if (!empty($parameters)) {
+  // add form-select to parameters
+    $parameters = preg_replace('/class="([^"]*)"/', 'class="$1 form-select"', $parameters);
     $field .= ' ' . $parameters;
   }
 
@@ -534,7 +540,7 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   }
   $field .= '</select>' . "\n";
   if ($required) {
-    $field .= '<span class="input-group-addon alert-danger">' . '*' . '</span>' . PHP_EOL;
+    $field .= '<span class="input-group-text alert-danger">' . '*' . '</span>' . PHP_EOL;
     $field .= '</div>' . PHP_EOL;
   }
 
@@ -638,20 +644,20 @@ function zen_draw_date_selector($fieldname_prefix, $default_date='') {
         }
         $html = '
         <div class="row">
-            <div class="col-sm-offset-2 col-sm-4">' . $form . '
-                <div class="form-group">' .
-            zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'keywords', 'class="control-label col-sm-3"') . '
+            <div class="offset-sm-2 col-sm-4">' . $form . '
+                <div class="form-group row mb-3">' .
+            zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'keywords', 'class="form-label col-sm-3"') . '
                          <div class="col-sm-9">' .
             zen_draw_input_field('keywords', ($_POST['keywords'] ?? ''), 'class="form-control" id="keywords"') . '
                          </div>
                 </div>' . zen_hide_session_id();
         if (!empty($keywords_products)) {
-            $html .= '<div class="form-group">
+            $html .= '<div class="form-group row mb-3">
                       <div class="col-sm-3">
-                          <p class="control-label">' . TEXT_INFO_SEARCH_DETAIL_FILTER . '</p>
+                          <p class="form-label">' . TEXT_INFO_SEARCH_DETAIL_FILTER . '</p>
                       </div>
                       <div class="col-sm-9 text-right">' .
-                zen_output_string_protected($keywords_products) . ' <a href="' . zen_href_link($filename, $fullAction) . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>
+                zen_output_string_protected($keywords_products) . ' <a href="' . zen_href_link($filename, $fullAction) . '" class="btn btn-secondary" role="button">' . IMAGE_RESET . '</a>
                       </div>
                   </div>';
         }

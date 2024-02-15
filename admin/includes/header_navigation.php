@@ -10,29 +10,36 @@ if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
 
 $menuTitles = zen_get_menu_titles();
 ?>
-<nav class="navbar navbar-default">
-  <!-- Brand and toggle get grouped for better mobile display -->
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-adm1-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar">&nbsp;</span>
-      <span class="icon-bar">&nbsp;</span>
-      <span class="icon-bar">&nbsp;</span>
-    </button>
-  </div>
-  <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse navbar-adm1-collapse">
-    <ul class="nav navbar-nav">
-          <?php foreach (zen_get_admin_menu_for_user() as $menuKey => $pages) { ?>
-            <li class="dropdown">
-              <a href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><?php echo $menuTitles[$menuKey] ?><b class="caret">&nbsp;</b></a>
-              <ul class="dropdown-menu">
-                <?php foreach ($pages as $page) { ?>
-                  <li><a href="<?php echo zen_href_link($page['file'], $page['params']) ?>"><?php echo $page['name'] ?></a></li>
+
+<div class="row">
+<nav class="navbar navbar-expand navbar-light bg-light">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-start" id="navbarSupportedContent">
+            <ul class="navbar-nav flex-wrap">
+                <?php foreach (zen_get_admin_menu_for_user() as $menuKey => $pages) { ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?php echo $menuTitles[$menuKey] ?>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <?php foreach ($pages as $page) { ?>
+                            <li><a class="dropdown-item" href="<?php echo zen_href_link($page['file'], $page['params']) ?>"><?php echo $page['name'] ?></a></li>
+                        <?php } ?>
+                    </ul>
+                </li>
                 <?php } ?>
-              </ul>
-            </li>
-          <?php } ?>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<nav class="navbar navbar-default d-sm-block d-md-none">
+    <ul class="nav nav-pills">
+
           <li class="upperMenuItems"><a href="<?php echo zen_href_link(FILENAME_DEFAULT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_TOP; ?></a></li>
           <li class="upperMenuItems"><a href="<?php echo zen_catalog_href_link(FILENAME_DEFAULT); ?>" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_ONLINE_CATALOG; ?></a></li>
           <li class="upperMenuItems"><a href="https://www.zen-cart.com/forum" class="headerLink" rel="noopener" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
@@ -40,12 +47,13 @@ $menuTitles = zen_get_menu_titles();
           <li class="upperMenuItems"><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_ACCOUNT; ?></a></li>
           <li class="upperMenuItems"><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'NONSSL'); ?>" class="headerLink"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
     </ul>
-  </div><!-- /.navbar-collapse -->
 </nav>
+</div>
 <?php if ($url = page_has_help()) { ?>
-<div class="pull-right noprint">
-  <a href="<?php echo $url; ?>" rel="noopener" target="_blank" class="btn btn-sm btn-default btn-help" role="button" title="Help">
+<div class="float-end noprint">
+  <a href="<?php echo $url; ?>" rel="noopener" target="_blank" class="btn btn-sm btn-secondary btn-help" role="button" title="Help">
     <i class="fa-regular fa-question fa-lg" aria-hidden="true"></i>
   </a>
 </div>
 <?php } ?>
+

@@ -14,7 +14,7 @@ use Zencart\Paginator\LaravelPaginator;
     <?php if ($filterManager->hasFilters()) { ?>
     <div class="row noprint">
         <div class="form-inline">
-            <div class="form-group col-xs-4 col-sm-3 col-md-3 col-lg-3">
+            <div class="form-group row mb-3 col-xs-4 col-sm-3 col-md-3 col-lg-3">
                 <form method="post" action="<?php echo zen_href_link($PHP_SELF); ?>">
                     <input type="hidden" name="securityToken" value="<?php echo $_SESSION['securityToken']; ?>">
                     <?php foreach ($filterManager->getFilters() as $filter) { ?>
@@ -29,7 +29,7 @@ use Zencart\Paginator\LaravelPaginator;
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
             <table class="table table-hover">
-                <thead>
+                <thead class="table-dark">
                 <tr class="dataTableHeadingRow">
                     <?php foreach ($formatter->getTableHeaders() as $colHeader) { ?>
                         <th class="<?php echo $colHeader['headerClass']; ?>"><?php echo $colHeader['title'];

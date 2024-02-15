@@ -117,43 +117,43 @@ if (!empty($action)) {
         ?>
         <div class="row">
           <?php echo zen_draw_form('update', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID'] . '&action=update', 'post', 'class="form-horizontal"'); ?>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <?php echo zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-3">
-              <p class="control-label"><?php echo ENTRY_PRODUCT; ?></p>
+              <p class="form-label"><?php echo ENTRY_PRODUCT; ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
               <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo $rInfo->products_name; ?></span>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-3">
-              <p class="control-label"><?php echo ENTRY_FROM; ?></p>
+              <p class="form-label"><?php echo ENTRY_FROM; ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
               <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo $rInfo->customers_name; ?></span>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-3">
-              <p class="control-label"><?php echo ENTRY_DATE; ?></p>
+              <p class="form-label"><?php echo ENTRY_DATE; ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
               <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo zen_date_short($rInfo->date_added); ?></span>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(ENTRY_REVIEW, 'reviews_text', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(ENTRY_REVIEW, 'reviews_text', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="reviews_text"'); ?>
               <span class="help-block"><?php echo ENTRY_REVIEW_TEXT; ?></span>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-3">
-              <p class="control-label"><?php echo ENTRY_RATING; ?></p>
+              <p class="form-label"><?php echo ENTRY_RATING; ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
               <?php echo TEXT_BAD; ?>
@@ -165,10 +165,10 @@ if (!empty($action)) {
               <?php echo TEXT_GOOD; ?>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-12 text-right">
               <?php echo zen_draw_hidden_field('reviews_id', $rInfo->reviews_id); ?>
-              <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID']); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+              <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID']); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
             </div>
           </div>
           <?php echo '</form>'; ?>
@@ -176,44 +176,44 @@ if (!empty($action)) {
       <?php } elseif ($action == 'preview') { ?>
         <div class="row">
           <div class="form-horizontal">
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <?php echo zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?>
             </div>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-sm-3">
-                <p class="control-label"><?php echo ENTRY_PRODUCT; ?></p>
+                <p class="form-label"><?php echo ENTRY_PRODUCT; ?></p>
               </div>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo $rInfo->products_name; ?></span>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-sm-3">
-                <p class="control-label"><?php echo ENTRY_FROM; ?></p>
+                <p class="form-label"><?php echo ENTRY_FROM; ?></p>
               </div>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo $rInfo->customers_name; ?></span>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-sm-3">
-                <p class="control-label"><?php echo ENTRY_DATE; ?></p>
+                <p class="form-label"><?php echo ENTRY_DATE; ?></p>
               </div>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo zen_date_short($rInfo->date_added); ?></span>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-sm-3">
-                <p class="control-label"><?php echo ENTRY_REVIEW; ?></p>
+                <p class="form-label"><?php echo ENTRY_REVIEW; ?></p>
               </div>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo nl2br(zen_output_string_protected(zen_break_string($rInfo->reviews_text, 15))); ?></span>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-sm-3">
-                <p class="control-label"><?php echo ENTRY_RATING; ?></p>
+                <p class="form-label"><?php echo ENTRY_RATING; ?></p>
               </div>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none" title="<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating) ?>">
@@ -230,9 +230,9 @@ if (!empty($action)) {
               $back_url_params = ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id;
             }
             ?>
-            <div class="form-group">
+            <div class="form-group row mb-3">
               <div class="col-sm-12 text-right">
-                <a href="<?php echo zen_href_link($back_url, $back_url_params, 'NONSSL'); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+                <a href="<?php echo zen_href_link($back_url, $back_url_params, 'NONSSL'); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
                 <a href="<?php echo zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_EDIT_REVIEW; ?></a>
               </div>
             </div>
@@ -240,10 +240,10 @@ if (!empty($action)) {
         </div>
       <?php } else { ?>
         <div class="row">
-          <div class="col-sm-offset-4 col-sm-4">
+          <div class="offset-sm-4 col-sm-4">
             <?php echo zen_draw_form('status_form', FILENAME_REVIEWS, '', 'get', 'class="form-horizontal"', true); ?>
-            <div class="form-group">
-              <?php echo zen_draw_label(HEADING_TITLE_STATUS, 'status', 'class="control-label col-sm-3"'); ?>
+            <div class="form-group row mb-3">
+              <?php echo zen_draw_label(HEADING_TITLE_STATUS, 'status', 'class="form-label col-sm-3"'); ?>
               <div class="col-sm-9">
                 <?php echo zen_draw_pull_down_menu('status', $status_list, $status_filter, 'onchange="this.form.submit();" class="form-control" id="status"'); ?>
               </div>
@@ -257,8 +257,9 @@ if (!empty($action)) {
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-            <table class="table table-hover">
-              <thead>
+              <div class="table-responsive">
+              <table class="table table-hover">
+              <thead class="table-dark">
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
@@ -353,12 +354,12 @@ if (!empty($action)) {
                       <?php echo zen_draw_form('setflag_products', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=setflag&rID=' . $review['reviews_id']); ?>
                       <?php if ($review['status'] === '1') { ?>
                         <button type="submit" class="btn btn-status">
-                          <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                          <i class="fa-solid fa-check-square fa-lg txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
                         </button>
                         <?php echo zen_draw_hidden_field('flag', '0'); ?>
                       <?php } else { ?>
                         <button type="submit" class="btn btn-status">
-                          <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                          <i class="fa-solid fa-times-square fa-lg txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
                         </button>
                         <?php echo zen_draw_hidden_field('flag', '1'); ?>
                       <?php } ?>
@@ -377,6 +378,7 @@ if (!empty($action)) {
                 <?php } ?>
               </tbody>
             </table>
+              </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
@@ -390,14 +392,14 @@ if (!empty($action)) {
                 $contents = array('form' => zen_draw_form('reviews', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'action=deleteconfirm') . zen_draw_hidden_field('rID', $rInfo->reviews_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_REVIEW_INTRO);
                 $contents[] = array('text' => '<b>' . $rInfo->products_name . '</b>');
-                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (isset($rInfo) && is_object($rInfo)) {
                   $heading[] = array('text' => '<h4>' . $rInfo->products_name . '</h4>');
 
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_EDIT_REVIEW . '</a> ' . '<a href="' . zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=delete') . '" class="btn btn-warning" role="button">' . TEXT_DELETE_REVIEW . '</a> ');
-                  $contents[] = array('align' => 'text-center', 'text' => '<a rel="noopener" target="_blank" href="' . zen_catalog_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $rInfo->products_id . '&reviews_id=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . TEXT_VIEW_REVIEW . '</a> ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id . '&action=new_product') . '" class="btn btn-default" role="button">' . TEXT_EDIT_PRODUCT . '</a>');
+                  $contents[] = array('align' => 'text-center', 'text' => '<a rel="noopener" target="_blank" href="' . zen_catalog_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $rInfo->products_id . '&reviews_id=' . $rInfo->reviews_id) . '" class="btn btn-secondary" role="button">' . TEXT_VIEW_REVIEW . '</a> ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id . '&action=new_product') . '" class="btn btn-secondary" role="button">' . TEXT_EDIT_PRODUCT . '</a>');
 
                   $contents[] = array('text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($rInfo->date_added));
                   if (zen_not_null($rInfo->last_modified)) {
@@ -423,12 +425,14 @@ if (!empty($action)) {
           </div>
         </div>
         <div class="row">
-          <table class="table">
+            <div class="table-responsive">
+            <table class="table">
             <tr>
               <td><?php echo $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></td>
               <td class="text-right"><?php echo $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'rID'))); ?></td>
             </tr>
           </table>
+            </div>
         </div>
       <?php } ?>
       <!-- body_text_eof //-->

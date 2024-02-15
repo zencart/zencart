@@ -286,8 +286,9 @@ if (!empty($action)) {
       <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover" role="listbox">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover" role="listbox">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_NAME; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_CODE; ?></th>
@@ -330,6 +331,7 @@ if (!empty($action)) {
             ?>
             </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
@@ -340,34 +342,34 @@ if (!empty($action)) {
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_LANGUAGE . '</h4>');
                 $contents = array('form' => zen_draw_form('languages', FILENAME_LANGUAGES, 'action=insert', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'name', 'class="control-label"') . zen_draw_input_field('name', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_CODE, 'code', 'class="control-label"') . zen_draw_input_field('code', '', 'maxlength="2" size="4" class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_IMAGE, 'image', 'class="control-label"') . zen_draw_input_field('image', 'icon.gif', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_DIRECTORY, 'directory', 'class="control-label"') . zen_draw_input_field('directory', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_SORT_ORDER, 'sort_order', 'class="control-label"') . zen_draw_input_field('sort_order', '', 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'name', 'class="form-label"') . zen_draw_input_field('name', '', 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_CODE, 'code', 'class="form-label"') . zen_draw_input_field('code', '', 'maxlength="2" size="4" class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_IMAGE, 'image', 'class="form-label"') . zen_draw_input_field('image', 'icon.gif', 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_DIRECTORY, 'directory', 'class="form-label"') . zen_draw_input_field('directory', '', 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_SORT_ORDER, 'sort_order', 'class="form-label"') . zen_draw_input_field('sort_order', '', 'class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_LANGUAGE . '</h4>');
                 $contents = array('form' => zen_draw_form('languages', FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'name', 'class="control-label"') . zen_draw_input_field('name', htmlspecialchars($lInfo->name, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_CODE, 'code', 'class="control-label"') . zen_draw_input_field('code', $lInfo->code, 'maxlength="2" size="4" class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_IMAGE, 'image', 'class="control-label"') . zen_draw_input_field('image', $lInfo->image, 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_DIRECTORY, 'directory', 'class="control-label"') . zen_draw_input_field('directory', $lInfo->directory, 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_SORT_ORDER, 'sort_order', 'class="control-label"') . zen_draw_input_field('sort_order', $lInfo->sort_order, 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'name', 'class="form-label"') . zen_draw_input_field('name', htmlspecialchars($lInfo->name, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_CODE, 'code', 'class="form-label"') . zen_draw_input_field('code', $lInfo->code, 'maxlength="2" size="4" class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_IMAGE, 'image', 'class="form-label"') . zen_draw_input_field('image', $lInfo->image, 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_DIRECTORY, 'directory', 'class="form-label"') . zen_draw_input_field('directory', $lInfo->directory, 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_LANGUAGE_SORT_ORDER, 'sort_order', 'class="form-label"') . zen_draw_input_field('sort_order', $lInfo->sort_order, 'class="form-control"'));
                 if (DEFAULT_LANGUAGE != $lInfo->code) {
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 }
-                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_LANGUAGE . '</h4>');
                 $contents = array('form' => zen_draw_form('delete', FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('lID', $lInfo->languages_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $lInfo->name . '</b>');
-                $contents[] = array('align' => 'text-center', 'text' => (($remove_language) ? '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>' : '') . ' <a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+                $contents[] = array('align' => 'text-center', 'text' => (($remove_language) ? '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>' : '') . ' <a href="' . zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
               default:
                 if (is_object($lInfo)) {
@@ -390,7 +392,8 @@ if (!empty($action)) {
         </div>
       </div>
       <div class="row">
-        <table class="table">
+          <div class="table-responsive">
+          <table class="table">
           <tr>
             <td><?php echo $languages_split->display_count($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></td>
             <td class="text-right"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
@@ -405,6 +408,7 @@ if (!empty($action)) {
           }
           ?>
         </table>
+          </div>
       </div>
       <!-- body_text_eof //-->
     </div>

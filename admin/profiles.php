@@ -112,8 +112,9 @@ switch ($action) {
 
         <h1><?php echo HEADING_TITLE_ALL_PROFILES ?></h1>
 
-        <table class="table table-striped">
-          <thead>
+        <div class="table-responsive">
+          <table class="table table-striped">
+          <thead class="table-dark">
             <tr>
               <th class="id"><?php echo TEXT_ID ?></th>
               <th class="name"><?php echo TEXT_NAME ?></th>
@@ -135,7 +136,7 @@ switch ($action) {
                     </td>
                     <td></td>
                     <td>
-                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button> <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                      <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button> <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
                       <?php echo '</form>'; ?>
                     </td>
                   <?php } else { ?>
@@ -153,7 +154,7 @@ switch ($action) {
                             echo TEXT_CONFIRM_DELETE;
                             ?>
                             <a href="<?php echo zen_href_link(FILENAME_PROFILES, 'action=delete_confirm&profile=' . $profileDetails['id']) ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                            <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                            <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
                             <?php
                           } else if ($action != 'delete') {
                             ?>
@@ -181,6 +182,7 @@ switch ($action) {
             </tfoot>
           <?php } ?>
         </table>
+        </div>
 
       <?php } elseif ($action == 'edit') { ?>
 
@@ -191,7 +193,7 @@ switch ($action) {
         <?php echo zen_draw_hidden_field('profile', $profile); ?>
         <div class="row formButtons">
           <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php foreach ($pagesByMenu as $menuKey => $pageList) { ?>
           <dl>
@@ -208,7 +210,7 @@ switch ($action) {
         <?php } ?>
         <div class="row formButtons">
           <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php echo '</form>'; ?>
 
@@ -224,7 +226,7 @@ switch ($action) {
         <?php echo zen_draw_hidden_field('action', 'insert'); ?>
         <div class="row formButtons">
           <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php foreach ($pagesByMenu as $menuKey => $pageList) { ?>
           <dl>
@@ -240,7 +242,7 @@ switch ($action) {
         <?php } ?>
         <div class="row formButtons">
           <button type="submit" class="btn btn-primary"><?php echo IMAGE_SAVE; ?></button>
-          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_PROFILES) ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php echo '</form>'; ?>
       <?php } ?>

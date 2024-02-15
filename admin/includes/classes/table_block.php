@@ -7,10 +7,10 @@
  * @version $Id: brittainmark 2022 Aug 22 Modified in v1.5.8-alpha2 $
  */
 class boxTableBlock {
-    protected 
+    protected
         $table_row_parameters,
         $table_data_parameters;
-     
+
 function tableBlock($contents) {
     $tableBox_string = '';
 
@@ -25,7 +25,7 @@ function tableBlock($contents) {
       if (isset($contents[$i][0]) && is_array($contents[$i][0])) {
         for ($x = 0, $y = sizeof($contents[$i]); $x < $y; $x++) {
           if (isset($contents[$i][$x]['text']) && zen_not_null($contents[$i][$x]['text'])) {
-            $tableBox_string .= '<div class="row';
+            $tableBox_string .= '<div class="';
             if (zen_not_null($this->table_row_parameters)) {
               $tableBox_string .= ' ' . $this->table_row_parameters;
             }
@@ -50,7 +50,7 @@ function tableBlock($contents) {
           }
         }
       } else {
-        $tableBox_string .= '<div class="row';
+        $tableBox_string .= '<div class="';
         if (isset($contents[$i]['align']) && zen_not_null($contents[$i]['align'])) {
           $tableBox_string .= ' ' . $contents[$i]['align'];
         }

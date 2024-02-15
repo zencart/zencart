@@ -306,6 +306,7 @@ $cr_list = $db->Execute($cr_query_raw);
 ?>
     <div class="row">
         <h4><?php echo HEADING_TITLE_CATEGORY; ?></h4>
+        <div class="table-responsive">
         <table class="table table-hover">
             <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_CATEGORY_ID; ?></td>
@@ -358,6 +359,7 @@ if ($cr_list->EOF) {
                 <td><button type="button" id="cat-add-submit"><?php echo TEXT_SUBMIT_CATEGORY_ADD; ?></button></td>
             </tr>
         </table>
+        </div>
     </div>
 <?php
 $ppage = (isset($_GET['ppage'])) ? (int)$_GET['ppage'] : 1;
@@ -369,6 +371,7 @@ $prArrayList = [];
 ?>
     <div class="row">
         <h4><?php echo HEADING_TITLE_PRODUCT; ?></h4>
+        <div class="table-responsive">
         <table class="table table-hover">
             <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_PRODUCT_ID; ?></td>
@@ -529,11 +532,12 @@ if (empty($products_array)) {
                 <td colspan="6"><?php echo TEXT_INFO_ADD_DENY_ALL; ?></td>
             </tr>
         </table>
+        </div>
     </div>
     <div class="row">
         <a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN,
             (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') .
-            'cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid'])); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+            'cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid'])); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_BACK; ?></a>
     </div>
 </div>
 <!-- body_eof //-->

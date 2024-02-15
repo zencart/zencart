@@ -854,7 +854,7 @@ if ($found == false) {
                   }
                 }
                 ?>
-                <?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'; ?>
+                <?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'; ?>
             </td>
           </tr>
           <tr class="infoBoxContent">
@@ -891,13 +891,13 @@ if ($found == false) {
         </div>
 
         <?php echo zen_draw_form('locate_configure', FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_configuration', 'post', 'class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'locConfig', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'locConfig', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('configuration_key', $q_const, ' id="locConfig" size="40" class="form-control" placeholder="' . TEXT_SEARCH_KEY_PLACEHOLDER . '"'); ?>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
             <?php
             $za_lookup = array(
               array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
@@ -909,15 +909,15 @@ if ($found == false) {
             );
 //                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
             ?>
-            <?php echo zen_draw_label(TEXT_LANGUAGE_LOOKUPS, 'zv_files_lc', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(TEXT_LANGUAGE_LOOKUPS, 'zv_files_lc', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_configuration' ? (int)$_POST['zv_files'] : '0'), 'id="zv_files_lc" class="form-control"'); ?>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12"><?php echo TEXT_INFO_CONFIGURATION_UPDATE; ?></div>
         </div>
-        <div class="form-group text-right">
+        <div class="form-group row mb-3 text-right">
           <div class="col-sm-12">
             <button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH_ALT; ?></button>
           </div>
@@ -930,11 +930,11 @@ if ($found == false) {
           <div class="col-sm-12"><?php echo SEARCH_CFG_KEYS_HEADING_TITLE; ?></div>
         </div>
         <?php echo zen_draw_form('search_keys', FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys' . $flags, 'post', 'class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(SEARCH_CFG_KEYS_SEARCH_BOX_TEXT, 'search', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(SEARCH_CFG_KEYS_SEARCH_BOX_TEXT, 'search', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('search', zen_output_string_protected($search), 'id="search" size="40" class="form-control" placeholder="' . SEARCH_CFG_KEYS_FORM_PLACEHOLDER . '"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12 text-right">
             <button type="submit" class="btn btn-primary"><?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_GROUP; ?></button>
             <input type="button" value="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY; ?>" onClick="document.search_keys.action = '<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=search_config_keys&s=k' . $flags) ?>'; document.search_keys.submit();" title="<?php echo SEARCH_CFG_KEYS_FORM_BUTTON_SEARCH_SORTED_BY_KEY; ?>" class="btn btn-primary">
@@ -955,7 +955,7 @@ if ($found == false) {
           ?>
           <div class="table-responsive">
             <table class="table">
-              <thead>
+              <thead class="table-dark">
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo SEARCH_CFG_KEYS_TABLE_SECTION; ?></th>
                   <th class="dataTableHeadingContent text-center"><?php echo SEARCH_CFG_KEYS_TABLE_GROUP; ?></th>
@@ -1016,11 +1016,11 @@ if ($found == false) {
           <div class="col-sm-12"><?php echo TEXT_FUNCTION_CONSTANT; ?></div>
         </div>
         <?php echo zen_draw_form('locate_function', FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_function', 'post', 'class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'configuration_key_lf', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'configuration_key_lf', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('configuration_key', $q_func, 'id="configuration_key_lf" class="form-control" size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
             <?php
             $za_lookup = array(
               array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
@@ -1028,10 +1028,10 @@ if ($found == false) {
               array('id' => '3', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_ADMIN)
             );
             ?>
-            <?php echo zen_draw_label(TEXT_FUNCTION_LOOKUPS, 'zv_files_lf', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(TEXT_FUNCTION_LOOKUPS, 'zv_files_lf', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_function' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_lf" class="form-control"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
         </div>
         <?php echo '</form>'; ?>
@@ -1044,11 +1044,11 @@ if ($found == false) {
           <div class="col-sm-12"><?php echo TEXT_CLASS_CONSTANT; ?></div>
         </div>
         <?php echo zen_draw_form('locate_class', FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_class', 'post', 'class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'configuration_key_lc', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'configuration_key_lc', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('configuration_key', $q_class, 'id="configuration_key_lc" class="form-control" size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
             <?php
             $za_lookup = array(
               array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
@@ -1056,10 +1056,10 @@ if ($found == false) {
               array('id' => '3', 'text' => TEXT_CLASS_LOOKUP_CURRENT_ADMIN)
             );
             ?>
-            <?php echo zen_draw_label(TEXT_CLASS_LOOKUPS, 'zv_files_lcl', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(TEXT_CLASS_LOOKUPS, 'zv_files_lcl', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_class' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_lcl" class="form-control"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
         </div>
         <?php echo '</form>'; ?>
@@ -1072,11 +1072,11 @@ if ($found == false) {
           <div class="col-sm-12"><?php echo TEXT_TEMPLATE_CONSTANT; ?></div>
         </div>
         <?php echo zen_draw_form('locate_template', FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_template', 'post', 'class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'configuration_key_ltf', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_CONFIGURATION_KEY, 'configuration_key_ltf', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('configuration_key', $q_tpl, 'id="configuration_key_ltf" class="form-control" size="40" placeholder="' . TEXT_SEARCH_PHRASE_PLACEHOLDER . '"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
             <?php
             $za_lookup = array(
               array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
@@ -1085,10 +1085,10 @@ if ($found == false) {
               array('id' => '4', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_PAGES)
             );
             ?>
-            <?php echo zen_draw_label(TEXT_TEMPLATE_LOOKUPS, 'zv_files_ltf', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(TEXT_TEMPLATE_LOOKUPS, 'zv_files_ltf', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_template' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_ltf" class="form-control"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button></div>
         </div>
         <?php echo '</form>'; ?>
@@ -1101,11 +1101,11 @@ if ($found == false) {
           <div class="col-sm-12"><?php echo TEXT_ALL_FILES_CONSTANT; ?></div>
         </div>
         <?php echo zen_draw_form('locate_all_files', FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files', 'post', 'class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_SEARCH_LOOKUP_PLACEHOLDER, 'configuration_key_af', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_SEARCH_LOOKUP_PLACEHOLDER, 'configuration_key_af', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('configuration_key', $q_all, 'id="configuration_key_af" class="form-control" size="40" placeholder="' . TEXT_SEARCH_LOOKUP_PLACEHOLDER . '"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
             <?php
             $za_lookup = array(
               array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
@@ -1115,26 +1115,26 @@ if ($found == false) {
               array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_LARAVEL),
             );
             ?>
-            <?php echo zen_draw_label(TEXT_ALL_FILES_LOOKUPS, 'zv_files_af', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(TEXT_ALL_FILES_LOOKUPS, 'zv_files_af', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_all_files' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_af" class="form-control"'); ?></div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_INCLUDE_PLUGINS, 'include_zc_plugins', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_INCLUDE_PLUGINS, 'include_zc_plugins', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
             <div class="checkbox">
               <label for="include_zc_plugins"><?php echo zen_draw_checkbox_field('include_plugins', true, $include_plugins, '', 'id="include_zc_plugins" aria-label="include_zc_plugins"'); ?></label>
             </div>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_INCLUDE_LARAVEL, 'include_laravel', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_INCLUDE_LARAVEL, 'include_laravel', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
             <div class="checkbox">
               <label for="include_laravel"><?php echo zen_draw_checkbox_field('include_laravel', true, $include_laravel, '', 'id="include_laravel" aria-label="include_laravel"'); ?></label>
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
             <?php
             $za_lookup_filetype = array(
               array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_PHP),
@@ -1145,22 +1145,22 @@ if ($found == false) {
               array('id' => '6', 'text' => TEXT_ALL_FILES_LOOKUP_ALL_TYPES),
             );
             ?>
-            <?php echo zen_draw_label(TEXT_ALL_FILESTYPE_LOOKUPS, 'zv_filestype', 'class="control-label col-sm-3"'); ?>
+            <?php echo zen_draw_label(TEXT_ALL_FILESTYPE_LOOKUPS, 'zv_filestype', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, (!empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : '1'), 'id="zv_filestype" class="form-control"'); ?></div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CONTEXT_LINES, 'context_lines', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_CONTEXT_LINES, 'context_lines', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_input_field('context_lines', strval((int)$default_context_lines), 'id="context_lines" class="form-control" size="1"'); ?></div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_CASE_SENSITIVE, 'locate-cs', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_CASE_SENSITIVE, 'locate-cs', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
             <div class="checkbox">
               <label><?php echo zen_draw_checkbox_field('case_sensitive', true, $case_sensitive, '', 'id="locate-cs"'); ?></label>
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12 text-right">
             <button type="submit" class="btn btn-primary"><?php echo TEXT_BUTTON_SEARCH; ?></button>
             <input type="button" class="btn btn-primary" value="<?php echo TEXT_BUTTON_REGEX_SEARCH; ?>" onClick="document.locate_all_files.action = '<?php echo zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=locate_all_files&m=r') ?>'; document.locate_all_files.submit();" title="<?php echo TEXT_BUTTON_REGEX_SEARCH_ALT; ?>">

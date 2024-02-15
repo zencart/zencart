@@ -105,6 +105,7 @@ if (strpos($disabled_functions,"phpinfo") === false) {
 <div class="phpinfo phpinfo-is-disabled"><?php echo ERROR_UNABLE_TO_DISPLAY_SERVER_INFORMATION; ?></div>
 <?php } ?>
 <h2 id="db-h2"><?php echo TITLE_DATABASE_VARIABLES . $system['db_version'] . ($system['mysql_strict_mode'] === true ? '<em> ' . TITLE_MYSQL_STRICT_MODE . '</em>' : ''); ?></h2>
+<div class="table-responsive">
 <table class="table" id="database-info">
     <tr class="db-row">
         <th class="db-name db-head db-info"><?php echo HEADING_DATABASE_VARIABLE; ?></th>
@@ -122,6 +123,7 @@ if (strpos($disabled_functions,"phpinfo") === false) {
     }
     ?>
 </table>
+</div>
 <!-- body_text_eof //-->
 
 <!-- body_eof //-->

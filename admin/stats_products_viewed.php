@@ -62,11 +62,11 @@ $products = $db->Execute($sql);
         <div class="row">
             <?php echo zen_draw_form('date_range', FILENAME_STATS_PRODUCTS_VIEWED, '', 'post', 'class="form-horizontal"'); ?>
 
-            <div class="form-group">
-                <?php echo zen_draw_label(TEXT_REPORT_START_DATE, 'start_date', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_REPORT_START_DATE, 'start_date', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-4 col-md-3">
                     <div class="date input-group" id="datepicker_start_date">
-                <span class="input-group-addon datepicker_icon">
+                <span class="input-group-text datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                         <?php echo zen_draw_input_field('start_date', $startdate, 'class="form-control" id="start_date"'); ?>
@@ -74,11 +74,11 @@ $products = $db->Execute($sql);
                     <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)</span>
                 </div>
             </div>
-            <div class="form-group">
-                <?php echo zen_draw_label(TEXT_REPORT_END_DATE, 'end_date', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_REPORT_END_DATE, 'end_date', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-4 col-md-3">
                     <div class="date input-group" id="datepicker_end_date">
-                <span class="input-group-addon datepicker_icon">
+                <span class="input-group-text datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                         <?php echo zen_draw_input_field('end_date', $enddate, 'class="form-control" id="end_date"'); ?>
@@ -96,8 +96,9 @@ $products = $db->Execute($sql);
         </div>
 <br>
 
+        <div class="table-responsive">
         <table class="table table-hover">
-            <thead>
+            <thead class="table-dark">
             <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent right"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_NAME; ?></th>
@@ -124,12 +125,15 @@ $products = $db->Execute($sql);
             ?>
             </tbody>
         </table>
+        </div>
+        <div class="table-responsive">
         <table class="table">
             <tr>
                 <td><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
                 <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], 'start_date=' . $startdate . '&end_date=' . $enddate); ?></td>
             </tr>
         </table>
+        </div>
         <!-- body_text_eof //-->
         <!-- body_eof //-->
     </div>

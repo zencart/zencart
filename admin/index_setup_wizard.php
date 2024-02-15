@@ -118,43 +118,43 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
       <p><?php echo TEXT_STORE_DETAILS; ?></p>
       <div class="row">
           <?php echo zen_draw_form('setupWizardForm', FILENAME_DEFAULT, 'action=update', 'post', 'id="setupWizardForm" class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_STORE_NAME, 'store_name', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_STORE_NAME, 'store_name', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('store_name', $store_name, 'id="store_name" class="form-control" autofocus="autofocus"'); ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_STORE_OWNER, 'store_owner', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_STORE_OWNER, 'store_owner', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('store_owner', $store_owner, 'id="store_owner" class="form-control"'); ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_STORE_OWNER_EMAIL, 'store_owner_email', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_STORE_OWNER_EMAIL, 'store_owner_email', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('store_owner_email', $store_owner_email, 'id="store_owner_email" class="form-control"', null, 'email'); ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_STORE_COUNTRY, 'zone_country_id', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_STORE_COUNTRY, 'zone_country_id', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo $country_string; ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_STORE_ZONE, 'zone_id', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_STORE_ZONE, 'zone_id', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo $zone_string; ?>
           </div>
         </div>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_STORE_ADDRESS, 'store_address', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_STORE_ADDRESS, 'store_address', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
             <?php echo zen_draw_textarea_field('store_address', 'soft', '50', '5', $store_address, 'id="store_address" class="form-control"'); ?>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <button type="submit" class="btn btn-primary" id="button"><?php echo IMAGE_UPDATE; ?></button>
         </div>
         <?php echo '</form>'; ?>

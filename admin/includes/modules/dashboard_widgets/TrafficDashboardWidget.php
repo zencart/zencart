@@ -30,13 +30,14 @@ foreach ($visits as $data) {
     $i++;
 }
 ?>
-  <div class="panel panel-default reportBox">
-    <div class="panel-heading header"><?php echo sprintf(TEXT_COUNTER_HISTORY_TITLE, (int)$maxRows); ?></div>
+  <div class="card reportBox mb-3">
+    <div class="card-header header"><?php echo sprintf(TEXT_COUNTER_HISTORY_TITLE, (int)$maxRows); ?></div>
     <?php if (count($visit_history)) { ?>
-      <div class="panel-body">
+      <div class="card-body">
         <div id="trafficgraph"></div>
       </div>
-      <table class="table table-striped table-condensed">
+      <div class="table-responsive">
+        <table class="table table-striped table-condensed">
         <tr>
           <td class="indented"><?php echo DASHBOARD_DAY; ?></td>
           <td class="text-right indented"> <?php echo DASHBOARD_SESSIONS; ?> - <?php echo DASHBOARD_TOTAL; ?></td>
@@ -51,6 +52,7 @@ foreach ($visits as $data) {
           </tr>
         <?php } ?>
       </table>
+      </div>
     <?php } else { ?>
       <div class="row">
         <p><?php echo TEXT_NONE; ?></p>

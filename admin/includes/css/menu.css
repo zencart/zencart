@@ -47,7 +47,8 @@
     background-color: #d7d6cc;
 }
 .navbar-nav li>a.dropdown-toggle {
-    font-size: 1.2em;
+    padding-left: 7px;
+    padding-right: 7px;
     color: #333;
 }
 
@@ -58,8 +59,8 @@
 .btn-help {
   margin-right: 4px;
   margin-bottom: 8px;
-  background-color: #337ab7; 
-  color: white; 
+  background-color: #337ab7;
+  color: white;
 }
 
 @media (min-width: 768px) {
@@ -70,4 +71,65 @@
     .navbar {
         min-height: 30px;
     }
+}
+
+.nav > li > a {
+    padding: 10px 15px;
+}
+.nav > li.upperMenuItems > a {
+    padding: 3px 5px;
+}
+.navbar {
+    padding-top: 0;
+}
+.navbar .container-fluid {
+    background: #d7d6cc;
+}
+a.headerLink {
+    margin: 0 6px;
+}
+a.headerLink:link {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+a.headerLink:visited {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+a.headerLink:hover {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: underline;
+}
+a.headerLink:active {
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+}
+.upperMenuItems a.headerLink:link {
+    color: #000;
+    font-weight: normal;
+    text-decoration: none;
+}
+.upperMenuItems a.headerLink:visited {
+    color: #000;
+    font-weight: normal;
+    text-decoration: none;
+}
+.upperMenuItems a.headerLink:hover {
+    color: #000;
+    font-weight: normal;
+    text-decoration: underline;
+}
+.upperMenuItems a.headerLink:active {
+    color: #000;
+    font-weight: normal;
+    text-decoration: none;
+}
+.nav > li > a:hover
+{
+    text-decoration: none;
+    background-color: #eee;
 }

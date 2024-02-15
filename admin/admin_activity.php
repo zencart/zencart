@@ -339,29 +339,29 @@ if ($action != '') {
             <?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post', 'class="form-horizontal"'); //, 'onsubmit="return check_form(export);"');     ?>
           <h4><?php echo HEADING_SUB1; ?></h4>
             <div class="row"><?php echo TEXT_INSTRUCTIONS; ?></div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER, 'filter', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER, 'filter', 'class="col-sm-3 form-label"'); ?>
               <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_pull_down_menu('filter', $filter_options, $post_filter, 'class="form-control" id="filter"'); ?>
               </div>
             </div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER_USER, 'filter_user', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER_USER, 'filter_user', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-9 col-md-6">
                     <?php echo zen_draw_pull_down_menu('filter_user', $admin_users, $filter_by_user, 'class="form-control" id="filter_user"'); ?>
                 </div>
             </div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 form-label"'); ?>
               <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_pull_down_menu('format', $available_export_formats, $post_format, 'class="form-control" id="format"'); ?>
               </div>
             </div>
-            <div class="form-group">
-                <?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILENAME, 'filename', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILENAME, 'filename', 'class="col-sm-3 form-label"'); ?>
               <div class="col-sm-9 col-md-6">
                   <?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), 'class="form-control" size="60" id="filename"'); ?>
               </div>
             </div>
-            <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-9 col-md-6">
+            <div class="form-group row mb-3">
+              <div class="offset-sm-3 col-sm-9 col-md-6">
                 <div class="checkbox">
                   <label><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></label>
                 </div>
@@ -369,7 +369,7 @@ if ($action != '') {
               </div>
             </div>
             <div class="text-right">
-              <button class="btn btn-primary"><?php echo IMAGE_GO; ?></button> <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
+              <button class="btn btn-primary"><?php echo IMAGE_GO; ?></button> <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
             <div class="row"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></div>
             <?php echo '</form>'; ?>
         </div>

@@ -39,7 +39,7 @@ $contents[] = ['text' => TEXT_MOVE_PRODUCTS_INTRO];
 //
 $exclude_category = (zen_count_products_in_category(TOPMOST_CATEGORY_PARENT_ID, true) === 0) ? '' : TOPMOST_CATEGORY_PARENT_ID;
 $contents[] = ['text' => zen_draw_label(sprintf(TEXT_MOVE_PRODUCT, $pInfo->products_id, $pInfo->products_name, $current_category_id, $product_current_category_string), 'move_to_category_id', 'style="font-weight:normal;font-size:larger;"') . zen_draw_pull_down_menu('move_to_category_id', zen_get_category_tree('', '', $exclude_category), $current_category_id, 'id="move_to_category_id" class="form-control"')];
-$contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_MOVE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+$contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_MOVE . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
 $contents[] = ['text' => TEXT_INFO_CURRENT_CATEGORIES];
 $contents[] = ['text' => '<span class="text-danger"><strong>' . TEXT_MASTER_CATEGORIES_ID . ' <br>ID#' . zen_get_parent_category_id($pInfo->products_id) . ' ' . $product_master_category_string . '</strong></span>'];
 if (count($product_categories) > 1) {

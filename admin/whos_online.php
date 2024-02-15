@@ -128,7 +128,7 @@ $listingURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['q', '
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <div class="table-responsive">
             <table class="table">
-              <thead>
+              <thead class="table-dark">
                 <tr class="dataTableHeadingRowWhois">
                   <th class="dataTableHeadingContentWhois"><?php echo TABLE_HEADING_ONLINE; ?></th>
                   <th class="dataTableHeadingContentWhois text-center"><?php echo TABLE_HEADING_CUSTOMER_ID; ?></th>
@@ -299,8 +299,8 @@ $listingURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['q', '
                          . ' <a href="' . zen_catalog_href_link(zen_get_info_page($product['id']), 'cPath=' . zen_get_product_path($product['id']) . '&products_id=' . $product['id'] . '&language=' . $cart['language_code']) . '" target="_blank" rel="noreferrer noopener">'
                          . $product['name']
                          . '</a>'
-                         . ' <a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id'] . '&action=new_product') . '" role="button" class="btn btn-sm btn-default"><i class="fa-solid fa-pencil fa-lg" aria-hidden="true"></i> ' . IMAGE_EDIT . '</a>'
-                         . ' <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id']) . '" role="button" class="btn btn-sm btn-default"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> ' . IMAGE_CATEGORY . '</a>'
+                         . ' <a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id'] . '&action=new_product') . '" role="button" class="btn btn-sm btn-secondary"><i class="fa-solid fa-pencil fa-lg" aria-hidden="true"></i> ' . IMAGE_EDIT . '</a>'
+                         . ' <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . zen_get_product_path($product['id']) . '&pID=' . $product['id']) . '" role="button" class="btn btn-sm btn-secondary"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> ' . IMAGE_CATEGORY . '</a>'
                         ];
                 }
 

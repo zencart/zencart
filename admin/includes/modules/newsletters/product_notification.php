@@ -102,17 +102,17 @@ function selectAll(FormName, SelectBox) {
 }
 </script>';
     $choose_audience_string .= '<div class="row">' . sprintf(TEXT_NOTIFICATION_INFO_GLOBAL, '<strong>"' . $this->title . '"</strong>') . '</div>' . PHP_EOL;
-    $choose_audience_string .= '<div class="row"><a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true') . '" class="btn btn-default" role="button">' . BUTTON_GLOBAL . '</a></div>' . PHP_EOL;
+    $choose_audience_string .= '<div class="row"><a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true') . '" class="btn btn-secondary" role="button">' . BUTTON_GLOBAL . '</a></div>' . PHP_EOL;
 
     $choose_audience_string .= '<hr><div class="row">' . TEXT_NOTIFICATION_INFO_PRODUCTS . '</div><br>' . PHP_EOL;
 
-    $cancel_button = '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-default" role="button">' . BUTTON_CANCEL . '</a>' . PHP_EOL;
+    $cancel_button = '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-secondary" role="button">' . BUTTON_CANCEL . '</a>' . PHP_EOL;
 
     $choose_audience_string .= zen_draw_form('notifications' ,FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm', 'post', 'onSubmit="return selectAll(\'notifications\', \'chosen[]\')"') . PHP_EOL;
 
     $choose_audience_string .= '<div class="row">' . PHP_EOL;
     $choose_audience_string .= '<div class="col-sm-4"><b>' . TEXT_PRODUCTS . '</b><br>' . zen_draw_pull_down_menu('products', $products_array, '', 'size="20" class="form-control" multiple') . '</div>' . PHP_EOL;
-    $choose_audience_string .= '<div class="col-sm-4 text-center"><div class="btn-group-vertical"><input type="button" value="' . BUTTON_SELECT . '" onClick="mover(\'remove\');" class="btn btn-default"><input type="button" value="' . BUTTON_UNSELECT . '" onClick="mover(\'add\');" class="btn btn-default"><input type="submit" value="' . BUTTON_SUBMIT . '" class="btn btn-default">' . $cancel_button . '</div></div>' . PHP_EOL;
+    $choose_audience_string .= '<div class="col-sm-4 text-center"><div class="btn-group-vertical"><input type="button" value="' . BUTTON_SELECT . '" onClick="mover(\'remove\');" class="btn btn-secondary"><input type="button" value="' . BUTTON_UNSELECT . '" onClick="mover(\'add\');" class="btn btn-secondary"><input type="submit" value="' . BUTTON_SUBMIT . '" class="btn btn-secondary">' . $cancel_button . '</div></div>' . PHP_EOL;
     $choose_audience_string .= '<div class="col-sm-4"><b>' . TEXT_SELECTED_PRODUCTS . '</b><br>' . zen_draw_pull_down_menu('chosen[]', array(), '', 'size="20" class="form-control" multiple') . '</div>' . PHP_EOL;
     $choose_audience_string .= '</div>' . PHP_EOL;
     $choose_audience_string .= '</form>' . PHP_EOL;
@@ -198,7 +198,7 @@ function selectAll(FormName, SelectBox) {
       }
       $confirm_string .= '<button type="submit" class="btn btn-primary">' . IMAGE_SEND . '</button> ';
     }
-    $confirm_string .= '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send') . '" class="btn btn-default" role="button">' . IMAGE_BACK . '</a> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' . PHP_EOL;
+    $confirm_string .= '<a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send') . '" class="btn btn-secondary" role="button">' . IMAGE_BACK . '</a> <a href="' . zen_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>' . PHP_EOL;
      $confirm_string .= '  </div>' . PHP_EOL;
 
     return $confirm_string;

@@ -134,8 +134,9 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
       <!-- body_text //-->
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover table-striped">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover table-striped">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ORDERS_ID; ?></th>
@@ -181,12 +182,15 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
               <?php } ?>
               </tbody>
           </table>
+            </div>
+            <div class="table-responsive">
           <table class="table">
             <tr>
               <td><?php echo $gv_split->display_count($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
               <td class="text-right"><?php echo $gv_split->display_links($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
             </tr>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
           <?php
@@ -196,8 +200,8 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
             case 'release':
               $heading[] = array('text' => '<h4>[' . $gInfo->unique_id . '] ' . zen_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount) . '</h4>');
               $contents = array('form' => zen_draw_form('gv_release', FILENAME_GV_QUEUE, 'action=confirmrelease&page=' . $_GET['page']));
-              $contents[] = array('align' => 'text-center', 'text' => zen_draw_hidden_field('gid', $gInfo->unique_id) . '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button>&nbsp;<a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'], 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
-//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '" class="btn btn-danger" role="button">' . IMAGE_CONFIRM . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => zen_draw_hidden_field('gid', $gInfo->unique_id) . '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button>&nbsp;<a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'], 'NONSSL') . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
+//      $contents[] = array('align' => 'center', 'text' => '<a href="' . zen_href_link('gv_queue.php', 'action=confirmrelease&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '" class="btn btn-danger" role="button">' . IMAGE_CONFIRM . '</a> <a href="' . zen_href_link('gv_queue.php', 'action=cancel&gid=' . $gInfo->unique_id . '&page=' . $_GET['page'],'NONSSL') . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>');
               break;
             default:
               if (!isset($gInfo) || !is_object($gInfo)) {

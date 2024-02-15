@@ -836,11 +836,11 @@ if (!empty($action)) {
         ?>
         <div class="row">&nbsp;</div>
         <?php echo zen_draw_form('getquery', FILENAME_SQLPATCH, 'action=execute' . (($debug == true) ? '&debug=ON' : '') . (($skip_stripslashes == true) ? '&keepslashes=1' : ''), 'post', 'class="form-horizontal"'); ?>
-        <div class="form-group">
-            <?php echo zen_draw_label(TEXT_ENTER_QUERY_STRING, 'query_string', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_ENTER_QUERY_STRING, 'query_string', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_textarea_field('query_string', 'soft', '80', '10', '', 'id="query_string" class="form-control noEditor"', false); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND; ?></button></div>
         </div>
         <?php echo '</form>'; ?>
@@ -855,11 +855,11 @@ if (!empty($action)) {
           echo zen_draw_hidden_field('nogrants', (bool)$_GET['nogrants'], 'id="nogrants"');
         }
         ?>
-        <div class="form-group">
-  <?php echo zen_draw_label(TEXT_QUERY_FILENAME, 'sql_file', 'class="control-label col-sm-3"'); ?>
+        <div class="form-group row mb-3">
+  <?php echo zen_draw_label(TEXT_QUERY_FILENAME, 'sql_file', 'class="form-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_file_field('sql_file', '', 'class="form-control" id="sql_file"'); ?></div>
         </div>
-        <div class="form-group">
+        <div class="form-group row mb-3">
           <div class="col-sm-12 text-right"><button type="submit" class="btn btn-primary"><?php echo IMAGE_UPLOAD; ?></button></div>
         </div>
   <?php echo '</form>'; ?>
@@ -873,4 +873,4 @@ if (!empty($action)) {
     </body>
   </html>
   <?php require(DIR_WS_INCLUDES . 'application_bottom.php');
-  
+

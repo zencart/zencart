@@ -91,41 +91,41 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
     echo zen_draw_form('new_product_meta_tags', FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['product_type']) ? '&product_type=' . $_GET['product_type'] : '') . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview_meta_tags' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
     ?>
   <h3><?php echo sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)); ?></h3>
-  <div class="form-group">
-    <div class="col-sm-3 control-label"><?php echo TEXT_META_TAG_TITLE_INCLUDES; ?></div>
+  <div class="form-group row mb-3">
+    <div class="col-sm-3 form-label"><?php echo TEXT_META_TAG_TITLE_INCLUDES; ?></div>
     <div class="col-sm-6">
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS, 'metatags_products_name_status', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_PRODUCTS_NAME_STATUS, 'metatags_products_name_status', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_products_name_status', '1', ($pInfo->metatags_products_name_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_products_name_status', '0', ($pInfo->metatags_products_name_status == '0')) . TEXT_NO; ?></label>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_TITLE_STATUS, 'metatags_title_status', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_TITLE_STATUS, 'metatags_title_status', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_status', '1', ($pInfo->metatags_title_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_status', '0', ($pInfo->metatags_title_status == '0')) . TEXT_NO; ?></label>
         </div>
       </div>
 <?php /* not used for documents
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_MODEL_STATUS, 'metatags_model_status', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_MODEL_STATUS, 'metatags_model_status', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_model_status', '1', ($pInfo->metatags_model_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_model_status', '0', ($pInfo->metatags_model_status == '0')) . TEXT_NO; ?></label>
         </div>
       </div>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_PRICE_STATUS, 'metatags_price_status', 'class="col-sm-3 control-label"') ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_PRICE_STATUS, 'metatags_price_status', 'class="col-sm-3 form-label"') ?>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_price_status', '1', ($pInfo->metatags_price_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_price_status', '0', ($pInfo->metatags_price_status == '0')) . TEXT_NO; ?></label>
         </div>
       </div>
 */ ?>
-      <div class="form-group">
-          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS, 'metatags_title_tagline_status', 'class="col-sm-3 control-label"'); ?>
+      <div class="form-group row mb-3">
+          <?php echo zen_draw_label(TEXT_PRODUCTS_METATAGS_TITLE_TAGLINE_STATUS, 'metatags_title_tagline_status', 'class="col-sm-3 form-label"'); ?>
         <div class="col-sm-9 col-md-6">
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_tagline_status', '1', ($pInfo->metatags_title_tagline_status == '1')) . TEXT_YES; ?></label>
           <label class="radio-inline"><?php echo zen_draw_radio_field('metatags_title_tagline_status', '0', ($pInfo->metatags_title_tagline_status == '0')) . TEXT_NO; ?></label>
@@ -133,33 +133,33 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
       </div>
     </div>
   </div>
-  <div class="form-group"><?php echo zen_draw_separator('pixel_black.gif', '100%', '3'); ?></div>
-  <div class="form-group">
+  <div class="form-group row mb-3"><?php echo zen_draw_separator('pixel_black.gif', '100%', '3'); ?></div>
+  <div class="form-group row mb-3">
       <?php
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         ?>
       <div class="input-group">
-        <span class="input-group-addon">
+        <span class="input-group-text">
             <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
         </span>
         <div style="border: 1px solid #ccc;">
           <div class="col-sm-12" style="padding-top: 10px;padding-bottom: 10px;">
               <strong><?php echo TEXT_DOCUMENT_NAME; ?></strong>&nbsp;<?php echo zen_get_products_name($_GET['pID'], $languages[$i]['id']); ?>
           </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_META_TAGS_TITLE, 'metatags_title[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_META_TAGS_TITLE, 'metatags_title[' . $languages[$i]['id'] . ']', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_input_field('metatags_title[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($metatags_title[$languages[$i]['id']]) ? stripslashes($metatags_title[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_title'), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_META_TAGS_PRODUCTS_DESCRIPTION, 'metatags_title', '150', false) . ' class="form-control" id="metatags_title[' . $languages[$i]['id'] . ']"'); ?>
             </div>
           </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_META_TAGS_KEYWORDS, 'metatags_keywords[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_META_TAGS_KEYWORDS, 'metatags_keywords[' . $languages[$i]['id'] . ']', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_textarea_field('metatags_keywords[' . $languages[$i]['id'] . ']', 'soft', '', '10', htmlspecialchars((isset($metatags_keywords[$languages[$i]['id']])) ? stripslashes($metatags_keywords[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_keywords'), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="metatags_keywords[' . $languages[$i]['id'] . ']"'); ?>
             </div>
           </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_META_TAGS_DESCRIPTION, 'metatags_description[' . $languages[$i]['id'] . ']', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_META_TAGS_DESCRIPTION, 'metatags_description[' . $languages[$i]['id'] . ']', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
                 <?php echo zen_draw_textarea_field('metatags_description[' . $languages[$i]['id'] . ']', 'soft', '', '10', htmlspecialchars((isset($metatags_description[$languages[$i]['id']])) ? stripslashes($metatags_description[$languages[$i]['id']]) : zen_get_product_metatag_fields($pInfo->products_id, $languages[$i]['id'], 'metatags_description'), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="metatags_description[' . $languages[$i]['id'] . ']"'); ?>
             </div>
@@ -171,11 +171,11 @@ if (empty($pInfo->metatags_keywords) && empty($pInfo->metatags_description)) {
     }
     ?>
   </div>
-  <div class="form-group"><?php echo TEXT_INFO_META_TAGS_USAGE; ?></div>
-  <div class="form-group text-right">
+  <div class="form-group row mb-3"><?php echo TEXT_INFO_META_TAGS_USAGE; ?></div>
+  <div class="form-group row mb-3 text-right">
       <?php echo zen_draw_hidden_field('products_model', $pInfo->products_model); ?>
       <?php echo zen_draw_hidden_field('products_price_sorter', $pInfo->products_price_sorter); ?>
-    <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+    <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
   </div>
   <?php echo '</form>'; ?>
 </div>

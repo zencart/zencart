@@ -248,10 +248,10 @@ if ($action == 'preview') {
           echo zen_draw_hidden_field('attachment_filetype', $attachment_filetype);
           ?>
           <div class="col-sm-6">
-            <button type="submit" name="back" value="back" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
+            <button type="submit" name="back" value="back" class="btn btn-secondary"><?php echo IMAGE_BACK; ?></button>
           </div>
           <div class="col-sm-6 text-right">
-            <a href="<?php echo zen_href_link(FILENAME_MAIL, (isset($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
+            <a href="<?php echo zen_href_link(FILENAME_MAIL, (isset($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '') . (isset($_GET['customer']) ? '&customer=' . zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : '') . (isset($_GET['origin']) ? '&origin=' . zen_output_string_protected($_GET['origin']) : '')); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a> <button type="submit" class="btn btn-primary"><?php echo IMAGE_SEND_EMAIL; ?></button>
           </div>
           <?php echo '</form>'; ?>
         </div>
@@ -263,20 +263,20 @@ if ($action == 'preview') {
             <?php
             $customers = get_audiences_list('email', '', (isset($_GET['customer']) ? zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : ''));
             ?>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_CUSTOMER, 'customers_email_address', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('customers_email_address', $customers, (isset($_GET['customer']) ? zen_output_string_protected(urldecode(str_replace("+", "%2B",urlencode($_GET['customer'])))) : ''), 'class="form-control"');  //, 'multiple'        ?></div>
           </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9"><?php echo zen_draw_input_field('from', htmlspecialchars(EMAIL_FROM, ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
           </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9"><?php echo zen_draw_input_field('subject', htmlspecialchars(isset($_POST['subject']) ? $_POST['subject'] : '', ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_MESSAGE_HTML, 'message_html', 'class="col-sm-3 control-label"'); //HTML version   ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_MESSAGE_HTML, 'message_html', 'class="col-sm-3 form-label"'); //HTML version   ?>
             <div class="col-sm-9">
                 <?php
                 if (EMAIL_USE_HTML == 'true') {
@@ -287,8 +287,8 @@ if ($action == 'preview') {
                 ?>
             </div>
           </div>
-          <div class="form-group">
-              <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+              <?php echo zen_draw_label(TEXT_MESSAGE, 'message', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9"><?php echo zen_draw_textarea_field('message', 'soft', '', '15', htmlspecialchars(isset($_POST['message']) ? $_POST['message'] : '', ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control"'); ?></div>
           </div>
 
@@ -297,18 +297,18 @@ if ($action == 'preview') {
               <?php
               $dir_info = zen_build_subdirectories_array(DIR_WS_ADMIN_ATTACHMENTS, 'admin-attachments');
               ?>
-              <div class="form-group">
-                  <?php echo zen_draw_label(TEXT_SELECT_ATTACHMENT_TO_UPLOAD, 'upload_file', 'class="col-sm-3 control-label"'); ?>
+              <div class="form-group row mb-3">
+                  <?php echo zen_draw_label(TEXT_SELECT_ATTACHMENT_TO_UPLOAD, 'upload_file', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-9"><?php echo zen_draw_file_field('upload_file') . '<br>' . stripslashes($_POST['upload_file']) . zen_draw_hidden_field('prev_upload_file', stripslashes($_POST['upload_file'])); ?></div>
-                <?php echo zen_draw_label(TEXT_ATTACHMENTS_DIR, 'attach_dir', 'class="col-sm-3 control-label"'); ?>
+                <?php echo zen_draw_label(TEXT_ATTACHMENTS_DIR, 'attach_dir', 'class="col-sm-3 form-label"'); ?>
                 <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('attach_dir', $dir_info, '', 'class="form-control"'); ?></div>
               </div>
             <?php } // end uploads-enabled dialog ?>
             <?php
             $dir_info = zen_build_subdirectories_array(DIR_WS_ADMIN_ATTACHMENTS, '(none)');
             ?>
-            <div class="form-group">
-                <?php echo zen_draw_label(TEXT_SELECT_ATTACHMENT, 'attachment_file', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group row mb-3">
+                <?php echo zen_draw_label(TEXT_SELECT_ATTACHMENT, 'attachment_file', 'class="col-sm-3 form-label"'); ?>
               <div class="col-sm-9"><?php echo zen_draw_pull_down_menu('attachment_file', $file_list, $_POST['attachment_file'], 'class="form-control"'); ?></div>
             </div>
           </div>
@@ -321,7 +321,7 @@ if ($action == 'preview') {
         }
         ?>
         <div class="row text-right">
-          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, (!empty($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : ''), $request_type); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
+          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, (!empty($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : ''), $request_type); ?>" class="btn btn-secondary"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
       }

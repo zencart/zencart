@@ -93,13 +93,14 @@ switch ($_GET['action']) {
         if (empty($_GET['options_id'])) {
           ?>
           <?php echo zen_draw_form('quick_jump', FILENAME_PRODUCTS_OPTIONS_VALUES, '', 'get', 'class="form-horizontal"'); ?>
-          <table class="table table-condensed">
+          <div class="table-responsive">
+            <table class="table table-condensed">
             <tr class="dataTableHeadingRow">
               <td colspan="2" class="dataTableHeadingContent text-center"><?php echo TEXT_UPDATE_OPTION_VALUES; ?></td>
             </tr>
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent">
-                  <?php echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
+                  <?php echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="form-label"');
                   //filter the dropdown to only show Option Names that have Option Values defined
                   $options_values = $db->Execute("SELECT DISTINCT po.products_options_id, po.products_options_name
                                                   FROM " . TABLE_PRODUCTS_OPTIONS . " po INNER JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " povtpo
@@ -124,12 +125,14 @@ switch ($_GET['action']) {
               </td>
             </tr>
           </table>
+          </div>
           <?php echo '</form>'; ?>
           <?php
         } else {
           ?>
           <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id'], 'post', 'class="form-horizontal"'); ?>
-          <table class="table table-condensed table-striped">
+          <div class="table-responsive">
+            <table class="table table-condensed table-striped">
             <tr class="dataTableHeadingRow">
               <td colspan="3" class="dataTableHeadingContent text-center">
                 <?php echo TEXT_EDIT_OPTION_NAME; ?> <?php echo zen_options_name($_GET['options_id']); ?></td>
@@ -181,10 +184,11 @@ switch ($_GET['action']) {
               }
               ?>
               <td <?php echo ($option_values_exist == true ? '' : 'colspan="3"'); ?> class="dataTableHeadingContent text-left">
-                <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
               </td>
             </tr>
           </table>
+          </div>
           <?php echo '</form>'; ?>
           <?php
         } // which table

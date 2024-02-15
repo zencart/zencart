@@ -265,6 +265,7 @@ if (!empty($action)) {
       <!-- body_text //-->
       <?php if ($action == '') { ?>
         <div class="row">
+            <div class="table-responsive">
           <table class="table-condensed">
             <tr>
               <td class="text-right"><?php echo TEXT_LEGEND; ?></td>
@@ -291,6 +292,7 @@ if (!empty($action)) {
               </div></td>
             </tr>
           </table>
+            </div>
         </div>
       <?php } // legend ?>
       <?php
@@ -349,9 +351,9 @@ if (!empty($action)) {
             echo zen_draw_hidden_field('banners_id', $bID);
           }
           ?>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-3">
-              <p class="control-label"><?php echo TEXT_BANNERS_STATUS; ?></p>
+              <p class="form-label"><?php echo TEXT_BANNERS_STATUS; ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
               <label class="radio-inline"><?php echo zen_draw_radio_field('status', '1', $bInfo->status == 1) . TEXT_BANNERS_ACTIVE; ?></label>
@@ -359,9 +361,9 @@ if (!empty($action)) {
               <span class="help-block"><?php echo TEXT_INFO_BANNER_STATUS; ?></span>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-3">
-              <p class="control-label"><?php echo TEXT_BANNERS_OPEN_NEW_WINDOWS; ?></p>
+              <p class="form-label"><?php echo TEXT_BANNERS_OPEN_NEW_WINDOWS; ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
               <label class="radio-inline"><?php echo zen_draw_radio_field('banners_open_new_windows', '1', $bInfo->banners_open_new_windows == 1) . TEXT_YES; ?></label>
@@ -369,9 +371,9 @@ if (!empty($action)) {
               <span class="help-block"><?php echo TEXT_INFO_BANNER_OPEN_NEW_WINDOWS; ?></span>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-3">
-              <p class="control-label"><?php echo TEXT_BANNERS_ON_SSL; ?></p>
+              <p class="form-label"><?php echo TEXT_BANNERS_ON_SSL; ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
               <label class="radio-inline"><?php echo zen_draw_radio_field('banners_on_ssl', '1', $bInfo->banners_on_ssl == 1) . TEXT_YES; ?></label>
@@ -379,27 +381,27 @@ if (!empty($action)) {
               <span class="help-block"><?php echo TEXT_INFO_BANNER_ON_SSL; ?></span>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_TITLE, 'banners_title', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_TITLE, 'banners_title', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('banners_title', htmlspecialchars($bInfo->banners_title, ENT_COMPAT, CHARSET), zen_set_field_length(TABLE_BANNERS, 'banners_title') . ' class="form-control" id="banners_title"', true); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_URL, 'banners_url', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_URL, 'banners_url', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('banners_url', $bInfo->banners_url, zen_set_field_length(TABLE_BANNERS, 'banners_url') . ' class="form-control" id="banners_url"'); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_GROUP, 'banners_group', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_GROUP, 'banners_group', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group, 'class="form-control" id="banners_group"'); ?><br>
               <p><?php echo TEXT_BANNERS_NEW_GROUP; ?></p><?php echo zen_draw_input_field('new_banners_group', '', 'class="form-control" id="new_banners_group"', count($groups_array) === 0); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_IMAGE, 'banners_image', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_IMAGE, 'banners_image', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_file_field('banners_image', '', 'class="form-control" id="banners_image"'); ?>
               <p><?php echo TEXT_BANNERS_IMAGE_LOCAL; ?></p>
@@ -407,8 +409,8 @@ if (!empty($action)) {
               <?php echo zen_draw_input_field('banners_image_local', ($bInfo->banners_image ?? ''), zen_set_field_length(TABLE_BANNERS, 'banners_image') . ' class="form-control"'); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_IMAGE_TARGET, 'banners_image_target', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_IMAGE_TARGET, 'banners_image_target', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('banners_image_target', '', 'class="form-control" id="banners_image_target"'); ?>
               <span class="help-block"><?php echo DIR_FS_CATALOG_IMAGES; ?></span>
@@ -417,23 +419,23 @@ if (!empty($action)) {
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_HTML_TEXT, 'banners_html_text', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_HTML_TEXT, 'banners_html_text', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo '<p>' . TEXT_BANNERS_HTML_TEXT_INFO . '</p>' . zen_draw_textarea_field('banners_html_text', 'soft', '80', '10', htmlspecialchars($bInfo->banners_html_text, ENT_COMPAT, CHARSET), 'class="editorHook form-control" id="banners_html_text"'); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_ALL_SORT_ORDER, 'banners_sort_order', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_ALL_SORT_ORDER, 'banners_sort_order', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo TEXT_BANNERS_ALL_SORT_ORDER_INFO . '<br>' . zen_draw_input_field('banners_sort_order', $bInfo->banners_sort_order, zen_set_field_length(TABLE_BANNERS, 'banners_sort_order') . ' class="form-control" id="banners_sort_order"'); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_SCHEDULED_AT, 'date_scheduled', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_SCHEDULED_AT, 'date_scheduled', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_date_scheduled">
-                <span class="input-group-addon datepicker_icon">
+                <span class="input-group-text datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                 <?php echo zen_draw_input_field('date_scheduled', $bInfo->date_scheduled, 'class="form-control" id="date_scheduled" autocomplete="off"'); ?>
@@ -441,11 +443,11 @@ if (!empty($action)) {
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_SCHEDULED_DATE; ?></span></span>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_EXPIRES_ON, 'expires_date', 'class="col-sm-3 control-label"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_EXPIRES_ON, 'expires_date', 'class="col-sm-3 form-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <div class="date input-group" id="datepicker_expires_date">
-                <span class="input-group-addon datepicker_icon">
+                <span class="input-group-text datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
                 <?php echo zen_draw_input_field('expires_date', $bInfo->expires_date, 'class="form-control" id="expires_date" autocomplete="off"'); ?>
@@ -455,19 +457,19 @@ if (!empty($action)) {
             </div>
           </div>
           <?php require DIR_WS_INCLUDES . 'javascript/dateChecker.php'; ?>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_IMPRESSIONS, 'expires_impressions', 'class="control-label col-sm-3"'); ?>
+          <div class="form-group row mb-3">
+            <?php echo zen_draw_label(TEXT_BANNERS_IMPRESSIONS, 'expires_impressions', 'class="form-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7" class="form-control" id="expires_impressions"'); ?>
             </div>
           </div>
-          <div class="form-group">
+          <div class="form-group row mb-3">
             <div class="col-sm-12 text-right">
-              <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'add') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . (int)$_GET['bID'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+              <button type="submit" class="btn btn-primary"><?php echo (($form_action == 'add') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . (int)$_GET['bID'] : '')); ?>" class="btn btn-secondary" role="button"><?php echo IMAGE_CANCEL; ?></a>
             </div>
           </div>
-          <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-9 col-md-6">
+          <div class="form-group row mb-3">
+            <div class="offset-sm-3 col-sm-9 col-md-6">
               <?php echo TEXT_BANNERS_BANNER_NOTE . '<br>' . TEXT_BANNERS_INSERT_NOTE . '<br>' . TEXT_BANNERS_EXPIRY_NOTE . '<br>' . TEXT_BANNERS_SCHEDULE_NOTE; ?>
             </div>
           </div>
@@ -478,8 +480,9 @@ if (!empty($action)) {
         ?>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+              <div class="table-responsive">
             <table class="table table-hover table-striped">
-              <thead>
+              <thead class="table-dark">
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_BANNERS; ?></th>
                   <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_GROUPS; ?></th>
@@ -589,6 +592,7 @@ if (!empty($action)) {
                 <?php } ?>
               </tbody>
             </table>
+              </div>
           </div>
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
             <?php
@@ -605,7 +609,7 @@ if (!empty($action)) {
                 if ($bInfo->banners_image) {
                   $contents[] = ['text' => '<div class="checkbox-inline"><label>' . zen_draw_checkbox_field('delete_image', 'on', true) . TEXT_INFO_DELETE_IMAGE . '</label></div>'];
                 }
-                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
               default:
                 if (is_object($bInfo)) {
@@ -613,7 +617,7 @@ if (!empty($action)) {
 
                   $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=del') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
                   $contents[] = ['text' => TEXT_BANNERS_DATE_ADDED . ' ' . zen_date_short($bInfo->date_added)];
-                  $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '" class="btn btn-default" role="button">' . IMAGE_UPDATE . '</a>'];
+                  $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '" class="btn btn-secondary" role="button">' . IMAGE_UPDATE . '</a>'];
 
                   $banner_id = $bInfo->banners_id;
                   $days = 3;
@@ -694,6 +698,7 @@ if (!empty($action)) {
           </div>
         </div>
         <div class="row">
+            <div class="table-responsive">
           <table class="table">
             <tr>
               <td><?php echo $banners_split->display_count($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></td>
@@ -703,6 +708,7 @@ if (!empty($action)) {
               <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_BANNER; ?></a></td>
             </tr>
           </table>
+            </div>
         </div>
       <?php } ?>
 

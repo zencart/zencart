@@ -175,13 +175,15 @@ for ($i = 0; $i < $report->size; $i++) {
     <div class="container-fluid">
       <h1><?php echo $report_desc . ' ' . HEADING_TITLE; ?></h1>
       <!-- body_text //-->
-      <table class="table">
+        <div class="table-responsive">
+        <table class="table">
         <tr>
           <td class="menuBoxHeading text-right">
             <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, 'report=1' . $sales_report_filter_link); ?>"><?php echo REPORT_TEXT_HOURLY; ?></a> | <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, 'report=2' . $sales_report_filter_link); ?>"><?php echo REPORT_TEXT_DAILY; ?></a> | <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, 'report=3' . $sales_report_filter_link); ?>"><?php echo REPORT_TEXT_WEEKLY; ?></a> | <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, 'report=4' . $sales_report_filter_link); ?>"><?php echo REPORT_TEXT_MONTHLY; ?></a> | <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, 'report=5' . $sales_report_filter_link); ?>"><?php echo REPORT_TEXT_YEARLY; ?></a>
           </td>
         </tr>
       </table>
+        </div>
 
       <div class="col-sm-12 col-md-6">
         <div id="chart_div"></div>
@@ -190,7 +192,7 @@ for ($i = 0; $i < $report->size; $i++) {
       <div class="col-sm-12 col-md-6">
         <div class="table-responsive">
           <table class="table table-striped table-hover">
-            <thead>
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"></th>
                 <th class="dataTableHeadingContent text-center"><?php echo REPORT_TEXT_ORDERS; ?></th>
@@ -265,6 +267,7 @@ for ($i = 0; $i < $report->size; $i++) {
             </tfoot>
           </table>
         </div>
+          <div class="table-responsive">
         <table class="table">
             <?php if (!empty($order_cnt)) { /* This section of code does not appear to be executed */
               ?>
@@ -286,6 +289,8 @@ for ($i = 0; $i < $report->size; $i++) {
             <td class="dataTableContent text-right"><?php echo $currencies->format($sum) ?></td>
           </tr>
         </table>
+          </div>
+          <div class="table-responsive">
         <table class="table table-condensed">
           <tr class="dataTableRow">
             <td class="dataTableContent text-left col-sm-10"><?php echo FILTER_STATUS ?></td>
@@ -325,6 +330,7 @@ for ($i = 0; $i < $report->size; $i++) {
           }
           ?>
         </table>
+          </div>
       </div>
       <!-- body_text_eof //-->
     </div>

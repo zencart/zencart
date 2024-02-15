@@ -100,9 +100,9 @@ if ($gID == 7) {
           <h1><?php echo $cfg_group->fields['configuration_group_title']; ?></h1>
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-
-          <table class="table table-hover" role="listbox">
-            <thead>
+            <div class="table-responsive">
+          <table class="table table-striped table-hover" role="listbox">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONFIGURATION_TITLE; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONFIGURATION_VALUE; ?></th>
@@ -195,6 +195,7 @@ if ($gID == 7) {
             ?>
             </tbody>
           </table>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
           <?php
@@ -225,7 +226,7 @@ if ($gID == 7) {
               }
               $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
               $contents[] = array('text' => '<br><strong>' . $cInfo->configuration_title . '</strong><br>' . $cInfo->configuration_description . '<br>' . $value_field);
-              $contents[] = array('align' => 'text-center', 'text' => '<br>' . '<button type="submit" name="submit' . $cInfo->configuration_key . '" class="btn btn-primary"><i class="fa-solid fa-check"></i> ' . IMAGE_UPDATE . '</button>' . '&nbsp;<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id) . '" class="btn btn-default" role="button"><i class="fa-solid fa-xmark"></i> ' . IMAGE_CANCEL . '</a>');
+              $contents[] = array('align' => 'text-center', 'text' => '<br>' . '<button type="submit" name="submit' . $cInfo->configuration_key . '" class="btn btn-primary"><i class="fa-solid fa-check"></i> ' . IMAGE_UPDATE . '</button>' . '&nbsp;<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id) . '" class="btn btn-secondary" role="button"><i class="fa-solid fa-xmark"></i> ' . IMAGE_CANCEL . '</a>');
               break;
             default:
               if (isset($cInfo) && is_object($cInfo)) {

@@ -51,8 +51,9 @@ if (!empty($action)) {
       <div class="row">
         <!-- body_text //-->
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
-            <thead>
+            <div class="table-responsive">
+            <table class="table table-hover">
+            <thead class="table-dark">
               <tr class="dataTableHeadingRow">
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE; ?></th>
                 <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_NAME; ?></th>
@@ -113,6 +114,7 @@ if (!empty($action)) {
             ?>
             </tbody>
           </table>
+            </div>
             <div class="row">
                 <div class="col-xs-6"><?php echo $template_split->display_count($template_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_TEMPLATES); ?></div>
                 <div class="col-xs-6 text-right"><?php echo $template_split->display_links($template_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
@@ -150,9 +152,9 @@ if (!empty($action)) {
                       'text' => $ln['language_name'],
                       ];
                 }
-                $contents[] = ['text' => zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, '', 'class="form-control" id="ln"')];
-                $contents[] = ['text' => zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'lang', 'class="control-label"') . zen_draw_pull_down_menu('lang', $language_array, '', 'class="form-control" id="lang"')];
-                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                $contents[] = ['text' => zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="form-label"') . zen_draw_pull_down_menu('ln', $template_array, '', 'class="form-control" id="ln"')];
+                $contents[] = ['text' => zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'lang', 'class="form-label"') . zen_draw_pull_down_menu('lang', $language_array, '', 'class="form-control" id="lang"')];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page']) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
 
               case 'edit':
@@ -164,8 +166,8 @@ if (!empty($action)) {
                   if (isset($value['missing'])) continue;
                   $template_array[] = ['id' => $key, 'text' => $value['name']];
                 }
-                $contents[] = ['text' => zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control" id="ln"')];
-                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                $contents[] = ['text' => zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="form-label"') . zen_draw_pull_down_menu('ln', $template_array, $templates->fields['template_dir'], 'class="form-control" id="ln"')];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
 
               case 'delete':
@@ -174,7 +176,7 @@ if (!empty($action)) {
                 $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('tID', $tInfo->template_id)];
                 $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
                 $contents[] = ['text' => '<b>' . $template_info[$tInfo->template_dir]['name'] . '</b>'];
-                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id) . '" class="btn btn-secondary" role="button">' . IMAGE_CANCEL . '</a>'];
                 break;
 
               default:
