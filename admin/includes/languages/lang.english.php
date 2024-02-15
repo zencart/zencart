@@ -237,7 +237,6 @@ $define = [
     'ERROR_SHIPPING_ORIGIN_ZIP' => '<strong>Warning:</strong> Store Zip Code is not defined. See Configuration | Shipping/Packaging to set it.',
     'ERROR_TOKEN_EXPIRED_PLEASE_RESUBMIT' => 'ERROR: Sorry, there was an error processing your data. Please re-submit the information again.',
     'ERROR_UNABLE_TO_DISPLAY_SERVER_INFORMATION' => 'Sorry, your PHP configuration cannot be displayed because your hosting company has specified that [phpinfo] should be disabled as part of [disable_functions] in php.ini settings.',
-    'ERROR_USPS_STATUS' => '<strong>Warning:</strong> USPS shipping module is either missing the username, or it is set to TEST rather than PRODUCTION and will not work.<br>If you cannot retrieve USPS Shipping Quotes, contact USPS to activate your Web Tools account on their production server. 1-800-344-7779 or icustomercare@usps.com',
     'FEMALE' => 'Female',
     'HEADER_ALT_TEXT' => 'Admin Powered by Zen Cart :: The Art of E-Commerce',
     'HEADER_LOGO_IMAGE' => 'logo.gif',
