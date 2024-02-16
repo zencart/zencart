@@ -134,6 +134,9 @@ UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configFeaturedLis
 UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configAllListing';
 
 
+# Add template_settings field
+ALTER TABLE template_select ADD template_settings LONGTEXT DEFAULT NULL;
+
 
 #### VERSION UPDATE STATEMENTS
 ## THE FOLLOWING 2 SECTIONS SHOULD BE THE "LAST" ITEMS IN THE FILE, so that if the upgrade fails prematurely, the version info is not updated.

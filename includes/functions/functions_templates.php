@@ -9,6 +9,69 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 /**
+ * Template settings access helper function
+ */
+function tpl(string $setting, string $cast_to = null, $default = null, bool $check_globals = false)
+{
+    // Check whether the settings array contains the $setting
+    global $tpl_settings;
+    if (isset($tpl_settings[$setting])) {
+        return zen_cast($tpl_settings[$setting], $cast_to);
+    }
+
+    // Fallback to a globally-defined constant, if it exists
+    if (defined($setting)) {
+        return zen_cast(constant($setting), $cast_to);
+    }
+
+    // Else fall back to a global variable
+    if ($check_globals && isset($GLOBALS[$setting])) {
+        return zen_cast($GLOBALS[$setting], $cast_to);
+    }
+
+    // Else return the provided default, if any
+    if ($default !== null) {
+        return zen_cast($default, $cast_to);
+    }
+
+    return null;
+}
+
+/**
+ * Cast an input to a desired type; Frequently used by the tpl() template-settings helper function.
+ * (Note: does not operate recursively on arrays)
+ */
+function zen_cast($input, ?string $cast_to): mixed
+{
+    // this case is listed first because it's likely to be the most common when called from the tpl() function
+    if ($cast_to === null) {
+        return $input;
+    }
+
+    switch ($cast_to) {
+        case 'string':
+            return (string)$input;
+        case 'boolean':
+        case 'bool':
+            return (bool)$input;
+        case 'int':
+        case 'integer':
+            return (int)$input;
+        case 'double':
+        case 'float':
+            return (float)$input;
+        case 'array':
+            if (is_array($input)) {
+                return $input;
+            }
+            return [$input];
+        case 'passthru':
+        default:
+            return $input;
+    }
+}
+
+/**
  * Get all template directories found in catalog folder structure
  *
  * @return array
