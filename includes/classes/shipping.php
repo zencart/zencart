@@ -1,4 +1,5 @@
 <?php
+
 /**
  * shipping class
  *
@@ -10,6 +11,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
+
 /**
  * shipping class
  * Class used for interfacing with shipping modules
@@ -19,19 +21,16 @@ class shipping extends base
 {
     /**
      * $enabled allows notifier to turn off shipping method
-     * @var boolean
      */
-    public $enabled;
+    public bool $enabled;
     /**
      * $modules is an array of installed shipping module names can be altered by notifier
-     * @var array
      */
-    public $modules;
+    public array $modules;
     /**
      * $abort_legacy_calculations allows a notifier to enable the calculate_boxes_weight_and_tare method
-     * @var boolean
      */
-    public $abort_legacy_calculations;
+    public bool $abort_legacy_calculations;
 
     public function __construct($module = null)
     {
@@ -46,34 +45,34 @@ class shipping extends base
             return;
         }
 
-        $include_modules = [];
+        $modules_to_quote = [];
 
-        if (!empty($module) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules))) {
-            $include_modules[] = [
-            'class' => substr($module['id'], 0, strpos($module['id'], '_')),
-            'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1))
+        if (!empty($module) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.') + 1)), $this->modules))) {
+            $modules_to_quote[] = [
+                'class' => substr($module['id'], 0, strpos($module['id'], '_')),
+                'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.') + 1)),
             ];
         } else {
-            foreach($this->modules as $value) {
+            foreach ($this->modules as $value) {
                 $class = substr($value, 0, strrpos($value, '.'));
-                $include_modules[] = [
+                $modules_to_quote[] = [
                     'class' => $class,
-                    'file' => $value
+                    'file' => $value,
                 ];
             }
         }
 
-        for ($i = 0, $n = count($include_modules); $i < $n; $i++) {
+        foreach ($modules_to_quote as $quote_module) {
             $lang_file = null;
-            $module_file = DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file'];
+            $module_file = DIR_WS_MODULES . 'shipping/' . $quote_module['file'];
             if (IS_ADMIN_FLAG === true) {
-                $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+                $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $quote_module['file'], 'false');
                 $module_file = DIR_FS_CATALOG . $module_file;
             } else {
-                $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $include_modules[$i]['file'], 'false');
+                $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $quote_module['file'], 'false');
             }
-            if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $include_modules[$i]['file'], '/modules/shipping')) {
-                $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $include_modules[$i]['file'], '/modules/shipping');
+            if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], $quote_module['file'], '/modules/shipping')) {
+                $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], $quote_module['file'], '/modules/shipping');
             } else {
                 if (is_object($messageStack)) {
                     if (IS_ADMIN_FLAG === false) {
@@ -85,31 +84,31 @@ class shipping extends base
                 continue;
             }
             $this->enabled = true;
-            $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $include_modules[$i]['class'], $include_modules[$i]['class']);
+            $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $quote_module['class'], $quote_module['class']);
             if ($this->enabled) {
                 include_once $module_file;
-                $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+                $GLOBALS[$quote_module['class']] = new $quote_module['class'];
 
-                $enabled = $this->check_enabled($GLOBALS[$include_modules[$i]['class']]);
-                if ($enabled == false ) {
-                    unset($GLOBALS[$include_modules[$i]['class']]);
+                $enabled = $this->check_enabled($GLOBALS[$quote_module['class']]);
+                if ($enabled === false) {
+                    unset($GLOBALS[$quote_module['class']]);
                 }
             }
         }
     }
 
-    public function check_enabled($class)
+    public function check_enabled($module_class): bool
     {
-        $enabled = $class->enabled;
-        if (method_exists($class, 'check_enabled_for_zone') && $class->enabled) {
-            $enabled = $class->check_enabled_for_zone();
+        $enabled = $module_class->enabled;
+        if (method_exists($module_class, 'check_enabled_for_zone') && $module_class->enabled) {
+            $enabled = $module_class->check_enabled_for_zone();
         }
-        $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE', [], $class, $enabled);
-        if (method_exists($class, 'check_enabled') && $enabled) {
-            $enabled = $class->check_enabled();
+        $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE', [], $module_class, $enabled);
+        if (method_exists($module_class, 'check_enabled') && $enabled) {
+            $enabled = $module_class->check_enabled();
         }
-        $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED', [], $class, $enabled);
-        return $enabled;
+        $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED', [], $module_class, $enabled);
+        return !empty($enabled);
     }
 
     public function calculate_boxes_weight_and_tare()
@@ -122,18 +121,18 @@ class shipping extends base
             return;
         }
 
-        if (is_array($this->modules)) {
+        if (!empty($this->modules)) {
             $shipping_quoted = '';
             $shipping_num_boxes = 1;
             $shipping_weight = $total_weight;
 
-            $za_tare_array = preg_split("/[:,]/" , str_replace(' ', '', !empty(SHIPPING_BOX_WEIGHT) ? SHIPPING_BOX_WEIGHT : '0:0'));
-            $zc_tare_percent= (float)$za_tare_array[0];
-            $zc_tare_weight= (float)$za_tare_array[1];
+            $za_tare_array = preg_split("/[:,]/", str_replace(' ', '', !empty(SHIPPING_BOX_WEIGHT) ? SHIPPING_BOX_WEIGHT : '0:0'));
+            $zc_tare_percent = (float)$za_tare_array[0];
+            $zc_tare_weight = (float)$za_tare_array[1];
 
-            $za_large_array = preg_split("/[:,]/" , str_replace(' ', '', !empty(SHIPPING_BOX_PADDING) ? SHIPPING_BOX_PADDING : '0:0'));
-            $zc_large_percent= (float)$za_large_array[0];
-            $zc_large_weight= (float)$za_large_array[1];
+            $za_large_array = preg_split("/[:,]/", str_replace(' ', '', !empty(SHIPPING_BOX_PADDING) ? SHIPPING_BOX_PADDING : '0:0'));
+            $zc_large_percent = (float)$za_large_array[0];
+            $zc_large_weight = (float)$za_large_array[1];
 
             // SHIPPING_BOX_WEIGHT = tare
             // SHIPPING_BOX_PADDING = Large Box % increase
@@ -142,28 +141,28 @@ class shipping extends base
             switch (true) {
                 // large box add padding
                 case (SHIPPING_MAX_WEIGHT <= $shipping_weight):
-                    $shipping_weight = $shipping_weight + ($shipping_weight*($zc_large_percent/100)) + $zc_large_weight;
+                    $shipping_weight = $shipping_weight + ($shipping_weight * ($zc_large_percent / 100)) + $zc_large_weight;
                     break;
 
                 default:
                     // add tare weight < large
-                    $shipping_weight = $shipping_weight + ($shipping_weight*($zc_tare_percent/100)) + $zc_tare_weight;
+                    $shipping_weight = $shipping_weight + ($shipping_weight * ($zc_tare_percent / 100)) + $zc_tare_weight;
                     break;
             }
 
             // total weight with Tare
             $_SESSION['shipping_weight'] = $shipping_weight;
             if ($shipping_weight > SHIPPING_MAX_WEIGHT) { // Split into many boxes
-//        $shipping_num_boxes = ceil($shipping_weight/SHIPPING_MAX_WEIGHT);
-                $zc_boxes = zen_round(($shipping_weight/SHIPPING_MAX_WEIGHT), 2);
+//              $shipping_num_boxes = ceil($shipping_weight/SHIPPING_MAX_WEIGHT);
+                $zc_boxes = zen_round(($shipping_weight / SHIPPING_MAX_WEIGHT), 2);
                 $shipping_num_boxes = ceil($zc_boxes);
-                $shipping_weight = $shipping_weight/$shipping_num_boxes;
+                $shipping_weight = $shipping_weight / $shipping_num_boxes;
             }
         }
         $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE', [], $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
     }
 
-    public function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = [])
+    public function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = []): array
     {
         global $shipping_weight, $uninsurable_value;
         $quotes_array = [];
@@ -175,30 +174,29 @@ class shipping extends base
         // calculate amount not to be insured on shipping
         $uninsurable_value = (method_exists($this, 'get_uninsurable_value')) ? $this->get_uninsurable_value($insurance_exclusions) : 0;
 
-        if (is_array($this->modules)) {
-            $include_quotes = [];
+        if (!empty($this->modules)) {
+            $modules_to_quote = [];
 
-            foreach($this->modules as $value) {
+            foreach ($this->modules as $value) {
                 $class = substr($value, 0, strrpos($value, '.'));
                 if (!empty($module)) {
-                    if ($module == $class && isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
-                        $include_quotes[] = $class;
+                    if ($module === $class && isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
+                        $modules_to_quote[] = $class;
                     }
                 } elseif (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
-                    $include_quotes[] = $class;
+                    $modules_to_quote[] = $class;
                 }
             }
 
-            $size = count($include_quotes);
-            for ($i = 0; $i < $size; $i++) {
-                if (method_exists($GLOBALS[$include_quotes[$i]], 'update_status')) {
-                    $GLOBALS[$include_quotes[$i]]->update_status();
+            foreach ($modules_to_quote as $quoting_module) {
+                if (method_exists($GLOBALS[$quoting_module], 'update_status')) {
+                    $GLOBALS[$quoting_module]->update_status();
                 }
-                if (false === $GLOBALS[$include_quotes[$i]]->enabled) {
+                if (false === $GLOBALS[$quoting_module]->enabled) {
                     continue;
                 }
                 $save_shipping_weight = $shipping_weight;
-                $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
+                $quotes = $GLOBALS[$quoting_module]->quote($method);
                 if (!isset($quotes['tax']) && !empty($quotes)) {
                     $quotes['tax'] = 0;
                 }
@@ -212,9 +210,9 @@ class shipping extends base
         return $quotes_array;
     }
 
-    public function cheapest()
+    public function cheapest(): array|bool
     {
-        if (!is_array($this->modules)) {
+        if (empty($this->modules)) {
             return false;
         }
 
@@ -227,14 +225,13 @@ class shipping extends base
                 if (empty($quotes['methods']) || isset($quotes['error'])) {
                     continue;
                 }
-                $size = count($quotes['methods']);
-                for ($i = 0; $i < $size; $i++) {
-                    if (isset($quotes['methods'][$i]['cost'])) {
+                foreach ($quotes['methods'] as $method) {
+                    if (isset($method['cost'])) {
                         $rates[] = [
-                            'id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
-                            'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',
-                            'cost' => $quotes['methods'][$i]['cost'],
-                            'module' => $quotes['id']
+                            'id' => $quotes['id'] . '_' . $method['id'],
+                            'title' => $quotes['module'] . ' (' . $method['title'] . ')',
+                            'cost' => $method['cost'],
+                            'module' => $quotes['id'],
                         ];
 
                         if ($quotes['id'] !== 'storepickup') {
@@ -255,9 +252,8 @@ class shipping extends base
                     }
 
                     // -----
-                    // Give a customized shipping module the opportunity to exclude itself from being quoted
-                    // as the cheapest.  The observer must set the $exclude_from_cheapest to specifically
-                    // (bool)true to be excluded.
+                    // Give a customized shipping module the opportunity to exclude itself from being quoted as the cheapest.
+                    // The observer must set the $exclude_from_cheapest to (bool)true to be excluded.
                     //
                     $exclude_from_cheapest = false;
                     $this->notify('NOTIFY_SHIPPING_EXCLUDE_FROM_CHEAPEST', $rate['module'], $exclude_from_cheapest);
