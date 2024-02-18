@@ -20,6 +20,10 @@ $parameters = [
   'products_price_w' => '0',
   'products_virtual' => DEFAULT_PRODUCT_PRODUCTS_VIRTUAL,
   'products_weight' => '0',
+  'products_length' => '',
+  'products_width' => '',
+  'products_height' => '',
+  'product_ships_in_own_box' => '',
   'products_date_added' => '',
   'products_last_modified' => '',
   'products_date_available' => '',
@@ -438,11 +442,42 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       ?>
     </div>
   </div>
+  <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;padding: 10px 10px 0 10px;">
+      <h2><?php echo TEXT_SHIPPING_PACKAGE_DETAILS; ?></h2>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_WEIGHT, 'products_weight', 'class="col-sm-3 control-label"'); ?>
-    <div class="col-sm-9 col-md-6">
+      <?php echo defined('TEXT_SHIPPING_' . SHIPPING_WEIGHT_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_WEIGHT_UNITS) : SHIPPING_WEIGHT_UNITS; ?>
+    <div class="col-sm-6 col-md-4">
         <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control" id="products_weight" inputmode="decimal"'); ?>
     </div>
+  </div>
+  <div class="form-group">
+    <?php echo zen_draw_label(TEXT_PRODUCTS_LENGTH, 'products_length', 'class="col-sm-3 control-label"'); ?>
+      <?php echo defined('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) : SHIPPING_DIMENSION_UNITS; ?>
+    <div class="col-sm-6 col-md-4">
+    <?php echo zen_draw_input_field('products_length', $pInfo->products_length, 'class="form-control" id="products_length" inputmode="decimal"'); ?>
+    </div>
+  </div>
+  <div class="form-group">
+     <?php echo zen_draw_label(TEXT_PRODUCTS_WIDTH, 'products_width', 'class="col-sm-3 control-label"'); ?>
+      <?php echo defined('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) : SHIPPING_DIMENSION_UNITS; ?>
+    <div class="col-sm-6 col-md-4">
+    <?php echo zen_draw_input_field('products_width', $pInfo->products_width, 'class="form-control" id="products_width" inputmode="decimal"'); ?>
+    </div>
+  </div>
+    <div class="form-group">
+    <?php echo zen_draw_label(TEXT_PRODUCTS_HEIGHT, 'products_height', 'class="col-sm-3 control-label"'); ?>
+        <?php echo defined('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) : SHIPPING_DIMENSION_UNITS; ?>
+    <div class="col-sm-6 col-md-4">
+    <?php echo zen_draw_input_field('products_height', $pInfo->products_height, 'class="form-control" id="products_height" inputmode="decimal"'); ?>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="product_ships_in_own_box"><?php echo TEXT_PRODUCT_SHIPS_IN_OWN_BOX; ?></label>
+    <div class="col-sm-6 col-md-4">
+    <?php echo zen_draw_checkbox_field('product_ships_in_own_box', '1', $pInfo->product_ships_in_own_box, '', 'id="product_ships_in_own_box"') . '&nbsp;' . TEXT_PRODUCT_SHIPS_IN_OWN_BOX_HELP . '&nbsp;' ?>
+    </div>
+  </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
