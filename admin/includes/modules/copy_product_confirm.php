@@ -55,6 +55,12 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
             'products_quantity' =>  'float',
             'products_price' =>  'float',
             'products_weight' =>  'float',
+
+            'products_length' =>  'float',
+            'products_width' =>  'float',
+            'products_height' =>  'float',
+            'product_ships_in_own_box' =>  'int',
+
             'products_tax_class_id' =>  'int',
             'manufacturers_id' =>  'int',
             'product_is_free' =>  'int',

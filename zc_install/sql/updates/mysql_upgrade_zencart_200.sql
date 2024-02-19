@@ -36,9 +36,23 @@ TRUNCATE TABLE db_cache;
 
 
 #############
-#PROGRESS_FEEDBACK:!TEXT=Altering Product table - may take some time
+#PROGRESS_FEEDBACK:!TEXT=Adding fields to Product table - may take some time
 
 ALTER TABLE products ADD products_mpn varchar(32) DEFAULT NULL AFTER products_model;
+
+# Product Dimensions fields. Modify(update) format if already present, or add if missing.
+ALTER TABLE products MODIFY products_length DECIMAL(8,4) DEFAULT NULL;
+ALTER TABLE products ADD products_length DECIMAL(8,4) DEFAULT NULL AFTER products_weight;
+ALTER TABLE products MODIFY products_width DECIMAL(8,4) DEFAULT NULL;
+ALTER TABLE products ADD products_width DECIMAL(8,4) DEFAULT NULL AFTER products_length;
+ALTER TABLE products MODIFY products_height DECIMAL(8,4) DEFAULT NULL;
+ALTER TABLE products ADD products_height DECIMAL(8,4) DEFAULT NULL AFTER products_width;
+# rename field used in some plugins:
+ALTER TABLE products CHANGE products_ready_to_ship product_ships_in_own_box TINYINT DEFAULT NULL;
+ALTER TABLE products MODIFY product_ships_in_own_box TINYINT DEFAULT NULL;
+ALTER TABLE products ADD product_ships_in_own_box TINYINT DEFAULT NULL AFTER products_height;
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Shipping Weight Units', 'SHIPPING_WEIGHT_UNITS', 'lbs', 'How should shipping modules treat the weights set on products? (remember, 1 ounce=0.0625 lbs, so choose lbs). <b>NOTE: You must still manually update your language files to show the correct units visually.</b>', 7, 6, now(), 'zen_cfg_select_option([\'lbs\', \'kgs\'],');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Shipping Dimension Units', 'SHIPPING_DIMENSION_UNITS', 'inches', 'In which unit of measurement does your store save length/width/height for your products?', 7, 7, now(), 'zen_cfg_select_option([\'inches\', \'centimeters\'],');
 
 #PROGRESS_FEEDBACK:!TEXT=Altering Order table - may take some time
 

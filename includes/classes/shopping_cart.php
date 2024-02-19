@@ -1385,12 +1385,14 @@ class shoppingCart extends base
                 'quantity' => $new_qty,
                 'weight' => $product['products_weight'] + $this->attributes_weight($uprid),
 
-                'weight_type' => $product['products_weight_type'] ?? null,
-                'dim_type' => $product['products_dim_type'] ?? null,
-                'length' => $product['products_length'] ?? null,
-                'width' => $product['products_width'] ?? null,
-                'height' => $product['products_height'] ?? null,
-                'ready_to_ship' => $product['products_ready_to_ship'] ?? null,
+                // units as defined in Admin, optionally overridden by what might be defined in products table from older shipping modules
+                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? (defined('SHIPPING_WEIGHT_UNITS') ? (string)SHIPPING_WEIGHT_UNITS : null),
+                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? (defined('SHIPPING_DIMENSION_UNITS') ? (string)SHIPPING_DIMENSION_UNITS : null),
+
+                'length' => $product['products_length'] ?? null, // float
+                'width' => $product['products_width'] ?? null, // float
+                'height' => $product['products_height'] ?? null, // float
+                'ships_in_own_box' => $product['product_ships_in_own_box'] ?? $product['products_ready_to_ship'] ?? null, // [0,1]
 
                 'final_price' => $products_price + $this->attributes_price($uprid),
                 'onetime_charges' => $this->attributes_price_onetime_charges($uprid, $new_qty),
