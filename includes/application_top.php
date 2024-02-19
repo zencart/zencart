@@ -82,7 +82,7 @@ define('PAGE_PARSE_START_TIME', microtime());
  * This is intended to run before any dependencies are required
  * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
  */
-if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 80000) {
+if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 80002) {
     require 'includes/templates/template_default/templates/tpl_zc_phpupgrade_default.php';
     exit(0);
 }
