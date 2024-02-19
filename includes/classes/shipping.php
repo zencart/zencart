@@ -20,22 +20,24 @@ if (!defined('IS_ADMIN_FLAG')) {
 class shipping extends base
 {
     /**
-     * $enabled allows notifier to turn off shipping method
+     * $enabled public property used by notifiers to allow notifier to turn off a shipping method when querying available modules
      */
     public bool $enabled;
     /**
-     * $modules is an array of installed shipping module names can be altered by notifier
+     * $modules is an array of installed shipping module names; notifier hook exists to alter if needed
      */
     public array $modules;
     /**
-     * $abort_legacy_calculations allows a notifier to enable the calculate_boxes_weight_and_tare method
+     * $abort_legacy_calculations public property allows a notifier to intercept the calculate_boxes_weight_and_tare method
      */
     public bool $abort_legacy_calculations;
+    /**
+     * Initialized modules whose status is "enabled"
+     */
+    protected array $initialized_modules = [];
 
     public function __construct($module = null)
     {
-        global $PHP_SELF, $messageStack, $languageLoader;
-
         if (defined('MODULE_SHIPPING_INSTALLED') && !empty(MODULE_SHIPPING_INSTALLED)) {
             $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
         }
@@ -44,6 +46,17 @@ class shipping extends base
         if (empty($this->modules)) {
             return;
         }
+
+        $this->initialize_modules($module);
+    }
+
+    /**
+     * Load language files and check "enabled" configuration status of each module.
+     * If $module is specified, limits the initialization to just that module; else processes all "installed" modules listed in Admin.
+     */
+    protected function initialize_modules($module = null): void
+    {
+        global $PHP_SELF, $messageStack, $languageLoader;
 
         $modules_to_quote = [];
 
@@ -92,11 +105,29 @@ class shipping extends base
                 $enabled = $this->check_enabled($GLOBALS[$quote_module['class']]);
                 if ($enabled === false) {
                     unset($GLOBALS[$quote_module['class']]);
+                } else {
+                    $this->initialized_modules[] = $quote_module['class'];
                 }
             }
         }
     }
 
+    public function getInitializedModules(): array
+    {
+        return $this->initialized_modules;
+    }
+
+    /**
+     * NOTE: Could eventually replace zen_count_shipping_modules() function
+     */
+    public function countEnabledModules(): int
+    {
+        return count($this->initialized_modules);
+    }
+
+    /**
+     * Check whether a module is enabled for the active checkout zone
+     */
     public function check_enabled($module_class): bool
     {
         $enabled = $module_class->enabled;
@@ -111,6 +142,12 @@ class shipping extends base
         return !empty($enabled);
     }
 
+    /**
+     * Legacy package calculation
+     * Rudimentarily takes the sum of all weights and then divides into number of boxes required based on admin-configured max weight per box.
+     * Includes adding tare/padding percentage based on box size.
+     * DOES NOT TAKE PACKAGE DIMENSIONS INTO ACCOUNT.
+     */
     public function calculate_boxes_weight_and_tare()
     {
         global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
@@ -162,6 +199,15 @@ class shipping extends base
         $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE', [], $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
     }
 
+    /**
+     * Cycle through all enabled shipping modules and prepare quotes for all methods supported by those modules
+     *
+     * @param $method - If specified, limit to re-quoting the specified method
+     * @param $module - If specified, limit to re-quoting for the specified module
+     * @param $calc_boxes_weight_tare - Do box/tare calculations?
+     * @param $insurance_exclusions - Pass rules for excluding from insurance calculations; requires customization.
+     * @return array
+     */
     public function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = []): array
     {
         global $shipping_weight, $uninsurable_value;
@@ -210,6 +256,10 @@ class shipping extends base
         return $quotes_array;
     }
 
+    /**
+     * Determine cheapest-available shipping method.
+     * Excludes store-pickup unless store-pickup is the only option
+     */
     public function cheapest(): array|bool
     {
         if (empty($this->modules)) {
