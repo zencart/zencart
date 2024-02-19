@@ -11,7 +11,7 @@ if (PHP_VERSION_ID < 80002) {
 }
 
 /**
- * File contains just application_top code
+ * Bootstrap file contains former application_top code
  *
  * Initializes common classes & methods. Controlled by an array which describes
  * the elements to be initialised and the order in which that happens.
