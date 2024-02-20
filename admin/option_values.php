@@ -109,13 +109,13 @@ switch ($_GET['action']) {
     <!-- body //-->
     <div class="container-fluid">
 
-        <h1><?= HEADING_TITLE; ?></h1>
+        <h1><?= HEADING_TITLE ?></h1>
         <!-- body_text //-->
         <?php
         if (empty($_GET['options_id'])) {
             ?>
             <div id="editOptionName">
-                <h2><?= TEXT_UPDATE_OPTION_VALUES; ?></h2>
+                <h2><?= TEXT_UPDATE_OPTION_VALUES ?></h2>
                 <?php
                 echo zen_draw_form('quick_jump', FILENAME_PRODUCTS_OPTIONS_VALUES, '', 'get', 'class="form-inline"');
                 echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
@@ -137,23 +137,23 @@ switch ($_GET['action']) {
                     ];
                 }
                 echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, '', 'class="form-control" id="options_id"'); ?>
-                <button type="submit" class="btn btn-primary"><?= IMAGE_EDIT; ?></button>
+                <button type="submit" class="btn btn-primary"><?= IMAGE_EDIT ?></button>
                 <?php echo '</form>'; ?>
             </div>
             <hr>
             <?php
         } else {
             ?>
-            <h2><?= TEXT_UPDATE_OPTION_VALUES; ?></h2>
-            <h3><?= TEXT_EDIT_OPTION_NAME . zen_options_name($_GET['options_id']); ?></h3>
+            <h2><?= TEXT_UPDATE_OPTION_VALUES ?></h2>
+            <h3><?= TEXT_EDIT_OPTION_NAME . zen_options_name($_GET['options_id']) ?></h3>
             <div class="table-responsive">
                 <?php
                 echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id'], 'post', 'class="form-horizontal"'); ?>
                 <table class="table-condensed">
                     <tr class="dataTableHeadingRow">
-                        <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_OPTION_VALUE_ID; ?></th>
-                        <th class="dataTableHeadingContent"><?= TABLE_HEADING_OPTION_VALUE_NAME; ?></th>
-                        <th class="dataTableHeadingContent text-center"><?= TEXT_SORT_ORDER; ?></th>
+                        <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_OPTION_VALUE_ID ?></th>
+                        <th class="dataTableHeadingContent"><?= TABLE_HEADING_OPTION_VALUE_NAME ?></th>
+                        <th class="dataTableHeadingContent text-center"><?= TEXT_SORT_ORDER ?></th>
                     </tr>
                     <?php
                     $rows = $db->Execute(
@@ -167,9 +167,9 @@ switch ($_GET['action']) {
                     );
                     foreach ($rows as $row) { ?>
                         <tr>
-                            <td class="dataTableContent text-center"><?= $row['products_options_values_id']; ?></td>
-                            <td class="dataTableContent"><?= $row['products_options_values_name']; ?></td>
-                            <td class="dataTableContent"><?= zen_draw_input_field('options_values_new_sort_order[' . $row['products_options_values_id'] . ']', $row['products_options_values_sort_order'], 'size="4" class="form-control text-right"'); ?>
+                            <td class="dataTableContent text-center"><?= $row['products_options_values_id'] ?></td>
+                            <td class="dataTableContent"><?= $row['products_options_values_name'] ?></td>
+                            <td class="dataTableContent"><?= zen_draw_input_field('options_values_new_sort_order[' . $row['products_options_values_id'] . ']', $row['products_options_values_sort_order'], 'size="4" class="form-control text-right"') ?>
                             </td>
                         </tr>
                         <?php
@@ -178,13 +178,13 @@ switch ($_GET['action']) {
                 <div class="row">
                     <?php
                     if (count($languages_array) > 1) { ?>
-                        <div class="radio"><label><?= zen_draw_radio_field('language', 'current_only') . TEXT_UPDATE_SORT_LANGUAGE_CURRENT; ?></label></div>
-                        <div class="radio"><label><?= zen_draw_radio_field('language', 'all', true) . TEXT_UPDATE_SORT_LANGUAGE_ALL; ?></label></div> <?php
+                        <div class="radio"><label><?= zen_draw_radio_field('language', 'current_only') . TEXT_UPDATE_SORT_LANGUAGE_CURRENT ?></label></div>
+                        <div class="radio"><label><?= zen_draw_radio_field('language', 'all', true) . TEXT_UPDATE_SORT_LANGUAGE_ALL ?></label></div> <?php
                     } ?>
-                    <button type="submit" class="btn btn-warning"><?= TEXT_UPDATE_SUBMIT; ?></button>
-                    <a href="<?= zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES); ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL; ?></a>
+                    <button type="submit" class="btn btn-warning"><?= TEXT_UPDATE_SUBMIT ?></button>
+                    <a href="<?= zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
                 </div>
-                <?php echo '</form>'; ?>
+                <?='</form>' ?>
             </div>
             <?php
         }

@@ -21,7 +21,7 @@ class AdminEndpointsTest extends zcFeatureTestCaseAdmin
         'attributes_controller' => ['strings' => ['Please select a Category to display the Product Attributes of']],
         'downloads_manager' => ['strings' => ['Admin Downloads Manager']],
         'option_name' => ['strings' => ['Option Name Sort Order']],
-        'option_values' => ['strings' => ['Option Values Default Sort Order']],
+        'option_values' => ['strings' => ['Option Value Sorter']],
         'manufacturers' => ['strings' => ['Admin Manufacturers']],
         'reviews' => ['strings' => ['Admin Reviews']],
         'specials' => ['strings' => ['Admin Specials']],
