@@ -24,17 +24,39 @@ if (!isset($_GET['action'])) {
 }
 
 switch ($_GET['action']) {
-  case ('update_sort_order'):
-    foreach ($_POST['options_values_new_sort_order'] as $id => $new_sort_order) {
 
-      $db->Execute("UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES . "
-                    SET products_options_values_sort_order = " . (int)$_POST['options_values_new_sort_order'][$id] . "
-                    WHERE products_options_values_id = " . (int)$id);
-    }
-    $messageStack->add_session(SUCCESS_OPTION_VALUES_SORT_ORDER . ' ' . zen_options_name($_GET['options_id']), 'success');
+    //Update by Option Name
+    case ('update_sort_order'):
+
+      if (empty($_POST['language']) || $_POST['language'] === 'current_only') {
+          $languages_array[0] = ['id' => $_SESSION['languages_id']];
+      } else {
+          $languages_array = zen_get_languages();
+      }
+      foreach ($languages_array as $language) {
+          foreach ($_POST['options_values_new_sort_order'] as $id => $new_sort_order) {
+              $db->Execute(
+                  'UPDATE ' . TABLE_PRODUCTS_OPTIONS_VALUES . '
+                    SET products_options_values_sort_order = ' . (int)$new_sort_order . '
+                    WHERE products_options_values_id = ' . (int)$id . ' AND language_id = ' . (int)$language['id']
+              );
+              $messageStack->add_session(
+                  sprintf(
+                      SUCCESS_OPTION_VALUES_SORT_ORDER_NAME,
+                      htmlentities(zen_get_option_name_language($_GET['options_id'], (int)$language['id'])),
+                      $_GET['options_id'],
+                      htmlentities(zen_values_name($id, (int)$language['id'])),
+                      $id,
+                      $new_sort_order
+                  ),
+                  'success'
+              );
+          }
+      }
     $_GET['action'] = '';
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
     break;
+
 // update by product
   case ('update_product'):
     $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_SORT . $_POST['products_update_id'] . ' ' . zen_get_products_name($_POST['products_update_id'], $_SESSION['languages_id']), 'success');
@@ -72,7 +94,7 @@ switch ($_GET['action']) {
     $action = '';
     zen_redirect(zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES));
     break;
-} // switch
+}
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -86,112 +108,87 @@ switch ($_GET['action']) {
 
     <!-- body //-->
     <div class="container-fluid">
-      <div class="table-responsive">
-        <h1><?php echo HEADING_TITLE; ?></h1>
+
+        <h1><?= HEADING_TITLE ?></h1>
         <!-- body_text //-->
         <?php
         if (empty($_GET['options_id'])) {
-          ?>
-          <?php echo zen_draw_form('quick_jump', FILENAME_PRODUCTS_OPTIONS_VALUES, '', 'get', 'class="form-horizontal"'); ?>
-          <table class="table table-condensed">
-            <tr class="dataTableHeadingRow">
-              <td colspan="2" class="dataTableHeadingContent text-center"><?php echo TEXT_UPDATE_OPTION_VALUES; ?></td>
-            </tr>
-            <tr class="dataTableHeadingRow">
-              <td class="dataTableHeadingContent">
-                  <?php echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
-                  //filter the dropdown to only show Option Names that have Option Values defined
-                  $options_values = $db->Execute("SELECT DISTINCT po.products_options_id, po.products_options_name
-                                                  FROM " . TABLE_PRODUCTS_OPTIONS . " po INNER JOIN " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " povtpo
-                                                  ON po.products_options_id = povtpo.products_options_id
-                                                  WHERE po.language_id = " . (int)$_SESSION['languages_id'] . "
-                                                  AND po.products_options_name != ''
-                                                  AND po.products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-                                                  AND po.products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
-                                                  ORDER BY po.products_options_name");
-                  $optionsValuesArray = array();
-                  foreach ($options_values as $options_value) {
-                    $optionsValuesArray[] = array(
-                      'id' => $options_value['products_options_id'],
-                      'text' => $options_value['products_options_name']
-                    );
-                  }
-                  ?>
-                  <?php echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, '', 'class="form-control" id="options_id"'); ?>
-              </td>
-              <td class="dataTableHeadingContent text-center">
-                <button type="submit" class="btn btn-primary"><?php echo IMAGE_EDIT; ?></button>
-              </td>
-            </tr>
-          </table>
-          <?php echo '</form>'; ?>
-          <?php
-        } else {
-          ?>
-          <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id'], 'post', 'class="form-horizontal"'); ?>
-          <table class="table table-condensed table-striped">
-            <tr class="dataTableHeadingRow">
-              <td colspan="3" class="dataTableHeadingContent text-center">
-                <?php echo TEXT_EDIT_OPTION_NAME; ?> <?php echo zen_options_name($_GET['options_id']); ?></td>
-            </tr>
-            <tr class="dataTableHeadingRow">
-              <td class="dataTableHeadingContent">Option ID</td>
-              <td class="dataTableHeadingContent">Option Value Name</td>
-              <td class="dataTableHeadingContent">Sort Order</td>
-            </tr>
-            <?php
-            $rows = $db->Execute("SELECT *
-                                  FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov,
-                                       " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " povtpo
-                                  WHERE povtpo.products_options_values_id = pov.products_options_values_id
-                                  AND povtpo.products_options_id = " . (int)$_GET['options_id'] . "
-                                  AND pov.language_id = " . (int)$_SESSION['languages_id'] . "
-                                  ORDER BY pov.products_options_values_sort_order, pov.products_options_values_id");
-
-            if ($rows->RecordCount() > 0) {
-              $option_values_exist = true;
-              foreach ($rows as $row) {
-                ?>
-                <tr>
-                  <td class="dataTableContent"><?php echo $row['products_options_values_id']; ?></td>
-                  <td class="dataTableContent"><?php echo $row['products_options_values_name']; ?></td>
-                  <td class="dataTableContent">
-                    <?php echo zen_draw_input_field('options_values_new_sort_order[' . $row['products_options_values_id'] . ']', $row['products_options_values_sort_order'], 'size="4" class="form-control"'); ?>
-                  </td>
-                </tr>
-                <?php
-              }
-            } else {
-              $option_values_exist = false;
-              ?>
-              <tr>
-                <td colspan="3" class="text-center dataTableContent"><?php echo TEXT_NO_OPTION_VALUE . zen_options_name($_GET['options_id']); ?></td>
-              </tr>
-              <?php
-            }
             ?>
-            <tr class="dataTableHeadingRow">
+            <div id="editOptionName">
+                <h2><?= TEXT_UPDATE_OPTION_VALUES ?></h2>
                 <?php
-                if ($option_values_exist == true) {
-                  ?>
-                <td colspan="2" class="dataTableHeadingContent text-right">
-                  <button type="submit" class="btn btn-primary"><?php echo TEXT_UPDATE_SUBMIT; ?></button>
-                </td>
+                echo zen_draw_form('quick_jump', FILENAME_PRODUCTS_OPTIONS_VALUES, '', 'get', 'class="form-inline"');
+                echo zen_draw_label(TEXT_SELECT_OPTION, 'options_id', 'class="control-label"');
+                // Get only Option Names that have Option Values
+                $options_values = $db->Execute(
+                    'SELECT DISTINCT po.products_options_id, po.products_options_name
+                                  FROM ' . TABLE_PRODUCTS_OPTIONS . ' po INNER JOIN ' . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . ' povtpo
+                                  ON po.products_options_id = povtpo.products_options_id
+                                  WHERE po.language_id = ' . (int)$_SESSION['languages_id'] . '
+                                  AND po.products_options_name != ""
+                                  AND po.products_options_type != ' . (int)PRODUCTS_OPTIONS_TYPE_TEXT . '
+                                  AND po.products_options_type != ' . (int)PRODUCTS_OPTIONS_TYPE_FILE . '
+                                  ORDER BY po.products_options_name');
+                $optionsValuesArray = [];
+                foreach ($options_values as $options_value) {
+                    $optionsValuesArray[] = [
+                        'id' => $options_value['products_options_id'],
+                        'text' => $options_value['products_options_name']
+                    ];
+                }
+                echo zen_draw_pull_down_menu('options_id', $optionsValuesArray, '', 'class="form-control" id="options_id"'); ?>
+                <button type="submit" class="btn btn-primary"><?= IMAGE_EDIT ?></button>
+                <?php echo '</form>'; ?>
+            </div>
+            <hr>
+            <?php
+        } else {
+            ?>
+            <h2><?= TEXT_UPDATE_OPTION_VALUES ?></h2>
+            <h3><?= TEXT_EDIT_OPTION_NAME . zen_options_name($_GET['options_id']) ?></h3>
+            <div class="table-responsive">
                 <?php
-              }
-              ?>
-              <td <?php echo ($option_values_exist == true ? '' : 'colspan="3"'); ?> class="dataTableHeadingContent text-left">
-                <a href="<?php echo zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
-              </td>
-            </tr>
-          </table>
-          <?php echo '</form>'; ?>
-          <?php
-        } // which table
-        ?>
+                echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_VALUES, 'action=update_sort_order&options_id=' . $_GET['options_id'], 'post', 'class="form-horizontal"'); ?>
+                <table class="table-condensed">
+                    <tr class="dataTableHeadingRow">
+                        <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_OPTION_VALUE_ID ?></th>
+                        <th class="dataTableHeadingContent"><?= TABLE_HEADING_OPTION_VALUE_NAME ?></th>
+                        <th class="dataTableHeadingContent text-center"><?= TEXT_SORT_ORDER ?></th>
+                    </tr>
+                    <?php
+                    $rows = $db->Execute(
+                        'SELECT *
+                                  FROM ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' pov,
+                                       ' . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . ' povtpo
+                                  WHERE povtpo.products_options_values_id = pov.products_options_values_id
+                                  AND povtpo.products_options_id = ' . (int)$_GET['options_id'] . '
+                                  AND pov.language_id = ' . (int)$_SESSION['languages_id'] . '
+                                  ORDER BY pov.products_options_values_sort_order, pov.products_options_values_id'
+                    );
+                    foreach ($rows as $row) { ?>
+                        <tr>
+                            <td class="dataTableContent text-center"><?= $row['products_options_values_id'] ?></td>
+                            <td class="dataTableContent"><?= $row['products_options_values_name'] ?></td>
+                            <td class="dataTableContent"><?= zen_draw_input_field('options_values_new_sort_order[' . $row['products_options_values_id'] . ']', $row['products_options_values_sort_order'], 'size="4" class="form-control text-right"') ?>
+                            </td>
+                        </tr>
+                        <?php
+                    } ?>
+                </table>
+                <div class="row">
+                    <?php
+                    if (count($languages_array) > 1) { ?>
+                        <div class="radio"><label><?= zen_draw_radio_field('language', 'current_only') . TEXT_UPDATE_SORT_LANGUAGE_CURRENT ?></label></div>
+                        <div class="radio"><label><?= zen_draw_radio_field('language', 'all', true) . TEXT_UPDATE_SORT_LANGUAGE_ALL ?></label></div> <?php
+                    } ?>
+                    <button type="submit" class="btn btn-warning"><?= TEXT_UPDATE_SUBMIT ?></button>
+                    <a href="<?= zen_href_link(FILENAME_PRODUCTS_OPTIONS_VALUES) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
+                </div>
+                <?='</form>' ?>
+            </div>
+            <?php
+        }
 
-      </div>
-      <?php
 //////////////////////////////////////////
 // BOF: Update by Product, Category or All products
 // only show when not updating Option Value Sort Order

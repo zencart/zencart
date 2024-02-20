@@ -321,7 +321,7 @@ function zen_get_attributes_options_sort_order($products_id, $options_id, $optio
 
     $check_options_id = zen_get_attribute_details((int)$products_id, (int)$options_id, (int)$options_values_id);
     $check_options_sort_order = ($check_options_id->EOF) ? '0' : $check_options_id->fields['products_options_sort_order'];
- 
+
     return $check_sort_order . '.' . str_pad($check_options_sort_order, 5, '0', STR_PAD_LEFT);
 }
 
@@ -374,17 +374,20 @@ function zen_options_name($options_id)
 
 /**
  * Return Options_values_name from value-ID
- * @param int $values_id
+ * @param  int|string  $values_id
+ * @param  int  $languages_id
  * @return string
  */
-function zen_values_name($values_id)
+function zen_values_name(int|string $values_id, int $languages_id = 0): string
 {
     global $db;
-
+    if ($languages_id === 0) {
+        $languages_id = (int)$_SESSION['languages_id'];
+    }
     $values_values = $db->Execute("SELECT products_options_values_name
                                    FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                                    WHERE products_options_values_id = " . (int)$values_id . "
-                                   AND language_id = " . (int)$_SESSION['languages_id'], 1);
+                                   AND language_id = " . $languages_id, 1);
     return ($values_values->EOF) ? '' : $values_values->fields['products_options_values_name'];
 }
 
