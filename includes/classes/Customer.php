@@ -205,6 +205,7 @@ class Customer extends base
             "UPDATE " . TABLE_CUSTOMERS . "
                 SET last_login_ip = '" . zen_db_input(zen_get_ip_address()) . "'
               WHERE customers_id = " . (int)$customer_id;
+        $db->Execute($sql);
 
         // these session variables are used in various places across the catalog
         $_SESSION['customer_id'] = (int)$customer_id;
