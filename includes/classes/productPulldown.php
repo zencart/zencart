@@ -23,10 +23,10 @@
             'products_sort_order' => 'p',
         ];
 
-        private $categories_join;
-        private $output_string;
-        private $show_model;
-        private $show_price;
+        protected $categories_join;
+        protected $output_string;
+        protected $show_model;
+        protected $show_price;
 
         /**
          *
