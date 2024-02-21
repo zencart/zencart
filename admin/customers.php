@@ -1924,7 +1924,7 @@ if ($action === 'edit' || $action === 'update') {
                 $heading[] = [
                     'text' =>
                         '<h4>' .
-                            TABLE_HEADING_ID . $cInfo->customers_id . ' ' .
+                            TABLE_HEADING_ID . ' ' . $cInfo->customers_id . ' ' .
                             $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname .
                         '</h4>' .
                         '<br>' .
