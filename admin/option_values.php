@@ -72,7 +72,6 @@ switch ($_GET['action']) {
                                              WHERE ptoc.categories_id = " . (int)$_POST['categories_update_id'] . "
                                              AND pa.products_id = ptoc.products_id");
     foreach ($all_products_attributes as $products_attribute) {
-      $product_id_updated .= ' - ' . $products_attribute['products_id'] . ':' . $products_attribute['products_attributes_id'];
       zen_update_attributes_products_option_values_sort_order($products_attribute);
     }
     $messageStack->add_session(SUCCESS_CATEGORIES_UPDATE_SORT . (int)$_POST['categories_update_id'] . ' ' . zen_get_category_name($_POST['categories_update_id'], $_SESSION['languages_id']), 'success');
