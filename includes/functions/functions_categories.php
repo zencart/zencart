@@ -353,7 +353,7 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id)
  * @param bool $show_current_category
  * @return string
  */
-function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
+function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null, bool $includeAttributes = false)
 {
     global $current_category_id;
 
@@ -374,6 +374,8 @@ function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = []
     if ($show_current_category) {
         $pulldown->setCategory($current_category_id);
     }
+
+    $pulldown->includeAttributes($includeAttributes);
 
     if ((int) $filter_by_option_name > 0) {
         $pulldown->setOptionFilter((int) $filter_by_option_name);
@@ -403,7 +405,7 @@ function zen_draw_pulldown_products_having_attributes($field_name, $parameters =
         $order_by = 'products_name';
     }
 
-    return zen_draw_pulldown_products($field_name, $parameters, $exclude, false, 0, true, false, $order_by, $filter_by_option_name);
+    return zen_draw_pulldown_products($field_name, $parameters, $exclude, false, 0, true, false, $order_by, $filter_by_option_name, true);
 }
 
 /**
@@ -415,7 +417,7 @@ function zen_draw_pulldown_products_having_attributes($field_name, $parameters =
  * @param bool $show_parent
  * @return string
  */
-function zen_draw_pulldown_categories_having_products($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false, $show_full_path = false, $filter_by_option_name = null)
+function zen_draw_pulldown_categories_having_products($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false, $show_full_path = false, $filter_by_option_name = null, bool $includeAttributes = false)
 {
     if (!is_array($exclude)) {
         $exclude = [];
@@ -423,7 +425,7 @@ function zen_draw_pulldown_categories_having_products($field_name, $parameters =
 
     $pulldown = new categoryPulldown();
 
-    $pulldown->showID($show_id)->showParent($show_parent)->showFullPath($show_full_path)->exclude($exclude)->includeAttributes($show_full_path);
+    $pulldown->showID($show_id)->showParent($show_parent)->showFullPath($show_full_path)->exclude($exclude)->includeAttributes($includeAttributes || $show_full_path);
 
     if ((int) $filter_by_option_name > 0) {
         $pulldown->setOptionFilter((int) $filter_by_option_name);
@@ -443,7 +445,7 @@ function zen_draw_pulldown_categories_having_products($field_name, $parameters =
  */
 function zen_draw_pulldown_categories_having_products_with_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null)
 {
-    return zen_draw_pulldown_categories_having_products($field_name, $parameters , $exclude, false, false, $show_full_path, $filter_by_option_name);
+    return zen_draw_pulldown_categories_having_products($field_name, $parameters , $exclude, false, false, $show_full_path, $filter_by_option_name, true);
 
 }
 
