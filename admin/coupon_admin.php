@@ -722,12 +722,8 @@ switch ($_GET['action']) {
                 <td><?php echo COUPON_REFERRER; ?></td>
                 <td><?php
                 // Referrers inputs may be empty, sanitise here
-                $trimmed_referrers = array_map(function ($referrer) {
-                  return trim($referrer);
-                }, $_POST['coupon_referrer']);
-                $referrers = array_filter($trimmed_referrers, function ($referrer) {
-                  return !empty(trim($referrer));
-                });
+                $trimmed_referrers = array_map(fn ($referrer) => trim($referrer), $_POST['coupon_referrer'] ?? []);
+                $referrers = array_filter($trimmed_referrers, fn ($referrer) => !empty(trim($referrer)));
                 // Validate that none clash with existing coupons, excluding ourself
                 foreach ($referrers as $referrer) {
                   $already_assigned = CouponValidation::referrer_already_assigned($referrer, $_GET['cid']);
@@ -740,7 +736,7 @@ switch ($_GET['action']) {
                     break;
                   }
                 }
-                $referrers = join(',', $referrers);
+                $referrers = implode(',', $referrers);
                 echo $referrers ?: 'none'; ?></td>
               </tr>
               <tr>
@@ -973,6 +969,8 @@ switch ($_GET['action']) {
               foreach ($referrers as $idx => $referrer) {
                 $btn_cls = $idx === 0 ? 'btn-success' : 'btn-danger';
                 $btn_label = $idx === 0 ? 'fa-plus' : 'fa-times';
+
+              // NOTE: any changes to the following data-list-entry div/button HTML needs to be updated in the coupon_admin.js javascript as well:
               ?>
               <div class="col-sm-12" data-list-entry>
                 <div class="input-group"><?php echo zen_draw_input_field('coupon_referrer[]', $referrer, 'class="form-control"'); ?>
