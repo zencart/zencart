@@ -39,6 +39,7 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
         'cd.coupon_name',
         'cd.coupon_description',
         'c.coupon_code',
+        'c.referrer'
     ];
     $searchWords = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
     $sql = "SELECT c.coupon_id, c.coupon_active
@@ -649,6 +650,7 @@ switch ($_GET['action']) {
             <?php
             break;
           case 'update_preview':
+            $invalid_message = null; // Control whether we allow submitting the new values
             echo zen_draw_form('coupon', FILENAME_COUPON_ADMIN, 'action=update_confirm&oldaction=' . $_GET['oldaction'] . '&cid=' . $_GET['cid'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''));
             ?>
             <table class="table">
@@ -718,7 +720,24 @@ switch ($_GET['action']) {
               </tr>
               <tr>
                 <td><?php echo COUPON_REFERRER; ?></td>
-                <td><?php echo $_POST['coupon_referrer'] ?: 'none'; ?></td>
+                <td><?php
+                // Referrers inputs may be empty, sanitise here
+                $trimmed_referrers = array_map(fn ($referrer) => trim($referrer), $_POST['coupon_referrer'] ?? []);
+                $referrers = array_filter($trimmed_referrers, fn ($referrer) => !empty(trim($referrer)));
+                // Validate that none clash with existing coupons, excluding ourself
+                foreach ($referrers as $referrer) {
+                  $already_assigned = CouponValidation::referrer_already_assigned($referrer, $_GET['cid']);
+                  if (!empty($already_assigned)) {
+                    $invalid_message = sprintf(
+                      COUPON_REFERRER_EXISTS,
+                      $already_assigned['coupon_code'],
+                      $already_assigned['coupon_id'],
+                      $referrer);
+                    break;
+                  }
+                }
+                $referrers = implode(',', $referrers);
+                echo $referrers ?: 'none'; ?></td>
               </tr>
               <tr>
                 <td><?php echo COUPON_STARTDATE; ?></td>
@@ -744,7 +763,7 @@ switch ($_GET['action']) {
               echo zen_draw_hidden_field('coupon_code', stripslashes($c_code));
               echo zen_draw_hidden_field('coupon_uses_coupon', $_POST['coupon_uses_coupon']);
               echo zen_draw_hidden_field('coupon_uses_user', $_POST['coupon_uses_user']);
-              echo zen_draw_hidden_field('coupon_referrer', $_POST['coupon_referrer']);
+              echo zen_draw_hidden_field('coupon_referrer', $referrers);
               echo zen_draw_hidden_field('coupon_products', (!empty($_POST['coupon_products']) ? $_POST['coupon_products'] : ''));
               echo zen_draw_hidden_field('coupon_categories', (!empty($_POST['coupon_categories']) ? $_POST['coupon_categories'] : ''));
               echo zen_draw_hidden_field('coupon_startdate', date('Y-m-d', mktime(0, 0, 0, $_POST['coupon_startdate_month'], $_POST['coupon_startdate_day'], $_POST['coupon_startdate_year'])));
@@ -755,8 +774,13 @@ switch ($_GET['action']) {
               echo zen_draw_hidden_field('coupon_is_valid_for_sales', (int)$_POST['coupon_is_valid_for_sales']);
               ?>
               <tr>
-                <td class="text-right">
-                  <button type="submit" class="btn btn-primary"><?php echo COUPON_BUTTON_CONFIRM; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                <td class="text-right" colspan=2>
+                  <?php
+                  if (!empty($invalid_message)) {
+                    echo "<span class='errorText'>" . $invalid_message . '</span>';
+                  }
+                  ?>
+                  <button type="submit" class="btn btn-primary" <?php echo empty($invalid_message) ? '' : 'disabled' ?>><?php echo COUPON_BUTTON_CONFIRM; ?></button>&nbsp;<a href="<?php echo zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
                 </td>
                 <td></td>
               </tr>
@@ -937,13 +961,27 @@ switch ($_GET['action']) {
               </div>
             </div>
             <div class="form-group">
-              <?php echo zen_draw_label(COUPON_REFERRER, 'coupon_referrer', 'class="control-label col-sm-3"'); ?>
-              <div class="col-sm-9 col-md-6">
-                <div class="input-group"><?php echo zen_draw_input_field('coupon_referrer', (!empty($coupon_referrer) && $coupon_referrer >= 1 ? $coupon_referrer : ''), 'class="form-control" id="coupon_referrer"'); ?>
-                  <span class="input-group-addon">
-                    <i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="<?php echo COUPON_REFERRER_HELP; ?>"></i>
-                  </span>
+              <?php echo zen_draw_label(COUPON_REFERRER . '&nbsp;<i class="fa-solid fa-circle-info fa-lg" data-toggle="tooltip" title="' . COUPON_REFERRER_HELP . '"></i>', 'coupon_referrer', 'class="control-label col-sm-3"'); ?>
+              <div class="input-group col-sm-9 col-md-6" data-list="referrers">
+              <?php
+              // Render an input box for each referrer value. These are collected on POST and recombined
+              $referrers = explode(',', $coupon_referrer);
+              foreach ($referrers as $idx => $referrer) {
+                $btn_cls = $idx === 0 ? 'btn-success' : 'btn-danger';
+                $btn_label = $idx === 0 ? 'fa-plus' : 'fa-times';
+
+              // NOTE: any changes to the following data-list-entry div/button HTML needs to be updated in the coupon_admin.js javascript as well:
+              ?>
+              <div class="col-sm-12" data-list-entry>
+                <div class="input-group"><?php echo zen_draw_input_field('coupon_referrer[]', $referrer, 'class="form-control"'); ?>
+                <div class="input-group-btn">
+                  <button type="button" class="btn <?php echo $btn_cls ?>">
+                    <i class="fa-solid <?php echo $btn_label ?>"></i>
+                  </button>
                 </div>
+                </div>
+              </div>
+              <?php } ?>
               </div>
             </div>
             <?php

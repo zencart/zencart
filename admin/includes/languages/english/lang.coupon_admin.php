@@ -58,6 +58,7 @@ $define = [
     'COUPON_USES_COUPON' => 'Uses per Coupon',
     'COUPON_USES_USER' => 'Uses per Customer',
     'COUPON_REFERRER' => 'Valid Referrers',
+    'COUPON_REFERRER_EXISTS' => 'Coupon \'%s\' (id %d) already exists with the referrer \'%s\'',
     'COUPON_PRODUCTS' => 'Valid Product List',
     'COUPON_CATEGORIES' => 'Valid Categories List',
     'DATE_CREATED' => 'Date Created',
