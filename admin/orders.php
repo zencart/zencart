@@ -860,7 +860,14 @@ if (!empty($action) && $order_exists === true) {
                         if ($products_weight_unit === null) {
                             $products_weight = '&mdash;';
                         } else {
-                            $products_weight_total = rtrim(number_format((float)($products_weight_unit * $order->products[$i]['qty']), 4, '.', ''), '0.');
+                            // ----
+                            // For the total weight, format the value with 4 decimal digits, trimming
+                            // any trailing 0's from the decimals -- e.g. '20.0200' becomes '20.02'.  The
+                            // second rtrim removes a trailing decimal point, in case the overall weight
+                            // is an integral value -- e.g. '20.0000' first becomes '20.' and then '20'.
+                            //
+                            $products_weight_total = rtrim(number_format((float)($products_weight_unit * $order->products[$i]['qty']), 4, '.', ''), '0');
+                            $products_weight_total = rtrim($products_weight_total, '.');
                             $products_weight = "$products_weight_unit$weight_unit / $products_weight_total$weight_unit";
                         }
                 ?>
