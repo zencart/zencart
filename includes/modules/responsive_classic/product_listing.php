@@ -21,12 +21,15 @@ $error_categories = false;
 
 $show_submit = zen_run_normal();
 
-$columns_per_row = defined('PRODUCT_LISTING_COLUMNS_PER_ROW') ? PRODUCT_LISTING_COLUMNS_PER_ROW : 1;
-$product_listing_layout_style = (int)$columns_per_row > 1 ? 'columns' : 'table';
-if (empty($columns_per_row)) $product_listing_layout_style = 'fluid';
-if ($columns_per_row === 'fluid') $product_listing_layout_style = 'fluid';
+$columns_per_row = defined('PRODUCT_LISTING_COLUMNS_PER_ROW') ? (int)PRODUCT_LISTING_COLUMNS_PER_ROW : 1;
+if (empty($product_listing_layout_style) || !in_array($product_listing_layout_style, ['columns', 'table', 'fluid'])) {
+    $product_listing_layout_style = $columns_per_row > 1 ? 'columns' : 'table';
+    if (empty($columns_per_row)) {
+        $product_listing_layout_style = 'fluid';
+    }
+}
 
-$max_results = (int)MAX_DISPLAY_PRODUCTS_LISTING;
+$max_results = (int)($product_listing_max_results ?? MAX_DISPLAY_PRODUCTS_LISTING);
 if ($product_listing_layout_style === 'columns' && $columns_per_row > 1) {
     $max_results = ($columns_per_row * (int)($max_results / $columns_per_row));
 }
@@ -174,31 +177,28 @@ if ($num_products_count > 0) {
 //            }
 //        }
 
-        // set css classes for "row" wrapper, to allow for fluid grouping of cells based on viewport
-        // these defaults are based on Bootstrap4, but can be customized to suit your own framework
+        // Set css classes for "row" wrapper, to allow for fluid grouping of cells based on viewport
+        // these defaults are inspired by Bootstrap4, but can be customized to suit your own framework
         if ($product_listing_layout_style === 'fluid') {
-            $grid_cards_classes = 'row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3';
-            if (!isset($grid_classes_matrix)) {
+            $grid_cards_classes = $grid_product_cards_classes ?? 'row row-clmns-3';
+            if (!isset($grid_product_classes_matrix)) {
                 // this array is intentionally in reverse order, with largest index first
-                $grid_classes_matrix = [
-                    '12' => 'row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6',
-                    '10' => 'row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-5',
-                    '9' => 'row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5',
-                    '8' => 'row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4',
-                    '6' => 'row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3',
+                $grid_product_classes_matrix = [
+                    // for responsive_classic the array index here is in 'pixels', because $center_column_width is in pixels. See tpl_main_page.php
+                    '480' => 'row row-clms-1 row-clms-sm-2 row-clms-md-3 row-clms-lg-4 row-clms-xl-6',
                 ];
             }
 
-            // determine classes to use based on number of grid-columns used by "center" column
+            // determine classes to use based on number of grid-columns used by "center" column. See tpl_main_page.php
             if (isset($center_column_width)) {
-                foreach ($grid_classes_matrix as $width => $classes) {
+                foreach ($grid_product_classes_matrix as $width => $classes) {
                     if ($center_column_width >= $width) {
                         $grid_cards_classes = $classes;
                         break;
                     }
                 }
             }
-            $list_box_contents[$rows]['params'] = 'class="row ' . $grid_cards_classes . ' text-center"';
+            $list_box_contents[$rows]['params'] = 'class="' . $grid_cards_classes . ' text-center"';
         }
 
         $product_contents = [];
@@ -365,8 +365,8 @@ if ($num_products_count > 0) {
                     $lc_text = '';
                     if (!empty($record['products_image']) || PRODUCTS_IMAGE_NO_IMAGE_STATUS > 0) {
                         $lc_text .= '<div class="list-image">';
-                        $lc_text .= '<a href="' . $href . '">';
-                        $lc_text .= zen_image(DIR_WS_IMAGES . $record['products_image'], $listing_product_name, IMAGE_PRODUCT_LISTING_WIDTH, IMAGE_PRODUCT_LISTING_HEIGHT, 'class="listingProductImage"');
+                        $lc_text .= '<a href="' . $href . '" title="' . zen_output_string_protected($listing_product_name) . '">';
+                        $lc_text .= zen_image(DIR_WS_IMAGES . $record['products_image'], $listing_product_name, IMAGE_PRODUCT_LISTING_WIDTH, IMAGE_PRODUCT_LISTING_HEIGHT, 'loading="lazy" class="listingProductImage"');
                         $lc_text .= '</a>';
                         $lc_text .= '</div>';
                     }
@@ -411,10 +411,12 @@ if ($num_products_count > 0) {
             if ($product_listing_layout_style === 'columns') {
                 $style = ' style="width:' . $col_width . '%;"';
             }
+            $grid_product_card_params = $grid_product_card_params ?? 'centerBoxContentsProducts centeredContent back gridlayout';
+            $grid_product_wrap_classes = $grid_product_wrap_classes ?? '';
             $list_box_contents[$rows][] = [
-                'params' => 'class="centerBoxContentsProducts centeredContent back gridlayout"' . $style,
+                'params' => 'class="' . $grid_product_card_params . '"' . $style,
                 'text' => $lc_text,
-                'wrap_with_classes' => '',
+                'wrap_with_classes' => $grid_product_wrap_classes,
                 'card_type' => $product_listing_layout_style,
                 'category' => $record['master_categories_id'],
                 'parent_category_name' => $record['parent_category_name'],
@@ -432,7 +434,6 @@ if ($num_products_count > 0) {
         }
     }
 } else {
-
     $list_box_contents = [];
     $list_box_contents[0][] = [
         'params' => 'class="productListing-data"',

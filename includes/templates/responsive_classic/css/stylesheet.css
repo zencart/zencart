@@ -278,7 +278,7 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .categoryListBoxContents img{margin-bottom:10px;}
 .categoryListBoxContents a{font-size:1.2em;text-decoration:none;}
 .categoryListBoxContents a:hover{}
-.categoryListBoxContents{padding:20px 0;display:block;cursor:pointer;}
+.categoryListBoxContents{/*padding:20px 0;*/display:block;cursor:pointer;}
 .categoryListBoxContents:hover{}
 .categoryListBoxContents:hover a{}
 #indexProductListCatDescription, #categoryDescription{margin-left:5%;float:left;}
@@ -328,12 +328,14 @@ span.list-addtext{display:block;text-align:center;}
 #no-products{padding:20px;margin:20px 0;}
 
 /*product listing column-layout overrides*/
-.gridlayout.centerBoxContentsProducts { padding: 2em 0; }
+.gridlayout.centerBoxContentsProducts { padding: 2em 0;}
+.gridlayout.categoryListBoxContents { padding: 2em 0;}
 .gridlayout .list-image {float:none}
 .gridlayout .list-image {min-height: revert; min-width: revert}
 .gridlayout .list-image {margin-right: inherit;}
 .gridlayout .list-more {float: none;}
 #productListing .gridlayout .list-more {margin: auto; width: 30%}
+#indexCategories .gridlayout .list-more {margin: auto; width: 30%}
 .gridlayout .itemTitle {width:90%;margin:5px auto}
 .gridlayout .listingDescription {width:90%;margin:10px auto}
 .gridlayout .cart-add {float:none;}
