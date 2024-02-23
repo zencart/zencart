@@ -175,6 +175,7 @@ $group = [
     'attributes_id',
     'id',
     'padID',
+    'coupon_id',
     'coupon_uses_coupon',
     'coupon_uses_user',
     'coupon_zone_restriction',
@@ -212,6 +213,7 @@ $group = [
     'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
     'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
     'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'zone_page', 'search',
+    'referrer_domain',
 ];
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
 

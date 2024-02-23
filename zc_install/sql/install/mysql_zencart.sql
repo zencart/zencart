@@ -492,6 +492,24 @@ CREATE TABLE coupon_redeem_track (
 # --------------------------------------------------------
 
 #
+# Table structure for table 'coupon_referrers'
+#
+
+DROP TABLE IF EXISTS coupon_referrers;
+CREATE TABLE coupon_referrers (
+  referrer_id int(11) NOT NULL AUTO_INCREMENT,
+  referrer_domain varchar(64) NOT NULL,
+  coupon_id INT(11) NOT NULL,
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY  (referrer_id),
+  UNIQUE KEY idx_referrer_domain_zen (referrer_domain),
+  KEY idx_refcoupon_id_zen (coupon_id)
+);
+
+# --------------------------------------------------------
+
+#
 # Table structure for table 'coupon_restrict'
 #
 
@@ -523,7 +541,6 @@ CREATE TABLE coupons (
   coupon_expire_date datetime NOT NULL default '0001-01-01 00:00:00',
   uses_per_coupon int(5) NOT NULL default 1,
   uses_per_user int(5) NOT NULL default 0,
-  referrer TEXT DEFAULT NULL,
   restrict_to_products varchar(255) default NULL,
   restrict_to_categories varchar(255) default NULL,
   restrict_to_customers text,
@@ -2355,6 +2372,7 @@ VALUES ('configMyStore', 'BOX_CONFIGURATION_MY_STORE', 'FILENAME_CONFIGURATION',
        ('gvQueue', 'BOX_GV_ADMIN_QUEUE', 'FILENAME_GV_QUEUE', '', 'gv', 'Y', 2),
        ('gvMail', 'BOX_GV_ADMIN_MAIL', 'FILENAME_GV_MAIL', '', 'gv', 'Y', 3),
        ('gvSent', 'BOX_GV_ADMIN_SENT', 'FILENAME_GV_SENT', '', 'gv', 'Y', 4),
+       ('couponReferrers', 'BOX_COUPON_REFERRERS', 'FILENAME_COUPON_REFERRERS', '', 'gv', 'Y', 5),
        ('profiles', 'BOX_ADMIN_ACCESS_PROFILES', 'FILENAME_PROFILES', '', 'access', 'Y', 1),
        ('users', 'BOX_ADMIN_ACCESS_USERS', 'FILENAME_USERS', '', 'access', 'Y', 2),
        ('pageRegistration', 'BOX_ADMIN_ACCESS_PAGE_REGISTRATION', 'FILENAME_ADMIN_PAGE_REGISTRATION', '', 'access', 'Y', 3),

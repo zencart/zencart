@@ -286,7 +286,6 @@ switch ($_GET['action']) {
       'coupon_type' => zen_db_prepare_input($coupon_type),
       'uses_per_coupon' => (int)$_POST['coupon_uses_coupon'],
       'uses_per_user' => (int)$_POST['coupon_uses_user'],
-      'referrer' => $_POST['coupon_referrer'] ?: 'null',
       'coupon_minimum_order' => (float)$_POST['coupon_min_order'],
       'restrict_to_products' => zen_db_prepare_input($_POST['coupon_products']),
       'restrict_to_categories' => zen_db_prepare_input($_POST['coupon_categories']),
@@ -318,6 +317,17 @@ switch ($_GET['action']) {
         ];
         zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_desc_array, 'update', "coupon_id = " . (int)$_GET['cid'] . " and language_id = " . (int)$languages[$i]['id']);
       }
+      // referrers
+        $trimmed_referrers = array_map(static fn($referrer) => trim($referrer), explode(',', $_POST['coupon_referrer'] ?? []));
+        foreach ($trimmed_referrers as $referrer) {
+            if (empty(CouponValidation::referrer_already_assigned($referrer))) {
+                $sql_data_array = [
+                    'referrer_domain' => $referrer,
+                    'coupon_id' => (int)$_GET['cid'],
+                ];
+                zen_db_perform(TABLE_COUPON_REFERRERS, $sql_data_array);
+            }
+        }
     } else {
       zen_db_perform(TABLE_COUPONS, $sql_data_array);
       $cid = $db->insert_ID();
@@ -329,6 +339,17 @@ switch ($_GET['action']) {
         $sql_data_marray[$i]['language_id'] = (int)$language_id;
         zen_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_marray[$i]);
       }
+      // referrers
+        $trimmed_referrers = array_map(static fn($referrer) => trim($referrer), explode(',', $_POST['coupon_referrer'] ?? []));
+        foreach ($trimmed_referrers as $referrer) {
+            if (empty(CouponValidation::referrer_already_assigned($referrer))) {
+                $sql_data_array = [
+                    'referrer_domain' => $referrer,
+                    'coupon_id' => (int)$_GET['cid'],
+                ];
+                zen_db_perform(TABLE_COUPON_REFERRERS, $sql_data_array);
+            }
+        }
     }
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
 }
@@ -721,23 +742,24 @@ switch ($_GET['action']) {
               <tr>
                 <td><?php echo COUPON_REFERRER; ?></td>
                 <td><?php
-                // Referrers inputs may be empty, sanitise here
-                $trimmed_referrers = array_map(fn ($referrer) => trim($referrer), $_POST['coupon_referrer'] ?? []);
-                $referrers = array_filter($trimmed_referrers, fn ($referrer) => !empty(trim($referrer)));
-                // Validate that none clash with existing coupons, excluding ourself
-                foreach ($referrers as $referrer) {
-                  $already_assigned = CouponValidation::referrer_already_assigned($referrer, $_GET['cid']);
-                  if (!empty($already_assigned)) {
-                    $invalid_message = sprintf(
-                      COUPON_REFERRER_EXISTS,
-                      $already_assigned['coupon_code'],
-                      $already_assigned['coupon_id'],
-                      $referrer);
-                    break;
-                  }
-                }
-                $referrers = implode(',', $referrers);
-                echo $referrers ?: 'none'; ?></td>
+                    // Referrers inputs may be empty, sanitise here
+                    $trimmed_referrers = array_map(static fn($referrer) => trim($referrer), $_POST['coupon_referrer'] ?? []);
+                    $referrers = array_filter($trimmed_referrers, fn($referrer) => !empty(trim($referrer)));
+                    // Validate that none clash with existing coupons, excluding ourself
+                    foreach ($referrers as $referrer) {
+                        $already_assigned = CouponValidation::referrer_already_assigned($referrer, $_GET['cid']);
+                        if (!empty($already_assigned)) {
+                            $invalid_message = sprintf(
+                                COUPON_REFERRER_EXISTS,
+                                $already_assigned['coupon_code'],
+                                $already_assigned['coupon_id'],
+                                $referrer
+                            );
+                            break;
+                        }
+                    }
+                    $referrers = implode(',', $referrers);
+                    echo $referrers ?: 'none'; ?></td>
               </tr>
               <tr>
                 <td><?php echo COUPON_STARTDATE; ?></td>
@@ -814,7 +836,6 @@ switch ($_GET['action']) {
             $coupon_code = $coupon->fields['coupon_code'];
             $coupon_uses_coupon = $coupon->fields['uses_per_coupon'];
             $coupon_uses_user = $coupon->fields['uses_per_user'];
-            $coupon_referrer = $coupon->fields['referrer'];
             $coupon_startdate = $coupon->fields['coupon_start_date'];
             $coupon_finishdate = $coupon->fields['coupon_expire_date'];
             $coupon_zone_restriction = $coupon->fields['coupon_zone_restriction'];
@@ -823,7 +844,16 @@ switch ($_GET['action']) {
             $coupon_is_valid_for_sales = $coupon->fields['coupon_is_valid_for_sales'];
             $coupon_product_count = $coupon->fields['coupon_product_count'];
 
-          case 'new':
+            $results = $db->Execute("SELECT *
+                                    FROM " . TABLE_COUPON_REFERRERS . "
+                                    WHERE coupon_id = " . (int)$_GET['cid']);
+            $coupon_referrer = '';
+            foreach ($results as $result) {
+                $coupon_referrer .= $result['referrer_domain'] . ',';
+            }
+            $coupon_referrer = trim($coupon_referrer, ',');
+
+            case 'new':
 // set some defaults
             if ($_GET['action'] != 'voucheredit' && empty($coupon_uses_user)) {
               $coupon_uses_user = 1;
@@ -1133,12 +1163,25 @@ switch ($_GET['action']) {
 
                   $cc_split = new splitPageResults($_GET['page'], $maxDisplaySearchResults, $cc_query_raw, $cc_query_numrows);
                   $cc_list = $db->Execute($cc_query_raw);
+
+                  $sql = "SELECT referrer_domain
+                        FROM " . TABLE_COUPON_REFERRERS . "
+                        WHERE coupon_id = " . (int)$_GET['cid'];
+                  $results = $db->Execute($sql);
+                  $coupon_referrer = '';
+                  foreach ($results as $result) {
+                      $coupon_referrer .= $result['referrer_domain'] . ',';
+                  }
+                  $coupon_referrer = trim($coupon_referrer, ',');
+
                   if ($cc_list->EOF && (empty($_GET['cid']) || ($_GET['cid'] == $cc_list->fields['coupon_id'])) && empty($cInfo)) {
                     $cInfo = new objectInfo($cc_list->fields);
+                    $cInfo->referrer = $coupon_referrer;
                   }
                   foreach ($cc_list as $item) {
                     if ((empty($_GET['cid']) || ($_GET['cid'] == $item['coupon_id'])) && empty($cInfo)) {
                       $cInfo = new objectInfo($item);
+                      $cInfo->referrer = $coupon_referrer;
                     }
                     if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
                       ?>
@@ -1293,6 +1336,7 @@ switch ($_GET['action']) {
                                              LEFT JOIN " . TABLE_COUPONS . " c ON c.coupon_id = cd.coupon_id
                                                AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
                                              WHERE cd.coupon_id = " . (int)$cInfo->coupon_id);
+
                 $uses_coupon = $cInfo->uses_per_coupon;
                 $uses_user = $cInfo->uses_per_user;
                 $referrer = $cInfo->referrer;

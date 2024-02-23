@@ -76,7 +76,22 @@ ALTER TABLE products_attributes ADD options_values_price_w varchar(150) NOT NULL
 ALTER TABLE products_discount_quantity ADD discount_price_w varchar(150) NOT NULL DEFAULT '0' AFTER discount_price;
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Wholesale Pricing', 'WHOLESALE_PRICING_CONFIG', 'false', 'Should <em>Wholesale Pricing</em> be enabled for your site?  Choose <b>false</b> (the default) if you don\'t want that feature enabled. Otherwise, choose <b>Tax Exempt</b> to enable with tax-exemptions for all wholesale customers or <b>Pricing Only</b> to apply tax as usual for wholesale customers.', 1, 23, now(), 'zen_cfg_select_option([\'false\', \'Tax Exempt\', \'Pricing Only\'],');
 
-ALTER TABLE coupons ADD referrer TEXT DEFAULT NULL AFTER uses_per_user;
+#PROGRESS_FEEDBACK:!TEXT=Altering Coupon tables - may take some time
+
+DROP TABLE IF EXISTS coupon_referrers;
+CREATE TABLE coupon_referrers (
+  referrer_id int(11) NOT NULL AUTO_INCREMENT,
+  referrer_domain varchar(64) NOT NULL,
+  coupon_id INT(11) NOT NULL,
+  date_added timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY  (referrer_id),
+  UNIQUE KEY idx_referrer_domain_zen (referrer_domain),
+  KEY idx_refcoupon_id_zen (coupon_id)
+);
+INSERT IGNORE INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+VALUES ('couponReferrers', 'BOX_COUPON_REFERRERS', 'FILENAME_COUPON_REFERRERS', '', 'gv', 'Y', 5);
+
 
 #############
 #### Updated country information that has changed.

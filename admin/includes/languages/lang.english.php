@@ -75,6 +75,7 @@ $define = [
     'BOX_CONFIGURATION_STOCK' => 'Stock',
     'BOX_CONFIGURATION_WEBSITE_MAINTENANCE' => 'Website Maintenance',
     'BOX_COUPON_ADMIN' => 'Coupon Admin',
+    'BOX_COUPON_REFERRERS' => 'Coupon Referrers',
     'BOX_COUPON_RESTRICT' => 'Coupon Restrictions',
     'BOX_CUSTOMERS_CUSTOMERS' => 'Customers',
     'BOX_CUSTOMERS_CUSTOMER_GROUPS' => 'Customer Groups',

@@ -52,6 +52,7 @@ define('FILENAME_CONTACT_US', 'contact_us');
 define('FILENAME_COOKIE_USAGE', 'cookie_usage');
 define('FILENAME_COUNTRIES', 'countries');
 define('FILENAME_COUPON_ADMIN', 'coupon_admin');
+define('FILENAME_COUPON_REFERRERS', 'coupon_referrers');
 define('FILENAME_COUPON_RESTRICT', 'coupon_restrict');
 define('FILENAME_COUPON_ADMIN_EXPORT', 'coupon_admin_export');
 define('FILENAME_CREATE_ACCOUNT', 'create_account');
