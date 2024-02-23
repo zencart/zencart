@@ -446,28 +446,28 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       <h2><?php echo TEXT_SHIPPING_PACKAGE_DETAILS; ?></h2>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_WEIGHT, 'products_weight', 'class="col-sm-3 control-label"'); ?>
-      <?php echo defined('TEXT_SHIPPING_' . SHIPPING_WEIGHT_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_WEIGHT_UNITS) : SHIPPING_WEIGHT_UNITS; ?>
+      <?php echo zen_get_translated_config_setting('SHIPPING_WEIGHT_UNITS', 'TEXT_SHIPPING_', SHIPPING_WEIGHT_UNITS); ?>
     <div class="col-sm-6 col-md-4">
         <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control" id="products_weight" inputmode="decimal"'); ?>
     </div>
   </div>
   <div class="form-group">
     <?php echo zen_draw_label(TEXT_PRODUCTS_LENGTH, 'products_length', 'class="col-sm-3 control-label"'); ?>
-      <?php echo defined('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) : SHIPPING_DIMENSION_UNITS; ?>
+      <?php echo zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', SHIPPING_DIMENSION_UNITS); ?>
     <div class="col-sm-6 col-md-4">
     <?php echo zen_draw_input_field('products_length', $pInfo->products_length, 'class="form-control" id="products_length" inputmode="decimal"'); ?>
     </div>
   </div>
   <div class="form-group">
      <?php echo zen_draw_label(TEXT_PRODUCTS_WIDTH, 'products_width', 'class="col-sm-3 control-label"'); ?>
-      <?php echo defined('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) : SHIPPING_DIMENSION_UNITS; ?>
+      <?php echo zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', SHIPPING_DIMENSION_UNITS); ?>
     <div class="col-sm-6 col-md-4">
     <?php echo zen_draw_input_field('products_width', $pInfo->products_width, 'class="form-control" id="products_width" inputmode="decimal"'); ?>
     </div>
   </div>
     <div class="form-group">
     <?php echo zen_draw_label(TEXT_PRODUCTS_HEIGHT, 'products_height', 'class="col-sm-3 control-label"'); ?>
-        <?php echo defined('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) ? constant('TEXT_SHIPPING_' . SHIPPING_DIMENSION_UNITS) : SHIPPING_DIMENSION_UNITS; ?>
+        <?php echo zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', SHIPPING_DIMENSION_UNITS); ?>
     <div class="col-sm-6 col-md-4">
     <?php echo zen_draw_input_field('products_height', $pInfo->products_height, 'class="form-control" id="products_height" inputmode="decimal"'); ?>
     </div>
