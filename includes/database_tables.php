@@ -35,6 +35,7 @@ define('TABLE_COUPON_GV_QUEUE', DB_PREFIX . 'coupon_gv_queue');
 define('TABLE_COUPON_GV_CUSTOMER', DB_PREFIX . 'coupon_gv_customer');
 define('TABLE_COUPON_EMAIL_TRACK', DB_PREFIX . 'coupon_email_track');
 define('TABLE_COUPON_REDEEM_TRACK', DB_PREFIX . 'coupon_redeem_track');
+define('TABLE_COUPON_REFERRERS', DB_PREFIX . 'coupon_referrers');
 define('TABLE_COUPON_RESTRICT', DB_PREFIX . 'coupon_restrict');
 define('TABLE_COUPONS', DB_PREFIX . 'coupons');
 define('TABLE_COUPONS_DESCRIPTION', DB_PREFIX . 'coupons_description');

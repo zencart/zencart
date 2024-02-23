@@ -187,18 +187,19 @@ class CouponValidation
      * e.g. referrer 'abc.com' may only be assigned to one coupon, not two or more.
      *
      * @param string $referrer The domain to check e.g. 'abc.com'
-     * @param int $exclude_coupon_id Optional coupon_id to exclude
+     * @param int $exclude_coupon_id Optional coupon_id to exclude/ignore (ie: "self" record)
      * @return ?array
      */
     public static function referrer_already_assigned(string $referrer, ?int $exclude_coupon_id = null): ?array
     {
         global $db;
-        $sql = "SELECT coupon_id, coupon_code
-                FROM " . TABLE_COUPONS . "
-                WHERE referrer LIKE '%:referrer:%'";
-        $sql = $db->bindVars($sql, ':referrer:', $referrer, 'noquotestring');
+        $sql = "SELECT c.coupon_id, coupon_code
+                FROM " . TABLE_COUPONS . " c
+                LEFT JOIN " . TABLE_COUPON_REFERRERS . " r ON (c.coupon_id = r.coupon_id)
+                WHERE referrer_domain = :referrer";
+        $sql = $db->bindVars($sql, ':referrer', $referrer, 'string');
         if (!empty($exclude_coupon_id)) {
-            $sql .= " AND coupon_id <> $exclude_coupon_id";
+            $sql .= " AND c.coupon_id <> $exclude_coupon_id";
         }
 
         $result = $db->Execute($sql);

@@ -24,20 +24,31 @@ function initCouponReferrerCheck(): ?string {
     }
     $domain = $matches[1];
 
-    $sql = "SELECT coupon_code, referrer
-        FROM " . TABLE_COUPONS . "
-        WHERE referrer LIKE '%:referrer:%'";
-    $sql = $db->bindVars($sql, ':referrer:', $domain, 'noquotestring');
+    $sql = "SELECT coupon_code
+        FROM " . TABLE_COUPONS . " c
+        LEFT JOIN " . TABLE_COUPON_REFERRERS . " r ON (c.coupon_id = r.coupon_id)
+        WHERE referrer_domain = :referrer";
+    $sql = $db->bindVars($sql, ':referrer', $domain, 'string');
+
+//    $sql = "SELECT coupon_id
+//        FROM " . TABLE_COUPON_REFERRERS . "
+//        WHERE referrer_domain = :referrer";
+//    $sql = $db->bindVars($sql, ':referrer', $domain, 'string');
+//
+//    $result = $db->Execute($sql, 1);
+//
+//    if ($result->EOF) {
+//        return null;
+//    }
+//
+//    $sql = "SELECT coupon_code
+//        FROM " . TABLE_COUPONS . "
+//        WHERE coupon_id = :coupon_id";
+//    $sql = $db->bindVars($sql, ':coupon_id', $result['coupon_id'], 'integer');
 
     $result = $db->Execute($sql, 1);
 
     if ($result->EOF) {
-        return null;
-    }
-
-    $referrers = explode(',', $result->fields['referrer']);
-    $referrers = array_map(fn ($val) => trim($val), $referrers);
-    if (! in_array($domain, $referrers)) {
         return null;
     }
 
