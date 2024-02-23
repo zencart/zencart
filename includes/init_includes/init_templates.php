@@ -66,7 +66,7 @@ if (zen_is_whitelisted_admin_ip()) {
  * The tpl() helper can be used to query settings and even fallback to admin configs.
  */
 if (file_exists(DIR_WS_TEMPLATE . 'template_settings.php')) {
-    require DIR_WS_TEMPLATE . 'template_settings.php';
+    require_once DIR_WS_TEMPLATE . 'template_settings.php';
 }
 if (!empty($result->fields['template_settings'])) {
     $tmp = json_decode($result->fields['template_settings'], true);
