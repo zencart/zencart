@@ -74,6 +74,7 @@ if (!empty($result->fields['template_settings'])) {
         if (empty($tpl_settings)) {
             $tpl_settings = [];
         }
+        $tpl_settings['template_dir'] = $template_dir;
         $tpl_settings = array_merge($tpl_settings, $tmp);
     }
 }

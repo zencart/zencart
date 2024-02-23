@@ -1,19 +1,29 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Nov 27 Modified in v1.5.8a $
+ * @version $Id:  Modified in v2.0.0-alpha2 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
 /**
- * Template settings access helper function
+ * Template settings access helper function.
+ * This will first look to the $template_settings array for the setting key (the name of the constant being overridden)
+ * Lookup order:
+ * - $template_settings array key
+ * - global CONSTANT
+ * - global $var by same name, if requested
+ *
+ * All returned values will be passed through zen_cast() to allow casting to desired type, if specified.
+ *
+ * If nothing is found, the supplied default will be returned. Else null.
  */
-function tpl(string $setting, string $cast_to = null, $default = null, bool $check_globals = false)
+function tpl(string $setting, string $cast_to = null, $default = null, bool $check_globals = false): mixed
 {
-    // Check whether the settings array contains the $setting
+    // Check whether the $tpl_settings array contains the $setting
+    // It could be populated from the template_settings.php file or the template_settings JSON field in the db
     global $tpl_settings;
     if (isset($tpl_settings[$setting])) {
         return zen_cast($tpl_settings[$setting], $cast_to);
@@ -43,7 +53,8 @@ function tpl(string $setting, string $cast_to = null, $default = null, bool $che
  */
 function zen_cast($input, ?string $cast_to): mixed
 {
-    // this case is listed first because it's likely to be the most common when called from the tpl() function
+    // null case is listed first because it's likely to be the most common when called from the tpl() function
+    // null treats it as a passthrough, doing no casting.
     if ($cast_to === null) {
         return $input;
     }
