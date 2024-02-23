@@ -212,8 +212,9 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
     </div>
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <?php
-        echo((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') ? iconv('ISO-8859-1', 'UTF-8', $zcDate->output(ADMIN_NAV_DATE_TIME_FORMAT, time())) : $zcDate->output(ADMIN_NAV_DATE_TIME_FORMAT, time())); //windows does not "do" UTF-8...so a manual conversion is necessary
-        echo '&nbsp;' . date("O", time()) . ' GMT';  // time zone
+        /** @var zcDate $zcDate */
+        $date = $zcDate->output(ADMIN_NAV_DATE_TIME_FORMAT, time());
+        echo (function_exists('mb_convert_encoding')) ? mb_convert_encoding($date, 'UTF-8') : $date;
         echo '&nbsp;[' . $_SERVER['REMOTE_ADDR'] . ']'; // current admin user's IP address
         echo '<br>';
         echo gethostname();

@@ -9,7 +9,7 @@
 @setlocale(LC_TIME, ['en_US', 'en_US.utf8', 'en', 'English_United States.1252']);
 
 $define = [
-    'ADMIN_NAV_DATE_TIME_FORMAT' => '%A %d %b %Y %X',
+    'ADMIN_NAV_DATE_TIME_FORMAT' => '%A %d %b %Y %X (%Z)',
     'ARIA_PAGINATION_' => '',
     'ARIA_PAGINATION_CURRENTLY_ON' => ', now on page %s',
     'ARIA_PAGINATION_CURRENT_PAGE' => 'Current Page',
