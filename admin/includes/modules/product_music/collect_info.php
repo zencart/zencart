@@ -300,7 +300,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       <?php echo ($pInfo->products_priced_by_attribute == 1 ? '<span class="help-block errorText">' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_EDIT . '</span>' : ''); ?>
     </div>
   </div>
-  <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;padding: 10px 10px 0 0;">
+  <div class="well product-tax-prices">
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
@@ -485,11 +485,14 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       ?>
     </div>
   </div>
+  <div class="well product-shipping-measurements">
+      <h2><?php echo TEXT_SHIPPING_PACKAGE_DETAILS; ?></h2>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_WEIGHT, 'products_weight', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control" id="products_weight" inputmode="decimal"'); ?>
     </div>
+  </div>
   </div>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
