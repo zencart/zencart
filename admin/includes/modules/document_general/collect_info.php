@@ -20,6 +20,10 @@ $parameters = [
   'products_price_w' => '0',
   'products_virtual' => 0,
   'products_weight' => '0',
+  'products_length' => '',
+  'products_width' => '',
+  'products_height' => '',
+  'product_ships_in_own_box' => '',
   'products_date_added' => '',
   'products_last_modified' => '',
   'products_date_available' => '',
@@ -158,6 +162,10 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
        zen_draw_hidden_field('products_model', $pInfo->products_model) .
        zen_draw_hidden_field('products_price', $pInfo->products_price) .
        zen_draw_hidden_field('products_weight', $pInfo->products_weight) .
+       zen_draw_hidden_field('products_length', $pInfo->products_length) .
+       zen_draw_hidden_field('products_width', $pInfo->products_width) .
+       zen_draw_hidden_field('products_height', $pInfo->products_height) .
+       zen_draw_hidden_field('product_ships_in_own_box', $pInfo->product_ships_in_own_box) .
        zen_draw_hidden_field('products_virtual', $pInfo->products_virtual) .
        zen_draw_hidden_field('products_tax_class_id', $pInfo->products_tax_class_id) .
        zen_draw_hidden_field('manufacturers_id', $pInfo->manufacturers_id) .
