@@ -849,6 +849,21 @@ input.faint {
     color: #333;
 }
 
+.well.product-tax-prices {
+    color: #31778f;
+    background-color: #d9eff7;
+    border-color: #bcecf1;
+    padding: 10px 10px 0 10px;
+}
+.well.product-shipping-measurements {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    padding: 10px 10px 0 10px;
+}
+
+/** utility */
+
 .control-label {/*for multiple inputs*/
     font-weight: 700;
 }
