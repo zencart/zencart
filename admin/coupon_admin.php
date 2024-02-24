@@ -319,13 +319,29 @@ switch ($_GET['action']) {
       }
       // referrers
         $trimmed_referrers = array_map(static fn($referrer) => trim($referrer), explode(',', $_POST['coupon_referrer'] ?? []));
+        $results = $db->Execute("SELECT *
+                                 FROM " . TABLE_COUPON_REFERRERS . "
+                                 WHERE coupon_id = " . (int)$_GET['cid']);
+        $previous_referrers = [];
+        foreach ($results as $result) {
+            $previous_referrers[] = $result['referrer_domain'];
+        }
         foreach ($trimmed_referrers as $referrer) {
+            // add new domains
             if (empty(CouponValidation::referrer_already_assigned($referrer))) {
                 $sql_data_array = [
                     'referrer_domain' => $referrer,
                     'coupon_id' => (int)$_GET['cid'],
                 ];
                 zen_db_perform(TABLE_COUPON_REFERRERS, $sql_data_array);
+            }
+        }
+        foreach ($previous_referrers as $referrer) {
+            // delete removed domains
+            if (!in_array($referrer, $trimmed_referrers)) {
+                $sql = "DELETE FROM " . TABLE_COUPON_REFERRERS . " WHERE referrer_domain = :domain";
+                $sql = $db->bindVars($sql, ':domain', $referrer, 'string');
+                $db->Execute($sql);
             }
         }
     } else {
