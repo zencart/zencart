@@ -463,6 +463,10 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 
     if (!empty($parameters)) $field .= ' ' . $parameters;
 
+    if (!str_contains($parameters, 'id="')) {
+        $field .= ' id="' . zen_output_string(str_replace(['[', ']'], '-', $name)) . '"';
+    }
+
     $field .= '>';
 
     if ($text == '~*~*#' && (isset($GLOBALS[$name]) && is_string($GLOBALS[$name])) && ($reinsert_value == true) ) {
