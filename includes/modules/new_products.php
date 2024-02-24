@@ -75,7 +75,10 @@ if ($num_products_count > 0) {
         if ($new_products->fields['products_image'] === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '0') {
             $new_products_image = '';
         } else {
-            $new_products_image = '<a href="' . $new_products_link . '">' . zen_image(DIR_WS_IMAGES . $new_products->fields['products_image'], $new_products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br>';
+            $new_products_image =
+                '<a href="' . $new_products_link . '">' .
+                    zen_image(DIR_WS_IMAGES . $new_products->fields['products_image'], $new_products_name, IMAGE_PRODUCT_NEW_WIDTH, IMAGE_PRODUCT_NEW_HEIGHT) .
+                '</a><br>';
         }
 
         $zco_notifier->notify('NOTIFY_MODULES_NEW_PRODUCTS_B4_LIST_BOX', [], $new_products->fields, $products_price);
