@@ -5,10 +5,10 @@
  * Prepares the content for displaying a category's sub-category listing in grid format.
  * Once the data is prepared, it calls the standard tpl_list_box_content template for display.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 18 Modified in v1.5.8-alpha2 $
+ * @version $Id: DrByte 2024 Feb 24 Modified in v2.0.0-beta1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');

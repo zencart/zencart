@@ -3,7 +3,7 @@
  * index.php -- This is the main controller file for the Zen Cart installer
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Feb 19 Modified in v2.0.0-beta1 $
  */
 
 if (PHP_VERSION_ID < 80002) {

@@ -9,9 +9,9 @@
  * Placing a file in the includes/modules/pages/some_page/ directory called main_template_vars.php
  * allows you to override this page and choose the template that loads.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Jan 31 Modified in v2.0.0-beta1 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
