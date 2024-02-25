@@ -23,7 +23,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * The 'choice' aliases help with weighting for fallback to default selection
  */
 $template_dir = 'template_default';
-$sql = "SELECT template_dir, template_language, template_language=" . (int)$_SESSION['languages_id'] . " AS choice1, template_language=0 AS choice2
+$sql = "SELECT *, template_language=" . (int)$_SESSION['languages_id'] . " AS choice1, template_language=0 AS choice2
         FROM " . TABLE_TEMPLATE_SELECT . "
         ORDER BY choice1 DESC, choice2 DESC, template_language";
 $result = $db->Execute($sql);
@@ -60,6 +60,28 @@ if (zen_is_whitelisted_admin_ip()) {
  * The actual template icons directory to use
  */
   define('DIR_WS_TEMPLATE_ICONS', DIR_WS_TEMPLATE_IMAGES . 'icons/');
+
+/**
+ * Load template-specific configuration settings, if they exist.
+ * The tpl() helper can be used to query settings and even fallback to admin configs.
+ */
+if (empty($tpl_settings)) {
+    $tpl_settings = [];
+}
+if (file_exists(DIR_WS_TEMPLATE . 'template_settings.php')) {
+    require_once DIR_WS_TEMPLATE . 'template_settings.php';
+}
+// check again in case overrides went wrong
+if (empty($tpl_settings)) {
+    $tpl_settings = [];
+}
+if (!empty($result->fields['template_settings'])) {
+    $tmp = json_decode($result->fields['template_settings'], true);
+    if (is_array($tmp)) {
+        $tpl_settings = array_merge($tmp, $tpl_settings);
+    }
+}
+$tpl_settings['template_dir'] = $template_dir;
 
 /**
  * Load the appropriate Language files, based on the currently-selected template

@@ -2158,6 +2158,7 @@ CREATE TABLE template_select (
   template_id int(11) NOT NULL auto_increment,
   template_dir varchar(64) NOT NULL default '',
   template_language varchar(64) NOT NULL default '0',
+  template_settings LONGTEXT DEFAULT NULL,
   PRIMARY KEY  (template_id),
   KEY idx_tpl_lang_zen (template_language)
 ) ENGINE=MyISAM;

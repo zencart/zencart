@@ -55,11 +55,15 @@ foreach ($categories as $next_category) {
     // Set css classes for "row" wrapper, to allow for fluid grouping of cells based on viewport
     // these defaults are inspired by Bootstrap4, but can be customized to suit your own framework
     if ($category_row_layout_style === 'fluid') {
-        $grid_cards_classes = $grid_category_cards_classes ?? 'row row-clms-3';
+        $grid_cards_classes = $grid_category_cards_classes ?? 'row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3';
         if (!isset($grid_category_classes_matrix)) {
             // this array is intentionally in reverse order, with largest index first
             $grid_category_classes_matrix = [
-                '480' => 'row row-clms-1 row-clms-sm-2 row-clms-md-3 row-clms-lg-4 row-clms-xl-6',
+                '12' => 'row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6',
+                '10' => 'row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-5',
+                '9' => 'row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5',
+                '8' => 'row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4',
+                '6' => 'row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3',
             ];
         }
 
