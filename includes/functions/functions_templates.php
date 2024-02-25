@@ -10,9 +10,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Template settings access helper function.
- * This will first look to the $template_settings array for the setting key (the name of the constant being overridden)
+ * This will first look to the global $tpl_settings array for the setting key (the name of the constant being overridden)
  * Lookup order:
- * - $template_settings array key
+ * - $tpl_settings array key
  * - global CONSTANT
  * - global $var by same name, if requested
  *
