@@ -65,19 +65,23 @@ if (zen_is_whitelisted_admin_ip()) {
  * Load template-specific configuration settings, if they exist.
  * The tpl() helper can be used to query settings and even fallback to admin configs.
  */
+if (empty($tpl_settings)) {
+    $tpl_settings = [];
+}
 if (file_exists(DIR_WS_TEMPLATE . 'template_settings.php')) {
     require_once DIR_WS_TEMPLATE . 'template_settings.php';
+}
+// check again in case overrides went wrong
+if (empty($tpl_settings)) {
+    $tpl_settings = [];
 }
 if (!empty($result->fields['template_settings'])) {
     $tmp = json_decode($result->fields['template_settings'], true);
     if (is_array($tmp)) {
-        if (empty($tpl_settings)) {
-            $tpl_settings = [];
-        }
-        $tpl_settings['template_dir'] = $template_dir;
-        $tpl_settings = array_merge($tpl_settings, $tmp);
+        $tpl_settings = array_merge($tmp, $tpl_settings);
     }
 }
+$tpl_settings['template_dir'] = $template_dir;
 
 /**
  * Load the appropriate Language files, based on the currently-selected template
