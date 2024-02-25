@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=checkout_shipping.
  * Displays allowed shipping modules for selection by customer.
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2023 Feb 23 Modified in v1.5.8a $
+ * @version $Id: DrByte 2024 Jan 29 Modified in v2.0.0-beta1 $
  */
 ?>
 <div class="centerColumn" id="checkoutShipping">

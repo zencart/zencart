@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2021 Jan 29 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Feb 22 Modified in v2.0.0-beta1 $
  */
 
 $psr4Autoloader->addPrefix('Zencart\QueryBuilder', DIR_FS_CATALOG . DIR_WS_CLASSES);

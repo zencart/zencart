@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  Modified in v2.0.0-alpha $
+ * @version $Id: DrByte 2024 Feb 03 New in v2.0.0-beta1 $
  */
 require DIR_WS_MODULES . zen_get_module_directory(FILENAME_MAIN_PRODUCT_IMAGE);
 ?>
