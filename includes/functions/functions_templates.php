@@ -35,8 +35,16 @@ function tpl(string $setting, string $cast_to = null, $default = null, bool $che
     }
 
     // Else fall back to a global variable
-    if ($check_globals && isset($GLOBALS[$setting])) {
-        return zen_cast($GLOBALS[$setting], $cast_to);
+    if ($check_globals) {
+        // first exact case as supplied
+        if (isset($GLOBALS[$setting])) {
+            return zen_cast($GLOBALS[$setting], $cast_to);
+        }
+        // next check all lower-case
+        $setting = strtolower($setting); // $setting is not used again below, so convert directly
+        if (isset($GLOBALS[$setting])) {
+            return zen_cast($GLOBALS[$setting], $cast_to);
+        }
     }
 
     // Else return the provided default, if any
