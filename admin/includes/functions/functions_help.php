@@ -148,7 +148,7 @@ function page_has_help()
         FILENAME_SQLPATCH => 'https://docs.zen-cart.com/user/admin_pages/tools/install_sql_patches/',
         FILENAME_COUPON_ADMIN => 'https://docs.zen-cart.com/user/admin_pages/discounts/coupon_admin/',
         FILENAME_COUPON_RESTRICT => 'https://docs.zen-cart.com/user/admin_pages/discounts/coupon_restrictions/',
-        FILENAME_COUPON_REFERRERS => 'https://docs.zen-cart.com/user/admin_pages/discounts/coupon_referrers/',
+        FILENAME_COUPON_REFERRERS => 'https://docs.zen-cart.com/user/order_total/coupons/#coupon-referrers/',
         FILENAME_GV_QUEUE => 'https://docs.zen-cart.com/user/admin_pages/discounts/gift_certificate_queue/',
         FILENAME_GV_MAIL => 'https://docs.zen-cart.com/user/admin_pages/discounts/send_gift_certificate/',
         FILENAME_GV_SENT => 'https://docs.zen-cart.com/user/admin_pages/discounts/gift_certificates_sent/',
