@@ -12,7 +12,7 @@
 /* ALL MOBILE PHONES - ORIENTATION:LANDSCAPE */
 @media only screen and (orientation:landscape) {
 /*bof responsive*/
-.onerow-fluid {width:100% !important;} 
+.onerow-fluid {width:100% !important;}
 .onerow-fluid>[class*="col"] {float:none;display:block;width:auto;margin:0px;clear:both;}
 
 /*bof header*/
@@ -216,7 +216,7 @@ fieldset p{width:90%;margin:0 auto;}
 /* ALL MOBILE PHONES - ORIENTATION:PORTRAIT */
 @media only screen and (orientation:portrait) {
 /*bof responsive*/
-.onerow-fluid {width:100% !important;} 
+.onerow-fluid {width:100% !important;}
 .onerow-fluid>[class*="col"] {float:none;display:block;width:auto;margin:0px;clear:both;}
 
 /*bof header*/
@@ -309,7 +309,7 @@ div#accountLinksWrapper.back {float:none;width:100%;}
 .button{display:block;text-align:center;padding:12px 20px;}
 input.cssButton.submit_button.button.button_send, .button_send:hover, input.cssButton.submit_button.button.button_login, .button_login:hover, input.cssButton.submit_button.button.button_update, .button_update:hover, input.cssButton.submit_button.button.button_submit, .button_submit:hover{width:100%;padding: 12px 30px 30px 30px;}
 span.cssButton.normal_button.button.small_edit, .small_edit:hover{float:left;}
-span.cssButton.normal_button.button.button_delete_small, .button_delete_small:hover{float:right;width:33%;} 
+span.cssButton.normal_button.button.button_delete_small, .button_delete_small:hover{float:right;width:33%;}
 #accountDefault .forward, #accountHistInfo .forward{float:none;text-align:center;}
 .amount{float:right !important;}
 div#myAccountPaymentInfo{text-align:left !important;}
