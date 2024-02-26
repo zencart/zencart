@@ -90,7 +90,7 @@ CREATE TABLE coupon_referrers (
   KEY idx_refcoupon_id_zen (coupon_id)
 );
 INSERT IGNORE INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
-VALUES ('couponReferrers', 'BOX_COUPON_REFERRERS', 'FILENAME_COUPON_REFERRERS', '', 'gv', 'Y', 5);
+VALUES ('couponReferrers', 'BOX_COUPON_REFERRERS', 'FILENAME_COUPON_REFERRERS', '', 'gv', 'N', 5);
 
 
 #############
