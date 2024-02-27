@@ -51,7 +51,7 @@ ALTER TABLE products ADD products_height DECIMAL(8,4) DEFAULT NULL AFTER product
 ALTER TABLE products CHANGE products_ready_to_ship product_ships_in_own_box TINYINT DEFAULT NULL;
 ALTER TABLE products MODIFY product_ships_in_own_box TINYINT DEFAULT NULL;
 ALTER TABLE products ADD product_ships_in_own_box TINYINT DEFAULT NULL AFTER products_height;
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Shipping Weight Units', 'SHIPPING_WEIGHT_UNITS', 'lbs', 'How should shipping modules treat the weights set on products? (remember, 1 ounce=0.0625 lbs, so choose lbs). <b>NOTE: You must still manually update your language files to show the correct units visually.</b>', 7, 6, now(), 'zen_cfg_select_option([\'lbs\', \'kgs\'],');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Shipping Weight Units', 'SHIPPING_WEIGHT_UNITS', 'lbs', 'How should shipping modules treat the weights set on products? (remember if using lbs, 1 ounce=0.0625). <b>NOTE: You must still manually update your language files to show the correct units visually.</b>', 7, 6, now(), 'zen_cfg_select_option([\'lbs\', \'kgs\'],');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Shipping Dimension Units', 'SHIPPING_DIMENSION_UNITS', 'inches', 'In which unit of measurement does your store save length/width/height for your products?', 7, 7, now(), 'zen_cfg_select_option([\'inches\', \'centimeters\'],');
 
 #PROGRESS_FEEDBACK:!TEXT=Altering Order table - may take some time
@@ -132,6 +132,11 @@ UPDATE configuration_group SET visible = 0 WHERE configuration_group_id = 23;
 UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configNewListing';
 UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configFeaturedListing';
 UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configAllListing';
+
+
+## Clarify SHIPPING configuration examples.
+UPDATE configuration SET configuration_description = 'What is the weight of typical packaging of small to medium packages?<br>Example:<br>Unit = Your SHIPPING_WEIGHT_UNITS (lbs or kgs) <br> 10% + 1 Unit 10:1<br>10% + 0 Units 10:0<br>0% + 5 Units 0:5<br>0% + 1/2 Unit 0:0.5<br>0% + 0 Units 0:0' WHERE configuration_key = 'SHIPPING_BOX_WEIGHT';
+UPDATE configuration SET configuration_description = 'What is the weight of typical packaging for Large packages?<br>Example:<br>Unit = Your SHIPPING_WEIGHT_UNITS (lbs or kgs) <br> 10% + 1 Unit 10:1<br>10% + 0 Units 10:0<br>0% + 5 Units 0:5<br>0% + 1/2 Unit 0:0.5<br>0% + 0 Units 0:0' WHERE configuration_key = 'SHIPPING_BOX_PADDING';
 
 
 # Add template_settings field
