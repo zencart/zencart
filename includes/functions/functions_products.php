@@ -836,6 +836,22 @@ function zen_has_product_discounts($product_id)
 }
 
 /**
+ * Check if a product in the catalogue has a special price defined or not.
+ *
+ * @param int $product_id
+ * @return boolean
+ */
+function zen_has_product_specials(int $product_id): bool
+{
+    global $db;
+    $result = $db->Execute('SELECT products_id
+        FROM ' . TABLE_SPECIALS . "
+        WHERE products_id = $product_id
+        LIMIT 1;");
+    return !$result->EOF;
+}
+
+/**
  * Set the status of a product.
  * Used for toggling
  *
@@ -964,6 +980,42 @@ function zen_products_attributes_download_delete($product_id)
 }
 
 /**
+ * Copy specials pricing from one product to another.
+ *
+ * @param int $copy_from Source products_id
+ * @param int $copy_to   Target products_id
+ * @return bool Indicates whether there was a special on $copy_from or not.
+ */
+function zen_copy_specials_to_product(int $copy_from, int $copy_to): bool {
+    global $db;
+
+    // Fetch existing special for $copy_from, if any.
+    $from_result = $db->Execute('SELECT * FROM ' . TABLE_SPECIALS . "
+        WHERE products_id = $copy_from;");
+    if ($from_result->EOF) {
+        return false;
+    }
+
+    // Take the data row, modified ready to insert/update
+    $sql_data = $from_result->fields;
+    unset($sql_data['specials_id']);
+    $sql_data['products_id'] = $copy_to;
+
+    // Test for existing special for $copy_to, and insert/update as required.
+    $result = $db->Execute('SELECT products_id FROM ' . TABLE_SPECIALS . "
+        WHERE products_id = $copy_to LIMIT 1;");
+    if ($result->EOF) {
+        // Insert new specials row
+        zen_db_perform(TABLE_SPECIALS, $sql_data);
+    } else {
+        // Update existing specials row
+        zen_db_perform(TABLE_SPECIALS, $sql_data, 'update', "products_id = $copy_to");
+    }
+
+    return true;
+}
+
+/**
  * copy quantity-discounts from one product to another
  * @param int $copy_from
  * @param int $copy_to
@@ -1002,6 +1054,8 @@ function zen_copy_discounts_to_product($copy_from, $copy_to)
         );
         $cnt_discount++;
     }
+
+    return true;
 }
 
 function zen_products_sort_order($includeOrderBy = true): string
