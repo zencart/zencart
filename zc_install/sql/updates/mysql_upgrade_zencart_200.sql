@@ -134,6 +134,12 @@ UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configFeaturedLis
 UPDATE admin_pages SET display_on_menu = 'N' WHERE page_key = 'configAllListing';
 
 
+## Clarify SHIPPING configuration examples.
+UPDATE configuration SET configuration_description = 'What is the weight of typical packaging of small to medium packages?<br>Example:<br>Unit = Your SHIPPING_WEIGHT_UNITS (lbs or kgs) <br> 10% + 1 Unit 10:1<br>10% + 0 Units 10:0<br>0% + 5 Units 0:5<br>0% + 1/2 Unit 0:0.5<br>0% + 0 Units 0:0' WHERE configuration_key = 'SHIPPING_BOX_WEIGHT';
+UPDATE configuration SET configuration_description = 'What is the weight of typical packaging for Large packages?<br>Example:<br>Unit = Your SHIPPING_WEIGHT_UNITS (lbs or kgs) <br> 10% + 1 Unit 10:1<br>10% + 0 Units 10:0<br>0% + 5 Units 0:5<br>0% + 1/2 Unit 0:0.5<br>0% + 0 Units 0:0' WHERE configuration_key = 'SHIPPING_BOX_PADDING';
+UPDATE configuration SET configuration_description = 'How should shipping modules treat the weights set on products? (remember if using lbs, 1 ounce=0.0625). <b>NOTE: You must still manually update your language files to show the correct units visually.</b>' WHERE configuration_key = 'SHIPPING_WEIGHT_UNITS';
+
+
 # Add template_settings field
 ALTER TABLE template_select ADD template_settings LONGTEXT DEFAULT NULL;
 
