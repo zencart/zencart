@@ -24,15 +24,15 @@ use Twig\Environment;
  */
 class HIncludeFragmentRenderer extends RoutableFragmentRenderer
 {
-    private ?string $globalDefaultTemplate;
+    private $globalDefaultTemplate;
     private $signer;
     private $twig;
-    private string $charset;
+    private $charset;
 
     /**
-     * @param string $globalDefaultTemplate The global default content (it can be a template name or the content)
+     * @param string|null $globalDefaultTemplate The global default content (it can be a template name or the content)
      */
-    public function __construct(Environment $twig = null, UriSigner $signer = null, string $globalDefaultTemplate = null, string $charset = 'utf-8')
+    public function __construct(?Environment $twig = null, ?UriSigner $signer = null, ?string $globalDefaultTemplate = null, string $charset = 'utf-8')
     {
         $this->twig = $twig;
         $this->globalDefaultTemplate = $globalDefaultTemplate;
@@ -42,8 +42,10 @@ class HIncludeFragmentRenderer extends RoutableFragmentRenderer
 
     /**
      * Checks if a templating engine has been set.
+     *
+     * @return bool
      */
-    public function hasTemplating(): bool
+    public function hasTemplating()
     {
         return null !== $this->twig;
     }
@@ -57,7 +59,7 @@ class HIncludeFragmentRenderer extends RoutableFragmentRenderer
      *  * id:         An optional hx:include tag id attribute
      *  * attributes: An optional array of hx:include tag attributes
      */
-    public function render(string|ControllerReference $uri, Request $request, array $options = []): Response
+    public function render($uri, Request $request, array $options = [])
     {
         if ($uri instanceof ControllerReference) {
             $uri = (new FragmentUriGenerator($this->fragmentPath, $this->signer))->generate($uri, $request);
@@ -95,7 +97,7 @@ class HIncludeFragmentRenderer extends RoutableFragmentRenderer
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return 'hinclude';
     }

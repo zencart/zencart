@@ -7,10 +7,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class LayoutBox extends Eloquent
+class LayoutBox extends Model
 {
+    use HasFactory;
+
     protected $table = TABLE_LAYOUT_BOXES;
     protected $primaryKey = 'layout_id';
     public $timestamps = false;

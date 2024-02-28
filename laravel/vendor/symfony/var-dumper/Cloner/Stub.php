@@ -39,7 +39,7 @@ class Stub
     public $position = 0;
     public $attr = [];
 
-    private static array $defaultProperties = [];
+    private static $defaultProperties = [];
 
     /**
      * @internal

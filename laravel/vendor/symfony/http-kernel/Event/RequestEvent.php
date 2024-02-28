@@ -24,12 +24,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RequestEvent extends KernelEvent
 {
-    private $response = null;
+    private $response;
 
     /**
      * Returns the response object.
+     *
+     * @return Response|null
      */
-    public function getResponse(): ?Response
+    public function getResponse()
     {
         return $this->response;
     }
@@ -46,8 +48,10 @@ class RequestEvent extends KernelEvent
 
     /**
      * Returns whether a response was set.
+     *
+     * @return bool
      */
-    public function hasResponse(): bool
+    public function hasResponse()
     {
         return null !== $this->response;
     }

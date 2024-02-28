@@ -17,10 +17,10 @@ use Symfony\Component\Mime\RawMessage;
 
 final class EmailAttachmentCount extends Constraint
 {
-    private int $expectedValue;
-    private ?string $transport;
+    private $expectedValue;
+    private $transport;
 
-    public function __construct(int $expectedValue, string $transport = null)
+    public function __construct(int $expectedValue, ?string $transport = null)
     {
         $this->expectedValue = $expectedValue;
         $this->transport = $transport;

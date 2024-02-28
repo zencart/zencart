@@ -36,14 +36,14 @@ use Symfony\Component\Mime\Exception\LogicException;
  */
 final class MimeTypes implements MimeTypesInterface
 {
-    private array $extensions = [];
-    private array $mimeTypes = [];
+    private $extensions = [];
+    private $mimeTypes = [];
 
     /**
      * @var MimeTypeGuesserInterface[]
      */
-    private array $guessers = [];
-    private static MimeTypes $default;
+    private $guessers = [];
+    private static $default;
 
     public function __construct(array $map = [])
     {

@@ -21,9 +21,20 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class RemoveEmptyControllerArgumentLocatorsPass implements CompilerPassInterface
 {
+    private $controllerLocator;
+
+    public function __construct(string $controllerLocator = 'argument_resolver.controller_locator')
+    {
+        if (0 < \func_num_args()) {
+            trigger_deprecation('symfony/http-kernel', '5.3', 'Configuring "%s" is deprecated.', __CLASS__);
+        }
+
+        $this->controllerLocator = $controllerLocator;
+    }
+
     public function process(ContainerBuilder $container)
     {
-        $controllerLocator = $container->findDefinition('argument_resolver.controller_locator');
+        $controllerLocator = $container->findDefinition($this->controllerLocator);
         $controllers = $controllerLocator->getArgument(0);
 
         foreach ($controllers as $controller => $argumentRef) {

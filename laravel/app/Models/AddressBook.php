@@ -7,10 +7,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class AddressBook extends Eloquent
+class AddressBook extends Model
 {
+    use HasFactory;
+
     protected $table = TABLE_ADDRESS_BOOK;
     protected $primaryKey = 'address_book_id';
     public $timestamps = false;

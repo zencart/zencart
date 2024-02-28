@@ -20,8 +20,10 @@ interface SessionBagInterface
 {
     /**
      * Gets this bag's name.
+     *
+     * @return string
      */
-    public function getName(): string;
+    public function getName();
 
     /**
      * Initializes the Bag.
@@ -30,13 +32,15 @@ interface SessionBagInterface
 
     /**
      * Gets the storage key for this bag.
+     *
+     * @return string
      */
-    public function getStorageKey(): string;
+    public function getStorageKey();
 
     /**
      * Clears out data from bag.
      *
      * @return mixed Whatever data was contained
      */
-    public function clear(): mixed;
+    public function clear();
 }

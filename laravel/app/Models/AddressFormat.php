@@ -7,10 +7,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class AddressFormat extends Eloquent
+class AddressFormat extends Model
 {
+    use HasFactory;
+
     protected $table = TABLE_ADDRESS_FORMAT;
     protected $primaryKey = 'address_format_id';
     public $timestamps = false;

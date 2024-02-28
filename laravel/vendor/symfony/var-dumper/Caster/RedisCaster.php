@@ -102,7 +102,10 @@ class RedisCaster
         return $a;
     }
 
-    private static function getRedisOptions(\Redis|\RedisArray|\RedisCluster $redis, array $options = []): EnumStub
+    /**
+     * @param \Redis|\RedisArray|\RedisCluster $redis
+     */
+    private static function getRedisOptions($redis, array $options = []): EnumStub
     {
         $serializer = $redis->getOption(\Redis::OPT_SERIALIZER);
         if (\is_array($serializer)) {

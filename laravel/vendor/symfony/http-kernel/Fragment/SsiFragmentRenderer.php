@@ -21,7 +21,7 @@ class SsiFragmentRenderer extends AbstractSurrogateFragmentRenderer
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return 'ssi';
     }

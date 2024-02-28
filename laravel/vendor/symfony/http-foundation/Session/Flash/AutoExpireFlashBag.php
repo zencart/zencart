@@ -18,9 +18,9 @@ namespace Symfony\Component\HttpFoundation\Session\Flash;
  */
 class AutoExpireFlashBag implements FlashBagInterface
 {
-    private string $name = 'flashes';
-    private array $flashes = ['display' => [], 'new' => []];
-    private string $storageKey;
+    private $name = 'flashes';
+    private $flashes = ['display' => [], 'new' => []];
+    private $storageKey;
 
     /**
      * @param string $storageKey The key used to store flashes in the session
@@ -33,7 +33,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
@@ -60,7 +60,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function add(string $type, mixed $message)
+    public function add(string $type, $message)
     {
         $this->flashes['new'][$type][] = $message;
     }
@@ -68,7 +68,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function peek(string $type, array $default = []): array
+    public function peek(string $type, array $default = [])
     {
         return $this->has($type) ? $this->flashes['display'][$type] : $default;
     }
@@ -76,7 +76,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function peekAll(): array
+    public function peekAll()
     {
         return \array_key_exists('display', $this->flashes) ? $this->flashes['display'] : [];
     }
@@ -84,7 +84,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function get(string $type, array $default = []): array
+    public function get(string $type, array $default = [])
     {
         $return = $default;
 
@@ -103,7 +103,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function all(): array
+    public function all()
     {
         $return = $this->flashes['display'];
         $this->flashes['display'] = [];
@@ -122,7 +122,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function set(string $type, string|array $messages)
+    public function set(string $type, $messages)
     {
         $this->flashes['new'][$type] = (array) $messages;
     }
@@ -130,7 +130,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function has(string $type): bool
+    public function has(string $type)
     {
         return \array_key_exists($type, $this->flashes['display']) && $this->flashes['display'][$type];
     }
@@ -138,7 +138,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function keys(): array
+    public function keys()
     {
         return array_keys($this->flashes['display']);
     }
@@ -146,7 +146,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function getStorageKey(): string
+    public function getStorageKey()
     {
         return $this->storageKey;
     }
@@ -154,7 +154,7 @@ class AutoExpireFlashBag implements FlashBagInterface
     /**
      * {@inheritdoc}
      */
-    public function clear(): mixed
+    public function clear()
     {
         return $this->all();
     }

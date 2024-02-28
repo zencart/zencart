@@ -7,10 +7,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class ConfigurationGroup extends Eloquent
+class ConfigurationGroup extends Model
 {
+    use HasFactory;
+
     protected $table = TABLE_CONFIGURATION_GROUP;
     protected $primaryKey = 'configuration_group_id';
     public $timestamps = false;

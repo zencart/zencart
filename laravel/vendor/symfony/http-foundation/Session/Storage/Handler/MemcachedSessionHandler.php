@@ -24,14 +24,14 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     private $memcached;
 
     /**
-     * Time to live in seconds.
+     * @var int Time to live in seconds
      */
-    private ?int $ttl;
+    private $ttl;
 
     /**
-     * Key prefix for shared environments.
+     * @var string Key prefix for shared environments
      */
-    private string $prefix;
+    private $prefix;
 
     /**
      * Constructor.
@@ -54,7 +54,11 @@ class MemcachedSessionHandler extends AbstractSessionHandler
         $this->prefix = $options['prefix'] ?? 'sf2s';
     }
 
-    public function close(): bool
+    /**
+     * @return bool
+     */
+    #[\ReturnTypeWillChange]
+    public function close()
     {
         return $this->memcached->quit();
     }
@@ -62,12 +66,16 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doRead(string $sessionId): string
+    protected function doRead(string $sessionId)
     {
         return $this->memcached->get($this->prefix.$sessionId) ?: '';
     }
 
-    public function updateTimestamp(string $sessionId, string $data): bool
+    /**
+     * @return bool
+     */
+    #[\ReturnTypeWillChange]
+    public function updateTimestamp($sessionId, $data)
     {
         $this->memcached->touch($this->prefix.$sessionId, $this->getCompatibleTtl());
 
@@ -77,7 +85,7 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doWrite(string $sessionId, string $data): bool
+    protected function doWrite(string $sessionId, string $data)
     {
         return $this->memcached->set($this->prefix.$sessionId, $data, $this->getCompatibleTtl());
     }
@@ -98,14 +106,18 @@ class MemcachedSessionHandler extends AbstractSessionHandler
     /**
      * {@inheritdoc}
      */
-    protected function doDestroy(string $sessionId): bool
+    protected function doDestroy(string $sessionId)
     {
         $result = $this->memcached->delete($this->prefix.$sessionId);
 
         return $result || \Memcached::RES_NOTFOUND == $this->memcached->getResultCode();
     }
 
-    public function gc(int $maxlifetime): int|false
+    /**
+     * @return int|false
+     */
+    #[\ReturnTypeWillChange]
+    public function gc($maxlifetime)
     {
         // not required here because memcached will auto expire the records anyhow.
         return 0;
@@ -113,8 +125,10 @@ class MemcachedSessionHandler extends AbstractSessionHandler
 
     /**
      * Return a Memcached instance.
+     *
+     * @return \Memcached
      */
-    protected function getMemcached(): \Memcached
+    protected function getMemcached()
     {
         return $this->memcached;
     }

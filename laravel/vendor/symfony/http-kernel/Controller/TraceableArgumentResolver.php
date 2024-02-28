@@ -31,14 +31,14 @@ class TraceableArgumentResolver implements ArgumentResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function getArguments(Request $request, callable $controller): array
+    public function getArguments(Request $request, callable $controller)
     {
         $e = $this->stopwatch->start('controller.get_arguments');
 
-        $ret = $this->resolver->getArguments($request, $controller);
-
-        $e->stop();
-
-        return $ret;
+        try {
+            return $this->resolver->getArguments($request, $controller);
+        } finally {
+            $e->stop();
+        }
     }
 }

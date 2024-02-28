@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class ResponseStatusCodeSame extends Constraint
 {
-    private int $statusCode;
+    private $statusCode;
 
     public function __construct(int $statusCode)
     {

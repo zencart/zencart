@@ -21,7 +21,7 @@ class EsiFragmentRenderer extends AbstractSurrogateFragmentRenderer
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return 'esi';
     }

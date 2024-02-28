@@ -29,7 +29,7 @@ abstract class Bundle implements BundleInterface
     protected $name;
     protected $extension;
     protected $path;
-    private string $namespace;
+    private $namespace;
 
     /**
      * {@inheritdoc}
@@ -58,9 +58,11 @@ abstract class Bundle implements BundleInterface
     /**
      * Returns the bundle's container extension.
      *
+     * @return ExtensionInterface|null
+     *
      * @throws \LogicException
      */
-    public function getContainerExtension(): ?ExtensionInterface
+    public function getContainerExtension()
     {
         if (null === $this->extension) {
             $extension = $this->createContainerExtension();
@@ -90,9 +92,9 @@ abstract class Bundle implements BundleInterface
     /**
      * {@inheritdoc}
      */
-    public function getNamespace(): string
+    public function getNamespace()
     {
-        if (!isset($this->namespace)) {
+        if (null === $this->namespace) {
             $this->parseClassName();
         }
 
@@ -102,7 +104,7 @@ abstract class Bundle implements BundleInterface
     /**
      * {@inheritdoc}
      */
-    public function getPath(): string
+    public function getPath()
     {
         if (null === $this->path) {
             $reflected = new \ReflectionObject($this);
@@ -130,8 +132,10 @@ abstract class Bundle implements BundleInterface
 
     /**
      * Returns the bundle's container extension class.
+     *
+     * @return string
      */
-    protected function getContainerExtensionClass(): string
+    protected function getContainerExtensionClass()
     {
         $basename = preg_replace('/Bundle$/', '', $this->getName());
 
@@ -140,8 +144,10 @@ abstract class Bundle implements BundleInterface
 
     /**
      * Creates the bundle's container extension.
+     *
+     * @return ExtensionInterface|null
      */
-    protected function createContainerExtension(): ?ExtensionInterface
+    protected function createContainerExtension()
     {
         return class_exists($class = $this->getContainerExtensionClass()) ? new $class() : null;
     }

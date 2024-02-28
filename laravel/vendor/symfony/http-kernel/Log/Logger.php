@@ -33,8 +33,8 @@ class Logger extends AbstractLogger
         LogLevel::EMERGENCY => 7,
     ];
 
-    private int $minLevelIndex;
-    private \Closure $formatter;
+    private $minLevelIndex;
+    private $formatter;
 
     /** @var resource|null */
     private $handle;
@@ -42,7 +42,7 @@ class Logger extends AbstractLogger
     /**
      * @param string|resource|null $output
      */
-    public function __construct(string $minLevel = null, $output = null, callable $formatter = null)
+    public function __construct(?string $minLevel = null, $output = null, ?callable $formatter = null)
     {
         if (null === $minLevel) {
             $minLevel = null === $output || 'php://stdout' === $output || 'php://stderr' === $output ? LogLevel::ERROR : LogLevel::WARNING;
@@ -66,7 +66,7 @@ class Logger extends AbstractLogger
         }
 
         $this->minLevelIndex = self::LEVELS[$minLevel];
-        $this->formatter = $formatter instanceof \Closure ? $formatter : \Closure::fromCallable($formatter ?? [$this, 'format']);
+        $this->formatter = $formatter ?: [$this, 'format'];
         if ($output && false === $this->handle = \is_resource($output) ? $output : @fopen($output, 'a')) {
             throw new InvalidArgumentException(sprintf('Unable to open "%s".', $output));
         }
@@ -74,8 +74,10 @@ class Logger extends AbstractLogger
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
-    public function log($level, $message, array $context = []): void
+    public function log($level, $message, array $context = [])
     {
         if (!isset(self::LEVELS[$level])) {
             throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
@@ -98,7 +100,7 @@ class Logger extends AbstractLogger
         if (str_contains($message, '{')) {
             $replacements = [];
             foreach ($context as $key => $val) {
-                if (null === $val || \is_scalar($val) || $val instanceof \Stringable) {
+                if (null === $val || \is_scalar($val) || (\is_object($val) && method_exists($val, '__toString'))) {
                     $replacements["{{$key}}"] = $val;
                 } elseif ($val instanceof \DateTimeInterface) {
                     $replacements["{{$key}}"] = $val->format(\DateTime::RFC3339);

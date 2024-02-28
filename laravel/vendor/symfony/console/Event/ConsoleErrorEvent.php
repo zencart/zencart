@@ -22,10 +22,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class ConsoleErrorEvent extends ConsoleEvent
 {
-    private \Throwable $error;
-    private int $exitCode;
+    private $error;
+    private $exitCode;
 
-    public function __construct(InputInterface $input, OutputInterface $output, \Throwable $error, Command $command = null)
+    public function __construct(InputInterface $input, OutputInterface $output, \Throwable $error, ?Command $command = null)
     {
         parent::__construct($command, $input, $output);
 

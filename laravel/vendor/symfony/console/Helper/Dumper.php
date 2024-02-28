@@ -24,9 +24,9 @@ final class Dumper
     private $output;
     private $dumper;
     private $cloner;
-    private \Closure $handler;
+    private $handler;
 
-    public function __construct(OutputInterface $output, CliDumper $dumper = null, ClonerInterface $cloner = null)
+    public function __construct(OutputInterface $output, ?CliDumper $dumper = null, ?ClonerInterface $cloner = null)
     {
         $this->output = $output;
         $this->dumper = $dumper;
@@ -57,7 +57,7 @@ final class Dumper
         }
     }
 
-    public function __invoke(mixed $var): string
+    public function __invoke($var): string
     {
         return ($this->handler)($var);
     }

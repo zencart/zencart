@@ -7,10 +7,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class AdminActivityLog extends Eloquent
+class AdminActivityLog extends Model
 {
+    use HasFactory;
+
     protected $table = TABLE_ADMIN_ACTIVITY_LOG;
     protected $primaryKey = 'log_id';
     protected  $hidden = ['gzpost'];

@@ -20,8 +20,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
 {
     /**
      * Folder where profiler data are stored.
+     *
+     * @var string
      */
-    private string $folder;
+    private $folder;
 
     /**
      * Constructs the file storage using a "dsn-like" path.
@@ -45,7 +47,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function find(?string $ip, ?string $url, ?int $limit, ?string $method, int $start = null, int $end = null, string $statusCode = null): array
+    public function find(?string $ip, ?string $url, ?int $limit, ?string $method, ?int $start = null, ?int $end = null, ?string $statusCode = null): array
     {
         $file = $this->getIndexFilename();
 
@@ -59,6 +61,12 @@ class FileProfilerStorage implements ProfilerStorageInterface
         $result = [];
         while (\count($result) < $limit && $line = $this->readLineFromFile($file)) {
             $values = str_getcsv($line);
+
+            if (7 !== \count($values)) {
+                // skip invalid lines
+                continue;
+            }
+
             [$csvToken, $csvIp, $csvMethod, $csvUrl, $csvTime, $csvParent, $csvStatusCode] = $values;
             $csvTime = (int) $csvTime;
 
@@ -188,8 +196,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
 
     /**
      * Gets filename to store data, associated to the token.
+     *
+     * @return string
      */
-    protected function getFilename(string $token): string
+    protected function getFilename(string $token)
     {
         // Uses 4 last characters, because first are mostly the same.
         $folderA = substr($token, -2, 2);
@@ -200,8 +210,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
 
     /**
      * Gets the index filename.
+     *
+     * @return string
      */
-    protected function getIndexFilename(): string
+    protected function getIndexFilename()
     {
         return $this->folder.'/index.csv';
     }
@@ -212,8 +224,10 @@ class FileProfilerStorage implements ProfilerStorageInterface
      * This function automatically skips the empty lines and do not include the line return in result value.
      *
      * @param resource $file The file resource, with the pointer placed at the end of the line to read
+     *
+     * @return mixed
      */
-    protected function readLineFromFile($file): mixed
+    protected function readLineFromFile($file)
     {
         $line = '';
         $position = ftell($file);
@@ -251,7 +265,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
         return '' === $line ? null : $line;
     }
 
-    protected function createProfileFromData(string $token, array $data, Profile $parent = null)
+    protected function createProfileFromData(string $token, array $data, ?Profile $parent = null)
     {
         $profile = new Profile($token);
         $profile->setIp($data['ip']);
@@ -278,7 +292,7 @@ class FileProfilerStorage implements ProfilerStorageInterface
         return $profile;
     }
 
-    private function doRead($token, Profile $profile = null): ?Profile
+    private function doRead($token, ?Profile $profile = null): ?Profile
     {
         if (!$token || !file_exists($file = $this->getFilename($token))) {
             return null;

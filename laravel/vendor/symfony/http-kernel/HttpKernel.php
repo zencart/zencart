@@ -55,7 +55,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     protected $requestStack;
     private $argumentResolver;
 
-    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver, RequestStack $requestStack = null, ArgumentResolverInterface $argumentResolver = null)
+    public function __construct(EventDispatcherInterface $dispatcher, ControllerResolverInterface $resolver, ?RequestStack $requestStack = null, ?ArgumentResolverInterface $argumentResolver = null)
     {
         $this->dispatcher = $dispatcher;
         $this->resolver = $resolver;
@@ -66,7 +66,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true)
     {
         $request->headers->set('X-Php-Ob-Level', (string) ob_get_level());
 
@@ -100,7 +100,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     /**
      * @internal
      */
-    public function terminateWithException(\Throwable $exception, Request $request = null)
+    public function terminateWithException(\Throwable $exception, ?Request $request = null)
     {
         if (!$request = $request ?: $this->requestStack->getMainRequest()) {
             throw $exception;
@@ -255,7 +255,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     /**
      * Returns a human-readable string for the specified variable.
      */
-    private function varToString(mixed $var): string
+    private function varToString($var): string
     {
         if (\is_object($var)) {
             return sprintf('an object of type %s', \get_class($var));

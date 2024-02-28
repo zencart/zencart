@@ -58,7 +58,7 @@ final class FormDataPart extends AbstractMultipartPart
         $values = [];
 
         $prepare = function ($item, $key, $root = null) use (&$values, &$prepare) {
-            if (\is_int($key) && \is_array($item)) {
+            if (null === $root && \is_int($key) && \is_array($item)) {
                 if (1 !== \count($item)) {
                     throw new InvalidArgumentException(sprintf('Form field values with integer keys can only have one array element, the key being the field name and the value being the field value, %d provided.', \count($item)));
                 }
@@ -83,7 +83,7 @@ final class FormDataPart extends AbstractMultipartPart
         return $values;
     }
 
-    private function preparePart(string $name, string|TextPart $value): TextPart
+    private function preparePart(string $name, $value): TextPart
     {
         if (\is_string($value)) {
             return $this->configurePart($name, new TextPart($value, 'utf-8', 'plain', '8bit'));

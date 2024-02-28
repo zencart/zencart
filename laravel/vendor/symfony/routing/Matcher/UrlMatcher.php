@@ -45,7 +45,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      *
      * @internal
      */
-    protected array $allowSchemes = [];
+    protected $allowSchemes = [];
 
     protected $routes;
     protected $request;
@@ -73,7 +73,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getContext(): RequestContext
+    public function getContext()
     {
         return $this->context;
     }
@@ -81,7 +81,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function match(string $pathinfo): array
+    public function match(string $pathinfo)
     {
         $this->allow = $this->allowSchemes = [];
 
@@ -99,7 +99,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function matchRequest(Request $request): array
+    public function matchRequest(Request $request)
     {
         $this->request = $request;
 
@@ -120,11 +120,13 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      *
      * @param string $pathinfo The path info to be parsed
      *
+     * @return array
+     *
      * @throws NoConfigurationException  If no routing configuration could be found
      * @throws ResourceNotFoundException If the resource could not be found
      * @throws MethodNotAllowedException If the resource was found but the request method is not allowed
      */
-    protected function matchCollection(string $pathinfo, RouteCollection $routes): array
+    protected function matchCollection(string $pathinfo, RouteCollection $routes)
     {
         // HEAD and GET are equivalent as per RFC
         if ('HEAD' === $method = $this->context->getMethod()) {
@@ -202,8 +204,10 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      * As this method requires the Route object, it is not available
      * in matchers that do not have access to the matched Route instance
      * (like the PHP and Apache matcher dumpers).
+     *
+     * @return array
      */
-    protected function getAttributes(Route $route, string $name, array $attributes): array
+    protected function getAttributes(Route $route, string $name, array $attributes)
     {
         $defaults = $route->getDefaults();
         if (isset($defaults['_canonical_route'])) {
@@ -220,7 +224,7 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      *
      * @return array The first element represents the status, the second contains additional information
      */
-    protected function handleRouteRequirements(string $pathinfo, string $name, Route $route): array
+    protected function handleRouteRequirements(string $pathinfo, string $name, Route $route)
     {
         // expression condition
         if ($route->getCondition() && !$this->getExpressionLanguage()->evaluate($route->getCondition(), ['context' => $this->context, 'request' => $this->request ?: $this->createRequest($pathinfo)])) {
@@ -232,8 +236,10 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
 
     /**
      * Get merged default parameters.
+     *
+     * @return array
      */
-    protected function mergeDefaults(array $params, array $defaults): array
+    protected function mergeDefaults(array $params, array $defaults)
     {
         foreach ($params as $key => $value) {
             if (!\is_int($key) && null !== $value) {

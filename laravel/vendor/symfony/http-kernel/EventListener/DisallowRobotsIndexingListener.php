@@ -34,7 +34,7 @@ class DisallowRobotsIndexingListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents(): array
+    public static function getSubscribedEvents()
     {
         return [
             KernelEvents::RESPONSE => ['onResponse', -255],

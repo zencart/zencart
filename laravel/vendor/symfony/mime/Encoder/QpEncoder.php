@@ -76,7 +76,7 @@ class QpEncoder implements EncoderInterface
         255 => '=FF',
     ];
 
-    private static array $safeMapShare = [];
+    private static $safeMapShare = [];
 
     /**
      * A map of non-encoded ascii characters.
@@ -85,7 +85,7 @@ class QpEncoder implements EncoderInterface
      *
      * @internal
      */
-    protected array $safeMap = [];
+    protected $safeMap = [];
 
     public function __construct()
     {

@@ -408,10 +408,10 @@ function utilDumpRequest($mode = 'p', $out = 'log')
  * we ever revert to a full laravel install
  */
 
-function request()
-{
-    return \Zencart\Request\Request::getInstance();
-}
+//function request()
+//{
+//    return \Zencart\Request\Request::getInstance();
+//}
 
 function zen_updated_by_admin($admin_id = null): string
 {

@@ -25,17 +25,27 @@ class ContainerControllerResolver extends ControllerResolver
 {
     protected $container;
 
-    public function __construct(ContainerInterface $container, LoggerInterface $logger = null)
+    public function __construct(ContainerInterface $container, ?LoggerInterface $logger = null)
     {
         $this->container = $container;
 
         parent::__construct($logger);
     }
 
+    protected function createController(string $controller)
+    {
+        if (1 === substr_count($controller, ':')) {
+            $controller = str_replace(':', '::', $controller);
+            trigger_deprecation('symfony/http-kernel', '5.1', 'Referencing controllers with a single colon is deprecated. Use "%s" instead.', $controller);
+        }
+
+        return parent::createController($controller);
+    }
+
     /**
      * {@inheritdoc}
      */
-    protected function instantiateController(string $class): object
+    protected function instantiateController(string $class)
     {
         $class = ltrim($class, '\\');
 

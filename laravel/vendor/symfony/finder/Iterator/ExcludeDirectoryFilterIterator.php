@@ -17,14 +17,15 @@ namespace Symfony\Component\Finder\Iterator;
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @extends \FilterIterator<string, \SplFileInfo>
+ *
  * @implements \RecursiveIterator<string, \SplFileInfo>
  */
 class ExcludeDirectoryFilterIterator extends \FilterIterator implements \RecursiveIterator
 {
-    private \Iterator $iterator;
-    private bool $isRecursive;
-    private array $excludedDirs = [];
-    private ?string $excludedPattern = null;
+    private $iterator;
+    private $isRecursive;
+    private $excludedDirs = [];
+    private $excludedPattern;
 
     /**
      * @param \Iterator $iterator    The Iterator to filter
@@ -52,8 +53,11 @@ class ExcludeDirectoryFilterIterator extends \FilterIterator implements \Recursi
 
     /**
      * Filters the iterator values.
+     *
+     * @return bool
      */
-    public function accept(): bool
+    #[\ReturnTypeWillChange]
+    public function accept()
     {
         if ($this->isRecursive && isset($this->excludedDirs[$this->getFilename()]) && $this->isDir()) {
             return false;
@@ -69,12 +73,20 @@ class ExcludeDirectoryFilterIterator extends \FilterIterator implements \Recursi
         return true;
     }
 
-    public function hasChildren(): bool
+    /**
+     * @return bool
+     */
+    #[\ReturnTypeWillChange]
+    public function hasChildren()
     {
         return $this->isRecursive && $this->iterator->hasChildren();
     }
 
-    public function getChildren(): self
+    /**
+     * @return self
+     */
+    #[\ReturnTypeWillChange]
+    public function getChildren()
     {
         $children = new self($this->iterator->getChildren(), []);
         $children->excludedDirs = $this->excludedDirs;

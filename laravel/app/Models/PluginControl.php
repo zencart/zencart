@@ -7,27 +7,30 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class PluginControl extends Eloquent
+class PluginControl extends Model
 {
+    use HasFactory;
+
     protected $table = TABLE_PLUGIN_CONTROL;
     protected $primaryKey = 'unique_key';
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
     protected $guarded = [];
-      
+
     public function getRelativePath()
     {
         $relativePath =  ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG). 'zc_plugins/' . $this->unique_key . '/' . $this->version . '/';
         return $relativePath;
     }
-    
+
     public function getAbsolutePath()
     {
         $absolutePath = DIR_FS_CATALOG . 'zc_plugins/' . $this->unique_key . '/' . $this->version . '/';
         return $absolutePath;
     }
-    
+
 }

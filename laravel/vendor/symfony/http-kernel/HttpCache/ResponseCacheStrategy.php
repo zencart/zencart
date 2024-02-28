@@ -34,10 +34,10 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
      */
     private const INHERIT_DIRECTIVES = ['public', 'immutable'];
 
-    private int $embeddedResponses = 0;
-    private bool $isNotCacheableResponseEmbedded = false;
-    private int $age = 0;
-    private array $flagDirectives = [
+    private $embeddedResponses = 0;
+    private $isNotCacheableResponseEmbedded = false;
+    private $age = 0;
+    private $flagDirectives = [
         'no-cache' => null,
         'no-store' => null,
         'no-transform' => null,
@@ -47,7 +47,7 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
         'private' => null,
         'immutable' => null,
     ];
-    private array $ageDirectives = [
+    private $ageDirectives = [
         'max-age' => null,
         's-maxage' => null,
         'expires' => null,
@@ -147,7 +147,7 @@ class ResponseCacheStrategy implements ResponseCacheStrategyInterface
 
         if (is_numeric($this->ageDirectives['expires'])) {
             $date = clone $response->getDate();
-            $date->modify('+'.($this->ageDirectives['expires'] + $this->age).' seconds');
+            $date = $date->modify('+'.($this->ageDirectives['expires'] + $this->age).' seconds');
             $response->setExpires($date);
         }
     }

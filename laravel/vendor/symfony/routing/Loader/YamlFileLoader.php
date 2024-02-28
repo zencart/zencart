@@ -39,9 +39,16 @@ class YamlFileLoader extends FileLoader
     private $yamlParser;
 
     /**
+     * Loads a Yaml file.
+     *
+     * @param string      $file A Yaml file path
+     * @param string|null $type The resource type
+     *
+     * @return RouteCollection
+     *
      * @throws \InvalidArgumentException When a route can't be parsed because YAML is invalid
      */
-    public function load(mixed $file, string $type = null): RouteCollection
+    public function load($file, ?string $type = null)
     {
         $path = $this->locator->locate($file);
 
@@ -53,7 +60,9 @@ class YamlFileLoader extends FileLoader
             throw new \InvalidArgumentException(sprintf('File "%s" not found.', $path));
         }
 
-        $this->yamlParser ??= new YamlParser();
+        if (null === $this->yamlParser) {
+            $this->yamlParser = new YamlParser();
+        }
 
         try {
             $parsedConfig = $this->yamlParser->parseFile($path, Yaml::PARSE_CONSTANT);
@@ -108,7 +117,7 @@ class YamlFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports($resource, ?string $type = null)
     {
         return \is_string($resource) && \in_array(pathinfo($resource, \PATHINFO_EXTENSION), ['yml', 'yaml'], true) && (!$type || 'yaml' === $type);
     }
@@ -241,10 +250,16 @@ class YamlFileLoader extends FileLoader
     }
 
     /**
+     * Validates the route configuration.
+     *
+     * @param array  $config A resource config
+     * @param string $name   The config key
+     * @param string $path   The loaded file path
+     *
      * @throws \InvalidArgumentException If one of the provided config keys is not supported,
      *                                   something is missing or the combination is nonsense
      */
-    protected function validate(mixed $config, string $name, string $path)
+    protected function validate($config, string $name, string $path)
     {
         if (!\is_array($config)) {
             throw new \InvalidArgumentException(sprintf('The definition of "%s" in "%s" must be a YAML array.', $name, $path));

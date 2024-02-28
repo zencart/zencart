@@ -32,7 +32,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * @var array<string, Route>
      */
-    private array $routes = [];
+    private $routes = [];
 
     /**
      * @var array<string, Alias>
@@ -42,12 +42,12 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /**
      * @var array<string, ResourceInterface>
      */
-    private array $resources = [];
+    private $resources = [];
 
     /**
      * @var array<string, int>
      */
-    private array $priorities = [];
+    private $priorities = [];
 
     public function __clone()
     {
@@ -69,26 +69,37 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @return \ArrayIterator<string, Route>
      */
-    public function getIterator(): \ArrayIterator
+    #[\ReturnTypeWillChange]
+    public function getIterator()
     {
         return new \ArrayIterator($this->all());
     }
 
     /**
      * Gets the number of Routes in this collection.
+     *
+     * @return int
      */
-    public function count(): int
+    #[\ReturnTypeWillChange]
+    public function count()
     {
         return \count($this->routes);
     }
 
-    public function add(string $name, Route $route, int $priority = 0)
+    /**
+     * @param int $priority
+     */
+    public function add(string $name, Route $route/* , int $priority = 0 */)
     {
+        if (\func_num_args() < 3 && __CLASS__ !== static::class && __CLASS__ !== (new \ReflectionMethod($this, __FUNCTION__))->getDeclaringClass()->getName() && !$this instanceof \PHPUnit\Framework\MockObject\MockObject && !$this instanceof \Prophecy\Prophecy\ProphecySubjectInterface && !$this instanceof \Mockery\MockInterface) {
+            trigger_deprecation('symfony/routing', '5.1', 'The "%s()" method will have a new "int $priority = 0" argument in version 6.0, not defining it is deprecated.', __METHOD__);
+        }
+
         unset($this->routes[$name], $this->priorities[$name], $this->aliases[$name]);
 
         $this->routes[$name] = $route;
 
-        if ($priority) {
+        if ($priority = 3 <= \func_num_args() ? func_get_arg(2) : 0) {
             $this->priorities[$name] = $priority;
         }
     }
@@ -98,7 +109,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @return array<string, Route>
      */
-    public function all(): array
+    public function all()
     {
         if ($this->priorities) {
             $priorities = $this->priorities;
@@ -113,8 +124,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
 
     /**
      * Gets a route by name.
+     *
+     * @return Route|null
      */
-    public function get(string $name): ?Route
+    public function get(string $name)
     {
         $visited = [];
         while (null !== $alias = $this->aliases[$name] ?? null) {
@@ -142,10 +155,25 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @param string|string[] $name The route name or an array of route names
      */
-    public function remove(string|array $name)
+    public function remove($name)
     {
+        $routes = [];
         foreach ((array) $name as $n) {
+            if (isset($this->routes[$n])) {
+                $routes[] = $n;
+            }
+
             unset($this->routes[$n], $this->priorities[$n], $this->aliases[$n]);
+        }
+
+        if (!$routes) {
+            return;
+        }
+
+        foreach ($this->aliases as $k => $alias) {
+            if (\in_array($alias->getId(), $routes, true)) {
+                unset($this->aliases[$k]);
+            }
         }
     }
 
@@ -294,7 +322,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @param string|string[] $schemes The scheme or an array of schemes
      */
-    public function setSchemes(string|array $schemes)
+    public function setSchemes($schemes)
     {
         foreach ($this->routes as $route) {
             $route->setSchemes($schemes);
@@ -306,7 +334,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @param string|string[] $methods The method or an array of methods
      */
-    public function setMethods(string|array $methods)
+    public function setMethods($methods)
     {
         foreach ($this->routes as $route) {
             $route->setMethods($methods);
@@ -318,7 +346,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * @return ResourceInterface[]
      */
-    public function getResources(): array
+    public function getResources()
     {
         return array_values($this->resources);
     }
@@ -366,5 +394,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
     public function getAlias(string $name): ?Alias
     {
         return $this->aliases[$name] ?? null;
+    }
+
+    public function getPriority(string $name): ?int
+    {
+        return $this->priorities[$name] ?? null;
     }
 }

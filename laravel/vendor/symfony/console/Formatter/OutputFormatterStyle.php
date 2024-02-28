@@ -21,11 +21,11 @@ use Symfony\Component\Console\Color;
 class OutputFormatterStyle implements OutputFormatterStyleInterface
 {
     private $color;
-    private string $foreground;
-    private string $background;
-    private array $options;
-    private ?string $href = null;
-    private bool $handlesHrefGracefully;
+    private $foreground;
+    private $background;
+    private $options;
+    private $href;
+    private $handlesHrefGracefully;
 
     /**
      * Initializes output formatter style.
@@ -33,7 +33,7 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
      * @param string|null $foreground The style foreground color name
      * @param string|null $background The style background color name
      */
-    public function __construct(string $foreground = null, string $background = null, array $options = [])
+    public function __construct(?string $foreground = null, ?string $background = null, array $options = [])
     {
         $this->color = new Color($this->foreground = $foreground ?: '', $this->background = $background ?: '', $this->options = $options);
     }
@@ -41,7 +41,7 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
     /**
      * {@inheritdoc}
      */
-    public function setForeground(string $color = null)
+    public function setForeground(?string $color = null)
     {
         $this->color = new Color($this->foreground = $color ?: '', $this->background, $this->options);
     }
@@ -49,7 +49,7 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
     /**
      * {@inheritdoc}
      */
-    public function setBackground(string $color = null)
+    public function setBackground(?string $color = null)
     {
         $this->color = new Color($this->foreground, $this->background = $color ?: '', $this->options);
     }
@@ -92,10 +92,13 @@ class OutputFormatterStyle implements OutputFormatterStyleInterface
     /**
      * {@inheritdoc}
      */
-    public function apply(string $text): string
+    public function apply(string $text)
     {
-        $this->handlesHrefGracefully ??= 'JetBrains-JediTerm' !== getenv('TERMINAL_EMULATOR')
-            && (!getenv('KONSOLE_VERSION') || (int) getenv('KONSOLE_VERSION') > 201100);
+        if (null === $this->handlesHrefGracefully) {
+            $this->handlesHrefGracefully = 'JetBrains-JediTerm' !== getenv('TERMINAL_EMULATOR')
+                && (!getenv('KONSOLE_VERSION') || (int) getenv('KONSOLE_VERSION') > 201100)
+                && !isset($_SERVER['IDEA_INITIAL_DIRECTORY']);
+        }
 
         if (null !== $this->href && $this->handlesHrefGracefully) {
             $text = "\033]8;;$this->href\033\\$text\033]8;;\033\\";

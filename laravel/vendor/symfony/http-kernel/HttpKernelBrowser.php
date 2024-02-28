@@ -31,12 +31,12 @@ use Symfony\Component\HttpFoundation\Response;
 class HttpKernelBrowser extends AbstractBrowser
 {
     protected $kernel;
-    private bool $catchExceptions = true;
+    private $catchExceptions = true;
 
     /**
      * @param array $server The server parameters (equivalent of $_SERVER)
      */
-    public function __construct(HttpKernelInterface $kernel, array $server = [], History $history = null, CookieJar $cookieJar = null)
+    public function __construct(HttpKernelInterface $kernel, array $server = [], ?History $history = null, ?CookieJar $cookieJar = null)
     {
         // These class properties must be set before calling the parent constructor, as it may depend on it.
         $this->kernel = $kernel;
@@ -129,8 +129,10 @@ EOF;
 
     /**
      * {@inheritdoc}
+     *
+     * @return Request
      */
-    protected function filterRequest(DomRequest $request): Request
+    protected function filterRequest(DomRequest $request)
     {
         $httpRequest = Request::create($request->getUri(), $request->getMethod(), $request->getParameters(), $request->getCookies(), $request->getFiles(), $server = $request->getServer(), $request->getContent());
         if (!isset($server['HTTP_ACCEPT'])) {
@@ -154,8 +156,10 @@ EOF;
      * an invalid UploadedFile is returned with an error set to UPLOAD_ERR_INI_SIZE.
      *
      * @see UploadedFile
+     *
+     * @return array
      */
-    protected function filterFiles(array $files): array
+    protected function filterFiles(array $files)
     {
         $filtered = [];
         foreach ($files as $key => $value) {
@@ -189,8 +193,10 @@ EOF;
      * {@inheritdoc}
      *
      * @param Response $response
+     *
+     * @return DomResponse
      */
-    protected function filterResponse(object $response): DomResponse
+    protected function filterResponse(object $response)
     {
         // this is needed to support StreamedResponse
         ob_start();

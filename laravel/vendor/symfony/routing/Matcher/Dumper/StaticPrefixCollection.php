@@ -23,22 +23,22 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class StaticPrefixCollection
 {
-    private string $prefix;
+    private $prefix;
 
     /**
      * @var string[]
      */
-    private array $staticPrefixes = [];
+    private $staticPrefixes = [];
 
     /**
      * @var string[]
      */
-    private array $prefixes = [];
+    private $prefixes = [];
 
     /**
      * @var array[]|self[]
      */
-    private array $items = [];
+    private $items = [];
 
     public function __construct(string $prefix = '/')
     {
@@ -60,8 +60,10 @@ class StaticPrefixCollection
 
     /**
      * Adds a route to a group.
+     *
+     * @param array|self $route
      */
-    public function addRoute(string $prefix, array|StaticPrefixCollection $route)
+    public function addRoute(string $prefix, $route)
     {
         [$prefix, $staticPrefix] = $this->getCommonPrefix($prefix, $prefix);
 

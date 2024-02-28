@@ -21,10 +21,10 @@ use Symfony\Component\Console\Formatter\OutputFormatterInterface;
  */
 class TrimmedBufferOutput extends Output
 {
-    private int $maxLength;
-    private string $buffer = '';
+    private $maxLength;
+    private $buffer = '';
 
-    public function __construct(int $maxLength, ?int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = false, OutputFormatterInterface $formatter = null)
+    public function __construct(int $maxLength, ?int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = false, ?OutputFormatterInterface $formatter = null)
     {
         if ($maxLength <= 0) {
             throw new InvalidArgumentException(sprintf('"%s()" expects a strictly positive maxLength. Got %d.', __METHOD__, $maxLength));
@@ -36,8 +36,10 @@ class TrimmedBufferOutput extends Output
 
     /**
      * Empties buffer and returns its content.
+     *
+     * @return string
      */
-    public function fetch(): string
+    public function fetch()
     {
         $content = $this->buffer;
         $this->buffer = '';

@@ -33,7 +33,7 @@ class DataPart extends TextPart
     /**
      * @param resource|string $body
      */
-    public function __construct($body, string $filename = null, string $contentType = null, string $encoding = null)
+    public function __construct($body, ?string $filename = null, ?string $contentType = null, ?string $encoding = null)
     {
         unset($this->_parent);
 
@@ -51,7 +51,7 @@ class DataPart extends TextPart
         $this->setDisposition('attachment');
     }
 
-    public static function fromPath(string $path, string $name = null, string $contentType = null): self
+    public static function fromPath(string $path, ?string $name = null, ?string $contentType = null): self
     {
         if (null === $contentType) {
             $ext = strtolower(substr($path, strrpos($path, '.') + 1));
@@ -84,7 +84,7 @@ class DataPart extends TextPart
     /**
      * @return $this
      */
-    public function asInline(): static
+    public function asInline()
     {
         return $this->setDisposition('inline');
     }
@@ -141,7 +141,10 @@ class DataPart extends TextPart
         }
     }
 
-    public function __sleep(): array
+    /**
+     * @return array
+     */
+    public function __sleep()
     {
         // converts the body to a string
         parent::__sleep();

@@ -18,7 +18,10 @@ use Symfony\Component\ErrorHandler\Exception\SilencedErrorContext;
  */
 class ThrowableUtils
 {
-    public static function getSeverity(SilencedErrorContext|\Throwable $throwable): int
+    /**
+     * @param SilencedErrorContext|\Throwable
+     */
+    public static function getSeverity($throwable): int
     {
         if ($throwable instanceof \ErrorException || $throwable instanceof SilencedErrorContext) {
             return $throwable->getSeverity();

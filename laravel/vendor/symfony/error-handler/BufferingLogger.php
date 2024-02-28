@@ -20,7 +20,7 @@ use Psr\Log\AbstractLogger;
  */
 class BufferingLogger extends AbstractLogger
 {
-    private array $logs = [];
+    private $logs = [];
 
     public function log($level, $message, array $context = []): void
     {
@@ -35,7 +35,10 @@ class BufferingLogger extends AbstractLogger
         return $logs;
     }
 
-    public function __sleep(): array
+    /**
+     * @return array
+     */
+    public function __sleep()
     {
         throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
     }
@@ -48,14 +51,14 @@ class BufferingLogger extends AbstractLogger
     public function __destruct()
     {
         foreach ($this->logs as [$level, $message, $context]) {
-            if (str_contains($message, '{')) {
+            if (false !== strpos($message, '{')) {
                 foreach ($context as $key => $val) {
                     if (null === $val || \is_scalar($val) || (\is_object($val) && \is_callable([$val, '__toString']))) {
                         $message = str_replace("{{$key}}", $val, $message);
                     } elseif ($val instanceof \DateTimeInterface) {
                         $message = str_replace("{{$key}}", $val->format(\DateTime::RFC3339), $message);
                     } elseif (\is_object($val)) {
-                        $message = str_replace("{{$key}}", '[object '.get_debug_type($val).']', $message);
+                        $message = str_replace("{{$key}}", '[object '.\get_class($val).']', $message);
                     } else {
                         $message = str_replace("{{$key}}", '['.\gettype($val).']', $message);
                     }

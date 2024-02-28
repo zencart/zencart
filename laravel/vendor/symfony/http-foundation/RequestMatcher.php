@@ -18,36 +18,47 @@ namespace Symfony\Component\HttpFoundation;
  */
 class RequestMatcher implements RequestMatcherInterface
 {
-    private ?string $path = null;
-    private ?string $host = null;
-    private ?int $port = null;
+    /**
+     * @var string|null
+     */
+    private $path;
+
+    /**
+     * @var string|null
+     */
+    private $host;
+
+    /**
+     * @var int|null
+     */
+    private $port;
 
     /**
      * @var string[]
      */
-    private array $methods = [];
+    private $methods = [];
 
     /**
      * @var string[]
      */
-    private array $ips = [];
+    private $ips = [];
+
+    /**
+     * @var array
+     */
+    private $attributes = [];
 
     /**
      * @var string[]
      */
-    private array $attributes = [];
-
-    /**
-     * @var string[]
-     */
-    private array $schemes = [];
+    private $schemes = [];
 
     /**
      * @param string|string[]|null $methods
      * @param string|string[]|null $ips
      * @param string|string[]|null $schemes
      */
-    public function __construct(string $path = null, string $host = null, string|array $methods = null, string|array $ips = null, array $attributes = [], string|array $schemes = null, int $port = null)
+    public function __construct(?string $path = null, ?string $host = null, $methods = null, $ips = null, array $attributes = [], $schemes = null, ?int $port = null)
     {
         $this->matchPath($path);
         $this->matchHost($host);
@@ -66,7 +77,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $scheme An HTTP scheme or an array of HTTP schemes
      */
-    public function matchScheme(string|array|null $scheme)
+    public function matchScheme($scheme)
     {
         $this->schemes = null !== $scheme ? array_map('strtolower', (array) $scheme) : [];
     }
@@ -80,7 +91,7 @@ class RequestMatcher implements RequestMatcherInterface
     }
 
     /**
-     * Adds a check for the the URL port.
+     * Adds a check for the URL port.
      *
      * @param int|null $port The port number to connect to
      */
@@ -112,7 +123,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $ips A specific IP address or a range specified using IP/netmask like 192.168.1.0/24
      */
-    public function matchIps(string|array|null $ips)
+    public function matchIps($ips)
     {
         $ips = null !== $ips ? (array) $ips : [];
 
@@ -126,7 +137,7 @@ class RequestMatcher implements RequestMatcherInterface
      *
      * @param string|string[]|null $method An HTTP method or an array of HTTP methods
      */
-    public function matchMethod(string|array|null $method)
+    public function matchMethod($method)
     {
         $this->methods = null !== $method ? array_map('strtoupper', (array) $method) : [];
     }
@@ -142,7 +153,7 @@ class RequestMatcher implements RequestMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function matches(Request $request): bool
+    public function matches(Request $request)
     {
         if ($this->schemes && !\in_array($request->getScheme(), $this->schemes, true)) {
             return false;

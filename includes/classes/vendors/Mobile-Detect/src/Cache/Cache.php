@@ -27,7 +27,7 @@ class Cache implements CacheInterface
     /**
      * @throws CacheException
      */
-    public function get(string $key, mixed $default = null): CacheItem|null
+    public function get($key, mixed $default = null)
     {
         if (empty($key)) {
             throw new CacheException('Invalid cache key');
@@ -39,7 +39,7 @@ class Cache implements CacheInterface
     /**
      * @throws CacheException
      */
-    public function set(string $key, mixed $value, \DateInterval|int|null $ttl = null): bool
+    public function set($key, $value, $ttl = null): bool
     {
         if (empty($key)) {
             throw new CacheException('Invalid cache key');
@@ -49,7 +49,7 @@ class Cache implements CacheInterface
         return true;
     }
 
-    public function delete(string $key): bool
+    public function delete($key): bool
     {
         unset($this->cache_db[$key]);
         return true;
@@ -61,7 +61,7 @@ class Cache implements CacheInterface
         return true;
     }
 
-    public function getMultiple(iterable $keys, mixed $default = null): iterable
+    public function getMultiple($keys, $default = null): iterable
     {
         return array_map(function ($key) {
             return $this->cache_db[$key];
@@ -73,7 +73,7 @@ class Cache implements CacheInterface
      * @param \DateInterval|int|null $ttl
      * @return bool
      */
-    public function setMultiple(iterable $values, \DateInterval|int|null $ttl = null): bool
+    public function setMultiple($values, $ttl = null): bool
     {
         foreach ($values as $cacheItemArray) {
             $item = new CacheItem(...$cacheItemArray);
@@ -82,7 +82,7 @@ class Cache implements CacheInterface
         return true;
     }
 
-    public function deleteMultiple(iterable $keys): bool
+    public function deleteMultiple($keys): bool
     {
         foreach ($keys as $key) {
             unset($this->cache_db[$key]);
@@ -90,7 +90,7 @@ class Cache implements CacheInterface
         return true;
     }
 
-    public function has(string $key): bool
+    public function has($key): bool
     {
         return isset($this->cache_db[$key]);
     }

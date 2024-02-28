@@ -36,7 +36,7 @@ class RouterDataCollector extends DataCollector
      *
      * @final
      */
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null)
     {
         if ($response instanceof RedirectResponse) {
             $this->data['redirect'] = true;
@@ -61,7 +61,7 @@ class RouterDataCollector extends DataCollector
         ];
     }
 
-    protected function guessRoute(Request $request, string|object|array $controller)
+    protected function guessRoute(Request $request, $controller)
     {
         return 'n/a';
     }
@@ -77,17 +77,23 @@ class RouterDataCollector extends DataCollector
     /**
      * @return bool Whether this request will result in a redirect
      */
-    public function getRedirect(): bool
+    public function getRedirect()
     {
         return $this->data['redirect'];
     }
 
-    public function getTargetUrl(): ?string
+    /**
+     * @return string|null
+     */
+    public function getTargetUrl()
     {
         return $this->data['url'];
     }
 
-    public function getTargetRoute(): ?string
+    /**
+     * @return string|null
+     */
+    public function getTargetRoute()
     {
         return $this->data['route'];
     }
@@ -95,7 +101,7 @@ class RouterDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function getName(): string
+    public function getName()
     {
         return 'router';
     }

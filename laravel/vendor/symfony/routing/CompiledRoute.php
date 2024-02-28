@@ -18,14 +18,14 @@ namespace Symfony\Component\Routing;
  */
 class CompiledRoute implements \Serializable
 {
-    private array $variables;
-    private array $tokens;
-    private string $staticPrefix;
-    private string $regex;
-    private array $pathVariables;
-    private array $hostVariables;
-    private ?string $hostRegex;
-    private array $hostTokens;
+    private $variables;
+    private $tokens;
+    private $staticPrefix;
+    private $regex;
+    private $pathVariables;
+    private $hostVariables;
+    private $hostRegex;
+    private $hostTokens;
 
     /**
      * @param string      $staticPrefix  The static prefix of the compiled route
@@ -37,7 +37,7 @@ class CompiledRoute implements \Serializable
      * @param array       $hostVariables An array of host variables
      * @param array       $variables     An array of variables (variables defined in the path and in the host patterns)
      */
-    public function __construct(string $staticPrefix, string $regex, array $tokens, array $pathVariables, string $hostRegex = null, array $hostTokens = [], array $hostVariables = [], array $variables = [])
+    public function __construct(string $staticPrefix, string $regex, array $tokens, array $pathVariables, ?string $hostRegex = null, array $hostTokens = [], array $hostVariables = [], array $variables = [])
     {
         $this->staticPrefix = $staticPrefix;
         $this->regex = $regex;
@@ -68,7 +68,7 @@ class CompiledRoute implements \Serializable
      */
     final public function serialize(): string
     {
-        throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
+        return serialize($this->__serialize());
     }
 
     public function __unserialize(array $data): void
@@ -86,71 +86,87 @@ class CompiledRoute implements \Serializable
     /**
      * @internal
      */
-    final public function unserialize(string $serialized)
+    final public function unserialize($serialized)
     {
         $this->__unserialize(unserialize($serialized, ['allowed_classes' => false]));
     }
 
     /**
      * Returns the static prefix.
+     *
+     * @return string
      */
-    public function getStaticPrefix(): string
+    public function getStaticPrefix()
     {
         return $this->staticPrefix;
     }
 
     /**
      * Returns the regex.
+     *
+     * @return string
      */
-    public function getRegex(): string
+    public function getRegex()
     {
         return $this->regex;
     }
 
     /**
      * Returns the host regex.
+     *
+     * @return string|null
      */
-    public function getHostRegex(): ?string
+    public function getHostRegex()
     {
         return $this->hostRegex;
     }
 
     /**
      * Returns the tokens.
+     *
+     * @return array
      */
-    public function getTokens(): array
+    public function getTokens()
     {
         return $this->tokens;
     }
 
     /**
      * Returns the host tokens.
+     *
+     * @return array
      */
-    public function getHostTokens(): array
+    public function getHostTokens()
     {
         return $this->hostTokens;
     }
 
     /**
      * Returns the variables.
+     *
+     * @return array
      */
-    public function getVariables(): array
+    public function getVariables()
     {
         return $this->variables;
     }
 
     /**
      * Returns the path variables.
+     *
+     * @return array
      */
-    public function getPathVariables(): array
+    public function getPathVariables()
     {
         return $this->pathVariables;
     }
 
     /**
      * Returns the host variables.
+     *
+     * @return array
      */
-    public function getHostVariables(): array
+    public function getHostVariables()
     {
         return $this->hostVariables;
     }

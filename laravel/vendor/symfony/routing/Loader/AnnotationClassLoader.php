@@ -85,7 +85,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     protected $defaultRouteIndex = 0;
 
-    public function __construct(Reader $reader = null, string $env = null)
+    public function __construct(?Reader $reader = null, ?string $env = null)
     {
         $this->reader = $reader;
         $this->env = $env;
@@ -102,9 +102,13 @@ abstract class AnnotationClassLoader implements LoaderInterface
     /**
      * Loads from annotations from a class.
      *
+     * @param string $class A class name
+     *
+     * @return RouteCollection
+     *
      * @throws \InvalidArgumentException When route can't be parsed
      */
-    public function load(mixed $class, string $type = null): RouteCollection
+    public function load($class, ?string $type = null)
     {
         if (!class_exists($class)) {
             throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
@@ -235,7 +239,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports($resource, ?string $type = null)
     {
         return \is_string($resource) && preg_match('/^(?:\\\\?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)+$/', $resource) && (!$type || 'annotation' === $type);
     }
@@ -250,7 +254,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function getResolver(): LoaderResolverInterface
+    public function getResolver()
     {
     }
 
@@ -276,7 +280,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
         $globals = $this->resetGlobals();
 
         $annot = null;
-        if ($attribute = $class->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) {
+        if (\PHP_VERSION_ID >= 80000 && ($attribute = $class->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null)) {
             $annot = $attribute->newInstance();
         }
         if (!$annot && $this->reader) {
@@ -367,8 +371,10 @@ abstract class AnnotationClassLoader implements LoaderInterface
      */
     private function getAnnotations(object $reflection): iterable
     {
-        foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
-            yield $attribute->newInstance();
+        if (\PHP_VERSION_ID >= 80000) {
+            foreach ($reflection->getAttributes($this->routeAnnotationClass, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
+                yield $attribute->newInstance();
+            }
         }
 
         if (!$this->reader) {

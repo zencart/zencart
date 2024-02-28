@@ -6,9 +6,9 @@
  */
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class ProjectVersion extends Eloquent
+class ProjectVersion extends Model
 {
     protected $table = TABLE_PROJECT_VERSION;
     protected $primaryKey = 'project_version_id';

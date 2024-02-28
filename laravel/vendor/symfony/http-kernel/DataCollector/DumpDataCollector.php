@@ -31,19 +31,23 @@ use Symfony\Component\VarDumper\Server\Connection;
  */
 class DumpDataCollector extends DataCollector implements DataDumperInterface
 {
-    private $stopwatch = null;
-    private string|FileLinkFormatter|false $fileLinkFormat;
-    private int $dataCount = 0;
-    private bool $isCollected = true;
-    private int $clonesCount = 0;
-    private int $clonesIndex = 0;
-    private array $rootRefs;
-    private string $charset;
+    private $stopwatch;
+    private $fileLinkFormat;
+    private $dataCount = 0;
+    private $isCollected = true;
+    private $clonesCount = 0;
+    private $clonesIndex = 0;
+    private $rootRefs;
+    private $charset;
     private $requestStack;
     private $dumper;
-    private mixed $sourceContextProvider;
+    private $sourceContextProvider;
 
-    public function __construct(Stopwatch $stopwatch = null, string|FileLinkFormatter $fileLinkFormat = null, string $charset = null, RequestStack $requestStack = null, DataDumperInterface|Connection $dumper = null)
+    /**
+     * @param string|FileLinkFormatter|null       $fileLinkFormat
+     * @param DataDumperInterface|Connection|null $dumper
+     */
+    public function __construct(?Stopwatch $stopwatch = null, $fileLinkFormat = null, ?string $charset = null, ?RequestStack $requestStack = null, $dumper = null)
     {
         $fileLinkFormat = $fileLinkFormat ?: \ini_get('xdebug.file_link_format') ?: get_cfg_var('xdebug.file_link_format');
         $this->stopwatch = $stopwatch;
@@ -97,7 +101,7 @@ class DumpDataCollector extends DataCollector implements DataDumperInterface
         }
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null)
     {
         if (!$this->dataCount) {
             $this->data = [];
@@ -112,11 +116,11 @@ class DumpDataCollector extends DataCollector implements DataDumperInterface
         if (!$this->requestStack
             || !$response->headers->has('X-Debug-Token')
             || $response->isRedirection()
-            || ($response->headers->has('Content-Type') && !str_contains($response->headers->get('Content-Type'), 'html'))
+            || ($response->headers->has('Content-Type') && !str_contains($response->headers->get('Content-Type') ?? '', 'html'))
             || 'html' !== $request->getRequestFormat()
             || false === strripos($response->getContent(), '</body>')
         ) {
-            if ($response->headers->has('Content-Type') && str_contains($response->headers->get('Content-Type'), 'html')) {
+            if ($response->headers->has('Content-Type') && str_contains($response->headers->get('Content-Type') ?? '', 'html')) {
                 $dumper = new HtmlDumper('php://output', $this->charset);
                 $dumper->setDisplayOptions(['fileLinkFormat' => $this->fileLinkFormat]);
             } else {
