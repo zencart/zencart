@@ -2201,7 +2201,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if (MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING == 'Yes') $this->setShippingMethod();
 
       // send the user on
-      if ($_SESSION['paypal_ec_markflow'] == 1) {
+      if (!empty($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1) {
         $this->terminateEC('', false, FILENAME_CHECKOUT_PROCESS);
       } else {
         $this->terminateEC('', false, FILENAME_CHECKOUT_CONFIRMATION);
@@ -3168,7 +3168,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           }
           $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_ERROR;
           if ($response['L_ERRORCODE0'] == 10009) $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_REFUNDFULL_ERROR;
-          if ($response['RESULT'] == 105 || isset($response['RESPMSG'])) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if ((!empty($response['RESULT']) && $response['RESULT'] == 105) || isset($response['RESPMSG'])) $response['L_SHORTMESSAGE0'] = ($response['RESULT'] ?? '') . ' ' . $response['RESPMSG'];
           if (urldecode($response['L_LONGMESSAGE0']) == 'This transaction has already been fully refunded') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
           if (urldecode($response['L_LONGMESSAGE0']) == 'Can not do a full refund after a partial refund') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
           if (urldecode($response['L_LONGMESSAGE0']) == 'The partial refund amount must be less than or equal to the remaining amount') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
