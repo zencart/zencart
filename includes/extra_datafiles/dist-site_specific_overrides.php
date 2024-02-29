@@ -14,6 +14,14 @@
  * @version $Id: Steve 2024 Feb 11 Modified in v2.0.0-beta1 $
  */
 // -----
+// Identify whether the link to the 'accessibility' page is included in the "Information" sidebox.
+//
+// true .... Show in the sidebox (default)
+// false ... Don't show in the sidebox
+//
+// $flag_show_accessibility_sidebox_link = false;
+
+// -----
 // Identify whether the link to the 'about_us' page is included in the "Information" sidebox.
 //
 // true .... Show in the sidebox (default)

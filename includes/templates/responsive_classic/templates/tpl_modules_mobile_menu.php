@@ -104,6 +104,17 @@ echo $menulist;
 <?php if (DEFINE_CONDITIONS_STATUS <= 1) { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_CONDITIONS); ?>"><?php echo BOX_INFORMATION_CONDITIONS; ?></a></li>
 <?php } ?>
+<?php
+// -----
+// The following flag is set by /includes/init_includes/init_common_elements.php; refer to that module's
+// comments for the way to override this setting.
+//
+if ($flag_show_accessibility_sidebox_link === true) {
+?>
+    <li><?php echo '<a href="' . zen_href_link(FILENAME_ACCESSIBILITY) . '">' . BOX_INFORMATION_ACCESSIBILITY . '</a>'; ?></li>
+<?php
+}
+?>
 <?php if (!empty($external_bb_url) && !empty($external_bb_text)) { // forum/bb link ?>
         <li><a href="<?php echo $external_bb_url; ?>" rel="noopener" target="_blank"><?php echo $external_bb_text; ?></a></li>
 <?php } ?>
