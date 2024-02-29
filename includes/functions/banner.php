@@ -144,7 +144,7 @@
         if ($banner->fields['banners_open_new_windows'] == '1') {
           $target = ' rel="noopener" target="_blank"';
         }
-        $banner_string = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner->fields['banners_id']) . '"' . $target . '>' . zen_image(DIR_WS_IMAGES . $banner->fields['banners_image'], $banner->fields['banners_title']) . '</a>';
+        $banner_string = '<a href="' . zen_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner->fields['banners_id']) . '"' . $target . ' aria-label="' . $banner->fields['banners_title'] . '">' . zen_image(DIR_WS_IMAGES . $banner->fields['banners_image'], $banner->fields['banners_title']) . '</a>';
       }
     }
 
