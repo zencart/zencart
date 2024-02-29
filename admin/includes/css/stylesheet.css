@@ -205,11 +205,6 @@ textarea {
     width: 80%;
 }
 
-/* to handle textareas for browsers which don't like % widths */
-textarea.sqlpatchKeyedQuery, TEXTAREA#file_contents {
-    width: auto;
-}
-
 form {
     display: inline;
 }
