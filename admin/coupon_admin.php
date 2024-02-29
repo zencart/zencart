@@ -1180,25 +1180,24 @@ switch ($_GET['action']) {
                   $cc_split = new splitPageResults($_GET['page'], $maxDisplaySearchResults, $cc_query_raw, $cc_query_numrows);
                   $cc_list = $db->Execute($cc_query_raw);
 
-                  $sql = "SELECT referrer_domain
-                        FROM " . TABLE_COUPON_REFERRERS . "
-                        WHERE coupon_id = " . (int)$_GET['cid'];
-                  $results = $db->Execute($sql);
-                  $coupon_referrer = '';
-                  foreach ($results as $result) {
-                      $coupon_referrer .= $result['referrer_domain'] . ',';
-                  }
-                  $coupon_referrer = trim($coupon_referrer, ',');
-
                   if ($cc_list->EOF && (empty($_GET['cid']) || ($_GET['cid'] == $cc_list->fields['coupon_id'])) && empty($cInfo)) {
                     $cInfo = new objectInfo($cc_list->fields);
-                    $cInfo->referrer = $coupon_referrer;
                   }
                   foreach ($cc_list as $item) {
                     if ((empty($_GET['cid']) || ($_GET['cid'] == $item['coupon_id'])) && empty($cInfo)) {
                       $cInfo = new objectInfo($item);
-                      $cInfo->referrer = $coupon_referrer;
                     }
+
+                    $coupon_referrer = '';
+                    $sql = "SELECT referrer_domain
+                            FROM " . TABLE_COUPON_REFERRERS . "
+                            WHERE coupon_id = " . (int)$cInfo->coupon_id ?? 0;
+                    $results = $db->Execute($sql);
+                    foreach ($results as $result) {
+                        $coupon_referrer .= $result['referrer_domain'] . ',';
+                    }
+                    $cInfo->referrer = trim($coupon_referrer, ',');
+
                     if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
                       ?>
                       <tr class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_COUPON_ADMIN, zen_get_all_get_params(array('cid', 'action')) . 'cid=' . $cInfo->coupon_id . '&action=voucheredit'); ?>'">
@@ -1355,7 +1354,6 @@ switch ($_GET['action']) {
 
                 $uses_coupon = $cInfo->uses_per_coupon;
                 $uses_user = $cInfo->uses_per_user;
-                $referrer = $cInfo->referrer;
                 $coupon_order_limit = $cInfo->coupon_order_limit;
                 $coupon_is_valid_for_sales = $cInfo->coupon_is_valid_for_sales;
                 if ($uses_coupon == 0 || $uses_coupon == '') {
@@ -1371,7 +1369,7 @@ switch ($_GET['action']) {
                   $contents[] = array('text' => COUPON_FINISHDATE . ':&nbsp;' . zen_date_short($cInfo->coupon_expire_date));
                   $contents[] = array('text' => COUPON_USES_COUPON . ':&nbsp;' . $uses_coupon);
                   $contents[] = array('text' => COUPON_USES_USER . ':&nbsp;' . $uses_user);
-                  $contents[] = array('text' => COUPON_REFERRER . ':&nbsp;' . ($referrer ?? 'none'));
+                  $contents[] = array('text' => COUPON_REFERRER . ':&nbsp;' . ($cInfo->referrer ?? 'none'));
                   $contents[] = array('text' => COUPON_PRODUCTS . ':&nbsp;' . $prod_details);
                   $contents[] = array('text' => COUPON_CATEGORIES . ':&nbsp;' . $cat_details);
                   $contents[] = array('text' => COUPON_MIN_ORDER . ':&nbsp;' . $currencies->format($cInfo->coupon_minimum_order));
