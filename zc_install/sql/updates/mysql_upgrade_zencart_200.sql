@@ -119,6 +119,12 @@ DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_
 DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'OT';
 #############
 
+## Fix typos in old configuration keys
+UPDATE product_type_layout SET configuration_description='Default setting for a new product (can be modified per product).<br>Show the Product Title in the page &lt;title&gt; tag.' WHERE configuration_key='SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_STATUS';
+UPDATE product_type_layout SET configuration_description='Default setting for a new product (can be modified per product).<br>Show the Product Model in the page &lt;title&gt; tag.' WHERE configuration_key='SHOW_PRODUCT_MUSIC_INFO_METATAGS_MODEL_STATUS';
+UPDATE product_type_layout SET configuration_description='Default setting for a new product (can be modified per product).<br>Show the Product Price in the page &lt;title&gt; tag.' WHERE configuration_key='SHOW_PRODUCT_MUSIC_INFO_METATAGS_PRICE_STATUS';
+UPDATE product_type_layout SET configuration_description='Default setting for a new product (can be modified per product).<br>Show the defined constant "SITE_TAGLINE" in the page &lt;title&gt; tag.' WHERE configuration_key='SHOW_PRODUCT_MUSIC_INFO_METATAGS_TITLE_TAGLINE_STATUS';
+
 
 ## SNAF product listing changes
 UPDATE configuration SET configuration_title = 'Sort Order Default - Product Listing' WHERE configuration_key = 'PRODUCT_LISTING_DEFAULT_SORT_ORDER';
