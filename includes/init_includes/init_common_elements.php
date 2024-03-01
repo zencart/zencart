@@ -10,6 +10,11 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
+// -----
+// Sets the processing flag (used by /includes/modules/sideboxes/information.php) that
+// indicates whether or not a link to the "Accessibility" page should be included.
+//
+$flag_show_accessibility_sidebox_link = (isset($flag_show_accessibility_sidebox_link)) ? (bool)$flag_show_accessibility_sidebox_link : true;
 
 // -----
 // Sets the processing flag (used by /includes/modules/sideboxes/information.php) that

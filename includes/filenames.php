@@ -12,6 +12,7 @@
  * define project filenames
  */
 define('FILENAME_ABOUT_US', 'about_us');
+define('FILENAME_ACCESSIBILITY', 'accessibility');
 define('FILENAME_ACCOUNT', 'account');
 define('FILENAME_ACCOUNT_EDIT', 'account_edit');
 define('FILENAME_ACCOUNT_HISTORY', 'account_history');
@@ -62,6 +63,7 @@ define('FILENAME_CUSTOMERS', 'customers');
 define('FILENAME_CUSTOMER_GROUPS', 'customer_groups');
 define('FILENAME_DEFAULT', 'index');
 define('FILENAME_DEFINE_ABOUT_US', 'define_about_us');
+define('FILENAME_DEFINE_ACCESSIBILITY', 'define_accessibility');
 define('FILENAME_DEFINE_ASK_A_QUESTION', 'define_ask_a_question');
 define('FILENAME_DEFINE_PAGES_EDITOR', 'define_pages_editor');
 define('FILENAME_DEFINE_MAIN_PAGE', 'define_main_page');
