@@ -896,7 +896,7 @@ class paypaldp extends base {
 
       $optionsShip = array();
       if (isset($order->delivery) && $order->delivery['street_address'] != '') {
-        $optionsShip= array('SHIPTONAME'   => ($order->delivery['name'] == '' ? $order->delivery['firstname'] . ' ' . $order->delivery['lastname'] : $order->delivery['name']),
+        $optionsShip= array('SHIPTONAME'   => empty($order->delivery['name']) ? $order->delivery['firstname'] . ' ' . $order->delivery['lastname'] : $order->delivery['name'],
                             'SHIPTOSTREET' => $order->delivery['street_address'],
                             'SHIPTOSTREET2' => $order->delivery['suburb'],
                             'SHIPTOCITY'   => $order->delivery['city'],
@@ -975,7 +975,7 @@ class paypaldp extends base {
       $this->numitems = sizeof($order->products);
       $this->responsedata = $response;
 
-      if ($response['PNREF']) {
+      if (!empty($response['PNREF'])) {
       // PNREF only comes from payflow mode
         $this->payment_type = MODULE_PAYMENT_PAYPALDP_PF_TEXT_TYPE;
         $this->transaction_id = $response['PNREF'];
@@ -998,7 +998,7 @@ class paypaldp extends base {
         $this->correlationid = $response['CORRELATIONID'];
         $this->payment_time = urldecode($response['TIMESTAMP']);
         $this->amt = urldecode($response['AMT'] . ' ' . $response['CURRENCYCODE']);
-        $this->auth_code = (isset($this->responsedata['AUTHCODE'])) ? $this->responsedata['AUTHCODE'] : $this->responsedata['TOKEN'];
+        $this->auth_code = $this->responsedata['AUTHCODE'] ?? ($this->responsedata['TOKEN'] ?? 'n/a');
         $this->transactiontype = 'cart';
       }
   }
@@ -1045,20 +1045,20 @@ class paypaldp extends base {
                           'payment_type' => $this->payment_type,
                           'payment_status' => $this->payment_status,
                           'pending_reason' => $this->pendingreason,
-                          'invoice' => urldecode($_SESSION['paypal_ec_token'] . $this->responsedata['PPREF']),
-                          'first_name' => $_SESSION['paypal_ec_payer_info']['payer_firstname'],
-                          'last_name' => $_SESSION['paypal_ec_payer_info']['payer_lastname'],
-                          'payer_business_name' => $_SESSION['paypal_ec_payer_info']['payer_business'],
-                          'address_name' => $_SESSION['paypal_ec_payer_info']['ship_name'],
-                          'address_street' => $_SESSION['paypal_ec_payer_info']['ship_street_1'],
-                          'address_city' => $_SESSION['paypal_ec_payer_info']['ship_city'],
-                          'address_state' => $_SESSION['paypal_ec_payer_info']['ship_state'],
-                          'address_zip' => $_SESSION['paypal_ec_payer_info']['ship_postal_code'],
-                          'address_country' => $_SESSION['paypal_ec_payer_info']['ship_country'],
-                          'address_status' => $_SESSION['paypal_ec_payer_info']['ship_address_status'],
-                          'payer_email' => $_SESSION['paypal_ec_payer_info']['payer_email'],
-                          'payer_id' => $_SESSION['paypal_ec_payer_id'],
-                          'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'],
+                          'invoice' => urldecode(($_SESSION['paypal_ec_token'] ?? '') . ($this->responsedata['PPREF'] ?? '')),
+                          'first_name' => $_SESSION['paypal_ec_payer_info']['payer_firstname'] ?? '',
+                          'last_name' => $_SESSION['paypal_ec_payer_info']['payer_lastname'] ?? '',
+                          'payer_business_name' => $_SESSION['paypal_ec_payer_info']['payer_business'] ?? '',
+                          'address_name' => $_SESSION['paypal_ec_payer_info']['ship_name'] ?? '',
+                          'address_street' => $_SESSION['paypal_ec_payer_info']['ship_street_1'] ?? '',
+                          'address_city' => $_SESSION['paypal_ec_payer_info']['ship_city'] ?? '',
+                          'address_state' => $_SESSION['paypal_ec_payer_info']['ship_state'] ?? '',
+                          'address_zip' => $_SESSION['paypal_ec_payer_info']['ship_postal_code'] ?? '',
+                          'address_country' => $_SESSION['paypal_ec_payer_info']['ship_country'] ?? '',
+                          'address_status' => $_SESSION['paypal_ec_payer_info']['ship_address_status'] ?? '',
+                          'payer_email' => $_SESSION['paypal_ec_payer_info']['payer_email'] ?? '',
+                          'payer_id' => $_SESSION['paypal_ec_payer_id'] ?? '',
+                          'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'] ?? '',
                           'payment_date' => convertToLocalTimeZone(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
                           'receiver_email' => (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' ? MODULE_PAYMENT_PAYPALWPP_PFVENDOR : str_replace('_api1', '', MODULE_PAYMENT_PAYPALWPP_APIUSERNAME)),
@@ -1069,9 +1069,9 @@ class paypaldp extends base {
                           'mc_gross' => (float)$this->amt,
                           'mc_fee' => (float)urldecode($this->feeamt),
                           'mc_currency' => $this->responsedata['CURRENCYCODE'],
-                          'settle_amount' => (float)urldecode($this->responsedata['SETTLEAMT']),
-                          'settle_currency' => $this->responsedata['CURRENCYCODE'],
-                          'exchange_rate' => (urldecode($this->responsedata['EXCHANGERATE']) > 0 ? urldecode($this->responsedata['EXCHANGERATE']) : 1.0),
+                          'settle_amount' => (float)urldecode($this->responsedata['SETTLEAMT'] ?? 0),
+                          'settle_currency' => $this->responsedata['CURRENCYCODE'] ?? '',
+                          'exchange_rate' => urldecode($this->responsedata['EXCHANGERATE'] ?? 1),
                           'notify_version' => '0',
                           'verify_sign' =>'',
                           'date_added' => 'now()',
@@ -1389,10 +1389,10 @@ class paypaldp extends base {
       if (!$error) {
         if (!isset($response['GROSSREFUNDAMT'])) $response['GROSSREFUNDAMT'] = $refundAmt;
         // Success, so save the results
-        $comments = 'REFUND INITIATED. Trans ID:' . $response['REFUNDTRANSACTIONID'] . $response['PNREF']. "\nGross Refund Amt: " . urldecode($response['GROSSREFUNDAMT']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $refundNote;
+        $comments = 'REFUND INITIATED. Trans ID:' . $response['REFUNDTRANSACTIONID'] . ($response['PNREF'] ?? ''). "\nGross Refund Amt: " . urldecode($response['GROSSREFUNDAMT']) . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $refundNote;
         zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
 
-        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_REFUND_INITIATED, urldecode($response['GROSSREFUNDAMT']), urldecode($response['REFUNDTRANSACTIONID']). $response['PNREF']), 'success');
+        $messageStack->add_session(sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_REFUND_INITIATED, urldecode($response['GROSSREFUNDAMT']), urldecode($response['REFUNDTRANSACTIONID']) . ($response['PNREF'] ?? '')), 'success');
         return true;
       }
     }
@@ -1958,7 +1958,7 @@ class paypaldp extends base {
         }
     }
     /** Handle FMF Scenarios **/
-    if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment')) && $response['PAYMENTSTATUS'] == 'Pending' && isset($response['L_ERRORCODE0']) && $response['L_ERRORCODE0'] == 11610) {
+    if (in_array($operation, ['DoExpressCheckoutPayment', 'DoDirectPayment']) && !empty($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] === 'Pending' && isset($response['L_ERRORCODE0']) && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
       $this->fmfErrors = array();
       if ($response['ACK'] == 'SuccessWithWarning' && isset($response['L_FMFPENDINGID0'])) {
@@ -1986,7 +1986,7 @@ class paypaldp extends base {
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_INVALID_RESPONSE;
           $errorNum = urldecode($response['L_ERRORCODE0'] . ' ' . $response['RESULT'] . ' <!-- ' . $response['RESPMSG'] . ' -->');
-          if ($response['RESULT'] == 25) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_WPP_ACCOUNT_ERROR;
+          if (!empty($response['RESULT']) && $response['RESULT'] == 25) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_WPP_ACCOUNT_ERROR;
           if ($response['L_ERRORCODE0'] == 10500 || $response['L_ERRORCODE0'] == 10501) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_US_WPP_ACCOUNT_ERROR;
           if ($response['HOSTCODE'] == 10500 || $response['HOSTCODE'] == 10501) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_UKWPP_ACCOUNT_ERROR;
           if ($response['HOSTCODE'] == 10558) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_CANNOT_USE_THIS_CURRENCY_ERROR;
@@ -2031,7 +2031,7 @@ class paypaldp extends base {
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_REFUND_ERROR;
           if ($response['L_ERRORCODE0'] == 10009) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_REFUNDFULL_ERROR;
-          if ($response['RESULT'] == 105 || isset($response['RESPMSG'])) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if ((!empty($response['RESULT']) && $response['RESULT'] == 105) || isset($response['RESPMSG'])) $response['L_SHORTMESSAGE0'] = ($response['RESULT'] ?? '') . ' ' . $response['RESPMSG'];
           if (urldecode($response['L_LONGMESSAGE0']) == 'This transaction has already been fully refunded') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
           if (urldecode($response['L_LONGMESSAGE0']) == 'Can not do a full refund after a partial refund') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
           if (urldecode($response['L_LONGMESSAGE0']) == 'The partial refund amount must be less than or equal to the remaining amount') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
@@ -2061,7 +2061,7 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_CAPT_ERROR;
-          if ($response['RESULT'] == 111) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if (!empty($response['RESULT']) && $response['RESULT'] == 111) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
           $errorText .= ' (' . urldecode($response['L_SHORTMESSAGE0']) . ') ' . $response['L_ERRORCODE0'];
           $messageStack->add_session($errorText, 'error');
           return true;
@@ -2074,8 +2074,8 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_VOID_ERROR;
-          if ($response['RESULT'] == 12) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
-          if ($response['RESULT'] == 108) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if (!empty($response['RESULT']) && $response['RESULT'] == 12) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if (!empty($response['RESULT']) && $response['RESULT'] == 108) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
           $errorText .= ' (' . urldecode($response['L_SHORTMESSAGE0']) . ') ' . $response['L_ERRORCODE0'];
           $messageStack->add_session($errorText, 'error');
           return true;
