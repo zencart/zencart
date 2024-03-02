@@ -705,12 +705,12 @@ class paypaldp extends base {
     global $order;
     $_SESSION['paypal_ec_markflow'] = 1;
     $process_button_string = '';
-    $process_button_string .= "\n" . zen_draw_hidden_field('wpp_cc_type', $_POST['paypalwpp_cc_type']) . "\n" .
-        zen_draw_hidden_field('wpp_cc_expdate_month', $_POST['paypalwpp_cc_expires_month']) . "\n" .
-        zen_draw_hidden_field('wpp_cc_expdate_year', $_POST['paypalwpp_cc_expires_year']) . "\n" .
-        zen_draw_hidden_field('wpp_cc_issuedate_month', $_POST['paypalwpp_cc_issue_month']) . "\n" .
-        zen_draw_hidden_field('wpp_cc_issuedate_year', $_POST['paypalwpp_cc_issue_year']) . "\n" .
-        zen_draw_hidden_field('wpp_cc_issuenumber', $_POST['paypalwpp_cc_issuenumber']) . "\n" .
+    $process_button_string .= "\n" . zen_draw_hidden_field('wpp_cc_type', $_POST['paypalwpp_cc_type'] ?? '') . "\n" .
+        zen_draw_hidden_field('wpp_cc_expdate_month', $_POST['paypalwpp_cc_expires_month'] ?? '') . "\n" .
+        zen_draw_hidden_field('wpp_cc_expdate_year', $_POST['paypalwpp_cc_expires_year'] ?? '') . "\n" .
+        zen_draw_hidden_field('wpp_cc_issuedate_month', $_POST['paypalwpp_cc_issue_month'] ?? '') . "\n" .
+        zen_draw_hidden_field('wpp_cc_issuedate_year', $_POST['paypalwpp_cc_issue_year'] ?? '') . "\n" .
+        zen_draw_hidden_field('wpp_cc_issuenumber', $_POST['paypalwpp_cc_issuenumber'] ?? '') . "\n" .
         zen_draw_hidden_field('wpp_cc_number', $_POST['paypalwpp_cc_number']) . "\n" .
         zen_draw_hidden_field('wpp_cc_checkcode', $_POST['paypalwpp_cc_checkcode']) . "\n" .
         zen_draw_hidden_field('wpp_payer_firstname', $_POST['paypalwpp_cc_firstname']) . "\n" .
@@ -1933,7 +1933,7 @@ class paypaldp extends base {
       $this->zcLog('termEC-1', 'Killed the session vars as requested');
     }
 
-    $this->zcLog('termEC-2', 'BEFORE: Token Data:' . $_SESSION['paypal_ec_token']);
+    $this->zcLog('termEC-2', 'BEFORE: Token Data:' . ($_SESSION['paypal_ec_token'] ?? ''));
 
     if ($error_msg) {
       $messageStack->add_session($stackAlert, $error_msg, 'error');
@@ -1985,11 +1985,13 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - before_process() - DP', "In function: before_process() - Direct Payment \r\nDid first contact attempt return error? " . ($error_occurred ? "Yes" : "No") . " \r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_INVALID_RESPONSE;
-          $errorNum = urldecode($response['L_ERRORCODE0'] . ' ' . $response['RESULT'] . ' <!-- ' . $response['RESPMSG'] . ' -->');
+          $errorNum = urldecode($response['L_ERRORCODE0'] . ' ' . ($response['RESULT'] ?? '') . ' <!-- ' . ($response['RESPMSG'] ?? '') . ' -->');
           if (!empty($response['RESULT']) && $response['RESULT'] == 25) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_WPP_ACCOUNT_ERROR;
           if ($response['L_ERRORCODE0'] == 10500 || $response['L_ERRORCODE0'] == 10501) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_US_WPP_ACCOUNT_ERROR;
-          if ($response['HOSTCODE'] == 10500 || $response['HOSTCODE'] == 10501) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_UKWPP_ACCOUNT_ERROR;
-          if ($response['HOSTCODE'] == 10558) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_CANNOT_USE_THIS_CURRENCY_ERROR;
+          if (!empty($response['HOSTCODE'])) { 
+             if ($response['HOSTCODE'] == 10500 || $response['HOSTCODE'] == 10501) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_UKWPP_ACCOUNT_ERROR;
+             if ($response['HOSTCODE'] == 10558) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_CANNOT_USE_THIS_CURRENCY_ERROR;
+          }
           if ($response['L_ERRORCODE0'] == 10002) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_SANDBOX_VS_LIVE_ERROR;
           if ($response['L_ERRORCODE0'] == 10565) {
             $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_WPP_BAD_COUNTRY_ERROR;
@@ -2010,11 +2012,11 @@ class paypaldp extends base {
             $errorText = 'Card rejected by the bank. Your IP address has been recorded.';
             $errorNum = '15005';
           }
-          if ($response['RESPMSG'] != '') $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED . ' ' . $errorText;
+          if (!empty($response['RESPMSG'])) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED . ' ' . $errorText;
 
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALDP_INVALID_RESPONSE || $errorText == MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? (isset($response['RESULT']) && $response['RESULT'] != 0 ? MODULE_PAYMENT_PAYPALDP_CANNOT_BE_COMPLETED . ' (' . $errorNum . ')' : $errorNum) . ' ' . urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ' ' . $response['CURL_ERRORS']) : '';
           $explain = "\n\nProblem occurred while customer #" . $_SESSION['customer_id'] . ' -- ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' -- was attempting checkout.' . "\n";
-          $detailedEmailMessage = MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0']  . ' ' . $response['RESPMSG']. "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . $errorInfo . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));
+          $detailedEmailMessage = MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0']  . ' ' . $response['RESPMSG']. "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . ($response['L_ERRORCODE1'] ?? '') . "\n" . ($response['L_SHORTMESSAGE1'] ?? '') . "\n" . ($response['L_LONGMESSAGE1'] ?? ''). ($response['L_ERRORCODE2'] ?? '') . "\n" . ($response['L_SHORTMESSAGE2'] ?? '') . "\n" . ($response['L_LONGMESSAGE2']  ?? ''). ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . $errorInfo . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));
           $detailedEmailMessage .= $explain;
           if (!isset($response['L_ERRORCODE0']) && isset($response['RESULT'])) $detailedEmailMessage .= "\n\n" . print_r($response, TRUE);
           zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . zen_uncomment($errorNum) . ')', zen_uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br(zen_uncomment($detailedEmailMessage))), 'paymentalert');
