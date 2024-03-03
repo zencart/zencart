@@ -58,6 +58,7 @@
 <?php if (DEFINE_CONDITIONS_STATUS <= '1') { ?>
             <li><?php echo '<a href="' . zen_href_link(FILENAME_CONDITIONS) . '">' . BOX_INFORMATION_CONDITIONS . '</a>'; ?></li>
 <?php } ?>
+<li><?php echo '<a href="' . zen_href_link(FILENAME_ACCESSIBILITY) . '">' . BOX_INFORMATION_ACCESSIBILITY . '</a>'; ?></li>
 <?php if (DEFINE_CONTACT_US_STATUS <= '1') { ?>
             <li><?php echo '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . BOX_INFORMATION_CONTACT . '</a>'; ?></li>
 <?php } ?>
