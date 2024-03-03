@@ -321,7 +321,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
     array_multisort($tmp, SORT_DESC, $address);
 
     // store translated values into original array, just for the sake of the notifier
-    $incoming = $address;
+    $incoming = array_merge($incoming, $address);
 
     // convert into $-prefixed keys
     foreach ($address as $key => $value) {
