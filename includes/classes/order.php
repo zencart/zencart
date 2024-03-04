@@ -11,6 +11,10 @@
  * Stores new orders and sends order confirmation emails
  *
  */
+
+use \App\Models\AddressBook;
+use \App\Models\Zone;
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -588,6 +592,7 @@ class order extends base
                 'telephone' => $customer_address->fields['customers_telephone'],
                 'email_address' => $customer_address->fields['customers_email_address'],
             ];
+            $this->customer['zone_id'] = $this->getCanonicalZoneId($this->customer['zone_id'], (int)$this->customer['country']['id'], $this->customer['state']);
         }
 
         if ($this->content_type == 'virtual') {
@@ -626,6 +631,7 @@ class order extends base
                 'country_id' => $shipping_address->fields['entry_country_id'],
                 'format_id' => (int)$shipping_address->fields['address_format_id'],
             ];
+            $this->delivery['zone_id'] = $this->getCanonicalZoneId($this->delivery['zone_id'], (int)$this->delivery['country']['id'], $this->delivery['state']);
         }
 
         if ($billing_address->RecordCount() > 0) {
@@ -644,6 +650,7 @@ class order extends base
                 'country_id' => $billing_address->fields['entry_country_id'],
                 'format_id' => (int)$billing_address->fields['address_format_id'],
             ];
+            $this->billing['zone_id'] = $this->getCanonicalZoneId($this->billing['zone_id'], (int)$this->billing['country']['id'], $this->billing['state']);
         }
 
         list($taxCountryId, $taxZoneId) = $this->determineTaxAddressZones($billto, $sendto);
@@ -791,15 +798,18 @@ class order extends base
                                   WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
                                   AND ab.address_book_id = " . $address_book_id;
 
-            if ($tax_address_query != '') {
+
+
                 $tax_address = $db->Execute($tax_address_query);
                 if ($tax_address->RecordCount() > 0) {
                     $taxCountryId = $tax_address->fields['entry_country_id'];
                     $taxZoneId = $tax_address->fields['entry_zone_id'];
                 }
+            if ((int)$taxZoneId === 0) {
+                $taxZoneId = $this->getTaxZoneIdFromState($address_book_id);
             }
-        }
 
+        }
         return [$taxCountryId, $taxZoneId];
     }
 
@@ -1489,4 +1499,26 @@ class order extends base
         $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
     }
 
+    protected function getCanonicalZoneId(int $zoneId, int $countryId, string $state): int
+    {
+        if ($zoneId > 0) {
+            return $zoneId;
+        }
+        return $this->findZoneIdFromState($countryId, $state);
+    }
+    protected function getTaxZoneIdFromState(int $address_book_id): int
+    {
+        $ta = AddressBook::find($address_book_id);
+        return $this->findZoneIdFromState($ta->entry_country_id, $ta->entry_state);
+    }
+
+    protected function findZoneIdFromState(int $country_id, string $state): int
+    {
+        $tateShort = strtoupper($state);
+        $zone = Zone::where('zone_country_id', $country_id)
+            ->where('zone_code', $tateShort)
+            ->orWhere('zone_name', $state)
+            ->first();
+        return $zone->zone_id;
+    }
 }
