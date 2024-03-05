@@ -61,20 +61,28 @@ if (zen_is_whitelisted_admin_ip()) {
  */
   define('DIR_WS_TEMPLATE_ICONS', DIR_WS_TEMPLATE_IMAGES . 'icons/');
 
-/**
- * Load template-specific configuration settings, if they exist.
- * The tpl() helper can be used to query settings and even fallback to admin configs.
- */
-if (empty($tpl_settings)) {
+
+if (empty($tpl_settings) || !is_array($tpl_settings)) {
     $tpl_settings = [];
 }
+/**
+ * Instantiate TemplateSettings object, before loading template's template_settings.php file.
+ */
+$tplSetting = new TemplateSettings($tpl_settings ?? null);
+
+/**
+ * Load template-specific configuration settings, if they exist.
+ */
 if (file_exists(DIR_WS_TEMPLATE . 'template_settings.php')) {
     require_once DIR_WS_TEMPLATE . 'template_settings.php';
 }
 // check again in case overrides went wrong
-if (empty($tpl_settings)) {
+if (empty($tpl_settings) || !is_array($tpl_settings)) {
     $tpl_settings = [];
 }
+/**
+ * Load any template override settings from db
+ */
 if (!empty($result->fields['template_settings'])) {
     $tmp = json_decode($result->fields['template_settings'], true);
     if (is_array($tmp)) {
@@ -90,6 +98,15 @@ $languageLoaderFactory = new LanguageLoaderFactory();
 $languageLoader = $languageLoaderFactory->make('catalog', $installedPlugins, $current_page, $template_dir);
 $languageLoader->loadInitialLanguageDefines();
 $languageLoader->finalizeLanguageDefines();
+
+/**
+ * Process any overrides from the $tpl_settings array, inserting them into the $tplSetting class object
+ */
+if (!isset($tplSetting)) {
+    $tplSetting = new TemplateSettings($tpl_settings ?? null);
+} else {
+    $tplSetting->setFromArray($tpl_settings ?? null);
+}
 
 /**
  * send the content charset "now" so that all content is impacted by it
