@@ -13,7 +13,7 @@ $action = (isset($_GET['action']) ? $_GET['action'] : '');
 // The 'page=' parameter, if supplied, must be an alphabetic value; otherwise, default to the
 // first page (blank/A).
 //
-$currentPage = (!empty($_GET['page']) && ctype_alpha($_GET['page'][0]) ? $_GET['page'][0] : '');
+$currentPage = (!empty($_GET['page']) && ctype_alpha($_GET['page'][0]) ? replace_accents($_GET['page'][0]) : '');
 
 // -----
 // If a country's ID (cID=) parameter is also specified, ensure that the 'page=' parameter is
@@ -47,7 +47,7 @@ if (isset($_GET['cID'])) {
     // Otherwise, set the current page to reflect the first
     // character of the country's name.
     //
-    $currentPage = strtoupper($country_name->fields['countries_name'][0]);
+    $currentPage = strtoupper(replace_accents($country_name->fields['countries_name'][0]));
 }
 
 // -----
