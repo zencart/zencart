@@ -192,7 +192,7 @@ class splitPageResults
             $sql = substr($sql_query, 0, $pos_to) . $where_sql;
             $this->sql_before = $sql;
             if (isset($current_page_number)) {
-                $sql .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $letterGroupLength . ") = '" . $current_page_number . "'";
+                $sql .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $letterGroupLength . ") = '" . $current_page_number . "' ";
             } else {
                 $sql .= $this->letterGroupColumn . " IS NULL ";
             }
@@ -246,7 +246,7 @@ class splitPageResults
             $letter = $check_page->fields['letter'];
             $sql_query = $this->sql_before;
             if (!empty($letter)) {
-                $sql_query .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $this->letterGroupLength . ") = '" . $letter . "'";
+                $sql_query .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $this->letterGroupLength . ") = '" . $letter . "' ";
             } else {
                 $sql_query .= $this->letterGroupColumn . " IS NULL ";
             }
