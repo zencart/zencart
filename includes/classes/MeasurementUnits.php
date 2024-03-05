@@ -1,7 +1,5 @@
 <?php
 
-namespace Zencart;
-
 use TypeError;
 
 class MeasurementUnits
