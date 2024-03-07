@@ -105,7 +105,13 @@ DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_
 ### Austria
 UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Vorarlberg' WHERE c.countries_iso_code_3 = 'AUT' AND z.zone_code = 'VB';
 ### Italia
-INSERT INTO zones (zone_country_id, zone_code, zone_name) SELECT (SELECT countries_id FROM countries WHERE countries_iso_code_3 = 'ITA'), 'SU', 'Sud Sardegna' WHERE NOT EXISTS (SELECT * FROM zones WHERE zone_country_id = (SELECT countries_id FROM countries WHERE countries_iso_code_3 = 'ITA') AND zone_code = 'SU');
+INSERT INTO zones ( zone_country_id, zone_code, zone_name ) SELECT * FROM
+(SELECT countries_id AS zone_country_id, 'SU' AS zone_code, 'Sud Sardegna' AS zone_name
+FROM countries WHERE countries_iso_code_3 = 'ITA' LIMIT 1) AS tmp WHERE NOT EXISTS (SELECT *
+FROM zones WHERE zone_country_id = (SELECT countries_id
+FROM countries WHERE countries_iso_code_3 = 'ITA' LIMIT 1) AND zone_code = 'SU' LIMIT 1)
+LIMIT 1;
+
 UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Valle D\'Aosta' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'AO';
 UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Barletta-Andria-Trani' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'BT';
 UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Forlì-Cesena' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'FC';
