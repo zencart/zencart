@@ -213,6 +213,13 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
             }
         }
 
+// copy specials to Duplicate
+        if (!empty($_POST['copy_specials']) && $_POST['copy_specials'] === 'copy_specials_yes') {
+            if (zen_copy_specials_to_product($products_id, $dup_products_id)) {
+                $messageStack->add_session(sprintf(TEXT_COPY_AS_DUPLICATE_SPECIALS, $products_id, $dup_products_id), 'success');
+            }
+        }
+
 // copy product discounts to Duplicate
         if (!empty($_POST['copy_discounts']) && $_POST['copy_discounts'] === 'copy_discounts_yes') {
             zen_copy_discounts_to_product($products_id, $dup_products_id);
