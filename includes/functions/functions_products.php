@@ -844,10 +844,7 @@ function zen_has_product_discounts($product_id)
 function zen_has_product_specials(int $product_id): bool
 {
     global $db;
-    $result = $db->Execute('SELECT products_id
-        FROM ' . TABLE_SPECIALS . "
-        WHERE products_id = $product_id
-        LIMIT 1;");
+    $result = $db->Execute('SELECT products_id FROM ' . TABLE_SPECIALS . " WHERE products_id = $product_id", 1);
     return !$result->EOF;
 }
 
@@ -990,8 +987,7 @@ function zen_copy_specials_to_product(int $copy_from, int $copy_to): bool {
     global $db;
 
     // Fetch existing special for $copy_from, if any.
-    $from_result = $db->Execute('SELECT * FROM ' . TABLE_SPECIALS . "
-        WHERE products_id = $copy_from;");
+    $from_result = $db->Execute('SELECT * FROM ' . TABLE_SPECIALS . " WHERE products_id = $copy_from");
     if ($from_result->EOF) {
         return false;
     }
@@ -1002,8 +998,7 @@ function zen_copy_specials_to_product(int $copy_from, int $copy_to): bool {
     $sql_data['products_id'] = $copy_to;
 
     // Test for existing special for $copy_to, and insert/update as required.
-    $result = $db->Execute('SELECT products_id FROM ' . TABLE_SPECIALS . "
-        WHERE products_id = $copy_to LIMIT 1;");
+    $result = $db->Execute('SELECT products_id FROM ' . TABLE_SPECIALS . " WHERE products_id = $copy_to", 1);
     if ($result->EOF) {
         // Insert new specials row
         zen_db_perform(TABLE_SPECIALS, $sql_data);
