@@ -24,3 +24,5 @@ $psr4Autoloader->addPrefix('Zencart\Request', DIR_FS_CATALOG . DIR_WS_CLASSES);
 if (defined('DIR_FS_ADMIN')) {
     $psr4Autoloader->addPrefix('Zencart\Paginator', DIR_FS_ADMIN . DIR_WS_CLASSES);
 }
+$psr4Autoloader->setClassFile('Settings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Settings.php' );
+$psr4Autoloader->setClassFile('TemplateSettings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'TemplateSettings.php' );
