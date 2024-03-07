@@ -580,6 +580,17 @@ class zcDatabaseInstaller
         }
     }
 
+    public function parserInnerJoin(): void
+    {
+        if (!$this->tableExists($this->lineSplit[2])) {
+            $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]) . ' CHECK PREFIXES!';
+            $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+            error_log($result . "\n" . $this->line . "\n---------------\n\n");
+        } else {
+            $this->line = 'INNER JOIN ' . $this->dbPrefix . substr($this->line, 12);
+        }
+    }
+
     public function parserLeftJoin(): void
     {
         if (!$this->tableExists($this->lineSplit[2])) {
