@@ -5,6 +5,7 @@
  * @version $Id: DrByte 2024 Feb 22 Modified in v2.0.0-beta1 $
  */
 /** @var \Aura\Autoload\Loader $psr4Autoloader */
+$psr4Autoloader->setClassFile('Zencart\SessionHandler', DIR_FS_CATALOG . DIR_WS_CLASSES . 'SessionHandler.php' );
 $psr4Autoloader->addPrefix('Zencart\QueryBuilder', DIR_FS_CATALOG . DIR_WS_CLASSES);
 $psr4Autoloader->addPrefix('Zencart\Traits', DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits');
 $psr4Autoloader->addPrefix('Zencart\FileSystem', DIR_FS_CATALOG . DIR_WS_CLASSES );
