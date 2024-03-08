@@ -93,7 +93,8 @@ if (zen_get_product_is_linked($pInfo->products_id) == 'true') {
     $contents[] = [
         'text' => '<h6>' . TEXT_COPY_LINKED_CATEGORIES . '</h6>' .
             '<div class="radio"><label>' . zen_draw_radio_field('copy_linked_categories', 'copy_linked_categories_yes', true) . TEXT_YES . '</label></div>' .
-            '<div class="radio"><label>' . zen_draw_radio_field('copy_linked_categories', 'copy_linked_categories_no') . TEXT_NO . '</label></div>'
+            '<div class="radio"><label>' . zen_draw_radio_field('copy_linked_categories', 'copy_linked_categories_no') . TEXT_NO . '</label></div>',
+        'params' => 'infoBoxContent duplicate-only hiddenField',
     ];
 }
 // only ask if product has qty discounts defined
@@ -101,10 +102,14 @@ if (zen_has_product_discounts($pInfo->products_id) == 'true') {
     $contents[] = [
         'text' => '<h6>' . TEXT_COPY_DISCOUNTS . '</h6>' .
             '<div class="radio"><label>' . zen_draw_radio_field('copy_discounts', 'copy_discounts_yes', true) . TEXT_YES . '</label></div>' .
-            '<div class="radio"><label>' . zen_draw_radio_field('copy_discounts', 'copy_discounts_no') . TEXT_NO . '</label></div>'
+            '<div class="radio"><label>' . zen_draw_radio_field('copy_discounts', 'copy_discounts_no') . TEXT_NO . '</label></div>',
+        'params' => 'infoBoxContent duplicate-only hiddenField',
     ];
 }
-$contents[] = ['text' => '<label>' . zen_draw_checkbox_field('edit_duplicate', '1', true) . TEXT_COPY_EDIT_DUPLICATE . '</label>'];
+$contents[] = [
+        'text' => '<label>' . zen_draw_checkbox_field('edit_duplicate', '1', true) . TEXT_COPY_EDIT_DUPLICATE . '</label>',
+        'params' => 'infoBoxContent duplicate-only hiddenField',
+    ];
 $contents[] = ['text' => zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
 $contents[] = [
     'align' => 'center',
