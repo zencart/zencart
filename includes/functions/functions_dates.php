@@ -86,7 +86,6 @@ function zen_date_short($raw_date)
     $second = (int)substr($raw_date, 17, 2);
 
     return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-
 }
 
 
