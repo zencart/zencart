@@ -85,12 +85,7 @@ function zen_date_short($raw_date)
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-// error on 1969 only allows for leap year
-    if ($year != 1969 && @date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
-        return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-        return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
-    }
+    return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
 
 }
 
