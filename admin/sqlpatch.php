@@ -252,7 +252,7 @@ function executeSql($lines, $database, $table_prefix = '') {
           $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
         case (substr($line_upper, 0, 10) == 'INNER JOIN '):
-          $line = 'INNER JOIN ' . $table_prefix . ltrim(substr($line, 12));
+          $line = 'INNER JOIN ' . $table_prefix . ltrim(substr($line, 11));
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));

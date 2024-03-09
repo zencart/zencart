@@ -74,6 +74,7 @@ class zcDatabaseInstaller
             'UPDATE IGNORE ',
             'DELETE FROM ',
             'DROP INDEX ',
+            'INNER JOIN ',
             'LEFT JOIN ',
             'FROM ',
             ') ENGINE=MYISAM',
@@ -485,11 +486,20 @@ class zcDatabaseInstaller
         } else {
             $this->line = 'ALTER TABLE ' . $this->dbPrefix . substr($this->line, 12);
 
+            $exists = false;
+
             switch (strtoupper($this->lineSplit[3])) {
+                case 'CHANGE':
+                case 'MODIFY':
+                    // Check to see if the column / index already exists
+                    // we treat it falsey in this case because we cannot perform the change if the column is not present
+                    $exists = !$this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
+                    $result = sprintf(REASON_COLUMN_DOESNT_EXIST_TO_CHANGE, $this->lineSplit[4]);
+                    $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+                    break;
                 case 'ADD':
                 case 'DROP':
                     // Check to see if the column / index already exists
-                    $exists = false;
                     switch (strtoupper($this->lineSplit[4])) {
                         case 'COLUMN':
                             $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[5]);
@@ -525,14 +535,13 @@ class zcDatabaseInstaller
                             // No known item added, MySQL defaults to column definition unless the action is to drop the item, then it is the reverse.
                             $exists = strtoupper($this->lineSplit[3]) !== 'DROP' && $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
                     }
-                    // Ignore this line if the column / index already exists
-                    if ($exists) {
-                        $this->ignoreLine = true;
-                    }
-
                     break;
                 default:
                     // Do nothing
+            }
+            // Ignore this line if the column / index already exists
+            if ($exists) {
+                $this->ignoreLine = true;
             }
         }
     }
@@ -587,7 +596,7 @@ class zcDatabaseInstaller
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
             error_log($result . "\n" . $this->line . "\n---------------\n\n");
         } else {
-            $this->line = 'INNER JOIN ' . $this->dbPrefix . substr($this->line, 12);
+            $this->line = 'INNER JOIN ' . $this->dbPrefix . substr($this->line, 11);
         }
     }
 
