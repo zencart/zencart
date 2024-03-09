@@ -34,5 +34,5 @@ if (PRODUCT_LIST_ALPHA_SORTER === 'true') {
     } else {
         echo '<label class="inputLabel sr-only" for="select-alpha_filter_id">' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES . '</label>';
     }
-    echo zen_draw_pull_down_menu('alpha_filter_id', $letters_list, ($_GET['alpha_filter_id'] ?? ''), 'onchange="this.form.submit()"');
+    echo zen_draw_pull_down_menu('alpha_filter_id', $letters_list, ($_GET['alpha_filter_id'] ?? ''), 'onchange="this.form.submit()" aria-label="' . TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES . '"');
 }

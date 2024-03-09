@@ -97,7 +97,7 @@
 
             // draw filter_id (ie: category/mfg depending on $options)
             if ($do_filter_list) {
-                echo zen_draw_pull_down_menu('filter_id', $options, ($_GET['filter_id'] ?? ''), 'onchange="this.form.submit()"');
+                echo zen_draw_pull_down_menu('filter_id', $options, ($_GET['filter_id'] ?? ''), 'aria-label="' . TEXT_SHOW . '" onchange="this.form.submit()"');
             }
 
 
