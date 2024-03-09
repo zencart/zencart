@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 22 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2024 Mar 07 Modified in v2.0.0-rc1 $
  */
 /** @var \Aura\Autoload\Loader $psr4Autoloader */
 $psr4Autoloader->setClassFile('Zencart\SessionHandler', DIR_FS_CATALOG . DIR_WS_CLASSES . 'SessionHandler.php' );
