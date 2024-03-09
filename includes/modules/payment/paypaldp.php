@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 20 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 Mar 05 Modified in v2.0.0-rc1 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
