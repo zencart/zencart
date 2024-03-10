@@ -261,27 +261,46 @@ class ot_gv {
       }
     }
   }
-  /**
-   * check system to see if GVs should be made available or not. If true, then supply GV-selection fields on checkout pages
-   */
-  function credit_selection() {
-    global $db, $currencies;
-    $selection = array();
-    $gv_query = $db->Execute("SELECT coupon_id FROM " . TABLE_COUPONS . " WHERE coupon_type = 'G' AND coupon_active='Y'");
-    // checks to see if any GVs are in the system and active or if the current customer has any GV balance
-    if ($gv_query->RecordCount() > 0 || $this->use_credit_amount()) {
-      $selection = array('id' => $this->code,
-                         'module' => $this->title,
-                         'redeem_instructions' => MODULE_ORDER_TOTAL_GV_REDEEM_INSTRUCTIONS,
-                         'checkbox' => $this->use_credit_amount(),
-                         'fields' => array(array('title' => MODULE_ORDER_TOTAL_GV_TEXT_ENTER_CODE,
-                         'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-'.$this->code.'" onkeyup="submitFunction(0,0)"'),
-                         'tag' => 'disc-'.$this->code,
-                         )));
 
+    /**
+    * check system to see if GVs should be made available or not. If true, then supply GV-selection fields on checkout pages
+    */
+    function credit_selection()
+    {
+        global $db, $order;
+
+        // -----
+        // Don't offer a GV payment for orders that contain **only** GV's!
+        //
+        $only_gvs_in_order = true;
+        foreach ($order->products as $next_product) {
+            if (str_starts_with($next_product['model'], 'GIFT') === false) {
+                $only_gvs_in_order = false;
+                break;
+            }
+        }
+
+        $selection = [];
+        $gv_query = $db->Execute("SELECT coupon_id FROM " . TABLE_COUPONS . " WHERE coupon_type = 'G' AND coupon_active = 'Y' LIMIT 1");
+        // checks to see if any GVs are in the system and active or if the current customer has any GV balance
+        if ($only_gvs_in_order === false && (!$gv_query->EOF || $this->use_credit_amount())) {
+            $selection = [
+                'id' => $this->code,
+                'module' => $this->title,
+                'redeem_instructions' => MODULE_ORDER_TOTAL_GV_REDEEM_INSTRUCTIONS,
+                'checkbox' => $this->use_credit_amount(),
+                'fields' => [
+                    [
+                        'title' => MODULE_ORDER_TOTAL_GV_TEXT_ENTER_CODE,
+                        'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-' . $this->code . '" onkeyup="submitFunction(0,0)"'),
+                        'tag' => 'disc-'.$this->code,
+                    ],
+                ],
+            ];
+        }
+        return $selection;
     }
-    return $selection;
-  }
+
   /**
    * Verify that the customer has entered a valid redemption amount, and return the amount that can be applied to this order
    */
