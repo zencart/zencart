@@ -279,11 +279,14 @@ class ot_gv {
                 break;
             }
         }
+        if ($only_gvs_in_order === true) {
+            return [];
+        }
 
         $selection = [];
         $gv_query = $db->Execute("SELECT coupon_id FROM " . TABLE_COUPONS . " WHERE coupon_type = 'G' AND coupon_active = 'Y' LIMIT 1");
         // checks to see if any GVs are in the system and active or if the current customer has any GV balance
-        if ($only_gvs_in_order === false && (!$gv_query->EOF || $this->use_credit_amount())) {
+        if (!$gv_query->EOF || $this->use_credit_amount()) {
             $selection = [
                 'id' => $this->code,
                 'module' => $this->title,
