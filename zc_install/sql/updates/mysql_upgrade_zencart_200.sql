@@ -110,7 +110,9 @@ FROM zones z
 INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'CHE';
 
 ### Austria
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Vorarlberg' WHERE c.countries_iso_code_3 = 'AUT' AND z.zone_code = 'VB';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Vorarlberg' WHERE c.countries_iso_code_3 = 'AUT' AND z.zone_code = 'VB';
+
 ### Italia
 INSERT INTO zones ( zone_country_id, zone_code, zone_name ) SELECT * FROM
 (SELECT countries_id AS zone_country_id, 'SU' AS zone_code, 'Sud Sardegna' AS zone_name
