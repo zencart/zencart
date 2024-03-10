@@ -22,28 +22,52 @@ if (!function_exists('zen_date_raw')) {
     function zen_date_raw($date, $reverse = false) {
         // sometimes zen_date_short is called with a zero-date value which returns false, which is then passed to $date here, so this just reformats to avoid confusion.
         if (empty($date) || strpos($date, '0001') || strpos($date, '0000')) {
-            $date = '01/01/0001';
+            $date = DateTime::createFromFormat('!m/d/Y', '01/01/0001')->format(DATE_FORMAT);
         }
 
-        if (DATE_FORMAT === 'd/m/Y') {
+		$date = preg_replace('/\D+/', '', $date);		
+		$date_format = str_replace(['/', '-'], '', DATE_FORMAT);
+
+        if ($date_format === 'dmY') {
             if ($reverse) {
-                return substr($date, 0, 2) . substr($date, 3, 2) . substr($date, 6, 4);
+                return substr($date, 0, 2) . substr($date, 2, 2) . substr($date, 4, 4);
             } else {
-                return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
+                return substr($date, 4, 4) . substr($date, 2, 2) . substr($date, 0, 2);
             }
-        } elseif (DATE_FORMAT === 'Y/m/d') {
+        } elseif ($date_format === 'Ymd') {
             if ($reverse) {
-                return substr($date, 8, 2) . substr($date, 5, 2) . substr($date, 0, 4);
+                return substr($date, 6, 2) . substr($date, 4, 2) . substr($date, 0, 4);
             } else {
-                return substr($date, 0, 4) . substr($date, 5, 2) . substr($date, 8, 2);
+                return substr($date, 0, 4) . substr($date, 4, 2) . substr($date, 6, 2);
             }
         } elseif ($reverse) {
-            return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
+            return substr($date, 2, 2) . substr($date, 0, 2) . substr($date, 4, 4);
         } else {
-            return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
+            return substr($date, 4, 4) . substr($date, 0, 2) . substr($date, 2, 2);
         }
     }
 }
+
+
+/**
+ * Validate a date in the selected locale date format
+ *
+ * @param string $date
+ * @param string $format (optional) needs to be a valid short date format for DateTimeImmutableObject using / or - or nothing as separators
+ * @return bool|true|false
+ */
+function zen_valid_date(string $date, $format = DATE_FORMAT)
+{
+	//Validate date using DATE_FORMAT by default as reference format.
+	$format0 = str_replace('-', '/', $format);
+	$format1 = str_replace('/', '-', $format);
+    $format2 = str_replace(['/','-'], '', $format);
+    $d0 = DateTime::createFromFormat('!' . $format0, $date);
+    $d1 = DateTime::createFromFormat('!' . $format1, $date);
+    $d2 = DateTime::createFromFormat('!' . $format2, $date);
+    return ($d0 && $d0->format($format0) == $date) || ($d1 && $d1->format($format1) == $date) || ($d2 && $d2->format($format2) == $date);
+}
+
 
 /**
  * Output a raw date string in the selected locale date format

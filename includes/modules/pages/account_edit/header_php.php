@@ -54,7 +54,7 @@ if (!empty($_POST['action']) && $_POST['action'] == 'process') {
 
   if (ACCOUNT_DOB == 'true') {
     if (ENTRY_DOB_MIN_LENGTH > 0 or !empty($_POST['dob'])) {
-      if (strlen($dob) >10 || validDate($dob) === false) {
+      if (strlen($dob) >10 || zen_valid_date($dob) === false) {
         $error = true;
         $messageStack->add('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
       }
