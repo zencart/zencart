@@ -154,6 +154,7 @@ function page_has_help()
         FILENAME_GV_SENT => 'https://docs.zen-cart.com/user/admin_pages/discounts/gift_certificates_sent/',
         FILENAME_PROFILES => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_profiles/',
         FILENAME_USERS => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_users/',
+        FILENAME_ADMIN_ACCOUNT => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_account/',
         FILENAME_ADMIN_PAGE_REGISTRATION => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_page_registration/',
         FILENAME_ADMIN_ACTIVITY => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_activity_logs/',
         FILENAME_RECORD_ARTISTS => 'https://docs.zen-cart.com/user/admin_pages/extras/record_artists/',
