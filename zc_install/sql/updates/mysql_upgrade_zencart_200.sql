@@ -5,7 +5,7 @@
 # * @copyright Copyright 2003-2024 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Scott Wilson 2024 Feb 25 Modified in v2.0.0-beta1 $
+# * @version $Id: Scott Wilson 2024 Mar 09 Modified in v2.0.0-rc1 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -100,10 +100,19 @@ UPDATE countries SET countries_name = 'Türkiye' WHERE countries_iso_code_3 = 'T
 
 #############
 #### Updated zone names.
+
+### NOTE: while it may not read very human-friendly, line-breaks have been inserted before FROM and INNER JOIN keywords
+###       so that the zc_install parser can properly apply the table-name prefixes if they exist
+
 ### Switzerland
-DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'CHE';
+DELETE z
+FROM zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'CHE';
+
 ### Austria
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Vorarlberg' WHERE c.countries_iso_code_3 = 'AUT' AND z.zone_code = 'VB';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Vorarlberg' WHERE c.countries_iso_code_3 = 'AUT' AND z.zone_code = 'VB';
+
 ### Italia
 INSERT INTO zones ( zone_country_id, zone_code, zone_name ) SELECT * FROM
 (SELECT countries_id AS zone_country_id, 'SU' AS zone_code, 'Sud Sardegna' AS zone_name
@@ -112,17 +121,32 @@ FROM zones WHERE zone_country_id = (SELECT countries_id
 FROM countries WHERE countries_iso_code_3 = 'ITA' LIMIT 1) AND zone_code = 'SU' LIMIT 1)
 LIMIT 1;
 
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Valle D\'Aosta' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'AO';
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Barletta-Andria-Trani' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'BT';
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Forlì-Cesena' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'FC';
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'L\'Aquila' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'AQ';
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Massa-Carrara' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'MS';
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Pesaro E Urbino' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'PU';
-UPDATE zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Verbano-Cusio-Ossola' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'VB';
-DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'CI';
-DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'VS';
-DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'OG';
-DELETE z FROM zones z INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'OT';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Valle D\'Aosta' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'AO';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Barletta-Andria-Trani' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'BT';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Forlì-Cesena' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'FC';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'L\'Aquila' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'AQ';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Massa-Carrara' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'MS';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Pesaro E Urbino' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'PU';
+UPDATE zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id SET z.zone_name = 'Verbano-Cusio-Ossola' WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'VB';
+DELETE z
+FROM zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'CI';
+DELETE z
+FROM zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'VS';
+DELETE z
+FROM zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'OG';
+DELETE z
+FROM zones z
+INNER JOIN countries c ON z.zone_country_id = c.countries_id WHERE c.countries_iso_code_3 = 'ITA' AND z.zone_code = 'OT';
 #############
 
 ## Fix typos in old configuration keys
@@ -167,7 +191,7 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='2', project_version_minor='0.0-beta1', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.8->2.0.0-beta1', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
-UPDATE project_version SET project_version_major='2', project_version_minor='0.0-beta1', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.8->2.0.0-beta1', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
+UPDATE project_version SET project_version_major='2', project_version_minor='0.0-rc1', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.8->2.0.0-rc1', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='2', project_version_minor='0.0-rc1', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 1.5.8->2.0.0-rc1', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 ##### END OF UPGRADE SCRIPT

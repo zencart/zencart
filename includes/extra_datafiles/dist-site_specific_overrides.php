@@ -11,7 +11,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2024 Feb 11 Modified in v2.0.0-beta1 $
+ * @version $Id: Scott C Wilson 2024 Mar 01 Modified in v2.0.0-rc1 $
  */
 // -----
 // Identify whether the link to the 'accessibility' page is included in the "Information" sidebox.

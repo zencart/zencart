@@ -22,7 +22,7 @@ foreach($_GET as $key => $value) {
 echo zen_hide_session_id();
 ?>
     <label for="disp-order-sorter" class="inputLabel"><?php echo TEXT_INFO_SORT_BY; ?></label>
-    <select name="disp_order" onchange="this.form.submit();" id="disp-order-sorter">
+    <select name="disp_order" onchange="this.form.submit();" aria-label="<?php echo TEXT_INFO_SORT_BY;?>" id="disp-order-sorter">
 <?php if (false && $disp_order > 0) { // reset to store default ?>
     <option value="<?php echo $disp_order_default; ?>" <?php echo ($disp_order === $disp_order_default ? 'selected="selected"' : ''); ?>><?php echo PULL_DOWN_ALL_RESET; ?></option>
 <?php } ?>

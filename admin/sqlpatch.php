@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2023 Mar 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2024 Mar 07 Modified in v2.0.0-rc1 $
  */
 require('includes/application_top.php');
 
@@ -252,7 +252,7 @@ function executeSql($lines, $database, $table_prefix = '') {
           $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
         case (substr($line_upper, 0, 10) == 'INNER JOIN '):
-          $line = 'INNER JOIN ' . $table_prefix . ltrim(substr($line, 12));
+          $line = 'INNER JOIN ' . $table_prefix . ltrim(substr($line, 11));
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));

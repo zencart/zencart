@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Aug 18 Modified in v2.0.0-alpha1 $
+ * @version $Id: piloujp 2024 Mar 09 Modified in v2.0.0-rc1 $
  */
 
 // Normally this zen_date_raw function will ONLY be defined here.
@@ -109,13 +109,7 @@ function zen_date_short($raw_date)
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-// error on 1969 only allows for leap year
-    if ($year != 1969 && @date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
-        return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-        return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
-    }
-
+    return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
 }
 
 
