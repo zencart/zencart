@@ -251,8 +251,14 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
         die();
     }
 
+    /**
+     * Catch undefined constants
+     */
+    zen_define_default('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID', 2);
+
     // this is used to determine whether a record needs insertion. ie: original echeck notice failed, but now we have cleared, so need parent record established:
     $new_record_needed = ($txn_type === 'unique');
+
     /**
      * evaluate what type of transaction we're processing
      */
@@ -513,7 +519,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                     $new_status = ($isECtransaction ? (int)MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID : (int)MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID);
                     break;
                 case 'echeck-cleared':
-                    $new_status = (defined('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID') ? MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID : 2);
+                    $new_status = (int)MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID;
                     break;
                 case ($txn_type === 'express-checkout-cleared' || str_starts_with($txn_type, 'cleared-')):
                     //express-checkout-cleared
