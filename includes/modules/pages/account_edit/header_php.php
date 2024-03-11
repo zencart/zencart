@@ -54,14 +54,7 @@ if (!empty($_POST['action']) && $_POST['action'] == 'process') {
 
   if (ACCOUNT_DOB == 'true') {
     if (ENTRY_DOB_MIN_LENGTH > 0 or !empty($_POST['dob'])) {
-      // Support ISO-8601 style date
-      if (preg_match('/^([0-9]{4})(|-|\/)([0-9]{2})\2([0-9]{2})$/', $dob)) {
-        // Account for incorrect date format provided to strtotime such as swapping day and month instead of the expected yyyymmdd, yyyy-mm-dd, or yyyy/mm/dd format
-        if (strtotime($dob) !== false) {
-          $_POST['dob'] = $dob = date(DATE_FORMAT, strtotime($dob));
-        }
-      }
-      if (substr_count($dob,'/') > 2 || checkdate((int)substr(zen_date_raw($dob), 4, 2), (int)substr(zen_date_raw($dob), 6, 2), (int)substr(zen_date_raw($dob), 0, 4)) == false) {
+      if (strlen($dob) >10 || zen_valid_date($dob) === false) {
         $error = true;
         $messageStack->add('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
       }
@@ -181,10 +174,7 @@ if (ACCOUNT_GENDER == 'true') {
 }
 
 if (!(isset($_POST['action']) && ($_POST['action'] == 'process'))) {
-  // Posted page content is not requested to be processed, populate dob with customer's database entry.
-  // Using ISO-8601 format of date display to support javascript/jQuery driven date picker data handling.
-  $dob = zen_date_raw(zen_date_short($account->fields['customers_dob']));
-  $dob = substr($dob, 0, 4) . '-' . substr($dob, 4, 2) . '-' . substr($dob, 6, 2);
+  $dob = zen_date_short($account->fields['customers_dob']);
   if ($dob <= '0001-01-01') {
     $dob = '0001-01-01 00:00:00';
   }
