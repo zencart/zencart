@@ -54,9 +54,9 @@ if (!function_exists('zen_date_raw')) {
  *
  * @param string $date
  * @param string $format (optional) needs to be a valid short date format for DateTimeImmutableObject using / or - or nothing as separators
- * @return bool|true|false
+ * @return bool
  */
-function zen_valid_date(string $date, $format = DATE_FORMAT)
+function zen_valid_date(string $date, string $format = DATE_FORMAT): bool
 {
 	// Build 3 formats from 1 with 3 possible separators
 	$format0 = str_replace('-', '/', $format);

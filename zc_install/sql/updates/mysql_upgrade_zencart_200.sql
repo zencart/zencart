@@ -179,7 +179,7 @@ UPDATE configuration SET configuration_description = 'What is the weight of typi
 ALTER TABLE template_select ADD template_settings LONGTEXT DEFAULT NULL;
 
 # Change minimum dob field length for new date VALIDATION
-UPDATE configuration SET configuration_value = 8 WHERE configuration_key = 'ENTRY_DOB_MIN_LENGTH';
+UPDATE configuration SET configuration_value = 8 WHERE configuration_key = 'ENTRY_DOB_MIN_LENGTH' AND configuration_value=10;
 
 
 #### VERSION UPDATE STATEMENTS
