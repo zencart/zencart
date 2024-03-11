@@ -58,7 +58,7 @@ if (!function_exists('zen_date_raw')) {
  */
 function zen_valid_date(string $date, $format = DATE_FORMAT)
 {
-	//Validate date using DATE_FORMAT by default as reference format.
+	// Build 3 formats from 1 with 3 possible separators
 	$format0 = str_replace('-', '/', $format);
 	$format1 = str_replace('/', '-', $format);
     $format2 = str_replace(['/','-'], '', $format);
