@@ -859,12 +859,12 @@ class order extends base
         //
         if (DISPLAY_PRICE_WITH_TAX === 'true') {
             $shown_price =
-                $currencies->value(zen_add_tax($product_final_price, $product_tax_rate)) * $product_qty
-                    + $currencies->value(zen_add_tax($product_onetime_charges, $product_tax_rate));
+                $currencies->value(zen_add_tax($product_final_price, $product_tax_rate), false) * $product_qty
+                    + $currencies->value(zen_add_tax($product_onetime_charges, $product_tax_rate), false);
         } else {
             $shown_price =
-                $currencies->value($product_final_price * $product_qty)
-                    + $currencies->value($product_onetime_charges);
+                $currencies->value($product_final_price * $product_qty, false)
+                    + $currencies->value($product_onetime_charges, false);
         }
 
         $this->info['subtotal'] += $shown_price;
@@ -900,11 +900,11 @@ class order extends base
             // currency.
             //
             if ($displaying_prices_with_tax === false) {
-                $tax_to_add = $currencies->value(zen_calculate_tax($tax_info['subtotal'], $tax_info['tax_rate']));
+                $tax_to_add = $currencies->value(zen_calculate_tax($tax_info['subtotal'], $tax_info['tax_rate']), false);
             } else {
                 $tax_rate = $tax_info['tax_rate'];
                 $tax_rate_divisor = ($tax_rate >= 10) ? "1.$tax_rate" : "1.0$tax_rate";
-                $tax_to_add = $tax_info['subtotal'] - $currencies->value($tax_info['subtotal'] / $tax_rate_divisor);
+                $tax_to_add = $tax_info['subtotal'] - $currencies->value($tax_info['subtotal'] / $tax_rate_divisor, false);
             }
 
             $this->info['tax'] += $tax_to_add;
