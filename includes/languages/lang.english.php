@@ -463,6 +463,7 @@ $define = [
     'TEXT_NO_NEW_PRODUCTS' => 'More new products will be added soon. Please check back later.',
     'TEXT_NO_PROD_RESTRICTIONS' => 'This coupon is valid for all products.',
     'TEXT_NO_PROD_SALES' => 'This coupon is not valid for products on sale.',
+    'TEXT_NO_SHIPPING_AVAILABLE_ESTIMATOR' => 'Sorry, we have no online options for shipping this order to the address shown.  Please contact us for alternate arrangements!',
     'TEXT_NO_REVIEWS' => 'There are currently no product reviews.',
     'TEXT_NUMBER_SYMBOL' => '# ',
     'TEXT_OF_5_STARS' => '',

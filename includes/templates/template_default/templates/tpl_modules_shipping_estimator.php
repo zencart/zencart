@@ -166,7 +166,14 @@
       }
 ?>
 </table>
-<?php
+<?php 
+      if (empty($quotes)) { 
+?>
+      <div id="noShippingAvailable" class="alert important">
+         <?php echo TEXT_NO_SHIPPING_AVAILABLE_ESTIMATOR; ?>
+      </div>
+<?php 
+      } 
    }
   }
 echo '</form>'; ?>
