@@ -900,11 +900,11 @@ class order extends base
             // currency.
             //
             if ($displaying_prices_with_tax === false) {
-                $tax_to_add = $currencies->value(zen_calculate_tax($tax_info['subtotal'], $tax_info['tax_rate']), false);
+                $tax_to_add = zen_calculate_tax($tax_info['subtotal'], $tax_info['tax_rate']);
             } else {
                 $tax_rate = $tax_info['tax_rate'];
                 $tax_rate_divisor = ($tax_rate >= 10) ? "1.$tax_rate" : "1.0$tax_rate";
-                $tax_to_add = $tax_info['subtotal'] - $currencies->value($tax_info['subtotal'] / $tax_rate_divisor, false);
+                $tax_to_add = $tax_info['subtotal'] - $tax_info['subtotal'] / $tax_rate_divisor;
             }
 
             $this->info['tax'] += $tax_to_add;
