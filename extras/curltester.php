@@ -48,35 +48,29 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
 
 <?php
 
-echo 'Connecting to USPS (port 80)...<br>';
-doCurlTest('http://production.shippingapis.com/shippingapi.dll');
+echo 'Connecting to USPS ...<br>';
+doCurlTest('https://secure.shippingapis.com/ShippingAPI.dll');
 if (isset($_GET['old']) && $_GET['old'] == '1') {
-  echo '2nd test, using old method: ';
-  dofsockTest('production.shippingapis.com', 80);
+  echo '2nd test, using old http method on old endpoint: ';
+    doCurlTest('http://production.shippingapis.com/shippingapi.dll');
 }
 
-echo 'Connecting to USPS Test/Staging/Sandbox Server (port 80)...<br>';
-doCurlTest('http://stg-production.shippingapis.com/ShippingApi.dll');
-if (isset($_GET['old']) && $_GET['old'] == '1') {
-  echo '2nd test, using old method: ';
-  dofsockTest('stg-production.shippingapis.com', 80);
-}
-
-echo 'Connecting to UPS (port 80)...<br>';
-doCurlTest('http://www.ups.com/using/services/rave/qcostcgi.cgi');
-dofsockTest('www.ups.com', 80);
+echo 'Connecting to USPS Test/Staging/Sandbox Server ...<br>';
+doCurlTest('https://stg-secure.shippingapis.com/ShippingApi.dll');
 
 echo 'Connecting to UPSXML (onlinetools.ups.com) ...<br>';
-doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
+doCurlTest('https://onlinetools.ups.com/api/rating/v1/Shop');
+//doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
 
 echo 'Connecting to UPSXML (sandbox) ...<br>';
-doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
+doCurlTest('https://wwwcie.ups.com/api/rating/v1/Shop');
+//doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
 
 echo 'Connecting to FedEx (port 80)...<br>';
 dofsockTest('fedex.com', 80);
 
 echo 'Connecting to Canada Post SellOnline HTTP/S ...<br>';
-doCurlTest('https://sellonline-cybervente.canadapost-postescanada.ca/'); 
+doCurlTest('https://sellonline-cybervente.canadapost-postescanada.ca/');
 
 echo 'Connecting to Canada Post REST API (SSL) ...<br>';
 doCurlTest('https://soa-gw.canadapost.ca/rs/ship/price');
