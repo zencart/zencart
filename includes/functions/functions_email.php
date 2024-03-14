@@ -506,7 +506,10 @@
             if ($ErrorInfo !== '') {
                 $mail_langs = $mail->getTranslations();
                 if (strpos($ErrorInfo, $mail_langs['recipients_failed']) === false) {
-                    trigger_error('Email Error: ' . $ErrorInfo);
+                   // Don't log SMTP rejected spam; log others
+                   if (!str_contains($ErrorInfo, 'spam content')) {
+                       trigger_error('Email Error: ' . $ErrorInfo);
+                   }
                 } else {
                     $log_prefix = (IS_ADMIN_FLAG === true) ? '/myDEBUG-bounced-email-adm-' : '/myDEBUG-bounced-email-';
                     $log_date = new DateTime();
