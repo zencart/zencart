@@ -236,3 +236,7 @@ modified_files.txt
 .ddev
 **/security_test.php
 
+# laravel
+
+laravel/.env
+

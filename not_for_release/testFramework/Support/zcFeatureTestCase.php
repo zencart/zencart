@@ -9,6 +9,7 @@ namespace Tests\Support;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestResult;
 use Tests\Support\Traits\ConfigurationSettingsConcerns;
+use Tests\Support\Traits\LowOrderFeeConcerns;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\DatabaseConcerns;
 use Tests\Support\Traits\GeneralConcerns;
@@ -20,7 +21,7 @@ use Tests\Support\Traits\LogFileConcerns;
  */
 abstract class zcFeatureTestCase extends WebTestCase
 {
-    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns, LogFileConcerns;
+    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns, LogFileConcerns, LowOrderFeeConcerns;
 
     static $firstrun = false;
 
