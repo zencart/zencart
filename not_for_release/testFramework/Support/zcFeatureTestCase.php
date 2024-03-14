@@ -9,6 +9,8 @@ namespace Tests\Support;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestResult;
 use Tests\Support\Traits\ConfigurationSettingsConcerns;
+use Tests\Support\Traits\DiscountCouponConcerns;
+use Tests\Support\Traits\LowOrderFeeConcerns;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\DatabaseConcerns;
 use Tests\Support\Traits\GeneralConcerns;
@@ -20,7 +22,7 @@ use Tests\Support\Traits\LogFileConcerns;
  */
 abstract class zcFeatureTestCase extends WebTestCase
 {
-    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns, LogFileConcerns;
+    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns, LogFileConcerns, LowOrderFeeConcerns, DiscountCouponConcerns;
 
     static $firstrun = false;
 
@@ -61,7 +63,6 @@ abstract class zcFeatureTestCase extends WebTestCase
         if (!defined('TEXT_PROGRESS_FINISHED')) {
             define('TEXT_PROGRESS_FINISHED', '');
         }
-
         self::removeLogFiles();
 
     }

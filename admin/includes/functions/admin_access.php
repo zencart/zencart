@@ -19,7 +19,7 @@ function check_page($page, $params = [])
 {
     global $db;
     if (!isset($_SESSION['admin_id'])) return false;
-    
+
     $page_params = '';
     // Most entries (normal case) have their own pages. However, everything on the Configuration
     // and Modules menus are handled by the single pages configuration.php and modules.php. So for

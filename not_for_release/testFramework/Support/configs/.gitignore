@@ -1,4 +1,5 @@
 *.configure.php
+*.configure.php.example
 *.db_configure.php
 
 !runner.admin.configure.php

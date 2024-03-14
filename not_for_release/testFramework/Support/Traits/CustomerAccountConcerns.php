@@ -2,18 +2,25 @@
 
 namespace Tests\Support\Traits;
 
+use App\Models\CouponGvCustomer;
+use App\Models\Customer;
 use Tests\Support\helpers\ProfileManager;
 
 trait CustomerAccountConcerns
 {
 
-    public function createCustomerAccount($profileName)
+
+    public function createCustomerAccountOrLogin($profileName)
     {
-        //echo 'Creating account for ' . $profileName . PHP_EOL;
+        $profile = ProfileManager::getProfile($profileName);
+        $customer = Customer::where('customers_email_address', $profile['email_address'])->first();
+        if ($customer) {
+            $this->loginCustomer($profileName);
+            return $profile;
+        }
         $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=create_account');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $profile = ProfileManager::getProfile($profileName);
         $this->browser->submitForm('Submit the Information', $profile);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Your Account Has Been Created', (string)$response->getContent());
@@ -40,6 +47,51 @@ trait CustomerAccountConcerns
         $profile = ProfileManager::getProfileForLogin($profileName);
         $this->browser->submitForm('Sign In', $profile);
         return $profile;
+    }
+
+    public function getCouponBalanceCustomer($customerEmail)
+    {
+        $customerId = $this->getCustomerIdFromEmail($customerEmail);
+        $gv = CouponGvCustomer::where('customer_id', $customerId)->first();
+        if (!$gv) {
+            return 0;
+        }
+        return $gv['amount'];
+    }
+
+    public function getCustomerIdFromEmail($customerEmail)
+    {
+        $customer = Customer::where('customers_email_address', $customerEmail)->first();
+        return $customer['customers_id'];
+    }
+
+    public function addGiftVoucherBalance($customerEmail, $value)
+    {
+        $customerId = $this->getCustomerIdFromEmail($customerEmail);
+        $gv = CouponGvCustomer::where('customer_id', $customerId)->first();
+        if (!$gv) {
+            CouponGvCustomer::query()->create(['customer_id' => $customerId, 'amount' => $value]);
+        } else {
+            $gv->amount = $value;
+            $gv->save();
+        }
+    }
+
+    public function setCustomerGroupDiscount($customerEmail, $value)
+    {
+        $customerId = $this->getCustomerIdFromEmail($customerEmail);
+        $gp = Customer::where('customers_id', $customerId)->first();
+        if (!$gp) {
+            return;
+        }
+        $gp->customers_group_pricing = $value;
+        $gp->save();
+    }
+    public function updateGVBalance($profile)
+    {
+        if ($this->getCouponBalanceCustomer($profile['email_address']) < 300) {
+            $this->addGiftVoucherBalance($profile['email_address'], 1000);
+        }
     }
 
 }

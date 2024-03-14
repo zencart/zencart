@@ -14,15 +14,17 @@ class BasicTaxStoreWithShippingTest extends zcFeatureTestCaseStore
             return;
         }
         static::$ready = true;
-        $this->createCustomerAccount('florida-basic1');
-        $this->createCustomerAccount('US-not-florida-basic');
         $this->setConfiguration('STORE_PRODUCT_TAX_BASIS', 'Store');
         $this->setConfiguration('MODULE_SHIPPING_ITEM_TAX_CLASS', 1);
     }
 
+    /**
+     * @test
+     * scenario BTC 7
+     */
     public function testBasicCheckoutFloridaCustomer()
     {
-        $this->loginCustomer('florida-basic1');
+        $this->createCustomerAccountOrLogin('florida-basic1');
         $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&products_id=25');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Microsoft', (string)$response->getContent() );
@@ -57,9 +59,13 @@ class BasicTaxStoreWithShippingTest extends zcFeatureTestCaseStore
         $this->assertStringContainsString('Your Order Number is:', (string)$response->getContent() );
     }
 
+    /**
+     * @test
+     * scenario BTC 8
+     */
     public function testBasicCheckoutNonFloridaCustomer()
     {
-        $this->loginCustomer('US-not-florida-basic');
+        $this->createCustomerAccountOrLogin('US-not-florida-basic');
         $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&products_id=25');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Microsoft', (string)$response->getContent() );

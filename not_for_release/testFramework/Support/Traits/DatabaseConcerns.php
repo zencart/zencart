@@ -4,6 +4,7 @@ namespace Tests\Support\Traits;
 
 use App\Services\MigrationsRunner;
 use App\Services\SeederRunner;
+use Doctrine\DBAL\Configuration;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use InitialSeeders\DatabaseSeeder;
 
@@ -34,12 +35,10 @@ trait DatabaseConcerns
         if (!defined('IS_ADMIN_FLAG')) {
             define('IS_ADMIN_FLAG', false);
         }
-
     }
 
-    public static function runMigrations()
+    public static function runDatabaseLoader($mainConfigs)
     {
-        echo 'Running Migrations' . PHP_EOL;
         $options = [
             'db_host' => DB_SERVER,
             'db_user' => DB_SERVER_USERNAME,
@@ -57,24 +56,30 @@ trait DatabaseConcerns
             'message' => '',
         ];
 
+        echo 'Running mysql_zencart.sql' . PHP_EOL;
         $file = ROOTCWD . 'zc_install/sql/install/mysql_zencart.sql';
         $dbInstaller = new \zcDatabaseInstaller($options);
         $conn = $dbInstaller->getConnection();
         $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
-    }
-
-    public static function runInitialSeeders()
-    {
-        echo 'Running Initial Seeders' . PHP_EOL;
+        echo 'Running mysql_utf8.sql' . PHP_EOL;
+        $file = ROOTCWD . 'zc_install/sql/install/mysql_utf8.sql';
+        $dbInstaller = new \zcDatabaseInstaller($options);
+        $conn = $dbInstaller->getConnection();
+        $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
+        echo 'Running mysql_demo.sql' . PHP_EOL;
+        $file = ROOTCWD . 'zc_install/sql/demo/mysql_demo.sql';
+        $dbInstaller = new \zcDatabaseInstaller($options);
+        $conn = $dbInstaller->getConnection();
+        $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
         $runner = new SeederRunner();
-        $runner->run('InitialSeeders', 'DatabaseSeeder');
+        $runner->run('InitialSetupSeeder', $mainConfigs);
     }
 
     public static function runCustomSeeder($seederClass)
     {
         echo 'Running Custom Seeder' . PHP_EOL;
         $runner = new SeederRunner();
-        $runner->run('CustomSeeders', $seederClass);
+        $runner->run($seederClass);
     }
 
 }

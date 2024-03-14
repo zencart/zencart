@@ -25,9 +25,12 @@ abstract class zcFeatureTestCaseAdmin extends zcFeatureTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        $mainConfigs = self::loadConfigureFile('main');
         self::loadConfigureFile('admin');
-        self::loadMigrationAndSeeders();
-
+        if (!defined('TABLE_ADDRESS_BOOK')) {
+            require DIR_FS_CATALOG . 'includes/database_tables.php';
+        }
+        self::loadMigrationAndSeeders($mainConfigs);
     }
 
     public function tearDown(): void
