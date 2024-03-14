@@ -666,7 +666,7 @@ class order extends base
                 'price' => $products[$i]['price'],
                 'tax' => null, // calculated later
                 'tax_groups' => null, // calculated later
-                'final_price' => (DISPLAY_PRICE_WITH_TAX === 'true') ? $products_final_price_without_tax : zen_round($products_final_price_without_tax, $decimals),
+                'final_price' => $products_final_price_without_tax,
                 'onetime_charges' => $_SESSION['cart']->attributes_price_onetime_charges($products[$i]['id'], $products[$i]['quantity']),
                 'weight' => $products[$i]['weight'],
                 'length' => $products[$i]['length'] ?? null,
@@ -859,12 +859,12 @@ class order extends base
         //
         if (DISPLAY_PRICE_WITH_TAX === 'true') {
             $shown_price =
-                $currencies->value(zen_add_tax($product_final_price, $product_tax_rate), false) * $product_qty
-                    + $currencies->value(zen_add_tax($product_onetime_charges, $product_tax_rate), false);
+                zen_add_tax($product_final_price, $product_tax_rate) * $product_qty
+                    + zen_add_tax($product_onetime_charges, $product_tax_rate);
         } else {
             $shown_price =
-                $currencies->value($product_final_price * $product_qty, false)
-                    + $currencies->value($product_onetime_charges, false);
+                $product_final_price * $product_qty
+                    + $product_onetime_charges;
         }
 
         $this->info['subtotal'] += $shown_price;
