@@ -2,6 +2,9 @@
 
 namespace Tests\Support\Traits;
 
+use App\Models\CouponGvCustomer;
+use App\Models\Customer;
+use App\Models\GroupPricing;
 use Tests\Support\helpers\ProfileManager;
 
 trait CustomerAccountConcerns
@@ -42,4 +45,42 @@ trait CustomerAccountConcerns
         return $profile;
     }
 
+    public function getCouponBalanceCustomer($customerEmail)
+    {
+        $customerId = $this->getCustomerIdFromEmail($customerEmail);
+        $gv = CouponGvCustomer::where('customer_id', $customerId)->first();
+        if (!$gv) {
+            return 0;
+        }
+        return $gv['amount'];
+    }
+
+    public function getCustomerIdFromEmail($customerEmail)
+    {
+        $customer = Customer::where('customers_email_address', $customerEmail)->first();
+        return $customer['customers_id'];
+    }
+
+    public function addGiftVoucherBalance($customerEmail, $value)
+    {
+        $customerId = $this->getCustomerIdFromEmail($customerEmail);
+        $gv = CouponGvCustomer::where('customer_id', $customerId)->first();
+        if (!$gv) {
+            CouponGvCustomer::query()->create(['customer_id' => $customerId, 'amount' => $value]);
+        } else {
+            $gv->amount = $value;
+            $gv->save();
+        }
+    }
+
+    public function setCustomerGroupDiscount($customerEmail, $value)
+    {
+        $customerId = $this->getCustomerIdFromEmail($customerEmail);
+        $gp = Customer::where('customers_id', $customerId)->first();
+        if (!$gp) {
+            return;
+        }
+        $gp->customers_group_pricing = $value;
+        $gp->save();
+    }
 }

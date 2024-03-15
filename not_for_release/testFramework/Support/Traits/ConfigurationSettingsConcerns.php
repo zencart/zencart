@@ -27,7 +27,7 @@ trait ConfigurationSettingsConcerns
 
     public function switchItemShippingTax($mode = 'on')
     {
-        $this->setConfiguration('MODULE_SHIPPING_ITEM_TAX_CLASS', $mode == 'on' ? '2' : '0');
+        $this->setConfiguration('MODULE_SHIPPING_ITEM_TAX_CLASS', $mode == 'on' ? '1' : '0');
     }
 
     public function switchFlatShippingTax($mode = 'on')
