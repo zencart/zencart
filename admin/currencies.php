@@ -16,7 +16,7 @@ if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
-      if ($_POST['title'] == '' || $_POST['code'] == '') {
+      if (empty($_POST['title']) || empty($_POST['code']) || strlen($_POST['code']) > 3) {
         $_GET['action'] = '';
         $messageStack->add_session(ERROR_INVALID_CURRENCY_ENTRY, 'error');
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
