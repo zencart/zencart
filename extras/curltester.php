@@ -66,11 +66,11 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     echo 'Connecting to USPS Test/Staging/Sandbox Server ...<br>';
     doCurlTest('https://stg-secure.shippingapis.com/ShippingApi.dll');
 
-    echo 'Connecting to UPSXML (onlinetools.ups.com) ...<br>';
+    echo 'Connecting to UPS (onlinetools.ups.com) ...<br>';
     doCurlTest('https://onlinetools.ups.com/api/rating/v1/Shop');
     //doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
 
-    echo 'Connecting to UPSXML (sandbox) ...<br>';
+    echo 'Connecting to UPS (sandbox) ...<br>';
     doCurlTest('https://wwwcie.ups.com/api/rating/v1/Shop');
     //doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
 
