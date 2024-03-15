@@ -1700,7 +1700,7 @@ if ($action === 'edit' || $action === 'update') {
         $additional_columns = [];
         $zco_notifier->notify(
             'NOTIFY_ADMIN_CUSTOMERS_LISTING_ELEMENT',
-            $customer,
+            $result,
             $additional_columns
         );
         if (is_array($additional_columns) && count($additional_columns) !== 0) {
