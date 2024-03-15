@@ -926,7 +926,7 @@ class shoppingCart extends base
                     }
                     ////////////////////////////////////////////////
 
-                    $attributesTotal += zen_round($productTotal, $decimalPlaces);
+                    $attributesTotal += $productTotal;
                 } // eof foreach
             } // attributes price
             $productTotal = $savedProductTotal + $attributesTotal;
@@ -976,11 +976,11 @@ class shoppingCart extends base
                   }
             */
 
-            $this->total += zen_round(zen_add_tax($productTotal, $products_tax), $decimalPlaces) * $qty;
-            $this->total += zen_round(zen_add_tax($totalOnetimeCharge, $products_tax), $decimalPlaces);
-            $this->free_shipping_price += zen_round(zen_add_tax($freeShippingTotal, $products_tax), $decimalPlaces) * $qty;
+            $this->total += zen_add_tax($productTotal, $products_tax) * $qty;
+            $this->total += zen_add_tax($totalOnetimeCharge, $products_tax);
+            $this->free_shipping_price += zen_add_tax($freeShippingTotal, $products_tax) * $qty;
             if ($is_free_shipping === true) {
-                $this->free_shipping_price += zen_round(zen_add_tax($totalOnetimeCharge, $products_tax), $decimalPlaces);
+                $this->free_shipping_price += zen_add_tax($totalOnetimeCharge, $products_tax);
             }
 
 // ******* WARNING ADD ONE TIME ATTRIBUTES, PRICE FACTOR
@@ -1106,7 +1106,7 @@ class shoppingCart extends base
             $_SESSION['cart_errors'] .= zen_get_products_name($attribute_price['products_id'], $_SESSION['languages_id'])  . ERROR_PRODUCT_OPTION_SELECTION . '<br>';
             }
             */
-            $total_attributes_price += zen_round($attributes_price, $currencies->get_decimal_places($_SESSION['currency']));
+            $total_attributes_price += $attributes_price;
         }
 
         return $total_attributes_price;

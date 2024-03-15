@@ -115,7 +115,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
 
     // $ppe is product price each, before one-time charges added
     $ppe = $products[$i]['final_price'];
-    $ppe = zen_round(zen_add_tax($ppe, zen_get_tax_rate($products[$i]['tax_class_id'])), $currencies->get_decimal_places($_SESSION['currency']));
+    $ppe = zen_add_tax($ppe, zen_get_tax_rate($products[$i]['tax_class_id']));
     // $ppt is product price total, before one-time charges added
     $ppt = $ppe * $products[$i]['quantity'];
 
