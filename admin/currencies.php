@@ -16,7 +16,7 @@ if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
-      if ($_POST['title'] == '' || $_POST['code'] == '') {
+      if (empty($_POST['title']) || empty($_POST['code'])) {
         $_GET['action'] = '';
         $messageStack->add_session(ERROR_INVALID_CURRENCY_ENTRY, 'error');
         zen_redirect(zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
@@ -184,14 +184,14 @@ if (!empty($action)) {
 
                 $contents = array('form' => zen_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . (isset($cInfo) ? '&cID=' . $cInfo->currencies_id : '') . '&action=insert', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_TITLE, 'title', 'class="control-label"') . zen_draw_input_field('title', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_CODE, 'code', 'class="control-label"') . zen_draw_input_field('code', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_LEFT, 'symbol_left', 'class="control-label"') . zen_draw_input_field('symbol_left', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_RIGHT, 'symbol_right', 'class="control-label"') . zen_draw_input_field('symbol_right', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_POINT, 'decimal_point', 'class="control-label"') . zen_draw_input_field('decimal_point', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_THOUSANDS_POINT, 'thousands_point', 'class="control-label"') . zen_draw_input_field('thousands_point', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_PLACES, 'decimal_places', 'class="control-label"') . zen_draw_input_field('decimal_places', '', 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_VALUE, 'value', 'class="control-label"') . zen_draw_input_field('value', '', 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_TITLE, 'title', 'class="control-label"') . zen_draw_input_field('title', '', zen_set_field_length(TABLE_CURRENCIES, 'title', '32') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_CODE, 'code', 'class="control-label"') . zen_draw_input_field('code', '', zen_set_field_length(TABLE_CURRENCIES, 'code', '3') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_LEFT, 'symbol_left', 'class="control-label"') . zen_draw_input_field('symbol_left', '', zen_set_field_length(TABLE_CURRENCIES, 'symbol_left', '32') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_RIGHT, 'symbol_right', 'class="control-label"') . zen_draw_input_field('symbol_right', '', zen_set_field_length(TABLE_CURRENCIES, 'symbol_right', '32') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_POINT, 'decimal_point', 'class="control-label"') . zen_draw_input_field('decimal_point', '', zen_set_field_length(TABLE_CURRENCIES, 'decimal_point', '1') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_THOUSANDS_POINT, 'thousands_point', 'class="control-label"') . zen_draw_input_field('thousands_point', '', zen_set_field_length(TABLE_CURRENCIES, 'thousands_point', '1') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_PLACES, 'decimal_places', 'class="control-label"') . zen_draw_input_field('decimal_places', '', zen_set_field_length(TABLE_CURRENCIES, 'decimal_places', '1') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_VALUE, 'value', 'class="control-label"') . zen_draw_input_field('value', '', 'size="15" maxlength="14" class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
@@ -200,14 +200,14 @@ if (!empty($action)) {
 
                 $contents = array('form' => zen_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_TITLE, 'title', 'class="control-label"') . zen_draw_input_field('title', htmlspecialchars($cInfo->title, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_CODE, 'code', 'class="control-label"') . zen_draw_input_field('code', htmlspecialchars($cInfo->code, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_LEFT, 'symbol_left', 'class="control-label"') . zen_draw_input_field('symbol_left', htmlspecialchars($cInfo->symbol_left, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_RIGHT, 'symbol_right', 'class="control-label"') . zen_draw_input_field('symbol_right', htmlspecialchars($cInfo->symbol_right, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_POINT, 'decimal_point', 'class="control-label"') . zen_draw_input_field('decimal_point', htmlspecialchars($cInfo->decimal_point, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_THOUSANDS_POINT, 'thousands_point', 'class="control-label"') . zen_draw_input_field('thousands_point', htmlspecialchars($cInfo->thousands_point, ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_PLACES, 'decimal_places', 'class="control-label"') . zen_draw_input_field('decimal_places', $cInfo->decimal_places, 'class="form-control"'));
-                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_VALUE, 'value', 'class="control-label"') . zen_draw_input_field('value', $cInfo->value, 'class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_TITLE, 'title', 'class="control-label"') . zen_draw_input_field('title', htmlspecialchars($cInfo->title, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CURRENCIES, 'title', '32') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_CODE, 'code', 'class="control-label"') . zen_draw_input_field('code', htmlspecialchars($cInfo->code, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CURRENCIES, 'code', '3') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_LEFT, 'symbol_left', 'class="control-label"') . zen_draw_input_field('symbol_left', htmlspecialchars($cInfo->symbol_left, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CURRENCIES, 'symbol_left', '32') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_SYMBOL_RIGHT, 'symbol_right', 'class="control-label"') . zen_draw_input_field('symbol_right', htmlspecialchars($cInfo->symbol_right, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CURRENCIES, 'symbol_right', '32') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_POINT, 'decimal_point', 'class="control-label"') . zen_draw_input_field('decimal_point', htmlspecialchars($cInfo->decimal_point, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CURRENCIES, 'decimal_point', '1') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_THOUSANDS_POINT, 'thousands_point', 'class="control-label"') . zen_draw_input_field('thousands_point', htmlspecialchars($cInfo->thousands_point, ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_CURRENCIES, 'thousands_point', '1') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_PLACES, 'decimal_places', 'class="control-label"') . zen_draw_input_field('decimal_places', $cInfo->decimal_places, zen_set_field_length(TABLE_CURRENCIES, 'decimal_places', '1') . ' class="form-control"'));
+                $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_VALUE, 'value', 'class="control-label"') . zen_draw_input_field('value', $cInfo->value, 'size="15" maxlength="14" class="form-control"'));
                 if (DEFAULT_CURRENCY != $cInfo->code) {
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
                 }
