@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 02 Modified in v2.0.0-beta1 $
+ * @version $Id: lat9 2024 Jan 19 Modified in v2.0.0-alpha1 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -556,23 +556,23 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           //
           // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
           //
-          // $extra_headings = array(
-          //     array(
+          // $extra_headings = [
+          //     [
           //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-          //       'text' => $value
-          //     ),
-          // );
+          //       'text' => $value,
+          //     ],
+          // ];
           //
           // Observer notes:
-          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          // - Be sure to check that the $p2/$extra_headings value is specifically empty before initializing, since
           //   multiple observers might be injecting content!
           // - If heading-columns are added, be sure to add the associated data columns, too, via the
           //   'NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY' notification.
           //
           if ($show_prod_labels) {
-              $extra_headings = false;
+              $extra_headings = [];
               $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_HEADERS_B4_QTY', '', $extra_headings);
-              if (is_array($extra_headings)) {
+              if (!empty($extra_headings)) {
                   foreach ($extra_headings as $heading_info) {
                       $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
 ?>
@@ -595,12 +595,12 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           // $extra_headings = [
           //     [
           //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-          //       'text' => $value
+          //       'text' => $value,
           //     ],
           // ];
           //
           // Observer notes:
-          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          // - Be sure to check that the $p2/$extra_headings value is specifically empty before initializing, since
           //   multiple observers might be injecting content!
           // - If heading-columns are added, be sure to add the associated data columns, too, via the
           //   'NOTIFY_ADMIN_CATEGORY_LISTING_DATA' notification.
@@ -612,7 +612,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           //   must also watch the 'NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY' notification to insert the
           //   product-based columns' data, e.g. '&nbsp;', so that all columns are properly aligned!
           //
-          $extra_headings = false;
+          $extra_headings = [];
           $zco_notifier->notify(
               'NOTIFY_ADMIN_CATEGORY_LISTING_HEADERS',
               [
@@ -622,7 +622,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               ],
               $extra_headings
           );
-          if (is_array($extra_headings)) {
+          if (!empty($extra_headings)) {
               foreach ($extra_headings as $heading_info) {
                   $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
 ?>
@@ -636,23 +636,23 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
           //
           // A watching observer can provide an associative array in the following format (for the products' listing ONLY):
           //
-          // $extra_headings = array(
-          //     array(
+          // $extra_headings = [
+          //     [
           //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-          //       'text' => $value
-          //     ),
-          // );
+          //       'text' => $value,
+          //     ],
+          // ];
           //
           // Observer notes:
-          // - Be sure to check that the $p2/$extra_headings value is specifically (bool)false before initializing, since
+          // - Be sure to check that the $p2/$extra_headings value is specifically empty before initializing, since
           //   multiple observers might be injecting content!
           // - If heading-columns are added, be sure to add the associated data columns, too, via the
           //   'NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY' notification.
           //
           if ($show_prod_labels) {
-              $extra_headings = false;
+              $extra_headings = [];
               $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY', '', $extra_headings);
-              if (is_array($extra_headings)) {
+              if (!empty($extra_headings)) {
                   foreach ($extra_headings as $heading_info) {
                       $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
 ?>
@@ -721,19 +721,19 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               // $extra_data = [
               //     [
               //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-              //       'text' => $value
+              //       'text' => $value,
               //     ],
               // ];
               //
               // Observer notes:
-              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              // - Be sure to check that the $p2/$extra_data value is specifically empty before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_CATEGORY_LISTING_HEADERS' notification.
               //
-              $extra_data = false;
+              $extra_data = [];
               $zco_notifier->notify('NOTIFY_ADMIN_CATEGORY_LISTING_DATA', $category, $extra_data);
-              if (is_array($extra_data)) {
+              if (!empty($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
 ?>
@@ -933,22 +933,22 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //
               // A watching observer can provide an associative array in the following format:
               //
-              // $extra_data = array(
-              //     array(
+              // $extra_data = [
+              //     [
               //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-              //       'text' => $value
-              //     ),
-              // );
+              //       'text' => $value,
+              //     ],
+              // ];
               //
               // Observer notes:
-              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              // - Be sure to check that the $p2/$extra_data value is specifically empty before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_B4_QTY' notification.
               //
-              $extra_data = false;
+              $extra_data = [];
               $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_B4_QTY', $product, $extra_data);
-              if (is_array($extra_data)) {
+              if (!empty($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
 ?>
@@ -964,22 +964,22 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               //
               // A watching observer can provide an associative array in the following format:
               //
-              // $extra_data = array(
-              //     array(
+              // $extra_data = [
+              //     [
               //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
-              //       'text' => $value
-              //     ),
-              // );
+              //       'text' => $value,
+              //     ],
+              // ];
               //
               // Observer notes:
-              // - Be sure to check that the $p2/$extra_data value is specifically (bool)false before initializing, since
+              // - Be sure to check that the $p2/$extra_data value is specifically empty before initializing, since
               //   multiple observers might be injecting content!
               // - If heading-columns are added, be sure to add the associated header columns, too, via the
               //   'NOTIFY_ADMIN_PROD_LISTING_HEADERS_AFTER_QTY' notification.
               //
-              $extra_data = false;
+              $extra_data = [];
               $zco_notifier->notify('NOTIFY_ADMIN_PROD_LISTING_DATA_AFTER_QTY', $product, $extra_data);
-              if (is_array($extra_data)) {
+              if (!empty($extra_data)) {
                   foreach ($extra_data as $data_info) {
                       $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
 ?>
