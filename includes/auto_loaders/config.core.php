@@ -170,11 +170,11 @@ $autoLoadConfig[45][] = [
 /**
  * Breakpoint 47
  *
- * require DIR_WS_CLASSES . 'split_page_results.php';
+ * require 'includes/init_includes/init_split_page_results.php';
  */
 $autoLoadConfig[47][] = [
-    'autoType' => 'class',
-    'loadFile' => 'split_page_results.php',
+    'autoType' => 'init_script',
+    'loadFile' => 'init_split_page_results.php',
 ];
 /**
  * Breakpoint 50.
