@@ -29,7 +29,6 @@ if (!defined('USE_PCONNECT')) {
  * require DIR_WS_CLASSES . 'currencies.php';
  * require DIR_WS_CLASSES . 'message_stack.php';
  * require DIR_WS_CLASSES . 'template_func.php';
- * require DIR_WS_CLASSES . 'split_page_results.php';
  * require DIR_WS_CLASSES . 'breadcrumb.php';
  * require DIR_WS_CLASSES . 'language.php';
  * require DIR_WS_CLASSES . 'zcDate.php';
@@ -67,10 +66,6 @@ $autoLoadConfig[0][] = [
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
     'loadFile' => 'template_func.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'split_page_results.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
@@ -139,6 +134,16 @@ $autoLoadConfig[5][] = [
     'autoType' => 'classInstantiate',
     'className' => 'zcDate',
     'objectName' => 'zcDate',
+];
+
+/**
+ * Breakpoint 10
+ *
+ * require DIR_WS_CLASSES . 'split_page_results.php';
+ */
+$autoLoadConfig[10][] = [
+    'autoType' => 'class',
+    'loadFile' => 'split_page_results.php',
 ];
 
 /**
