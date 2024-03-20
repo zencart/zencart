@@ -137,16 +137,6 @@ $autoLoadConfig[5][] = [
 ];
 
 /**
- * Breakpoint 10
- *
- * require DIR_WS_CLASSES . 'split_page_results.php';
- */
-$autoLoadConfig[10][] = [
-    'autoType' => 'class',
-    'loadFile' => 'split_page_results.php',
-];
-
-/**
  * Breakpoint 30.
  *
  * $zc_cache = new cache();
@@ -176,6 +166,15 @@ $autoLoadConfig[40][] = [
 $autoLoadConfig[45][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_non_db_settings.php',
+];
+/**
+ * Breakpoint 47
+ *
+ * require DIR_WS_CLASSES . 'split_page_results.php';
+ */
+$autoLoadConfig[47][] = [
+    'autoType' => 'class',
+    'loadFile' => 'split_page_results.php',
 ];
 /**
  * Breakpoint 50.
