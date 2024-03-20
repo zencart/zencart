@@ -22,13 +22,6 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           tools: composer, phpunit
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v4
-        with:
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          path: ${{ steps.composer-cache.outputs.dir }}
-          restore-keys: ${{ runner.os }}-composer-
-
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
 
