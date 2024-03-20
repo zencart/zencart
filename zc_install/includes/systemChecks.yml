@@ -208,6 +208,14 @@ systemChecks:
         parameters:
           mysqlVersion: 5.7.8
           mariaDBVersion: 10.2.7
+  checkintl:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_INTL .PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: intl
   checkjson:
     runLevel: always
     errorLevel: FAIL

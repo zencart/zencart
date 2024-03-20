@@ -154,6 +154,7 @@ return [
 'TEXT_ERROR_DB_CONNECTION_UPGRADE' => 'Problems with database connection based on the entries in your current configure.php',
 'TEXT_ERROR_SET_TIME_LIMIT' => 'max_execution_time setting disabled',
 'TEXT_ERROR_GD' => 'GD Extension not enabled',
+'TEXT_ERROR_INTL' => 'INTL Extension not enabled. Required for date-handling and locale support.',
 'TEXT_ERROR_JSON' => 'JSON Extension not enabled. Required for parsing data in many parts of the application.',
 'TEXT_ERROR_FILEINFO' => 'Fileinfo extension not enabled. Used for calculating file sizes.',
 'TEXT_ERROR_ZLIB' => 'Zlib Extension not enabled',
