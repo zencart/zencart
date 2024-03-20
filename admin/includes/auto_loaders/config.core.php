@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -25,7 +24,6 @@ if (!defined('USE_PCONNECT')) {
  * require DIR_WS_CLASSES . 'table_block.php';
  * require DIR_WS_CLASSES . 'box.php';
  * require DIR_WS_CLASSES . 'message_stack.php';
- * require DIR_WS_CLASSES . 'split_page_results.php';
  * require DIR_WS_CLASSES . 'object_info.php';
  * require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.phpmailer.php';
  * require DIR_FS_CATALOG . DIR_WS_CLASSES . 'upload.php';
@@ -74,11 +72,6 @@ $autoLoadConfig[0][] = [
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
     'loadFile' => 'message_stack.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'split_page_results.php',
     'classPath' => DIR_WS_CLASSES,
 ];
 $autoLoadConfig[0][] = [
@@ -184,6 +177,15 @@ $autoLoadConfig[20][] = [
 $autoLoadConfig[25][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_non_db_settings_admin.php',
+];
+/**
+ * Breakpoint 27
+ *
+ * require 'includes/init_includes/init_split_page_results.php';
+ */
+$autoLoadConfig[27][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_split_page_results.php',
 ];
 /**
  * Breakpoint 30.
