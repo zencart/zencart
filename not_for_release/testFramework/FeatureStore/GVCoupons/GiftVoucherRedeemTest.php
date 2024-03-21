@@ -105,7 +105,7 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
         $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
         $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['cot_gv' => '1.5', 'payment' => '']);
+        $this->browser->submitForm('Continue', ['cot_gv' => '1,5', 'payment' => '']);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('SEK6,4259', (string)$response->getContent() );
         $this->setConfiguration('DEFAULT_CURRENCY', 'USD');
@@ -121,7 +121,7 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
         $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=gv_send');
-        $this->browser->submitForm('Send Now', ['to_name' => 'Tom Bombadil', 'email' => 'foo@example.com', 'amount' => '20.50', 'message' => 'This is a test message']);
+        $this->browser->submitForm('Send Now', ['to_name' => 'Tom Bombadil', 'email' => 'foo@example.com', 'amount' => '20,50', 'message' => 'This is a test message']);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Send Gift Certificate Confirmation', (string)$response->getContent() );
         $this->assertStringContainsString('SEK20,50', (string)$response->getContent() );
