@@ -168,15 +168,6 @@ $autoLoadConfig[45][] = [
     'loadFile' => 'init_non_db_settings.php',
 ];
 /**
- * Breakpoint 47
- *
- * require 'includes/init_includes/init_split_page_results.php';
- */
-$autoLoadConfig[47][] = [
-    'autoType' => 'init_script',
-    'loadFile' => 'init_split_page_results.php',
-];
-/**
  * Breakpoint 50.
  *
  * $sniffer = new sniffer();
@@ -306,6 +297,15 @@ $autoLoadConfig[110][] = [
 $autoLoadConfig[110][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_templates.php',
+];
+/**
+ * Breakpoint 115
+ *
+ * require 'includes/init_includes/init_split_page_results.php';
+ */
+$autoLoadConfig[115][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_split_page_results.php',
 ];
 /**
  * Breakpoint 120.
