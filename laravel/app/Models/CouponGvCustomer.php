@@ -1,0 +1,18 @@
+<?php
+/**
+ * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version GIT: $Id: $
+ */
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
+class CouponGvCustomer extends Eloquent
+{
+    protected $table = TABLE_COUPON_GV_CUSTOMER;
+    protected $primaryKey = 'customer_id';
+    public $timestamps = false;
+    protected $guarded = [];
+}
