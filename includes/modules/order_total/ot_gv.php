@@ -50,11 +50,11 @@ class ot_gv {
     protected $deduction;
     /**
      * $description is a soft name for this order total method
-     * @var string 
+     * @var string
      */
     public $description;
     /**
-     * $header the module box header 
+     * $header the module box header
      * @var string
      */
     public $header;
@@ -98,7 +98,7 @@ class ot_gv {
      * @var array
      */
     protected $validation_errors = [];
-  
+
   /**
    * process gift vouchers
    *
@@ -122,7 +122,7 @@ class ot_gv {
     $this->credit_class = true;
     if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true && zen_is_logged_in() && !zen_in_guest_checkout()) {
-      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($_SESSION['cot_gv'], 2) . '" onfocus="if (this.value == \'' . number_format($_SESSION['cot_gv'], 2) . '\') this.value = \'\';">' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
+      $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2) . '" onfocus="if (this.value == \'' . number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2) . '\') this.value = \'\';">' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
     }
     $this->output = array();
     if (IS_ADMIN_FLAG === true) {
@@ -539,7 +539,7 @@ class ot_gv {
   }
 
   function help() {
-       return array('link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/'); 
+       return array('link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/');
   }
 
   /**
