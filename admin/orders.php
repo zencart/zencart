@@ -578,9 +578,11 @@ if (!empty($action) && $order_exists === true) {
         <div class="row noprint"><?php echo zen_draw_separator(); ?></div>
         <div class="row">
           <div class="col-sm-4">
-            <table class="table">
+            <table class="table" id="addressCustomer">
               <tr>
-                <td><strong><?php echo ENTRY_CUSTOMER_ADDRESS; ?></strong></td>
+                <td><strong><?php echo ENTRY_CUSTOMER_ADDRESS; ?></strong><br>
+                    <button type="button" class="btn btn-xs btn-default" title="<?= TEXT_COPY ?>" style="margin-top: 1rem" onclick="copyToClipboard('customer', this)"><?= TEXT_COPY ?></button>
+                </td>
                 <td><?php echo zen_address_format($order->customer['format_id'], $order->customer, 1, '', '<br>'); ?></td>
               </tr>
               <tr>
@@ -622,11 +624,11 @@ if (!empty($action) && $order_exists === true) {
               <tr>
                 <td class="noprint"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
                 <td class="noprint">
-                  <?php 
-                  if ($order->customer['id'] == 0) { 
-                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>'; 
+                  <?php
+                  if ($order->customer['id'] == 0) {
+                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>';
                   } else {
-                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $order->customer['id'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>'; 
+                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $order->customer['id'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>';
                   }
                   ?>
                 </td>
@@ -634,9 +636,11 @@ if (!empty($action) && $order_exists === true) {
             </table>
           </div>
           <div class="col-sm-4">
-            <table class="table">
+            <table class="table" id="addressDelivery">
               <tr>
-                <td><strong><?php echo ENTRY_SHIPPING_ADDRESS; ?></strong></td>
+                <td><strong><?php echo ENTRY_SHIPPING_ADDRESS; ?></strong><br>
+                    <button type="button" class="btn btn-xs btn-default" title="<?= TEXT_COPY ?>" style="margin-top: 1rem" onclick="copyToClipboard('delivery', this)"><?= TEXT_COPY ?></button>
+                </td>
                 <td><?php echo (empty($order->delivery)) ? TEXT_NONE : zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
               </tr>
 <?php if (!empty($order->delivery)) { ?>
@@ -655,9 +659,11 @@ if (!empty($action) && $order_exists === true) {
             </table>
           </div>
           <div class="col-sm-4">
-            <table class="table">
+            <table class="table" id="addressBilling">
               <tr>
-                <td><strong><?php echo ENTRY_BILLING_ADDRESS; ?></strong></td>
+                <td><strong><?php echo ENTRY_BILLING_ADDRESS; ?></strong><br>
+                    <button type="button" class="btn btn-xs btn-default" title="<?= TEXT_COPY ?>" style="margin-top: 1rem" onclick="copyToClipboard('billing', this)"><?= TEXT_COPY ?></button>
+                </td>
                 <td><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, '', '<br>'); ?></td>
               </tr>
               <tr>
@@ -1418,11 +1424,11 @@ if ($show_orders_weights === true) {
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '"><i class="fa-solid fa-magnifying-glass"></i></a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
 <?php if ($show_zone_info) { ?>
                 <td class="dataTableContent text-left">
-<?php 
-                    if (!empty($orders->fields['delivery_country'])) { 
-                       echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; 
+<?php
+                    if (!empty($orders->fields['delivery_country'])) {
+                       echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country'];
                     } else {
-                       echo $orders->fields['customers_state'] . '<br>' . $orders->fields['customers_country']; 
+                       echo $orders->fields['customers_state'] . '<br>' . $orders->fields['customers_country'];
                     }
 ?>
                 </td>
