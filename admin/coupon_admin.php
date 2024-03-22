@@ -39,12 +39,13 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
         'cd.coupon_name',
         'cd.coupon_description',
         'c.coupon_code',
-        'c.referrer'
+        'cr.referrer_domain'
     ];
     $searchWords = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
     $sql = "SELECT c.coupon_id, c.coupon_active
             FROM " . TABLE_COUPONS . " c
             LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd ON cd.coupon_id = c.coupon_id
+            LEFT JOIN " . TABLE_COUPON_REFERRERS . " cr ON cr.coupon_id = c.coupon_id
             " . $searchWords . $active;
   $search = $db->Execute($sql);
   if ($search->EOF) {
