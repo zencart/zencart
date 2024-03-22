@@ -587,16 +587,25 @@ if (!empty($action) && $order_exists === true) {
                 <td>&nbsp;</td>
                 <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?php echo urlencode($order->customer['street_address'] . ',' . $order->customer['city'] . ',' .  $order->customer['state'] . ',' . $order->customer['postcode']); ?>" rel="noreferrer" target="map"><i class="fa-regular fa-map">&nbsp;</i> <u><?php echo TEXT_MAP_CUSTOMER_ADDRESS; ?></u></a></td>
               </tr>
-<?php
-  $address_footer_suffix = '';
-  $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'customer', $address_footer_suffix, $order->customer);
-  if (!empty($address_footer_suffix)) {
-  ?>
-                <tr><td>&nbsp;</td><td><?php echo $address_footer_suffix; ?></td></tr>
-<?php } ?>
-              <tr class="noprint">
-                <td colspan="2"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
-              </tr>
+                <?php
+                $address_footer_suffix = '';
+                $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'customer', $address_footer_suffix, $order->customer);
+                if (is_array($address_footer_suffix)) {
+                    foreach ($address_footer_suffix as $label => $data) {
+                        ?>
+                        <tr>
+                            <td><strong><?= $label ?></td>
+                            <td><?= $data ?></td>
+                        </tr>
+                        <?php
+                    }
+                } elseif (!empty($address_footer_suffix)) { ?>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><?= $address_footer_suffix ?></td>
+                    </tr>
+                <?php
+                } ?>
               <tr>
                 <td><strong><?php echo ENTRY_TELEPHONE_NUMBER; ?></strong></td>
                 <td><a href="tel:<?php echo preg_replace('/\s+/', '', $order->customer['telephone']); ?>"><?php echo $order->customer['telephone']; ?></a></td>
@@ -622,11 +631,11 @@ if (!empty($action) && $order_exists === true) {
               <tr>
                 <td class="noprint"><strong><?php echo ENTRY_CUSTOMER; ?></strong></td>
                 <td class="noprint">
-                  <?php 
-                  if ($order->customer['id'] == 0) { 
-                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>'; 
+                  <?php
+                  if ($order->customer['id'] == 0) {
+                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'search=' . $order->customer['email_address'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>';
                   } else {
-                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $order->customer['id'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>'; 
+                       echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $order->customer['id'], 'SSL') . '">' . TEXT_CUSTOMER_LOOKUP . '</a>';
                   }
                   ?>
                 </td>
@@ -648,10 +657,22 @@ if (!empty($action) && $order_exists === true) {
   }
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'delivery', $address_footer_suffix, $order->delivery);
-  if (!empty($address_footer_suffix)) {
-  ?>
-                <tr><td>&nbsp;</td><td><?php echo $address_footer_suffix; ?></td></tr>
-<?php } ?>
+    if (is_array($address_footer_suffix)) {
+        foreach ($address_footer_suffix as $label => $data) {
+            ?>
+            <tr>
+                <td><strong><?= $label ?></td>
+                <td><?= $data ?></td>
+            </tr>
+            <?php
+        }
+    } elseif (!empty($address_footer_suffix)) { ?>
+        <tr>
+            <td>&nbsp;</td>
+            <td><?= $address_footer_suffix ?></td>
+        </tr>
+        <?php
+    } ?>
             </table>
           </div>
           <div class="col-sm-4">
@@ -667,7 +688,22 @@ if (!empty($action) && $order_exists === true) {
 <?php
   $address_footer_suffix = '';
   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_ADDRESS_FOOTERS', 'billing', $address_footer_suffix, $order->billing);
-
+if (is_array($address_footer_suffix)) {
+    foreach ($address_footer_suffix as $label => $data) {
+        ?>
+        <tr>
+            <td><strong><?= $label ?></td>
+            <td><?= $data ?></td>
+        </tr>
+        <?php
+    }
+} elseif (!empty($address_footer_suffix)) { ?>
+    <tr>
+        <td>&nbsp;</td>
+        <td><?= $address_footer_suffix ?></td>
+    </tr>
+    <?php
+}
   // -----
   // Determine, based on a 'soft' configuration setting in admin/extra_datafiles/site_specific_admin_overrides.php,
   // whether to display the order's overall and product-specific weights.
@@ -677,11 +713,7 @@ if (!empty($action) && $order_exists === true) {
   // display the weights!
   //
   $show_orders_weights = ($order->info['order_weight'] !== null && ((bool)($show_orders_weights ?? true)));
-
-  if (!empty($address_footer_suffix)) {
-  ?>
-                <tr><td>&nbsp;</td><td><?php echo $address_footer_suffix; ?></td></tr>
-<?php } ?>
+?>
             </table>
           </div>
         </div>
@@ -1418,11 +1450,11 @@ if ($show_orders_weights === true) {
                 <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '"><i class="fa-solid fa-magnifying-glass"></i></a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
 <?php if ($show_zone_info) { ?>
                 <td class="dataTableContent text-left">
-<?php 
-                    if (!empty($orders->fields['delivery_country'])) { 
-                       echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; 
+<?php
+                    if (!empty($orders->fields['delivery_country'])) {
+                       echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country'];
                     } else {
-                       echo $orders->fields['customers_state'] . '<br>' . $orders->fields['customers_country']; 
+                       echo $orders->fields['customers_state'] . '<br>' . $orders->fields['customers_country'];
                     }
 ?>
                 </td>
