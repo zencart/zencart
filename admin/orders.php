@@ -581,7 +581,7 @@ if (!empty($action) && $order_exists === true) {
             <table class="table" id="addressCustomer">
               <tr>
                 <td><strong><?php echo ENTRY_CUSTOMER_ADDRESS; ?></strong><br>
-                    <button type="button" class="btn btn-xs btn-default" title="<?= TEXT_COPY ?>" style="margin-top: 1rem" onclick="copyToClipboard('customer', this)"><?= TEXT_COPY ?></button>
+                    <button type="button" class="btn btn-xs btn-default mt-3" title="<?= TEXT_COPY ?>" onclick="copyToClipboard('customer', this)"><?= TEXT_COPY ?></button>
                 </td>
                 <td><?php echo zen_address_format($order->customer['format_id'], $order->customer, 1, '', '<br>'); ?></td>
               </tr>
@@ -639,7 +639,7 @@ if (!empty($action) && $order_exists === true) {
             <table class="table" id="addressDelivery">
               <tr>
                 <td><strong><?php echo ENTRY_SHIPPING_ADDRESS; ?></strong><br>
-                    <button type="button" class="btn btn-xs btn-default" title="<?= TEXT_COPY ?>" style="margin-top: 1rem" onclick="copyToClipboard('delivery', this)"><?= TEXT_COPY ?></button>
+                    <button type="button" class="btn btn-xs btn-default mt-3" title="<?= TEXT_COPY ?>" onclick="copyToClipboard('delivery', this)"><?= TEXT_COPY ?></button>
                 </td>
                 <td><?php echo (empty($order->delivery)) ? TEXT_NONE : zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
               </tr>
@@ -662,7 +662,7 @@ if (!empty($action) && $order_exists === true) {
             <table class="table" id="addressBilling">
               <tr>
                 <td><strong><?php echo ENTRY_BILLING_ADDRESS; ?></strong><br>
-                    <button type="button" class="btn btn-xs btn-default" title="<?= TEXT_COPY ?>" style="margin-top: 1rem" onclick="copyToClipboard('billing', this)"><?= TEXT_COPY ?></button>
+                    <button type="button" class="btn btn-xs btn-default mt-3" title="<?= TEXT_COPY ?>" onclick="copyToClipboard('billing', this)"><?= TEXT_COPY ?></button>
                 </td>
                 <td><?php echo zen_address_format($order->billing['format_id'], $order->billing, 1, '', '<br>'); ?></td>
               </tr>
@@ -1438,8 +1438,7 @@ if ($show_orders_weights === true) {
                 </td>
 <?php if ($quick_view_popover_enabled) { ?>
                 <td class="dataTableContent text-right dataTableButtonCell">
-                    <a tabindex="0" class="btn btn-xs btn-link orderProductsPopover" role="button" data-toggle="popover"
-                       data-trigger="focus"
+                    <a tabindex="0" class="btn btn-xs btn-link mt-3 orderProductsPopover" role="button" data"focus"
                        data-placement="left"
                        title="<?php echo TEXT_PRODUCT_POPUP_TITLE; ?>"
                        data-content="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br />' => '<br>']); ?>"

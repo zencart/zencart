@@ -915,3 +915,41 @@ input.faint {
 tbody>tr>td.align-bottom {
   vertical-align: bottom;
 }
+
+.m-0 {
+    margin: 0 !important;
+}
+.m-1 {
+    margin: 0.25rem !important;
+}
+.m-2 {
+    margin: 0.5rem !important;
+}
+.m-3 {
+    margin: 1rem !important;
+}
+.m-4 {
+    margin: 1.5rem !important;
+}
+.m-5 {
+    margin: 3rem !important;
+}
+.mt-0 {
+    margin-top: 0 !important;
+}
+.mt-1 {
+    margin-top: 0.25rem !important;
+}
+.mt-2 {
+    margin-top: 0.5rem !important;
+}
+.mt-3 {
+    margin-top: 1rem !important;
+}
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+.mt-5 {
+    margin-top: 3rem !important;
+}
+/**/
