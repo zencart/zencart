@@ -55,7 +55,7 @@ switch ((int)$_GET['disp_order']) {
         $order_by = " ORDER BY p.products_date_added, pd.products_name";
         break;
     case 8:
-        $order_by = " ORDER BY p.products_sort_order, pd.products_name ";
+        $order_by = $default_sort_order ??  " ORDER BY p.products_sort_order, pd.products_name ";
         break;
     case 0:
         // reset

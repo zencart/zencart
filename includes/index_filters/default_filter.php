@@ -81,7 +81,7 @@ $where_str = "
 
 // $default_sort_order could be set in header_php or main_template_vars before we get here
 $order_by = $default_sort_order ?? '';
-if (empty($order_by)) {
+if (empty($order_by) || !empty($_GET['disp_order'])) {
     // Build ORDER BY sort chosen from dropdown, or apply defaults
     $order_by_backup = $order_by;
     require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER));
