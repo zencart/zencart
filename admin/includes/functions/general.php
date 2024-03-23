@@ -428,11 +428,11 @@ function zen_remove_order($order_id, $restock = false)
 
 function zen_call_function($function, $parameter, $object = '')
 {
-    if ($object == '') {
-        return call_user_func($function, $parameter);
+    if ($object === '') {
+        return $function($parameter);
     }
 
-    return call_user_func(array($object, $function), $parameter);
+    return call_user_func([$object, $function], $parameter);
 }
 
 //@todo - is there a function already for this query?
