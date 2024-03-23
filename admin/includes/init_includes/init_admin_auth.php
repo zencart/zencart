@@ -63,6 +63,11 @@ if (basename($PHP_SELF) !== FILENAME_ALERT_PAGE . '.php') {
             }
         }
 
+        // Do MFA validation
+        if (basename($PHP_SELF) !== FILENAME_MFA . '.php' && !empty($_SESSION['mfa']['pending']) && !empty($_SESSION['mfa']['token'])) {
+            zen_redirect(zen_href_link(FILENAME_MFA, zen_get_all_get_params('action')));
+        }
+
         // check page authorization access
         if (!in_array($page, [FILENAME_DEFAULT, FILENAME_ADMIN_ACCOUNT, FILENAME_LOGOFF, FILENAME_ALERT_PAGE, FILENAME_PASSWORD_FORGOTTEN, FILENAME_DENIED, FILENAME_ALT_NAV], true)
             && !zen_is_superuser())
