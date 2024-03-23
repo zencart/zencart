@@ -7,6 +7,10 @@
  */
 
 if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7);
+
+// The admin login slamming threshold is the minimum number of failed logins before an email is sent to the storeowner reporting ongoing failed logins
+zen_define_default('ADMIN_LOGIN_SLAMMING_THRESHOLD', 3);
+
 /**
  * Checks whether the currently logged on user has permission to access
  * the page passed as parameter $page, with GET $params . The function returns boolean
@@ -15,20 +19,22 @@ if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7
  * @param array $params
  * @return bool
  */
-function check_page($page, $params = [])
+function check_page(string $page, $params = []): bool
 {
     global $db;
-    if (!isset($_SESSION['admin_id'])) return false;
+    if (!isset($_SESSION['admin_id'])) {
+        return false;
+    }
 
     $page_params = '';
     // Most entries (normal case) have their own pages. However, everything on the Configuration
     // and Modules menus are handled by the single pages configuration.php and modules.php. So for
     // these pages we check their respective get params too.
     if (!empty($params)) {
-        if ($page == 'modules') {
+        if ($page === 'modules' && isset($params['set'])) {
             $page_params = 'set=' . $params['set'];
         }
-        if ($page == 'configuration') {
+        if ($page === 'configuration' && isset($params['gID'])) {
             $page_params = 'gID=' . $params['gID'];
         }
     }
@@ -66,38 +72,42 @@ function check_page($page, $params = [])
  * This way permission profiles only need to register the parent page.
  *
  * @param string $page FILENAME_XYZ page name
- * @param array $params
- * @return bool
+ * @param array $params (usually $_GET)
  */
-function check_related_page($page, $params)
+function check_related_page(string $page, $params = []): bool
 {
-    if ($page == FILENAME_BANNER_STATISTICS) {
+    if ($page === FILENAME_BANNER_STATISTICS) {
         return check_page(FILENAME_BANNER_MANAGER, $params);
+    }
+    if ($page === FILENAME_COUPON_REFERRERS) {
+        return check_page(FILENAME_COUPON_ADMIN, $params);
     }
     return false;
 }
 
-function zen_is_superuser()
+function zen_is_superuser(): bool
 {
     global $db;
-    if (!isset($_SESSION['admin_id'])) return false;
+    if (!isset($_SESSION['admin_id'])) {
+        return false;
+    }
     $sql = 'SELECT admin_id from ' . TABLE_ADMIN . '
             WHERE admin_id = :adminId:
             AND admin_profile = ' . SUPERUSER_PROFILE;
     $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     return $result->RecordCount() > 0;
 }
 
 /**
  * Get array of registered admin users
- * @param int $limit
+ * @param ?int $limit
  * @return array of Admin Users
  */
-function zen_get_users($limit = null)
+function zen_get_users($limit = null): array
 {
     global $db;
-    $retVal = array();
+    $retVal = [];
     $sql = 'SELECT a.*, p.profile_name FROM ' . TABLE_ADMIN . ' a
             LEFT JOIN ' . TABLE_ADMIN_PROFILES . ' p ON p.profile_id = a.admin_profile';
     if (!empty($limit)) {
@@ -106,24 +116,24 @@ function zen_get_users($limit = null)
     }
     $result = $db->Execute($sql);
     foreach ($result as $row) {
-        $retVal[] = array(
+        $retVal[] = [
             'id' => $row['admin_id'],
             'name' => $row['admin_name'],
             'email' => $row['admin_email'],
             'profile' => $row['admin_profile'],
             'profileName' => $row['profile_name'],
-        );
+        ];
     }
     return $retVal;
 }
 
-function zen_delete_user($id)
+function zen_delete_user($id): void
 {
     global $db, $messageStack;
     $result = $db->Execute("SELECT COUNT(admin_id) AS count FROM " . TABLE_ADMIN . " WHERE admin_id != " . (int)$id);
     if ($result->fields['count'] < 1) {
         $messageStack->add(ERROR_CANNOT_DELETE_LAST_ADMIN, 'error');
-    } elseif ($id == $_SESSION['admin_id']) {
+    } elseif ((int)$id === (int)$_SESSION['admin_id']) {
         $messageStack->add(ERROR_CANNOT_DELETE_SELF, 'error');
     } else {
         $delname = preg_replace('/[^\w._-]/', '*', zen_get_admin_name($id)) . ' [id: ' . (int)$id . ']';
@@ -133,24 +143,26 @@ function zen_delete_user($id)
         $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
         zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), 'warning');
         $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname);
-        $block = array('EMAIL_MESSAGE_HTML' => $email_text);
+        $block = ['EMAIL_MESSAGE_HTML' => $email_text];
         zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
     }
 }
 
-function zen_check_for_invalid_admin_chars($val)
+function zen_check_for_invalid_admin_chars($val): bool
 {
     $matchstring = '[\d\w._-]'; // could expand this regex to allow other than non-accented latin chars
     $isValid = false;
-    if (preg_match('|' . $matchstring . '|', $val)) $isValid = true;
+    if (preg_match('|' . $matchstring . '|', $val)) {
+        $isValid = true;
+    }
     return $isValid;
 }
 
-function zen_insert_user($name, $email, $password, $confirm, $profile)
+function zen_insert_user($name, $email, $password, $confirm, $profile): array
 {
     global $db;
-    $errors = array();
-    if (zen_check_for_invalid_admin_chars($name) == false) {
+    $errors = [];
+    if (zen_check_for_invalid_admin_chars($name) === false) {
         $errors[] = ERROR_ADMIN_INVALID_CHARS_IN_USERNAME;
     }
     $name = zen_db_prepare_input($name);
@@ -162,13 +174,13 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
         $errors[] = ERROR_DUPLICATE_USER;
     }
     $email = zen_db_prepare_input($email);
-    if (zen_validate_email($email) == false) {
+    if (zen_validate_email($email) === false) {
         $errors[] = ERROR_ADMIN_INVALID_EMAIL_ADDRESS;
     }
     $password = zen_db_prepare_input($password);
     $confirm = zen_db_prepare_input($confirm);
     $profile = (int)$profile;
-    if ($password != $confirm) {
+    if ($password !== $confirm) {
         $errors[] = ERROR_PASSWORDS_NOT_MATCHING;
     }
     if (zen_check_for_password_problems($password, 0)) {
@@ -195,31 +207,31 @@ function zen_insert_user($name, $email, $password, $confirm, $profile)
         $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
         zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
         $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname);
-        $block = array('EMAIL_MESSAGE_HTML' => $email_text);
+        $block = ['EMAIL_MESSAGE_HTML' => $email_text];
         zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
     }
     return $errors;
 }
 
-function zen_update_user($name, $email, $id, $profile)
+function zen_update_user($name, $email, $id, $profile): array
 {
     global $db;
-    $errors = array();
+    $errors = [];
     if ($name !== false) {
         if (strlen($name) >= ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH)) {
             $name = zen_db_prepare_input($name);
         } else {
             $errors[] = sprintf(ERROR_ADMIN_NAME_TOO_SHORT, ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH));
         }
-        if (zen_check_for_invalid_admin_chars($name) == false) {
+        if (zen_check_for_invalid_admin_chars($name) === false) {
             $errors[] = ERROR_ADMIN_INVALID_CHARS_IN_USERNAME;
         }
     }
     $email = zen_db_prepare_input($email);
-    if (zen_validate_email($email) == false) {
+    if (zen_validate_email($email) === false) {
         $errors[] = ERROR_ADMIN_INVALID_EMAIL_ADDRESS;
     }
-    if (count($errors) == 0) {
+    if (empty($errors)) {
         $id = (int)$id;
         $oldData = zen_read_user(zen_get_admin_name($id));
         if ($oldData === false) {
@@ -228,8 +240,12 @@ function zen_update_user($name, $email, $id, $profile)
         }
         $sql = "UPDATE " . TABLE_ADMIN . "
                 SET admin_email = :email:, ";
-        if (isset($name) && $name !== false && $name != $oldData['admin_name']) $sql .= "admin_name = :name:, ";
-        if (isset($profile) && $profile > 0 && $profile != $oldData['admin_profile']) $sql .= "admin_profile = :profile:, ";
+        if (isset($name) && $name !== false && $name != $oldData['admin_name']) {
+            $sql .= "admin_name = :name:, ";
+        }
+        if (isset($profile) && $profile > 0 && $profile != $oldData['admin_profile']) {
+            $sql .= "admin_profile = :profile:, ";
+        }
         $sql .= "last_modified = NOW() WHERE admin_id=" . $id;
         $sql = $db->bindVars($sql, ':name:', $name, 'stringIgnoreNull');
         $sql = $db->bindVars($sql, ':email:', $email, 'stringIgnoreNull');
@@ -238,49 +254,63 @@ function zen_update_user($name, $email, $id, $profile)
         // Now notify admin and user of changes
         $newData = zen_read_user(zen_get_admin_name($id));
         $admname = preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']';
-        $changes = array();
-        if ($oldData['admin_email'] != $newData['admin_email']) {
-            $changes['email'] = array('old' => $oldData['admin_email'], 'new' => $newData['admin_email']);
+        $changes = [];
+        if ($oldData['admin_email'] !== $newData['admin_email']) {
+            $changes['email'] = ['old' => $oldData['admin_email'], 'new' => $newData['admin_email']];
         }
-        if ($oldData['admin_name'] != $newData['admin_name']) {
-            $changes['name'] = array('old' => $oldData['admin_name'], 'new' => $newData['admin_name']);
+        if ($oldData['admin_name'] !== $newData['admin_name']) {
+            $changes['name'] = ['old' => $oldData['admin_name'], 'new' => $newData['admin_name']];
         }
+        // numeric, so != instead of !==
         if ($oldData['admin_profile'] != $newData['admin_profile']) {
-            $changes['profile'] = array('old' => zen_get_profile_name($oldData['admin_profile']) . '(' . $oldData['admin_profile'] . ')', 'new' => zen_get_profile_name($newData['admin_profile']) . '(' . $newData['admin_profile'] . ')');
+            $changes['profile'] = [
+                'old' => zen_get_profile_name($oldData['admin_profile']) . '(' . $oldData['admin_profile'] . ')',
+                'new' => zen_get_profile_name($newData['admin_profile']) . '(' . $newData['admin_profile'] . ')',
+            ];
         }
         $alertText = '';
-        if (isset($changes['email'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_EMAIL_CHANGED, $oldData['admin_name'], $changes['email']['old'], $changes['email']['new'], $admname) . "\n";
-        if (isset($changes['name'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_NAME_CHANGED, $oldData['admin_name'], $changes['name']['old'], $changes['name']['new'], $admname) . "\n";
-        if (isset($changes['profile'])) $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_PROFILE_CHANGED, $oldData['admin_name'], $changes['profile']['old'], $changes['profile']['new'], $admname) . "\n";
-        if ($alertText != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '), 'admin_settings_changed');
-        if ($alertText != '') zen_mail(STORE_NAME, $oldData['admin_email'], TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, array('EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '), 'admin_settings_changed');
-        if ($alertText != '') zen_record_admin_activity(TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED . ' ' . $alertText, 'warning');
+        if (isset($changes['email'])) {
+            $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_EMAIL_CHANGED, $oldData['admin_name'], $changes['email']['old'], $changes['email']['new'], $admname) . "\n";
+        }
+        if (isset($changes['name'])) {
+            $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_NAME_CHANGED, $oldData['admin_name'], $changes['name']['old'], $changes['name']['new'], $admname) . "\n";
+        }
+        if (isset($changes['profile'])) {
+            $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_PROFILE_CHANGED, $oldData['admin_name'], $changes['profile']['old'], $changes['profile']['new'], $admname) . "\n";
+        }
+        if ($alertText !== '') {
+            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '], 'admin_settings_changed');
+        }
+        if ($alertText !== '') {
+            zen_mail(STORE_NAME, $oldData['admin_email'], TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '], 'admin_settings_changed');
+        }
+        if ($alertText !== '') {
+            zen_record_admin_activity(TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED . ' ' . $alertText, 'warning');
+        }
     }
     return $errors;
 }
 
 /**
  * Lookup admin user login details based on admin username
- * @param string $name
  */
-function zen_read_user($name)
+function zen_read_user(string $name): bool|array
 {
     global $db;
     $sql = "SELECT admin_id, admin_name, admin_email, admin_pass, pwd_last_change_date, reset_token, failed_logins, lockout_expires, admin_profile
-            FROM " . TABLE_ADMIN . " WHERE admin_name = :adminname:  LIMIT 1";
+            FROM " . TABLE_ADMIN . " WHERE admin_name = :adminname: ";
     $sql = $db->bindVars($sql, ':adminname:', $name, 'stringIgnoreNull');
-    $result = $db->Execute($sql);
-    if ($result->EOF || $result->RecordCount() < 1) return false;
+    $result = $db->Execute($sql, 1);
+    if ($result->EOF || $result->RecordCount() < 1) {
+        return false;
+    }
     return $result->fields;
 }
 
 /**
  * Verify login according to security requirements
- * @param string $admin_name
- * @param string $admin_pass
- * @return array
  */
-function zen_validate_user_login($admin_name, $admin_pass)
+function zen_validate_user_login(string $admin_name, string $admin_pass): array
 {
     global $db;
     $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
@@ -301,9 +331,9 @@ function zen_validate_user_login($admin_name, $admin_pass)
             zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_TO_LOG_IN_TO_LOCKED_ACCOUNT . ' ' . $admin_name, 'warning');
         }
         if ($result['reset_token'] !== '') {
-            list ($token_expires_at, $token) = explode('}', $result['reset_token']);
+            [$token_expires_at, $token] = explode('}', $result['reset_token']);
             if ($token_expires_at > 0) {
-                if ($token_expires_at <= time() && $result['admin_pass'] != '') {
+                if ($token_expires_at <= time() && $result['admin_pass'] !== '') {
                     // reset the reset_token field to blank, since token has expired
                     $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
                     $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
@@ -314,13 +344,11 @@ function zen_validate_user_login($admin_name, $admin_pass)
                         $error = true;
                         $message = ERROR_WRONG_LOGIN;
                         zen_record_admin_activity(sprintf(TEXT_ERROR_INCORRECT_PASSWORD_DURING_RESET_FOR_USER) . ' ' . $admin_name, 'warning');
-
                     } else {
                         $error = true;
                         $expired = true;
                         $message = TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED;
                     }
-
                 }
             }
         }
@@ -348,7 +376,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
                     $error = true;
                     $message = ERROR_WRONG_LOGIN;
                     zen_record_admin_activity('TFA Failure - Two-factor authentication failed', 'warning');
-                } elseif ($response === true) {
+                } else {
                     zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'warning');
                 }
             }
@@ -357,13 +385,15 @@ function zen_validate_user_login($admin_name, $admin_pass)
 
     // BEGIN LOGIN SLAM PREVENTION
     if ($error) {
-        if (!isset($_SESSION['login_attempt'])) $_SESSION['login_attempt'] = 0;
+        if (!isset($_SESSION['login_attempt'])) {
+            $_SESSION['login_attempt'] = 0;
+        }
         $_SESSION['login_attempt']++;
         $sql = "UPDATE " . TABLE_ADMIN . " SET failed_logins = failed_logins + 1, last_failed_attempt = now(), last_failed_ip = :ip: WHERE admin_name = :adminname: ";
         $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
         $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
         $db->Execute($sql);
-        if (!empty($result) && ($_SESSION['login_attempt'] > 3 || $result['failed_logins'] > 3) && !empty($result['admin_email']) && ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS == 'Yes') {
+        if (!empty($result) && ($_SESSION['login_attempt'] > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD || $result['failed_logins'] > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD) && !empty($result['admin_email']) && ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS == 'Yes') {
             $html_msg['EMAIL_CUSTOMERS_NAME'] = $result['admin_name'];
             $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']);
             zen_record_admin_activity(sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), 'warning');
@@ -378,24 +408,24 @@ function zen_validate_user_login($admin_name, $admin_pass)
                 zen_record_admin_activity('Too many login failures. Account locked for ' . ADMIN_LOGIN_LOCKOUT_TIMER / 60 . ' minutes', 'warning');
                 sleep(15);
                 $redirect = zen_href_link(FILENAME_DEFAULT, '', 'SSL');
-                return array($error, $expired, $message, $redirect);
+                return [$error, $expired, $message, $redirect];
             } else {
                 sleep(4);
             }
         }
     } // END LOGIN SLAM PREVENTION
     // deal with expireds for SSL change
-    if (PADSS_PWD_EXPIRY_ENFORCED == 1 && $error == false && $result['pwd_last_change_date'] == '1990-01-01 14:02:22') {
+    if (PADSS_PWD_EXPIRY_ENFORCED == 1 && $error === false && $result['pwd_last_change_date'] === '1990-01-01 14:02:22') {
         $expired = true;
         $error = true;
         $message = ($message === '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
     }
     // deal with expireds for PA-DSS
-    if ($error == false && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
+    if ($error === false && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
         $expired = true;
         $error = true;
     }
-    if ($error == false) {
+    if ($error === false) {
         if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
             $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
         }
@@ -405,17 +435,17 @@ function zen_validate_user_login($admin_name, $admin_pass)
         $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
         $db->Execute($sql);
         $_SESSION['admin_id'] = $result['admin_id'];
-        if (SESSION_RECREATE == 'True') {
+        if (SESSION_RECREATE === 'True') {
             zen_session_recreate();
         }
-        $redirect = zen_href_link($camefrom, zen_get_all_get_params(array('camefrom')), 'SSL');
+        $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
     }
-    return array($error, $expired, $message, $redirect);
+    return [$error, $expired, $message, $redirect];
 }
 
 /**
  * Check whether the specified password validates according to PA-DSS requirements:
- * Must be minimum 7 characters
+ * Must be minimum 12 characters (or 8 or 7 for older PCI standards)
  * Must use both letters and numbers
  * Must not use any of the last 4 passwords
  * THESE ARE PA-DSS REQUIREMENTS AND ARE NOT TO BE RELAXED
@@ -424,7 +454,7 @@ function zen_validate_user_login($admin_name, $admin_pass)
  * @param int $adminID
  * @return bool Error status
  */
-function zen_check_for_password_problems($password, $adminID = 0)
+function zen_check_for_password_problems(string $password, $adminID = 0): bool
 {
     global $db;
     $error = false;
@@ -437,13 +467,17 @@ function zen_check_for_password_problems($password, $adminID = 0)
         $error = true;
     }
     // if no user specified, skip checking history
-    if ($adminID == 0) return $error;
+    if (empty($adminID)) {
+        return $error;
+    }
     // passwords cannot be same as last 4
-    if (PADSS_PWD_EXPIRY_ENFORCED == 0) return $error; // skip the check if flag disabled
+    if ((int)PADSS_PWD_EXPIRY_ENFORCED === 0) {
+        return $error;
+    } // skip the check if flag disabled
     $sql = "SELECT admin_pass, prev_pass1, prev_pass2, prev_pass3 FROM " . TABLE_ADMIN . "
             WHERE admin_id = :adminID:";
     $sql = $db->bindVars($sql, ':adminID:', $adminID, 'integer');
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     if ($result->RecordCount()) {
         foreach ($result->fields as $key => $val) {
             if (zen_validate_password($password, $val)) {
@@ -458,30 +492,31 @@ function zen_check_for_password_problems($password, $adminID = 0)
  * Check whether the specified admin user's password expired more than 90 days ago
  * THIS IS A PA-DSS REQUIREMENT AND MUST NOT BE CHANGED WITHOUT VOIDING COMPLIANCE
  *
- * @param string $adminID
- * @return bool
+ * @param int $adminID
  */
-function zen_check_for_expired_pwd($adminID)
+function zen_check_for_expired_pwd($adminID): bool
 {
-    if (PADSS_PWD_EXPIRY_ENFORCED == 0) return false;
+    if ((int)PADSS_PWD_EXPIRY_ENFORCED === 0) {
+        return false;
+    }
     global $db;
     $sql = "SELECT admin_id FROM " . TABLE_ADMIN . "
             WHERE admin_id = :adminID:
             AND pwd_last_change_date < DATE_SUB(CURDATE(),INTERVAL 90 DAY)";
     $sql = $db->bindVars($sql, ':adminID:', $adminID, 'integer');
-    $result = $db->Execute($sql);
+    $result = $db->Execute($sql, 1);
     return (bool)$result->RecordCount();
 }
 
-function zen_reset_password($id, $password, $compare)
+function zen_reset_password($id, $password, $compare): array
 {
     global $db;
-    $errors = array();
+    $errors = [];
     $id = (int)$id;
-    if ($password != 'no password' || $compare != 'no password') {
+    if ($password !== 'no password' || $compare !== 'no password') {
         $password = zen_db_prepare_input($password);
         $compare = zen_db_prepare_input($compare);
-        if ($password != $compare) {
+        if ($password !== $compare) {
             $errors[] = ERROR_PASSWORDS_NOT_MATCHING;
         }
         if (zen_check_for_password_problems($password, $id)) {
@@ -505,16 +540,13 @@ function zen_reset_password($id, $password, $compare)
 
 /**
  * Validate whether the password-reset request is permissible
- * @param string $admin_name
- * @param string $adm_old_pwd
- * @param string $adm_new_pwd
- * @param string $adm_conf_pwd
+ *
  * @return array error messages
  */
-function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd, $adm_conf_pwd)
+function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd, string $adm_new_pwd, string $adm_conf_pwd): array
 {
     global $db;
-    $errors = array();
+    $errors = [];
     $result = zen_read_user($admin_name);
     if (empty($result) || $admin_name != $result['admin_name']) {
         $errors[] = ERROR_WRONG_LOGIN;
@@ -525,8 +557,8 @@ function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd,
     }
     // if entered password doesn't match current password, check for reset token
     if (!zen_validate_password($adm_old_pwd, $result['admin_pass'])) {
-        if ($result['reset_token'] != '') {
-            list ($expired_token, $token) = explode('}', $result['reset_token']);
+        if (!empty($result['reset_token'])) {
+            [$expired_token, $token] = explode('}', $result['reset_token']);
             if ($expired_token > 0) {
                 if ($expired_token <= time()) {
                     // reset the reset_token field to blank, since token has expired
@@ -567,13 +599,11 @@ function zen_validate_pwd_reset_request($admin_name, $adm_old_pwd, $adm_new_pwd,
 
 /**
  * Retrieve profiles list
- * @param bool $withUsers
- * @return array
  */
-function zen_get_profiles($withUsers = false)
+function zen_get_profiles(bool $withUsers = false): array
 {
     global $db;
-    $retVal = array();
+    $retVal = [];
     if ($withUsers) {
         $sql = "SELECT p.profile_id, p.profile_name, COUNT(a.admin_profile) as profile_users
                 FROM " . TABLE_ADMIN_PROFILES . " p
@@ -585,7 +615,7 @@ function zen_get_profiles($withUsers = false)
                 'id' => $row['profile_id'],
                 'name' => $row['profile_name'],
                 'users' => $row['profile_users'],
-                ];
+            ];
         }
     } else {
         $sql = 'SELECT * FROM ' . TABLE_ADMIN_PROFILES;
@@ -600,30 +630,32 @@ function zen_get_profiles($withUsers = false)
     return $retVal;
 }
 
-function zen_get_profile_name($profile)
+function zen_get_profile_name($profile_id): string
 {
     global $db;
     $sql = "SELECT profile_name FROM " . TABLE_ADMIN_PROFILES . " WHERE profile_id = :profile:";
-    $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
+    $sql = $db->bindVars($sql, ':profile:', $profile_id, 'integer');
     $result = $db->Execute($sql);
-    return $result->fields['profile_name'];
+    return $result->fields['profile_name'] ?? '';
 }
 
-function zen_update_profile_name($profile, $profile_name)
+function zen_update_profile_name($profile_id, string $profile_name): void
 {
     global $db;
     $sql = "UPDATE " . TABLE_ADMIN_PROFILES . "
             SET profile_name = :profileName:
             WHERE profile_id = :profile:";
     $sql = $db->bindVars($sql, ':profileName:', zen_db_prepare_input($profile_name), 'stringIgnoreNull');
-    $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
+    $sql = $db->bindVars($sql, ':profile:', $profile_id, 'integer');
     $db->Execute($sql);
     zen_record_admin_activity('Admin profile renamed.', 'notice');
 }
 
-function zen_get_admin_pages($menu_only)
+function zen_get_admin_pages(bool $menu_only): array
 {
     global $db;
+    $productTypes = [];
+    $retVal = [];
 
     /**
      * First we'll get all the pages
@@ -640,7 +672,9 @@ function zen_get_admin_pages($menu_only)
     $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as page_name
             FROM " . TABLE_ADMIN_PAGES . " ap
             LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key ";
-    if ($menu_only) $sql .= "WHERE ap.display_on_menu = 'Y' ";
+    if ($menu_only) {
+        $sql .= "WHERE ap.display_on_menu = 'Y' ";
+    }
     $sql .= "ORDER BY am.sort_order, ap.sort_order";
     $result = $db->Execute($sql);
     foreach ($result as $row) {
@@ -650,14 +684,13 @@ function zen_get_admin_pages($menu_only)
                 'file' => constant($row['main_page']),
                 'params' => $row['page_params'],
             ];
-
         }
     }
     if ($menu_only) {
         if (defined('MENU_CATEGORIES_TO_SORT_BY_NAME') && !empty(MENU_CATEGORIES_TO_SORT_BY_NAME)) {
             $sorted_menus = explode(",", MENU_CATEGORIES_TO_SORT_BY_NAME);
             foreach (array_keys($retVal) as $key) {
-                if (in_array($key, $sorted_menus)) {
+                if (in_array($key, $sorted_menus, true)) {
                     usort($retVal[$key], 'admin_menu_name_sort_callback');
                 }
             }
@@ -673,41 +706,39 @@ function zen_get_admin_pages($menu_only)
     /**
      * Then we'll deal with the exceptions
      */
-    // Include paypal ipn menu only if the payment mod is enabled
-    if (!(defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS == 'True') &&
-        !(defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True') &&
-        !(defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True')) {
+    // Include PayPal Standard menu only if that payment mod is enabled
+    if (!(defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS === 'True') &&
+        !(defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS === 'True') &&
+        !(defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS === 'True')) {
         unset ($retVal['customers']['paypal']);
     }
 
     // don't show Coupon Admin unless installed
-    if (!defined('MODULE_ORDER_TOTAL_COUPON_STATUS') || MODULE_ORDER_TOTAL_COUPON_STATUS != 'true') {
+    if (!defined('MODULE_ORDER_TOTAL_COUPON_STATUS') || MODULE_ORDER_TOTAL_COUPON_STATUS !== 'true') {
         unset ($retVal['gv']['couponAdmin']);
     }
     // don't show Gift Vouchers unless installed
-    if (!defined('MODULE_ORDER_TOTAL_GV_STATUS') || MODULE_ORDER_TOTAL_GV_STATUS != 'true') {
-        unset ($retVal['gv']['gvQueue']);
-        unset ($retVal['gv']['gvMail']);
-        unset ($retVal['gv']['gvSent']);
+    if (!defined('MODULE_ORDER_TOTAL_GV_STATUS') || MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
+        unset($retVal['gv']['gvQueue'], $retVal['gv']['gvMail'], $retVal['gv']['gvSent']);
     }
     // if Coupons and Gift Vouchers are off display msg
     if (!defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && !defined('MODULE_ORDER_TOTAL_GV_STATUS')) {
-        $retVal['gv']['message'] = array(
+        $retVal['gv']['message'] = [
             'name' => NOT_INSTALLED_TEXT,
             'file' => FILENAME_MODULES,
             'params' => 'set=ordertotal',
-        );
+        ];
     }
 
     return $retVal;
 }
 
-function zen_get_permitted_pages_for_profile($profile)
+function zen_get_permitted_pages_for_profile($profile_id): array
 {
     global $db;
-    $retVal = array();
+    $retVal = [];
     $sql = "SELECT page_key FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " WHERE profile_id = :profile:";
-    $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
+    $sql = $db->bindVars($sql, ':profile:', $profile_id, 'integer');
     $result = $db->Execute($sql);
     foreach ($result as $row) {
         $retVal[] = $row['page_key'];
@@ -715,88 +746,92 @@ function zen_get_permitted_pages_for_profile($profile)
     return $retVal;
 }
 
-function zen_delete_profile($profile)
+function zen_delete_profile($profile): string
 {
     global $db;
     $error = '';
     $sql = "SELECT admin_id FROM " . TABLE_ADMIN . " WHERE admin_profile = :profile:";
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
-    $result = $db->Execute($sql);
-    if ($result->RecordCount() == 0) {
-        $sql = "DELETE FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " WHERE profile_id = :profile:";
-        $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
-        $db->Execute($sql);
-        $sql = "DELETE FROM " . TABLE_ADMIN_PROFILES . " WHERE profile_id = :profile:";
-        $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
-        $db->Execute($sql);
-        zen_record_admin_activity('Deleted Admin Profile "' . (int)$profile . '"', 'warning');
-    } else {
-        $error = ERROR_PROFILE_HAS_USERS_ATTACHED;
+    $result = $db->Execute($sql, 1);
+    if ($result->RecordCount() > 0) {
+        return ERROR_PROFILE_HAS_USERS_ATTACHED;
     }
-    return $error;
-}
-
-function zen_create_profile($profileData)
-{
-    global $db;
-    $retVal = '';
-    if (!isset($profileData['name'])) {
-        $retVal = ERROR_NO_PROFILE_NAME;
-    } else {
-        $name = zen_db_prepare_input($profileData['name']);
-        if (empty($name)) {
-            $retVal = ERROR_INVALID_PROFILE_NAME;
-        } else {
-            $sql = "SELECT profile_id FROM " . TABLE_ADMIN_PROFILES . " WHERE profile_name = :name:";
-            $sql = $db->bindVars($sql, ':name:', $name, 'stringIgnoreNull');
-            $result = $db->Execute($sql);
-            if ($result->RecordCount() > 0) {
-                $retVal = ERROR_DUPLICATE_PROFILE_NAME;
-            } else if (!isset($profileData['p']) || !is_array($profileData['p']) || sizeof($profileData['p']) == 0) {
-                $retVal = ERROR_NO_PAGES_IN_PROFILE;
-            } else {
-                $sql = "INSERT INTO " . TABLE_ADMIN_PROFILES . " SET profile_name = :name:";
-                $sql = $db->bindVars($sql, ':name:', $name, 'stringIgnoreNull');
-                $db->Execute($sql);
-                $profileId = $db->Insert_ID();
-                if (is_numeric($profileId)) {
-                    // suceeded in creating the profile so result returned was the profile ID
-                    zen_insert_pages_into_profile($profileId, $profileData['p']);
-                    zen_record_admin_activity('Created new admin Profile "' . (int)$profileId . '"', 'warning');
-                } else {
-                    // failed to create the profile return error message
-                    $retVal = ERROR_UNABLE_TO_CREATE_PROFILE;
-                }
-            }
-        }
-    }
-    return $retVal;
-}
-
-function zen_remove_profile_permits($profile)
-{
-    global $db;
     $sql = "DELETE FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " WHERE profile_id = :profile:";
     $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
     $db->Execute($sql);
-    zen_record_admin_activity('Deleted profile permissions from profile #' . (int)$profile, 'warning');
+    $sql = "DELETE FROM " . TABLE_ADMIN_PROFILES . " WHERE profile_id = :profile:";
+    $sql = $db->bindVars($sql, ':profile:', $profile, 'integer');
+    $db->Execute($sql);
+    zen_record_admin_activity('Deleted Admin Profile "' . (int)$profile . '"', 'warning');
+    return $error;
 }
 
-function zen_insert_pages_into_profile($id, $pages)
+function zen_create_profile(array $profileData): string
 {
     global $db;
+    if (!isset($profileData['name'])) {
+        return ERROR_NO_PROFILE_NAME;
+    }
+
+    $name = zen_db_prepare_input($profileData['name']);
+    if (empty($name)) {
+        return ERROR_INVALID_PROFILE_NAME;
+    }
+
+    $sql = "SELECT profile_id FROM " . TABLE_ADMIN_PROFILES . " WHERE profile_name = :name:";
+    $sql = $db->bindVars($sql, ':name:', $name, 'stringIgnoreNull');
+    $result = $db->Execute($sql);
+    if ($result->RecordCount() > 0) {
+        return ERROR_DUPLICATE_PROFILE_NAME;
+    }
+
+    if (empty($profileData['p']) || !is_array($profileData['p'])) {
+        return ERROR_NO_PAGES_IN_PROFILE;
+    }
+
+    $sql = "INSERT INTO " . TABLE_ADMIN_PROFILES . " SET profile_name = :name:";
+    $sql = $db->bindVars($sql, ':name:', $name, 'stringIgnoreNull');
+    $db->Execute($sql);
+    $profileId = $db->Insert_ID();
+    if (is_numeric($profileId)) {
+        // suceeded in creating the profile so result returned was the profile ID
+        zen_insert_pages_into_profile($profileId, $profileData['p']);
+        zen_record_admin_activity('Created new admin Profile "' . (int)$profileId . '"', 'warning');
+        return '';
+    }
+
+    // failed to create the profile return error message
+    return ERROR_UNABLE_TO_CREATE_PROFILE;
+}
+
+function zen_remove_profile_permits($profile_id): void
+{
+    global $db;
+    $sql = "DELETE FROM " . TABLE_ADMIN_PAGES_TO_PROFILES . " WHERE profile_id = :profile:";
+    $sql = $db->bindVars($sql, ':profile:', $profile_id, 'integer');
+    $db->Execute($sql);
+    zen_record_admin_activity('Deleted profile permissions from profile #' . (int)$profile_id, 'warning');
+}
+
+function zen_insert_pages_into_profile($profile_id, array $pages): void
+{
+    global $db;
+    if (empty($pages)) {
+        return;
+    }
+
     foreach ($pages as $page) {
         $sql = "INSERT INTO " . TABLE_ADMIN_PAGES_TO_PROFILES . "
                 SET page_key=:page:,
                     profile_id=:profileId:";
         $sql = $db->bindVars($sql, ':page:', $page, 'stringIgnoreNull');
-        $sql = $db->bindVars($sql, ':profileId:', $id, 'integer');
+        $sql = $db->bindVars($sql, ':profileId:', $profile_id, 'integer');
         $db->Execute($sql);
-        zen_record_admin_activity('Added pages to profile #' . (int)$id, 'warning');
     }
+    zen_record_admin_activity('Added pages to profile #' . (int)$profile_id, 'warning');
 }
 
-function zen_get_admin_menu_for_user()
+function zen_get_admin_menu_for_user(): array
 {
     global $db;
     if (zen_is_superuser()) {
@@ -804,7 +839,7 @@ function zen_get_admin_menu_for_user()
         $retVal = zen_get_admin_pages(true);
     } else {
         // get only those registered pages allowed by the current user's profile
-        $retVal = array();
+        $retVal = [];
         $sql = "SELECT ap.menu_key, ap.page_key, ap.main_page, ap.page_params, ap.language_key as pageName
                 FROM " . TABLE_ADMIN . " a
                 LEFT JOIN " . TABLE_ADMIN_PAGES_TO_PROFILES . " ap2p ON ap2p.profile_id = a.admin_profile
@@ -817,33 +852,33 @@ function zen_get_admin_menu_for_user()
         $result = $db->Execute($sql);
         foreach ($result as $row) {
             if (defined($row['pageName']) && defined($row['main_page'])) {
-                $retVal[$row['menu_key']][$row['page_key']] = array(
+                $retVal[$row['menu_key']][$row['page_key']] = [
                     'name' => constant($row['pageName']),
                     'file' => constant($row['main_page']),
                     'params' => $row['page_params'],
-                );
+                ];
             }
         }
     }
     return $retVal;
 }
 
-function zen_get_menu_titles()
+function zen_get_menu_titles(): array
 {
     global $db;
-    $retval = array();
+    $retVal = [];
     $sql = "SELECT menu_key, language_key FROM " . TABLE_ADMIN_MENUS . " ORDER BY sort_order";
     $result = $db->Execute($sql);
     foreach ($result as $row) {
-       if (defined($row['language_key'])) {
-          $retVal[$row['menu_key']] = constant($row['language_key']);
-       }
+        if (defined($row['language_key'])) {
+            $retVal[$row['menu_key']] = constant($row['language_key']);
+        }
     }
     $retVal['_productTypes'] = BOX_HEADING_PRODUCT_TYPES;
     return $retVal;
 }
 
-function zen_page_key_exists($page_key)
+function zen_page_key_exists(string $page_key): bool
 {
     global $db;
     $sql = "SELECT page_key FROM " . TABLE_ADMIN_PAGES . " WHERE page_key = :page_key:";
@@ -852,10 +887,10 @@ function zen_page_key_exists($page_key)
     return $result->RecordCount() > 0;
 }
 
-function zen_register_admin_page($page_key, $language_key, $main_page, $page_params, $menu_key, $display_on_menu, $sort_order = -1)
+function zen_register_admin_page(string $page_key, string $language_key, string $main_page, string $page_params, string $menu_key, string $display_on_menu, $sort_order = -1): void
 {
     global $db;
-    if ($sort_order == -1) {
+    if ((int)$sort_order === -1) {
         $sql = "SELECT MAX(sort_order) AS sort_order_max FROM " . TABLE_ADMIN_PAGES . " WHERE menu_key = :menu_key:";
         $sql = $db->bindVars($sql, ':menu_key:', $menu_key, 'stringIgnoreNull');
         $result = $db->Execute($sql);
@@ -880,7 +915,7 @@ function zen_register_admin_page($page_key, $language_key, $main_page, $page_par
     zen_record_admin_activity('Registered new admin menu page "' . $page_key . '"', 'warning');
 }
 
-function zen_deregister_admin_pages($pages)
+function zen_deregister_admin_pages(string|array $pages): void
 {
     global $db;
     if (!empty($pages)) {
@@ -900,7 +935,7 @@ function zen_deregister_admin_pages($pages)
     }
 }
 
-function zen_admin_authorized_to_place_order()
+function zen_admin_authorized_to_place_order(): bool
 {
     global $db;
     $admin_in_profile = false;
@@ -930,11 +965,13 @@ function zen_admin_authorized_to_place_order()
 /**
  * callback function for sorting admin menu entries
  */
-function admin_menu_name_sort_callback($a, $b)
+function admin_menu_name_sort_callback($a, $b): int
 {
-    if ($a['name'] == $b['name'])
+    if ($a['name'] === $b['name']) {
         return 0;
-    if ($a['name'] < $b['name'])
+    }
+    if ($a['name'] < $b['name']) {
         return -1;
+    }
     return 1;
 }
