@@ -4,3 +4,4 @@
 
 !runner.admin.configure.php
 !runner.store.configure.php
+!runner.main.configure.php
