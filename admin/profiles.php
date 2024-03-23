@@ -45,7 +45,7 @@ switch ($action) {
       zen_redirect(zen_href_link(FILENAME_PROFILES));
     } else {
       $messageStack->add(SUCCESS_PROFILE_DELETED, 'success');
-      unset($action);
+      $action = '';
       $profileList = zen_get_profiles(TRUE);
     }
     break;
