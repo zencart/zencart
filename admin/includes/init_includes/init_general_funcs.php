@@ -13,6 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
 
 
+require 'includes/init_includes/init_pci_settings.php';
 
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'database.php';
 

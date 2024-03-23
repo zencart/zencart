@@ -6,10 +6,10 @@
  * @version $Id: Scott C Wilson 2022 Nov 24 Modified in v1.5.8a $
  */
 
-if (!defined('ADMIN_PASSWORD_MIN_LENGTH')) define('ADMIN_PASSWORD_MIN_LENGTH', 7);
-
 // The admin login slamming threshold is the minimum number of failed logins before an email is sent to the storeowner reporting ongoing failed logins
 zen_define_default('ADMIN_LOGIN_SLAMMING_THRESHOLD', 3);
+// Do you want warning/courtesy emails to be sent after several login failures have occurred (determined by the threshold above)?
+zen_define_default('ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS', 'Yes');
 
 /**
  * Checks whether the currently logged on user has permission to access
@@ -400,7 +400,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
             zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
         }
         if ($expired_token < 10000) {
-            if ($_SESSION['login_attempt'] > 6 || (!empty($result) && $result['failed_logins'] > 6)) {
+            if ($_SESSION['login_attempt'] > (int)ADMIN_LOGIN_LOCKOUT_LIMIT || (!empty($result) && $result['failed_logins'] > (int)ADMIN_LOGIN_LOCKOUT_LIMIT)) {
                 $sql = "UPDATE " . TABLE_ADMIN . " SET lockout_expires = " . (time() + ADMIN_LOGIN_LOCKOUT_TIMER) . " WHERE admin_name = :adminname: ";
                 $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
                 $db->Execute($sql);
