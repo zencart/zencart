@@ -8,7 +8,9 @@
 /** @var $PHP_SELF */
 /** @var $zco_notifier */
 
-if (!defined('IS_ADMIN_FLAG')) die('Illegal Access');
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
 
 define('SUPERUSER_PROFILE', 1);
 
@@ -16,12 +18,12 @@ define('SUPERUSER_PROFILE', 1);
 // Special handling for AJAX requests.  Return a 'logged_out' error if no admin session
 // is active; otherwise, bypass the remainder of the authorization checks.
 //
-if (basename($PHP_SELF) == FILENAME_AJAX . '.php') {
+if (basename($PHP_SELF) === FILENAME_AJAX . '.php') {
     if (empty($_SESSION['admin_id'])) {
-        $ajax_response = array(
+        $ajax_response = [
             'error' => 'logged_out',
-            'redirect' => zen_href_link(FILENAME_LOGIN, '', 'SSL')
-        );
+            'redirect' => zen_href_link(FILENAME_LOGIN, '', 'SSL'),
+        ];
         echo json_encode($ajax_response);
         exit;
     }
@@ -29,57 +31,54 @@ if (basename($PHP_SELF) == FILENAME_AJAX . '.php') {
 }
 
 // admin folder rename required
-if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE == '') && !defined('ZENCART_TESTFRAMEWORK_RUNNING'))
-{
-  if (basename($PHP_SELF) != FILENAME_ALERT_PAGE . '.php')
-  {
-    if (substr(DIR_WS_ADMIN, -7) == '/admin/' || substr(DIR_WS_HTTPS_ADMIN, -7) == '/admin/')
-    {
-      zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
+if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE === '') && !defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
+    if (basename($PHP_SELF) !== FILENAME_ALERT_PAGE . '.php') {
+        if (str_ends_with(DIR_WS_ADMIN, '/admin/') || str_ends_with(DIR_WS_HTTPS_ADMIN, '/admin/')) {
+            zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
+        }
+        $check_path = dirname($PHP_SELF) . '/../zc_install';
+        if (is_dir($check_path)) {
+            zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
+        }
     }
-    $check_path = dirname($PHP_SELF) . '/../zc_install';
-    if (is_dir($check_path))
-    {
-      zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
-    }
-  }
 }
-if (basename($PHP_SELF) != FILENAME_ALERT_PAGE . '.php')
-{
 
-  if (strpos(strtolower($PHP_SELF),FILENAME_PASSWORD_FORGOTTEN.'.php') !== FALSE &&
-  substr_count(strtolower($PHP_SELF), '.php') > 1)
-  {
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
+// Check safety of access
+if (basename($PHP_SELF) !== FILENAME_ALERT_PAGE . '.php') {
 
-  if (!(basename($PHP_SELF) == FILENAME_LOGIN . ".php"))
-  {
-    $page = basename($PHP_SELF, ".php");
-    if (!isset($_SESSION['admin_id']))
+    // handle malicious URLs
+    if (str_contains(strtolower($PHP_SELF), FILENAME_PASSWORD_FORGOTTEN . '.php')
+        && substr_count(strtolower($PHP_SELF), '.php') > 1)
     {
-      if (!(basename($PHP_SELF) == FILENAME_PASSWORD_FORGOTTEN . '.php'))
-      {
-        zen_redirect(zen_href_link(FILENAME_LOGIN, 'camefrom=' . basename($PHP_SELF) . '&' .  zen_get_all_get_params(), 'SSL'));
-      }
+        zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
     }
 
-    if (!in_array($page, array(FILENAME_DEFAULT,FILENAME_ADMIN_ACCOUNT,FILENAME_LOGOFF,FILENAME_ALERT_PAGE,FILENAME_PASSWORD_FORGOTTEN,FILENAME_DENIED,FILENAME_ALT_NAV)) &&
-        !zen_is_superuser())
-    {
-      if ( (check_page($page, $_GET) == FALSE) && (check_related_page($page, $_GET) == FALSE) )
-      {
-        zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
-        zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
-      }
-        $zco_notifier->notify('NOTIFY_ADMIN_NONSUPERUSER_ACTION');
+    if (!(basename($PHP_SELF) === FILENAME_LOGIN . ".php")) {
+        $page = basename($PHP_SELF, ".php");
+
+        // must be logged in
+        if (!isset($_SESSION['admin_id'])) {
+            if (!(basename($PHP_SELF) == FILENAME_PASSWORD_FORGOTTEN . '.php')) {
+                zen_redirect(zen_href_link(FILENAME_LOGIN, 'camefrom=' . basename($PHP_SELF) . '&' . zen_get_all_get_params(), 'SSL'));
+            }
+        }
+
+        // check page authorization access
+        if (!in_array($page, [FILENAME_DEFAULT, FILENAME_ADMIN_ACCOUNT, FILENAME_LOGOFF, FILENAME_ALERT_PAGE, FILENAME_PASSWORD_FORGOTTEN, FILENAME_DENIED, FILENAME_ALT_NAV], true)
+            && !zen_is_superuser())
+        {
+            if (check_page($page, $_GET) === false && check_related_page($page, $_GET) === false) {
+                zen_record_admin_activity('Attempted access to unauthorized page [' . $page . ']. Redirected to DENIED page instead.', 'notice');
+                zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
+            }
+            $zco_notifier->notify('NOTIFY_ADMIN_NONSUPERUSER_ACTION');
+        }
     }
 
-  }
-
-  if ((basename($PHP_SELF) == FILENAME_LOGIN . '.php') &&
-  (substr_count(dirname($PHP_SELF),'//') > 0 || substr_count(dirname($PHP_SELF),'.php') > 0))
-  {
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
+    // handle malicious URLs
+    if ((basename($PHP_SELF) === FILENAME_LOGIN . '.php')
+        && (substr_count(dirname($PHP_SELF), '//') > 0 || substr_count(dirname($PHP_SELF), '.php') > 0))
+    {
+        zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+    }
 }
