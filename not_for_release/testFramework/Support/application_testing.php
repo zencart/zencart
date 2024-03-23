@@ -24,6 +24,9 @@ $config = $prefix . '/not_for_release/testFramework/Support/configs/' . $user . 
 if (!file_exists($config)) {
   die($config . ' does not exist');
 }
+if (!defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE')) {
+    define('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', '');
+}
 require($config);
 
 
