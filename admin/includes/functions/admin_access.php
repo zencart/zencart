@@ -297,8 +297,13 @@ function zen_update_user($name, $email, $id, $profile): array
  */
 function zen_read_user(string $name): bool|array
 {
-    global $db;
-    $sql = "SELECT admin_id, admin_name, admin_email, admin_pass, pwd_last_change_date, reset_token, failed_logins, lockout_expires, admin_profile
+    global $db, $sniffer;
+
+    if (!$sniffer->field_exists(TABLE_ADMIN, 'mfa')) {
+        $db->Execute('ALTER TABLE ' . TABLE_ADMIN . ' ADD COLUMN mfa TEXT DEFAULT NULL');
+    }
+
+    $sql = "SELECT admin_id, admin_name, admin_email, admin_pass, pwd_last_change_date, reset_token, failed_logins, lockout_expires, admin_profile, mfa
             FROM " . TABLE_ADMIN . " WHERE admin_name = :adminname: ";
     $sql = $db->bindVars($sql, ':adminname:', $name, 'stringIgnoreNull');
     $result = $db->Execute($sql, 1);
@@ -372,10 +377,10 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         // BEGIN 2-factor authentication
         if ($error === false && defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE') && ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE !== '') {
             if (function_exists(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE)) {
-                $response = zen_call_function(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE, [$result['admin_id'], $result['admin_email'], $result['admin_name']]);
+                $response = zen_call_function(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE, ['admin_id' => $result['admin_id'], 'email' => $result['admin_email'], 'admin_name' => $result['admin_name'], 'mfa' => $result['mfa']]);
                 if ($response !== true) {
                     $error = true;
-                    $message = ERROR_WRONG_LOGIN;
+                    $message = TEXT_MFA_ERROR;
                     zen_record_admin_activity('TFA Failure - Two-factor authentication failed', 'warning');
                 } else {
                     zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'warning');
@@ -975,4 +980,25 @@ function admin_menu_name_sort_callback($a, $b): int
         return -1;
     }
     return 1;
+}
+
+function zen_check_if_mfa_token_is_reused(string $token, ?string $admin_name): bool
+{
+    global $db;
+    // cleanup all expired tokens
+    $sql = 'DELETE FROM ' . TABLE_ADMIN_EXPIRED_TOKENS . " WHERE used_date <= NOW() - INTERVAL 24 HOUR";
+    $db->Execute($sql);
+
+    if (empty($admin_name)) {
+        $admin_name = zen_get_admin_name($_SESSION['admin_id']);
+    }
+
+    // check for current token
+    $sql = 'SELECT * FROM ' . TABLE_ADMIN_EXPIRED_TOKENS . " WHERE admin_name = '" . zen_db_input($admin_name) . "' AND otp_code = '" . zen_db_input($token) . "'";
+    $results = $db->Execute($sql, 1);
+
+    // if re-used record is found then EOF is not true (if no records found, EOF is true)
+    $token_is_re_used = !$results->EOF;
+
+    return $token_is_re_used;
 }

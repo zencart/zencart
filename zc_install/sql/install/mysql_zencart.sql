@@ -100,12 +100,27 @@ CREATE TABLE admin (
   lockout_expires int(11) NOT NULL default '0',
   last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00',
   last_failed_ip varchar(45) NOT NULL default '',
+  mfa TEXT DEFAULT NULL,
   PRIMARY KEY  (admin_id),
   KEY idx_admin_name_zen (admin_name),
   KEY idx_admin_email_zen (admin_email),
   KEY idx_admin_profile_zen (admin_profile)
 ) ENGINE=MyISAM;
 
+
+# --------------------------------------------------------
+#
+# Table structure for table 'admin_expired_tokens'
+#
+
+DROP TABLE IF EXISTS admin_expired_tokens;
+CREATE TABLE admin_expired_tokens (
+  admin_name varchar(44) NOT NULL default '',
+  otp_code varchar(32) NOT NULL default '',
+  used_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY  (used_date, otp_code, admin_name),
+  KEY idx_admin_name_otp_code_zen (admin_name, otp_code)
+);
 
 # --------------------------------------------------------
 
@@ -2445,6 +2460,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('Wholesale Pricing', 'WHOLESALE_PRICING_CONFIG', 'false', 'Should <em>Wholesale Pricing</em> be enabled for your site?  Choose <b>false</b> (the default) if you don\'t want that feature enabled. Otherwise, choose <b>Tax Exempt</b> to enable with tax-exemptions for all wholesale customers or <b>Pricing Only</b> to apply tax as usual for wholesale customers.', 1, 23, now(), 'zen_cfg_select_option([\'false\', \'Tax Exempt\', \'Pricing Only\'],');
 
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('MFA Multi-Factor Authentication Required', 'MFA_ENABLED', 'False', '2-Factor authentication for Admin users', 1, 29, now(), 'zen_cfg_select_option([\'True\', \'False\'],');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Admin Session Timeout Enforced?', 'PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED', '1', 'PA-DSS Compliance requires that any Admin login sessions expire after 15 minutes of inactivity. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Strong Password Rules Enforced?', 'PADSS_PWD_EXPIRY_ENFORCED', '1', 'PA-DSS Compliance requires that admin passwords must be changed after 90 days and cannot re-use the last 4 passwords. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Ajax Checkout?', 'PADSS_AJAX_CHECKOUT', '1', 'PA-DSS Compliance requires that for some inbuilt payment methods, that we use ajax to draw the checkout confirmation screen. While this will only happen if one of those payment methods is actually present, some people may want the traditional checkout flow <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');

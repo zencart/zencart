@@ -307,6 +307,12 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
+          - checkType: configKeyExists
+            keyName: MFA_ENABLED
+          - checkType: fieldSchema
+            tableName: admin_expired_tokens
+            fieldName: otp_code
+            fieldCheck: Exists
 
   checkDBVersion200:
     runLevel: dbVersion

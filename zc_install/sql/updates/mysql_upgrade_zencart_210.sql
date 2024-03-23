@@ -39,6 +39,19 @@ TRUNCATE TABLE db_cache;
 ALTER TABLE email_archive ADD COLUMN errorinfo TEXT DEFAULT NULL;
 ALTER TABLE email_archive ADD INDEX idx_email_date_sent_zen (date_sent);
 
+#PROGRESS_FEEDBACK:!TEXT=Updating table structures!
+ALTER TABLE admin ADD COLUMN mfa TEXT DEFAULT NULL;
+DROP TABLE IF EXISTS admin_expired_tokens;
+CREATE TABLE admin_expired_tokens (
+  admin_name varchar(44) NOT NULL default '',
+  otp_code varchar(32) NOT NULL default '',
+  used_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY  (used_date, otp_code, admin_name),
+  KEY idx_admin_name_otp_code_zen (admin_name, otp_code)
+);
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('MFA Multi-Factor Authentication Required', 'MFA_ENABLED', 'False', '2-Factor authentication for Admin users', 1, 29, now(), 'zen_cfg_select_option([\'True\', \'False\'],');
+
+
 
 
 
