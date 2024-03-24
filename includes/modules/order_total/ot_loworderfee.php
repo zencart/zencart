@@ -35,6 +35,11 @@ class ot_loworderfee
      */
     public $title;
     /**
+     * $enabled determines whether this module shows or not... during checkout.
+     * @var boolean
+     */
+    public $enabled;
+    /**
      * $output is an array of the display elements used on checkout pages
      * @var array
      */
