@@ -1,25 +1,35 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2010 Kuroi Web Design
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id:  Modified 2024-02-24 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+?>
+
+<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"><\/script>');</script>
+<script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js" title="CKEditorCDN"></script>
+<?php
+
 // prepare list of languages supported by this website, so we can tell CKEditor
 $var = zen_get_languages();
 $jsLanguageLookupArray = "var lang = new Array;\n";
 foreach ($var as $key)
 {
   $jsLanguageLookupArray .= "        lang[" . $key['id'] . "] = '" . $key['code'] . "';\n";
+  if ($key['code'] === 'en') {
+      continue;
+  }
+?>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/translations/<?php echo $key['code']; ?>.js"></script>
+<?php
 }
 ?>
-<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"><\/script>');</script>
-<script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
-<script src="https://cdn.ckeditor.com/4.14.0/standard-all/ckeditor.js" title="CKEditorCDN"></script>
-
+<script src="<?php echo (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : '/') . DIR_WS_EDITORS . 'ckeditor5/config.js'; ?>"></script>
 <script title="ckEditor-Initialize">
     jQuery(document).ready(function() {
         <?php echo $jsLanguageLookupArray; ?>
@@ -31,11 +41,12 @@ foreach ($var as $key)
                 index = jQuery(this).attr('name').match(/\d+/);
                 if (index == null) index = <?php echo $_SESSION['languages_id'] ?>;
 
-                CKEDITOR.replace(jQuery(this).attr('name'),
-                    {
-                        customConfig: '<?php echo (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : '/') . DIR_WS_EDITORS . 'ckeditor/config.js'; ?>',
-                        language: lang[index]
-                    });
+                ClassicEditor
+                    .create(document.querySelector( '#' + jQuery(this).attr('id') ),
+                        {...myCKEditorConfig, ...{language: lang[index]}})
+                    .catch( error => {
+                        console.error( error );
+                    } );
             }
         });
     });
@@ -43,9 +54,4 @@ foreach ($var as $key)
 
 <?php
 // Other options:
-// - Edit your /editors/ckeditor/config.js file to control the toolbar buttons, add additional plugins, control the UI color, etc
-//
-// Advanced:
-// https://ckeditor.com/docs/ckeditor4/latest/features/styles.html#the-stylesheet-parser-plugin
-// - set custom styles in the /editors/ckeditor/styles.js file
-// - import a template-specific stylesheet from catalog-side, using config.contentsCss setting, so dialogs "look like catalog-side" in admin editor
+// - Edit your /editors/ckeditor5/config.js file to control the toolbar buttons, add additional plugins, etc
