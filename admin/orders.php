@@ -1470,7 +1470,8 @@ if ($show_orders_weights === true) {
                 </td>
 <?php if ($quick_view_popover_enabled) { ?>
                 <td class="dataTableContent text-right dataTableButtonCell">
-                    <a tabindex="0" class="btn btn-xs btn-link mt-3 orderProductsPopover" role="button" data"focus"
+                    <a tabindex="0" class="btn btn-xs btn-link mt-3 orderProductsPopover" role="button" data-toggle="popover"
+                       data-trigger="focus"
                        data-placement="left"
                        title="<?php echo TEXT_PRODUCT_POPUP_TITLE; ?>"
                        data-content="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br />' => '<br>']); ?>"
