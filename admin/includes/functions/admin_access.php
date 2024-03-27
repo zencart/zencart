@@ -374,7 +374,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
                 $response = zen_call_function(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE, [$result['admin_id'], $result['admin_email'], $result['admin_name']]);
                 if ($response !== true) {
                     $error = true;
-                    $message = ERROR_WRONG_LOGIN;
+                    $message = TEXT_MFA_ERROR;
                     zen_record_admin_activity('TFA Failure - Two-factor authentication failed', 'warning');
                 } else {
                     zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'warning');

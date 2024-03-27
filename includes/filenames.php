@@ -105,6 +105,7 @@ define('FILENAME_LOGOFF', 'logoff');
 define('FILENAME_MAIL', 'mail');
 define('FILENAME_MAIN_PRODUCT_IMAGE', 'main_product_image');
 define('FILENAME_MANUFACTURERS', 'manufacturers');
+define('FILENAME_MFA', 'mfa');
 define('FILENAME_META_TAGS', 'meta_tags');
 define('FILENAME_MODULES', 'modules');
 define('FILENAME_NEWSLETTERS', 'newsletters');
