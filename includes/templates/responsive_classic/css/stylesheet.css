@@ -136,6 +136,8 @@ select#country, select#stateZone, #state {margin-left:0;}
 #navCatTabs li a {text-decoration: underline;padding: 1.2em 1.0em;display: block;}
 #navCatTabs li a:hover {}
 #navCatTabs li:hover{}
+span.category-subs-selected {font-weight: bold;}
+
 /*top ezpages links*/
 #navEZPagesTop {margin:0;width:100%;}
 #navEZPagesTop ul {font-size:0;text-align:center;overflow:hidden;}
