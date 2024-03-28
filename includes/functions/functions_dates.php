@@ -196,7 +196,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
         }
     }
 
-    if ($date_separator_idx != $format_separator_idx) {
+    if (!isset($date_separator_idx, $format_separator_idx) || $date_separator_idx != $format_separator_idx) {
         return false;
     }
 
