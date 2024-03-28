@@ -12,6 +12,7 @@ $define = [
     'TEXT_ADMIN_PROFILE' => 'Profile',
     'TEXT_CHOOSE_PROFILE' => 'Choose Profile',
     'TEXT_NO_USERS_FOUND' => 'No Admin Users found',
+    'TEXT_PASS_LAST_CHANGED' => 'Pwd Last Change',
     'TEXT_CONFIRM_DELETE' => 'Delete requested. Please confirm: ',
     'ERROR_NO_USER_DEFINED' => 'The option requested requires a username to be specified.',
     'ERROR_USER_MUST_HAVE_PROFILE' => 'User must be assigned a profile.',
