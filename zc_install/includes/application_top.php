@@ -148,10 +148,10 @@ zen_sanitize_request();
  */
 $request_type = ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) ||
     (isset($_SERVER['HTTP_X_FORWARDED_BY']) && stripos($_SERVER['HTTP_X_FORWARDED_BY'], 'SSL') !== false) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (stripos($_SERVER['HTTP_X_FORWARDED_HOST'], 'SSL') !== false || stripos($_SERVER['HTTP_X_FORWARDED_HOST'], str_replace('https://', '', HTTPS_SERVER)) !== false)) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (stripos($_SERVER['HTTP_X_FORWARDED_HOST'], 'SSL') !== false) ||
     (isset($_SERVER['SCRIPT_URI']) && stripos($_SERVER['SCRIPT_URI'], 'https:') === 0) ||
     (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) == 'on')) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https')) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'))) ||
     (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] != '') ||
     (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
 
