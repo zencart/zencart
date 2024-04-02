@@ -216,7 +216,7 @@ if ($num_products_count > 0) {
             $lc_text = '';
 
             $href = zen_href_link(zen_get_info_page($record['products_id']), 'cPath=' . zen_get_generated_category_path_rev($linkCpath) . '&products_id=' . $record['products_id']);
-            $listing_product_name = $record['products_name'] ?? '';
+            $listing_product_name = zen_get_products_name((int)$record['products_id']);
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
                 $listing_description = zen_trunc_string(zen_clean_html(stripslashes(zen_get_products_description($record['products_id'], $_SESSION['languages_id']))), PRODUCT_LIST_DESCRIPTION);
