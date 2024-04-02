@@ -52,8 +52,16 @@
 
     function process() {
       global $order, $currencies;
+	  // bof lost penny compensation
+	  $decimale = $currencies->get_decimal_places($_SESSION['currency']);
+	  $lost_penny_total = $currencies->value($order->info['subtotal']) + $currencies->value($order->info['shipping_cost']);
+	  $lost_penny_total -= (isset($order->info['coupon_amount']) && $order->info['coupon_amount'] !=0) ? $currencies->value($order->info['coupon_amount']) : 0;
+	  $lost_penny_total += DISPLAY_PRICE_WITH_TAX != 'true' ? $currencies->value($order->info['tax']) : 0;
+	  $lost_penny = substr(strval(zen_round(abs($lost_penny_total - $currencies->value($order->info['total'])), $decimale)), -1);
+	  $display_order_total = ($lost_penny == '1' && $order->info['total'] > 0) ? $currencies->value($lost_penny_total, true, DEFAULT_CURRENCY) : $order->info['total'];
+	  // eof lost penny compensation
       $this->output[] = array('title' => $this->title . ':',
-                              'text' => $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value']),
+                              'text' => $currencies->format($display_order_total, true, $order->info['currency'], $order->info['currency_value']),
                               'value' => $order->info['total']);
     }
 
