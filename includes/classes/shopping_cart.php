@@ -677,13 +677,12 @@ class shoppingCart extends base
             $qty = $data['qty'];
             $prid = zen_get_prid($uprid);
 
-            $product = zen_get_product_details($prid);
-            if ($product->EOF) {
+            $product = (new Product($prid))->withDefaultLanguage()->getData();
+            if (empty($product)) {
                 $this->removeUprid($uprid);
                 continue;
             }
 
-            $product = $product->fields;
             $this->notify('NOTIFY_CART_CALCULATE_PRODUCT_PRICE', $uprid, $product);
             $prid = zen_get_prid($product['products_id']);
 
@@ -1231,15 +1230,13 @@ class shoppingCart extends base
         $products_array = [];
         foreach ($this->contents as $uprid => $data) {
             $prid = zen_get_prid($uprid);
-            $products = zen_get_product_details($prid);
-            if ($products->EOF) {
+            $product = (new Product($prid))->withDefaultLanguage()->getData();
+            if (empty($product)) {
                 $this->removeUprid($uprid);
                 continue;
             }
 
-            $this->notify('NOTIFY_CART_GET_PRODUCTS_NEXT', $uprid, $products->fields);
-
-            $product = $products->fields;
+            $this->notify('NOTIFY_CART_GET_PRODUCTS_NEXT', $uprid, $product);
 
             $products_raw_price = zen_get_retail_or_wholesale_price($product['products_price'], $product['products_price_w']);
             $products_price = $products_raw_price;
@@ -1489,8 +1486,7 @@ class shoppingCart extends base
         } else {
             foreach ($this->contents as $uprid => $data) {
                 $prid = (int)$uprid;
-                $free_ship_check = zen_get_product_details($prid);
-                $free_ship_check = $free_ship_check->fields;
+                $free_ship_check = (new Product($prid))->withDefaultLanguage()->getData();
 
                 if (str_starts_with($free_ship_check['products_model'] ?? '', 'GIFT')) {
 // @TODO - fix GIFT price in cart special/attribute
@@ -1584,9 +1580,8 @@ class shoppingCart extends base
      * Calculate item quantity, bounded by the mixed/min units settings
      *
      * @param int|string $uprid_to_check product id of item to check
-     * @return float
      */
-    public function in_cart_mixed($uprid_to_check)
+    public function in_cart_mixed(int|string $uprid_to_check): float|int
     {
         // if nothing is in cart return 0
         if (!is_array($this->contents)) {
@@ -1594,10 +1589,10 @@ class shoppingCart extends base
         }
 
         // check if mixed is on
-        $product = zen_get_product_details((int)$uprid_to_check);
+        $mixed_status = (new Product((int)$uprid_to_check))->withDefaultLanguage()->get('products_quantity_mixed');
 
         // if mixed attributes is off return qty for current attribute selection
-        if ($product->fields['products_quantity_mixed'] === '0') {
+        if ($mixed_status === '0') {
             return $this->get_quantity($uprid_to_check);
         }
 
@@ -1630,10 +1625,10 @@ class shoppingCart extends base
         }
 
         // check if mixed is on
-        $product = zen_get_product_details((int)$uprid_to_check);
+        $mixed_status = (new Product((int)$uprid_to_check))->withDefaultLanguage()->get('products_mixed_discount_quantity');
 
         // if mixed attributes is off return qty for current attribute selection
-        if ($product->fields['products_mixed_discount_quantity'] === '0') {
+        if ($mixed_status === '0') {
             return $this->get_quantity($uprid_to_check);
         }
 
@@ -1671,8 +1666,8 @@ class shoppingCart extends base
         $in_cart_check_qty = 0;
         foreach ($this->contents as $uprid => $data) {
             // check if field it true
-            $product_check = zen_get_product_details(zen_get_prid($uprid));
-            if (array_key_exists($check_what, $product_check->fields) && (string)$product_check->fields[$check_what] === (string)$check_value) {
+            $product_check = (new Product(zen_get_prid($uprid)))->withDefaultLanguage()->getData();
+            if (array_key_exists($check_what, $product_check) && (string)$product_check[$check_what] === (string)$check_value) {
                 $in_cart_check_qty += $data['qty'];
             }
         }
@@ -2651,10 +2646,10 @@ class shoppingCart extends base
         }
 
         // check if mixed is on
-        $product = zen_get_product_details((int)$pr_id);
+        $mixed_status = (new Product((int)$pr_id))->withDefaultLanguage()->get('products_quantity_mixed');
 
         // if mixed attributes is off identify that this product is the last of its kind (which is also the first of its kind).
-        if (empty($product->fields['products_quantity_mixed'])) {
+        if (empty($mixed_status)) {
             return true;
         }
 

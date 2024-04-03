@@ -25,6 +25,7 @@ if (defined('DIR_FS_ADMIN')) {
     $psr4Autoloader->addPrefix('Zencart\Paginator', DIR_FS_ADMIN . DIR_WS_CLASSES);
 }
 $psr4Autoloader->setClassFile('language', DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php' );
+$psr4Autoloader->setClassFile('Product', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Product.php' );
 $psr4Autoloader->setClassFile('Settings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Settings.php' );
 $psr4Autoloader->setClassFile('TemplateSettings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'TemplateSettings.php' );
 $psr4Autoloader->setClassFile('ZenShipping', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ZenShipping.php');

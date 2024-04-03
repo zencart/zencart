@@ -129,17 +129,16 @@ if ($num_products_count > 0) {
     // Retrieve all records into an array to allow for sorting and insertion of additional data if needed
     $records = [];
     foreach ($listing as $record) {
+        $product_info = (new Product($record['products_id']))->getDataForLanguage((int)$_SESSION['languages_id']) ?? [];
         $category_id = !empty($record['categories_id']) ? $record['categories_id'] : $record['master_categories_id'];
         $parent_category_name = trim(zen_get_categories_parent_name($category_id));
         $category_name = trim(zen_get_category_name($category_id, (int)$_SESSION['languages_id']));
+
         $records[] = array_merge($record,
             [
                 'parent_category_name' => (!empty($parent_category_name)) ? $parent_category_name : $category_name,
                 'category_name' => $category_name,
-//                'products_name' => $record['products_name'],
-//                'master_categories_id' => $record['master_categories_id'],
-//                'products_sort_order' => $record['products_sort_order'],
-            ]);
+            ], $product_info);
     }
 
     if (!empty($_GET['keyword'])) $skip_sort = true;
@@ -215,7 +214,7 @@ if ($num_products_count > 0) {
             $listing_product_name = $record['products_name'] ?? '';
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
-                $listing_description = zen_trunc_string(zen_clean_html(stripslashes(zen_get_products_description($record['products_id'], $_SESSION['languages_id']))), PRODUCT_LIST_DESCRIPTION);
+                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'])), PRODUCT_LIST_DESCRIPTION);
                 $lc_text .= '<div class="listingDescription">' . $listing_description . '</div>';
             }
             $listing_model = $record['products_model'] ?? '';
