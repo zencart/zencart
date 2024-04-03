@@ -648,7 +648,9 @@ if (!empty($action) && $order_exists === true) {
             <table class="table" id="addressDelivery">
               <tr>
                 <td><strong><?php echo ENTRY_SHIPPING_ADDRESS; ?></strong><br>
+                    <?php if (!empty($order->delivery)) { ?>
                     <button type="button" class="btn btn-xs btn-default mt-3" title="<?= TEXT_COPY ?>" onclick="copyToClipboard('delivery', this)"><?= TEXT_COPY ?></button>
+                    <?php } ?>
                 </td>
                 <td><?php echo (empty($order->delivery)) ? TEXT_NONE : zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
               </tr>
