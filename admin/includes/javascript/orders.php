@@ -33,13 +33,13 @@ if (isset($action) && $action === 'edit') {
             let address;
             switch (addressType) {
                 case('customer') :
-                    address = '<?= $addressBlock['customer'] ?>';
+                    address = '<?= zen_output_string_protected($addressBlock['customer']) ?>';
                     break;
                 case('delivery') :
-                    address = '<?= $addressBlock['delivery'] ?>';
+                    address = '<?= zen_output_string_protected($addressBlock['delivery']) ?>';
                     break;
                 case('billing') :
-                    address = '<?= $addressBlock['billing'] ?>';
+                    address = '<?= zen_output_string_protected($addressBlock['billing']) ?>';
                     break;
                 default:
                     return;
