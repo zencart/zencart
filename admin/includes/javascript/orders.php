@@ -14,6 +14,10 @@ if (isset($action) && $action === 'edit') {
     $address_types = ['customer', 'delivery', 'billing'];
     $addressBlock = [];
     foreach ($address_types as $address_type) {
+        if ($order->{$address_type} === false) {
+            $addressBlock[$address_type] = '';
+            continue;
+        }
         $addressBlock[$address_type] =
             $order->{$address_type}['name'] . '\n' .
             // Note the ternary is used with empty() (instead of ?? ) so that blank-but-not-null elements are excluded
@@ -33,13 +37,13 @@ if (isset($action) && $action === 'edit') {
             let address;
             switch (addressType) {
                 case('customer') :
-                    address = '<?= zen_output_string_protected($addressBlock['customer']) ?>';
+                    address = '<?= htmlspecialchars($addressBlock['customer']) ?>';
                     break;
                 case('delivery') :
-                    address = '<?= zen_output_string_protected($addressBlock['delivery']) ?>';
+                    address = '<?= htmlspecialchars($addressBlock['delivery']) ?>';
                     break;
                 case('billing') :
-                    address = '<?= zen_output_string_protected($addressBlock['billing']) ?>';
+                    address = '<?= htmlspecialchars($addressBlock['billing']) ?>';
                     break;
                 default:
                     return;
