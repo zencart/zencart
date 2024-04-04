@@ -798,8 +798,8 @@
             OFFICE_EMAIL . "\t" . $email_from . "\n" .
             (trim($login) !== '' ? OFFICE_LOGIN_NAME . "\t" . $login . "\n" : '') .
             (trim($login_email) !== '' ? OFFICE_LOGIN_EMAIL . "\t" . $login_email . "\n" : '') .
-            (trim($login_phone) !== '' ? OFFICE_LOGIN_PHONE . "\t" . $login_phone . "\n" : '') .
-            ($login_fax !== '' ? OFFICE_LOGIN_FAX . "\t" . $login_fax . "\n" : '') .
+            (trim($login_phone) !== '' ? OFFICE_LOGIN_PHONE . "\t" . zen_output_string_protected($login_phone) . "\n" : '') .
+            ($login_fax !== '' ? OFFICE_LOGIN_FAX . "\t" . zen_output_string_protected($login_fax) . "\n" : '') .
             OFFICE_IP_ADDRESS . "\t" . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . "\n" .
             ($email_host_address != '' ? OFFICE_HOST_ADDRESS . "\t" . $email_host_address . "\n" : '') .
             OFFICE_DATE_TIME . "\t" . date("D M j Y G:i:s T") . "\n";
@@ -811,15 +811,15 @@
                 '<tr><td class="extra-info-bold">' . OFFICE_EMAIL . '</td><td>' . $email_from . '</td></tr>' .
                 ($login !== '' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_NAME . '</td><td>' . $login . '</td></tr>' : '') .
                 ($login_email !== '' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_EMAIL . '</td><td>' . $login_email . '</td></tr>' : '') .
-                ($login_phone !== '' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_PHONE . '</td><td>' . $login_phone . '</td></tr>' : '') .
-                ($login_fax !== '' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_FAX . '</td><td>' . $login_fax . '</td></tr>' : '') .
+                ($login_phone !== '' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_PHONE . '</td><td>' . zen_output_string_protected($login_phone) . '</td></tr>' : '') .
+                ($login_fax !== '' ? '<tr><td class="extra-info-bold">' . OFFICE_LOGIN_FAX . '</td><td>' . zen_output_string_protected($login_fax) . '</td></tr>' : '') .
             '   <tr><td class="extra-info-bold">' . OFFICE_IP_ADDRESS . '</td><td>' . $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'] . '</td></tr>' .
                 ($email_host_address != '' ? '<tr><td class="extra-info-bold">' . OFFICE_HOST_ADDRESS . '</td><td>' . $email_host_address . '</td></tr>' : '') .
             '   <tr><td class="extra-info-bold">' . OFFICE_DATE_TIME . '</td><td>' . date('D M j Y G:i:s T') . '</td></tr>';
 
         foreach ($moreinfo as $key => $val) {
-            $extra_info['TEXT'] .= $key . ": \t" . $val . "\n";
-            $extra_info['HTML'] .= '<tr><td class="extra-info-bold">' . $key . '</td><td>' . $val . '</td></tr>';
+            $extra_info['TEXT'] .= zen_output_string_protected($key) . ": \t" . zen_output_string_protected($val) . "\n";
+            $extra_info['HTML'] .= '<tr><td class="extra-info-bold">' . zen_output_string_protected($key) . '</td><td>' . zen_output_string_protected($val) . '</td></tr>';
         }
 
         $extra_info['TEXT'] .= "\n\n";

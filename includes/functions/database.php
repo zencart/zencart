@@ -54,6 +54,10 @@ function zen_db_output(string $string)
  */
 function zen_db_prepare_input($string, bool $trimspace = true)
 {
+
+    if (!IS_ADMIN_FLAG && is_string($string)) {
+        $string = zen_sanitize_string($string);
+    }
     if (is_string($string)) {
         if ($trimspace == true) {
             return trim(stripslashes($string));

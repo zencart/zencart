@@ -1670,7 +1670,7 @@ if ($action === 'edit' || $action === 'update') {
 <?php
         if (ACCOUNT_COMPANY === 'true') {
 ?>
-                                <td class="dataTableContent"><?php echo $customer['company']; ?></td>
+                                <td class="dataTableContent"><?php echo zen_output_string_protected($customer['company']); ?></td>
 <?php
         }
         if ($show_registration_ip_in_listing) {
@@ -2133,7 +2133,7 @@ if ($action === 'edit' || $action === 'update') {
                     'text' =>
                         '<br>' .
                         CUSTOMERS_REFERRAL . ' ' .
-                        $cInfo->customers_referral
+                        zen_output_string_protected($cInfo->customers_referral)
                 ];
             }
             break;
