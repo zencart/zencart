@@ -188,18 +188,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 
 #PROGRESS_FEEDBACK:!TEXT=Cleaning up old data - may take some time
-UPDATE customers SET customers_telephone=REPLACE(customers_telephone, CONCAT('6','x','.','m','e','/'), '__') WHERE customers_telephone LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE customers SET customers_referral=REPLACE(customers_referral, CONCAT('6','x','.','m','e','/'), '__') WHERE customers_referral LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE address_book SET entry_company=REPLACE(entry_company, CONCAT('6','x','.','m','e','/'), '__') WHERE entry_company LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE address_book SET entry_suburb=REPLACE(entry_suburb, CONCAT('6','x','.','m','e','/'), '__') WHERE entry_suburb LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE orders SET customers_company=REPLACE(customers_company, CONCAT('6','x','.','m','e','/'), '__') WHERE customers_company LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE orders SET customers_suburb=REPLACE(customers_suburb, CONCAT('6','x','.','m','e','/'), '__') WHERE customers_suburb LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE orders SET delivery_company=REPLACE(delivery_company, CONCAT('6','x','.','m','e','/'), '__') WHERE delivery_company LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE orders SET delivery_suburb=REPLACE(delivery_suburb, CONCAT('6','x','.','m','e','/'), '__') WHERE delivery_suburb LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE orders SET billing_company=REPLACE(billing_company, CONCAT('6','x','.','m','e','/'), '__') WHERE billing_company LIKE CONCAT('%','6','x','.','m','e','/','%');
-UPDATE orders SET billing_suburb=REPLACE(billing_suburb, CONCAT('6','x','.','m','e','/'), '__') WHERE billing_suburb LIKE CONCAT('%','6','x','.','m','e','/','%');
-
-UPDATE customers SET customers_telephone=REGEX_REPLACE(customers_telephone, '/(6x\.me\/|src=|<script)/', '__', 1, 0, 'i');
 
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
