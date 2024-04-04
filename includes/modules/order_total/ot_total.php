@@ -54,7 +54,9 @@
       global $order, $currencies;
 	  // bof lost penny compensation
 	  $lost_penny_total = $currencies->value($order->info['subtotal']) + $currencies->value($order->info['shipping_cost']);
-	  $lost_penny_total -= (isset($order->info['coupon_amount']) && $order->info['coupon_amount'] !=0) ? $currencies->value($order->info['coupon_amount']) : 0;
+	  foreach ($order->info['option_modules'] as $key => $value) {
+	      $lost_penny_total += (isset($order->info['option_modules'][$key]) && $order->info['option_modules'][$key] !=0) ? $currencies->value($order->info['option_modules'][$key]) : 0;
+	  }
 	  $lost_penny_total += DISPLAY_PRICE_WITH_TAX != 'true' ? $currencies->value($order->info['tax']) : 0;
 	  $lost_penny = substr(strval(zen_round(abs($lost_penny_total - $currencies->value($order->info['total'])), $currencies->get_decimal_places($_SESSION['currency']))), -1);
 	  $order->info['total'] = ($lost_penny == '1' && $order->info['total'] > 0) ? $currencies->value($lost_penny_total, true, DEFAULT_CURRENCY) : $order->info['total'];

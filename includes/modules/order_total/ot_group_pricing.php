@@ -99,13 +99,17 @@ class ot_group_pricing {
           $tax += $od_amount['tax_groups'][$key];
         }
       }
-      $order->info['total'] = $order->info['total'] - $od_amount['total'];
       if (DISPLAY_PRICE_WITH_TAX == 'true') {
-        $od_amount['total'] += $tax;
-      }
+          $od_amount['total'] += $tax;
+		  $order->info['total'] -= $od_amount['total'];
+      } else {
+          $order->info['total'] -= $od_amount['total'] + $tax;
+	  }
+	  $order->info['option_modules']['group_discount_amount'] = - $od_amount['total'];
       if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
       if ($order->info['total'] < 0) $order->info['total'] = 0;
       $order->info['tax'] = $order->info['tax'] - $tax;
+
       $this->output[] = array('title' => $this->title . ':',
       'text' => '-' . $currencies->format($od_amount['total'], true, $order->info['currency'], $order->info['currency_value']),
       'value' => $od_amount['total']);
