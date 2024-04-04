@@ -986,7 +986,7 @@ if ($action === 'edit' || $action === 'update') {
                 <div class="col-sm-9 col-md-6">
 <?php
     if ($processed === true) {
-        if ($cInfo->customers_newsletter === '1') {
+        if ($cInfo->customers_newsletter === 1) {
             echo ENTRY_NEWSLETTER_YES;
         } else {
             echo ENTRY_NEWSLETTER_NO;
@@ -996,7 +996,7 @@ if ($action === 'edit' || $action === 'update') {
         echo zen_draw_pull_down_menu(
             'customers_newsletter',
             $newsletter_array,
-            ($cInfo->customers_newsletter === '1') ? '1' : '0',
+            ($cInfo->customers_newsletter === 1) ? '1' : '0',
             'class="form-control" id="customers_newsletter"'
         );
     }
