@@ -605,7 +605,7 @@ if (!empty($action) && $order_exists === true) {
               </tr>
               <tr>
                 <td><strong><?php echo ENTRY_TELEPHONE_NUMBER; ?></strong></td>
-                <td><a href="tel:<?php echo preg_replace('/\s+/', '', $order->customer['telephone']); ?>"><?php echo $order->customer['telephone']; ?></a></td>
+                <td><a href="tel:<?php echo preg_replace('/\s+/', '', zen_output_string_protected($order->customer['telephone'])); ?>"><?php echo zen_output_string_protected($order->customer['telephone']); ?></a></td>
               </tr>
               <tr>
                 <td><strong><?php echo ENTRY_EMAIL_ADDRESS; ?></strong></td>
@@ -1334,10 +1334,10 @@ if (!empty($action) && $order_exists === true) {
                     ?>
                 <td class="dataTableContent text-center"><?php echo $show_difference . $orders->fields['orders_id']; ?></td>
                 <td class="dataTableContent"><?php echo $show_payment_type; ?></td>
-                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . $orders->fields['customers_company'] : ''); ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $orders->fields['customers_id'], 'NONSSL') . '">' . zen_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW . ' ' . TABLE_HEADING_CUSTOMERS) . '</a>&nbsp;' . $orders->fields['customers_name'] . ($orders->fields['customers_company'] !== '' ? '<br>' . zen_output_string_protected($orders->fields['customers_company']) : ''); ?></td>
 <?php if ($show_zone_info) { ?>
                 <td class="dataTableContent text-left">
-<?php echo $orders->fields['delivery_state'] . '<br>' . $orders->fields['delivery_country']; ?>
+<?php echo zen_output_string_protected($orders->fields['delivery_state']) . '<br>' . zen_output_string_protected($orders->fields['delivery_country']); ?>
                 </td>
 <?php } ?>
                 <td class="dataTableContent text-right" title="<?php echo zen_output_string($product_details, ['"' => '&quot;', "'" => '&#39;', '<br>' => '', '<br />' => '', '<hr>' => "----\n"]); ?>">
@@ -1448,7 +1448,7 @@ if (!empty($action) && $order_exists === true) {
 
                   $contents = ['form' => zen_draw_form('orders', FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . '&action=deleteconfirm', 'post', 'class="form-horizontal"', true) . zen_draw_hidden_field('oID', $oInfo->orders_id)];
 //      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br><br><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
-                  $contents[] = ['text' => TEXT_INFO_DELETE_INTRO . '<br><br><strong>' . ENTRY_ORDER_ID . $oInfo->orders_id . '<br>' . $oInfo->order_total . '<br>' . $oInfo->customers_name . ($oInfo->customers_company !== '' ? '<br>' . $oInfo->customers_company : '') . '</strong>'];
+                  $contents[] = ['text' => TEXT_INFO_DELETE_INTRO . '<br><br><strong>' . ENTRY_ORDER_ID . $oInfo->orders_id . '<br>' . $oInfo->order_total . '<br>' . $oInfo->customers_name . ($oInfo->customers_company !== '' ? '<br>' . zen_output_string_protected($oInfo->customers_company) : '') . '</strong>'];
                   $contents[] = ['text' => '<br><label>' . zen_draw_checkbox_field('restock', 'on') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY . '</label>'];
                   $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $oInfo->orders_id, 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                   break;

@@ -97,7 +97,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
                 $check_customer = $db->Execute($sql);
                 $customer_email = $check_customer->fields['customers_email_address'];
                 $customer_name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
-                $customer_telephone = $check_customer->fields['customers_telephone'];
+                $customer_telephone = zen_sanitize_string($check_customer->fields['customers_telephone']);
             } else {
                 $customer_email = NOT_LOGGED_IN_TEXT;
                 $customer_name = NOT_LOGGED_IN_TEXT;
@@ -182,7 +182,7 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     $check_customer = $db->Execute($sql);
     $email_address = $check_customer->fields['customers_email_address'];
     $name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
-    $telephone = $check_customer->fields['customers_telephone'];
+    $telephone = zen_sanitize_string($check_customer->fields['customers_telephone']);
 }
 
 $send_to_array = array();
