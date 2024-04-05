@@ -257,11 +257,13 @@ class paypaldp extends base {
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
-      $country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : STORE_COUNTRY;
+
+      $merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : null;
+      $country = $merchant_country ?? STORE_COUNTRY;
       $this->title = $country == '223' || $country == 'USA' ? MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP : MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_NONUSA;
-      $this->title .= (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') ? ' (' . MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY . ')' : '');
+      $this->title .= ($merchant_country !== null) ? " ($merchant_country)" : '';
       if ($this->enabled) {
-        if ( ((MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'US' || MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'Canada') && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
+        if ((($merchant_country === 'USA' || $merchant_country === 'Canada') && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
               || (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True')
           ) $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
         if (MODULE_PAYMENT_PAYPALDP_SERVER =='sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
@@ -291,8 +293,6 @@ class paypaldp extends base {
 //    $this->new_acct_notify = MODULE_PAYMENT_PAYPALDP_NEW_ACCT_NOTIFY;
     $this->zone = (int)MODULE_PAYMENT_PAYPALDP_ZONE;
     if (is_object($order)) $this->update_status();
-
-    if (PROJECT_VERSION_MAJOR != '1' && substr(PROJECT_VERSION_MINOR, 0, 3) != '5.6') $this->enabled = false;
 
     // offer credit card choices for pull-down menu -- only needed for UK version
     $this->cards = array();
@@ -896,7 +896,7 @@ class paypaldp extends base {
 
       $optionsShip = array();
       if (isset($order->delivery) && $order->delivery['street_address'] != '') {
-        $optionsShip= array('SHIPTONAME'   => ($order->delivery['name'] == '' ? $order->delivery['firstname'] . ' ' . $order->delivery['lastname'] : $order->delivery['name']),
+        $optionsShip= array('SHIPTONAME'   => empty($order->delivery['name']) ? $order->delivery['firstname'] . ' ' . $order->delivery['lastname'] : $order->delivery['name'],
                             'SHIPTOSTREET' => $order->delivery['street_address'],
                             'SHIPTOSTREET2' => $order->delivery['suburb'],
                             'SHIPTOCITY'   => $order->delivery['city'],
@@ -975,7 +975,7 @@ class paypaldp extends base {
       $this->numitems = sizeof($order->products);
       $this->responsedata = $response;
 
-      if ($response['PNREF']) {
+      if (!empty($response['PNREF'])) {
       // PNREF only comes from payflow mode
         $this->payment_type = MODULE_PAYMENT_PAYPALDP_PF_TEXT_TYPE;
         $this->transaction_id = $response['PNREF'];
@@ -1106,11 +1106,9 @@ class paypaldp extends base {
             ORDER BY paypal_ipn_id DESC LIMIT 1";
     $sql = $db->bindVars($sql, ':orderID', $zf_order_id, 'integer');
     $ipn = $db->Execute($sql);
-    if ($ipn->EOF) {
-      $ipn = new stdClass;
-      $ipn->fields = array();
+    if (!$ipn->EOF && file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php')) {
+        require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php');
     }
-    if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php')) require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypalwpp_admin_notification.php');
     return $output;
   }
   /**
