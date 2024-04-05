@@ -243,6 +243,93 @@ ALTER TABLE ezpages DROP pages_title;
 ALTER TABLE ezpages DROP pages_html_text;
 
 
+
+UPDATE address_book SET entry_company='FAKE ACCOUNT' WHERE entry_company LIKE '%src=%';
+UPDATE address_book SET entry_firstname='FAKE ACCOUNT' WHERE entry_firstname LIKE '%src=%';
+UPDATE address_book SET entry_lastname='FAKE ACCOUNT' WHERE entry_lastname LIKE '%src=%';
+UPDATE address_book SET entry_street_address='FAKE ACCOUNT' WHERE entry_street_address LIKE '%src=%';
+UPDATE address_book SET entry_suburb='FAKE ACCOUNT' WHERE entry_suburb LIKE '%src=%';
+UPDATE address_book SET entry_city='FAKE ACCOUNT' WHERE entry_city LIKE '%src=%';
+UPDATE address_book SET entry_state='FAKE ACCOUNT' WHERE entry_state LIKE '%src=%';
+UPDATE address_book SET entry_company=REPLACE(entry_company, '<script', '_scrpt_') WHERE entry_company LIKE '%<script%';
+UPDATE address_book SET entry_firstname=REPLACE(entry_firstname, '<script', '_scrpt_') WHERE entry_firstname LIKE '%<script%';
+UPDATE address_book SET entry_lastname=REPLACE(entry_lastname, '<script', '_scrpt_') WHERE entry_lastname LIKE '%<script%';
+UPDATE address_book SET entry_street_address=REPLACE(entry_street_address, '<script', '_scrpt_') WHERE entry_street_address LIKE '%<script%';
+UPDATE address_book SET entry_suburb=REPLACE(entry_suburb, '<script', '_scrpt_') WHERE entry_suburb LIKE '%<script%';
+UPDATE address_book SET entry_city=REPLACE(entry_city, '<script', '_scrpt_') WHERE entry_city LIKE '%<script%';
+UPDATE address_book SET entry_state=REPLACE(entry_state, '<script', '_scrpt_') WHERE entry_state LIKE '%<script%';
+
+UPDATE customers SET customers_firstname='FAKE ACCOUNT' WHERE customers_firstname LIKE '%src=%';
+UPDATE customers SET customers_lastname='FAKE ACCOUNT' WHERE customers_lastname LIKE '%src=%';
+UPDATE customers SET customers_telephone='FAKE ACCOUNT' WHERE customers_telephone LIKE '%src=%';
+UPDATE customers SET customers_fax='FAKE ACCOUNT' WHERE customers_fax LIKE '%src=%';
+UPDATE customers SET customers_referral='FAKE ACCOUNT' WHERE customers_referral LIKE '%src=%';
+UPDATE customers SET customers_nick='FAKE ACCOUNT' WHERE customers_nick LIKE '%src=%';
+UPDATE customers SET customers_email_address='FAKE ACCOUNT' WHERE customers_email_address LIKE '%src=%';
+UPDATE customers SET customers_firstname=REPLACE(customers_firstname, '<script', '_scrpt_') WHERE customers_firstname LIKE '%<script%';
+UPDATE customers SET customers_lastname=REPLACE(customers_lastname, '<script', '_scrpt_') WHERE customers_lastname LIKE '%<script%';
+UPDATE customers SET customers_telephone=REPLACE(customers_telephone, '<script', '_scrpt_') WHERE customers_telephone LIKE '%<script%';
+UPDATE customers SET customers_email_address=REPLACE(customers_email_address, '<script', '_scrpt_') WHERE customers_email_address LIKE '%<script%';
+UPDATE customers SET customers_fax=REPLACE(customers_fax, '<script', '_scrpt_') WHERE customers_fax LIKE '%<script%';
+UPDATE customers SET customers_referral=REPLACE(customers_referral, '<script', '_scrpt_') WHERE customers_referral LIKE '%<script%';
+UPDATE customers SET customers_nick=REPLACE(customers_nick, '<script', '_scrpt_') WHERE customers_nick LIKE '%<script%';
+
+UPDATE orders SET customers_company='FAKE ACCOUNT' WHERE customers_company LIKE '%src=%';
+UPDATE orders SET customers_name='FAKE ACCOUNT' WHERE customers_name LIKE '%src=%';
+UPDATE orders SET customers_street_address='FAKE ACCOUNT' WHERE customers_street_address LIKE '%src=%';
+UPDATE orders SET customers_suburb='FAKE ACCOUNT' WHERE customers_suburb LIKE '%src=%';
+UPDATE orders SET customers_city='FAKE ACCOUNT' WHERE customers_city LIKE '%src=%';
+UPDATE orders SET customers_state='FAKE ACCOUNT' WHERE customers_state LIKE '%src=%';
+UPDATE orders SET customers_country='FAKE ACCOUNT' WHERE customers_country LIKE '%src=%';
+UPDATE orders SET customers_telephone='FAKE ACCOUNT' WHERE customers_telephone LIKE '%src=%';
+UPDATE orders SET customers_email_address='FAKE ACCOUNT' WHERE customers_email_address LIKE '%src=%';
+UPDATE orders SET delivery_company='FAKE ACCOUNT' WHERE delivery_company LIKE '%src=%';
+UPDATE orders SET delivery_name='FAKE ACCOUNT' WHERE delivery_name LIKE '%src=%';
+UPDATE orders SET delivery_street_address='FAKE ACCOUNT' WHERE delivery_street_address LIKE '%src=%';
+UPDATE orders SET delivery_suburb='FAKE ACCOUNT' WHERE delivery_suburb LIKE '%src=%';
+UPDATE orders SET delivery_city='FAKE ACCOUNT' WHERE delivery_city LIKE '%src=%';
+UPDATE orders SET delivery_state='FAKE ACCOUNT' WHERE delivery_state LIKE '%src=%';
+UPDATE orders SET delivery_country='FAKE ACCOUNT' WHERE delivery_country LIKE '%src=%';
+UPDATE orders SET billing_company='FAKE ACCOUNT' WHERE billing_company LIKE '%src=%';
+UPDATE orders SET billing_name='FAKE ACCOUNT' WHERE billing_name LIKE '%src=%';
+UPDATE orders SET billing_street_address='FAKE ACCOUNT' WHERE billing_street_address LIKE '%src=%';
+UPDATE orders SET billing_suburb='FAKE ACCOUNT' WHERE billing_suburb LIKE '%src=%';
+UPDATE orders SET billing_city='FAKE ACCOUNT' WHERE billing_city LIKE '%src=%';
+UPDATE orders SET billing_state='FAKE ACCOUNT' WHERE billing_state LIKE '%src=%';
+UPDATE orders SET billing_country='FAKE ACCOUNT' WHERE billing_country LIKE '%src=%';
+UPDATE orders SET customers_company=REPLACE(customers_company, '<script', '_scrpt_') WHERE customers_company LIKE '%<script%';
+UPDATE orders SET customers_name=REPLACE(customers_name, '<script', '_scrpt_') WHERE customers_name LIKE '%<script%';
+UPDATE orders SET customers_street_address=REPLACE(customers_street_address, '<script', '_scrpt_') WHERE customers_street_address LIKE '%<script%';
+UPDATE orders SET customers_suburb=REPLACE(customers_suburb, '<script', '_scrpt_') WHERE customers_suburb LIKE '%<script%';
+UPDATE orders SET customers_city=REPLACE(customers_city, '<script', '_scrpt_') WHERE customers_city LIKE '%<script%';
+UPDATE orders SET customers_state=REPLACE(customers_state, '<script', '_scrpt_') WHERE customers_state LIKE '%<script%';
+UPDATE orders SET customers_country=REPLACE(customers_country, '<script', '_scrpt_') WHERE customers_country LIKE '%<script%';
+UPDATE orders SET customers_telephone=REPLACE(customers_telephone, '<script', '_scrpt_') WHERE customers_telephone LIKE '%<script%';
+UPDATE orders SET customers_email_address=REPLACE(customers_email_address, '<script', '_scrpt_') WHERE customers_email_address LIKE '%<script%';
+UPDATE orders SET delivery_company=REPLACE(delivery_company, '<script', '_scrpt_') WHERE delivery_company LIKE '%<script%';
+UPDATE orders SET delivery_name=REPLACE(delivery_name, '<script', '_scrpt_') WHERE delivery_name LIKE '%<script%';
+UPDATE orders SET delivery_street_address=REPLACE(delivery_street_address, '<script', '_scrpt_') WHERE delivery_street_address LIKE '%<script%';
+UPDATE orders SET delivery_suburb=REPLACE(delivery_suburb, '<script', '_scrpt_') WHERE delivery_suburb LIKE '%<script%';
+UPDATE orders SET delivery_city=REPLACE(delivery_city, '<script', '_scrpt_') WHERE delivery_city LIKE '%<script%';
+UPDATE orders SET delivery_state=REPLACE(delivery_state, '<script', '_scrpt_') WHERE delivery_state LIKE '%<script%';
+UPDATE orders SET delivery_country=REPLACE(delivery_country, '<script', '_scrpt_') WHERE delivery_country LIKE '%<script%';
+UPDATE orders SET billing_company=REPLACE(billing_company, '<script', '_scrpt_') WHERE billing_company LIKE '%<script%';
+UPDATE orders SET billing_name=REPLACE(billing_name, '<script', '_scrpt_') WHERE billing_name LIKE '%<script%';
+UPDATE orders SET billing_street_address=REPLACE(billing_street_address, '<script', '_scrpt_') WHERE billing_street_address LIKE '%<script%';
+UPDATE orders SET billing_suburb=REPLACE(billing_suburb, '<script', '_scrpt_') WHERE billing_suburb LIKE '%<script%';
+UPDATE orders SET billing_city=REPLACE(billing_city, '<script', '_scrpt_') WHERE billing_city LIKE '%<script%';
+UPDATE orders SET billing_state=REPLACE(billing_state, '<script', '_scrpt_') WHERE billing_state LIKE '%<script%';
+UPDATE orders SET billing_country=REPLACE(billing_country, '<script', '_scrpt_') WHERE billing_country LIKE '%<script%';
+
+UPDATE email_archive SET email_to_name='SPAM MESSAGE' WHERE email_to_name LIKE '%src=%' OR email_to_name LIKE '%<script%';
+UPDATE email_archive SET email_subject ='SPAM MESSAGE' WHERE email_subject LIKE '%src=%' OR email_subject LIKE '%<script%';
+UPDATE email_archive SET email_text=REPLACE(email_text, 'src=', '_src_') WHERE email_text LIKE '%src=%';
+UPDATE email_archive SET email_text=REPLACE(email_text, '<script', '_scrpt_') WHERE email_text LIKE '%<script%';
+UPDATE email_archive SET email_html=REPLACE(email_html, 'src=', '_src_') WHERE email_html LIKE '%src=%';
+UPDATE email_archive SET email_html=REPLACE(email_html, '<script', '_scrpt_') WHERE email_html LIKE '%<script%';
+
+
+
 #############
 ### Added to correct storepickup tax basis description
 UPDATE configuration set configuration_description = 'On what basis is Shipping Tax calculated. Options are<br>Shipping - Based on Store Pickup Address <br>Billing - Based on customers Billing address' WHERE  configuration_key= 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS';
