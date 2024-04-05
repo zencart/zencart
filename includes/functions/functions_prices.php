@@ -1430,7 +1430,16 @@ function zen_get_letters_count_price($string, $free = 0, $price = 0)
 function zen_get_products_discount_price_qty($product_id, $check_qty, $check_amount = 0)
 {
     global $db;
+
     $product_id = (int)$product_id;
+
+    if (IS_ADMIN_FLAG === false) {
+        $new_qty = $_SESSION['cart']->in_cart_mixed_discount_quantity($product_id);
+        // check for discount qty mix
+        if ($new_qty > $check_qty) {
+            $check_qty = $new_qty;
+        }
+    }
 
     $result = zen_get_product_details($product_id);
     if ($result->EOF) {
