@@ -10,8 +10,12 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+$prev_next_override = false;
+$zco_notifier->notify('NOTIFY_PRODUCT_PREV_NEXT_OVERRIDE', [], $prev_next_override);
+
 // bof: previous next
-if (PRODUCT_INFO_PREVIOUS_NEXT != 0) {
+if ($prev_next_override === false && PRODUCT_INFO_PREVIOUS_NEXT != 0) {
 
   // sort order
     $prev_next_order = zen_products_sort_order();
