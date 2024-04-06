@@ -1170,7 +1170,7 @@ switch ($_GET['action']) {
                   if (isset($_GET['cid']) && empty($inSearch)) {
                       $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
-                                     WHERE coupon_id = " . (int)$_GET['cid'];
+                                     WHERE coupon_type != 'G'";
                   } else {
                       $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
@@ -1189,15 +1189,17 @@ switch ($_GET['action']) {
                       $cInfo = new objectInfo($item);
                     }
 
-                    $coupon_referrer = '';
-                    $sql = "SELECT referrer_domain
-                            FROM " . TABLE_COUPON_REFERRERS . "
-                            WHERE coupon_id = " . (int)$cInfo->coupon_id ?? 0;
-                    $results = $db->Execute($sql);
-                    foreach ($results as $result) {
-                        $coupon_referrer .= $result['referrer_domain'] . ',';
-                    }
-                    $cInfo->referrer = trim($coupon_referrer, ',');
+                    if (isset($cInfo)) {
+					    $coupon_referrer = '';
+                        $sql = "SELECT referrer_domain
+                                FROM " . TABLE_COUPON_REFERRERS . "
+                                WHERE coupon_id = " . (int)$cInfo->coupon_id ?? 0;
+                        $results = $db->Execute($sql);
+                        foreach ($results as $result) {
+                            $coupon_referrer .= $result['referrer_domain'] . ',';
+                        }
+                        $cInfo->referrer = trim($coupon_referrer, ',');
+					}
 
                     if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
                       ?>
