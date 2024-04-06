@@ -132,14 +132,14 @@ if ($num_products_count > 0) {
         $category_id = !empty($record['categories_id']) ? $record['categories_id'] : $record['master_categories_id'];
         $parent_category_name = trim(zen_get_categories_parent_name($category_id));
         $category_name = trim(zen_get_category_name($category_id, (int)$_SESSION['languages_id']));
+        $product_details = zen_get_product_details($record['products_id']);
         $records[] = array_merge($record,
             [
                 'parent_category_name' => (!empty($parent_category_name)) ? $parent_category_name : $category_name,
                 'category_name' => $category_name,
-//                'products_name' => $record['products_name'],
 //                'master_categories_id' => $record['master_categories_id'],
 //                'products_sort_order' => $record['products_sort_order'],
-            ]);
+            ], $product_details->fields ?? []);
     }
 
     if (!empty($_GET['keyword'])) $skip_sort = true;
