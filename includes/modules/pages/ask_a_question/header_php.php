@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2023 Jul 03 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott C Wilson 2024 Apr 04 Modified in v2.0.0 $
  */
 $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
 
