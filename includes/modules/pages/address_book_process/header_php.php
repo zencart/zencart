@@ -115,7 +115,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
                      FROM " . TABLE_ZONES . "
                      WHERE zone_country_id = :zoneCountryID
                      AND " .
-                     ((trim($state) != '' && $zone_id == 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
+                     ((trim($state) != '' && (int)$zone_id === 0) ? "(upper(zone_name) like ':zoneState%' OR upper(zone_code) like '%:zoneState%') OR " : "") .
                     "zone_id = :zoneID
                      ORDER BY zone_code ASC, zone_name";
 
