@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 01 Modified in v2.0.0-rc1 $
+ * @version $Id: piloujp 2024 Apr 06 Modified in v2.0.0 $
  */
 require 'includes/application_top.php';
 require DIR_WS_CLASSES . 'currencies.php';
