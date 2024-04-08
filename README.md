@@ -1,4 +1,4 @@
-![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=v158)
+![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=master)
 
 
 Zen Cart&reg; - The Art of E-Commerce
@@ -13,7 +13,7 @@ Zen Cart is free and open source software, with free community-driven support av
 --------------------
 
 
-Zen Cart&reg; v2.0.0-dev
+Zen Cart&reg; v2.0.0
 ---------------------
 
 Compatibility
@@ -50,7 +50,7 @@ Recommended reading related to upgrading: https://docs.zen-cart.com/user/upgradi
 
 Guidance for Secure Installations
 ---------------------------------
-__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v157.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resilience against troublesome access attempted by any undesired/unauthorized visitors.
+__The [Implementation Guide](https://www.zen-cart.com/docs/implementation-guide-v200.pdf) document is provided to give detailed instructions on how to install and secure your site in accordance with PCI Compliance requirements.__ Whether your site "needs" PCI Compliance or not is up to you to decide, but you should still follow the documented principles to maximize your site's resilience against troublesome access attempted by any undesired/unauthorized visitors.
 
 
 Documentation
