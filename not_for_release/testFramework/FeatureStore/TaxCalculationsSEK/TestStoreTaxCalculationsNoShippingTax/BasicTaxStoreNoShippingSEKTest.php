@@ -46,13 +46,13 @@ class BasicTaxStoreNoShippingSEKTest extends zcFeatureTestCaseStore
         $this->assertStringContainsString('12,2483', (string)$response->getContent() );
         $this->assertStringContainsString('0,4375', (string)$response->getContent() );
         $this->assertStringContainsString('0,8574', (string)$response->getContent() );
-        $this->assertStringContainsString('SEK13,5431SEK', (string)$response->getContent() );
+        $this->assertStringContainsString('SEK13,5432SEK', (string)$response->getContent() );
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
         $this->assertStringContainsString('12,2483', (string)$response->getContent() );
         $this->assertStringContainsString('0,4375', (string)$response->getContent() );
         $this->assertStringContainsString('0,8574', (string)$response->getContent() );
-        $this->assertStringContainsString('SEK13,5431SEK', (string)$response->getContent() );
+        $this->assertStringContainsString('SEK13,5432SEK', (string)$response->getContent() );
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
