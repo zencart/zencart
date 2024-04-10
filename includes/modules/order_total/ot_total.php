@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: piloujp 2024 Apr 10 Modified in v2.0.0 $
  */
   class ot_total {
 
@@ -54,8 +54,10 @@
       global $order, $currencies;
 	  // bof lost penny compensation
 	  $modules_total = $currencies->value($order->info['subtotal']) + $currencies->value($order->info['shipping_cost']);
-	  foreach ($order->info['option_modules'] as $key => $value) {
-	      $modules_total += (isset($order->info['option_modules'][$key]) && $order->info['option_modules'][$key] !=0) ? $currencies->value($order->info['option_modules'][$key]) : 0;
+      if (!empty($order->info['option_modules'])) {
+		  foreach ($order->info['option_modules'] as $key => $value) {
+			  $modules_total += (isset($order->info['option_modules'][$key]) && $order->info['option_modules'][$key] !=0) ? $currencies->value($order->info['option_modules'][$key]) : 0;
+		  }
 	  }
 	  $modules_total += DISPLAY_PRICE_WITH_TAX != 'true' ? $currencies->value($order->info['tax']) : 0;
 	  $lost_penny = substr(strval(zen_round(abs($modules_total - $currencies->value($order->info['total'])), $currencies->get_decimal_places($_SESSION['currency']))), -1);

@@ -80,7 +80,6 @@ class ot_loworderfee
                 break;
         }
 
-//        if ( ($pass == true) && ( ($order->info['total'] - $order->info['shipping_cost']) < MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER) ) {
         if ($pass == true && $order->info['subtotal'] < MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER) {
             $charge_it = 'true';
             $cart_content_type = $_SESSION['cart']->get_content_type();
