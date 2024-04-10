@@ -99,7 +99,7 @@ class ot_group_pricing {
           $tax += $od_amount['tax_groups'][$key];
         }
       }
-      $order->info['total'] -= $od_amount['total'];
+      $order->info['total'] = $order->info['total'] - $od_amount['total'];
       if (DISPLAY_PRICE_WITH_TAX == 'true') {
         $od_amount['total'] += $tax;
       }
@@ -107,7 +107,6 @@ class ot_group_pricing {
       if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
       if ($order->info['total'] < 0) $order->info['total'] = 0;
       $order->info['tax'] = $order->info['tax'] - $tax;
-
       $this->output[] = array('title' => $this->title . ':',
       'text' => '-' . $currencies->format($od_amount['total'], true, $order->info['currency'], $order->info['currency_value']),
       'value' => $od_amount['total']);
@@ -146,11 +145,16 @@ class ot_group_pricing {
         return $od_amount;
     }
     $orderTotal = $this->get_order_total();
+    $orderTotalTax = $orderTotal['tax'];
+    $taxGroups = $orderTotal['taxGroups'];
     $group_query = $db->Execute("select customers_group_pricing from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
     if ($group_query->fields['customers_group_pricing'] != '0') {
       $group_discount = $db->Execute("select group_name, group_percentage from " . TABLE_GROUP_PRICING . "
                                       where group_id = '" . (int)$group_query->fields['customers_group_pricing'] . "'");
-      $od_amount['total'] = ($orderTotal['total'] - $_SESSION['cart']->gv_only()) * $group_discount->fields['group_percentage'] / 100;
+      $gift_vouchers = $_SESSION['cart']->gv_only();
+      $discount = ($orderTotal['total'] - $gift_vouchers) * $group_discount->fields['group_percentage'] / 100;
+//      echo "discout = $discount<br>";
+      $od_amount['total'] = round($discount, 2);
       $ratio = $od_amount['total']/$order_total;
       /**
        * when calculating the ratio add some insignificant values to stop divide by zero errors
@@ -167,11 +171,12 @@ class ot_group_pricing {
           if ($od_amount['total'] >= $order_total) {
             $ratio = 1;
           }
+          $adjustedTax = $orderTotalTax * $ratio;
           if ($order->info['tax'] == 0) return $od_amount;
-          $ratio = ($orderTotal['tax'] != 0 ) ? $ratio : 0;
+          $ratioTax = ($orderTotalTax != 0 ) ? $adjustedTax/$orderTotalTax : 0;
           $tax_deduct = 0;
-          foreach ($orderTotal['taxGroups'] as $key=>$value) {
-            $od_amount['tax_groups'][$key] = $value * $ratio;
+          foreach ($taxGroups as $key=>$value) {
+            $od_amount['tax_groups'][$key] = $value * $ratioTax;
             $tax_deduct += $od_amount['tax_groups'][$key];
           }
           $od_amount['tax'] = $tax_deduct;
