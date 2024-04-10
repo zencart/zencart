@@ -1,14 +1,14 @@
 <?php
 /**
- * @author      Serban Ghita <serbanghita@gmail.com>
- * @license     MIT License https://github.com/serbanghita/Mobile-Detect/blob/master/LICENSE.txt
- *
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @author ZCAdditions.com, ZCA Responsive Template Default
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:  $
  */
 
 function layoutTypes()
 {
-    return array('default', 'mobile', 'tablet', 'full');
+    return ['default', 'mobile', 'tablet', 'full'];
 }
 
 function initLayoutType()
@@ -32,8 +32,8 @@ function initLayoutType()
         }
     }
 
-    if ( !in_array($layoutType, $layoutTypes) ) { 
-        $layoutType = 'default'; 
+    if ( !in_array($layoutType, $layoutTypes) ) {
+        $layoutType = 'default';
     }
 
     $_SESSION['layoutType'] = $layoutType;
