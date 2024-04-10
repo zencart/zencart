@@ -1,7 +1,12 @@
 <?php
-// ADMIN KEEPALIVE_MODULE v2.1 for Zen Cart v1.5.7+
-// Admin session timeout warning alerter
-// Prompts to extend login session after 2/3 of the allowed session time has expired without mouse activity or form submission.
+/**
+ * Admin session timeout warning alerter
+ * Prompts to extend login session after 2/3 of the allowed session time has expired without mouse activity or form submission.
+ *
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:  $
+ */
 
 if (!defined('TEXT_TIMEOUT_WARNING')) define('TEXT_TIMEOUT_WARNING', '**WARNING**');
 if (!defined('TEXT_TIMEOUT_TIME_REMAINING')) define('TEXT_TIMEOUT_TIME_REMAINING', ' Time remaining:');

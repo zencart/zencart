@@ -1,9 +1,11 @@
 <?php
-// -----
-// Part of the Report All Errors plugin, provided by lat9@vinosdefrutastropicales.com
-//
-// @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-//
+/**
+ * Part of the Report All Errors plugin, provided by lat9@vinosdefrutastropicales.com
+ *
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id:  $
+ */
 
 /**
  * If the admin-level is set to report all errors during the store's operation, enable it!
