@@ -29,23 +29,23 @@
 
     function updateGross() {
         const taxRate = getTaxRate();
-        let grossValue = $('input[name="products_price"]').val();
+        let grossValue = $('input[name="products_price_net"]').val();
 
         if (taxRate > 0) {
-            grossValue = grossValue * ((taxRate / 100) + 1);
+            grossValue = grossValue / ((taxRate / 100) + 1);
         }
 
-        $('input[name="products_price_gross"]').val(doRound(grossValue, 4));
+        $('input[name="products_price"]').val(doRound(grossValue, 4));
     }
 
     function updateNet() {
         const taxRate = getTaxRate();
-        let netValue = $('input[name="products_price_gross"]').val();
+        let netValue = $('input[name="products_price"]').val();
 
         if (taxRate > 0) {
-            netValue = netValue / ((taxRate / 100) + 1);
+            netValue = netValue * ((taxRate / 100) + 1);
         }
 
-        $('input[name="products_price"]').val(doRound(netValue, 4));
+        $('input[name="products_price_net"]').val(doRound(netValue, 4));
     }
 </script>
