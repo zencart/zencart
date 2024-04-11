@@ -783,7 +783,7 @@ class order extends base
                     if (isset($this->billing['zone_id']) && $this->billing['zone_id'] == STORE_ZONE) {
                         $address_book_id = $billToAddressId;
                     } else {
-                        $address_book_id = ($this->content_type === 'virtual' ? $billToAddressId : $shipToAddressId);
+                        $address_book_id = ($this->content_type === 'virtual' ? $billToAddressId : -1);
                     }
             }
             $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id

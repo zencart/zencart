@@ -177,13 +177,15 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
     $rates_array = [];
 
     if ($country_id == -1 && $zone_id == -1) {
-        if (zen_is_logged_in()) {
-            $country_id = $_SESSION['customer_country_id'];
-            $zone_id = $_SESSION['customer_zone_id'];
-        } else {
-            $country_id = STORE_COUNTRY;
-            $zone_id = STORE_ZONE;
-        }
+		if (STORE_PRODUCT_TAX_BASIS != 'Store') {
+			if (zen_is_logged_in()) {
+				$country_id = $_SESSION['customer_country_id'];
+				$zone_id = $_SESSION['customer_zone_id'];
+			} else {
+				$country_id = STORE_COUNTRY;
+				$zone_id = STORE_ZONE;
+			}
+		}
     }
 
     $tax_query = "SELECT tax_description, tax_rate, tax_priority
