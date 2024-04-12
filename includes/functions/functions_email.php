@@ -604,6 +604,9 @@
         if (is_array($content)) {
             $block = $content;
         } else {
+            if ($content === '' || $content === 'none') {
+               return '';
+            }
             $block['EMAIL_MESSAGE_HTML'] = $content;
         }
 
