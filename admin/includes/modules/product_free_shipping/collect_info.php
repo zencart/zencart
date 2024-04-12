@@ -261,19 +261,19 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'onchange="updateNet()" class="form-control" id="products_tax_class_id"'); ?>
+          <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'onchange="updateTaxIncl()" class="form-control" id="products_tax_class_id"'); ?>
       </div>
     </div>
     <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_GROSS, 'products_price', 'class="col-sm-3 control-label"'); ?>
+        <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_EXCL, 'products_price', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateNet()" class="form-control" id="products_price" inputmode="decimal"'); ?>
+          <?php echo zen_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateTaxIncl()" class="form-control" id="products_price" inputmode="decimal"'); ?>
       </div>
     </div>
     <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_NET, 'products_price_net', 'class="col-sm-3 control-label"'); ?>
+        <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_INCL, 'products_price_tax_incl', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_price_net', $pInfo->products_price, 'onkeyup="updateGross()" class="form-control" id="products_price_net" inputmode="decimal"'); ?>
+          <?php echo zen_draw_input_field('products_price_tax_incl', $pInfo->products_price, 'onkeyup="updateNoTax()" class="form-control" id="products_price_tax_incl" inputmode="decimal"'); ?>
       </div>
     </div>
 <?php
@@ -291,7 +291,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
 ?>
   </div>
   <script>
-    updateNet();
+    updateTaxIncl();
   </script>
   <div class="form-group">
     <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_VIRTUAL; ?></p>
