@@ -179,10 +179,10 @@ function zen_get_new_date_range($time_limit = false)
 
     $zc_new_date = date('Ymd', $date_range);
     switch (true) {
-        case (SHOW_NEW_PRODUCTS_LIMIT === '0'):
+        case (SHOW_NEW_PRODUCTS_LIMIT === 0):
             $new_range = '';
             break;
-        case (SHOW_NEW_PRODUCTS_LIMIT === '1'):
+        case (SHOW_NEW_PRODUCTS_LIMIT === 1):
             $zc_new_date = date('Ym', time()) . '01';
             $new_range = ' AND p.products_date_added >= ' . $zc_new_date;
             break;
