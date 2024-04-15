@@ -4,7 +4,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
-namespace Tests\Features\TestStoreFeatures;
+namespace Tests\FeatureStore\StoreEndpoints;
 
 use Tests\Support\zcFeatureTestCaseStore;
 
