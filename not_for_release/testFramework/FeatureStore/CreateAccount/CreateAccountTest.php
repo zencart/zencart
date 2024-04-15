@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\TestCreateAccount;
+namespace Tests\FeatureStore\CreateAccount;
 
 use App\Models\Customer;
 use Tests\Support\Traits\CustomerAccountConcerns;
