@@ -52,17 +52,17 @@
 
     function process() {
       global $order, $currencies;
-	  // bof lost penny compensation
-	  $modules_total = $currencies->value($order->info['subtotal']) + $currencies->value($order->info['shipping_cost']);
+      // bof lost penny compensation
+      $modules_total = $currencies->value($order->info['subtotal']) + $currencies->value($order->info['shipping_cost']);
       if (!empty($order->info['option_modules'])) {
-		  foreach ($order->info['option_modules'] as $key => $value) {
-			  $modules_total += (isset($order->info['option_modules'][$key]) && $order->info['option_modules'][$key] !=0) ? $currencies->value($order->info['option_modules'][$key]) : 0;
-		  }
-	  }
-	  $modules_total += DISPLAY_PRICE_WITH_TAX != 'true' ? $currencies->value($order->info['tax']) : 0;
-	  $lost_penny = substr(strval(zen_round(abs($modules_total - $currencies->value($order->info['total'])), $currencies->get_decimal_places($_SESSION['currency']))), -1);
-	  $order->info['total'] = ($lost_penny == '1' && $order->info['total'] > 0) ? $currencies->value($modules_total, true, DEFAULT_CURRENCY) : $order->info['total'];
-	  // eof lost penny compensation
+          foreach ($order->info['option_modules'] as $key => $value) {
+              $modules_total += (isset($order->info['option_modules'][$key]) && $order->info['option_modules'][$key] !=0) ? $currencies->value($order->info['option_modules'][$key]) : 0;
+          }
+      }
+      $modules_total += DISPLAY_PRICE_WITH_TAX != 'true' ? $currencies->value($order->info['tax']) : 0;
+      $lost_penny = substr(strval(zen_round(abs($modules_total - $currencies->value($order->info['total'])), $currencies->get_decimal_places($_SESSION['currency']))), -1);
+      $order->info['total'] = ($lost_penny == '1' && $order->info['total'] > 0) ? $currencies->value($modules_total, true, DEFAULT_CURRENCY) : $order->info['total'];
+      // eof lost penny compensation
       $this->output[] = array('title' => $this->title . ':',
                               'text' => $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value']),
                               'value' => $order->info['total']);

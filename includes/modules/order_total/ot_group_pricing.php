@@ -103,7 +103,7 @@ class ot_group_pricing {
       if (DISPLAY_PRICE_WITH_TAX == 'true') {
         $od_amount['total'] += $tax;
       }
-	  $order->info['option_modules']['group_discount_amount'] = - $od_amount['total'];
+      $order->info['option_modules']['group_discount_amount'] = - $od_amount['total'];
       if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
       if ($order->info['total'] < 0) $order->info['total'] = 0;
       $order->info['tax'] = $order->info['tax'] - $tax;

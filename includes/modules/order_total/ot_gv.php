@@ -150,7 +150,7 @@ class ot_gv {
         }
         $order->info['total'] = $order->info['total'] - $od_amount['total'];
         if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
-		$order->info['option_modules']['gv_amount'] = - $od_amount['total'];
+        $order->info['option_modules']['gv_amount'] = - $od_amount['total'];
         if ($order->info['total'] < 0) $order->info['total'] = 0;
         $order->info['tax'] = $order->info['tax'] - $od_amount['tax'];
         // prepare order-total output for display and storing to invoice
