@@ -148,15 +148,15 @@ class ot_gv {
             $tax += $od_amount['tax_groups'][$key];
           }
         }
-		$order->info['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? $order->info['total'] - $od_amount['total'] : $order->info['total'] - $od_amount['total'] - $od_amount['tax'];
-		$order->info['tax'] -= $tax;
+        $order->info['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? $order->info['total'] - $od_amount['total'] : $order->info['total'] - $od_amount['total'] - $od_amount['tax'];
+        $order->info['tax'] -= $tax;
         if ($order->info['total'] < 0) {
-			$order->info['total'] = 0;
-			$order->info['tax'] = 0;
-			foreach ($order->info['tax_groups'] as $key => $value) {
-				$order->info['tax_groups'][$key] = 0;
-			}
-		}
+            $order->info['total'] = 0;
+            $order->info['tax'] = 0;
+            foreach ($order->info['tax_groups'] as $key => $value) {
+                $order->info['tax_groups'][$key] = 0;
+            }
+        }
         // prepare order-total output for display and storing to invoice
         $this->output[] = array('title' => $this->title . ':',
                                 'text' => '-' . $currencies->format($od_amount['total']),
@@ -430,11 +430,11 @@ class ot_gv {
       if ($od_amount['total'] >= $order_total) {
         $ratio = 1;
       } else {
-		if ($order->info['shipping_tax'] == 0 && $order_total > $order->info['shipping_cost']) {
-			$ratio = $od_amount['total'] / ($order_total - $order->info['shipping_cost']);
-		} else {
+        if ($order->info['shipping_tax'] == 0 && $order_total > $order->info['shipping_cost']) {
+            $ratio = $od_amount['total'] / ($order_total - $order->info['shipping_cost']);
+        } else {
             $ratio = $od_amount['total'] / $order_total;
-		}
+        }
       }
       $tax_deduct = 0;
       foreach ($order->info['tax_groups'] as $key=>$value) {
@@ -442,7 +442,7 @@ class ot_gv {
         $tax_deduct += $od_amount['tax_groups'][$key];
       }
       $od_amount['tax'] = $tax_deduct;
-	  $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
+      $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
       break;
       case 'Credit Note':
         $tax_rate = zen_get_tax_rate($this->tax_class);
