@@ -33,6 +33,7 @@ abstract class zcFeatureTestCaseStore extends zcFeatureTestCase
         if (!defined('TABLE_ADDRESS_BOOK')) {
             require DIR_FS_CATALOG . 'includes/database_tables.php';
         }
+        require_once(ROOTCWD . 'includes/defined_paths.php');
         self::loadMigrationAndSeeders($mainConfigs);
     }
 
