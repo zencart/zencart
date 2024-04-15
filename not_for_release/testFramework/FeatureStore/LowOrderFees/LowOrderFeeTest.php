@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Feature;
+namespace Tests\FeatureStore\LowOrderFees;
 
 use Tests\Support\helpers\ProfileManager;
 use Tests\Support\zcFeatureTestCaseStore;
