@@ -7,53 +7,21 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Aug 18 Modified in v2.0.0-alpha1 $
  */
-class ot_shipping extends base
+
+use Zencart\ModuleSupport\OrderTotalBase;
+use Zencart\ModuleSupport\OrderTotalConcerns;
+use Zencart\ModuleSupport\OrderTotalContract;
+use Carbon\Carbon;
+
+class ot_shipping extends OrderTotalBase implements OrderTotalContract
 {
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" order total module
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this order total method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $sort_order is the order priority of this order total module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $title is the displayed name for this order total method
-     * @var string
-     */
-    public $title;
-    /**
-     * $output is an array of the display elements used on checkout pages
-     * @var array
-     */
-    public $output = [];
+    use OrderTotalConcerns;
 
-    public function __construct()
-    {
-        global $order, $currencies;
-        $this->code = 'ot_shipping';
-        $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
-        $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
-        $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') ? (int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : null;
-        if (null === $this->sort_order) {
-            return false;
-        }
-        $this->output = [];
-    }
+    public string $code = 'ot_shipping';
+    public string $defineName = 'SHIPPING';
 
-    public function process()
+
+    public function process(): void
     {
         global $order, $currencies;
  
@@ -61,7 +29,7 @@ class ot_shipping extends base
         unset($_SESSION['shipping_tax_description']);
         
         if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING === 'true') {
-            $pass = false;
+                                    $pass = false;
             switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
                 case 'national':
                     if ($order->delivery['country_id'] == STORE_COUNTRY) {
@@ -158,40 +126,40 @@ class ot_shipping extends base
         }
     }
 
-    public function check()
+    protected function addCustomConfigurationKeys(): array
     {
-        global $db;
-        if (!isset($this->_check)) {
-            $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_SHIPPING_STATUS' LIMIT 1");
-            $this->_check = $check_query->RecordCount();
-        }
-        return $this->_check;
-    }
-
-    public function keys()
-    {
-        return [
-            'MODULE_ORDER_TOTAL_SHIPPING_STATUS',
-            'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER',
-            'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING',
-            'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER',
-            'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION'
+        $configKeys = [];
+        $key = $this->buildDefine('FREE_SHIPPING');
+        $configKeys[$key] = [
+            'configuration_value' => 'false',
+            'configuration_title' => 'Allow Free Shipping',
+            'configuration_description' => 'Do you want to allow free shipping?',
+            'configuration_group_id' => 6,
+            'sort_order' => 1,
+            'date_added' => Carbon::now(),
+            'set_function' => 'zen_cfg_select_option([\'true\', \'false\'], ',
         ];
-    }
-
-    public function install()
-    {
-        global $db;
-        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('This module is installed', 'MODULE_ORDER_TOTAL_SHIPPING_STATUS', 'true', '', 6, 1,'zen_cfg_select_option(array(\'true\'), ', now())");
-        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Sort Order', 'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER', '200', 'Sort order of display.', 6, 2, now())");
-        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Allow Free Shipping', 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING', 'false', 'Do you want to allow free shipping?', 6, 3, 'zen_cfg_select_option([\'true\', \'false\'], ', now())");
-        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, date_added) VALUES ('Free Shipping For Orders Over', 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER', '50', 'Provide free shipping for orders over the set amount.', 6, 4, 'currencies->format', now())");
-        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Provide Free Shipping For Orders Made', 'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION', 'national', 'Provide free shipping for orders sent to the set destination.', 6, 5, 'zen_cfg_select_option([\'national\', \'international\', \'both\'], ', now())");
-    }
-
-    public function remove()
-    {
-        global $db;
-        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
+        $configKeys = [];
+        $key = $this->buildDefine('FREE_SHIPPING_OVER');
+        $configKeys[$key] = [
+            'configuration_value' => '50',
+            'configuration_title' => 'Free Shipping For Orders Over',
+            'configuration_description' => 'Provide free shipping for orders over the set amount',
+            'configuration_group_id' => 6,
+            'sort_order' => 1,
+            'date_added' => Carbon::now(),
+            'use_function' => 'currencies->format',
+        ];
+        $key = $this->buildDefine('DESTINATION');
+        $configKeys[$key] = [
+            'configuration_value' => 'national',
+            'configuration_title' => 'Provide Free Shipping For Orders Made',
+            'configuration_description' => 'Provide free shipping for orders sent to the set destination.',
+            'configuration_group_id' => 6,
+            'sort_order' => 1,
+            'date_added' => Carbon::now(),
+            'set_function' => 'zen_cfg_select_option([\'national\', \'international\', \'both\'], ',
+        ];
+      return $configKeys;
     }
 }
