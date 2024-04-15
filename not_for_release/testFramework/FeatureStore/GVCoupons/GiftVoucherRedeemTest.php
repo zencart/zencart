@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\TestGVCoupons;
+namespace Tests\FeatureStore\GVCoupons;
 
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcFeatureTestCaseStore;
