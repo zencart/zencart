@@ -148,7 +148,7 @@ class ot_gv {
             $tax += $od_amount['tax_groups'][$key];
           }
         }
-        $order->info['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? $order->info['total'] - $od_amount['total'] : $order->info['total'] - $od_amount['total'] - $od_amount['tax'];
+        $order->info['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['total'] - $od_amount['total'] : $order->info['total'] - $od_amount['total'] - $od_amount['tax'];
         $order->info['tax'] -= $tax;
         if ($order->info['total'] < 0) {
             $order->info['total'] = 0;
@@ -442,11 +442,11 @@ class ot_gv {
         $tax_deduct += $od_amount['tax_groups'][$key];
       }
       $od_amount['tax'] = $tax_deduct;
-      $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
+      $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
       break;
       case 'Credit Note':
         $tax_rate = zen_get_tax_rate($this->tax_class);
-        $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? zen_add_tax($deduction, $tax_rate) : $deduction;
+        $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? zen_add_tax($deduction, $tax_rate) : $deduction;
         $od_amount['tax'] = zen_calculate_tax($deduction, $tax_rate);
         $tax_description = zen_get_tax_description($this->tax_class);
         $od_amount['tax_groups'][$tax_description] = $od_amount['tax'];

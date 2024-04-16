@@ -544,21 +544,21 @@ class ot_coupon extends base
                         break;
                     case 'P': // percentage
                         if ($this->calculate_tax == 'Credit Note') { // Calculate deduction from gross price
-                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX == 'true' ? $orderAmountTotal - $orderTotalDetails['orderTax'] : $orderAmountTotal) * $coupon_details['coupon_amount'] / 100;
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ?  $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100)) : $od_amount['total'];
+                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX === 'true' ? $orderAmountTotal - $orderTotalDetails['orderTax'] : $orderAmountTotal) * $coupon_details['coupon_amount'] / 100;
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100)) : $od_amount['total'];
                         } else { // calculate deduction from net price
-                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX == 'true' ? $orderAmountTotal : $orderAmountTotal + $orderTotalDetails['orderTax']) * $coupon_details['coupon_amount'] / 100;
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
+                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX === 'true' ? $orderAmountTotal : $orderAmountTotal + $orderTotalDetails['orderTax']) * $coupon_details['coupon_amount'] / 100;
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
                         }
                         $ratio = $coupon_details['coupon_amount'] / 100;
                         break;
                     case 'E': // percentage & Free Shipping
                         if ($this->calculate_tax == 'Credit Note') {
-                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX == 'true' ? $orderAmountTotal - $orderTotalDetails['orderTax'] : $orderAmountTotal) * $coupon_details['coupon_amount'] / 100;
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ?  $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100)) : $od_amount['total'];
+                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX === 'true' ? $orderAmountTotal - $orderTotalDetails['orderTax'] : $orderAmountTotal) * $coupon_details['coupon_amount'] / 100;
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100)) : $od_amount['total'];
                         } else {
-                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX == 'true' ? $orderAmountTotal : $orderAmountTotal + $orderTotalDetails['orderTax']) * $coupon_details['coupon_amount'] / 100;
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
+                            $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX === 'true' ? $orderAmountTotal : $orderAmountTotal + $orderTotalDetails['orderTax']) * $coupon_details['coupon_amount'] / 100;
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
                         }
                         if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
                             $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $orderTotalDetails['shippingTax'];
@@ -574,18 +574,18 @@ class ot_coupon extends base
                             } else {                                
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             }
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'false' ?  $od_amount['total'] : $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100));
-                            $ratio = DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['total'] / ($orderAmountTotal - $orderTotalDetails['orderTax']) : $od_amount['total'] / $orderAmountTotal;
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'false' ?  $od_amount['total'] : $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100));
+                            $ratio = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] / ($orderAmountTotal - $orderTotalDetails['orderTax']) : $od_amount['total'] / $orderAmountTotal;
                         } elseif ($this->calculate_tax == 'Standard') {
-                            if (DISPLAY_PRICE_WITH_TAX == 'true') {
+                            if (DISPLAY_PRICE_WITH_TAX === 'true') {
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             } else {                                
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             }
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
                             $ratio = $od_amount['total'] / $orderAmountTotal;
                         } else {
-                            if (DISPLAY_PRICE_WITH_TAX == 'true') {
+                            if (DISPLAY_PRICE_WITH_TAX === 'true') {
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             } else {                                
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
@@ -600,18 +600,18 @@ class ot_coupon extends base
                             } else {                                
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             }
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'false' ?  $od_amount['total'] : $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100));
-                            $ratio = DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['total'] / ($orderAmountTotal - $orderTotalDetails['orderTax']) : $od_amount['total'] / $orderAmountTotal;
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'false' ?  $od_amount['total'] : $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100));
+                            $ratio = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] / ($orderAmountTotal - $orderTotalDetails['orderTax']) : $od_amount['total'] / $orderAmountTotal;
                         } elseif ($this->calculate_tax == 'Standard') {
-                            if (DISPLAY_PRICE_WITH_TAX == 'true') {
+                            if (DISPLAY_PRICE_WITH_TAX === 'true') {
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             } else {                            
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             }
-                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
+                            $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
                             $ratio = $od_amount['total'] / $orderAmountTotal;
                         } else {
-                            if (DISPLAY_PRICE_WITH_TAX == 'true') {
+                            if (DISPLAY_PRICE_WITH_TAX === 'true') {
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             } else {                            
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] + $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
@@ -647,10 +647,10 @@ class ot_coupon extends base
                     case 'Credit Note':
                         if ($this->tax_class == true) {
                             $tax_rate = zen_get_tax_rate($this->tax_class);
-                            $od_amount['tax'] += (DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['total'] - ($od_amount['total'] / (1 + $tax_rate / 100)) : zen_calculate_tax($od_amount['total'], $tax_rate));
+                            $od_amount['tax'] += (DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] - ($od_amount['total'] / (1 + $tax_rate / 100)) : zen_calculate_tax($od_amount['total'], $tax_rate));
                             if ($od_amount['tax'] > ($orderTotalDetails['orderTax'] + $orderTotalDetails['shippingTax'])) {
                                 $od_amount['tax'] = $orderTotalDetails['orderTax'] + $orderTotalDetails['shippingTax'];
-                                $od_amount['total'] = DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['tax'] + ($od_amount['tax'] / ($tax_rate / 100)) : $od_amount['tax'] / ($tax_rate / 100);
+                                $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['tax'] + ($od_amount['tax'] / ($tax_rate / 100)) : $od_amount['tax'] / ($tax_rate / 100);
                             }
                             $tax_description = zen_get_tax_description($this->tax_class);
                             isset($od_amount['tax_groups'][$tax_description]) ? $od_amount['tax_groups'][$tax_description] += $od_amount['tax'] : $od_amount['tax_groups'][$tax_description] = $od_amount['tax'];
@@ -666,7 +666,7 @@ class ot_coupon extends base
                                 $od_amount['tax_groups'][$key] = isset($od_amount['tax_groups'][$key]) ? $od_amount['tax_groups'][$key] + $this_tax * $ratio : $this_tax * $ratio;
                                 $od_amount['tax'] += $od_amount['tax_groups'][$key];
                             }
-                            $od_amount['total'] += DISPLAY_PRICE_WITH_TAX == 'true' ? $od_amount['tax'] : 0;
+                            $od_amount['total'] += DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['tax'] : 0;
                         }
                         break;
                     case 'None':
@@ -759,7 +759,7 @@ class ot_coupon extends base
         // change what total is used for Discount Coupon Minimum
         $orderTotalFull = $order->info['total'];
         if (isset($_SESSION['shipping_tax_amount']) && $_SESSION['shipping_tax_amount'] != 0) {
-            $orderTotalFull -= DISPLAY_PRICE_WITH_TAX == 'true' ? $order->info['shipping_cost'] - $order->info['shipping_tax'] : $order->info['shipping_cost'];
+            $orderTotalFull -= DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['shipping_cost'] - $order->info['shipping_tax'] : $order->info['shipping_cost'];
         }
         $orderTotalFull -= $orderTotalTax;
         // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) - to include both in array
