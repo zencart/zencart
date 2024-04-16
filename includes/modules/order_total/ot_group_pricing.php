@@ -100,7 +100,7 @@ class ot_group_pricing {
         }
       }
       $order->info['total'] = $order->info['total'] - $od_amount['total'];
-      if (DISPLAY_PRICE_WITH_TAX == 'true') {
+      if (DISPLAY_PRICE_WITH_TAX === 'true') {
         $od_amount['total'] += $tax;
       }
       $order->info['option_modules']['group_discount_amount'] = - $od_amount['total'];
@@ -119,7 +119,7 @@ class ot_group_pricing {
     $order_total = $order->info['total'];
     if ($this->include_shipping != 'true') $order_total -= $order->info['shipping_cost'];
     if ($this->include_tax != 'true') $order_total -= $order->info['tax'];
-    if (DISPLAY_PRICE_WITH_TAX == 'true' && $this->include_shipping != 'true')
+    if (DISPLAY_PRICE_WITH_TAX === 'true' && $this->include_shipping != 'true')
     {
       $order_total += $order->info['shipping_tax'];
     }
@@ -199,7 +199,7 @@ class ot_group_pricing {
     global $order;
     $od_amount = $this->calculate_deductions($order_total);
     $order->info['total'] = $order->info['total'] - $od_amount['total'];
-    return $od_amount['total'] + (DISPLAY_PRICE_WITH_TAX == 'true' ? 0 : $od_amount['tax']);
+    return $od_amount['total'] + (DISPLAY_PRICE_WITH_TAX === 'true' ? 0 : $od_amount['tax']);
   }
 
   function credit_selection() {

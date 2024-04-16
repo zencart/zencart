@@ -594,7 +594,7 @@ class ot_coupon extends base
                             $od_amount['tax_groups'][$key] = zen_round($this_tax * $ratio, $currencyDecimalPlaces);
                             $od_amount['tax'] += $od_amount['tax_groups'][$key];
                         }
-                        if (DISPLAY_PRICE_WITH_TAX == 'true' && $coupon_details['coupon_type'] == 'F') {
+                        if (DISPLAY_PRICE_WITH_TAX === 'true' && $coupon_details['coupon_type'] == 'F') {
                             $od_amount['total'] += $od_amount['tax'];
                         }
                         break;
