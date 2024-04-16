@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 // Check if there are boxes for the column
 $column_box_default='tpl_box_default_single.php';
-$column_single_display= $db->Execute("SELECT layout_box_name FROM " . TABLE_LAYOUT_BOXES . " WHERE (layout_box_location=0 OR layout_box_location=1) AND layout_box_status_single=1 AND layout_template ='" . $template_dir . "'" . ' ORDER BY LPAD(layout_box_sort_order_single,11,"0")');
+$column_single_display= $db->Execute("SELECT layout_box_name FROM " . TABLE_LAYOUT_BOXES . " WHERE (layout_box_location=0 OR layout_box_location=1) AND layout_box_status_single=1 AND layout_template ='" . $template_dir . "'" . " ORDER BY LPAD(layout_box_sort_order_single,11,'0')");
 // safety row stop
 $box_cnt=0;
 if (defined('BOX_WIDTH_SINGLE')) {
