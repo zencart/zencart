@@ -203,7 +203,7 @@ class ot_gv {
       }
       $od_amount = $this->calculate_deductions($order_total);
       $order->info['total'] = $order->info['total'] - $od_amount['total'];
-      if (DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (DISPLAY_PRICE_WITH_TAX !== 'true') {
         $order->info['total'] -= $od_amount['tax'];
       }
       return $od_amount['total'] + $od_amount['tax'];

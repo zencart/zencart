@@ -163,7 +163,7 @@ class ot_coupon extends base
             $order->info['total'] -= $od_amount['total'];
             $order->info['coupon_amount'] = $od_amount['total'];
 
-            if (DISPLAY_PRICE_WITH_TAX != 'true') {
+            if (DISPLAY_PRICE_WITH_TAX !== 'true') {
                 $order->info['total'] -= $tax;
             }
             $order->info['tax'] -= $tax;
@@ -569,7 +569,7 @@ class ot_coupon extends base
                         break;
                     case 'F': // Fixed amount Off
                         if ($this->calculate_tax == 'Credit Note') {
-                            if (DISPLAY_PRICE_WITH_TAX != 'true') {
+                            if (DISPLAY_PRICE_WITH_TAX !== 'true') {
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             } else {                                
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
@@ -595,7 +595,7 @@ class ot_coupon extends base
                         break;
                     case 'O': // Both Fixed amount off & Free Shipping
                         if ($this->calculate_tax == 'Credit Note') {
-                            if (DISPLAY_PRICE_WITH_TAX != 'true') {
+                            if (DISPLAY_PRICE_WITH_TAX !== 'true') {
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
                             } else {                                
                                 $od_amount['total'] = ($coupon_details['coupon_amount'] > ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) ? ($orderTotalDetails['orderTotal'] - $orderTotalDetails['orderTax']) : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count;
@@ -745,7 +745,7 @@ class ot_coupon extends base
             }
         }
 
-        if (DISPLAY_PRICE_WITH_TAX != 'true') {
+        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
             $orderTotal -= $orderTotalTax;
         }
         // shipping/tax
