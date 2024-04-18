@@ -543,10 +543,10 @@ class ot_coupon extends base
                         return $od_amount;
                         break;
                     case 'P': // percentage
-                        if ($this->calculate_tax == 'Credit Note') { // Calculate deduction from gross price
+                        if ($this->calculate_tax == 'Credit Note') { // Calculate deduction from price excluding tax
                             $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX === 'true' ? $orderAmountTotal - $orderTotalDetails['orderTax'] : $orderAmountTotal) * $coupon_details['coupon_amount'] / 100;
                             $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] * (1 + (zen_get_tax_rate($this->tax_class) / 100)) : $od_amount['total'];
-                        } else { // calculate deduction from net price
+                        } else { // calculate deduction from price including tax
                             $od_amount['total'] = (DISPLAY_PRICE_WITH_TAX === 'true' ? $orderAmountTotal : $orderAmountTotal + $orderTotalDetails['orderTax']) * $coupon_details['coupon_amount'] / 100;
                             $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
                         }
