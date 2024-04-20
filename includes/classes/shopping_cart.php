@@ -1672,7 +1672,7 @@ class shoppingCart extends base
         foreach ($this->contents as $uprid => $data) {
             // check if field it true
             $product_check = zen_get_product_details(zen_get_prid($uprid));
-            if (array_key_exists($check_value, $product_check->fields) && (string)$product_check->fields[$check_what] === (string)$check_value) {
+            if (array_key_exists($check_what, $product_check->fields) && (string)$product_check->fields[$check_what] === (string)$check_value) {
                 $in_cart_check_qty += $data['qty'];
             }
         }
