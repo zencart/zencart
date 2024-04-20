@@ -108,7 +108,8 @@ class ot_loworderfee
             if ($charge_it === 'true') {
                 $tax_address = zen_get_tax_locations();
                 $tax = zen_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
-                $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
+                $tax_multiple = zen_get_multiple_tax_rates(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
+                $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id'], true);
 
                 // calculate from flat fee or percentage
                 if (substr(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, -1) === '%') {
@@ -118,10 +119,12 @@ class ot_loworderfee
                 }
 
                 $order->info['tax'] += zen_calculate_tax($low_order_fee, $tax);
-                if (!isset($order->info['tax_groups'][$tax_description])) {
-                    $order->info['tax_groups'][$tax_description] = 0;
+                foreach ($tax_description as $key => $value) {
+                    if (!isset($order->info['tax_groups'][$value])) {
+                        $order->info['tax_groups'][$value] = 0;
+                    }
+                    $order->info['tax_groups'][$value] += zen_calculate_tax($low_order_fee, $tax_multiple[$value]);
                 }
-                $order->info['tax_groups'][$tax_description] += zen_calculate_tax($low_order_fee, $tax);
                 $order->info['total'] += $low_order_fee + zen_calculate_tax($low_order_fee, $tax);
                 if (DISPLAY_PRICE_WITH_TAX === 'true') {
                     $low_order_fee += zen_calculate_tax($low_order_fee, $tax);

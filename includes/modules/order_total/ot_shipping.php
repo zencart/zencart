@@ -93,7 +93,7 @@ class ot_shipping extends base
             //
             $external_shipping_tax_handler = false;
             $shipping_tax = 0;
-            $shipping_tax_description = '';
+            $shipping_tax_description = [];
             $this->notify(
                 'NOTIFY_OT_SHIPPING_TAX_CALCS', 
                 [], 
@@ -112,29 +112,35 @@ class ot_shipping extends base
 
                     if ($shipping_tax_basis === 'Billing') {
                         $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
-                        $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
+                        $shipping_tax_multiple = zen_get_multiple_tax_rates($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
+                        $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id'], true);
                     } elseif ($shipping_tax_basis === 'Shipping') {
                         $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-                        $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+                        $shipping_tax_multiple = zen_get_multiple_tax_rates($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+                        $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id'], true);
                     } else {
                         if (STORE_ZONE == $order->billing['zone_id']) {
                             $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
-                            $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
+                            $shipping_tax_multiple = zen_get_multiple_tax_rates($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
+                            $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id'], true);
                         } elseif (STORE_ZONE == $order->delivery['zone_id']) {
                             $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-                            $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+                            $shipping_tax_multiple = zen_get_multiple_tax_rates($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+                            $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id'], true);
                         } else {
-                            $shipping_tax = 0;
+                            $shipping_tax_multiple[] = 0;
                         }
                     }
                 }
                 $shipping_tax_amount = zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
                 $order->info['shipping_tax'] += $shipping_tax_amount;
                 $order->info['tax'] += $shipping_tax_amount;
-                if (!isset($order->info['tax_groups'][$shipping_tax_description])) {
-                    $order->info['tax_groups'][$shipping_tax_description] = 0;
+                foreach ($shipping_tax_description as $key => $value) {
+                    if (!isset($order->info['tax_groups'][$value])) {
+                        $order->info['tax_groups'][$value] = 0;
+                    }
+                    $order->info['tax_groups'][$value] += zen_calculate_tax($order->info['shipping_cost'], $shipping_tax_multiple[$value]);
                 }
-                $order->info['tax_groups'][$shipping_tax_description] += $shipping_tax_amount;
                 $order->info['total'] += $shipping_tax_amount;
                 $_SESSION['shipping_tax_description'] = $shipping_tax_description;
                 $_SESSION['shipping_tax_amount'] =  $shipping_tax_amount;

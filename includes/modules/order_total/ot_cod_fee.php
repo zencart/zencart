@@ -114,9 +114,15 @@
           $tax = zen_get_tax_rate(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
           $order->info['total'] += $cod_cost;
           if ($tax > 0) {
-            $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
+            $tax_multiple = zen_get_multiple_tax_rates(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
+            $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id'], true);
             $order->info['tax'] += zen_calculate_tax($cod_cost, $tax);
-            $order->info['tax_groups'][$tax_description] += zen_calculate_tax($cod_cost, $tax);
+            foreach ($tax_description as $key => $value) {
+                if (!isset($order->info['tax_groups'][$value])) {
+                    $order->info['tax_groups'][$value] = 0;
+                }
+                $order->info['tax_groups'][$value] += zen_calculate_tax($cod_cost, $tax_multiple[$value]);
+            }
             $order->info['total'] += zen_calculate_tax($cod_cost, $tax);
             if (DISPLAY_PRICE_WITH_TAX == 'true') {
               $cod_cost += zen_calculate_tax($cod_cost, $tax);

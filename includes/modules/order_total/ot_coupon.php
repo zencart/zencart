@@ -599,10 +599,12 @@ class ot_coupon extends base
                         }
                         break;
                     case 'Credit Note':
-                        $tax_rate = zen_get_tax_rate($this->tax_class);
-                        $od_amount['tax'] = zen_calculate_tax($od_amount['total'], $tax_rate);
-                        $tax_description = zen_get_tax_description($this->tax_class);
-                        $od_amount['tax_groups'][$tax_description] = $od_amount['tax'];
+                        $tax_rate = zen_get_multiple_tax_rates($this->tax_class);
+                        $tax_description = zen_get_tax_description($this->tax_class, -1, -1, true);
+                        foreach ($tax_description as $key => $value) {
+                            $od_amount['tax'] += zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
+                            $od_amount['tax_groups'][$value] = zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
+                        }
                         break;
                     case 'None':
                     default:
@@ -665,10 +667,13 @@ class ot_coupon extends base
                 }
                 $orderTotalTax -= $productsTaxAmount;
                 $tax_description = zen_get_tax_description($product['tax_class_id']);
-                if (empty($orderTaxGroups[$tax_description])) {
-                    $orderTaxGroups[$tax_description] = 0 - $productsTaxAmount;
-                } else {
-                    $orderTaxGroups[$tax_description] -= $productsTaxAmount;
+                $multi_tax_rate = zen_get_multiple_tax_rates($product['tax_class_id']);
+                foreach ($tax_description as $key => $value) {
+                    if (empty($orderTaxGroups[$value])) {
+                        $orderTaxGroups[$value] = 0 - (zen_calculate_tax($product['final_price'], $multi_tax_rate[$value]) * $product['quantity']);
+                    } else {
+                        $orderTaxGroups[$value] -= zen_calculate_tax($product['final_price'], $multi_tax_rate[$value]) * $product['quantity'];
+                    }
                 }
             }
         }

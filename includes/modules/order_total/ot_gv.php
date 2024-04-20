@@ -408,6 +408,7 @@ class ot_gv {
     $od_amount = array();
     $deduction = $this->calculate_credit($this->get_order_total());
     $od_amount['total'] = $deduction;
+    $od_amount['tax'] = 0;
     switch ($this->calculate_tax) {
       case 'None':
       $remainder = $order->info['total'] - $od_amount['total'];
@@ -436,10 +437,12 @@ class ot_gv {
       break;
       case 'Credit Note':
         $od_amount['total'] = $deduction;
-        $tax_rate = zen_get_tax_rate($this->tax_class);
-        $od_amount['tax'] = zen_calculate_tax($deduction, $tax_rate);
-        $tax_description = zen_get_tax_description($this->tax_class);
-        $od_amount['tax_groups'][$tax_description] = $od_amount['tax'];
+        $tax_rate = zen_get_multiple_tax_rates($this->tax_class);
+        $tax_description = zen_get_tax_description($this->tax_class, -1, -1, true);
+        foreach ($tax_description as $key => $value) {
+            $od_amount['tax'] += zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
+            $od_amount['tax_groups'][$value] = zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
+        }
       break;
       default:
     }
