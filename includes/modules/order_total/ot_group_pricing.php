@@ -99,9 +99,11 @@ class ot_group_pricing {
           $tax += $od_amount['tax_groups'][$key];
         }
       }
-      $od_amount['total'] += (DISPLAY_PRICE_WITH_TAX === 'true' && $this->calculate_tax == "Credit Note") ? $tax : 0;
       $order->info['total'] -= $od_amount['total'];
-      $order->info['total'] -= DISPLAY_PRICE_WITH_TAX === 'true' ? 0 : $tax;
+      if (DISPLAY_PRICE_WITH_TAX === 'true') {
+        $od_amount['total'] += $tax;
+      }
+      if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
       if ($order->info['total'] < 0) $order->info['total'] = 0;
       $order->info['tax'] = $order->info['tax'] - $tax;
 
@@ -116,7 +118,6 @@ class ot_group_pricing {
     $order_total_tax = $order->info['tax'];
     $order_total = $order->info['total'];
     if ($this->include_shipping != 'true') $order_total -= $order->info['shipping_cost'];
-    $orderTotalFull = $order_total;
     if ($this->include_tax != 'true') $order_total -= $order->info['tax'];
     if (DISPLAY_PRICE_WITH_TAX === 'true' && $this->include_shipping != 'true')
     {
@@ -133,6 +134,7 @@ class ot_group_pricing {
       }
       $taxGroups[$key] = $value;
     }
+    $orderTotalFull = $order_total;
     $order_total = array('totalFull'=>$orderTotalFull, 'total'=>$order_total, 'tax'=>$order_total_tax, 'taxGroups'=>$taxGroups);
     return $order_total;
   }
@@ -161,11 +163,6 @@ class ot_group_pricing {
           }
         break;
         case 'Standard':
-          $od_amount['total'] = ($orderTotal['totalFull'] - $_SESSION['cart']->gv_only()) * $group_discount->fields['group_percentage'] / 100;
-          $ratio = $od_amount['total']/$orderTotal['totalFull'];
-          if (DISPLAY_PRICE_WITH_TAX !== 'true') {
-              $od_amount['total'] /= 1 + zen_get_tax_rate($this->tax_class)/100;
-          }
           if ($od_amount['total'] >= $order_total) {
             $ratio = 1;
           }
