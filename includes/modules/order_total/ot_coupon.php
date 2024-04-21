@@ -152,13 +152,14 @@ class ot_coupon extends base
             foreach ($order->info['tax_groups'] as $key => $value) {
                 if (isset($od_amount['tax_groups'][$key])) {
                     $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
-                    $order->info['tax_groups'][$key] = zen_round($order->info['tax_groups'][$key], $currencies->get_decimal_places($_SESSION['currency']));
                     $tax += $od_amount['tax_groups'][$key];
                 }
             }
             // free shipping for free shipping 'S' or percentage off and free shipping 'E' or amount off and free shipping 'O'
             if (in_array($od_amount['type'], ['S', 'E', 'O'])) {
                 $order->info['shipping_cost'] = 0;
+                $order->info['shipping_tax'] = 0;
+                $order->info['shipping_tax_groups'] = [];
             }
 
             $order->info['total'] -= $od_amount['total'];
@@ -476,7 +477,7 @@ class ot_coupon extends base
      */
     function calculate_deductions()
     {
-        global $db, $currencies;
+        global $db, $currencies, $order;
 
         $od_amount = ['tax' => 0, 'total' => 0];
         if (empty($_SESSION['cc_id'])) {
@@ -534,8 +535,13 @@ class ot_coupon extends base
                     case 'S': // Free Shipping
                         $od_amount['total'] = $orderTotalDetails['shipping'];
                         $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
-                        if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
-                            $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $od_amount['tax'];
+                        if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
+                            foreach ($_SESSION['shipping_tax_description'] as $key => $value) {
+                                if (!isset($od_amount['tax_groups'][$value])) {
+                                    $od_amount['tax_groups'][$value] = 0;                                    
+                                }
+                                $od_amount['tax_groups'][$value] += $order->info['shipping_tax_groups'][$value];
+                            }
                         }
                         // early-return skips further processing for type 'S'
                         return $od_amount;

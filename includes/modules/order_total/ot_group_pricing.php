@@ -115,20 +115,18 @@ class ot_group_pricing {
     global  $order;
     $order_total_tax = $order->info['tax'];
     $order_total = $order->info['total'];
-    if ($this->include_shipping != 'true') $order_total -= $order->info['shipping_cost'];
+    if ($this->include_shipping != 'true') {
+        $order_total -= DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['shipping_cost'] : $order->info['shipping_cost'] + $order->info['shipping_tax'];
+    }
     $orderTotalFull = $order_total;
     if ($this->include_tax != 'true') $order_total -= $order->info['tax'];
-    if (DISPLAY_PRICE_WITH_TAX === 'true' && $this->include_shipping != 'true')
-    {
-      $order_total += $order->info['shipping_tax'];
-    }
     $taxGroups = array();
     foreach ($order->info['tax_groups'] as $key=>$value) {
-      if (isset($_SESSION['shipping_tax_description']) && $key == $_SESSION['shipping_tax_description'])
+      if (isset($_SESSION['shipping_tax_description']) && in_array($key, $_SESSION['shipping_tax_description']))
       {
         if ($this->include_shipping != 'true')
         {
-          $value -= $order->info['shipping_tax'];
+          $value -= $order->info['shipping_tax_groups'][$key];
         }
       }
       $taxGroups[$key] = $value;
