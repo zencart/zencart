@@ -71,7 +71,8 @@ abstract class ZenShipping extends base
      * Remove the module's settings
      *
      */
-    public function remove() {
+    public function remove(): void
+    {
         global $db;
         $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like '" . $this->class_key . "_%'");
     }

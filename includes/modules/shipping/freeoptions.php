@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -6,7 +7,7 @@
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
 class freeoptions extends ZenShipping
- {
+{
 
     public function __construct()
     {
@@ -15,7 +16,9 @@ class freeoptions extends ZenShipping
         $this->description = MODULE_SHIPPING_FREEOPTIONS_TEXT_DESCRIPTION;
         $this->sort_order = defined('MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER') ? MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER : null;
         $this->class_key = 'MODULE_SHIPPING_FREEOPTIONS';
-        if (null === $this->sort_order) return false;
+        if (null === $this->sort_order) {
+            return false;
+        }
 
         $this->icon = '';
         $this->tax_class = MODULE_SHIPPING_FREEOPTIONS_TAX_CLASS;
@@ -82,7 +85,7 @@ class freeoptions extends ZenShipping
         //
         $freeoptions_total = (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX !== '');
         $freeoptions_weight = (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX !== '');
-        $freeoptions_items  = (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '');
+        $freeoptions_items = (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '');
         $this->debug[] = [$freeoptions_total, $freeoptions_weight, $freeoptions_items];
 
         $this->enabled = ($freeoptions_total === true || $freeoptions_weight === true || $freeoptions_items === true);
@@ -145,7 +148,7 @@ class freeoptions extends ZenShipping
     // -----
     // Return the "Free Options" quote, as requested.
     //
-    public function quote($method = ''):array
+    public function quote($method = ''): array
     {
         global $order;
 
@@ -160,16 +163,18 @@ class freeoptions extends ZenShipping
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_FREEOPTIONS_TEXT_WAY,
-                    'cost'  => (float)MODULE_SHIPPING_FREEOPTIONS_COST + (float)MODULE_SHIPPING_FREEOPTIONS_HANDLING
-                ]
-            ]
+                    'cost' => (float)MODULE_SHIPPING_FREEOPTIONS_COST + (float)MODULE_SHIPPING_FREEOPTIONS_HANDLING,
+                ],
+            ],
         ];
 
         if ($this->tax_class > '0') {
             $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         }
 
-        if (!empty($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
+        if (!empty($this->icon)) {
+            $this->quotes['icon'] = zen_image($this->icon, $this->title);
+        }
 
         return $this->quotes;
     }
@@ -191,7 +196,7 @@ class freeoptions extends ZenShipping
         }
     }
 
-    public function install():void
+    public function install(): void
     {
         global $db;
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Free Options Shipping', 'MODULE_SHIPPING_FREEOPTIONS_STATUS', 'True', 'Free Options is used to display a Free Shipping option when other Shipping Modules are displayed.
@@ -239,7 +244,7 @@ See: freeshipper<br><br>Do you want to offer per freeoptions rate shipping?', '6
             'MODULE_SHIPPING_FREEOPTIONS_TAX_CLASS',
             'MODULE_SHIPPING_FREEOPTIONS_TAX_BASIS',
             'MODULE_SHIPPING_FREEOPTIONS_ZONE',
-            'MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER'
+            'MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER',
         ];
     }
 }
