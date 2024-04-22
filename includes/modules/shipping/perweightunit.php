@@ -9,60 +9,7 @@
  * "Per Weight Unit" shipping module, allowing you to offer per-unit-rate shipping options
  *
  */
-class perweightunit extends base {
-
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" shipping module
-     *
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this shipping method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $enabled determines whether this module shows or not... during checkout.
-     * @var boolean
-     */
-    public $enabled;
-    /**
-     * $icon is the file name containing the Shipping method icon
-     * @var string
-     */
-    public $icon;
-    /** 
-     * $quotes is an array containing all the quote information for this shipping module
-     * @var array
-     */
-    public $quotes;
-    /**
-     * $sort_order is the order priority of this shipping module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-     * @var string
-     */
-    public $tax_basis;
-    /**
-     * $tax_class is the  Tax class to be applied to the shipping cost
-     * @var string
-     */
-    public $tax_class;
-    /**
-     * $title is the displayed name for this shipping method
-     * @var string
-     */
-    public $title;
-    
+class perweightunit extends ZenShipping {
   /**
      * Constructor
    *
@@ -75,6 +22,7 @@ class perweightunit extends base {
     $this->title = MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_DESCRIPTION;
     $this->sort_order = defined('MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER') ? MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER : null;
+    $this->class_key = 'MODULE_SHIPPING_PERWEIGHTUNIT';
     if (null === $this->sort_order) return false;
 
     $this->icon = '';
@@ -133,7 +81,7 @@ class perweightunit extends base {
    * @param string $method
    * @return array
    */
-  function quote($method = '') {
+  function quote($method = ''): array {
     global $order, $shipping_weight, $shipping_num_boxes;
 
     $total_weight_units = $shipping_weight;
@@ -170,7 +118,7 @@ class perweightunit extends base {
    * Install the shipping module and its configuration settings
    *
    */
-  function install() {
+  function install(): void {
     global $db;
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Per Weight Unit Shipping', 'MODULE_SHIPPING_PERWEIGHTUNIT_STATUS', 'True', 'Do you want to offer per unit rate shipping?<br><br>Product Quantity * Units (products_weight) * Cost per Unit', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Cost per Unit', 'MODULE_SHIPPING_PERWEIGHTUNIT_COST', '1', 'NOTE: When using this Shipping Module be sure to check the Tare settings in the Shipping/Packaging and set the Largest Weight high enough to handle the price, such as 5000.00 and the adjust the settings on Small and Large packages which will add to the price as well.<br><br>The shipping cost will be used to determine shipping charges based on: Product Quantity * Units (products_weight) * Cost per Unit - in an order that uses this shipping method.', '6', '0', now())");
@@ -185,24 +133,14 @@ class perweightunit extends base {
   }
 
   function help() {
-    return array('link' => 'https://docs.zen-cart.com/user/shipping/per_item_shipping/'); 
-  }
-
-
-  /**
-   * Remove the module and all its settings
-   *
-   */
-  function remove() {
-    global $db;
-    $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE  'MODULE\_SHIPPING\_PERWEIGHTUNIT\_%'");
+    return array('link' => 'https://docs.zen-cart.com/user/shipping/per_item_shipping/');
   }
   /**
    * Internal list of configuration keys used for configuration of the module
    *
    * @return array
    */
-  function keys() {
+  function keys(): array {
     return array('MODULE_SHIPPING_PERWEIGHTUNIT_STATUS', 'MODULE_SHIPPING_PERWEIGHTUNIT_COST', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD', 'MODULE_SHIPPING_PERWEIGHTUNIT_TAX_CLASS', 'MODULE_SHIPPING_PERWEIGHTUNIT_TAX_BASIS', 'MODULE_SHIPPING_PERWEIGHTUNIT_ZONE', 'MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER');
   }
 }

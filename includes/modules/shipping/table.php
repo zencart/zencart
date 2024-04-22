@@ -9,60 +9,8 @@
  * Enter description here...
  *
  */
-class table extends base {
+class table extends ZenShipping {
 
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" shipping module
-     *
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this shipping method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $enabled determines whether this module shows or not... during checkout.
-     * @var boolean
-     */
-    public $enabled;
-    /**
-     * $icon is the file name containing the Shipping method icon
-     * @var string
-     */
-    public $icon;
-    /** 
-     * $quotes is an array containing all the quote information for this shipping module
-     * @var array
-     */
-    public $quotes;
-    /**
-     * $sort_order is the order priority of this shipping module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-     * @var string
-     */
-    public $tax_basis;
-    /**
-     * $tax_class is the  Tax class to be applied to the shipping cost
-     * @var string
-     */
-    public $tax_class;
-    /**
-     * $title is the displayed name for this shipping method
-     * @var string
-     */
-    public $title;
-    
   /**
    * constructor
    *
@@ -75,6 +23,7 @@ class table extends base {
     $this->title = MODULE_SHIPPING_TABLE_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION;
     $this->sort_order = defined('MODULE_SHIPPING_TABLE_SORT_ORDER') ? MODULE_SHIPPING_TABLE_SORT_ORDER : null;
+    $this->class_key = 'MODULE_SHIPPING_TABLE';
     if (null === $this->sort_order) return false;
 
     $this->icon = '';
@@ -132,7 +81,7 @@ class table extends base {
    * @param string $method
    * @return unknown
    */
-  function quote($method = '') {
+  function quote($method = ''): array {
     global $order, $shipping_weight, $shipping_num_boxes, $total_count;
 
     // shipping adjustment
@@ -152,7 +101,7 @@ class table extends base {
 
     $table_cost = preg_split("/[:,]/" , MODULE_SHIPPING_TABLE_COST);
     $size = sizeof($table_cost);
-    $shipping = 0; 
+    $shipping = 0;
     for ($i=0, $n=$size; $i<$n; $i+=2) {
       if (round($order_total,9) <= $table_cost[$i]) {
         if (strstr($table_cost[$i+1], '%')) {
@@ -164,7 +113,7 @@ class table extends base {
       }
     }
 
-    $show_box_weight = ''; 
+    $show_box_weight = '';
     if (MODULE_SHIPPING_TABLE_MODE == 'weight') {
       $shipping = $shipping * $shipping_num_boxes;
       // show boxes if weight
@@ -215,7 +164,7 @@ class table extends base {
    * Install the shipping module and its configuration settings
    *
    */
-  function install() {
+  function install(): void {
     global $db;
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Table Method', 'MODULE_SHIPPING_TABLE_STATUS', 'True', 'Do you want to offer table rate shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Shipping Table', 'MODULE_SHIPPING_TABLE_COST', '25:8.50,50:5.50,10000:0.00', 'The shipping cost is based on the total cost or weight of items or count of the items. Example: 25:8.50,50:5.50,etc.. Up to 25 charge 8.50, from there to 50 charge 5.50, etc<br>You can also use percentage amounts, such 25:8.50,35:5%,40:9.50,10000:7% to charge a percentage value of the Order Total', '6', '0', 'zen_cfg_textarea(', now())");
@@ -230,20 +179,11 @@ class table extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_TABLE_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
   }
   /**
-   * Remove the module and all its settings
-   *
-   */
-    function remove() {
-      global $db;
-      $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_TABLE\_%'");
-    }
-
-  /**
    * Internal list of configuration keys used for configuration of the module
-   * 
+   *
    * @return unknown
    */
-  function keys() {
+  function keys(): array {
     return array('MODULE_SHIPPING_TABLE_STATUS', 'MODULE_SHIPPING_TABLE_COST', 'MODULE_SHIPPING_TABLE_MODE', 'MODULE_SHIPPING_TABLE_HANDLING', 'MODULE_SHIPPING_TABLE_HANDLING_METHOD', 'MODULE_SHIPPING_TABLE_TAX_CLASS', 'MODULE_SHIPPING_TABLE_TAX_BASIS', 'MODULE_SHIPPING_TABLE_ZONE', 'MODULE_SHIPPING_TABLE_SORT_ORDER');
   }
 

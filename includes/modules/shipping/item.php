@@ -6,66 +6,14 @@
  * @version $Id: mc12345678 2023 Jul 09 Modified in v2.0.0-alpha1 $
  */
 
+  class item extends ZenShipping {
 
-  class item {
-      
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" shipping module
-     *
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this shipping method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $enabled determines whether this module shows or not... during checkout.
-     * @var boolean
-     */
-    public $enabled;
-    /**
-     * $icon is the file name containing the Shipping method icon
-     * @var string
-     */
-    public $icon;
-    /** 
-     * $quotes is an array containing all the quote information for this shipping module
-     * @var array
-     */
-    public $quotes;
-    /**
-     * $sort_order is the order priority of this shipping module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-     * @var string
-     */
-    public $tax_basis;
-    /**
-     * $tax_class is the  Tax class to be applied to the shipping cost
-     * @var string
-     */
-    public $tax_class;
-    /**
-     * $title is the displayed name for this shipping method
-     * @var string
-     */
-    public $title;
-  
     function __construct() {
       $this->code = 'item';
       $this->title = MODULE_SHIPPING_ITEM_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_ITEM_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_SHIPPING_ITEM_SORT_ORDER') ? MODULE_SHIPPING_ITEM_SORT_ORDER : null;
+      $this->class_key = 'MODULE_SHIPPING_ITEM';
       if (null === $this->sort_order) return false;
 
       $this->icon = '';
@@ -109,7 +57,7 @@
       }
     }
 
-    function quote($method = '') {
+    function quote($method = ''): array {
       global $order, $total_count;
 
       // adjusted count for free shipping
@@ -138,7 +86,7 @@
       return $this->_check;
     }
 
-    function install() {
+    function install(): void {
       global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Item Shipping', 'MODULE_SHIPPING_ITEM_STATUS', 'True', 'Do you want to offer per item rate shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Cost', 'MODULE_SHIPPING_ITEM_COST', '2.50', 'The shipping cost will be multiplied by the number of items in an order that uses this shipping method.', '6', '0', now())");
@@ -149,12 +97,8 @@
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_ITEM_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
-    function remove() {
-      global $db;
-      $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_ITEM\_%'");
-    }
 
-    function keys() {
+    function keys(): array {
       return array('MODULE_SHIPPING_ITEM_STATUS', 'MODULE_SHIPPING_ITEM_COST', 'MODULE_SHIPPING_ITEM_HANDLING', 'MODULE_SHIPPING_ITEM_TAX_CLASS', 'MODULE_SHIPPING_ITEM_TAX_BASIS', 'MODULE_SHIPPING_ITEM_ZONE', 'MODULE_SHIPPING_ITEM_SORT_ORDER');
     }
   }

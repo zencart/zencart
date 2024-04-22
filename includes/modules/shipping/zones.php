@@ -92,64 +92,13 @@
 
 */
 
-class zones
+class zones extends ZenShipping
 {
-  /**
-   * $_check is used to check the configuration key set up
-   * @var int
-   */
-  protected $_check;
-  /**
-   * $code determines the internal 'code' name used to designate "this" shipping module
-   *
-   * @var string
-   */
-  public $code;
-  /**
-   * $description is a soft name for this shipping method
-   * @var string 
-   */
-  public $description;
-  /**
-   * $enabled determines whether this module shows or not... during checkout.
-   * @var boolean
-   */
-  public $enabled;
-  /**
-   * $icon is the file name containing the Shipping method icon
-   * @var string
-   */
-  public $icon;
   /**
    * $num_zones is the number of zones to process
    * @var integer
    */
   protected $num_zones;
-  /** 
-   * $quotes is an array containing all the quote information for this shipping module
-   * @var array
-   */
-  public $quotes;
-  /**
-   * $sort_order is the order priority of this shipping module when displayed
-   * @var int
-   */
-  public $sort_order;
-  /**
-   * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-   * @var string
-   */
-  public $tax_basis;
-  /**
-   * $tax_class is the  Tax class to be applied to the shipping cost
-   * @var string
-   */
-  public $tax_class;
-  /**
-   * $title is the displayed name for this shipping method
-   * @var string
-   */
-  public $title;
 
   function __construct()
   {
@@ -157,6 +106,7 @@ class zones
     $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION;
     $this->sort_order = defined('MODULE_SHIPPING_ZONES_SORT_ORDER') ? MODULE_SHIPPING_ZONES_SORT_ORDER : null;
+    $this->class_key = 'MODULE_SHIPPING_ZONES';
     if (null === $this->sort_order) return false;
 
     $this->icon = '';
@@ -198,7 +148,7 @@ class zones
     }
   }
 
-  function quote($method = '')
+  function quote($method = ''): array
   {
     global $order, $shipping_weight, $shipping_num_boxes, $total_count;
     $dest_country = $order->delivery['country']['iso_code_2'];
@@ -354,7 +304,7 @@ class zones
     return $this->_check;
   }
 
-  function install()
+  function install(): void
   {
     global $db;
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Zones Method', 'MODULE_SHIPPING_ZONES_STATUS', 'True', 'Do you want to offer zone rate shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -382,13 +332,7 @@ class zones
     return array('link' => 'https://docs.zen-cart.com/user/shipping/zones/');
   }
 
-  function remove()
-  {
-    global $db;
-    $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_ZONES\_%'");
-  }
-
-  function keys()
+  function keys(): array
   {
     $keys = array('MODULE_SHIPPING_ZONES_STATUS', 'MODULE_SHIPPING_ZONES_METHOD', 'MODULE_SHIPPING_ZONES_TAX_CLASS', 'MODULE_SHIPPING_ZONES_TAX_BASIS', 'MODULE_SHIPPING_ZONES_SORT_ORDER', 'MODULE_SHIPPING_ZONES_SKIPPED');
 

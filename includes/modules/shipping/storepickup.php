@@ -9,34 +9,7 @@
  * Store-Pickup / Will-Call shipping method
  * with multiple location choices as radio-buttons
  */
-class storepickup extends base {
-
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" shipping module
-     *
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this shipping method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $enabled determines whether this module shows or not... during checkout.
-     * @var boolean
-     */
-    public $enabled;
-    /**
-     * $icon is the file name containing the Shipping method icon
-     * @var string
-     */
-    public $icon;
+class storepickup extends ZenShipping {
     /**
      * $locations is an array of locations for the customer to pickup order
      * @var array
@@ -47,32 +20,7 @@ class storepickup extends base {
      * @var array
      */
     protected $methodsList = [];
-    /** 
-     * $quotes is an array containing all the quote information for this shipping module
-     * @var array
-     */
-    public $quotes;
-    /**
-     * $sort_order is the order priority of this shipping module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-     * @var string
-     */
-    public $tax_basis;
-    /**
-     * $tax_class is the  Tax class to be applied to the shipping cost
-     * @var string
-     */
-    public $tax_class;
-    /**
-     * $title is the displayed name for this shipping method
-     * @var string
-     */
-    public $title;
-    
+
   /**
    * constructor
    *
@@ -83,6 +31,7 @@ class storepickup extends base {
     $this->title = MODULE_SHIPPING_STOREPICKUP_TEXT_TITLE;
     $this->description = MODULE_SHIPPING_STOREPICKUP_TEXT_DESCRIPTION;
     $this->sort_order = defined('MODULE_SHIPPING_STOREPICKUP_SORT_ORDER') ? MODULE_SHIPPING_STOREPICKUP_SORT_ORDER : null;
+    $this->class_key = 'MODULE_SHIPPING_STOREPICKUP';
     if (null === $this->sort_order) return false;
 
     $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
@@ -132,7 +81,7 @@ class storepickup extends base {
    * @param string $method
    * @return array
    */
-  function quote($method = '') {
+  function quote($method = ''): array {
     global $order;
 
     // this code looks to see if there's a language-specific translation for the available shipping locations/methods, to override what is entered in the Admin (since the admin setting is in the default language)
@@ -191,7 +140,7 @@ class storepickup extends base {
    * Install the shipping module and its configuration settings
    *
    */
-  function install() {
+  function install(): void {
     global $db;
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Store Pickup Shipping', 'MODULE_SHIPPING_STOREPICKUP_STATUS', 'True', 'Do you want to offer In Store rate shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Pickup Locations', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'Walk In', 'Enter a list of locations, separated by semicolons (;).<br>Optionally you may specify a fee/surcharge for each location by adding a comma and an amount. If no amount is specified, then the generic Shipping Cost amount from the next setting will be applied.<br><br>Examples:<br>121 Main Street;20 Church Street<br>Sunnyside,4.00;Lee Park,5.00;High Street,0.00<br>Dallas;Tulsa,5.00;Phoenix,0.00<br>For multilanguage use, see the define-statement in the language file for this module.', '6', '0', now())");
@@ -202,19 +151,11 @@ class storepickup extends base {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_STOREPICKUP_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
   }
   /**
-   * Remove the module and all its settings
-   *
-   */
-  function remove() {
-    global $db;
-    $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_STOREPICKUP\_%'");
-  }
-  /**
    * Internal list of configuration keys used for configuration of the module
    *
    * @return array
    */
-  function keys() {
+  function keys(): array {
     return array('MODULE_SHIPPING_STOREPICKUP_STATUS', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'MODULE_SHIPPING_STOREPICKUP_COST', 'MODULE_SHIPPING_STOREPICKUP_TAX_CLASS', 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS', 'MODULE_SHIPPING_STOREPICKUP_ZONE', 'MODULE_SHIPPING_STOREPICKUP_SORT_ORDER');
   }
 }

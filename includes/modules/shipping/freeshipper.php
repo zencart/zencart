@@ -6,65 +6,14 @@
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
 //
-  class freeshipper {
-      
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" shipping module
-     *
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this shipping method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $enabled determines whether this module shows or not... during checkout.
-     * @var boolean
-     */
-    public $enabled;
-    /**
-     * $icon is the file name containing the Shipping method icon
-     * @var string
-     */
-    public $icon;
-    /** 
-     * $quotes is an array containing all the quote information for this shipping module
-     * @var array
-     */
-    public $quotes;
-    /**
-     * $sort_order is the order priority of this shipping module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-     * @var string
-     */
-    public $tax_basis;
-    /**
-     * $tax_class is the  Tax class to be applied to the shipping cost
-     * @var string
-     */
-    public $tax_class;
-    /**
-     * $title is the displayed name for this shipping method
-     * @var string
-     */
-    public $title;
-  
+  class freeshipper extends ZenShipping {
+
     function __construct() {
       $this->code = 'freeshipper';
       $this->title = MODULE_SHIPPING_FREESHIPPER_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_FREESHIPPER_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_SHIPPING_FREESHIPPER_SORT_ORDER') ? MODULE_SHIPPING_FREESHIPPER_SORT_ORDER : null;
+        $this->class_key = 'MODULE_SHIPPING_FREESHIPPER';
       if (null === $this->sort_order) return false;
 
       $this->icon = '';
@@ -107,7 +56,7 @@
       }
     }
 
-    function quote($method = '') {
+    function quote($method = ''):array {
       global $order;
 
       $this->quotes = array('id' => $this->code,
@@ -136,11 +85,11 @@
 
     function get_configuration_errors() {
       if (!zen_check_for_misconfigured_downloads()) {
-         return TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED; 
+         return TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED;
       }
     }
 
-    function install() {
+    function install(): void {
       global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Free Shipping', 'MODULE_SHIPPING_FREESHIPPER_STATUS', 'True', 'Do you want to offer Free shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Free Shipping Cost', 'MODULE_SHIPPING_FREESHIPPER_COST', '0.00', 'What is the Shipping cost?', '6', '6', now())");
@@ -151,15 +100,10 @@
     }
 
     function help() {
-       return array('link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/'); 
+       return array('link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/');
     }
 
-    function remove() {
-      global $db;
-      $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_FREESHIPPER\_%'");
-    }
-
-    function keys() {
+    function keys(): array {
       return array('MODULE_SHIPPING_FREESHIPPER_STATUS', 'MODULE_SHIPPING_FREESHIPPER_COST', 'MODULE_SHIPPING_FREESHIPPER_HANDLING', 'MODULE_SHIPPING_FREESHIPPER_TAX_CLASS', 'MODULE_SHIPPING_FREESHIPPER_ZONE', 'MODULE_SHIPPING_FREESHIPPER_SORT_ORDER');
     }
   }
