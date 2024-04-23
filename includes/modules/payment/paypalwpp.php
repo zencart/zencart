@@ -1737,7 +1737,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           }
         }
       }
-      $this->zcLog('ec-step1-addr_check3', 'address details from override check:'.($address_arr == FALSE ? ' <NONE FOUND>' : print_r($address_arr, true)));
+      $this->zcLog('ec-step1-addr_check3', 'address details from override check:'.(empty($address_arr) ? ' <NONE FOUND>' : print_r($address_arr, true)));
 
       // Do we require a "confirmed" shipping address ?
       if (MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS == 'Yes') {
