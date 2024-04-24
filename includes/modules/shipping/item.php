@@ -15,7 +15,6 @@ class item extends ZenShipping
         $this->title = MODULE_SHIPPING_ITEM_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_ITEM_TEXT_DESCRIPTION;
         $this->sort_order = defined('MODULE_SHIPPING_ITEM_SORT_ORDER') ? MODULE_SHIPPING_ITEM_SORT_ORDER : null;
-        $this->class_key = 'MODULE_SHIPPING_ITEM';
         if (null === $this->sort_order) {
             return false;
         }

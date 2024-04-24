@@ -26,7 +26,6 @@ class table extends ZenShipping
         $this->title = MODULE_SHIPPING_TABLE_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION;
         $this->sort_order = defined('MODULE_SHIPPING_TABLE_SORT_ORDER') ? MODULE_SHIPPING_TABLE_SORT_ORDER : null;
-        $this->class_key = 'MODULE_SHIPPING_TABLE';
         if (null === $this->sort_order) {
             return false;
         }

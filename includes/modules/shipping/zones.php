@@ -107,7 +107,6 @@ class zones extends ZenShipping
         $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION;
         $this->sort_order = defined('MODULE_SHIPPING_ZONES_SORT_ORDER') ? MODULE_SHIPPING_ZONES_SORT_ORDER : null;
-        $this->class_key = 'MODULE_SHIPPING_ZONES';
         if (null === $this->sort_order) {
             return false;
         }

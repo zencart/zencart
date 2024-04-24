@@ -59,8 +59,6 @@ abstract class ZenShipping extends base
      */
     public $title;
 
-    protected $class_key;
-
     abstract public function quote($method = ''): array;
 
     abstract public function keys(): array;
@@ -74,7 +72,10 @@ abstract class ZenShipping extends base
     public function remove(): void
     {
         global $db;
-        $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like '" . $this->class_key . "_%'");
+        $db->Execute(
+            "DELETE FROM " . TABLE_CONFIGURATION . "
+              WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')"
+        );
     }
 
 }
