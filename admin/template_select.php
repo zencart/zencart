@@ -188,8 +188,42 @@ if (!empty($action)) {
                  $contents[] = ['text' => TEXT_INFO_TEMPLATE_AUTHOR . $template_info[$tInfo->template_dir]['author']];
                  $contents[] = ['text' => TEXT_INFO_TEMPLATE_VERSION . $template_info[$tInfo->template_dir]['version']];
                  $contents[] = ['text' => TEXT_INFO_TEMPLATE_DESCRIPTION . '<br>' . $template_info[$tInfo->template_dir]['description']];
-                 $contents[] = ['align' => 'text-center',
-                    'text' => '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_INFO_EDIT_INTRO . '</a>' .
+                 if ($template_info[$tInfo->template_dir]['has_template_settings'] === true) {
+                     $template_settings_button =
+                        '<button type="button" class="btn btn-info" data-toggle="modal" data-target="#view-settings">' .
+                            TEXT_VIEW_TEMPLATE_SETTINGS .
+                        '</button> ';
+                     $template_settings = file_get_contents($template_info[$tInfo->template_dir]['template_path'] . '/template_settings.php');
+                     $template_settings = nl2br(zen_output_string_protected($template_settings), true);
+                     $contents[] = [
+                        'text' =>
+                            '<div id="view-settings" class="modal fade" role="dialog">' .
+                                '<div class="modal-dialog modal-lg">' .
+                                    '<div class="modal-content">' .
+                                        '<div class="modal-header">' .
+                                            '<button type="button" class="close" data-dismiss="modal">&times;</button>' .
+                                            '<h4 class="modal-title">' .
+                                                TEXT_MODAL_HEADING_INTRO . $template_info[$tInfo->template_dir]['name'] .
+                                            '</h4>' .
+                                        '</div>' .
+                                        '<div class="modal-body">' .
+                                            '<p>' . $template_settings . '</p>' .
+                                        '</div>' .
+                                        '<div class="modal-footer">' .
+                                            '<button type="button" class="btn btn-default" data-dismiss="modal">' . TEXT_CLOSE . '</button>' .
+                                        '</div>' .
+                                    '</div>' .
+                                '</div>' .
+                            '</div>'
+                     ];
+                 }
+                 $contents[] = [
+                    'align' => 'text-center',
+                    'text' =>
+                        ($template_settings_button ?? '') .
+                        '<a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=edit') . '" class="btn btn-primary" role="button">' .
+                            TEXT_INFO_EDIT_INTRO .
+                        '</a>' .
                         ($tInfo->template_language != '0' ? ' <a href="' . zen_href_link(FILENAME_TEMPLATE_SELECT, 'page=' . $_GET['page'] . '&tID=' . $tInfo->template_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>' : '')];
                   $contents[] = ['text' => '<hr>'];
                   $contents[] = ['text' => TEXT_INFO_TEMPLATE_INSTALLED];
