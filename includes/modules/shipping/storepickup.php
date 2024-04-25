@@ -5,38 +5,13 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
+
 /**
  * Store-Pickup / Will-Call shipping method
  * with multiple location choices as radio-buttons
  */
-class storepickup extends base {
-
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" shipping module
-     *
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this shipping method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $enabled determines whether this module shows or not... during checkout.
-     * @var boolean
-     */
-    public $enabled;
-    /**
-     * $icon is the file name containing the Shipping method icon
-     * @var string
-     */
-    public $icon;
+class storepickup extends ZenShipping
+{
     /**
      * $locations is an array of locations for the customer to pickup order
      * @var array
@@ -47,174 +22,169 @@ class storepickup extends base {
      * @var array
      */
     protected $methodsList = [];
-    /** 
-     * $quotes is an array containing all the quote information for this shipping module
-     * @var array
-     */
-    public $quotes;
-    /**
-     * $sort_order is the order priority of this shipping module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-     * @var string
-     */
-    public $tax_basis;
-    /**
-     * $tax_class is the  Tax class to be applied to the shipping cost
-     * @var string
-     */
-    public $tax_class;
-    /**
-     * $title is the displayed name for this shipping method
-     * @var string
-     */
-    public $title;
-    
-  /**
-   * constructor
-   *
-   * @return storepickup
-   */
-  function __construct() {
-    $this->code = 'storepickup';
-    $this->title = MODULE_SHIPPING_STOREPICKUP_TEXT_TITLE;
-    $this->description = MODULE_SHIPPING_STOREPICKUP_TEXT_DESCRIPTION;
-    $this->sort_order = defined('MODULE_SHIPPING_STOREPICKUP_SORT_ORDER') ? MODULE_SHIPPING_STOREPICKUP_SORT_ORDER : null;
-    if (null === $this->sort_order) return false;
 
-    $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
-    $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
-    $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
-    $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS == 'True');
-    $this->update_status();
-  }
-  /**
-   * Perform various checks to see whether this module should be visible
-   */
-  function update_status() {
-    global $order, $db;
-    if (!$this->enabled) return;
-    if (IS_ADMIN_FLAG === true) return;
+    /**
+     * constructor
+     *
+     * @return storepickup
+     */
+    function __construct()
+    {
+        $this->code = 'storepickup';
+        $this->title = MODULE_SHIPPING_STOREPICKUP_TEXT_TITLE;
+        $this->description = MODULE_SHIPPING_STOREPICKUP_TEXT_DESCRIPTION;
+        $this->sort_order = defined('MODULE_SHIPPING_STOREPICKUP_SORT_ORDER') ? MODULE_SHIPPING_STOREPICKUP_SORT_ORDER : null;
+        if (null === $this->sort_order) {
+            return false;
+        }
 
-    if (isset($order->delivery) && (int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0 ) {
-      $check_flag = false;
-      $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
+        $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
+        $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
+        $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
+        $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS == 'True');
+        $this->update_status();
+    }
+
+    /**
+     * Perform various checks to see whether this module should be visible
+     */
+    function update_status()
+    {
+        global $order, $db;
+        if (!$this->enabled) {
+            return;
+        }
+        if (IS_ADMIN_FLAG === true) {
+            return;
+        }
+
+        if (isset($order->delivery) && (int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) {
+            $check_flag = false;
+            $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
                              where geo_zone_id = '" . MODULE_SHIPPING_STOREPICKUP_ZONE . "'
                              and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
                              order by zone_id");
-      while (!$check->EOF) {
-        if ($check->fields['zone_id'] < 1) {
-          $check_flag = true;
-          break;
-        } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-          $check_flag = true;
-          break;
+            while (!$check->EOF) {
+                if ($check->fields['zone_id'] < 1) {
+                    $check_flag = true;
+                    break;
+                } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
+                    $check_flag = true;
+                    break;
+                }
+                $check->MoveNext();
+            }
+
+            if ($check_flag == false) {
+                $this->enabled = false;
+            }
         }
-        $check->MoveNext();
-      }
 
-      if ($check_flag == false) {
-        $this->enabled = false;
-      }
-    }
-
-    // other status checks?
-    if ($this->enabled) {
-      // other checks here
-    }
-  }
-  /**
-   * Obtain quote from shipping system/calculations
-   *
-   * @param string $method
-   * @return array
-   */
-  function quote($method = '') {
-    global $order;
-
-    // this code looks to see if there's a language-specific translation for the available shipping locations/methods, to override what is entered in the Admin (since the admin setting is in the default language)
-    $ways_translated = (defined('MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS')) ? trim(MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS) : '';
-    $ways_default = trim(MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST);
-    $methodsToParse = ($ways_translated == '') ? $ways_default : $ways_translated;
-
-    if ($methodsToParse == '') {
-      $this->methodsList[] = array('id' => $this->code,
-                                   'title' => trim((string)MODULE_SHIPPING_STOREPICKUP_TEXT_WAY),
-                                   'cost' => MODULE_SHIPPING_STOREPICKUP_COST);
-    } else {
-      $this->locations = explode(';', (string)$methodsToParse);
-      $this->methodsList = array();
-      foreach ($this->locations as $key => $val)
-      {
-        if ($method != '' && $method != $this->code . (string)$key) continue;
-        $cost = MODULE_SHIPPING_STOREPICKUP_COST;
-        $title = $val;
-        if (strstr($val, ',')) {
-          list($title, $cost) = explode(',', $val);
+        // other status checks?
+        if ($this->enabled) {
+            // other checks here
         }
-        $this->methodsList[] = array('id' => $this->code . (string)$key,
-                                     'title' => trim($title),
-                                     'cost' => $cost);
-      }
     }
 
-    $this->quotes = array('id' => $this->code,
-                          'module' => MODULE_SHIPPING_STOREPICKUP_TEXT_TITLE,
-                          'methods' => $this->methodsList);
+    /**
+     * Obtain quote from shipping system/calculations
+     *
+     * @param string $method
+     * @return array
+     */
+    function quote($method = ''): array
+    {
+        global $order;
 
-    if ($this->tax_class > 0) {
-      $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        // this code looks to see if there's a language-specific translation for the available shipping locations/methods, to override what is entered in the Admin (since the admin setting is in the default language)
+        $ways_translated = (defined('MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS')) ? trim(MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS) : '';
+        $ways_default = trim(MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST);
+        $methodsToParse = ($ways_translated == '') ? $ways_default : $ways_translated;
+
+        if ($methodsToParse == '') {
+            $this->methodsList[] = [
+                'id' => $this->code,
+                'title' => trim((string)MODULE_SHIPPING_STOREPICKUP_TEXT_WAY),
+                'cost' => MODULE_SHIPPING_STOREPICKUP_COST,
+            ];
+        } else {
+            $this->locations = explode(';', (string)$methodsToParse);
+            $this->methodsList = [];
+            foreach ($this->locations as $key => $val) {
+                if ($method != '' && $method != $this->code . (string)$key) {
+                    continue;
+                }
+                $cost = MODULE_SHIPPING_STOREPICKUP_COST;
+                $title = $val;
+                if (strstr($val, ',')) {
+                    [$title, $cost] = explode(',', $val);
+                }
+                $this->methodsList[] = [
+                    'id' => $this->code . (string)$key,
+                    'title' => trim($title),
+                    'cost' => $cost,
+                ];
+            }
+        }
+
+        $this->quotes = [
+            'id' => $this->code,
+            'module' => MODULE_SHIPPING_STOREPICKUP_TEXT_TITLE,
+            'methods' => $this->methodsList,
+        ];
+
+        if ($this->tax_class > 0) {
+            $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        }
+
+        if (!empty($this->icon)) {
+            $this->quotes['icon'] = zen_image($this->icon, $this->title);
+        }
+
+        return $this->quotes;
     }
 
-    if (!empty($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
-
-    return $this->quotes;
-  }
-  /**
-   * Check to see whether module is installed
-   *
-   * @return boolean
-   */
-  function check() {
-    global $db;
-    if (!isset($this->_check)) {
-      $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_STOREPICKUP_STATUS'");
-      $this->_check = $check_query->RecordCount();
+    /**
+     * Check to see whether module is installed
+     *
+     * @return boolean
+     */
+    function check()
+    {
+        global $db;
+        if (!isset($this->_check)) {
+            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_STOREPICKUP_STATUS'");
+            $this->_check = $check_query->RecordCount();
+        }
+        if ($this->_check > 0 && !defined('MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST')) {
+            $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Pickup Locations', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'Walk In', 'Enter a list of locations, separated by semicolons (;).<br>Optionally you may specify a fee/surcharge for each location by adding a comma and an amount. If no amount is specified, then the generic Shipping Cost amount from the next setting will be applied.<br><br>Examples:<br>121 Main Street;20 Church Street<br>Sunnyside,4.00;Lee Park,5.00;High Street,0.00<br>Dallas;Tulsa,5.00;Phoenix,0.00<br>For multilanguage use, see the define-statement in the language file for this module.', '6', '0', now())");
+        }
+        return $this->_check;
     }
-    if ($this->_check > 0 && !defined('MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST')) $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Pickup Locations', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'Walk In', 'Enter a list of locations, separated by semicolons (;).<br>Optionally you may specify a fee/surcharge for each location by adding a comma and an amount. If no amount is specified, then the generic Shipping Cost amount from the next setting will be applied.<br><br>Examples:<br>121 Main Street;20 Church Street<br>Sunnyside,4.00;Lee Park,5.00;High Street,0.00<br>Dallas;Tulsa,5.00;Phoenix,0.00<br>For multilanguage use, see the define-statement in the language file for this module.', '6', '0', now())");
-    return $this->_check;
-  }
-  /**
-   * Install the shipping module and its configuration settings
-   *
-   */
-  function install() {
-    global $db;
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Store Pickup Shipping', 'MODULE_SHIPPING_STOREPICKUP_STATUS', 'True', 'Do you want to offer In Store rate shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Pickup Locations', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'Walk In', 'Enter a list of locations, separated by semicolons (;).<br>Optionally you may specify a fee/surcharge for each location by adding a comma and an amount. If no amount is specified, then the generic Shipping Cost amount from the next setting will be applied.<br><br>Examples:<br>121 Main Street;20 Church Street<br>Sunnyside,4.00;Lee Park,5.00;High Street,0.00<br>Dallas;Tulsa,5.00;Phoenix,0.00<br>For multilanguage use, see the define-statement in the language file for this module.', '6', '0', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Cost', 'MODULE_SHIPPING_STOREPICKUP_COST', '0.00', 'The shipping cost for all orders using this shipping method.', '6', '0', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_STOREPICKUP_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Tax Basis', 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS', 'Shipping', 'On what basis is Shipping Tax calculated. Options are<br>Shipping - Based on Store Pickup Address <br>Billing - Based on customers Billing address', '6', '0', 'zen_cfg_select_option(array(\'Shipping\', \'Billing\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Shipping Zone', 'MODULE_SHIPPING_STOREPICKUP_ZONE', '0', 'If a zone is selected, only enable this shipping method for that zone.', '6', '0', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_STOREPICKUP_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
-  }
-  /**
-   * Remove the module and all its settings
-   *
-   */
-  function remove() {
-    global $db;
-    $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'MODULE\_SHIPPING\_STOREPICKUP\_%'");
-  }
-  /**
-   * Internal list of configuration keys used for configuration of the module
-   *
-   * @return array
-   */
-  function keys() {
-    return array('MODULE_SHIPPING_STOREPICKUP_STATUS', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'MODULE_SHIPPING_STOREPICKUP_COST', 'MODULE_SHIPPING_STOREPICKUP_TAX_CLASS', 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS', 'MODULE_SHIPPING_STOREPICKUP_ZONE', 'MODULE_SHIPPING_STOREPICKUP_SORT_ORDER');
-  }
+
+    /**
+     * Install the shipping module and its configuration settings
+     *
+     */
+    function install(): void
+    {
+        global $db;
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Store Pickup Shipping', 'MODULE_SHIPPING_STOREPICKUP_STATUS', 'True', 'Do you want to offer In Store rate shipping?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Pickup Locations', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'Walk In', 'Enter a list of locations, separated by semicolons (;).<br>Optionally you may specify a fee/surcharge for each location by adding a comma and an amount. If no amount is specified, then the generic Shipping Cost amount from the next setting will be applied.<br><br>Examples:<br>121 Main Street;20 Church Street<br>Sunnyside,4.00;Lee Park,5.00;High Street,0.00<br>Dallas;Tulsa,5.00;Phoenix,0.00<br>For multilanguage use, see the define-statement in the language file for this module.', '6', '0', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Cost', 'MODULE_SHIPPING_STOREPICKUP_COST', '0.00', 'The shipping cost for all orders using this shipping method.', '6', '0', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_STOREPICKUP_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Tax Basis', 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS', 'Shipping', 'On what basis is Shipping Tax calculated. Options are<br>Shipping - Based on Store Pickup Address <br>Billing - Based on customers Billing address', '6', '0', 'zen_cfg_select_option(array(\'Shipping\', \'Billing\'), ', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Shipping Zone', 'MODULE_SHIPPING_STOREPICKUP_ZONE', '0', 'If a zone is selected, only enable this shipping method for that zone.', '6', '0', 'zen_get_zone_class_title', 'zen_cfg_pull_down_zone_classes(', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_STOREPICKUP_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
+    }
+
+    /**
+     * Internal list of configuration keys used for configuration of the module
+     *
+     * @return array
+     */
+    function keys(): array
+    {
+        return ['MODULE_SHIPPING_STOREPICKUP_STATUS', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'MODULE_SHIPPING_STOREPICKUP_COST', 'MODULE_SHIPPING_STOREPICKUP_TAX_CLASS', 'MODULE_SHIPPING_STOREPICKUP_TAX_BASIS', 'MODULE_SHIPPING_STOREPICKUP_ZONE', 'MODULE_SHIPPING_STOREPICKUP_SORT_ORDER'];
+    }
 }

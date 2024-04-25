@@ -26,3 +26,4 @@ if (defined('DIR_FS_ADMIN')) {
 }
 $psr4Autoloader->setClassFile('Settings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Settings.php' );
 $psr4Autoloader->setClassFile('TemplateSettings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'TemplateSettings.php' );
+$psr4Autoloader->setClassFile('ZenShipping', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ZenShipping.php');

@@ -1,77 +1,23 @@
 <?php
+
 /**
  * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
-class freeoptions extends base
- {
-    
-    /**
-     * $_check is used to check the configuration key set up
-     * @var int
-     */
-    protected $_check;
-    /**
-     * $code determines the internal 'code' name used to designate "this" shipping module
-     *
-     * @var string
-     */
-    public $code;
-    /**
-     * $description is a soft name for this shipping method
-     * @var string 
-     */
-    public $description;
-    /**
-     * $enabled determines whether this module shows or not... during checkout.
-     * @var boolean
-     */
-    public $enabled;
-    /**
-     * $debug is an array containing debug information
-     * @var array
-     */
-    public $debug = [];
-    /**
-     * $icon is the file name containing the Shipping method icon
-     * @var string
-     */
-    public $icon;
-    /** 
-     * $quotes is an array containing all the quote information for this shipping module
-     * @var array
-     */
-    public $quotes;
-    /**
-     * $sort_order is the order priority of this shipping module when displayed
-     * @var int
-     */
-    public $sort_order;
-    /**
-     * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
-     * @var string
-     */
-    public $tax_basis;
-    /**
-     * $tax_class is the  Tax class to be applied to the shipping cost
-     * @var string
-     */
-    public $tax_class;
-    /**
-     * $title is the displayed name for this shipping method
-     * @var string
-     */
-    public $title;
-  
+class freeoptions extends ZenShipping
+{
+
     public function __construct()
     {
         $this->code = 'freeoptions';
         $this->title = MODULE_SHIPPING_FREEOPTIONS_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_FREEOPTIONS_TEXT_DESCRIPTION;
         $this->sort_order = defined('MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER') ? MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER : null;
-        if (null === $this->sort_order) return false;
+        if (null === $this->sort_order) {
+            return false;
+        }
 
         $this->icon = '';
         $this->tax_class = MODULE_SHIPPING_FREEOPTIONS_TAX_CLASS;
@@ -138,7 +84,7 @@ class freeoptions extends base
         //
         $freeoptions_total = (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX !== '');
         $freeoptions_weight = (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX !== '');
-        $freeoptions_items  = (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '');
+        $freeoptions_items = (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '');
         $this->debug[] = [$freeoptions_total, $freeoptions_weight, $freeoptions_items];
 
         $this->enabled = ($freeoptions_total === true || $freeoptions_weight === true || $freeoptions_items === true);
@@ -201,10 +147,10 @@ class freeoptions extends base
     // -----
     // Return the "Free Options" quote, as requested.
     //
-    public function quote($method = '')
+    public function quote($method = ''): array
     {
         global $order;
-        
+
         // -----
         // Note: Only requested by the shipping class if previous processing has indicated that the
         // module is enabled!
@@ -216,16 +162,18 @@ class freeoptions extends base
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_FREEOPTIONS_TEXT_WAY,
-                    'cost'  => (float)MODULE_SHIPPING_FREEOPTIONS_COST + (float)MODULE_SHIPPING_FREEOPTIONS_HANDLING
-                ]
-            ]
+                    'cost' => (float)MODULE_SHIPPING_FREEOPTIONS_COST + (float)MODULE_SHIPPING_FREEOPTIONS_HANDLING,
+                ],
+            ],
         ];
 
         if ($this->tax_class > '0') {
             $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         }
 
-        if (!empty($this->icon)) $this->quotes['icon'] = zen_image($this->icon, $this->title);
+        if (!empty($this->icon)) {
+            $this->quotes['icon'] = zen_image($this->icon, $this->title);
+        }
 
         return $this->quotes;
     }
@@ -243,11 +191,11 @@ class freeoptions extends base
     public function get_configuration_errors()
     {
         if (!zen_check_for_misconfigured_downloads()) {
-            return TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED; 
+            return TEXT_DOWNLOADABLE_PRODUCTS_MISCONFIGURED;
         }
     }
 
-    public function install()
+    public function install(): void
     {
         global $db;
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Free Options Shipping', 'MODULE_SHIPPING_FREEOPTIONS_STATUS', 'True', 'Free Options is used to display a Free Shipping option when other Shipping Modules are displayed.
@@ -277,16 +225,10 @@ See: freeshipper<br><br>Do you want to offer per freeoptions rate shipping?', '6
 
     public function help()
     {
-        return ['link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/']; 
-    }
-    
-    public function remove()
-    {
-        global $db;
-        $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE  'MODULE\_SHIPPING\_FREEOPTIONS\_%'");
+        return ['link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/'];
     }
 
-    public function keys()
+    public function keys(): array
     {
         return [
             'MODULE_SHIPPING_FREEOPTIONS_STATUS',
@@ -301,7 +243,7 @@ See: freeshipper<br><br>Do you want to offer per freeoptions rate shipping?', '6
             'MODULE_SHIPPING_FREEOPTIONS_TAX_CLASS',
             'MODULE_SHIPPING_FREEOPTIONS_TAX_BASIS',
             'MODULE_SHIPPING_FREEOPTIONS_ZONE',
-            'MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER'
+            'MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER',
         ];
     }
 }
