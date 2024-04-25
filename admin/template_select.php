@@ -194,6 +194,9 @@ if (!empty($action)) {
                             TEXT_VIEW_TEMPLATE_SETTINGS .
                         '</button> ';
                      $template_settings = file_get_contents($template_info[$tInfo->template_dir]['template_path'] . '/template_settings.php');
+                     if ($template_settings === false) {
+                         $template_settings = ERROR_COULD_NOT_READ_FILE;
+                     }
                      $template_settings = nl2br(zen_output_string_protected($template_settings), true);
                      $contents[] = [
                         'text' =>

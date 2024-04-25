@@ -31,6 +31,7 @@ $define = [
     'TEXT_CLOSE' => 'Close',
     'TEXT_VIEW_TEMPLATE_SETTINGS' => 'View Template Settings',
     'TEXT_MODAL_HEADING_INTRO' => 'Template Settings: ',
+    'ERROR_COULD_NOT_READ_FILE' => 'Sorry, the file could not be read.',
 ];
 
 return $define;
