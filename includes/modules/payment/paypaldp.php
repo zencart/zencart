@@ -981,7 +981,7 @@ class paypaldp extends base {
         $this->transaction_id = $response['PNREF'];
         $this->payment_status = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Completed';
         $this->avs = 'AVSADDR: ' . $response['AVSADDR'] . ', AVSZIP: ' . $response['AVSZIP'] . ', IAVS: ' . $response['IAVS'];
-        $this->cvv2 = $response['CVV2MATCH'];
+        $this->cvv2 = $response['CVV2MATCH'] ?? '';
         $this->amt = $display_order_amount . ' ' . $my_currency;
         $this->payment_time = date('Y-m-d h:i:s');
         $this->responsedata['CURRENCYCODE'] = $my_currency;
@@ -994,7 +994,7 @@ class paypaldp extends base {
         $this->payment_status = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Completed';
         $this->pendingreason = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'authorization' : '';
         $this->avs = $response['AVSCODE'];
-        $this->cvv2 = $response['CVV2MATCH'];
+        $this->cvv2 = $response['CVV2MATCH'] ?? '';
         $this->correlationid = $response['CORRELATIONID'];
         $this->payment_time = urldecode($response['TIMESTAMP']);
         $this->amt = urldecode($response['AMT'] . ' ' . $response['CURRENCYCODE']);
