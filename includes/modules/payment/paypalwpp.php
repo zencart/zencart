@@ -3096,8 +3096,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             $this->_doDebug('PayPal Error Log - ec_step1()', "In function: ec_step1()\r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_ERROR;
-          $errorNum = urldecode($response['L_ERRORCODE0'] . $response['RESULT']);
-          if ($response['RESULT'] == 25) $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_NOT_WPP_ACCOUNT_ERROR;
+          $errorNum = urldecode($response['L_ERRORCODE0'] . ($response['RESULT'] ?? ''));
+          if (isset($response['RESULT']) && $response['RESULT'] == 25) $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_NOT_WPP_ACCOUNT_ERROR;
           if ($response['L_ERRORCODE0'] == 10002) $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_SANDBOX_VS_LIVE_ERROR;
           if ($response['L_ERRORCODE0'] == 10565) {
             $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_WPP_BAD_COUNTRY_ERROR;
