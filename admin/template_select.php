@@ -210,7 +210,7 @@ if (!empty($action)) {
                                             '</h4>' .
                                         '</div>' .
                                         '<div class="modal-body">' .
-                                            '<p>' . $template_settings . '</p>' .
+                                            '<samp>' . $template_settings . '</samp>' .
                                         '</div>' .
                                         '<div class="modal-footer">' .
                                             '<button type="button" class="btn btn-default" data-dismiss="modal">' . TEXT_CLOSE . '</button>' .
