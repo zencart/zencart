@@ -343,7 +343,7 @@ function zen_get_system_information($privacy = false)
         $output = '';
         if (DISPLAY_SERVER_UPTIME == 'true') {
             @exec('uptime 2>&1', $output, $errnum);
-            if ($errnum == 0) {
+            if ($errnum == 0 && isset($output[0])) {
                 $uptime = $output[0];
             }
         }
