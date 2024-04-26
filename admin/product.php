@@ -4,6 +4,8 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Oct 28 Modified in v2.0.0-alpha1 $
+ *
+ * @var products $zc_products
  */
 require 'includes/application_top.php';
 
