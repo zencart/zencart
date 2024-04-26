@@ -9,7 +9,7 @@
  */
 ?>
 <!-- bof: upcoming_products -->
-<fieldset>
+<fieldset id="upcoming-products" class="clearBoth">
 <legend><?php echo TABLE_HEADING_UPCOMING_PRODUCTS; ?></legend>
 <table id="upcomingProductsTable">
 <caption><?php echo CAPTION_UPCOMING_PRODUCTS; ?></caption>
