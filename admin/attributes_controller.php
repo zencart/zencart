@@ -639,6 +639,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
     $products_options_values_name = str_replace('"', '\"', $products_options_values_name);
     $products_options_values_name = str_replace('&quot;', '\"', $products_options_values_name);
     $products_options_values_name = str_replace('&frac12;', '1/2', $products_options_values_name);
+    $products_options_values_name = str_replace('&amp;', '&', $products_options_values_name);
 
     if ($counter == 1) {
       $value_string .= '  if (' . $selectedName . ' == "' . $attribute['products_options_id'] . '") {' . "\n";
