@@ -123,6 +123,8 @@ if (!empty($response['RESPMSG'])) {
 
         $outputPFmain .= '</table></td>'."\n\n";
     }
+} else if ($response === false) {
+    $outputPayPal .= '<td style="vertical-align: top">n/a</td>'."\n\n";
 } else {
     // display all paypal status fields (in admin Orders page):
     $outputPayPal .= '<td style="vertical-align: top"><table id="outputPayPal_1">'."\n";
@@ -130,13 +132,13 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_FIRST_NAME."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['FIRSTNAME']) ."\n";
+    $outputPayPal .= urldecode($response['FIRSTNAME'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_LAST_NAME."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['LASTNAME']) ."\n";
+    $outputPayPal .= urldecode($response['LASTNAME'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     if (!empty($response['BUSINESS'])) {
@@ -198,7 +200,7 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_EMAIL_ADDRESS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['EMAIL']) ."\n";
+    $outputPayPal .= urldecode($response['EMAIL'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
@@ -210,25 +212,29 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYER_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYERID']) ."\n";
+    $outputPayPal .= urldecode($response['PAYERID'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYER_STATUS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYERSTATUS']) ."\n";
+    $outputPayPal .= urldecode($response['PAYERSTATUS'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_STATUS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['ADDRESSSTATUS']) ."\n";
+    $outputPayPal .= urldecode($response['ADDRESSSTATUS'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&amp;id=' . urldecode($response['TRANSACTIONID']) . '" rel="noopener" target="_blank">' . urldecode($response['TRANSACTIONID']) . '</a>' ."\n";
+    if (isset($response['TRANSACTIONID'])) { 
+       $outputPayPal .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&amp;id=' . urldecode($response['TRANSACTIONID']) . '" rel="noopener" target="_blank">' . urldecode($response['TRANSACTIONID']) . '</a>' ."\n";
+    } else {
+       $outputPayPal .= 'n/a'; 
+    }
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
@@ -244,7 +250,7 @@ if (!empty($response['RESPMSG'])) {
         $outputPayPal .= $response['PROTECTIONELIGIBILITY']."\n";
         $outputPayPal .= '</td></tr>'."\n";
     }
-    if (defined('MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS') && $ipn->fields['memo'] != '') {
+    if (defined('MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS') && !empty($ipn->fields['memo'])) {
         $outputPayPal .= '<tr><td>'."\n";
         $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS."\n";
         $outputPayPal .= '</td><td>'."\n";
@@ -259,37 +265,45 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_TYPE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['TRANSACTIONTYPE']) ."\n";
+    $outputPayPal .= urldecode($response['TRANSACTIONTYPE'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_TYPE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYMENTTYPE']) ."\n";
+    $outputPayPal .= urldecode($response['PAYMENTTYPE'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_STATUS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYMENTSTATUS']) ."\n";
+    $outputPayPal .= urldecode($response['PAYMENTSTATUS'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PENDING_REASON."\n";
-    $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PENDINGREASON']) . ($response['REASONCODE'] == 'None' ? '' : urldecode($response['PENDINGREASON'])) ."\n";
+    $outputPayPal .= '</td><td>'."\n"; 
+    if (isset($response['PENDINGREASON'])) { 
+       $outputPayPal .= urldecode($response['PENDINGREASON']) . (empty($response['REASONCODE']) || $response['REASONCODE'] == 'None' ? '' : urldecode($response['PENDINGREASON'])) ."\n";
+    } else {
+       $outputPayPal .= 'n/a'; 
+    }
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_INVOICE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($ipn->fields['invoice']) . (urldecode($ipn->fields['invoice']) != urldecode($response['INVNUM']) ? '<br>' . urldecode($response['INVNUM']) : '') ."\n";
+    if (!empty($ipn->fields['invoice'])) { 
+       $outputPayPal .= urldecode($ipn->fields['invoice']) . (urldecode($ipn->fields['invoice']) != urldecode($response['INVNUM'] ?? '') ? '<br>' . urldecode($response['INVNUM'] ?? '') : '') ."\n";
+    } else {
+       $outputPayPal .= 'n/a'; 
+    }
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_DATE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['ORDERTIME']) ."\n";
+    $outputPayPal .= urldecode($response['ORDERTIME'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '</table></td>'."\n\n";
@@ -299,9 +313,13 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CURRENCY."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= $ipn->fields['mc_currency']."\n";
-    if ($ipn->fields['mc_currency'] !== urldecode($response['CURRENCYCODE'])) {
-        $outputPayPal .= ' ' . urldecode($response['CURRENCYCODE']);
+    if (!empty($ipn->fields['mc_currency']) && !empty($response['CURRENCYCODE'])) { 
+       $outputPayPal .= $ipn->fields['mc_currency'] ."\n";
+       if ($ipn->fields['mc_currency'] !== urldecode($response['CURRENCYCODE'])) {
+           $outputPayPal .= ' ' . urldecode($response['CURRENCYCODE']);
+       }
+    } else {
+           $outputPayPal .= 'n/a'; 
     }
     $outputPayPal .= "\n";
     $outputPayPal .= '</td></tr>'."\n";
@@ -309,7 +327,7 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_GROSS_AMOUNT."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['AMT']) ."\n";
+    $outputPayPal .= urldecode($response['AMT'] ?? '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
@@ -327,7 +345,7 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CART_ITEMS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= $ipn->fields['num_cart_items']."\n";
+    $outputPayPal .= ($ipn->fields['num_cart_items'] ?? '')."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '</table></td>'."\n\n";
@@ -448,7 +466,7 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
         $output .= $outputStartBlock; //start second table
 
         $transaction_type_authorization = (isset($response['TRANSACTION_TYPE']) && $response['TRANSACTION_TYPE'] == 'Authorization');
-        $transactiontype_payment = in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']);
+        $transactiontype_payment = (isset($response['TRANSACTION_TYPE']) && in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']));
         if ($transaction_type_authorization || ($transactiontype_payment && $response['PAYMENTTYPE'] == 'instant' && $response['PENDINGREASON'] == 'authorization') || $authcapt_on) {
             if (method_exists($this, '_doRefund') && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp')) {
                 $output .= $outputRefund;
@@ -468,7 +486,7 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
             if (method_exists($this, '_doRefund') /* && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp') */) {
                 $output .= $outputRefund;
             }
-            if (method_exists($this, '_doVoid') && $response['PAYMENTTYPE'] == 'instant' && $response['PAYMENTSTATUS'] != 'Voided' && $module != 'paypaldp') {
+            if (method_exists($this, '_doVoid') && isset($response['PAYMENTTYPE']) && $response['PAYMENTTYPE'] == 'instant' && $response['PAYMENTSTATUS'] != 'Voided' && $module != 'paypaldp') {
                 $output .= $outputVoid;
             }
         }
