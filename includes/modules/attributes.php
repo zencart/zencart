@@ -44,7 +44,7 @@ $products_price_is_priced_by_attributes = zen_get_products_price_is_priced_by_at
 
 
 if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
-    $options_order_by = ' order by LPAD(popt.products_options_sort_order,11,"0"), popt.products_options_name';
+    $options_order_by = " ORDER BY LPAD(popt.products_options_sort_order,11,'0'), popt.products_options_name";
 } else {
     $options_order_by = ' order by popt.products_options_name';
 }
@@ -66,9 +66,9 @@ $products_options_names = $db->Execute($sql);
 
 
 if (PRODUCTS_OPTIONS_SORT_BY_PRICE == '1') {
-    $order_by = ' order by LPAD(pa.products_options_sort_order,11,"0"), pov.products_options_values_name';
+    $order_by = " ORDER BY LPAD(pa.products_options_sort_order,11,'0'), pov.products_options_values_name";
 } else {
-    $order_by = ' order by LPAD(pa.products_options_sort_order,11,"0"), pa.options_values_price';
+    $order_by = " ORDER BY LPAD(pa.products_options_sort_order,11,'0'), pa.options_values_price";
 }
 
 while (!$products_options_names->EOF) {

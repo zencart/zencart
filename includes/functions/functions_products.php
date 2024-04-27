@@ -1016,7 +1016,7 @@ function zen_products_sort_order($includeOrderBy = true): string
 {
     switch (PRODUCT_INFO_PREVIOUS_NEXT_SORT) {
         case (0):
-            $productSort = 'LPAD(p.products_id,11,"0")';
+            $productSort = "LPAD(p.products_id,11,'0')";
             $productSort = 'p.products_id';
             break;
         case (1):
@@ -1035,7 +1035,7 @@ function zen_products_sort_order($includeOrderBy = true): string
             $productSort = 'pd.products_name, p.products_model';
             break;
         case (6):
-            $productSort = 'LPAD(p.products_sort_order,11,"0"), pd.products_name';
+            $productSort = "LPAD(p.products_sort_order,11,'0'), pd.products_name";
             $productSort = 'products_sort_order, pd.products_name';
             break;
         default:
