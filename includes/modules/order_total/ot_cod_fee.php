@@ -122,6 +122,7 @@
                     $order->info['tax_groups'][$value] = 0;
                 }
                 $order->info['tax_groups'][$value] += zen_calculate_tax($cod_cost, $tax_multiple[$value]);
+                $order->info['tax_subtotals'][$value]['subtotal'] += $cod_cost;
             }
             $order->info['total'] += zen_calculate_tax($cod_cost, $tax);
             if (DISPLAY_PRICE_WITH_TAX == 'true') {

@@ -142,9 +142,13 @@ class ot_shipping extends base
                     if (!isset($order->info['shipping_tax_groups'][$value])) {
                         $order->info['shipping_tax_groups'][$value] = 0;
                     }
+                    if (!isset($order->info['tax_subtotals'][$value])) {
+                        $order->info['tax_subtotals'][$value] = ['tax_rate' => $shipping_tax_multiple[$value],'subtotal' => 0];
+                    }
                     $shipping_tax_group_value = zen_calculate_tax($order->info['shipping_cost'], $shipping_tax_multiple[$value]);
                     $order->info['tax_groups'][$value] += $shipping_tax_group_value;
                     $order->info['shipping_tax_groups'][$value] += $shipping_tax_group_value;
+                    $order->info['tax_subtotals'][$value]['subtotal'] += $order->info['shipping_cost'];
                 }
                 $order->info['total'] += $shipping_tax_amount;
                 $_SESSION['shipping_tax_description'] = $shipping_tax_description;

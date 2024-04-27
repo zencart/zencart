@@ -558,6 +558,7 @@ class order extends base
             'tax' => 0,
             'total' => 0,
             'tax_groups' => [],
+            'shipping_tax_groups' => [],
             'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
         ];

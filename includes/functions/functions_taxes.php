@@ -149,7 +149,11 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1, $mu
         return $tax_description;
     }
 
-    return TEXT_UNKNOWN_TAX_RATE;
+    if ($multi === true) {
+        return array(TEXT_UNKNOWN_TAX_RATE);
+    } else {
+        return TEXT_UNKNOWN_TAX_RATE;
+    }
 }
 
 /**

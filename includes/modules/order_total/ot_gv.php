@@ -64,11 +64,6 @@ class ot_gv {
      */
     public $include_shipping;
     /**
-     * $include_tax allow tax to be discounted by coupon if 'true'
-     * @var string
-     */
-    public $include_tax;
-    /**
      * $sort_order is the order priority of this order total module when displayed
      * @var int
      */
@@ -115,21 +110,14 @@ class ot_gv {
 
     $this->user_prompt = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
     $this->include_shipping = MODULE_ORDER_TOTAL_GV_INC_SHIPPING;
-    $this->include_tax = MODULE_ORDER_TOTAL_GV_INC_TAX;
     $this->calculate_tax = MODULE_ORDER_TOTAL_GV_CALC_TAX;
     $this->credit_tax = MODULE_ORDER_TOTAL_GV_CREDIT_TAX;
-    $this->tax_class  = MODULE_ORDER_TOTAL_GV_TAX_CLASS;
     $this->credit_class = true;
     if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true && zen_is_logged_in() && !zen_in_guest_checkout()) {
       $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2) . '" onfocus="if (this.value == \'' . number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2) . '\') this.value = \'\';">' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
     }
     $this->output = array();
-    if (IS_ADMIN_FLAG === true) {
-      if ($this->include_tax == 'true' && $this->calculate_tax != "None") {
-        $this->title .= '<span class="alert">' . MODULE_ORDER_TOTAL_GV_INCLUDE_ERROR . '</span>';
-      }
-    }
   }
   /**
    * Enter description here...
@@ -148,10 +136,13 @@ class ot_gv {
             $tax += $od_amount['tax_groups'][$key];
           }
         }
-        $order->info['total'] = $order->info['total'] - $od_amount['total'];
-        if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
-        if ($order->info['total'] < 0) $order->info['total'] = 0;
-        $order->info['tax'] = $order->info['tax'] - $od_amount['tax'];
+        $order->info['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['total'] - $od_amount['total'] : $order->info['total'] - $od_amount['total'] - $od_amount['tax'];
+        $order->info['tax'] -= $tax;
+        if ($order->info['total'] < 0) {
+            $order->info['total'] = 0;
+            $order->info['tax'] = 0;
+            $order->info['tax_groups'] = [];
+        }
         // prepare order-total output for display and storing to invoice
         $this->output[] = array('title' => $this->title . ':',
                                 'text' => '-' . $currencies->format($od_amount['total']),
@@ -198,7 +189,7 @@ class ot_gv {
       }
       $od_amount = $this->calculate_deductions($order_total);
       $order->info['total'] = $order->info['total'] - $od_amount['total'];
-      if (DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (DISPLAY_PRICE_WITH_TAX !== 'true') {
         $order->info['total'] -= $od_amount['tax'];
       }
       return $od_amount['total'] + $od_amount['tax'];
@@ -400,7 +391,7 @@ class ot_gv {
       $full_cost = 0;
       $gv_payment_amount = $save_total_cost;
     }
-    return zen_round($gv_payment_amount,2);
+    return $gv_payment_amount;
   }
 
   function calculate_deductions($order_total) {
@@ -408,41 +399,62 @@ class ot_gv {
     $od_amount = array();
     $deduction = $this->calculate_credit($this->get_order_total());
     $od_amount['total'] = $deduction;
-    $od_amount['tax'] = 0;
     switch ($this->calculate_tax) {
-      case 'None':
-      $remainder = $order->info['total'] - $od_amount['total'];
-      $tax_deduct = $order->info['tax'] - $remainder;
-      // division by 0
-      if ($order->info['tax'] <= 0) {
-        $ratio_tax = 0;
-      } else {
-        $ratio_tax = $tax_deduct/$order->info['tax'];
-      }
-      $tax_deduct = 0;
-      $od_amount['tax'] = $tax_deduct;
-      break;
       case 'Standard':
       if ($od_amount['total'] >= $order_total) {
         $ratio = 1;
       } else {
-        $ratio = ($od_amount['total'] / ($order_total - $order->info['tax']));
+        if ($order->info['shipping_tax'] == 0 && $order_total > $order->info['shipping_cost']) {
+            $ratio = $od_amount['total'] / ($order_total - $order->info['shipping_cost']);
+        } else {
+            $ratio = $od_amount['total'] / $order_total;
+        }
       }
       $tax_deduct = 0;
       foreach ($order->info['tax_groups'] as $key=>$value) {
-        $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio;
+        $this_tax = $value;
+        if ($this->include_shipping != 'true') {
+            if (isset($_SESSION['shipping_tax_description'])) {
+                foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
+                    if ($_SESSION['shipping_tax_description'][$ind] == $key) {
+                        $this_tax -= $order->info['shipping_tax_groups'][$key];
+                    }
+                }
+            }
+        }
+        $od_amount['tax_groups'][$key] = isset($od_amount['tax_groups'][$key]) ? $od_amount['tax_groups'][$key] + $this_tax * $ratio : $this_tax * $ratio;
         $tax_deduct += $od_amount['tax_groups'][$key];
       }
       $od_amount['tax'] = $tax_deduct;
+      $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
       break;
       case 'Credit Note':
-        $od_amount['total'] = $deduction;
-        $tax_rate = zen_get_multiple_tax_rates($this->tax_class);
-        $tax_description = zen_get_tax_description($this->tax_class, -1, -1, true);
-        foreach ($tax_description as $key => $value) {
-            $od_amount['tax'] += zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
-            $od_amount['tax_groups'][$value] = zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
+      if ($od_amount['total'] >= $order_total) {
+        $ratio = 1;
+      } else {
+        if ($order->info['shipping_tax'] == 0 && $order_total > $order->info['shipping_cost']) {
+            $ratio = $od_amount['total'] / ($order_total - $order->info['tax'] - $order->info['shipping_cost']);
+        } else {
+            $ratio = $od_amount['total'] / ($order_total - $order->info['tax']);
         }
+      }
+      $tax_deduct = 0;
+      foreach ($order->info['tax_groups'] as $key=>$value) {
+        $this_tax = $value;
+        if ($this->include_shipping != 'true') {
+            if (isset($_SESSION['shipping_tax_description'])) {
+                foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
+                    if ($_SESSION['shipping_tax_description'][$ind] == $key) {
+                        $this_tax -= $order->info['shipping_tax_groups'][$key];
+                    }
+                }
+            }
+        }
+        $od_amount['tax_groups'][$key] = isset($od_amount['tax_groups'][$key]) ? $od_amount['tax_groups'][$key] + $this_tax * $ratio : $this_tax * $ratio;
+        $tax_deduct += $od_amount['tax_groups'][$key];
+      }
+      $od_amount['tax'] = $tax_deduct;
+      $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] + $od_amount['tax'] : $od_amount['total'];
       break;
       default:
     }
@@ -466,11 +478,22 @@ class ot_gv {
   function get_order_total() {
     global $order;
     $order_total = $order->info['total'];
-    // if we are not supposed to include tax in credit calculations, subtract it out
-    if ($this->include_tax != 'true') $order_total -= $order->info['tax'];
+    // if GV amount is tax excluded (Credit Note)
+    if ($this->calculate_tax == "Credit Note") {
+        if (DISPLAY_PRICE_WITH_TAX === 'true' && $this->include_shipping != 'true') {
+            $order_total -= $order->info['tax'] - $order->info['shipping_tax'];
+        } else {
+            $order_total -= $order->info['tax'];
+        }
+    } else {
+        if (DISPLAY_PRICE_WITH_TAX !== 'true' && $this->include_shipping != 'true') {
+            $order_total -= $order->info['shipping_tax'];
+        }
+    }
     // if we are not supposed to include shipping amount in credit calcs, subtract it out
-    if ($this->include_shipping != 'true') $order_total -= $order->info['shipping_cost'];
-    $order_total = $order->info['total'];
+    if ($this->include_shipping != 'true') {
+        $order_total -= $order->info['shipping_cost'];
+    }
 
     // check gv_amount in cart and do not allow GVs to pay for GVs
     $chk_gv_amount = 0;
@@ -518,8 +541,8 @@ class ot_gv {
    */
   function keys() {
     return array('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE',
-        'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'MODULE_ORDER_TOTAL_GV_INC_TAX',
-        'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX',
+        'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING',
+        'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX',
         'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID', 'MODULE_ORDER_TOTAL_GV_SPECIAL');
   }
   /**
@@ -533,9 +556,7 @@ class ot_gv {
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Queue Purchases', 'MODULE_ORDER_TOTAL_GV_QUEUE', 'true', 'Do you want to queue purchases of the Gift Voucher?', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Show Queue in Admin header?', 'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'true', 'Show Queue button on all pages of Admin?<br>(Will auto-hide if nothing in queue, and will auto-display on \'Orders\' screen, regardless of this setting)', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Include Shipping', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING', 'true', 'Include Shipping in calculation', '6', '5', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Include Tax', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 'false', 'Include Tax in calculation.', '6', '6','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Re-calculate Tax', 'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'None', 'Re-Calculate Tax', '6', '7','zen_cfg_select_option(array(\'None\', \'Standard\', \'Credit Note\'), ', now())");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('Tax Class', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', '0', 'Use the following tax class when treating Gift Voucher as Credit Note.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Re-calculate Tax', 'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'Standard', 'GV amount is tax included -> Standard, if tax excluded -> Credit Note', '6', '7','zen_cfg_select_option(array(\'Standard\', \'Credit Note\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) VALUES ('Credit including Tax', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX', 'false', 'Add tax to purchased Gift Voucher when crediting to Account', '6', '8','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('Set Order Status', 'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID', '0', 'Set the status of orders made where GV covers full payment', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Allow Gift Voucher Specials', 'MODULE_ORDER_TOTAL_GV_SPECIAL', 'false', 'Do you want to allow Gift Voucher to be placed on Special?', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");

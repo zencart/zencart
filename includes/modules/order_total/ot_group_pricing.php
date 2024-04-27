@@ -21,11 +21,6 @@ class ot_group_pricing {
      */
     public $code;
     /**
-     * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
-     * @var string
-     */
-    public $calculate_tax;
-    /**
      * $credit_class flag to indicate order totals method is a credit class
      * @var boolean
      */
@@ -46,20 +41,10 @@ class ot_group_pricing {
      */
     public $include_shipping;
     /**
-     * $include_tax allow tax to be discounted by coupon if 'true'
-     * @var string
-     */
-    public $include_tax;
-    /**
      * $sort_order is the order priority of this order total module when displayed
      * @var int
      */
     public $sort_order;
-    /**
-     * $tax_class is the Tax class to be applied to the coupon cost
-     * @var
-     */
-    public $tax_class;
     /**
      * $title is the displayed name for this order total method
      * @var string
@@ -79,9 +64,6 @@ class ot_group_pricing {
     if (null === $this->sort_order) return false;
 
     $this->include_shipping = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING;
-    $this->include_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX;
-    $this->calculate_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX;
-    $this->tax_class = MODULE_ORDER_TOTAL_GROUP_PRICING_TAX_CLASS;
     $this->credit_class = true;
     $this->output = array();
   }
@@ -97,9 +79,10 @@ class ot_group_pricing {
         if (isset($od_amount['tax_groups'][$key])) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $tax += $od_amount['tax_groups'][$key];
+          $order->info['tax_subtotals'][$key]['subtotal'] -= $od_amount['total'];
         }
       }
-      $od_amount['total'] += (DISPLAY_PRICE_WITH_TAX === 'true' && $this->calculate_tax == "Credit Note") ? $tax : 0;
+      $od_amount['total'] += (DISPLAY_PRICE_WITH_TAX === 'true') ? $tax : 0;
       $order->info['total'] -= $od_amount['total'];
       $order->info['total'] -= DISPLAY_PRICE_WITH_TAX === 'true' ? 0 : $tax;
       if ($order->info['total'] < 0) $order->info['total'] = 0;
@@ -116,10 +99,10 @@ class ot_group_pricing {
     $order_total_tax = $order->info['tax'];
     $order_total = $order->info['total'];
     if ($this->include_shipping != 'true') {
-        $order_total -= DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['shipping_cost'] : $order->info['shipping_cost'] + $order->info['shipping_tax'];
+        $order_total -= DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['shipping_cost'] - $order->info['shipping_tax'] : $order->info['shipping_cost'];
     }
     $orderTotalFull = $order_total;
-    if ($this->include_tax != 'true') $order_total -= $order->info['tax'];
+    $order_total -= $order->info['tax'];
     $taxGroups = array();
     foreach ($order->info['tax_groups'] as $key=>$value) {
       if (isset($_SESSION['shipping_tax_description']) && in_array($key, $_SESSION['shipping_tax_description']))
@@ -135,7 +118,7 @@ class ot_group_pricing {
     return $order_total;
   }
   function calculate_deductions($order_total) {
-    global $db, $order;
+    global $db;
     $od_amount = array();
     if ($order_total == 0 || !zen_is_logged_in() || zen_in_guest_checkout()) {
         return $od_amount;
@@ -143,48 +126,16 @@ class ot_group_pricing {
     $orderTotal = $this->get_order_total();
     $group_query = $db->Execute("select customers_group_pricing from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
     if ($group_query->fields['customers_group_pricing'] != '0') {
-      $group_discount = $db->Execute("select group_name, group_percentage from " . TABLE_GROUP_PRICING . "
-                                      where group_id = '" . (int)$group_query->fields['customers_group_pricing'] . "'");
-      $od_amount['total'] = ($orderTotal['total'] - $_SESSION['cart']->gv_only()) * $group_discount->fields['group_percentage'] / 100;
-      $ratio = $od_amount['total']/$order_total;
-      /**
-       * when calculating the ratio add some insignificant values to stop divide by zero errors
-       */
-      switch ($this->calculate_tax) {
-        case 'None':
-          if ($this->include_tax === 'true') {
-            foreach ($order->info['tax_groups'] as $key=>$value) {
-              $od_amount['tax_groups'][$key] = $order->info['tax_groups'][$key] * $ratio;
-            }
-          }
-        break;
-        case 'Standard':
-          $od_amount['total'] = ($orderTotal['totalFull'] - $_SESSION['cart']->gv_only()) * $group_discount->fields['group_percentage'] / 100;
-          $ratio = $od_amount['total']/$orderTotal['totalFull'];
-          if (DISPLAY_PRICE_WITH_TAX !== 'true') {
-              $od_amount['total'] /= 1 + zen_get_tax_rate($this->tax_class)/100;
-          }
-          if ($od_amount['total'] >= $order_total) {
-            $ratio = 1;
-          }
-          if ($order->info['tax'] == 0) return $od_amount;
-          $ratio = ($orderTotal['tax'] != 0 ) ? $ratio : 0;
-          $tax_deduct = 0;
-          foreach ($orderTotal['taxGroups'] as $key=>$value) {
+        $group_discount = $db->Execute("select group_name, group_percentage from " . TABLE_GROUP_PRICING . "
+                                        where group_id = '" . (int)$group_query->fields['customers_group_pricing'] . "'");
+        $od_amount['total'] = ($orderTotal['total'] - $_SESSION['cart']->gv_only()) * $group_discount->fields['group_percentage'] / 100;
+        $ratio = $od_amount['total']/$order_total;
+        $tax_deduct = 0;
+        foreach ($orderTotal['taxGroups'] as $key=>$value) {
             $od_amount['tax_groups'][$key] = $value * $ratio;
             $tax_deduct += $od_amount['tax_groups'][$key];
-          }
-          $od_amount['tax'] = $tax_deduct;
-        break;
-        case 'Credit Note':
-          $tax_rate = zen_get_multiple_tax_rates($this->tax_class);
-          $tax_description = zen_get_tax_description($this->tax_class, -1, -1, true);
-          foreach ($tax_description as $key => $value) {
-              $od_amount['tax'] += zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
-              $od_amount['tax_groups'][$value] = zen_calculate_tax($od_amount['total'], $tax_rate[$value]);
-          }
-        break;
-      }
+        }
+        $od_amount['tax'] = $tax_deduct;
     }
     return $od_amount;
   }
@@ -229,7 +180,7 @@ class ot_group_pricing {
   }
 
   function keys() {
-    return array('MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS', 'MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER', 'MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING', 'MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX', 'MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX', 'MODULE_ORDER_TOTAL_GROUP_PRICING_TAX_CLASS');
+    return array('MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS', 'MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER', 'MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING');
   }
 
   function install() {
@@ -237,9 +188,6 @@ class ot_group_pricing {
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('This module is installed', 'MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER', '290', 'Sort order of display.', '6', '2', now())");
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Include Shipping', 'MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING', 'false', 'Include Shipping value in amount before discount calculation?', '6', '5', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Include Tax', 'MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX', 'true', 'Include Tax value in amount before discount calculation?', '6', '6','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function ,date_added) values ('Re-calculate Tax', 'MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX', 'Standard', 'Re-Calculate Tax', '6', '7','zen_cfg_select_option(array(\'None\', \'Standard\', \'Credit Note\'), ', now())");
-    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_ORDER_TOTAL_GROUP_PRICING_TAX_CLASS', '0', 'Use the following tax class when treating Group Discount as Credit Note.', '6', '0', 'zen_get_tax_class_title', 'zen_cfg_pull_down_tax_classes(', now())");
   }
 
   function help() {
