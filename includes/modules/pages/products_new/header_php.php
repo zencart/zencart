@@ -39,7 +39,6 @@ foreach ($define_list as $key => $value) {
 }
 
 // display limits
-//$display_limit = zen_get_products_new_timelimit();
 $display_limit = zen_get_new_date_range();
 //MAX_DISPLAY_PRODUCTS_NEW
 
