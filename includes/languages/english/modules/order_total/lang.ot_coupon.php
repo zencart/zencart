@@ -8,7 +8,6 @@ $define = [
     'MODULE_ORDER_TOTAL_COUPON_TEXT_CURRENT_CODE' => 'Your Current Redemption Code: ',
     'TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER' => 'REMOVE',
     'TEXT_REMOVE_REDEEM_COUPON' => 'Discount Coupon Removed by Request!',
-    'MODULE_ORDER_TOTAL_COUPON_INCLUDE_ERROR' => ' Setting Include tax = true, should only happen when recalculate = None',
 ];
 
 $define['MODULE_ORDER_TOTAL_COUPON_REMOVE_INSTRUCTIONS'] = '<p>To remove a Discount Coupon from this order replace the coupon code with: ' . $define['TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER'] . '</p>';
