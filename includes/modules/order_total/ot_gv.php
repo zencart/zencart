@@ -134,6 +134,7 @@ class ot_gv {
           if (isset($od_amount['tax_groups'][$key])) {
             $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
             $tax += $od_amount['tax_groups'][$key];
+            $order->info['tax_subtotals'][$key]['subtotal'] -= $od_amount['total'];
           }
         }
         $order->info['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['total'] - $od_amount['total'] : $order->info['total'] - $od_amount['total'] - $od_amount['tax'];
@@ -477,7 +478,7 @@ class ot_gv {
    */
   function get_order_total() {
     global $order;
-    $order_total = $order->info['total'];
+    $order_total = $this->include_shipping == 'true' ? $order->info['total'] : $order->info['total'] - $order->info['shipping_cost'];
     // if GV amount is tax excluded (Credit Note)
     if ($this->calculate_tax == "Credit Note") {
         if (DISPLAY_PRICE_WITH_TAX === 'true' && $this->include_shipping != 'true') {
@@ -489,10 +490,6 @@ class ot_gv {
         if (DISPLAY_PRICE_WITH_TAX !== 'true' && $this->include_shipping != 'true') {
             $order_total -= $order->info['shipping_tax'];
         }
-    }
-    // if we are not supposed to include shipping amount in credit calcs, subtract it out
-    if ($this->include_shipping != 'true') {
-        $order_total -= $order->info['shipping_cost'];
     }
 
     // check gv_amount in cart and do not allow GVs to pay for GVs
