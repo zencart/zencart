@@ -98,7 +98,7 @@ class ot_group_pricing {
     $order_total_tax = $order->info['tax'];
     $order_total = $order->info['total'];
     if ($this->include_shipping != 'true') {
-        $order_total -= DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['shipping_cost'] - $order->info['shipping_tax'] : $order->info['shipping_cost'];
+        $order_total -= $order->info['shipping_cost'];
     }
     $orderTotalFull = $order_total;
     $order_total -= DISPLAY_PRICE_WITH_TAX !== 'true' ? $order->info['tax'] : 0;
