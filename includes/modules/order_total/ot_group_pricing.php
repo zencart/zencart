@@ -80,6 +80,9 @@ class ot_group_pricing {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
           $tax += $od_amount['tax_groups'][$key];
           $order->info['tax_subtotals'][$key]['subtotal'] -= $od_amount['total'];
+          if (isset($od_amount['shipping_tax_groups']) && array_key_exists($key, $od_amount['shipping_tax_groups'])) {
+            $order->info['shipping_tax_groups'][$key] -= $od_amount['shipping_tax_groups'][$key];
+          }
         }
       }
       $order->info['total'] -= DISPLAY_PRICE_WITH_TAX !== 'true' ? $od_amount['total'] + $tax : $od_amount['total'];
@@ -102,18 +105,8 @@ class ot_group_pricing {
     }
     $orderTotalFull = $order_total;
     $order_total -= DISPLAY_PRICE_WITH_TAX !== 'true' ? $order->info['tax'] : 0;
-    $taxGroups = array();
-    foreach ($order->info['tax_groups'] as $key=>$value) {
-      if (isset($_SESSION['shipping_tax_description']) && in_array($key, $_SESSION['shipping_tax_description']))
-      {
-        if ($this->include_shipping != 'true')
-        {
-          $value -= $order->info['shipping_tax_groups'][$key];
-        }
-      }
-      $taxGroups[$key] = $value;
-    }
-    $order_total = array('totalFull'=>$orderTotalFull, 'total'=>$order_total, 'tax'=>$order_total_tax, 'taxGroups'=>$taxGroups);
+
+    $order_total = array('totalFull'=>$orderTotalFull, 'total'=>$order_total, 'tax'=>$order_total_tax, 'taxGroups'=>$order->info['tax_groups'], 'ShippingTaxGroups'=>$order->info['shipping_tax_groups']);
     return $order_total;
   }
   
@@ -132,7 +125,19 @@ class ot_group_pricing {
         $ratio = $od_amount['total']/$order_total;
         $tax_deduct = 0;
         foreach ($orderTotal['taxGroups'] as $key=>$value) {
-            $od_amount['tax_groups'][$key] = $value * $ratio;
+            $tax = $value;
+            if (isset($_SESSION['shipping_tax_description']) &&  $_SESSION['shipping_tax_description'][0] != '') {
+                foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
+                    if ($descr == $key) {
+                        if ($this->include_shipping != 'true') {
+                            $tax -= $orderTotal['ShippingTaxGroups'][$key];
+                        } else {
+                            $od_amount['shipping_tax_groups'][$key] = $orderTotal['ShippingTaxGroups'][$key] * $ratio;
+                        }
+                    }
+                }
+            }
+            $od_amount['tax_groups'][$key] = $tax * $ratio;
             $tax_deduct += $od_amount['tax_groups'][$key];
         }
         $od_amount['tax'] = $tax_deduct;
