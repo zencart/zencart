@@ -119,10 +119,11 @@ class ot_gv {
     }
     $this->output = array();
   }
-  /**
-   * Enter description here...
-   *
-   */
+    /**
+     * Produces final deduction values,
+     * updates $order amounts,
+     * and generates the $this->output for showing discount information on checkout pages
+     */
   function process() {
     global $order, $currencies;
     if ($_SESSION['cot_gv']) {
@@ -398,13 +399,19 @@ class ot_gv {
     return $gv_payment_amount;
   }
 
+    /**
+     * Calculate actual deductions on total and taxes
+     *
+     * @return array $od_amount
+     */
   function calculate_deductions($order_total) {
     global $db, $order;
     $od_amount = array();
     $deduction = $this->calculate_credit($this->get_order_total());
     $od_amount['total'] = $deduction;
+    // Depending on set options, calculate an equivalent ratio for the discount and then use it to adjust taxes
     switch ($this->calculate_tax) {
-      case 'Standard':
+      case 'Standard': // deduction applies tax included
       if ($od_amount['total'] >= $order_total) {
         $ratio = 1;
       } else {
@@ -434,7 +441,7 @@ class ot_gv {
       $od_amount['tax'] = $tax_deduct;
       $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
       break;
-      case 'Credit Note':
+      case 'Credit Note': // deduction applies tax excluded
       if ($od_amount['total'] >= $order_total) {
         $ratio = 1;
       } else {
@@ -513,11 +520,11 @@ class ot_gv {
 
     return $order_total;
   }
-  /**
-   * Enter description here...
-   *
-   * @return unknown
-   */
+    /**
+    * Check install status
+    *
+    * @return bool
+    */
   function check() {
     global $db;
     if (!isset($this->_check)) {
@@ -538,21 +545,19 @@ class ot_gv {
 
     return $this->_check;
   }
-  /**
-   * Enter description here...
-   *
-   * @return unknown
-   */
+    /**
+    * @return array of this modules constants (settings)
+    */
   function keys() {
     return array('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE',
         'MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN', 'MODULE_ORDER_TOTAL_GV_INC_SHIPPING',
         'MODULE_ORDER_TOTAL_GV_CALC_TAX', 'MODULE_ORDER_TOTAL_GV_CREDIT_TAX',
         'MODULE_ORDER_TOTAL_GV_ORDER_STATUS_ID', 'MODULE_ORDER_TOTAL_GV_SPECIAL');
   }
-  /**
-   * Enter description here...
-   *
-   */
+    /**
+    * Install module keys in database
+    *
+    */
   function install() {
     global $db;
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('This module is installed', 'MODULE_ORDER_TOTAL_GV_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
@@ -570,10 +575,10 @@ class ot_gv {
        return array('link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/');
   }
 
-  /**
-   * Enter description here...
-   *
-   */
+    /**
+    * Uninstall
+    *
+    */
   function remove() {
     global $db;
     $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");

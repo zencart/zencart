@@ -68,6 +68,11 @@ class ot_group_pricing {
     $this->output = array();
   }
 
+    /**
+     * Produces final deduction values,
+     * updates $order amounts,
+     * and generates the $this->output for showing discount information on checkout pages
+     */
   function process() {
     global $order, $currencies, $db;
     $order_total = $this->get_order_total();
@@ -75,6 +80,7 @@ class ot_group_pricing {
     $this->deduction = isset($od_amount['total']) ? $od_amount['total'] : 0;
     if (isset($od_amount['total']) && $od_amount['total'] > 0) {
       $tax = 0;
+      // Update all tax rates in order object
       foreach($order->info['tax_groups'] as $key => $value) {
         if (isset($od_amount['tax_groups'][$key])) {
           $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
@@ -96,6 +102,11 @@ class ot_group_pricing {
     }
   }
   
+    /**
+     * Calculate eligible total amounts against which discounts will be applied
+     *
+     * @return array
+     */
   function get_order_total() {
     global  $order;
     $order_total_tax = $order->info['tax'];
@@ -110,6 +121,11 @@ class ot_group_pricing {
     return $order_total;
   }
   
+    /**
+     * Calculate actual deductions on total and taxes
+     *
+     * @return array $od_amount
+     */
   function calculate_deductions($order_total) {
     global $db;
     $od_amount = array();
@@ -174,6 +190,11 @@ class ot_group_pricing {
    */
   function clear_posts() {
   }
+    /**
+    * Check install status
+    *
+    * @return bool
+    */
   function check() {
     global $db;
     if (!isset($this->_check)) {
@@ -183,11 +204,16 @@ class ot_group_pricing {
 
     return $this->_check;
   }
-
+    /**
+    * @return array of this modules constants (settings)
+    */
   function keys() {
     return array('MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS', 'MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER', 'MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING');
   }
-
+    /**
+    * Install module keys in database
+    *
+    */
   function install() {
     global $db;
     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('This module is installed', 'MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
@@ -198,7 +224,10 @@ class ot_group_pricing {
   function help() {
        return array('link' => 'https://docs.zen-cart.com/user/order_total/group_pricing/'); 
   }
-
+    /**
+    * Uninstall
+    *
+    */
   function remove() {
     global $db;
     $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");

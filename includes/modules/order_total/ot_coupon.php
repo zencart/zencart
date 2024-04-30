@@ -132,6 +132,7 @@ class ot_coupon extends base
 
         if ($od_amount['total'] > 0) {
             $tax = 0;
+            // Update all tax rates in order object
             foreach ($order->info['tax_groups'] as $key => $value) {
                 if (isset($od_amount['tax_groups'][$key])) {
                     $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
@@ -726,10 +727,10 @@ class ot_coupon extends base
     }
 
     /**
-     * Check install status
-     *
-     * @return bool
-     */
+    * Check install status
+    *
+    * @return bool
+    */
     function check()
     {
         global $db;
@@ -742,13 +743,17 @@ class ot_coupon extends base
     }
 
     /**
-     * @return array
-     */
+    * @return array of this modules constants (settings)
+    */
     function keys()
     {
         return ['MODULE_ORDER_TOTAL_COUPON_STATUS', 'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', 'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX'];
     }
 
+    /**
+    * Install module keys in database
+    *
+    */
     function install()
     {
         global $db;
@@ -759,9 +764,9 @@ class ot_coupon extends base
     }
 
     /**
-     * Uninstall
-     *
-     */
+    * Uninstall
+    *
+    */
     function remove()
     {
         global $db;

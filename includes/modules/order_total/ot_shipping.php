@@ -53,6 +53,11 @@ class ot_shipping extends base
         $this->output = [];
     }
 
+    /**
+     * Calculate final shipping cost and tax values,
+     *
+     * Generates the $this->output for showing results information on checkout pages
+     */
     public function process()
     {
         global $order, $currencies;
@@ -109,7 +114,8 @@ class ot_shipping extends base
                     } else {
                         $shipping_tax_basis = $GLOBALS[$module]->tax_basis;
                     }
-
+                    
+                    // Calculate shipping tax depending on zone and settings (shipping tax basis)
                     if ($shipping_tax_basis === 'Billing') {
                         $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
                         $shipping_tax_multiple = zen_get_multiple_tax_rates($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
@@ -132,6 +138,7 @@ class ot_shipping extends base
                         }
                     }
                 }
+                // calculate final shipping cost and adjust shipping tax in order object
                 $shipping_tax_amount = zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
                 $order->info['shipping_tax'] += $shipping_tax_amount;
                 $order->info['tax'] += $shipping_tax_amount;
@@ -173,6 +180,11 @@ class ot_shipping extends base
         }
     }
 
+    /**
+    * Check install status
+    *
+    * @return bool
+    */
     public function check()
     {
         global $db;
@@ -183,6 +195,9 @@ class ot_shipping extends base
         return $this->_check;
     }
 
+    /**
+    * @return array of this modules constants (settings)
+    */
     public function keys()
     {
         return [
@@ -194,6 +209,10 @@ class ot_shipping extends base
         ];
     }
 
+    /**
+    * Install module keys in database
+    *
+    */
     public function install()
     {
         global $db;
@@ -204,6 +223,10 @@ class ot_shipping extends base
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Provide Free Shipping For Orders Made', 'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION', 'national', 'Provide free shipping for orders sent to the set destination.', 6, 5, 'zen_cfg_select_option([\'national\', \'international\', \'both\'], ', now())");
     }
 
+    /**
+    * Uninstall
+    *
+    */
     public function remove()
     {
         global $db;
