@@ -16,7 +16,7 @@
 $show_onetime= 'false';
 // attributes_qty_price
       if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
-        $options_order_by= ' order by LPAD(popt.products_options_sort_order,11,"0")';
+        $options_order_by= " ORDER BY LPAD(popt.products_options_sort_order,11,'0')";
       } else {
         $options_order_by= ' order by popt.products_options_name';
       }
@@ -34,9 +34,9 @@ $show_onetime= 'false';
       while (!$products_options_names_lookup->EOF) {
 
         if ( PRODUCTS_OPTIONS_SORT_BY_PRICE =='1' ) {
-          $order_by= ' order by LPAD(pa.products_options_sort_order,11,"0"), pov.products_options_values_name';
+          $order_by= " ORDER BY LPAD(pa.products_options_sort_order,11,'0'), pov.products_options_values_name";
         } else {
-          $order_by= ' order by LPAD(pa.products_options_sort_order,11,"0"), pa.options_values_price';
+          $order_by= " ORDER BY LPAD(pa.products_options_sort_order,11,'0'), pa.options_values_price";
         }
 
         $sql = "select    pov.products_options_values_id,
@@ -116,7 +116,7 @@ $show_onetime= 'false';
 <?php
 // attributes_qty_price_onetime
       if (PRODUCTS_OPTIONS_SORT_ORDER=='0') {
-        $options_order_by= ' order by LPAD(popt.products_options_sort_order,11,"0")';
+        $options_order_by= " ORDER BY LPAD(popt.products_options_sort_order,11,'0')";
       } else {
         $options_order_by= ' order by popt.products_options_name';
       }
@@ -134,9 +134,9 @@ $show_onetime= 'false';
       while (!$products_options_names_lookup->EOF) {
 
         if ( PRODUCTS_OPTIONS_SORT_BY_PRICE =='1' ) {
-          $order_by= ' order by LPAD(pa.products_options_sort_order,11,"0"), pov.products_options_values_name';
+          $order_by= " ORDER BY LPAD(pa.products_options_sort_order,11,'0'), pov.products_options_values_name";
         } else {
-          $order_by= ' order by LPAD(pa.products_options_sort_order,11,"0"), pa.options_values_price';
+          $order_by= " ORDER BY LPAD(pa.products_options_sort_order,11,'0'), pa.options_values_price";
         }
 
         $sql = "select    pov.products_options_values_id,

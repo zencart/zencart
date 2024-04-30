@@ -170,7 +170,7 @@ class shoppingCart extends base
             $this->contents[$uprid] = ['qty' => $next_product['customers_basket_quantity']];
 
             // set contents in sort order
-            $order_by = ' ORDER BY LPAD(products_options_sort_order,11,"0")';
+            $order_by = " ORDER BY LPAD(products_options_sort_order,11,'0')";
 
             $attributes = $db->Execute(
                 "SELECT products_options_id, products_options_value_id, products_options_value_text

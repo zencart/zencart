@@ -717,7 +717,7 @@ function zen_getOrdersStatuses(bool $keyed = false): array
     $orders_statuses = [];
     $orders_status_array = [];
     $orders_status_query = $db->Execute('SELECT orders_status_id, orders_status_name FROM ' . TABLE_ORDERS_STATUS . '
-                                 WHERE language_id = "' . (int)$_SESSION['languages_id'] . '" ORDER BY sort_order, orders_status_id');
+                                 WHERE language_id = ' . (int)$_SESSION['languages_id'] . ' ORDER BY sort_order, orders_status_id');
     foreach ($orders_status_query as $next_status) {
         if (!$keyed) {
             $orders_statuses[] = [
