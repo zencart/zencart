@@ -79,18 +79,22 @@ class ot_group_pricing {
     $od_amount = $this->calculate_deductions($order_total['total']);
     $this->deduction = isset($od_amount['total']) ? $od_amount['total'] : 0;
     if (isset($od_amount['total']) && $od_amount['total'] > 0) {
-      $tax = 0;
-      // Update all tax rates in order object
-      foreach($order->info['tax_groups'] as $key => $value) {
-        if (isset($od_amount['tax_groups'][$key])) {
-          $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
-          $tax += $od_amount['tax_groups'][$key];
-          $order->info['tax_subtotals'][$key]['subtotal'] -= $od_amount['total'];
-          if (isset($od_amount['shipping_tax_groups']) && array_key_exists($key, $od_amount['shipping_tax_groups'])) {
-            $order->info['shipping_tax_groups'][$key] -= $od_amount['shipping_tax_groups'][$key];
-          }
+        if ($this->include_shipping === 'true') {
+            $order->info['shipping_cost'] -= $od_amount['shipping'];
+            $order->info['shipping_tax'] -= $od_amount['shippingTax'];
         }
-      }
+        $tax = 0;
+        // Update all tax rates in order object
+        foreach($order->info['tax_groups'] as $key => $value) {
+            if (isset($od_amount['tax_groups'][$key])) {
+                $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
+                $tax += $od_amount['tax_groups'][$key];
+                $order->info['tax_subtotals'][$key]['subtotal'] -= $od_amount['total'];
+                if (isset($od_amount['shipping_tax_groups']) && array_key_exists($key, $od_amount['shipping_tax_groups']) && $this->include_shipping === 'true') {
+                    $order->info['shipping_tax_groups'][$key] -= $od_amount['shipping_tax_groups'][$key];
+                }
+            }
+        }
       $order->info['total'] -= DISPLAY_PRICE_WITH_TAX !== 'true' ? $od_amount['total'] + $tax : $od_amount['total'];
       if ($order->info['total'] < 0) $order->info['total'] = 0;
       $order->info['tax'] = $order->info['tax'] - $tax;
@@ -117,7 +121,7 @@ class ot_group_pricing {
     $orderTotalFull = $order_total;
     $order_total -= DISPLAY_PRICE_WITH_TAX !== 'true' ? $order->info['tax'] : 0;
 
-    $order_total = array('totalFull'=>$orderTotalFull, 'total'=>$order_total, 'tax'=>$order_total_tax, 'taxGroups'=>$order->info['tax_groups'], 'ShippingTaxGroups'=>$order->info['shipping_tax_groups']);
+    $order_total = array('totalFull'=>$orderTotalFull, 'total'=>$order_total, 'tax'=>$order_total_tax, 'taxGroups'=>$order->info['tax_groups'], 'shipping' => $order->info['shipping_cost'], 'ShippingTax' => $order->info['shipping_tax'], 'ShippingTaxGroups'=>$order->info['shipping_tax_groups']);
     return $order_total;
   }
   
@@ -139,6 +143,13 @@ class ot_group_pricing {
                                         where group_id = '" . (int)$group_query->fields['customers_group_pricing'] . "'");
         $od_amount['total'] = ($orderTotal['total'] - $_SESSION['cart']->gv_only()) * $group_discount->fields['group_percentage'] / 100;
         $ratio = $od_amount['total']/$order_total;
+        if ($this->include_shipping === 'true') {
+            $od_amount['shipping'] = $orderTotalDetails['shipping'] * $ratio;
+            $od_amount['ShippingTax'] = $orderTotalDetails['ShippingTax'] * $ratio;
+        } else {
+            $od_amount['shipping'] = 0;
+            $od_amount['ShippingTax'] = 0;
+        }
         $tax_deduct = 0;
         foreach ($orderTotal['taxGroups'] as $key=>$value) {
             $tax = $value;

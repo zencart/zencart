@@ -131,6 +131,10 @@ class ot_coupon extends base
         $this->deduction = $od_amount['total'];
 
         if ($od_amount['total'] > 0) {
+            if ($this->include_shipping === 'true') {
+                $order->info['shipping_cost'] -= $od_amount['shipping'];
+                $order->info['shipping_tax'] -= $od_amount['ShippingTax'];
+            }
             $tax = 0;
             // Update all tax rates in order object
             foreach ($order->info['tax_groups'] as $key => $value) {
@@ -138,7 +142,7 @@ class ot_coupon extends base
                     $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
                     $tax += $od_amount['tax_groups'][$key];
                     $order->info['tax_subtotals'][$key]['subtotal'] -= $od_amount['total'];
-                    if (isset($od_amount['shipping_tax_groups']) && array_key_exists($key, $od_amount['shipping_tax_groups'])) {
+                    if (isset($od_amount['shipping_tax_groups']) && array_key_exists($key, $od_amount['shipping_tax_groups']) && $this->include_shipping === 'true') {
                         $order->info['shipping_tax_groups'][$key] -= $od_amount['shipping_tax_groups'][$key];
                     }
                 }
@@ -522,7 +526,7 @@ class ot_coupon extends base
                 switch ($coupon_details['coupon_type']) {
                     case 'S': // Free Shipping
                         $od_amount['total'] = $orderTotalDetails['shipping'];
-                        $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['shippingTax'] : 0;
+                        $od_amount['tax'] = ($this->calculate_tax == 'Standard') ? $orderTotalDetails['ShippingTax'] : 0;
                         if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
                             foreach ($_SESSION['shipping_tax_description'] as $key => $value) {
                                 if (!isset($od_amount['tax_groups'][$value])) {
@@ -551,7 +555,7 @@ class ot_coupon extends base
                             $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ?  $od_amount['total'] : $od_amount['total'] / (1 + ($orderTotalDetails['orderTax'] / $orderTotalDetails['orderTotal']));
                         }
                         if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
-                            $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $orderTotalDetails['shippingTax'];
+                            $od_amount['tax_groups'][$_SESSION['shipping_tax_description']] = $orderTotalDetails['ShippingTax'];
                         }
                         // add in Free Shipping
                         $coupon_includes_free_shipping = true;
@@ -601,9 +605,17 @@ class ot_coupon extends base
                         $coupon_includes_free_shipping = true;
                         break;
                     default:
+                        $ratio = 1;
                         // n/a
                 }
 
+                if ($this->include_shipping === 'true') {
+                    $od_amount['shipping'] = $orderTotalDetails['shipping'] * $ratio;
+                    $od_amount['ShippingTax'] = $orderTotalDetails['ShippingTax'] * $ratio;
+                } else {
+                    $od_amount['shipping'] = 0;
+                    $od_amount['ShippingTax'] = 0;
+                }
                 // adjust for tax
                 if ($od_amount['total'] >= $orderAmountTotal) $ratio = 1;
                 foreach ($orderTotalDetails['orderTaxGroups'] as $key => $value) {
