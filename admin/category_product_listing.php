@@ -302,11 +302,11 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 <!doctype html>
 <html <?= HTML_PARAMS ?>>
   <head>
-    <?php require DIR_WS_INCLUDES . 'admin_html_head.php' ?>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
   <body>
     <!-- header //-->
-    <?php require DIR_WS_INCLUDES . 'header.php' ?>
+    <?php require DIR_WS_INCLUDES . 'header.php'; ?>
     <!-- header_eof //-->
     <!-- body //-->
     <div class="container-fluid">
@@ -1347,7 +1347,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
         });
     </script>
     <!-- footer //-->
-    <?php require DIR_WS_INCLUDES . 'footer.php' ?>
+    <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->
   </body>
 </html>
