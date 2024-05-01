@@ -113,7 +113,7 @@ class ot_gv {
     $this->calculate_tax = MODULE_ORDER_TOTAL_GV_CALC_TAX;
     $this->credit_tax = MODULE_ORDER_TOTAL_GV_CREDIT_TAX;
     $this->credit_class = true;
-    if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') $_SESSION['cot_gv'] = '0.00';
+    if (!(isset($_SESSION['cot_gv']) && zen_not_null(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] === '0') $_SESSION['cot_gv'] = '0.00';
     if (IS_ADMIN_FLAG !== true && zen_is_logged_in() && !zen_in_guest_checkout()) {
       $this->checkbox = $this->user_prompt . '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2) . '" onfocus="if (this.value == \'' . number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2) . '\') this.value = \'\';">' . ($this->user_has_gv_account($_SESSION['customer_id']) > 0 ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($this->user_has_gv_account($_SESSION['customer_id'])) : '');
     }
@@ -228,7 +228,7 @@ class ot_gv {
        // if prices differ assume Special and get Special Price
 
         // Do not use this on GVs Priced by Attribute
-      if (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true'
+      if (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL === 'true'
           && $gv_original_price != 0 && $gv_original_price != $order->products[$i]['final_price']
           && !zen_get_products_price_is_priced_by_attributes((int)$order->products[$i]['id'])
       ) {
@@ -240,7 +240,7 @@ class ot_gv {
       if ($this->credit_tax=='true') $gv_order_amount = $gv_order_amount * (100 + $order->products[$i]['tax']) / 100;
       $gv_order_amount = $gv_order_amount * 100 / 100;
 
-      if (MODULE_ORDER_TOTAL_GV_QUEUE == 'false') {
+      if (MODULE_ORDER_TOTAL_GV_QUEUE === 'false') {
         // GV_QUEUE is false so release amount to account immediately
         $gv_result = $this->user_has_gv_account($_SESSION['customer_id']);
         $customer_gv = false;
@@ -337,7 +337,7 @@ class ot_gv {
       $_SESSION['cot_gv'] = 0.00;
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
-    if (isset($_POST['cot_gv']) && $_POST['cot_gv'] == 0) $_SESSION['cot_gv'] = '0.00';
+    if (isset($_POST['cot_gv']) && $_POST['cot_gv'] === 0) $_SESSION['cot_gv'] = '0.00';
 
     // if we have a GV redemption code submitted, process it
     if (!empty($_POST['gv_redeem_code'])) {
@@ -347,7 +347,7 @@ class ot_gv {
       if ($gv_result->RecordCount() > 0) {
         $redeem_query = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = '" . (int)$gv_result->fields['coupon_id'] . "'");
         // if already redeemed, throw error
-        if ( ($redeem_query->RecordCount() > 0) && ($gv_result->fields['coupon_type'] == 'G')  ) {
+        if ( ($redeem_query->RecordCount() > 0) && ($gv_result->fields['coupon_type'] === 'G')  ) {
           $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, 'error');
           zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
         }
@@ -357,7 +357,7 @@ class ot_gv {
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
       // if valid, add redeemed amount to customer's GV balance and mark as redeemed
-      if ($gv_result->fields['coupon_type'] == 'G') {
+      if ($gv_result->fields['coupon_type'] === 'G') {
         $gv_amount = $gv_result->fields['coupon_amount'];
         // Things to set
         // ip address of claimant
@@ -385,7 +385,7 @@ class ot_gv {
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
       }
     }
-    if (isset($_POST['submit_redeem_x']) && $_POST['submit_redeem_x'] && $gv_result->fields['coupon_type'] == 'G') zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
+    if (isset($_POST['submit_redeem_x']) && $_POST['submit_redeem_x'] && $gv_result->fields['coupon_type'] === 'G') zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
   }
   /**
    * Calculate GV claim amount (GV amounts are always based on the STORE's default currency value)
@@ -419,7 +419,7 @@ class ot_gv {
         if ($od_amount['total'] >= $order_total) {
             $ratio = 1;
         } else {
-            if ($order->info['shipping_tax'] == 0 && $order_total > $order->info['shipping_cost']) {
+            if ($order->info['shipping_tax'] === 0 && $order_total > $order->info['shipping_cost']) {
                 $ratio = $od_amount['total'] / ($order_total - $order->info['shipping_cost']);
             } else {
                 $ratio = $od_amount['total'] / $order_total;
@@ -437,8 +437,8 @@ class ot_gv {
             $this_tax = $value;
             if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
                 foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
-                    if ($descr == $key) {
-                        if ($this->include_shipping != 'true') {
+                    if ($descr === $key) {
+                        if ($this->include_shipping !== 'true') {
                             $this_tax -= $order->info['shipping_tax_groups'][$key];
                         } else {
                             $od_amount['shipping_tax_groups'][$key] = $order->info['shipping_tax_groups'][$key] * $ratio;
@@ -456,7 +456,7 @@ class ot_gv {
         if ($od_amount['total'] >= $order_total) {
             $ratio = 1;
         } else {
-            if ($order->info['shipping_tax'] == 0 && $order_total > $order->info['shipping_cost']) {
+            if ($order->info['shipping_tax'] === 0 && $order_total > $order->info['shipping_cost']) {
                 $ratio = $od_amount['total'] / ($order_total - $order->info['tax'] - $order->info['shipping_cost']);
             } else {
                 $ratio = $od_amount['total'] / ($order_total - $order->info['tax']);
@@ -467,8 +467,8 @@ class ot_gv {
             $this_tax = $value;
             if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
                 foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
-                    if ($descr == $key) {
-                        if ($this->include_shipping != 'true') {
+                    if ($descr === $key) {
+                        if ($this->include_shipping !== 'true') {
                             $this_tax -= $order->info['shipping_tax_groups'][$key];
                         } else {
                             $od_amount['shipping_tax_groups'][$key] = $order->info['shipping_tax_groups'][$key] * $ratio;
@@ -503,16 +503,16 @@ class ot_gv {
    */
   function get_order_total() {
     global $order;
-    $order_total = $this->include_shipping == 'true' ? $order->info['total'] : $order->info['total'] - $order->info['shipping_cost'];
+    $order_total = $this->include_shipping === 'true' ? $order->info['total'] : $order->info['total'] - $order->info['shipping_cost'];
     // if GV amount is tax excluded (Credit Note)
-    if ($this->calculate_tax == "Credit Note") {
-        if (DISPLAY_PRICE_WITH_TAX === 'true' && $this->include_shipping != 'true') {
+    if ($this->calculate_tax === "Credit Note") {
+        if (DISPLAY_PRICE_WITH_TAX === 'true' && $this->include_shipping !== 'true') {
             $order_total -= $order->info['tax'] - $order->info['shipping_tax'];
         } else {
             $order_total -= $order->info['tax'];
         }
     } else {
-        if (DISPLAY_PRICE_WITH_TAX !== 'true' && $this->include_shipping != 'true') {
+        if (DISPLAY_PRICE_WITH_TAX !== 'true' && $this->include_shipping !== 'true') {
             $order_total -= $order->info['shipping_tax'];
         }
     }

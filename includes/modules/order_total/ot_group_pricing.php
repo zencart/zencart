@@ -115,7 +115,7 @@ class ot_group_pricing {
     global  $order;
     $order_total_tax = $order->info['tax'];
     $order_total = $order->info['total'];
-    if ($this->include_shipping != 'true') {
+    if ($this->include_shipping !== 'true') {
         $order_total -= $order->info['shipping_cost'];
     }
     $orderTotalFull = $order_total;
@@ -133,7 +133,7 @@ class ot_group_pricing {
   function calculate_deductions($order_total) {
     global $db;
     $od_amount = array();
-    if ($order_total == 0 || !zen_is_logged_in() || zen_in_guest_checkout()) {
+    if ($order_total === 0 || !zen_is_logged_in() || zen_in_guest_checkout()) {
         return $od_amount;
     }
     $orderTotal = $this->get_order_total();
@@ -155,8 +155,8 @@ class ot_group_pricing {
             $tax = $value;
             if (isset($_SESSION['shipping_tax_description']) &&  $_SESSION['shipping_tax_description'][0] != '') {
                 foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
-                    if ($descr == $key) {
-                        if ($this->include_shipping != 'true') {
+                    if ($descr === $key) {
+                        if ($this->include_shipping !== 'true') {
                             $tax -= $orderTotal['ShippingTaxGroups'][$key];
                         } else {
                             $od_amount['shipping_tax_groups'][$key] = $orderTotal['ShippingTaxGroups'][$key] * $ratio;
