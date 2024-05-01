@@ -95,7 +95,6 @@ function zen_get_languages(): array
      */
     global $lng;
     if ($lng === null) {
-        include_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php';
         $lng = new language();
     }
     return array_values($lng->get_languages_by_code());
