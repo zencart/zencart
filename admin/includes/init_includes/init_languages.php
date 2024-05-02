@@ -13,8 +13,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 // set the language
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
-
-    include(DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
     if (isset($_GET['language']) && !empty($_GET['language'])) {
