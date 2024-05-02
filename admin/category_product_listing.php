@@ -462,7 +462,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             ?>
           </div>
           <div class="col-md-4">
-          <?php require DIR_WS_MODULES . 'search_box.php' ?>
+          <?php require DIR_WS_MODULES . 'search_box.php'; ?>
             <?= zen_draw_form('goto', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get', 'class="form-horizontal"') ?>
             <?= zen_hide_session_id() ?>
             <div class="form-group">
