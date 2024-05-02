@@ -132,7 +132,7 @@ class ot_gv {
         if ($od_amount['total'] > 0) {
             if ($this->include_shipping === 'true') {
                 $order->info['shipping_cost'] -= $od_amount['shipping'];
-                $order->info['shipping_tax'] -= $od_amount['shippingTax'];
+                $order->info['shipping_tax'] -= $od_amount['ShippingTax'];
             }
             $tax = 0;
             foreach($order->info['tax_groups'] as $key => $value) {
@@ -425,13 +425,6 @@ class ot_gv {
                 $ratio = $od_amount['total'] / $order_total;
             }
         }
-        if ($this->include_shipping === 'true') {
-            $od_amount['shipping'] = $order->info['shipping_cost'] * $ratio;
-            $od_amount['ShippingTax'] = $order->info['shipping_tax'] * $ratio;
-        } else {
-            $od_amount['shipping'] = 0;
-            $od_amount['ShippingTax'] = 0;
-        }
         $tax_deduct = 0;
         foreach ($order->info['tax_groups'] as $key=>$value) {
             $this_tax = $value;
@@ -483,6 +476,13 @@ class ot_gv {
         $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] + $od_amount['tax'] : $od_amount['total'];
       break;
       default:
+    }
+    if ($this->include_shipping === 'true') {
+        $od_amount['shipping'] = $order->info['shipping_cost'] * $ratio;
+        $od_amount['ShippingTax'] = $order->info['shipping_tax'] * $ratio;
+    } else {
+        $od_amount['shipping'] = 0;
+        $od_amount['ShippingTax'] = 0;
     }
     return $od_amount;
   }
