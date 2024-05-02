@@ -279,13 +279,14 @@ $autoLoadConfig[60][] = [
  * Breakpoint 65.
  *
  * require 'includes/init_includes/init_languages.php';
- * Expecting nothing loaded before init_sanitize to require $_POST/$_GET sanitization.
  */
 $autoLoadConfig[65][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_languages.php',
 ];
 /**
+ * Expecting nothing loaded before init_sanitize to require $_POST/$_GET sanitization.
+ *
  * Breakpoint 70.
  *
  * require 'includes/init_includes/init_sanitize.php';
