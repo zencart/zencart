@@ -337,7 +337,7 @@ class ot_gv {
       $_SESSION['cot_gv'] = 0.00;
       zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
-    if (isset($_POST['cot_gv']) && $_POST['cot_gv'] === 0) $_SESSION['cot_gv'] = '0.00';
+    if (isset($_POST['cot_gv']) && $_POST['cot_gv'] === '0') $_SESSION['cot_gv'] = '0.00';
 
     // if we have a GV redemption code submitted, process it
     if (!empty($_POST['gv_redeem_code'])) {
@@ -413,76 +413,43 @@ class ot_gv {
     $od_amount = array();
     $deduction = $this->calculate_credit($this->get_order_total());
     $od_amount['total'] = $deduction;
-    // Depending on set options, calculate an equivalent ratio for the discount and then use it to adjust taxes
-    switch ($this->calculate_tax) {
-      case 'Standard': // deduction applies tax included
-        if ($od_amount['total'] >= $order_total) {
-            $ratio = 1;
-        } else {
-            if ($order->info['shipping_tax'] === 0 && $order_total > $order->info['shipping_cost']) {
-                $ratio = $od_amount['total'] / ($order_total - $order->info['shipping_cost']);
-            } else {
-                $ratio = $od_amount['total'] / $order_total;
-            }
-        }
-        $tax_deduct = 0;
-        foreach ($order->info['tax_groups'] as $key=>$value) {
-            $this_tax = $value;
-            if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
-                foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
-                    if ($descr === $key) {
-                        if ($this->include_shipping !== 'true') {
-                            $this_tax -= $order->info['shipping_tax_groups'][$key];
-                        } else {
-                            $od_amount['shipping_tax_groups'][$key] = $order->info['shipping_tax_groups'][$key] * $ratio;
-                        }
-                    }
-                }
-            }
-            $od_amount['tax_groups'][$key] = isset($od_amount['tax_groups'][$key]) ? $od_amount['tax_groups'][$key] + $this_tax * $ratio : $this_tax * $ratio;
-            $tax_deduct += $od_amount['tax_groups'][$key];
-        }
-        $od_amount['tax'] = $tax_deduct;
-        $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
-      break;
-      case 'Credit Note': // deduction applies tax excluded
-        if ($od_amount['total'] >= $order_total) {
-            $ratio = 1;
-        } else {
-            if ($order->info['shipping_tax'] === 0 && $order_total > $order->info['shipping_cost']) {
-                $ratio = $od_amount['total'] / ($order_total - $order->info['tax'] - $order->info['shipping_cost']);
-            } else {
-                $ratio = $od_amount['total'] / ($order_total - $order->info['tax']);
-            }
-        }
-        $tax_deduct = 0;
-        foreach ($order->info['tax_groups'] as $key=>$value) {
-            $this_tax = $value;
-            if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
-                foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
-                    if ($descr === $key) {
-                        if ($this->include_shipping !== 'true') {
-                            $this_tax -= $order->info['shipping_tax_groups'][$key];
-                        } else {
-                            $od_amount['shipping_tax_groups'][$key] = $order->info['shipping_tax_groups'][$key] * $ratio;
-                        }
-                    }
-                }
-            }
-            $od_amount['tax_groups'][$key] = isset($od_amount['tax_groups'][$key]) ? $od_amount['tax_groups'][$key] + $this_tax * $ratio : $this_tax * $ratio;
-            $tax_deduct += $od_amount['tax_groups'][$key];
-        }
-        $od_amount['tax'] = $tax_deduct;
-        $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] + $od_amount['tax'] : $od_amount['total'];
-      break;
-      default:
+    // Calculate an equivalent ratio for the discount and then use it to adjust taxes
+    if ($od_amount['total'] >= $order_total) {
+        $ratio = 1;
+    } else {
+        $ratio = $od_amount['total'] / $order_total;
     }
+    $tax_deduct = 0;
+    foreach ($order->info['tax_groups'] as $key=>$value) {
+        $this_tax = $value;
+        if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
+            foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
+                if ($descr === $key) {
+                    if ($this->include_shipping !== 'true') {
+                        $this_tax -= $order->info['shipping_tax_groups'][$key];
+                    } else {
+                        $od_amount['shipping_tax_groups'][$key] = $order->info['shipping_tax_groups'][$key] * $ratio;
+                    }
+                }
+            }
+        }
+        $od_amount['tax_groups'][$key] = isset($od_amount['tax_groups'][$key]) ? $od_amount['tax_groups'][$key] + $this_tax * $ratio : $this_tax * $ratio;
+        $tax_deduct += $od_amount['tax_groups'][$key];
+    }
+    $od_amount['tax'] = $tax_deduct;
+    // Shipping cost and tax deductions
     if ($this->include_shipping === 'true') {
         $od_amount['shipping'] = $order->info['shipping_cost'] * $ratio;
         $od_amount['ShippingTax'] = $order->info['shipping_tax'] * $ratio;
     } else {
         $od_amount['shipping'] = 0;
         $od_amount['ShippingTax'] = 0;
+    }
+    // Final deduction amont calculation depending on method used
+    if ($this->calculate_tax === 'Credit Note') {
+        $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] + $od_amount['tax'] : $od_amount['total'];
+    } else {
+        $od_amount['total'] = DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] - $od_amount['tax'];
     }
     return $od_amount;
   }
