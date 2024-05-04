@@ -472,14 +472,12 @@ class ot_coupon extends base
      */
     function calculate_deductions()
     {
-        global $db, $currencies;
+        global $db;
 
         $od_amount = ['tax' => 0, 'total' => 0];
         if (empty($_SESSION['cc_id'])) {
             return $od_amount;
         }
-
-        $currencyDecimalPlaces = $currencies !== null ? $currencies->get_decimal_places($_SESSION['currency']) : 2;
 
         $result = $db->Execute("SELECT * FROM " . TABLE_COUPONS . " WHERE coupon_id = " . (int)$_SESSION['cc_id']);
 
@@ -491,12 +489,10 @@ class ot_coupon extends base
         $this->coupon_code = $coupon_details['coupon_code'];
 
         $orderTotalDetails = $this->get_order_total($coupon_details['coupon_id']);
-
-        $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['orderTotal'];
-
         $orderAmountTotal = $orderTotalDetails['orderTotal'];
-        // coupon is applied against value of only qualifying/restricted products in cart
-        if ($coupon_details['coupon_calc_base'] === 1) {
+
+        $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['orderTotal']; // coupon is applied against value of only qualifying/restricted products in cart
+        if ($coupon_details['coupon_calc_base'] === '1') {
             $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['totalFull']; // coupon minimum comparison includes sale items that may not be included in deduction
         }
 
@@ -654,10 +650,6 @@ class ot_coupon extends base
                     $od_amount['tax'] += $od_amount['tax_groups'][$key];
                 }
 
-                // adjust for free-shipping
-                if ($coupon_includes_free_shipping) {
-                    //$od_amount['total'] += DISPLAY_PRICE_WITH_TAX === 'true' ?  $orderTotalDetails['shipping'] - $orderTotalDetails['ShippingTax'] : $orderTotalDetails['shipping'];
-                }
                 if ($od_amount['total'] > $orderAmountTotal) {
                     $od_amount['total'] = $orderAmountTotal;
                     $od_amount['tax'] = $orderTotalDetails['orderTax'];
@@ -686,9 +678,12 @@ class ot_coupon extends base
         $orderTaxGroups = $order->info['tax_groups'] ?? [];
         $orderTotalTax = $order->info['tax'] ?? 0;
         $orderTotal = $order->info['total'] ?? 0;
-
+        $orderTotalFull = $order->info['total'] - $orderTotalTax;
         $coupon_id = (int)$coupon_id;
 
+        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
+            $orderTotal -= $orderTotalTax;
+        }
         // for products which are not applicable for this coupon, calculate their value in the cart and reduce it from the final order-total that the coupon's discounts will apply to
         $products = $_SESSION['cart']->get_products();
         $i = 0;
@@ -709,7 +704,7 @@ class ot_coupon extends base
                     $orderTotal -= $productsTaxAmount;
                 }
                 $orderTotalTax -= $productsTaxAmount;
-                $tax_description = zen_get_tax_description($product['tax_class_id'], true);
+                $tax_description = zen_get_tax_description($product['tax_class_id'], -1, -1, true);
                 $multi_tax_rate = zen_get_multiple_tax_rates($product['tax_class_id']);
                 foreach ($tax_description as $key => $value) {
                     if (empty($orderTaxGroups[$value])) {
@@ -721,29 +716,15 @@ class ot_coupon extends base
             }
         }
 
-        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
-            $orderTotal -= $orderTotalTax;
-        }
         // shipping/tax
         if ($this->include_shipping !== 'true') {
             $orderTotal -= $order->info['shipping_cost'];
-            if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
-                foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
-                    if ($descr === $key) {
-                        $orderTotalTax -= $order->info['shipping_tax_groups'][$key];
-                    }
-                }
-            }
-        }
-
-        // change what total is used for Discount Coupon Minimum
-        $orderTotalFull = $order->info['total'];
-        if ($this->include_shipping !== 'true') {
+            // change what total is used for Discount Coupon Minimum
             if (isset($_SESSION['shipping_tax_amount']) && $_SESSION['shipping_tax_amount'] != 0) {
                 $orderTotalFull -= DISPLAY_PRICE_WITH_TAX === 'true' ? $order->info['shipping_cost'] - $order->info['shipping_tax'] : $order->info['shipping_cost'];
             }
         }
-        $orderTotalFull -= $orderTotalTax;
+
         // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) - to include both in array
         // add total order amount ($orderTotalFull) to array for $order_total['totalFull'] vs $order_total['orderTotal']
         return [
@@ -969,10 +950,9 @@ class ot_coupon extends base
 
         $orderTotalDetails = $this->get_order_total($coupon_details['coupon_id']);
 
-        $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['orderTotal'];
+        $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['orderTotal'];  // coupon is applied against value of only qualifying/restricted products in cart
 
-        $orderAmountTotal = (string)$orderTotalDetails['orderTotal'];  // coupon is applied against value of only qualifying/restricted products in cart
-        if ($coupon_details['coupon_calc_base'] === 1) {
+        if ($coupon_details['coupon_calc_base'] === '1') {
             $orderAmountToCompareAgainstCouponMinimum = (string)$orderTotalDetails['totalFull']; // coupon minimum comparison includes sale items that may not be included in deduction
         }
 
@@ -980,10 +960,8 @@ class ot_coupon extends base
 // for total order amount vs qualified order amount just switch the commented lines
 //        if ((string)$orderTotalDetails['totalFull'] < $coupon_details['coupon_minimum_order'])
 //        if ((string)$orderTotalDetails['orderTotal'] < $coupon_details['coupon_minimum_order'])
-//        if ($orderAmountTotal > 0 && $orderAmountTotal < $coupon_details['coupon_minimum_order'])
 
-        if ($orderAmountTotal > 0 && $orderAmountToCompareAgainstCouponMinimum < $coupon_details['coupon_minimum_order']) {
-            // $order_total['orderTotal'] . ' vs ' . $order_total['totalFull']
+        if ($orderAmountToCompareAgainstCouponMinimum > '0' && $orderAmountToCompareAgainstCouponMinimum < $coupon_details['coupon_minimum_order']) {
             return false;
         }
 
