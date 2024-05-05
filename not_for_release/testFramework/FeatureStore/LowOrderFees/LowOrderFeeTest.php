@@ -220,7 +220,7 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->assertStringContainsString('2.52', (string)$response->getContent() );
         $this->assertStringContainsString('5.00', (string)$response->getContent() );
         $this->assertStringContainsString('46.01', (string)$response->getContent() );
-        $this->browser->submitForm('Continue', ['cot_gv' => 45.29, 'payment' => '']);
+        $this->browser->submitForm('Continue', ['cot_gv' => 39.99, 'payment' => '']);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Please select a payment method for your order', (string)$response->getContent() );
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
