@@ -81,7 +81,7 @@ class ot_group_pricing {
     if (isset($od_amount['total']) && $od_amount['total'] > 0) {
         if ($this->include_shipping === 'true') {
             $order->info['shipping_cost'] -= $od_amount['shipping'];
-            $order->info['shipping_tax'] -= $od_amount['shippingTax'];
+            $order->info['shipping_tax'] -= $od_amount['ShippingTax'];
         }
         $tax = 0;
         // Update all tax rates in order object
@@ -144,8 +144,8 @@ class ot_group_pricing {
         $od_amount['total'] = ($orderTotal['total'] - $_SESSION['cart']->gv_only()) * $group_discount->fields['group_percentage'] / 100;
         $ratio = $od_amount['total']/$order_total;
         if ($this->include_shipping === 'true') {
-            $od_amount['shipping'] = $orderTotalDetails['shipping'] * $ratio;
-            $od_amount['ShippingTax'] = $orderTotalDetails['ShippingTax'] * $ratio;
+            $od_amount['shipping'] = $orderTotal['shipping'] * $ratio;
+            $od_amount['ShippingTax'] = $orderTotal['ShippingTax'] * $ratio;
         } else {
             $od_amount['shipping'] = 0;
             $od_amount['ShippingTax'] = 0;
