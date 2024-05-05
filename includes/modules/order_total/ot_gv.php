@@ -424,7 +424,7 @@ class ot_gv {
         $this_tax = $value;
         if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'][0] != '') {
             foreach ($_SESSION['shipping_tax_description'] as $ind => $descr) {
-                if ($descr === $key) {
+                if (isset($order->info['shipping_tax_groups'][$key]) && $descr === $key) {
                     if ($this->include_shipping !== 'true') {
                         $this_tax -= $order->info['shipping_tax_groups'][$key];
                     } else {
