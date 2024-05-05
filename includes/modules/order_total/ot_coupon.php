@@ -515,7 +515,7 @@ class ot_coupon extends base
                 }
 
                 // Determine return values for discount amounts based on coupon type
-                // A ratio is used to calculate new taxes. This ratio is like an average deduction factor for all tax classes apllied to total order.
+                // A ratio is used to calculate new taxes. This ratio is like an average deduction factor for all tax classes applied to total order.
                 $coupon_includes_free_shipping = false;
                 $od_amount['type'] = $coupon_details['coupon_type'];
 
