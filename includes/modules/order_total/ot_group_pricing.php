@@ -121,7 +121,16 @@ class ot_group_pricing {
     $orderTotalFull = $order_total;
     $order_total -= DISPLAY_PRICE_WITH_TAX !== 'true' ? $order->info['tax'] : 0;
 
-    $order_total = array('totalFull'=>$orderTotalFull, 'total'=>$order_total, 'tax'=>$order_total_tax, 'taxGroups'=>$order->info['tax_groups'], 'shipping' => $order->info['shipping_cost'], 'ShippingTax' => $order->info['shipping_tax'], 'ShippingTaxGroups'=>$order->info['shipping_tax_groups']);
+    $order_total = [
+        'totalFull' => $orderTotalFull,
+        'total' => $order_total,
+        'tax' => $order_total_tax,
+        'taxGroups' => $order->info['tax_groups'],
+        'shipping' => $order->info['shipping_cost'],
+        'ShippingTax' => $order->info['shipping_tax'],
+        'ShippingTaxGroups'=>$order->info['shipping_tax_groups'],
+    ];
+
     return $order_total;
   }
   
