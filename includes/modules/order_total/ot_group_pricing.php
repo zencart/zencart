@@ -128,7 +128,7 @@ class ot_group_pricing {
         'taxGroups' => $order->info['tax_groups'],
         'shipping' => $order->info['shipping_cost'],
         'ShippingTax' => $order->info['shipping_tax'],
-        'ShippingTaxGroups'=>$order->info['shipping_tax_groups'],
+        'ShippingTaxGroups' => $order->info['shipping_tax_groups'],
     ];
 
     return $order_total;
