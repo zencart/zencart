@@ -1,2 +1,2 @@
-<p><strong>Conditions of Use Sample Text ...</strong></p><p>This section of text is from the Define Pages Editor located under Tools in the Admin.</p>
-<p>To remove this section of the text, delete it from the Define Pages Editor.</p>
+<p><strong>Conditions of Use Message ...</strong></p>
+<p>We haven't updated this page yet. Please use the Contact Us form to let us know!</p>

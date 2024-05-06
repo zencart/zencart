@@ -1,3 +1,3 @@
-<p><strong>Accessibility Sample Text ...</strong></p>
-<p>This section of text is from the Define Pages Editor located under Tools in the Admin.</p>
-<p>To remove this section of the text, delete it from the Define Pages Editor.</p>
+<p>We have more to say about Accessibility!</p>
+<p>Please use the Contact-Us page to remind us to update this page.</p>
+<p class="small pt-5"><br><br><br>Storeowners: use the Define Pages editor in your Admin to update this text.</p>

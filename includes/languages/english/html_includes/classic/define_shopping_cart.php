@@ -1,2 +1,7 @@
-<p>This file is found in includes/languages/english/html_includes/define_shopping_cart.php</p>
-<p>Edit this text (the one you are reading now) in Admin > Tools > Define Pages Editor to write your personal shopping cart message here</p>
+<p>
+    Your shopping cart contents are shown below. You may update quantities or remove items by clicking on the related buttons.
+    
+    If relevant, Shipping, Taxes and Discounts will be determined and displayed during Checkout.
+    
+    You may of course add more items to your cart!
+</p>

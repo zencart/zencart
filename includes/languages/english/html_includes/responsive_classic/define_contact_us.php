@@ -1,2 +1,2 @@
-<p><strong>Contact Us Sample Text ...</strong></p>
-<p>We haven't updated this custom text yet. Please use form below to let us know!</p>
+<p><strong>We are available to help!</strong></p>
+<p>You may reach us using the details above, or fill out this form and we'll respond as soon as possible.</p>
