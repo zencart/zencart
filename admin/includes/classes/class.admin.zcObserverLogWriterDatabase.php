@@ -11,7 +11,7 @@
 class zcObserverLogWriterDatabase extends base {
 
     private $notifier;
-    
+
   public function __construct(notifier $zco_notifier = null) {
     if (!$zco_notifier) $zco_notifier = new notifier;
     $this->notifier = $zco_notifier;
@@ -134,7 +134,7 @@ class zcObserverLogWriterDatabase extends base {
   {
     global $db;
     $db->Execute("truncate table " . TABLE_ADMIN_ACTIVITY_LOG);
-    $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
+    $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name() ?? '[Unknown/NotLoggedIn]') . '[' . (int)$_SESSION['admin_id'] . ']}';
     $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
     $sql_data_array = array( 'access_date' => 'now()',
             'admin_id' => (int)$admin_id,

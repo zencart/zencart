@@ -5,6 +5,8 @@ use base;
 
 class zcNotifierBaseAliasTestObject extends base
 {
+    public string $foo;
+
     public function fireNotifierValid()
     {
         $this->foo = 'valid';

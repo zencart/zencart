@@ -13,6 +13,8 @@ use Tests\Support\zcDiscountCouponTest;
 
 class DiscountCouponsTest extends zcDiscountCouponTest
 {
+    public ot_coupon $coupon;
+
     public function setUp(): void
     {
         parent::setUp();

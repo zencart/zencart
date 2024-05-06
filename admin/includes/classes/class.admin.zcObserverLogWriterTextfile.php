@@ -56,7 +56,7 @@ class zcObserverLogWriterTextfile extends base {
       touch($this->destinationLogFilename);
       $init_required = true;
     } else {
-      $val = file_get_contents($this->destinationLogFilename, null, null, null, 100);
+      $val = file_get_contents($this->destinationLogFilename, false, null, 0, 100);
       if ($val === false || strlen($val) < 20) {
         $init_required = true;
       }
@@ -90,7 +90,7 @@ class zcObserverLogWriterTextfile extends base {
       unlink($this->destinationLogFilename);
     }
 
-    $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name()) . '[' . (int)$_SESSION['admin_id'] . ']}';
+    $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name() ?? '[Unknown/NotLoggedIn]') . '[' . (int)$_SESSION['admin_id'] . ']}';
     $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
     $data = array('access_date' => date('M-d-Y H:i:s'),
             'admin_id' => (int)$admin_id,
