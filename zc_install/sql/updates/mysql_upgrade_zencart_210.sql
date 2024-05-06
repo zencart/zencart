@@ -51,13 +51,15 @@ CREATE TABLE admin_expired_tokens (
 );
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('MFA Multi-Factor Authentication Required', 'MFA_ENABLED', 'False', '2-Factor authentication for Admin users', 1, 29, now(), 'zen_cfg_select_option([\'True\', \'False\'],');
 
+# Removing unused keys from configuration table
+DELETE FROM configuration WHERE configuration_key IN ('MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX', 'MODULE_ORDER_TOTAL_GROUP_PRICING_TAX_CLASS', 'MODULE_ORDER_TOTAL_GV_INC_TAX', 'MODULE_ORDER_TOTAL_GV_TAX_CLASS', 'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', 'MODULE_ORDER_TOTAL_COUPON_INC_TAX');
 
-
+# Update ot modules configuration
+UPDATE configuration SET configuration_description = 'GV amount is tax included -> Standard, if tax excluded -> Credit Note', set_function = 'zen_cfg_select_option(array(\'Standard\', \'Credit Note\'),' WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_CALC_TAX';
+UPDATE configuration SET configuration_description = 'Discount amount is tax included -> Standard, if tax excluded -> Credit Note', set_function = 'zen_cfg_select_option(array(\'Standard\', \'Credit Note\'),' WHERE configuration_key = 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX';
 
 # Image matching mode
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images matching pattern', 'ADDITIONAL_IMAGES_MODE', 'legacy', '&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict', '4', '25', 'zen_cfg_select_option(array(\'strict\', \'legacy\'), ', now());
-
-
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
