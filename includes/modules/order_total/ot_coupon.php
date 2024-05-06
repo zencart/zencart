@@ -141,9 +141,12 @@ class ot_coupon extends base
                 if (isset($od_amount['tax_groups'][$key])) {
                     $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
                     $tax += $od_amount['tax_groups'][$key];
-                    
-                    if (empty($order->info['tax_subtotals'])) {
-                        $order->info['tax_subtotals'] = [];
+
+                    if (!isset($order->info['tax_subtotals'][$key])) {
+                        $order->info['tax_subtotals'][$key] = [
+                            'tax_rate' => $value,
+                            'subtotal' => 0,
+                        ];
                     }
                     $order->info['tax_subtotals'][$key]['subtotal'] -= $od_amount['total'];
                     
