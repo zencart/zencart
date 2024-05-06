@@ -734,6 +734,7 @@ class ot_coupon extends base
             'orderTax' => $orderTotalTax,
             'shipping' => $order->info['shipping_cost'] ?? 0,
             'shippingTax' => $order->info['shipping_tax'] ?? 0,
+            'ShippingTaxGroups' => $order->info['shipping_tax_groups'],
         ];
     }
 
