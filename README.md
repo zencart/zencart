@@ -13,13 +13,13 @@ Zen Cart is free and open source software, with free community-driven support av
 --------------------
 
 
-Zen Cart&reg; v2.0.0
+Zen Cart&reg; v2.1.0-dev
 ---------------------
 
 Compatibility
 -------------
-Zen Cart v2.0.0 is designed for:
- * PHP 8.0 to PHP 8.3
+Zen Cart v2.1.0 is designed for:
+ * PHP 8.0 to PHP 8.4
  * MySQL 5.7.8+ or MariaDB 10.2.7+
  * Apache 2.2 and 2.4
  
