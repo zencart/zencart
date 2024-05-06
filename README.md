@@ -1,4 +1,4 @@
-![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Tests/badge.svg?branch=master)
+![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Unit%20Tests/badge.svg?branch=master)
 
 
 Zen Cart&reg; - The Art of E-Commerce
