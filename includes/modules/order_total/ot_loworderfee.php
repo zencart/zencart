@@ -130,6 +130,9 @@ class ot_loworderfee
                         if (!isset($order->info['tax_groups'][$value])) {
                             $order->info['tax_groups'][$value] = 0;
                         }
+                        if (!isset($order->info['tax_groups'][$value])) {
+                            $order->info['tax_subtotals'][$value]['subtotal'] = 0;
+                        }
                         $loworder_tax_group_value = zen_calculate_tax($low_order_fee, $tax_multiple[$value]);
                         $order->info['tax_groups'][$value] += $loworder_tax_group_value;
                         $order->info['tax_subtotals'][$value]['subtotal'] += $low_order_fee;
