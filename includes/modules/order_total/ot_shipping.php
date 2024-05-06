@@ -99,6 +99,7 @@ class ot_shipping extends base
             $external_shipping_tax_handler = false;
             $shipping_tax = 0;
             $shipping_tax_description = [];
+            $shipping_tax_multiple = [];
             $this->notify(
                 'NOTIFY_OT_SHIPPING_TAX_CALCS', 
                 [], 
