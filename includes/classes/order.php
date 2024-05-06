@@ -231,6 +231,7 @@ class order extends base
             'total' => $order->fields['order_total'],
             'tax' => $order->fields['order_tax'],
             'shipping_tax_rate' => $order->fields['shipping_tax_rate'],
+            'shipping_tax_groups' => [],
             'last_modified' => $order->fields['last_modified'],
             'ip_address' => $order->fields['ip_address'],
             'language_code' => $order->fields['language_code'],
