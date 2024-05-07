@@ -1156,7 +1156,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
         if (isset($order->delivery['country']['id'])) {
             $shippingISO = zen_get_countries_with_iso_codes($order->delivery['country']['id']);
-            $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2']);
+            $user_locale_info[] = strtoupper($shippingISO['countries_iso_code_2'] ?? '');
         }
 
         if (isset($order->billing['country']['id'])) {
