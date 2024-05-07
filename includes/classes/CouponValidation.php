@@ -14,6 +14,7 @@ class CouponValidation
     public static function is_product_valid(int $product_id, int $coupon_id): bool
     {
         global $db;
+        global $zco_notifier; 
 
         $product_id = (int)$product_id;
 
@@ -23,7 +24,7 @@ class CouponValidation
 
         $coupons = $db->Execute($coupons_query);
 
-        $product_query = "SELECT products_model FROM " . TABLE_PRODUCTS . "
+        $product_query = "SELECT * FROM " . TABLE_PRODUCTS . "
                           WHERE products_id = $product_id";
 
         $product = $db->Execute($product_query);
@@ -32,6 +33,12 @@ class CouponValidation
             return false;
         }
 
+        $product_can_use_coupon = true; 
+        $zco_notifier->notify('NOTIFY_COUPON_ADDITIONAL_CHECKS', $product->fields, $coupon_id, $product_can_use_coupon); 
+        if ($product_can_use_coupon === false) {
+            return false;
+        }
+        
         // modified to manage restrictions better - leave commented for now
         if ($coupons->RecordCount() === 0) {
             return true;
