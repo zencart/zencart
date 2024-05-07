@@ -8,6 +8,8 @@ class zcNotifierTraitAliasTestObject
 {
     use NotifierManager;
 
+    public string $foo;
+
     public function fireNotifierValid()
     {
         $this->foo = 'valid';

@@ -877,7 +877,7 @@ class order extends base
                     'subtotal' => 0,
                 ];
             }
-            $this->info['tax_subtotals'][$tax_description]['subtotal'] += $shown_price;
+            $this->info['tax_subtotals'][$tax_description]['subtotal'] += $product_final_price * $product_qty + $product_onetime_charges;
         }
     }
 
@@ -889,24 +889,8 @@ class order extends base
     {
         global $currencies;
 
-        $displaying_prices_with_tax = (DISPLAY_PRICE_WITH_TAX === 'true');
         foreach ($this->info['tax_subtotals'] as $tax_description => $tax_info) {
-            // -----
-            // If not displaying prices with tax, simply calculate the to-be-added
-            // tax for this tax-group.
-            //
-            // Otherwise, 'pull' the tax value from the tax-group's subtotal, noting
-            // that the subtotal value is already rounded based on the currently-selected
-            // currency.
-            //
-            if ($displaying_prices_with_tax === false) {
-                $tax_to_add = zen_calculate_tax($tax_info['subtotal'], $tax_info['tax_rate']);
-            } else {
-                $tax_rate = $tax_info['tax_rate'];
-                $tax_rate_divisor = ($tax_rate >= 10) ? "1.$tax_rate" : "1.0$tax_rate";
-                $tax_to_add = $tax_info['subtotal'] - $tax_info['subtotal'] / $tax_rate_divisor;
-            }
-
+            $tax_to_add = zen_calculate_tax($tax_info['subtotal'], $tax_info['tax_rate']);
             $this->info['tax'] += $tax_to_add;
             $this->info['tax_groups'][$tax_description] = $tax_to_add;
         }

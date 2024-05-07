@@ -28,6 +28,10 @@ $define = [
     'TEXT_INFO_HEADING_NEW_TEMPLATE' => 'Associate Template with a language',
     'TEXT_INFO_INSERT_INTRO' => 'Choose below to associate a template with a language',
     'IMAGE_NEW_TEMPLATE' => 'Create a new template/language association',
+    'TEXT_CLOSE' => 'Close',
+    'TEXT_VIEW_TEMPLATE_SETTINGS' => 'View Template Settings',
+    'TEXT_MODAL_HEADING_INTRO' => 'Template Settings: ',
+    'ERROR_COULD_NOT_READ_FILE' => 'Sorry, the file could not be read.',
 ];
 
 return $define;

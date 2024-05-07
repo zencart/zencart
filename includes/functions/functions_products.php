@@ -199,47 +199,6 @@ function zen_get_new_date_range($time_limit = false)
 }
 
 /**
- * build New Products query clause
- * @param int $time_limit
- * @return string
- */
-function zen_get_products_new_timelimit($time_limit = false)
-{
-    if ($time_limit == false) {
-        $time_limit = SHOW_NEW_PRODUCTS_LIMIT;
-    }
-    $time_limit = (int)$time_limit;
-    switch ($time_limit) {
-        case 1:
-            $display_limit = " AND date_format(p.products_date_added, '%Y%m') >= date_format(now(), '%Y%m')";
-            break;
-        case 7:
-            $display_limit = ' AND TO_DAYS(NOW()) - TO_DAYS(p.products_date_added) <= 7';
-            break;
-        case 14:
-            $display_limit = ' AND TO_DAYS(NOW()) - TO_DAYS(p.products_date_added) <= 14';
-            break;
-        case 30:
-            $display_limit = ' AND TO_DAYS(NOW()) - TO_DAYS(p.products_date_added) <= 30';
-            break;
-        case 60:
-            $display_limit = ' AND TO_DAYS(NOW()) - TO_DAYS(p.products_date_added) <= 60';
-            break;
-        case 90:
-            $display_limit = ' AND TO_DAYS(NOW()) - TO_DAYS(p.products_date_added) <= 90';
-            break;
-        case 120:
-            $display_limit = ' AND TO_DAYS(NOW()) - TO_DAYS(p.products_date_added) <= 120';
-            break;
-        default:
-            $display_limit = '';
-            break;
-    }
-    return $display_limit;
-}
-
-
-/**
  * Return a product's category (master_categories_id)
  * @param int $product_id
  * @return int|string

@@ -67,7 +67,6 @@ echo $menulist;
 
 <?php if (SHOW_CATEGORIES_BOX_PRODUCTS_NEW == 'true') {
       // display limits
-//    $display_limit = zen_get_products_new_timelimit();
       $display_limit = zen_get_new_date_range();
 
       $show_this = $db->Execute("select p.products_id

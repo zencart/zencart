@@ -282,8 +282,9 @@ function zen_get_attributes_sort_order($products_id, $options_id, $options_value
 }
 
 /*
- * Query a specific option's, based on an options_id and an
- * optional language_id, returning a db QueryFactory response.
+ * Query a specific option's details,
+ * based on an options_id and an optional language_id,
+ * returning a db QueryFactory response.
  *
  * @param int $options_id
  * @param int $language_id (optional)

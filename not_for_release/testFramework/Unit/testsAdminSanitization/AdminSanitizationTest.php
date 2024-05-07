@@ -13,6 +13,14 @@ class AdminSanitizationTest extends zcUnitTestCase
 {
     public function setUp(): void
     {
+        global $PHP_SELF;
+        $serverScript = basename($_SERVER['SCRIPT_NAME']);
+        $PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $serverScript : 'home.php';
+        if (basename($PHP_SELF, '.php') === 'index') {
+            $PHP_SELF = isset($_GET['cmd']) ? basename($_GET['cmd'] . '.php') : $PHP_SELF;
+        }
+        $PHP_SELF = htmlspecialchars($PHP_SELF, ENT_COMPAT);
+
         parent::setUp();
         require_once(DIR_FS_CATALOG . '/admin/includes/classes/AdminRequestSanitizer.php');
     }
