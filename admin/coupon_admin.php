@@ -1170,12 +1170,13 @@ switch ($_GET['action']) {
                   if (isset($_GET['cid']) && empty($inSearch)) {
                       $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
-                                     WHERE coupon_type != 'G'";
-                  } else {
-                      $cc_query_raw = "SELECT *
+                                     WHERE coupon_id = " . (int)$_GET['cid'];
+                      $cc_query = $db->Execute($cc_query_raw); 
+                      $cInfo = new objectInfo($cc_query->fields);
+                  }    
+                  $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
                                      WHERE coupon_type != 'G'" . $mysqlSearch . $mysqlActive;
-                  }
                   $maxDisplaySearchResults = ((defined('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') && (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS > 0) ? (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS : 20);
 
                   $cc_split = new splitPageResults($_GET['page'], $maxDisplaySearchResults, $cc_query_raw, $cc_query_numrows);
@@ -1188,7 +1189,6 @@ switch ($_GET['action']) {
                     if ((empty($_GET['cid']) || ($_GET['cid'] == $item['coupon_id'])) && empty($cInfo)) {
                       $cInfo = new objectInfo($item);
                     }
-
                     if (isset($cInfo)) {
 					    $coupon_referrer = '';
                         $sql = "SELECT referrer_domain
