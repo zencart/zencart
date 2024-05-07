@@ -54,7 +54,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
     // Push all attribute information into an array
     if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
-            $options_order_by = ' ORDER BY LPAD(popt.products_options_sort_order,11,"0")';
+            $options_order_by = " ORDER BY LPAD(popt.products_options_sort_order,11,'0')";
         } else {
             $options_order_by = ' ORDER BY popt.products_options_name';
         }
