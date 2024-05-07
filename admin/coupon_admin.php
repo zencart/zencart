@@ -1171,7 +1171,7 @@ switch ($_GET['action']) {
                       $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
                                      WHERE coupon_id = " . (int)$_GET['cid'];
-                      $cc_query = $db->Execute($cc_query_raw); 
+                      $cc_query = $db->Execute($cc_query_raw, 1);
                       $cInfo = new objectInfo($cc_query->fields);
                   }    
                   $cc_query_raw = "SELECT *
