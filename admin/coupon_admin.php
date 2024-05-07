@@ -1012,7 +1012,7 @@ switch ($_GET['action']) {
               <div class="input-group col-sm-9 col-md-6" data-list="referrers">
               <?php
               // Render an input box for each referrer value. These are collected on POST and recombined
-              $referrers = explode(',', $coupon_referrer);
+              $referrers = explode(',', $coupon_referrer ?? '');
               foreach ($referrers as $idx => $referrer) {
                 $btn_cls = $idx === 0 ? 'btn-success' : 'btn-danger';
                 $btn_label = $idx === 0 ? 'fa-plus' : 'fa-times';
