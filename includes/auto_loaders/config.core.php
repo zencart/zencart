@@ -30,7 +30,6 @@ if (!defined('USE_PCONNECT')) {
  * require DIR_WS_CLASSES . 'message_stack.php';
  * require DIR_WS_CLASSES . 'template_func.php';
  * require DIR_WS_CLASSES . 'breadcrumb.php';
- * require DIR_WS_CLASSES . 'language.php';
  * require DIR_WS_CLASSES . 'zcDate.php';
  *
  */
@@ -66,10 +65,6 @@ $autoLoadConfig[0][] = [
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
     'loadFile' => 'template_func.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'language.php',
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',

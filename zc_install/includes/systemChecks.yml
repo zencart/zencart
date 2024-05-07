@@ -45,9 +45,9 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 8.4
+          version: 8.5
           versionTest: lt
-          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.3.x') . PHP_EOL; ?>
+          localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.4.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
@@ -298,6 +298,15 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_HTTPS .PHP_EOL; ?>
     methods:
       checkHttpsRequest:
+
+  checkDBVersion210:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '2.1.0'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v2.1.0') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
 
   checkDBVersion200:
     runLevel: dbVersion

@@ -8,6 +8,9 @@ use Tests\Support\zcUnitTestCase;
 
 class AdminNotificationsTest extends zcUnitTestCase
 {
+    public ?AdminNotifications $an = null;
+    public array $dummy = [];
+
     public function setUp(): void
     {
         parent::setUp();

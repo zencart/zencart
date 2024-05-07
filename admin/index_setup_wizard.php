@@ -83,17 +83,19 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
     <script>
       function update_zone(theForm) {
           // if there is no zone_id field to update, or if it is hidden from display, then exit performing no updates
-          if (!theForm || !theForm.elements["zone_id"])
+          if (!theForm || !theForm.elements["zone_id"]) {
               return;
-          if (theForm.zone_id.type == "hidden")
+          }
+          if (theForm.zone_id.type === "hidden") {
               return;
+          }
 
           // set initial values
-          var SelectedCountry = theForm.zone_country_id.options[theForm.zone_country_id.selectedIndex].value;
-          var SelectedZone = theForm.elements["zone_id"].value;
+          let SelectedCountry = theForm.zone_country_id.options[theForm.zone_country_id.selectedIndex].value;
+          let SelectedZone = theForm.elements["zone_id"].value;
 
           // reset the array of pulldown options so it can be repopulated
-          var NumState = theForm.zone_id.options.length;
+          let NumState = theForm.zone_id.options.length;
           while (NumState > 0) {
               NumState = NumState - 1;
               theForm.zone_id.options[NumState] = null;
@@ -101,10 +103,17 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
           // build dynamic list of countries/zones for pulldown
 <?php echo zen_js_zone_list('SelectedCountry', 'theForm', 'zone_id', false); ?>
 
-          // if we had a value before reset, set it again
-          if (SelectedZone != "")
-              theForm.elements["zone_id"].value = SelectedZone;
+          // hide the field and its label if no zone
+          if (theForm.zone_id.options.length == 0) {
+              $("#zone_id, label[for=zone_id], #zonefieldgroup").hide();
+          } else {
+              $("#zone_id, label[for=zone_id], #zonefieldgroup").show();
+          }
 
+          // if we had a value before reset, set it again
+          if (SelectedZone != '') {
+              theForm.elements["zone_id"].value = SelectedZone;
+          }
       }
     </script>
   </head>
@@ -142,7 +151,7 @@ $zone_string = zen_draw_pull_down_menu('zone_id', zen_get_country_zones($store_c
               <?php echo $country_string; ?>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="zonefieldgroup">
             <?php echo zen_draw_label(TEXT_STORE_ZONE, 'zone_id', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6">
               <?php echo $zone_string; ?>

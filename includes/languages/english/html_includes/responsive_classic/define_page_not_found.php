@@ -1,2 +1,2 @@
-<p><strong>Custom 404 Error Page Sample Text ...</strong></p>
-<p>We haven't updated this page yet. Please use the Contact Us form to let us know!</p>
+<p><strong>Oops ... the link you clicked seems invalid</strong></p>
+<p>Please use the search, or pick something exciting from the Categories list!</p>

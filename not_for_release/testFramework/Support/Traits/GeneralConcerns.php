@@ -49,6 +49,13 @@ trait GeneralConcerns
         $this->browser = new HttpBrowser(HttpClient::create());
     }
 
+    public static function locateElementInPageSource(string $element_lookup_text, string $page_source, int $length = 1500): string
+    {
+        $position = strpos($page_source, $element_lookup_text);
+        // if not found, return whole $page_source; but if found, only return a portion of the page
+        return ($position === false) ? $page_source : substr($page_source, $position, $length);
+    }
+
     /**
      * @param $page
      * @return mixed
