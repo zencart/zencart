@@ -34,7 +34,7 @@ class ot_group_pricing {
      * $deduction amount of deduction calculated/afforded while being applied to an order
      * @var float|null
      */
-    protected $deduction;
+    public $deduction;
     /**
      * $description is a soft name for this order total method
      * @var string 
