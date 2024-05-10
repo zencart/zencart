@@ -72,6 +72,8 @@ if (SHOW_NEWSLETTER_UNSUBSCRIBE_LINK == 'true') {
     $information[] = '<a href="' . zen_href_link(FILENAME_UNSUBSCRIBE) . '">' . BOX_INFORMATION_UNSUBSCRIBE . '</a>';
 }
 
+$zco_notifier->notify('NOTIFY_INFORMATION_SIDEBOX_ADDITIONS', [], $information);
+
 require($template->get_template_dir('tpl_information.php', DIR_WS_TEMPLATE, $current_page_base, 'sideboxes') . '/tpl_information.php');
 
 $title = BOX_HEADING_INFORMATION;
