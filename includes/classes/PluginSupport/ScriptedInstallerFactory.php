@@ -7,19 +7,13 @@
 
 namespace Zencart\PluginSupport;
 
+use queryFactory;
+
 class ScriptedInstallerFactory
 {
+    protected queryFactory $dbConn;
 
-    /**
-     * $dbConn is a database object 
-     * @var object
-     */
-    protected $dbConn;
-    /**
-     * $errorContainer is a PluginErrorContainer object
-     * @var object
-     */
-    protected $errorContainer;
+    protected PluginErrorContainer $errorContainer;
 
     public function __construct($dbConn, $errorContainer)
     {
@@ -27,7 +21,7 @@ class ScriptedInstallerFactory
         $this->errorContainer = $errorContainer;
     }
 
-    public function make($pluginDir)
+    public function make($pluginDir): \ScriptedInstaller
     {
         require_once $pluginDir . '/Installer/ScriptedInstaller.php';
         $scriptedInstaller = new \ScriptedInstaller($this->dbConn, $this->errorContainer);
