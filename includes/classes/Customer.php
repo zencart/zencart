@@ -187,7 +187,7 @@ class Customer extends base
 
         // @TODO - delete this if we collapse the Info table
         // enforce db integrity: make sure related record exists
-        if (empty($this->data['customers_info_date_account_created'])) {
+        if (empty($this->data['date_account_created'])) {
             $sql = "INSERT IGNORE INTO " . TABLE_CUSTOMERS_INFO . " (customers_info_id) VALUES (:customersID)";
             $sql = $db->bindVars($sql, ':customersID',  $customer_id, 'integer');
             $db->Execute($sql);
