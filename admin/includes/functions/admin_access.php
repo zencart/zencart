@@ -122,6 +122,7 @@ function zen_get_users($limit = null): array
             'email' => $row['admin_email'],
             'profile' => $row['admin_profile'],
             'profileName' => $row['profile_name'],
+            'pwd_last_change_date' => $row['pwd_last_change_date'],
         ];
     }
     return $retVal;
