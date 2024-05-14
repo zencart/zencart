@@ -67,6 +67,8 @@
 
       $var_linksList = $page_query_list_sidebox;
 
+      $zco_notifier->notify('NOTIFY_EZPAGES_SIDEBOX_ADDITIONS', [], $var_linksList);
+
       require($template->get_template_dir('tpl_ezpages.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_ezpages.php');
 
       $zco_notifier->notify('NOTIFY_END_EZPAGES_SIDEBOX');
