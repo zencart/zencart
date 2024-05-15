@@ -83,6 +83,11 @@ class storepickup extends ZenShipping
         // other status checks?
         if ($this->enabled) {
             // other checks here
+
+            // -----
+            // Give a watching observer the opportunity to disable the overall shipping module.
+            //
+            $this->notify('NOTIFY_SHIPPING_STOREPICKUP_UPDATE_STATUS', [], $this->enabled);
         }
     }
 

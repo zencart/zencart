@@ -8,7 +8,6 @@
  */
 class freeoptions extends ZenShipping
 {
-
     public function __construct()
     {
         $this->code = 'freeoptions';
@@ -142,6 +141,13 @@ class freeoptions extends ZenShipping
         // are met.
         //
         $this->enabled = ($freeoptions_total === true || $freeoptions_weight === true || $freeoptions_items === true);
+
+        if ($this->enabled) {
+            // -----
+            // Give a watching observer the opportunity to disable the overall shipping module.
+            //
+            $this->notify('NOTIFY_SHIPPING_FREEOPTIONS_UPDATE_STATUS', [], $this->enabled);
+        }
     }
 
     // -----

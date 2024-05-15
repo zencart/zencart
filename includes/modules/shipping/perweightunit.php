@@ -83,6 +83,13 @@ class perweightunit extends ZenShipping
                 $this->enabled = false;
             }
         }
+
+        if ($this->enabled) {
+            // -----
+            // Give a watching observer the opportunity to disable the overall shipping module.
+            //
+            $this->notify('NOTIFY_SHIPPING_PERWEIGHTUNIT_UPDATE_STATUS', [], $this->enabled);
+        }
     }
 
     /**
