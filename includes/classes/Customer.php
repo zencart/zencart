@@ -516,7 +516,9 @@ class Customer extends base
         global $db;
 
         if ($this->isSameAsLoggedIn()) {
-            // @TODO - clean out whos_online for this user's session
+            // clean out whos_online for this user's session
+            $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE customer_id = " . (int)$_SESSION['customer_id']);
+
             // @TODO - kill actual session from sessionhandler too? (eg: really boot them out)
 
             unset($_SESSION['customer_id']);
