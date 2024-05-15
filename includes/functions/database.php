@@ -86,10 +86,10 @@ function zen_db_prepare_input($string, bool $trimspace = true)
  * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
  * @return queryFactoryResult
  */
-function zen_db_perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = '')
+function zen_db_perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = ''): queryFactoryResult
 {
     global $db;
-    if (strtolower($performType) == 'insert') {
+    if (strtolower($performType) === 'insert') {
         $query = 'INSERT INTO ' . $tableName . ' (';
         foreach ($tableData as $columns => $value) {
             $query .= $columns . ', ';
@@ -111,7 +111,7 @@ function zen_db_perform(string $tableName, array $tableData, $performType = 'INS
             }
         }
         $query = substr($query, 0, -2) . ')';
-    } elseif (strtolower($performType) == 'update') {
+    } elseif (strtolower($performType) === 'update') {
         $query = 'UPDATE ' . $tableName . ' SET ';
         foreach ($tableData as $columns => $value) {
             $value = (string)$value;
