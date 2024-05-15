@@ -84,7 +84,7 @@ class Customer extends base
         return $wholesale_info['wholesale_tier'];
     }
 
-    public function getData(string $element = null)
+    public function getData(?string $element = null)
     {
         if (empty($element)) {
             return $this->data;
@@ -120,7 +120,7 @@ class Customer extends base
      * @param int|null $idToCheck
      * @return bool
      */
-    public function isSameAsLoggedIn(int $idToCheck = null)
+    public function isSameAsLoggedIn(?int $idToCheck = null)
     {
         if (empty($idToCheck)) {
             $idToCheck = $this->customer_id;
@@ -237,7 +237,7 @@ class Customer extends base
         return (bool)$in_guest_checkout;
     }
 
-    public function customerExistsInDatabase(int $customer_id = null): bool
+    public function customerExistsInDatabase(?int $customer_id = null): bool
     {
         global $db;
 
@@ -515,7 +515,7 @@ class Customer extends base
         return false;
     }
 
-    public function getAddressBookEntries(int $customer_id = null): object
+    public function getAddressBookEntries(?int $customer_id = null): object
     {
         global $db;
 
@@ -535,7 +535,7 @@ class Customer extends base
         return $db->Execute($sql);
     }
 
-    public function getNumberOfAddressBookEntries(int $customer_id = null): int
+    public function getNumberOfAddressBookEntries(?int $customer_id = null): int
     {
         if (empty($customer_id)) {
             $customer_id = $this->customer_id;
@@ -547,7 +547,7 @@ class Customer extends base
         return count($this->getAddressBookEntries());
     }
 
-    public function getFormattedAddressBookList(int $customer_id = null): array
+    public function getFormattedAddressBookList(?int $customer_id = null): array
     {
         global $db;
 

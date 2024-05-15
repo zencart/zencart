@@ -440,7 +440,7 @@ function zen_str_to_numeric($string) {
  * @param string|null $fallback Value to return if failures occur
  * @return string
  */
-function zen_get_translated_config_setting(string $config_key, string $lang_define_prefix = null, string $fallback = null): string
+function zen_get_translated_config_setting(string $config_key, ?string $lang_define_prefix = null, ?string $fallback = null): string
 {
     // Get current configuration_value for the specified key.
     // It would already be defined as a constant at this point, so if not defined, then it's invalid, so we'll return the fallback.
