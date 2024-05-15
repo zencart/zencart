@@ -7,7 +7,7 @@
  */
 
 
-  class item {
+  class item extends base {
       
     /**
      * $_check is used to check the configuration key set up
@@ -106,6 +106,13 @@
         if ($check_flag == false) {
           $this->enabled = false;
         }
+      }
+
+      if ($this->enabled) { 
+          // -----
+          // Give a watching observer the opportunity to disable the overall shipping module.
+          //
+          $this->notify('NOTIFY_SHIPPING_ITEM_UPDATE_STATUS', [], $this->enabled);
       }
     }
 

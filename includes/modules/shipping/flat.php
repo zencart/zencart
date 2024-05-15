@@ -6,7 +6,7 @@
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
 
-  class flat {
+  class flat extends base {
     
     /**
      * $_check is used to check the configuration key set up
@@ -104,6 +104,13 @@
         if ($check_flag == false) {
           $this->enabled = false;
         }
+      }
+
+      if ($this->enabled) { 
+          // -----
+          // Give a watching observer the opportunity to disable the overall shipping module.
+          //
+          $this->notify('NOTIFY_SHIPPING_FLAT_UPDATE_STATUS', [], $this->enabled);
       }
     }
 
