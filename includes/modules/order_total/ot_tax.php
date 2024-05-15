@@ -62,6 +62,7 @@
 
             $taxDescription = '';
             $taxValue = 0;
+            $order->info['tax_sort_order'] = $this->sort_order;
             if (STORE_TAX_DISPLAY_STATUS === '1') {
                 $taxAddress = zen_get_tax_locations();
                 $result = zen_get_all_tax_descriptions($taxAddress['country_id'], $taxAddress['zone_id']);

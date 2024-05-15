@@ -219,7 +219,7 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
         }
     } else {
         // no tax at this level, set rate to 0 and description of unknown
-        $rates_array[TEXT_UNKNOWN_TAX_RATE] = 0;
+        $rates_array = [];
     }
     return $rates_array;
 }

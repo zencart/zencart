@@ -162,13 +162,11 @@ class ot_coupon extends base
                 $order->info['shipping_tax_groups'] = [];
             }
 
-            $order->info['total'] -= $od_amount['total'];
-
-            if (DISPLAY_PRICE_WITH_TAX !== 'true') {
-                $order->info['total'] -= $tax;
+            $order->info['total'] -= DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] + $tax;
+            if (DISPLAY_PRICE_WITH_TAX !== 'true' && !empty($order->info['tax_sort_order']) && $this->sort_order > $order->info['tax_sort_order']) {
+                $od_amount['total'] += $tax;
             }
             $order->info['tax'] -= $tax;
-
             if ($order->info['total'] < 0) {
                 $order->info['total'] = 0;
                 $order->info['tax'] = 0;

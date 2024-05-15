@@ -64,7 +64,7 @@ class ot_shipping extends base
  
         $this->output = [];
         unset($_SESSION['shipping_tax_description']);
-        
+
         if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING === 'true') {
             $pass = false;
             switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {

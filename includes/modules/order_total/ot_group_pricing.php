@@ -95,13 +95,20 @@ class ot_group_pricing {
                 }
             }
         }
-      $order->info['total'] -= DISPLAY_PRICE_WITH_TAX !== 'true' ? $od_amount['total'] + $tax : $od_amount['total'];
-      if ($order->info['total'] < 0) $order->info['total'] = 0;
-      $order->info['tax'] = $order->info['tax'] - $tax;
+        $order->info['total'] -= DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] + $tax;
+        if (DISPLAY_PRICE_WITH_TAX !== 'true' && !empty($order->info['tax_sort_order']) && $this->sort_order > $order->info['tax_sort_order']) {
+            $od_amount['total'] += $tax;
+        }
+        $order->info['tax'] -= $tax;
+        if ($order->info['total'] < 0) {
+            $order->info['total'] = 0;
+            $order->info['tax'] = 0;
+            $order->info['tax_groups'] = [];
+        }
 
-      $this->output[] = array('title' => $this->title . ':',
-      'text' => '-' . $currencies->format($od_amount['total'], true, $order->info['currency'], $order->info['currency_value']),
-      'value' => $od_amount['total']);
+        $this->output[] = array('title' => $this->title . ':',
+        'text' => '-' . $currencies->format($od_amount['total'], true, $order->info['currency'], $order->info['currency_value']),
+        'value' => $od_amount['total']);
 
     }
   }
