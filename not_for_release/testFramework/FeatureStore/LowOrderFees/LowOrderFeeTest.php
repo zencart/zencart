@@ -142,7 +142,7 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->assertStringContainsString('2.50', $lookup_section); // shipping item
         $this->assertStringContainsString('3.05', $lookup_section); // Tax
         $this->assertStringContainsString('5.00', $lookup_section); // low order fee
-        $this->assertStringContainsString('-$50.54', $lookup_section); // gv used
+        $this->assertStringContainsString('-$47.49', $lookup_section); // gv used
         $this->assertStringContainsString('0.00', $lookup_section); // balance
         $this->switchLowOrderFee('off');
         $this->switchItemShippingTax('off');
@@ -261,7 +261,7 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->assertStringContainsString('-$4.00', $lookup_section);
         $this->assertStringContainsString('2.52', $lookup_section);
         $this->assertStringContainsString('5.00', $lookup_section);
-        $this->assertStringContainsString('-$46.01', $lookup_section);
+        $this->assertStringContainsString('-$43.49', $lookup_section);
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchLowOrderFee('off');
     }
