@@ -96,6 +96,7 @@ class ot_group_pricing {
             }
         }
         $order->info['total'] -= DISPLAY_PRICE_WITH_TAX === 'true' ? $od_amount['total'] : $od_amount['total'] + $tax;
+        // When discount module is displayed after tax module, add tax to amount, even when displaying prices tax excluded.
         if (DISPLAY_PRICE_WITH_TAX !== 'true' && !empty($order->info['tax_sort_order']) && $this->sort_order > $order->info['tax_sort_order']) {
             $od_amount['total'] += $tax;
         }
