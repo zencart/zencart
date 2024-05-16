@@ -65,10 +65,10 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
  */
   require($template->get_template_dir('/tpl_modules_additional_images.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_additional_images.php'); ?>
 <!--eof Additional Product Images -->
-</div>
 <?php
   }
 ?>
+</div>
 <div id="pinfo-right" class="group grids">
 <!--bof Product Price block -->
 <!--bof Product details list  -->
