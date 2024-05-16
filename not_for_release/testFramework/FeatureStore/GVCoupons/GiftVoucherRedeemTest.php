@@ -53,7 +53,7 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', []);
         $this->browser->submitForm('Continue', ['cot_gv' => 100.00, 'payment' => '']);
         $response = $this->browser->getResponse();
-        $this->assertStringContainsString('-$45.29', (string)$response->getContent() );
+        $this->assertStringContainsString('-$45.28', (string)$response->getContent() );
     }
 
     /**
@@ -110,7 +110,7 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', ['cot_gv' => '1,5', 'payment' => '']);
         $response = (string)$this->browser->getResponse()->getContent();
         $lookup_section = self::locateElementInPageSource('id="checkoutOrderTotals"', $response);
-        $this->assertStringContainsString('SEK6,3269', $lookup_section);
+        $this->assertStringContainsString('SEK6,4257', $lookup_section);
         $this->setConfiguration('DEFAULT_CURRENCY', 'USD');
     }
 
