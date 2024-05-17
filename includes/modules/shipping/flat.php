@@ -8,7 +8,6 @@
 
 class flat extends ZenShipping
 {
-
     function __construct()
     {
         $this->code = 'flat';
@@ -61,6 +60,13 @@ class flat extends ZenShipping
             if ($check_flag == false) {
                 $this->enabled = false;
             }
+        }
+
+        if ($this->enabled) {
+            // -----
+            // Give a watching observer the opportunity to disable the overall shipping module.
+            //
+            $this->notify('NOTIFY_SHIPPING_FLAT_UPDATE_STATUS', [], $this->enabled);
         }
     }
 

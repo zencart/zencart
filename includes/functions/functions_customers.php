@@ -31,7 +31,7 @@ function zen_customer_greeting(): string
  * @param bool $check_session unused legacy param
  * @return int
  */
-function zen_count_customer_orders(int $customer_id = null, $check_session = true): int
+function zen_count_customer_orders(?int $customer_id = null, $check_session = true): int
 {
     $customer = new Customer($customer_id);
 
@@ -54,7 +54,7 @@ function zen_get_customers_address_primary(int $customer_id): int
  * @param int|null $customer_id
  * @return array
  */
-function zen_get_customer_address_book_entries(int $customer_id = null): array
+function zen_get_customer_address_book_entries(?int $customer_id = null): array
 {
     $customer = new Customer($customer_id);
 
@@ -74,7 +74,7 @@ function zen_get_customers_address_book($customer_id) {
  * @return int
  * @deprecated use Customer::getFormattedAddressBookList or zen_get_customer_address_book_entries()
  */
-function zen_count_customer_address_book_entries(int $customer_id = null, $check_session = true): int
+function zen_count_customer_address_book_entries(?int $customer_id = null, $check_session = true): int
 {
     return count(zen_get_customer_address_book_entries($customer_id));
 }

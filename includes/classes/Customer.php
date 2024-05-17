@@ -7,10 +7,10 @@
 
 class Customer extends base
 {
-    protected $customer_id = null;
-    protected $is_logged_in = false;
-    protected $is_in_guest_checkout = false;
-    protected $data = [];
+    protected ?int $customer_id = null;
+    protected bool $is_logged_in = false;
+    protected bool $is_in_guest_checkout = false;
+    protected array $data = [];
 
     public function __construct($customer_id = null)
     {
@@ -63,11 +63,13 @@ class Customer extends base
         }
         return $wholesaleInfo;
     }
+
     public static function isWholesaleCustomer(): bool
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
         return $wholesale_info['is_wholesale'];
     }
+
     public static function isTaxExempt(): bool
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
@@ -78,13 +80,14 @@ class Customer extends base
 
         return (bool)$is_tax_exempt;
     }
+
     public static function getCustomerWholesaleTier(): int
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
         return $wholesale_info['wholesale_tier'];
     }
 
-    public function getData(string $element = null)
+    public function getData(?string $element = null)
     {
         if (empty($element)) {
             return $this->data;
@@ -97,7 +100,7 @@ class Customer extends base
         return $this->data[$element];
     }
 
-    public function getCurrentCustomerId()
+    public function getCurrentCustomerId(): int
     {
         if (empty($this->customer_id)) {
             $this->setCustomerIdFromSession();
@@ -105,7 +108,7 @@ class Customer extends base
         return (int)$this->customer_id;
     }
 
-    public function setCustomerIdFromSession()
+    public function setCustomerIdFromSession(): int
     {
         if (!empty($_SESSION['customer_id'])) {
             $this->customer_id = (int)$_SESSION['customer_id'];
@@ -115,12 +118,10 @@ class Customer extends base
     }
 
     /**
-     * Return whether the customer is currently logged into the site.
+     * Return whether the indicated customer is currently logged into the site.
      * If no customer is specified, we check the one already assigned to this class
-     * @param int|null $idToCheck
-     * @return bool
      */
-    public function isSameAsLoggedIn(int $idToCheck = null)
+    public function isSameAsLoggedIn(?int $idToCheck = null): bool
     {
         if (empty($idToCheck)) {
             $idToCheck = $this->customer_id;
@@ -131,7 +132,7 @@ class Customer extends base
     }
 
     /**
-     * Return whether some customer is currently logged into the site.
+     * Return whether "any" customer is currently logged into the site.
      */
     public function someoneIsLoggedIn(): bool
     {
@@ -140,7 +141,7 @@ class Customer extends base
         return (bool)$is_logged_in;
     }
 
-    public function doLoginLookupByEmail(string $email)
+    public function doLoginLookupByEmail(string $email): array|false
     {
         global $db;
 
@@ -189,7 +190,7 @@ class Customer extends base
         // enforce db integrity: make sure related record exists
         if (empty($this->data['date_account_created'])) {
             $sql = "INSERT IGNORE INTO " . TABLE_CUSTOMERS_INFO . " (customers_info_id) VALUES (:customersID)";
-            $sql = $db->bindVars($sql, ':customersID',  $customer_id, 'integer');
+            $sql = $db->bindVars($sql, ':customersID', $customer_id, 'integer');
             $db->Execute($sql);
         }
 
@@ -237,7 +238,7 @@ class Customer extends base
         return (bool)$in_guest_checkout;
     }
 
-    public function customerExistsInDatabase(int $customer_id = null): bool
+    public function customerExistsInDatabase(?int $customer_id = null): bool
     {
         global $db;
 
@@ -258,7 +259,7 @@ class Customer extends base
         return $result->RecordCount() > 0;
     }
 
-    protected function load($customer_id = null)
+    protected function load(?int $customer_id = null): bool
     {
         global $db;
 
@@ -365,10 +366,10 @@ class Customer extends base
         return true;
     }
 
-    // -----
-    // Return the count of the current customer's previous orders.
-    //
-    protected function countCustomersPreviousOrders()
+    /**
+     * Return the count of the current customer's previous orders.
+     */
+    protected function countCustomersPreviousOrders(): int
     {
         global $db;
         $orders = $db->Execute(
@@ -379,11 +380,11 @@ class Customer extends base
         return (int)$orders->fields['count'];
     }
 
-    // -----
-    // Retrieve the current customer's lifetime value, the sum of all
-    // previously-placed orders.
-    //
-    protected function getLifetimeValue()
+    /**
+     * Retrieve the current customer's lifetime value,
+     * the sum of all previously-placed orders.
+     */
+    protected function getLifetimeValue(): float|int
     {
         global $db, $currencies;
         $lifetime_value = 0;
@@ -414,7 +415,10 @@ class Customer extends base
         return $lifetime_value;
     }
 
-    protected function getPricingGroupAssociation()
+    /**
+     * Add group-pricing details to the $this->data array
+     */
+    protected function getPricingGroupAssociation(): void
     {
         global $db;
         $sql =
@@ -434,7 +438,10 @@ class Customer extends base
         $this->notify('NOTIFY_CUSTOMER_PRICING_GROUP_LOADED', $this->data);
     }
 
-    protected function setDefaultAddressBookId(int $id)
+    /**
+     * Update customer record in db with default address-book id
+     */
+    protected function setDefaultAddressBookId(int $id): void
     {
         global $db;
         $sql =
@@ -445,7 +452,7 @@ class Customer extends base
         $this->data['customers_default_address_id'] = (int)$id;
     }
 
-    public function isBanned($customer_id = null): bool
+    public function isBanned(?int $customer_id = null): bool
     {
         $banned_status = false;
 
@@ -462,7 +469,7 @@ class Customer extends base
         return $banned_status;
     }
 
-    public function banCustomer()
+    public function banCustomer(): void
     {
         $proceed_with_ban = true;
         $reset_shopping_session_and_basket = true;
@@ -481,7 +488,7 @@ class Customer extends base
         }
     }
 
-    public function setCustomerAuthorizationStatus(int $status)
+    public function setCustomerAuthorizationStatus(int $status): array
     {
         global $db;
         $sql =
@@ -495,7 +502,7 @@ class Customer extends base
         return $this->data;
     }
 
-    public function resetCustomerCart()
+    public function resetCustomerCart(): void
     {
         global $db;
         $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $this->customer_id);
@@ -504,18 +511,23 @@ class Customer extends base
         $this->forceLogout();
     }
 
-    public function forceLogout()
+    public function forceLogout(): bool
     {
+        global $db;
+
         if ($this->isSameAsLoggedIn()) {
-            // @TODO - clean out whos_online for this user's session
+            // clean out whos_online for this user's session
+            $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE customer_id = " . (int)$_SESSION['customer_id']);
+
             // @TODO - kill actual session from sessionhandler too? (eg: really boot them out)
+
             unset($_SESSION['customer_id']);
             return true;
         }
         return false;
     }
 
-    public function getAddressBookEntries(int $customer_id = null): object
+    public function getAddressBookEntries(?int $customer_id = null): object
     {
         global $db;
 
@@ -535,7 +547,7 @@ class Customer extends base
         return $db->Execute($sql);
     }
 
-    public function getNumberOfAddressBookEntries(int $customer_id = null): int
+    public function getNumberOfAddressBookEntries(?int $customer_id = null): int
     {
         if (empty($customer_id)) {
             $customer_id = $this->customer_id;
@@ -547,7 +559,7 @@ class Customer extends base
         return count($this->getAddressBookEntries());
     }
 
-    public function getFormattedAddressBookList(int $customer_id = null): array
+    public function getFormattedAddressBookList(?int $customer_id = null): array
     {
         global $db;
 
@@ -672,7 +684,6 @@ class Customer extends base
 
     /**
      * Used catalog-side in the My Account page(s)
-     * @return int
      */
     public function getNumberOfOrders(): int
     {
@@ -698,7 +709,7 @@ class Customer extends base
         return $result->fields['total'];
     }
 
-    public function setPassword(string $new_password)
+    public function setPassword(string $new_password): void
     {
         global $db;
         $sql =
@@ -722,7 +733,7 @@ class Customer extends base
      * @param bool $delete_reviews
      * @param bool $forget_only Instead of delete, simply obfuscate address/name data
      */
-    public function delete(bool $delete_reviews = false, $forget_only = false)
+    public function delete(bool $delete_reviews = false, bool $forget_only = false): void
     {
         global $db;
 
@@ -730,7 +741,8 @@ class Customer extends base
             $reviews = $db->Execute(
                 "SELECT reviews_id
                    FROM " . TABLE_REVIEWS . "
-                  WHERE customers_id = " . (int)$this->customer_id);
+                  WHERE customers_id = " . (int)$this->customer_id
+            );
             foreach ($reviews as $review) {
                 $db->Execute(
                     "DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
@@ -827,7 +839,7 @@ class Customer extends base
         zen_record_admin_activity('Customer with customer ID ' . (int)$this->customer_id . ' deleted.', 'warning');
     }
 
-    public function create(array $data)
+    public function create(array $data): array
     {
         global $db;
 
@@ -852,11 +864,11 @@ class Customer extends base
         if (CUSTOMERS_REFERRAL_STATUS == '2' && !empty($data['customers_referral'])) {
             $sql_data_array[] = ['fieldName' => 'customers_referral', 'value' => $data['customers_referral'], 'type' => 'stringIgnoreNull'];
         }
-        if (ACCOUNT_GENDER == 'true') {
+        if (ACCOUNT_GENDER === 'true') {
             $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
-        if (ACCOUNT_DOB == 'true') {
-            $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' =>(empty($data['dob']) || $data['dob'] === '0001-01-01 00:00:00') ? '0001-01-01 00:00:00' : zen_date_raw($data['dob']), 'type' => 'date'];
+        if (ACCOUNT_DOB === 'true') {
+            $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' => (empty($data['dob']) || $data['dob'] === '0001-01-01 00:00:00') ? '0001-01-01 00:00:00' : zen_date_raw($data['dob']), 'type' => 'date'];
         }
 
         $db->perform(TABLE_CUSTOMERS, $sql_data_array);
@@ -877,17 +889,17 @@ class Customer extends base
             ['fieldName' => 'entry_country_id', 'value' => $data['country'], 'type' => 'integer'],
         ];
 
-        if (ACCOUNT_GENDER == 'true') {
+        if (ACCOUNT_GENDER === 'true') {
             $sql_data_array[] = ['fieldName' => 'entry_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
-        if (ACCOUNT_COMPANY == 'true') {
+        if (ACCOUNT_COMPANY === 'true') {
             $sql_data_array[] = ['fieldName' => 'entry_company', 'value' => $data['company'], 'type' => 'stringIgnoreNull'];
         }
-        if (ACCOUNT_SUBURB == 'true') {
+        if (ACCOUNT_SUBURB === 'true') {
             $sql_data_array[] = ['fieldName' => 'entry_suburb', 'value' => $data['suburb'], 'type' => 'stringIgnoreNull'];
         }
 
-        if (ACCOUNT_STATE == 'true') {
+        if (ACCOUNT_STATE === 'true') {
             if ($data['zone_id'] > 0) {
                 $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => $data['zone_id'], 'type' => 'integer'];
                 $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => '', 'type' => 'stringIgnoreNull'];

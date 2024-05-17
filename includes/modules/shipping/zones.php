@@ -123,6 +123,15 @@ class zones extends ZenShipping
         // CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
         $this->num_zones = 3;
 
+
+        if ($this->enabled) {
+            // -----
+            // Give a watching observer the opportunity to disable the overall shipping module.
+            //
+            $this->notify('NOTIFY_SHIPPING_ZONES_UPDATE_STATUS', [], $this->enabled);
+        }
+
+
         if (IS_ADMIN_FLAG === true) {
             // build in admin only additional zones if missing in the configuration table due to customization of default $this->num_zones = 3
             global $db;

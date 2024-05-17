@@ -9,7 +9,6 @@
 //
 class freeshipper extends ZenShipping
 {
-
     function __construct()
     {
         $this->code = 'freeshipper';
@@ -62,6 +61,13 @@ class freeshipper extends ZenShipping
             if ($check_flag == false) {
                 $this->enabled = false;
             }
+        }
+
+        if ($this->enabled) {
+            // -----
+            // Give a watching observer the opportunity to disable the overall shipping module.
+            //
+            $this->notify('NOTIFY_SHIPPING_FREESHIPPER_UPDATE_STATUS', [], $this->enabled);
         }
     }
 
