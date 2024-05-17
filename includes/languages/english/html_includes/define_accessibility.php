@@ -1,3 +1,6 @@
-<p><strong>Accessibility Sample Text ...</strong></p>
-<p>This section of text is from the Define Pages Editor located under Tools in the Admin.</p>
-<p>To remove this section of the text, delete it from the Define Pages Editor.</p>
+We are committed to keeping our site accessible to everyone.
+We welcome feedback on ways to improve this site's accessibility.
+<br><br>
+Please call or email us if you need help placing an order.  Thank you!
+<br><br>
+
