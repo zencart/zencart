@@ -551,19 +551,21 @@
         $email_html = (EMAIL_USE_HTML == 'true') ? zen_db_prepare_input_html_safe($email_html) : zen_db_prepare_input('HTML disabled in admin');
         $email_text = zen_db_prepare_input($email_text);
         $module = zen_db_prepare_input($module);
-        $error_msgs = zen_db_prepare_input($error_msgs);
+        $error_msgs = empty($error_msgs) ? 'NULL' : zen_db_prepare_input($error_msgs);
 
-        $db->Execute("INSERT INTO " . TABLE_EMAIL_ARCHIVE . "
-                  (email_to_name, email_to_address, email_from_name, email_from_address, email_subject, email_html, email_text, date_sent, module)
-                  VALUES ('" . zen_db_input($to_name) . "',
-                          '" . zen_db_input($to_email_address) . "',
-                          '" . zen_db_input($from_email_name) . "',
-                          '" . zen_db_input($from_email_address) . "',
-                          '" . zen_db_input($email_subject) . "',
-                          '" . zen_db_input($email_html) . "',
-                          '" . zen_db_input($email_text) . "',
-                          now() ,
-                          '" . zen_db_input($module) . "')");
+        $db->perform(TABLE_EMAIL_ARCHIVE, [
+            [ 'fieldName' => 'email_to_name', 'value' => $to_name, 'type' => 'string' ],
+            [ 'fieldName' => 'email_to_address', 'value' => $to_email_address, 'type' => 'string' ],
+            [ 'fieldName' => 'email_from_name', 'value' => $from_email_name, 'type' => 'string' ],
+            [ 'fieldName' => 'email_from_address', 'value' => $from_email_address, 'type' => 'string' ],
+            [ 'fieldName' => 'email_subject', 'value' => $email_subject, 'type' => 'string' ],
+            [ 'fieldName' => 'email_html', 'value' => $email_html, 'type' => 'string' ],
+            [ 'fieldName' => 'email_text', 'value' => $email_text, 'type' => 'string' ],
+            [ 'fieldName' => 'date_sent', 'value' => 'now()', 'type' => 'passthru' ],
+            [ 'fieldName' => 'module', 'value' => $module, 'type' => 'string' ],
+            [ 'fieldName' => 'errorinfo', 'value' => $error_msgs, 'type' => 'string' ],
+        ]);
+
         return $db;
     }
 
