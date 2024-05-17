@@ -1,15 +1,52 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte  Modified in v2.0.1 $
+ *
+ * @var notifier $zco_notifier
  */
 
 if (empty($currencies)) {
     require_once DIR_WS_CLASSES . 'currencies.php';
     $currencies = new currencies();
 }
+
+$widgets = [];
+$widgets[] = ['column' => 1, 'sort' => 10, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/BaseStatisticsDashboardWidget.php'];
+$widgets[] = ['column' => 1, 'sort' => 15, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/SpecialsDashboardWidget.php'];
+$widgets[] = ['column' => 1, 'sort' => 20, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/OrderStatusDashboardWidget.php'];
+$widgets[] = ['column' => 2, 'sort' => 10, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/RecentCustomersDashboardWidget.php'];
+$widgets[] = ['column' => 2, 'sort' => 15, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/WhosOnlineDashboardWidget.php'];
+$widgets[] = ['column' => 2, 'sort' => 20, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/TrafficDashboardWidget.php'];
+$widgets[] = ['column' => 3, 'sort' => 10, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/RecentOrdersDashboardWidget.php'];
+$widgets[] = ['column' => 3, 'sort' => 15, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/SalesReportDashboardWidget.php'];
+
+$zco_notifier->notify('NOTIFY_ADMIN_DASHBOARD_WIDGETS', null, $widgets);
+
+// Prepare for sorting: ensure each has its dependent columns, so multisort doesn't complain about inconsistent array sizes
+foreach ($widgets as $key => $widget) {
+    if (!isset($widget['sort'])) {
+        $widgets[$key]['sort'] = 999;
+    }
+    if (!isset($widget['column'])) {
+        $widgets[$key]['column'] = 0; // 0-unspecified, will be ignored
+    }
+}
+
+// Sort in advance so the template can simply loop over each column without re-sorting.
+array_multisort(array_column($widgets, 'column'), SORT_ASC, array_column($widgets, 'sort'), SORT_ASC, $widgets);
+
+// Path validation (catch invalid path errors) and security LFI check (prevent loading files from outside)
+$acceptedPath = realPath(DIR_FS_CATALOG);
+foreach ($widgets as $key => $widget) {
+    $realPath = realpath($widget['path']);
+    if ($realPath === false || !str_starts_with($realPath, $acceptedPath) || !file_exists($widget['path'])) {
+        unset($widgets[$key]); // Skip if it's not under the intended directory or doesn't exist
+    }
+}
+
 
 ?>
 <!doctype html>
@@ -39,41 +76,30 @@ if (empty($currencies)) {
     ?>
 
     <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/BaseStatisticsDashboardWidget.php';
-        ?>
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/SpecialsDashboardWidget.php';
-        ?>
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/OrderStatusDashboardWidget.php';
-        ?>
-
+    <?php
+    foreach ($widgets as $widget) {
+        if ($widget['column'] === 1 && !empty($widget['visible'])) {
+            include $widget['path'];
+        }
+    }
+    ?>
     </div>
     <div id="coltwo" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/RecentCustomersDashboardWidget.php';
-        ?>
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/WhosOnlineDashboardWidget.php';
-        ?>
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/TrafficDashboardWidget.php';
-        ?>
-
+    <?php
+    foreach ($widgets as $widget) {
+        if ($widget['column'] === 2 && !empty($widget['visible'])) {
+            include $widget['path'];
+        }
+    }
+    ?>
     </div>
     <div id="colthree" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/RecentOrdersDashboardWidget.php';
-        ?>
-        <?php
-        include DIR_WS_MODULES . 'dashboard_widgets/SalesReportDashboardWidget.php';
-        ?>
-
+    <?php
+    foreach ($widgets as $widget) {
+        if ($widget['column'] === 3 && !empty($widget['visible'])) {
+            include $widget['path'];
+        }
+    }
+    ?>
     </div>
 
