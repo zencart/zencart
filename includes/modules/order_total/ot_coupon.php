@@ -46,7 +46,7 @@ class ot_coupon extends base
      * $deduction amount of deduction calculated/afforded while being applied to an order
      * @var float|null
      */
-    public $deduction;
+    protected $deduction;
     /**
      * $description is a soft name for this order total method
      * @var string
@@ -162,7 +162,7 @@ class ot_coupon extends base
             }
 
             $order->info['total'] -= $od_amount['total'];
-            $order->info['option_modules']['coupon_amount'] = - $od_amount['total'];
+            $order->info['option_modules'][$this->code] = - $od_amount['total'];
 
             if (DISPLAY_PRICE_WITH_TAX != 'true') {
                 $order->info['total'] -= $tax;

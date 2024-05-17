@@ -125,7 +125,7 @@ class ot_loworderfee
                 if (DISPLAY_PRICE_WITH_TAX === 'true') {
                     $low_order_fee += zen_calculate_tax($low_order_fee, $tax);
                 }
-                $order->info['option_modules']['lord_fee'] = $low_order_fee;
+                $order->info['option_modules'][$this->code] = $low_order_fee;
 
                 $this->output[] = [
                     'title' => $this->title . ':',

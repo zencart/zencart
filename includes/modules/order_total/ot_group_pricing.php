@@ -34,7 +34,7 @@ class ot_group_pricing {
      * $deduction amount of deduction calculated/afforded while being applied to an order
      * @var float|null
      */
-    public $deduction;
+    protected $deduction;
     /**
      * $description is a soft name for this order total method
      * @var string 
@@ -103,7 +103,7 @@ class ot_group_pricing {
       if (DISPLAY_PRICE_WITH_TAX === 'true') {
         $od_amount['total'] += $tax;
       }
-      $order->info['option_modules']['group_discount_amount'] = - $od_amount['total'];
+      $order->info['option_modules'][$this->code] = - $od_amount['total'];
       if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
       if ($order->info['total'] < 0) $order->info['total'] = 0;
       $order->info['tax'] = $order->info['tax'] - $tax;

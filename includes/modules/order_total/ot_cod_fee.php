@@ -122,7 +122,7 @@
               $cod_cost += zen_calculate_tax($cod_cost, $tax);
             }
           }
-          $order->info['option_modules']['cod_fee'] = $cod_cost;
+          $order->info['option_modules'][$this->code] = $cod_cost;
 
           $this->output[] = array('title' => $this->title . ':',
                                   'text' => $currencies->format($cod_cost, true,  $order->info['currency'], $order->info['currency_value']),
