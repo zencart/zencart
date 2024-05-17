@@ -36,7 +36,7 @@ TRUNCATE TABLE db_cache;
 
 #PROGRESS_FEEDBACK:!TEXT=Adding error logging to email archive ...
 # Add column to store any errorinfo returned from phpmailer.
-ALTER TABLE ADD ALTER TABLE email_archive ADD COLUMN (errorinfo TEXT NULL);
+ALTER TABLE email_archive ADD COLUMN errorinfo TEXT DEFAULT NULL;
 
 
 
