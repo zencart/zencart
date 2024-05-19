@@ -12,6 +12,9 @@ if (isset($module)) {
   unset($module);
 }
 
+$whois_provider_url = 'https://ipdata.co/%s?utm_source=zen_cart';
+//$whois_provider_url = 'https://whois.domaintools.com/%s';
+
 // Override instructions in:
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 $quick_view_popover_enabled = $quick_view_popover_enabled ?? false;
@@ -620,12 +623,19 @@ if (!empty($action) && $order_exists === true) {
                 <td><strong><?php echo TEXT_INFO_IP_ADDRESS; ?></strong></td>
                 <?php
                 if (!empty($order->info['ip_address'])) {
-                  $lookup_ip = substr($order->info['ip_address'], 0, strpos($order->info['ip_address'], ' '));
-                  $whois_url = 'https://ipdata.co/' . $lookup_ip . '?utm_source=zen_cart';
-                  //$whois_url = 'https://whois.domaintools.com/' . $lookup_ip;
-                  $zco_notifier->notify('ADMIN_ORDERS_IP_LINKS', $lookup_ip, $whois_url);
+                  $ips = explode(' - ', $order->info['ip_address']);
+                  $lookup_ip = $ips[0];
+                  $whois_url = sprintf($whois_provider_url, $lookup_ip);
+                  $lookup_ip2 = $ips[1] ?? '';
+                  $whois_url2 = empty($lookup_ip2) ? '' : sprintf($whois_provider_url, $lookup_ip2);
+                  $zco_notifier->notify('ADMIN_ORDERS_IP_LINKS', $lookup_ip, $whois_url, $whois_provider_url, $lookup_ip2, $whois_url2);
                   ?>
-                  <td class="noprint"><a href="<?php echo $whois_url; ?>" rel="noreferrer noopener" target="_blank"><?php echo $order->info['ip_address']; ?></a></td>
+                  <td class="noprint">
+                      <a href="<?= $whois_url ?>" rel="noreferrer noopener" target="_blank"><?= $lookup_ip ?></a>
+                  <?php if (!empty($lookup_ip2) && $lookup_ip !== $lookup_ip2) { ?> -
+                      <a href="<?= $whois_url2 ?>" rel="noreferrer noopener" target="_blank"><?= $lookup_ip2 ?></a>
+                  <?php } ?>
+                  </td>
                 <?php } else { ?>
                   <td><?php echo TEXT_UNKNOWN; ?></td>
                 <?php } ?>
