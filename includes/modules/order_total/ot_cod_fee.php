@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2002 Thomas Plänkers http://www.oscommerce.at
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2024 Mar 21 Modified in v2.0.0 $
+ * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
  */
 /**
  * COD-FEE Order Totals Module
