@@ -123,15 +123,6 @@ class zones extends ZenShipping
         // CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
         $this->num_zones = 3;
 
-
-        if ($this->enabled) {
-            // -----
-            // Give a watching observer the opportunity to disable the overall shipping module.
-            //
-            $this->notify('NOTIFY_SHIPPING_ZONES_UPDATE_STATUS', [], $this->enabled);
-        }
-
-
         if (IS_ADMIN_FLAG === true) {
             // build in admin only additional zones if missing in the configuration table due to customization of default $this->num_zones = 3
             global $db;
@@ -156,6 +147,27 @@ class zones extends ZenShipping
                     $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . "  (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i . "', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
                 }
             }
+        }
+        $this->update_status();
+    }
+
+    /**
+     * Perform various checks to see whether this module should be visible
+     */
+    function update_status()
+    {
+        if (!$this->enabled) {
+            return;
+        }
+        if (IS_ADMIN_FLAG === true) {
+            return;
+        }
+
+        if ($this->enabled) {
+            // -----
+            // Give a watching observer the opportunity to disable the overall shipping module.
+            //
+            $this->notify('NOTIFY_SHIPPING_ZONES_UPDATE_STATUS', [], $this->enabled);
         }
     }
 
