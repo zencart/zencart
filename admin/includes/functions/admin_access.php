@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 22 Modified in v2.0.0 $
+ * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
  */
 
 // The admin login slamming threshold is the minimum number of failed logins before an email is sent to the storeowner reporting ongoing failed logins
