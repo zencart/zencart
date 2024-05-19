@@ -97,7 +97,7 @@ class PageLoader
     {
         foreach ($this->installedPlugins as $plugin) {
             $checkDir = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/templates/default/' . $templateDir . '/';
-            if (file_exists($checkDir . $templateCode )) {
+            if ($this->fileSystem->fileExistsInDirectory($checkDir, preg_replace('/\//', '', $templateCode))) {
                 return $checkDir;
             }
         }
