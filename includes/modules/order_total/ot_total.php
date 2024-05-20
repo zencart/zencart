@@ -61,7 +61,7 @@
       }
       $modules_total += DISPLAY_PRICE_WITH_TAX !== 'true' ? $currencies->value($order->info['tax']) : 0;
       $lost_penny = substr(strval(zen_round(abs($modules_total - $currencies->value($order->info['total'])), $currencies->get_decimal_places($_SESSION['currency']))), -1);
-      $order->info['total'] = ($lost_penny == '1' && $order->info['total'] > 0) ? $currencies->value($modules_total, true, DEFAULT_CURRENCY) : $order->info['total'];
+      $order->info['total'] = ($lost_penny === '1' && $order->info['total'] > 0) ? $currencies->value($modules_total, true, DEFAULT_CURRENCY) : $order->info['total'];
       // eof lost penny compensation
       $this->output[] = array('title' => $this->title . ':',
                               'text' => $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value']),
