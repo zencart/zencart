@@ -7,47 +7,66 @@
 
 namespace Zencart\Traits;
 
-use  Zencart\Events\EventDto;
+use Zencart\Events\EventDto;
 
 trait NotifierManager
 {
     /**
      * @var array of aliases
      */
-    private $observerAliases = ['NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE'];
+    private array $observerAliases = [
+        // this one is an alias to accommodate an old misspelling:
+        'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE',
+    ];
 
-    public function getRegisteredObservers()
+    public function getRegisteredObservers(): array
     {
         return EventDto::getInstance()->getObservers();
     }
 
     /**
-     * method to notify observers that an event has occurred in the notifier object
+     * Notify observers that an event has occurred in the notifier object
+     * ("Publish" in pub/sub terminology, or "fire event" in "event listener" terminology)
+     *
      * Can optionally pass parameters and variables to the observer, useful for passing stuff which is outside of the 'scope' of the observed class.
      * Any of params 2-9 can be passed by reference, and will be updated in the calling location if the observer "update" function also receives them by reference
      *
-     * @param string $eventID The event ID to notify.
-     * @param mixed $param1 passed as value only.
-     * @param mixed $param2 passed by reference.
-     * @param mixed $param3 passed by reference.
-     * @param mixed $param4 passed by reference.
-     * @param mixed $param5 passed by reference.
-     * @param mixed $param6 passed by reference.
-     * @param mixed $param7 passed by reference.
-     * @param mixed $param8 passed by reference.
-     * @param mixed $param9 passed by reference.
+     * @param string $eventID The event ID to notify/publish.
+     * @param mixed|array|null $param1 passed as value only. Usually an array of data, or just a variable, or null if unused.
+     * @param mixed|null $param2 passed by reference.
+     * @param mixed|null $param3 passed by reference.
+     * @param mixed|null $param4 passed by reference.
+     * @param mixed|null $param5 passed by reference.
+     * @param mixed|null $param6 passed by reference.
+     * @param mixed|null $param7 passed by reference.
+     * @param mixed|null $param8 passed by reference.
+     * @param mixed|null $param9 passed by reference.
      *
      * NOTE: The $param1 is not received-by-reference, but params 2-9 are.
      * NOTE: The $param1 value CAN be an array, and is sometimes typecast to be an array, but can also safely be a string or int etc if the notifier sends such and the observer class expects same.
      */
-    function notify($eventID, $param1 = array(), &$param2 = null, &$param3 = null, &$param4 = null, &$param5 = null, &$param6 = null, &$param7 = null, &$param8 = null, &$param9 = null)
+    public function notify(
+        string $eventID,
+        mixed $param1 = [],
+        mixed &$param2 = null,
+        mixed &$param3 = null,
+        mixed &$param4 = null,
+        mixed &$param5 = null,
+        mixed &$param6 = null,
+        mixed &$param7 = null,
+        mixed &$param8 = null,
+        mixed &$param9 = null
+    ): void
     {
+        // first log that the notifier was triggered:
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
         $observers = $this->getRegisteredObservers();
+
         if (empty($observers)) {
             return;
         }
+
         foreach ($observers as $key => $obs) {
             // identify the event
             $actualEventId = $eventID;
@@ -66,7 +85,7 @@ trait NotifierManager
                 $actualEventId = $obs['eventID'];
             }
             // check whether the looped observer's eventID is a match to the event or alias
-            if (!in_array($obs['eventID'], $matchMap)) {
+            if (!in_array($obs['eventID'], $matchMap, true)) {
                 continue;
             }
 
@@ -82,7 +101,7 @@ trait NotifierManager
             $methodsToCheck[] = 'update' . \base::camelize(strtolower($actualEventId), true);
             $methodsToCheck[] = 'update';
 
-            foreach($methodsToCheck as $method) {
+            foreach ($methodsToCheck as $method) {
                 if (method_exists($obs['obs'], $method)) {
                     $obs['obs']->{$method}($this, $actualEventId, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
                     continue 2;
@@ -94,7 +113,7 @@ trait NotifierManager
         }
     }
 
-    protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9)
+    protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9): void
     {
         if (!defined('NOTIFIER_TRACE') || empty(NOTIFIER_TRACE) || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
             return;
@@ -102,18 +121,20 @@ trait NotifierManager
         global $zcDate;
 
         $file = DIR_FS_LOGS . '/notifier_trace.log';
-        $paramArray = (is_array($param1) && count($param1) == 0) ? array() : array('param1' => $param1);
+        $paramArray = (is_array($param1) && count($param1) === 0) ? [] : ['param1' => $param1];
         for ($i = 2; $i < 10; $i++) {
             $param_n = "param$i";
             if ($$param_n !== null) {
                 $paramArray[$param_n] = $$param_n;
             }
         }
+
         global $this_is_home_page, $PHP_SELF;
-        $main_page = (isset($this_is_home_page) && $this_is_home_page)
-            ? 'index-home'
-            : ((IS_ADMIN_FLAG) ? basename($PHP_SELF)
-                : (isset($_GET['main_page']) ? $_GET['main_page'] : ''));
+        $main_page = (IS_ADMIN_FLAG) ? basename($PHP_SELF) : ($_GET['main_page'] ?? '');
+        if (!empty($this_is_home_page)) {
+            $main_page = 'index-home';
+        }
+
         $output = '';
         if (count($paramArray)) {
             $output = ', ';
@@ -126,16 +147,22 @@ trait NotifierManager
         error_log($zcDate->output("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
 
-    private function eventIdHasAlias($eventId)
+    private function eventIdHasAlias($eventId): bool
     {
-        if (array_key_exists($eventId, $this->observerAliases)) {
-            return true;
-        }
-        return false;
+        return array_key_exists($eventId, $this->observerAliases);
     }
 
-    private function substituteAlias($eventId)
+    private function substituteAlias($eventId): bool|int|string
     {
-        return array_search($eventId, $this->observerAliases);
+        return array_search($eventId, $this->observerAliases, true);
+    }
+
+    public function registerObserverAlias(string $oldEventId, string $newEventId): void
+    {
+        if ($this->eventIdHasAlias($oldEventId)) {
+            return;
+        }
+
+        $this->observerAliases[$oldEventId] = $newEventId;
     }
 }
