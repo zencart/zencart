@@ -29,7 +29,7 @@ class CouponValidation
 
         $product = $db->Execute($product_query);
 
-        if (str_starts_with($product->fields['products_model'], 'GIFT')) {
+        if (str_starts_with($product->fields['products_model'] ?? '', 'GIFT')) {
             return false;
         }
 

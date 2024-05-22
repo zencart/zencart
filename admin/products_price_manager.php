@@ -817,6 +817,10 @@ if (!empty($action)) {
                   <div class="col-sm-9 col-md-6 text-center">
                     <?php
 // Specials cannot be added to Gift Vouchers when false
+                    // prevent log on null 
+                    if (empty($pInfo->products_model)) { 
+                        $pInfo->products_model = ''; 
+                    }
                     if ((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true'))) {
                       ?>
                       <a href="<?php echo zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . (isset($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . '&go_back=ON' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa-solid fa-plus"></i> <?php echo IMAGE_INSTALL_SPECIAL; ?></a>

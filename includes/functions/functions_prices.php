@@ -29,7 +29,7 @@ function zen_get_products_special_price($product_id, $specials_price_only = fals
         $special_price = false;
     }
 
-    if (strpos($product->fields['products_model'], 'GIFT') === 0) {    //Never apply a salededuction to Ian Wilson's Giftvouchers
+    if (strpos(($product->fields['products_model'] ?? ''), 'GIFT') === 0) {    //Never apply a salededuction to Ian Wilson's Giftvouchers
         if (!empty($special_price)) {
             return $special_price;
         }

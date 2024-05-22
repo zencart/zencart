@@ -274,7 +274,7 @@ class ot_gv {
         //
         $only_gvs_in_order = true;
         foreach ($order->products as $next_product) {
-            if (str_starts_with($next_product['model'], 'GIFT') === false) {
+            if (str_starts_with($next_product['model'] ?? '', 'GIFT') === false) {
                 $only_gvs_in_order = false;
                 break;
             }
