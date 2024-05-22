@@ -752,6 +752,7 @@ CREATE TABLE email_archive (
   email_text text NOT NULL,
   date_sent datetime NOT NULL default '0001-01-01 00:00:00',
   module varchar(64) NOT NULL default '',
+  errorinfo TEXT DEFAULT NULL,
   PRIMARY KEY  (archive_id),
   KEY idx_email_to_address_zen (email_to_address),
   KEY idx_module_zen (module)
