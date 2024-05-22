@@ -689,7 +689,7 @@ function zen_get_products_allow_add_to_cart($product_id)
     $allow_add_to_cart = !$product_query_results->EOF && $product_query_results->fields['allow_add_to_cart'] !== 'N';
 
     // If product is encoded as GV but GV feature is turned off, disallow add-to-cart
-    if ($allow_add_to_cart === true && strpos($product_query_results->fields['products_model'], 'GIFT') === 0) {
+    if ($allow_add_to_cart === true && strpos(($product_query_results->fields['products_model'] ?? ''), 'GIFT') === 0) {
         if (!defined('MODULE_ORDER_TOTAL_GV_STATUS') || MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
             $allow_add_to_cart = false;
         }
