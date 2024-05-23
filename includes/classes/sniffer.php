@@ -122,4 +122,15 @@ class sniffer extends base
         $result = $db->Execute($sql);
         return (int)$result->fields['count'] !== 0;
     }
+
+    public function indexExists(string $table_name, string $index_name): bool
+    {
+        global $db;
+
+        $check = $db->Execute(
+            'SHOW INDEX FROM `' . $db->prepare_input($table_name) . '` ' .
+            "WHERE `Key_name` = '" . $db->prepare_input($index_name) . "'"
+        );
+        return !$check->EOF;
+    }
 }
