@@ -49,7 +49,7 @@ function zen_get_products_special_price($product_id, $specials_price_only = fals
     $sale = zen_get_sale_for_category_and_price($category, $product_price);
 
     // -----
-    // Give an observer the opportunity to add functionality for the salemaker sales, 
+    // Give an observer the opportunity to add functionality for the salemaker sales,
     // perhaps enabling linked products to be included.
     //
     // If the 'sale' price is to be overridden, an observer sets the $sale variable
@@ -110,7 +110,7 @@ function zen_get_products_special_price($product_id, $specials_price_only = fals
             return number_format($sale_product_price, 4, '.', '');
             break;
         case 1:
-            return number_format($special_price, 4, '.', '');
+            return number_format(convertToFloat($special_price), 4, '.', '');
             break;
         case 2:
             return number_format($sale_special_price, 4, '.', '');
@@ -1090,7 +1090,7 @@ function zen_get_products_sale_discount_type($product_id = false, $categories_id
     $results = $db->Execute($sql);
     foreach ($results as $result) {
        if (empty($result['sale_categories_all'])) {
-          continue; 
+          continue;
        }
         $categories = explode(',', $result['sale_categories_all']);
         foreach ($categories as $key => $value) {
@@ -1561,7 +1561,7 @@ function zen_update_products_price_sorter($product_id)
 function zen_parse_salemaker_categories($categories_csv)
 {
     if (empty($categories_csv)) {
-       return []; 
+       return [];
     }
     $clist_array = explode(',', $categories_csv);
     return array_unique($clist_array);
