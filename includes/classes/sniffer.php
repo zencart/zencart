@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * It is also used by plugins which add additional fields to the database, to check which changes are needed before making them.
  *
  */
-class sniffer extends base
+class sniffer
 {
     /**
      * Check to see if the requested table exists
