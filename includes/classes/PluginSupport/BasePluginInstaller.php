@@ -94,13 +94,22 @@ class BasePluginInstaller
         $this->dbConn->execute($sql);
     }
 
-
     protected function loadInstallerLanguageFile($file)
     {
         $lng = $_SESSION['language'];
         $filename = $this->pluginDir . '/Installer/languages/' . $lng . '/' . $file;
         if (file_exists($filename)) {
-            require_once($filename);
+            require_once $filename;
+            return;
+        }
+
+        if ($lng === 'english') {
+            return;
+        }
+
+        $filename = $this->pluginDir . '/Installer/languages/english/' . $file;
+        if (file_exists($filename)) {
+            require_once $filename;
         }
     }
 
