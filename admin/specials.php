@@ -227,7 +227,7 @@ if (!empty($action)) {
         if ($check_product->RecordCount() < 1) {// check for valid PID
           $skip_special = true;
           $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_NO_EXIST, (int)$_POST['pre_add_products_id']), 'caution');
-        } elseif ((!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL === 'false') && (substr($check_product->fields['products_model'], 0, 4) === 'GIFT')) { // check for PID as a gift voucher
+        } elseif ((!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL === 'false') && (substr($check_product->fields['products_model'] ?? '', 0, 4) === 'GIFT')) { // check for PID as a gift voucher
           $skip_special = true;
           $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_GIFT, (int)$_POST['pre_add_products_id']), 'caution');
         }
