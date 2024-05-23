@@ -216,7 +216,7 @@ function zen_get_products_display_price($product_id)
             if ($display_sale_price) {
                 if (SHOW_SALE_DISCOUNT === '1') {
                     if ($display_normal_price != 0) {
-                        $show_discount_amount = number_format(100 - (($display_sale_price / $display_normal_price) * 100), SHOW_SALE_DISCOUNT_DECIMALS);
+                        $show_discount_amount = number_format(100 - (($display_sale_price / $display_normal_price) * 100), (int)SHOW_SALE_DISCOUNT_DECIMALS);
                     } else {
                         $show_discount_amount = '';
                     }
