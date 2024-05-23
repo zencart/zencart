@@ -5,7 +5,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 08 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte  Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -27,7 +27,7 @@ class sniffer extends base
     public function table_exists(string $table_name): bool
     {
         global $db;
-        $sql = "SHOW TABLES like '" . $table_name . "'";
+        $sql = "SHOW TABLES LIKE '" . $db->prepare_input($table_name) . "'";
         $result = $db->Execute($sql);
         return $result->RecordCount() > 0;
     }
@@ -38,7 +38,7 @@ class sniffer extends base
     public function field_exists(string $table_name, string $field_name): bool
     {
         global $db;
-        $sql = "SHOW FIELDS FROM " . $table_name;
+        $sql = "SHOW FIELDS FROM " . $db->prepare_input($table_name);
         $result = $db->Execute($sql);
         foreach ($result as $record) {
             if ($record['Field'] === $field_name) {
@@ -55,7 +55,7 @@ class sniffer extends base
     public function field_type(string $table_name, string $field_name, string $field_type, bool $return_found = false): bool|string
     {
         global $db;
-        $sql = "SHOW FIELDS FROM " . $table_name;
+        $sql = "SHOW FIELDS FROM " . $db->prepare_input($table_name);
         $result = $db->Execute($sql);
         foreach($result as $record) {
             if ($record['Field'] === $field_name) {
@@ -83,9 +83,9 @@ class sniffer extends base
     {
         global $db;
         $sql = 'SELECT COUNT(*) AS count FROM :table_name WHERE :key_name = :key_value;';
-        $sql = $db->bindVars($sql, ':key_name', $key_name, 'passthru');
+        $sql = $db->bindVars($sql, ':key_name', $key_name, 'noquotestring');
         $sql = $db->bindVars($sql, ':key_value', $key_value, 'integer');
-        $sql = $db->bindVars($sql, ':table_name', $table_name, 'passthru');
+        $sql = $db->bindVars($sql, ':table_name', $table_name, 'noquotestring');
         $result = $db->Execute($sql);
         return (int)$result->fields['count'] !== 0;
     }
@@ -110,7 +110,7 @@ class sniffer extends base
                 static function ($key, $value) {
                     global $db;
                     $bit = ':key = :value';
-                    $bit = $db->bindVars($bit, ':key', $key, 'passthru');
+                    $bit = $db->bindVars($bit, ':key', $key, 'noquotestring');
                     $bit = $db->bindVars($bit, ':value', $value, 'integer');
                     return $bit;
                 },
@@ -118,7 +118,7 @@ class sniffer extends base
                 $key_values
             )
         );
-        $sql = $db->bindVars($sql, ':table_name', $table_name, 'passthru');
+        $sql = $db->bindVars($sql, ':table_name', $table_name, 'noquotestring');
         $result = $db->Execute($sql);
         return (int)$result->fields['count'] !== 0;
     }
