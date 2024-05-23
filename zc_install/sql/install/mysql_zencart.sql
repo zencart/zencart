@@ -755,6 +755,7 @@ CREATE TABLE email_archive (
   errorinfo TEXT DEFAULT NULL,
   PRIMARY KEY  (archive_id),
   KEY idx_email_to_address_zen (email_to_address),
+  KEY idx_email_date_sent_zen (date_sent),
   KEY idx_module_zen (module)
 ) ENGINE=MyISAM;
 
