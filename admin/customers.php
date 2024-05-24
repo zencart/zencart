@@ -1600,10 +1600,10 @@ if ($action === 'edit' || $action === 'update') {
         $check_count = 0;
         if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) {
             foreach ($check_page as $item) {
+                $check_count++;
                 if ($item['customers_id'] === $_GET['cID']) {
                     break;
                 }
-                $check_count++;
             }
             $_GET['page'] = round(
                 (($check_count / MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER) + (fmod_round(
