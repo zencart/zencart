@@ -761,7 +761,7 @@ if ($action === 'edit' || $action === 'update') {
                     <?php
                     echo zen_draw_input_field(
                         'entry_street_address',
-                        htmlspecialchars($cInfo->street_address, ENT_COMPAT, CHARSET, true),
+                        htmlspecialchars($cInfo->street_address ?? '', ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
                             TABLE_ADDRESS_BOOK,
                             'entry_street_address',
@@ -781,7 +781,7 @@ if ($action === 'edit' || $action === 'update') {
                     <?php
                     echo zen_draw_input_field(
                         'entry_suburb',
-                        htmlspecialchars((string)$cInfo->suburb, ENT_COMPAT, CHARSET, true),
+                        htmlspecialchars((string)$cInfo->suburb ?? '', ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
                             TABLE_ADDRESS_BOOK,
                             'entry_suburb',
@@ -799,7 +799,7 @@ if ($action === 'edit' || $action === 'update') {
                     <?php
                     echo zen_draw_input_field(
                         'entry_postcode',
-                        htmlspecialchars($cInfo->postcode, ENT_COMPAT, CHARSET, true),
+                        htmlspecialchars($cInfo->postcode ?? '', ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
                             TABLE_ADDRESS_BOOK,
                             'entry_postcode',
@@ -816,7 +816,7 @@ if ($action === 'edit' || $action === 'update') {
                     <?php
                     echo zen_draw_input_field(
                         'entry_city',
-                        htmlspecialchars($cInfo->city, ENT_COMPAT, CHARSET, true),
+                        htmlspecialchars($cInfo->city ?? '', ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
                             TABLE_ADDRESS_BOOK,
                             'entry_city',
@@ -857,7 +857,7 @@ if ($action === 'edit' || $action === 'update') {
                     zen_get_zone_name(
                         (int)$cInfo->country_id,
                         (int)$cInfo->zone_id,
-                        $cInfo->state
+                        $cInfo->state ?? ''
                     ),
                     ENT_COMPAT,
                     CHARSET,
@@ -1670,7 +1670,7 @@ if ($action === 'edit' || $action === 'update') {
 <?php
         if (ACCOUNT_COMPANY === 'true') {
 ?>
-                                <td class="dataTableContent"><?php echo zen_output_string_protected($customer['company']); ?></td>
+                                <td class="dataTableContent"><?php echo zen_output_string_protected($customer['company'] ?? ''); ?></td>
 <?php
         }
         if ($show_registration_ip_in_listing) {

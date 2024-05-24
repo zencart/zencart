@@ -358,7 +358,7 @@ class Customer extends base
             'number_of_orders',
         ];
         foreach ($ints as $key) {
-            if (null !== $this->data[$key]) {
+            if (isset($this->data[$key]) && is_numeric($this->data[$key])) {
                 $this->data[$key] = (int)$this->data[$key];
             }
         }
@@ -602,6 +602,7 @@ class Customer extends base
             $addressArray[] = [
                 'firstname' => $result['firstname'],
                 'lastname' => $result['lastname'],
+                'company' => $result['company'],
                 'address_book_id' => $result['address_book_id'],
                 'country_id' => $result['country_id'],
                 'country_iso' => $result['country_iso'],
