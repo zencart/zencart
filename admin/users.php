@@ -18,7 +18,7 @@ $currentUser = $_SESSION['admin_id'];
 // determine whether an action has been requested
 if (isset($_POST['action']) && in_array($_POST['action'], ['insert', 'update', 'reset'])) {
     $action = $_POST['action'];
-} elseif (isset($_GET['action']) && in_array($_GET['action'], ['add', 'edit', 'password', 'delete', 'delete_confirm'])) {
+} elseif (isset($_GET['action']) && in_array($_GET['action'], ['add', 'edit', 'password', 'delete', 'delete_confirm', 'deletemfa', 'deletemfa_confirm', 'exemptmfa', 'exemptmfa_confirm', 'unexemptmfa', 'unexemptmfa_confirm'])) {
     $action = $_GET['action'];
 } else {
     $action = '';
@@ -31,7 +31,13 @@ if (($action == 'update' || $action == 'reset') && isset($_POST['user'])) {
     $user = $_GET['user'];
 } elseif (($action == 'delete' || $action == 'delete_confirm') && isset($_POST['user'])) {
     $user = $_POST['user'];
-} elseif (in_array($action, ['edit', 'password', 'delete', 'delete_confirm', 'update', 'reset'])) {
+} elseif (($action === 'deletemfa' || $action === 'deletemfa_confirm') && isset($_POST['user'])) {
+    $user = $_POST['user'];
+} elseif (($action === 'exemptmfa' || $action === 'exemptmfa_confirm') && isset($_POST['user'])) {
+    $user = $_POST['user'];
+} elseif (($action === 'unexemptmfa' || $action === 'unexemptmfa_confirm') && isset($_POST['user'])) {
+    $user = $_POST['user'];
+} elseif (in_array($action, ['edit', 'password', 'delete', 'delete_confirm', 'update', 'reset', 'deletemfa', 'deletemfa_confirm', 'exemptmfa', 'exemptmfa_confirm', 'unexemptmfa', 'unexemptmfa_confirm'])) {
     $messageStack->add_session(ERROR_NO_USER_DEFINED, 'error');
     zen_redirect(zen_href_link(FILENAME_USERS));
 }
@@ -52,6 +58,39 @@ switch ($action) {
     case 'delete_confirm': // remove existing user from database
         if (isset($_POST['user'])) {
             zen_delete_user($_POST['user']);
+        }
+        break;
+    case 'deletemfa_confirm': // remove mfa from user account
+        if (isset($_POST['user'])) {
+            zen_db_perform(TABLE_ADMIN, ['mfa' => 'NULL'], 'update', 'admin_id = ' . (int)$_POST['user']);
+            $uname = preg_replace('/[^\w._-]/', '*', zen_get_admin_name($_POST['user'])) . ' [id: ' . (int)$_POST['user'] . ']';
+            $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+            zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_DELETED, $uname, $admname), 'warning');
+            $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_DELETED, $uname, $admname);
+            $block = ['EMAIL_MESSAGE_HTML' => $email_text];
+            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_MFA_DELETED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
+        }
+        break;
+    case 'exemptmfa_confirm': // mark user account to be excluded from mfa
+        if (isset($_POST['user'])) {
+            zen_db_perform(TABLE_ADMIN, ['mfa' => json_encode(['exempt' => true])], 'update', 'admin_id = ' . (int)$_POST['user']);
+            $uname = preg_replace('/[^\w._-]/', '*', zen_get_admin_name($_POST['user'])) . ' [id: ' . (int)$_POST['user'] . ']';
+            $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+            zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_EXEMPTED, $uname, $admname), 'warning');
+            $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_EXEMPTED, $uname, $admname);
+            $block = ['EMAIL_MESSAGE_HTML' => $email_text];
+            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_MFA_EXEMPTED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
+        }
+        break;
+    case 'unexemptmfa_confirm': // undo mfa exemption
+        if (isset($_POST['user'])) {
+            zen_db_perform(TABLE_ADMIN, ['mfa' => json_encode(['exempt' => false])], 'update', 'admin_id = ' . (int)$_POST['user']);
+            $uname = preg_replace('/[^\w._-]/', '*', zen_get_admin_name($_POST['user'])) . ' [id: ' . (int)$_POST['user'] . ']';
+            $admname = '{' . preg_replace('/[^\w._-]/', '*', zen_get_admin_name()) . ' [id: ' . (int)$_SESSION['admin_id'] . ']}';
+            zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_UNEXEMPTED, $uname, $admname), 'warning');
+            $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_UNEXEMPTED, $uname, $admname);
+            $block = ['EMAIL_MESSAGE_HTML' => $email_text];
+            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_MFA_UNEXEMPTED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
         }
         break;
     case 'insert': // insert new user into database. Post data is prep'd for db in the first function call
@@ -116,7 +155,7 @@ $userList = zen_get_users();
 <div class="container-fluid" id="pageWrapper">
 
     <h1><?php echo HEADING_TITLE ?></h1>
-    <?php if (($action != '') && $action != 'delete') { // Hide this form when delete selected
+    <?php if ($action !== '' && !in_array($action, ['delete', 'deletemfa', 'exemptmfa', 'unexemptmfa'])) { // Hide this form when delete selected
         echo zen_draw_form('users', FILENAME_USERS);
         if (isset($formAction)) {
             echo zen_draw_hidden_field('action', $formAction);
@@ -133,6 +172,9 @@ $userList = zen_get_users();
             <th class="email"><?php echo TEXT_EMAIL ?></th>
             <th class="profile"><?php echo TEXT_ADMIN_PROFILE ?></th>
             <th class="changed"><?php echo TEXT_PASS_LAST_CHANGED ?></th>
+            <?php if (zen_is_superuser()) { ?>
+            <th class="mfa_status"><?php echo TEXT_MFA_STATUS ?></th>
+            <?php } ?>
             <?php if ($action == 'add' || $action == 'password') { ?>
                 <th class="password"><?php echo TEXT_PASSWORD ?></th>
                 <th class="password"><?php echo TEXT_CONFIRM_PASSWORD ?></th>
@@ -148,6 +190,9 @@ $userList = zen_get_users();
                 <td class="email"><?php echo zen_draw_input_field('email', isset($_POST['email']) ? $_POST['email'] : '', 'class="form-control" autocomplete="off"', true, 'email', true) ?></td>
                 <td class="profile"><?php echo zen_draw_pull_down_menu('profile', $profilesList, isset($_POST['profile']) ? $_POST['profile'] : '', 'class="form-control"', true) ?></td>
                 <td class="changed"></td>
+                <?php if (zen_is_superuser()) { ?>
+                <td class="mfa_status"></td>
+                <?php } ?>
                 <td class="password"><?php echo zen_draw_input_field('password', isset($_POST['password']) ? $_POST['password'] : '', 'class="form-control" autocomplete="off"', true, 'password'); ?></td>
                 <td class="confirm"><?php echo zen_draw_input_field('confirm', isset($_POST['confirm']) ? $_POST['confirm'] : '', 'class="form-control" autocomplete="off"', true, 'password'); ?></td>
                 <td class="actions">
@@ -176,6 +221,72 @@ $userList = zen_get_users();
                     <td class="profile"><?php echo $userDetails['profileName'] ?></td>
                 <?php } ?>
                 <td class="changed"><?php echo zen_date_short($userDetails['pwd_last_change_date']); ?></td>
+                <?php
+                if (zen_is_superuser()) {
+                    $userFresh = zen_read_user($userDetails['name']);
+                    $user_mfa_data = json_decode($userFresh['mfa'] ?? '', true, 2);
+                    $mfa_status = !empty($user_mfa_data['generated_at']) && !empty($user_mfa_data['secret']);
+                    $mfa_exempt = !empty($user_mfa_data['exempt']);
+                    $mfa_date = $mfa_status ? (new DateTime)->setTimestamp($user_mfa_data['generated_at'])->setTimezone((new DateTime)->getTimezone())->format('Y-m-d H:i:s') : '';
+                    $mfa_status_msg = TEXT_MFA_NOT_SET;
+                    if (!empty($user_mfa_data['generated_at'])) {
+                        $mfa_status_msg = sprintf(TEXT_MFA_ENABLED_DATE, zen_date_short($mfa_date));
+                    } elseif (!empty($user_mfa_data['via_email'])) {
+                        $mfa_status_msg = TEXT_MFA_BY_EMAIL;
+                    } elseif ($mfa_exempt) {
+                        $mfa_status_msg = TEXT_MFA_EXEMPT;
+                    }
+                    ?>
+                <td class="mfa_status"><?= $mfa_status_msg ?>
+                    <?php if ($mfa_status === true) {
+                        $btn_class = '';
+                        if ($action === 'deletemfa' && $userDetails['id'] === $user) {
+                           $btn_class = 'btn btn-sm btn-danger';
+                        } elseif ($action !== 'deletemfa') {
+                            $btn_class = 'btn btn-sm btn-warning';
+                        }
+                        ?>
+                        <?php echo zen_draw_form('delete_mfa', FILENAME_USERS, 'action=' . ($action === 'deletemfa' ? 'deletemfa_confirm' : 'deletemfa')); ?>
+                        <?php echo zen_draw_hidden_field('user', $userDetails['id']); ?>
+                        <?php echo ($action === 'deletemfa' && $userDetails['id'] === $user ? '<br>' . TEXT_CONFIRM_RESET : '') . ($btn_class === '' ? '' : '<button class="' . $btn_class . '">' . IMAGE_RESET . '</button>') ?>
+                        <?php if ($action === 'deletemfa' && $userDetails['id'] === $user) { ?>
+                            <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-sm btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                        <?php } ?>
+                        <?php echo '</form>'; ?>
+                    <?php
+                    } elseif ($mfa_exempt !== true) {
+                        $btn_class = '';
+                        if ($action === 'exemptmfa' && $userDetails['id'] === $user) {
+                           $btn_class = 'btn btn-sm btn-danger';
+                        } elseif ($action !== 'exemptmfa') {
+                            $btn_class = 'btn btn-sm btn-warning';
+                        }
+                        ?>
+                        <?php echo zen_draw_form('exempt_mfa', FILENAME_USERS, 'action=' . ($action === 'exemptmfa' ? 'exemptmfa_confirm' : 'exemptmfa')); ?>
+                        <?php echo zen_draw_hidden_field('user', $userDetails['id']); ?>
+                        <?php echo ($action === 'exemptmfa' && $userDetails['id'] === $user ? '<br>' . TEXT_CONFIRM_EXEMPT : '') . ($btn_class === '' ? '' : '<button class="' . $btn_class . '">' . TEXT_BUTTON_EXEMPT . '</button>') ?>
+                        <?php if ($action === 'exemptmfa' && $userDetails['id'] === $user) { ?>
+                            <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-sm btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                        <?php } ?>
+                        <?php echo '</form>'; ?>
+                    <?php } elseif ($mfa_exempt === true) {
+                        $btn_class = '';
+                        if ($action === 'unexemptmfa' && $userDetails['id'] === $user) {
+                           $btn_class = 'btn btn-sm btn-danger';
+                        } elseif ($action !== 'ununexemptmfa') {
+                            $btn_class = 'btn btn-sm btn-warning';
+                        }
+                        ?>
+                        <?php echo zen_draw_form('unexempt_mfa', FILENAME_USERS, 'action=' . ($action === 'unexemptmfa' ? 'unexemptmfa_confirm' : 'unexemptmfa')); ?>
+                        <?php echo zen_draw_hidden_field('user', $userDetails['id']); ?>
+                        <?php echo ($action === 'unexemptmfa' && $userDetails['id'] === $user ? '<br>' . TEXT_CONFIRM_UNEXEMPT : '') . ($btn_class === '' ? '' : '<button class="' . $btn_class . '">' . IMAGE_RESET . '</button>') ?>
+                        <?php if ($action === 'unexemptmfa' && $userDetails['id'] === $user) { ?>
+                            <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-sm btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+                        <?php } ?>
+                        <?php echo '</form>'; ?>
+                    <?php } ?>
+                </td>
+                <?php } ?>
                 <?php if ($action == 'password' && $user == $userDetails['id']) { ?>
                     <td class="password"><?php echo zen_draw_input_field('password', '', 'class="form-control"', true, 'password', true) ?></td>
                     <td class="confirm"><?php echo zen_draw_input_field('confirm', '', 'class="form-control"', true, 'password', true) ?></td>

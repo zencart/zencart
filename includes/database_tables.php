@@ -20,6 +20,7 @@ define('TABLE_ADMIN_MENUS', DB_PREFIX . 'admin_menus');
 define('TABLE_ADMIN_PAGES', DB_PREFIX . 'admin_pages');
 define('TABLE_ADMIN_PAGES_TO_PROFILES', DB_PREFIX . 'admin_pages_to_profiles');
 define('TABLE_ADMIN_PROFILES', DB_PREFIX . 'admin_profiles');
+define('TABLE_ADMIN_EXPIRED_TOKENS', DB_PREFIX . 'admin_expired_tokens');
 define('TABLE_AUTHORIZENET', DB_PREFIX . 'authorizenet');
 define('TABLE_BANNERS', DB_PREFIX . 'banners');
 define('TABLE_BANNERS_HISTORY', DB_PREFIX . 'banners_history');

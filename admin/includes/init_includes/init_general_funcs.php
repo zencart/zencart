@@ -18,6 +18,7 @@ require 'includes/init_includes/init_pci_settings.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'database.php';
 
 require DIR_WS_FUNCTIONS . 'general.php';
+require DIR_WS_FUNCTIONS . 'functions_mfa.php';
 
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_attributes.php';

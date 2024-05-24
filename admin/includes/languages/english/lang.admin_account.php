@@ -9,6 +9,7 @@
 $define = [
     'HEADING_TITLE' => 'Admin Account',
     'SUCCESS_PASSWORD_UPDATED' => 'Password updated.',
+    'TEXT_PASS_LAST_CHANGED' => 'Pwd Last Change',
 ];
 
 return $define;

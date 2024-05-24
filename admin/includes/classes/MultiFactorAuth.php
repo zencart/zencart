@@ -1,0 +1,186 @@
+<?php
+
+/**
+ * Standalone PHP Class for handling Google Authenticator 2-factor authentication.
+ *
+ * Based on / inspired by: https://github.com/RobThree/TwoFactorAuth
+ * Based on / inspired by: https://github.com/PHPGangsta/GoogleAuthenticator
+ *
+ * Algorithms, digits, period etc. explained: https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+ *
+ */
+
+class MultiFactorAuth
+{
+    private static string $_base32dict = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=';
+
+    /** @var array<string> */
+    private static array $_base32;
+
+    /** @var array<string, int> */
+    private static array $_base32lookup = [];
+
+    public function __construct(
+        private int    $codeLength = 6,
+        private int    $period = 30,
+        private string $algorithm = 'sha1',
+        private ?string $issuer = null,
+    ) {
+        if ($this->codeLength <= 0) {
+            throw new ValueError('codeLength must be int > 0');
+        }
+
+        if ($this->period <= 0) {
+            throw new ValueError('Period must be int > 0');
+        }
+
+        self::$_base32 = str_split(self::$_base32dict);
+        self::$_base32lookup = array_flip(self::$_base32);
+    }
+
+    /**
+     * Create a new secret
+     * @throws Exception
+     */
+    public function createSecret(int $bits = 160): string
+    {
+        $secret = '';
+        $bytes = (int)ceil($bits / 5);   // We use 5 bits of each byte (since we have a 32-character 'alphabet' / BASE32)
+        $rnd = random_bytes($bytes);
+        for ($i = 0; $i < $bytes; $i++) {
+            $secret .= self::$_base32[ord($rnd[$i]) & 31];  //Mask out left 3 bits for 0-31 values
+        }
+        return $secret;
+    }
+
+    /**
+     * Calculate the code with given secret and point in time
+     */
+    public function getCode(string $secret, ?int $time = null): string
+    {
+        $secretkey = $this->base32Decode($secret);
+
+        $timestamp = "\0\0\0\0" . pack('N*', $this->getTimeSlice($time ?? time()));      // Pack time into binary string
+        $hashhmac = hash_hmac($this->algorithm, $timestamp, $secretkey, true); // Hash it with users secret key
+        $hashpart = substr($hashhmac, ord(substr($hashhmac, -1)) & 0x0F, 4); // Use last nibble of result as index/offset and grab 4 bytes of the result
+        $value = unpack('N', $hashpart);                                       // Unpack binary value
+        $value = $value[1] & 0x7FFFFFFF;                                              // Drop MSB, keep only 31 bits
+
+        return str_pad((string)($value % 10 ** $this->codeLength), $this->codeLength, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Check if the code is correct. This will accept codes starting from ($discrepancy * $period) sec ago to ($discrepancy * period) sec from now
+     */
+    public function verifyCode(string $secret, string $code, int $discrepancy = 1, ?int $time = null, ?int &$timeslice = 0): bool
+    {
+        $timeslice = 0;
+
+        // To keep safe from timing-attacks we iterate *all* possible codes even though we already may have
+        // verified a code is correct. We use the timeslice variable to hold either 0 (no match) or the timeslice
+        // of the match. Each iteration we either set the timeslice variable to the timeslice of the match
+        // or set the value to itself.  This is an effort to maintain constant execution time for the code.
+        for ($i = -$discrepancy; $i <= $discrepancy; $i++) {
+            $ts = ($time ?? time()) + ($i * $this->period);
+            $slice = $this->getTimeSlice($ts);
+            $timeslice = hash_equals($this->getCode($secret, $ts), $code) ? $slice : $timeslice;
+        }
+
+        return $timeslice > 0;
+    }
+
+    /**
+     * Set the code length, should be >=6.
+     */
+    public function setCodeLength(int $length): static
+    {
+        $this->codeLength = $length;
+
+        return $this;
+    }
+
+    public function getCodeLength(): int
+    {
+        return $this->codeLength;
+    }
+
+    private function getTimeSlice(?int $time = null, int $offset = 0): int
+    {
+        return (int)floor($time / $this->period) + ($offset * $this->period);
+    }
+
+    private function base32Decode(string $value): string
+    {
+        if ($value === '') {
+            return '';
+        }
+
+        if (preg_match('/[^' . preg_quote(self::$_base32dict, '/') . ']/', $value) !== 0) {
+            throw new ValueError('Invalid base32 string');
+        }
+
+        $buffer = '';
+        foreach (str_split($value) as $char) {
+            if ($char !== '=') {
+                $buffer .= str_pad(decbin(self::$_base32lookup[$char]), 5, '0', STR_PAD_LEFT);
+            }
+        }
+        $length = strlen($buffer);
+        $blocks = trim(chunk_split(substr($buffer, 0, $length - ($length % 8)), 8, ' '));
+
+        $output = '';
+        foreach (explode(' ', $blocks) as $block) {
+            $output .= chr(bindec(str_pad($block, 8, '0', STR_PAD_RIGHT)));
+        }
+        return $output;
+    }
+
+    /**
+     * Builds a string to be encoded in a QR code
+     */
+    public function getQRText(string $label, string $secret): string
+    {
+        return 'otpauth://totp/' . rawurlencode($label)
+            . '?secret=' . rawurlencode($secret)
+            . '&issuer=' . rawurlencode((string)$this->issuer)
+            . '&period=' . $this->period
+            . '&algorithm=' . rawurlencode(strtoupper($this->algorithm))
+            . '&digits=' . $this->codeLength;
+    }
+
+    /**
+     * Get QR-Code URL for image from QRserver.com.
+     * See https://goqr.me/api/doc/create-qr-code/
+     */
+    public function getQrCodeQrServerUrl(string $domain, string $secretkey, int $size = 200): string
+    {
+        $queryParameters = [
+            'size' => $size . 'x' . $size,
+            'ecc' => 'L',
+            'margin' => 4,
+            'qzone' => 1,
+            'format' => 'png', // 'svg'
+            'data' => $this->getQRText($domain, $secretkey),
+        ];
+
+        return 'https://api.qrserver.com/v1/create-qr-code/?' . http_build_query($queryParameters);
+    }
+
+    /**
+     * See http://qrickit.com/qrickit_apps/qrickit_api.php
+     */
+    public function getQrCodeQRicketUrl(string $domain, string $secretkey, int $size = 200): string
+    {
+        $queryParameters = [
+            'qrsize' => $size,
+            'e' => 'l',
+            'bgdcolor' => 'ffffff',
+            'fgdcolor' => '000000',
+            't' => 'p', // png
+            'd' => $this->getQRText($domain, $secretkey),
+        ];
+
+        return 'https://qrickit.com/api/qr?' . http_build_query($queryParameters);
+    }
+
+}
