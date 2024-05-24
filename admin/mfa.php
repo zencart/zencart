@@ -45,6 +45,11 @@ if (!empty($_POST['action'])) {
         $message = ERROR_SECURITY_ERROR;
         zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_MFA_LOGIN_WITHOUT_CSRF_TOKEN, 'warning');
     } elseif ($_POST['action'] === 'otp' . $_SESSION['securityToken']) {
+        // handle session timeout: redirect back to login to start over
+        if (empty($_SESSION['mfa'])) {
+            unset($_SESSION['mfa']); // for thoroughness
+            zen_redirect(zen_href_link(FILENAME_LOGOFF));
+        }
         // validate manual-generated token such as one sent via email
         if (isset($_SESSION['mfa']['expires']) && !empty($_SESSION['mfa']['token'])) {
             if (trim($_POST['mfa_code']) === $_SESSION['mfa']['token']) {
@@ -124,58 +129,78 @@ $fieldAttributes .= match ($_SESSION['mfa']['type'] ?? 'digits') {
 </head>
 <body id="mfa">
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-offset-1 col-sm-offset-2 col-md-offset-3 col-lg-offset-4 col-xs-10 col-sm-8 col-md-6 col-lg-4 text-center">
-            <div class="mfa-main-div mfa-box-shadow">
-                <?= zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="mfa-img"') . PHP_EOL ?>
-                <?= zen_draw_form('mfaForm', FILENAME_MFA, zen_get_all_get_params(), 'post', 'id="mfaForm" class="form-horizontal"', 'true') . PHP_EOL ?>
+    <div class="row mt-5">
+        <div class="col-xs-offset-2 col-sm-offset-3 col-md-offset-3 col-lg-offset-4 col-xs-8 col-sm-6 col-md-6 col-lg-4 text-center">
+            <div class="row">
+                <div class="col-sm-12 mfa-main-div mfa-box-shadow">
+                    <?= zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="mfa-img"') . PHP_EOL ?>
+                    <?= zen_draw_form('mfaForm', FILENAME_MFA, zen_get_all_get_params(), 'post', 'id="mfaForm" class="form-horizontal"', 'true') . PHP_EOL ?>
 
-                <?php if ($setup_required) { ?>
-                <?= zen_draw_hidden_field('action', 'setup' . $_SESSION['securityToken'], 'id="otpsetup"') . PHP_EOL ?>
-                <h2><?= TEXT_MFA_SELECT ?></h2>
-                <div class="form-group form-group-lg">
-                    <?= zen_draw_pull_down_menu('selected', $mfa_modes_to_select_from, '', 'class="form-control input-lg" autofocus id="mfaselect-' . $_SESSION['securityToken'] . '" required') . PHP_EOL ?>
-                </div>
-
-                <?php } else { ?>
-                <?= zen_draw_hidden_field('action', 'otp' . $_SESSION['securityToken'], 'id="otpaction"') . PHP_EOL ?>
-                <h2><?= HEADING_TITLE ?></h2>
-                <div id="mfa-intro" class="m-5">
-                    <p><?= TEXT_MFA_INTRO ?></p>
-                </div>
-
-                <?php
-                if (!empty($_SESSION['mfa']['qrcode'])) { ?>
-                    <div id="mfa-qrcode" class="m-5">
-                        <?= TEXT_MFA_SCAN_QR_CODE ?>
-                        <div id="mfa_qr_img"><?= $_SESSION['mfa']['qrcode'] ?></div>
+                    <?php if ($setup_required) { ?>
+                    <?= zen_draw_hidden_field('action', 'setup' . $_SESSION['securityToken'], 'id="otpsetup"') . PHP_EOL ?>
+                    <h2><?= TEXT_MFA_SELECT ?></h2>
+                    <div class="form-group form-group-lg">
+                        <?= zen_draw_pull_down_menu('selected', $mfa_modes_to_select_from, '', 'class="form-control input-lg" autofocus id="mfaselect-' . $_SESSION['securityToken'] . '" required') . PHP_EOL ?>
                     </div>
-                <?php
-                } ?>
-                <div class="form-group">
-                    <?= TEXT_MFA_ENTER_OTP_CODE ?>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa-solid fa-lg fa-lock"></i></span>
-                        <?= zen_draw_input_field('mfa_code', '', 'class="form-control input-lg" autocapitalize="none" spellcheck="false" autocomplete="one-time-code" autofocus placeholder="' . TEXT_MFA_INPUT . '"' . $fieldAttributes . ' id="mfa-' . $_SESSION['securityToken'] . '" required', false, 'text') . PHP_EOL ?>
+
+                    <?php } else { ?>
+
+                    <?= zen_draw_hidden_field('action', 'otp' . $_SESSION['securityToken'], 'id="otpaction"') . PHP_EOL ?>
+
+                    <h2><?= HEADING_TITLE ?></h2>
+
+
+                    <?php if (empty($_SESSION['mfa']['qrcode'])) { ?>
+                    <div id="mfa-intro" class="col-xs-12 mt-3">
+                        <p><?= ''//TEXT_MFA_INTRO ?></p>
                     </div>
-                </div>
-                <?php } ?>
+                    <?php } ?>
+
+                    <?php
+                    if (!empty($_SESSION['mfa']['qrcode'])) { ?>
+                        <div id="mfa-qrcode" class="col-xs-12 m-4">
+                            <?= TEXT_MFA_SCAN_QR_CODE ?><br><br>
+                            <div id="mfa_qr_img"><?= $_SESSION['mfa']['qrcode'] ?></div>
+                        </div>
+                    <?php
+                    } ?>
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="form-group">
+                                <?php
+                                if (empty($_SESSION['mfa']['qrcode'])) {
+                                    if (isset($_SESSION['mfa']['expires']) && !empty($_SESSION['mfa']['token'])) {
+                                        echo TEXT_MFA_ENTER_OTP_EMAIL;
+                                    } else {
+                                        echo TEXT_MFA_ENTER_OTP_CODE;
+                                    }
+                                }
+                                ?>
+                                <div class="input-group mt-4">
+                                    <span class="input-group-addon"><i class="fa-solid fa-lg fa-lock"></i></span>
+                                    <?= zen_draw_input_field('mfa_code', '', 'class="form-control input-md" autocapitalize="none" spellcheck="false" autocomplete="one-time-code" autofocus placeholder="' . TEXT_MFA_INPUT . '"' . $fieldAttributes . ' id="mfa-' . $_SESSION['securityToken'] . '" required', false, 'text') . PHP_EOL ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php } ?>
 
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary"><?= TEXT_SUBMIT ?></button>
-                    <a class="button" class="btn btn-default btn-link" href="<?= zen_href_link(FILENAME_LOGOFF) ?>"><?= TEXT_CANCEL ?></a>
-                </div>
-                <?php
-                echo '</form>' . PHP_EOL; ?>
-                <br class="clearBoth">
-                <?php
-                if ($message) { ?>
-                    <p class="mfa-alert-warning alert alert-warning"><?= $message ?></p>
-                <?php
-                } ?>
-                <div id="mfa-bottom" class="m-3">
-                    <p><?= TEXT_MFA_BOTTOM ?></p>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary"><?= TEXT_SUBMIT ?></button>
+                        <a class="button" class="btn btn-default btn-link" href="<?= zen_href_link(FILENAME_LOGOFF) ?>"><?= TEXT_CANCEL ?></a>
+                    </div>
+                    <?php
+                    echo '</form>' . PHP_EOL; ?>
+                    <br class="clearBoth">
+                    <?php
+                    if ($message) { ?>
+                        <p class="mfa-alert-warning alert alert-warning"><?= $message ?></p>
+                    <?php
+                    } ?>
+                    <div id="mfa-bottom" class="m-3">
+                        <p><?= TEXT_MFA_BOTTOM ?></p>
+                    </div>
                 </div>
             </div>
         </div>

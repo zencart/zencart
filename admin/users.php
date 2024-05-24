@@ -244,7 +244,7 @@ $userList = zen_get_users();
                 <td class="mfa_status"><?= $mfa_status_msg ?>
                     <?php if ($mfa_status_of_store !== true) {
                         // not enabled, so no buttons to output
-                    } elseif ($mfa_status === true) {
+                    } elseif ($mfa_status === true || !empty($user_mfa_data['via_email'])) {
                         $btn_class = '';
                         if ($action === 'deletemfa' && $userDetails['id'] === $user) {
                            $btn_class = 'btn btn-sm btn-danger';
