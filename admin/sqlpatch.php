@@ -520,7 +520,7 @@ function zen_check_alter_command($param) {
       if (strtoupper($param[4]) == 'INDEX') {
         // check that the index to be added doesn't already exist
         $index = $param[5];
-        $sql = "SHOW FIELDS FROM " . DB_PREFIX . $param[2];
+        $sql = "SHOW INDEX FROM " . DB_PREFIX . $param[2];
         $results = $db->Execute($sql);
         foreach ($results as $result) {
           if (ZC_UPG_DEBUG3 == true) {
@@ -593,7 +593,7 @@ function zen_check_alter_command($param) {
       if (strtoupper($param[4]) == 'INDEX') {
         // check that the index to be dropped exists
         $index = $param[5];
-        $sql = "SHOW FIELDS FROM " . DB_PREFIX . $param[2];
+        $sql = "SHOW INDEX FROM " . DB_PREFIX . $param[2];
         $results = $db->Execute($sql);
         foreach ($results as $result) {
           if (ZC_UPG_DEBUG3 == true) {
