@@ -14,11 +14,13 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_PRODUCT_FREE_SHIPPING_INFO');
 
-  if (!isset($product_info->EOF, $product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$_GET['products_id']) {
-    $product_info = zen_get_product_details($_GET['products_id']);
+  $product_info = $product_info ?? new Product($_GET['products_id']);
+
+  if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$_GET['products_id']) {
+      $product_info = new Product($_GET['products_id']);
   }
 
-  $product_not_found = $product_info->EOF;
+  $product_not_found = !$product_info->exists();
 
   if (!defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') || DISABLED_PRODUCTS_TRIGGER_HTTP200 !== 'true') {
       if (!$product_not_found && $product_info->fields['products_status'] != 1) {
@@ -38,7 +40,7 @@
 
     $products_price = $currencies->display_price($product_info->fields['products_price'], zen_get_tax_rate($product_info->fields['products_tax_class_id']));
 
-    $manufacturers_name= zen_get_products_manufacturers_name((int)$_GET['products_id']);
+    $manufacturers_name = $product_info->fields['manufacturers_name'];
 
     if ($new_price = zen_get_products_special_price($product_info->fields['products_id'])) {
       $specials_price = $currencies->display_price($new_price, zen_get_tax_rate($product_info->fields['products_tax_class_id']));
@@ -61,17 +63,17 @@
 
     $reviews = $db->Execute($reviews_query);
 
-  $products_name = $product_info->fields['products_name'];
+  $products_name = $product_info->fields['lang'][$_SESSION['languages_code']]['products_name'];
   $products_model = $product_info->fields['products_model'];
   // if no common markup tags in description, add line breaks for readability:
-  $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['products_description']) ? nl2br($product_info->fields['products_description']) : $product_info->fields['products_description']);
+  $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['lang'][$_SESSION['languages_code']]['products_description']) ? nl2br($product_info->fields['lang'][$_SESSION['languages_code']]['products_description']) : $product_info->fields['lang'][$_SESSION['languages_code']]['products_description']);
 
   $products_image = (($product_not_found || $product_info->fields['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
   if ($product_info->fields['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS != '1') {
     $products_image = $product_info->fields['products_image'];
   }
 
-  $products_url = $product_info->fields['products_url'];
+  $products_url = $product_info->fields['lang'][$_SESSION['languages_code']]['products_url'];
   $products_date_available = $product_info->fields['products_date_available'];
   $products_date_added = $product_info->fields['products_date_added'];
   $products_manufacturer = $manufacturers_name;

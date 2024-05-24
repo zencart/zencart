@@ -70,7 +70,7 @@ if ($num_products_count > 0) {
 
         $products_price = zen_get_products_display_price($new_products_id);
         $new_products_link = zen_href_link(zen_get_info_page($new_products_id), 'cPath=' . $productsInCategory[$new_products_id] . '&products_id=' . $new_products_id);
-        $new_products_name = $new_products->fields['products_name'];
+        $new_products_name = zen_get_products_name($new_products->fields['products_id']);
 
         if ($new_products->fields['products_image'] === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '0') {
             $new_products_image = '';
@@ -98,7 +98,7 @@ if ($num_products_count > 0) {
 
     if (!empty($current_category_id)) {
         $category_title = zen_get_category_name((int)$current_category_id);
-        $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, $zcDate->output('%B')) . ($category_title != '' ? ' - ' . $category_title : '' ) . '</h2>';
+        $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, $zcDate->output('%B')) . ($category_title !== '' ? ' - ' . $category_title : '' ) . '</h2>';
     } else {
         $title = '<h2 class="centerBoxHeading">' . sprintf(TABLE_HEADING_NEW_PRODUCTS, $zcDate->output('%B')) . '</h2>';
     }

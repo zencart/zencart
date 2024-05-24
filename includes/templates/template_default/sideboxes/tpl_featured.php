@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Side Box Template
  *
@@ -7,17 +8,19 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
  */
-  $content = "";
-  $content .= '<div class="sideBoxContent centeredContent">';
-  $featured_box_counter = 0;
-  while (!$random_featured_product->EOF) {
+$content = "";
+$content .= '<div class="sideBoxContent centeredContent">';
+$featured_box_counter = 0;
+while (!$random_featured_product->EOF) {
+    $data = (new Product($random_featured_product->fields['products_id']))->withDefaultLanguage()->getData();
     $featured_box_counter++;
-    $featured_box_price = zen_get_products_display_price($random_featured_product->fields['products_id']);
+    $featured_box_price = zen_get_products_display_price($data['products_id']);
     $content .= "\n" . '  <div class="sideBoxContentItem">';
-    $content .=  '<a href="' . zen_href_link(zen_get_info_page($random_featured_product->fields["products_id"]), 'cPath=' . zen_get_generated_category_path_rev($random_featured_product->fields["master_categories_id"]) . '&products_id=' . $random_featured_product->fields["products_id"]) . '">' . zen_image(DIR_WS_IMAGES . $random_featured_product->fields['products_image'], $random_featured_product->fields['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
-    $content .= '<br>' . $random_featured_product->fields['products_name'] . '</a>';
+    $content .= '<a href="' . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . zen_get_generated_category_path_rev($data["master_categories_id"]) . '&products_id=' . $data["products_id"]) . '">'
+        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+    $content .= '<br>' . $data['products_name'] . '</a>';
     $content .= '<div>' . $featured_box_price . '</div>';
     $content .= '</div>';
     $random_featured_product->MoveNextRandom();
-  }
-  $content .= '</div>' . "\n";
+}
+$content .= '</div>' . "\n";

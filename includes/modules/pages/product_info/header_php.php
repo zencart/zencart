@@ -13,9 +13,9 @@ $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_INFO');
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
-$product_info = zen_get_product_details($products_id_current = (!empty($_GET['products_id']) ? (int)$_GET['products_id'] : 0));
-if (!empty($product_info->fields['type_handler']) && $current_page !== $product_info->fields['type_handler'] . '_info') {
-    zen_redirect(zen_href_link($product_info->fields['type_handler'] . '_info', zen_get_all_get_params()));
+$product_info = new Product($products_id_current = (!empty($_GET['products_id']) ? (int)$_GET['products_id'] : 0));
+if ($current_page !== $product_info->get('info_page')) {
+    zen_redirect(zen_href_link($product_info->get('info_page'), zen_get_all_get_params()));
 }
 
 zen_product_set_header_response($products_id_current, $product_info);
