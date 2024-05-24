@@ -69,6 +69,8 @@ switch ($action) {
 // get this user's details
 $userList = zen_get_users($_SESSION['admin_id']);
 $userDetails = $userList[0];
+
+$mfa_status_of_store = MFA_ENABLED === 'True';
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -101,7 +103,11 @@ $userDetails = $userList[0];
                 <th class="password"><?php echo TEXT_CONFIRM_PASSWORD ?></th>
             <?php } else if ($action !== 'edit') { ?>
             <th class="changed"><?php echo TEXT_PASS_LAST_CHANGED ?></th>
+            <?php
+                if ($mfa_status_of_store) {
+            ?>
             <th class="mfa_status"><?php echo TEXT_MFA_STATUS ?></th>
+                <?php } ?>
             <?php } ?>
             <th class="actions">&nbsp;</th>
         </tr>
@@ -134,13 +140,16 @@ $userDetails = $userList[0];
                 <td class="changed"><?php echo zen_date_short($userDetails['pwd_last_change_date']); ?></td>
                 <?php
                 $user = zen_read_user($userDetails['name']);
+                if ($mfa_status_of_store) {
                 $user_mfa_data = json_decode($user['mfa'] ?? '', true, 2);
-                $mfa_status_of_store = MFA_ENABLED === 'True';
                 $mfa_status = !empty($user_mfa_data['generated_at']) && !empty($user_mfa_data['secret']);
                 $mfa_date = $mfa_status ? (new DateTime)->setTimestamp($user_mfa_data['generated_at'])->setTimezone((new DateTime)->getTimezone())->format('Y-m-d H:i:s') : '';
                 $mfa_email = !empty($user_mfa_data['via_email']);
                 $mfa_exempt = !empty($user_mfa_data['exempt']);
-                $mfa_status_msg = TEXT_MFA_NOT_SET;
+                $mfa_status_msg = TEXT_MFA_DISABLED_FOR_SITE;
+                if ($mfa_status_of_store) {
+                    $mfa_status_msg = TEXT_MFA_NOT_SET;
+                }
                 if (!empty($user_mfa_data['generated_at'])) {
                     $mfa_status_msg = sprintf(TEXT_MFA_ENABLED_DATE, zen_date_short($mfa_date));
                 } elseif (!empty($user_mfa_data['via_email'])) {
@@ -151,10 +160,11 @@ $userDetails = $userList[0];
                 ?>
                 <td class="mfa_status">
                     <?= $mfa_status_msg ?>
-                    <?php if ($mfa_status_of_store && !$mfa_status && !$mfa_exempt && !$mfa_email) { ?>
+                    <?php if (!$mfa_status && !$mfa_exempt && !$mfa_email) { ?>
                     <a href="<?php echo zen_href_link(FILENAME_MFA, 'action=setup') ?>" class="btn btn-sm btn-default"><?php echo TEXT_BUTTON_SET_UP; ?></a>
                     <?php } ?>
                 </td>
+                <?php } ?>
                 <td class="actions">
                     <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=edit'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a>
                     <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACCOUNT, 'action=password') ?>" class="btn btn-primary"><?php echo IMAGE_RESET_PWD; ?></a>

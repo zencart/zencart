@@ -225,10 +225,14 @@ $userList = zen_get_users();
                 if (zen_is_superuser()) {
                     $userFresh = zen_read_user($userDetails['name']);
                     $user_mfa_data = json_decode($userFresh['mfa'] ?? '', true, 2);
+                    $mfa_status_of_store = MFA_ENABLED === 'True';
                     $mfa_status = !empty($user_mfa_data['generated_at']) && !empty($user_mfa_data['secret']);
                     $mfa_exempt = !empty($user_mfa_data['exempt']);
                     $mfa_date = $mfa_status ? (new DateTime)->setTimestamp($user_mfa_data['generated_at'])->setTimezone((new DateTime)->getTimezone())->format('Y-m-d H:i:s') : '';
-                    $mfa_status_msg = TEXT_MFA_NOT_SET;
+                    $mfa_status_msg = TEXT_MFA_DISABLED_FOR_SITE;
+                    if ($mfa_status_of_store) {
+                        $mfa_status_msg = TEXT_MFA_NOT_SET;
+                    }
                     if (!empty($user_mfa_data['generated_at'])) {
                         $mfa_status_msg = sprintf(TEXT_MFA_ENABLED_DATE, zen_date_short($mfa_date));
                     } elseif (!empty($user_mfa_data['via_email'])) {
@@ -238,7 +242,9 @@ $userList = zen_get_users();
                     }
                     ?>
                 <td class="mfa_status"><?= $mfa_status_msg ?>
-                    <?php if ($mfa_status === true) {
+                    <?php if ($mfa_status_of_store !== true) {
+                        // not enabled, so no buttons to output
+                    } elseif ($mfa_status === true) {
                         $btn_class = '';
                         if ($action === 'deletemfa' && $userDetails['id'] === $user) {
                            $btn_class = 'btn btn-sm btn-danger';
@@ -259,7 +265,7 @@ $userList = zen_get_users();
                         if ($action === 'exemptmfa' && $userDetails['id'] === $user) {
                            $btn_class = 'btn btn-sm btn-danger';
                         } elseif ($action !== 'exemptmfa') {
-                            $btn_class = 'btn btn-sm btn-warning';
+                            $btn_class = 'btn btn-sm btn-default';
                         }
                         ?>
                         <?php echo zen_draw_form('exempt_mfa', FILENAME_USERS, 'action=' . ($action === 'exemptmfa' ? 'exemptmfa_confirm' : 'exemptmfa')); ?>
@@ -274,12 +280,12 @@ $userList = zen_get_users();
                         if ($action === 'unexemptmfa' && $userDetails['id'] === $user) {
                            $btn_class = 'btn btn-sm btn-danger';
                         } elseif ($action !== 'ununexemptmfa') {
-                            $btn_class = 'btn btn-sm btn-warning';
+                            $btn_class = 'btn btn-sm btn-default';
                         }
                         ?>
                         <?php echo zen_draw_form('unexempt_mfa', FILENAME_USERS, 'action=' . ($action === 'unexemptmfa' ? 'unexemptmfa_confirm' : 'unexemptmfa')); ?>
                         <?php echo zen_draw_hidden_field('user', $userDetails['id']); ?>
-                        <?php echo ($action === 'unexemptmfa' && $userDetails['id'] === $user ? '<br>' . TEXT_CONFIRM_UNEXEMPT : '') . ($btn_class === '' ? '' : '<button class="' . $btn_class . '">' . IMAGE_RESET . '</button>') ?>
+                        <?php echo ($action === 'unexemptmfa' && $userDetails['id'] === $user ? '<br>' . TEXT_CONFIRM_UNEXEMPT : '') . ($btn_class === '' ? '' : '<button class="' . $btn_class . '">' . TEXT_BUTTON_UNEXEMPT . '</button>') ?>
                         <?php if ($action === 'unexemptmfa' && $userDetails['id'] === $user) { ?>
                             <a href="<?php echo zen_href_link(FILENAME_USERS) ?>" class="btn btn-sm btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
                         <?php } ?>
