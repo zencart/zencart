@@ -86,8 +86,8 @@ class InitSystem
         if (isset($entry['classPath'])) {
             $filePath = $entry['classPath'];
         }
-        if ($entry['loaderType'] == 'plugin') {
-            $filePath = $this->findPluginDirectory($filePath, $entry['pluginInfo']['unique_key']);
+        if ($entry['loaderType'] === 'plugin') {
+            $filePath = $this->findPluginDirectory($entry['classPath'] ?? DIR_WS_CLASSES, $entry['pluginInfo']['unique_key']);
         }
         $this->debugList[] = 'processing class - ' . $filePath  . $entry['loadFile'];
         $result = 'FAILED';
