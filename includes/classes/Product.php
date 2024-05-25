@@ -61,7 +61,7 @@ class Product
 
     public function get(string $name)
     {
-        return $this->data[$name] ?? $this->data['lang'][$this->languages[(int)$_SESSION['languages_id']]] ?? null;
+        return $this->data[$name] ?? $this->data['lang'][$this->languages[(int)$_SESSION['languages_id']]][$name] ?? null;
     }
 
     /**
