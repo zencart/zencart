@@ -69,7 +69,7 @@ if ($num_products_count > 0) {
 
     $list_box_contents = [];
     while (!$specials_index->EOF) {
-        $product_info = new Product($specials_index->fields['products_id']);
+        $product_info = new Product((int)$specials_index->fields['products_id']);
         $data = array_merge($specials_index->fields, $product_info->getDataForLanguage());
 
         $products_price = zen_get_products_display_price($data['products_id']);

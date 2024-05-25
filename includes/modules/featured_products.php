@@ -65,7 +65,7 @@ if ($num_products_count > 0) {
         $col_width = floor(100 / SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS);
     }
     while (!$featured_products->EOF) {
-        $product_info = new Product($featured_products->fields['products_id']);
+        $product_info = new Product((int)$featured_products->fields['products_id']);
         $data = $product_info->getDataForLanguage();
 
         $products_price = zen_get_products_display_price($data['products_id']);

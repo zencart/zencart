@@ -129,7 +129,7 @@ if ($num_products_count > 0) {
     // Retrieve all records into an array to allow for sorting and insertion of additional data if needed
     $records = [];
     foreach ($listing as $record) {
-        $product_info = (new Product($record['products_id']))->getDataForLanguage((int)$_SESSION['languages_id']) ?? [];
+        $product_info = (new Product((int)$record['products_id']))->getDataForLanguage((int)$_SESSION['languages_id']) ?? [];
         $category_id = !empty($record['categories_id']) ? $record['categories_id'] : $record['master_categories_id'];
         $parent_category_name = trim(zen_get_categories_parent_name($category_id));
         $category_name = trim(zen_get_category_name($category_id, (int)$_SESSION['languages_id']));

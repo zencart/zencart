@@ -677,7 +677,7 @@ class shoppingCart extends base
             $qty = $data['qty'];
             $prid = zen_get_prid($uprid);
 
-            $product = (new Product($prid))->withDefaultLanguage()->getData();
+            $product = (new Product((int)$prid))->withDefaultLanguage()->getData();
             if (empty($product)) {
                 $this->removeUprid($uprid);
                 continue;
@@ -1230,7 +1230,7 @@ class shoppingCart extends base
         $products_array = [];
         foreach ($this->contents as $uprid => $data) {
             $prid = zen_get_prid($uprid);
-            $product = (new Product($prid))->withDefaultLanguage()->getData();
+            $product = (new Product((int)$prid))->withDefaultLanguage()->getData();
             if (empty($product)) {
                 $this->removeUprid($uprid);
                 continue;

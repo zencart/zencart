@@ -12,7 +12,7 @@ $content = "";
 $content .= '<div class="sideBoxContent centeredContent">';
 $specials_box_counter = 0;
 while (!$random_specials_sidebox_product->EOF) {
-    $data = array_merge($random_specials_sidebox_product->fields, (new Product($random_specials_sidebox_product->fields['products_id']))->withDefaultLanguage()->getData());
+    $data = array_merge($random_specials_sidebox_product->fields, (new Product((int)$random_specials_sidebox_product->fields['products_id']))->withDefaultLanguage()->getData());
     $specials_box_counter++;
     $specials_box_price = zen_get_products_display_price($data['products_id']);
     $content .= "\n" . '  <div class="sideBoxContentItem">';

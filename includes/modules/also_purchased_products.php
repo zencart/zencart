@@ -30,7 +30,7 @@ if (isset($_GET['products_id']) && SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PROD
         }
 
         while (!$also_purchased_products->EOF) {
-            $product_info = new Product($also_purchased_products->fields['products_id']);
+            $product_info = new Product((int)$also_purchased_products->fields['products_id']);
             $data = array_merge($also_purchased_products->fields, $product_info->getDataForLanguage());
 
             $list_box_contents[$row][$col] = [

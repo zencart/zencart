@@ -61,7 +61,7 @@ if ($sql !== '' && $expected->RecordCount() > 0) {
         if (!isset($productsInCategory[$expect['products_id']])) {
             $productsInCategory[$expect['products_id']] = zen_get_generated_category_path_rev($expect['master_categories_id']);
         }
-        $expectedItems[] = array_merge($expect, (new Product($expect['products_id']))->getDataForLanguage());
+        $expectedItems[] = array_merge($expect, (new Product((int)$expect['products_id']))->getDataForLanguage());
     }
     require $template->get_template_dir('tpl_modules_upcoming_products.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/' . 'tpl_modules_upcoming_products.php';
 }

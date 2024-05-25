@@ -14,10 +14,10 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_PRODUCT_FREE_SHIPPING_INFO');
 
-  $product_info = $product_info ?? new Product($_GET['products_id']);
+  $product_info = $product_info ?? new Product((int)$_GET['products_id']);
 
   if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$_GET['products_id']) {
-      $product_info = new Product($_GET['products_id']);
+      $product_info = new Product((int)$_GET['products_id']);
   }
 
   $product_not_found = !$product_info->exists();

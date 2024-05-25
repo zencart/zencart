@@ -12,7 +12,7 @@ $content = "";
 $content .= '<div class="sideBoxContent centeredContent">';
 $whats_new_box_counter = 0;
 while (!$random_whats_new_sidebox_product->EOF) {
-    $data = (new Product($random_whats_new_sidebox_product->fields['products_id']))->withDefaultLanguage()->getData();
+    $data = (new Product((int)$random_whats_new_sidebox_product->fields['products_id']))->withDefaultLanguage()->getData();
 
     $whats_new_box_counter++;
     $whats_new_price = zen_get_products_display_price($data['products_id']);

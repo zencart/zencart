@@ -17,7 +17,7 @@
  */
 function zen_get_product_details($product_id, $language_id = null): Product
 {
-    return (new Product($product_id))->forLanguage((int)$language_id);
+    return (new Product((int)$product_id))->forLanguage((int)$language_id);
 }
 
 function zen_product_set_header_response(int|string $product_id, ?Product $product_info = null): void
@@ -26,12 +26,12 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 
     // make sure we got a dbResponse
     if ($product_info === null || !isset($product_info->EOF)) {
-        $product_info = new Product($product_id);
+        $product_info = new Product((int)$product_id);
     }
 
     // make sure it's for the current product
     if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$product_id) {
-        $product_info = new Product($product_id);
+        $product_info = new Product((int)$product_id);
     }
 
     $product = $product_info->getData();
@@ -190,7 +190,7 @@ function zen_get_new_date_range($time_limit = false): string
  */
 function zen_get_products_category_id($product_id): int|string
 {
-    return (new Product($product_id))->get('master_categories_id') ?? '';
+    return (new Product((int)$product_id))->get('master_categories_id') ?? '';
 }
 
 /**
@@ -408,7 +408,7 @@ function zen_get_prid(string|int $uprid): int
  */
 function zen_products_id_valid(int|string $product_id): bool
 {
-    return (new Product($product_id))->isValid();
+    return (new Product((int)$product_id))->isValid();
 }
 
 /**
@@ -419,7 +419,7 @@ function zen_products_id_valid(int|string $product_id): bool
  */
 function zen_get_products_name($product_id, $language_id = null): string
 {
-    $product = (new Product($product_id))->getDataForLanguage($language_id);
+    $product = (new Product((int)$product_id))->getDataForLanguage($language_id);
     return $product['products_name'] ?? '';
 }
 
@@ -429,7 +429,7 @@ function zen_get_products_name($product_id, $language_id = null): string
  */
 function zen_get_products_model($product_id): string
 {
-    return (new Product($product_id))->get('products_model') ?? '';
+    return (new Product((int)$product_id))->get('products_model') ?? '';
 }
 
 /**
@@ -438,7 +438,7 @@ function zen_get_products_model($product_id): string
  */
 function zen_get_products_status($product_id): int
 {
-    return (new Product($product_id))->status();
+    return (new Product((int)$product_id))->status();
 }
 
 /**
@@ -450,9 +450,9 @@ function zen_get_products_status($product_id): int
 function zen_get_product_is_linked($product_id, $show_count = 'false')
 {
     if ($show_count === true || $show_count === 'true') {
-        return (new Product($product_id))->get('linked_categories_count');
+        return (new Product((int)$product_id))->get('linked_categories_count');
     }
-    return (new Product($product_id))->isLinked() ? 'true' : 'false';
+    return (new Product((int)$product_id))->isLinked() ? 'true' : 'false';
 }
 
 /**
@@ -517,7 +517,7 @@ function zen_check_stock($products_id, $products_quantity): string
  */
 function zen_get_products_manufacturers_name($product_id): string
 {
-    return (new Product($product_id))->get('manufacturers_name') ?? '';
+    return (new Product((int)$product_id))->get('manufacturers_name') ?? '';
 }
 
 /**
@@ -527,7 +527,7 @@ function zen_get_products_manufacturers_name($product_id): string
  */
 function zen_get_products_manufacturers_image($product_id): string
 {
-    return (new Product($product_id))->get('manufacturers_image') ?? '';
+    return (new Product((int)$product_id))->get('manufacturers_image') ?? '';
 }
 
 /**
@@ -537,7 +537,7 @@ function zen_get_products_manufacturers_image($product_id): string
  */
 function zen_get_products_manufacturers_id($product_id): int
 {
-    return (new Product($product_id))->get('manufacturers_id') ?? 0;
+    return (new Product((int)$product_id))->get('manufacturers_id') ?? 0;
 }
 
 /**
@@ -547,7 +547,7 @@ function zen_get_products_manufacturers_id($product_id): int
  */
 function zen_get_products_url($product_id, $language_id): string
 {
-    $product = (new Product($product_id))->getDataForLanguage($language_id);
+    $product = (new Product((int)$product_id))->getDataForLanguage($language_id);
     return $product['products_url'] ?? '';
 }
 
@@ -561,7 +561,7 @@ function zen_get_products_description($product_id, $language_id = null): string
 {
     global $zco_notifier;
 
-    $product = new Product($product_id);
+    $product = new Product((int)$product_id);
     $data = $product->getDataForLanguage($language_id);
 
     //Allow an observer to modify the description
@@ -576,7 +576,7 @@ function zen_get_products_description($product_id, $language_id = null): string
  */
 function zen_get_info_page($product_id): string
 {
-    return (new Product($product_id))->getInfoPage();
+    return (new Product((int)$product_id))->getInfoPage();
 }
 
 /**
@@ -587,7 +587,7 @@ function zen_get_info_page($product_id): string
 function zen_get_products_type($product_id): int|string
 {
     // NOTE: Empty string return is used by the admin/product.php to identify a product that doesn't exist in the database!
-    return (new Product($product_id))->get('products_type') ?? '';
+    return (new Product((int)$product_id))->get('products_type') ?? '';
 }
 
 /**
@@ -599,7 +599,7 @@ function zen_get_products_type($product_id): int|string
  */
 function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height = SMALL_IMAGE_HEIGHT): string
 {
-    $image = (new Product($product_id))->get('products_image') ?? '';
+    $image = (new Product((int)$product_id))->get('products_image') ?? '';
     if (empty($image)) {
         return '';
     }
@@ -617,7 +617,7 @@ function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height
  */
 function zen_get_products_virtual($product_id): bool
 {
-    return (new Product($product_id))->isVirtual();
+    return (new Product((int)$product_id))->isVirtual();
 }
 
 /**
@@ -627,7 +627,7 @@ function zen_get_products_virtual($product_id): bool
  */
 function zen_get_products_allow_add_to_cart($product_id): string
 {
-    return (new Product($product_id))->allowsAddToCart() ? 'Y' : 'N';
+    return (new Product((int)$product_id))->allowsAddToCart() ? 'Y' : 'N';
 }
 
 /**
@@ -674,7 +674,7 @@ function zen_get_show_product_switch_name($lookup, $field, $prefix = 'SHOW_', $s
  */
 function zen_get_product_is_always_free_shipping($product_id): bool
 {
-    return (new Product($product_id))->isAlwaysFreeShipping();
+    return (new Product((int)$product_id))->isAlwaysFreeShipping();
 }
 
 /**
@@ -688,7 +688,7 @@ function zen_get_product_is_always_free_shipping($product_id): bool
  */
 function zen_products_lookup($product_id, $what_field = 'products_name', $language = null): mixed
 {
-    $product = new Product($product_id);
+    $product = new Product((int)$product_id);
     $data = $product->getDataForLanguage($language);
     if (empty($data) || !array_key_exists($what_field, $data)) {
         return '';
@@ -703,7 +703,7 @@ function zen_products_lookup($product_id, $what_field = 'products_name', $langua
  */
 function zen_get_parent_category_id($product_id): int|string
 {
-    return (new Product($product_id))->get('master_categories_id') ?? '';
+    return (new Product((int)$product_id))->get('master_categories_id') ?? '';
 }
 
 /**
