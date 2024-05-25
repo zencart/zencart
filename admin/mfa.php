@@ -188,7 +188,7 @@ $fieldAttributes .= match ($_SESSION['mfa']['type'] ?? 'digits') {
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary"><?= TEXT_SUBMIT ?></button>
-                        <a class="button" class="btn btn-default btn-link" href="<?= zen_href_link(FILENAME_LOGOFF) ?>"><?= TEXT_CANCEL ?></a>
+                        <a class="button btn btn-default btn-link" href="<?= zen_href_link(FILENAME_LOGOFF) ?>"><?= TEXT_CANCEL ?></a>
                     </div>
                     <?php
                     echo '</form>' . PHP_EOL; ?>
