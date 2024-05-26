@@ -23,7 +23,7 @@ ini_set('display_errors', 1);
 set_time_limit(500);
 
 $showDetails = (isset($_GET['d']) && $_GET['d'] != '0') || (isset($_GET['details']) && $_GET['details'] != '0');
-$errorMessage = '<span style="color:red;font-weight:bold">Error </span>';
+$errorMessage = '<span style="color:red;font-weight:bold">Error </span> (rerun with "?d=1" for details)';
 $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
 ?>
     <html>
@@ -33,6 +33,7 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     <body>
     <p>
         <?php
+        echo 'Checking server against howsmytls.com' . "<br>\n";
         // Assess the capabilities of this server when connecting as a client. To see ciphers and other data add the ?details=on parameter as described above.
         $ch = curl_init('https://www.howsmytls.com/a/check');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -41,6 +42,7 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
         curl_close($ch);
         $json = json_decode($data, false);
         echo (stristr($json->rating, 'Okay')) ? $goodMessage : $errorMessage;
+        echo "<br>\n";
         echo 'Connection uses ' . $json->tls_version . "<br>\n";
         if ($showDetails) {
             echo '<pre>' . print_r(json_decode($data, true), true) . "</pre><br>";
