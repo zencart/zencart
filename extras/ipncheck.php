@@ -34,7 +34,6 @@ $testBoth = (isset($_GET['both']) && $_GET['both'] == '0') ? FALSE : TRUE;
 $testSandbox = (isset($_GET['sandbox'])) ? TRUE : FALSE;
 
 $_POST = array();
-if (isset($GLOBALS)) unset($GLOBALS);
 if (isset($_GET)) unset($_GET);
 if (isset($_REQUEST)) unset($_REQUEST);
 $_POST['ipn_mode'] = 'communication_test';
