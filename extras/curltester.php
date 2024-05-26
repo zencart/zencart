@@ -41,7 +41,7 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
         $data = curl_exec($ch);
         curl_close($ch);
         $json = json_decode($data, false);
-        echo (stristr($json->rating, 'Okay')) ? $goodMessage : $errorMessage;
+        echo (stripos($json->rating, 'Okay') !== false ? $goodMessage : $errorMessage) . ' Rating: ' . $json->rating;
         echo "<br>\n";
         echo 'Connection uses ' . $json->tls_version . "<br>\n";
         if ($showDetails) {
