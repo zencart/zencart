@@ -19,7 +19,7 @@ $define = [
     'TEXT_HEADING_NEW_RECORD_COMPANY' => 'New Record Company',
     'TEXT_HEADING_EDIT_RECORD_COMPANY' => 'Edit Record Company',
     'TEXT_HEADING_DELETE_RECORD_COMPANY' => 'Delete Record Company',
-    'TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES' => 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Record Companies)',
+    'TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES' => 'Displaying <strong>%1$d</strong> to <strong>%2$d</strong> (of <strong>%3$d</strong> Record Companies)',
     'TEXT_DELETE_PRODUCTS' => 'Delete this Record Company and all items linked to it?',
     'TEXT_DELETE_WARNING_PRODUCTS' => '<b>WARNING:</b> There are %s items still linked to this Record Company!',
 ];

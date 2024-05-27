@@ -35,7 +35,7 @@ $define = [
     'TEXT_CLEANUP_ERROR' => 'Please check file permissions. Some Directories not removed',
     'TEXT_UPGRADE_AVAILABLE' => 'Upgrade Available',
     'TEXT_VERSION_INSTALLED' => 'Version Installed: %s',
-    'TEXT_NEW_PLUGIN_DOWNLOAD_AVAILABLE' => 'A new version %s is available to download from the <a target="_blank" href="https://www.zen-cart.com/downloads.php?do=file&id=%s">support forum</a>',
+    'TEXT_NEW_PLUGIN_DOWNLOAD_AVAILABLE' => 'A new version %1$s is available to download from the <a target="_blank" href="https://www.zen-cart.com/downloads.php?do=file&id=%2$s">support forum</a>',
     'TEXT_CONFIRM_UNINSTALL' => 'Are you sure you want to uninstall this plugin?',
     'TEXT_CONFIRM_UPGRADE' => 'Are you sure you want to upgrade this plugin?',
     'TEXT_CONFIRM_DISABLE' => 'Are you sure you want to disable this plugin?',
