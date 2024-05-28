@@ -61,7 +61,7 @@ $define = [
     'ERROR_OPTION_VALUES_DELETE_MISMATCH' => 'Error: Mismatched Option Name and Option Value selected',
     'SUCCESS_OPTION_VALUES_DELETE' => 'Successful: Deletion of: ',
     'LABEL_FILTER' => 'Select Option Name to filter Values',
-    'TEXT_DISPLAY_NUMBER_OF_OPTION_VALUES' => 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Option Values)',
+    'TEXT_DISPLAY_NUMBER_OF_OPTION_VALUES' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Option Values)',
     'TEXT_SHOW_ALL' => 'Show All',
 ];
 

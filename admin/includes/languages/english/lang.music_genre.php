@@ -16,7 +16,7 @@ $define = [
     'TEXT_HEADING_NEW_MUSIC_GENRE' => 'New Music Genre',
     'TEXT_HEADING_EDIT_MUSIC_GENRE' => 'Edit Music Genre',
     'TEXT_HEADING_DELETE_MUSIC_GENRE' => 'Delete Music Genre',
-    'TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES' => 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Music Genres)',
+    'TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES' => 'Displaying <strong>%1$d</strong> to <strong>%2$d</strong> (of <strong>%3$d</strong> Music Genres)',
     'TEXT_DELETE_PRODUCTS' => 'Delete this Music Genre and all items linked to it?',
     'TEXT_DELETE_WARNING_PRODUCTS' => '<b>WARNING:</b> There are %s items still linked to this Music Genre!',
 ];

@@ -33,7 +33,7 @@ $define = [
     'TABLE_HEADING_PAGE_IS_VISIBLE' => 'Page is Visible:',
     'TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION' => ' Page shown even if not in header, footer or sidebox<br>
 (If all the settings for Visible and Header and Footer and Sidebox are all OFF then visitors attempting to see the page will get a Page-Not-Found response.)',
-    'TEXT_DISPLAY_NUMBER_OF_PAGES' => 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> pages)',
+    'TEXT_DISPLAY_NUMBER_OF_PAGES' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> pages)',
     'IMAGE_NEW_PAGE' => 'New Page',
     'TEXT_INFO_PAGES_ID' => 'ID: ',
     'TEXT_INFO_PAGES_ID_SELECT' => 'Select a page ...',

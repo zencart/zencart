@@ -43,7 +43,7 @@ $define = [
     'TEXT_GOOD_BOX' => ' ',
     'TEXT_BAD_BOX' => '<span class="txt-red"><b>MISSING</b></span><br>',
     'SUCCESS_BOX_DELETED' => 'Removed the box: ',
-    'SUCCESS_BOX_RESET' => 'Settings for [%s] have been reset to current settings from [%s].',
+    'SUCCESS_BOX_RESET' => 'Settings for [%1$s] have been reset to current settings from [%2$s].',
     'SUCCESS_BOX_UPDATED' => 'Updated settings for box: ',
     'TEXT_ON' => ' ON ',
     'TEXT_OFF' => ' OFF ',
