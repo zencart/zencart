@@ -17,6 +17,7 @@ $error = false;
 $setup_required = ($_GET['action'] ?? '') === 'setup' || !empty($_SESSION['mfa']['setup_required']);
 
 $mfa_modes_to_select_from = [
+    ['id' => '', 'text' => PLEASE_SELECT],
     ['id' => 'totp', 'text' => TEXT_MFA_METHOD_TOTP],
     ['id' => 'email', 'text' => TEXT_MFA_METHOD_EMAIL],
 ];
@@ -140,8 +141,8 @@ $fieldAttributes .= match ($_SESSION['mfa']['type'] ?? 'digits') {
                     <?php if ($setup_required) { ?>
                     <?= zen_draw_hidden_field('action', 'setup' . $_SESSION['securityToken'], 'id="otpsetup"') . PHP_EOL ?>
                     <h2><?= TEXT_MFA_SELECT ?></h2>
-                    <div class="form-group form-group-lg">
-                        <?= zen_draw_pull_down_menu('selected', $mfa_modes_to_select_from, '', 'class="form-control input-lg" autofocus id="mfaselect-' . $_SESSION['securityToken'] . '" required') . PHP_EOL ?>
+                    <div class="form-group form-group">
+                        <?= zen_draw_pull_down_menu('selected', $mfa_modes_to_select_from, 'totp', 'class="form-control input" autofocus id="mfaselect-' . $_SESSION['securityToken'] . '" required') . PHP_EOL ?>
                     </div>
 
                     <?php } else { ?>
