@@ -34,9 +34,9 @@ class ScriptedInstaller
         return $uninstalled;
     }
 
-    public function doUpgrade()
+    public function doUpgrade($oldVersion)
     {
-        $upgraded = $this->executeUpgrade();
+        $upgraded = $this->executeUpgrade($oldVersion);
         return $upgraded;
     }
 
@@ -50,7 +50,7 @@ class ScriptedInstaller
         return true;
     }
 
-    protected function executeUpgrade()
+    protected function executeUpgrade($oldVersion)
     {
         return true;
     }
