@@ -15,6 +15,8 @@ require_once DIR_FS_ADMIN . DIR_WS_CLASSES . 'MultiFactorAuth.php';
 zen_define_default('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', 'zen_mfa_handler');
 
 /**
+ * Broker for MFA activity.
+ *
  * Checks whether MFA is enabled for the store.
  * Checks whether the current user has MFA configured, or is exempt from it.
  * Checks whether setup is required.
@@ -51,7 +53,7 @@ function zen_mfa_handler(array $admin_info = []): bool
         return zen_mfa_by_totp($admin_info);
     }
 
-    // MFA is required but user has not selected a method yet
+    // MFA is required but user has not selected a method yet or hasn't verified first issued code yet
     $_SESSION['mfa']['setup_required'] = true;
 
     return true;
@@ -87,17 +89,15 @@ function zen_mfa_by_totp(array $admin_info = []): bool
         $_SESSION['mfa'] = [];
     }
 
+    $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER);
+
     $ga = new MultiFactorAuth();
 
     $user_mfa_data = json_decode($admin_info['mfa'] ?? '', true, 2);
     $secret = !empty($user_mfa_data['secret']) ? $user_mfa_data['secret'] : $ga->createSecret();
     if (empty($user_mfa_data['secret'])) {
         $_SESSION['mfa']['secret_not_yet_persisted'] = true;
-        $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER);
-
-        $qrCode = $ga->getQrCodeQrServerUrl($domain, $secret);
-//        $qrCode = $ga->getQrCodeQRicketUrl($domain, $secret)
-
+        $qrCode = $ga->getQrCode($domain, $secret, $admin_info['admin_name'] ?? '', 200);
         $_SESSION['mfa']['qrcode'] = $qrCode;
     }
 
@@ -148,6 +148,6 @@ function zen_mfa_by_email(array $admin_info = []): bool
     // send email
     $email_response = zen_mail($admin_info['admin_name'], $admin_info['email'], TEXT_MFA_EMAIL_SUBJECT, $text_msg, STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
 
-    // The email response must be a blank string (it will be false on abort, or error message string on failure)
+    // zen_mail()'s response must be a blank string (it will be false on abort, or error message string on failure)
     return $email_response === '';
 }

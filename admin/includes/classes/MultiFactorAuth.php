@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Standalone PHP Class for handling Google Authenticator 2-factor authentication.
+ * Handle Multi-Factor authentication via TOTP
+ * Compatible with most Authenticator apps and in-browser support.
  *
  * Based on / inspired by: https://github.com/RobThree/TwoFactorAuth
  * Based on / inspired by: https://github.com/PHPGangsta/GoogleAuthenticator
@@ -25,6 +26,9 @@ class MultiFactorAuth
         private int     $period = 30,
         private string  $algorithm = 'sha1', // 'sha256', 'sha512'
         private ?string $issuer = null,
+        private array   $qrProviderOrder = ['QrServerUrl', 'QRickitUrl'],
+        private bool    $prependIssuer = true,
+        private string  $encoding = 'utf-8',
     ) {
         if ($this->codeLength <= 0) {
             throw new ValueError('codeLength must be int > 0, usually 6, 7, or 8');
@@ -33,6 +37,9 @@ class MultiFactorAuth
         if ($this->period <= 0) {
             throw new ValueError('Period (seconds) must be int > 0, normally 30, optionally 15 or 60');
         }
+
+        if ($this->issuer !== null) {
+            $this->issuer = str_replace(':', '_', $this->issuer);
         }
 
         self::$_base32 = str_split(self::$_base32dict);
@@ -139,11 +146,27 @@ class MultiFactorAuth
     /**
      * Builds a string to be encoded in a QR code
      */
-    public function getQRText(string $label, string $secret): string
+    protected function getQRText(string $domain, string $secret, string $accountname = ''): string
     {
+        if ($domain !== '') {
+            $domain = str_replace(':', '_', $domain);
+        }
+
+        $issuer = $this->issuer ?? $domain;
+
+        if ($accountname !== '') {
+            $accountname = str_replace(':', '_', $accountname);
+        }
+
+        $label = $accountname;
+
+        if ($this->prependIssuer && !empty($issuer)) {
+            $label = $issuer . ':' . $label;
+        }
+
         return 'otpauth://totp/' . rawurlencode($label)
             . '?secret=' . rawurlencode($secret)
-            . '&issuer=' . rawurlencode((string)$this->issuer)
+            . '&issuer=' . rawurlencode($issuer)
             . '&period=' . $this->period
             . '&algorithm=' . rawurlencode(strtoupper($this->algorithm))
             . '&digits=' . $this->codeLength;
@@ -153,7 +176,7 @@ class MultiFactorAuth
      * Get QR-Code URL for image from QRserver.com.
      * See https://goqr.me/api/doc/create-qr-code/
      */
-    public function getQrCodeQrServerUrl(string $domain, string $secretkey, int $size = 200): string
+    public function getQrCodeQrServerUrl(string $data, int $size = 200): string
     {
         $queryParameters = [
             'size' => $size . 'x' . $size,
@@ -161,7 +184,7 @@ class MultiFactorAuth
             'margin' => 4,
             'qzone' => 1,
             'format' => 'png', // 'svg'
-            'data' => $this->getQRText($domain, $secretkey),
+            'data' => $data,
         ];
 
         return 'https://api.qrserver.com/v1/create-qr-code/?' . http_build_query($queryParameters);
@@ -170,7 +193,7 @@ class MultiFactorAuth
     /**
      * See http://qrickit.com/qrickit_apps/qrickit_api.php
      */
-    public function getQrCodeQRicketUrl(string $domain, string $secretkey, int $size = 200): string
+    public function getQrCodeQRickitUrl(string $data, int $size = 200): string
     {
         $queryParameters = [
             'qrsize' => $size,
@@ -178,10 +201,32 @@ class MultiFactorAuth
             'bgdcolor' => 'ffffff',
             'fgdcolor' => '000000',
             't' => 'p', // png
-            'd' => $this->getQRText($domain, $secretkey),
+            'd' => $data,
         ];
 
         return 'https://qrickit.com/api/qr?' . http_build_query($queryParameters);
     }
 
+
+    public function getQrCode(string $domain, string $secret, string $accountname = '', int $size = 200): string
+    {
+        $data = $this->getQRText($domain, $secret, $accountname);
+
+        $qr = '';
+        foreach ($this->qrProviderOrder as $provider) {
+            if ($provider === 'QrServerUrl') {
+                $qr = $this->getQrCodeQRserverUrl($data, $size);
+            }
+
+            if ($provider === 'QRickitUrl') {
+                $qr = $this->getQrCodeQRickitUrl($data, $size);
+            }
+
+            if (!empty($qr)) {
+                return $qr;
+            }
+        }
+
+        return $qr;
+    }
 }
