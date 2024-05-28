@@ -98,6 +98,7 @@ if (!empty($_POST['action'])) {
     } elseif ($_POST['action'] === 'setup' . $_SESSION['securityToken']) {
         if ($_POST['selected'] === 'email') {
             zen_db_perform(TABLE_ADMIN, ['mfa' => json_encode(['via_email' => true])], 'update', "admin_id = " . (int)$_SESSION['admin_id']);
+            zen_mfa_by_email(['admin_id' => $user['admin_id'], 'email' => $user['admin_email'], 'admin_name' => $user['admin_name'], 'mfa' => json_encode(['via_email' => true])]);
             $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
             $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
             zen_redirect($redirect);
