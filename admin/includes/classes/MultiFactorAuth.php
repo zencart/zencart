@@ -21,17 +21,18 @@ class MultiFactorAuth
     private static array $_base32lookup = [];
 
     public function __construct(
-        private int    $codeLength = 6,
-        private int    $period = 30,
-        private string $algorithm = 'sha1',
+        private int     $codeLength = 6,
+        private int     $period = 30,
+        private string  $algorithm = 'sha1', // 'sha256', 'sha512'
         private ?string $issuer = null,
     ) {
         if ($this->codeLength <= 0) {
-            throw new ValueError('codeLength must be int > 0');
+            throw new ValueError('codeLength must be int > 0, usually 6, 7, or 8');
         }
 
         if ($this->period <= 0) {
-            throw new ValueError('Period must be int > 0');
+            throw new ValueError('Period (seconds) must be int > 0, normally 30, optionally 15 or 60');
+        }
         }
 
         self::$_base32 = str_split(self::$_base32dict);
