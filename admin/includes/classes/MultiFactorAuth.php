@@ -15,8 +15,8 @@
 foreach ([
     DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/DaspridEnum/autoload.php', // required by BaconQrCode
     DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/BaconQrCode/autoload.php', // required by BaconQrCode
-    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-color/autoload.php', // required by TCBarcode
-    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-barcode/autoload.php', // required by TCBarcode
+//    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-color/autoload.php', // required by TCBarcode
+//    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-barcode/autoload.php', // required by TCBarcode
 ] as $file) {
     if (file_exists($file)) {
         include $file;
@@ -38,7 +38,7 @@ class MultiFactorAuth
         private int     $period = 30,
         private string  $algorithm = 'sha1', // 'sha256', 'sha512'
         private ?string $issuer = null,
-        private array   $qrProviderOrder = ['local', 'BaconQrCode', 'TCBarcode', 'QrServerUrl', 'QRickitUrl'],
+        private array   $qrProviderOrder = ['local', 'BaconQrCode', 'QrServerUrl', 'QRickitUrl'], // 'TCBarcode'
         private bool    $prependIssuer = true,
         private string  $encoding = 'utf-8',
     ) {
@@ -234,6 +234,7 @@ class MultiFactorAuth
 
     /**
      * See https://github.com/tecnickcom/tc-lib-barcode
+     * (To add this library, must create an autoloader.php for it to register with, and also include tc-lib-color)
      */
     public function getQrCodeTCBarcode(string $data, int $size = 200): string
     {
