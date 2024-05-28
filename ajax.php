@@ -54,8 +54,9 @@ $className = 'zc' . ucfirst($_GET['act']);
 $classFile = basename($className . '.php');
 $classPath = DIR_WS_CLASSES . 'ajax/';
 $basePath  = DIR_FS_CATALOG;
-if (file_exists(realpath($basePath . $classPath . $classFile))) {
-    require realpath($basePath . $classPath . $classFile);
+$file = realpath($basePath . $classPath . $classFile);
+if (!empty($file)) && file_exists($file)) {
+    require $file;
 } else {
     $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/' . $classPath, '~^' . $classFile . '$~');
     if (!class_exists($className)) {
