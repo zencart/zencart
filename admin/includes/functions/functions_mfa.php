@@ -98,7 +98,7 @@ function zen_mfa_by_totp(array $admin_info = []): bool
         $qrCode = $ga->getQrCodeQrServerUrl($domain, $secret);
 //        $qrCode = $ga->getQrCodeQRicketUrl($domain, $secret)
 
-        $_SESSION['mfa']['qrcode'] = sprintf('<img class="text-center" src="%s"/>', $qrCode);
+        $_SESSION['mfa']['qrcode'] = $qrCode;
     }
 
     // set system to expect MFA confirmation, so that login won't progress past getting this confirmation

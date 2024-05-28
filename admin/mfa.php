@@ -162,7 +162,14 @@ $fieldAttributes .= match ($_SESSION['mfa']['type'] ?? 'digits') {
                     if (!empty($_SESSION['mfa']['qrcode'])) { ?>
                         <div id="mfa-qrcode" class="col-xs-12 m-4">
                             <?= TEXT_MFA_SCAN_QR_CODE ?><br><br>
-                            <div id="mfa_qr_img"><?= $_SESSION['mfa']['qrcode'] ?></div>
+                            <div id="mfa_qr_img"><?php
+                                $qrCode = $_SESSION['mfa']['qrcode'];
+                                if (str_starts_with($qrCode, '<')) {
+                                    echo $qrCode;
+                                } else {
+                                    echo sprintf('<img class="text-center" src="%s" alt="QR Code"/>', $qrCode);
+                                }
+                                ?></div>
                         </div>
                     <?php
                     } ?>
