@@ -11,6 +11,18 @@
  *
  */
 
+// handle autoloaders for 3rd party composer packages
+foreach ([
+    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/DaspridEnum/autoload.php', // required by BaconQrCode
+    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/BaconQrCode/autoload.php', // required by BaconQrCode
+    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-color/autoload.php', // required by TCBarcode
+    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-barcode/autoload.php', // required by TCBarcode
+] as $file) {
+    if (file_exists($file)) {
+        include $file;
+    }
+}
+
 class MultiFactorAuth
 {
     private static string $_base32dict = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=';
@@ -26,7 +38,7 @@ class MultiFactorAuth
         private int     $period = 30,
         private string  $algorithm = 'sha1', // 'sha256', 'sha512'
         private ?string $issuer = null,
-        private array   $qrProviderOrder = ['QrServerUrl', 'QRickitUrl'],
+        private array   $qrProviderOrder = ['local', 'BaconQrCode', 'TCBarcode', 'QrServerUrl', 'QRickitUrl'],
         private bool    $prependIssuer = true,
         private string  $encoding = 'utf-8',
     ) {
@@ -207,6 +219,43 @@ class MultiFactorAuth
         return 'https://qrickit.com/api/qr?' . http_build_query($queryParameters);
     }
 
+    /**
+     * See https://github.com/Bacon/BaconQrCode
+     *
+     * Using SVG mode because it is not dependent on Imagemagick (but is dependent on XMLWriter)
+     */
+    public function getQrCodeBaconQrCode(string $data, int $size = 200): string
+    {
+        $renderer = new BaconQrCode\Renderer\ImageRenderer((new BaconQrCode\Renderer\RendererStyle\RendererStyle($size))->withSize($size), new BaconQrCode\Renderer\Image\SvgImageBackEnd());
+        $writer = new BaconQrCode\Writer($renderer);
+
+        return $writer->writeString($data, $this->encoding ?? 'utf-8');
+    }
+
+    /**
+     * See https://github.com/tecnickcom/tc-lib-barcode
+     */
+    public function getQrCodeTCBarcode(string $data, int $size = 200): string
+    {
+        $barcode = new \Com\Tecnick\Barcode\Barcode();
+
+        $qrCode = $barcode->getBarcodeObj(
+            'QRCODE,L',
+            $data, // data string to encode
+            $size,
+            $size,
+            'black',  // foreground color
+            [2,2,2,2] // padding (use absolute or negative values as multiplication factors)
+        )->setBackgroundColor('white'); // background color
+
+        if (function_exists('imagecreate')) {
+            return 'data:image/png;base64,' . base64_encode($qrCode->getPngData(true));
+        }
+
+        return $qrCode->getSvgCode(); // returns SVG as SVG markup, safe to render directly as HTML
+
+        //return $qrCode->getHtmlDiv(); // returns a DIV containing multiple small rectangles for QR code, safe to render as HTML; however, QR Code is not as well recognized by in-browser scanners
+    }
 
     public function getQrCode(string $domain, string $secret, string $accountname = '', int $size = 200): string
     {
@@ -214,6 +263,24 @@ class MultiFactorAuth
 
         $qr = '';
         foreach ($this->qrProviderOrder as $provider) {
+            if ($provider === 'local' || $provider === 'BaconQrCode') {
+                if (class_exists('\BaconQrCode\Encoder\QrCode')) {
+                    $qr = $this->getQrCodeBaconQrCode($data, $size);
+                }
+                if (!empty($qr)) {
+                    return $qr;
+                }
+            }
+
+            if ($provider === 'local' || $provider === 'TCBarcode') {
+                if (class_exists('\Com\Tecnick\Barcode\Barcode')) {
+                    $qr = $this->getQrCodeTCBarcode($data, $size);
+                }
+                if (!empty($qr)) {
+                    return $qr;
+                }
+            }
+
             if ($provider === 'QrServerUrl') {
                 $qr = $this->getQrCodeQRserverUrl($data, $size);
             }
