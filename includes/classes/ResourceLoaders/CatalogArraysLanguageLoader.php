@@ -47,13 +47,13 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions');
         $this->addLanguageDefines($defineList);
 
-        $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions/' . $this->templateDir);
-        $this->addLanguageDefines($defineList);
-
         $defineList = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions', 'catalog');
         $this->addLanguageDefines($defineList);
 
         $defineList = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions/default');
+        $this->addLanguageDefines($defineList);
+        
+        $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions/' . $this->templateDir);
         $this->addLanguageDefines($defineList);
     }
 
