@@ -63,8 +63,7 @@ if (!empty($_POST['action'])) {
                 zen_db_perform(TABLE_ADMIN_EXPIRED_TOKENS, ['admin_name' => $_SESSION['mfa']['admin_name'] ?? zen_get_admin_name($_SESSION['admin_id']), 'otp_code' => $_POST['mfa_code']]);
 
                 unset($_SESSION['mfa']);
-                $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
-                $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+                $redirect = zen_href_link($_GET['camefrom'] ?? FILENAME_DEFAULT, zen_get_all_get_params(['camefrom', 'action']), 'SSL');
                 zen_redirect($redirect);
             }
         } else {
@@ -84,8 +83,7 @@ if (!empty($_POST['action'])) {
                 zen_db_perform(TABLE_ADMIN_EXPIRED_TOKENS, ['admin_name' => $_SESSION['mfa']['admin_name'] ?? zen_get_admin_name($_SESSION['admin_id']), 'otp_code' => $_POST['mfa_code']]);
 
                 unset($_SESSION['mfa']);
-                $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
-                $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+                $redirect = zen_href_link($_GET['camefrom'] ?? FILENAME_DEFAULT, zen_get_all_get_params(['camefrom', 'action']), 'SSL');
                 zen_redirect($redirect);
             }
         }
@@ -100,8 +98,7 @@ if (!empty($_POST['action'])) {
         if ($_POST['selected'] === 'email') {
             zen_db_perform(TABLE_ADMIN, ['mfa' => json_encode(['via_email' => true])], 'update', "admin_id = " . (int)$_SESSION['admin_id']);
             zen_mfa_by_email(['admin_id' => $user['admin_id'], 'email' => $user['admin_email'], 'admin_name' => $user['admin_name'], 'mfa' => json_encode(['via_email' => true])]);
-            $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
-            $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+            $redirect = zen_href_link($_GET['camefrom'] ?? FILENAME_DEFAULT, zen_get_all_get_params(['camefrom', 'action']), 'SSL');
             zen_redirect($redirect);
         }
         // else set up OTP
