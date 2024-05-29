@@ -55,7 +55,7 @@ $classFile = basename($className . '.php');
 $classPath = DIR_WS_CLASSES . 'ajax/';
 $basePath  = DIR_FS_CATALOG;
 $file = realpath($basePath . $classPath . $classFile);
-if (!empty($file)) && file_exists($file)) {
+if (!empty($file) && file_exists($file)) {
     require $file;
 } else {
     $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/' . $classPath, '~^' . $classFile . '$~');
