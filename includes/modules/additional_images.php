@@ -36,6 +36,14 @@ if ($products_image !== '' && !empty($flag_show_product_info_additional_images))
         $products_image_base = $products_image_match;
     }
 
+    // Unless legacy mode is turned on, force the use of a '_' suffix when detecting additional images NOT in a subdirectory
+    if (defined('ADDITIONAL_IMAGES_MODE') && ADDITIONAL_IMAGES_MODE !== 'legacy') {
+        $products_image_base .= '_';
+    }
+    if (str_ends_with($products_image_base, '__')) {
+        $products_image_base = substr($products_image_base, 0, -1);
+    }
+
     $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
     if ($products_image_directory !== '') {
         $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";

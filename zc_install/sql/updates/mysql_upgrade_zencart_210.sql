@@ -54,6 +54,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 
 
+# Image matching mode
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images matching pattern', 'ADDITIONAL_IMAGES_MODE', 'legacy', '&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict', '4', '25', 'zen_cfg_select_option(array(\'strict\', \'legacy\'), ', now());
 
 
 
