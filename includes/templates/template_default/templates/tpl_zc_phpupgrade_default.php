@@ -16,7 +16,7 @@ $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) 
 include 'includes/version.php';
 ?>
 <!DOCTYPE html>
-<html <?php echo HTML_PARAMS; ?>>
+<html dir="ltr" lang="en">
   <head>
     <title>PHP Version Upgrade Required</title>
     <meta content="utf-8">
