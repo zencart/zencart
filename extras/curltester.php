@@ -76,7 +76,10 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     doCurlTest('https://wwwcie.ups.com/api/rating/v1/Shop');
     //doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
 
-    echo 'Connecting to FedEx (port 80)...<br>';
+    echo 'Connecting to FedEx API ...<br>';
+    doCurlTest('https://apis.fedex.com/');
+
+    echo 'Connecting to FedEx (old port 80)...<br>';
     dofsockTest('fedex.com', 80);
 
     echo 'Connecting to Canada Post SellOnline HTTP/S ...<br>';
