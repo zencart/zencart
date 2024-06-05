@@ -229,6 +229,7 @@ $define = [
     'ERROR_NOTHING_SELECTED' => 'Nothing was selected ... No changes have been made',
     'ERROR_NO_DATA_TO_SAVE' => 'ERROR: The data you submitted was found to be empty. YOUR CHANGES HAVE *NOT* BEEN SAVED. You may have a problem with your browser or your internet connection.',
     'ERROR_NO_DEFAULT_CURRENCY_DEFINED' => 'Error: There is currently no default currency set. Please set one at: Administration Tools->Localization->Currencies',
+    'ERROR_ORDER_DOES_NOT_EXIST' => 'Error: Order does not exist.',
     'ERROR_ORDER_WEIGHT_ZERO_STATUS' => '<strong>Warning:</strong> 0 weight is configured for Free Shipping and Free Shipping Module is not enabled',
     'ERROR_PASSWORDS_NOT_MATCHING' => 'Password and confirmation must match',
     'ERROR_PASSWORD_RULES' => 'Passwords must contain both letters and numbers, must be at least %s characters long, and must not be the same as the last 4 passwords used. Passwords expire every 90 days, after which you will be prompted to choose a new password.',

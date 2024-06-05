@@ -23,26 +23,32 @@ $oID = (int)$_GET['oID'];
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
-
-// prepare order-status pulldown list
-$ordersStatus = zen_getOrdersStatuses();
-$orders_statuses = $ordersStatus['orders_statuses'];
-$orders_status_array = $ordersStatus['orders_status_array'];
-
-$show_customer = false;
-if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
-  $show_customer = true;
-}
-if (isset($order->delivery['street_address']) && $order->billing['street_address'] != $order->delivery['street_address']) {
-  $show_customer = true;
-}
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
   <body>
+<?php
+if (empty($order->info)) {
+?>
+      <p class="text-danger text-center"><?= ERROR_ORDER_DOES_NOT_EXIST . $oID ?></p>
+<?php
+} else {
+// prepare order-status pulldown list
+    $ordersStatus = zen_getOrdersStatuses();
+    $orders_statuses = $ordersStatus['orders_statuses'];
+    $orders_status_array = $ordersStatus['orders_status_array'];
+
+    $show_customer = false;
+    if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
+      $show_customer = true;
+    }
+    if (isset($order->delivery['street_address']) && $order->billing['street_address'] != $order->delivery['street_address']) {
+      $show_customer = true;
+    }
+?>
     <div class="container">
       <!-- body_text //-->
       <table class="table">
@@ -330,7 +336,10 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
           }
       ?>
     </div>
-
+      
+<?php
+}
+?>
     <!-- body_text_eof //-->
   </body>
 </html>
