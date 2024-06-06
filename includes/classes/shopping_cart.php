@@ -1361,7 +1361,7 @@ class shoppingCart extends base
 
             // convert quantity to proper decimals
             $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
-            if ($precision === 0 || str_contains($data['qty'], '.')) {
+            if ($precision === 0 || !str_contains($data['qty'], '.')) {
                 $new_qty = $data['qty'];
             } else {
                 $new_qty = preg_replace('/[0]+$/', '', $data['qty']);
@@ -2384,7 +2384,7 @@ class shoppingCart extends base
         $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
 
         if ($precision !== 0) {
-            if (str_contains((string)$check_qty, '.')) {
+            if (!str_contains((string)$check_qty, '.')) {
                 return $check_qty;
             }
             return preg_replace('/[0]+$/', '', $check_qty);
