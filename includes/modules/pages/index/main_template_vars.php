@@ -227,7 +227,7 @@ if ($current_categories_name == '' && isset($_GET['music_genre_id'])) {
                            WHERE music_genre_id = " . (int)$_GET['music_genre_id'] . " LIMIT 1");
   if (!$result->EOF) $current_categories_name = $result->fields['music_genre_name'];
 }
-$zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body, $current_categories_name);
+$zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body, $current_categories_name, $current_categories_description);
 
 require($template->get_template_dir($tpl_page_body, DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . $tpl_page_body);
 
