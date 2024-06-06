@@ -11,7 +11,7 @@ require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (isset($_POST['products_id'])) {
-    $product_type = zen_get_products_type($_POST['products_id']);
+    $product_type = (int)zen_get_products_type($_POST['products_id']);
 } elseif (isset($_GET['product_type'])) {
     $product_type = (int)$_GET['product_type'];
 } else {
@@ -166,7 +166,7 @@ if (!empty($action)) {
             $cascaded_prod_cat_for_delete = [];
             $cascaded_prod_cat_for_delete[] = $categories[$i]['id'];
             // determine product-type-specific override script for this product
-            $product_type = zen_get_products_type($category_product);
+            $product_type = (int)zen_get_products_type($category_product);
             // now loop thru the delete_product_confirm script for each product in the current category
             require zen_get_admin_module_from_directory($product_type, 'delete_product_confirm.php');
           }
@@ -912,7 +912,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $pInfo = new objectInfo($product);
               }
 
-              $type_handler = $zc_products->get_handler($product['products_type']);
+              $type_handler = zen_get_handler_from_type($product['products_type']);
               $products_wholesale_indicator = ($wholesale_pricing_enabled === true && $product['products_price_w'] !== '0') ? $wholesale_pricing_indicator : '';
               ?>
               <tr class="product-listing-row" data-pid="<?= $product['products_id'] ?>">
@@ -1040,7 +1040,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <?php } else { ?>
                         <a href="<?= zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $product['products_id'] . '&current_category_id=' . $current_category_id) ?>" class="btn btn-sm btn-default btn-attributes-off" role="button" title="<?= BOX_CATALOG_CATEGORIES_ATTRIBUTES_CONTROLLER ?>"><strong>A</strong></a>
                       <?php } ?>
-                      <?php if ($zc_products->get_allow_add_to_cart($product['products_id']) === "Y") { ?>
+                      <?php if (zen_get_products_allow_add_to_cart($product['products_id']) === 'Y') { ?>
 <?php
                      $ppm_color = 'btn-pricemanager-on';
                      if (zen_has_product_discounts($product['products_id']) === 'true') {

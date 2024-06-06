@@ -12,8 +12,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 /**
  * products class
- * Class used for managing various product information
+ * Deprecated class formerly used for managing various product information
  *
+ * @deprecated v2.1.0 - use Product class instead
+ * or call zen_get_products_name(), zen_get_handler_from_type(), zen_get_products_allow_add_to_cart()
  */
 class products extends base {
 

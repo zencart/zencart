@@ -303,7 +303,7 @@
       $products_linked = $db->Execute($products_linked_query);
       if ($products_linked->RecordCount() > 0) $contents[] = array('text' => '<hr>');
       while (!$products_linked->EOF) {
-        $contents[] = array('text'=>zen_draw_form('remove_product', FILENAME_MEDIA_MANAGER, 'action=remove_product&page=' . $_GET['page']) . '<input type="hidden" name="mID" value="' . $mInfo->media_id . '">' . '<input type="hidden" name="product_id" value="' . $products_linked->fields['product_id'] . '">' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>'. '&nbsp;' . $zc_products->products_name($products_linked->fields['product_id']) . '<br>' . '</form>');
+        $contents[] = array('text'=>zen_draw_form('remove_product', FILENAME_MEDIA_MANAGER, 'action=remove_product&page=' . $_GET['page']) . '<input type="hidden" name="mID" value="' . $mInfo->media_id . '">' . '<input type="hidden" name="product_id" value="' . $products_linked->fields['product_id'] . '">' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>'. '&nbsp;' . zen_get_products_name($products_linked->fields['product_id']) . '<br>' . '</form>');
         $products_linked->MoveNext();
       }
       $contents[] = array('align' => 'center', 'text' =>  '<br><a href="' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . $mManager_parameter) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');

@@ -111,7 +111,6 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
                 $cPath = zen_get_product_path($orders_products['products_id']);
               }
               $product_type = zen_get_products_type($orders_products['products_id']);
-              $type_handler = $zc_products->get_admin_handler($product_type);
               ?>
               <tr class="dataTableRow">
                 <td class="dataTableContent"><a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(array('cID', 'action', 'page', 'products_filter')) . 'cID=' . $orders_products['customers_id'] . '&action=edit', 'NONSSL'); ?>"><?php echo $orders_products['customers_id']; ?></a></td>
@@ -155,7 +154,6 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
           foreach ($products as $product) {
             $cPath = zen_get_product_path($product['products_id']);
             $product_type = zen_get_products_type($product['products_id']);
-            $type_handler = $zc_products->get_admin_handler($product_type);
             ?>
             <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">
               <td class="dataTableContent text-right"><a href="<?php echo zen_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'products_filter=' . $product['products_id']); ?>"><?php echo $product['products_id']; ?></a></td>

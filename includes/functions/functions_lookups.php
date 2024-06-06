@@ -14,13 +14,20 @@
  * get the type_handler value for the specified product_type
  * @param int $product_type
  */
-function zen_get_handler_from_type($product_type)
+function zen_get_handler_from_type($product_type): string
 {
     global $db;
 
-    $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = " . (int)$product_type;
+    // this is a fallback safety to protect against damaged (inaccessible) data caused by incorrect code in custom product types
+    if ((int)$product_type === 0) {
+        $product_type = 1;
+    }
+
+    $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$product_type;
     $handler = $db->Execute($sql);
-    if ($handler->EOF) return 'ERROR: Invalid type_handler. Your product_type settings are wrong, incomplete, or damaged.';
+    if ($handler->EOF) {
+        throw new ValueError('ERROR: Invalid type_handler. Your product_type settings are wrong, incomplete, or damaged.');
+    }
     return $handler->fields['type_handler'];
 }
 

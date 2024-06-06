@@ -716,7 +716,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 <?php
                 }
                 ?>
-                <?php if ($zc_products->get_allow_add_to_cart($products_filter) == "Y") { ?>
+                <?php if (zen_get_products_allow_add_to_cart($products_filter) === 'Y') { ?>
                   <li role="presentation"><a role="menuitem" href="<?php echo zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id); ?>"><?php echo IMAGE_PRODUCTS_PRICE_MANAGER; ?></a></li>
                 <?php } ?>
                 <?php

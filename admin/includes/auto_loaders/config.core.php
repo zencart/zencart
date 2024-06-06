@@ -309,15 +309,17 @@ $autoLoadConfig[80][] = [
 /**
  * Breakpoint 90.
  *
- * $zc_products = new products();
+ * $zc_products = new products(); // deprecated v2.1.0
  * require DIR_WS_FUNCTIONS . 'datepicker.php';
  *
  */
+// zc_products deprecated v2.1.0; use Product class instead.
 $autoLoadConfig[90][] = [
     'autoType' => 'classInstantiate',
     'className' => 'products',
     'objectName' => 'zc_products',
 ];
+
 $autoLoadConfig[90][] = [
     'autoType' => 'require',
     'loadFile' => DIR_WS_FUNCTIONS . 'datepicker.php',

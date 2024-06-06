@@ -22,7 +22,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         }
     } elseif ($_POST['copy_as'] === 'duplicate') {
 
-        $product = zen_get_product_details($products_id);
+        $product = (new Product((int)$products_id))->withDefaultLanguage();
 
         // fix Product copy from if Unit is 0
         if ($product->fields['products_quantity_order_units'] == 0) {

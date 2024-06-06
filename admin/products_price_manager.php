@@ -320,7 +320,7 @@ if (!empty($action)) {
 
       <?php
 // only show if allowed in cart
-      if ($zc_products->get_allow_add_to_cart($products_filter) == 'Y') {
+      if (zen_get_products_allow_add_to_cart($products_filter) === 'Y') {
 
 // featured information
         $featuredParameters = [
@@ -817,9 +817,9 @@ if (!empty($action)) {
                   <div class="col-sm-9 col-md-6 text-center">
                     <?php
 // Specials cannot be added to Gift Vouchers when false
-                    // prevent log on null 
-                    if (empty($pInfo->products_model)) { 
-                        $pInfo->products_model = ''; 
+                    // prevent log on null
+                    if (empty($pInfo->products_model)) {
+                        $pInfo->products_model = '';
                     }
                     if ((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true'))) {
                       ?>
