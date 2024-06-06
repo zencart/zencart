@@ -370,7 +370,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_MODEL, 'products_model', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
-        <?php echo zen_draw_input_field('products_model', htmlspecialchars(stripslashes($pInfo->products_model), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control" id="products_model"'); ?>
+        <?php echo zen_draw_input_field('products_model', htmlspecialchars(stripslashes($pInfo->products_model ?? ''), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control" id="products_model"'); ?>
     </div>
   </div>
     <hr>
@@ -397,12 +397,12 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         <?php echo zen_draw_label(TEXT_EDIT_PRODUCTS_IMAGE, 'products_image', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-9 col-lg-6">
             <?php echo zen_draw_file_field('products_image', '', 'class="form-control" id="products_image"'); ?>
-            <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image); ?>
+            <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image ?? ''); ?>
         </div>
     </div>
     <?php
     $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
-    $default_directory = substr($pInfo->products_image, 0, strpos($pInfo->products_image, '/') + 1);
+    $default_directory = substr($pInfo->products_image ?? '', 0, strpos($pInfo->products_image ?? '', '/') + 1);
     ?>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
