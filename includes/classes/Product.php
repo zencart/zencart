@@ -69,7 +69,7 @@ class Product
      */
     public function getDataForLanguage(?int $language_id = null): ?array
     {
-        if (empty($language_id)) {
+        if (empty($language_id)) { // empty allows for 0 which might occur if null is pre-casted to int before passing to this function
             $language_id = (int)$_SESSION['languages_id'];
         }
         $data = $this->data;
