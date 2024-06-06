@@ -419,6 +419,23 @@ function utilDumpRequest($mode = 'p', $out = 'log')
 }
 
 /**
+ * Convert a truthy/falsey string to boolean.
+ * Recognizes words like Yes, No, Off, On, True/False (both string and native types); and is not case-sensitive
+ * Also recognizes numbers both as strings and integers ('0', '1') as booleans
+ * Blank (empty string) is treated as false.
+ *
+ * By default, will return null if the passed value is neither truthy/falsey (ie: 'red', or '2')
+ */
+function zen_to_boolean(mixed $value, bool $null_on_failure = true): bool|null
+{
+    if ($null_on_failure) {
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+
+    return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+}
+
+/**
  * this function will need to be removed if
  * we ever revert to a full laravel install
  */
