@@ -1364,7 +1364,7 @@ class shoppingCart extends base
             if ($precision === 0 || !str_contains($data['qty'], '.')) {
                 $new_qty = $data['qty'];
             } else {
-                $new_qty = preg_replace('/[0]+$/', '', $data['qty']);
+                $new_qty = rtrim($data['qty'], '0');
             }
             $check_unit_decimals = $product['products_quantity_order_units'];
             if (!str_contains($check_unit_decimals, '.')) {
@@ -2387,7 +2387,7 @@ class shoppingCart extends base
             if (!str_contains((string)$check_qty, '.')) {
                 return $check_qty;
             }
-            return preg_replace('/[0]+$/', '', $check_qty);
+            return rtrim((string)$check_qty, '0');
         }
 
         if ($check_qty != round(zen_str_to_numeric($check_qty), $precision)) {
