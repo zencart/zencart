@@ -243,7 +243,11 @@ class Product
         $results = $db->Execute($sql, null, true, 900);
         $data['linked_categories_count'] = $results->RecordCount();
         $data['linked_categories'] = [];
-        foreach($results as $result) {
+        foreach ($results as $result) {
+            if ($result['categories_id'] === $data['master_categories_id']) {
+                $data['linked_categories_count']--;
+                continue;
+            }
             $data['linked_categories'][] = $result['categories_id'];
         }
 
