@@ -73,11 +73,20 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         //
         $zco_notifier->notify('NOTIFY_MODULES_COPY_PRODUCT_CONFIRM_DUPLICATE_FIELDS', $product, $separately_updated_fields, $casted_fields);
 
+        $db_fields = $db->metaColumns(TABLE_PRODUCTS);
+
         foreach ($product->fields as $key => $value) {
-            if (in_array($key, $separately_updated_fields)) {
+            // only prepare fields that are part of TABLE_PRODUCTS
+            if (!in_array($key, $db_fields, true)) {
                 continue;
             }
 
+            // skip any fields that are handled already or will be done differently
+            if (in_array($key, $separately_updated_fields, true)) {
+                continue;
+            }
+
+            // cast types according to rules
             $value = zen_db_input($value);
             if (array_key_exists($key, $casted_fields)) {
                 if ($casted_fields[$key] === 'int') {
