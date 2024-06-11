@@ -147,7 +147,7 @@ if ($request_type === 'SSL' && SESSION_CHECK_SSL_SESSION_ID === 'True' && ENABLE
  * verify the browser user agent if the feature is enabled
  */
 if (SESSION_CHECK_USER_AGENT === 'True') {
-    $http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+    $http_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
     if (empty($_SESSION['SESSION_USER_AGENT'])) {
         $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
     }
