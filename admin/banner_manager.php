@@ -570,7 +570,7 @@ if (!empty($action)) {
                         </a>
                       <?php } else { ?>
                         <a href="<?php echo zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=1'); ?>" data-toggle="tooltip" title="<?php echo IMAGE_ICON_BANNER_ON_SSL_OFF; ?>">
-                          <?php echo zen_icon('ssl-off', '2x', false, true) ?>
+                          <?php echo zen_icon('ssl-off', '', '2x', false, true) ?>
                         </a>
                       <?php } ?>
                     </td>
