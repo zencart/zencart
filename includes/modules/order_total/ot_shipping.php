@@ -21,7 +21,7 @@ class ot_shipping extends base
     public $code;
     /**
      * $description is a soft name for this order total method
-     * @var string 
+     * @var string
      */
     public $description;
     /**
@@ -56,25 +56,25 @@ class ot_shipping extends base
     public function process()
     {
         global $order, $currencies;
- 
+
         $this->output = [];
         unset($_SESSION['shipping_tax_description']);
-        
+
         if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING === 'true') {
             $pass = false;
             switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
                 case 'national':
                     if ($order->delivery['country_id'] == STORE_COUNTRY) {
-                        $pass = true; 
+                        $pass = true;
                     }
                     break;
               case 'international':
                     if ($order->delivery['country_id'] != STORE_COUNTRY) {
-                        $pass = true; 
+                        $pass = true;
                     }
                     break;
               case 'both':
-                    $pass = true; 
+                    $pass = true;
                     break;
               default:
                     break;
@@ -95,10 +95,10 @@ class ot_shipping extends base
             $shipping_tax = 0;
             $shipping_tax_description = '';
             $this->notify(
-                'NOTIFY_OT_SHIPPING_TAX_CALCS', 
-                [], 
-                $external_shipping_tax_handler, 
-                $shipping_tax, 
+                'NOTIFY_OT_SHIPPING_TAX_CALCS',
+                [],
+                $external_shipping_tax_handler,
+                $shipping_tax,
                 $shipping_tax_description
             );
 
