@@ -584,10 +584,9 @@ function zen_get_info_page($product_id): string
  * @param int $product_id
  * @return int|string
  */
-function zen_get_products_type($product_id): int|string
+function zen_get_products_type($product_id): int
 {
-    // NOTE: Empty string return is used by the admin/product.php to identify a product that doesn't exist in the database!
-    return (new Product((int)$product_id))->get('products_type') ?? '';
+    return (new Product((int)$product_id))->get('products_type') ?? 1;
 }
 
 /**

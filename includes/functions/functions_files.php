@@ -204,10 +204,8 @@ function zen_get_module_sidebox_directory($check_file)
  */
 function zen_get_admin_module_from_directory(int $product_type, string $filename_to_check, bool $dir_only = false): string
 {
-    global $zc_products;
-
     $dir = DIR_WS_MODULES;
-    $product_type_foldername = $zc_products->get_handler($product_type);
+    $product_type_foldername = zen_get_handler_from_type($product_type);
     if (file_exists(DIR_WS_MODULES . $product_type_foldername . '/' . $filename_to_check)) {
         $dir = DIR_WS_MODULES . $product_type_foldername . '/';
     }

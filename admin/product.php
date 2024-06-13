@@ -4,8 +4,6 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Oct 28 Modified in v2.0.0-alpha1 $
- *
- * @var products $zc_products
  */
 require 'includes/application_top.php';
 
@@ -14,18 +12,19 @@ $action = $_GET['action'] ?? '';
 require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
-$product_type = (isset($_POST['product_type']) ? (int)$_POST['product_type'] : (isset($_GET['pID']) ? zen_get_products_type($_GET['pID']) : 1));
+$product_type = (int)($_POST['product_type'] ?? $_GET['products_type'] ?? 1);
 
-// -----
-// If the product_type is an empty string, zen_get_products_type has indicated that the
-// requested product is not found in the database.
-//
-if ($product_type === '') {
+if (isset($_GET['pID'])) {
+    $product_lookup = (new Product((int)$_GET['pID']));
+    $product_type = $product_lookup->get('products_type');
+    $type_handler = $product_lookup->getTypeHandler() . '.php';
+}
+
+if ($product_lookup === null || !$product_lookup->exists()) {
     $messageStack->add_session(sprintf(WARNING_PRODUCT_DOES_NOT_EXIST, (int)($_GET['pID'] ?? 0)), 'warning');
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
 }
 
-$type_handler = $zc_products->get_admin_handler($product_type);
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action, $action);
 
 if (!empty($action)) {
