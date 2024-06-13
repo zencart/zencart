@@ -716,19 +716,16 @@ class queryFactory extends base
 
     /**
      * Get column properties for a table
-     * @param string $tablename
-     * @return mixed
      */
-    public function metaColumns(string $tablename)
+    public function metaColumns(string $tablename): array
     {
-        $sql = "SHOW COLUMNS from :tableName:";
+        $sql = "SHOW COLUMNS FROM `:tableName:`";
         $sql = $this->bindVars($sql, ':tableName:', $tablename, 'noquotestring');
         $res = $this->Execute($sql);
-        while (!$res->EOF) {
-            $obj [strtoupper($res->fields['Field'])] = new queryFactoryMeta($res->fields);
-            $res->MoveNext();
+        foreach ($res as $result) {
+            $obj [strtoupper($result['Field'])] = new queryFactoryMeta($result);
         }
-        return $obj;
+        return $obj ?? [];
     }
 
     function get_server_info()
@@ -1000,14 +997,23 @@ class queryFactoryResult implements Countable, Iterator
 
 class queryFactoryMeta extends base
 {
-    public $type;
-    public $max_length;
+    public string $field;
+    public string $type;
+    public int $max_length;
+    public bool $nullable;
+    public bool $indexed;
+    public ?string $default;
+    public ?string $extra;
+    public string $nativeType;
 
-    function __construct($field)
+    public function __construct($field)
     {
+        $this->field = $field['Field'];
+
         $type = $field['Type'];
         $rgx = preg_match('/^[a-z]*/', $type, $matches);
         $this->type = $matches[0];
+
         $this->max_length = (int)preg_replace('/[a-z\(\)]/', '', $type);
         if (empty($this->max_length)) {
            switch (strtoupper($type)) {
@@ -1037,7 +1043,50 @@ class queryFactoryMeta extends base
                   $this->notify('NOTIFY_QUERY_FACTORY_META_DEFAULT', ['field' => $field, 'type' => $type], $this->max_length);
                   break;
            }
-
         }
+
+        $this->nullable = strtoupper($field['Null']) === 'YES';
+        $this->indexed = !empty($field['Key']);
+        $this->default = $field['Default'];
+        $this->extra = $field['Extra'];
+
+        $this->nativeType = $this->match_native_type($this->type);
+        // reasonable to treat tinyint(1) as boolean
+        if ($this->type === 'tinyint' && $this->max_length === 1) {
+            $this->nativeType = 'bool';
+        }
+    }
+
+    /**
+     * Determine native scalar PHP type which most closely matches the db field type.
+     * Basically anything that's not int|float will be treated as string here.
+     * (more complex type matching/casting can be done in userland code)
+     */
+    protected function match_native_type(string $mysql_field_type): string
+    {
+        $mysql_field_type = strtoupper($mysql_field_type);
+
+        if (preg_match('/(INT|BOOL)/', $mysql_field_type)) {
+            return 'int';
+        }
+        if (preg_match('/(DECIMAL|NUMERIC|FIXED)/', $mysql_field_type)) {
+            return 'float';
+        }
+        if (preg_match('/(FLOAT|DOUBLE)/', $mysql_field_type)) {
+            return 'float';
+        }
+        if (preg_match('/(CHAR|TEXT|JSON|LONG)/', $mysql_field_type)) {
+            return 'string';
+        }
+        if (preg_match('/(BLOB|BINARY)/', $mysql_field_type)) {
+            return 'string';
+        }
+        if (preg_match('/(ENUM|SET)/', $mysql_field_type)) {
+            return 'string';
+        }
+        if (preg_match('/TIME/', $mysql_field_type)) {
+            return 'string';
+        }
+        return 'string';
     }
 }
