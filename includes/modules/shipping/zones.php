@@ -275,18 +275,18 @@ class zones extends ZenShipping
                         // charge per box when done by Weight
                         // Handling fee per box or order
                         if (constant('MODULE_SHIPPING_ZONES_HANDLING_METHOD_' . $dest_zone) == 'Box') {
-                            $shipping_cost = ($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone) * $shipping_num_boxes;
+                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone) * $shipping_num_boxes;
                         } else {
-                            $shipping_cost = ($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         }
                         break;
                     case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
                         // don't charge per box when done by Price
-                        $shipping_cost = ($shipping) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                        $shipping_cost = ($shipping) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         break;
                     case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
                         // don't charge per box when done by Item
-                        $shipping_cost = ($shipping) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                        $shipping_cost = ($shipping) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         break;
                 }
             }
