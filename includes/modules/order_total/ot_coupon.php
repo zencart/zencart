@@ -634,14 +634,13 @@ class ot_coupon extends base
      * Calculate eligible total amounts against which discounts will be applied
      *
      * @param int $coupon_id
-     * @return array
      */
-    function get_order_total($coupon_id)
+    function get_order_total($coupon_id): array
     {
         global $order;
-        $orderTaxGroups = $order->info['tax_groups'];
-        $orderTotalTax = $order->info['tax'];
-        $orderTotal = $order->info['total'];
+        $orderTaxGroups = $order->info['tax_groups'] ?? [];
+        $orderTotalTax = $order->info['tax'] ?? 0;
+        $orderTotal = $order->info['total'] ?? 0;
 
         $coupon_id = (int)$coupon_id;
 
@@ -675,26 +674,33 @@ class ot_coupon extends base
         }
 
         // shipping/tax
-        if ($this->include_shipping != 'true') {
-            $orderTotal -= $order->info['shipping_cost'];
-            if (isset($_SESSION['shipping_tax_description']) && $_SESSION['shipping_tax_description'] != '') {
-                $orderTotalTax -= $order->info['shipping_tax'];
+        if ($this->include_shipping !== 'true') {
+            $orderTotal -= $order->info['shipping_cost'] ?? 0;
+            if (!empty($_SESSION['shipping_tax_description'])) {
+                $orderTotalTax -= $order->info['shipping_tax'] ?? 0;
             }
         }
-        if (DISPLAY_PRICE_WITH_TAX != 'true') {
+        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
             $orderTotal -= $orderTotalTax;
         }
 
         // change what total is used for Discount Coupon Minimum
-        $orderTotalFull = $order->info['total'];
+        $orderTotalFull = $order->info['total'] ?? 0;
         //echo 'Current $orderTotalFull: ' . $orderTotalFull . ' shipping_cost: ' . $order->info['shipping_cost'] . '<br>';
-        $orderTotalFull -= $order->info['shipping_cost'];
+        $orderTotalFull -= $order->info['shipping_cost'] ?? 0;
         //echo 'Current $orderTotalFull less shipping: ' . $orderTotalFull . '<br>';
         $orderTotalFull -= $orderTotalTax;
         //echo 'Current $orderTotalFull less taxes: ' . $orderTotalFull . '<br>';
         // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) - to include both in array
         // add total order amount ($orderTotalFull) to array for $order_total['totalFull'] vs $order_total['orderTotal']
-        return ['totalFull' => $orderTotalFull, 'orderTotal' => $orderTotal, 'orderTaxGroups' => $orderTaxGroups, 'orderTax' => $orderTotalTax, 'shipping' => $order->info['shipping_cost'], 'shippingTax' => $order->info['shipping_tax']];
+        return [
+            'totalFull' => $orderTotalFull,
+            'orderTotal' => $orderTotal,
+            'orderTaxGroups' => $orderTaxGroups,
+            'orderTax' => $orderTotalTax,
+            'shipping' => $order->info['shipping_cost'] ?? 0,
+            'shippingTax' => $order->info['shipping_tax'] ?? 0,
+        ];
     }
 
     /**
