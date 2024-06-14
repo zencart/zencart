@@ -14,7 +14,7 @@ $zco_notifier->notify('NOTIFY_HEADER_START_DOCUMENT_PRODUCT_INFO');
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 $product_info = new Product($products_id_current = (!empty($_GET['products_id']) ? (int)$_GET['products_id'] : 0));
-if ($current_page !== $product_info->get('info_page')) {
+if ($product_info->exists() && $current_page !== $product_info->get('info_page')) {
     zen_redirect(zen_href_link($product_info->get('info_page'), zen_get_all_get_params()));
 }
 
