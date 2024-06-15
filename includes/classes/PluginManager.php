@@ -47,14 +47,18 @@ class PluginManager
 
     public function isUpgradeAvailable($uniqueKey, $currentVersion)
     {
-        if (empty($currentVersion)) return false;
+        if (empty($currentVersion)) {
+            return false;
+        }
         $versionList = $this->getVersionsForUpgrade($uniqueKey, $currentVersion);
         return count($versionList);
     }
 
     public function getVersionsForUpgrade($uniqueKey, $currentVersion)
     {
-        if (empty($currentVersion)) return [];
+        if (empty($currentVersion)) {
+            return [];
+        }
         $versions = $this->getPluginVersions($uniqueKey);
         $versionList = [];
         foreach ($versions as $version) {
@@ -86,7 +90,9 @@ class PluginManager
 
         // if no results or invalid format, abort
         // @TODO - is this the right return type? or should we return the unaltered $plugins array?
-        if (empty($results)) return false;
+        if (empty($results)) {
+            return false;
+        }
 
         // make sure $results is the actual array we want to iterate over, and not a sub-array
         if (is_array($results) && !isset($results[0]['id']) && isset($results[0][0]['id'])) {
@@ -107,7 +113,7 @@ class PluginManager
                 $plugins[$unique_key]['latest_plugin_version'] = $result['latest_plugin_version'];
                 $plugins[$unique_key]['zcversions'] = $result['zcversions'];
 
-                if (in_array($present_zc_version, $result['zcversions'], $strict=false)) {
+                if (in_array($present_zc_version, $result['zcversions'], $strict = false)) {
                     $plugins[$unique_key]['new_plugin_exists_for_this_zc_version'] = true;
                 }
             }
@@ -118,13 +124,17 @@ class PluginManager
 
     protected function getLatestPluginVersionsOnline($plugin_ids_csv = 0)
     {
-        if (empty(trim($plugin_ids_csv, ','))) return false;
+        if (empty(trim($plugin_ids_csv, ','))) {
+            return false;
+        }
 
         $versionServer = new \VersionServer();
         $data = json_decode($versionServer->getPluginVersion($plugin_ids_csv), true);
 
         if (null === $data || isset($data['error'])) {
-            if (LOG_PLUGIN_VERSIONCHECK_FAILURES) error_log('CURL error checking plugin versions (in batch): ' . print_r(!empty($data)? $data : 'null', true));
+            if (LOG_PLUGIN_VERSIONCHECK_FAILURES) {
+                error_log('CURL error checking plugin versions (in batch): ' . print_r(!empty($data)? $data : 'null', true));
+            }
             return false;
         }
 
@@ -132,7 +142,9 @@ class PluginManager
             try {
                 $data = json_decode($data, true);
             } catch (\Exception $exception) {
-                if (LOG_PLUGIN_VERSIONCHECK_FAILURES) error_log('CURL error checking plugin versions (in batch): ' . print_r(!empty($data) ? $data : 'null', true));
+                if (LOG_PLUGIN_VERSIONCHECK_FAILURES) {
+                    error_log('CURL error checking plugin versions (in batch): ' . print_r(!empty($data) ? $data : 'null', true));
+                }
                 return false;
             }
         }
@@ -150,14 +162,18 @@ class PluginManager
     {
         $pluginDir = DIR_FS_CATALOG . 'zc_plugins';
         $pluginList = [];
-        if (!is_dir($pluginDir)) return $pluginList;
+        if (!is_dir($pluginDir)) {
+            return $pluginList;
+        }
         $dir = new \DirectoryIterator($pluginDir);
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDot() || !$fileinfo->isDir()) {
                 continue;
             }
             $versionInfo = $this->getPluginVersionDirectories($fileinfo);
-            if (count($versionInfo) == 0) continue;
+            if (count($versionInfo) === 0) {
+                continue;
+            }
             $pluginList = $this->mergeInVersionInfo($pluginList, $fileinfo->getFilename(), $versionInfo);
         }
         return $pluginList;
@@ -206,15 +222,15 @@ class PluginManager
             $versionInsertValues = $this->processUpdatePluginControlVersions($uniqueKey, $pluginsFromFilesystem, $versionInsertValues);
             $insertValues[] =
                 [
-                    'unique_key'    => $uniqueKey,
-                    'name'          => $plugin[$pluginVersion]['pluginName'],
-                    'description'   => $plugin[$pluginVersion]['pluginDescription'],
-                    'type'          => '',
-                    'status'        => 0,
-                    'author'        => $plugin[$pluginVersion]['pluginAuthor'],
-                    'version'       => '',
-                    'zc_versions'   => '',
-                    'infs'          => 1,
+                    'unique_key' => $uniqueKey,
+                    'name' => $plugin[$pluginVersion]['pluginName'],
+                    'description' => $plugin[$pluginVersion]['pluginDescription'],
+                    'type' => '',
+                    'status' => 0,
+                    'author' => $plugin[$pluginVersion]['pluginAuthor'],
+                    'version' => '',
+                    'zc_versions' => '',
+                    'infs' => 1,
                     'zc_contrib_id' => $plugin[$pluginVersion]['pluginId']
                 ];
 
