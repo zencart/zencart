@@ -114,11 +114,6 @@ $autoLoadConfig[0][] = [
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'Customer.php',
-    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
     'loadFile' => 'zcDate.php',
     'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
 ];

@@ -62,10 +62,6 @@ $autoLoadConfig[0][] = [
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'Customer.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
     'loadFile' => 'zcDate.php',
 ];
 /**

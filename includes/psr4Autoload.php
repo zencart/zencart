@@ -29,3 +29,4 @@ $psr4Autoloader->setClassFile('Product', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Prod
 $psr4Autoloader->setClassFile('Settings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Settings.php' );
 $psr4Autoloader->setClassFile('TemplateSettings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'TemplateSettings.php' );
 $psr4Autoloader->setClassFile('ZenShipping', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ZenShipping.php');
+$psr4Autoloader->setClassFile('Customer', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Customer.php');
