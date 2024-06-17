@@ -37,14 +37,8 @@ $autoLoadConfig[0][] = [
     'autoType' => 'include',
     'loadFile' => DIR_WS_INCLUDES . 'version.php',
 ];
-//$autoLoadConfig[0][] = [
-//    'autoType' => 'class',
-//    'loadFile' => 'class.base.php',
-//];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'class.notifier.php',
-];
+
+//- notifier class loaded via psr4Autoload.php
 $autoLoadConfig[0][] = [
     'autoType' => 'classInstantiate',
     'className' => 'notifier',
@@ -58,62 +52,12 @@ $autoLoadConfig[0][] = [
     'autoType' => 'class',
     'loadFile' => 'boxes.php',
 ];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'category_tree.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'template_func.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'sniffer.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'shopping_cart.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'navigation_history.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'currencies.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'message_stack.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'breadcrumb.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'class.zcPassword.php',
-];
+
+//- zcPassword class loaded via psr4Autoload.php
 $autoLoadConfig[0][] = [
     'autoType' => 'classInstantiate',
     'className' => 'zcPassword',
     'objectName' => 'zcPassword',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'class.search.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'zcDate.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'Coupon.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'CouponValidation.php',
 ];
 /**
  * Breakpoint 5.
@@ -121,6 +65,7 @@ $autoLoadConfig[0][] = [
  * $zcDate = new zcDate(); ... will be re-initialized when/if the require_languages.php module is run.
  *
  */
+//- zcDate class loaded via psr4Autoload.php
 $autoLoadConfig[5][] = [
     'autoType' => 'classInstantiate',
     'className' => 'zcDate',
@@ -165,6 +110,7 @@ $autoLoadConfig[45][] = [
  * require 'includes/init_includes/init_gzip.php';
  * require 'includes/init_includes/init_sefu.php';
  */
+//- sniffer class loaded via psr4Autoload.php
 $autoLoadConfig[50][] = [
     'autoType' => 'classInstantiate',
     'className' => 'sniffer',
@@ -222,6 +168,7 @@ $autoLoadConfig[70][] = [
  * if (!$_SESSION['cart']) $_SESSION['cart'] = new shoppingCart();
  *
  */
+//- shoppingCart class loaded via psr4Autoload.php
 $autoLoadConfig[80][] = [
     'autoType' => 'classInstantiate',
     'className' => 'shoppingCart',
@@ -229,6 +176,7 @@ $autoLoadConfig[80][] = [
     'checkInstantiated' => true,
     'classSession' => true,
 ];
+//- Zencart\Search\Search loaded via psr4Autoload.php
 $autoLoadConfig[80][] = [
     'autoType' => 'classInstantiate',
     'className' => 'Zencart\Search\Search',
@@ -240,6 +188,7 @@ $autoLoadConfig[80][] = [
  * currencies = new currencies();
  *
  */
+//- currencies class loaded via psr4Autoload.php
 $autoLoadConfig[90][] = [
     'autoType' => 'classInstantiate',
     'className' => 'currencies',
@@ -262,11 +211,13 @@ $autoLoadConfig[96][] = [
  * $template = new template_func();
  *
  */
+//- template_func class loaded via psr4Autoload.php
 $autoLoadConfig[100][] = [
     'autoType' => 'classInstantiate',
     'className' => 'template_func',
     'objectName' => 'template',
 ];
+//- navigationHistory class loaded via psr4Autoload.php
 $autoLoadConfig[100][] = [
     'autoType' => 'classInstantiate',
     'className' => 'navigationHistory',
@@ -320,6 +271,7 @@ $autoLoadConfig[120][] = [
  * messageStack = new messageStack();
  *
  */
+//- messageStack class loaded via psr4Autoload.php
 $autoLoadConfig[130][] = [
     'autoType' => 'classInstantiate',
     'className' => 'messageStack',
@@ -371,6 +323,7 @@ $autoLoadConfig[150][] = [
  * require 'includes/init_includes/init_category_path.php';
  * $breadcrumb = new breadcrumb();
  */
+//- breadcrumb class loaded via psr4Autoloader.php
 $autoLoadConfig[160][] = [
     'autoType' => 'classInstantiate',
     'className' => 'breadcrumb',
