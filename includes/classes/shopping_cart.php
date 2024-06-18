@@ -2017,10 +2017,8 @@ class shoppingCart extends base
                     $real_ids = $_POST['id'] ?? [];
                     if (isset($_GET['number_of_uploads']) && $_GET['number_of_uploads'] > 0) {
                         /**
-                         * Need the upload class for attribute type that allows user uploads.
-                         *
+                         * Need the upload class for attribute type that allows user uploads. Now psr4Autoloaded!
                          */
-                        include_once DIR_WS_CLASSES . 'upload.php';
                         for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
                             $upload_prefix = UPLOAD_PREFIX . $i;
                             $text_prefix = TEXT_PREFIX . ($_POST[$upload_prefix] ?? '');
