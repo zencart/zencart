@@ -20,7 +20,6 @@ if (!defined('USE_PCONNECT')) {
  * require DIR_WS_CLASSES . 'class.notifier.php';
  * $zco_notifier = new notifier()'
  * require DIR_WS_CLASSES . 'class.phpmailer.php';
- * require DIR_WS_CLASSES . 'boxes.php';
  * require DIR_WS_CLASSES . 'category_tree.php';
  * require DIR_WS_CLASSES . 'cache.php';
  * require DIR_WS_CLASSES . 'sniffer.php';
@@ -47,10 +46,6 @@ $autoLoadConfig[0][] = [
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
     'loadFile' => 'class.phpmailer.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'boxes.php',
 ];
 
 //- zcPassword class loaded via psr4Autoload.php
