@@ -62,8 +62,6 @@ if (!empty($action)) {
             <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_WARNING_PRODUCT_MISCONFIGURED_SHORT; ?>
-        </div>
-        <div class="col-sm-6">
           <div class="fa-stack fa-fw">
             <i class="fa-solid fa-circle fa-stack-1x txt-red"></i>
             <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>
