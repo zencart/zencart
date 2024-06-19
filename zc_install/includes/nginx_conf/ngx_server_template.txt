@@ -76,7 +76,7 @@
 	#############################################################################################	
 	## Allow all 'GET' and 'HEAD' requests to specific static file types in 'includes' and/or subfolders
 	location ~ %%store_folder%%/includes {
-		location ~ %%store_folder%%/includes.+\.(ico|jpe?g|gif|otf|webp|png|swf|flv|pdf|svg?z)$ {
+		location ~ %%store_folder%%/includes.+\.(ico|jpe?g|gif|eot|otf|woff2?|ttf|webp|png|swf|flv|pdf|svgz?)$ {
 			if ( $request_method !~ ^(GET|HEAD)$ ) { return 403; }
 			add_header Cache-Control 'max-age=864000, public, must-revalidate';
 			expires $zencart_expires;		
