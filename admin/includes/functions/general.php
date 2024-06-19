@@ -427,6 +427,9 @@ function zen_remove_order($order_id, $restock = false)
 
 function zen_call_function($function, $parameter, $object = '')
 {
+    if (!function_exists($function)) { 
+        return 'Unknown';
+    }
     if ($object === '') {
         return $function($parameter);
     }
