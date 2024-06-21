@@ -26,7 +26,7 @@ $breadcrumb->add(NAVBAR_TITLE, zen_href_link(FILENAME_UNSUBSCRIBE, '', 'NONSSL')
 
 // if they clicked on the "confirm unsubscribe" then process it:
 if (isset($_GET['action']) && ($_GET['action'] == 'unsubscribe')) {
-  $unsubscribe_address = zen_db_prepare_input($_GET['addr']);
+  $unsubscribe_address = zen_db_prepare_input($unsubscribe_address);
   /// Check and see if the email exists in the database, and is subscribed to the newsletter.
   $unsubscribe_count_query = "SELECT 1 
                               FROM " . TABLE_CUSTOMERS . " 
