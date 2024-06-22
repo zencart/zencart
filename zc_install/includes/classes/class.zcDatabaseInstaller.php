@@ -493,8 +493,15 @@ class zcDatabaseInstaller
                 case 'MODIFY':
                     // Check to see if the column / index already exists
                     // we treat it falsey in this case because we cannot perform the change if the column is not present
-                    $exists = !$this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
-                    $result = sprintf(REASON_COLUMN_DOESNT_EXIST_TO_CHANGE, $this->lineSplit[4]);
+
+                    // we check for semi-optional COLUMN keyword
+                    if (strtoupper($this->lineSplit[4]) === 'COLUMN') {
+                        $exists = !$this->tableColumnExists($this->lineSplit[2], $this->lineSplit[5]);
+                        $result = sprintf(REASON_COLUMN_DOESNT_EXIST_TO_CHANGE, $this->lineSplit[5]);
+                    } else {
+                        $exists = !$this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
+                        $result = sprintf(REASON_COLUMN_DOESNT_EXIST_TO_CHANGE, $this->lineSplit[4]);
+                    }
                     $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
                     break;
                 case 'ADD':
