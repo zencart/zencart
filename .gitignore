@@ -19,8 +19,10 @@ dev-*.*
 .project
 .settings
 .buildpath
-# Ignore phpStorm stuff
+
+# Ignore phpStorm/intellij configuration
 .idea
+*.iml
 
 # dbv
 /data/meta/revision
@@ -227,16 +229,14 @@ images/dvd/blade_runner_01.gif
 #testing
 includes/*.config.save
 admin/includes/*.config.save
+**/security_test.php
 
 #release process
 modified_files.txt
 
 # ddev
-
 .ddev
-**/security_test.php
 
 # laravel
-
 laravel/.env
 
