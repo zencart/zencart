@@ -250,12 +250,16 @@ if (!empty($action)) {
       $lng = $db->Execute("SELECT languages_id
                            FROM " . TABLE_LANGUAGES . "
                            WHERE code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
-      if ((int)$_SESSION['languages_id'] == (int)$_POST['lID'])
-        $_SESSION['languages_id'] = $lng->fields['languages_id'];
+      if ((int)$_SESSION['languages_id'] == (int)$_POST['lID']) {
+          $_SESSION['languages_id'] = $lng->fields['languages_id'];
+          $getlang = '&language=' . DEFAULT_LANGUAGE;
+      } else {
+          $getlang = '';
+      }
 
       $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
 
-      zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
+      zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . $getlang));
       break;
     case 'delete':
       $lID = zen_db_prepare_input($_GET['lID']);
