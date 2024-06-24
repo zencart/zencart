@@ -46,7 +46,7 @@ class ot_coupon extends base
      * $deduction amount of deduction calculated/afforded while being applied to an order
      * @var float|null
      */
-    protected $deduction;
+    public $deduction;
     /**
      * $description is a soft name for this order total method
      * @var string
@@ -680,11 +680,15 @@ class ot_coupon extends base
                 $orderTotalTax -= $order->info['shipping_tax'] ?? 0;
             }
         }
+        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
+            $orderTotal -= $orderTotalTax;
+        }
+
         // change what total is used for Discount Coupon Minimum
         $orderTotalFull = $order->info['total'] ?? 0;
-        if (isset($_SESSION['shipping_tax_amount']) && $_SESSION['shipping_tax_amount'] != 0) {
-            $orderTotalFull -= DISPLAY_PRICE_WITH_TAX == 'true' ? $order->info['shipping_cost'] - $order->info['shipping_tax'] : ($order->info['shipping_cost'] ?? 0);
-        }
+        //echo 'Current $orderTotalFull: ' . $orderTotalFull . ' shipping_cost: ' . $order->info['shipping_cost'] . '<br>';
+        $orderTotalFull -= $order->info['shipping_cost'] ?? 0;
+        //echo 'Current $orderTotalFull less shipping: ' . $orderTotalFull . '<br>';
         $orderTotalFull -= $orderTotalTax;
         //echo 'Current $orderTotalFull less taxes: ' . $orderTotalFull . '<br>';
         // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) - to include both in array
