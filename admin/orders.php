@@ -1064,7 +1064,7 @@ if ($show_orders_weights === true) {
                         }
                         ?>
                     </td>
-                    <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
+                    <td><?php echo $orders_status_array[$item['orders_status_id']] ?? ''; ?></td>
 <?php
                     // -----
                     // A watching observer can provide an associative array in the form:
