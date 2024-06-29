@@ -247,10 +247,9 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
 
       // if we just deleted our currently-selected language, need to switch to default lang:
-      if ((int)$_SESSION['languages_id'] == (int)$_POST['lID']) {
+      $getlang = '';
+      if ((int)$_SESSION['languages_id'] === (int)$_POST['lID']) {
           $getlang = '&language=' . DEFAULT_LANGUAGE;
-      } else {
-          $getlang = '';
       }
 
       $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
