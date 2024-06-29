@@ -12,7 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 // do not remove for now
 if (defined('DEV_SHOW_APPLICATION_BOTTOM_DEBUG') && DEV_SHOW_APPLICATION_BOTTOM_DEBUG == true) {
     $langLoaded = $languageLoader->getLanguageFilesLoaded();
-    echo '$langLoaded = ' . str_replace("\n", '<br>', var_export($langLoaded, true));
+    echo '$langLoaded =<br>' . nl2br(var_export($langLoaded, true), false);
 
     $files = get_included_files();
     $langFiles = [];
@@ -29,6 +29,7 @@ if (defined('DEV_SHOW_APPLICATION_BOTTOM_DEBUG') && DEV_SHOW_APPLICATION_BOTTOM_
             $langFiles[] = $file;
         }
     }
+    echo '<br>Other $langFiles:<br>' . nl2br(var_export($langFiles, true), false);
 }
 // close session (store variables)
-  session_write_close();
+session_write_close();

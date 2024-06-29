@@ -77,7 +77,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
 
         foreach ($product->fields as $key => $value) {
             // only prepare fields that are part of TABLE_PRODUCTS
-            if (!in_array($key, $db_fields, true)) {
+            if (!array_key_exists(strtoupper($key), $db_fields)) {
                 continue;
             }
 

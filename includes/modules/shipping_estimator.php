@@ -213,7 +213,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                     $selected_quote[0] = $value;
                     if (!empty($method)) {
                         foreach ($selected_quote[0]['methods'] as $qkey => $qval) {
-                            if ($qval['id'] == $method) {
+                            if (($qval['id'] ?? '') == $method) {
                                 $selected_quote[0]['methods'] = [$qval];
                                 continue 2;
                             }

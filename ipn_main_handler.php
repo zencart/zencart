@@ -265,7 +265,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
     $txn_type = ipn_determine_txn_type($_POST, $txn_type);
     ipn_debug_email('Breakpoint: 5 - Transaction type (txn_type) = ' . $txn_type . '   [parentLookup=' . $parentLookup . ']');
 
-    if ($_POST['payment_type'] === 'instant' && $isDPtransaction && ((isset($_POST['auth_status']) && $_POST['auth_status'] === 'Completed') || $_POST['payment_status'] === 'Completed')) {
+    if (!empty($_POST['payment_type']) && $_POST['payment_type'] === 'instant' && $isDPtransaction && ((isset($_POST['auth_status']) && $_POST['auth_status'] === 'Completed') || $_POST['payment_status'] === 'Completed')) {
         ipn_debug_email('IPN NOTICE :: DP/Website Payments Pro notice -- IPN Ignored');
         die();
     }
