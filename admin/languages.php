@@ -247,11 +247,7 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
 
       // if we just deleted our currently-selected language, need to switch to default lang:
-      $lng = $db->Execute("SELECT languages_id
-                           FROM " . TABLE_LANGUAGES . "
-                           WHERE code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
       if ((int)$_SESSION['languages_id'] == (int)$_POST['lID']) {
-          $_SESSION['languages_id'] = $lng->fields['languages_id'];
           $getlang = '&language=' . DEFAULT_LANGUAGE;
       } else {
           $getlang = '';
