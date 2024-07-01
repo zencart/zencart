@@ -6,6 +6,8 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
+ *
+ * @var Zencart\Search\Search $search
  */
 
 use Zencart\Search\SearchOptions;
@@ -28,8 +30,8 @@ $missing_one_input = false;
 
 $_GET['keyword'] = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
-if (!empty($_GET['keywords']) && $_GET['keywords'] != HEADER_SEARCH_DEFAULT_TEXT && $_GET['keywords'] != KEYWORD_FORMAT_STRING) {
-    $keywords = $_GET['keywords'];
+if (!empty($_GET['keyword']) && $_GET['keyword'] !== HEADER_SEARCH_DEFAULT_TEXT && $_GET['keyword'] !== KEYWORD_FORMAT_STRING) {
+    $keywords = $_GET['keyword'];
 }
 
 $price_check_error = false;
@@ -42,7 +44,7 @@ try {
     $listing_sql = $search->buildSearchSQL();
 
     $result = new \splitPageResults($listing_sql, MAX_DISPLAY_PRODUCTS_LISTING, 'p.products_id', 'page');
-    $zco_notifier->notify('NOTIFY_SEARCH_RESULTS', $listing_sql, $keywords, $result);
+    $zco_notifier->notify('NOTIFY_SEARCH_RESULTS', $listing_sql, $searchOptions->keywords, $result);
 
     // Expose changed search options in $_GET for product listing page.
     $_GET['sort'] = $searchOptions->sort;
