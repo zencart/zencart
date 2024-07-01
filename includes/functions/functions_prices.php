@@ -242,7 +242,7 @@ function zen_get_products_display_price($product_id)
                     '<span class="productPriceDiscount">' .
                         '<br>' .
                         PRODUCT_PRICE_DISCOUNT_PREFIX .
-                        number_format(100 - (($display_special_price / $display_normal_price) * 100), SHOW_SALE_DISCOUNT_DECIMALS) .
+                        number_format(100 - (($display_special_price / $display_normal_price) * 100), (int)SHOW_SALE_DISCOUNT_DECIMALS) .
                         PRODUCT_PRICE_DISCOUNT_PERCENTAGE .
                     '</span>';
             } else {

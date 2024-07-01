@@ -355,7 +355,7 @@ class WhosOnline extends base
 
         if (session_decode($session_data) !== false) {
             $cart = $_SESSION['cart'];
-            $currency = $_SESSION['currency'];
+            $currency = $_SESSION['currency'] ?? DEFAULT_CURRENCY;
 
             if (is_object($cart) && isset($currency)) {
                 $extracted_data['products'] = $cart->get_products();

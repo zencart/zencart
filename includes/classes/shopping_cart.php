@@ -654,7 +654,7 @@ class shoppingCart extends base
         $this->total = 0;
         $this->weight = 0;
         $this->total_before_discounts = 0;
-        $decimalPlaces = $currencies->get_decimal_places($_SESSION['currency']);
+        $decimalPlaces = $currencies->get_decimal_places($_SESSION['currency'] ?? DEFAULT_CURRENCY);
         // shipping adjustment
         $this->free_shipping_item = 0;
         $this->free_shipping_price = 0;

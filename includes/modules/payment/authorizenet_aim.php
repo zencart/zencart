@@ -437,10 +437,10 @@ class authorizenet_aim extends base {
     $response = $this->_sendRequest($submit_data);
     $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', $this->code, $response);
     $response_code = $response[0];
-    $response_text = $response[3];
-    $this->auth_code = $response[4];
-    $this->transaction_id = $response[6];
-    $this->avs_response= $response[5];
+    $response_text = $response[3] ?? '';
+    $this->auth_code = $response[4] ?? '';
+    $this->transaction_id = $response[6] ?? '';
+    $this->avs_response= $response[5] ?? '';
     $this->ccv_response= ($response[38] ?? '');
     $response_msg_to_customer = $response_text . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
 
@@ -723,7 +723,7 @@ class authorizenet_aim extends base {
       $errorMessage = date('M-d-Y h:i:s') .
                       "\n=================================\n\n" .
                       ($this->commError !='' ? 'Comm results: ' . $this->commErrNo . ' ' . $this->commError . "\n\n" : '') .
-                      'Response Code: ' . ($response[0] ?? "Unknown") . ".\nResponse Text: " . $response[3] . "\n\n" .
+                      'Response Code: ' . ($response[0] ?? "Unknown") . ".\nResponse Text: " . ($response[3] ?? '') . "\n\n" .
                       'Sending to Authorizenet: ' . print_r($this->reportable_submit_data, true) . "\n\n" .
                       'Results Received back from Authorizenet: ' . print_r($resp_output, true) . "\n\n" .
                       'CURL communication info: ' . print_r($this->commInfo, true) . "\n";
@@ -747,7 +747,7 @@ class authorizenet_aim extends base {
     // This can be used for testing or for implementation in other applications
     // This can be turned on and off if the Admin Section
     $response_order_id = ($response[7] ?? '');
-    if (MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA == 'True'){
+    if (MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA == 'True' && !empty($response_order_id)){
       $db_response_text = ($response[3] ?? "Unknown") . ($this->commError !='' ? ' - Comm results: ' . $this->commErrNo . ' ' . $this->commError : '');
       $db_response_text .= ($response[0] == 2 && $response[2] == 4) ? ' NOTICE: Card should be picked up - possibly stolen ' : '';
       $db_response_text .= ($response[0] == 3 && $response[2] == 11) ? ' DUPLICATE TRANSACTION ATTEMPT ' : '';
@@ -755,7 +755,7 @@ class authorizenet_aim extends base {
       // Insert the data into the database
       $sql = "INSERT INTO " . TABLE_AUTHORIZENET . "  (id, customer_id, order_id, response_code, response_text, authorization_type, transaction_id, sent, received, time, session_id) VALUES (NULL, :custID, :orderID, :respCode, :respText, :authType, :transID, :sentData, :recvData, :orderTime, :sessID )";
       $sql = $db->bindVars($sql, ':custID', ($_SESSION['customer_id'] ?? '-1'), 'integer');
-      $sql = $db->bindVars($sql, ':orderID', preg_replace('/[^0-9]/', '', $response[7]), 'integer');
+      $sql = $db->bindVars($sql, ':orderID', preg_replace('/[^0-9]/', '', $response_order_id), 'integer');
       $sql = $db->bindVars($sql, ':respCode', $response[0], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', ($response[11] ?? ''), 'string');
