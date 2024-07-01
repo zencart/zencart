@@ -62,6 +62,11 @@
       $this->output = array();
     }
 
+    /**
+     * Calculate final cod fee and tax values,
+     *
+     * Generates the $this->output for showing results information on checkout pages
+     */
     function process() {
       global $order, $currencies, $cod_cost, $cod_country, $shipping;
 
@@ -114,9 +119,16 @@
           $tax = zen_get_tax_rate(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
           $order->info['total'] += $cod_cost;
           if ($tax > 0) {
-            $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
+            $tax_multiple = zen_get_multiple_tax_rates(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
+            $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id'], true);
             $order->info['tax'] += zen_calculate_tax($cod_cost, $tax);
-            $order->info['tax_groups'][$tax_description] += zen_calculate_tax($cod_cost, $tax);
+            foreach ($tax_description as $key => $value) {
+                if (!isset($order->info['tax_groups'][$value])) {
+                    $order->info['tax_groups'][$value] = 0;
+                }
+                $order->info['tax_groups'][$value] += zen_calculate_tax($cod_cost, $tax_multiple[$value]);
+                $order->info['tax_subtotals'][$value]['subtotal'] += $cod_cost;
+            }
             $order->info['total'] += zen_calculate_tax($cod_cost, $tax);
             if (DISPLAY_PRICE_WITH_TAX == 'true') {
               $cod_cost += zen_calculate_tax($cod_cost, $tax);
@@ -136,6 +148,11 @@
       }
     }
 
+    /**
+    * Check install status
+    *
+    * @return bool
+    */
     function check() {
       global $db;
       if (!isset($this->_check)) {
@@ -146,10 +163,17 @@
       return $this->_check;
     }
 
+    /**
+    * @return array of this modules constants (settings)
+    */
     function keys() {
       return array('MODULE_ORDER_TOTAL_COD_STATUS', 'MODULE_ORDER_TOTAL_COD_SORT_ORDER', 'MODULE_ORDER_TOTAL_COD_FEE_FLAT', 'MODULE_ORDER_TOTAL_COD_FEE_FREE', 'MODULE_ORDER_TOTAL_COD_FEE_FREESHIPPER', 'MODULE_ORDER_TOTAL_COD_FEE_FREEOPTIONS', 'MODULE_ORDER_TOTAL_COD_FEE_PERWEIGHTUNIT', 'MODULE_ORDER_TOTAL_COD_FEE_ITEM', 'MODULE_ORDER_TOTAL_COD_FEE_TABLE', 'MODULE_ORDER_TOTAL_COD_FEE_UPS', 'MODULE_ORDER_TOTAL_COD_FEE_USPS', 'MODULE_ORDER_TOTAL_COD_FEE_ZONES', 'MODULE_ORDER_TOTAL_COD_FEE_AP', 'MODULE_ORDER_TOTAL_COD_FEE_DP', 'MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE', 'MODULE_ORDER_TOTAL_COD_FEE_FEDEX', 'MODULE_ORDER_TOTAL_COD_TAX_CLASS');
     }
 
+    /**
+    * Install module keys in database
+    *
+    */
     function install() {
       global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Display COD', 'MODULE_ORDER_TOTAL_COD_STATUS', 'true', 'Do you want this module to display?', '6', '1','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
@@ -172,6 +196,10 @@
     }
 
 
+    /**
+    * Uninstall
+    *
+    */
     function remove() {
       global $db;
       $keys = '';

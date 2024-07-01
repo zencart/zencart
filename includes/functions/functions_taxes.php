@@ -89,7 +89,7 @@ function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
  * @param int $zone_id
  * @return false|string
  */
-function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
+function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1, bool $multi = false)
 {
     global $db, $zco_notifier;
 
@@ -133,16 +133,15 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
     $tax = $db->Execute($tax_query);
 
     if ($tax->RecordCount() > 0) {
-        $tax_description = '';
+        $tax_description = [];
         foreach ($tax as $rate) {
-            $tax_description .= $rate['tax_description'] . ' + ';
+            $tax_description[] = $rate['tax_description'];
         }
-        $tax_description = substr($tax_description, 0, -3);
 
-        return $tax_description;
+        return ($multi) ? $tax_description : implode(' + ', $tax_description);
     }
 
-    return TEXT_UNKNOWN_TAX_RATE;
+    return ($multi) ? array(TEXT_UNKNOWN_TAX_RATE) : TEXT_UNKNOWN_TAX_RATE;
 }
 
 /**
@@ -220,7 +219,7 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
         }
     } else {
         // no tax at this level, set rate to 0 and description of unknown
-        $rates_array[TEXT_UNKNOWN_TAX_RATE] = 0;
+        $rates_array = [];
     }
     return $rates_array;
 }
