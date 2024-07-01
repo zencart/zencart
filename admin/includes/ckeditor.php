@@ -18,7 +18,7 @@ foreach ($var as $key)
 ?>
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"><\/script>');</script>
 <script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
-<script src="https://cdn.ckeditor.com/4.14.0/standard-all/ckeditor.js" title="CKEditorCDN"></script>
+<script src="https://cdn.ckeditor.com/4.22.1/standard-all/ckeditor.js" title="CKEditorCDN"></script>
 
 <script title="ckEditor-Initialize">
     jQuery(document).ready(function() {
