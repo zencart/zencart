@@ -118,10 +118,11 @@
             $order->info['tax'] += zen_calculate_tax($cod_cost, $tax);
             $order->info['tax_groups'][$tax_description] += zen_calculate_tax($cod_cost, $tax);
             $order->info['total'] += zen_calculate_tax($cod_cost, $tax);
-            if (DISPLAY_PRICE_WITH_TAX == 'true') {
+            if (DISPLAY_PRICE_WITH_TAX === 'true') {
               $cod_cost += zen_calculate_tax($cod_cost, $tax);
             }
           }
+          $order->info['option_modules'][$this->code] = $cod_cost;
 
           $this->output[] = array('title' => $this->title . ':',
                                   'text' => $currencies->format($cod_cost, true,  $order->info['currency'], $order->info['currency_value']),

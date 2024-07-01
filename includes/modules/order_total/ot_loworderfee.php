@@ -80,7 +80,6 @@ class ot_loworderfee
                 break;
         }
 
-//        if ( ($pass == true) && ( ($order->info['total'] - $order->info['shipping_cost']) < MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER) ) {
         if ($pass == true && $order->info['subtotal'] < MODULE_ORDER_TOTAL_LOWORDERFEE_ORDER_UNDER) {
             $charge_it = 'true';
             $cart_content_type = $_SESSION['cart']->get_content_type();
@@ -126,6 +125,7 @@ class ot_loworderfee
                 if (DISPLAY_PRICE_WITH_TAX === 'true') {
                     $low_order_fee += zen_calculate_tax($low_order_fee, $tax);
                 }
+                $order->info['option_modules'][$this->code] = $low_order_fee;
 
                 $this->output[] = [
                     'title' => $this->title . ':',
