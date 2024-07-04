@@ -1520,7 +1520,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
 // calculate current total attribute price
 // $attributes_values
 
-                  $attributes_price_final = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, $attributes_values, false);
+                  $attributes_price_final = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, $attributes_values, false, false, 0, true);
                   $attributes_price_final_value = $attributes_price_final;
                   $attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
                   $attributes_price_final_onetime = zen_get_attributes_price_final_onetime($attributes_value['products_attributes_id'], 1, $attributes_values);
@@ -1620,7 +1620,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     <?php
                     $new_attributes_price = '';
                     if ($attributes_value['attributes_discounted']) {
-                      $new_attributes_price = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, '', false);
+                      $new_attributes_price = zen_get_attributes_price_final($attributes_value['products_attributes_id'], 1, '', false, false, 0, true);
                       $new_attributes_price2 = zen_get_discount_calc($products_filter, true, $new_attributes_price);
                       if ($new_attributes_price != $attributes_price_final_value) {
                         $new_attributes_price = '|' . $currencies->display_price($new_attributes_price2, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
