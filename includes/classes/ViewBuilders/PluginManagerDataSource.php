@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class PluginManagerDataSource extends DataTableDataSource
 {
-    protected function buildInitialQuery() : Builder
+    protected function buildInitialQuery(): Builder
     {
-        return (new PluginControl())->query();
+        return (new PluginControl())->query()->orderBy('name')->orderBy('unique_key');
     }
 }
