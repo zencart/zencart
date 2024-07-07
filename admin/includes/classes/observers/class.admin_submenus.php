@@ -13,6 +13,11 @@ class zcObserverAdminSubmenus extends base
 
     public function update(&$class, $eventID, $lang, &$olan)
     {
+        $admin_submenus = [];
+        $table_type = [];
+
+        $conn = new mysqli(constant('DB_SERVER'), DB_SERVER_USERNAME, DB_SERVER_PASSWORD, constant('DB_DATABASE'));
+        
         $lang_dir_name = DIR_WS_LANGUAGES . $olan->language['directory'] . '/admin_submenus';
         if (is_dir($lang_dir_name)) {
             $dir_content = array_diff(scandir($lang_dir_name), array('..', '.'));
@@ -22,8 +27,20 @@ class zcObserverAdminSubmenus extends base
                 }
             }
         }
+        
+        $plugin_infos = $conn->query('SELECT unique_key, version FROM plugin_control WHERE 1'); // check fo installed encapsulated plugins
+        while ($plugin = $plugin_infos->fetch_assoc()) {
+            $plugin_lang_dir_name = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/admin/includes/languages/' . $olan->language['directory'] . '/admin_submenus';
+            if (is_dir($plugin_lang_dir_name)) {
+                $plugin_dir_content = array_diff(scandir($plugin_lang_dir_name), array('..', '.'));
+                foreach($plugin_dir_content as $key => $filename) {
+                    if (is_file($plugin_lang_dir_name . '/' . $filename) && strpos($filename, 'admin_menus') === 0) { // checking for files starting by 'admin_menus' to include them as they should contain '$admin_submenus' table data.
+                        include($plugin_lang_dir_name . '/' . $filename);
+                    }
+                }
+            }
+        }
         if (!empty($admin_submenus)) {
-            $conn = new mysqli(constant('DB_SERVER'), DB_SERVER_USERNAME, DB_SERVER_PASSWORD, constant('DB_DATABASE'));
             foreach($admin_submenus as $table_name => $menus) { // Extract translation data for each table that needs translation.
                 if (empty($table_type[$table_name])) continue;
                 switch ($table_type[$table_name]) { // Different queries are needed because tables have differents fields and unique index keys.
@@ -51,9 +68,17 @@ class zcObserverAdminSubmenus extends base
                         }
                         $query_types->close();
                         break;
+                    case 4; // Changes plugin_control table column description to new language
+                        $query_plugin = $conn->prepare("UPDATE " . $table_name . " SET description = ? WHERE unique_key = ?");
+                        foreach($menus as $type_id => $type_name) {
+                            $query_plugin->bind_param("ss", $type_name, $type_id);
+                            $query_plugin->Execute();
+                        }
+                        $query_plugin->close();
+                        break;
                 }
             }
-            $conn->close();
         }
+        $conn->close();
     }
 }

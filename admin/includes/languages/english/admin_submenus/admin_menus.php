@@ -1,7 +1,5 @@
 <?php
 
-$admin_submenus = [];
-$table_type = [];
 // For table with a configuration_title and a configuration_description fields to translate and configuration_key as unique index (for WHERE clause in query), set type to 1.
 // For table with a group_title and a group_description fields to translate and configuration_group_id as unique index (for WHERE clause in query), set type to 2.
 // For table with a type_name field to translate and type_id as unique index (for WHERE clause in query), set type to 3.
