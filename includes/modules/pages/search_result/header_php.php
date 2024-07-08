@@ -10,14 +10,18 @@
  * @var Zencart\Search\Search $search
  */
 
-use Zencart\Search\SearchOptions;
 use Zencart\Exceptions\SearchException;
+use Zencart\Search\SearchOptions;
 
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ADVANCED_SEARCH_RESULTS');
 
-if (!defined('KEYWORD_FORMAT_STRING')) define('KEYWORD_FORMAT_STRING', 'keywords');
-if (!defined('ADVANCED_SEARCH_INCLUDE_METATAGS')) define('ADVANCED_SEARCH_INCLUDE_METATAGS', 'true');
+if (!defined('KEYWORD_FORMAT_STRING')) {
+    define('KEYWORD_FORMAT_STRING', 'keywords');
+}
+if (!defined('ADVANCED_SEARCH_INCLUDE_METATAGS')) {
+    define('ADVANCED_SEARCH_INCLUDE_METATAGS', 'true');
+}
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
@@ -31,8 +35,8 @@ $missing_one_input = false;
 $keywords = $_GET['keyword'] ?? '';
 
 $price_check_error = false;
-try {
 
+try {
     // Perform the search using the provided parameters.
     $searchOptions = new SearchOptions();
 
@@ -47,7 +51,7 @@ try {
     $_GET['sort'] = $searchOptions->sort;
 
     // if no results were found, show a customisable message.
-    if ($result->number_of_rows == 0) {
+    if ($result->number_of_rows === 0) {
         $message = TEXT_NO_PRODUCTS;
         $zco_notifier->notify('NOTIFY_SEARCH_NO_RESULTS_MESSAGE', $result, $search, $message);
         $messageStack->add_session('search', $message, 'caution');
@@ -58,7 +62,6 @@ try {
         $result = $db->Execute($result->sql_query);
         zen_redirect(zen_href_link(zen_get_info_page($result->fields['products_id']), 'cPath=' . zen_get_product_path($result->fields['products_id']) . '&products_id=' . $result->fields['products_id']));
     }
-
 } catch (SearchException $e) {
     $messageStack->add_session('search', $e->getMessage());
     zen_redirect(zen_href_link(FILENAME_SEARCH, zen_get_all_get_params(), 'NONSSL', true, false));
