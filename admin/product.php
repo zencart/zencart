@@ -20,9 +20,11 @@ if (isset($_GET['pID'])) {
     $type_handler = $product_lookup->getTypeHandler() . '.php';
 }
 
-if ($product_lookup === null || !$product_lookup->exists()) {
-    $messageStack->add_session(sprintf(WARNING_PRODUCT_DOES_NOT_EXIST, (int)($_GET['pID'] ?? 0)), 'warning');
-    zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+if ($action !== 'new_product' && $action !== 'new_product_preview' && $action !== 'insert_product') { 
+    if ($product_lookup === null || !$product_lookup->exists()) {
+        $messageStack->add_session(sprintf(WARNING_PRODUCT_DOES_NOT_EXIST, (int)($_GET['pID'] ?? 0)), 'warning');
+        zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+    }
 }
 
 $zco_notifier->notify('NOTIFY_BEGIN_ADMIN_PRODUCTS', $action, $action);
