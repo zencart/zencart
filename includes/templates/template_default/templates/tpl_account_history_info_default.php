@@ -112,6 +112,17 @@ $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order
   if (DOWNLOAD_ENABLED == 'true') require($template->get_template_dir('tpl_modules_downloads.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_downloads.php');
 ?>
 
+<?php
+  $additional_content = false;
+  $zco_notifier->notify('NOTIFY__INVOICE_ADDITIONAL_DATA_MIDDLE', $order, $additional_content);
+    if ($additional_content !== false) {
+?>
+    <table class="table">
+        <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+    </table>
+<?php
+    }
+?>
 
 <?php
 /**
