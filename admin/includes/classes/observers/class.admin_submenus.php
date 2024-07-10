@@ -13,10 +13,10 @@ class zcObserverAdminSubmenus extends base
 
     public function update(&$class, $eventID, $lang, &$olan)
     {
+        global $db;
+        $conn = $db->link;
         $admin_submenus = [];
         $table_type = [];
-
-        $conn = new mysqli(constant('DB_SERVER'), DB_SERVER_USERNAME, DB_SERVER_PASSWORD, constant('DB_DATABASE'));
         
         $lang_dir_name = DIR_WS_LANGUAGES . $olan->language['directory'] . '/admin_submenus';
         if (is_dir($lang_dir_name)) {
@@ -28,8 +28,8 @@ class zcObserverAdminSubmenus extends base
             }
         }
         
-        $plugin_infos = $conn->query('SELECT unique_key, version FROM plugin_control WHERE 1'); // check fo installed encapsulated plugins
-        while ($plugin = $plugin_infos->fetch_assoc()) {
+        $result = $db->Execute('SELECT unique_key, version FROM plugin_control WHERE 1'); // check fo installed encapsulated plugins
+        foreach ($result as $plugin) {
             $plugin_lang_dir_name = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/admin/includes/languages/' . $olan->language['directory'] . '/admin_submenus';
             if (is_dir($plugin_lang_dir_name)) {
                 $plugin_dir_content = array_diff(scandir($plugin_lang_dir_name), array('..', '.'));
@@ -79,6 +79,5 @@ class zcObserverAdminSubmenus extends base
                 }
             }
         }
-        $conn->close();
     }
 }
