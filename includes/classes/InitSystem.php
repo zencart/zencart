@@ -175,7 +175,7 @@ class InitSystem
     protected function loadAutoLoadersFromSystem($loaderType, $rootDir, $plugin = [])
     {
         $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($rootDir);
-        $fileList = $this->processForOverrides($fileList, $rootDir);
+        $fileList = $this->processForOverrides($loaderType, $fileList, $rootDir);
         $loaderList = $this->getLoadersFromFileList($fileList);
         $loaderList = $this->processLoaderListForType($loaderType, $loaderList, $plugin);
         return $loaderList;
@@ -193,13 +193,24 @@ class InitSystem
         return $pluginLoaderList;
     }
 
-    protected function processForOverrides($fileList, $rootDir)
+    protected function processForOverrides(string $loaderType, array $fileList, string $rootDir): array
     {
         $newFileList = [];
         $baseDir = $rootDir;
         $overrideDir = $baseDir . '/overrides';
+        $core_loader_file = '';
+        if ($loaderType === 'core') {
+            $core_loader_file = $this->loaderPrefix . '.core.php';
+            if ($this->overrideFileExists($core_loader_file, $overrideDir)) {
+                $newFileList[] = $orderrideDir . '/' . $core_loader_file;
+            } else {
+                $newFileList[] = $baseDir . '/' . $core_loader_file;
+            }
+        }
         foreach ($fileList as $file) {
-            if (!$this->fileMatchesLoaderPrefix($file)) continue;
+            if ($file === $core_loader_file || !$this->fileMatchesLoaderPrefix($file)) {
+                continue;
+            }
             $filePath = $baseDir . '/' . $file;
             if ($this->overrideFileExists($file, $overrideDir)) $filePath = $overrideDir . '/' . $file;
             $newFileList[] = $filePath;
