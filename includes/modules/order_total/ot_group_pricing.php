@@ -141,6 +141,8 @@ class ot_group_pricing {
     global $db, $order;
     $od_amount = array();
     if ($order_total == 0 || !zen_is_logged_in() || zen_in_guest_checkout()) {
+        global $zco_notifier;
+        $zco_notifier->notify('NOTIFY_OT_GROUP_PRICING_DEDUCTION_OVERRIDE', ['order_total' => $order_total], $od_amount);
         return $od_amount;
     }
     $orderTotal = $this->get_order_total();
