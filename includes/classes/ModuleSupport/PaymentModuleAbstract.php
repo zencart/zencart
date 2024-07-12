@@ -40,6 +40,10 @@ abstract class PaymentModuleAbstract
      */
     public string $code = '';
     /**
+     * @var string
+     */
+    public string $title = '';
+    /**
      * @var array
      */
     protected array $configurationKeys;
