@@ -1398,10 +1398,10 @@ if ($show_orders_weights === true) {
                     $check_count = 0;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_ORDERS) {
                       while (!$check_page->EOF) {
+                        $check_count++;
                         if ($check_page->fields['orders_id'] == $_GET['oID']) {
                           break;
                         }
-                        $check_count++;
                         $check_page->MoveNext();
                       }
                       $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS_ORDERS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS_ORDERS) != 0 ? .5 : 0)), 0);
