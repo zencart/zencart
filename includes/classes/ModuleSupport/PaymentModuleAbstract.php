@@ -172,6 +172,9 @@ abstract class PaymentModuleAbstract
         $title = $this->getDefine('MODULE_PAYMENT_%%_TEXT_TITLE_ADMIN');
         $title = $title ?? $this->getDefine('MODULE_PAYMENT_%%_TEXT_TITLE');
         $title = $title . '['. $this->version . ']';
+        if (method_exists($this, 'checkNonFatalConfigureStatus')) {
+            $this->checkNonFatalConfigureStatus();
+        }
         if (empty($this->configureErrors)) {
             return $title;
         }
@@ -224,8 +227,8 @@ abstract class PaymentModuleAbstract
     protected function isEnabled(): bool
     {
         $enabled = true;
-        if (method_exists($this, 'checkConfigureStatus')) {
-            $enabled = $this->checkConfigureStatus();
+        if (method_exists($this, 'checkFatalConfigureStatus')) {
+            $enabled = $this->checkFatalConfigureStatus();
         }
         if (!$enabled) {
             return false;

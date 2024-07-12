@@ -19,14 +19,11 @@ class moneyorder extends PaymentModuleAbstract implements PaymentModuleContract
         $this->email_footer = $this->getDefine('MODULE_PAYMENT_%%_TEXT_EMAIL_FOOTER', '');
     }
 
-    protected function checkConfigureStatus(): bool
+    protected function checkNonFatalConfigureStatus(): void
     {
-        $configureStatus = true;
         if ($this->getDefine('MODULE_PAYMENT_%%_PAYTO') == 'the Store Owner/Website Name' || $this->getDefine('MODULE_PAYMENT_%%_PAYTO') == '') {
             $this->configureErrors[] = '(not configured - needs pay-to)';
-            $configureStatus = false;
         }
-        return $configureStatus;
     }
     protected function addCustomConfigurationKeys(): array
     {
