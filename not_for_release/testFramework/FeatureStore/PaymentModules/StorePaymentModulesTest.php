@@ -12,6 +12,7 @@ class StorePaymentModulesTest extends zcFeatureTestCaseStore
 {
     public static function setUpBeforeClass(): void
     {
+        global $psr4Autoloader;
         parent::setUpBeforeClass();
         require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
         require DIR_FS_CATALOG . 'laravel/vendor/autoload.php';
