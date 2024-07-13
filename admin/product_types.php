@@ -11,6 +11,8 @@ $action = ($_GET['action'] ?? '');
 if (!isset($_GET['cID'])) $_GET['cID'] = '';
 if (!isset($_GET['gID'])) $_GET['gID'] = '';
 
+$lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
+
 if (!empty($action)) {
   switch ($action) {
     case 'layout_save':
@@ -36,7 +38,7 @@ if (!empty($action)) {
       $handler = zen_db_prepare_input($_POST['handler']);
       $allow_add_to_cart = zen_db_prepare_input(isset($_POST['catalog_add_to_cart']) ? 'Y' : 'N');
       $sql_data_array = [
-        'type_name' => $type_name,
+        'type_name' => $type_name . $lang_suffix . ' AS type_name',
         'type_handler' => $handler,
         'allow_add_to_cart' => $allow_add_to_cart
       ];
@@ -130,7 +132,7 @@ if (!empty($action)) {
       <!-- body //-->
       <?php
       if (isset($_GET['action']) && ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit')) {
-        $sql = "SELECT type_name
+        $sql = "SELECT type_name" . $lang_suffix . " AS type_name
                 FROM " . TABLE_PRODUCT_TYPES . "
                 WHERE type_id = " . (int)$_GET['ptID'];
         $type_name = $db->Execute($sql);
@@ -150,7 +152,7 @@ if (!empty($action)) {
               </thead>
               <tbody>
                 <?php
-                $configuration = $db->Execute("SELECT configuration_id, configuration_title, configuration_value, configuration_key, use_function
+                $configuration = $db->Execute("SELECT configuration_id, configuration_title" . $lang_suffix . " AS configuration_title, configuration_value, configuration_key, use_function
                                                FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
                                                WHERE product_type_id = " . (int)$_GET['ptID'] . "
                                                ORDER BY sort_order");
@@ -172,7 +174,7 @@ if (!empty($action)) {
                   }
 
                   if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $item['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-                    $cfg_extra = $db->Execute("SELECT configuration_key, configuration_description, date_added, last_modified, use_function, set_function
+                    $cfg_extra = $db->Execute("SELECT configuration_key, configuration_description" . $lang_suffix . " AS configuration_description, date_added, last_modified, use_function, set_function
                                                          FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
                                                          WHERE configuration_id = " . (int)$item['configuration_id']);
                     $cInfo_array = array_merge($item, $cfg_extra->fields);
@@ -267,7 +269,7 @@ if (!empty($action)) {
               </thead>
               <tbody>
                 <?php
-                $product_types_query_raw = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
+                $product_types_query_raw = "SELECT type_id, type_name" . $lang_suffix . " AS type_name, type_handler, type_master_type, allow_add_to_cart, default_image, date_added, last_modified FROM " . TABLE_PRODUCT_TYPES;
                 $product_types_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $product_types_query_raw, $product_types_query_numrows);
                 $product_types = $db->Execute($product_types_query_raw);
                 foreach ($product_types as $product_type) {
@@ -328,7 +330,7 @@ if (!empty($action)) {
                 $contents[] = ['text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_HANDLER, 'handler', 'class="control-label"') . zen_draw_input_field('handler', $ptInfo->type_handler, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_handler') . ' class="form-control"')];
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_ALLOW_ADD_CART, 'catalog_add_to_cart', 'class="control-label"') . zen_draw_checkbox_field('catalog_add_to_cart', $ptInfo->allow_add_to_cart, $ptInfo->allow_add_to_cart == 'Y', 'class="form-control"')];
-                $sql = "SELECT type_id, type_name FROM " . TABLE_PRODUCT_TYPES;
+                $sql = "SELECT type_id, type_name" . $lang_suffix . " AS type_name FROM " . TABLE_PRODUCT_TYPES;
                 $product_type_list = $db->Execute($sql);
                 foreach ($product_type_list as $item) {
                   $product_type_array[] = [

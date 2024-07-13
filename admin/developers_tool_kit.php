@@ -11,6 +11,8 @@ $default_context_lines = 0;
 $output = '';
 $outCount = '';
 
+$lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
+
 if (!empty($_POST) && !isset($_POST['context_lines'])) {
   $_POST['context_lines'] = abs((int)$default_context_lines);
 }
@@ -59,7 +61,7 @@ function getDirList($dirName, $filetypes = 1) {
 }
 
 function zen_display_files($include_root = false, $filetypesincluded = 1) {
-  global $check_directory, $found, $configuration_key_lookup, $outCount, $output;
+  global $check_directory, $found, $configuration_key_lookup, $outCount, $output, $lang_suffix;
   global $db;
   $max_context_lines_before = $max_context_lines_after = abs((int)$_POST['context_lines']);
 
@@ -139,7 +141,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     $sql = $db->BindVars($sql, ':zcconfigkey:', strtoupper($configuration_key_lookup), 'string');
     $check_configure = $db->Execute($sql);
     if ($check_configure->RecordCount() < 1) {
-      $sql = "SELECT *
+      $sql = "SELECT configuration_id, configuration_title" . $lang_suffix . " AS configuration_title, configuration_key, configuration_value, configuration_description" . $lang_suffix . " AS configuration_description, product_type_id, sort_order, last_modified, date_added, use_function, set_function
               FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
               WHERE configuration_key = :zcconfigkey:";
       $sql = $db->BindVars($sql, ':zcconfigkey:', strtoupper($configuration_key_lookup), 'string');
@@ -337,8 +339,8 @@ switch ($action) {
              :cfgAndClause: " . (!isset($_GET['v']) ? ' AND g.visible=1 ' : '') . "
              ORDER BY configuration_title, configuration_group_id)
          UNION
-        (SELECT configuration_id, configuration_key, p.product_type_id AS configuration_group_id, type_name AS configuration_group_title,
-                configuration_title, configuration_description, configuration_value, 'type' AS src
+        (SELECT configuration_id, configuration_key, p.product_type_id AS configuration_group_id, t.type_name" . $lang_suffix . " AS configuration_group_title,
+                configuration_title" . $lang_suffix . " AS configuration_title, configuration_description" . $lang_suffix . " AS configuration_description, configuration_value, 'type' AS src
          FROM " . TABLE_PRODUCT_TYPE_LAYOUT . " p,
               " . TABLE_PRODUCT_TYPES . " t
          WHERE p.product_type_id = t.type_id
@@ -391,7 +393,7 @@ switch ($action) {
     $sql = $db->BindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
     $check_configure = $db->Execute($sql);
     if ($check_configure->RecordCount() < 1) {
-      $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPE_LAYOUT . " WHERE configuration_key = :zcconfigkey:";
+      $sql = "SELECT configuration_id, configuration_title" . $lang_suffix . " AS configuration_title, configuration_key, configuration_value, configuration_description" . $lang_suffix . " AS configuration_description, product_type_id, sort_order, last_modified, date_added, use_function, set_function FROM " . TABLE_PRODUCT_TYPE_LAYOUT . " WHERE configuration_key = :zcconfigkey:";
       $sql = $db->BindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
       $check_configure = $db->Execute($sql);
       if ($check_configure->RecordCount() < 1) {

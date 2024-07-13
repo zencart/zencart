@@ -666,7 +666,8 @@ function zen_get_admin_pages(bool $menu_only): array
     /**
      * First we'll get all the pages
      */
-    $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES . " WHERE type_handler != 'product'";
+    $lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
+    $sql = "SELECT type_id, type_name" . $lang_suffix . " AS type_name, type_handler, type_master_type, allow_add_to_cart, default_image, date_added, last_modified FROM " . TABLE_PRODUCT_TYPES . " WHERE type_handler != 'product'";
     $result = $db->Execute($sql);
     foreach ($result as $row) {
         $productTypes['_productTypes_' . $row['type_handler']] = [

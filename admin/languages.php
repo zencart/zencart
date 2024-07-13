@@ -139,15 +139,16 @@ if (!empty($action)) {
         }
 
 // create additional orders_status records
-        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
+        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name, sort_order
                                        FROM " . TABLE_ORDERS_STATUS . "
                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($orders_status as $status) {
-          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name)
+          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, sort_order)
                         VALUES ('" . (int)$status['orders_status_id'] . "',
                                 '" . (int)$insert_id . "',
-                                '" . zen_db_input($status['orders_status_name']) . "')");
+                                '" . zen_db_input($status['orders_status_name']) . "',
+                                '" . (int)$status['sort_order'] . "')");
         }
 
         // create additional coupons_description records
@@ -174,6 +175,145 @@ if (!empty($action)) {
                                 '" . (int)$insert_id . "',
                                 '" . zen_db_input($ezpage['pages_title']) . "',
                                 '" . zen_db_input($ezpage['pages_html_text']) . "')");
+        }
+
+// create additional products option stock names records
+        $products_option_stock_names = $db->Execute("SELECT pos_name_id, pos_name
+                                       FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . "
+                                       WHERE language_id = " . (int)$_SESSION['languages_id']);
+
+        foreach ($products_option_stock_names as $option_stock_name) {
+          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " (pos_name_id, language_id, pos_name)
+                        VALUES ('" . (int)$option_stock_name['pos_name_id'] . "',
+                                '" . (int)$insert_id . "',
+                                '" . zen_db_input($option_stock_name['pos_name']) . "')");
+        }
+
+// Following code updates submenus in admin using different methods depending on which table in database needs to be translated and which part of ZC is concerned (core or plugins).
+        $lang_data = $db->Execute("SELECT code, directory FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$insert_id);
+        if ($lang_data->fields['code'] !== 'en' && !empty($lang_data->fields['code'])) {
+            $lang_suffix = '_' . $lang_data->fields['code'];
+            $lang_name = $lang_data->fields['directory'];
+            // create additional product_type's type_name records
+            $db->Execute("ALTER TABLE " . TABLE_PRODUCT_TYPES . " ADD COLUMN type_name" . $lang_suffix . " VARCHAR(255) AFTER type_name");
+            $db->Execute("UPDATE " . TABLE_PRODUCT_TYPES . " SET type_name" . $lang_suffix . " = type_name");
+
+            // create additional product_type_layout's configuration_title and configuration_description records
+            $db->Execute("ALTER TABLE " . TABLE_PRODUCT_TYPE_LAYOUT . " ADD COLUMN configuration_title" . $lang_suffix . " TEXT AFTER configuration_title, ADD COLUMN configuration_description" . $lang_suffix . " TEXT AFTER configuration_description");
+            $db->Execute("UPDATE " . TABLE_PRODUCT_TYPE_LAYOUT . " SET configuration_title" . $lang_suffix . " = configuration_title, configuration_description" . $lang_suffix . " = configuration_description");
+
+            // create additional plugin_control's description records
+            $db->Execute("ALTER TABLE " . TABLE_PLUGIN_CONTROL . " ADD COLUMN description" . $lang_suffix . " VARCHAR(255) AFTER description");
+            $db->Execute("UPDATE " . TABLE_PLUGIN_CONTROL . " SET description" . $lang_suffix . " = description");
+
+            // update database with translation for admin submenus if available
+            $admin_submenus = [];
+            $lang_dir_name = './' . DIR_WS_LANGUAGES . $lang_name . '/admin_submenus';
+            $config_lines = file('./' . DIR_WS_LANGUAGES . $lang_name . '/lang.configuration.php', FILE_SKIP_EMPTY_LINES);
+            if (is_dir($lang_dir_name)) {
+                $dir_content = array_diff(scandir($lang_dir_name), array('..', '.'));
+                foreach($dir_content as $key => $filename) {
+                    if (strpos($filename, 'admin_menus') === 0) { // checking for files starting by 'admin_menus' to include them as they should contain '$admin_submenus' array data.
+                        include($lang_dir_name . '/' . $filename);
+                    } elseif (strpos($filename, 'lan_configuration') === 0) { // checking for files starting by 'lan_configuration' which contain language constants to add them to file 'lang.configuration.php'.
+                        if (empty($last_line)) {
+                            $last_line = $config_lines[array_key_last($config_lines)];
+                            array_pop($config_lines); // removes 'return $define;' to add new language constants array.
+                        }
+                        $config_to_add = file($lang_dir_name . '/' . $filename, FILE_SKIP_EMPTY_LINES);
+                        if (empty($config_lines_to_add)) {
+                            $config_lines_to_add[] = '// ' . $lang_data->fields['code'] . '_start ' . PHP_EOL; // add a starting tag for newly installed language to identify this language's constants so it can easily be removed later when necessary.
+                        }
+                        $config_lines_to_add = array_merge($config_lines_to_add, $config_to_add);
+                    }
+                }
+                if (!empty($config_lines_to_add)) {
+                    $config_lines_to_add[] = '// ' . $lang_data->fields['code'] . '_end ' . PHP_EOL; // add a ending tag for newly installed language to identify this language's constants so it can easily be removed later when necessary.
+                    $config_lines = array_merge($config_lines, $config_lines_to_add);
+                    $config_lines[] = $last_line; // puts back 'return $define;' after new language constants array.
+                    file_put_contents('./' . DIR_WS_LANGUAGES . $lang_name . '/lang.configuration.php', $config_lines);
+                }
+            }
+            
+            $result = $db->Execute('SELECT unique_key, version FROM plugin_control WHERE status = 1'); // check for installed encapsulated plugins
+            foreach ($result as $plugin) {
+                $plugin_lang_dir_name = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/admin/includes/languages/' . $lang_name . '/admin_submenus';
+                if (is_dir($plugin_lang_dir_name)) {
+                    $plugin_dir_content = array_diff(scandir($plugin_lang_dir_name), array('..', '.'));
+                    foreach($plugin_dir_content as $key => $filename) {
+                        $complete_filename = $plugin_lang_dir_name . '/' . $filename;
+                        if (file_exists($complete_filename) && strpos($filename, 'admin_menus') === 0) { // checking for files starting by 'admin_menus' in encapsulated plugin folder to include them as they should contain '$admin_submenus' table data.
+                            include($complete_filename);
+                        } elseif ($filename === 'lan_configuration.php') { // checking for file 'lan_configuration,php' in encapsulated plugin folder, which contains language constants to add them to file 'lang.configuration.php'.
+                            if (empty($last_plugin_line)) {
+                                $last_plugin_line = $config_lines[array_key_last($config_lines)];
+                                array_pop($config_lines); // removes 'return $define;' to add new language constants array.
+                            }
+                            $conf_to_add = file($complete_filename, FILE_SKIP_EMPTY_LINES);
+                            if (empty($conf_lines_to_add)) {
+                                $conf_lines_to_add[] = '// ' . $lang_data->fields['code'] . '_start ' . PHP_EOL; // add a starting tag for newly installed language to identify this language's constants so it can easily be removed later when necessary.
+                            }
+                            $conf_lines_to_add = array_merge($conf_lines_to_add, $conf_to_add);
+                        }
+                    }
+                    if (!empty($conf_lines_to_add)) {
+                        $conf_lines_to_add[] = '// ' . $lang_data->fields['code'] . '_end ' . PHP_EOL; // add a ending tag for newly installed language to identify this language's constants so it can easily be removed later when necessary.
+                        $config_lines = array_merge($config_lines, $conf_lines_to_add);
+                        $config_lines[] = $last_plugin_line; // puts back 'return $define;' after new language constants array.
+                        file_put_contents('./' . DIR_WS_LANGUAGES . $lang_name . '/lang.configuration.php', $config_lines);
+                    }
+                }
+
+            }
+
+            if (!empty($admin_submenus)) {
+                $conn = $db->link;
+                foreach($admin_submenus as $table_name => $menus) { // Extract translation data for each table that needs translation from array '$admin_submenus'.
+                    switch ($table_name) {
+                        case 'product_type_layout': // update product_type_layout table columns configuration_title and configuration_description for new language
+                            $query_configuration = $conn->prepare("UPDATE " . $table_name . " SET configuration_title" . $lang_suffix . " = ?, configuration_description" . $lang_suffix . " = ? WHERE configuration_key = ?");
+                            foreach($menus as $configuration_key => $translation) {
+                                $query_configuration->bind_param("sss", $translation['title'], $translation['description'], $configuration_key);
+                                $query_configuration->Execute();
+                            }
+                            $query_configuration->close();
+                            break;
+                        case 'product_types'; // Updates product_types table column type_name for new language
+                            $query_types = $conn->prepare("UPDATE " . $table_name . " SET type_name" . $lang_suffix . " = ? WHERE type_id = ?");
+                            foreach($menus as $type_id => $type_name) {
+                                $query_types->bind_param("si", $type_name, $type_id);
+                                $query_types->Execute();
+                            }
+                            $query_types->close();
+                            break;
+                        case 'orders_status'; // Changes orders_status table column orders_status_name to new language
+                            $query_orders_status = $conn->prepare("UPDATE " . $table_name . " SET orders_status_name = ? WHERE orders_status_id = ? AND language_id = " . (int)$insert_id);
+                            foreach($menus as $orders_status_id => $orders_status_name) {
+                                $query_orders_status->bind_param("si", $orders_status_name, $orders_status_id);
+                                $query_orders_status->Execute();
+                            }
+                            $query_orders_status->close();
+                            break;
+                        case 'products_options_stock_names'; // Changes products_options_stock_names table column pos_name to new language
+                            $query_pos_name = $conn->prepare("UPDATE " . $table_name . " SET pos_name = ? WHERE pos_name_id = ? AND language_id = " . (int)$insert_id);
+                            foreach($menus as $pos_name_id => $pos_name) {
+                                $query_pos_name->bind_param("si", $pos_name, $pos_name_id);
+                                $query_pos_name->Execute();
+                            }
+                            $query_pos_name->close();
+                            break;
+                        case 'plugin_control'; // Changes plugin_control table column description to new language
+                            $query_plugin = $conn->prepare("UPDATE " . $table_name . " SET description" . $lang_suffix . " = ? WHERE unique_key = ?");
+                            foreach($menus as $unique_key => $description) {
+                                $query_plugin->bind_param("ss", $description, $unique_key);
+                                $query_plugin->Execute();
+                            }
+                            $query_plugin->close();
+                            break;
+                    }
+                }
+            }
+            
         }
 
         $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_INSERT', (int)$insert_id);
@@ -223,6 +363,9 @@ if (!empty($action)) {
       break;
     case 'deleteconfirm':
       $lID = zen_db_prepare_input($_POST['lID']);
+      $langue = $db->Execute("SELECT code, directory FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . $lID);
+      $lcode = $langue->fields['code'];
+      $ldir = $langue->fields['directory'];
       $lng = $db->Execute("SELECT languages_id
                            FROM " . TABLE_LANGUAGES . "
                            WHERE code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
@@ -245,6 +388,28 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " WHERE language_id = " . (int)$lID);
+      if ($lcode !== 'en') { // removes additional language related column when language is deleted.
+          $db->Execute("ALTER TABLE " . TABLE_PRODUCT_TYPES . " DROP COLUMN type_name_" . $lcode);
+          $db->Execute("ALTER TABLE " . TABLE_PRODUCT_TYPE_LAYOUT . " DROP COLUMN configuration_title_" . $lcode . ", DROP COLUMN configuration_description_" . $lcode);
+          $db->Execute("ALTER TABLE " . TABLE_PLUGIN_CONTROL . " DROP COLUMN description_" . $lcode);
+          
+          $config_lines = file('./' . DIR_WS_LANGUAGES . $ldir . '/lang.configuration.php', FILE_SKIP_EMPTY_LINES); // When a language is removed, file 'lang.configuration.php' is cleaned up from this language constants.
+          do {
+              $index_start = 0;
+              $index_length = 0;
+              foreach ($config_lines as $index => $config_line) {
+                  if (strpos($config_line, $lcode . '_start') !== false) { // starting tag for removed language
+                      $index_start = (int)$index;
+                  } elseif (strpos($config_line, $lcode . '_end') !== false && $index_start !== 0) { // ending tag for removed language
+                      $index_length = (int)$index + 1 - $index_start;
+                      array_splice($config_lines, $index_start, $index_length);
+                      break;
+                  }
+              }
+          } while ($index_start !== 0);
+          file_put_contents('./' . DIR_WS_LANGUAGES . $ldir . '/lang.configuration.php', $config_lines);
+      }
 
       // if we just deleted our currently-selected language, need to switch to default lang:
       $getlang = '';

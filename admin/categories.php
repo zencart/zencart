@@ -279,7 +279,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <?php
     // Make an array of product types
-    $sql = "SELECT type_id, type_name FROM " . TABLE_PRODUCT_TYPES;
+    $lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
+    $sql = "SELECT type_id, type_name" . $lang_suffix . " AS type_name FROM " . TABLE_PRODUCT_TYPES;
     $product_types = $db->Execute($sql);
     while (!$product_types->EOF) {
       $type_array[] = [
@@ -472,7 +473,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <div class="col-sm-9 col-md-6">
                 <?php
                 foreach ($restrict_types as $restrict_type) {
-                  $type_query = "SELECT type_name
+                  $type_query = "SELECT type_name" . $lang_suffix . " AS type_name
                                  FROM " . TABLE_PRODUCT_TYPES . "
                                  WHERE type_id = " . (int)$restrict_type['product_type_id'];
                   $type = $db->Execute($type_query);

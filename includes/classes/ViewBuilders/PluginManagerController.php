@@ -27,7 +27,8 @@ class PluginManagerController extends BaseController
         if ($this->currentFieldValue('status') == 1) {
             $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->currentFieldValue('version')) . '<br>');
         }
-        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . $this->currentFieldValue('description'));
+        $desc_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] !== 'en') ? 'description_' . $_SESSION['languages_code'] : 'description';
+        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . $this->currentFieldValue($desc_suffix));
         if ($this->currentFieldValue('status') == 0) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(

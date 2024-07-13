@@ -1264,7 +1264,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
               if (empty($product_types)) {
                 // There are no restricted product types so offer all types instead
-                $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
+                $lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
+                $sql = "SELECT type_id, type_name" . $lang_suffix . " AS type_name, type_handler, type_master_type, allow_add_to_cart, default_image, date_added, last_modified FROM " . TABLE_PRODUCT_TYPES;
                 $product_types = $db->Execute($sql);
               }
 
