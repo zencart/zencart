@@ -35,7 +35,7 @@ class ScriptedInstaller extends ScriptedInstallBase
 
                 ('General: Duplicate Model Numbers', 'POSM_DUPLICATE_MODELNUMS', 'Allow', 'How should the admin-level tools handle duplicate model numbers?  Choose one of:<ol><li><b>Allow</b> (default): No message, allows saving.</li><li><b>Disallow:</b> Issue message, don\'t allow saving.</li><li><b>Message-Only:</b> Issue message, allow saving.</li></ol>', $cgi, 21, now(), NULL, 'zen_cfg_select_option([\'Allow\', \'Disallow\',\'Message-Only\'],'),
 
-                ('General: Divider Color', 'POSM_DIVIDER_COLOR', '#d4ffbd', 'Enter the background color to be used for the divider in <em>Catalog :: Products\' Options\' Stock Manager.', $cgi, 24, now(), NULL, NULL),
+                ('General: Divider Color', 'POSM_DIVIDER_COLOR', '#d4ffbd', 'Enter the background color to be used for the divider in <em>Catalog :: Products\' Options\' Stock Manager.</em>', $cgi, 24, now(), NULL, NULL),
 
                 ('General: Options\' Stock Re-order Level', 'POSM_STOCK_REORDER_LEVEL', '5', 'Enter the low-stock level for products with options\' stock.  This value is used to highlight low-stock options within the <em>Catalog->Manage Options\' Stock</em> tools and, if <em>Configuration->E-mail Options->Send Low Stock Emails</em> is enabled, determines the stock-level at which to send those emails.<br><br><strong>Note:</strong> The value entered must consist of numeric (0-9) characters <em>only</em>.', $cgi, 25, now(), NULL, NULL),
 

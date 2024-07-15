@@ -25,13 +25,11 @@ require_once('includes/application_bootstrap.php');
 use Zencart\InitSystem\InitSystem;
 use Zencart\FileSystem\FileSystem;
 
-$autoLoadConfig = array();
 if (isset($loaderPrefix)) {
-  $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
+    $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
 } else {
-  $loaderPrefix = 'config';
+    $loaderPrefix = 'config';
 }
-$loader_file = $loaderPrefix . '.core.php';
 $initSystem = new InitSystem('admin', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
 if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
@@ -40,4 +38,3 @@ $loaderList = $initSystem->loadAutoLoaders();
 $initSystemList = $initSystem->processLoaderList($loaderList);
 
 require(DIR_FS_CATALOG . 'includes/autoload_func.php');
-

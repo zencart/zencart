@@ -345,6 +345,9 @@ if ($products_list->EOF) {
                 <tr>
                     <td colspan="<?= STATIC_FIELD_COUNT ?>" class="text-center"><?= POSM_VIEW_ALL_NO_PRODUCTS_TO_LIST ?></td>
                 </tr>
+            </tbody>
+        </table>
+    <?= '</form>' ?>
 <?php
 } else {
     $posm_view_all = new PosmViewAll($posm_stock_reorder_level, $sort_by);
@@ -461,10 +464,10 @@ if ($products_list->EOF) {
                 $pos_model = zen_draw_input_field("model[$pos_id]", $pos_model, 'class="model-num' . $extra_model_class . '"' . $model_field_size);
             }
 ?>
-            <tr class="hoverRow">
-                <td>&nbsp;</td>
-                <td class="dataTableContent"><?= $current_option['option_name'] ?></td>
-                <td class="dataTableContent text-center model"><?= $pos_model ?></td>
+                <tr class="hoverRow">
+                    <td>&nbsp;</td>
+                    <td class="dataTableContent"><?= $current_option['option_name'] ?></td>
+                    <td class="dataTableContent text-center model"><?= $pos_model ?></td>
 <?php
             // -----
             // This notification provides the observer with access to an array of content which is
@@ -493,18 +496,18 @@ if ($products_list->EOF) {
                 }
                 $parameters = (isset($content['params'])) ? ' ' . $content['params'] : '';
 ?>
-                <td class="dataTableContent<?= $additional_class ?>"<?= $parameters ?>>
-                    <?= $content['text'] ?>
-                </td>
+                    <td class="dataTableContent<?= $additional_class ?>"<?= $parameters ?>>
+                        <?= $content['text'] ?>
+                    </td>
 <?php
             }
             $quantity = $_POST['quantity'][$pos_id] ?? $current_option['fields']['products_quantity'];
             $out_of_stock_class = ($quantity <= $posm_stock_reorder_level) ? 'class="out-of-stock"' : '';
 ?>
-                <td class="dataTableContent text-center">
-                    <?= zen_draw_input_field("quantity[$pos_id]", $quantity, $out_of_stock_class) ?>
-                </td>
-            </tr>
+                    <td class="dataTableContent text-center">
+                        <?= zen_draw_input_field("quantity[$pos_id]", $quantity, $out_of_stock_class) ?>
+                    </td>
+                </tr>
 <?php
         }
     }  // END loop displaying information for all products
@@ -532,8 +535,8 @@ if ($products_list->EOF) {
 <?php
 }  // One or more products was found
 ?>
-<!-- body_eof //-->
 </div>
+<!-- body_eof //-->
 
 <!-- footer //-->
 <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
