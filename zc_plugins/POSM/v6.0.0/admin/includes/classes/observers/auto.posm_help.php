@@ -13,6 +13,8 @@ class zcObserverPosmHelp extends base
             $help_page = 'https://docs.zen-cart.com/user/admin_pages/catalog/options_stock_manager/'; 
         } elseif ($page === FILENAME_PRODUCTS_OPTIONS_STOCK_VIEW_ALL) {
             $help_page = 'https://docs.zen-cart.com/user/admin_pages/catalog/options_stock_view_all/'; 
+        } elseif ($page === FILENAME_POSM_FIND_DUPLICATE_MODELNUMS) {
+            $help_page = 'https://docs.zen-cart.com/user/admin_pages/tools/posm_find_duplicate_models/'; 
         }
     }
 }
