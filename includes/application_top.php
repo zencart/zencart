@@ -177,14 +177,7 @@ zen_enable_error_logging();
 foreach (glob(DIR_WS_INCLUDES . 'extra_configures/*.php') ?? [] as $file) {
     include($file);
 }
-$autoLoadConfig = [];
-if (isset($loaderPrefix)) {
- $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
-} else {
-  $loaderPrefix = 'config';
-}
-$loader_file = $loaderPrefix . '.core.php';
-require 'includes/initsystem.php';
+
 /**
  * determine install status
  */
@@ -234,14 +227,11 @@ foreach ($installedPlugins as $plugin) {
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
 }
 
-
-$autoLoadConfig = array();
 if (isset($loaderPrefix)) {
     $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
 } else {
     $loaderPrefix = 'config';
 }
-$loader_file = $loaderPrefix . '.core.php';
 $initSystem = new InitSystem('catalog', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
 if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
