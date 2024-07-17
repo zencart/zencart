@@ -122,6 +122,10 @@ class products_options_stock_observer extends base
 
                 /* Issued by /admin/category_product_listing.php */
                 'NOTIFY_ADMIN_PROD_LISTING_PRODUCTS_QUERY',
+
+                /* Issued by /admin/languages.php */
+                'NOTIFY_ADMIN_LANGUAGE_INSERT',
+                'NOTIFY_ADMIN_LANGUAGE_DELETE',
             ]
         );
     }
@@ -575,6 +579,41 @@ class products_options_stock_observer extends base
         $extra_joins .= ' LEFT JOIN ' . TABLE_PRODUCTS_OPTIONS_STOCK . ' posm ON posm.products_id = p.products_id';
         $extra_search_fields[] = 'posm.pos_model';
     }
+
+   // -----
+    // Issued by /admin/languages.php; when a new language is added.
+    // Enables POSM to add Back-ordered label for this language in table products_options_stock_names.
+    //
+    protected function notify_admin_language_insert(&$class, string $e, &$insert_id)
+    {
+        global $db;
+
+        // create additional products option stock names records
+        $products_option_stock_names = $db->Execute("SELECT pos_name_id, pos_name
+                                       FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . "
+                                       WHERE language_id = " . (int)$_SESSION['languages_id']);
+
+        foreach ($products_option_stock_names as $option_stock_name) {
+          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " (pos_name_id, language_id, pos_name)
+                        VALUES ('" . (int)$option_stock_name['pos_name_id'] . "',
+                                '" . (int)$insert_id . "',
+                                '" . zen_db_input($option_stock_name['pos_name']) . "')");
+        }
+    }
+
+   // -----
+    // Issued by /admin/languages.php; when a language is deleted.
+    // Enables POSM to delete Back-ordered label for this language in table products_options_stock_names.
+    //
+    protected function notify_admin_language_delete(&$class, string $e, &$langID)
+    {
+        global $db;
+
+      $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " WHERE language_id = " . (int)$langID);
+    }
+
+
+
 
     // -----
     // End notification handlers.
