@@ -211,7 +211,6 @@ require DIR_FS_CATALOG . 'includes/application_laravel.php';
 
 $pluginManager = new PluginManager(new PluginControl(), new \App\Models\PluginControlVersion());
 $installedPlugins = $pluginManager->getInstalledPlugins();
-$pluginManager = new PluginManager(new PluginControl, new App\Models\PluginControlVersion);
 
 $fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');
