@@ -1,9 +1,8 @@
 <?php
-
 return [
     'pluginVersion' => 'v6.0.0',
     'pluginName' => "Products' Options' Stock Manager",
-    'pluginDescription' => 'This plugin provides enables your site to assign stock levels and model-numbers for your products based on product-attribute combinations (also known as &quot;product variants&quot; or &quot;stock by attributes&quot;). ',
+    'pluginDescription' => 'This plugin enables your site to assign stock levels and model-numbers for your products based on product-attribute combinations (also known as &quot;product variants&quot; or &quot;stock by attributes&quot;). ',
     'pluginAuthor' => 'Vinos de Frutas Tropicales (lat9)',
     'pluginId' => 0, // ID from Zen Cart forum
     'zcVersions' => [],
