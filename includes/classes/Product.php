@@ -22,7 +22,6 @@ class Product
     /** @deprecated use ->get('property') or ->getData()  */
     public array $fields;
 
-    /** @deprecated use !exists()  */
     public bool $EOF = true;
 
     public function __construct(protected ?int $product_id = null)
@@ -90,7 +89,7 @@ class Product
 
     public function exists(): bool
     {
-        return !empty($this->product_id);
+        return (!empty($this->product_id) && !$this->EOF);
     }
     public function isValid(): bool
     {
