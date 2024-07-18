@@ -475,20 +475,16 @@ if (!empty($action)) {
                   <td  class="dataTableContent text-center"><?php echo (($salemaker_sale['sale_date_end'] == '0001-01-01') ? TEXT_SALEMAKER_NEVER : zen_date_short($salemaker_sale['sale_date_end'])); ?></td>
                   <td  class="dataTableContent text-center">
                       <?php echo zen_draw_form('setflag_products', FILENAME_SALEMAKER, 'action=setflag&sID=' . $salemaker_sale['sale_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''));
-                        ?>
-                  <button type="submit" class="btn btn-status">
+                      ?>
+                      <button type="submit" class="btn btn-status">
                       <?php
                       if ($salemaker_sale['sale_status'] == '1') {
-                        echo zen_icon('enabled', IMAGE_ICON_STATUS_ON, 'lg', true) . '
-                      </button>
-                      <input type="hidden" name="flag" value="0">' . "\n";
-                    } else {
-                        echo zen_icon('disabled', IMAGE_ICON_STATUS_OFF, 'lg', true) . '
-                      </button>
-                      <input type="hidden" name="flag" value="1">' . "\n";
-                    }
-                    ?>
-                  </form>
+                          echo zen_icon('enabled', IMAGE_ICON_STATUS_ON, 'lg', true) . ' </button> <input type="hidden" name="flag" value="0">';
+                      } else {
+                          echo zen_icon('disabled', IMAGE_ICON_STATUS_OFF, 'lg', true) . ' </button> <input type="hidden" name="flag" value="1">';
+                      }
+                      ?>
+                      </form>
                   </td>
                   <td class="dataTableContent text-right"><?php
                       if (!empty($sInfo) && (is_object($sInfo)) && !empty($salemaker_sale) && isset($salemaker_sale['sale_id']) && ($salemaker_sale['sale_id'] == $sInfo->sale_id)) {
