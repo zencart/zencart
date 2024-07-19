@@ -193,7 +193,7 @@ class statsSalesReportGraph
                 break;
         }
 
-        if (in_array((int)$this->mode, [self::HOURLY_VIEW, self::DAILY_VIEW, self::WEEKLY_VIEW, self::MONTHLY_VIEW], false)) {
+        if (in_array((int)$this->mode, [self::HOURLY_VIEW, self::DAILY_VIEW, self::WEEKLY_VIEW], false)) {
             // set previous to start - diff
             $tmpDiff = $this->endDate - $this->startDate;
             if ($this->size == 0) {
@@ -212,9 +212,6 @@ class statsSalesReportGraph
                 case self::WEEKLY_VIEW:
                     $tmp1 = 30 * 24 * 60 * 60;
                     break;
-                case self::MONTHLY_VIEW:
-                    $tmp1 = 365 * 24 * 60 * 60;
-                    break;
             }
             $tmp = ceil($tmpDiff / $tmp1);
             if ($tmp > 1) {
@@ -225,7 +222,7 @@ class statsSalesReportGraph
 
             $tmpStart = $this->startDate - $tmpShift + $tmpUnit;
             $tmpEnd = $this->startDate - $tmpUnit;
-            if ($tmpStart >= $this->globalStartDate || $this->mode == self::MONTHLY_VIEW) {
+            if ($tmpStart >= $this->globalStartDate) {
                 $this->previous = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
             }
             $tmpStart = $this->endDate;
@@ -237,6 +234,22 @@ class statsSalesReportGraph
                     $tmpEnd = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
                     $this->next = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
                 }
+            }
+        } elseif ((int)$this->mode == self::MONTHLY_VIEW) { 
+            // compute previous link if data is there 
+            $year = date('Y', $this->startDate) - 1; 
+            $tmpStart = mktime(0,0,0,1,1,$year); 
+            $tmpEnd = mktime(0,0,0,12,1,$year); 
+            if (date('Y', $tmpStart) >= date('Y', $this->globalStartDate)) {
+               $this->previous = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
+            }
+
+            // compute next link if data is there 
+            $year = date('Y', $this->startDate) + 1; 
+            $tmpStart = mktime(0,0,0,1,1,$year); 
+            $tmpEnd = mktime(0,0,0,12,1,$year); 
+            if (date('Y', $tmpEnd) <= date('Y')) {
+               $this->next= "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
             }
         }
 
