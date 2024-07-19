@@ -104,16 +104,21 @@ $paramsToCheck = [
 ];
 if (!$contaminated) {
     foreach ($paramsToCheck as $key) {
-        if (isset($_GET[$key]) && !is_array($_GET[$key])) {
-            if (substr($_GET[$key], 0, 4) == 'http' || strstr($_GET[$key], '//')) {
-                $contaminated = true;
-                break;
-            }
-            $len = (in_array($key, array($zenSessionId, 'error_message', 'payment_error'))) ? 255 : 43;
-            if (isset($_GET[$key]) && strlen($_GET[$key]) > $len) {
-                $contaminated = true;
-                break;
-            }
+        if (!isset($_GET[$key])) {
+            continue;
+        }
+        if (is_array($_GET[$key])) {
+            $contaminated = true;
+            break;
+        }
+        if (str_starts_with(strtolower($_GET[$key]), 'http') || str_contains($_GET[$key], '//')) {
+            $contaminated = true;
+            break;
+        }
+        $len = (in_array($key, [$zenSessionId, 'error_message', 'payment_error'])) ? 255 : 43;
+        if (strlen($_GET[$key]) > $len) {
+            $contaminated = true;
+            break;
         }
     }
 }
