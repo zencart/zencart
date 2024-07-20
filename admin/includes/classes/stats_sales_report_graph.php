@@ -264,7 +264,7 @@ class statsSalesReportGraph
             $tmpStart = mktime(0, 0, 0, date('m', $firstDay), 1 - date('w', $firstDay), date('Y', $firstDay));
             $lastDay = mktime(0, 0, 0, date('m', $firstDay), date('t', $firstDay), date('Y', $firstDay));
             $tmpEnd = ($lastDay > mktime(0, 0, 0, date('m'), date('d'), date('Y'))) ? mktime(0, 0, 0, date('m'), date('d') + 6 - date('w'), date('Y')) : mktime(0, 0, 0, date('m', $lastDay), date('d', $lastDay) + 6 - date('w', $lastDay), date('Y', $lastDay));
-            if ($this->endDate < mktime(0, 0, 0, date('m'), date('d') + 6 - date('w'), date('Y'))) {
+            if ($this->endDate < mktime(0, 0, 0, date('m'), date('d'), date('Y'))) {
                $this->next= "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
             }
         }
