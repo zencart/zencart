@@ -141,7 +141,7 @@ class statsSalesReportGraph
                     $this->startDate = $this->globalStartDate;
                 }
                 // size to the number of weeks in this month till endDate
-                $this->size = ceil((($this->endDate - $this->startDate + 1) / (60 * 60 * 24)) / 7);
+                $this->size = ceil((($this->endDate - $this->startDate) / (60 * 60 * 24)) / 7);
                 for ($i = 0; $i < $this->size; $i++) {
                     $this->startDates[$i] = mktime(0, 0, 0, date('m', $this->startDate), date('d', $this->startDate) +  $i * 7, date('Y', $this->startDate));
                     $this->endDates[$i] = mktime(0, 0, 0, date('m', $this->startDate), date('d', $this->startDate) + ($i + 1) * 7, date('Y', $this->startDate));
@@ -193,7 +193,7 @@ class statsSalesReportGraph
                 break;
         }
 
-        if (in_array((int)$this->mode, [self::HOURLY_VIEW, self::DAILY_VIEW, self::WEEKLY_VIEW], false)) {
+        if (in_array((int)$this->mode, [self::HOURLY_VIEW, self::DAILY_VIEW], false)) {
             // set previous to start - diff
             $tmpDiff = $this->endDate - $this->startDate;
             if ($this->size == 0) {
@@ -208,9 +208,6 @@ class statsSalesReportGraph
                     break;
                 case self::DAILY_VIEW:
                     $tmp1 = 7 * 24 * 60 * 60;
-                    break;
-                case self::WEEKLY_VIEW:
-                    $tmp1 = 30 * 24 * 60 * 60;
                     break;
             }
             $tmp = ceil($tmpDiff / $tmp1);
@@ -235,20 +232,39 @@ class statsSalesReportGraph
                     $this->next = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
                 }
             }
-        } elseif ((int)$this->mode == self::MONTHLY_VIEW) { 
-            // compute previous link if data is there 
-            $year = date('Y', $this->startDate) - 1; 
-            $tmpStart = mktime(0,0,0,1,1,$year); 
-            $tmpEnd = mktime(0,0,0,12,1,$year); 
+        } elseif ((int)$this->mode == self::MONTHLY_VIEW) {
+            // compute previous link if data is there
+            $year = date('Y', $this->startDate) - 1;
+            $tmpStart = mktime(0,0,0,1,1,$year);
+            $tmpEnd = mktime(0,0,0,12,1,$year);
             if (date('Y', $tmpStart) >= date('Y', $this->globalStartDate)) {
                $this->previous = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
             }
 
-            // compute next link if data is there 
-            $year = date('Y', $this->startDate) + 1; 
-            $tmpStart = mktime(0,0,0,1,1,$year); 
-            $tmpEnd = mktime(0,0,0,12,1,$year); 
+            // compute next link if data is there
+            $year = date('Y', $this->startDate) + 1;
+            $tmpStart = mktime(0,0,0,1,1,$year);
+            $tmpEnd = mktime(0,0,0,12,1,$year);
             if (date('Y', $tmpEnd) <= date('Y')) {
+               $this->next= "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
+            }
+        } elseif ((int)$this->mode == self::WEEKLY_VIEW) {
+            $dayOfMonth = $this->startDate + (8 * 24 * 60 * 60);
+            // compute previous link
+            $firstDay = mktime(0, 0, 0, date('m', $dayOfMonth) - 1, 1, date('Y', $dayOfMonth));
+            $tmpStart = mktime(0, 0, 0, date('m', $firstDay), 1 - date('w', $firstDay), date('Y', $firstDay));
+            $lastDay = mktime(0, 0, 0, date('m', $firstDay), date('t', $firstDay), date('Y', $firstDay));
+            $tmpEnd = mktime(0, 0, 0, date('m', $lastDay), date('d', $lastDay) + 6 - date('w', $lastDay), date('Y', $lastDay));
+            if ($tmpStart >= $this->globalStartDate) {
+                $this->previous = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
+            }
+
+            // compute next link
+            $firstDay = mktime(0, 0, 0, date('m', $dayOfMonth) + 1, 1, date('Y', $dayOfMonth));
+            $tmpStart = mktime(0, 0, 0, date('m', $firstDay), 1 - date('w', $firstDay), date('Y', $firstDay));
+            $lastDay = mktime(0, 0, 0, date('m', $firstDay), date('t', $firstDay), date('Y', $firstDay));
+            $tmpEnd = ($lastDay > mktime(0, 0, 0, date('m'), date('d'), date('Y'))) ? mktime(0, 0, 0, date('m'), date('d') + 6 - date('w'), date('Y')) : mktime(0, 0, 0, date('m', $lastDay), date('d', $lastDay) + 6 - date('w', $lastDay), date('Y', $lastDay));
+            if ($this->endDate < mktime(0, 0, 0, date('m'), date('d') + 6 - date('w'), date('Y'))) {
                $this->next= "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
             }
         }
