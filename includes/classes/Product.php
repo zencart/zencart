@@ -99,7 +99,7 @@ class Product
 
     public function exists(): bool
     {
-        return !empty($this->product_id);
+        return !empty($this->product_id) && !empty($this->data);
     }
     public function isValid(): bool
     {
