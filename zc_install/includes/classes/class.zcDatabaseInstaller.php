@@ -70,8 +70,8 @@ class zcDatabaseInstaller
             'TRUNCATE TABLE ',
             'RENAME TABLE ',
             'TO ',
-            'UPDATE ',
             'UPDATE IGNORE ',
+            'UPDATE ',
             'DELETE FROM ',
             'DROP INDEX ',
             'INNER JOIN ',
@@ -185,6 +185,8 @@ class zcDatabaseInstaller
                 } else {
                     $this->completeLine = false;
                 }
+            } else {
+                $this->completeLine = false;
             }
             if ($this->completeLine) {
                 $output = (trim(str_replace(';', '', $this->newLine)) !== '' && !$this->ignoreLine) ? $this->tryExecute($this->newLine) : '';
@@ -218,6 +220,7 @@ class zcDatabaseInstaller
                 }
                 if (method_exists($this, $parseMethod)) {
                     $this->$parseMethod();
+                    break;
                 }
             }
         }
