@@ -138,9 +138,10 @@ class ot_group_pricing {
     return $order_total;
   }
   function calculate_deductions($order_total) {
-    global $db, $order;
+    global $db, $order, $zco_notifier;
     $od_amount = array();
     if ($order_total == 0 || !zen_is_logged_in() || zen_in_guest_checkout()) {
+        $zco_notifier->notify('NOTIFY_OT_GROUP_PRICING_DEDUCTION_OVERRIDE', ['order_total' => $order_total], $od_amount);
         return $od_amount;
     }
     $orderTotal = $this->get_order_total();
@@ -187,6 +188,19 @@ class ot_group_pricing {
           $od_amount['tax_groups'][$tax_description] = $od_amount['tax'];
         break;
       }
+
+      $zco_notifier->notify(
+        'NOTIFY_OT_GROUP_PRICING_DEDUCTION_OVERRIDE_FINAL',
+        [
+            'customers_group_pricing' => (int)$group_query->fields['customers_group_pricing'],
+            'group_percentage' => $group_discount->fields['group_percentage'],
+            'orderTotal' => $orderTotal,
+            'gift_vouchers' => $gift_vouchers,
+            'tax_calc_method' => $this->calculate_tax,
+            'order_info' => $order->info,
+        ],
+        $od_amount
+      );
     }
     return $od_amount;
   }

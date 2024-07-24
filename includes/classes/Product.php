@@ -74,8 +74,17 @@ class Product
         }
         $data = $this->data;
 
+        // -----
+        // If this request is for a product being created, it might not yet have
+        // its language elements (e.g. products_name) stored.  In this case, simply
+        // return the product's base information.
+        //
+        if (!isset($data['lang'])) {
+            return $data;
+        }
+
         // strip all languages except specified one, and merge into parent array instead of sub-array
-        foreach($data['lang'][$this->languages[$language_id]] as $key => $value) {
+        foreach ($data['lang'][$this->languages[$language_id]] as $key => $value) {
             $data[$key] = $value;
         }
         unset($data['lang']);
@@ -90,7 +99,7 @@ class Product
 
     public function exists(): bool
     {
-        return !empty($this->product_id);
+        return !empty($this->product_id) && !empty($this->data);
     }
     public function isValid(): bool
     {

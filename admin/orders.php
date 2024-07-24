@@ -1064,7 +1064,7 @@ if ($show_orders_weights === true) {
                         }
                         ?>
                     </td>
-                    <td><?php echo $orders_status_array[$item['orders_status_id']]; ?></td>
+                    <td><?php echo $orders_status_array[$item['orders_status_id']] ?? ''; ?></td>
 <?php
                     // -----
                     // A watching observer can provide an associative array in the form:
@@ -1398,10 +1398,10 @@ if ($show_orders_weights === true) {
                     $check_count = 0;
                     if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_ORDERS) {
                       while (!$check_page->EOF) {
+                        $check_count++;
                         if ($check_page->fields['orders_id'] == $_GET['oID']) {
                           break;
                         }
-                        $check_count++;
                         $check_page->MoveNext();
                       }
                       $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS_ORDERS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS_ORDERS) != 0 ? .5 : 0)), 0);

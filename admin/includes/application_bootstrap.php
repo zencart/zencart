@@ -172,7 +172,7 @@ require (DIR_FS_CATALOG . 'includes/application_laravel.php');
 
 $pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
 $installedPlugins = $pluginManager->getInstalledPlugins();
-$pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
+
 $pageLoader = PageLoader::getInstance();
 $pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem);
 

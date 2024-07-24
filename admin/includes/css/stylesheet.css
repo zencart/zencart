@@ -953,3 +953,10 @@ tbody>tr>td.align-bottom {
     margin-top: 3rem !important;
 }
 /**/
+
+/* CKEditor */
+.ck-editor__editable, .ck-source-editing-area {
+    min-height: 250px;
+    max-height: 650px;
+}
+

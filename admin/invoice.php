@@ -382,6 +382,17 @@ if (empty($order->info)) {
           ?>
         </tbody>
       </table>
+      <?php
+        $additional_content = false;
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_INVOICE_ADDITIONAL_DATA_MIDDLE', $oID, $additional_content);
+          if ($additional_content !== false) {
+      ?>
+          <table class="table">
+              <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+          </table>
+      <?php
+          }
+      ?>
       <table class="table">
           <?php
           for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {
