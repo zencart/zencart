@@ -225,7 +225,7 @@ switch ($_GET['action']) {
       $update_errors = 1;
       $messageStack->add(ERROR_NO_COUPON_NAME, 'error');
     }
-    if ((!$_POST['coupon_amount']) && (!$_POST['coupon_free_ship'])) {
+    if ((!$_POST['coupon_amount']) && (empty($_POST['coupon_free_ship']))) {
       $update_errors = 1;
       $messageStack->add(ERROR_NO_COUPON_AMOUNT, 'error');
     }
