@@ -22,41 +22,110 @@ $zenSessionId = 'zenid';
 /**
  * inoculate against hack attempts which waste CPU cycles
  */
-$contaminated = (isset($_FILES['GLOBALS']) || isset($_REQUEST['GLOBALS'])) ? true : false;
-$paramsToAvoid = array('GLOBALS', '_COOKIE', '_ENV', '_FILES', '_GET', '_POST', '_REQUEST', '_SERVER', '_SESSION', 'HTTP_COOKIE_VARS', 'HTTP_ENV_VARS', 'HTTP_GET_VARS', 'HTTP_POST_VARS', 'HTTP_POST_FILES', 'HTTP_RAW_POST_DATA', 'HTTP_SERVER_VARS', 'HTTP_SESSION_VARS');
-$paramsToAvoid[] = 'autoLoadConfig';
-$paramsToAvoid[] = 'mosConfig_absolute_path';
-$paramsToAvoid[] = 'function';
-$paramsToAvoid[] = 'hash';
-$paramsToAvoid[] = 'main';
-$paramsToAvoid[] = 'vars';
-foreach($paramsToAvoid as $key) {
-  if (isset($_GET[$key]) || isset($_POST[$key]) || isset($_COOKIE[$key])) {
-    $contaminated = true;
-    break;
-  }
-}
-$paramsToCheck = array($zenSessionId, 'main_page', 'cPath', 'products_id', 'language', 'currency', 'action', 'manufacturers_id', 'pID', 'pid', 'reviews_id', 'filter_id', 'sort', 'number_of_uploads', 'notify', 'page_holder', 'chapter', 'alpha_filter_id', 'typefilter', 'disp_order', 'id', 'key', 'music_genre_id', 'record_company_id', 'set_session_login', 'faq_item', 'edit', 'delete', 'search_in_description', 'dfrom', 'pfrom', 'dto', 'pto', 'inc_subcat', 'payment_error', 'order', 'gv_no', 'pos', 'addr', 'error', 'count', 'error_message', 'info_message', 'cID', 'page', 'credit_class_error_code');
-if (!$contaminated) {
-  foreach($paramsToCheck as $key) {
-    if (isset($_GET[$key]) && !is_array($_GET[$key])) {
-      if (substr($_GET[$key], 0, 4) == 'http' || strstr($_GET[$key], '//')) {
+$contaminated = (isset($_FILES['GLOBALS']) || isset($_REQUEST['GLOBALS']));
+$paramsToAvoid = [
+    'GLOBALS',
+    '_COOKIE',
+    '_ENV',
+    '_FILES',
+    '_GET',
+    '_POST',
+    '_REQUEST',
+    '_SERVER',
+    '_SESSION',
+    'HTTP_COOKIE_VARS',
+    'HTTP_ENV_VARS',
+    'HTTP_GET_VARS',
+    'HTTP_POST_VARS',
+    'HTTP_POST_FILES',
+    'HTTP_RAW_POST_DATA',
+    'HTTP_SERVER_VARS',
+    'HTTP_SESSION_VARS',
+    'autoLoadConfig',
+    'mosConfig_absolute_path',
+    'function',
+    'hash',
+    'main',
+    'vars',
+];
+foreach ($paramsToAvoid as $key) {
+    if (isset($_GET[$key]) || isset($_POST[$key]) || isset($_COOKIE[$key])) {
         $contaminated = true;
         break;
-      }
-      $len = (in_array($key, array($zenSessionId, 'error_message', 'payment_error'))) ? 255 : 43;
-      if (isset($_GET[$key]) && strlen($_GET[$key]) > $len) {
-        $contaminated = true;
-        break;
-      }
     }
-  }
+}
+$paramsToCheck = [
+    $zenSessionId,
+    'main_page',
+    'cPath',
+    'products_id',
+    'language',
+    'currency',
+    'action',
+    'manufacturers_id',
+    'pID',
+    'pid',
+    'reviews_id',
+    'filter_id',
+    'sort',
+    'number_of_uploads',
+    'notify',
+    'page_holder',
+    'chapter',
+    'alpha_filter_id',
+    'typefilter',
+    'disp_order',
+    'id',
+    'key',
+    'music_genre_id',
+    'record_company_id',
+    'set_session_login',
+    'faq_item',
+    'edit',
+    'delete',
+    'search_in_description',
+    'dfrom',
+    'pfrom',
+    'dto',
+    'pto',
+    'inc_subcat',
+    'payment_error',
+    'order',
+    'gv_no', 
+    'pos',
+    'addr',
+    'error',
+    'count',
+    'error_message',
+    'info_message',
+    'cID', 
+    'page',
+    'credit_class_error_code',
+];
+if (!$contaminated) {
+    foreach ($paramsToCheck as $key) {
+        if (!isset($_GET[$key])) {
+            continue;
+        }
+        if (is_array($_GET[$key])) {
+            $contaminated = true;
+            break;
+        }
+        if (str_starts_with(strtolower($_GET[$key]), 'http') || str_contains($_GET[$key], '//')) {
+            $contaminated = true;
+            break;
+        }
+        $len = (in_array($key, [$zenSessionId, 'error_message', 'payment_error'])) ? 255 : 43;
+        if (strlen($_GET[$key]) > $len) {
+            $contaminated = true;
+            break;
+        }
+    }
 }
 unset($paramsToCheck, $paramsToAvoid, $key);
-if ($contaminated)
-{
-  header('HTTP/1.1 406 Not Acceptable');
-  exit(0);
+if ($contaminated) {
+    header('HTTP/1.1 406 Not Acceptable');
+    exit(0);
 }
 unset($contaminated, $len);
 /* *** END OF INOCULATION *** */
@@ -75,8 +144,9 @@ define('IS_ADMIN_FLAG', false);
  * integer saves the time at which the script started.
  */
 define('PAGE_PARSE_START_TIME', microtime());
-@ini_set("arg_separator.output","&");
-@ini_set("html_errors","0");
+@ini_set('arg_separator.output', '&');
+@ini_set('html_errors', '0');
+
 /**
  * Ensure minimum PHP version.
  * This is intended to run before any dependencies are required
@@ -86,19 +156,22 @@ if (PHP_VERSION_ID < 80002) {
     require 'includes/templates/template_default/templates/tpl_zc_phpupgrade_default.php';
     exit(0);
 }
+
 /**
  * Set the local configuration parameters - mainly for developers
  */
 if (file_exists('includes/local/configure.php')) {
-  /**
-   * load any local(user created) configure file.
-   */
-  include('includes/local/configure.php');
+    /**
+     * load any local(user created) configure file.
+     */
+    include 'includes/local/configure.php';
 }
+
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
 define('DEBUG_AUTOLOAD', false);
+
 /**
  * set the level of error reporting
  *
@@ -106,8 +179,8 @@ define('DEBUG_AUTOLOAD', false);
  * It is mainly there to show php warnings during testing/bug fixing phases.
  */
 if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
-  @ini_set('display_errors', TRUE);
-  error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
+    @ini_set('display_errors', true);
+    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
 } else {
     error_reporting(0);
 }
@@ -122,9 +195,11 @@ $detected_locale = setlocale(LC_TIME, 0);
 if ($detected_locale === false || $detected_locale === 'C') {
     setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
 }
+
 if (file_exists('./not_for_release/testFramework/Support/application_testing.php')) {
-    require('./not_for_release/testFramework/Support/application_testing.php');
+    require './not_for_release/testFramework/Support/application_testing.php';
 }
+
 /**
  * check for and include load application parameters
  */
@@ -133,21 +208,21 @@ if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
         /**
          * load the main configure file.
          */
-        include('includes/configure.php');
-    } else if (!defined('DIR_FS_CATALOG') && !defined('HTTP_SERVER') && !defined('DIR_WS_CATALOG') && !defined('DIR_WS_INCLUDES')) {
+        include 'includes/configure.php';
+    } elseif (!defined('DIR_FS_CATALOG') && !defined('HTTP_SERVER') && !defined('DIR_WS_CATALOG') && !defined('DIR_WS_INCLUDES')) {
         $problemString = 'includes/configure.php not found';
-        require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
+        require 'includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
         exit;
     }
 }
+
 /**
  * if main configure file doesn't contain valid info (ie: is dummy or doesn't match filestructure, display assistance page to suggest running the installer)
  */
 if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
-
     $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
-  require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
-  exit;
+    require 'includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
+    exit;
 }
 
 /**
@@ -157,11 +232,12 @@ if (file_exists('includes/defined_paths.php')) {
     /**
      * load the system-defined path constants
      */
-    require('includes/defined_paths.php');
+    require 'includes/defined_paths.php';
 } else {
     die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
     exit;
 }
+
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
 
@@ -182,13 +258,19 @@ foreach (glob(DIR_WS_INCLUDES . 'extra_configures/*.php') ?? [] as $file) {
  * determine install status
  */
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
-    if (((!file_exists('includes/configure.php') && !file_exists('includes/local/configure.php'))) || (DB_TYPE == '') || (!file_exists('includes/classes/db/' . DB_TYPE . '/query_factory.php')) || !file_exists('includes/autoload_func.php')) {
+    if (
+        (!file_exists('includes/configure.php') && !file_exists('includes/local/configure.php'))
+        || DB_TYPE == ''
+        || !file_exists('includes/classes/db/' . DB_TYPE . '/query_factory.php')
+        || !file_exists('includes/autoload_func.php')
+    ) {
         $problemString = 'includes/configure.php file empty or file not found, OR wrong DB_TYPE set, OR cannot find includes/autoload_func.php which suggests paths are wrong or files were not uploaded correctly';
-        require('includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
+        require 'includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
         header('location: zc_install/index.php');
         exit;
     }
 }
+
 /**
  * psr-4 autoloading
  */
@@ -233,22 +315,26 @@ if (isset($loaderPrefix)) {
 }
 $initSystem = new InitSystem('catalog', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
-if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
+if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) {
+    $initSystem->setDebug(true);
+}
 
 $loaderList = $initSystem->loadAutoLoaders();
 
 $initSystemList = $initSystem->processLoaderList($loaderList);
 
 require DIR_FS_CATALOG . 'includes/autoload_func.php';
+
 /**
  * load the counter code
 **/
 if (empty($spider_flag)) {
-// counter and counter history
-  require(DIR_WS_INCLUDES . 'counter.php');
+    // counter and counter history
+    require DIR_WS_INCLUDES . 'counter.php';
 }
+
 // get customers unique IP that paypal does not touch
 $customers_ip_address = $_SERVER['REMOTE_ADDR'];
 if (!isset($_SESSION['customers_ip_address'])) {
-  $_SESSION['customers_ip_address'] = $customers_ip_address;
+    $_SESSION['customers_ip_address'] = $customers_ip_address;
 }

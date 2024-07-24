@@ -767,14 +767,16 @@ function zen_get_category_name($category_id, $language_id = null)
  * @param int $language_id
  * @return string
  */
-function zen_get_category_description($category_id, $language_id = null) {
-    global $db;
+function zen_get_category_description($category_id, $language_id = null): string
+{
+    global $db, $zco_notifier;
     if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
     $category = $db->Execute("SELECT categories_description
                               FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                               WHERE categories_id = " . (int)$category_id . "
                               AND language_id = " . (int)$language_id);
     if ($category->EOF) return '';
+    $zco_notifier->notify('NOTIFY_GET_CATEGORY_DESCRIPTION', $category_id, $category->fields['categories_description']);
     return $category->fields['categories_description'];
 }
 
