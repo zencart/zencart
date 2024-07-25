@@ -139,7 +139,7 @@ if (!empty($action)) {
         }
 
 // create additional orders_status records
-        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
+        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name, sort_order
                                        FROM " . TABLE_ORDERS_STATUS . "
                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
 
