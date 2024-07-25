@@ -139,16 +139,15 @@ if (!empty($action)) {
         }
 
 // create additional orders_status records
-        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name, sort_order
+        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
                                        FROM " . TABLE_ORDERS_STATUS . "
                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($orders_status as $status) {
-          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, sort_order)
+          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name)
                         VALUES ('" . (int)$status['orders_status_id'] . "',
                                 '" . (int)$insert_id . "',
-                                '" . zen_db_input($status['orders_status_name']) . "',
-                                '" . (int)$status['sort_order'] . "')");
+                                '" . zen_db_input($status['orders_status_name']) . "')");
         }
 
         // create additional coupons_description records
@@ -175,18 +174,6 @@ if (!empty($action)) {
                                 '" . (int)$insert_id . "',
                                 '" . zen_db_input($ezpage['pages_title']) . "',
                                 '" . zen_db_input($ezpage['pages_html_text']) . "')");
-        }
-
-// create additional products option stock names records
-        $products_option_stock_names = $db->Execute("SELECT pos_name_id, pos_name
-                                       FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . "
-                                       WHERE language_id = " . (int)$_SESSION['languages_id']);
-
-        foreach ($products_option_stock_names as $option_stock_name) {
-          $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " (pos_name_id, language_id, pos_name)
-                        VALUES ('" . (int)$option_stock_name['pos_name_id'] . "',
-                                '" . (int)$insert_id . "',
-                                '" . zen_db_input($option_stock_name['pos_name']) . "')");
         }
 
 // Following code updates submenus in admin using different methods depending on which table in database needs to be translated and which part of ZC is concerned (core or plugins).
@@ -388,7 +375,6 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
-      $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " WHERE language_id = " . (int)$lID);
       if ($lcode !== 'en') { // removes additional language related column when language is deleted.
           $db->Execute("ALTER TABLE " . TABLE_PRODUCT_TYPES . " DROP COLUMN type_name_" . $lcode);
           $db->Execute("ALTER TABLE " . TABLE_PRODUCT_TYPE_LAYOUT . " DROP COLUMN configuration_title_" . $lcode . ", DROP COLUMN configuration_description_" . $lcode);
