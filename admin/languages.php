@@ -146,7 +146,7 @@ if (!empty($action)) {
         foreach ($orders_status as $status) {
           $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, sort_order)
                         VALUES (" . $status['orders_status_id'] . ",
-                                " . $insert_id . ",
+                                " . (int)$insert_id . ",
                                 '" . zen_db_input($status['orders_status_name']) . "',
                                 " . $status['sort_order'] . ")");
         }
