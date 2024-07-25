@@ -176,6 +176,20 @@ if (!empty($action)) {
                                 '" . zen_db_input($ezpage['pages_html_text']) . "')");
         }
 
+        // create additional products option stock names records
+        if (defined('TABLE_PRODUCTS_OPTIONS_STOCK_NAMES')) {
+            $products_option_stock_names = $db->Execute("SELECT pos_name_id, pos_name
+                                           FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . "
+                                           WHERE language_id = " . (int)$_SESSION['languages_id']);
+
+            foreach ($products_option_stock_names as $option_stock_name) {
+              $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " (pos_name_id, language_id, pos_name)
+                            VALUES ('" . (int)$option_stock_name['pos_name_id'] . "',
+                                    '" . (int)$insert_id . "',
+                                    '" . zen_db_input($option_stock_name['pos_name']) . "')");
+            }
+        }
+
         $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_INSERT', (int)$insert_id);
 
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id));
@@ -245,6 +259,9 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
+      if (defined('TABLE_PRODUCTS_OPTIONS_STOCK_NAMES')) {
+          $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " WHERE language_id = " . (int)$lID);
+      }
 
       // if we just deleted our currently-selected language, need to switch to default lang:
       $getlang = '';
