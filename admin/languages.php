@@ -144,10 +144,11 @@ if (!empty($action)) {
                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($orders_status as $status) {
-          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name)
+          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, sort_order)
                         VALUES ('" . (int)$status['orders_status_id'] . "',
                                 '" . (int)$insert_id . "',
-                                '" . zen_db_input($status['orders_status_name']) . "')");
+                                '" . zen_db_input($status['orders_status_name']) . "',
+                                '" . (int)$status['sort_order'] . "')");
         }
 
         // create additional coupons_description records
