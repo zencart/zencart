@@ -477,7 +477,7 @@ class queryFactory extends base
      * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
      * @param false $debug developer use only
      */
-    public function perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = '', $debug = false): void
+    public function perform(string $tableName, array $tableData, string $performType = 'INSERT', string $whereCondition = '', ?bool $debug = false): void
     {
         switch (strtolower($performType)) {
             case 'insertignore':
@@ -490,12 +490,12 @@ class queryFactory extends base
                     }
                     $insertString .= $value['fieldName'] . ", ";
                 }
-                $insertString = substr($insertString, 0, strlen($insertString) - 2) . ') VALUES (';
+                $insertString = substr($insertString, 0, -2) . ') VALUES (';
                 foreach ($tableData as $key => $value) {
                     $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
                     $insertString .= $bindVarValue . ", ";
                 }
-                $insertString = substr($insertString, 0, strlen($insertString) - 2) . ')';
+                $insertString = substr($insertString, 0, -2) . ')';
                 if ($debug === true) {
                     echo $insertString;
                     die();
@@ -513,7 +513,7 @@ class queryFactory extends base
                     $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
                     $updateString .= $value['fieldName'] . '=' . $bindVarValue . ', ';
                 }
-                $updateString = substr($updateString, 0, strlen($updateString) - 2);
+                $updateString = substr($updateString, 0, -2);
                 if (!empty($whereCondition)) {
                     $updateString .= ' WHERE ' . $whereCondition;
                 }
