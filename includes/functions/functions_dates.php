@@ -93,7 +93,6 @@ function zen_date_long($raw_date)
 
 /**
  * Output a raw date string in the selected locale date format
- * NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
  *
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string|string[]|null
