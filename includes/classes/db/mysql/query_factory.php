@@ -480,8 +480,10 @@ class queryFactory extends base
     public function perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = '', $debug = false): void
     {
         switch (strtolower($performType)) {
+            case 'insertignore':
+                $insertString = "INSERT IGNORE INTO " . $tableName . " (";
             case 'insert':
-                $insertString = "INSERT INTO " . $tableName . " (";
+                $insertString = $insertString ?? "INSERT INTO " . $tableName . " (";
                 foreach ($tableData as $key => $value) {
                     if ($debug === true) {
                         echo $value['fieldName'] . '#';
@@ -503,8 +505,10 @@ class queryFactory extends base
 
                 break;
 
+            case 'updateignore':
+                $updateString = 'UPDATE IGNORE ' . $tableName . ' SET ';
             case 'update':
-                $updateString = 'UPDATE ' . $tableName . ' SET ';
+                $updateString = $updateString ?? 'UPDATE ' . $tableName . ' SET ';
                 foreach ($tableData as $key => $value) {
                     $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
                     $updateString .= $value['fieldName'] . '=' . $bindVarValue . ', ';
