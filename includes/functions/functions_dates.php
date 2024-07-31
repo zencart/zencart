@@ -25,7 +25,7 @@ if (!function_exists('zen_date_raw')) {
             $date = DateTime::createFromFormat('!m/d/Y', '01/01/0001')->format(DATE_FORMAT);
         }
 
-		$date = preg_replace('/\D+/', '', $date);		
+		$date = preg_replace('/\D+/', '', $date);
 		$date_format = str_replace(['/', '-'], '', DATE_FORMAT);
 
         if ($date_format === 'dmY') {
