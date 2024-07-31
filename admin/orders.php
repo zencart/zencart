@@ -1249,34 +1249,6 @@ if ($show_orders_weights === true) {
             <table id="orders-table" class="table table-hover">
               <thead>
                 <tr class="dataTableHeadingRow">
-                    <?php
-// Sort Listing
-                    switch ($_GET['list_order']) {
-                      case "id-asc":
-                        $disp_order = "c.customers_id";
-                        break;
-                      case "firstname":
-                        $disp_order = "c.customers_firstname";
-                        break;
-                      case "firstname-desc":
-                        $disp_order = "c.customers_firstname DESC";
-                        break;
-                      case "lastname":
-                        $disp_order = "c.customers_lastname, c.customers_firstname";
-                        break;
-                      case "lastname-desc":
-                        $disp_order = "c.customers_lastname DESC, c.customers_firstname";
-                        break;
-                      case "company":
-                        $disp_order = "a.entry_company";
-                        break;
-                      case "company-desc":
-                        $disp_order = "a.entry_company DESC";
-                        break;
-                      default:
-                        $disp_order = "c.customers_id DESC";
-                    }
-                    ?>
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ORDERS_ID; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></th>
