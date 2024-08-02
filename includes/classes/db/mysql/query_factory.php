@@ -473,7 +473,7 @@ class queryFactory extends base
      *
      * @param string $tableName table on which to perform the insert/update
      * @param array $tableData data to be inserted/deleted containing sub-arrays with fieldName/value/type keys (where type is the BindVar rule to apply)
-     * @param string $performType INSERT or UPDATE
+     * @param string $performType INSERT or UPDATE or INSERTIGNORE or UPDATEIGNORE
      * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
      * @param false $debug developer use only
      */
@@ -481,9 +481,10 @@ class queryFactory extends base
     {
         switch (strtolower($performType)) {
             case 'insertignore':
-                $insertString = "INSERT IGNORE INTO " . $tableName . " (";
+                $insertString = 'INSERT IGNORE';
             case 'insert':
-                $insertString = $insertString ?? "INSERT INTO " . $tableName . " (";
+                $insertString = $insertString ?? 'INSERT';
+                $insertString .= " INTO $tableName (";
                 foreach ($tableData as $key => $value) {
                     if ($debug === true) {
                         echo $value['fieldName'] . '#';
@@ -506,9 +507,10 @@ class queryFactory extends base
                 break;
 
             case 'updateignore':
-                $updateString = 'UPDATE IGNORE ' . $tableName . ' SET ';
+                $updateString = 'UPDATE IGNORE ';
             case 'update':
-                $updateString = $updateString ?? 'UPDATE ' . $tableName . ' SET ';
+                $updateString = $updateString ?? 'UPDATE ';
+                $updateString .= " $tableName SET ";
                 foreach ($tableData as $key => $value) {
                     $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
                     $updateString .= $value['fieldName'] . '=' . $bindVarValue . ', ';
