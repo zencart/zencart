@@ -332,11 +332,11 @@ class statsSalesReportGraph
                     $this->info[$i]['link'] = '';
                     break;
                 case self::DAILY_VIEW:
-                    $this->info[$i]['text'] = $zcDate->output('%x', $this->startDates[$i]);
+                    $this->info[$i]['text'] = $zcDate->output(DATE_FORMAT_SHORT, $this->startDates[$i]);
                     $this->info[$i]['link'] = "report=" . self::HOURLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) + 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::WEEKLY_VIEW:
-                    $this->info[$i]['text'] = $zcDate->output('%x', $this->startDates[$i]) . " - " . $zcDate->output('%x', mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i])));
+                    $this->info[$i]['text'] = $zcDate->output(DATE_FORMAT_SHORT, $this->startDates[$i]) . " - " . $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i])));
                     $this->info[$i]['link'] = "report=" . self::DAILY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::MONTHLY_VIEW:

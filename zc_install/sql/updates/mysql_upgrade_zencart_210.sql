@@ -40,6 +40,14 @@ ALTER TABLE email_archive ADD COLUMN errorinfo TEXT DEFAULT NULL;
 ALTER TABLE email_archive ADD INDEX idx_email_date_sent_zen (date_sent);
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
+# Postcode/zip fields expand to accomodate Portugal formatting
+ALTER TABLE address_book MODIFY entry_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY customers_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_postcode varchar(64) NOT NULL default '';
+ALTER TABLE paypal MODIFY address_zip varchar(64) default NULL;
+ALTER TABLE paypal_testing MODIFY address_zip varchar(64) default NULL;
+
 ALTER TABLE admin ADD COLUMN mfa TEXT DEFAULT NULL;
 DROP TABLE IF EXISTS admin_expired_tokens;
 CREATE TABLE admin_expired_tokens (
@@ -50,9 +58,6 @@ CREATE TABLE admin_expired_tokens (
   KEY idx_admin_name_otp_code_zen (admin_name, otp_code)
 );
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('MFA Multi-Factor Authentication Required', 'MFA_ENABLED', 'False', '2-Factor authentication for Admin users', 1, 29, now(), 'zen_cfg_select_option([\'True\', \'False\'],');
-
-
-
 
 # Image matching mode
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images matching pattern', 'ADDITIONAL_IMAGES_MODE', 'legacy', '&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict', '4', '25', 'zen_cfg_select_option(array(\'strict\', \'legacy\'), ', now());
