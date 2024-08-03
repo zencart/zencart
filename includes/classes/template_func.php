@@ -28,20 +28,4 @@ class template_func extends base
         $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
         return $pageLoader->getTemplateDirectory($template_code, $current_template, $current_page, $template_dir);
     }
-
-    public function file_exists(string $file_dir, string $file_pattern, bool $debug = false): bool
-    {
-        $file_found = false;
-        $file_pattern = '/' . str_replace("/", "\/", $file_pattern) . '$/';
-        if ($mydir = @dir($file_dir)) {
-          while ($file = $mydir->read()) {
-            if (preg_match($file_pattern, $file)) {
-              $file_found = true;
-              break;
-            }
-          }
-          $mydir->close();
-        }
-        return $file_found;
-    }
 }
