@@ -382,13 +382,15 @@ foreach ($layoutBoxes as $layoutBox) {
 foreach ($left_active as $next_box => $next_box_id) {
     $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
     $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
+    $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
-                                                    <div class="col-sm-9 pl-0 pt-2">
+                                                    <div class="col-md-9 pl-0 pt-2">
                                                         <?= $next_box ?>
                                                     </div>
-                                                    <div class="col-sm-3 pr-0 text-right">
+                                                    <div class="col-md-3 pr-0 text-right">
+                                                        <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
                                                     </div>
@@ -421,13 +423,15 @@ foreach ($left_active as $next_box => $next_box_id) {
 foreach ($right_active as $next_box => $next_box_id) {
     $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
     $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
+    $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
-                                                    <div class="col-sm-9 pl-0 pt-2">
+                                                    <div class="col-md-9 pl-0 pt-2">
                                                         <?= $next_box ?>
                                                     </div>
-                                                    <div class="col-sm-3 pr-0 text-right">
+                                                    <div class="col-md-3 pr-0 text-right">
+                                                        <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
                                                     </div>
@@ -454,13 +458,15 @@ ksort($left_right_unused);
 foreach ($left_right_unused as $next_box => $next_box_id) {
     $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
     $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
+    $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
-                                                    <div class="col-sm-9 pl-0 pt-2">
+                                                    <div class="col-md-9 pl-0 pt-2">
                                                         <?= $next_box ?>
                                                     </div>
-                                                    <div class="col-sm-3 pr-0 text-right">
+                                                    <div class="col-md-3 pr-0 text-right">
+                                                        <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
                                                     </div>
@@ -493,13 +499,15 @@ if ($include_single_column_settings === true) {
     foreach ($single_active as $next_box => $next_box_id) {
         $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_SINGLE_COLUMN);
         $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_SINGLE_COLUMN);
+        $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_SINGLE_COLUMN);
 ?>
                                     <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                         <div class="row">
-                                            <div class="col-sm-9 pl-0 pt-2">
+                                            <div class="col-md-9 pl-0 pt-2">
                                                 <?= $next_box ?>
                                             </div>
-                                            <div class="col-sm-3 pr-0 text-right">
+                                            <div class="col-md-3 pr-0 text-right">
+                                                <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
                                             </div>
@@ -520,13 +528,15 @@ if ($include_single_column_settings === true) {
     foreach ($single_unused as $next_box => $next_box_id) {
         $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_SINGLE_COLUMN);
         $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_SINGLE_COLUMN);
+        $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_SINGLE_COLUMN);
 ?>
                                     <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                         <div class="row">
-                                            <div class="col-sm-9 pl-0 pt-2">
+                                            <div class="col-md-9 pl-0 pt-2">
                                                 <?= $next_box ?>
                                             </div>
-                                            <div class="col-sm-3 pr-0 text-right">
+                                            <div class="col-md-3 pr-0 text-right">
+                                                <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
                                             </div>
@@ -619,6 +629,8 @@ $(function() {
         $('#unused > li:last-child i.fa-angle-down').addClass('invisible');
         $('#single-box > li:first-child i.fa-angle-up').addClass('invisible');
         $('#single-unused > li:last-child i.fa-angle-down').addClass('invisible');
+        $('i.fa-xmark').show();
+        $('#unused i.fa-xmark, #single-unused i.fa-xmark').hide();
     }
     set_invisible();
 
@@ -685,6 +697,21 @@ $(function() {
     });
     $('#lbc-main i.fa-angle-down').on('click', function(e){
         $(this).closest('li').moveDown();
+        set_invisible();
+    });
+
+    // -----
+    // On-click handler for the X icon (move to unused).
+    //
+    $('#lbc-main i.fa-xmark').on('click', function(e){
+        let sideBox = $(this).closest('li');
+        if (sideBox.closest('ul').attr('id') === 'single-box') {
+            $('#single-unused').prepend(sideBox);
+            $('#single-unused > li:first-child').markMoved();
+        } else {
+            $('#unused').prepend(sideBox);
+            $('#unused > li:first-child').markMoved(true);
+        }
         set_invisible();
     });
 

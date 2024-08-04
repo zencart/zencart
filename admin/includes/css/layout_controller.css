@@ -16,7 +16,7 @@
 .border-dark {
     border-color: #343a40;
 }
-i.fa-angle-up:hover, i.fa-angle-down:hover {
+i.fa-angle-up:hover, i.fa-angle-down:hover, i.fa-xmark:hover {
     cursor: pointer;
 }
 .mb-0 {

@@ -33,7 +33,7 @@ $define = [
     'SUCCESS_BOX_RESET' => 'Settings for [%1$s] have been reset to current settings from [%2$s].',
     'TEXT_ERROR_INVALID_RESET_SUBMISSION' => 'ERROR: Invalid reset choice',
 
-    'TEXT_INSTRUCTIONS' => 'If your device has a mouse, you can drag and drop a sidebox to change its column-location or sort-order within its associated column locations. Otherwise, use the up- and down-arrow icons to change a sidebox\'s location or sort-order.',
+    'TEXT_INSTRUCTIONS' => 'If your device has a mouse, you can drag and drop a sidebox to change its column-location or sort-order within its associated column locations. Otherwise, use the up- and down-arrow icons to change a sidebox\'s location or sort-order. Use an <i class="fa-solid fa-xmark"></i> icon to quickly move an active sidebox to its inactive group.',
     'BUTTON_SHOW_HIDE_NOTES' => 'Show/Hide Notes',
     'TEXT_NOTES' => 'Notes:',
     'TEXT_NOTE1' => 'Once you have moved a sidebox, a button is displayed which, when clicked, saves all the changes you have made.',
@@ -51,10 +51,12 @@ $define = [
     'TEXT_HEADING_SINGLE_COLUMN' => 'Single-Column Locations',
     'TEXT_HEADING_ACTIVE_SINGLE' => 'Active Single-Column Sideboxes',
     'TEXT_HEADING_INACTIVE_SINGLE' => 'Inactive Single-Column Sideboxes',
+
     'TEXT_MOVE_BOX_UP' => 'Move %1$s up in the %2$s column locations.',
     'TEXT_MOVE_BOX_DOWN' => 'Move %1$s down in the %2$s column locations.',
-        'TEXT_MOVE_LEFT_RIGHT_COLUMN' => 'left/right',  //- Used as %2$s value in above two phrases
-        'TEXT_MOVE_SINGLE_COLUMN' => 'single',          //- Used as %2$s value in the above two phrases
+    'TEXT_MOVE_BOX_UNUSED' => 'Move %1$s to the %2$s column unused location.',
+        'TEXT_MOVE_LEFT_RIGHT_COLUMN' => 'left/right',  //- Used as %2$s value in above three phrases
+        'TEXT_MOVE_SINGLE_COLUMN' => 'single',          //- Used as %2$s value in the above three phrases
     'BUTTON_SAVE_CHANGES' => 'Save Changes',
     'SUCCESS_BOX_UPDATED' => 'Settings have been updated.',
 ];
