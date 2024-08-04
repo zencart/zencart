@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: proseLA 2023 Aug 19 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 Jul 07 Modified in v2.1.0-alpha1 $
  */
 require('includes/application_top.php');
 // To override the $show_* or $attr_img_width values, see

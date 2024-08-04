@@ -2,10 +2,10 @@
 /**
  * Side Box Template: Searchbox for column header
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 25 Modified in v2.1.0-alpha1 $
  */
 $content = '';
 $content .= zen_draw_form('quick_find_header', zen_href_link(FILENAME_SEARCH_RESULT, '', $request_type, false), 'get');

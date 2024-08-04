@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 May 22 Modified in v2.1.0-alpha1 $
  * structurally identical to featured.php, modifications should be replicated
  */
 require 'includes/application_top.php';

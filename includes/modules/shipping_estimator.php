@@ -11,7 +11,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Dec 08 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 Jun 05 Modified in v2.1.0-alpha1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
