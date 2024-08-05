@@ -287,9 +287,6 @@ foreach ($layoutBoxes as $layoutBox) {
                 </div>
             </div>
         </div>
-        <div class="text-center py-2">
-            <button class="btn btn-primary btn-save d-none"><?= BUTTON_SAVE_CHANGES ?></button>
-        </div>
 <?php
     if (count($missing) !== 0) {
 ?>
@@ -312,7 +309,6 @@ foreach ($layoutBoxes as $layoutBox) {
                                         <?= zen_draw_checkbox_field($next_box, '1', false, '', 'data-id="' . $next_box_id . '"') ?>
                                     </div>
                                 </div>
-
                             </li>
 <?php
         }
@@ -343,6 +339,7 @@ foreach ($layoutBoxes as $layoutBox) {
                                     <?= TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE ?>
                                     <span id="boxes-to-remove">&nbsp;</span>
                                 </p>
+                            <?= '</form>' ?>
                         </div>
                     </div>
                     <div class="modal-footer text-center">
@@ -355,6 +352,9 @@ foreach ($layoutBoxes as $layoutBox) {
 <?php
     }
 ?>
+        <div class="text-center py-2">
+            <button class="btn btn-primary btn-save d-none"><?= BUTTON_SAVE_CHANGES ?></button>
+        </div>
         <div id="lbc-main" class="row">
             <div id="lbc-lr" class="col-md-<?= ($include_single_column_settings === true) ? '8' : '12' ?>">
                 <div class="panel panel-info dataTableRow">
