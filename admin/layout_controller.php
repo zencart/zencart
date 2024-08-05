@@ -325,6 +325,7 @@ foreach ($layoutBoxes as $layoutBox) {
         <div id="remove-modal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
+                    <?= zen_draw_form('confirm-form', FILENAME_LAYOUT_CONTROLLER, 'action=deleteconfirm') ?>
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title text-center"><?= TEXT_INFO_HEADING_DELETE_BOX ?></h4>
@@ -332,20 +333,19 @@ foreach ($layoutBoxes as $layoutBox) {
                     <div class="modal-body">
                         <p id="missing-none-selected"><?= TEXT_NO_BOXES_TO_REMOVE ?></p>
                         <div id="missing-confirm" class="d-none">
-                            <?= zen_draw_form('confirm-form', FILENAME_LAYOUT_CONTROLLER, 'action=deleteconfirm') ?>
-                                <?= zen_draw_hidden_field('delete_boxes', 'placeholder', 'id="remove-boxes"') ?>
-                                <?= zen_draw_hidden_field('delete_boxes_names', 'placeholder', 'id="remove-boxes-names"') ?>
-                                <p>
-                                    <?= TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE ?>
-                                    <span id="boxes-to-remove">&nbsp;</span>
-                                </p>
-                            <?= '</form>' ?>
+                            <?= zen_draw_hidden_field('delete_boxes', 'placeholder', 'id="remove-boxes"') ?>
+                            <?= zen_draw_hidden_field('delete_boxes_names', 'placeholder', 'id="remove-boxes-names"') ?>
+                            <p>
+                                <?= TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE ?>
+                                <span id="boxes-to-remove">&nbsp;</span>
+                            </p>
                         </div>
                     </div>
                     <div class="modal-footer text-center">
                         <button id="remove-button" type="submit" class="btn btn-danger d-none"><?= BUTTON_REMOVE_BOXES ?></button>
                         <button type="button" class="btn btn-default" data-dismiss="modal"><?= BUTTON_CLOSE ?></button>
                     </div>
+                    <?= '</form>' ?>
                 </div>
             </div>
         </div>
@@ -852,7 +852,6 @@ $(function() {
         $('#boxes-to-remove').text('');
         document.getElementById('remove-boxes').value = '';
         $('#lbc-missing input:checked').each(function() {
-            console.log($(this).attr('name')+', '+$(this).data('id'));
             $('#boxes-to-remove').text($('#boxes-to-remove').text()+$(this).attr('name')+', ');
             document.getElementById('remove-boxes').value += $(this).data('id')+',';
         });
