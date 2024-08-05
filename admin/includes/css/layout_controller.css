@@ -19,6 +19,12 @@
 i.fa-angle-up:hover, i.fa-angle-down:hover, i.fa-xmark:hover {
     cursor: pointer;
 }
+.d-flex {
+    display: flex;
+}
+.justify-content-around {
+    justify-content: space-around;
+}
 .mb-0 {
     margin-bottom: 0;
 }

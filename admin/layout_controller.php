@@ -386,10 +386,10 @@ foreach ($left_active as $next_box => $next_box_id) {
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
-                                                    <div class="col-md-9 pl-0 pt-2">
+                                                    <div class="col-sm-9 pl-0 pt-2">
                                                         <?= $next_box ?>
                                                     </div>
-                                                    <div class="col-md-3 pr-0 text-right">
+                                                    <div class="col-sm-3 pr-0 d-flex justify-content-around">
                                                         <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
@@ -427,10 +427,10 @@ foreach ($right_active as $next_box => $next_box_id) {
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
-                                                    <div class="col-md-9 pl-0 pt-2">
+                                                    <div class="col-sm-9 pl-0 pt-2">
                                                         <?= $next_box ?>
                                                     </div>
-                                                    <div class="col-md-3 pr-0 text-right">
+                                                    <div class="col-sm-3 pr-0 d-flex justify-content-around">
                                                         <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
@@ -462,10 +462,10 @@ foreach ($left_right_unused as $next_box => $next_box_id) {
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
-                                                    <div class="col-md-9 pl-0 pt-2">
+                                                    <div class="col-sm-9 pl-0 pt-2">
                                                         <?= $next_box ?>
                                                     </div>
-                                                    <div class="col-md-3 pr-0 text-right">
+                                                    <div class="col-sm-3 pr-0 d-flex justify-content-around">
                                                         <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                         <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
@@ -503,10 +503,10 @@ if ($include_single_column_settings === true) {
 ?>
                                     <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                         <div class="row">
-                                            <div class="col-md-9 pl-0 pt-2">
+                                            <div class="col-sm-9 pl-0 pt-2">
                                                 <?= $next_box ?>
                                             </div>
-                                            <div class="col-md-3 pr-0 text-right">
+                                            <div class="col-sm-3 pr-0 d-flex justify-content-around">
                                                 <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
@@ -532,10 +532,10 @@ if ($include_single_column_settings === true) {
 ?>
                                     <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                         <div class="row">
-                                            <div class="col-md-9 pl-0 pt-2">
+                                            <div class="col-sm-9 pl-0 pt-2">
                                                 <?= $next_box ?>
                                             </div>
-                                            <div class="col-md-3 pr-0 text-right">
+                                            <div class="col-sm-3 pr-0 d-flex justify-content-around">
                                                 <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
                                                 <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
@@ -629,8 +629,8 @@ $(function() {
         $('#unused > li:last-child i.fa-angle-down').addClass('invisible');
         $('#single-box > li:first-child i.fa-angle-up').addClass('invisible');
         $('#single-unused > li:last-child i.fa-angle-down').addClass('invisible');
-        $('i.fa-xmark').show();
-        $('#unused i.fa-xmark, #single-unused i.fa-xmark').hide();
+        $('i.fa-xmark').removeClass('invisible');
+        $('#unused i.fa-xmark, #single-unused i.fa-xmark').addClass('invisible');
     }
     set_invisible();
 
