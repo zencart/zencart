@@ -679,5 +679,8 @@ $define = [
     '_NOVEMBER' => 'November',
     '_OCTOBER' => 'October',
     '_SEPTEMBER' => 'September',
+    'BOX_CATALOG_FEATURED_CATEGORIES' => 'Featured Categories',
+    'IMAGE_EDIT_CATEGORY' => 'Edit Category',
+    'TABLE_HEADING_CATEGORY_NAME' => 'Category Name',
 ];
 return $define;
