@@ -1,14 +1,18 @@
 INSERT INTO `admin_pages` (`page_key`, `language_key`, `main_page`, `page_params`, `menu_key`, `display_on_menu`, `sort_order`) VALUES
 ('featured_categories', 'BOX_CATALOG_FEATURED_CATEGORIES', 'FILENAME_FEATURED_CATEGORIES', '', 'catalog', 'Y', 19);
 
-INSERT INTO `configuration` (`configuration_title`, `configuration_key`, `configuration_value`, `configuration_description`, `configuration_group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`, `val_function`) VALUES
-('Show Featured Categories on Main Page', 'SHOW_PRODUCT_INFO_MAIN_FEATURED_CATEGORIES', '3', 'Show Featured Categories on Main Page<br />0= off or set the sort order', 24, 73, '2024-08-01 20:39:58', '2024-08-01 20:39:31', NULL, 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ', NULL),
-('Random Featured Categories for SideBox', 'MAX_RANDOM_SELECT_FEATURED_CATEGORIES', '1', 'Number of random FEATURED categories to rotate in the sidebox<br />Enter the number of categories to display in this sidebox at one time.<br /><br />How many categories do you want to display in this sidebox?', 3, 32, NULL, '2024-08-03 03:29:18', NULL, NULL, '{\"error\":\"TEXT_MAX_ADMIN_RANDOM_SELECT_FEATURED_CATEGORIES_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":0}}}');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function, val_function) VALUES
+('Show Featured Categories on Main Page', 'SHOW_PRODUCT_INFO_MAIN_FEATURED_CATEGORIES', '0', 'Show Featured Categories on Main Page<br />0= off or set the sort order', 24, 73, '2024-08-01 20:39:58', '2024-08-01 20:39:31', NULL, 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ', NULL),
+('Random Featured Categories for SideBox', 'MAX_RANDOM_SELECT_FEATURED_CATEGORIES', '1', 'Number of random FEATURED categories to rotate in the sidebox<br />Enter the number of categories to display in this sidebox at one time.<br /><br />How many categories do you want to display in this sidebox?', 3, 32, NULL, '2024-08-03 03:29:18', NULL, NULL, '{\"error\":\"TEXT_MAX_ADMIN_RANDOM_SELECT_FEATURED_CATEGORIES_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":0}}}'),
+('Categories Box - Show Featured Category Link', 'SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES', 'false', 'Show Featured Categories Link in the Categories Box', 19, 11, '2003-03-21 13:08:25', '2003-03-21 11:42:47', NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),',NULL);
+
 UPDATE `configuration` SET `set_function` = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ' WHERE `configuration_key` = 'SHOW_PRODUCT_INFO_MAIN_NEW_PRODUCTS';
 UPDATE `configuration` SET `set_function` = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ' WHERE `configuration_key` = 'SHOW_PRODUCT_INFO_MAIN_FEATURED_PRODUCTS'; 
 UPDATE `configuration` SET `set_function` = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ' WHERE `configuration_key` = 'SHOW_PRODUCT_INFO_MAIN_SPECIALS_PRODUCTS'; 
 UPDATE `configuration` SET `set_function` = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ' WHERE `configuration_key` = 'SHOW_PRODUCT_INFO_MAIN_UPCOMING'; 
 
+--For some reason it doesn't want this at the same time as the configuration cahnges but both run fine alone.
+-- I am too tired to care right now
 
 CREATE TABLE `featured_categories` (
   `featured_categories_id` int(11) NOT NULL,
@@ -41,3 +45,4 @@ INSERT INTO `featured_categories` (`categories_id`, `featured_date_added`, `feat
 (25, '2024-08-03 01:47:03', NULL, '2025-08-02', NULL, 1, '2024-08-02'),
 (62, '2024-08-03 01:44:32', NULL, '0001-01-01', NULL, 1, '0001-01-01'),
 (22, '2024-08-04 17:31:37', NULL, '0001-01-01', NULL, 1, '0001-01-01');
+

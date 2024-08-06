@@ -87,6 +87,8 @@ $define = [
     'CATEGORIES_BOX_HEADING_PRODUCTS_ALL' => 'All Products ...',
     'CATEGORIES_BOX_HEADING_SPECIALS' => 'Specials ...',
     'CATEGORIES_BOX_HEADING_WHATS_NEW' => 'New Products ...',
+    'CATEGORIES_BOX_HEADING_FEATURED_CATEGORIES' => 'Featured Categories...',
+
     'CATEGORY_COMPANY' => 'Company Details',
     'CATEGORY_PERSONAL' => 'Your Personal Details',
     'CHARSET' => 'utf-8',

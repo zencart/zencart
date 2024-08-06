@@ -4,7 +4,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte  New in 2.1.0 $
+ * @version $Id: TMCSherpa 2024 Aug 05 Modified in v2.1.0-alpha1 $
  *
  * @var language $lng
  * @var queryFactory $db
