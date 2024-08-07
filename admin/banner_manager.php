@@ -401,7 +401,7 @@ if (!empty($action)) {
               <?php echo zen_draw_input_field('banners_url', $bInfo->banners_url, zen_set_field_length(TABLE_BANNERS, 'banners_url') . ' class="form-control" id="banners_url"'); ?>
             </div>
           </div>
-          <div class="form-group"">
+          <div class="form-group">
             <?php echo zen_draw_label(TEXT_BANNERS_GROUP, 'banners_group', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-4 col-md-3">
               <?php echo zen_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group, 'class="form-control" id="banners_group"'); ?>
