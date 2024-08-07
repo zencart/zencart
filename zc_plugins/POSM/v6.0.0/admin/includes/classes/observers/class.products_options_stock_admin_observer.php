@@ -480,7 +480,7 @@ class products_options_stock_observer extends base
     // allowing the admin processing to indicate that the product is/isn't included.
     //
     protected function notify_order_after_query(\order &$order, string $e)
-    {   
+    {
         foreach ($order->products as &$current_product) {
             if (!$this->show_stock_messages) {
                 $current_product['name'] = $this->stripStockMessage($current_product['name']);
@@ -515,9 +515,9 @@ class products_options_stock_observer extends base
             $categories = explode('_', $_GET['cPath']);
             $category_id = end($categories);
         }
-        $additional_icons .= 
+        $additional_icons .=
             '<a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK, 'pID=' . $product['products_id']) . '&category_id=' . $category_id . '">' .
-                '<i class="fa fa-square fa-lg text-primary" aria-hidden="true" title="' . POS_ALT_PRODUCT_HAS_OPTIONS_STOCK . '"></i>' .
+                '<i class="fa fa-square fa-lg align-middle text-primary" aria-hidden="true" title="' . POS_ALT_PRODUCT_HAS_OPTIONS_STOCK . '"></i>' .
             '</a>';
     }
 
