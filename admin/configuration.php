@@ -58,7 +58,7 @@ if ($cfg_group->RecordCount() == 0) {
     $cfg_group->fields['configuration_group_title'] = '';
 } else {
     // multilanguage support:
-    // For example, in admin/includes/languages/spanish/lang.configuration.php
+    // For example, in admin/includes/languages/spanish/configuration.php
     // define('CFG_GRP_TITLE_MY_STORE', 'Mi Tienda');
     $str = $cfg_group->fields['configuration_group_title'];
     $str = str_replace(' ', '_', $str);
@@ -162,7 +162,7 @@ if ($gID == 7) {
                   ?>
                   <?php
                   // multilanguage support:
-                  // For example, in admin/includes/languages/spanish/lang.configuration.php
+                  // For example, in admin/includes/languages/spanish/configuration.php
                   // define('CFGTITLE_STORE_NAME', 'Nombre de la Tienda');
                   // define('CFGDESC_STORE_NAME', 'El nombre de mi tienda');
                   if (defined('CFGTITLE_' . $item['configuration_key'])) {
