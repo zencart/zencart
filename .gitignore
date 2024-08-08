@@ -23,6 +23,7 @@ dev-*.*
 # Ignore phpStorm/intellij configuration
 .idea
 *.iml
+.vscode
 
 # dbv
 /data/meta/revision
