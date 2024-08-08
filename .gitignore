@@ -20,7 +20,7 @@ dev-*.*
 .settings
 .buildpath
 
-# Ignore phpStorm/intellij configuration
+# Ignore phpStorm/intellij stuff
 .idea
 *.iml
 
@@ -239,4 +239,4 @@ modified_files.txt
 
 # laravel
 laravel/.env
-
+laravel/storage/*
