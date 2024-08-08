@@ -79,11 +79,20 @@ echo $menulist;
     }
   }
 ?>
-<?php if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
+<?php if (SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES == 'true') {
        $show_this = $db->Execute("select products_id from " . TABLE_FEATURED . " where status= 1 limit 1");
        if ($show_this->RecordCount() > 0) {
 ?>
     <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_FEATURED_PRODUCTS); ?>"><?php echo CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS; ?></a></li>
+<?php
+    }
+  }
+?>
+<?php if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
+       $show_this = $db->Execute("select categories_id from " . TABLE_FEATURED_CATEGORIES . " where status= 1 limit 1");
+       if ($show_this->RecordCount() > 0) {
+?>
+    <li><a class="category-links" href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES); ?>"><?php echo CATEGORIES_BOX_HEADING_FEATURED_CATEGORIES; ?></a></li>
 <?php
     }
   }

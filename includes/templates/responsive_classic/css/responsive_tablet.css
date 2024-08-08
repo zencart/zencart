@@ -53,6 +53,7 @@ div#bannerbox2{}
 div#bestsellers{}
 div#specials{}
 div#whosonline{}
+div#featuredcategories{}
 
 /* index & cPath (product listing pages) */
 div#productListing table, div#productListing thead, div#productListing tbody, div#productListing th, div#productListing td, div#productListing tr{display:block;}
@@ -149,6 +150,7 @@ div#productnotifications{display:none;visibility:hidden;}
 div#orderhistory{display:none;visibility:hidden;}
 div#currencies{display:none;visibility:hidden;}
 div#languages{display:none;visibility:hidden;}
+div#featuredcategories { display:none;visibility:hidden; }
 
 /*bof login, create account*/
 div#loginDefault input[type="text"], div#loginDefault input[type="password"], div#loginDefault select {height:40px;}

@@ -179,6 +179,7 @@ define('FILENAME_UNSUBSCRIBE', 'unsubscribe');
 define('FILENAME_USERS', 'users');
 define('FILENAME_ZONES', 'zones');
 define('FILENAME_WHOS_ONLINE', 'whos_online');
+define('FILENAME_FEATURED_CATEGORIES','featured_categories');
 
 // The following have .php or other suffix INTENTIONALLY !!!
 
@@ -199,4 +200,6 @@ define('FILENAME_PREV_NEXT_DISPLAY', 'products_previous_next_display.php');
 define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
 define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
+define('FILENAME_FEATURED_CATEGORIES_MODULE','featured_categories.php');
+
 

@@ -94,3 +94,8 @@ UPDATE record_artists_info SET date_last_click = NULL WHERE CAST(date_last_click
 UPDATE record_company SET date_added = NULL WHERE CAST(date_added AS CHAR(19)) = '0000-00-00 00:00:00';
 UPDATE record_company SET last_modified = NULL WHERE CAST(last_modified AS CHAR(19)) = '0000-00-00 00:00:00';
 UPDATE record_company_info SET date_last_click = NULL WHERE CAST(date_last_click AS CHAR(19)) = '0000-00-00 00:00:00';
+UPDATE featured_categories SET featured_date_added = NULL WHERE CAST(featured_date_added AS CHAR(19)) = '0000-00-00 00:00:00';
+UPDATE featured_categories SET featured_last_modified = NULL WHERE CAST(featured_last_modified AS CHAR(19)) = '0000-00-00 00:00:00';
+UPDATE featured_categories SET expires_date = '0001-01-01' WHERE CAST(expires_date AS CHAR(10)) = '0000-00-00';
+UPDATE featured_categories SET date_status_change = NULL WHERE CAST(date_status_change AS CHAR(19)) = '0000-00-00 00:00:00';
+UPDATE featured_categories SET featured_date_available = '0001-01-01' WHERE CAST(featured_date_available AS CHAR(10)) = '0000-00-00';
