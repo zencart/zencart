@@ -969,7 +969,7 @@ class ot_coupon extends base
      * @param int|null $customer_id
      * @return bool
      */
-    protected function validateCouponUsesPerCustomer($coupon_details, $customer_id = null)
+    protected function validateCouponUsesPerCustomer($coupon_details, ?int $customer_id = null)
     {
         global $db;
 
