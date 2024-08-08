@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // To "upgrade" to a newer version, set the number here. See https://github.com/ckeditor/ckeditor5/releases for latest.
-const CKEDITOR_VERSION = '42.0.2';
+const CKEDITOR_VERSION = '43.0.0';
 
 
 // for compatibility with pre-ZC-v2.0.0 where class is PSR-autoloaded

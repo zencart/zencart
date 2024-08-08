@@ -140,20 +140,30 @@ if (!empty($action)) {
         $banner_error = true;
       }
 
-      if (empty($banners_html_text)) {
-        if (empty($banners_image_local)) {
-          $banners_image = new upload('banners_image');
-          $banners_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
-          $banners_image->set_destination(DIR_FS_CATALOG_IMAGES . $banners_image_target);
-          if (!$banners_image->parse() || !$banners_image->save()) {
-            $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
-            $banner_error = true;
+      // If an image has been uploaded, parse it far enough to validate it, but not yet save it
+      $banners_image = new upload('banners_image');
+      $banners_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
+      $banners_image->set_destination(DIR_FS_CATALOG_IMAGES . $banners_image_target);
+      $has_uploaded_image = $banners_image->parse();
+
+      // if we can't save the uploaded image, and no local image is supplied, then if the banner has no HTML content, throw error
+      if (empty($banners_image_local) || $has_uploaded_image) {
+          if (!($uploaded_image = $banners_image->save())) {
+              if (empty($banners_html_text)) {
+                  $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
+                  $banner_error = true;
+              }
           }
-        }
+      }
+
+      // use local (or user-typed) image filename first
+      $db_image_location = $banners_image_local;
+      // override with uploaded file, if validated
+      if (!empty($uploaded_image)) {
+          $db_image_location = $banners_image_target . $banners_image->filename;
       }
 
       if (!$banner_error) {
-        $db_image_location = (zen_not_null($banners_image_local) || !isset($banners_image)) ? $banners_image_local : $banners_image_target . $banners_image->filename;
         $db_image_location = zen_limit_image_filename($db_image_location, TABLE_BANNERS, 'banners_image');
         $banners_url = zen_limit_image_filename($banners_url, TABLE_BANNERS, 'banners_url');
         $sql_data_array = [
@@ -393,31 +403,43 @@ if (!empty($action)) {
           </div>
           <div class="form-group">
             <?php echo zen_draw_label(TEXT_BANNERS_GROUP, 'banners_group', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group, 'class="form-control" id="banners_group"'); ?><br>
+            <div class="col-sm-4 col-md-3">
+              <?php echo zen_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group, 'class="form-control" id="banners_group"'); ?>
               <p><?php echo TEXT_BANNERS_NEW_GROUP; ?></p><?php echo zen_draw_input_field('new_banners_group', '', 'class="form-control" id="new_banners_group"', count($groups_array) === 0); ?>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_IMAGE, 'banners_image', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_file_field('banners_image', '', 'class="form-control" id="banners_image"'); ?>
-              <p><?php echo TEXT_BANNERS_IMAGE_LOCAL; ?></p>
-              <p><?php echo DIR_FS_CATALOG_IMAGES; ?></p>
-              <?php echo zen_draw_input_field('banners_image_local', ($bInfo->banners_image ?? ''), zen_set_field_length(TABLE_BANNERS, 'banners_image') . ' class="form-control"'); ?>
+
+          <div style="border: 1px solid grey; padding: 10px">
+            <div class="form-group row mt-2">
+                <div class="col-sm-offset-3 col-sm-9"><?php echo TEXT_BANNERS_IMAGE_LOCAL; ?></div>
+                <?php echo zen_draw_label(TEXT_BANNERS_CURRENT_IMAGE, 'banners_image_local', 'class="col-sm-3 control-label"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-addon"><?php echo DIR_FS_CATALOG_IMAGES; ?></span>
+                        <?php echo zen_draw_input_field('banners_image_local', ($bInfo->banners_image ?? ''), zen_set_field_length(TABLE_BANNERS, 'banners_image') . 'id="banners_image_local" class="form-control"'); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mt-2">
+                <?php echo zen_draw_label(TEXT_BANNERS_IMAGE, 'banners_image', 'class="col-sm-3 control-label"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <?php echo zen_draw_file_field('banners_image', '', 'class="form-control" id="banners_image"'); ?>
+                </div>
+            </div>
+            <div class="form-group row mt-2">
+                <?php echo zen_draw_label(TEXT_BANNERS_IMAGE_TARGET, 'banners_image_target', 'class="col-sm-3 control-label"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <div class="input-group"><span class="input-group-addon"><?php echo DIR_FS_CATALOG_IMAGES; ?></span>
+                        <?php echo zen_draw_input_field('banners_image_target', 'banners/', 'class="form-control" id="banners_image_target"'); ?>
+                    </div>
+                    <div>
+                        <?php echo TEXT_BANNER_IMAGE_TARGET_INFO; ?>
+                    </div>
+                </div>
             </div>
           </div>
-          <div class="form-group">
-            <?php echo zen_draw_label(TEXT_BANNERS_IMAGE_TARGET, 'banners_image_target', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_input_field('banners_image_target', '', 'class="form-control" id="banners_image_target"'); ?>
-              <span class="help-block"><?php echo DIR_FS_CATALOG_IMAGES; ?></span>
-              <div>
-                <?php echo TEXT_BANNER_IMAGE_TARGET_INFO; ?>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
+
+          <div class="form-group mt-4">
             <?php echo zen_draw_label(TEXT_BANNERS_HTML_TEXT, 'banners_html_text', 'class="col-sm-3 control-label"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo '<p>' . TEXT_BANNERS_HTML_TEXT_INFO . '</p>' . zen_draw_textarea_field('banners_html_text', 'soft', '80', '10', htmlspecialchars($bInfo->banners_html_text, ENT_COMPAT, CHARSET), 'class="editorHook form-control" id="banners_html_text"'); ?>
