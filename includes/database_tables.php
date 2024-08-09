@@ -107,3 +107,4 @@ define('TABLE_ZONES_TO_GEO_ZONES', DB_PREFIX . 'zones_to_geo_zones');
 define('TABLE_UPGRADE_EXCEPTIONS', DB_PREFIX . 'upgrade_exceptions');
 define('TABLE_WHOS_ONLINE', DB_PREFIX . 'whos_online');
 define('TABLE_ZONES', DB_PREFIX . 'zones');
+define('TABLE_FEATURED_CATEGORIES', DB_PREFIX . 'featured_categories');

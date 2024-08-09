@@ -67,3 +67,4 @@ $psr4Autoloader->setClassFile('zcDate', DIR_FS_CATALOG . DIR_WS_CLASSES . 'zcDat
 $psr4Autoloader->setClassFile('zcPassword', DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
 $psr4Autoloader->setClassFile('ZenShipping', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ZenShipping.php');
 $psr4Autoloader->setClassFile('Zencart\SessionHandler', DIR_FS_CATALOG . DIR_WS_CLASSES . 'SessionHandler.php' );
+$psr4Autoloader->setClassFile('Category', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Category.php' );

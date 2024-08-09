@@ -37,4 +37,5 @@ TRUNCATE TABLE record_company_info;
 TRUNCATE TABLE reviews; 
 TRUNCATE TABLE reviews_description; 
 TRUNCATE TABLE salemaker_sales; 
-TRUNCATE TABLE specials; 
+TRUNCATE TABLE specials;
+TRUNCATE TABLE featured_categories; 

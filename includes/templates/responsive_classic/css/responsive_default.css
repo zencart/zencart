@@ -58,6 +58,7 @@ div#bestsellers {display:none;visibility:hidden;}
 div#specials {display:none;visibility:hidden;}
 div#whosonline {display:none;visibility:hidden;}
 div#shoppingcart {display:none;visibility:hidden;}
+div#featuredcategories {display:none;visibility:hidden;}
 
 
 /* bof login, create account */
@@ -240,6 +241,7 @@ div#bannerbox2 {display:none;visibility:hidden; }
 div#bestsellers {display:none;visibility:hidden; }
 div#specials {display:none;visibility:hidden; }
 div#whosonline {display:none;visibility:hidden;}
+div#featuredcategories {display:none;visibility:hidden;}
 
 /*bof login, create account*/
 div#loginDefault input[type="text"], div#loginDefault input[type="password"], div#loginDefault select {width:93%;}
