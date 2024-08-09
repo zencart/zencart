@@ -401,15 +401,18 @@ function zen_draw_input_field($name, $value = '~*~*#', $parameters = '', $requir
 
 ////
 // Output a form password field
-  function zen_draw_password_field($name, $value = '', $required = false, $parameters = '',$autocomplete = false) {
+function zen_draw_password_field(string $name, string $value = '', bool $required = false, string $parameters = '', bool $autocomplete = false)
+{
     $parameters .= ' maxlength="40"';
-    if($autocomplete == false){
-      $parameters .= ' autocomplete="off"';
+
+    if ($autocomplete === false && !str_contains($parameters, 'autocomplete=')) {
+        $parameters .= ' autocomplete="off"';
     }
+
     $field = zen_draw_input_field($name, $value, $parameters, $required, 'password', false);
 
     return $field;
-  }
+}
 
 ////
 // Output a form file field
