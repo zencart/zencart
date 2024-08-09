@@ -123,10 +123,10 @@ class currencies extends base
      * @param string $currencyCode
      * @return string
      */
-    public function normalizeValue($valueIn, $currencyCode = null)
+    public function normalizeValue($valueIn, ?string $currencyCode = null)
     {
         $currency_info = $this->getCurrencyInfo($currencyCode);
-        return str_replace($currency_info['decimal_point'], '.', $valueIn);
+        return str_replace($currency_info['decimal_point'], '.', (string)$valueIn);
     }
 
     public function is_set($code)
@@ -180,10 +180,10 @@ class currencies extends base
      * Protected function that returns an array of 'currency' settings for the specified
      * currency_code.
      *
-     * @param null|string $currency_code The currency 'code' information to be returned.
-     * @return array 
+     * @param string|null $currency_code The currency 'code' information to be returned.
+     * @return array
      */
-    protected function getCurrencyInfo($currency_code)
+    protected function getCurrencyInfo(?string $currency_code): array
     {
         // -----
         // If the submitted currency-code is 'empty' (i.e. '' or null), default the
