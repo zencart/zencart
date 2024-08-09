@@ -89,13 +89,13 @@ class zcDatabaseInstaller
         return $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
     }
 
-    public function runZeroDateSql($options = null): ?bool
+    public function runZeroDateSql(?array $options = null): ?bool
     {
         $file = DIR_FS_INSTALL . 'sql/install/zero_dates_cleanup.sql';
         return $this->parseSqlFile($file, $options);
     }
 
-    public function parseSqlFile($fileName, $options = null): bool
+    public function parseSqlFile($fileName, ?array $options = null): bool
     {
         $this->extendedOptions = $options ?? [];
         $this->progressFeedback = '';
