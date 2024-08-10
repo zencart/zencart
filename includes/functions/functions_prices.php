@@ -1288,7 +1288,7 @@ function zen_get_attributes_price_final($attribute_id, $qty = 1, $pre_selected =
         $attributes_price_final += zen_get_attributes_price_final_onetime($products_attributes_id, 1, $pre_selected);
     }
 
-    if ($include_products_price_in === false) {
+    if ($include_products_price_in === false && $prod_priced_by_attr === true) {
         return $attributes_price_final - $products_price_without_attributes;
     }
     return $attributes_price_final;
