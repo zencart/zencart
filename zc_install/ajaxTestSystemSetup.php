@@ -16,10 +16,15 @@ require DIR_FS_INSTALL . 'includes/application_top.php';
 $error = false;
 $errorList = [];
 
+if (empty($_POST['agreeLicense']) || $_POST['agreeLicense'] !== 'agree') {
+    $error = true;
+    $errorList['agreeLicense'] = TEXT_FORM_VALIDATION_AGREE_LICENSE;
+}
+
 //physical path tests
 if (!file_exists($_POST['physical_path'] . '/includes/vers' . 'ion.php')) {
     $error = true;
-    $errorList[] = TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH;
+    $errorList['physical_path'] = TEXT_SYSTEM_SETUP_ERROR_CATALOG_PHYSICAL_PATH;
 }
 
 echo json_encode(['error' => $error, 'errorList' => $errorList]);

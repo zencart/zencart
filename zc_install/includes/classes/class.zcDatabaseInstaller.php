@@ -25,6 +25,7 @@ class zcDatabaseInstaller
     protected bool $dieOnErrors;
     protected array $errors = [];
     protected array $extendedOptions;
+    public static string $initialProgressMeterFilename = DEBUG_LOG_FOLDER . '/progress.json';
     protected string $fileName;
     protected Closure $func;
     protected int $jsonProgressLoggingTotal;
@@ -83,7 +84,7 @@ class zcDatabaseInstaller
 
     public function getConnection(): bool
     {
-        require_once(DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php');
+        require_once DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php';
         $this->db = new queryFactory;
         $options = ['dbCharset' => $this->dbCharset];
         return $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
@@ -154,6 +155,12 @@ class zcDatabaseInstaller
         $this->line = trim($line);
         if (str_starts_with($this->line, '#NEXT_X_ROWS_AS_ONE_COMMAND:')) {
             $this->keepTogetherLines = (int)substr($this->line, 28);
+        }
+        if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
+            $this->progressFeedback = $this->newLine;
+            if (empty(trim($this->progressFeedback))) {
+                $this->progressFeedback = $this->line;
+            }
         }
         if (str_starts_with($this->line, '#PROGRESS_FEEDBACK:!')) {
             $this->progressFeedback = $this->processProgressFeedback();

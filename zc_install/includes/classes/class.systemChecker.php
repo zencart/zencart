@@ -208,7 +208,7 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -527,7 +527,7 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -551,7 +551,7 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = @$db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if ((int)$db->error_number !== 2002) {
@@ -562,7 +562,7 @@ class systemChecker
 
     public function checkNewDBConnection($parameters): bool|queryFactoryResult
     {
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect(zcRegistry::getValue('db_host'), zcRegistry::getValue('db_user'), zcRegistry::getValue('db_password'), zcRegistry::getValue('db_name'));
         if (!$result) {
@@ -661,7 +661,7 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -795,7 +795,7 @@ class systemChecker
             $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
             $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
             $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
-            require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
             $db = new queryFactory();
             $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
             $db->selectdb($dbNameVal);
@@ -826,7 +826,7 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if ((int)$db->error_number === 2002) {
