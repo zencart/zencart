@@ -88,7 +88,7 @@ return [
 'TEXT_COMPLETION_INSTALL_COMPLETE' => '',
 'TEXT_COMPLETION_INSTALL_LINKS_BELOW' => 'The links to access your Admin area dashboard and shop storefront are shown below:',
 'TEXT_COMPLETION_UPGRADE_COMPLETE' => 'Congratulations, your upgrade is now complete.',
-'TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING' => 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it',
+'TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING' => 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it.',
 'TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING' => 'You must <strong>now</strong> delete/remove the "zc_install" directory from your server.',
 'TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION' => 'Admin access is disabled until this directory has been removed, to prevent unauthorized persons from using the installer to overwrite your installation.',
 'TEXT_COMPLETION_CATALOG_LINK_TEXT' => 'Your Storefront',
@@ -253,7 +253,7 @@ You may proceed with installing despite this situation, but please be advised th
 'REASON_PRIMARY_KEY_ALREADY_EXISTS' => 'Cannot add primary key to table %s because a primary key already exists.',
 'REASON_CONFIG_GROUP_KEY_ALREADY_EXISTS' => 'Cannot insert configuration_group_key "%s" because it already exists',
 'REASON_CONFIG_GROUP_ID_ALREADY_EXISTS' => 'Cannot insert configuration_group_id "%s" because it already exists',
-'TEXT_COMPLETION_NGINX_TEXT' => '<u>Important Security Information for Nginx</u>',
+'TEXT_COMPLETION_NGINX_TEXT' => 'Click to view <u>Important Security Information for Nginx</u>',
 'TEXT_HELP_TITLE_NGINXCONF' => 'Securing Zen Cart on Nginx Web Servers',
 'TEXT_HELP_CONTENT_NGINXCONF' => '<p>Your Zen Cart installation comes with security measures in a format native to the Apache Webserver. <br>
 See below to implement a similar set of measures for the Nginx Webserver.</p>
