@@ -283,7 +283,7 @@ class zcDatabaseInstaller
     {
         if (isset($this->extendedOptions['doJsonProgressLogging'])) {
             $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
-            $progress = ($this->jsonProgressLoggingCount / $this->jsonProgressLoggingTotal * 100);
+            $progress = round($this->jsonProgressLoggingCount / $this->jsonProgressLoggingTotal * 100, 2);
             $fp = fopen($fileName, "w");
             if ($fp) {
                 $arr = ['total' => $this->jsonProgressLoggingTotal, 'progress' => $progress, 'message' => $this->extendedOptions['message'], 'progressFeedback' => $this->progressFeedback];
