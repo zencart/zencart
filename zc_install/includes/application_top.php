@@ -178,6 +178,7 @@ $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);
 if (empty($current_page) || !file_exists('includes/modules/pages/' . $current_page)) {
     $_GET['main_page'] = $current_page = 'index';
 }
+$is_home_page = $current_page === 'index';
 $page_directory = 'includes/modules/pages/' . $current_page;
 
 $languagesInstalled = $languageManager->getLanguagesInstalled();
