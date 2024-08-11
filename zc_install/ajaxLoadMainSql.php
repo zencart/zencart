@@ -50,7 +50,7 @@ if ($error) {
     die();
 }
 // localization file
-$charset = $_POST['db_charset'];
+$charset = $_POST['db_charset'] ?? 'utf8';
 if (!in_array($charset, ['utf8', 'latin1'])) {
     $charset = 'utf8';
 }
