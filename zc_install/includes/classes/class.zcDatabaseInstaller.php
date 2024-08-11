@@ -156,7 +156,6 @@ class zcDatabaseInstaller
             $this->keepTogetherLines = (int)substr($this->line, 28);
         }
         if (str_starts_with($this->line, '#PROGRESS_FEEDBACK:!')) {
-            $this->processProgressFeedback();
             $this->progressFeedback = $this->processProgressFeedback();
             $this->completeLine = true;
             $this->doJsonProgressLoggingUpdate();
