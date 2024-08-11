@@ -679,7 +679,7 @@ class zcDatabaseInstaller
         }
     }
 
-    private function processProgressFeedback()
+    private function processProgressFeedback(): string
     {
         $matches = explode(':!', $this->line);
         array_shift($matches);

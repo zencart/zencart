@@ -5,7 +5,7 @@
  * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
  */
 
-require(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
 
 $isUpgrade = false;
 $adminLink = $catalogLink = '#';
