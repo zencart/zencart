@@ -44,7 +44,11 @@ function ajaxAbort($status = 400, $msg = null)
 }
 // --- support functions ------------------
 
-if (!isset($_GET['act']) || !isset($_GET['method'])) {
+// -----
+// Ensure that the two required $_GET variables are (a) set and (b) contain
+// only alphanumeric characters.
+//
+if (!isset($_GET['act'], $_GET['method']) || !preg_match('/^(^[a-zA-Z0-9])+$/', $_GET['act']) || !preg_match('/^(^[a-zA-Z0-9])+$/', $_GET['method'])) {
     ajaxAbort();
 }
 
