@@ -56,7 +56,7 @@ if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_MET
 // value or a uprid (dddd:xxxx), where xxxx is the 32-hexadecimal character md5 hash of the currently-selected
 // attributes.
 //
-// Noting that if an id-value is found to be invalid, there's no since
+// Noting that if an id-value is found to be invalid, there's no sense
 // in taking up further resources on the server; simply redirect to
 // the home page.
 //
