@@ -10,7 +10,7 @@
   <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
   <div class="col-sm-9">
     <div class="input-group">
-      <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"', false, 'search'); ?>
+      <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search" autofocus="autofocus"', false, 'search'); ?>
       <span class="input-group-btn">
         <button type="submit" class="btn btn-info"><i class="fa-solid fa-magnifying-glass fa-lg"></i></button>
       </span>
