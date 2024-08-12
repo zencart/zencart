@@ -10,7 +10,7 @@ define('IS_ADMIN_FLAG', false);
 define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
-require(DIR_FS_INSTALL . 'includes/application_top.php');
+require DIR_FS_INSTALL . 'includes/application_top.php';
 
 if (isset($_POST['id'])) {
     $result = str_replace('helpId', '', zen_output_string_protected($_POST['id']));

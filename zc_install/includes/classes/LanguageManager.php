@@ -24,7 +24,7 @@ class LanguageManager
         $infoFiles = $this->listFilesFromDirectory(DIR_FS_INSTALL . $this->langPath, '~^lng_info.*\.php$~i');
         $this->languagesInstalled = [];
         foreach ($infoFiles as $infoFile) {
-            $infoData = require(DIR_FS_INSTALL . $this->langPath . $infoFile);
+            $infoData = require DIR_FS_INSTALL . $this->langPath . $infoFile;
             $this->languagesInstalled = array_merge($this->languagesInstalled, $infoData);
         }
         return $this->languagesInstalled;
@@ -61,7 +61,7 @@ class LanguageManager
         $defineList = [];
         $fp = DIR_FS_INSTALL . $this->langPath . $lng . '/' . $file . '.php';
         if (file_exists($fp)) {
-            $defineList = require($fp);
+            $defineList = require $fp;
         }
         return $defineList;
     }
