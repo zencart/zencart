@@ -56,6 +56,10 @@ if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_MET
 // value or a uprid (dddd:xxxx), where xxxx is the 32-hexadecimal character md5 hash of the currently-selected
 // attributes.
 //
+// Noting that if an id-value is found to be invalid, there's no since
+// in taking up further resources on the server; simply redirect to
+// the home page.
+//
 $saniGroup1 = [
     'products_id',  //- 'Normal', multi-use
     'product_id',   //- shopping_cart, when removing a product from the cart
@@ -64,10 +68,7 @@ $saniGroup1 = [
 ];
 foreach ($saniGroup1 as $key) {
     if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?$/', (string)$_GET[$key])) {
-        $_GET[$key] = '';
-        if (isset($_REQUEST[$key])) {
-            $_REQUEST[$key] = '';
-        }
+        zen_redirect(zen_href_link(FILENAME_DEFAULT));
     }
 }
 
