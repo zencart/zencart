@@ -19,10 +19,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 $zco_notifier->notify('NOTIFY_INIT_SANITIZE_STARTS');
 
 foreach ($_GET as $varname => $varvalue) {
-    if (is_array($varvalue)) {
-        $site_array_override = false;
-        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $site_array_override);
-        if ($site_array_override === false) {
+    if (!is_string($varvalue)) {
+        $get_var_override = false;
+        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $get_var_override);
+        if ($get_var_override === false) {
             zen_redirect(zen_href_link(FILENAME_DEFAULT));
         }
     }
@@ -63,7 +63,7 @@ $saniGroup1 = [
     'pID',          //- main/additional images' pop-ups
 ];
 foreach ($saniGroup1 as $key) {
-    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', (string)$_GET[$key])) {
+    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?$/', (string)$_GET[$key])) {
         $_GET[$key] = '';
         if (isset($_REQUEST[$key])) {
             $_REQUEST[$key] = '';
