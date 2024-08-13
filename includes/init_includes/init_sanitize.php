@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $zco_notifier->notify('NOTIFY_INIT_SANITIZE_STARTS');
 
 foreach ($_GET as $varname => $varvalue) {
-    if (!is_string($varvalue)) {
+    if (is_array($varvalue)) {
         $get_var_override = false;
         $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $get_var_override);
         if ($get_var_override === false) {
@@ -43,10 +43,10 @@ if (zen_is_hmac_login()) {
 }
 
 if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_METHOD'] == 'POST') {
-    $mainPage = isset($_GET['main_page']) ? $_GET['main_page'] : FILENAME_DEFAULT;
+    $mainPage = $_GET['main_page'] ?? FILENAME_DEFAULT;
     if (!in_array($mainPage, $csrfBlackList)) {
         if ((!isset($_SESSION ['securityToken']) || !isset($_POST ['securityToken'])) || ($_SESSION ['securityToken'] !== $_POST ['securityToken'])) {
-            zen_redirect(zen_href_link( FILENAME_TIME_OUT, '', $request_type ));
+            zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', $request_type));
         }
     }
 }
