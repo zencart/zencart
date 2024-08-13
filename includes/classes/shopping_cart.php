@@ -2180,6 +2180,10 @@ class shoppingCart extends base
         if (!empty($_POST['products_id']) && is_array($_POST['products_id'])) {
             $products_list = $_POST['products_id'];
             foreach ($products_list as $key => $val) {
+                if (!is_string($val)) {
+                    unset($products_list[$key]);
+                    continue;
+                }
                 $prodId = preg_replace('/[^0-9a-f:.]/', '', (string)$key);
                 if (is_numeric($val) && $val > 0) {
                     $adjust_max = false;
