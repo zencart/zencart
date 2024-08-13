@@ -2,9 +2,13 @@
 
 namespace Tests\Support\Traits;
 
+use App\Models\PluginControl;
+use App\Models\PluginControlVersion;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Filesystem\Filesystem;
+
 
 trait GeneralConcerns
 {
@@ -72,4 +76,47 @@ trait GeneralConcerns
         return $URI;
     }
 
+
+    protected function browserAdminLogin() 
+    {
+        $this->runCustomSeeder('StoreWizardSeeder');
+        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $response = $this->browser->getResponse();
+        $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
+        $this->browser->submitForm('Submit', [
+            'admin_name' => 'Admin',
+            'admin_pass' => 'password',
+        ]);
+    }
+
+    // PLUGIN STUFF
+
+    protected function installPluginToFilesystem($pluginName, $version)
+    {
+        $this->addPluginToFileSystem($pluginName, $version);
+    }
+
+    protected function removePlugin($pluginName, $version)
+    {
+        $this->removePluginFromFileSystem($pluginName, $version);
+    }
+
+    protected function removePluginFromFileSystem($pluginName, $version)
+    {
+        $filesystem = new Filesystem();
+        if (is_dir(DIR_FS_CATALOG . 'zc_plugins/' . $pluginName . '/' . $version)) {
+            $filesystem->remove(DIR_FS_CATALOG . 'zc_plugins/' . $pluginName . '/' . $version);
+        }
+    }
+
+    protected function addPluginToFileSystem($pluginName, $version)
+    {
+        $srcDirectory = DIR_FS_CATALOG . 'not_for_release/testFramework/Support/plugins/' . $pluginName;
+        $destinationDirectory = DIR_FS_CATALOG . 'zc_plugins/' . $pluginName . '/';
+        $filesystem = new Filesystem();
+        if (!is_dir(DIR_FS_CATALOG . 'zc_plugins/' . $pluginName)) {
+            $filesystem->mkdir($destinationDirectory);
+        }
+        $filesystem->mirror($srcDirectory, $destinationDirectory);
+    }
 }
