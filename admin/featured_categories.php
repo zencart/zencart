@@ -155,18 +155,18 @@ if (!empty($action)) {
       break;
     case 'pre_add_confirmation':
       $skip_featured = false;
-      // check for no PID entered
+      // check for no CID entered
       if (empty($_POST['pre_add_categories_id'])) {
         $skip_featured = true;
-        $messageStack->add_session(WARNING_FEATURED_PRE_ADD_PID_EMPTY, 'caution');
+        $messageStack->add_session(WARNING_FEATURED_PRE_ADD_CID_EMPTY, 'caution');
       } else {
         $sql = "SELECT categories_id
                 FROM " . TABLE_CATEGORIES . "
                 WHERE categories_id = " . (int)$_POST['pre_add_categories_id'];
         $check_featured = $db->Execute($sql);
-        if ($check_featured->RecordCount() < 1) {// check for valid PID
+        if ($check_featured->RecordCount() < 1) {// check for valid CID
           $skip_featured = true;
-          $messageStack->add_session(sprintf(WARNING_FEATURED_PRE_ADD_PID_NO_EXIST, (int)$_POST['pre_add_categories_id']), 'caution');
+          $messageStack->add_session(sprintf(WARNING_FEATURED_PRE_ADD_CID_NO_EXIST, (int)$_POST['pre_add_categories_id']), 'caution');
         }
       }
       // check if Featured already exists
@@ -182,7 +182,7 @@ if (!empty($action)) {
       }
       if ($skip_featured === true) {
         zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (!empty($check_featured->fields['featured_categories_id']) ? 'fID=' . (int)$check_featured->fields['featured_categories_id'] : '' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))));
-      } else { // product id is valid
+      } else { // category id is valid
         zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=new' . '&preID=' . (int)$_POST['pre_add_categories_id']));
       }
       break;
@@ -208,7 +208,7 @@ if (!empty($action)) {
         if (($action === 'edit') && isset($_GET['fID'])) {//update existing Featured
           $form_action = 'update';
 
-          $product = $db->Execute("SELECT p.categories_id, pd.categories_name,
+          $category = $db->Execute("SELECT p.categories_id, pd.categories_name,
                                           f.expires_date, f.featured_date_available
                                    FROM " . TABLE_CATEGORIES . " p,
                                         " . TABLE_CATEGORIES_DESCRIPTION . " pd,
@@ -218,23 +218,23 @@ if (!empty($action)) {
                                    AND p.categories_id = f.categories_id
                                    AND f.categories_id = " . (int)$_GET['fID']);
 
-          $fInfo = new objectInfo($product->fields);
+          $fInfo = new objectInfo($category->fields);
         } elseif (($action === 'new') && isset($_GET['preID'])) { //update existing Featured
           $form_action = 'insert';
 
-          $product = $db->Execute("SELECT p.categories_id, pd.categories_name
+          $category = $db->Execute("SELECT p.categories_id, pd.categories_name
                                    FROM " . TABLE_CATEGORIES . " p,
                                         " . TABLE_CATEGORIES_DESCRIPTION . " pd
                                    WHERE p.categories_id = pd.categories_id
                                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                    AND p.categories_id = " . (int)$_GET['preID']);
 
-          $fInfo = new objectInfo($product->fields);
-        } elseif (empty($_GET['preID'])) { // insert by product select dropdown
+          $fInfo = new objectInfo($category->fields);
+        } elseif (empty($_GET['preID'])) { // insert by category select dropdown
           $fInfo = new objectInfo([]);
 
-// create an array of featured products, which will be excluded from the pull down menu of products
-// (when creating a new featured product)
+// create an array of featured categories, which will be excluded from the pull down menu of categories
+// (when creating a new featured category)
           $featured_array = [];
           $featureds = $db->Execute("SELECT p.categories_id
                                      FROM " . TABLE_CATEGORIES . " p,
@@ -257,7 +257,7 @@ if (!empty($action)) {
           if ($form_action === 'update') {
             echo zen_draw_hidden_field('featured_categories_id', $_GET['fID']);
           }
-          if (!empty($_GET['preID'])) { // new Special: insert by product ID
+          if (!empty($_GET['preID'])) { // new Special: insert by category ID
             echo zen_draw_hidden_field('categories_id', $_GET['preID']);
           }
           ?>
@@ -269,7 +269,7 @@ if (!empty($action)) {
               </div>
             </div>
             <?php
-          } elseif (!empty($_GET['preID'])) { // new Featured: insert by product ID
+          } elseif (!empty($_GET['preID'])) { // new Featured: insert by category ID
             $preID = (int)$_GET['preID'];
             ?>
             <div class="form-group">
@@ -325,7 +325,7 @@ if (!empty($action)) {
         <div class="row">
           <div class="col-sm-8">
             <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_FEATURED_SELECT; ?></a>
-            <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=pre_add'); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_INFO_PRE_ADD_INTRO; ?>"><?php echo TEXT_ADD_FEATURED_PID; ?></a>
+            <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=pre_add'); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_INFO_PRE_ADD_INTRO; ?>"><?php echo TEXT_ADD_FEATURED_CID; ?></a>
           </div>
           <div class="col-sm-4">
           <?php require DIR_WS_MODULES . 'search_box.php'; ?>
@@ -396,11 +396,11 @@ if (!empty($action)) {
                 $featureds = $db->Execute($featured_query_raw);
                 foreach ($featureds as $featured) {
                   if ((!isset($_GET['fID']) || (isset($_GET['fID']) && ((int)$_GET['fID'] === (int)$featured['featured_categories_id']))) && !isset($fInfo)) {
-                    $products = $db->Execute("SELECT categories_image
+                    $categories = $db->Execute("SELECT categories_image
                                               FROM " . TABLE_CATEGORIES . "
                                               WHERE categories_id = " . (int)$featured['categories_id']);
 
-                    $fInfo_array = array_merge($featured, $products->fields);
+                    $fInfo_array = array_merge($featured, $categories->fields);
                     $fInfo = new objectInfo($fInfo_array);
                   }
 
@@ -426,7 +426,7 @@ if (!empty($action)) {
                           <?php } ?>
                         </button>
                       <?php } else { ?>
-                        <?php echo zen_draw_form('setflag_products_' . $featured['categories_id'], FILENAME_FEATURED_CATEGORIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=setflag'); ?>
+                        <?php echo zen_draw_form('setflag_categories_' . $featured['categories_id'], FILENAME_FEATURED_CATEGORIES, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=setflag'); ?>
                         <?php if ($featured['status'] === '1') { ?>
                           <button type="submit" class="btn btn-status">
                             <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo TEXT_FEATURED_ACTIVE; ?>"></i>
@@ -486,9 +486,9 @@ if (!empty($action)) {
                         $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_PRE_ADD_FEATURED . '</h4>'];
                         $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED_CATEGORIES, 'action=pre_add_confirmation' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'post', 'class="form-horizontal"')];
                         $contents[] = ['text' => TEXT_INFO_PRE_ADD_INTRO];
-                        $result = $db->Execute("SELECT MAX(categories_id) AS lastproductid FROM " . TABLE_CATEGORIES);
-                        $max_product_id = $result->fields['lastproductid'];
-                        $contents[] = ['text' => zen_draw_label(TEXT_ADD_FEATURED_SELECT, 'pre_add_categories_id', 'class="control-label"') . zen_draw_input_field('pre_add_categories_id', '', zen_set_field_length(TABLE_FEATURED_CATEGORIES, 'categories_id') . ' class="form-control" id="pre_add_categories_id" required max="' . $max_product_id . '"', '', 'number')];
+                        $result = $db->Execute("SELECT MAX(categories_id) AS lastcategoryid FROM " . TABLE_CATEGORIES);
+                        $max_category_id = $result->fields['lastcategoryid'];
+                        $contents[] = ['text' => zen_draw_label(TEXT_ADD_FEATURED_SELECT, 'pre_add_categories_id', 'class="control-label"') . zen_draw_input_field('pre_add_categories_id', '', zen_set_field_length(TABLE_FEATURED_CATEGORIES, 'categories_id') . ' class="form-control" id="pre_add_categories_id" required max="' . $max_category_id . '"', '', 'number')];
                         $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES, (!empty($fInfo->featured_categories_id) ? '&fID=' . $fInfo->featured_categories_id : '') . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
 

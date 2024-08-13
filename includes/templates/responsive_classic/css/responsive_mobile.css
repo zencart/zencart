@@ -35,7 +35,7 @@ div#logo {float:none;text-align:center;margin:25px 0 15px 0;}
 div#taglineWrapper { float:none;clear:both;}
 
 /*bof center-boxes*/
-.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48%!important;height:auto;margin:0;padding:10px 0;}
+.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsFeaturedCategories.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48%!important;height:auto;margin:0;padding:10px 0;}
 
 /*bof login, create account*/
 div#loginDefault input[type="text"],  div#loginDefault select, div#loginDefault input[type="password"], div#loginDefault input[type=tel], div#loginDefault input[type=email] {width:85%;margin-left:20px;}
@@ -243,7 +243,7 @@ div#taglineWrapper {float:none;clear:both;}
 #navMain .last{}
 
 /*bof center-boxes*/
-.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {clear:both;width:100%!important;height:auto;margin:0;padding:10px 0;}
+.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsFeaturedCategories.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {clear:both;width:100%!important;height:auto;margin:0;padding:10px 0;}
 
 /* bof login, create account */
 div#loginDefault input[type=text], div#loginDefault select {width:80%;}
@@ -354,7 +354,7 @@ div#productListing tr.productListing-odd {clear:both;}
 .list-more{margin:10px 0;float:none;padding:15px 0;}
 .productListing-even, .productListing-odd{text-align:center;line-height:165%;}
 .listingDescription{width:100%;}
-.specialsListBoxContents:nth-child(odd), .centerBoxContentsAlsoPurch:nth-child(odd), .centerBoxContentsFeatured:nth-child(odd), .centerBoxContentsSpecials:nth-child(odd), .centerBoxContentsNew:nth-child(odd){background:#f4f4f4;}
+.specialsListBoxContents:nth-child(odd), .centerBoxContentsAlsoPurch:nth-child(odd), .centerBoxContentsFeatured:nth-child(odd), ..centerBoxContentsFeaturedCategories:nth-child(odd), centerBoxContentsSpecials:nth-child(odd), .centerBoxContentsNew:nth-child(odd){background:#f4f4f4;}
 .navSplitPagesResult{text-align:center;}
 .navSplitPagesLinks{display:block;text-align:center;}
 #indexProductList .list-more{margin-top:0;}

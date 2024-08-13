@@ -14,7 +14,7 @@ $zco_notifier->notify('NOTIFY_HEADER_START_FEATURED_CATEGORIES');
 
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
-// load extra language strings used by product_listing module
+// load extra language strings used by category_listing module
 $languageLoader->setCurrentPage('index');
 $languageLoader->loadLanguageForView();
 
@@ -35,7 +35,7 @@ $listing = $db->Execute($listing_sql);
 
 foreach ($listing as $record) {
     if ($record['categories_image'] === '' || !file_exists(DIR_WS_IMAGES . $record['categories_image'])) {
-        $record['categories_image'] = PRODUCTS_IMAGE_NO_IMAGE;
+        $record['categories_image'] = CATEGORY_IMAGE_NO_IMAGE;
     }
 }
 
@@ -43,12 +43,12 @@ foreach ($listing as $record) {
 // Define the maximum columns to display.
 // These are "soft" configuration setting that can be overridden on a site-specific basis.
 //
-if (!defined('MAX_DISPLAY_FEATURED_CATEGORIES_PER_ROW')) {
-    define('MAX_DISPLAY_FEATURED_CATEGORIES_PER_ROW', '6');
+if (!defined('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES')) {
+    define('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES', '3');
 }
 // display sort order dropdown
 
-// set the product filters according to selected product type
+// set the category filters according to selected category type
 $typefilter = $_GET['typefilter'] ?? 'default';
 //require(zen_get_index_filters_directory($typefilter . '_filter.php'));
 

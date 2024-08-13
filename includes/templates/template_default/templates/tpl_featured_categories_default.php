@@ -15,7 +15,7 @@
 
 <?php
 /**
- * display the product sort dropdown
+ * display the category sort dropdown
  */
 
         $list_box_contents = [];
@@ -34,7 +34,7 @@
             ];
 
             $col++;
-            if ($col >= MAX_DISPLAY_FEATURED_CATEGORIES_PER_ROW) {
+            if ($col >= SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES) {
                 $col = 0;
                 $row++;
             }

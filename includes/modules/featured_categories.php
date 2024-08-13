@@ -15,7 +15,6 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // initialize vars
 $categories_categories_id_list = [];
-$list_of_products = '';
 $sql = '';
 $display_limit = '';
 
@@ -37,27 +36,27 @@ $num_categories_count = $featured_categories->RecordCount();
 
 // show only when 1 or more
 if ($num_categories_count > 0) {
-    if ($num_categories_count < SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS || SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS == 0) {
+    if ($num_categories_count < SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES || SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES == 0) {
         $col_width = floor(100 / $num_categories_count);
     } else {
-        $col_width = floor(100 / SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS);
+        $col_width = floor(100 / SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES);
     }
     while (!$featured_categories->EOF) {
         $category_info = new Category((int)$featured_categories->fields['categories_id']);
         $data = $category_info->getDataForLanguage();
 
         $list_box_contents[$row][$col] = [
-            'params' => 'class="centerBoxContentsFeatured centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
-            'text' => (($data['categories_image'] === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
+            'params' => 'class="centerBoxContentsFeaturedCategories centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
+            'text' => (($data['categories_image'] === '' && CATEGORY_IMAGE_NO_IMAGE_STATUS == 0) ? ''
                     : '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($data['categories_id'])). '">'
-                        . zen_image(DIR_WS_IMAGES . $data['categories_image'], $data['categories_name'], IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH, IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT)
+                        . zen_image(DIR_WS_IMAGES . $data['categories_image'], $data['categories_name'], IMAGE_FEATURED_CATEGORY_LISTING_WIDTH, IMAGE_FEATURED_CATEGORY_LISTING_HEIGHT)
                     . '</a><br>')
                 . '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($data['categories_id'])). '">' . $data['categories_name']
                 . '</a><br>',
         ];
 
         $col++;
-        if ($col > (SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS - 1)) {
+        if ($col > (SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES - 1)) {
             $col = 0;
             $row++;
         }
