@@ -23,7 +23,7 @@
         $col = 0;
         foreach ($listing as $record) {
             $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'categories_id=' . $record['categories_id']) . '">';
-            $lc_text .= '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($record["categories_id"])). '">'
+            $lc_text .= '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($record['categories_id'])). '">'
         . zen_image(DIR_WS_IMAGES . $record['categories_image'], $record['categories_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
             $lc_text .= '<div class="categoryName">' . $record['categories_name'] . '</div>';
             $lc_text .= '</a>';
@@ -34,7 +34,7 @@
             ];
 
             $col++;
-            if ($col >= FC_MAX_COLUMNS) {
+            if ($col >= MAX_DISPLAY_FEATURED_CATEGORIES_PER_ROW) {
                 $col = 0;
                 $row++;
             }

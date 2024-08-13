@@ -79,7 +79,7 @@ echo $menulist;
     }
   }
 ?>
-<?php if (SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES == 'true') {
+<?php if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
        $show_this = $db->Execute("select products_id from " . TABLE_FEATURED . " where status= 1 limit 1");
        if ($show_this->RecordCount() > 0) {
 ?>
@@ -88,7 +88,7 @@ echo $menulist;
     }
   }
 ?>
-<?php if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true') {
+<?php if (SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES== 'true') {
        $show_this = $db->Execute("select categories_id from " . TABLE_FEATURED_CATEGORIES . " where status= 1 limit 1");
        if ($show_this->RecordCount() > 0) {
 ?>

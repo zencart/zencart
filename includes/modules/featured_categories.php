@@ -26,17 +26,14 @@ $display_limit = '';
             AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
             WHERE p.categories_status = 1
             AND f.status = 1";
-
-if ($sql !== '') {
     $featured_categories = $db->ExecuteRandomMulti($sql, MAX_DISPLAY_SEARCH_RESULTS_FEATURED);
-}
 
 $row = 0;
 $col = 0;
 $list_box_contents = [];
 $title = '';
 
-$num_categories_count = ($sql === '') ? 0 : $featured_categories->RecordCount();
+$num_categories_count = $featured_categories->RecordCount();
 
 // show only when 1 or more
 if ($num_categories_count > 0) {
@@ -51,11 +48,11 @@ if ($num_categories_count > 0) {
 
         $list_box_contents[$row][$col] = [
             'params' => 'class="centerBoxContentsFeatured centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
-            'text' => (($data['categories_image'] === '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
-                    : '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($data["categories_id"])). '">'
+            'text' => (($data['categories_image'] === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
+                    : '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($data['categories_id'])). '">'
                         . zen_image(DIR_WS_IMAGES . $data['categories_image'], $data['categories_name'], IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH, IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT)
                     . '</a><br>')
-                . '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($data["categories_id"])). '">' . $data['categories_name']
+                . '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($data['categories_id'])). '">' . $data['categories_name']
                 . '</a><br>',
         ];
 

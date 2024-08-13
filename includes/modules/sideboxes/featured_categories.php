@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
- * based on featured
+ * based on featured and brands
  */
 
 // test if box should display
@@ -28,9 +28,10 @@
     $random_featured_categories = $db->ExecuteRandomMulti($random_featured_categories_query, MAX_RANDOM_SELECT_FEATURED_CATEGORIES);
 
     if ($random_featured_categories->RecordCount() > 0)  {
-      require($template->get_template_dir('tpl_featured_categories.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_featured_categories.php');
+      require $template->get_template_dir('tpl_featured_categories.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes') . '/tpl_featured_categories.php';
       $title =  BOX_HEADING_FEATURED_CATEGORIES;
-      require($template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default);
+      $title_link = FILENAME_FEATURED_CATEGORIES;
+      require $template->get_template_dir($column_box_default, DIR_WS_TEMPLATE, $current_page_base,'common') . '/' . $column_box_default;
     }
   }
 ?>

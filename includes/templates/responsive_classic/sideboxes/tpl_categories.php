@@ -86,7 +86,7 @@
         $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a></li>' . "\n";
       }
     }
-    if (SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES== 'true') {
+    if (SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES == 'true') {
       $show_this = $db->Execute("select categories_id from " . TABLE_FEATURED_CATEGORIES . " where status= 1 limit 1");
       if ($show_this->RecordCount() > 0) {
         $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES) . '">' . CATEGORIES_BOX_HEADING_FEATURED_CATEGORIES . '</a></li>' . "\n";

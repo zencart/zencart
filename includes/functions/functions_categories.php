@@ -1245,6 +1245,9 @@ function zen_remove_category($category_id)
     $db->Execute("DELETE FROM " . TABLE_COUPON_RESTRICT . "
                   WHERE category_id = " . (int)$category_id);
 
+    $db->Execute("DELETE FROM " . TABLE_FEATURED_CATEGORIES . "
+                  WHERE categories_id = " . (int)$category_id);
+
     zen_record_admin_activity('Deleted category ' . (int)$category_id . ' from database via admin console.', 'warning');
 }
 

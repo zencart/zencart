@@ -20,13 +20,16 @@ $languageLoader->loadLanguageForView();
 
 $breadcrumb->add(NAVBAR_TITLE);
 
-    $listing_sql = "SELECT p.categories_id, p.categories_image, pd.categories_name
-            FROM " . TABLE_CATEGORIES . " p
-            LEFT JOIN " . TABLE_FEATURED_CATEGORIES . " f ON p.categories_id = f.categories_id
-            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " pd ON p.categories_id = pd.categories_id
-            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-            WHERE p.categories_status = 1
-            AND f.status = 1";
+$listing_sql = "SELECT p.categories_id, p.categories_image, pd.categories_name
+                FROM " . TABLE_CATEGORIES . " p
+                LEFT JOIN " . TABLE_FEATURED_CATEGORIES . " f ON p.categories_id = f.categories_id
+                LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " pd ON p.categories_id = pd.categories_id
+                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                WHERE p.categories_status = 1
+                AND f.status = 1
+                ORDER BY f.categories_id";
+
+// Added order by, no sure it's needed
 
 $listing = $db->Execute($listing_sql);
 
@@ -40,8 +43,8 @@ foreach ($listing as $record) {
 // Define the maximum columns to display.
 // These are "soft" configuration setting that can be overridden on a site-specific basis.
 //
-if (!defined('FC_MAX_COLUMNS')) {
-    define('FC_MAX_COLUMNS', '6');
+if (!defined('MAX_DISPLAY_FEATURED_CATEGORIES_PER_ROW')) {
+    define('MAX_DISPLAY_FEATURED_CATEGORIES_PER_ROW', '6');
 }
 // display sort order dropdown
 

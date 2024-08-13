@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS featured_categories;
 CREATE TABLE featured_categories (
   featured_categories_id int(11) NOT NULL auto_increment,
-  categories_id int(11) NOT NULL default '0',
+  categories_id int(11) NOT NULL default 0,
   featured_date_added datetime default NULL,
   featured_last_modified datetime default NULL,
   expires_date date NOT NULL default '0001-01-01',
@@ -10,19 +10,18 @@ CREATE TABLE featured_categories (
   featured_date_available date NOT NULL default '0001-01-01',
   PRIMARY KEY  (featured_categories_id),
   KEY idx_status_zen (status),
-  KEY idx_products_id_zen (categories_id),
+  KEY idx_category_id_zen (categories_id),
   KEY idx_date_avail_zen (featured_date_available),
   KEY idx_expires_date_zen (expires_date)
 ) ENGINE=MyISAM;
-I
 
-NSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
+INSERT INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order)
 VALUES ('featured_categories', 'BOX_CATALOG_FEATURED_CATEGORIES', 'FILENAME_FEATURED_CATEGORIES', '', 'catalog', 'Y', 13);
 
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function, val_function) VALUES ('Show Featured Categories on Main Page', 'SHOW_PRODUCT_INFO_MAIN_FEATURED_CATEGORIES', '5', 'Show Featured Categories on Main Page<br />0= off or set the sort order', 24, 68, NULL, now(), NULL, 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ', NULL);
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function, val_function) VALUES ('Random Featured Categories for SideBox', 'MAX_RANDOM_SELECT_FEATURED_CATEGORIES', '1', 'Number of random FEATURED categories to rotate in the sidebox<br />Enter the number of categories to display in this sidebox at one time.<br /><br />How many categories do you want to display in this sidebox?', 3, 32, NULL, now(), NULL, NULL, '{\"error\":\"TEXT_MAX_ADMIN_RANDOM_SELECT_FEATURED_CATEGORIES_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":0}}}');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function, val_function) VALUES ('Show Featured Categories on Main Page', 'SHOW_PRODUCT_INFO_MAIN_FEATURED_CATEGORIES', '5', 'Show Featured Categories on Main Page<br>0= off or set the sort order', 24, 68, NULL, now(), NULL, 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ', NULL);
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function, val_function) VALUES ('Random Featured Categories for SideBox', 'MAX_RANDOM_SELECT_FEATURED_CATEGORIES', '1', 'Number of random FEATURED categories to rotate in the sidebox<br>Enter the number of categories to display in this sidebox at one time.<br><br>How many categories do you want to display in this sidebox?', 3, 32, NULL, now(), NULL, NULL, '{\"error\":\"TEXT_MAX_ADMIN_RANDOM_SELECT_FEATURED_CATEGORIES_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":0}}}');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function, val_function) VALUES ('Categories Box - Show Featured Category Link', 'SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES', 'true', 'Show Featured Categories Link in the Categories Box', 19, 11, NULL, now(), NULL, 'zen_cfg_select_option(array(\'true\', \'false\'),',NULL);
-
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Featured Categories Colums Per Row', 'MAX_DISPLAY_FEATURED_CATEGORIES_PER_ROW', '3', 'Special Products Columns per Row', '24', '97', 'zen_cfg_select_option(array(\'1\', \'2\', \'3\', \'4\', \'5\', \'6\', \'7\', \'8\', \'9\', \'10\', \'11\', \'12\'), ', now());
 
 UPDATE configuration SET set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ' WHERE configuration_key = 'SHOW_PRODUCT_INFO_MAIN_NEW_PRODUCTS';
 UPDATE configuration SET set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ' WHERE configuration_key = 'SHOW_PRODUCT_INFO_MAIN_FEATURED_PRODUCTS';

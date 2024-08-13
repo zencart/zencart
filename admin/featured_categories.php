@@ -282,7 +282,7 @@ if (!empty($action)) {
             <div class="form-group">
               <?php echo zen_draw_label(TEXT_FEATURED_CATEGORY, 'categories_id', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-9 col-md-6">
-                  <?php echo  zen_draw_pulldown_categories_having_products('categories_id', 'class="form-control"', $featured_array, true,'',true,); ?>
+                  <?php echo  zen_draw_pulldown_categories_having_products('categories_id', 'required size="15" class="form-control"', $featured_array, true,'',true,); ?>
                 </div>
               </div>
           <?php } ?>

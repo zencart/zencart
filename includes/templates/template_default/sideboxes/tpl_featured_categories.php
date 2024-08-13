@@ -16,7 +16,7 @@ while (!$random_featured_categories->EOF) {
     $data = (new Category((int)$random_featured_categories->fields['categories_id']))->withDefaultLanguage()->getData();
     $featured_category_box_counter++;
     $content .= "\n" . '  <div class="sideBoxContentItem">';
-    $content .= '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($data["categories_id"])). '">'
+    $content .= '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . zen_get_generated_category_path_rev($data['categories_id'])). '">'
         . zen_image(DIR_WS_IMAGES . $data['categories_image'], $data['categories_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
     $content .= '<br>' . $data['categories_name'] . '</a>';
     $content .= '</div>';
