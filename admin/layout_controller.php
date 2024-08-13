@@ -30,7 +30,8 @@ if ($selected_template !== $template_dir) {
     $messageStack->add(TEXT_CAUTION_EDITING_NOT_LIVE_TEMPLATE, 'error');
 }
 
-$include_single_column_settings = !empty($available_templates[$selected_template]['uses_single_column_layout_settings']);
+$include_single_column_settings = $available_templates[$selected_template]['uses_single_column_layout_settings'];
+$uses_mobile_sidebox_settings = $available_templates[$selected_template]['uses_mobile_sidebox_settings'];
 
 $sideboxFinder = new SideboxFinder(new Filesystem());
 $sideboxes = $sideboxFinder->findFromFilesystem($installedPlugins, $selected_template);
@@ -61,7 +62,7 @@ foreach ($sideboxes as $sideboxFile => $plugin) {
 $action = $_GET['action'] ?? '';
 switch ($action) {
     case 'save':
-        if (!isset($_POST['left_active'], $_POST['right_active'], $_POST['unused_lr'])) {
+        if (!isset($_POST['left_active'], $_POST['right_active'], $_POST['inactive_lr'])) {
             zen_redirect(zen_href_link(FILENAME_LAYOUT_CONTROLLER));
         }
 
@@ -87,8 +88,8 @@ switch ($action) {
             $sort_order += 20;
         }
 
-        $unused_lr = explode(',', trim(str_replace(' ', '', $_POST['unused_lr']), ','));
-        foreach ($unused_lr as $next_box_id) {
+        $inactive_lr = explode(',', trim(str_replace(' ', '', $_POST['inactive_lr']), ','));
+        foreach ($inactive_lr as $next_box_id) {
             $layout_update[(int)$next_box_id] = [
                 'layout_box_status' => 0,
                 'layout_box_location' => 0,
@@ -97,26 +98,40 @@ switch ($action) {
         }
 
         if ($include_single_column_settings === true) {
-            if (!isset($_POST['single_active'], $_POST['unused_single'])) {
+            if (!isset($_POST['single_active'], $_POST['inactive_single'])) {
                 zen_redirect(zen_href_link(FILENAME_LAYOUT_CONTROLLER));
             }
 
             $single_active = explode(',', trim(str_replace(' ', '', $_POST['single_active']), ','));
             $sort_order = 0;
             foreach ($single_active as $next_box_id) {
-                $layout_update[(int)$next_box_id] += [
-                    'layout_box_status_single' => 1,
-                    'layout_box_sort_order_single' => $sort_order,
-                ];
+                if (!isset($layout_update[(int)$next_box_id])) {
+                    $layout_update[(int)$next_box_id] = [
+                        'layout_box_status_single' => 1,
+                        'layout_box_sort_order_single' => $sort_order,
+                    ];
+                } else {
+                    $layout_update[(int)$next_box_id] += [
+                        'layout_box_status_single' => 1,
+                        'layout_box_sort_order_single' => $sort_order,
+                    ];
+                }
                 $sort_order += 20;
             }
 
-            $unused_single = explode(',', trim(str_replace(' ', '', $_POST['unused_single']), ','));
-            foreach ($unused_single as $next_box_id) {
-                $layout_update[(int)$next_box_id] += [
-                    'layout_box_status_single' => 0,
-                    'layout_box_sort_order_single' => 3000,
-                ];
+            $inactive_single = explode(',', trim(str_replace(' ', '', $_POST['inactive_single']), ','));
+            foreach ($inactive_single as $next_box_id) {
+                if (!isset($layout_update[(int)$next_box_id])) {
+                    $layout_update[(int)$next_box_id] = [
+                        'layout_box_status_single' => 0,
+                        'layout_box_sort_order_single' => 3000,
+                    ];
+                } else {
+                    $layout_update[(int)$next_box_id] += [
+                        'layout_box_status_single' => 0,
+                        'layout_box_sort_order_single' => 3000,
+                    ];
+                }
             }
         }
 
@@ -239,14 +254,17 @@ if (count($new_boxes) !== 0) {
 $layoutBoxes = $model
     ->where('layout_template', $selected_template)
     ->where('layout_box_name', 'not like', '%ezpages_bar')
+    ->where('layout_box_name', 'not like', '%\_header.php')
+    ->where('layout_box_name', 'not like', '%\_footer.php')
     ->orderBy('layout_box_sort_order')
+    ->orderBy('layout_box_sort_order_single')
     ->orderBy('layout_box_name')
     ->get();
 $left_active = [];
 $right_active = [];
-$left_right_unused = [];
-$single_active = [];
-$single_unused = [];
+$left_right_inactive = [];
+$mobile_active = [];
+$mobile_inactive = [];
 $missing = [];
 foreach ($layoutBoxes as $layoutBox) {
     $boxDirectory = $sideboxFinder->sideboxPath($layoutBox, $selected_template);
@@ -256,28 +274,99 @@ foreach ($layoutBoxes as $layoutBox) {
     }
     $currentBox = $boxDirectory . $layoutBox['layout_box_name'];
     if (empty($layoutBox['layout_box_status'])) {
-        $left_right_unused[$currentBox] = $layoutBox['layout_id'];
+        $left_right_inactive[$currentBox] = $layoutBox['layout_id'];
     } elseif (empty($layoutBox['layout_box_location'])) {
         $left_active[$currentBox] = $layoutBox['layout_id'];
     } else {
         $right_active[$currentBox] = $layoutBox['layout_id'];
     }
     if (empty($layoutBox['layout_box_status_single'])) {
-        $single_unused[$currentBox] = $layoutBox['layout_id'];
+        $mobile_inactive[$currentBox] = $layoutBox['layout_id'];
     } else {
-        $single_active[$currentBox] = $layoutBox['layout_id'];
+        $mobile_active[$currentBox] = $layoutBox['layout_id'];
     }
+}
+
+if ($include_single_column_settings === true) {
+    $layoutBoxes = $model
+        ->where('layout_template', $selected_template)
+        ->where('layout_box_name', 'like', '%\_header.php')
+        ->orderBy('layout_box_sort_order_single')
+        ->orderBy('layout_box_name')
+        ->get();
+    $header_active = [];
+    $header_inactive = [];
+    foreach ($layoutBoxes as $layoutBox) {
+        $boxDirectory = $sideboxFinder->sideboxPath($layoutBox, $selected_template);
+        if ($boxDirectory === false) {
+            $missing[$layoutBox['layout_box_name']] = $layoutBox['layout_id'];
+            continue;
+        }
+        $currentBox = $boxDirectory . $layoutBox['layout_box_name'];
+        if (empty($layoutBox['layout_box_status_single'])) {
+            $header_inactive[$currentBox] = $layoutBox['layout_id'];
+        } else {
+            $header_active[$currentBox] = $layoutBox['layout_id'];
+        }
+    }
+    $header_boxes_present = (count($layoutBoxes) !== 0);
+
+    $layoutBoxes = $model
+        ->where('layout_template', $selected_template)
+        ->where('layout_box_name', 'like', '%\_footer.php')
+        ->orderBy('layout_box_sort_order_single')
+        ->orderBy('layout_box_name')
+        ->get();
+    $footer_active = [];
+    $footer_inactive = [];
+    foreach ($layoutBoxes as $layoutBox) {
+        $boxDirectory = $sideboxFinder->sideboxPath($layoutBox, $selected_template);
+        if ($boxDirectory === false) {
+            $missing[$layoutBox['layout_box_name']] = $layoutBox['layout_id'];
+            continue;
+        }
+        $currentBox = $boxDirectory . $layoutBox['layout_box_name'];
+        if (empty($layoutBox['layout_box_status_single'])) {
+            $footer_inactive[$currentBox] = $layoutBox['layout_id'];
+        } else {
+            $footer_active[$currentBox] = $layoutBox['layout_id'];
+        }
+    }
+    $footer_boxes_present = (count($layoutBoxes) !== 0);
 }
 ?>
         <div class="row">
             <div class="col">
                 <button class="btn btn-info" data-toggle="collapse" data-target="#instructions">
-                    <?= BUTTON_SHOW_HIDE_NOTES ?>
+                    <?= BUTTON_SHOW_NOTES ?>
+                </button>
+                <button class="btn btn-info d-none" data-toggle="collapse" data-target="#instructions">
+                    <?= BUTTON_HIDE_NOTES ?>
                 </button>
                 <div id="instructions" class="collapse pt-2">
                     <p><?= TEXT_INSTRUCTIONS ?></p>
                     <p><strong><?= TEXT_NOTES ?></strong></p>
                     <ol>
+<?php
+if ($include_single_column_settings === true) {
+    $template_specific_boxes = '';
+    if ($header_boxes_present === true) {
+        $template_specific_boxes = TEXT_MOVE_HEADER_COLUMN;
+    }
+    if ($footer_boxes_present === true) {
+        $template_specific_boxes .= ', ' . TEXT_MOVE_FOOTER_COLUMN;
+    }
+    if ($uses_mobile_sidebox_settings === true) {
+        $template_specific_boxes .= ', ' . TEXT_MOVE_MOBILE_COLUMN;
+    }
+    $template_specific_boxes = ltrim($template_specific_boxes, ', ');
+    if ($template_specific_boxes !== '') {
+?>
+                        <li class="py-1"><?= sprintf(TEXT_NOTE1_OPT, '<b>' . ucwords($template_specific_boxes) . '</b>', '<samp>' . $selected_template . '</samp>') ?></li>
+<?php
+    }
+}
+?>
                         <li class="py-1"><?= TEXT_NOTE1 ?></li>
                         <li class="py-1"><?= TEXT_NOTE2 ?></li>
                         <li class="py-1"><?= TEXT_NOTE3 ?></li>
@@ -288,7 +377,7 @@ foreach ($layoutBoxes as $layoutBox) {
             </div>
         </div>
 <?php
-    if (count($missing) !== 0) {
+if (count($missing) !== 0) {
 ?>
         <div class="row">
             <div class="col-md-4"></div>
@@ -298,7 +387,7 @@ foreach ($layoutBoxes as $layoutBox) {
                     <div class="panel-body pb-0">
                         <ul id="lbc-missing" class="list-group mb-0">
 <?php
-        foreach ($missing as $next_box => $next_box_id) {
+    foreach ($missing as $next_box => $next_box_id) {
 ?>
                             <li class="list-group-item list-group-item-danger my-1">
                                 <div class="row">
@@ -311,7 +400,7 @@ foreach ($layoutBoxes as $layoutBox) {
                                 </div>
                             </li>
 <?php
-        }
+    }
 ?>
                         </ul>
                         <div class="row text-center py-2">
@@ -350,39 +439,43 @@ foreach ($layoutBoxes as $layoutBox) {
             </div>
         </div>
 <?php
-    }
+}
+
+// -----
+// Determine whether the header/footer/mobile column will be displayed.
+//
+$show_single_column = $include_single_column_settings && ($uses_mobile_sidebox_settings || $header_boxes_present || $footer_boxes_present);
 ?>
         <div class="text-center py-2">
             <button class="btn btn-primary btn-save d-none"><?= BUTTON_SAVE_CHANGES ?></button>
         </div>
         <div id="lbc-main" class="row">
-            <div id="lbc-lr" class="col-md-<?= ($include_single_column_settings === true) ? '8' : '12' ?>">
+            <div id="lbc-lr" class="col-md-<?= ($show_single_column === true) ? '8' : '12' ?>">
                 <div class="panel panel-info dataTableRow">
-                    <div class="panel-heading text-center"><?= TEXT_HEADING_LEFT_RIGHT_COLUMNS ?></div>
+                    <div class="panel-heading text-center"><?= TEXT_HEADING_MAIN_PAGE_BOXES ?></div>
                     <div class="panel-body pb-1">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="panel panel-success">
                                     <div class="panel-heading text-center">
 <?php
-    if (COLUMN_LEFT_STATUS === '0') {
+if (COLUMN_LEFT_STATUS === '0') {
 ?>
                                         <a href="javascript:void(0);" data-toggle="popover" title="<?= TEXT_COLUMN_DISABLED ?>" data-content="<?= TEXT_DISABLED_MESSAGE ?>" data-trigger="focus">
                                             <i class="fa-solid fa-2x fa-circle-exclamation text-danger"></i>
                                         </a>
 <?php
-    }
+}
 ?>
                                         <?= TEXT_HEADING_ACTIVE_LEFT ?>
                                     </div>
                                     <div class="panel-body">
                                         <ul id="left-box" class="list-group lbc-box-lr mb-0">
 <?php
-
 foreach ($left_active as $next_box => $next_box_id) {
-    $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
-    $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
-    $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
+    $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
+    $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
+    $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
@@ -390,9 +483,9 @@ foreach ($left_active as $next_box => $next_box_id) {
                                                         <?= $next_box ?>
                                                     </div>
                                                     <div class="col-sm-3 pr-0 d-flex justify-content-around">
-                                                        <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
-                                                        <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
-                                                        <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
                                                     </div>
                                                 </div>
                                             </li>
@@ -407,13 +500,13 @@ foreach ($left_active as $next_box => $next_box_id) {
                                 <div class="panel panel-success">
                                     <div class="panel-heading text-center">
 <?php
-    if (COLUMN_RIGHT_STATUS === '0') {
+if (COLUMN_RIGHT_STATUS === '0') {
 ?>
                                         <a href="javascript:void(0);" data-toggle="popover" title="<?= TEXT_COLUMN_DISABLED ?>" data-content="<?= TEXT_DISABLED_MESSAGE ?>" data-trigger="focus">
                                             <i class="fa-solid fa-2x fa-circle-exclamation text-danger"></i>
                                         </a>
 <?php
-    }
+}
 ?>
                                         <?= TEXT_HEADING_ACTIVE_RIGHT ?>
                                     </div>
@@ -421,9 +514,9 @@ foreach ($left_active as $next_box => $next_box_id) {
                                         <ul id="right-box" class="list-group lbc-box-lr mb-0">
 <?php
 foreach ($right_active as $next_box => $next_box_id) {
-    $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
-    $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
-    $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
+    $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
+    $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
+    $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
@@ -431,9 +524,9 @@ foreach ($right_active as $next_box => $next_box_id) {
                                                         <?= $next_box ?>
                                                     </div>
                                                     <div class="col-sm-3 pr-0 d-flex justify-content-around">
-                                                        <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
-                                                        <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
-                                                        <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
                                                     </div>
                                                 </div>
                                             </li>
@@ -454,11 +547,11 @@ foreach ($right_active as $next_box => $next_box_id) {
                                     <div class="panel-body">
                                         <ul id="unused" class="list-group lbc-box-lr mb-0">
 <?php
-ksort($left_right_unused);
-foreach ($left_right_unused as $next_box => $next_box_id) {
-    $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
-    $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
-    $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_LEFT_RIGHT_COLUMN);
+ksort($left_right_inactive);
+foreach ($left_right_inactive as $next_box => $next_box_id) {
+    $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
+    $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
+    $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_MAIN_PAGE_COLUMN);
 ?>
                                             <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                                 <div class="row">
@@ -466,9 +559,9 @@ foreach ($left_right_unused as $next_box => $next_box_id) {
                                                         <?= $next_box ?>
                                                     </div>
                                                     <div class="col-sm-3 pr-0 d-flex justify-content-around">
-                                                        <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
-                                                        <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
-                                                        <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                        <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
                                                     </div>
                                                 </div>
                                             </li>
@@ -485,21 +578,31 @@ foreach ($left_right_unused as $next_box => $next_box_id) {
                 </div>
             </div>
 <?php
-if ($include_single_column_settings === true) {
+if ($show_single_column === true) {
+    if ($header_boxes_present === true) {
 ?>
-            <div id="lbc-single" class="col-md-4">
+            <div class="col-md-4">
                 <div class="panel panel-info dataTableRow">
-                    <div class="panel-heading text-center"><?= TEXT_HEADING_SINGLE_COLUMN ?></div>
-                    <div class="panel-body pb-0">
+                    <div class="panel-heading text-center panel-collapse" data-toggle="collapse" data-target="#header-panel">
+                        <?= TEXT_HEADING_HEADER_BOXES ?>
+                        <br>
+                        <button class="btn btn-info btn-sm lbc-show d-none">
+                            <?= BUTTON_SHOW ?>
+                        </button>
+                        <button class="btn btn-info btn-sm lbc-hide">
+                            <?= BUTTON_HIDE ?>
+                        </button>
+                    </div>
+                    <div id="header-panel" class="panel-body collapse in pb-0">
                         <div class="panel panel-success">
-                            <div class="panel-heading text-center"><?= TEXT_HEADING_ACTIVE_SINGLE ?></div>
+                            <div class="panel-heading text-center"><?= TEXT_HEADING_ACTIVE_BOXES ?></div>
                             <div class="panel-body">
-                                <ul id="single-box" class="list-group lbc-box-s mb-0">
+                                <ul id="header-box" class="list-group lbc-box-h mb-0">
 <?php
-    foreach ($single_active as $next_box => $next_box_id) {
-        $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_SINGLE_COLUMN);
-        $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_SINGLE_COLUMN);
-        $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_SINGLE_COLUMN);
+        foreach ($header_active as $next_box => $next_box_id) {
+            $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_HEADER_COLUMN);
+            $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_HEADER_COLUMN);
+            $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_HEADER_COLUMN);
 ?>
                                     <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                         <div class="row">
@@ -507,28 +610,28 @@ if ($include_single_column_settings === true) {
                                                 <?= $next_box ?>
                                             </div>
                                             <div class="col-sm-3 pr-0 d-flex justify-content-around">
-                                                <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
-                                                <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
-                                                <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
+                                                <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
                                             </div>
                                         </div>
                                     </li>
 <?php
-    }
+        }
 ?>
                                 </ul>
                             </div>
                         </div>
                         <div class="panel panel-warning">
-                            <div class="panel-heading text-center"><?= TEXT_HEADING_INACTIVE_SINGLE ?></div>
+                            <div class="panel-heading text-center"><?= TEXT_HEADING_INACTIVE_BOXES ?></div>
                             <div class="panel-body">
-                                <ul id="single-unused" class="list-group lbc-box-s mb-0">
+                                <ul id="header-unused" class="list-group lbc-box-h mb-0">
 <?php
-    ksort($single_unused);
-    foreach ($single_unused as $next_box => $next_box_id) {
-        $move_up_aria_label = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_SINGLE_COLUMN);
-        $move_down_aria_label = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_SINGLE_COLUMN);
-        $move_unused_aria_label = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_SINGLE_COLUMN);
+        ksort($header_inactive);
+        foreach ($header_inactive as $next_box => $next_box_id) {
+            $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_HEADER_COLUMN);
+            $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_HEADER_COLUMN);
+            $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_HEADER_COLUMN);
 ?>
                                     <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
                                         <div class="row">
@@ -536,14 +639,14 @@ if ($include_single_column_settings === true) {
                                                 <?= $next_box ?>
                                             </div>
                                             <div class="col-sm-3 pr-0 d-flex justify-content-around">
-                                                <i class="fa-solid fa-2x fa-xmark px-1" aria-label="<?= $move_unused_aria_label ?>"></i>
-                                                <i class="fa-solid fa-2x fa-angle-down px-1" aria-label="<?= $move_down_aria_label ?>"></i>
-                                                <i class="fa-solid fa-2x fa-angle-up px-1" aria-label="<?= $move_up_aria_label ?>"></i>
+                                                <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
                                             </div>
                                         </div>
                                     </li>
 <?php
-    }
+        }
 ?>
                                 </ul>
                             </div>
@@ -551,10 +654,167 @@ if ($include_single_column_settings === true) {
                     </div>
                 </div>
             </div>
-        </div>
 <?php
+    }
+
+    if ($footer_boxes_present === true) {
+?>
+            <div class="col-md-4">
+                <div class="panel panel-info dataTableRow">
+                    <div class="panel-heading text-center panel-collapse" data-toggle="collapse" data-target="#footer-panel">
+                        <?= TEXT_HEADING_FOOTER_BOXES ?>
+                        <br>
+                        <button class="btn btn-info btn-sm lbc-show d-none">
+                            <?= BUTTON_SHOW ?>
+                        </button>
+                        <button class="btn btn-info btn-sm lbc-hide">
+                            <?= BUTTON_HIDE ?>
+                        </button>
+                    </div>
+                    <div id="footer-panel" class="panel-body collapse in pb-0">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center"><?= TEXT_HEADING_ACTIVE_BOXES ?></div>
+                            <div class="panel-body">
+                                <ul id="footer-box" class="list-group lbc-box-f mb-0">
+<?php
+        foreach ($footer_active as $next_box => $next_box_id) {
+            $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_FOOTER_COLUMN);
+            $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_FOOTER_COLUMN);
+            $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_FOOTER_COLUMN);
+?>
+                                    <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
+                                        <div class="row">
+                                            <div class="col-sm-9 pl-0 pt-2">
+                                                <?= $next_box ?>
+                                            </div>
+                                            <div class="col-sm-3 pr-0 d-flex justify-content-around">
+                                                <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
+                                            </div>
+                                        </div>
+                                    </li>
+<?php
+        }
+?>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="panel panel-warning">
+                            <div class="panel-heading text-center"><?= TEXT_HEADING_INACTIVE_BOXES ?></div>
+                            <div class="panel-body">
+                                <ul id="footer-unused" class="list-group lbc-box-f mb-0">
+<?php
+        ksort($footer_inactive);
+        foreach ($footer_inactive as $next_box => $next_box_id) {
+            $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_FOOTER_COLUMN);
+            $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_FOOTER_COLUMN);
+            $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_FOOTER_COLUMN);
+?>
+                                    <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
+                                        <div class="row">
+                                            <div class="col-sm-9 pl-0 pt-2">
+                                                <?= $next_box ?>
+                                            </div>
+                                            <div class="col-sm-3 pr-0 d-flex justify-content-around">
+                                                <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
+                                            </div>
+                                        </div>
+                                    </li>
+<?php
+        }
+?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<?php
+    }
+
+    if ($uses_mobile_sidebox_settings === true) {
+?>
+            <div class="col-md-4">
+                <div class="panel panel-info dataTableRow">
+                    <div class="panel-heading text-center panel-collapse" data-toggle="collapse" data-target="#mobile-panel">
+                        <?= TEXT_HEADING_MOBILE_BOXES ?>
+                        <br>
+                        <button class="btn btn-info btn-sm lbc-show d-none">
+                            <?= BUTTON_SHOW ?>
+                        </button>
+                        <button class="btn btn-info btn-sm lbc-hide">
+                            <?= BUTTON_HIDE ?>
+                        </button>
+                    </div>
+                    <div id="mobile-panel" class="panel-body collapse in pb-0">
+                        <div class="panel panel-success">
+                            <div class="panel-heading text-center"><?= TEXT_HEADING_ACTIVE_BOXES ?></div>
+                            <div class="panel-body">
+                                <ul id="mobile-box" class="list-group lbc-box-m mb-0">
+<?php
+        foreach ($mobile_active as $next_box => $next_box_id) {
+            $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_MOBILE_COLUMN);
+            $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_MOBILE_COLUMN);
+            $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_MOBILE_COLUMN);
+?>
+                                    <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
+                                        <div class="row">
+                                            <div class="col-sm-9 pl-0 pt-2">
+                                                <?= $next_box ?>
+                                            </div>
+                                            <div class="col-sm-3 pr-0 d-flex justify-content-around">
+                                                <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
+                                            </div>
+                                        </div>
+                                    </li>
+<?php
+        }
+?>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="panel panel-warning">
+                            <div class="panel-heading text-center"><?= TEXT_HEADING_INACTIVE_BOXES ?></div>
+                            <div class="panel-body">
+                                <ul id="mobile-unused" class="list-group lbc-box-m mb-0">
+<?php
+        ksort($mobile_inactive);
+        foreach ($mobile_inactive as $next_box => $next_box_id) {
+            $move_up_title = sprintf(TEXT_MOVE_BOX_UP, $next_box, TEXT_MOVE_MOBILE_COLUMN);
+            $move_down_title = sprintf(TEXT_MOVE_BOX_DOWN, $next_box, TEXT_MOVE_MOBILE_COLUMN);
+            $move_unused_title = sprintf(TEXT_MOVE_BOX_UNUSED, $next_box, TEXT_MOVE_MOBILE_COLUMN);
+?>
+                                    <li class="list-group-item my-1 lbc-item" data-id="<?= $next_box_id ?>">
+                                        <div class="row">
+                                            <div class="col-sm-9 pl-0 pt-2">
+                                                <?= $next_box ?>
+                                            </div>
+                                            <div class="col-sm-3 pr-0 d-flex justify-content-around">
+                                                <i class="fa-solid fa-2x fa-xmark px-1" title="<?= $move_unused_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-down px-1" title="<?= $move_down_title ?>"></i>
+                                                <i class="fa-solid fa-2x fa-angle-up px-1" title="<?= $move_up_title ?>"></i>
+                                            </div>
+                                        </div>
+                                    </li>
+<?php
+        }
+?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<?php
+    }
 }
 ?>
+        </div>
         <div class="text-center py-2">
             <button class="btn btn-primary btn-save d-none"><?= BUTTON_SAVE_CHANGES ?></button>
         </div>
@@ -562,9 +822,9 @@ if ($include_single_column_settings === true) {
         <?= zen_draw_form('saveForm', FILENAME_LAYOUT_CONTROLLER, 'action=save', 'post') .
             zen_draw_hidden_field('left_active', 'placeholder', 'id="left-active"') .
             zen_draw_hidden_field('right_active', 'placeholder', 'id="right-active"') .
-            zen_draw_hidden_field('unused_lr', 'placeholder', 'id="unused-lr"') .
+            zen_draw_hidden_field('inactive_lr', 'placeholder', 'id="inactive-lr"') .
             zen_draw_hidden_field('single_active', 'placeholder', 'id="single-active"') .
-            zen_draw_hidden_field('unused_single', 'placeholder', 'id="unused-single"') ?>
+            zen_draw_hidden_field('inactive_single', 'placeholder', 'id="inactive-single"') ?>
         <?= '</form>' ?>
 
         <!-- resets -->
@@ -618,6 +878,29 @@ $(function() {
     $('[data-toggle="popover"]').popover();
 
     // -----
+    // Handle Bootstrap collapsable events to display the Hide/Show buttons.
+    //
+    $('.collapse').on('show.bs.collapse', function() {
+        if ($(this).attr('id') === 'instructions') {
+            $(this).prev().prev().hide();   //- Hide show
+            $(this).prev().show();
+        } else {
+            $(this).prev().children('.lbc-show').hide();
+            $(this).prev().children('.lbc-hide').show();
+        }
+    });
+    $('.collapse').on('hide.bs.collapse', function() {
+        console.log('hide: '+$(this).attr('id'));
+        if ($(this).attr('id') === 'instructions') {
+            $(this).prev().prev().show();
+            $(this).prev().hide();
+        } else {
+            $(this).prev().children('.lbc-show').show();
+            $(this).prev().children('.lbc-hide').hide();
+        }
+    });
+
+    // -----
     // Multi-use function to "hide" (while keeping the space) the up-/down-angles
     // since movement is up/down within a respective box-group. For example, the
     // very last entry in the "Inactive" box-groups cannot be moved down, so that
@@ -627,10 +910,14 @@ $(function() {
         $('#lbc-main ul > li i.fa-angle-up, #lbc-main ul > li i.fa-angle-down').removeClass('invisible');
         $('#left-box > li:first-child i.fa-angle-up').addClass('invisible');
         $('#unused > li:last-child i.fa-angle-down').addClass('invisible');
-        $('#single-box > li:first-child i.fa-angle-up').addClass('invisible');
-        $('#single-unused > li:last-child i.fa-angle-down').addClass('invisible');
+        $('#header-box > li:first-child i.fa-angle-up').addClass('invisible');
+        $('#header-unused > li:last-child i.fa-angle-down').addClass('invisible');
+        $('#footer-box > li:first-child i.fa-angle-up').addClass('invisible');
+        $('#footer-unused > li:last-child i.fa-angle-down').addClass('invisible');
+        $('#mobile-box > li:first-child i.fa-angle-up').addClass('invisible');
+        $('#mobile-unused > li:last-child i.fa-angle-down').addClass('invisible');
         $('i.fa-xmark').removeClass('invisible');
-        $('#unused i.fa-xmark, #single-unused i.fa-xmark').addClass('invisible');
+        $('#unused i.fa-xmark, #header-unused i.fa-xmark, #footer-unused i.fa-xmark, #mobile-unused i.fa-xmark').addClass('invisible');
     }
     set_invisible();
 
@@ -639,6 +926,7 @@ $(function() {
     // selection 'up' in its respective box-group.
     //
     $.fn.moveUp = function() {
+        console.log('Moving up: '+$(this).closest('ul').attr('id'));
         if ($(this).prev().length !== 0) {
             $(this).insertBefore($(this).prev()).markMoved();
         } else if ($(this).closest('ul').attr('id') === 'right-box') {
@@ -647,9 +935,15 @@ $(function() {
         } else if ($(this).closest('ul').attr('id') === 'unused') {
             $('#right-box').append($(this));
             $('#right-box > li:last-child').markMoved();
-        } else if ($(this).closest('ul').attr('id') === 'single-unused') {
-            $('#single-box').append($(this));
-            $('#single-box > li:last-child').markMoved();
+        } else if ($(this).closest('ul').attr('id') === 'header-unused') {
+            $('#header-box').append($(this));
+            $('#header-box > li:last-child').markMoved();
+        } else if ($(this).closest('ul').attr('id') === 'footer-unused') {
+            $('#footer-box').append($(this));
+            $('#footer-box > li:last-child').markMoved();
+        } else if ($(this).closest('ul').attr('id') === 'mobile-unused') {
+            $('#mobile-box').append($(this));
+            $('#mobile-box > li:last-child').markMoved();
         }
         return this;
     };
@@ -667,9 +961,15 @@ $(function() {
         } else if ($(this).closest('ul').attr('id') === 'right-box') {
             $('#unused').prepend($(this));
             $('#unused > li:first-child').markMoved(true);
-        } else if ($(this).closest('ul').attr('id') === 'single-box') {
-            $('#single-unused').prepend($(this));
-            $('#single-unused > li:first-child').markMoved(true);
+        } else if ($(this).closest('ul').attr('id') === 'header-box') {
+            $('#header-unused').prepend($(this));
+            $('#header-unused > li:first-child').markMoved(true);
+        } else if ($(this).closest('ul').attr('id') === 'footer-box') {
+            $('#footer-unused').prepend($(this));
+            $('#footer-unused > li:first-child').markMoved(true);
+        } else if ($(this).closest('ul').attr('id') === 'mobile-box') {
+            $('#mobile-unused').prepend($(this));
+            $('#mobile-unused > li:first-child').markMoved(true);
         }
         return this;
     };
@@ -681,7 +981,7 @@ $(function() {
     // button.
     //
     $.fn.markMoved = function(force = false) {
-        if (force === true || ($(this).closest('ul').attr('id') !== 'unused' && $(this).closest('ul').attr('id') !== 'single-unused')) {
+        if (force === true || ($(this).closest('ul').attr('id').endsWith('unused') === false)) {
             $(this).addClass('list-group-item-warning');
             $('.btn-save').show();
         }
@@ -705,9 +1005,15 @@ $(function() {
     //
     $('#lbc-main i.fa-xmark').on('click', function(e){
         let sideBox = $(this).closest('li');
-        if (sideBox.closest('ul').attr('id') === 'single-box') {
-            $('#single-unused').prepend(sideBox);
-            $('#single-unused > li:first-child').markMoved();
+        if (sideBox.closest('ul').attr('id') === 'header-box') {
+            $('#header-unused').prepend(sideBox);
+            $('#header-unused > li:first-child').markMoved();
+        } else if (sideBox.closest('ul').attr('id') === 'footer-box') {
+            $('#footer-unused').prepend(sideBox);
+            $('#footer-unused > li:first-child').markMoved();
+        } else if (sideBox.closest('ul').attr('id') === 'mobile-box') {
+            $('#mobile-unused').prepend(sideBox);
+            $('#mobile-unused > li:first-child').markMoved();
         } else {
             $('#unused').prepend(sideBox);
             $('#unused > li:first-child').markMoved(true);
@@ -762,8 +1068,90 @@ $(function() {
         },
     });
 
-    $('#single-box, #single-unused').sortable({
-        connectWith: '.lbc-box-s',
+    $('#header-box, #header-unused').sortable({
+        connectWith: '.lbc-box-h',
+
+        // -----
+        // Selection is moved outside of a droppable/sortable container.
+        // Change the cursor to indicate that the selection can't
+        // be dropped there.
+        //
+        out: function(e, ui) {
+            document.body.style.cursor = 'not-allowed';
+        },
+        // -----
+        // Selection is hovering on a droppable/sortable container.
+        // Change the cursor to indicate that the selection is moveable.
+        //
+        over: function(e, ui) {
+            document.body.style.cursor = 'move';
+        },
+        // -----
+        // When a drag/sort action starts, capture the relative position and name of
+        // the associated item; used when the action stops.
+        //
+        start: function(e, ui) {
+            start_pos = [].slice.call(ui.item[0].parentNode.children).indexOf(ui.item[0]);
+            start_box = $(ui.item[0]).closest('ul').attr('id');
+        },
+        // -----
+        // Issued at the end of a drag/sort action. The sidebox is marked as 'moved'
+        // if its relative position in its current box-location has changed or if
+        // it's been moved to a different box.
+        //
+        stop: function(e, ui) {
+            document.body.style.cursor = 'default';
+            let stop_pos = [].slice.call(ui.item[0].parentNode.children).indexOf(ui.item[0]);
+            if (stop_pos !== start_pos || $(ui.item[0]).closest('ul').attr('id') !== start_box) {
+                $(ui.item).markMoved($(ui.item[0]).closest('ul').attr('id') !== start_box);
+            }
+            set_invisible();
+        },
+    });
+
+    $('#footer-box, #footer-unused').sortable({
+        connectWith: '.lbc-box-f',
+
+        // -----
+        // Selection is moved outside of a droppable/sortable container.
+        // Change the cursor to indicate that the selection can't
+        // be dropped there.
+        //
+        out: function(e, ui) {
+            document.body.style.cursor = 'not-allowed';
+        },
+        // -----
+        // Selection is hovering on a droppable/sortable container.
+        // Change the cursor to indicate that the selection is moveable.
+        //
+        over: function(e, ui) {
+            document.body.style.cursor = 'move';
+        },
+        // -----
+        // When a drag/sort action starts, capture the relative position and name of
+        // the associated item; used when the action stops.
+        //
+        start: function(e, ui) {
+            start_pos = [].slice.call(ui.item[0].parentNode.children).indexOf(ui.item[0]);
+            start_box = $(ui.item[0]).closest('ul').attr('id');
+        },
+        // -----
+        // Issued at the end of a drag/sort action. The sidebox is marked as 'moved'
+        // if its relative position in its current box-location has changed or if
+        // it's been moved to a different box.
+        //
+        stop: function(e, ui) {
+            document.body.style.cursor = 'default';
+            let stop_pos = [].slice.call(ui.item[0].parentNode.children).indexOf(ui.item[0]);
+            if (stop_pos !== start_pos || $(ui.item[0]).closest('ul').attr('id') !== start_box) {
+                $(ui.item).markMoved($(ui.item[0]).closest('ul').attr('id') !== start_box);
+            }
+            set_invisible();
+        },
+    });
+
+    $('#mobile-box, #mobile-unused').sortable({
+        connectWith: '.lbc-box-m',
 
         // -----
         // Selection is moved outside of a droppable/sortable container.
@@ -825,19 +1213,31 @@ $(function() {
         $('#unused .lbc-item').each(function() {
             theValue += ','+$(this).data('id');
         });
-        document.getElementById('unused-lr').value = theValue;
+        document.getElementById('inactive-lr').value = theValue;
 
         theValue = '';
-        $('#single-box .lbc-item').each(function() {
+        $('#header-box .lbc-item').each(function() {
+            theValue += ','+$(this).data('id');
+        });
+        $('#footer-box .lbc-item').each(function() {
+            theValue += ','+$(this).data('id');
+        });
+        $('#mobile-box .lbc-item').each(function() {
             theValue += ','+$(this).data('id');
         });
         document.getElementById('single-active').value = theValue;
 
         theValue = '';
-        $('#single-unused .lbc-item').each(function() {
+        $('#header-unused .lbc-item').each(function() {
             theValue += ','+$(this).data('id');
         });
-        document.getElementById('unused-single').value = theValue;
+        $('#footer-unused .lbc-item').each(function() {
+            theValue += ','+$(this).data('id');
+        });
+        $('#mobile-unused .lbc-item').each(function() {
+            theValue += ','+$(this).data('id');
+        });
+        document.getElementById('inactive-single').value = theValue;
 
         $('.btn-save').hide();
         document.saveForm.submit();

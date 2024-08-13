@@ -42,6 +42,7 @@ function zen_get_catalog_template_directories($include_template_default = false)
                 'description' => $template_description,
                 'screenshot' => $template_screenshot,
                 'uses_single_column_layout_settings' => !empty($uses_single_column_layout_settings),
+                'uses_mobile_sidebox_settings' => !isset($uses_mobile_sidebox_settings) || !empty($uses_mobile_sidebox_settings),
                 'template_path' => $path,
                 'has_template_settings' => file_exists($path . '/template_settings.php'),
             ];

@@ -13,10 +13,16 @@
     background-color: #d9edf7;
     border-color: #bce8f1;
 }
+li.lbc-item {
+    padding: 5px 10px;
+}
 .border-dark {
     border-color: #343a40;
 }
-i.fa-angle-up:hover, i.fa-angle-down:hover, i.fa-xmark:hover {
+i.fa-angle-up:hover,
+i.fa-angle-down:hover,
+i.fa-xmark:hover,
+.panel-collapse:hover {
     cursor: pointer;
 }
 .d-flex {
@@ -76,9 +82,13 @@ i.fa-angle-up:hover, i.fa-angle-down:hover, i.fa-xmark:hover {
 .lbc-box:first-child {
     margin-top: inherit;
 }
-.panel ul {
-    min-height: 44px;   /* Needed to move into 'empty' unordered list */
+.panel-body {
+    padding: 10px;
 }
-.popover-title, .popover-content {
+.panel ul {
+    min-height: 38px;   /* Needed to move into 'empty' unordered list */
+}
+.popover-title,
+.popover-content {
     text-align: center;
 }

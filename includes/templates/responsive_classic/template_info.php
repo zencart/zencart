@@ -20,3 +20,9 @@ $template_screenshot = 'scr_responsive_classic.jpg';
 // Enable the admin's "Layout Controller" to also display the single-column layout settings.
 //
 $uses_single_column_layout_settings = true;
+
+// -----
+// Instructs the "Layout Controller" that this template doesn't use
+// the 'Mobile-Menu' boxes.
+//
+$uses_mobile_sidebox_settings = false;
