@@ -21,7 +21,7 @@
       <div class="small-12 columns small-centered">
         <div class="mainContent">
         <?php require(DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_breadcrumb.php'); ?>
-        <?php if (!isset($_GET['main_page']) || $_GET['main_page'] === 'index' && count($languagesInstalled) > 1) { ?>
+        <?php if ($is_home_page && count($languagesInstalled) > 1) { ?>
         <form name="language_select" id="language_select" method="GET">
           <fieldset>
            <div class="row">
