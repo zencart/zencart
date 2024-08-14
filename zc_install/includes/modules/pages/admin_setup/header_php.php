@@ -6,7 +6,7 @@
  */
 
 @unlink(DEBUG_LOG_FOLDER . '/progress.json');
-require(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
 $changedDir = (bool)$_POST['changedDir'];
 $adminDir = $_POST['adminDir'];
 $adminNewDir = $_POST['adminNewDir'];
@@ -19,7 +19,7 @@ if (isset($_POST['upgrade_mode']) && $_POST['upgrade_mode'] === 'yes') {
     $isUpgrade = true;
 } elseif (isset($_POST['http_server_catalog'])) {
     $isUpgrade = false;
-    require(DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
+    require DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php';
     $result = new zcConfigureFileWriter($_POST);
 
     $errors = $result->errors;

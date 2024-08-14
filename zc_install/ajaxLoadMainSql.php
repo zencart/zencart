@@ -1,6 +1,8 @@
 <?php
+
 /**
  * ajaxLoadMainSql.php
+ *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Zcwilt 2024 Jan 20 Modified in v2.0.0-alpha1 $
@@ -9,14 +11,13 @@ define('IS_ADMIN_FLAG', false);
 define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
-require(DIR_FS_INSTALL . 'includes/application_top.php');
+require DIR_FS_INSTALL . 'includes/application_top.php';
 
 $error = false;
 
 $db_type = 'mysql';
 
-
-require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+require_once DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
 
 $options = [
     'db_host' => $_POST['db_host'],
@@ -27,10 +28,12 @@ $options = [
     'db_prefix' => $_POST['db_prefix'],
     'db_type' => $db_type,
 ];
+
 // trim spaces from inputs
 foreach ($options as $key => $val) {
     $options[$key] = trim($val);
 }
+
 $dbInstaller = new zcDatabaseInstaller($options);
 $result = $dbInstaller->getConnection();
 $extendedOptions = [
@@ -47,7 +50,7 @@ if ($error) {
     die();
 }
 // localization file
-$charset = $_POST['db_charset'];
+$charset = $_POST['db_charset'] ?? 'utf8';
 if (!in_array($charset, ['utf8', 'latin1'])) {
     $charset = 'utf8';
 }
@@ -66,6 +69,7 @@ if ($error) {
     echo json_encode(['error' => $error, 'file' => $file]);
     die();
 }
+
 // Demo data
 if (isset($_POST['demoData'])) {
     $extendedOptions = [
@@ -92,6 +96,7 @@ if ($error) {
     echo json_encode(['error' => $error, 'file' => $file]);
     die();
 }
+
 // Save data
 logDetails('saving cfg keys');
 $error = $dbInstaller->updateConfigKeys();

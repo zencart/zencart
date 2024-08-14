@@ -20,9 +20,9 @@ $zco_notifier->notify('NOTIFY_INIT_SANITIZE_STARTS');
 
 foreach ($_GET as $varname => $varvalue) {
     if (is_array($varvalue)) {
-        $site_array_override = false;
-        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $site_array_override);
-        if ($site_array_override === false) {
+        $get_var_override = false;
+        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $get_var_override);
+        if ($get_var_override === false) {
             zen_redirect(zen_href_link(FILENAME_DEFAULT));
         }
     }
@@ -43,10 +43,10 @@ if (zen_is_hmac_login()) {
 }
 
 if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_METHOD'] == 'POST') {
-    $mainPage = isset($_GET['main_page']) ? $_GET['main_page'] : FILENAME_DEFAULT;
+    $mainPage = $_GET['main_page'] ?? FILENAME_DEFAULT;
     if (!in_array($mainPage, $csrfBlackList)) {
         if ((!isset($_SESSION ['securityToken']) || !isset($_POST ['securityToken'])) || ($_SESSION ['securityToken'] !== $_POST ['securityToken'])) {
-            zen_redirect(zen_href_link( FILENAME_TIME_OUT, '', $request_type ));
+            zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', $request_type));
         }
     }
 }
@@ -56,6 +56,10 @@ if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_MET
 // value or a uprid (dddd:xxxx), where xxxx is the 32-hexadecimal character md5 hash of the currently-selected
 // attributes.
 //
+// Noting that if an id-value is found to be invalid, there's no sense
+// in taking up further resources on the server; simply redirect to
+// the home page.
+//
 $saniGroup1 = [
     'products_id',  //- 'Normal', multi-use
     'product_id',   //- shopping_cart, when removing a product from the cart
@@ -63,11 +67,8 @@ $saniGroup1 = [
     'pID',          //- main/additional images' pop-ups
 ];
 foreach ($saniGroup1 as $key) {
-    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', (string)$_GET[$key])) {
-        $_GET[$key] = '';
-        if (isset($_REQUEST[$key])) {
-            $_REQUEST[$key] = '';
-        }
+    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?$/', (string)$_GET[$key])) {
+        zen_redirect(zen_href_link(FILENAME_DEFAULT));
     }
 }
 

@@ -156,7 +156,6 @@ class zcDatabaseInstaller
             $this->keepTogetherLines = (int)substr($this->line, 28);
         }
         if (str_starts_with($this->line, '#PROGRESS_FEEDBACK:!')) {
-            $this->processProgressFeedback();
             $this->progressFeedback = $this->processProgressFeedback();
             $this->completeLine = true;
             $this->doJsonProgressLoggingUpdate();
@@ -283,7 +282,7 @@ class zcDatabaseInstaller
     {
         if (isset($this->extendedOptions['doJsonProgressLogging'])) {
             $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
-            $progress = ($this->jsonProgressLoggingCount / $this->jsonProgressLoggingTotal * 100);
+            $progress = round($this->jsonProgressLoggingCount / $this->jsonProgressLoggingTotal * 100, 2);
             $fp = fopen($fileName, "w");
             if ($fp) {
                 $arr = ['total' => $this->jsonProgressLoggingTotal, 'progress' => $progress, 'message' => $this->extendedOptions['message'], 'progressFeedback' => $this->progressFeedback];
@@ -679,7 +678,7 @@ class zcDatabaseInstaller
         }
     }
 
-    private function processProgressFeedback()
+    private function processProgressFeedback(): string
     {
         $matches = explode(':!', $this->line);
         array_shift($matches);
