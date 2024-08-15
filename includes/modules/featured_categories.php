@@ -18,13 +18,13 @@ $categories_categories_id_list = [];
 $sql = '';
 $display_limit = '';
 
-    $sql = "SELECT p.categories_id, p.categories_image, pd.categories_name
-            FROM " . TABLE_CATEGORIES . " p
-            LEFT JOIN " . TABLE_FEATURED_CATEGORIES . " f ON p.categories_id = f.categories_id
-            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " pd ON p.categories_id = pd.categories_id
-            AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-            WHERE p.categories_status = 1
-            AND f.status = 1";
+    $sql = "SELECT c.categories_id, c.categories_image, cd.categories_name
+            FROM " . TABLE_CATEGORIES . " c
+            LEFT JOIN " . TABLE_FEATURED_CATEGORIES . " fc ON c.categories_id = fc.categories_id
+            LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
+            AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+            WHERE c.categories_status = 1
+            AND fc.status = 1";
     $featured_categories = $db->ExecuteRandomMulti($sql, MAX_DISPLAY_SEARCH_RESULTS_FEATURED);
 
 $row = 0;

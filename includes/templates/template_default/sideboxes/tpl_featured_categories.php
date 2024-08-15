@@ -23,3 +23,4 @@ while (!$random_featured_categories->EOF) {
     $random_featured_categories->MoveNextRandom();
 }
 $content .= '</div>' . "\n";
+

@@ -20,16 +20,14 @@ $languageLoader->loadLanguageForView();
 
 $breadcrumb->add(NAVBAR_TITLE);
 
-$listing_sql = "SELECT p.categories_id, p.categories_image, pd.categories_name
-                FROM " . TABLE_CATEGORIES . " p
-                LEFT JOIN " . TABLE_FEATURED_CATEGORIES . " f ON p.categories_id = f.categories_id
-                LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " pd ON p.categories_id = pd.categories_id
-                AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                WHERE p.categories_status = 1
-                AND f.status = 1
-                ORDER BY f.categories_id";
-
-// Added order by, no sure it's needed
+$listing_sql = "SELECT c.categories_id, c.categories_image, cd.categories_name
+                FROM " . TABLE_CATEGORIES . " c
+                LEFT JOIN " . TABLE_FEATURED_CATEGORIES . " fc ON c.categories_id = fc.categories_id
+                LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON c.categories_id = cd.categories_id
+                AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                WHERE c.categories_status = 1
+                AND fc.status = 1
+                ORDER BY cd.categories_name";
 
 $listing = $db->Execute($listing_sql);
 
@@ -39,13 +37,6 @@ foreach ($listing as $record) {
     }
 }
 
-// -----
-// Define the maximum columns to display.
-// These are "soft" configuration setting that can be overridden on a site-specific basis.
-//
-if (!defined('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES')) {
-    define('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES', '3');
-}
 // display sort order dropdown
 
 // set the category filters according to selected category type
@@ -54,4 +45,5 @@ $typefilter = $_GET['typefilter'] ?? 'default';
 
 
 // This should be last line of the script:
-$zco_notifier->notify('NOTIFY_HEADER_START_FEATURED_CATEGORIES', null);
+$zco_notifier->notify('NOTIFY_HEADER_END_FEATURED_CATEGORIES', null);
+

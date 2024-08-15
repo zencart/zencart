@@ -24,3 +24,4 @@
 </div>
 <?php } ?>
 <!-- eof: featured categories  -->
+

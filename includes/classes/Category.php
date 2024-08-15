@@ -30,7 +30,7 @@ class Category
         $this->initLanguages();
 
         if ($this->categories_id !== null) {
-            $this->data = $this->loadProductDetails($this->categories_id);
+            $this->data = $this->loadCategoryDetails($this->categories_id);
 
             // set some backward compatibility properties
             $this->fields = $this->data;
@@ -75,9 +75,9 @@ class Category
         $data = $this->data;
 
         // -----
-        // If this request is for a product being created, it might not yet have
-        // its language elements (e.g. products_name) stored.  In this case, simply
-        // return the product's base information.
+        // If this request is for a category being created, it might not yet have
+        // its language elements (e.g. categories_name) stored.  In this case, simply
+        // return the categoriesbase information.
         //
         if (!isset($data['lang'])) {
             return $data;
@@ -108,7 +108,7 @@ class Category
 
     public function status(): int
     {
-        return (int)($this->data['products_status'] ?? 0);
+        return (int)($this->data['categories_status'] ?? 0);
     }
 
     public function getInfoPage(): string
@@ -121,30 +121,29 @@ class Category
         return $this->get($name);
     }
 
-    protected function loadProductDetails(int $categories_id, ?int $language_id = null): array
+    protected function loadCategoryDetails(int $categories_id, ?int $language_id = null): array
     {
         global $db;
 
-        $sql = "SELECT p.*
-                FROM " . TABLE_CATEGORIES . " p
-                WHERE p.categories_id = " . (int)$categories_id;
-        $product = $db->Execute($sql, 1, true, 900);
+        $sql = "SELECT *
+                FROM " . TABLE_CATEGORIES . "
+                WHERE categories_id = " . (int)$categories_id;
+        $category = $db->Execute($sql, 1, true, 900);
 
-        if ($product->EOF) {
+        if ($category->EOF) {
             return [];
         }
 
-        $data = $product->fields;
+        $data = $category->fields;
         $data['id'] = $data['categories_id'];
         $data['categories_id'] = $data['categories_id'];
-        //$data['parent_category_id'] = $data['master_categories_id'];
 
         /**
-         * Add $data['lang'][code] = [products_name, products_description, etc] for each language
+         * Add $data['lang'][code] = [categories_name, categories_description, etc] for each language
          */
-        $sql = "SELECT pd.*
-                FROM " . TABLE_CATEGORIES_DESCRIPTION . " pd
-                WHERE pd.categories_id = " . (int)$categories_id . "
+        $sql = "SELECT *
+                FROM " . TABLE_CATEGORIES_DESCRIPTION . "
+                WHERE categories_id = " . (int)$categories_id . "
                 ORDER BY language_id";
         $pd = $db->Execute($sql, null, true, 900);
         foreach ($pd as $result) {
@@ -166,3 +165,4 @@ class Category
         $this->languages = $lng->get_language_list();  // [1 => 'en', 2 => 'fr']
     }
 }
+
