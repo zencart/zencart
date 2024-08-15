@@ -48,9 +48,8 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     </address>
     <br class="clearBoth">
 <?php
-} else {
-    if ($_SESSION['cart']->get_content_type() !== 'virtual') {
-        $flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true');
+} elseif ($_SESSION['cart']->get_content_type() !== 'virtual') {
+    $flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true');
 ?>
     <label class="inputLabel" for="country"><?= ENTRY_COUNTRY ?></label>
     <?= zen_get_country_list('zone_country_id', $selected_country, 'id="country"' . (($flag_show_pulldown_states) ? ' onchange="update_zone(this.form);"' : '')) ?>
@@ -59,30 +58,30 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     <a id="seView"></a>
     <label class="inputLabel" for="stateZone" id="zoneLabel"><?= ENTRY_STATE ?></label>
 <?php
-        if ($flag_show_pulldown_states) {
+    if ($flag_show_pulldown_states) {
 ?>
     <?= zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $state_zone_id, 'id="stateZone"') ?>
     <br class="clearBoth" id="stBreak">
 <?php
-        }
+    }
 ?>
     <label class="inputLabel" for="state" id="stateLabel"><?= ($state_field_label ?? '') ?></label>
     <?= zen_draw_input_field('state', $selectedState, zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"') .'&nbsp;<span class="alert" id="stText">&nbsp;</span>' ?>
     <br class="clearBoth">
 <?php
-        if (CART_SHIPPING_METHOD_ZIP_REQUIRED === 'true') {
+    if (CART_SHIPPING_METHOD_ZIP_REQUIRED === 'true') {
 ?>
     <label class="inputLabel" for="postcode"><?= ENTRY_POST_CODE ?></label>
     <?= zen_draw_input_field('postcode', $postcode, 'size="7" id="postcode"') ?>
     <br class="clearBoth">
 <?php
-        }
+    }
 ?>
     <div class="buttonRow forward"><?= zen_image_submit(BUTTON_IMAGE_UPDATE, BUTTON_UPDATE_ALT) ?></div>
     <br class="clearBoth">
 <?php
-    }
 }
+echo '</form>';
 
 if ($_SESSION['cart']->get_content_type() === 'virtual') {
     echo CART_SHIPPING_METHOD_FREE_TEXT . ' ' . CART_SHIPPING_METHOD_ALL_DOWNLOADS;
@@ -119,66 +118,41 @@ if ($_SESSION['cart']->get_content_type() === 'virtual') {
             continue;
         }
 
-        if (isset($next_module['id']) && count($next_module['methods']) === 1 && isset($next_module['methods'][0]['id'])) {
-            // simple shipping method
-            $thisquoteid = $next_module['id'] . '_' . $next_module['methods'][0]['id'];
+        if (!empty($next_module['error'])) {
 ?>
         <tr<?= $extra ?>>
-<?php
-            if (isset($next_module['error']) && $next_module['error']) {
-?>
-            <td colspan="2"><?= $next_module['module'] ?>&nbsp;(<?= $next_module['error'] ?>)</td>
-<?php
-            } elseif ($selected_shipping['id'] === $thisquoteid) {
-?>
-            <td class="bold"><?= $next_module['module'] ?>&nbsp;(<?= $next_module['methods'][0]['title'] ?>)</td>
-            <td class="cartTotalDisplay bold"><?= $currencies->format(zen_add_tax($next_module['methods'][0]['cost'], $next_module['tax'] ?? 0)) ?></td>
-<?php
-            } else {
-?>
-            <td><?= $next_module['module'] ?>&nbsp;(<?= $next_module['methods'][0]['title'] ?>)</td>
-            <td class="cartTotalDisplay"><?= $currencies->format(zen_add_tax($next_module['methods'][0]['cost'], $next_module['tax'] ?? 0)) ?></td>
-<?php
-            }
-?>
+            <td colspan="2">
+                <?= $next_module['module'] ?>
+                <?= !empty($next_module['icon']) ? $next_module['icon'] : '' ?>
+                &nbsp;<?= $next_module['error'] ?>
+            </td>
         </tr>
 <?php
-        } elseif (empty($next_module['methods']) || !is_array($next_module['methods'])) {
             continue;
-        } else {
-            // shipping method with sub methods (multipickup) or none
-            foreach ($next_module['methods'] as $next_method) {
-                $thisquoteid = '';
-                if (isset($next_module['id']) && isset($next_method['id'])) {
-                    $thisquoteid = $next_module['id'] . '_' . $next_method['id'];
-                }
+        }
+
+        if (empty($next_module['methods']) || !is_array($next_module['methods'])) {
+            continue;
+        }
+
+        // shipping method with sub methods (multipickup) or none
+        foreach ($next_module['methods'] as $next_method) {
+            $thisquoteid = $next_module['id'] . '_' . $next_method['id'];
+            $extra_class = ($selected_shipping['id'] === $thisquoteid) ? 'bold' : '';
 ?>
         <tr<?= $extra ?>>
-<?php
-                if (!empty($next_module['error'])){
-?>
-            <td colspan="2"><?= $next_module['module'] ?>&nbsp;(<?= $next_module['error'] ?>)</td>
-<?php
-                } elseif ($selected_shipping['id'] === $thisquoteid){
-?>
-            <td class="bold"><?= $next_module['module'] ?>&nbsp;(<?= $next_method['title'] ?>)</td>
-            <td class="cartTotalDisplay bold">
+            <td class="<?= $extra_class ?>">
+                <?= $next_module['module'] ?>&nbsp;(<?= $next_method['title'] ?>)
+            </td>
+            <td class="cartTotalDisplay <?= $extra_class ?>">
                 <?= $currencies->format(zen_add_tax($next_method['cost'], $next_module['tax'] ?? 0)) ?>
             </td>
-<?php
-                } else {
-?>
-            <td><?= $next_module['module'] ?>&nbsp;(<?= $next_method['title'] ?>)</td>
-            <td class="cartTotalDisplay">
-                <?= $currencies->format(zen_add_tax($next_method['cost'], $next_module['tax'] ?? 0)) ?>
-            </td>
-<?php
-                }
-?>
        </tr>
 <?php
-            }
         }
+?>
+
+<?php
     }
 ?>
     </table>
@@ -192,5 +166,4 @@ if ($_SESSION['cart']->get_content_type() === 'virtual') {
     }
 }
 ?>
-    <?= '</form>' ?>
 </div>
