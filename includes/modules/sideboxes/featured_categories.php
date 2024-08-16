@@ -14,14 +14,14 @@ $show_featured= true;
 
 if ($show_featured == true) {
     $random_featured_categories_query = "SELECT c.categories_id, c.categories_image, cd.categories_name
-                                        FROM (" . TABLE_CATEGORIES . " p
+                                        FROM (" . TABLE_CATEGORIES . " c
                                         LEFT JOIN " . TABLE_FEATURED_CATEGORIES . " fc on c.categories_id = fc.categories_id
-                                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd on p.categories_id = cd.categories_id )
+                                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id )
                                         WHERE c.categories_id = fc.categories_id
                                         AND c.categories_id = cd.categories_id
                                         AND c.categories_status = 1
                                         AND fc.status = 1
-                                        AND cd.language_id = '" . (int)$_SESSION[languages_id] . "'";
+                                        AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
 
     // randomly select ONE featured category from the list retrieved:
     //$random_featured_categories = zen_random_select($random_featured_categories_query);
