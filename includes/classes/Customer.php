@@ -341,7 +341,7 @@ class Customer extends base
 
         $this->getPricingGroupAssociation();
 
-        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data);
+        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data, $this->data);
 
         // treat these as integers even though they (may have) come from the db as strings
         $ints = [
@@ -836,6 +836,8 @@ class Customer extends base
             "DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
               WHERE customers_id = " . (int)$this->customer_id
         );
+
+        $this->notify('NOTIFY_CUSTOMER_AFTER_RECORD_DELETED', (int)$this->customer_id);
 
         zen_record_admin_activity('Customer with customer ID ' . (int)$this->customer_id . ' deleted.', 'warning');
     }
