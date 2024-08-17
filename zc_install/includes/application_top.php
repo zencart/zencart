@@ -44,7 +44,7 @@ if (isset($argc) && $argc > 0) {
 }
 if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
     for ($i = 1; $i < $_SERVER["argc"]; $i++) {
-        list($key, $val) = explode('=', $_SERVER["argv"][$i]);
+        [$key, $val] = explode('=', $_SERVER["argv"][$i]);
         $_GET[$key] = $_REQUEST[$key] = $val;
         if ($key === 'cli') $controller = 'cli';
         if ($key === 'v' || $key === 'verbose') $debug_logging = 'screen';
@@ -172,6 +172,8 @@ require DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYaml.php';
 require DIR_FS_INSTALL . 'includes/classes/class.zcRegistry.php';
 require DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlParser.php';
 require DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlInline.php';
+require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
+require DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php';
 
 if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
 $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);

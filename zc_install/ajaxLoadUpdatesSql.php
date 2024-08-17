@@ -56,14 +56,13 @@ if ($error) {
     die();
 }
 
-require_once(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
-
-$file = DIR_FS_INSTALL . 'sql/updates/' . $db_type . '_upgrade_zencart_' . str_replace('.', '', $updateVersion) . '.sql';
 $options = $systemChecker->getDbConfigOptions();
 $dbInstaller = new zcDatabaseInstaller($options);
+
+$file = DIR_FS_INSTALL . 'sql/updates/' . $db_type . '_upgrade_zencart_' . str_replace('.', '', $updateVersion) . '.sql';
 $extendedOptions = [
     'doJsonProgressLogging' => true,
-    'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+    'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
     'id' => 'main',
     'message' => sprintf(TEXT_UPGRADING_TO_VERSION, $updateVersion),
 ];
@@ -83,7 +82,7 @@ if ($sql_files !== false) {
     foreach ($sql_files as $file) {
         $extendedOptions = [
             'doJsonProgressLogging' => true,
-            'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+            'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
             'id' => 'main',
             'message' => TEXT_LOADING_PLUGIN_UPGRADES . ' ' . $file,
         ];
