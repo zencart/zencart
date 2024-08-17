@@ -241,3 +241,5 @@ modified_files.txt
 # laravel
 laravel/.env
 
+# ensure test plugin is not checked in
+zc_plugins/zenTestPlugin
