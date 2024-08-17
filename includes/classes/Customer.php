@@ -341,7 +341,7 @@ class Customer extends base
 
         $this->getPricingGroupAssociation();
 
-        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data);
+        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data, $this->data);
 
         // treat these as integers even though they (may have) come from the db as strings
         $ints = [
