@@ -49,7 +49,7 @@ class QueryCache
      */
     public function inCache(string $query)
     {
-        return (isset($this->queries[$query]));
+        return (isset($this->queries[$query]) && $this->queries[$query] instanceof mysqli_result);
     }
 
     /**
