@@ -4,9 +4,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Apr 10 Modified in v2.0.1 $
  */
-
 namespace Zencart\ResourceLoaders;
-
 
 class SideboxFinder
 {
@@ -17,17 +15,16 @@ class SideboxFinder
         $this->filesystem = $filesystem;
     }
 
-    public function findFromFilesystem($installedPlugins, $templateDir)
+    public function findFromFilesystem(array $installedPlugins, string $templateDir): array
     {
         $sideboxes = [];
-        foreach ($installedPlugins as $plugin)
-        {
+        foreach ($installedPlugins as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/modules/sideboxes/';
             $files = $this->filesystem->listFilesFromDirectoryAlphaSorted($pluginDir);
             foreach ($files as $file) {
                 $sideboxes[$file] = $plugin['unique_key'] . '/' . $plugin['version'];
             }
-       }
+        }
         $mainDir = DIR_FS_CATALOG_MODULES . 'sideboxes/';
         $mainDirTpl = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $templateDir . '/';
         $files = $this->filesystem->listFilesFromDirectoryAlphaSorted($mainDir);
@@ -41,7 +38,7 @@ class SideboxFinder
         return $sideboxes;
     }
 
-    public function sideboxPath($sideboxInfo, $templateDir, $withFullPath = false)
+    public function sideboxPath($sideboxInfo, string $templateDir, bool $withFullPath = false): bool|string
     {
         if (!empty($sideboxInfo['plugin_details'])) {
             $path = $this->sideboxPathInPlugin($sideboxInfo);
@@ -59,7 +56,7 @@ class SideboxFinder
         return false;
     }
 
-    public function sideboxPathInPlugin($sideboxInfo)
+    public function sideboxPathInPlugin($sideboxInfo): bool|string
     {
         $baseDir = DIR_FS_CATALOG . 'zc_plugins/' . $sideboxInfo['plugin_details'] . '/'  . 'catalog/includes/modules/sideboxes/';
         if (file_exists($baseDir . $sideboxInfo['layout_box_name'])) {
@@ -67,5 +64,4 @@ class SideboxFinder
         }
         return false;
     }
-
 }
