@@ -13,11 +13,6 @@
  //require(DIR_WS_MODULES . '/debug_blocks/product_info_prices.php');
 ?>
 <div class="centerColumn" id="productGeneral">
-
-<!--bof Form start-->
-<?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data"') . "\n"; ?>
-<!--eof Form start-->
-
 <?php if ($messageStack->size('product_info') > 0) echo $messageStack->output('product_info'); ?>
 
 <!--bof Category Icon -->
@@ -84,6 +79,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <!--eof Product description -->
 <br class="clearBoth">
 
+<?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data"') . "\n"; ?>
 <!--bof Add to Cart Box -->
 <?php
 if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == '') {
@@ -152,7 +148,7 @@ if ($flag_show_ask_a_question) {
   }
 ?>
 <!--eof Attributes Module -->
-
+    <?php echo '</form>'; ?>
 <!--bof Quantity Discounts table -->
 <?php
   if ($products_discount_type != 0) { ?>
@@ -235,8 +231,4 @@ if ($flag_show_ask_a_question) {
 <!--bof also purchased products module-->
 <?php require($template->get_template_dir('tpl_modules_also_purchased_products.php', DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . 'tpl_modules_also_purchased_products.php');?>
 <!--eof also purchased products module-->
-
-<!--bof Form close-->
-</form>
-<!--bof Form close-->
 </div>
