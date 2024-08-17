@@ -837,6 +837,8 @@ class Customer extends base
               WHERE customers_id = " . (int)$this->customer_id
         );
 
+        $this->notify('NOTIFY_CUSTOMER_AFTER_RECORD_DELETED', (int)$this->customer_id);
+
         zen_record_admin_activity('Customer with customer ID ' . (int)$this->customer_id . ' deleted.', 'warning');
     }
 
