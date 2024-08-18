@@ -1,0 +1,94 @@
+#lbc-container {
+    font-size: 13px;
+}
+.d-none {
+    display: none;
+}
+.ui-sortable-placeholder {
+    visibility: visible!important;
+    border: 1px solid #31708f;
+}
+#lbc-main ul > li:hover {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+li.lbc-item {
+    padding: 5px 10px;
+}
+.border-dark {
+    border-color: #343a40;
+}
+i.fa-angle-up:hover,
+i.fa-angle-down:hover,
+i.fa-xmark:hover,
+.panel-collapse:hover {
+    cursor: pointer;
+}
+.d-flex {
+    display: flex;
+}
+.justify-content-around {
+    justify-content: space-around;
+}
+.mb-0 {
+    margin-bottom: 0;
+}
+.my-0 {
+    margin-bottom: 0;
+    margin-top: 0;
+}
+.my-1 {
+    margin-bottom: .25rem;
+    margin-top: .25rem;
+}
+.my-2 {
+    margin-bottom: .5rem;
+    margin-top: .5rem;
+}
+.pb-0 {
+    padding-bottom: 0;
+}
+.pl-0 {
+    padding-left: 0;
+}
+.pr-0 {
+    padding-right: 0;
+}
+.pt-0 {
+    padding-top: 0;
+}
+.pt-2 {
+    padding-top: .5rem;
+}
+.px-1 {
+    padding-left: .25rem;
+    padding-right: .25rem;
+}
+.py-1 {
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+}
+.py-2 {
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+.panel-heading {
+    font-weight: bold;
+}
+.lbc-box:last-child {
+    margin-bottom: inherit;
+}
+.lbc-box:first-child {
+    margin-top: inherit;
+}
+.panel-body {
+    padding: 10px;
+}
+.panel ul {
+    min-height: 38px;   /* Needed to move into 'empty' unordered list */
+}
+.popover-title,
+.popover-content {
+    text-align: center;
+}
