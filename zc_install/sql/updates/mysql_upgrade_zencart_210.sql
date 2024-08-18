@@ -40,7 +40,7 @@ ALTER TABLE email_archive ADD COLUMN errorinfo TEXT DEFAULT NULL;
 ALTER TABLE email_archive ADD INDEX idx_email_date_sent_zen (date_sent);
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
-# Postcode/zip fields expand to accomodate Portugal formatting
+# Postcode/zip fields expand to accommodate Portugal formatting
 ALTER TABLE address_book MODIFY entry_postcode varchar(64) NOT NULL default '';
 ALTER TABLE orders MODIFY customers_postcode varchar(64) NOT NULL default '';
 ALTER TABLE orders MODIFY delivery_postcode varchar(64) NOT NULL default '';
