@@ -22,170 +22,170 @@ if ($action !== '') {
 
     switch ($action) {
 
-    case 'setflag':
-        if (isset($_POST['flag']) && ($_POST['flag'] === '1' || $_POST['flag'] === '0')) {
-            zen_set_featured_status((int)$_POST['id'], (int)$_POST['flag']);
-            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, zen_get_all_get_params(['action', 'fID']) . 'fID=' . $_POST['id'], 'NONSSL'));
-        }
-        break;
-
-    case 'insert':
-        if (empty($_POST['categories_id'])) {
-            $messageStack->add_session(ERROR_NOTHING_SELECTED, 'caution');
-        } else {
-            $categories_id = (int)$_POST['categories_id'];
-            $error = false;
-            $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
-            if ($featured_date_available_raw === '') {
-                $featured_date_available = '0001-01-01';
-            } else {
-                if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
-                    $local_fmt = zen_datepicker_format_fordate();
-                    $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
-                    $featured_date_available_raw = 'null';
-                    if (!empty($dt)) {
-                        $featured_date_available_raw = $dt->format('Y-m-d');
-                    }
-                }
-                if (zcDate::validateDate($featured_date_available_raw) === true) {
-                    $featured_date_available = $featured_date_available_raw;
-                } else {
-                    $error = true;
-                    $messageStack->add(ERROR_INVALID_AVAILABLE_DATE, 'error');
-                }
+        case 'setflag':
+            if (isset($_POST['flag']) && ($_POST['flag'] === '1' || $_POST['flag'] === '0')) {
+                zen_set_featured_status((int)$_POST['id'], (int)$_POST['flag']);
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, zen_get_all_get_params(['action', 'fID']) . 'fID=' . $_POST['id'], 'NONSSL'));
             }
-            $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-            if ($expires_date_raw === '') {
-                $expires_date = '0001-01-01';
-            } else {
-                if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
-                    $local_fmt = zen_datepicker_format_fordate();
-                    $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
-                    $expires_date_raw = 'null';
-                    if (!empty($dt)) {
-                        $expires_date_raw = $dt->format('Y-m-d');
-                    }
-                }
-                if (zcDate::validateDate($expires_date_raw) === true) {
-                    $expires_date = $expires_date_raw;
-                } else {
-                    $error = true;
-                    $messageStack->add(ERROR_INVALID_EXPIRES_DATE, 'error');
-                }
-            }
-            if ($error === true) {
-                $action = 'new';
-                break;
-            }
-
-            $db->Execute("INSERT INTO " . TABLE_FEATURED_CATEGORIES . " (categories_id, featured_date_added, expires_date, status, featured_date_available)
-            VALUES (" . (int)$categories_id . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($featured_date_available) . "')");
-
-            $new_featured = $db->Execute("SELECT featured_categories_id
-                                        FROM " . TABLE_FEATURED_CATEGORIES . "
-                                        WHERE categories_id = " . (int)$categories_id);
-        } // nothing selected
-        if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') {
-            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? '&search=' . $_GET['search'] . '&' : '') . (isset($new_featured) ? 'fID=' . $new_featured->fields['featured_categories_id'] : '')));
-        }
-        break;
-
-        case 'update':
-            $featured_categories_id = (int)$_POST['featured_categories_id'];
-            $error = false;
-            $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
-            if ($featured_date_available_raw === '') {
-                $featured_date_available = '0001-01-01';
-            } else {
-                if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
-                    $local_fmt = zen_datepicker_format_fordate();
-                    $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
-                    $featured_date_available_raw = 'null';
-                    if (!empty($dt)) {
-                        $featured_date_available_raw = $dt->format('Y-m-d');
-                    }
-                }
-                if (zcDate::validateDate($featured_date_available_raw) === true) {
-                    $featured_date_available = $featured_date_available_raw;
-                } else {
-                    $error = true;
-                    $messageStack->add(ERROR_INVALID_AVAILABLE_DATE, 'error');
-                }
-            }
-            $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-            if ($expires_date_raw === '') {
-                $expires_date = '0001-01-01';
-            } else {
-                if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
-                    $local_fmt = zen_datepicker_format_fordate();
-                    $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
-                    $expires_date_raw = 'null';
-                    if (!empty($dt)) {
-                        $expires_date_raw = $dt->format('Y-m-d');
-                    }
-                }
-                if (zcDate::validateDate($expires_date_raw) === true) {
-                    $expires_date = $expires_date_raw;
-                } else {
-                    $error = true;
-                    $messageStack->add(ERROR_INVALID_EXPIRES_DATE, 'error');
-                }
-            }
-
-            if ($error === true) {
-                $action = 'edit';
-                break;
-            }
-
-            $db->Execute("UPDATE " . TABLE_FEATURED_CATEGORIES . "
-                          SET featured_last_modified = now(),
-                          expires_date = '" . zen_db_input($expires_date) . "',
-                          featured_date_available = '" . zen_db_input($featured_date_available) . "'
-                          WHERE featured_categories_id = " . $featured_categories_id);
-
-            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page. $search_parameters . 'fID=' . $featured_categories_id));
             break;
 
-    case 'deleteconfirm':
-        $featured_categories_id = (int)$_POST['fID'];
-        $db->Execute("DELETE FROM " . TABLE_FEATURED_CATEGORIES . "
-                    WHERE featured_categories_id = " . $featured_categories_id);
-        zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? 'search=' . $_GET['search'] : '')));
-        break;
+        case 'insert':
+            if (empty($_POST['categories_id'])) {
+                $messageStack->add_session(ERROR_NOTHING_SELECTED, 'caution');
+            } else {
+                $categories_id = (int)$_POST['categories_id'];
+                $error = false;
+                $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
+                if ($featured_date_available_raw === '') {
+                    $featured_date_available = '0001-01-01';
+                } else {
+                    if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
+                        $local_fmt = zen_datepicker_format_fordate();
+                        $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
+                        $featured_date_available_raw = 'null';
+                        if (!empty($dt)) {
+                            $featured_date_available_raw = $dt->format('Y-m-d');
+                        }
+                    }
+                    if (zcDate::validateDate($featured_date_available_raw) === true) {
+                        $featured_date_available = $featured_date_available_raw;
+                    } else {
+                        $error = true;
+                        $messageStack->add(ERROR_INVALID_AVAILABLE_DATE, 'error');
+                    }
+                }
+                $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
+                if ($expires_date_raw === '') {
+                    $expires_date = '0001-01-01';
+                } else {
+                    if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
+                        $local_fmt = zen_datepicker_format_fordate();
+                        $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
+                        $expires_date_raw = 'null';
+                        if (!empty($dt)) {
+                            $expires_date_raw = $dt->format('Y-m-d');
+                        }
+                    }
+                    if (zcDate::validateDate($expires_date_raw) === true) {
+                        $expires_date = $expires_date_raw;
+                    } else {
+                        $error = true;
+                        $messageStack->add(ERROR_INVALID_EXPIRES_DATE, 'error');
+                    }
+                }
+                if ($error === true) {
+                    $action = 'new';
+                    break;
+                }
 
-    case 'pre_add_confirmation':
-        $skip_featured = false;
-        // check for no CID entered
-        if (empty($_POST['pre_add_categories_id'])) {
-            $skip_featured = true;
-            $messageStack->add_session(WARNING_FEATURED_PRE_ADD_CID_EMPTY, 'caution');
-        } else {
-            $sql = "SELECT categories_id
-                    FROM " . TABLE_CATEGORIES . "
-                    WHERE categories_id = " . (int)$_POST['pre_add_categories_id'];
-            $check_featured = $db->Execute($sql);
-            if ($check_featured->EOF){// check for valid CID
-                $skip_featured = true;
-                $messageStack->add_session(sprintf(WARNING_FEATURED_PRE_ADD_CID_NO_EXIST, (int)$_POST['pre_add_categories_id']), 'caution');
+                $db->Execute("INSERT INTO " . TABLE_FEATURED_CATEGORIES . " (categories_id, featured_date_added, expires_date, status, featured_date_available)
+                VALUES (" . (int)$categories_id . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($featured_date_available) . "')");
+
+                $new_featured = $db->Execute("SELECT featured_categories_id
+                                            FROM " . TABLE_FEATURED_CATEGORIES . "
+                                            WHERE categories_id = " . (int)$categories_id);
+            } // nothing selected
+            if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') {
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? '&search=' . $_GET['search'] . '&' : '') . (isset($new_featured) ? 'fID=' . $new_featured->fields['featured_categories_id'] : '')));
             }
-        }
-        // check if Featured already exists
-        if ($skip_featured === false) {
-            $sql = "SELECT featured_categories_id
-                    FROM " . TABLE_FEATURED_CATEGORIES . "
-                    WHERE categories_id = " . (int)$_POST['pre_add_categories_id'];
-            $check_featured = $db->Execute($sql);
-            if ($check_featured->RecordCount() > 0) {
+            break;
+
+            case 'update':
+                $featured_categories_id = (int)$_POST['featured_categories_id'];
+                $error = false;
+                $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
+                if ($featured_date_available_raw === '') {
+                    $featured_date_available = '0001-01-01';
+                } else {
+                    if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
+                        $local_fmt = zen_datepicker_format_fordate();
+                        $dt = DateTime::createFromFormat($local_fmt, $featured_date_available_raw);
+                        $featured_date_available_raw = 'null';
+                        if (!empty($dt)) {
+                            $featured_date_available_raw = $dt->format('Y-m-d');
+                        }
+                    }
+                    if (zcDate::validateDate($featured_date_available_raw) === true) {
+                        $featured_date_available = $featured_date_available_raw;
+                    } else {
+                        $error = true;
+                        $messageStack->add(ERROR_INVALID_AVAILABLE_DATE, 'error');
+                    }
+                }
+                $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
+                if ($expires_date_raw === '') {
+                    $expires_date = '0001-01-01';
+                } else {
+                    if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
+                        $local_fmt = zen_datepicker_format_fordate();
+                        $dt = DateTime::createFromFormat($local_fmt, $expires_date_raw);
+                        $expires_date_raw = 'null';
+                        if (!empty($dt)) {
+                            $expires_date_raw = $dt->format('Y-m-d');
+                        }
+                    }
+                    if (zcDate::validateDate($expires_date_raw) === true) {
+                        $expires_date = $expires_date_raw;
+                    } else {
+                        $error = true;
+                        $messageStack->add(ERROR_INVALID_EXPIRES_DATE, 'error');
+                    }
+                }
+
+                if ($error === true) {
+                    $action = 'edit';
+                    break;
+                }
+
+                $db->Execute("UPDATE " . TABLE_FEATURED_CATEGORIES . "
+                              SET featured_last_modified = now(),
+                              expires_date = '" . zen_db_input($expires_date) . "',
+                              featured_date_available = '" . zen_db_input($featured_date_available) . "'
+                              WHERE featured_categories_id = " . $featured_categories_id);
+
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page. $search_parameters . 'fID=' . $featured_categories_id));
+                break;
+
+        case 'deleteconfirm':
+            $featured_categories_id = (int)$_POST['fID'];
+            $db->Execute("DELETE FROM " . TABLE_FEATURED_CATEGORIES . "
+                        WHERE featured_categories_id = " . $featured_categories_id);
+            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? 'search=' . $_GET['search'] : '')));
+            break;
+
+        case 'pre_add_confirmation':
+            $skip_featured = false;
+            // check for no CID entered
+            if (empty($_POST['pre_add_categories_id'])) {
                 $skip_featured = true;
-                $messageStack->add_session(sprintf(WARNING_FEATURED_PRE_ADD_CID_DUPLICATE, (int)$_POST['pre_add_categories_id']), 'caution');
+                $messageStack->add_session(WARNING_FEATURED_PRE_ADD_CID_EMPTY, 'caution');
+            } else {
+                $sql = "SELECT categories_id
+                        FROM " . TABLE_CATEGORIES . "
+                        WHERE categories_id = " . (int)$_POST['pre_add_categories_id'];
+                $check_featured = $db->Execute($sql);
+                if ($check_featured->EOF){// check for valid CID
+                    $skip_featured = true;
+                    $messageStack->add_session(sprintf(WARNING_FEATURED_PRE_ADD_CID_NO_EXIST, (int)$_POST['pre_add_categories_id']), 'caution');
+                }
             }
-        }
-        if ($skip_featured === true) {
-            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (!empty($check_featured->fields['featured_categories_id']) ? 'fID=' . (int)$check_featured->fields['featured_categories_id'] : '' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))));
-        } else { // category id is valid
-            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . 'action=new' . '&preID=' . (int)$_POST['pre_add_categories_id']));
-        }
-        break;
+            // check if Featured already exists
+            if ($skip_featured === false) {
+                $sql = "SELECT featured_categories_id
+                        FROM " . TABLE_FEATURED_CATEGORIES . "
+                        WHERE categories_id = " . (int)$_POST['pre_add_categories_id'];
+                $check_featured = $db->Execute($sql);
+                if ($check_featured->RecordCount() > 0) {
+                    $skip_featured = true;
+                    $messageStack->add_session(sprintf(WARNING_FEATURED_PRE_ADD_CID_DUPLICATE, (int)$_POST['pre_add_categories_id']), 'caution');
+                }
+            }
+            if ($skip_featured === true) {
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (!empty($check_featured->fields['featured_categories_id']) ? 'fID=' . (int)$check_featured->fields['featured_categories_id'] : '' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))));
+            } else { // category id is valid
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . 'action=new' . '&preID=' . (int)$_POST['pre_add_categories_id']));
+            }
+            break;
     }
 }
 ?>
