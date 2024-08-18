@@ -55,7 +55,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'status') {
         $messageStack->add('order_status', ERROR_INVALID_ORDER);
     }
 
-    $query_email_address = zen_db_prepare_input($_POST['query_email_address'] ?? '');
+    $query_email_address = zen_db_prepare_input((string)($_POST['query_email_address'] ?? ''));
     if ($query_email_address === '' || !zen_validate_email($query_email_address)) {
         $error = true;
         $messageStack->add('order_status', ERROR_INVALID_EMAIL);
