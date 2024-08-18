@@ -4,11 +4,13 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2020 Dec 28 New in v1.5.8-alpha $
  */
-
-// Set the following defines if you want to turn off payment, products, shipping.
-zen_define_default('DISPLAY_PAYMENT', true);
-zen_define_default('DISPLAY_SHIPPING', true);
-zen_define_default('DISPLAY_PRODUCTS', true);
+// -----
+// Determine which blocks are to be displayed; they're currently set by
+// init_includes/init_non_db_settings.php.
+//
+$display_payment = in_array(ORDER_STATUS_DISPLAY_PAYMENT, ['true', true]);
+$display_shipping = in_array(ORDER_STATUS_DISPLAY_SHIPPING, ['true', true]);
+$display_products = in_array(ORDER_STATUS_DISPLAY_PRODUCTS, ['true', true]);
 ?>
 <div class="centerColumn" id="orderStatus">
     <h1 id="orderHistoryHeading"><?php echo HEADING_TITLE; ?></h1>
@@ -23,7 +25,7 @@ if (isset($order)) {
         <h2 id="orderHistoryDetailedOrder"><?php echo SUB_HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_POST['order_id']); ?></h2>
         <div class="forward"><?php echo HEADING_ORDER_DATE . ' ' . zen_date_long($order->info['date_purchased']); ?></div>
 <?php
-    if (DISPLAY_PRODUCTS) {
+    if ($display_products === true) {
 ?>
         <table id="orderHistoryHeading">
             <tr class="tableHeading">
@@ -138,11 +140,11 @@ if (isset($order)) {
 ?>
         <hr>
 <?php
-    if (DISPLAY_SHIPPING) { 
+    if ($display_shipping === true) {
 ?>
         <div id="myAccountShipInfo" class="floatingBox back">
 <?php
-        if (zen_not_null($order->info['shipping_method'])) { 
+        if (!empty($order->info['shipping_method'])) {
 ?>
             <h4><?php echo HEADING_SHIPPING_METHOD; ?></h4>
             <div><?php echo $order->info['shipping_method']; ?></div>
@@ -156,7 +158,7 @@ if (isset($order)) {
 <?php
     }
 
-    if (DISPLAY_PAYMENT) { 
+    if ($display_products === true) {
 ?>
         <div id="myAccountPaymentInfo" class="floatingBox forward">
             <h4><?php echo HEADING_PAYMENT_METHOD; ?></h4>
