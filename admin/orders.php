@@ -827,9 +827,16 @@ if (is_array($address_footer_suffix)) {
         <?php
         if (isset($module) && (is_object($module) && method_exists($module, 'admin_notification')) && $module->enabled) {
           ?>
-          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?><br><a href="#" id="payinfo" class="noprint"><?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?></a></div>
-          <div class="row" id="payment-details-section" style="display: none;"><?php echo $module->admin_notification($oID); ?></div>
-          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+          <br>
+          <div class="row noprint">
+            <a href="javascript:void();" class="noprint" data-toggle="collapse" data-target="#payment-details-section">
+                <?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?>
+            </a>
+          </div>
+          <div class="row collapse" id="payment-details-section">
+            <?php echo $module->admin_notification($oID); ?>
+          </div>
+          <br>
           <?php
         }
         ?>
@@ -1667,11 +1674,6 @@ if ($show_orders_weights === true) {
 
     <!--  enable on-page script tools -->
     <script>
-        jQuery(document).ready(function() {
-            jQuery("#payinfo").click(function () {
-                jQuery("#payment-details-section").toggle()
-            });
-        });
         <?php
         $order_link = str_replace('&amp;', '&', zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . "oID=[*]"));
         ?>

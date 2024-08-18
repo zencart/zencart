@@ -10,11 +10,10 @@ namespace Zencart\LanguageLoader;
 
 class LanguageLoader
 {
-    private
-        $languageFilesLoaded,
-        $arrayLoader,
-        $fileLoader;
-        
+    private array $languageFilesLoaded;
+    private $arrayLoader;
+    private $fileLoader;
+
     public function __construct($arraysLoader, $filesLoader)
     {
         $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
@@ -23,35 +22,35 @@ class LanguageLoader
         $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
     }
 
-    public function loadInitialLanguageDefines()
+    public function loadInitialLanguageDefines(): void
     {
         $this->arrayLoader->loadInitialLanguageDefines($this);
         $this->fileLoader->loadInitialLanguageDefines($this);
     }
 
-    public function finalizeLanguageDefines()
+    public function finalizeLanguageDefines(): void
     {
         $this->arrayLoader->makeConstants($this->arrayLoader->getLanguageDefines());
     }
 
-    public function getLanguageFilesLoaded()
+    public function getLanguageFilesLoaded(): array
     {
         return $this->languageFilesLoaded;
     }
 
-    public function addLanguageFilesLoaded($type, $defineFile)
+    public function addLanguageFilesLoaded(string $type, string $defineFile): void
     {
         $this->languageFilesLoaded[$type][] = $defineFile;
     }
 
-    public function loadDefinesFromFile($baseDirectory, $language, $languageFile)
+    public function loadDefinesFromFile(string $baseDirectory, string $language, string $languageFile): bool
     {
         $this->arrayLoader->loadDefinesFromArrayFile($baseDirectory, $language, $languageFile);
         $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . '/' . $languageFile);
         return true; 
     }
 
-    public function loadModuleDefinesFromFile($baseDirectory, $language, $module_type, $languageFile)
+    public function loadModuleDefinesFromFile(string $baseDirectory, string $language, string $module_type, string $languageFile): bool
     {
         $defs = $this->arrayLoader->loadModuleDefinesFromArrayFile(DIR_FS_CATALOG . 'includes/languages/', $language, $module_type, $languageFile);
 
@@ -67,25 +66,25 @@ class LanguageLoader
      * @param string $currentPage
      * @return void
      */
-    public function setCurrentPage($currentPage)
+    public function setCurrentPage(string $currentPage): void
     {
         $this->arrayLoader->currentPage = $currentPage;
         $this->fileLoader->currentPage = $currentPage;
     }
 
-    public function loadLanguageForView()
+    public function loadLanguageForView(): void
     {
         $this->arrayLoader->loadLanguageForView();
         $this->fileLoader->loadLanguageForView();
     }
 
-    public function loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath = '')
+    public function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
     {
         $this->arrayLoader->loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath);
         $this->fileLoader->loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath);
     }
 
-    public function hasLanguageFile($rootPath, $language, $fileName, $extraPath = '')
+    public function hasLanguageFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): bool
     {
         if (is_file($rootPath . $language . $extraPath . '/' . $fileName)) {
             return true;
@@ -96,7 +95,7 @@ class LanguageLoader
         return false;
     }
 
-    public function isFileAlreadyLoaded($defineFile)
+    public function isFileAlreadyLoaded(string $defineFile): bool
     {
         $fileInfo = pathinfo($defineFile);
         $searchFile = $fileInfo['basename'];

@@ -51,7 +51,7 @@ trait DatabaseConcerns
         require_once ROOTCWD . 'zc_install/includes/classes/class.zcDatabaseInstaller.php';
         $extendedOptions = [
             'doJsonProgressLogging' => false,
-            'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+            'doJsonProgressLoggingFileName' => \zcDatabaseInstaller::$initialProgressMeterFilename,
             'id' => 'main',
             'message' => '',
         ];

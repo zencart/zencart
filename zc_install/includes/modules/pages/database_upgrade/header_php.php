@@ -36,3 +36,9 @@ $newArray = array_slice($versionArray, $key + 1);
 
 // add current IP to the view-in-maintenance-mode list
 $systemChecker->updateAdminIpList();
+
+
+// remove any stale progress-meter artifacts
+if (file_exists(zcDatabaseInstaller::$initialProgressMeterFilename)) {
+    unlink(zcDatabaseInstaller::$initialProgressMeterFilename);
+}

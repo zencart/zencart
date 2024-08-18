@@ -17,8 +17,6 @@ $error = false;
 
 $db_type = 'mysql';
 
-require_once DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
-
 $options = [
     'db_host' => $_POST['db_host'],
     'db_user' => $_POST['db_user'],
@@ -36,12 +34,19 @@ foreach ($options as $key => $val) {
 
 $dbInstaller = new zcDatabaseInstaller($options);
 $result = $dbInstaller->getConnection();
+
+// remove any stale progress-meter artifacts
+if (file_exists(zcDatabaseInstaller::$initialProgressMeterFilename)) {
+    unlink(zcDatabaseInstaller::$initialProgressMeterFilename);
+}
+
 $extendedOptions = [
     'doJsonProgressLogging' => true,
-    'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+    'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
     'id' => 'main',
     'message' => TEXT_CREATING_DATABASE,
 ];
+
 $file = DIR_FS_INSTALL . 'sql/install/mysql_zencart.sql';
 logDetails('processing file ' . $file);
 $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
@@ -58,7 +63,7 @@ $file = DIR_FS_INSTALL . 'sql/install/mysql_' . $charset . '.sql';
 if (file_exists($file)) {
     $extendedOptions = [
         'doJsonProgressLogging' => true,
-        'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+        'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
         'id' => 'main',
         'message' => TEXT_LOADING_CHARSET_SPECIFIC,
     ];
@@ -74,7 +79,7 @@ if ($error) {
 if (isset($_POST['demoData'])) {
     $extendedOptions = [
         'doJsonProgressLogging' => true,
-        'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+        'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
         'id' => 'main',
         'message' => TEXT_LOADING_DEMO_DATA,
     ];
@@ -113,7 +118,7 @@ if ($d = dir($pluginsfolder)) {
             if (preg_match('~^[^\._].*\.sql$~', $entry) > 0) {
                 $extendedOptions = [
                     'doJsonProgressLogging' => true,
-                    'doJsonProgressLoggingFileName' => DEBUG_LOG_FOLDER . '/progress.json',
+                    'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
                     'id' => 'main',
                     'message' => TEXT_LOADING_PLUGIN_DATA . ' ' . $entry,
                 ];
