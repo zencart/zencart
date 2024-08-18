@@ -57,7 +57,7 @@ if ($action === 'update_sort_order') {
         <table class="table table-condensed table-striped">
           <thead>
             <tr class="dataTableHeadingRow">
-              <th class="dataTableHeadingContent text-center" colspan="2"><?php echo TEXT_EDIT_ALL; ?></th>
+              <th class="dataTableHeadingContent text-center" colspan="2"><?= TEXT_EDIT_ALL ?></th>
             </tr>
 <?php
 $languages_array = [];
@@ -79,21 +79,21 @@ if ($lng_exists === false) {
 ?>
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent text-center col-sm-5">
-                <?php echo ($lng_id !== (int)$_SESSION['languages_id'] ? 'Current Language' : '&nbsp;'); ?>
+                <?= ($lng_id !== (int)$_SESSION['languages_id'] ? 'Current Language' : '&nbsp;') ?>
               </th>
               <th class="dataTableHeadingContent text-center">
-                <?php echo zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get'); ?>
-                    <?php echo zen_hide_session_id(); ?>
-                    <?php echo zen_draw_label(TEXT_SELECTED_LANGUAGE . zen_get_language_icon($lng_id), 'lng_id', 'class="control-label"'); ?>&nbsp;&nbsp;&nbsp;
-                    <?php echo zen_draw_pull_down_menu('lng_id', $languages_array, $lng_id, 'onchange="this.form.submit();" class="form-control"'); ?>
-                <?php echo '</form>'; ?>
+                <?= zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get') ?>
+                    <?= zen_hide_session_id() ?>
+                    <?= zen_draw_label(TEXT_SELECTED_LANGUAGE . zen_get_language_icon($lng_id), 'lng_id', 'class="control-label"') ?>&nbsp;&nbsp;&nbsp;
+                    <?= zen_draw_pull_down_menu('lng_id', $languages_array, $lng_id, 'onchange="this.form.submit();" class="form-control"') ?>
+                <?= '</form>' ?>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td colspan="2">
-                <?php echo zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_NAME, 'action=update_sort_order&lng_id=' . $lng_id); ?>
+                <?= zen_draw_form('update', FILENAME_PRODUCTS_OPTIONS_NAME, 'action=update_sort_order&lng_id=' . $lng_id) ?>
                 <table class="table table-condensed table-striped">
                   <thead>
                     <tr class="dataTableHeadingRow">
@@ -102,16 +102,16 @@ $using_session_language = ($lng_id === (int)$_SESSION['languages_id']);
 if ($using_session_language === false) {
 ?>
                       <th class="dataTableHeadingContent">&nbsp;</th>
-                      <th class="dataTableHeadingContent"><?php echo TEXT_CURRENT_NAME; ?></th>
-                      <th class="dataTableHeadingContent text-right"><?php echo TEXT_SORT_ORDER; ?></th>
+                      <th class="dataTableHeadingContent"><?= TEXT_CURRENT_NAME ?></th>
+                      <th class="dataTableHeadingContent text-right"><?= TEXT_SORT_ORDER ?></th>
 <?php
 }
 ?>
                       <th class="dataTableHeadingContent">&nbsp;</th>
-                      <th class="dataTableHeadingContent"><?php echo TEXT_OPTION_ID; ?></th>
-                      <th class="dataTableHeadingContent"><?php echo TEXT_OPTION_TYPE; ?></th>
-                      <th class="dataTableHeadingContent"><?php echo TEXT_OPTION_NAME; ?></th>
-                      <th class="dataTableHeadingContent"><?php echo TEXT_SORT_ORDER; ?></th>
+                      <th class="dataTableHeadingContent"><?= TEXT_OPTION_ID ?></th>
+                      <th class="dataTableHeadingContent"><?= TEXT_OPTION_TYPE ?></th>
+                      <th class="dataTableHeadingContent"><?= TEXT_OPTION_NAME ?></th>
+                      <th class="dataTableHeadingContent"><?= TEXT_SORT_ORDER ?></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -136,32 +136,32 @@ foreach ($rows as $row) {
 <?php
     if ($using_session_language === false) {
 ?>
-                      <td class="dataTableContent text-center"><?php echo zen_get_language_icon($_SESSION['languages_id']); ?></td>
-                      <td class="dataTableContent"><?php echo zen_get_option_name_language($row['products_options_id'], $_SESSION['languages_id']); ?></td>
-                      <td class="dataTableContent text-right"><?php echo zen_get_option_name_language_sort_order($row['products_options_id'], $_SESSION['languages_id']); ?></td>
+                      <td class="dataTableContent text-center"><?= zen_get_language_icon($_SESSION['languages_id']) ?></td>
+                      <td class="dataTableContent"><?= zen_get_option_name_language($row['products_options_id'], $_SESSION['languages_id']) ?></td>
+                      <td class="dataTableContent text-right"><?= zen_get_option_name_language_sort_order($row['products_options_id'], $_SESSION['languages_id']) ?></td>
 <?php
     }
 ?>
-                      <td class="dataTableContent text-center"><?php echo zen_get_language_icon($lng_id); ?></td>
-                      <td class="dataTableContent"><?php echo $row['products_options_id']; ?></td>
-                      <td class="dataTableContent"><?php echo $the_attributes_type; ?></td>
-                      <td class="dataTableContent"><?php echo $row['products_options_name']; ?></td>
+                      <td class="dataTableContent text-center"><?= zen_get_language_icon($lng_id) ?></td>
+                      <td class="dataTableContent"><?= $row['products_options_id'] ?></td>
+                      <td class="dataTableContent"><?= $the_attributes_type ?></td>
+                      <td class="dataTableContent"><?= $row['products_options_name'] ?></td>
                       <td class="dataTableContent">
-                        <?php echo zen_draw_input_field('products_options_sort_order[' . $row['products_options_id'] . ']', $row['products_options_sort_order'], 'size="4" class="form-control"'); ?>
+                        <?= zen_draw_input_field('products_options_sort_order[' . $row['products_options_id'] . ']', $row['products_options_sort_order'], 'size="4" class="form-control"') ?>
                       </td>
                     </tr>
 <?php
 }
 ?>
                     <tr class="dataTableHeadingRow">
-                      <td <?php echo ($using_session_language === true ? '' : 'colspan="4"'); ?> class="dataTableHeadingContent">&nbsp;</td>
+                      <td <?= ($using_session_language === true ? '' : 'colspan="4"') ?> class="dataTableHeadingContent">&nbsp;</td>
                       <td colspan="4" class="dataTableHeadingContent text-center align-middle">
-                        <button type="submit" class="btn btn-primary"><?php echo TEXT_UPDATE_SUBMIT; ?></button>
+                        <button type="submit" class="btn btn-primary"><?= TEXT_UPDATE_SUBMIT ?></button>
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <?php echo '</form>'; ?>
+                <?= '</form>' ?>
               </td>
             </tr>
           </tbody>
