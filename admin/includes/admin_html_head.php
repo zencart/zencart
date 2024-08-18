@@ -43,7 +43,7 @@ $zen_admin_html_head_loaded = true;
 <?php if (file_exists($value = DIR_WS_INCLUDES . 'css/jquery-ui.css')) { ?>
     <link rel="stylesheet" href="<?php echo $value; ?>">
 <?php } else { ?>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" integrity="sha256-RPilbUJ5F7X6DdeTO6VFZ5vl5rO5MJnmSk4pwhWfV8A= sha384-xewr6kSkq3dBbEtB6Z/3oFZmknWn7nHqhLVLrYgzEFRbU/DHSxW7K3B44yWUN60D sha512-/Q1sBqvNZheW2yvAccKiu/xc/o2AtDS2jNBozDEqA/8Mk/IcH853wrwDSGqAdl7jFyOWOcefLtwDd3kYo276Hw==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" integrity="sha384-b+3kCkBF7JElwswpAsmVFMmrPhoYrpI5w68/JyidGsEYjaPuo0WDeg5Hx6YXxZqs sha512-L32Q3WXcM2mi71hgvd56WcD4l1bF1zaqjPgDiW6AJ73zZevJZ+M/GHK6N5Rv72Wm+i+p02eINkWCq4s+uDDWAg==" crossorigin="anonymous">
 <?php } ?>
     <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/jAlert.css">
     <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/menu.css">
