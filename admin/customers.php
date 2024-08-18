@@ -1181,6 +1181,11 @@ if ($action === 'edit' || $action === 'update') {
             </div>
 <?php
 } else {
+    // -----
+    // For a "Password Reset" action, the "New Password" field should
+    // get the autofocus, not the search-input.
+    //
+    $no_searchbox_autofocus = ($action === 'pwreset');
 ?>
             <div class="col-sm-offset-8 col-sm-4">
                 <?php include DIR_WS_MODULES . 'search_box.php'; ?>
