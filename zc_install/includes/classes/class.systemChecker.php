@@ -191,6 +191,13 @@ class systemChecker
         return $result;
     }
 
+    public function configFileExists(): bool
+    {
+        $this->checkWriteableAdminFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        $this->checkWriteableFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        return $this->getServerConfig()->fileExists();
+    }
+
     public function getServerConfig(): ?zcConfigureFileReader
     {
         if (!isset($this->serverConfig)) {

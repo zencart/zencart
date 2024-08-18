@@ -49,6 +49,7 @@ if (isset($_POST['updateConfigure'])) {
         $storeConfigureFileWriter = new zcConfigureFileWriter($configureInputs);
     }
 }
+$configFilePresent = $systemChecker->configFileExists();
 $dbVersion = $systemChecker->findCurrentDbVersion();
 $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VERSION_MINOR;
 $isCurrentDb = $dbVersion === $currentDbVersion;

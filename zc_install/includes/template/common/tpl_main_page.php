@@ -9,6 +9,12 @@ $show_language_selector = (count($languagesInstalled) > 1);
 if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
     $show_language_selector = true;
 }
+$skip_header = false;
+
+if (empty($hasFatalErrors) && empty($hasWarnErrors) && (!empty($hasUpdatedConfigFile) || !empty($hasSaneConfigFile) || !empty($configFilePresent))) {
+    $skip_header = true;
+}
+
 ?>
 <body id="<?= $body_id ?>">
 <div class="container">
@@ -53,7 +59,7 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
                 $header_text = constant('TEXT_HEADER_MAIN');
             }
 
-            if (!empty($header_text)) { ?>
+            if (!empty($header_text && empty($skip_header))) { ?>
                 <div class="alert alert-primary"><?= $header_text ?></div>
             <?php } ?>
 
