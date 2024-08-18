@@ -91,7 +91,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'status') {
         }
         $_SESSION['os_errors']++;
 
-        $slamming_threshold = (((int)CHECKOUT_ONE_ORDER_STATUS_SLAM_COUNT) > 0) ? (int)CHECKOUT_ONE_ORDER_STATUS_SLAM_COUNT : 3;
+        $slamming_threshold = (((int)ORDER_STATUS_SLAM_COUNT) > 0) ? (int)ORDER_STATUS_SLAM_COUNT : 3;
         $zco_notifier->notify('NOTIFY_ORDER_STATUS_SLAMMING_ALERT', $_SESSION['os_errors'], $slamming_threshold);
         if ($_SESSION['os_errors'] > (int)$slamming_threshold) {
             $zco_notifier->notify('NOTIFY_ORDER_STATUS_SLAMMING_LOCKOUT');
