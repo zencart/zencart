@@ -18,26 +18,6 @@ if ($chk_option_names->RecordCount() < 1) {
 
 //  if (!$lng_id) $_GET['lng_id'] = $_SESSION['languages_id'];
 //  if (!$_GET['lng_id']) $_GET['lng_id'] = $_SESSION['languages_id'];
-
-$languages_array = array();
-$languages = zen_get_languages();
-$_GET['lng_exists'] = false;
-if (!isset($_GET['lng_id'])) {
-  $_GET['lng_id'] = 0;
-}
-for ($i = 0, $j=sizeof($languages);$i<$j; $i++) {
-  if ($languages[$i]['id'] == $_GET['lng_id']) {
-    $_GET['lng_exists'] = true;
-  }
-
-  $languages_array[] = array(
-    'id' => $languages[$i]['id'],
-    'text' => $languages[$i]['name']
-  );
-}
-if (!$_GET['lng_exists'] == true) {
-  $_GET['lng_id'] = (int)$_SESSION['languages_id'];
-}
 if (!isset($_GET['action'])) {
   $_GET['action'] = '';
 }
@@ -77,6 +57,27 @@ if ($_GET['action'] == "update_sort_order") {
             <tr class="dataTableHeadingRow">
               <th class="dataTableHeadingContent text-center col-sm-5"><?php echo ($_GET['lng_id'] != $_SESSION['languages_id'] ? 'Current Language' : '&nbsp;'); ?></th>
               <th class="dataTableHeadingContent text-center">
+<?php
+$languages_array = array();
+$languages = zen_get_languages();
+$_GET['lng_exists'] = false;
+if (!isset($_GET['lng_id'])) {
+  $_GET['lng_id'] = 0;
+}
+for ($i = 0, $j=sizeof($languages);$i<$j; $i++) {
+  if ($languages[$i]['id'] == $_GET['lng_id']) {
+    $_GET['lng_exists'] = true;
+  }
+
+  $languages_array[] = array(
+    'id' => $languages[$i]['id'],
+    'text' => $languages[$i]['name']
+  );
+}
+if (!$_GET['lng_exists'] == true) {
+  $_GET['lng_id'] = (int)$_SESSION['languages_id'];
+}
+?>
                   <?php echo zen_draw_form('lng', FILENAME_PRODUCTS_OPTIONS_NAME, '', 'get'); ?>
                   <?php echo zen_hide_session_id(); ?>
                 <?php echo zen_draw_label(TEXT_SELECTED_LANGUAGE . zen_get_language_icon($_GET['lng_id']), 'lng_id', 'class="control-label"'); ?>&nbsp;&nbsp;&nbsp;
