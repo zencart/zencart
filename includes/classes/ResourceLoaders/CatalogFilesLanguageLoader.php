@@ -5,7 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Nov 20 Modified in v1.5.8a $
  */
-
 namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
@@ -19,7 +18,7 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         $this->loadMainLanguageFiles();
     }
 
-    public function loadLanguageForView()
+    public function loadLanguageForView(): void
     {
         foreach ($this->pluginList as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
@@ -53,7 +52,7 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         }
     }
 
-    protected function loadMainLanguageFiles()
+    protected function loadMainLanguageFiles(): void
     {
         $extraFiles = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
         $this->loadFileDefineFile(DIR_WS_LANGUAGES . $this->templateDir . '/' . $_SESSION['language'] . '.php');
@@ -64,7 +63,7 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         }
     }
 
-    protected function LoadLanguageExtraDefinitions()
+    protected function LoadLanguageExtraDefinitions(): void
     {
         $extraDefsDir = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions';
         $extraDefsDirTpl = $extraDefsDir . '/' . $this->templateDir;

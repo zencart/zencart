@@ -14,9 +14,11 @@ class ArraysLanguageLoader extends BaseLanguageLoader
 {
     protected $mainLoader;
     
-    public function makeConstants($defines)
+    public function makeConstants($defines): void
     {
-        if (!is_array($defines)) return; 
+        if (!is_array($defines)) {
+            return;
+        }
 
         foreach ($defines as $defineKey => $defineValue) {
             if (defined($defineKey)) {
@@ -34,13 +36,13 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         }
     }
 
-    public function getLanguageDefines()
+    public function getLanguageDefines(): array
     {
         return $this->languageDefines;
     }
 
 
-    protected function loadArraysFromDirectory($rootPath, $language, $extraPath)
+    protected function loadArraysFromDirectory(string $rootPath, string $language, string $extraPath): array
     {
         $path = $rootPath . $language . $extraPath;
         $fileList = $this->fileSystem->listFilesFromDirectory($path, '~^lang\.(.*)\.php$~i');
@@ -48,7 +50,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    protected function pluginLoadArraysFromDirectory($language, $extraPath, $context = 'admin')
+    protected function pluginLoadArraysFromDirectory(string $language, string $extraPath, string $context = 'admin'): array
     {
         $defineList = [];
         foreach ($this->pluginList as $plugin) {
@@ -59,7 +61,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    protected function processArrayFileList($path, $fileList)
+    protected function processArrayFileList(string $path, array $fileList): array
     {
         $defineList = [];
         foreach ($fileList as $file) {
@@ -69,7 +71,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    public function loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath = '')
+    public function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
     {
         $defineListMain = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
         $extraPath .= '/' . $this->templateDir;
@@ -78,7 +80,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $this->makeConstants($defineList);
     }
 
-    public function loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath = '')
+    public function loadDefinesFromArrayFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): array
     {
         $arrayFileName = 'lang.' . $fileName;
         $mainFile = $rootPath . $language . $extraPath. '/' . $arrayFileName;
@@ -87,7 +89,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    public function loadModuleDefinesFromArrayFile($rootPath, $language, $module_type, $fileName, $extraPath = '')
+    public function loadModuleDefinesFromArrayFile(string $rootPath, string $language, string $module_type, string $fileName, string $extraPath = ''): array
     {
         $arrayFileName = 'lang.' . $fileName;
         $extraBlock = ''; 
@@ -100,7 +102,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    public function pluginLoadDefinesFromArrayFile($language, $fileName, $context = 'admin', $extraPath = '')
+    public function pluginLoadDefinesFromArrayFile(string $language, string $fileName, string $context = 'admin', string $extraPath = ''): array
     {
         $defineList = [];
         foreach ($this->pluginList as $plugin) {
@@ -112,7 +114,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    protected function loadDefinesWithFallback($mainFile, $fallbackFile)
+    protected function loadDefinesWithFallback(string $mainFile, string $fallbackFile): array
     {
         $defineListFallback = [];
         if ($mainFile !== $fallbackFile) {
@@ -123,7 +125,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    protected function addLanguageDefines($defineList)
+    protected function addLanguageDefines($defineList): void
     {
         if (!is_array($defineList)) {
             return;
@@ -132,11 +134,10 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $this->languageDefines = $newDefineList;
     }
 
-    protected function loadArrayDefineFile($definesFile)
+    protected function loadArrayDefineFile(string $definesFile): array
     {
-        $definesList = [];
         if ($this->mainLoader->isFileAlreadyLoaded($definesFile) === true || !is_file($definesFile)) {
-            return $definesList;
+            return [];
         }
         $this->mainLoader->addLanguageFilesLoaded('arrays', $definesFile);
         // file should return a variable 
