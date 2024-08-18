@@ -5,14 +5,14 @@
  * @version $Id: DrByte 2020 Dec 28 New in v1.5.8-alpha $
  */
 
-//use the following defines if you want to turn off payment, products, shipping
-define('DISPLAY_PAYMENT', true);
-define('DISPLAY_SHIPPING', true);
-define('DISPLAY_PRODUCTS', true);
+// Set the following defines if you want to turn off payment, products, shipping.
+zen_define_default('DISPLAY_PAYMENT', true);
+zen_define_default('DISPLAY_SHIPPING', true);
+zen_define_default('DISPLAY_PRODUCTS', true);
 ?>
 <div class="centerColumn" id="orderStatus">
     <h1 id="orderHistoryHeading"><?php echo HEADING_TITLE; ?></h1>
-<?php 
+<?php
 if ($messageStack->size('order_status') > 0) {
     echo $messageStack->output('order_status');
 }
@@ -22,8 +22,8 @@ if (isset($order)) {
     <fieldset>
         <h2 id="orderHistoryDetailedOrder"><?php echo SUB_HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_POST['order_id']); ?></h2>
         <div class="forward"><?php echo HEADING_ORDER_DATE . ' ' . zen_date_long($order->info['date_purchased']); ?></div>
-<?php 
-    if (DISPLAY_PRODUCTS) { 
+<?php
+    if (DISPLAY_PRODUCTS) {
 ?>
         <table id="orderHistoryHeading">
             <tr class="tableHeading">
@@ -70,7 +70,7 @@ if (isset($order)) {
 <?php
             }
 ?>
-                <td class="accountTotalDisplay"><?php echo $currencies->format(zen_add_tax($current_product['final_price'], $product_tax) * $current_product['qty'], true, $currency, $currency_value) . ($current_product['onetime_charges'] != 0 ? '<br />' . $currencies->format(zen_add_tax($current_product['onetime_charges'], $product_tax), true, $currency, $currency_value) : ''); ?></td>
+                <td class="accountTotalDisplay"><?php echo $currencies->format(zen_add_tax($current_product['final_price'], $product_tax) * $current_product['qty'], true, $currency, $currency_value) . ($current_product['onetime_charges'] != 0 ? '<br>' . $currencies->format(zen_add_tax($current_product['onetime_charges'], $product_tax), true, $currency, $currency_value) : ''); ?></td>
             </tr>
 <?php
         }
@@ -88,7 +88,7 @@ if (isset($order)) {
         }
 ?>
         </div>
-<?php 
+<?php
     }
 
     // -----
@@ -133,15 +133,15 @@ if (isset($order)) {
         }
 ?>
         </table>
-<?php 
-    } 
+<?php
+    }
 ?>
         <hr>
-<?php 
+<?php
     if (DISPLAY_SHIPPING) { 
 ?>
         <div id="myAccountShipInfo" class="floatingBox back">
-<?php 
+<?php
         if (zen_not_null($order->info['shipping_method'])) { 
 ?>
             <h4><?php echo HEADING_SHIPPING_METHOD; ?></h4>
@@ -153,7 +153,7 @@ if (isset($order)) {
         }
 ?>
         </div>
-<?php 
+<?php
     }
 
     if (DISPLAY_PAYMENT) { 
@@ -162,13 +162,13 @@ if (isset($order)) {
             <h4><?php echo HEADING_PAYMENT_METHOD; ?></h4>
             <div><?php echo $order->info['payment_method']; ?></div>
         </div>
-<?php 
-    } 
+<?php
+    }
 ?>
         <div class="clearBoth"></div>
     </fieldset>
-<?php 
-} 
+<?php
+}
 
 echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, 'action=status', $request_type), 'post');
 ?>
@@ -179,15 +179,14 @@ echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, 'action=
         <label class="inputLabel"><?php echo ENTRY_ORDER_NUMBER; ?></label>
         <?php echo zen_draw_input_field('order_id', $orderID, 'size="10" id="order_id" required', 'number'); ?> 
         <br>
-        
+
         <label class="inputLabel"><?php echo ENTRY_EMAIL; ?></label>
         <?php echo zen_draw_input_field('query_email_address', $query_email_address, 'size="35" id="query_email_address" required', 'email'); ?> 
         <br>
-        
+
         <?php echo zen_draw_input_field($spam_input_name, '', ' size="40" id="CUAS" style="visibility:hidden; display:none;" autocomplete="off"'); ?>
         <?php echo $extra_validation_html; ?>
 
         <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT); ?></div>
-
     </fieldset></form>
 </div>

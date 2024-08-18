@@ -49,13 +49,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'status') {
     $error = false;
     unset($_SESSION['email_address'], $_SESSION['email_is_os']);
 
-    $orderID = isset($_POST['order_id']) ? (int)$_POST['order_id'] : 0;
+    $orderID = (int)($_POST['order_id'] ?? 0);
     if ($orderID < 1) {
         $error = true;
         $messageStack->add('order_status', ERROR_INVALID_ORDER);
     }
 
-    $query_email_address = isset($_POST['query_email_address']) ? zen_db_prepare_input($_POST['query_email_address']) : '';
+    $query_email_address = zen_db_prepare_input($_POST['query_email_address'] ?? '');
     if ($query_email_address === '' || !zen_validate_email($query_email_address)) {
         $error = true;
         $messageStack->add('order_status', ERROR_INVALID_EMAIL);
