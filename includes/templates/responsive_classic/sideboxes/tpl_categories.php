@@ -82,7 +82,7 @@ if (SHOW_CATEGORIES_BOX_SPECIALS === 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_NEW 
     }
     if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS === 'true') {
         $show_this = $db->Execute("SELECT products_id FROM " . TABLE_FEATURED . " WHERE status= 1 limit 1");
-        if ($show_this->REOF) {
+        if ($show_this->EOF) {
             $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a></li>' . "\n";
         }
     }
