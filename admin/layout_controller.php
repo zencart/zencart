@@ -1007,13 +1007,13 @@ $(function() {
         let sideBox = $(this).closest('li');
         if (sideBox.closest('ul').attr('id') === 'header-box') {
             $('#header-unused').prepend(sideBox);
-            $('#header-unused > li:first-child').markMoved();
+            $('#header-unused > li:first-child').markMoved(true);
         } else if (sideBox.closest('ul').attr('id') === 'footer-box') {
             $('#footer-unused').prepend(sideBox);
-            $('#footer-unused > li:first-child').markMoved();
+            $('#footer-unused > li:first-child').markMoved(true);
         } else if (sideBox.closest('ul').attr('id') === 'mobile-box') {
             $('#mobile-unused').prepend(sideBox);
-            $('#mobile-unused > li:first-child').markMoved();
+            $('#mobile-unused > li:first-child').markMoved(true);
         } else {
             $('#unused').prepend(sideBox);
             $('#unused > li:first-child').markMoved(true);
