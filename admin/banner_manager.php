@@ -460,7 +460,7 @@ if (!empty($action)) {
                 </span>
                 <?= zen_draw_input_field('date_scheduled', $bInfo->date_scheduled, 'class="form-control" id="date_scheduled" autocomplete="off"') ?>
               </div>
-              <span class="help-block errorText">(<?= zen_datepicker_format_full(); ?>) <span class="date-check-error"><?= ERROR_INVALID_SCHEDULED_DATE ?></span></span>
+              <span class="help-block errorText">(<?= zen_datepicker_format_full() ?>) <span class="date-check-error"><?= ERROR_INVALID_SCHEDULED_DATE ?></span></span>
             </div>
           </div>
           <div class="form-group">
@@ -472,7 +472,7 @@ if (!empty($action)) {
                 </span>
                 <?= zen_draw_input_field('expires_date', $bInfo->expires_date, 'class="form-control" id="expires_date" autocomplete="off"') ?>
               </div>
-              <span class="help-block errorText">(<?= zen_datepicker_format_full(); ?>) <span class="date-check-error"><?= ERROR_INVALID_EXPIRES_DATE ?></span></span>
+              <span class="help-block errorText">(<?= zen_datepicker_format_full() ?>) <span class="date-check-error"><?= ERROR_INVALID_EXPIRES_DATE ?></span></span>
               <?= TEXT_BANNERS_OR_AT ?>
             </div>
           </div>
@@ -485,7 +485,7 @@ if (!empty($action)) {
           </div>
           <div class="form-group">
             <div class="col-sm-12 text-right">
-              <button type="submit" class="btn btn-primary"><?= (($form_action == 'add') ? IMAGE_INSERT : IMAGE_UPDATE); ?></button> <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . (int)$_GET['bID'] : '')); ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
+              <button type="submit" class="btn btn-primary"><?= (($form_action == 'add') ? IMAGE_INSERT : IMAGE_UPDATE) ?></button> <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . (int)$_GET['bID'] : '')) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
             </div>
           </div>
           <div class="form-group">
@@ -569,14 +569,14 @@ if (!empty($action)) {
                     <td class="dataTableContent text-right"><?= $banners_shown . ' / ' . $banners_clicked ?></td>
                     <td class="dataTableContent text-center">
                       <?php if ($banner['status'] == '1') { ?>
-                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=0'); ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_STATUS_ON ?>"><?= zen_icon('enabled', '', '2x', false, true) ?></a>
+                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=0') ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_STATUS_ON ?>"><?= zen_icon('enabled', '', '2x', false, true) ?></a>
                       <?php } else { ?>
-                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=1'); ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_STATUS_OFF ?>"><?= zen_icon('disabled', '', '2x', false, true) ?></a>
+                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=1') ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_STATUS_OFF ?>"><?= zen_icon('disabled', '', '2x', false, true) ?></a>
                       <?php } ?>
                     </td>
                     <td class="dataTableContent text-center">
                       <?php if ($banner['banners_open_new_windows'] == '1') { ?>
-                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=0'); ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON ?>">
+                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_open_new_windows&flagbanners_open_new_windows=0') ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_BANNER_OPEN_NEW_WINDOWS_ON ?>">
                           <?= zen_icon('new-window', '', '2x', false, true) ?>
                         </a>
                       <?php } else { ?>
@@ -587,11 +587,11 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-center">
                       <?php if ($banner['banners_on_ssl'] == '1') { ?>
-                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=0'); ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_BANNER_ON_SSL_ON ?>">
+                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=0') ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_BANNER_ON_SSL_ON ?>">
                           <?= zen_icon('ssl-on', '', '2x', false, true) ?>
                         </a>
                       <?php } else { ?>
-                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=1'); ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_BANNER_ON_SSL_OFF ?>">
+                        <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setbanners_on_ssl&flagbanners_on_ssl=1') ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_BANNER_ON_SSL_OFF ?>">
                           <?= zen_icon('ssl-off', '', '2x', false, true) ?>
                         </a>
                       <?php } ?>
@@ -722,7 +722,7 @@ if (!empty($action)) {
               <td class="text-right"><?= $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']) ?></td>
             </tr>
             <tr>
-              <td class="text-right" colspan="2"><a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'action=new'); ?>" class="btn btn-primary" role="button"><?= IMAGE_NEW_BANNER ?></a></td>
+              <td class="text-right" colspan="2"><a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'action=new') ?>" class="btn btn-primary" role="button"><?= IMAGE_NEW_BANNER ?></a></td>
             </tr>
           </table>
         </div>
