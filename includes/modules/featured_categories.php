@@ -49,7 +49,7 @@ if ($num_categories_count > 0) {
             'params' => 'class="centerBoxContentsFeaturedCategories centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
             'text' => (($data['categories_image'] === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
                     : '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' .  zen_get_generated_category_path_rev($data['categories_id'])) . '">'
-                        . zen_image(DIR_WS_IMAGES . $data['categories_image'] , $data['categories_name'] , IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH , IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT)
+                        . zen_image(DIR_WS_IMAGES . $data['categories_image'] , $data['categories_name'] , IMAGE_PRODUCT_LISTING_WIDTH , IMAGE_PRODUCT_LISTING_HEIGHT)
                     . '</a><br>')
                 . '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' .  zen_get_generated_category_path_rev($data['categories_id'])) . '">' . $data['categories_name']
                 . '</a><br>',
@@ -63,7 +63,7 @@ if ($num_categories_count > 0) {
         $featured_categories->MoveNextRandom();
     }
 
-    if (!$featured_categories->EOF) {
+    if ($featured_categories->EOF) {
         if (!empty($current_category_id)) {
             $category_title = zen_get_category_name((int)$current_category_id);
             $title = '<h2 class="centerBoxHeading">' . TABLE_HEADING_FEATURED_CATEGORIES . ($category_title !== '' ? ' - ' . $category_title : '') . '</h2>';

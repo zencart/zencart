@@ -9,7 +9,7 @@
 
 /*bof font colors*/
 body, .messageStackSuccess, .messageStackCaution, #tagline, #productQuantityDiscounts table, .categoryListBoxContents a, h2.greeting a {color:#000000;}
-a:link, a:visited, #navEZPagesTOC ul li a, a:hover, #navEZPagesTOC ul li a:hover, fieldset fieldset legend, #siteinfoLegal a, .cartTotalDisplay, .cartOldItem, .specialsListBoxContents, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .list-price, .itemTitle a, h2.greeting, #icon, h1, .header {color:#364fb5;}
+a:link, a:visited, #navEZPagesTOC ul li a, a:hover, #navEZPagesTOC ul li a:hover, fieldset fieldset legend, #siteinfoLegal a, .cartTotalDisplay, .cartOldItem, .specialsListBoxContents, .centerBoxContentsSpecials, .centerBoxContentsFeaturedCategories, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .list-price, .itemTitle a, h2.greeting, #icon, h1, .header {color:#364fb5;}
 h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #03A9D3;}
 .cat-count, .itemTitle a:hover, h2.greeting a:hover {color:#666;}
 h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #aaa;}
@@ -21,7 +21,7 @@ h2, h3, .cartAttribsList, #cart-box {color:#000000;}
 #navMain ul li a:hover, #navSupp ul li a:hover{color:#03a5ce;}
 #navMain ul li a.navCartContentsIndicator:hover {color:#ffffff;}
 .alert {color: #8b0000;}
-legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxContentsFeatured a, .centerBoxContentsSpecials a, .centerBoxContentsNew a, .productPriceDiscount{color:#333;}
+legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxContentsFeatured a, .centerBoxContentsSpecials a, .centerBoxContentsNew a, .productPriceDiscount, .centerBoxContentsFeaturedCategories a {color:#333;}
 .messageStackWarning, .messageStackError, #navMainWrapper, #navMain ul li a, #navCatTabsWrapper, #navCatTabs li a, #navCatTabs li a:hover, #navCatTabs li:hover, #navEZPagesTop, .pagination li a, #navSuppWrapper, #navSupp li a, #siteinfoIP, #siteinfoLegal, #bannerSix, #siteinfoLegal a:hover, h2.centerBoxHeading, h3.rightBoxHeading, h3.leftBoxHeading, h3.rightBoxHeading a, h3.leftBoxHeading a, .seDisplayedAddressLabel, TR.tableHeading, #shippingEstimatorContent h2, #shippingEstimatorContent th, #checkoutConfirmDefault .cartTableHeading, #filter-wrapper, .navSplitPagesLinks a, .current, .productListing-rowheading a, .productListing-rowheading a, .prod-list-wrap, #productQuantityDiscounts table tr:first-child td, #reviewsWriteHeading, #sendSpendWrapper h2, #accountDefault #sendSpendWrapper h2, #gvFaqDefaultSubHeading, #checkoutPayAddressDefaultAddress, #checkoutShipAddressDefaultAddress, #accountLinksWrapper h2, h2#addressBookDefaultPrimary, #myAccountPaymentInfo h3, #myAccountShipInfo h3, #myAccountPaymentInfo h4, #myAccountShipInfo h4, input.submit_button, input.submit_button:hover, input.cssButtonHover, span.normal_button, .fa-bars{color: #ffffff;}
 .cartNewItem {color:#DB3A00;}
 #orderhistoryContent ul li a i.fa,
@@ -34,7 +34,7 @@ legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxCon
 
 /*bof background colors*/
 body, #mainWrapper, #headerWrapper, #contentMainWrapper, #logoWrapper, #cartBoxListWrapper, #ezPageBoxList, #cartBoxListWrapper ul, #ezPageBoxList ul, #mainWrapper, #popupAdditionalImage, #contentMainWrapper, #headerWrapper, .sideBoxContent, .rightBoxContent, .rowOdd, #productQuantityDiscounts table, #accountLinksWrapper {background:#fff;}
-input:focus, select:focus, textarea:focus, #mainWrapper, .specialsListBoxContents:hover, .centerBoxContentsSpecials:hover, .centerBoxContentsAlsoPurch:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsNew:hover, .centerBoxContentsProducts:hover, .categoryListBoxContents:hover, .sideBoxContentItem:hover, .productListing-odd, #pinfo-right, #sendSpendWrapper {background:#f4f4f4;}
+input:focus, select:focus, textarea:focus, #mainWrapper, .specialsListBoxContents:hover, .centerBoxContentsSpecials:hover, .centerBoxContentsAlsoPurch:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsNew:hover, .centerBoxContentsProducts:hover, .categoryListBoxContents:hover, .sideBoxContentItem:hover, .productListing-odd, .centerBoxContentsFeaturedCategories:hover, #pinfo-right, #sendSpendWrapper {background:#f4f4f4;}
 .messageStackCaution {background-color:#ffff66;}
 .brandCell:hover,
 fieldset, .rowEven, #shippingEstimatorContent tr:nth-child(odd), #order-comments, ul.list-links li:hover, ol.list-links li:hover, #no-products, .listing-wrapper:nth-child(odd), #reviews-write-wrapper, #gvFaqDefaultContent, #checkoutPayAddressDefault .instructions, #checkoutShipAddressDefault .instructions, #addressBookDefault .instructions, #myAccountNotify, #myAccountGen, .reviews-wrapper, #accountHistInfo table td, #prevOrders td, #myAccountPaymentInfo, #myAccountShipInfo, #accountDefault #sendSpendWrapper{background:#eee;}
