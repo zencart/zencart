@@ -21,17 +21,14 @@ if ($show_featured == true) {
                                         AND c.categories_id = cd.categories_id
                                         AND c.categories_status = 1
                                         AND fc.status = 1
-                                        AND cd.language_id = " . (int)$_SESSION['languages_id'];
+                                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                                        ORDER BY RAND() LIMIT 1";
 
-    // randomly select ONE featured category from the list retrieved:
-    //$random_featured_categories = zen_random_select($random_featured_categories_query);
-    $random_featured_categories = $db->ExecuteRandomMulti($random_featured_categories_query, MAX_RANDOM_SELECT_FEATURED_CATEGORIES);
+    $random_featured_categories = $db->Execute($random_featured_categories_query);
 
-    if ($random_featured_categories->RecordCount() > 0)  {
-        require $template->get_template_dir('tpl_featured_categories.php' , DIR_WS_TEMPLATE , $current_page_base ,'sideboxes') . '/tpl_featured_categories.php';
-        $title =  BOX_HEADING_FEATURED_CATEGORIES;
-        $title_link = FILENAME_FEATURED_CATEGORIES;
-        require $template->get_template_dir($column_box_default , DIR_WS_TEMPLATE , $current_page_base ,'common') . '/' . $column_box_default;
-    }
+    require $template->get_template_dir('tpl_featured_categories.php' , DIR_WS_TEMPLATE , $current_page_base ,'sideboxes') . '/tpl_featured_categories.php';
+    $title =  BOX_HEADING_FEATURED_CATEGORIES;
+    $title_link = FILENAME_FEATURED_CATEGORIES;
+    require $template->get_template_dir($column_box_default , DIR_WS_TEMPLATE , $current_page_base ,'common') . '/' . $column_box_default;
 }
 

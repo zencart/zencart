@@ -35,7 +35,7 @@ foreach ($listing as $record) {
     ];
 
     $col++;
-    if ($col >= SHOW_PRODUCT_INFO_COLUMNS_FEATURED_CATEGORIES) {
+    if ($col >= SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS) {
         $col = 0;
         $row++;
     }

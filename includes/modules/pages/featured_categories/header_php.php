@@ -33,7 +33,7 @@ $listing = $db->Execute($listing_sql);
 
 foreach ($listing as $record) {
     if ($record['categories_image'] === '' || !file_exists(DIR_WS_IMAGES . $record['categories_image'])) {
-        $record['categories_image'] = CATEGORY_IMAGE_NO_IMAGE;
+        $record['categories_image'] = PRODUCT_IMAGE_NO_IMAGE;
     }
 }
 
