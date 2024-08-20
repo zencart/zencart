@@ -4,12 +4,13 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Aug 03 Modified in v2.1.0-alpha1 $
-*/
+ */
 
 $define = [
     'HEADING_TITLE' => 'Banner Manager',
     'TABLE_HEADING_BANNERS' => 'Banners',
     'TABLE_HEADING_GROUPS' => 'Groups',
+    'TABLE_HEADING_POSITIONS' => 'Positions',
     'TABLE_HEADING_STATISTICS' => 'Displays / Clicks',
     'TABLE_HEADING_BANNER_OPEN_NEW_WINDOWS' => 'New Window',
     'TABLE_HEADING_BANNER_ON_SSL' => 'Show SSL',
@@ -32,7 +33,7 @@ $define = [
     'TEXT_BANNERS_IMPRESSIONS' => 'impressions/views.',
     'TEXT_BANNERS_SCHEDULED_AT' => 'Scheduled At: <br>(Must be after today)',
     'TEXT_BANNERS_BANNER_NOTE' => '<b>Banner Notes:</b><ul><li>Use an image or HTML text for the banner - not both.</li><li>HTML Text has priority over an image</li><li>HTML Text will not register the click thru, but will register displays</li><li>Banners with absolute image URLs should not be displayed on secure pages</li></ul>',
-    'TEXT_BANNERS_INSERT_NOTE' => '<b>Image Notes:</b><ul><li>Uploading directories must have proper user (write) permissions setup!</li><li>Do not fill out the \'Save To\' field if you are not uploading an image to the webserver (ie, you are using a local (serverside) image).</li><li>The \'Save To\' field must be an existing directory with an ending slash (eg, banners/).</li></ul>',
+    'TEXT_BANNERS_INSERT_NOTE' => '<b>Image Notes:</b><ul><li>Uploading directories must have proper user (write) permissions setup!</li><li>Do not fill out the \'Save To\' field if you are not uploading an image to the webserver (i.e. you are using a local (server-side) image).</li><li>The \'Save To\' field must be an existing directory with an ending slash (e.g. banners/).</li></ul>',
     'TEXT_BANNERS_EXPIRY_NOTE' => '<b>Expiry Notes:</b><ul><li>Only one of the two fields should be submitted</li><li>If the banner is not to expire automatically, then leave these fields blank</li></ul>',
     'TEXT_BANNERS_SCHEDULE_NOTE' => '<b>Schedule Notes:</b><ul><li>If a schedule is set, the banner will be activated on that date.</li><li>All scheduled banners are marked as inactive until their date has arrived, to which they will then be marked active.</li></ul>',
     'TEXT_BANNERS_STATUS' => 'Banner Status:',
@@ -58,7 +59,7 @@ $define = [
     'ERROR_BANNER_TITLE_REQUIRED' => 'Error: Banner title required.',
     'ERROR_BANNER_GROUP_REQUIRED' => 'Error: Banner group required.',
     'ERROR_IMAGE_DOES_NOT_EXIST' => 'Error: Image does not exist.',
-    'ERROR_IMAGE_IS_NOT_WRITEABLE' => 'Error: Image can not be removed.',
+    'ERROR_IMAGE_IS_NOT_WRITEABLE' => 'Error: Image cannot be removed.',
     'ERROR_UNKNOWN_STATUS_FLAG' => 'Error: Unknown status flag.',
     'ERROR_BANNER_IMAGE_REQUIRED' => 'Error: Banner image required.',
     'ERROR_UNKNOWN_BANNER_OPEN_NEW_WINDOW' => 'Error: Banner could not be set to open in a new window',
