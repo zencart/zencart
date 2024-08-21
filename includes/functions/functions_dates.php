@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2024 Jul 30 Modified in v2.1.0-alpha1 $
  */
 
 // Normally this zen_date_raw function will ONLY be defined here.
@@ -25,7 +25,7 @@ if (!function_exists('zen_date_raw')) {
             $date = DateTime::createFromFormat('!m/d/Y', '01/01/0001')->format(DATE_FORMAT);
         }
 
-		$date = preg_replace('/\D+/', '', $date);		
+		$date = preg_replace('/\D+/', '', $date);
 		$date_format = str_replace(['/', '-'], '', DATE_FORMAT);
 
         if ($date_format === 'dmY') {
@@ -93,7 +93,6 @@ function zen_date_long($raw_date)
 
 /**
  * Output a raw date string in the selected locale date format
- * NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
  *
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string|string[]|null

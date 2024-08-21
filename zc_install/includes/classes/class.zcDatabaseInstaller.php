@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 09 Modified in v2.0.0-rc2 $
+ * @version $Id: brittainmark 2024 Jul 18 Modified in v2.1.0-alpha1 $
  *
  */
 
@@ -25,6 +25,7 @@ class zcDatabaseInstaller
     protected bool $dieOnErrors;
     protected array $errors = [];
     protected array $extendedOptions;
+    public static string $initialProgressMeterFilename = DEBUG_LOG_FOLDER . '/progress.json';
     protected string $fileName;
     protected Closure $func;
     protected int $jsonProgressLoggingTotal;
@@ -83,19 +84,19 @@ class zcDatabaseInstaller
 
     public function getConnection(): bool
     {
-        require_once(DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php');
+        require_once DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php';
         $this->db = new queryFactory;
         $options = ['dbCharset' => $this->dbCharset];
         return $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
     }
 
-    public function runZeroDateSql($options = null): ?bool
+    public function runZeroDateSql(?array $options = null): ?bool
     {
         $file = DIR_FS_INSTALL . 'sql/install/zero_dates_cleanup.sql';
         return $this->parseSqlFile($file, $options);
     }
 
-    public function parseSqlFile($fileName, $options = null): bool
+    public function parseSqlFile($fileName, ?array $options = null): bool
     {
         $this->extendedOptions = $options ?? [];
         $this->progressFeedback = '';
@@ -155,8 +156,13 @@ class zcDatabaseInstaller
         if (str_starts_with($this->line, '#NEXT_X_ROWS_AS_ONE_COMMAND:')) {
             $this->keepTogetherLines = (int)substr($this->line, 28);
         }
+        if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
+            $this->progressFeedback = $this->newLine;
+            if (empty(trim($this->progressFeedback))) {
+                $this->progressFeedback = $this->line;
+            }
+        }
         if (str_starts_with($this->line, '#PROGRESS_FEEDBACK:!')) {
-            $this->processProgressFeedback();
             $this->progressFeedback = $this->processProgressFeedback();
             $this->completeLine = true;
             $this->doJsonProgressLoggingUpdate();
@@ -283,7 +289,7 @@ class zcDatabaseInstaller
     {
         if (isset($this->extendedOptions['doJsonProgressLogging'])) {
             $fileName = $this->extendedOptions['doJsonProgressLoggingFileName'];
-            $progress = ($this->jsonProgressLoggingCount / $this->jsonProgressLoggingTotal * 100);
+            $progress = round($this->jsonProgressLoggingCount / $this->jsonProgressLoggingTotal * 100, 2);
             $fp = fopen($fileName, "w");
             if ($fp) {
                 $arr = ['total' => $this->jsonProgressLoggingTotal, 'progress' => $progress, 'message' => $this->extendedOptions['message'], 'progressFeedback' => $this->progressFeedback];
@@ -679,7 +685,7 @@ class zcDatabaseInstaller
         }
     }
 
-    private function processProgressFeedback()
+    private function processProgressFeedback(): string
     {
         $matches = explode(':!', $this->line);
         array_shift($matches);

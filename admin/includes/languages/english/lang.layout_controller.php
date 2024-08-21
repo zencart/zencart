@@ -1,57 +1,72 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
     'HEADING_TITLE' => 'Editing Sideboxes for template: ',
     'TEXT_CURRENTLY_VIEWING' => 'Currently Viewing: ',
     'TEXT_THIS_IS_PRIMARY_TEMPLATE' => ' (Main)',
-    'TABLE_HEADING_LAYOUT_BOX_NAME' => 'Box File Name',
-    'TABLE_HEADING_LAYOUT_BOX_STATUS' => 'LEFT/RIGHT COLUMN<br>Status',
-    'TABLE_HEADING_LAYOUT_BOX_STATUS_SINGLE' => 'SINGLE COLUMN<br>Status',
-    'TABLE_HEADING_LAYOUT_BOX_LOCATION' => 'LEFT or RIGHT<br>COLUMN',
-    'TABLE_HEADING_LAYOUT_BOX_SORT_ORDER' => 'LEFT/RIGHT COLUMN<br>Sort Order',
-    'TABLE_HEADING_LAYOUT_BOX_SORT_ORDER_SINGLE' => 'SINGLE COLUMN<br>Sort Order',
-    'TEXT_INFO_LAYOUT_BOX' => 'Selected Box: ',
-    'TEXT_INFO_LAYOUT_BOX_NAME' => 'Box Name:',
-    'TEXT_INFO_LAYOUT_BOX_LOCATION' => 'Location: ',
-    'TEXT_INFO_LAYOUT_BOX_STATUS' => 'Left/Right Column Status: ',
-    'TEXT_INFO_LAYOUT_BOX_STATUS_SINGLE' => 'Single Column Status: ',
-    'TEXT_INFO_LAYOUT_BOX_SORT_ORDER' => 'Left/Right Column Sort Order:',
-    'TEXT_INFO_LAYOUT_BOX_SORT_ORDER_SINGLE' => 'Single Column Sort Order:',
-    'TEXT_INFO_INSERT_INTRO' => 'Please enter the new box with its related data',
-    'TEXT_INFO_DELETE_INTRO' => 'Are you sure you want to delete this box?',
-    'TEXT_INFO_HEADING_EDIT_BOX' => 'Edit Box',
-    'TEXT_INFO_HEADING_DELETE_BOX' => 'Delete Box',
-    'TEXT_INFO_DELETE_MISSING_LAYOUT_BOX' => 'Delete missing box from Template listing: ',
-    'TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE' => 'NOTE: This does not remove files and you can re-add the box at anytime by adding it to the correct directory.<br><br><strong>Delete box name: </strong>',
-    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER' => 'Reset box status/sort settings: ',
-    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER_NOTE' => 'This does not remove any boxes. It will only reset the status/sort of boxes matching boxes in the other template.',
-    'TEXT_SETTINGS_COPY_FROM' => 'Copy status/sort settings FROM: ',
-    'TEXT_SETTINGS_COPY_TO' => ' TO: ',
-    'TEXT_ERROR_INVALID_RESET_SUBMISSION' => 'ERROR: invalid reset choice',
-    'TEXT_INFO_BOX_DETAILS' => 'Box Details: ',
-    'TABLE_HEADING_LAYOUT_TITLE' => 'Title',
-    'TABLE_HEADING_LAYOUT_VALUE' => 'Value',
     'TABLE_HEADING_BOXES_PATH' => 'Boxes Path: ',
     'TEXT_WARNING_NEW_BOXES_FOUND' => 'WARNING: New boxes found: ',
-    'TEXT_MODULE_DIRECTORY' => 'Site Layout Directory:',
-    'TEXT_GOOD_BOX' => ' ',
-    'TEXT_BAD_BOX' => '<span class="txt-red"><b>MISSING</b></span><br>',
-    'SUCCESS_BOX_DELETED' => 'Removed the box: ',
-    'SUCCESS_BOX_RESET' => 'Settings for [%1$s] have been reset to current settings from [%2$s].',
-    'SUCCESS_BOX_UPDATED' => 'Updated settings for box: ',
-    'TEXT_ON' => ' ON ',
-    'TEXT_OFF' => ' OFF ',
-    'TEXT_LEFT' => ' LEFT ',
-    'TEXT_RIGHT' => ' RIGHT ',
-    'TEXT_CAUTION_EDITING_NOT_LIVE_TEMPLATE' => 'CAUTION: You are editing settings for a template that is not the main template used by customers.',
-    'TEXT_RESET_SETTINGS' => 'Reset Settings',
     'TEXT_ORIGINAL_DEFAULTS' => '[Original/Master Zen Cart Defaults]',
+    'TEXT_CAUTION_EDITING_NOT_LIVE_TEMPLATE' => 'CAUTION: You are editing settings for a template that is not the main template used by customers.',
+
+    'TEXT_HEADING_MISSING_BOXES' => 'Missing Boxes',
+    'BUTTON_REMOVE_SELECTED' => 'Remove Selected',
+    'TEXT_NO_BOXES_TO_REMOVE' => 'No missing sideboxes were selected for removal.',
+    'BUTTON_REMOVE_BOXES' => 'Remove Boxes',
+    'BUTTON_CLOSE' => 'Close',
+
+    'TEXT_INFO_HEADING_DELETE_BOX' => 'Remove Missing Sideboxes',
+    'TEXT_INFO_DELETE_MISSING_LAYOUT_BOX_NOTE' => 'NOTE: This does not remove files and you can re-add the boxes at anytime by adding them to the correct directory.<br><br><strong>Boxes to remove: </strong> ',
+    'SUCCESS_BOX_DELETED' => 'These boxes were removed: ',
+
+    'TEXT_RESET_SETTINGS' => 'Reset Settings',
+    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER' => 'Reset box status/sort settings: ',
+    'TEXT_INFO_RESET_TEMPLATE_SORT_ORDER_NOTE' => 'This does not remove any boxes. It will only reset the status/sort-order of boxes matching boxes in the other template.',
+    'TEXT_SETTINGS_COPY_FROM' => 'Copy status/sort settings FROM: ',
+    'TEXT_SETTINGS_COPY_TO' => ' TO: ',
+    'SUCCESS_BOX_RESET' => 'Settings for [%1$s] have been reset to current settings from [%2$s].',
+    'TEXT_ERROR_INVALID_RESET_SUBMISSION' => 'ERROR: Invalid reset choice',
+
+    'TEXT_INSTRUCTIONS' => 'If your device has a mouse, you can drag and drop a box to change its column-location or sort-order within its active column locations. Otherwise, use the up- and down-arrow icons to change a box\'s location or sort-order. Use an <i class="fa-solid fa-xmark"></i> icon to quickly move an active box to its inactive group.',
+    'BUTTON_SHOW_NOTES' => 'Show Notes',
+    'BUTTON_HIDE_NOTES' => 'Hide Notes',
+    'TEXT_NOTES' => 'Notes:',
+    'TEXT_NOTE1_OPT' => 'The display of these (%1$s) boxes on the storefront are <em>very dependent</em> on the %2$s template. Check with the template author for details!',
+    'TEXT_NOTE1' => 'Once you have moved a box, a button is displayed which, when clicked, saves all the changes you have made.',
+    'TEXT_NOTE2' => 'Box sort-orders are calculated when you save your choices, no need to provide them.',
+    'TEXT_NOTE3' => 'All inactive boxes are saved with the same sort-order, so that they display in alphabetic order.',
+    'TEXT_NOTE4' => 'Moving a box within an its inactive group is not considered a change!',
+    'TEXT_NOTE5' => 'If you have made changes and navigate away from this tool, your browser will let you know that you have unsaved changes.',
+
+    'TEXT_COLUMN_DISABLED' => 'Column Globally Disabled',
+    'TEXT_DISABLED_MESSAGE' => 'Changes to this column will be saved, but will not be displayed on the storefront.  See the associated setting in Configuration :: Layout Settings.',
+    'TEXT_HEADING_MAIN_PAGE_BOXES' => 'Main-Page Boxes',
+    'TEXT_HEADING_ACTIVE_LEFT' => 'Active Left-Column Boxes',
+    'TEXT_HEADING_ACTIVE_RIGHT' => 'Active Right-Column Boxes',
+    'TEXT_HEADING_INACTIVE_LEFT_RIGHT' => 'Inactive Main-Page Boxes',
+    'TEXT_HEADING_HEADER_BOXES' => 'Header Boxes',
+    'TEXT_HEADING_FOOTER_BOXES' => 'Footer Boxes',
+    'TEXT_HEADING_MOBILE_BOXES' => 'Mobile-Menu Boxes',
+    'TEXT_HEADING_ACTIVE_BOXES' => 'Active Boxes',
+    'TEXT_HEADING_INACTIVE_BOXES' => 'Inactive Boxes',
+    'BUTTON_SHOW' => 'Show',
+    'BUTTON_HIDE' => 'Hide',
+
+    'TEXT_MOVE_BOX_UP' => 'Move %1$s up in the %2$s boxes.',
+    'TEXT_MOVE_BOX_DOWN' => 'Move %1$s down in the %2$s boxes.',
+    'TEXT_MOVE_BOX_UNUSED' => 'Move %1$s to the inactive %2$s boxes.',
+        'TEXT_MOVE_MAIN_PAGE_COLUMN' => 'main-page',  //- Used as %2$s value in above three phrases
+        'TEXT_MOVE_HEADER_COLUMN' => 'header',        //- Used as %2$s value in the above three phrases
+        'TEXT_MOVE_FOOTER_COLUMN' => 'footer',        //- Used as %2$s value in the above three phrases
+        'TEXT_MOVE_MOBILE_COLUMN' => 'mobile-menu',   //- Used as %2$s value in the above three phrases
+    'BUTTON_SAVE_CHANGES' => 'Save Changes',
+    'SUCCESS_BOX_UPDATED' => 'Settings have been updated.',
 ];
 
 return $define;

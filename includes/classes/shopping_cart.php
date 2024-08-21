@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Apr 16 Modified in v2.0.1 $
+ * @version $Id: Scott C Wilson 2024 Jun 28 Modified in v2.1.0-alpha1 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -2180,6 +2180,10 @@ class shoppingCart extends base
         if (!empty($_POST['products_id']) && is_array($_POST['products_id'])) {
             $products_list = $_POST['products_id'];
             foreach ($products_list as $key => $val) {
+                if (!is_string($val)) {
+                    unset($products_list[$key]);
+                    continue;
+                }
                 $prodId = preg_replace('/[^0-9a-f:.]/', '', (string)$key);
                 if (is_numeric($val) && $val > 0) {
                     $adjust_max = false;

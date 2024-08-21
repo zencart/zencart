@@ -23,6 +23,7 @@ dev-*.*
 # Ignore phpStorm/intellij stuff
 .idea
 *.iml
+.vscode
 
 # dbv
 /data/meta/revision
@@ -239,4 +240,6 @@ modified_files.txt
 
 # laravel
 laravel/.env
-laravel/storage/*
+
+# ensure test plugin is not checked in
+zc_plugins/zenTestPlugin

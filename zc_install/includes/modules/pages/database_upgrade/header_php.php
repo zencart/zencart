@@ -30,11 +30,15 @@ $versionArray[] = '1.5.8';
 $versionArray[] = '2.0.0';
 $versionArray[] = '2.1.0';
 
-//print_r($versionArray);
 $key = array_search($dbVersion, $versionArray, true);
 $newArray = array_slice($versionArray, $key + 1);
-//print_r($newArray);
 
 
 // add current IP to the view-in-maintenance-mode list
 $systemChecker->updateAdminIpList();
+
+
+// remove any stale progress-meter artifacts
+if (file_exists(zcDatabaseInstaller::$initialProgressMeterFilename)) {
+    unlink(zcDatabaseInstaller::$initialProgressMeterFilename);
+}

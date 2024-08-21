@@ -4,7 +4,7 @@
 # * @access private
 # * @copyright Copyright 2003-2024 Zen Cart Development Team
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id:   $
+# * @version $Id: lat9 2024 Jul 25 Modified in v2.1.0-alpha1 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -40,7 +40,7 @@ ALTER TABLE email_archive ADD COLUMN errorinfo TEXT DEFAULT NULL;
 ALTER TABLE email_archive ADD INDEX idx_email_date_sent_zen (date_sent);
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
-# Postcode/zip fields expand to accomodate Portugal formatting
+# Postcode/zip fields expand to accommodate Portugal formatting
 ALTER TABLE address_book MODIFY entry_postcode varchar(64) NOT NULL default '';
 ALTER TABLE orders MODIFY customers_postcode varchar(64) NOT NULL default '';
 ALTER TABLE orders MODIFY delivery_postcode varchar(64) NOT NULL default '';

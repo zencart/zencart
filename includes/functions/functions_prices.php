@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: lat9 2024 Jul 04 Modified in v2.1.0-alpha1 $
  */
 
 /**
@@ -1288,7 +1288,7 @@ function zen_get_attributes_price_final($attribute_id, $qty = 1, $pre_selected =
         $attributes_price_final += zen_get_attributes_price_final_onetime($products_attributes_id, 1, $pre_selected);
     }
 
-    if ($include_products_price_in === false) {
+    if ($include_products_price_in === false && $prod_priced_by_attr === true) {
         return $attributes_price_final - $products_price_without_attributes;
     }
     return $attributes_price_final;

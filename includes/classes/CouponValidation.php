@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 May 07 Modified in v2.0.1 $
+ * @version $Id: Scott Wilson 2024 May 22 Modified in v2.1.0-alpha1 $
  */
 
 class CouponValidation
@@ -14,7 +14,7 @@ class CouponValidation
     public static function is_product_valid(int $product_id, int $coupon_id): bool
     {
         global $db;
-        global $zco_notifier; 
+        global $zco_notifier;
 
         $product_id = (int)$product_id;
 
@@ -33,12 +33,12 @@ class CouponValidation
             return false;
         }
 
-        $product_can_use_coupon = true; 
-        $zco_notifier->notify('NOTIFY_COUPON_ADDITIONAL_CHECKS', $product->fields, $coupon_id, $product_can_use_coupon); 
+        $product_can_use_coupon = true;
+        $zco_notifier->notify('NOTIFY_COUPON_ADDITIONAL_CHECKS', $product->fields, $coupon_id, $product_can_use_coupon);
         if ($product_can_use_coupon === false) {
             return false;
         }
-        
+
         // modified to manage restrictions better - leave commented for now
         if ($coupons->RecordCount() === 0) {
             return true;

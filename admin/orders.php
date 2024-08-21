@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 May 15 Modified in v2.0.1 $
+ * @version $Id: DrByte 2024 Jul 30 Modified in v2.1.0-alpha1 $
  */
 require('includes/application_top.php');
 
@@ -827,9 +827,16 @@ if (is_array($address_footer_suffix)) {
         <?php
         if (isset($module) && (is_object($module) && method_exists($module, 'admin_notification')) && $module->enabled) {
           ?>
-          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?><br><a href="#" id="payinfo" class="noprint"><?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?></a></div>
-          <div class="row" id="payment-details-section" style="display: none;"><?php echo $module->admin_notification($oID); ?></div>
-          <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+          <br>
+          <div class="row noprint">
+            <a href="javascript:void();" class="noprint" data-toggle="collapse" data-target="#payment-details-section">
+                <?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?>
+            </a>
+          </div>
+          <div class="row collapse" id="payment-details-section">
+            <?php echo $module->admin_notification($oID); ?>
+          </div>
+          <br>
           <?php
         }
         ?>
@@ -1249,34 +1256,6 @@ if ($show_orders_weights === true) {
             <table id="orders-table" class="table table-hover">
               <thead>
                 <tr class="dataTableHeadingRow">
-                    <?php
-// Sort Listing
-                    switch ($_GET['list_order']) {
-                      case "id-asc":
-                        $disp_order = "c.customers_id";
-                        break;
-                      case "firstname":
-                        $disp_order = "c.customers_firstname";
-                        break;
-                      case "firstname-desc":
-                        $disp_order = "c.customers_firstname DESC";
-                        break;
-                      case "lastname":
-                        $disp_order = "c.customers_lastname, c.customers_firstname";
-                        break;
-                      case "lastname-desc":
-                        $disp_order = "c.customers_lastname DESC, c.customers_firstname";
-                        break;
-                      case "company":
-                        $disp_order = "a.entry_company";
-                        break;
-                      case "company-desc":
-                        $disp_order = "a.entry_company DESC";
-                        break;
-                      default:
-                        $disp_order = "c.customers_id DESC";
-                    }
-                    ?>
                   <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ORDERS_ID; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></th>
                   <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></th>
@@ -1695,11 +1674,6 @@ if ($show_orders_weights === true) {
 
     <!--  enable on-page script tools -->
     <script>
-        jQuery(document).ready(function() {
-            jQuery("#payinfo").click(function () {
-                jQuery("#payment-details-section").toggle()
-            });
-        });
         <?php
         $order_link = str_replace('&amp;', '&', zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . "oID=[*]"));
         ?>

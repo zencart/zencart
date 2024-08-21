@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
  */
 
 return [
@@ -15,7 +15,7 @@ return [
 'TEXT_INDEX_WARN_ERRORS' => 'Some Other Issues:',
 'TEXT_INDEX_WARN_ERRORS_ALT' => 'Some Issues:',
 'TEXT_HEADER_MAIN' => 'TIP: The field titles are clickable help links which explain what each field means.',
-'TEXT_INDEX_HEADER_MAIN' => 'TIP: More information may be available by clicking on the <strong>titles</strong> of some errors and warnings.',
+'TEXT_INDEX_HEADER_MAIN' => 'TIP: Links with a <u>question-mark icon <strong><i class="bi-question-circle"></i></strong></u> can be clicked to explain more detail about a form field or an error.',
 'TEXT_INSTALLER_CHOOSE_LANGUAGE' => 'Installer Language',
 'TEXT_HELP_CONTENT_CHOOSE_LANG' => 'This language selection refers to the installation process only.<br>The Zen Cart&reg; installation files include only the US English language pack.<br>However, Zen Cart&reg; is fully multi-lingual, supporting <em>any</em> language (subject to a language pack being available/having been developed by the community).',
 'TEXT_PAGE_HEADING_SYSTEM_SETUP' => 'System Setup',
@@ -76,8 +76,9 @@ return [
 'TEXT_EXAMPLE_USERNAME' => 'ie: bill',
 'TEXT_ADMIN_SETUP_USER_EMAIL' => 'Admin Superuser Email: ',
 'TEXT_EXAMPLE_EMAIL' => 'ie: my_email@example.com',
-'TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retype email: ',
+'TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT' => '... Retype email: ',
 'TEXT_ADMIN_SETUP_USER_PASSWORD' => 'Admin password: ',
+'TEXT_ADMIN_SETUP_MATCHING_EMAIL' => 'A matching valid email address is required.',
 'TEXT_ADMIN_SETUP_USER_PASSWORD_HELP' => '<strong>REMEMBER THIS!!</strong>: Below is your initial temporary password for your Admin Superuser Account. Please ensure you make a note of it.',
 'TEXT_ADMIN_SETUP_ADMIN_DIRECTORY' => 'Admin Directory: ',
 'TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT' => 'We were not able to change the name of your admin directory automatically. You must rename it from "admin" before you can access the admin area.',
@@ -88,7 +89,7 @@ return [
 'TEXT_COMPLETION_INSTALL_COMPLETE' => '',
 'TEXT_COMPLETION_INSTALL_LINKS_BELOW' => 'The links to access your Admin area dashboard and shop storefront are shown below:',
 'TEXT_COMPLETION_UPGRADE_COMPLETE' => 'Congratulations, your upgrade is now complete.',
-'TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING' => 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it',
+'TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING' => 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it.',
 'TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING' => 'You must <strong>now</strong> delete/remove the "zc_install" directory from your server.',
 'TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION' => 'Admin access is disabled until this directory has been removed, to prevent unauthorized persons from using the installer to overwrite your installation.',
 'TEXT_COMPLETION_CATALOG_LINK_TEXT' => 'Your Storefront',
@@ -162,7 +163,7 @@ return [
 'TEXT_ERROR_CURL' => 'Problems with the CURL extension - PHP is reporting that CURL is not present.',
 'TEXT_ERROR_UPLOADS' => 'Upload Extension for PHP is not enabled',
 'TEXT_ERROR_XML' => 'XML Extension in PHP is not enabled',
-'TEXT_ERROR_GZIP' => 'The GZip Extension in PHP is not enabled<br>[ <i><strong>NOTE:</strong> This may not be relevant if you are using Nginx and handling GZip within Nginx.</i> ]',
+'TEXT_ERROR_GZIP' => 'The GZip Extension in PHP is not detected',
 'TEXT_ERROR_EXTENSION_NOT_LOADED' => '%s extension does not seem to be loaded',
 'TEXT_ERROR_FUNCTION_DOES_NOT_EXIST' => 'PHP function %s does not exist',
 'TEXT_ERROR_CURL_LIVE_TEST' => 'Could not use CURL to contact a live server',
@@ -190,6 +191,8 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_HELP_CONTENT_CONNECTIONDATABASECHECK' => 'We tried to connect to MySQL using a localhost connection. This failure does not necessarily mean MySQL is not working, as some hosts require an IP address or host name for the MySQL database.<br><br>If you are indeed using localhost for your database server, you should check that MySQL is running correctly.',
 'TEXT_HELP_TITLE_CHECKCURL' => '%%TEXT_ERROR_CURL%%',
 'TEXT_HELP_CONTENT_CHECKCURL' => 'CURL is a background process used by (PHP in) your store to connect to external servers and services such as payment and shipping providers to process transactions or get real-time shipping quotes. When we tested CURL functionality on your server we were unable to establish a connection. This could indicate a problem with your webserver configuration. Please contact your hosting company for assistance to enable CURL support on your server.<br><br>If you are a developer running this site on an offline development server then it is unsurprising that CURL cannot connect for this test. CURL is not necessary for development purposes except for testing transactional activity, at which time connecting online will be required.',
+'TEXT_HELP_TITLE_GZIP' => 'PHP GZip extension not detected.',
+'TEXT_HELP_CONTENT_GZIP' => 'GZip is commonly used to compress webpage content, to make it smaller, before transmitting to the browser, so that it transmits faster. With Apache webserver it must be enabled in the PHP configuration settings; with Nginx webserver it may be enabled in the Nginx settings itself. Your hosting company can take care of this for you.<br><br>[ <i><strong>NOTE:</strong> To be clear: this can be ignored if you are using Nginx and handling GZip within Nginx</i> (because we cannot easily detect it automatically when nginx is in use). ]',
 'TEXT_HELP_TITLE_ADMINSERVERDOMAIN' => 'Admin Server Domain',
 'TEXT_HELP_CONTENT_ADMINSERVERDOMAIN' => 'Enter the domain name for accessing your Admin area. It is strongly recommended to use HTTPS (SSL) for this address. Consult your hosting company about enabling SSL on your site.',
 'TEXT_HELP_TITLE_ENABLESSLCATALOG' => 'Enable SSL for Storefront?',
@@ -223,7 +226,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_HELP_TITLE_SQLCACHEDIRECTORY' => 'SQL Cache Directory',
 'TEXT_HELP_CONTENT_SQLCACHEDIRECTORY' => 'Enter the directory to use for file-based caching. This is a directory/folder on your webserver, and its permissions must be set to writable so that the webserver (eg Apache) can write files to it.',
 'TEXT_HELP_TITLE_ADMINUSER' => 'Admin Superuser Name',
-'TEXT_HELP_CONTENT_ADMINUSER' => 'This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.',
+'TEXT_HELP_CONTENT_ADMINUSER' => 'This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.<br>Additional users with varying access levels can be added from the Administration panel.',
 'TEXT_HELP_TITLE_ADMINEMAIL' => 'Admin Superuser Email',
 'TEXT_HELP_CONTENT_ADMINEMAIL' => 'This email address will be used for password recovery in case you forget your password.',
 'TEXT_HELP_TITLE_ADMINEMAIL2' => 'Retype Email',
@@ -253,7 +256,7 @@ You may proceed with installing despite this situation, but please be advised th
 'REASON_PRIMARY_KEY_ALREADY_EXISTS' => 'Cannot add primary key to table %s because a primary key already exists.',
 'REASON_CONFIG_GROUP_KEY_ALREADY_EXISTS' => 'Cannot insert configuration_group_key "%s" because it already exists',
 'REASON_CONFIG_GROUP_ID_ALREADY_EXISTS' => 'Cannot insert configuration_group_id "%s" because it already exists',
-'TEXT_COMPLETION_NGINX_TEXT' => '<u>Important Security Information for Nginx</u>',
+'TEXT_COMPLETION_NGINX_TEXT' => 'Click to view <u>Important Security Information for Nginx</u>',
 'TEXT_HELP_TITLE_NGINXCONF' => 'Securing Zen Cart on Nginx Web Servers',
 'TEXT_HELP_CONTENT_NGINXCONF' => '<p>Your Zen Cart installation comes with security measures in a format native to the Apache Webserver. <br>
 See below to implement a similar set of measures for the Nginx Webserver.</p>
@@ -306,7 +309,7 @@ See below to implement a similar set of measures for the Nginx Webserver.</p>
 </li>
 <ol>
 </div>
-<div class="alert-box alert"> <strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.</div>
+<div class="alert alert-danger"> <strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.</div>
 <hr>',
 'TEXT_HELP_TITLE_AGREETOTERMS' => 'Agree To Terms',
 'TEXT_HELP_CONTENT_AGREETOTERMS' => '<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html" rel="noopener" target="_blank">Original GPL 2.0 text</a>

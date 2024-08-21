@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Dec 08 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 03 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -17,17 +17,18 @@ $define = [
     'TEXT_BANNERS_TITLE' => 'Banner Title:',
     'TEXT_BANNERS_URL' => 'Banner URL:',
     'TEXT_BANNERS_GROUP' => 'Banner Group:',
-    'TEXT_BANNERS_NEW_GROUP' => ', or enter a new banner group below',
-    'TEXT_BANNERS_IMAGE' => 'Image:',
-    'TEXT_BANNERS_IMAGE_LOCAL' => ', or enter local file below',
-    'TEXT_BANNERS_IMAGE_TARGET' => 'Image Target (Save To):',
-    'TEXT_BANNER_IMAGE_TARGET_INFO' => '<strong>Suggested Target location for the image on the server:</strong> ' . DIR_FS_CATALOG_IMAGES . 'banners/',
-    'TEXT_BANNERS_HTML_TEXT_INFO' => '<strong>NOTE: HTML banners do not record the clicks on the banner</strong>',
+    'TEXT_BANNERS_NEW_GROUP' => 'or enter a new banner group below',
+    'TEXT_BANNERS_IMAGE' => 'Upload Image:',
+    'TEXT_BANNERS_CURRENT_IMAGE' => 'Current Image:',
+    'TEXT_BANNERS_IMAGE_LOCAL' => 'Current image filename shown. Edit to specify an existing image. Or upload a new one.',
+    'TEXT_BANNERS_IMAGE_TARGET' => 'Image Target Folder (Save To):',
+    'TEXT_BANNER_IMAGE_TARGET_INFO' => '<strong>Suggested target directory for uploaded image:</strong> ' . 'banners/',
+    'TEXT_BANNERS_HTML_TEXT_INFO' => '<strong>NOTE: HTML banners do not track clicks on the banner. HTML banners override the banner-image specified above.</strong>',
     'TEXT_BANNERS_HTML_TEXT' => 'HTML Text:',
     'TEXT_BANNERS_ALL_SORT_ORDER' => 'Sort Order - banner_box_all',
     'TEXT_BANNERS_ALL_SORT_ORDER_INFO' => '<strong>NOTE: The banners_box_all sidebox will display the banners in their defined sort order</strong>',
     'TEXT_BANNERS_EXPIRES_ON' => 'Expires On: <br>(Must be after today)',
-    'TEXT_BANNERS_OR_AT' => ', or at',
+    'TEXT_BANNERS_OR_AT' => 'or at',
     'TEXT_BANNERS_IMPRESSIONS' => 'impressions/views.',
     'TEXT_BANNERS_SCHEDULED_AT' => 'Scheduled At: <br>(Must be after today)',
     'TEXT_BANNERS_BANNER_NOTE' => '<b>Banner Notes:</b><ul><li>Use an image or HTML text for the banner - not both.</li><li>HTML Text has priority over an image</li><li>HTML Text will not register the click thru, but will register displays</li><li>Banners with absolute image URLs should not be displayed on secure pages</li></ul>',

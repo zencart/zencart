@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 May 07 Modified in v2.0.1 $
+ * @version $Id: Scott Wilson 2024 Jul 24 Modified in v2.1.0-alpha1 $
  */
 require 'includes/application_top.php';
 require DIR_WS_CLASSES . 'currencies.php';
@@ -225,7 +225,7 @@ switch ($_GET['action']) {
       $update_errors = 1;
       $messageStack->add(ERROR_NO_COUPON_NAME, 'error');
     }
-    if ((!$_POST['coupon_amount']) && (!$_POST['coupon_free_ship'])) {
+    if ((!$_POST['coupon_amount']) && (empty($_POST['coupon_free_ship']))) {
       $update_errors = 1;
       $messageStack->add(ERROR_NO_COUPON_AMOUNT, 'error');
     }

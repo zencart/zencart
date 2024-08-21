@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Nick Fenwick 2024 May 12 Modified in v2.0.1 $
+ * @version $Id: DrByte 2024 May 23 Modified in v2.1.0-alpha1 $
  */
 
 class Customer extends base
@@ -341,7 +341,7 @@ class Customer extends base
 
         $this->getPricingGroupAssociation();
 
-        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data);
+        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data, $this->data);
 
         // treat these as integers even though they (may have) come from the db as strings
         $ints = [
@@ -836,6 +836,8 @@ class Customer extends base
             "DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
               WHERE customers_id = " . (int)$this->customer_id
         );
+
+        $this->notify('NOTIFY_CUSTOMER_AFTER_RECORD_DELETED', (int)$this->customer_id);
 
         zen_record_admin_activity('Customer with customer ID ' . (int)$this->customer_id . ' deleted.', 'warning');
     }

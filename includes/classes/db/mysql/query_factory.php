@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Nov 24 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 02 Modified in v2.1.0-alpha1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -473,27 +473,30 @@ class queryFactory extends base
      *
      * @param string $tableName table on which to perform the insert/update
      * @param array $tableData data to be inserted/deleted containing sub-arrays with fieldName/value/type keys (where type is the BindVar rule to apply)
-     * @param string $performType INSERT or UPDATE
+     * @param string $performType INSERT or UPDATE or INSERTIGNORE or UPDATEIGNORE
      * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
      * @param false $debug developer use only
      */
-    public function perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = '', $debug = false): void
+    public function perform(string $tableName, array $tableData, string $performType = 'INSERT', string $whereCondition = '', ?bool $debug = false): void
     {
         switch (strtolower($performType)) {
+            case 'insertignore':
+                $insertString = 'INSERT IGNORE';
             case 'insert':
-                $insertString = "INSERT INTO " . $tableName . " (";
+                $insertString = $insertString ?? 'INSERT';
+                $insertString .= " INTO $tableName (";
                 foreach ($tableData as $key => $value) {
                     if ($debug === true) {
                         echo $value['fieldName'] . '#';
                     }
                     $insertString .= $value['fieldName'] . ", ";
                 }
-                $insertString = substr($insertString, 0, strlen($insertString) - 2) . ') VALUES (';
+                $insertString = substr($insertString, 0, -2) . ') VALUES (';
                 foreach ($tableData as $key => $value) {
                     $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
                     $insertString .= $bindVarValue . ", ";
                 }
-                $insertString = substr($insertString, 0, strlen($insertString) - 2) . ')';
+                $insertString = substr($insertString, 0, -2) . ')';
                 if ($debug === true) {
                     echo $insertString;
                     die();
@@ -503,13 +506,16 @@ class queryFactory extends base
 
                 break;
 
+            case 'updateignore':
+                $updateString = 'UPDATE IGNORE ';
             case 'update':
-                $updateString = 'UPDATE ' . $tableName . ' SET ';
+                $updateString = $updateString ?? 'UPDATE ';
+                $updateString .= " $tableName SET ";
                 foreach ($tableData as $key => $value) {
                     $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
                     $updateString .= $value['fieldName'] . '=' . $bindVarValue . ', ';
                 }
-                $updateString = substr($updateString, 0, strlen($updateString) - 2);
+                $updateString = substr($updateString, 0, -2);
                 if (!empty($whereCondition)) {
                     $updateString .= ' WHERE ' . $whereCondition;
                 }

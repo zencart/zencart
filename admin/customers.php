@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: piloujp 2024 May 25 Modified in v2.1.0-alpha1 $
  */
 require 'includes/application_top.php';
 
@@ -1181,6 +1181,11 @@ if ($action === 'edit' || $action === 'update') {
             </div>
 <?php
 } else {
+    // -----
+    // For a "Password Reset" action, the "New Password" field should
+    // get the autofocus, not the search-input.
+    //
+    $no_searchbox_autofocus = ($action === 'pwreset');
 ?>
             <div class="col-sm-offset-8 col-sm-4">
                 <?php include DIR_WS_MODULES . 'search_box.php'; ?>

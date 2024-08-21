@@ -1,38 +1,37 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 07 New in v1.5.8-alpha $
+ * @version $Id: lat9 2024 Jun 12 Modified in v2.1.0-alpha1 $
  */
-
 namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
 
 class CatalogArraysLanguageLoader extends ArraysLanguageLoader
 {
-    public function loadInitialLanguageDefines($mainLoader)
+    public function loadInitialLanguageDefines($mainLoader): void
     {
         $this->mainLoader = $mainLoader;
         $this->loadMainLanguageFiles();
         $this->loadLanguageExtraDefinitions();
     }
 
-    public function loadLanguageForView()
+    public function loadLanguageForView(): void
     {
         $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage . '.php');
         // Pick up additional plugin files which are substring matches
-        // Example: lang.create_account_register.php on create_account page.  
+        // Example: lang.create_account_register.php on create_account page.
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
         $tfiles = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . "lang." . $this->currentPage  . '(.+)\.php$~i');
 
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
         $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . "lang." . $this->currentPage . '(.+)\.php$~i');
-        $files = array_merge($files, $tfiles); 
+        $files = array_merge($files, $tfiles);
 
         foreach ($files as $file) {
-           $file = substr($file, 5); 
+           $file = substr($file, 5);
            $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
         }
         foreach ($this->pluginList as $plugin) {
@@ -42,7 +41,7 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         }
     }
 
-    protected function loadLanguageExtraDefinitions()
+    protected function loadLanguageExtraDefinitions(): void
     {
         $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions');
         $this->addLanguageDefines($defineList);
@@ -57,7 +56,7 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $this->addLanguageDefines($defineList);
     }
 
-    protected function loadMainLanguageFiles()
+    protected function loadMainLanguageFiles(): void
     {
         $extraFiles = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
         $mainFile = DIR_WS_LANGUAGES . 'lang.' . $_SESSION['language'] . '.php';
