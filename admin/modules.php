@@ -162,36 +162,36 @@ if (!empty($action)) {
 }
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
   <body>
     <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+    <?php require DIR_WS_INCLUDES . 'header.php'; ?>
     <!-- header_eof //-->
 
     <!-- body //-->
     <div class="container-fluid">
       <!-- body_text //-->
-      <h1><?php echo HEADING_TITLE; ?></h1>
+      <h1><?= HEADING_TITLE ?></h1>
       <div class="row">
         <?php require_once DIR_WS_MODULES . 'notificationsDisplay.php'; ?>
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
           <table class="table table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></th>
+                <th class="dataTableHeadingContent"><?= TABLE_HEADING_MODULES ?></th>
                 <th class="dataTableHeadingContent">&nbsp;</th>
-                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_SORT_ORDER; ?></th>
+                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_SORT_ORDER ?></th>
 <?php
 if ($set == 'payment') {
 ?>
-                <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></th>
+                <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ORDERS_STATUS ?></th>
 <?php
 }
 ?>
-                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
+                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_ACTION ?>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
@@ -249,7 +249,7 @@ foreach ($directory_array as $next_dir) {
 <?php
                     } else { // a module row is selected, module is installed, infoBox is only showing module parameters
 ?>
-              <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL'); ?>'">
+              <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href='<?= zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') ?>'">
 <?php
                     }
                 } else { // a module row is selected, module is NOT installed
@@ -258,12 +258,12 @@ foreach ($directory_array as $next_dir) {
 <?php
                 }
             } else { // module row is not selected: click to show install option or module parameters ?>
-              <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?php echo zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'); ?>'">
+              <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?= zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') ?>'">
 <?php
             }
 ?>
-                  <td class="dataTableContent"><?php echo $module->title; ?></td>
-                  <td class="dataTableContent"><?php echo $module->code; ?></td>
+                  <td class="dataTableContent"><?= $module->title ?></td>
+                  <td class="dataTableContent"><?= $module->code ?></td>
                   <td class="dataTableContent text-right">
 <?php
             if (is_numeric($module->sort_order)) {
@@ -292,7 +292,7 @@ foreach ($directory_array as $next_dir) {
                 );
 ?>
                   <td class="dataTableContent text-center">
-                    <?php echo (is_numeric($module->sort_order) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : ''); ?>
+                    <?= (is_numeric($module->sort_order) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : '') ?>
                   </td>
 <?php
 }
@@ -516,7 +516,7 @@ if (!empty($heading) && !empty($contents)) {
 ?>
         </div>
       </div>
-      <div class="row"><?php echo TEXT_MODULE_DIRECTORY . ' ' . $module_directory; ?></div>
+      <div class="row"><?= TEXT_MODULE_DIRECTORY . ' ' . $module_directory ?></div>
       <!-- body_text_eof //-->
     </div>
     <!-- body_eof //-->
@@ -532,10 +532,10 @@ if (!empty($help_text['body'])) {
            <div class="modal-content">
                 <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                     <h4 class="modal-title"><?php echo $help_title . ' ' . IMAGE_MODULE_HELP; ?></h4>
+                     <h4 class="modal-title"><?= $help_title . ' ' . IMAGE_MODULE_HELP ?></h4>
                 </div>
                 <div class="modal-body">
-                    <?php echo $help_text['body']; ?>
+                    <?= $help_text['body'] ?>
                 </div>
                 <div class="modal-footer">
                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
