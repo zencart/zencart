@@ -314,6 +314,10 @@ systemChecks:
             tableName: admin_expired_tokens
             fieldName: otp_code
             fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: email_archive
+            fieldName: errorinfo
+            fieldCheck: Exists
 
   checkDBVersion200:
     runLevel: dbVersion

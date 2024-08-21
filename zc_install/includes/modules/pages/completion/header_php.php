@@ -5,7 +5,10 @@
  * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
  */
 
-require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
+// remove any stale progress-meter artifacts
+if (file_exists(zcDatabaseInstaller::$initialProgressMeterFilename)) {
+    unlink(zcDatabaseInstaller::$initialProgressMeterFilename);
+}
 
 $isUpgrade = false;
 $adminLink = $catalogLink = '#';

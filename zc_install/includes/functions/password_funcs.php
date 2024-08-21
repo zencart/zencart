@@ -8,7 +8,7 @@
  * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
  */
 
-require_once(DIR_FS_ROOT . '/includes/classes/class.zcPassword.php');
+require_once DIR_FS_ROOT . '/includes/classes/class.zcPassword.php';
 
 /**
  * Validates a plain text password with the encrpyted password

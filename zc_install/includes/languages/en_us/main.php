@@ -15,7 +15,7 @@ return [
 'TEXT_INDEX_WARN_ERRORS' => 'Some Other Issues:',
 'TEXT_INDEX_WARN_ERRORS_ALT' => 'Some Issues:',
 'TEXT_HEADER_MAIN' => 'TIP: The field titles are clickable help links which explain what each field means.',
-'TEXT_INDEX_HEADER_MAIN' => 'TIP: More information may be available by clicking on the <strong>titles</strong> of some errors and warnings.',
+'TEXT_INDEX_HEADER_MAIN' => 'TIP: Links with a <u>question-mark icon <strong><i class="bi-question-circle"></i></strong></u> can be clicked to explain more detail about a form field or an error.',
 'TEXT_INSTALLER_CHOOSE_LANGUAGE' => 'Installer Language',
 'TEXT_HELP_CONTENT_CHOOSE_LANG' => 'This language selection refers to the installation process only.<br>The Zen Cart&reg; installation files include only the US English language pack.<br>However, Zen Cart&reg; is fully multi-lingual, supporting <em>any</em> language (subject to a language pack being available/having been developed by the community).',
 'TEXT_PAGE_HEADING_SYSTEM_SETUP' => 'System Setup',
@@ -76,8 +76,9 @@ return [
 'TEXT_EXAMPLE_USERNAME' => 'ie: bill',
 'TEXT_ADMIN_SETUP_USER_EMAIL' => 'Admin Superuser Email: ',
 'TEXT_EXAMPLE_EMAIL' => 'ie: my_email@example.com',
-'TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retype email: ',
+'TEXT_ADMIN_SETUP_USER_EMAIL_REPEAT' => '... Retype email: ',
 'TEXT_ADMIN_SETUP_USER_PASSWORD' => 'Admin password: ',
+'TEXT_ADMIN_SETUP_MATCHING_EMAIL' => 'A matching valid email address is required.',
 'TEXT_ADMIN_SETUP_USER_PASSWORD_HELP' => '<strong>REMEMBER THIS!!</strong>: Below is your initial temporary password for your Admin Superuser Account. Please ensure you make a note of it.',
 'TEXT_ADMIN_SETUP_ADMIN_DIRECTORY' => 'Admin Directory: ',
 'TEXT_ADMIN_SETUP_ADMIN_DIRECTORY_HELP_DEFAULT' => 'We were not able to change the name of your admin directory automatically. You must rename it from "admin" before you can access the admin area.',
@@ -225,7 +226,7 @@ You may proceed with installing despite this situation, but please be advised th
 'TEXT_HELP_TITLE_SQLCACHEDIRECTORY' => 'SQL Cache Directory',
 'TEXT_HELP_CONTENT_SQLCACHEDIRECTORY' => 'Enter the directory to use for file-based caching. This is a directory/folder on your webserver, and its permissions must be set to writable so that the webserver (eg Apache) can write files to it.',
 'TEXT_HELP_TITLE_ADMINUSER' => 'Admin Superuser Name',
-'TEXT_HELP_CONTENT_ADMINUSER' => 'This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.',
+'TEXT_HELP_CONTENT_ADMINUSER' => 'This will be the primary username used to manage your admin access and other admin user accounts. It will have unrestricted privileges.<br>Additional users with varying access levels can be added from the Administration panel.',
 'TEXT_HELP_TITLE_ADMINEMAIL' => 'Admin Superuser Email',
 'TEXT_HELP_CONTENT_ADMINEMAIL' => 'This email address will be used for password recovery in case you forget your password.',
 'TEXT_HELP_TITLE_ADMINEMAIL2' => 'Retype Email',
@@ -308,7 +309,7 @@ See below to implement a similar set of measures for the Nginx Webserver.</p>
 </li>
 <ol>
 </div>
-<div class="alert-box alert"> <strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.</div>
+<div class="alert alert-danger"> <strong>IMPORTANT:</strong> These location blocks should be <strong>BEFORE</strong> any other location blocks in your Nginx configuration server block for Zen Cart.</div>
 <hr>',
 'TEXT_HELP_TITLE_AGREETOTERMS' => 'Agree To Terms',
 'TEXT_HELP_CONTENT_AGREETOTERMS' => '<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html" rel="noopener" target="_blank">Original GPL 2.0 text</a>
