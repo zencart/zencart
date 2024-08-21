@@ -5,7 +5,11 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Feb 14 Modified in v2.0.0-beta1 $
  */
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\ModuleFinder;
+
 require 'includes/application_top.php';
+
 if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) {
     require_once DIR_FS_CATALOG . 'includes/classes/dbencdata.php';
 }
@@ -18,7 +22,6 @@ if (!empty($set)) {
     switch ($set) {
         case 'shipping':
             $module_type = 'shipping';
-            $module_directory = DIR_FS_CATALOG_MODULES . 'shipping/';
             $module_key = 'MODULE_SHIPPING_INSTALLED';
             define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
             $shipping_errors = '';
@@ -34,19 +37,20 @@ if (!empty($set)) {
             break;
         case 'ordertotal':
             $module_type = 'order_total';
-            $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
             $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
             define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
             break;
         case 'payment':
         default:
             $module_type = 'payment';
-            $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
             $module_key = 'MODULE_PAYMENT_INSTALLED';
             define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
             break;
     }
 }
+
+$moduleFinder = new ModuleFinder($module_type, new Filesystem());
+$modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
 $nModule = $_GET['module'] ?? null;
 $notificationType = $module_type . (($nModule) ? '-' . $nModule : '') ;
@@ -80,9 +84,11 @@ if (!empty($action)) {
                         zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $_GET['set'] . '&module=' . $_GET['module'] . '&action=edit'));
                     }
                 }
-                $db->Execute("update " . TABLE_CONFIGURATION . "
-                            set configuration_value = '" . zen_db_input($value) . "'
-                            where configuration_key = '" . zen_db_input($key) . "'");
+                $db->Execute(
+                    "UPDATE " . TABLE_CONFIGURATION . "
+                        SET configuration_value = '" . zen_db_input($value) . "'
+                      WHERE configuration_key = '" . zen_db_input($key) . "'
+                      LIMIT 1");
             }
             $msg = sprintf(
                 TEXT_EMAIL_MESSAGE_ADMIN_SETTINGS_CHANGED,
@@ -105,14 +111,16 @@ if (!empty($action)) {
 
         case 'install':
             $result = 'failed';
-            $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+            $file_extension = pathinfo($PHP_SELF, PATHINFO_EXTENSION);
             $class = basename($_POST['module']);
+            $class_file = $class . '.' . $file_extension;
             if (!$is_ssl_protected && in_array($class, ['paypaldp', 'authorizenet_aim', 'authorizenet_echeck'])) {
                 break;
             }
-            if (file_exists($module_directory . $class . $file_extension)) {
-                if ($languageLoader->loadModuleDefinesFromFile( '/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
-                    include $module_directory . $class . $file_extension;
+
+            if (in_array($class_file, array_keys($modules_found))) {
+                if ($languageLoader->loadModuleDefinesFromFile('/modules/', $_SESSION['language'], $module_type, $class_file)) {
+                    require DIR_FS_CATALOG . $modules_found[$class_file] . $class_file;
                     $module = new $class();
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
                     zen_record_admin_activity($msg, 'warning');
@@ -135,11 +143,12 @@ if (!empty($action)) {
             break;
 
         case 'removeconfirm':
-            $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+            $file_extension = pathinfo($PHP_SELF, PATHINFO_EXTENSION);
             $class = basename($_POST['module']);
-            if (file_exists($module_directory . $class . $file_extension)) {
-                if ($languageLoader->loadModuleDefinesFromFile( '/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
-                    include $module_directory . $class . $file_extension;
+            $class_file = $class . '.' . $file_extension;
+            if (in_array($class_file, array_keys($modules_found))) {
+                if ($languageLoader->loadModuleDefinesFromFile('/modules/', $_SESSION['language'],  $module_type, $class_file)) {
+                    require DIR_FS_CATALOG . $modules_found[$class_file] . $class_file;
                     $module = new $class();
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
                     zen_record_admin_activity($msg, 'warning');
@@ -196,20 +205,20 @@ if ($set == 'payment') {
             </thead>
             <tbody>
 <?php
-$directory_array = zen_get_files_in_directory($module_directory);
-$installed_modules = $temp_for_sort = [];
-foreach ($directory_array as $next_dir) {
-    $file = basename($next_dir);
-    if ($languageLoader->hasLanguageFile( DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type)) {
-        $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'],  $file, '/modules/' . $module_type);
-        include $module_directory . $file;
-        $class = pathinfo($file, PATHINFO_FILENAME);
+$installed_modules = [];
+$temp_for_sort = [];
+$module_directory = DIR_FS_CATALOG . DIR_WS_MODULES . $module_type;
+foreach ($modules_found as $module_name => $module_file_dir) {
+    if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], $module_name, '/modules/' . $module_type)) {
+        $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], $module_name, '/modules/' . $module_type);
+        require DIR_FS_CATALOG . $module_file_dir . $module_name;
+        $class = pathinfo($module_name, PATHINFO_FILENAME);
         if (class_exists($class)) {
             $module = new $class();
             // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
             if ($module->check() > 0) {
                 // determine sort orders (using up to 6 digits, then filename) and add to list of installed modules
-                $temp_for_sort[$file] = str_pad((int)$module->sort_order, 6, '0', STR_PAD_LEFT) . $file;
+                $temp_for_sort[$module_name] = str_pad((int)$module->sort_order, 6, '0', STR_PAD_LEFT) . $module_name;
                 asort($temp_for_sort);
                 $installed_modules = array_flip($temp_for_sort);
             }
@@ -315,7 +324,7 @@ foreach ($directory_array as $next_dir) {
 <?php
             }
         } else {
-            echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file . '<br>';
+            echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $module_name . '<br>';
         }
     }
 
