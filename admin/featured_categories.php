@@ -25,7 +25,7 @@ if ($action !== '') {
         case 'setflag':
             if (isset($_POST['flag']) && ($_POST['flag'] === '1' || $_POST['flag'] === '0')) {
                 zen_set_featured_status((int)$_POST['id'], (int)$_POST['flag']);
-                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES , zen_get_all_get_params(['action' , 'fID']) . 'fID=' . $_POST['id'] , 'NONSSL'));
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, zen_get_all_get_params(['action', 'fID']) . 'fID=' . $_POST['id'], 'NONSSL'));
             }
             break;
 
@@ -86,7 +86,7 @@ if ($action !== '') {
                                             WHERE categories_id = " . (int)$categories_id);
             } // nothing selected
             if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') {
-                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page . (isset($_GET['search']) ? '&search=' . $_GET['search'] . '&' : '') . (isset($new_featured) ? 'fID=' . $new_featured->fields['featured_categories_id'] : '')));
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? '&search=' . $_GET['search'] . '&' : '') . (isset($new_featured) ? 'fID=' . $new_featured->fields['featured_categories_id'] : '')));
             }
             break;
 
@@ -143,7 +143,7 @@ if ($action !== '') {
                               featured_date_available = '" . zen_db_input($featured_date_available) . "'
                               WHERE featured_categories_id = " . $featured_categories_id);
 
-                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page . $search_parameters . 'fID=' . $featured_categories_id));
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . $search_parameters . 'fID=' . $featured_categories_id));
                 break;
 
         case 'deleteconfirm':
@@ -256,13 +256,13 @@ if ($action !== '') {
                 }
                 ?>
                 <div class="row">
-                    <?php echo zen_draw_form('new_featured', FILENAME_FEATURED_CATEGORIES, zen_get_all_get_params(['action' , 'info' , 'fID']) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : '') , 'post' , 'class="form-horizontal"'); ?>
+                    <?php echo zen_draw_form('new_featured', FILENAME_FEATURED_CATEGORIES, zen_get_all_get_params(['action', 'info', 'fID']) . 'action=' . $form_action . (!empty($_GET['go_back']) ? '&go_back=' . $_GET['go_back'] : ''), 'post', 'class="form-horizontal"'); ?>
                     <?php
                     if ($form_action === 'update') {
-                        echo zen_draw_hidden_field('featured_categories_id' , $_GET['fID']);
+                        echo zen_draw_hidden_field('featured_categories_id', $_GET['fID']);
                     }
                     if (!empty($_GET['preID'])) { // new Special: insert by category ID
-                        echo zen_draw_hidden_field('categories_id' , $_GET['preID']);
+                        echo zen_draw_hidden_field('categories_id', $_GET['preID']);
                     }
                     ?>
                     <?php if (isset($fInfo->categories_name)) { // Featured is already defined/this is an update ?>
@@ -334,8 +334,8 @@ if ($action !== '') {
             <?php } else { ?>
             <div class="row">
                 <div class="col-sm-8">
-                    <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_FEATURED_SELECT; ?></a>
-                    <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page . $search_parameters . 'action=pre_add'); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_INFO_PRE_ADD_INTRO; ?>"><?php echo TEXT_ADD_FEATURED_CID; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_FEATURED_SELECT; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . $search_parameters . 'action=pre_add'); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_INFO_PRE_ADD_INTRO; ?>"><?php echo TEXT_ADD_FEATURED_CID; ?></a>
                 </div>
                 <div class="col-sm-4">
                     <?php require DIR_WS_MODULES . 'search_box.php'; ?>
@@ -417,9 +417,9 @@ if ($action !== '') {
 
                             if (isset($fInfo) && is_object($fInfo) && ((int)$featured['featured_categories_id'] === (int)$fInfo->featured_categories_id)) {
                                 ?>
-                                <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page. $search_parameters . 'fID=' . $fInfo->featured_categories_id . '&action=edit'); ?>'">
+                                <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page. $search_parameters . 'fID=' . $fInfo->featured_categories_id . '&action=edit'); ?>'">
                             <?php } else { ?>
-                                <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page . $search_parameters . 'fID=' . $featured['featured_categories_id']); ?>'">
+                                <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . $search_parameters . 'fID=' . $featured['featured_categories_id']); ?>'">
                                 <?php
                             }
                             ?>
@@ -437,17 +437,17 @@ if ($action !== '') {
                                 <?php } ?>
                                 </button>
                             <?php } else { ?>
-                                <?php echo zen_draw_form('setflag_categories_' . $featured['categories_id'] , FILENAME_FEATURED_CATEGORIES , $current_page . $search_parameters . 'action=setflag'); ?>
+                                <?php echo zen_draw_form('setflag_categories_' . $featured['categories_id'], FILENAME_FEATURED_CATEGORIES, $current_page . $search_parameters . 'action=setflag'); ?>
                                 <?php if ($featured['status'] === '1') { ?>
                                     <button type="submit" class="btn btn-status">
                                     <i class="fa-solid fa-square fa-lg txt-status-on" title="<?php echo TEXT_FEATURED_ACTIVE; ?>"></i>
                                     </button>
-                                    <?php echo zen_draw_hidden_field('flag' , '0'); ?>
+                                    <?php echo zen_draw_hidden_field('flag', '0'); ?>
                                 <?php } else { ?>
                                     <button type="submit" class="btn btn-status">
                                     <i class="fa-solid fa-square fa-lg txt-status-off" title="<?php echo TEXT_FEATURED_INACTIVE; ?>"></i>
                                     </button>
-                                    <?php echo zen_draw_hidden_field('flag' , '1'); ?>
+                                    <?php echo zen_draw_hidden_field('flag', '1'); ?>
                                 <?php } ?>
                                 <?php echo zen_draw_hidden_field('id', $featured['featured_categories_id']); ?>
                                 <?php echo '</form>'; ?>
@@ -455,18 +455,18 @@ if ($action !== '') {
                             </td>
                             <td class="dataTableContent text-center actions">
                             <div class="btn-group">
-                                <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page . $search_parameters . 'action=edit' . '&fID=' . $featured['featured_categories_id']); ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                                <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . $search_parameters . 'action=edit' . '&fID=' . $featured['featured_categories_id']); ?>" class="btn btn-sm btn-default btn-edit" role="button">
                                 <?php echo zen_icon('pencil', ICON_EDIT) ?>
                                 </a>
-                                <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES , $current_page . $search_parameters . 'action=delete' . '&fID=' . $featured['featured_categories_id']); ?>" class="btn btn-sm btn-default btn-delete" role="button">
+                                <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . $search_parameters . 'action=delete' . '&fID=' . $featured['featured_categories_id']); ?>" class="btn btn-sm btn-default btn-delete" role="button">
                                 <?php echo zen_icon('trash', ICON_DELETE) ?>
                                 </a>
                             </div>
                             <?php if (isset($fInfo) && is_object($fInfo) && ($featured['featured_categories_id'] === $fInfo->featured_categories_id)) {
                                 echo zen_icon('caret-right', '', '2x', true);
                             } else { ?>
-                                <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES , zen_get_all_get_params(['fID']) . 'fID=' . $featured['featured_categories_id']); ?>" role="button">
-                                <?php echo zen_icon('circle-info' , IMAGE_ICON_INFO , '2x' , true , true) ?>
+                                <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, zen_get_all_get_params(['fID']) . 'fID=' . $featured['featured_categories_id']); ?>" role="button">
+                                <?php echo zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true, true) ?>
                                 </a>
                             <?php } ?>
                             </td>
@@ -475,8 +475,8 @@ if ($action !== '') {
                     </tbody>
                 </table>
             <div class="row">
-                <div class="col-sm-6"><?php echo $featured_split->display_count($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $_GET['page'] , TEXT_DISPLAY_NUMBER_OF_FEATURED); ?></div>
-                    <div class="col-sm-6 text-right"><?php echo $featured_split->display_links($featured_query_numrows , MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN , MAX_DISPLAY_PAGE_LINKS , $_GET['page'] , zen_get_all_get_params(['page' , 'fID'])); ?></div>
+                <div class="col-sm-6"><?php echo $featured_split->display_count($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_FEATURED); ?></div>
+                    <div class="col-sm-6 text-right"><?php echo $featured_split->display_links($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'fID'])); ?></div>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
@@ -487,20 +487,20 @@ if ($action !== '') {
                     switch ($action) {
                         case 'delete':
                             $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_FEATURED . '</h4>'];
-                            $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED_CATEGORIES , 'action=deleteconfirm' . $page_search_parameters) . zen_draw_hidden_field('fID', $fInfo->featured_categories_id)];
+                            $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED_CATEGORIES, 'action=deleteconfirm' . $page_search_parameters) . zen_draw_hidden_field('fID', $fInfo->featured_categories_id)];
                             $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
                             $contents[] = ['text' => '<b>' . zen_clean_html($fInfo->categories_name) . '"</b>'];
-                            $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES , 'fID=' . $fInfo->featured_categories_id . $page_search_parameters) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                            $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES, 'fID=' . $fInfo->featured_categories_id . $page_search_parameters) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                             break;
 
                         case 'pre_add':
                             $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_PRE_ADD_FEATURED . '</h4>'];
-                            $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED_CATEGORIES , 'action=pre_add_confirmation' . $page_search_parameters , 'post' , 'class="form-horizontal"')];
+                            $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED_CATEGORIES, 'action=pre_add_confirmation' . $page_search_parameters, 'post', 'class="form-horizontal"')];
                             $contents[] = ['text' => TEXT_INFO_PRE_ADD_INTRO];
                             $result = $db->Execute("SELECT MAX(categories_id) AS lastcategoryid FROM " . TABLE_CATEGORIES);
                             $max_category_id = $result->fields['lastcategoryid'];
-                            $contents[] = ['text' => zen_draw_input_field('pre_add_categories_id' , '' , zen_set_field_length(TABLE_FEATURED_CATEGORIES , 'categories_id') . ' class="form-control" id="pre_add_categories_id" required max="' . $max_category_id . '"' , '' , 'number')];
-                            $contents[] = ['align' => 'text-center' , 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES , (!empty($fInfo->featured_categories_id) ? '&fID=' . $fInfo->featured_categories_id : '') . $page_search_parameters) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                            $contents[] = ['text' => zen_draw_input_field('pre_add_categories_id', '', zen_set_field_length(TABLE_FEATURED_CATEGORIES, 'categories_id') . ' class="form-control" id="pre_add_categories_id" required max="' . $max_category_id . '"', '', 'number')];
+                            $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES, (!empty($fInfo->featured_categories_id) ? '&fID=' . $fInfo->featured_categories_id : '') . $page_search_parameters) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                             break;
 
                         default:
@@ -509,8 +509,8 @@ if ($action !== '') {
                                 $contents[] = [
                                 'align' => 'text-center',
                                 'text' => '
-                                <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES , '&fID=' . $fInfo->featured_categories_id . '&action=edit' . $page_search_parameters) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
-                                <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES , '&fID=' . $fInfo->featured_categories_id . '&action=delete' . $page_search_parameters) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_FEATURED . '</a>'
+                                <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES, '&fID=' . $fInfo->featured_categories_id . '&action=edit' . $page_search_parameters) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
+                                <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES, '&fID=' . $fInfo->featured_categories_id . '&action=delete' . $page_search_parameters) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_FEATURED . '</a>'
                                 ];
                                 $contents[] = ['text' => TEXT_FEATURED_AVAILABLE_DATE . ' ' . (($fInfo->featured_date_available !== '0001-01-01' && $fInfo->featured_date_available !== '') ? zen_date_short($fInfo->featured_date_available) : TEXT_NONE)];
                                 $contents[] = ['text' => TEXT_FEATURED_EXPIRES_DATE . ' ' . (($fInfo->expires_date !== '0001-01-01' && $fInfo->expires_date !== '') ? zen_date_short($fInfo->expires_date) : TEXT_NONE)];
@@ -525,7 +525,7 @@ if ($action !== '') {
                                 ];
                                 $contents[] = [
                                 'align' => 'text-center',
-                                'text' => '<a href="' . zen_href_link(FILENAME_CATEGORIES , '&cPath=' . $fInfo->parent_id . '&cID=' . $fInfo->categories_id . '&action=edit_category' ) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_CATEGORY . '</a>'
+                                'text' => '<a href="' . zen_href_link(FILENAME_CATEGORIES, '&cPath=' . $fInfo->parent_id . '&cID=' . $fInfo->categories_id . '&action=edit_category' ) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT_CATEGORY . '</a>'
                                 ];
                             }
                             break;

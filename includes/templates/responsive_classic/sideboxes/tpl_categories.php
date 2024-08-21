@@ -60,7 +60,7 @@ for ($i=0, $j=sizeof($box_categories_array); $i<$j; $i++) {
     }
 }
 
-if (SHOW_CATEGORIES_BOX_SPECIALS == 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_NEW == 'true' || SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS == 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_ALL == 'true' || SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES == 'true') {
+if (SHOW_CATEGORIES_BOX_SPECIALS === 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_NEW === 'true' || SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS === 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_ALL === 'true' || SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES === 'true') {
     // display a separator between categories and links
     if (SHOW_CATEGORIES_SEPARATOR_LINK === '1') {
         $content .= '' . "\n";

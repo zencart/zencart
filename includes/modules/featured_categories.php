@@ -62,15 +62,12 @@ if ($num_categories_count > 0) {
         }
         $featured_categories->MoveNextRandom();
     }
-
-    if ($featured_categories->EOF) {
-        if (!empty($current_category_id)) {
-            $category_title = zen_get_category_name((int)$current_category_id);
-            $title = '<h2 class="centerBoxHeading">' . TABLE_HEADING_FEATURED_CATEGORIES . ($category_title !== '' ? ' - ' . $category_title : '') . '</h2>';
-        } else {
-            $title = '<h2 class="centerBoxHeading">' . TABLE_HEADING_FEATURED_CATEGORIES . '</h2>';
-        }
-        $zc_show_featured = true;
+    if (!empty($current_category_id)) {
+        $category_title = zen_get_category_name((int)$current_category_id);
+        $title = '<h2 class="centerBoxHeading">' . TABLE_HEADING_FEATURED_CATEGORIES . ($category_title !== '' ? ' - ' . $category_title : '') . '</h2>';
+    } else {
+        $title = '<h2 class="centerBoxHeading">' . TABLE_HEADING_FEATURED_CATEGORIES . '</h2>';
     }
+    $zc_show_featured = true;
 }
 
