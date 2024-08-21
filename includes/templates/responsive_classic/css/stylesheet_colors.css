@@ -30,7 +30,7 @@ legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxCon
 .list-more{color:#fff !important;}
 
 /* Added by dbltoe for more accent on center page items.  Comment out any not wanted */
-.categoryListBoxContents:hover, centerBoxContentsListing:hover, .centerBoxContents:hover, .centerBoxContentsNew:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsSpecials:hover, .specialsListBoxContents:hover {border-radius: 5px;background:#e2e3e4;box-shadow: 21px 21px 41px #bdbdbd, -21px -21px 41px #d9d9d9;}
+.categoryListBoxContents:hover, centerBoxContentsListing:hover, .centerBoxContents:hover, .centerBoxContentsNew:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsSpecials:hover, .specialsListBoxContents:hover, .centerBoxContentsFeaturedCategories:hover {border-radius: 5px;background:#e2e3e4;box-shadow: 21px 21px 41px #bdbdbd, -21px -21px 41px #d9d9d9;}
 
 /*bof background colors*/
 body, #mainWrapper, #headerWrapper, #contentMainWrapper, #logoWrapper, #cartBoxListWrapper, #ezPageBoxList, #cartBoxListWrapper ul, #ezPageBoxList ul, #mainWrapper, #popupAdditionalImage, #contentMainWrapper, #headerWrapper, .sideBoxContent, .rightBoxContent, .rowOdd, #productQuantityDiscounts table, #accountLinksWrapper {background:#fff;}
