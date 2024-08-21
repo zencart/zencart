@@ -25,8 +25,8 @@ if (isset($_POST['adminDir'])) {
 }
 $systemChecker = new systemChecker($selectedAdminDir);
 if (isset($_POST['updateConfigure'])) {
-    require_once(DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php');
-    require_once(DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
+    require_once DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php';
+    require_once DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php';
     if (!isset($_POST['btnsubmit']) || $_POST['btnsubmit'] !== TEXT_REFRESH) {
         $configFile = DIR_FS_ROOT . 'includes/configure.php';
         $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';

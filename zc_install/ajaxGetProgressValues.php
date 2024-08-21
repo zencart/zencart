@@ -12,4 +12,4 @@ define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require DIR_FS_INSTALL . 'includes/application_top.php';
 
-echo @file_get_contents(DEBUG_LOG_FOLDER . '/progress.json');
+echo @file_get_contents(zcDatabaseInstaller::$initialProgressMeterFilename);

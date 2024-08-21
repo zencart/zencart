@@ -114,7 +114,7 @@ $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order
 
 <?php
   $additional_content = false;
-  $zco_notifier->notify('NOTIFY__INVOICE_ADDITIONAL_DATA_MIDDLE', $order, $additional_content);
+  $zco_notifier->notify('NOTIFY_INVOICE_ADDITIONAL_DATA_MIDDLE', $order, $additional_content);
     if ($additional_content !== false) {
 ?>
     <table class="table">

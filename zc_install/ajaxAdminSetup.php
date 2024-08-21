@@ -13,6 +13,28 @@ define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require DIR_FS_INSTALL . 'includes/application_top.php';
 
+$error = false;
+$errorList = [];
+$response = [];
+
+// validation
+if (empty($_POST['admin_user'])) {
+    $error = true;
+    $errorList['admin_user'] = 'Username is required';
+}
+if (empty($_POST['admin_email']) || empty($_POST['admin_email2']) || $_POST['admin_email'] !== $_POST['admin_email2']) {
+    $error = true;
+    $errorList['admin_email2'] = TEXT_ADMIN_SETUP_MATCHING_EMAIL;
+}
+
+if ($error) {
+    $response = [
+        'error' => $error,
+        'errorList' => $errorList,
+    ];
+}
+
+// prepare directory-related responses
 $adminDir = $_POST['adminDir'] ?? 'admin';
 $wordlist = file(DIR_FS_INSTALL . 'includes/wordlist.csv');
 $max = count($wordlist) - 1;
@@ -34,4 +56,8 @@ if ($adminDir === 'admin' && (!defined('DEVELOPER_MODE') || DEVELOPER_MODE === f
         $adminDir = $adminNewDir;
     }
 }
-echo json_encode(['changedDir' => (int)$result, 'adminNewDir' => $adminNewDir, 'adminDir' => $adminDir]);
+$response['changedDir'] = (int)$result;
+$response['adminNewDir'] = $adminNewDir;
+$response['adminDir'] = $adminDir;
+
+echo json_encode($response);

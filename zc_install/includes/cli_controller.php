@@ -77,8 +77,6 @@ $db_name = $zc_settings['db_name'] ?? 'zencart';
 $db_user = $zc_settings['db_user'] ?? '';
 $db_password = $zc_settings['db_password'] ?? '';
 
-require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
-
 $admin_password = zen_create_PADSS_password();
 
 if (isset($_POST['http_server_catalog'])) {
