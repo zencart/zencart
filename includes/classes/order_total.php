@@ -68,12 +68,16 @@ class order_total extends base
             $this->notify('NOTIFY_ORDER_TOTAL_PROCESS_STARTS', ['order_info' => $order->info]);
             foreach ($this->modules as $value) {
                 $class = substr($value, 0, strrpos($value, '.'));
-                if (!isset($GLOBALS[$class])) continue;
+                if (!isset($GLOBALS[$class])) {
+                    continue;
+                }
+
                 $GLOBALS[$class]->process();
                 $this->notify('NOTIFY_ORDER_TOTAL_PROCESS_NEXT', ['class' => $class, 'order_info' => $order->info, 'ot_output' => $GLOBALS[$class]->output]);
                 if (empty($GLOBALS[$class]->output)) {
                     continue;
                 }
+
                 for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i++) {
                     if (zen_not_null($GLOBALS[$class]->output[$i]['title']) && zen_not_null($GLOBALS[$class]->output[$i]['text'])) {
                         $order_total_array[] = [
@@ -103,19 +107,21 @@ class order_total extends base
                 // ideally, the first part of this IF statement should be dropped, and the ELSE portion is all that should be kept
                 if ($return_html == true) {
                     for ($i = 0; $i < $size; $i++) {
-                        $output_string .= '              <tr>' . "\n" .
+                        $output_string .=
+                            '              <tr>' . "\n" .
                             '                <td align="right" class="' . str_replace('_', '-', $GLOBALS[$class]->code) . '-Text">' . $GLOBALS[$class]->output[$i]['title'] . '</td>' . "\n" .
                             '                <td align="right" class="' . str_replace('_', '-', $GLOBALS[$class]->code) . '-Amount">' . $GLOBALS[$class]->output[$i]['text'] . '</td>' . "\n" .
                             '              </tr>';
                     }
                 } else {
                     // use a template file for output instead of hard-coded HTML
-                    require($template->get_template_dir('tpl_modules_order_totals.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_modules_order_totals.php');
+                    require $template->get_template_dir('tpl_modules_order_totals.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_modules_order_totals.php';
                 }
             }
         }
         return $output_string;
     }
+
     //
     // This function is called in checkout payment after display of payment methods. It actually calls
     // two credit class functions.
@@ -135,13 +141,14 @@ class order_total extends base
                 $class = substr($value, 0, strrpos($value, '.'));
                 if (isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class == true) {
                     $selection = $GLOBALS[$class]->credit_selection();
-                    if (is_array($selection)) $selection_array[] = $selection;
+                    if (is_array($selection)) {
+                        $selection_array[] = $selection;
+                    }
                 }
             }
         }
         return $selection_array;
     }
-
 
     // update_credit_account is called in checkout process on a per product basis. Its purpose
     // is to decide whether each product in the cart should add something to a credit account.
@@ -161,13 +168,11 @@ class order_total extends base
         }
     }
 
-
     // This function is called in checkout confirmation.
     // Its main use is for credit classes that use the credit_selection() method. This is usually for
     // entering redeem codes(Gift Vouchers/Discount Coupons). This function is used to validate these codes.
     // If they are valid then the necessary actions are taken, if not valid we are returned to checkout payment
     // with an error
-
     function collect_posts()
     {
         if (MODULE_ORDER_TOTAL_INSTALLED) {
@@ -181,6 +186,7 @@ class order_total extends base
             }
         }
     }
+
     // pre_confirmation_check is called on checkout confirmation. Its function is to decide whether the
     // credits available are greater than the order total. If they are then a variable (credit_covers) is set to
     // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
@@ -189,6 +195,7 @@ class order_total extends base
     function pre_confirmation_check($returnOrderTotalOnly = false)
     {
         global $order, $credit_covers;
+
         if (MODULE_ORDER_TOTAL_INSTALLED) {
             $orderInfoSaved = $order->info;
             $this->notify('NOTIFY_ORDER_TOTAL_PRE_CONFIRMATION_CHECK_STARTS', ['order_info' => $orderInfoSaved]);
@@ -203,9 +210,12 @@ class order_total extends base
                 $credit_covers = true;
             }
             $order->info = $orderInfoSaved;
-            if ($returnOrderTotalOnly === true) return $reCalculatedOrderTotal;
+            if ($returnOrderTotalOnly === true) {
+                return $reCalculatedOrderTotal;
+            }
         }
     }
+
     // this function is called in checkout process. it tests whether a decision was made at checkout payment to use
     // the credit amount be applied aginst the order. If so some action is taken. E.g. for a Gift voucher the account
     // is reduced the order total amount.
@@ -235,6 +245,7 @@ class order_total extends base
             }
         }
     }
+
     // Called at various times. This function calulates the total value of the order that the
     // credit will be applied against. This varies depending on whether the credit class applies
     // to shipping & tax
