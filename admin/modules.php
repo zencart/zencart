@@ -18,35 +18,33 @@ $set = $_GET['set'] ?? $_POST['set'] ?? '';
 
 $is_ssl_protected = strpos(HTTP_SERVER, 'https') === 0;
 
-if (!empty($set)) {
-    switch ($set) {
-        case 'shipping':
-            $module_type = 'shipping';
-            $module_key = 'MODULE_SHIPPING_INSTALLED';
-            define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
-            $shipping_errors = '';
-            if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
-                $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
-            }
-            if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS !== 'True')) {
-                $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
-            }
-            if ($shipping_errors !== '') {
-                $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
-            }
-            break;
-        case 'ordertotal':
-            $module_type = 'order_total';
-            $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
-            define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
-            break;
-        case 'payment':
-        default:
-            $module_type = 'payment';
-            $module_key = 'MODULE_PAYMENT_INSTALLED';
-            define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
-            break;
-    }
+switch ($set) {
+    case 'shipping':
+        $module_type = 'shipping';
+        $module_key = 'MODULE_SHIPPING_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
+        $shipping_errors = '';
+        if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
+            $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
+        }
+        if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS !== 'True')) {
+            $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
+        }
+        if ($shipping_errors !== '') {
+            $messageStack->add(ERROR_SHIPPING_CONFIGURATION . $shipping_errors, 'caution');
+        }
+        break;
+    case 'ordertotal':
+        $module_type = 'order_total';
+        $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
+        break;
+    case 'payment':
+    default:
+        $module_type = 'payment';
+        $module_key = 'MODULE_PAYMENT_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
+        break;
 }
 
 $moduleFinder = new ModuleFinder($module_type, new Filesystem());
