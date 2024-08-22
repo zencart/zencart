@@ -266,7 +266,8 @@ foreach ($modules_found as $module_name => $module_file_dir) {
               <tr id="defaultSelected" class="dataTableRowSelected">
 <?php
                 }
-            } else { // module row is not selected: click to show install option or module parameters ?>
+            } else { // module row is not selected: click to show install option or module parameters
+?>
               <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?= zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') ?>'">
 <?php
             }
@@ -304,56 +305,56 @@ foreach ($modules_found as $module_name => $module_file_dir) {
                     <?= (is_numeric($module->sort_order) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : '') ?>
                   </td>
 <?php
-}
+            }
 ?>
                   <td class="dataTableContent text-right">
 <?php
-                if (isset($mInfo) && is_object($mInfo) && $class === $mInfo->code) {
-                    echo zen_icon('caret-right', '', '2x', true);
-                    $_GET['module'] = $_GET['module'] ?? $mInfo->code;
-                } else {
-                    echo
-                        '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' .
-                            zen_icon('circle-info', '', '2x', true, false) .
-                        '</a>';
-                }
+            if (isset($mInfo) && is_object($mInfo) && $class === $mInfo->code) {
+                echo zen_icon('caret-right', '', '2x', true);
+                $_GET['module'] = $_GET['module'] ?? $mInfo->code;
+            } else {
+                echo
+                    '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' .
+                        zen_icon('circle-info', '', '2x', true, false) .
+                    '</a>';
+            }
 ?>
                     &nbsp;
                   </td>
               </tr>
 <?php
-            }
-        } else {
-            echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $module_name . '<br>';
-        }
-    }
-
-    ksort($installed_modules);
-    $installed_modules_list = zen_db_input(implode(';', $installed_modules));
-    $check = $db->Execute(
-        "SELECT configuration_value
-           FROM " . TABLE_CONFIGURATION . "
-          WHERE configuration_key = '" . zen_db_input($module_key) . "'
-          LIMIT 1"
-    );
-
-    if (!$check->EOF) {
-        if ($check->fields['configuration_value'] !== implode(';', $installed_modules)) {
-            $db->Execute(
-                "UPDATE " . TABLE_CONFIGURATION . "
-                    SET configuration_value = '" . $installed_modules_list . "',
-                        last_modified = now()
-                  WHERE configuration_key = '" . zen_db_input($module_key) . "'
-                  LIMIT 1"
-            );
         }
     } else {
-      $db->Execute(
-        "INSERT INTO " . TABLE_CONFIGURATION . "
-            (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added)
-         VALUES
-            ('Installed Modules', '" . zen_db_input($module_key) . "', '" . $installed_modules_list . "', 'This is automatically updated. No need to edit.', 6, 0, now())");
+        echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $module_name . '<br>';
     }
+}
+
+ksort($installed_modules);
+$installed_modules_list = zen_db_input(implode(';', $installed_modules));
+$check = $db->Execute(
+    "SELECT configuration_value
+       FROM " . TABLE_CONFIGURATION . "
+      WHERE configuration_key = '" . zen_db_input($module_key) . "'
+      LIMIT 1"
+);
+
+if (!$check->EOF) {
+    if ($check->fields['configuration_value'] !== implode(';', $installed_modules)) {
+        $db->Execute(
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_value = '" . $installed_modules_list . "',
+                    last_modified = now()
+              WHERE configuration_key = '" . zen_db_input($module_key) . "'
+              LIMIT 1"
+        );
+    }
+} else {
+  $db->Execute(
+    "INSERT INTO " . TABLE_CONFIGURATION . "
+        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added)
+     VALUES
+        ('Installed Modules', '" . zen_db_input($module_key) . "', '" . $installed_modules_list . "', 'This is automatically updated. No need to edit.', 6, 0, now())");
+}
 ?>
             </tbody>
           </table>
