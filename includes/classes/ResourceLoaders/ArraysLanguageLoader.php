@@ -14,12 +14,13 @@ class ArraysLanguageLoader extends BaseLanguageLoader
 {
     protected $mainLoader;
     
-    public function makeConstants($defines): void
+    public function makeConstants($defines): bool
     {
         if (!is_array($defines)) {
-            return;
+            return false;
         }
 
+        $constants_made = false;
         foreach ($defines as $defineKey => $defineValue) {
             if (defined($defineKey)) {
                 continue;
@@ -32,8 +33,11 @@ class ArraysLanguageLoader extends BaseLanguageLoader
                     }
                 }
             }
+
             define($defineKey, $defineValue);
+            $constants_made = true;
         }
+        return $constants_made;
     }
 
     public function getLanguageDefines(): array
@@ -78,6 +82,21 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $defineListTemplate = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
         $defineList = array_merge($defineListMain, $defineListTemplate);
         $this->makeConstants($defineList);
+    }
+
+    public function loadCatalogLanguageFile(string $language, string $fileName, string $extraPath = ''): bool
+    {
+        $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES;
+        $defineList = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+
+        $defineListPlugins = $this->pluginLoadDefinesFromArrayFile($language, $fileName, 'catalog', $extraPath);
+        $defineList = array_merge($defineList, $defineListPlugins);
+
+        $extraPath .= '/' . $this->templateDir;
+        $defineListTemplate = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+        $defineList = array_merge($defineList, $defineListTemplate);
+
+        return $this->makeConstants($defineList);
     }
 
     public function loadDefinesFromArrayFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): array

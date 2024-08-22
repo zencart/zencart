@@ -95,6 +95,11 @@ class LanguageLoader
         return false;
     }
 
+    public function loadCatalogLanguageFile(string $language, string $fileName, string $extraPath = ''): bool
+    {
+        return $this->arrayLoader->loadCatalogLanguageFile($language, $fileName, $extraPath);
+    }
+
     public function isFileAlreadyLoaded(string $defineFile): bool
     {
         $fileInfo = pathinfo($defineFile);
