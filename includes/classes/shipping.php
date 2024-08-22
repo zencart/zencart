@@ -79,17 +79,10 @@ class shipping
         }
 
         foreach ($modules_to_quote as $quote_module) {
-            $lang_file = null;
-            $module_file = DIR_WS_MODULES . 'shipping/' . $quote_module['file'];
-            if (IS_ADMIN_FLAG === true) {
-                $lang_file = zen_get_file_directory(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $quote_module['file'], 'false');
-                $module_file = DIR_FS_CATALOG . $module_file;
-            } else {
-                $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/', $quote_module['file'], 'false');
-            }
-            if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], $quote_module['file'], '/modules/shipping')) {
-                $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], $quote_module['file'], '/modules/shipping');
-            } else {
+            if (!$languageLoader->loadCatalogLanguageFile($_SESSION['language'], $quote_module['file'], '/modules/shipping')) {
+                $language_dir = (IS_ADMIN_FLAG === false) ? DIR_WS_LANGUAGES : (DIR_FS_CATALOG . DIR_WS_LANGUAGES);
+                $lang_file = zen_get_file_directory($language_dir . $_SESSION['language'] . '/modules/shipping/', $quote_module['file'], 'false');
+
                 if (is_object($messageStack)) {
                     if (IS_ADMIN_FLAG === false) {
                         $messageStack->add('checkout_shipping', WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
@@ -101,10 +94,11 @@ class shipping
             }
 
             $this->enabled = true;
+            $module_file = DIR_FS_CATALOG . DIR_WS_MODULES . 'shipping/' . $quote_module['file'];
             $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $quote_module['class'], $quote_module['class']);
             if ($this->enabled) {
                 include_once $module_file;
-                $GLOBALS[$quote_module['class']] = new $quote_module['class'];
+                $GLOBALS[$quote_module['class']] = new $quote_module['class']();
 
                 $enabled = $this->check_enabled($GLOBALS[$quote_module['class']]);
                 if ($enabled === false) {

@@ -84,7 +84,7 @@ class payment
                     if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . '/payment/' . $value)) {
                         $class = pathinfo($value, PATHINFO_FILENAME);
                         // Don't show Free Payment Module
-                        if ($class !='freecharger') {
+                        if ($class !== 'freecharger') {
                             $include_modules[] = ['class' => $class, 'file' => $value];
                         }
                     }
@@ -95,10 +95,8 @@ class payment
         for ($i = 0, $n = count($include_modules); $i < $n; $i++) {
             $next_module = $include_modules[$i];
 
-            $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', $next_module['file'], 'false');
-            if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $next_module['file'], '/modules/payment')) {
-                $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $next_module['file'], '/modules/payment');
-            } else {
+            if (!$languageLoader->loadCatalogLanguageFile($_SESSION['language'], $next_module['file'], '/modules/payment')) {
+                $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', $next_module['file'], 'false');
                 if (is_object($messageStack)) {
                     if (IS_ADMIN_FLAG === false) {
                         $messageStack->add('checkout_payment', WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file, 'caution');
@@ -108,6 +106,7 @@ class payment
                 }
                 continue;
             }
+
             include_once DIR_WS_MODULES . 'payment/' . $next_module['file'];
 
             $this->paymentClass = new $next_module['class']();
