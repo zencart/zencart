@@ -1,5 +1,4 @@
 <?php
-
 /**
  * shipping class
  *
@@ -8,6 +7,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Feb 19 Modified in v2.0.0-beta1 $
  */
+use Zencart\Traits\NotifierManager;
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -17,8 +18,10 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Class used for interfacing with shipping modules
  *
  */
-class shipping extends base
+class shipping
 {
+    use NotifierManager;
+
     /**
      * $enabled public property used by notifiers to allow notifier to turn off a shipping method when querying available modules
      */
@@ -67,7 +70,7 @@ class shipping extends base
             ];
         } else {
             foreach ($this->modules as $value) {
-                $class = substr($value, 0, strrpos($value, '.'));
+                $class = pathinfo($value, PATHINFO_FILENAME);
                 $modules_to_quote[] = [
                     'class' => $class,
                     'file' => $value,
@@ -96,6 +99,7 @@ class shipping extends base
                 }
                 continue;
             }
+
             $this->enabled = true;
             $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $quote_module['class'], $quote_module['class']);
             if ($this->enabled) {
@@ -135,10 +139,12 @@ class shipping extends base
             $enabled = $module_class->check_enabled_for_zone();
         }
         $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED_FOR_ZONE', [], $module_class, $enabled);
+
         if (method_exists($module_class, 'check_enabled') && $enabled) {
             $enabled = $module_class->check_enabled();
         }
         $this->notify('NOTIFY_SHIPPING_CHECK_ENABLED', [], $module_class, $enabled);
+
         return !empty($enabled);
     }
 
@@ -190,7 +196,6 @@ class shipping extends base
             // total weight with Tare
             $_SESSION['shipping_weight'] = $shipping_weight;
             if ($shipping_weight > SHIPPING_MAX_WEIGHT) { // Split into many boxes
-//              $shipping_num_boxes = ceil($shipping_weight/SHIPPING_MAX_WEIGHT);
                 $zc_boxes = zen_round(($shipping_weight / SHIPPING_MAX_WEIGHT), 2);
                 $shipping_num_boxes = ceil($zc_boxes);
                 $shipping_weight = $shipping_weight / $shipping_num_boxes;
@@ -211,6 +216,7 @@ class shipping extends base
     public function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = []): array
     {
         global $shipping_weight, $uninsurable_value;
+
         $quotes_array = [];
 
         if ($calc_boxes_weight_tare) {
@@ -224,7 +230,7 @@ class shipping extends base
             $modules_to_quote = [];
 
             foreach ($this->modules as $value) {
-                $class = substr($value, 0, strrpos($value, '.'));
+                $class = pathinfo($value, PATHINFO_FILENAME);
                 if (!empty($module)) {
                     if ($module === $class && isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
                         $modules_to_quote[] = $class;
@@ -241,6 +247,7 @@ class shipping extends base
                 if (false === $GLOBALS[$quoting_module]->enabled) {
                     continue;
                 }
+
                 $save_shipping_weight = $shipping_weight;
                 $quotes = $GLOBALS[$quoting_module]->quote($method);
                 if (!isset($quotes['tax']) && !empty($quotes)) {
@@ -269,12 +276,13 @@ class shipping extends base
         $rates = [];
         $exclude_storepickup_module = false;
         foreach ($this->modules as $value) {
-            $class = substr($value, 0, strrpos($value, '.'));
+            $class = pathinfo($value, PATHINFO_FILENAME);
             if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
                 $quotes = $GLOBALS[$class]->quotes ?? null;
                 if (empty($quotes['methods']) || isset($quotes['error'])) {
                     continue;
                 }
+
                 foreach ($quotes['methods'] as $method) {
                     if (isset($method['cost'])) {
                         $rates[] = [
