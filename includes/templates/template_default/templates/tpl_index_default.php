@@ -32,19 +32,15 @@
   $show_display_category = $db->Execute(SQL_SHOW_PRODUCT_INFO_MAIN);
   while (!$show_display_category->EOF) {
 ?>
+<?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_PRODUCTS') { ?>
 <?php
 /**
  * display the Featured Products Center Box
  */
 ?>
-<?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_PRODUCTS') { ?>
-
 <?php require($template->get_template_dir('tpl_modules_featured_products.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_products.php'); ?>
 <?php } ?>
 <?php
-/**
- * display the Featured Products Center Box
- */
 ?>
 
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_SPECIALS_PRODUCTS') { ?>
