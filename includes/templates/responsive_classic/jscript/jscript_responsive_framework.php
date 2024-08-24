@@ -56,6 +56,7 @@ $('#productnotifications').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#currencies').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#languages').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#shoppingcart').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#featuredcategories').css({ 'display': 'none', 'visibility': 'hidden' });
 
 
 $('input#email-address').clone().attr('type','email').insertAfter('input#email-address').prev().remove();
@@ -97,6 +98,7 @@ $('#bannerbox2').css({  });
 $('#bestsellers').css({  });
 $('#specials').css({  });
 $('#whosonline').css({  });
+$('#featuredcategories').css({  });
 
 
 <?php } else if ( $_SESSION['layoutType'] == 'full' ){ ?>

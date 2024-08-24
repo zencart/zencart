@@ -27,7 +27,7 @@ P, ADDRESS {padding:0.5em;}
 ADDRESS {font-style:normal;}
 HR {height: 1px;margin-top:0.5em;border:none;}
 #logo, .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .centerBoxContentsAlsoPurch, .attribImg {float:left;}
-.centeredContent, TH, #cartEmptyText, #cartBoxGVButton, #cartBoxEmpty, #cartBoxVoucherBalance, #navCatTabsWrapper, #navEZPageNextPrev, #bannerOne, #bannerTwo,  #bannerThree,  #bannerFour,  #bannerFive,  #bannerSix, #siteinfoLegal, #siteinfoCredits, #siteinfoStatus, #siteinfoIP, .center, .cartRemoveItemDisplay, .cartQuantityUpdate, .cartQuantity, .cartTotalsDisplay, #cartBoxGVBalance, .leftBoxHeading, .centerBoxHeading,.rightBoxHeading, .productListing-data, .accountQuantityDisplay, .ratingRow, LABEL#textAreaReviews, #productMainImage, #reviewsInfoDefaultProductImage, #productReviewsDefaultProductImage, #reviewWriteMainImage, .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .gvBal, .attribImg {text-align:center;}
+.centeredContent, TH, #cartEmptyText, #cartBoxGVButton, #cartBoxEmpty, #cartBoxVoucherBalance, #navCatTabsWrapper, #navEZPageNextPrev, #bannerOne, #bannerTwo,  #bannerThree,  #bannerFour,  #bannerFive,  #bannerSix, #siteinfoLegal, #siteinfoCredits, #siteinfoStatus, #siteinfoIP, .center, .cartRemoveItemDisplay, .cartQuantityUpdate, .cartQuantity, .cartTotalsDisplay, #cartBoxGVBalance, .leftBoxHeading, .centerBoxHeading,.rightBoxHeading, .productListing-data, .accountQuantityDisplay, .ratingRow, LABEL#textAreaReviews, #productMainImage, #reviewsInfoDefaultProductImage, #productReviewsDefaultProductImage, #reviewWriteMainImage, .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsFeaturedCategories, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .gvBal, .attribImg {text-align:center;}
 #navCategoryIcon, .buttonRow, #indexProductListCatDescription {margin:0.5em;}
 /*floats and clears*/
 .back {float:left;}
@@ -36,7 +36,7 @@ HR {height: 1px;margin-top:0.5em;border:none;}
 .bold {font-weight:bold;}
 .hiddenField {display:none;}
 .visibleField {display:inline;}
-#contentColumnMain, #navColumnOne, #navColumnTwo, .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .alert {vertical-align:top;}
+#contentColumnMain, #navColumnOne, #navColumnTwo, .centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsFeaturedCategories, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .alert {vertical-align:top;}
 .alert {margin-left:0.5em;}
 .important {font-weight:bold;}
 .gvBal {float:right;}
@@ -266,10 +266,10 @@ div#checkoutShippingContentChoose{margin-bottom:20px;}
 .cartImage {margin:0.5em 1em;}
 
 /*bof center boxes*/
-.centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew {margin:1em 0;}
-.specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxContentsFeatured a, .centerBoxContentsSpecials a, .centerBoxContentsNew a{margin:10px auto;font-size:0.8em;display:block;width:90%;text-decoration:underline;}
-.specialsListBoxContents, .centerBoxContentsSpecials, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew{font-size:1.6em;cursor:pointer;padding:20px 0;}
-.specialsListBoxContents:hover, .centerBoxContentsSpecials:hover, .centerBoxContentsAlsoPurch:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsNew:hover{}
+.centerBoxContents, .specialsListBoxContents, .categoryListBoxContents, .additionalImages, .centerBoxContentsSpecials, .centerBoxContentsFeaturedCategories, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew {margin:1em 0;}
+.specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxContentsFeatured a, .centerBoxContentsSpecials a, .centerBoxContentsFeaturedCategories a, .centerBoxContentsNew a{margin:10px auto;font-size:0.8em;display:block;width:90%;text-decoration:underline;}
+.specialsListBoxContents, .centerBoxContentsSpecials, .centerBoxContentsFeaturedCategories, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew{font-size:1.6em;cursor:pointer;padding:20px 0;}
+.specialsListBoxContents:hover, .centerBoxContentsSpecials:hover, .centerBoxContentsFeaturedCategories:hover, .centerBoxContentsAlsoPurch:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsNew:hover{}
 .centerBoxWrapper{overflow:hidden;margin-bottom:30px;clear:both;}
 .productPriceDiscount{margin:10px 0 5px 0;display:block;font-size:90%;}
 .productPriceDiscount br{display:none;}

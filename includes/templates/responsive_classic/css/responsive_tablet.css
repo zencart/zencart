@@ -30,7 +30,7 @@ div#taglineWrapper {float:none;clear:both;}
 #navCatTabs ul li:last-child, #navCatTabs ul li{border:none;padding:5px;}
 
 /*bof center-boxes*/
-div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48% !important;height:auto;}
+div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsFeaturedCategories.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48% !important;height:auto;}
 
 /* side-boxes */
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
@@ -41,6 +41,7 @@ div#whatsnew{}
 div#manufacturers{}
 div#reviews{}
 div#featured{}
+div#featuredcategories{}
 div#information {}
 div#moreinformation{}
 div#bannerbox{}
@@ -53,6 +54,7 @@ div#bannerbox2{}
 div#bestsellers{}
 div#specials{}
 div#whosonline{}
+div#featuredcategories{}
 
 /* index & cPath (product listing pages) */
 div#productListing table, div#productListing thead, div#productListing tbody, div#productListing th, div#productListing td, div#productListing tr{display:block;}
@@ -120,7 +122,7 @@ div#taglineWrapper {float:none;clear:both;}
 #navCatTabsWrapper, #navEZPagesTop{display:none;visibility:hidden;}
 
 /*bof center-boxes*/
-div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48%!important;height:auto;}
+div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsFeaturedCategories.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48%!important;height:auto;}
 
 /*bof side-boxes*/
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
@@ -131,6 +133,7 @@ div#whatsnew { display:none;visibility:hidden; }
 div#manufacturers { display:none;visibility:hidden; }
 div#reviews { display:none;visibility:hidden; }
 div#featured { display:none;visibility:hidden; }
+div#featuredcategories { display:none;visibility:hidden; }
 div#information { display:none;visibility:hidden; }
 div#moreinformation { display:none;visibility:hidden; }
 div#bannerbox { display:none;visibility:hidden; }
@@ -149,6 +152,7 @@ div#productnotifications{display:none;visibility:hidden;}
 div#orderhistory{display:none;visibility:hidden;}
 div#currencies{display:none;visibility:hidden;}
 div#languages{display:none;visibility:hidden;}
+div#featuredcategories { display:none;visibility:hidden; }
 
 /*bof login, create account*/
 div#loginDefault input[type="text"], div#loginDefault input[type="password"], div#loginDefault select {height:40px;}
