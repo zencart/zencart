@@ -88,7 +88,7 @@ return [
 'TEXT_COMPLETION_HEADER_MAIN' => '',
 'TEXT_COMPLETION_INSTALL_COMPLETE' => '',
 'TEXT_COMPLETION_INSTALL_LINKS_BELOW' => 'The links to access your Admin area dashboard and shop storefront are shown below:',
-'TEXT_COMPLETION_UPGRADE_COMPLETE' => 'Congratulations, your upgrade is now complete.',
+'TEXT_COMPLETION_UPGRADE_COMPLETE' => 'Congratulations, your database-upgrade for the core Zen Cart application is now complete.<br>Be sure to also upgrade any plugins you have installed.',
 'TEXT_COMPLETION_ADMIN_DIRECTORY_WARNING' => 'Your admin directory could not be renamed automatically, you will need to rename your admin directory before accessing it.',
 'TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING' => 'You must <strong>now</strong> delete/remove the "zc_install" directory from your server.',
 'TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION' => 'Admin access is disabled until this directory has been removed, to prevent unauthorized persons from using the installer to overwrite your installation.',
