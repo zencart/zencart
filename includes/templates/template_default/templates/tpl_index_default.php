@@ -38,13 +38,14 @@
  */
 ?>
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_PRODUCTS') { ?>
-<?php
-/**
- * display the Featured Categories Center Box
- */
-?>
+
 <?php require($template->get_template_dir('tpl_modules_featured_products.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_products.php'); ?>
 <?php } ?>
+<?php
+/**
+ * display the Featured Products Center Box
+ */
+?>
 
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_SPECIALS_PRODUCTS') { ?>
 <?php
@@ -75,7 +76,7 @@
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_CATEGORIES') { ?>
 <?php
 /**
- * display the Featured Products Center Box
+ * display the Featured Categories Center Box
  */
 ?>
 <?php require($template->get_template_dir('tpl_modules_featured_categories.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_categories.php'); ?>
