@@ -79,6 +79,17 @@ class systemChecker
 //echo print_r($this->systemChecks);
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
 //echo print_r($systemCheck);
+            // check for bypass
+            if (isset($systemCheck['skipWhen'])) {
+                $parts = explode('=', $systemCheck['skipWhen']);
+                $what = $parts[0];
+                $when = $parts[1];
+
+                if ($what === 'server' && $when === 'nginx' && str_starts_with($_SERVER['SERVER_SOFTWARE'], 'nginx')) {
+                    continue;
+                }
+            }
+
             if (in_array($systemCheck['runLevel'], $runLevels, false)) {
                 $resultCombined = true;
                 $criticalError = false;
