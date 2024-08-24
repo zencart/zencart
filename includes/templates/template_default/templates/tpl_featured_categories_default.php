@@ -14,24 +14,21 @@
 <h1 id="featuredCateoryDefaultHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
-/**
- * display the category sort dropdown
- */
-
 $list_box_contents = [];
 $row = 0;
 $col = 0;
 
+$col_width = floor(100 / SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS);
+
 foreach ($listing as $record) {
-    $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'categories_id=' . $record['categories_id']) . '">';
-    $lc_text .= '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath='.  zen_get_generated_category_path_rev($record['categories_id'])). '">'
-    . zen_image(DIR_WS_IMAGES . $record['categories_image'], $record['categories_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+    $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . zen_get_generated_category_path_rev($record['categories_id'])) . '">'
+             . zen_image(DIR_WS_IMAGES . $record['categories_image'], $record['categories_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
     $lc_text .= '<div class="categoryName">' . $record['categories_name'] . '</div>';
     $lc_text .= '</a>';
 
     $list_box_contents[$row][$col] = [
-    'params' => 'class="centerBoxContentsFeatured centeredContent back col130"',
-    'text' => $lc_text,
+        'params' => 'class="centerBoxContentsFeatured centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
+        'text' => $lc_text,
     ];
 
     $col++;
