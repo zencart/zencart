@@ -126,7 +126,7 @@ class Category
         global $db;
 
         $sql = "SELECT c.*, pt.product_type_id
-                FROM " . TABLE_CATEGORIES . "
+                FROM " . TABLE_CATEGORIES . " c 
                 LEFT JOIN product_types_to_category pt ON (c.categories_id = pt.category_id)
                 WHERE categories_id = " . (int)$category_id;
         $category = $db->Execute($sql, 1, true, 900);
