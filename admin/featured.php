@@ -11,8 +11,8 @@ require 'includes/application_top.php';
 require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
-$currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
+$action = $_GET['action'] ?? '';
+$currentPage = (int)($_GET['page'] ?? 0);
 
 if (!empty($action)) {
   // -----
