@@ -25,7 +25,7 @@ if ($action !== '') {
 
         case 'setflag':
             if (isset($_POST['flag']) && ($_POST['flag'] === '1' || $_POST['flag'] === '0')) {
-                zen_set_featured_status((int)$_POST['id'], (int)$_POST['flag']);
+                zen_set_featured_category_status((int)$_POST['id'], (int)$_POST['flag']);
                 zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, zen_get_all_get_params(['action', 'fID']) . 'fID=' . $_POST['id'], 'NONSSL'));
             }
             break;
