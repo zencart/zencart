@@ -11,7 +11,7 @@
 
 /**
  * Set the status of a featured product
- * 
+ *
  * @global object $db
  * @param int $featured_id
  * @param int $status
@@ -29,7 +29,7 @@ function zen_set_featured_status(int $featured_id, int $status)
 
 /**
  * Auto expire products on featured
- * 
+ *
  * @global object $db
  */
 function zen_expire_featured()
@@ -59,7 +59,7 @@ function zen_expire_featured()
 
 /**
  * Auto start products on featured
- * 
+ *
  * @global object $db
  */
 function zen_start_featured()

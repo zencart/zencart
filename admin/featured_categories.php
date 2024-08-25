@@ -9,10 +9,11 @@
 require 'includes/application_top.php';
 
 $action = $_GET['action'] ?? '';
-$currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
-$page_search_parameters = ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '');
-$current_page = ($currentPage != 0 ? 'page=' . $currentPage . '&' : '');
+$currentPage = (int)($_GET['page'] ?? 0);
+$page_search_parameters = ($currentPage !== 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '');
+$current_page = ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '');
 $search_parameters = (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '');
+
 
 if ($action !== '') {
     // -----
@@ -219,7 +220,7 @@ if ($action !== '') {
                                             AND fc.featured_categories_id = " . (int)$_GET['fID']);
 
                     $fInfo = new objectInfo($category->fields);
-                } elseif ($action === 'new' && isset($_GET['preID'])) { //update existing Featured
+                } elseif ($action === 'new' && isset($_GET['preID'])) { //update existing Featured Category
                     $form_action = 'insert';
 
                     $category = $db->Execute("SELECT c.categories_id, cd.categories_name
@@ -240,7 +241,7 @@ if ($action !== '') {
                                                 FROM " . TABLE_CATEGORIES . " c,
                                                 " . TABLE_CATEGORIES_DESCRIPTION . " cd,
                                                 " . TABLE_FEATURED_CATEGORIES . " fc
-                                                WHERE fc.categories_id = c.categories_id 
+                                                WHERE fc.categories_id = c.categories_id
                                                 AND cd.language_id = " . (int)$_SESSION['languages_id']);
 
                     foreach ($featureds as $featured) {
@@ -300,11 +301,11 @@ if ($action !== '') {
                                 <span class="input-group-addon datepicker_icon">
                                 <?php echo zen_icon('calendar-days', size: 'lg') ?>
                                 </span>
-                                <?php echo zen_draw_input_field('featured_date_available', 
+                                <?php echo zen_draw_input_field('featured_date_available',
                                 (($fInfo->featured_date_available == '0001-01-01') ? '' : $fInfo->featured_date_available),
                                 'class="form-control" id="featured_date_available"'); ?>
                             </div>
-                            <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) 
+                            <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)
                             <span class="date-check-error"><?php echo ERROR_INVALID_ACTIVE_DATE; ?></span></span>
                         </div>
                     </div>
@@ -315,10 +316,10 @@ if ($action !== '') {
                             <span class="input-group-addon datepicker_icon">
                             <?php echo zen_icon('calendar-days', size: 'lg') ?>
                             </span>
-                            <?php echo zen_draw_input_field('expires_date', 
+                            <?php echo zen_draw_input_field('expires_date',
                             (($fInfo->expires_date == '0001-01-01') ? '' : $fInfo->expires_date), 'class="form-control" id="expires_date"'); ?>
                         </div>
-                        <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) 
+                        <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>)
                         <span class="date-check-error"><?php echo ERROR_INVALID_EXPIRES_DATE; ?></span></span>
                     </div>
                 </div>
@@ -362,9 +363,9 @@ if ($action !== '') {
                         if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                             $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
                             $keyword_search_fields = [
-                            'cd.categories_name',
-                            'cd.categories_description',
-                            'c.categories_id',
+                                'cd.categories_name',
+                                'cd.categories_description',
+                                'c.categories_id',
                             ];
                             $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords));
                         }
@@ -372,7 +373,7 @@ if ($action !== '') {
                         // order of display
                         $order_by = " ORDER BY cd.categories_name"; //set sort order of table listing
                         $featured_query_raw = "SELECT c.categories_id, c.parent_id, cd.categories_name,
-                                                fc.featured_categories_id, fc.featured_date_added, fc.featured_last_modified, 
+                                                fc.featured_categories_id, fc.featured_date_added, fc.featured_last_modified,
                                                 fc.expires_date, fc.date_status_change, fc.status, fc.featured_date_available
                                                 FROM " . TABLE_CATEGORIES . " c,
                                                 " . TABLE_FEATURED_CATEGORIES . " fc,
