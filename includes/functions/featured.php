@@ -105,7 +105,7 @@ function zen_set_featured_category_status(int $category_id, int $status): void
     $sql = "UPDATE " . TABLE_FEATURED_CATEGORIES . "
           SET status = " . (int)$status . ",
               date_status_change = now()
-          WHERE featured_id = " . (int)$category_id;
+          WHERE featured_categories_id = " . (int)$category_id;
 
     $db->Execute($sql);
 }
