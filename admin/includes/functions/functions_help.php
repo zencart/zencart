@@ -107,6 +107,7 @@ function page_has_help()
         FILENAME_REVIEWS => 'https://docs.zen-cart.com/user/admin_pages/catalog/reviews/',
         FILENAME_SPECIALS => 'https://docs.zen-cart.com/user/admin_pages/catalog/specials/',
         FILENAME_FEATURED => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured/',
+        FILENAME_FEATURED_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured_categories/',
         FILENAME_SALEMAKER => 'https://docs.zen-cart.com/user/admin_pages/catalog/salemaker/',
         FILENAME_PRODUCTS_EXPECTED => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
         FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/products/product_management_admin/', 
