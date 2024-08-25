@@ -1062,11 +1062,13 @@ function zen_set_category_image($category_id, $image_name = '')
 
 
 /**
- * @TODO - refactor to category object?
+ * @deprecated 2.1.0 use Category class object instead
  * Return any field from categories or categories_description table
  * Example: zen_categories_lookup('10', 'parent_id');
  */
 function zen_categories_lookup($categories_id, $what_field = 'categories_name', $language = '') {
+    trigger_error('Call to deprecated function zen_categories_lookup. Use Category class object instead', E_USER_DEPRECATED);
+
     global $db;
 
     if (empty($language)) $language = $_SESSION['languages_id'];
@@ -1313,11 +1315,11 @@ function zen_childs_in_category_count($category_id) {
 
 
 /**
- * @TODO - is this even used?
  * get categories_name for product
  * @param int $product_id
  * @return string
- * @deprecated
+ * @deprecated Use zen_get_product_details()
+ * @TODO - delete from core in v2.2.0 or later
  */
 function zen_get_categories_name_from_product($product_id) {
     trigger_error('Call to deprecated function zen_get_categories_name_from_product. Use zen_get_product_details() instead', E_USER_DEPRECATED);

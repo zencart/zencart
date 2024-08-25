@@ -25,12 +25,12 @@ class Category
     /** @deprecated use !exists()  */
     public bool $EOF = true;
 
-    public function __construct(protected ?int $categories_id = null)
+    public function __construct(protected ?int $category_id = null)
     {
         $this->initLanguages();
 
-        if ($this->categories_id !== null) {
-            $this->data = $this->loadCategoryDetails($this->categories_id);
+        if ($this->category_id !== null) {
+            $this->data = $this->loadCategoryDetails($this->category_id);
 
             // set some backward compatibility properties
             $this->fields = $this->data;
@@ -77,7 +77,7 @@ class Category
         // -----
         // If this request is for a category being created, it might not yet have
         // its language elements (e.g. categories_name) stored.  In this case, simply
-        // return the categoriesbase information.
+        // return the category's base information.
         //
         if (!isset($data['lang'])) {
             return $data;
@@ -94,12 +94,12 @@ class Category
 
     public function getId(): ?int
     {
-        return $this->categories_id;
+        return $this->category_id;
     }
 
     public function exists(): bool
     {
-        return !empty($this->categories_id) && !empty($this->data);
+        return !empty($this->category_id) && !empty($this->data);
     }
     public function isValid(): bool
     {
@@ -121,13 +121,14 @@ class Category
         return $this->get($name);
     }
 
-    protected function loadCategoryDetails(int $categories_id, ?int $language_id = null): array
+    protected function loadCategoryDetails(int $category_id, ?int $language_id = null): array
     {
         global $db;
 
-        $sql = "SELECT *
+        $sql = "SELECT c.*, pt.product_type_id
                 FROM " . TABLE_CATEGORIES . "
-                WHERE categories_id = " . (int)$categories_id;
+                LEFT JOIN product_types_to_category pt ON (c.categories_id = pt.category_id)
+                WHERE categories_id = " . (int)$category_id;
         $category = $db->Execute($sql, 1, true, 900);
 
         if ($category->EOF) {
@@ -136,20 +137,23 @@ class Category
 
         $data = $category->fields;
         $data['id'] = $data['categories_id'];
-        $data['categories_id'] = $data['categories_id'];
+        $data['category_id'] = $data['categories_id'];
 
         /**
          * Add $data['lang'][code] = [categories_name, categories_description, etc] for each language
          */
         $sql = "SELECT *
                 FROM " . TABLE_CATEGORIES_DESCRIPTION . "
-                WHERE categories_id = " . (int)$categories_id . "
+                WHERE categories_id = " . (int)$category_id . "
                 ORDER BY language_id";
         $pd = $db->Execute($sql, null, true, 900);
         foreach ($pd as $result) {
             unset($result['categories_id']);
             $data['lang'][$this->languages[$result['language_id']]] = $result;
         }
+
+        //Allow an observer to modify details
+        $this->notify('NOTIFY_GET_CATEGORY_OBJECT_DETAILS', $category_id, $data);
 
         return $data;
     }
