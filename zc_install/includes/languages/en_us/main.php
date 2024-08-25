@@ -110,6 +110,7 @@ return [
 'TEXT_ERROR_ADMIN_CREDENTIALS' => 'Could not verify the Admin Credentials you provided.<br><br>' . '%%TEXT_HELP_CONTENT_UPGRADEADMINNAME%%',
 'TEXT_UPGRADE_IN_PROGRESS' => 'Upgrade running. Progress of each step is indicated below ...',
 'TEXT_UPGRADE_TO_VER_X_COMPLETED' => 'Upgrade to version %s completed.',
+'TEXT_CANNOT_DETECT_VERSION' => 'FATAL ERROR: Cannot detect existing Zen Cart database version. Either it is too old (before v1.2.6, in which case upgrade to v1.2.6 first) or it is seriously damaged.',
 'TEXT_NO_REMAINING_UPGRADE_STEPS' => 'Looking good! It appears as though there are no more upgrade steps required.',
 'TEXT_CONTINUE' => 'Continue',
 'TEXT_CANCEL' => 'Cancel',

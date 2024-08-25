@@ -13,36 +13,17 @@ define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
 require DIR_FS_INSTALL . 'includes/application_top.php';
 
+// load $versionArray details:
+$versionArray = require DIR_FS_INSTALL . 'includes/version_upgrades.php';
+
 $error = false;
 $errorList = [];
 $db_type = 'mysql';
-$updateList = [
-    '1.2.7' => ['required' => '1.2.6'],
-    '1.3.0' => ['required' => '1.2.7'],
-    '1.3.5' => ['required' => '1.3.0'],
-    '1.3.6' => ['required' => '1.3.5'],
-    '1.3.7' => ['required' => '1.3.6'],
-    '1.3.8' => ['required' => '1.3.7'],
-    '1.3.9' => ['required' => '1.3.8'],
-    '1.5.0' => ['required' => '1.3.9'],
-    '1.5.1' => ['required' => '1.5.0'],
-    '1.5.2' => ['required' => '1.5.1'],
-    '1.5.3' => ['required' => '1.5.2'],
-    '1.5.4' => ['required' => '1.5.3'],
-    '1.5.5' => ['required' => '1.5.4'],
-    '1.5.6' => ['required' => '1.5.5'],
-    '1.5.7' => ['required' => '1.5.6'],
-    '1.5.8' => ['required' => '1.5.7'],
-    '2.0.0' => ['required' => '1.5.8'],
-    '2.1.0' => ['required' => '2.0.0'],
-];
-
 $systemChecker = new systemChecker();
 $dbVersion = $systemChecker->findCurrentDbVersion();
 $postedVersion = sanitize_version($_POST['version']);
-$updateVersion = str_replace('version-', '', $postedVersion);
-$updateVersion = str_replace('_', '.', $updateVersion);
-$versionInfo = $updateList[$updateVersion];
+$updateVersion = str_replace(['version-', '_'], ['', '.'], $postedVersion);
+$versionInfo = $versionArray[$updateVersion];
 
 if ($versionInfo['required'] !== $dbVersion) {
     $error = true;
@@ -66,6 +47,7 @@ $extendedOptions = [
     'id' => 'main',
     'message' => sprintf(TEXT_UPGRADING_TO_VERSION, $updateVersion),
 ];
+logDetails($file, 'Running upgrade SQL');
 $result = $dbInstaller->getConnection();
 $errDates = $dbInstaller->runZeroDateSql($options);
 $errorUpg = $dbInstaller->parseSqlFile($file, $extendedOptions);

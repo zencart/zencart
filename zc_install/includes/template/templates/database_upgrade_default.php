@@ -31,12 +31,12 @@ if (count($newArray)) { ?>
                     <?php
                     foreach ($newArray as $key => $value) { ?>
                         <?php
-                        $from = ($key === 0) ? $dbVersion : $newArray[($key - 1)]; ?>
+                        $from = ($key === 0) ? ($dbVersion ?? $versionArray[$value]['required']): $newArray[($key - 1)]; ?>
                         <?php
-                        $to = $newArray[$key]; ?>
-                        <div id="label-version-<?= str_replace('.', '_', $newArray[$key]) ?>" class="checkbox-wrapper">
-                            <label class="form-check-label" for="version-<?= str_replace('.', '_', $newArray[$key]) ?>">
-                                <input class="form-check-input" type="checkbox" name="version-<?= str_replace('.', '_', $newArray[$key]) ?>" id="version-<?= str_replace('.', '_', $newArray[$key]) ?>" checked="CHECKED">
+                        $to = $value; ?>
+                        <div id="label-version-<?= str_replace('.', '_', $value) ?>" class="checkbox-wrapper">
+                            <label class="form-check-label" for="version-<?= str_replace('.', '_', $value) ?>">
+                                <input class="form-check-input" type="checkbox" name="version-<?= str_replace('.', '_', $value) ?>" id="version-<?= str_replace('.', '_', $value) ?>" checked="CHECKED">
                                 <?= $from . ' to  ' . $to ?></label>
                         </div>
                     <?php
@@ -76,6 +76,11 @@ if (count($newArray)) { ?>
                 </div>
             </div>
         </fieldset>
+    <?php
+    } elseif (empty($dbVersion)) { ?>
+        <div>
+            <div class="alert alert-danger round"><?= TEXT_CANNOT_DETECT_VERSION ?></div>
+        </div>
     <?php
     } else { ?>
         <div>
