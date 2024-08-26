@@ -91,3 +91,11 @@
 // false ... Do not show the column headings; this is the default.
 //
 //$show_table_header_row = false;
+
+// -----
+// Identify whether the link to the 'order_status' page is included in the "Information" sidebox.
+// 
+// true .... Display the link; this is the default.
+// false ... Do not show the link.
+//
+//$show_order_status_sidebox_link = true;
