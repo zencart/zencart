@@ -45,7 +45,7 @@ class order_total
             $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
             foreach ($module_list as $value) {
-                if (!$languageLoader->loadCatalogLanguageFile($_SESSION['language'], $value, '/modules/order_total')) {
+                if (!$languageLoader->loadModuleLanguageFile($_SESSION['language'], $value, 'order_total')) {
                     $language_dir = (IS_ADMIN_FLAG === false) ? DIR_WS_LANGUAGES : (DIR_FS_CATALOG . DIR_WS_LANGUAGES);
                     $lang_file = zen_get_file_directory($language_dir . $_SESSION['language'] . '/modules/order_total/', $value, 'false');
  
