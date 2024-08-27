@@ -732,12 +732,15 @@ if ($action === 'delete_option_value') { // delete product option value
 <?php
     }
 } else {
+    $searchBoxJs = '';  //- Forces search_box.php to not include its product-specific switches
 ?>
         <div class="row">
           <?= zen_draw_separator('pixel_trans.gif', '100%') ?>
         </div>
 
-        <?= addSearchKeywordForm(FILENAME_OPTIONS_VALUES_MANAGER, '') ?>
+        <div class="col-sm-offset-8 col-sm-4">
+            <?php require DIR_WS_MODULES . 'search_box.php'; ?>
+        </div>
 
         <div class="row">
           <?= zen_draw_form('set_filter', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"') ?>
@@ -771,6 +774,17 @@ if ($action === 'delete_option_value') { // delete product option value
     if ($filter !== 0) {
         $filter_condition = " AND po.products_options_id = " . $filter;
     }
+
+    $search = '';
+    if (!empty($_GET['search'])) {
+        $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
+        $keyword_search_fields = [
+            'po.products_options_name',
+            'pov.products_options_values_name',
+        ];
+        $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), false);
+    }
+
     $values_query_raw =
         "SELECT pov.products_options_values_id, pov.products_options_values_name, pov2po.products_options_id, pov.products_options_values_sort_order
            FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov
@@ -781,7 +795,7 @@ if ($action === 'delete_option_value') { // delete product option value
                    AND po.language_id = " . (int)$_SESSION['languages_id'] . "
           WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
             AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID .
-            $filter_condition . "
+            $filter_condition . $search . "
           ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order, 11, '0'), pov.products_options_values_name";
     $values_split = new splitPageResults($currentPage, $max_search_results, $values_query_raw, $values_query_numrows);
 ?>
@@ -844,6 +858,9 @@ if ($action === 'delete_option_value') { // delete product option value
     }
     if ($max_search_results !== 0) {
         $link_params .= '&max_search_results=' . $max_search_results;
+    }
+    if (!empty($_GET['search'])) {
+        $link_params .= '&search=' . $_GET['search'];
     }
 
     $next_id = 1;
