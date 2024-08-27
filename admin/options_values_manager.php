@@ -94,14 +94,14 @@ if ($action !== '') {
                         "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                             (products_options_values_id, language_id, products_options_values_name, products_options_values_sort_order)
                          VALUES
-                            (" . $value_id . ", " . (int)$language['id'] . ", '" . zen_db_input($value_name) . "', " . $products_options_values_sort_order . ")";
+                            (" . (int)$value_id . ", " . (int)$language['id'] . ", '" . zen_db_input($value_name) . "', " . (int)$products_options_values_sort_order . ")";
 
                 } else {
                     $sql =
                         "UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                             SET products_options_values_name = '" . zen_db_input($value_name) . "',
-                                products_options_values_sort_order = " . $products_options_values_sort_order . "
-                          WHERE products_options_values_id = " . $value_id . "
+                                products_options_values_sort_order = " . (int)$products_options_values_sort_order . "
+                          WHERE products_options_values_id = " . (int)$value_id . "
                             AND language_id = " . (int)$language['id'];
                 }
                 $db->Execute($sql);
@@ -112,12 +112,12 @@ if ($action !== '') {
                     "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
                         (products_options_id, products_options_values_id)
                      VALUES
-                        (" . $option_id . ", " . $value_id . ")";
+                        (" . (int)$option_id . ", " . (int)$value_id . ")";
             } else {
                 $sql =
                     "UPDATE " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
-                        SET products_options_id = " . $option_id . "
-                      WHERE products_options_values_id = " . $value_id;
+                        SET products_options_id = " . (int)$option_id . "
+                      WHERE products_options_values_id = " . (int)$value_id;
             }
             $db->Execute($sql);
 
@@ -133,7 +133,7 @@ if ($action !== '') {
                                     ON pov.products_options_values_id = pov2po.products_options_values_id
                           WHERE pov.language_id = " . (int)$language['id'] . "
                             AND pov.products_options_values_name = '" . zen_db_input($value_name) . "'
-                            AND pov2po.products_options_id = " . $option_id . "
+                            AND pov2po.products_options_id = " . (int)$option_id . "
                           ORDER BY pov.products_options_values_id DESC"
                     );
                     if ($check->RecordCount() > 1) {
@@ -176,12 +176,12 @@ if ($action !== '') {
                           WHERE products_attributes_id = " . (int)$remove_attribute['products_attributes_id']
                     );
                 }
-                $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE options_values_id = " . $value_id);
+                $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE options_values_id = " . (int)$value_id);
             }
 
-            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = " . $value_id);
+            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = " . (int)$value_id);
 
-            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = " . $value_id);
+            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = " . (int)$value_id);
 
             zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params(['action'])));
             break;
@@ -203,15 +203,15 @@ if ($action !== '') {
                             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                 ON pa.products_id = ptc.products_id
                       WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                        AND (pa.options_id = " . $options_id_from . "
-                        AND pa.options_values_id = " . $options_values_values_id_from . ")"
+                        AND (pa.options_id = " . (int)$options_id_from . "
+                        AND pa.options_values_id = " . (int)$options_values_values_id_from . ")"
                 );
             } else {
                 $products_only = $db->Execute(
                     "SELECT pa.products_id
                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                      WHERE pa.options_id = " . $options_id_from . "
-                        AND pa.options_values_id = " . $options_values_values_id_from
+                      WHERE pa.options_id = " . (int)$options_id_from . "
+                        AND pa.options_values_id = " . (int)$options_values_values_id_from
                 );
             }
 
@@ -248,13 +248,13 @@ if ($action !== '') {
                         "INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . "
                             (products_id, options_id, options_values_id)
                          VALUES
-                            (" . $current_products_id . ", " . $options_id_to . ", " . $options_values_values_id_to . ")";
+                            (" . (int)$current_products_id . ", " . (int)$options_id_to . ", " . (int)$options_values_values_id_to . ")";
                     $check_previous = $db->Execute(
                         "SELECT COUNT(*) AS count
                            FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                          WHERE products_id = " . $current_products_id . "
-                            AND options_id = " . $options_id_to . "
-                            AND options_values_id = " . $options_values_values_id_to . "
+                          WHERE products_id = " . (int)$current_products_id . "
+                            AND options_id = " . (int)$options_id_to . "
+                            AND options_values_id = " . (int)$options_values_values_id_to . "
                           LIMIT 1"
                     );
                     // do not add duplicate attributes
@@ -305,21 +305,22 @@ if ($action !== '') {
                             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                 ON pa.products_id = ptc.products_id
                       WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                        AND pa.options_id = " . $options_id_to
+                        AND pa.options_id = " . (int)$options_id_to
                 );
             } else {
                 $products_only = $db->Execute(
                     "SELECT DISTINCT pa.products_id
                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                      WHERE pa.options_id = " . $options_id_to);
+                      WHERE pa.options_id = " . (int)$options_id_to
+                );
             }
 
             $products_attributes_defaults = $db->Execute(
                 "SELECT pa.*
                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                  WHERE pa.products_id = " . $copy_from_products_id . "
-                    AND options_id = " . $options_id_from . "
-                    AND pa.options_values_id = " . $options_values_values_id_from
+                  WHERE pa.products_id = " . (int)$copy_from_products_id . "
+                    AND options_id = " . (int)$options_id_from . "
+                    AND pa.options_values_id = " . (int)$options_values_values_id_from
             );
 
             $options_id = $options_id_from;
@@ -426,9 +427,9 @@ if ($action !== '') {
                     $check_previous = $db->Execute(
                         "SELECT COUNT(*) AS count
                            FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                          WHERE products_id = " . $current_products_id . "
-                            AND options_id = " . $options_id_from . "
-                            AND options_values_id = " . $options_values_values_id_from . "
+                          WHERE products_id = " . (int)$current_products_id . "
+                            AND options_id = " . (int)$options_id_from . "
+                            AND options_values_id = " . (int)$options_values_values_id_from . "
                           LIMIT 1"
                     );
                     // do not add duplicate attributes
@@ -441,9 +442,9 @@ if ($action !== '') {
                         //echo 'delete old and add new: ' . $current_products_id . '<br>';
                         $db->Execute(
                             "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                              WHERE products_id = " . $current_products_id . "
-                                AND options_id = " . $options_id_from . "
-                                AND options_values_id = " . $options_values_values_id_from
+                              WHERE products_id = " . (int)$current_products_id . "
+                                AND options_id = " . (int)$options_id_from . "
+                                AND options_values_id = " . (int)$options_values_values_id_from
                         );
                         $db->Execute($sql);
                         $new_attribute++;
@@ -483,15 +484,15 @@ if ($action !== '') {
                             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                 ON pa.products_id = ptc.products_id
                       WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                        AND pa.options_id = " . $options_id_from . "
-                        AND pa.options_values_id = " . $options_values_values_id_from
+                        AND pa.options_id = " . (int)$options_id_from . "
+                        AND pa.options_values_id = " . (int)$options_values_values_id_from
                 );
             } else {
                 $products_only = $db->Execute(
                     "SELECT pa.products_id
                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                      WHERE pa.options_id = " . $options_id_from . "
-                        AND pa.options_values_id = " . $options_values_values_id_from
+                      WHERE pa.options_id = " . (int)$options_id_from . "
+                        AND pa.options_values_id = " . (int)$options_values_values_id_from
                 );
             }
 
@@ -531,14 +532,14 @@ if ($action !== '') {
                     $downloads_remove_query =
                         "SELECT products_attributes_id
                            FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                          WHERE products_id = " . $current_products_id . "
-                            AND options_id = " . $options_id_from . "
-                            AND options_values_id = " . $options_values_values_id_from;
+                          WHERE products_id = " . (int)$current_products_id . "
+                            AND options_id = " . (int)$options_id_from . "
+                            AND options_values_id = " . (int)$options_values_values_id_from;
                     $downloads_remove = $db->Execute($downloads_remove_query);
 
                     $remove_downloads_ids = [];
                     foreach ($downloads_remove as $row) {
-                        $remove_downloads_ids[] = $row['products_attributes_id'];
+                        $remove_downloads_ids[] = (int)$row['products_attributes_id'];
                     }
                     $zco_notifier->notify(
                         'OPTIONS_VALUES_MANAGER_DELETE_VALUES_OF_OPTIONNAME',
@@ -552,9 +553,9 @@ if ($action !== '') {
 
                     $sql =
                         "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                          WHERE products_id = " . $current_products_id . "
-                            AND options_id = " . $options_id_from . "
-                            AND options_values_id = " . $options_values_values_id_from;
+                          WHERE products_id = " . (int)$current_products_id . "
+                            AND options_id = " . (int)$options_id_from . "
+                            AND options_values_id = " . (int)$options_values_values_id_from;
                     $delete_selected = $db->Execute($sql);
 
                     // delete associated downloads
@@ -800,7 +801,7 @@ if ($action === 'delete_option_value') { // delete product option value
                     ON po.products_options_id = pov2po.products_options_id
                    AND po.language_id = " . (int)$_SESSION['languages_id'] . "
           WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
-            AND pov2po.products_options_values_id != " . PRODUCTS_OPTIONS_VALUES_TEXT_ID .
+            AND pov2po.products_options_values_id != " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID .
             $filter_condition . $search . "
           ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order, 11, '0'), pov.products_options_values_name";
     $values_split = new splitPageResults($currentPage, $max_search_results, $values_query_raw, $values_query_numrows);
@@ -909,7 +910,7 @@ if ($action === 'delete_option_value') { // delete product option value
                     "SELECT products_options_values_name
                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                       WHERE products_options_values_id = " . (int)$values_value['products_options_values_id'] . "
-                        AND language_id = " . $next_lang_id
+                        AND language_id = " . (int)$next_lang_id
                 );
                 $inputs .=
                     '<div class="form-group">' .
