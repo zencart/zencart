@@ -48,7 +48,7 @@ $extendedOptions = [
     'id' => 'main',
     'message' => 'Processing zero-date cleanups',
 ];
-$errDates = $dbInstaller->runZeroDateSql($options);
+$errDates = $dbInstaller->runZeroDateSql($extendedOptions);
 if (is_int($errDates)) {
     echo json_encode(['error' => $errDates, 'version' => 'dates-cleanup', 'errorList' => 'see zcInstall-DEBUG log files']);
     die();
