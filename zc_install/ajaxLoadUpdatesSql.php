@@ -39,6 +39,20 @@ if ($error) {
 
 $options = $systemChecker->getDbConfigOptions();
 $dbInstaller = new zcDatabaseInstaller($options);
+$result = $dbInstaller->getConnection();
+
+// Run zero-date cleanup
+$extendedOptions = [
+    'doJsonProgressLogging' => true,
+    'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
+    'id' => 'main',
+    'message' => 'Processing zero-date cleanups',
+];
+$errDates = $dbInstaller->runZeroDateSql($options);
+if (is_int($errDates)) {
+    echo json_encode(['error' => $errDates, 'version' => 'dates-cleanup', 'errorList' => 'see zcInstall-DEBUG log files']);
+    die();
+}
 
 $file = DIR_FS_INSTALL . 'sql/updates/' . $db_type . '_upgrade_zencart_' . str_replace('.', '', $updateVersion) . '.sql';
 $extendedOptions = [
@@ -49,10 +63,10 @@ $extendedOptions = [
 ];
 logDetails($file, 'Running upgrade SQL');
 $result = $dbInstaller->getConnection();
-$errDates = $dbInstaller->runZeroDateSql($options);
 $errorUpg = $dbInstaller->parseSqlFile($file, $extendedOptions);
-if ($error) {
-    echo json_encode(['error' => $error, 'version' => $updateVersion, 'errorList' => $errorList]);
+if (is_int($errorUpg)) {
+    $errorList[] = $errorUpg;
+    echo json_encode(['error' => $errorUpg, 'version' => $updateVersion, 'errorList' => $errorList]);
     die();
 }
 
@@ -69,7 +83,12 @@ if ($sql_files !== false) {
             'message' => TEXT_LOADING_PLUGIN_UPGRADES . ' ' . $file,
         ];
         logDetails('processing file ' . $file);
-        $errorUpg = $dbInstaller->parseSqlFile($file, $extendedOptions);
+        $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
+        if (is_int($error)) {
+            $errorList[] = $error;
+            echo json_encode(['error' => $error, 'version' => substr($file, -30), 'errorList' => $errorList]);
+            die();
+        }
     }
 }
 

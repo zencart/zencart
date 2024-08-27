@@ -93,7 +93,7 @@ class zcDatabaseInstaller
     public function runZeroDateSql(?array $options = null): ?bool
     {
         $file = DIR_FS_INSTALL . 'sql/install/zero_dates_cleanup.sql';
-        logDetails('Running cleanup for zero-date issues', $file);
+        logDetails($file, 'Running cleanup for zero-date issues');
         return $this->parseSqlFile($file, $options);
     }
 
