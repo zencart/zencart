@@ -21,7 +21,7 @@ if ($chk_option_names->fields['count'] < 1) {
 }
 
 // check for damaged database, caused by users indiscriminately deleting table data
-$ary = array();
+$ary = [];
 $chk_option_values = $db->Execute(
     "SELECT *
        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
@@ -30,47 +30,43 @@ $chk_option_values = $db->Execute(
 foreach ($chk_option_values as $item) {
     $ary[] = $item['language_id'];
 }
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-    if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary)) {
+foreach ($languages as $next_lang) {
+    $next_lang_id = (int)$next_lang['id'];
+    if ($next_lang_id > 0 && !in_array($next_lang_id, $ary)) {
         $db->Execute(
             "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                 (products_options_values_id, language_id, products_options_values_name)
              VALUES
-                (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')"
+                (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . $next_lang_id . ", 'TEXT')"
         );
     }
 }
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
-$currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
-$filter = (isset($_GET['set_filter']) && $_GET['set_filter'] != '' ? (int)$_GET['set_filter'] : 0);
-$last_mod = (int)(isset($_SESSION['options_names_values_last_mod']) ? $_SESSION['options_names_values_last_mod'] : 0);
+$action = $_GET['action'] ?? '';
+$currentPage = !empty($_GET['page']) ? (int)$_GET['page'] : 0;
+$filter = !empty($_GET['set_filter']) ? (int)$_GET['set_filter'] : 0;
+$last_mod = (int)($_SESSION['options_names_values_last_mod'] ?? 0);
 unset($_SESSION['options_names_values_last_mod']);
-$max_search_results = (isset($_GET['max_search_results']) && $_GET['max_search_results'] != '' ? (int)$_GET['max_search_results'] : (int)MAX_DISPLAY_SEARCH_RESULTS);
+$max_search_results = !empty($_GET['max_search_results']) ? (int)$_GET['max_search_results'] : (int)MAX_DISPLAY_SEARCH_RESULTS;
 
 // display or hide copier features
-if (!isset($_SESSION['option_names_values_copier'])) {
-    $_SESSION['option_names_values_copier'] = OPTION_NAMES_VALUES_GLOBAL_STATUS;
-}
+$_SESSION['option_names_values_copier'] ??= OPTION_NAMES_VALUES_GLOBAL_STATUS;
 if (!isset($_GET['reset_option_names_values_copier'])) {
     $reset_option_names_values_copier = $_SESSION['option_names_values_copier'];
 }
 
-if (!empty($action)) {
+if ($action !== '') {
     switch ($action) {
         case 'set_filter':
-            $exclude_array = ['action', 'page'];
-            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
+            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params(['action', 'page'])));
             break;
 
         case 'set_max_search_result':
-            $exclude_array = ['action', 'page'];
-            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
+            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params(['action', 'page'])));
             break;
 
         case 'set_option_names_values_copier':
-            $_SESSION['option_names_values_copier'] = $_GET['reset_option_names_values_copier'];
-            $action = '';
+            $_SESSION['option_names_values_copier'] = $_GET['reset_option_names_values_copier'] ?? OPTION_NAMES_VALUES_GLOBAL_STATUS;
             zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
             break;
 
@@ -149,14 +145,13 @@ if (!empty($action)) {
                 }
             }
 
-            $exclude_array = ['action'];
-            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
+            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params(['action'])));
             break;
 
         case 'delete_value':
             $value_id = (int)$_GET['value_id'];
 
-            $zco_notifier->notify('OPTIONS_VALUES_MANAGER_DELETE_VALUE', array('value_id' => $value_id));
+            $zco_notifier->notify('OPTIONS_VALUES_MANAGER_DELETE_VALUE', ['value_id' => $value_id]);
 
             // remove all attributes from products with value
             $remove_attributes_query = $db->Execute(
@@ -164,7 +159,7 @@ if (!empty($action)) {
                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
                   WHERE options_values_id = " . (int)$value_id
             );
-            if ($remove_attributes_query->RecordCount() > 0) {
+            if (!$remove_attributes_query->EOF) {
                 // clean all tables of option value
                 foreach ($remove_attributes_query as $remove_attribute) {
                     $db->Execute(
@@ -172,15 +167,14 @@ if (!empty($action)) {
                           WHERE products_attributes_id = " . (int)$remove_attribute['products_attributes_id']
                     );
                 }
-                $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE options_values_id = " . (int)$value_id);
+                $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . " WHERE options_values_id = " . $value_id);
             }
 
-            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = " . (int)$value_id);
+            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = " . $value_id);
 
-            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = " . (int)$value_id);
+            $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = " . $value_id);
 
-            $exclude_array = ['action'];
-            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)));
+            zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params(['action'])));
             break;
 
         ////////////////////////////////////////////////////
@@ -200,15 +194,15 @@ if (!empty($action)) {
                             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                 ON pa.products_id = ptc.products_id
                       WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                        AND (pa.options_id = " . (int)$options_id_from . "
-                        AND pa.options_values_id = " . (int)$options_values_values_id_from . ")"
+                        AND (pa.options_id = " . $options_id_from . "
+                        AND pa.options_values_id = " . $options_values_values_id_from . ")"
                 );
             } else {
                 $products_only = $db->Execute(
                     "SELECT pa.products_id
                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                      WHERE pa.options_id = " . (int)$options_id_from . "
-                        AND pa.options_values_id = " . (int)$options_values_values_id_from
+                      WHERE pa.options_id = " . $options_id_from . "
+                        AND pa.options_values_id = " . $options_values_values_id_from
                 );
             }
 
@@ -220,7 +214,7 @@ if (!empty($action)) {
 
             $new_attribute = 0;
 
-            if ($options_values_values_id_from == $options_values_values_id_to) {
+            if ($options_values_values_id_from === $options_values_values_id_to) {
                 // cannot copy to self
                 $messageStack->add(
                     ERROR_OPTION_VALUES_COPIED .
@@ -232,10 +226,16 @@ if (!empty($action)) {
                 );
             } else {
                 if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from) || !zen_validate_options_to_options_value($options_id_to, $options_values_values_id_to)) {
-                    $messageStack->add(ERROR_OPTION_VALUES_COPIED_MISMATCH . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to), 'warning');
+                    $messageStack->add(
+                        ERROR_OPTION_VALUES_COPIED_MISMATCH .
+                            TEXT_INFO_FROM .
+                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                            TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to),
+                        'warning'
+                    );
                 } else {
                     // check for existing combination
-                    if ($products_only->RecordCount() > 0) {
+                    if (!$products_only->EOF) {
                         // check existing matching products and add new attributes
                         foreach ($products_only as $product) {
                             $current_products_id = (int)$product['products_id'];
@@ -243,13 +243,13 @@ if (!empty($action)) {
                                 "INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . "
                                     (products_id, options_id, options_values_id)
                                  VALUES
-                                    (" . (int)$current_products_id . ", " . (int)$options_id_to . ", " . (int)$options_values_values_id_to . ")";
+                                    (" . $current_products_id . ", " . $options_id_to . ", " . $options_values_values_id_to . ")";
                             $check_previous = $db->Execute(
                                 "SELECT COUNT(*) AS count
                                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                  WHERE products_id = " . (int)$current_products_id . "
-                                    AND options_id = " . (int)$options_id_to . "
-                                    AND options_values_id = " . (int)$options_values_values_id_to . "
+                                  WHERE products_id = " . $current_products_id . "
+                                    AND options_id = " . $options_id_to . "
+                                    AND options_values_id = " . $options_values_values_id_to . "
                                   LIMIT 1"
                             );
                             // do not add duplicate attributes
@@ -260,16 +260,42 @@ if (!empty($action)) {
                         }
 
                         // display how many products were updated
-                        if ($new_attribute < 1) {
+                        if ($new_attribute === 0) {
                             // nothing was added due to duplicates
-                            $messageStack->add(SUCCESS_OPTION_VALUES_COPIED . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'caution');
+                            $messageStack->add(
+                                SUCCESS_OPTION_VALUES_COPIED .
+                                    TEXT_INFO_FROM .
+                                    zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                                    TEXT_INFO_TO .
+                                    zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
+                                    ' for: ' . $zc_categories .
+                                    ' ' . $new_attribute . ' products',
+                                'caution'
+                            );
                         } else {
                             // successful addition of new attributes that were not duplicates
-                            $messageStack->add(SUCCESS_OPTION_VALUES_COPIED . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'success');
+                            $messageStack->add(
+                                SUCCESS_OPTION_VALUES_COPIED .
+                                    TEXT_INFO_FROM .
+                                    zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                                    TEXT_INFO_TO .
+                                    zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
+                                    ' for: ' . $zc_categories .
+                                    ' ' . $new_attribute . ' products',
+                                'success'
+                            );
                         }
                     } else {
                         // warning nothing to copy
-                        $messageStack->add(ERROR_OPTION_VALUES_NONE . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) . $zc_categories, 'warning');
+                        $messageStack->add(
+                            ERROR_OPTION_VALUES_NONE .
+                                TEXT_INFO_FROM .
+                                zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                                TEXT_INFO_TO .
+                                zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
+                                $zc_categories,
+                            'warning'
+                        );
                     }
                 } // mismatch
             } // same option value
@@ -295,52 +321,53 @@ if (!empty($action)) {
                             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                 ON pa.products_id = ptc.products_id
                       WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                        AND (pa.options_id = " . (int)$options_id_to . ")"
+                        AND pa.options_id = " . $options_id_to
                 );
             } else {
                 $products_only = $db->Execute(
                     "SELECT DISTINCT pa.products_id
                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                      WHERE pa.options_id = " . (int)$options_id_to);
+                      WHERE pa.options_id = " . $options_id_to);
             }
 
             $products_attributes_defaults = $db->Execute(
                 "SELECT pa.*
                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                  WHERE pa.products_id = " . (int)$copy_from_products_id . "
-                    AND options_id = " . (int)$options_id_from . "
-                    AND pa.options_values_id = " . (int)$options_values_values_id_from
+                  WHERE pa.products_id = " . $copy_from_products_id . "
+                    AND options_id = " . $options_id_from . "
+                    AND pa.options_values_id = " . $options_values_values_id_from
             );
 
-            $options_id = (int)$options_id_from;
-            $values_id = (int)$options_values_values_id_from;
+            $options_id = $options_id_from;
+            $values_id = $options_values_values_id_from;
 
             if (!$products_attributes_defaults->EOF) {
-                $options_values_price = (float)$products_attributes_defaults->fields['options_values_price'];
-                $price_prefix = zen_db_prepare_input($products_attributes_defaults->fields['price_prefix']);
+                $attribute_defaults = $products_attributes_defaults->fields;
+                $options_values_price = (float)$attribute_defaults['options_values_price'];
+                $price_prefix = zen_db_prepare_input($attribute_defaults['price_prefix']);
 
-                $products_options_sort_order = (int)$products_attributes_defaults->fields['products_options_sort_order'];
-                $product_attribute_is_free = (int)$products_attributes_defaults->fields['product_attribute_is_free'];
-                $products_attributes_weight = (float)$products_attributes_defaults->fields['products_attributes_weight'];
-                $products_attributes_weight_prefix = zen_db_prepare_input($products_attributes_defaults->fields['products_attributes_weight_prefix']);
-                $attributes_display_only = (int)$products_attributes_defaults->fields['attributes_display_only'];
-                $attributes_default = (int)$products_attributes_defaults->fields['attributes_default'];
-                $attributes_discounted = (int)$products_attributes_defaults->fields['attributes_discounted'];
-                $attributes_price_base_included = (int)$products_attributes_defaults->fields['attributes_price_base_included'];
+                $products_options_sort_order = (int)$attribute_defaults['products_options_sort_order'];
+                $product_attribute_is_free = (int)$attribute_defaults['product_attribute_is_free'];
+                $products_attributes_weight = (float)$attribute_defaults['products_attributes_weight'];
+                $products_attributes_weight_prefix = zen_db_prepare_input($attribute_defaults['products_attributes_weight_prefix']);
+                $attributes_display_only = (int)$attribute_defaults['attributes_display_only'];
+                $attributes_default = (int)$attribute_defaults['attributes_default'];
+                $attributes_discounted = (int)$attribute_defaults['attributes_discounted'];
+                $attributes_price_base_included = (int)$attribute_defaults['attributes_price_base_included'];
 
-                $attributes_price_onetime = (float)$products_attributes_defaults->fields['attributes_price_onetime'];
-                $attributes_price_factor = (float)$products_attributes_defaults->fields['attributes_price_factor'];
-                $attributes_price_factor_offset = (float)$products_attributes_defaults->fields['attributes_price_factor_offset'];
-                $attributes_price_factor_onetime = (float)$products_attributes_defaults->fields['attributes_price_factor_onetime'];
-                $attributes_price_factor_onetime_offset = (float)$products_attributes_defaults->fields['attributes_price_factor_onetime_offset'];
-                $attributes_qty_prices = zen_db_prepare_input($products_attributes_defaults->fields['attributes_qty_prices']);
-                $attributes_qty_prices_onetime = zen_db_prepare_input($products_attributes_defaults->fields['attributes_qty_prices_onetime']);
+                $attributes_price_onetime = (float)$attribute_defaults['attributes_price_onetime'];
+                $attributes_price_factor = (float)$attribute_defaults['attributes_price_factor'];
+                $attributes_price_factor_offset = (float)$attribute_defaults['attributes_price_factor_offset'];
+                $attributes_price_factor_onetime = (float)$attribute_defaults['attributes_price_factor_onetime'];
+                $attributes_price_factor_onetime_offset = (float)$attribute_defaults['attributes_price_factor_onetime_offset'];
+                $attributes_qty_prices = zen_db_prepare_input($attribute_defaults['attributes_qty_prices']);
+                $attributes_qty_prices_onetime = zen_db_prepare_input($attribute_defaults['attributes_qty_prices_onetime']);
 
-                $attributes_price_words = (float)$products_attributes_defaults->fields['attributes_price_words'];
-                $attributes_price_words_free = (int)$products_attributes_defaults->fields['attributes_price_words_free'];
-                $attributes_price_letters = (float)$products_attributes_defaults->fields['attributes_price_letters'];
-                $attributes_price_letters_free = (int)$products_attributes_defaults->fields['attributes_price_letters_free'];
-                $attributes_required = (int)$products_attributes_defaults->fields['attributes_required'];
+                $attributes_price_words = (float)$attribute_defaults['attributes_price_words'];
+                $attributes_price_words_free = (int)$attribute_defaults['attributes_price_words_free'];
+                $attributes_price_letters = (float)$attribute_defaults['attributes_price_letters'];
+                $attributes_price_letters_free = (int)$attribute_defaults['attributes_price_letters_free'];
+                $attributes_required = (int)$attribute_defaults['attributes_required'];
             }
 
             if ($_POST['copy_to_categories_id'] == '') {
@@ -354,96 +381,122 @@ if (!empty($action)) {
             if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from) || ($products_attributes_defaults->EOF && !empty($copy_from_products_id))) {
                 if ($products_attributes_defaults->EOF && !empty($copy_from_products_id)) {
                     // bad product_id with no match
-                    $messageStack->add(ERROR_OPTION_VALUES_COPIED_MISMATCH_PRODUCTS_ID . $copy_from_products_id . ': ' . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from), 'warning');
+                    $messageStack->add(
+                        ERROR_OPTION_VALUES_COPIED_MISMATCH_PRODUCTS_ID .
+                            $copy_from_products_id . ': ' . zen_options_name($options_id_from) .
+                            ' ' . zen_values_name($options_values_values_id_from),
+                        'warning'
+                    );
                 } else {
                     // mismatched Option Name/Value
-                    $messageStack->add(ERROR_OPTION_VALUES_COPIED_MISMATCH . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from), 'warning');
+                    $messageStack->add(
+                        ERROR_OPTION_VALUES_COPIED_MISMATCH .
+                            TEXT_INFO_FROM .
+                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from),
+                        'warning'
+                    );
+                }
+            // check for existing combination
+            } elseif (!$products_only->EOF) {
+                    // check existing matching products and add new attributes
+                foreach ($products_only as $product) {
+                    $current_products_id = $product['products_id'];
+
+                    $sql =
+                        "INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . "
+                            (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
+                         VALUES
+                            (" . (int)$current_products_id . ",
+                            " . (int)$options_id . ",
+                            " . (int)$values_id . ",
+                            " . (float)$options_values_price . ",
+                            '" . zen_db_input($price_prefix) . "',
+                            " . (int)$products_options_sort_order . ",
+                            " . (int)$product_attribute_is_free . ",
+                            " . (float)$products_attributes_weight . ",
+                            '" . zen_db_input($products_attributes_weight_prefix) . "',
+                            " . (int)$attributes_display_only . ",
+                            " . (int)$attributes_default . ",
+                            " . (int)$attributes_discounted . ",
+                            '" . zen_db_input($attributes_image_name) . "',
+                            " . (int)$attributes_price_base_included . ",
+                            " . (float)$attributes_price_onetime . ",
+                            " . (float)$attributes_price_factor . ",
+                            " . (float)$attributes_price_factor_offset . ",
+                            " . (float)$attributes_price_factor_onetime . ",
+                            " . (float)$attributes_price_factor_onetime_offset . ",
+                            '" . zen_db_input($attributes_qty_prices) . "',
+                            '" . zen_db_input($attributes_qty_prices_onetime) . "',
+                            " . (float)$attributes_price_words . ",
+                            " . (int)$attributes_price_words_free . ",
+                            " . (float)$attributes_price_letters . ",
+                            " . (int)$attributes_price_letters_free . ",
+                            " . (int)$attributes_required . ")";
+
+                    $check_previous = $db->Execute(
+                        "SELECT COUNT(*) AS count
+                           FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+                          WHERE products_id = " . $current_products_id . "
+                            AND options_id = " . $options_id_from . "
+                            AND options_values_id = " . $options_values_values_id_from . "
+                          LIMIT 1"
+                    );
+                    // do not add duplicate attributes
+                    if ($check_previous->fields['count'] < 1) {
+                        // add new attribute
+                        $db->Execute($sql);
+                        $new_attribute++;
+                    } elseif ($_POST['copy_attributes'] !== 'copy_attributes_ignore') {
+                        // delete old and add new
+                        //echo 'delete old and add new: ' . $current_products_id . '<br>';
+                        $db->Execute(
+                            "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+                              WHERE products_id = " . $current_products_id . "
+                                AND options_id = " . $options_id_from . "
+                                AND options_values_id = " . $options_values_values_id_from
+                        );
+                        $db->Execute($sql);
+                        $new_attribute++;
+                    }
+                }
+
+                // display how many products were updated
+                if ($new_attribute === 0) {
+                    // nothing was added
+                    $messageStack->add(
+                        ERROR_OPTION_VALUES_NONE .
+                            TEXT_INFO_FROM .
+                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                            TEXT_INFO_TO .
+                            zen_options_name($options_id_to) .
+                            ' for: ' . $zc_categories . ' ' .
+                            $new_attribute . ' products',
+                        'warning'
+                    );
+                } else {
+                    // successful addition of new attributes that were not duplicates
+                    $messageStack->add(
+                        SUCCESS_OPTION_VALUES_COPIED .
+                            TEXT_INFO_FROM .
+                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                            TEXT_INFO_TO .
+                            zen_options_name($options_id_to) .
+                            ' for: ' . $zc_categories . ' ' .
+                            $new_attribute . ' products',
+                        'success'
+                    );
                 }
             } else {
-                // check for existing combination
-                if ($products_only->RecordCount() > 0) {
-                    // check existing matching products and add new attributes
-
-                    foreach ($products_only as $product) {
-                        $current_products_id = $product['products_id'];
-
-//              $sql = "insert into " . TABLE_PRODUCTS_ATTRIBUTES . "(products_id, options_id, options_values_id) values('" . $current_products_id . "', '" . $options_id_from . "', '" . $options_values_values_id_from . "')";
-                        $sql =
-                            "INSERT INTO " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                (products_id, options_id, options_values_id, options_values_price, price_prefix, products_options_sort_order, product_attribute_is_free, products_attributes_weight, products_attributes_weight_prefix, attributes_display_only, attributes_default, attributes_discounted, attributes_image, attributes_price_base_included, attributes_price_onetime, attributes_price_factor, attributes_price_factor_offset, attributes_price_factor_onetime, attributes_price_factor_onetime_offset, attributes_qty_prices, attributes_qty_prices_onetime, attributes_price_words, attributes_price_words_free, attributes_price_letters, attributes_price_letters_free, attributes_required)
-                             VALUES
-                                (" . (int)$current_products_id . ",
-                                " . (int)$options_id . ",
-                                " . (int)$values_id . ",
-                                " . (float)$options_values_price . ",
-                                '" . zen_db_input($price_prefix) . "',
-                                " . (int)$products_options_sort_order . ",
-                                " . (int)$product_attribute_is_free . ",
-                                " . (float)$products_attributes_weight . ",
-                                '" . zen_db_input($products_attributes_weight_prefix) . "',
-                                " . (int)$attributes_display_only . ",
-                                " . (int)$attributes_default . ",
-                                " . (int)$attributes_discounted . ",
-                                '" . zen_db_input($attributes_image_name) . "',
-                                " . (int)$attributes_price_base_included . ",
-                                " . (float)$attributes_price_onetime . ",
-                                " . (float)$attributes_price_factor . ",
-                                " . (float)$attributes_price_factor_offset . ",
-                                " . (float)$attributes_price_factor_onetime . ",
-                                " . (float)$attributes_price_factor_onetime_offset . ",
-                                '" . zen_db_input($attributes_qty_prices) . "',
-                                '" . zen_db_input($attributes_qty_prices_onetime) . "',
-                                " . (float)$attributes_price_words . ",
-                                " . (int)$attributes_price_words_free . ",
-                                " . (float)$attributes_price_letters . ",
-                                " . (int)$attributes_price_letters_free . ",
-                                " . (int)$attributes_required . ")";
-
-                        $check_previous = $db->Execute(
-                            "SELECT COUNT(*) AS count
-                               FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                              WHERE products_id = " . (int)$current_products_id . "
-                                AND options_id = " . (int)$options_id_from . "
-                                AND options_values_id = " . (int)$options_values_values_id_from . "
-                              LIMIT 1"
-                        );
-                        // do not add duplicate attributes
-                        if ($check_previous->fields['count'] < 1) {
-                            // add new attribute
-                            $db->Execute($sql);
-                            //echo $sql . '<br>';
-                            $new_attribute++;
-                        } else {
-                            // ignore
-                            if ($_POST['copy_attributes'] == 'copy_attributes_ignore') {
-                                //echo 'skipped already exists: ' . $current_products_id . '<br>';
-                            } else {
-                                // delete old and add new
-                                //echo 'delete old and add new: ' . $current_products_id . '<br>';
-                                $db->Execute(
-                                    "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                      WHERE products_id = " . (int)$current_products_id . "
-                                        AND options_id = " . (int)$options_id_from . "
-                                        AND options_values_id = " . (int)$options_values_values_id_from
-                                );
-                                $db->Execute($sql);
-                                $new_attribute++;
-                            }
-                        }
-                    }
-
-                    // display how many products were updated
-                    if ($new_attribute < 1) {
-                        // nothing was added
-                        $messageStack->add(ERROR_OPTION_VALUES_NONE . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'warning');
-                    } else {
-                        // successful addition of new attributes that were not duplicates
-                        $messageStack->add(SUCCESS_OPTION_VALUES_COPIED . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'success');
-                    }
-                } else {
-                    // warning nothing to copy
-                    $messageStack->add(ERROR_OPTION_VALUES_NONE . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' for: ' . $zc_categories, 'warning');
-                }
+                // warning nothing to copy
+                $messageStack->add(
+                    ERROR_OPTION_VALUES_NONE .
+                        TEXT_INFO_FROM .
+                        zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                        TEXT_INFO_TO .
+                        zen_options_name($options_id_to) .
+                        ' for: ' . $zc_categories,
+                    'warning'
+                );
             } // mismatch
             break;
 ////////////////////////////////////
@@ -460,15 +513,15 @@ if (!empty($action)) {
                             LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                 ON pa.products_id = ptc.products_id
                       WHERE ptc.categories_id = " . (int)$_POST['copy_to_categories_id'] . "
-                        AND (pa.options_id = " . (int)$options_id_from . "
-                        AND pa.options_values_id = " . (int)$options_values_values_id_from . ")"
+                        AND pa.options_id = " . $options_id_from . "
+                        AND pa.options_values_id = " . $options_values_values_id_from
                 );
             } else {
                 $products_only = $db->Execute(
                     "SELECT pa.products_id
                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                      WHERE pa.options_id = " . (int)$options_id_from . "
-                        AND pa.options_values_id = " . (int)$options_values_values_id_from
+                      WHERE pa.options_id = " . $options_id_from . "
+                        AND pa.options_values_id = " . $options_values_values_id_from
                 );
             }
 
@@ -481,10 +534,15 @@ if (!empty($action)) {
             $new_attribute = 0;
 
             if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from)) {
-                $messageStack->add(ERROR_OPTION_VALUES_DELETE_MISMATCH . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from), 'warning');
+                $messageStack->add(
+                    ERROR_OPTION_VALUES_DELETE_MISMATCH .
+                        TEXT_INFO_FROM .
+                        zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from),
+                    'warning'
+                );
             } else {
                 // check for existing combination
-                if ($products_only->RecordCount() > 0) {
+                if (!$products_only->EOF) {
                     // check existing matching products and add new attributes
                     foreach ($products_only as $product) {
                         $current_products_id = $product['products_id'];
@@ -493,26 +551,34 @@ if (!empty($action)) {
                         $downloads_remove_query =
                             "SELECT products_attributes_id
                                FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                              WHERE products_id = " . (int)$current_products_id . "
-                                AND options_id = " . (int)$options_id_from . "
-                                AND options_values_id = " . (int)$options_values_values_id_from;
+                              WHERE products_id = " . $current_products_id . "
+                                AND options_id = " . $options_id_from . "
+                                AND options_values_id = " . $options_values_values_id_from;
                         $downloads_remove = $db->Execute($downloads_remove_query);
 
                         $remove_downloads_ids = [];
                         foreach ($downloads_remove as $row) {
                             $remove_downloads_ids[] = $row['products_attributes_id'];
                         }
-                        $zco_notifier->notify('OPTIONS_VALUES_MANAGER_DELETE_VALUES_OF_OPTIONNAME', array('current_products_id' => $current_products_id, 'remove_ids' => $remove_downloads_ids, 'options_id' => $options_id_from, 'options_values_id' => $options_values_values_id_from));
+                        $zco_notifier->notify(
+                            'OPTIONS_VALUES_MANAGER_DELETE_VALUES_OF_OPTIONNAME',
+                            [
+                                'current_products_id' => $current_products_id,
+                                'remove_ids' => $remove_downloads_ids,
+                                'options_id' => $options_id_from,
+                                'options_values_id' => $options_values_values_id_from
+                            ]
+                        );
 
                         $sql =
                             "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                              WHERE products_id = " . (int)$current_products_id . "
-                                AND options_id = " . (int)$options_id_from . "
-                                AND options_values_id = " . (int)$options_values_values_id_from;
+                              WHERE products_id = " . $current_products_id . "
+                                AND options_id = " . $options_id_from . "
+                                AND options_values_id = " . $options_values_values_id_from;
                         $delete_selected = $db->Execute($sql);
 
                         // delete associated downloads
-                        if (sizeof($remove_downloads_ids)) {
+                        if (count($remove_downloads_ids) !== 0) {
                             $db->Execute(
                                 "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                                   WHERE products_attributes_id IN (" . implode(',', $remove_downloads_ids) . ")"
@@ -523,19 +589,41 @@ if (!empty($action)) {
                     }
 
                     // display how many products were updated
-                    if ($new_attribute < 1) {
+                    if ($new_attribute === 0) {
                         // nothing was added due to duplicates
-                        $messageStack->add(ERROR_OPTION_VALUES_NONE . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'caution');
+                        $messageStack->add(
+                            ERROR_OPTION_VALUES_NONE .
+                                zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                                ' for: ' . $zc_categories . ' ' .
+                                $new_attribute . ' products',
+                            'caution'
+                        );
                     } else {
                         // successful addition of new attributes that were not duplicates
-                        $messageStack->add(SUCCESS_OPTION_VALUES_DELETE . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'success');
+                        $messageStack->add(
+                            SUCCESS_OPTION_VALUES_DELETE .
+                                zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                                ' for: ' . $zc_categories . ' ' .
+                                $new_attribute . ' products',
+                            'success'
+                        );
                     }
                 } else {
                     // warning nothing to copy
-                    $messageStack->add(ERROR_OPTION_VALUES_NONE . TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) . TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) . $zc_categories, 'warning');
+                    $messageStack->add(
+                        ERROR_OPTION_VALUES_NONE .
+                            TEXT_INFO_FROM .
+                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
+                            TEXT_INFO_TO .
+                            zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
+                            $zc_categories,
+                        'warning'
+                    );
                 }
             } // mismatch
+            break;
 
+        default:
             break;
     }
 }
@@ -552,8 +640,12 @@ if (!empty($action)) {
       <h1><?php echo HEADING_TITLE_VAL; ?></h1>
       <div class="row">
         <div class="col-sm-4">
-          <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER) ?>" class="btn btn-default" role="button"><?php echo IMAGE_EDIT_ATTRIBUTES; ?></a> &nbsp;
-          <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER) ?>" class="btn btn-default" role="button"><?php echo IMAGE_OPTION_NAMES; ?></a>
+          <a href="<?php echo zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER) ?>" class="btn btn-default" role="button">
+            <?php echo IMAGE_EDIT_ATTRIBUTES; ?>
+          </a> &nbsp;
+          <a href="<?php echo zen_href_link(FILENAME_OPTIONS_NAME_MANAGER) ?>" class="btn btn-default" role="button">
+            <?php echo IMAGE_OPTION_NAMES; ?>
+          </a>
         </div>
         <div class="col-sm-4">
 <?php
@@ -571,12 +663,15 @@ echo
     '</form>';
 ?>
         </div>
-        <div class="col-sm-4 text-right"><?php echo TEXT_PRODUCT_OPTIONS_INFO; ?></div>
+        <div class="col-sm-4 text-right">
+            <?php echo TEXT_PRODUCT_OPTIONS_INFO; ?>
+        </div>
       </div>
       <!-- value //-->
 <?php
-if ($action == 'delete_option_value') { // delete product option value
-    $exclude_array = ['action'];
+if ($action === 'delete_option_value') { // delete product option value
+    $delete_option_value_params = zen_get_all_get_params(['action']);
+
     $values_values = $db->Execute(
         "SELECT products_options_values_id, products_options_values_name
            FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
@@ -602,7 +697,7 @@ if ($action == 'delete_option_value') { // delete product option value
             AND po.products_options_id = pa.options_id
           ORDER BY pd.products_name"
     );
-    if ($products_values->RecordCount() > 0) {
+    if (!$products_values->EOF) {
 ?>
                 <tr>
                   <td colspan="4" class="pageHeading"><?php echo $values_values->fields['products_options_values_name']; ?></td>
@@ -613,8 +708,12 @@ if ($action == 'delete_option_value') { // delete product option value
                 <tr>
                   <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   <td class="text-right">
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array) . 'action=delete_value'); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $delete_option_value_params . 'action=delete_value'); ?>" class="btn btn-danger" role="button">
+                        <?php echo IMAGE_DELETE; ?>
+                    </a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $delete_option_value_params); ?>" class="btn btn-default" role="button">
+                        <?php echo TEXT_CANCEL; ?>
+                    </a>
                   </td>
                 </tr>
 <?php
@@ -646,8 +745,12 @@ if ($action == 'delete_option_value') { // delete product option value
                 <tr>
                   <td colspan="3"><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   <td class="text-right">
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array) . 'action=delete_value'); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $delete_option_value_params . 'action=delete_value'); ?>" class="btn btn-danger" role="button">
+                        <?php echo IMAGE_DELETE; ?>
+                    </a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $delete_option_value_params); ?>" class="btn btn-default" role="button">
+                        <?php echo TEXT_CANCEL; ?>
+                    </a>
                   </td>
                 </tr>
 <?php
@@ -658,12 +761,16 @@ if ($action == 'delete_option_value') { // delete product option value
                 </tr>
               <tbody>
                 <tr>
-                  <td ><?php echo TEXT_OK_TO_DELETE; ?></td>
+                  <td><?php echo TEXT_OK_TO_DELETE; ?></td>
                 </tr>
                 <tr>
                   <td class="text-right" >
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array) . 'action=delete_value'); ?>" class="btn btn-danger" role="button"><?php echo IMAGE_DELETE; ?></a>
-                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default" role="button"><?php echo TEXT_CANCEL; ?></a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $delete_option_value_params . 'action=delete_value'); ?>" class="btn btn-danger" role="button">
+                        <?php echo IMAGE_DELETE; ?>
+                    </a>
+                    <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $delete_option_value_params); ?>" class="btn btn-default" role="button">
+                        <?php echo TEXT_CANCEL; ?>
+                    </a>
                   </td>
                 </tr>
 <?php
@@ -673,16 +780,14 @@ if ($action == 'delete_option_value') { // delete product option value
         <div class="row">
           <?php echo zen_draw_separator('pixel_trans.gif', '100%'); ?>
         </div>
-<?php
-    $form = addSearchKeywordForm(FILENAME_OPTIONS_VALUES_MANAGER, '');
-    echo $form;
-?>
+
+        <?php echo addSearchKeywordForm(FILENAME_OPTIONS_VALUES_MANAGER, ''); ?>
+
         <div class="row">
-<?php
-    echo
-        zen_draw_form('set_filter', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"') .
-        zen_post_all_get_params() .
-        zen_draw_label(LABEL_FILTER, 'set_filter', 'class="col-sm-3 control-label"');
+        <?php echo
+            zen_draw_form('set_filter', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"') .
+                zen_post_all_get_params() .
+                zen_draw_label(LABEL_FILTER, 'set_filter', 'class="col-sm-3 control-label"');
 ?>
           <div class="col-sm-6">
 <?php
@@ -694,17 +799,18 @@ if ($action == 'delete_option_value') { // delete product option value
           <div class="col-sm-3">
 <?php
     if ($filter !== 0) {
-        $exclude_array = ['set_filter', 'page'];
 ?>
-              <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params($exclude_array)); ?>" class="btn btn-default"><?php echo IMAGE_RESET; ?></a>
+              <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, zen_get_all_get_params(['set_filter', 'page'])); ?>" class="btn btn-default">
+                <?php echo IMAGE_RESET; ?>
+              </a>
 <?php
     }
 ?>
           </div>
-<?php
-    echo zen_draw_hidden_field('action', 'set_filter');
-    echo zen_hide_session_id();
-    echo '</form>';
+          <?php echo
+                zen_draw_hidden_field('action', 'set_filter') .
+                zen_hide_session_id() .
+            '</form>';
 ?>
         </div>
 <?php
@@ -740,17 +846,17 @@ if ($action == 'delete_option_value') { // delete product option value
     ];
 ?>
           <div class="col-sm-1">
-<?php
-    echo zen_draw_form('set_max_search_result', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"');
-    echo zen_post_all_get_params();
+            <?php echo
+                zen_draw_form('set_max_search_result', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"') .
+                    zen_post_all_get_params();
 ?>
             <div class="form-group">
                 <?php echo zen_draw_pull_down_menu('max_search_results', $max_search_results_array, $max_search_results, 'onchange="this.form.submit();" class="form-control"'); ?>
             </div>
-<?php
-    echo zen_draw_hidden_field('action', 'set_max_search_result');
-    echo zen_hide_session_id();
-    echo '</form>';
+            <?php echo
+                    zen_draw_hidden_field('action', 'set_max_search_result') .
+                    zen_hide_session_id() .
+                '</form>';
 ?>
           </div>
           <div class="col-sm-3">
@@ -776,6 +882,17 @@ if ($action == 'delete_option_value') { // delete product option value
             </thead>
             <tbody>
 <?php
+    $link_params = '';
+    if ($currentPage !== 0) {
+        $link_params .= '&page=' . $currentPage;
+    }
+    if ($filter !== 0) {
+        $link_params .= '&set_filter=' . $filter;
+    }
+    if ($max_search_results !== 0) {
+        $link_params .= '&max_search_results=' . $max_search_results;
+    }
+
     $next_id = 1;
     $values_values = $db->Execute($values_query_raw);
     foreach ($values_values as $values_value) {
@@ -784,7 +901,7 @@ if ($action == 'delete_option_value') { // delete product option value
         // fetch products_options_id for use if the option value is deleted
         // with TEXT and FILE Options, there are multiple options for the single TEXT
         // value and only the single reference should be deleted
-        $option_id = (!empty($last_mod) ? (string)$last_mod : $values_value['products_options_id']);
+        $option_id = !empty($last_mod) ? (string)$last_mod : $values_value['products_options_id'];
 
         $values_name = $values_value['products_options_values_name'];
         $products_options_values_sort_order = $values_value['products_options_values_sort_order'];
@@ -792,10 +909,10 @@ if ($action == 'delete_option_value') { // delete product option value
                 <tr>
 <?php
         // edit option values
-        if ($action == 'update_option_value' && $_GET['value_id'] == $values_value['products_options_values_id']) {
+        if ($action === 'update_option_value' && $_GET['value_id'] == $values_value['products_options_values_id']) {
 ?>
                     <td colspan="5">
-                     <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage: '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
+                       <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_value' . $link_params, 'post', 'class="form-horizontal"'); ?>
                         <table class="table">
                             <thead>
                                 <tr class="dataTableHeadingRow">
@@ -810,27 +927,34 @@ if ($action == 'delete_option_value') { // delete product option value
                                 <tr>
 <?php
             $inputs = '';
-            for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+            foreach ($languages as $next_lang) {
+                $next_lang_id = (int)$next_lang['id'];
                 $value_name = $db->Execute(
                     "SELECT products_options_values_name
                        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                       WHERE products_options_values_id = " . (int)$values_value['products_options_values_id'] . "
-                        AND language_id = " . (int)$languages[$i]['id']
+                        AND language_id = " . $next_lang_id
                 );
-                $inputs .= '<div class="form-group">';
-                $inputs .= '<div class="input-group">';
-                $inputs .= '<span class="input-group-addon">';
-                $inputs .= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']);
-                $inputs .= '</span>';
-                $inputs .= zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', zen_output_string($value_name->fields['products_options_values_name']), zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . ' class="form-control"');
-                $inputs .= '</div>';
-                $inputs .= '</div>';
-                }
-                $products_options_values_sort_order = $db->Execute(
-                    "SELECT DISTINCT products_options_values_sort_order
-                       FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
-                      WHERE products_options_values_id = " . (int)$values_value['products_options_values_id']
-                );
+                $inputs .=
+                    '<div class="form-group">' .
+                        '<div class="input-group">' .
+                            '<span class="input-group-addon">' .
+                                zen_image(DIR_WS_CATALOG_LANGUAGES . $next_lang['directory'] . '/images/' . $next_lang['image'], $next_lang['name']) .
+                            '</span>' .
+                            zen_draw_input_field(
+                                'value_name[' . $next_lang_id . ']',
+                                zen_output_string($value_name->fields['products_options_values_name']),
+                                zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . ' class="form-control"'
+                            ) .
+                        '</div>' .
+                    '</div>';
+            }
+
+            $products_options_values_sort_order = $db->Execute(
+                "SELECT DISTINCT products_options_values_sort_order
+                   FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
+                  WHERE products_options_values_id = " . (int)$values_value['products_options_values_id']
+            );
 ?>
                                     <td class="attributeBoxContent text-right">
                                       <?php echo $values_value['products_options_values_id']; ?>
@@ -838,22 +962,22 @@ if ($action == 'delete_option_value') { // delete product option value
                                     </td>
                                     <td class="attributeBoxContent">
 <?php
-                $options_values = $db->Execute(
-                    "SELECT products_options_id, products_options_name, products_options_type
-                       FROM " . TABLE_PRODUCTS_OPTIONS . "
-                      WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                        AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-                        AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
-                      ORDER BY products_options_name"
-                );
+            $options_values = $db->Execute(
+                "SELECT products_options_id, products_options_name, products_options_type
+                   FROM " . TABLE_PRODUCTS_OPTIONS . "
+                  WHERE language_id = " . (int)$_SESSION['languages_id'] . "
+                    AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
+                    AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
+                  ORDER BY products_options_name"
+            );
 
-                $optionsValueArray = [];
-                foreach ($options_values as $options_value) {
-                    $optionsValueArray[] = [
-                        'id' => $options_value['products_options_id'],
-                        'text' => '(' . $options_value['products_options_id'] . ') ' . $options_value['products_options_name'],
-                    ];
-                }
+            $optionsValueArray = [];
+            foreach ($options_values as $options_value) {
+                $optionsValueArray[] = [
+                    'id' => $options_value['products_options_id'],
+                    'text' => '(' . $options_value['products_options_id'] . ') ' . $options_value['products_options_name'],
+                ];
+            }
 ?>
                                         <?php echo zen_draw_pull_down_menu('option_id', $optionsValueArray, $values_value['products_options_id'], 'class="form-control"'); ?>
                                     </td>
@@ -863,7 +987,7 @@ if ($action == 'delete_option_value') { // delete product option value
                                     </td>
                                     <td class="attributeBoxContent text-right">
                                         <button type="submit" class="btn btn-primary"><?php echo IMAGE_UPDATE; ?></button>
-                                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-default" role="button">
+                                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, $link_params); ?>" class="btn btn-default" role="button">
                                             <?php echo IMAGE_CANCEL ?>
                                         </a>
                                     </td>
@@ -874,20 +998,26 @@ if ($action == 'delete_option_value') { // delete product option value
 <?php
         } else {
 ?>
-                    <td class="text-right"><?php echo $values_value["products_options_values_id"]; ?></td>
+                    <td class="text-right"><?php echo $values_value['products_options_values_id']; ?></td>
                     <td><?php echo $options_name; ?></td>
                     <td><?php echo $values_name; ?></td>
                     <td class="text-right"><?php echo $values_value['products_options_values_sort_order']; ?></td>
 <?php
-            if ($action == 'update_option_value') {
+            $link_params .= '&value_id=' . $values_value['products_options_values_id'];
+
+            if ($action === 'update_option_value') {
 ?>
                    <td>&nbsp;</td>
 <?php
             } else {
 ?>
                     <td class="text-right">
-                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a>
-                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value&value_id=' . $values_value['products_options_values_id'] . '&' . ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '') . ($filter !== 0 ? 'set_filter=' . $filter . '&' : '') . ($max_search_results != 0 ? 'max_search_results=' . $max_search_results : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_DELETE; ?></a>
+                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=update_option_value' . $link_params); ?>" class="btn btn-primary" role="button">
+                            <?php echo IMAGE_EDIT; ?>
+                        </a>
+                        <a href="<?php echo zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_option_value' . $link_params); ?>" class="btn btn-default" role="button">
+                            <?php echo IMAGE_DELETE; ?>
+                        </a>
                     </td>
 <?php
             }
@@ -902,11 +1032,11 @@ if ($action == 'delete_option_value') { // delete product option value
 ?>
                 </tr>
 <?php
-    if ($action != 'update_option_value') {
+    if ($action !== 'update_option_value') {
 ?>
                 <tr>
                     <td colspan="5">
-                        <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . ($currentPage !== 0 && $currentPage !== 1 ? '&page=' . $currentPage : '') . ($filter !== 0 ? '&set_filter=' . $filter : '') . ($max_search_results != 0 ? '&max_search_results=' . $max_search_results : ''), 'post', 'class="form-horizontal"'); ?>
+                        <?php echo zen_draw_form('values', FILENAME_OPTIONS_VALUES_MANAGER, 'action=add_product_option_values' . $link_params, 'post', 'class="form-horizontal"'); ?>
 <?php
         $options_values = $db->Execute(
             "SELECT products_options_id, products_options_name, products_options_type
@@ -932,12 +1062,14 @@ if ($action == 'delete_option_value') { // delete product option value
                         </div>
                         <div class="col-md-5">
 <?php
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        foreach ($languages as $next_lang) {
 ?>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <span class="input-group-addon"><?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?></span>
-                                    <?php echo zen_draw_input_field('value_name[' . $languages[$i]['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . ' class="form-control"'); ?>
+                                    <span class="input-group-addon">
+                                        <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $next_lang['directory'] . '/images/' . $next_lang['image'], $next_lang['name']); ?>
+                                    </span>
+                                    <?php echo zen_draw_input_field('value_name[' . $next_lang['id'] . ']', '', zen_set_field_length(TABLE_PRODUCTS_OPTIONS_VALUES, 'products_options_values_name', 50) . ' class="form-control"'); ?>
                                 </div>
                             </div>
 <?php
@@ -1057,12 +1189,22 @@ if ($_SESSION['option_names_values_copier'] == '0') {
                     <table class="table">
                         <tr class="dataTableHeadingRow">
                             <td class="dataTableHeadingContent">
-                                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from"'); ?><br>
-                                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from"'); ?>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_OPTION_FROM, 'options_id_from', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from"'); ?>
+                                <br>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM, 'options_values_values_id_from', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from"'); ?>
                             </td>
                             <td class="dataTableHeadingContent">
-                                <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO, 'options_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control" id="options_id_to"'); ?><br>
-                                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_TO, 'options_values_values_id_to', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_to', $option_values_to_dropdown, '', 'class="form-control" id="options_values_values_id_to"'); ?>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_OPTION_TO, 'options_id_to', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control" id="options_id_to"'); ?>
+                                <br>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_OPTION_VALUES_TO, 'options_values_values_id_to', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_values_values_id_to', $option_values_to_dropdown, '', 'class="form-control" id="options_values_values_id_to"'); ?>
                             </td>
                             <td class="dataTableHeadingContent">
                                 <?php echo str_replace('_XXX', '', $to_categories_id);?>
@@ -1100,14 +1242,22 @@ if ($_SESSION['option_names_values_copier'] == '0') {
                     <table>
                         <tr  class="dataTableHeadingRow">
                             <td class="dataTableHeadingContent">
-                                <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from_del', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from_del"'); ?><br>
-                                <?php echo zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from_del', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from_del"'); ?>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from_del', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from_del"'); ?>
+                                <br>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from_del', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from_del"'); ?>
                             </td>
                             <td class="dataTableHeadingContent">
                                 <?php echo str_replace('_XXX', '_del', $to_categories_id);?>
                             </td>
                             <td class="dataTableHeadingContent text-center">
-                                <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i> <?php echo IMAGE_DELETE; ?></button>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa-solid fa-trash"></i>
+                                    <?php echo IMAGE_DELETE; ?>
+                                </button>
                             </td>
                         </tr>
                     </table>
@@ -1139,12 +1289,20 @@ if ($_SESSION['option_names_values_copier'] == '0') {
                     <table class="table">
                         <tr  class="dataTableHeadingRow">
                             <td class="dataTableHeadingContent">
-                                <?php echo zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from_add', 'class="control-label"') . zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from_add"'); ?><br>
-                                <?php echo zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from_add', 'class="control-label"') . zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from_add"'); ?><br>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_OPTION_FROM_ADD, 'options_id_from_add', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from_add"'); ?>
+                                <br>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_OPTION_VALUES_FROM_ADD, 'options_values_values_id_from_add', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from_add"'); ?>
+                                <br>
                                 <?php echo $options_id_from_products_id; ?>
                             </td>
                             <td class="dataTableHeadingContent">
-                                <?php echo zen_draw_label(TEXT_SELECT_OPTION_TO_ADD_TO, 'options_id_to_add', 'class="control-label"') . zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control" id="options_id_to_add"'); ?>
+                                <?php echo
+                                    zen_draw_label(TEXT_SELECT_OPTION_TO_ADD_TO, 'options_id_to_add', 'class="control-label"') .
+                                    zen_draw_pull_down_menu('options_id_to', $option_to_dropdown, '', 'class="form-control" id="options_id_to_add"'); ?>
                             </td>
                             <td class="dataTableHeadingContent">
                                 <?php echo str_replace('_XXX', '_add', $to_categories_id);?><br>
