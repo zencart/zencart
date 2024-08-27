@@ -96,6 +96,9 @@ if (count($newArray)) { ?>
 <script>
     async function validateForm(form) {
         $('#upgradeResponsesHolder').html('');
+        if (form.id === 'db_upgrade_done') {
+            form.submit();
+        }
         $.ajax({
             type: "POST",
             timeout: 10000,
