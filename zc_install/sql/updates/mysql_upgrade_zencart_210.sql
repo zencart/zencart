@@ -108,6 +108,7 @@ UPDATE configuration SET configuration_title = 'Product And Category Image - No 
 UPDATE configuration SET configuration_title = 'Product And Category Image - No Image picture' WHERE configuration_key = 'PRODUCTS_IMAGE_NO_IMAGE';
 UPDATE configuration SET configuration_title = 'Featured Products And Categories Columns per Row' WHERE configuration_key = 'SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS';
 
+ALTER TABLE ezpages MODIFY page_is_ssl INT(1) NOT NULL default 1;
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
 #### VERSION UPDATE STATEMENTS

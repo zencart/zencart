@@ -40,7 +40,6 @@ if (!empty($action)) {
                 $pages_id = (int)$_POST['pages_id'];
             }
             $page_open_new_window = (int)$_POST['page_open_new_window'];
-            $page_is_ssl = (int)$_POST['page_is_ssl'];
             $status_visible = (int)$_POST['status_visible'];
 
             $alt_url = zen_db_prepare_input($_POST['alt_url']);
@@ -105,7 +104,6 @@ if (!empty($action)) {
             if ($page_error === false) {
                 $sql_data_array = [
                     'page_open_new_window' => $page_open_new_window,
-                    'page_is_ssl' => $page_is_ssl,
                     'alt_url' => $alt_url,
                     'alt_url_external' => $alt_url_external,
                     'status_header' => $status_header,
@@ -264,7 +262,6 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
             'status_footer' => 1,
             'status_toc' => 1,
             'page_open_new_window' => 0,
-            'page_is_ssl' => 1,
         ];
 
         $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_NEW', '', $parameters);
@@ -362,13 +359,6 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
             <div class="col-sm-9 col-md-6">
                 <label class="radio-inline"><?= zen_draw_radio_field('page_open_new_window', '1', ($ezInfo->page_open_new_window == 1)) . TEXT_YES ?></label>
                 <label class="radio-inline"><?= zen_draw_radio_field('page_open_new_window', '0', ($ezInfo->page_open_new_window == 0)) . TEXT_NO ?></label>
-            </div>
-        </div>
-        <div class="form-group">
-            <?= zen_draw_label(TABLE_HEADING_PAGE_IS_SSL, 'page_is_ssl', 'class="col-sm-3 control-label"') ?>
-            <div class="col-sm-9 col-md-6">
-                <label class="radio-inline"><?= zen_draw_radio_field('page_is_ssl', '1', ($ezInfo->page_is_ssl == 1)) . TEXT_YES ?></label>
-                <label class="radio-inline"><?= zen_draw_radio_field('page_is_ssl', '0', ($ezInfo->page_is_ssl == 0)) . TEXT_NO ?></label>
             </div>
         </div>
         <div class="form-group">
@@ -525,7 +515,6 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ID ?></th>
                         <th class="dataTableHeadingContent"><?= TABLE_HEADING_PAGES ?></th>
                         <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_PAGE_OPEN_NEW_WINDOW ?></th>
-                        <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_PAGE_IS_SSL ?></th>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_HEADER ?></th>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_SIDEBOX ?></th>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_FOOTER ?></th>
@@ -630,24 +619,6 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                             echo zen_draw_hidden_field('ezID', $page['pages_id']);
                             echo zen_draw_hidden_field('new_status', ($page['page_open_new_window'] === '1' ? '0' : '1'));
                             echo zen_draw_hidden_field('fieldName', 'page_open_new_window');
-                            echo '</form>';
-                            ?></td>
-                        <td class="dataTableContent text-center">
-                            <?= zen_draw_form('page_is_ssl', FILENAME_EZPAGES_ADMIN, 'action=update_status') ?>
-                            <button type="submit" class="btn btn-status">
-                                <?php
-                                if ($page['page_is_ssl'] === '1') { ?>
-                                    <i class="fa-solid fa-square fa-lg txt-status-on" title="<?= IMAGE_ICON_STATUS_ON ?>"></i>
-                                <?php
-                                } else { ?>
-                                    <i class="fa-solid fa-square fa-lg txt-status-off" title="<?= IMAGE_ICON_STATUS_OFF ?>"></i>
-                                <?php
-                                } ?>
-                            </button>
-                            <?php
-                            echo zen_draw_hidden_field('ezID', $page['pages_id']);
-                            echo zen_draw_hidden_field('new_status', ($page['page_is_ssl'] === '1' ? '0' : '1'));
-                            echo zen_draw_hidden_field('fieldName', 'page_is_ssl');
                             echo '</form>';
                             ?></td>
                         <td class="dataTableContent text-right">

@@ -796,7 +796,7 @@ CREATE TABLE ezpages (
   footer_sort_order int(3) NOT NULL default '0',
   toc_sort_order int(3) NOT NULL default '0',
   page_open_new_window int(1) NOT NULL default '0',
-  page_is_ssl int(1) NOT NULL default '0',
+  page_is_ssl INT(1) NOT NULL default '1',
   toc_chapter int(11) NOT NULL default '0',
   PRIMARY KEY  (pages_id),
   KEY idx_ezp_status_header_zen (status_header),
