@@ -93,6 +93,7 @@ class zcDatabaseInstaller
     public function runZeroDateSql(?array $options = null): ?bool
     {
         $file = DIR_FS_INSTALL . 'sql/install/zero_dates_cleanup.sql';
+        logDetails('Running cleanup for zero-date issues', $file);
         return $this->parseSqlFile($file, $options);
     }
 
@@ -114,7 +115,7 @@ class zcDatabaseInstaller
         $this->doJSONProgressLoggingStart(count($lines));
         $this->keepTogetherCount = 0;
         $this->newLine = "";
-        $usleep = defined('USLEEP_DB_INSTALLER') ? USLEEP_DB_INSTALLER : 3;
+        $usleep = defined('USLEEP_DB_INSTALLER') ? (int)USLEEP_DB_INSTALLER : 3;
         foreach ($lines as $line) {
             usleep($usleep);
             $this->jsonProgressLoggingCount++;
