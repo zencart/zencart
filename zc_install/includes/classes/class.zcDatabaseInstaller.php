@@ -483,7 +483,26 @@ class zcDatabaseInstaller
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
             $this->ignoreLine = true;
         } else {
-            $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
+            // Check for the SET command
+            $command = $this->lineSplit[2] ?? '';
+            if (strtoupper($command) === 'SET') {
+                $column = $this->lineSplit[3] ?? '';
+                // if there is an extra space (ie: 2 spaces) after the SET command in the SQL statement, then the column-name will be one more array element over
+                if ($column === ' ') {
+                    $column = $this->lineSplit[4] ?? '';
+                }
+                if ($column !== ' ') {
+                    $column_segments = explode('=', $column);
+                    $column_name = $column_segments[0];
+                    if (!$this->tableColumnExists($this->lineSplit[1], $column_name)) {
+                        $result = sprintf(REASON_COLUMN_DOESNT_EXIST, $column_name);
+                        $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+                        $this->ignoreLine = true;
+                    }
+                }
+            } else {
+                $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
+            }
         }
     }
 
@@ -501,17 +520,19 @@ class zcDatabaseInstaller
                 case 'CHANGE':
                 case 'MODIFY':
                     // Check to see if the column / index already exists
-                    // we treat it falsey in this case because we cannot perform the change if the column is not present
 
-                    // we check for semi-optional COLUMN keyword
                     if (strtoupper($this->lineSplit[4]) === 'COLUMN') {
+                        // we check for semi-optional COLUMN keyword
                         $exists = !$this->tableColumnExists($this->lineSplit[2], $this->lineSplit[5]);
                         $result = sprintf(REASON_COLUMN_DOESNT_EXIST_TO_CHANGE, $this->lineSplit[5]);
                     } else {
                         $exists = !$this->tableColumnExists($this->lineSplit[2], $this->lineSplit[4]);
                         $result = sprintf(REASON_COLUMN_DOESNT_EXIST_TO_CHANGE, $this->lineSplit[4]);
                     }
-                    $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+                    // $exists here is treated backwards/falsey in this case because we cannot perform the change if the column is not present
+                    if ($exists) {
+                        $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+                    }
                     break;
                 case 'ADD':
                 case 'DROP':
