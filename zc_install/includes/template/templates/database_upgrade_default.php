@@ -126,6 +126,7 @@ if (count($newArray)) { ?>
         let deferred = $.Deferred();
         let promise = deferred.promise();
         let length = $('input[type=checkbox]:checked').length;
+        let instance = 0;
         let error = false;
         let errorList = null;
         let response = null;
@@ -138,8 +139,9 @@ if (count($newArray)) { ?>
                         error = true;
                         return promise;
                     } else {
-                        console.log('Requesting upgrade for version ' + version);
-                        return doRequest(version);
+                        instance ++;
+                        console.log('Requesting upgrade for version ' + version + '; Step ' + instance + ' of ' + length);
+                        return doRequest(version, length, instance);
                     }
                 },
                 function (response, status, ajax) {
@@ -185,11 +187,11 @@ if (count($newArray)) { ?>
             }
         });
 
-        function doRequest(version) {
+        function doRequest(version, size, instance) {
             return $.ajax({
                 type: "post",
                 url: "ajaxLoadUpdatesSql.php",
-                data: {version: version},
+                data: {version: version, batchSize: size, batchInstance: instance},
                 dataType: "JSON"
             });
         }

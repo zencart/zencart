@@ -25,6 +25,9 @@ $postedVersion = sanitize_version($_POST['version']);
 $updateVersion = str_replace(['version-', '_'], ['', '.'], $postedVersion);
 $versionInfo = $versionArray[$updateVersion];
 
+$batchSize = $_POST['batchSize'] ?? 0;
+$batchInstance = $_POST['batchInstance'] ?? 0;
+
 if ($versionInfo['required'] !== $dbVersion) {
     $error = true;
     if (empty($versionInfo['required'])) {
@@ -41,17 +44,19 @@ $options = $systemChecker->getDbConfigOptions();
 $dbInstaller = new zcDatabaseInstaller($options);
 $result = $dbInstaller->getConnection();
 
-// Run zero-date cleanup
-$extendedOptions = [
-    'doJsonProgressLogging' => true,
-    'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
-    'id' => 'main',
-    'message' => 'Processing zero-date cleanups',
-];
-$errDates = $dbInstaller->runZeroDateSql($extendedOptions);
-if (is_int($errDates)) {
-    echo json_encode(['error' => $errDates, 'version' => 'dates-cleanup', 'errorList' => 'see zcInstall-DEBUG log files']);
-    die();
+// Run zero-date cleanup on first upgrade step only
+if ($batchInstance <= 1 || $batchSize <= 1) {
+    $extendedOptions = [
+        'doJsonProgressLogging' => true,
+        'doJsonProgressLoggingFileName' => zcDatabaseInstaller::$initialProgressMeterFilename,
+        'id' => 'main',
+        'message' => 'Processing zero-date cleanups',
+    ];
+    $errDates = $dbInstaller->runZeroDateSql($extendedOptions);
+    if (is_int($errDates)) {
+        echo json_encode(['error' => $errDates, 'version' => 'dates-cleanup', 'errorList' => 'see zcInstall-DEBUG log files']);
+        die();
+    }
 }
 
 $file = DIR_FS_INSTALL . 'sql/updates/' . $db_type . '_upgrade_zencart_' . str_replace('.', '', $updateVersion) . '.sql';
