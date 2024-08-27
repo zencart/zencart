@@ -522,9 +522,12 @@ class zcDatabaseInstaller
                             break;
                         case 'INDEX':
                         case 'KEY':
-                            // Do nothing if the index_name is ommitted
+                            // Do nothing if the index_name is omitted
                             if ($this->lineSplit[5] !== 'USING' && !str_starts_with($this->lineSplit[5], '(')) {
                                 $exists = $this->tableIndexExists($this->lineSplit[2], $this->lineSplit[5]);
+                            }
+                            if (strtoupper($this->lineSplit[3]) === 'DROP') {
+                                $exists = ! $exists;
                             }
                             break;
                         case 'UNIQUE':
