@@ -54,7 +54,7 @@ class LanguageLoader
     {
         $defs = $this->arrayLoader->loadModuleDefinesFromArrayFile(DIR_FS_CATALOG . 'includes/languages/', $language, $module_type, $languageFile);
 
-        $this->arrayLoader->makeConstants($defs); 
+        $this->arrayLoader->makeConstants($defs);
         $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . $module_type . '/' . $languageFile);
         return true; 
     }
@@ -95,9 +95,12 @@ class LanguageLoader
         return false;
     }
 
-    public function loadCatalogLanguageFile(string $language, string $fileName, string $extraPath = ''): bool
+    public function loadModuleLanguageFile(string $language, string $fileName, string $moduleType): bool
     {
-        return $this->arrayLoader->loadCatalogLanguageFile($language, $fileName, $extraPath);
+        $defineList = $this->arrayLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
+        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
+
+        return ($legacy_file_loaded || count($defineList) !== 0);
     }
 
     public function isFileAlreadyLoaded(string $defineFile): bool

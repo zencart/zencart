@@ -117,7 +117,7 @@ if (!empty($action)) {
             }
 
             if (in_array($class_file, array_keys($modules_found))) {
-                if ($languageLoader->loadCatalogLanguageFile($_SESSION['language'], $class_file, '/modules/' . $module_type)) {
+                if ($languageLoader->loadModuleLanguageFile($_SESSION['language'], $class_file, $module_type)) {
                     require DIR_FS_CATALOG . $modules_found[$class_file] . $class_file;
                     $module = new $class();
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
@@ -145,7 +145,7 @@ if (!empty($action)) {
             $class = basename($_POST['module']);
             $class_file = $class . '.' . $file_extension;
             if (in_array($class_file, array_keys($modules_found))) {
-                if ($languageLoader->loadCatalogLanguageFile($_SESSION['language'], $class_file, '/modules/' . $module_type)) {
+                if ($languageLoader->loadModuleLanguageFile($_SESSION['language'], $class_file, $module_type)) {
                     require DIR_FS_CATALOG . $modules_found[$class_file] . $class_file;
                     $module = new $class();
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
@@ -207,7 +207,7 @@ $installed_modules = [];
 $temp_for_sort = [];
 $module_directory = DIR_FS_CATALOG . DIR_WS_MODULES . $module_type;
 foreach ($modules_found as $module_name => $module_file_dir) {
-    if (!$languageLoader->loadCatalogLanguageFile($_SESSION['language'], $module_name, '/modules/' . $module_type)) {
+    if (!$languageLoader->loadModuleLanguageFile($_SESSION['language'], $module_name, $module_type)) {
         echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $module_name . '<br>';
         continue;
     }
@@ -430,7 +430,7 @@ switch ($action) {
         $file_extension = pathinfo($PHP_SELF, PATHINFO_EXTENSION);
         $class = pathinfo($_GET['module'], PATHINFO_FILENAME);
         if (file_exists($module_directory . $class . $file_extension)) {
-            if ($languageLoader->loadModuleDefinesFromFile( '/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
+            if ($languageLoader->loadModuleDefinesFromFile('/modules/', $_SESSION['language'],  $module_type, $class . $file_extension)) {
                 include_once $module_directory . $class . $file_extension;
                 $module = new $class();
                 if (method_exists($module, 'help')) {
