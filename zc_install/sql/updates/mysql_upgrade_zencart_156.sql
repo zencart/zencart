@@ -196,7 +196,7 @@ FROM ezpages e
 LEFT JOIN languages l ON 1;
 
 # This was moved to the 1.5.8 upgrade; DROP did not work in 1.5.6/1.5.7
-# for databases with prefixes 
+# for databases with prefixes
 # Note that these should have been done on separate lines
 # ALTER TABLE ezpages DROP languages_id, DROP pages_title, DROP pages_html_text;
 
@@ -211,6 +211,7 @@ ALTER TABLE configuration MODIFY configuration_key varchar(180) NOT NULL default
 ALTER TABLE product_type_layout MODIFY configuration_key varchar(180) NOT NULL default '';
 ALTER TABLE whos_online DROP KEY idx_last_page_url_zen;
 ALTER TABLE whos_online ADD KEY idx_last_page_url_zen (last_page_url(191));
+ALTER TABLE media_manager MODIFY last_modified datetime NOT NULL default '0001-01-01 00:00:00', MODIFY date_added datetime NOT NULL default '0001-01-01 00:00:00';
 ALTER TABLE media_manager DROP KEY idx_media_name_zen;
 ALTER TABLE media_manager ADD KEY idx_media_name_zen (media_name(191));
 # truncate was done earlier in this file already, but if copy/pasting for some reason, do the truncate below, to cleanup the table
