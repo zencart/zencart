@@ -588,6 +588,12 @@ if ($action !== '') {
 <html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+    <style>
+        .py-4 {padding-top: 1rem; padding-bottom: 1rem;}
+        .pb-4 {padding-bottom: 1rem;}
+        .bg-white {background-color: white; }
+        .border-bottom-ddd {border-bottom: 1px solid #ddd;}
+    </style>
   </head>
   <body>
     <!-- header //-->
@@ -745,16 +751,16 @@ if ($action === 'delete_option_value') { // delete product option value
         <div class="row">
           <?= zen_draw_form('set_filter', FILENAME_OPTIONS_VALUES_MANAGER, '', 'get', 'class="form-horizontal"') ?>
           <?= zen_post_all_get_params() ?>
-          <?= zen_draw_label(LABEL_FILTER, 'set_filter', 'class="col-sm-3 control-label"') ?>
+          <?= zen_draw_label(LABEL_FILTER, 'set_filter', 'class="col-sm-4 text-right control-label"') ?>
 
-          <div class="col-sm-6">
+          <div class="col-sm-4">
 <?php
     $pulldown = new productOptionsPulldown();
     $pulldown->setDefault($filter);
     echo $pulldown->generatePulldownHtml('set_filter','onchange="this.form.submit();" class="form-control" id="set_filter"');
 ?>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-4">
 <?php
     if ($filter !== 0) {
 ?>
@@ -1194,41 +1200,31 @@ if ($_SESSION['option_names_values_copier'] == '0') {
     bof: delete all Option Name for an Value
     example: Delete Color Red
     -->
-    <div class="table-responsive" style="border: 2px solid #999;">
-        <table class="table">
-            <tr>
-                <td><?= TEXT_OPTION_VALUE_DELETE_ALL ?></td>
-            </tr>
-            <tr>
-                <td><?= TEXT_INFO_OPTION_VALUE_DELETE_ALL ?></td>
-            </tr>
-            <tr class="dataTableHeadingRow">
-                <td>
-                    <?= zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', 'post', 'class="form-horizontal"') ?>
-                    <table>
-                        <tr  class="dataTableHeadingRow">
-                            <td class="dataTableHeadingContent">
-                                <?= zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from_del', 'class="control-label"') ?>
-                                <?= zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from_del"') ?>
-                                <br>
-                                <?= zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from_del', 'class="control-label"') ?>
-                                <?= zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from_del"') ?>
-                            </td>
-                            <td class="dataTableHeadingContent">
-                                <?= str_replace('_XXX', '_del', $to_categories_id) ?>
-                            </td>
-                            <td class="dataTableHeadingContent text-center">
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fa-solid fa-trash"></i>
-                                    <?= IMAGE_DELETE ?>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                    <?= '</form>' ?>
-                </td>
-            </tr>
-        </table>
+    <div class="row dataTableHeadingRow pb-4" style="border: 2px solid #999;">
+        <?= zen_draw_form('quick_jump', FILENAME_OPTIONS_VALUES_MANAGER, 'action=delete_options_values_of_option_name', 'post', 'class="form-horizontal"') ?>
+        <div class="col-sm-12 dataTableHeadingContent py-4 bg-white border-bottom-ddd">
+            <?= TEXT_OPTION_VALUE_DELETE_ALL ?>
+        </div>
+        <div class="col-sm-12 dataTableHeadingContent py-4 bg-white">
+            <?= TEXT_INFO_OPTION_VALUE_DELETE_ALL ?>
+        </div>
+        <div class="col-sm-4 dataTableHeadingContent py-4">
+            <?= zen_draw_label(TEXT_SELECT_DELETE_OPTION_FROM, 'options_id_from_del', 'class="control-label"') ?>
+            <?= zen_draw_pull_down_menu('options_id_from', $option_from_dropdown, '', 'class="form-control" id="options_id_from_del"') ?>
+            <br>
+            <?= zen_draw_label(TEXT_SELECT_DELETE_OPTION_VALUES_FROM, 'options_values_values_id_from_del', 'class="control-label"') ?>
+            <?= zen_draw_pull_down_menu('options_values_values_id_from', $option_values_from_dropdown, '', 'class="form-control" id="options_values_values_id_from_del"') ?>
+        </div>
+        <div class="col-sm-4 dataTableHeadingContent py-4">
+            <?= str_replace('_XXX', '_del', $to_categories_id) ?>
+        </div>
+        <div class="col-sm-4 dataTableHeadingContent text-center py-4">
+            <button type="submit" class="btn btn-danger">
+                <i class="fa-solid fa-trash"></i>
+                <?= IMAGE_DELETE ?>
+            </button>
+        </div>
+        <?= '</form>' ?>
     </div>
     <!-- eof: delete all matching option name for option values -->
     <div class="row">
