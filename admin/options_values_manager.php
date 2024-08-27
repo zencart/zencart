@@ -214,25 +214,18 @@ if ($action !== '') {
 
             $new_attribute = 0;
 
+            // -----
+            // Multiply-used strings for posted messages.
+            //
+            $from_option_name_value = TEXT_INFO_FROM . zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from);
+            $to_option_name_value = TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to);
+
             if ($options_values_values_id_from === $options_values_values_id_to) {
                 // cannot copy to self
-                $messageStack->add(
-                    ERROR_OPTION_VALUES_COPIED .
-                        TEXT_INFO_FROM .
-                        zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                        TEXT_INFO_TO .
-                        zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to),
-                    'warning'
-                );
+                $messageStack->add(ERROR_OPTION_VALUES_COPIED . $from_option_name_value . $to_option_name_value, 'warning');
             } else {
                 if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from) || !zen_validate_options_to_options_value($options_id_to, $options_values_values_id_to)) {
-                    $messageStack->add(
-                        ERROR_OPTION_VALUES_COPIED_MISMATCH .
-                            TEXT_INFO_FROM .
-                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                            TEXT_INFO_TO . zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to),
-                        'warning'
-                    );
+                    $messageStack->add(ERROR_OPTION_VALUES_COPIED_MISMATCH . $from_option_name_value . $to_option_name_value, 'warning');
                 } else {
                     // check for existing combination
                     if (!$products_only->EOF) {
@@ -262,40 +255,24 @@ if ($action !== '') {
                         // display how many products were updated
                         if ($new_attribute === 0) {
                             // nothing was added due to duplicates
-                            $messageStack->add(
-                                SUCCESS_OPTION_VALUES_COPIED .
-                                    TEXT_INFO_FROM .
-                                    zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                                    TEXT_INFO_TO .
-                                    zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
-                                    ' for: ' . $zc_categories .
-                                    ' ' . $new_attribute . ' products',
-                                'caution'
-                            );
+                            $message = SUCCESS_OPTION_VALUES_COPIED;
+                            $message_severity = 'caution';
                         } else {
                             // successful addition of new attributes that were not duplicates
-                            $messageStack->add(
-                                SUCCESS_OPTION_VALUES_COPIED .
-                                    TEXT_INFO_FROM .
-                                    zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                                    TEXT_INFO_TO .
-                                    zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
-                                    ' for: ' . $zc_categories .
-                                    ' ' . $new_attribute . ' products',
-                                'success'
-                            );
+                            $message = SUCCESS_OPTION_VALUES_COPIED;
+                            $message_severity = 'success';
                         }
+                        $messageStack->add(
+                            $message .
+                                $from_option_name_value .
+                                $to_option_name_value .
+                                ' for: ' . $zc_categories .
+                                ' ' . $new_attribute . ' products',
+                            $message_severity
+                        );
                     } else {
                         // warning nothing to copy
-                        $messageStack->add(
-                            ERROR_OPTION_VALUES_NONE .
-                                TEXT_INFO_FROM .
-                                zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                                TEXT_INFO_TO .
-                                zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
-                                $zc_categories,
-                            'warning'
-                        );
+                        $messageStack->add(ERROR_OPTION_VALUES_NONE . $from_option_name_value . $to_option_name_value . $zc_categories, 'warning');
                     }
                 } // mismatch
             } // same option value
@@ -378,23 +355,18 @@ if ($action !== '') {
 
             $new_attribute = 0;
 
+            // -----
+            // Multi-use string in completion messages.
+            //
+            $from_option_name_value = zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from);
+
             if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from) || ($products_attributes_defaults->EOF && !empty($copy_from_products_id))) {
                 if ($products_attributes_defaults->EOF && !empty($copy_from_products_id)) {
                     // bad product_id with no match
-                    $messageStack->add(
-                        ERROR_OPTION_VALUES_COPIED_MISMATCH_PRODUCTS_ID .
-                            $copy_from_products_id . ': ' . zen_options_name($options_id_from) .
-                            ' ' . zen_values_name($options_values_values_id_from),
-                        'warning'
-                    );
+                    $messageStack->add(ERROR_OPTION_VALUES_COPIED_MISMATCH_PRODUCTS_ID . $copy_from_products_id . ': ' . $from_option_name_value, 'warning');
                 } else {
                     // mismatched Option Name/Value
-                    $messageStack->add(
-                        ERROR_OPTION_VALUES_COPIED_MISMATCH .
-                            TEXT_INFO_FROM .
-                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from),
-                        'warning'
-                    );
+                    $messageStack->add(ERROR_OPTION_VALUES_COPIED_MISMATCH . TEXT_INFO_FROM . $from_option_name_value, 'warning');
                 }
             // check for existing combination
             } elseif (!$products_only->EOF) {
@@ -460,31 +432,22 @@ if ($action !== '') {
                     }
                 }
 
+                // -----
+                // Common-use string for completion messages.
+                //
+                $option_message =
+                    TEXT_INFO_FROM . $from_option_name_value .
+                    TEXT_INFO_TO . zen_options_name($options_id_to) .
+                    ' for: ' . $zc_categories . ' ' .
+                    $new_attribute . ' products';
+
                 // display how many products were updated
                 if ($new_attribute === 0) {
                     // nothing was added
-                    $messageStack->add(
-                        ERROR_OPTION_VALUES_NONE .
-                            TEXT_INFO_FROM .
-                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                            TEXT_INFO_TO .
-                            zen_options_name($options_id_to) .
-                            ' for: ' . $zc_categories . ' ' .
-                            $new_attribute . ' products',
-                        'warning'
-                    );
+                    $messageStack->add(ERROR_OPTION_VALUES_NONE . $option_message, 'warning');
                 } else {
                     // successful addition of new attributes that were not duplicates
-                    $messageStack->add(
-                        SUCCESS_OPTION_VALUES_COPIED .
-                            TEXT_INFO_FROM .
-                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                            TEXT_INFO_TO .
-                            zen_options_name($options_id_to) .
-                            ' for: ' . $zc_categories . ' ' .
-                            $new_attribute . ' products',
-                        'success'
-                    );
+                    $messageStack->add(SUCCESS_OPTION_VALUES_COPIED . $option_message, 'success');
                 }
             } else {
                 // warning nothing to copy
@@ -533,93 +496,78 @@ if ($action !== '') {
 
             $new_attribute = 0;
 
+            // -----
+            // Common message string.
+            //
+            $options_name_value = zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from);
+
             if (!zen_validate_options_to_options_value($options_id_from, $options_values_values_id_from)) {
+                $messageStack->add(ERROR_OPTION_VALUES_DELETE_MISMATCH . TEXT_INFO_FROM . $options_name_value, 'warning');
+            } elseif (!$products_only->EOF) {
+                // check existing matching products and add new attributes
+                foreach ($products_only as $product) {
+                    $current_products_id = $product['products_id'];
+
+                    // check for associated downloads
+                    $downloads_remove_query =
+                        "SELECT products_attributes_id
+                           FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+                          WHERE products_id = " . $current_products_id . "
+                            AND options_id = " . $options_id_from . "
+                            AND options_values_id = " . $options_values_values_id_from;
+                    $downloads_remove = $db->Execute($downloads_remove_query);
+
+                    $remove_downloads_ids = [];
+                    foreach ($downloads_remove as $row) {
+                        $remove_downloads_ids[] = $row['products_attributes_id'];
+                    }
+                    $zco_notifier->notify(
+                        'OPTIONS_VALUES_MANAGER_DELETE_VALUES_OF_OPTIONNAME',
+                        [
+                            'current_products_id' => $current_products_id,
+                            'remove_ids' => $remove_downloads_ids,
+                            'options_id' => $options_id_from,
+                            'options_values_id' => $options_values_values_id_from
+                        ]
+                    );
+
+                    $sql =
+                        "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
+                          WHERE products_id = " . $current_products_id . "
+                            AND options_id = " . $options_id_from . "
+                            AND options_values_id = " . $options_values_values_id_from;
+                    $delete_selected = $db->Execute($sql);
+
+                    // delete associated downloads
+                    if (count($remove_downloads_ids) !== 0) {
+                        $db->Execute(
+                            "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
+                              WHERE products_attributes_id IN (" . implode(',', $remove_downloads_ids) . ")"
+                        );
+                    }
+                    // count deleted attribute
+                    $new_attribute++;
+                }
+
+                // display how many products were updated
+                if ($new_attribute === 0) {
+                    // nothing was added due to duplicates
+                    $messageStack->add(ERROR_OPTION_VALUES_NONE . $options_name_value . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'caution');
+                } else {
+                    // successful addition of new attributes that were not duplicates
+                    $messageStack->add(SUCCESS_OPTION_VALUES_DELETE . $options_name_value . ' for: ' . $zc_categories . ' ' . $new_attribute . ' products', 'success');
+                }
+            } else {
+                // warning nothing to copy
                 $messageStack->add(
-                    ERROR_OPTION_VALUES_DELETE_MISMATCH .
+                    ERROR_OPTION_VALUES_NONE .
                         TEXT_INFO_FROM .
-                        zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from),
+                        $options_name_value .
+                        TEXT_INFO_TO .
+                        zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
+                        $zc_categories,
                     'warning'
                 );
-            } else {
-                // check for existing combination
-                if (!$products_only->EOF) {
-                    // check existing matching products and add new attributes
-                    foreach ($products_only as $product) {
-                        $current_products_id = $product['products_id'];
-
-                        // check for associated downloads
-                        $downloads_remove_query =
-                            "SELECT products_attributes_id
-                               FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                              WHERE products_id = " . $current_products_id . "
-                                AND options_id = " . $options_id_from . "
-                                AND options_values_id = " . $options_values_values_id_from;
-                        $downloads_remove = $db->Execute($downloads_remove_query);
-
-                        $remove_downloads_ids = [];
-                        foreach ($downloads_remove as $row) {
-                            $remove_downloads_ids[] = $row['products_attributes_id'];
-                        }
-                        $zco_notifier->notify(
-                            'OPTIONS_VALUES_MANAGER_DELETE_VALUES_OF_OPTIONNAME',
-                            [
-                                'current_products_id' => $current_products_id,
-                                'remove_ids' => $remove_downloads_ids,
-                                'options_id' => $options_id_from,
-                                'options_values_id' => $options_values_values_id_from
-                            ]
-                        );
-
-                        $sql =
-                            "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                              WHERE products_id = " . $current_products_id . "
-                                AND options_id = " . $options_id_from . "
-                                AND options_values_id = " . $options_values_values_id_from;
-                        $delete_selected = $db->Execute($sql);
-
-                        // delete associated downloads
-                        if (count($remove_downloads_ids) !== 0) {
-                            $db->Execute(
-                                "DELETE FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
-                                  WHERE products_attributes_id IN (" . implode(',', $remove_downloads_ids) . ")"
-                            );
-                        }
-                        // count deleted attribute
-                        $new_attribute++;
-                    }
-
-                    // display how many products were updated
-                    if ($new_attribute === 0) {
-                        // nothing was added due to duplicates
-                        $messageStack->add(
-                            ERROR_OPTION_VALUES_NONE .
-                                zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                                ' for: ' . $zc_categories . ' ' .
-                                $new_attribute . ' products',
-                            'caution'
-                        );
-                    } else {
-                        // successful addition of new attributes that were not duplicates
-                        $messageStack->add(
-                            SUCCESS_OPTION_VALUES_DELETE .
-                                zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                                ' for: ' . $zc_categories . ' ' .
-                                $new_attribute . ' products',
-                            'success'
-                        );
-                    }
-                } else {
-                    // warning nothing to copy
-                    $messageStack->add(
-                        ERROR_OPTION_VALUES_NONE .
-                            TEXT_INFO_FROM .
-                            zen_options_name($options_id_from) . ' ' . zen_values_name($options_values_values_id_from) .
-                            TEXT_INFO_TO .
-                            zen_options_name($options_id_to) . ' ' . zen_values_name($options_values_values_id_to) .
-                            $zc_categories,
-                        'warning'
-                    );
-                }
             } // mismatch
             break;
 
