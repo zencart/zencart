@@ -50,6 +50,7 @@ if (!empty($action)) {
             $pages_sidebox_sort_order = (int)$_POST['sidebox_sort_order'];
             $pages_footer_sort_order = (int)$_POST['footer_sort_order'];
             $pages_toc_sort_order = (int)$_POST['toc_sort_order'];
+            $pages_mobile_sort_order = (int)$_POST['mobile_sort_order'];
 
             $toc_chapter = (int)$_POST['toc_chapter'];
 
@@ -57,6 +58,7 @@ if (!empty($action)) {
             $status_sidebox = ($pages_sidebox_sort_order === 0 ? 0 : (int)$_POST['status_sidebox']);
             $status_footer = ($pages_footer_sort_order === 0 ? 0 : (int)$_POST['status_footer']);
             $status_toc = ($pages_toc_sort_order === 0 ? 0 : (int)$_POST['status_toc']);
+            $status_mobile = ($pages_mobile_sort_order === 0 ? 0 : (int)$_POST['status_mobile']);
 
             $pages_html_url_flag = false;
             $page_error = false;
@@ -106,11 +108,13 @@ if (!empty($action)) {
                     'page_open_new_window' => $page_open_new_window,
                     'alt_url' => $alt_url,
                     'alt_url_external' => $alt_url_external,
+                    'status_mobile' => $status_mobile,
                     'status_header' => $status_header,
                     'status_sidebox' => $status_sidebox,
                     'status_footer' => $status_footer,
                     'status_toc' => $status_toc,
                     'status_visible' => $status_visible,
+                    'mobile_sort_order' => $pages_mobile_sort_order,
                     'header_sort_order' => $pages_header_sort_order,
                     'sidebox_sort_order' => $pages_sidebox_sort_order,
                     'footer_sort_order' => $pages_footer_sort_order,
@@ -211,8 +215,9 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
             ['id' => '1', 'text' => TEXT_SORT_HEADER_TITLE],
             ['id' => '2', 'text' => TEXT_SORT_SIDEBOX_TITLE],
             ['id' => '3', 'text' => TEXT_SORT_FOOTER_TITLE],
-            ['id' => '4', 'text' => TEXT_SORT_PAGE_TITLE],
-            ['id' => '5', 'text' => TEXT_SORT_PAGE_ID_TITLE],
+            ['id' => '4', 'text' => TEXT_SORT_MOBILE_TITLE],
+            ['id' => '5', 'text' => TEXT_SORT_PAGE_TITLE],
+            ['id' => '6', 'text' => TEXT_SORT_PAGE_ID_TITLE],
         ];
         ?>
         <div class="col-sm-offset-4 col-sm-4">
@@ -252,11 +257,13 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
             'pages_html_text' => '',
             'alt_url' => '',
             'alt_url_external' => '',
+            'mobile_sort_order' => '',
             'header_sort_order' => '',
             'sidebox_sort_order' => '',
             'footer_sort_order' => '',
             'toc_sort_order' => '',
             'toc_chapter' => '',
+            'status_mobile' => 1,
             'status_header' => 1,
             'status_sidebox' => 1,
             'status_footer' => 1,
@@ -326,8 +333,8 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
         </div>
         <?php
         // -----
-        // Give an observer the chance to supply some additional ezpages-related inputs.  Each
-        // entry in the $extra_page_inputs returned is expected to contain:
+        // Give an observer the chance to supply some additional ezpages-related inputs.
+        // Each entry in the $extra_page_inputs returned is expected to contain:
         //
         // array(
         //    'label' => array(
@@ -352,6 +359,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                 </div>
                 <?php
             }
+            echo '<hr>';
         }
         ?>
         <div class="form-group">
@@ -369,7 +377,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                 <br><br><?= TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION ?>
             </div>
         </div>
-        <div class="row"><?= zen_draw_separator('pixel_black.gif', '100%', '1') ?></div>
+        <hr>
         <div class="form-group">
             <div class="col-sm-3">
                 <p class="control-label"><?= TABLE_HEADING_STATUS_HEADER ?></p>
@@ -415,6 +423,23 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
             <?= zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label col-sm-3"') ?>
             <div class="col-sm-2">
                 <?= zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control" id="footer_sort_order"') ?>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group">
+            <div class="col-sm-3">
+                <p class="control-label"><?= TABLE_HEADING_STATUS_MOBILE ?></p>
+            </div>
+            <div class="col-sm-9 col-md-6">
+                <label class="radio-inline"><?= zen_draw_radio_field('status_mobile', '1', ($ezInfo->status_mobile == 1)) . TEXT_YES ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('status_mobile', '0', ($ezInfo->status_mobile == 0)) . TEXT_NO ?></label>
+                <br><br><?= TABLE_HEADING_MOBILE_EXPLANATION ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?= zen_draw_label(TEXT_MOBILE_SORT_ORDER, 'status_mobile', 'class="control-label col-sm-3"') ?>
+            <div class="col-sm-2">
+                <?= zen_draw_input_field('mobile_sort_order', $ezInfo->mobile_sort_order, zen_set_field_length(TABLE_EZPAGES, 'mobile_sort_order') . ' class="form-control" id="mobile_sort_order"') ?>
             </div>
         </div>
         <hr>
@@ -518,6 +543,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_HEADER ?></th>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_SIDEBOX ?></th>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_FOOTER ?></th>
+                        <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_MOBILE ?></th>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_CHAPTER ?></th>
                         <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_VISIBLE ?></th>
                         <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATUS_TOC ?></th>
@@ -542,9 +568,12 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                             $ez_order_by = " ORDER BY e.footer_sort_order, ec.pages_title";
                             break;
                         case (4):
-                            $ez_order_by = " ORDER BY ec.pages_title";
+                            $ez_order_by = " ORDER BY e.status_mobile DESC, e.mobile_sort_order, ec.pages_title";
                             break;
                         case (5):
+                            $ez_order_by = " ORDER BY ec.pages_title";
+                            break;
+                        case (6):
                             $ez_order_by = " ORDER BY e.pages_id, ec.pages_title";
                             break;
                         default:
@@ -679,7 +708,27 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                             echo '</form>';
                             ?>
                         </td>
-                        <td class="dataTableContent text-right"><?= $page['toc_chapter'] ?></td>
+                        <td class="dataTableContent text-right">
+                            <?= $page['mobile_sort_order'] . '&nbsp;' ?>
+                            <?= zen_draw_form('mobile_status', FILENAME_EZPAGES_ADMIN, 'action=update_status') ?>
+                            <button type="submit" class="btn btn-status">
+                                <?php
+                                if ($page['status_mobile'] === '1') { ?>
+                                    <i class="fa-solid fa-square fa-lg txt-status-on" title="<?= IMAGE_ICON_STATUS_ON ?>"></i>
+                                <?php
+                                } else { ?>
+                                    <i class="fa-solid fa-square fa-lg txt-status-off" title="<?= IMAGE_ICON_STATUS_OFF ?>"></i>
+                                <?php
+                                } ?>
+                            </button>
+                            <?php
+                            echo zen_draw_hidden_field('ezID', $page['pages_id']);
+                            echo zen_draw_hidden_field('new_status', ($page['status_mobile'] === '1' ? '0' : '1'));
+                            echo zen_draw_hidden_field('fieldName', 'status_mobile');
+                            echo '</form>';
+                            ?>
+                        </td>
+                    <td class="dataTableContent text-right"><?= $page['toc_chapter'] ?></td>
                         <td class="dataTableContent text-center">
                             <?= zen_draw_form('status_visible', FILENAME_EZPAGES_ADMIN, 'action=update_status') ?>
                             <button type="submit" class="btn btn-status">

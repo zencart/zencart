@@ -108,7 +108,13 @@ UPDATE configuration SET configuration_title = 'Product And Category Image - No 
 UPDATE configuration SET configuration_title = 'Product And Category Image - No Image picture' WHERE configuration_key = 'PRODUCTS_IMAGE_NO_IMAGE';
 UPDATE configuration SET configuration_title = 'Featured Products And Categories Columns per Row' WHERE configuration_key = 'SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS';
 
+
+#PROGRESS_FEEDBACK:!TEXT=Updating ez-pages ...
+ALTER TABLE ezpages ADD status_mobile TINYINT(1) NOT NULL DEFAULT 1 AFTER alt_url_external;
+ALTER TABLE ezpages ADD mobile_sort_order TINYINT(1) NOT NULL DEFAULT 0 AFTER status_toc;
+ALTER TABLE ezpages ADD INDEX idx_ezp_status_mobile_zen (status_mobile);
 ALTER TABLE ezpages MODIFY page_is_ssl INT(1) NOT NULL default 1;
+
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
 #### VERSION UPDATE STATEMENTS

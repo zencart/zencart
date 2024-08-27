@@ -160,21 +160,21 @@ INSERT INTO customers_info (customers_info_id, customers_info_date_of_last_logon
 # Dumping data for table ezpages
 #
 
-INSERT INTO ezpages (pages_id, alt_url, alt_url_external, status_header, status_sidebox, status_footer, status_toc, header_sort_order, sidebox_sort_order, footer_sort_order, toc_sort_order, page_open_new_window, page_is_ssl, toc_chapter)
-VALUES (1, '', '', 1, 0, 0, 1, 10, 0, 0, 10, 0, 0, 10),
-(2, '', '', 0, 0, 0, 1, 0, 0, 0, 30, 0, 0, 10),
-(3, '', '', 0, 1, 0, 0, 0, 10, 0, 0, 0, 0, 0),
-(4, 'index.php?main_page=brands', '', 1, 0, 0, 0, 0, 5, 0, 0, 0, 1, 0),
-(5, '', '', 0, 1, 0, 0, 0, 20, 0, 0, 0, 0, 0),
-(6, '', '', 1, 1, 1, 0, 50, 50, 50, 0, 0, 0, 0),
-(7, 'index.php?main_page=account', '', 0, 0, 1, 0, 0, 0, 10, 0, 0, 1, 0),
-(8, 'index.php?main_page=site_map', '', 0, 1, 1, 0, 0, 40, 20, 0, 0, 0, 0),
-(9, 'index.php?main_page=privacy', '', 1, 0, 1, 0, 30, 0, 40, 0, 0, 0, 0),
-(10, '', 'https://www.zen-cart.com', 1, 0, 0, 0, 60, 0, 0, 0, 1, 0, 0),
-(11, 'index.php?main_page=index&cPath=21', '', 0, 1, 0, 0, 0, 60, 0, 0, 0, 0, 0),
-(12, 'index.php?main_page=index&cPath=3_10', '', 0, 0, 1, 0, 0, 0, 60, 0, 0, 0, 0),
-(13, '', 'https://www.google.com', 0, 1, 0, 0, 0, 70, 0, 0, 1, 0, 0),
-(14, '', '', 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 10);
+INSERT INTO ezpages (pages_id, alt_url, alt_url_external, status_header, status_sidebox, status_footer, status_toc, header_sort_order, sidebox_sort_order, footer_sort_order, toc_sort_order, page_open_new_window, page_is_ssl, toc_chapter, status_mobile, mobile_sort_order)
+VALUES (1, '', '', 1, 0, 0, 1, 10, 0, 0, 10, 0, 0, 10, 0, 0),
+(2, '', '', 0, 0, 0, 1, 0, 0, 0, 30, 0, 0, 10, 0, 0),
+(3, '', '', 0, 1, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0),
+(4, 'index.php?main_page=brands', '', 1, 0, 0, 0, 0, 5, 0, 0, 0, 1, 0, 1, 5),
+(5, '', '', 0, 1, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0),
+(6, '', '', 1, 1, 1, 0, 50, 50, 50, 0, 0, 0, 0, 0, 0),
+(7, 'index.php?main_page=account', '', 0, 0, 1, 0, 0, 0, 10, 0, 0, 1, 0, 1, 10),
+(8, 'index.php?main_page=site_map', '', 0, 1, 1, 0, 0, 40, 20, 0, 0, 0, 0, 0, 0),
+(9, 'index.php?main_page=privacy', '', 1, 0, 1, 0, 30, 0, 40, 0, 0, 0, 0, 1, 40),
+(10, '', 'https://www.zen-cart.com', 1, 0, 0, 0, 60, 0, 0, 0, 1, 0, 0, 0, 0),
+(11, 'index.php?main_page=index&cPath=21', '', 0, 1, 0, 0, 0, 60, 0, 0, 0, 0, 0, 1, 20),
+(12, 'index.php?main_page=index&cPath=3_10', '', 0, 0, 1, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0),
+(13, '', 'https://www.google.com', 0, 1, 0, 0, 0, 70, 0, 0, 1, 0, 0, 0, 0),
+(14, '', '', 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 10, 0, 0);
 
 #
 # Dumping data for table ezpages_content

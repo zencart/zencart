@@ -786,11 +786,13 @@ CREATE TABLE ezpages (
   pages_id int(11) NOT NULL auto_increment,
   alt_url varchar(255) NOT NULL default '',
   alt_url_external varchar(255) NOT NULL default '',
+  status_mobile TINYINT NOT NULL DEFAULT 1,
   status_header int(1) NOT NULL default '1',
   status_sidebox int(1) NOT NULL default '1',
   status_footer int(1) NOT NULL default '1',
   status_visible int(1) NOT NULL default '0',
   status_toc int(1) NOT NULL default '1',
+  mobile_sort_order TINYINT NOT NULL DEFAULT 0,
   header_sort_order int(3) NOT NULL default '0',
   sidebox_sort_order int(3) NOT NULL default '0',
   footer_sort_order int(3) NOT NULL default '0',
@@ -802,6 +804,7 @@ CREATE TABLE ezpages (
   KEY idx_ezp_status_header_zen (status_header),
   KEY idx_ezp_status_sidebox_zen (status_sidebox),
   KEY idx_ezp_status_footer_zen (status_footer),
+  KEY idx_ezp_status_mobile_zen (status_mobile),
   KEY idx_ezp_status_toc_zen (status_toc)
 ) ENGINE=MyISAM;
 

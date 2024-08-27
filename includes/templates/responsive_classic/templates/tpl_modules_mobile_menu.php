@@ -151,7 +151,7 @@ if ($flag_show_accessibility_sidebox_link === true) {
     </li>
 
 <?php
-  include(DIR_WS_MODULES . zen_get_module_directory('ezpages_bar_header.php'));
+  include(DIR_WS_MODULES . zen_get_module_directory('ezpages_mobile.php'));
   if (!empty($var_linksList)) {
 ?>
     <li><span><?php echo BOX_HEADING_EZPAGES; ?></span>
