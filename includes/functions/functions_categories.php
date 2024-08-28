@@ -1020,8 +1020,7 @@ function zen_remove_restrict_sub_categories($category_id, $product_type_id) {
 function zen_get_category_restricted_product_types($category_id)
 {
     global $db;
-    $lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
-    $sql = "SELECT ptc.product_type_id as type_id, pt.type_name$lang_suffix AS type_name
+    $sql = "SELECT ptc.product_type_id as type_id, pt.type_name, pt.type_handler
              FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
              LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (pt.type_id = ptc.product_type_id)
              WHERE ptc.category_id = " . (int)$category_id;
