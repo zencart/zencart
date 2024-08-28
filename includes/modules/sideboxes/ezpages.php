@@ -20,10 +20,9 @@
       return; // early exit; db not upgraded
     }
     $pages_query = $db->Execute("SELECT e.*, ec.*
-                                FROM " . TABLE_EZPAGES . " e,
-                                     " . TABLE_EZPAGES_CONTENT . " ec
-                                WHERE e.pages_id = ec.pages_id
-                                AND ec.languages_id = " . (int)$_SESSION['languages_id'] . "
+                                FROM " . TABLE_EZPAGES . " e
+                                INNER JOIN " . TABLE_EZPAGES_CONTENT . " ec ON (e.pages_id = ec.pages_id)
+                                WHERE ec.languages_id = " . (int)$_SESSION['languages_id'] . "
                                 AND e.status_sidebox = 1
                                 AND e.sidebox_sort_order > 0
                                 ORDER BY e.sidebox_sort_order, ec.pages_title");
