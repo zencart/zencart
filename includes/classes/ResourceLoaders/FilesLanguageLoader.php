@@ -13,7 +13,7 @@ class FilesLanguageLoader extends BaseLanguageLoader
 {
     protected $mainLoader;
 
-    protected function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
+    public function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
     {
         if ($this->mainLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath .  '/' . $this->templateDir)) {
             $this->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $this->templateDir . '/' . $fileName);

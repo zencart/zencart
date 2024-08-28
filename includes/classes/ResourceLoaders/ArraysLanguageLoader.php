@@ -74,7 +74,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    protected function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
+    public function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
     {
         $defineListMain = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
         $extraPath .= '/' . $this->templateDir;
