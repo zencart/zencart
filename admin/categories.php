@@ -279,13 +279,12 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <!-- body //-->
     <?php
     // Make an array of product types
-    $lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
-    $sql = "SELECT type_id, type_name$lang_suffix AS type_name FROM " . TABLE_PRODUCT_TYPES;
+    $sql = "SELECT type_id, type_name, type_handler FROM " . TABLE_PRODUCT_TYPES;
     $product_types = $db->Execute($sql);
     while (!$product_types->EOF) {
       $type_array[] = [
         'id' => $product_types->fields['type_id'],
-        'text' => $product_types->fields['type_name'],
+        'text' => zen_lookup_admin_menu_language_override('product_type', $product_types->fields['type_handler'], $product_types->fields['type_name']),
       ];
       $product_types->MoveNext();
     }
@@ -473,7 +472,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             <div class="col-sm-9 col-md-6">
                 <?php
                 foreach ($restrict_types as $restrict_type) {
-                  $type_query = "SELECT type_name$lang_suffix AS type_name
+                  $type_query = "SELECT type_name, type_handler
                                  FROM " . TABLE_PRODUCT_TYPES . "
                                  WHERE type_id = " . (int)$restrict_type['product_type_id'];
                   $type = $db->Execute($type_query);
@@ -483,7 +482,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     <?php echo zen_draw_hidden_field('type_id', $restrict_types->fields['product_type_id']); ?>
                   <button type="submit" class="btn btn-warning"><?php echo IMAGE_DELETE; ?></button>
                   <?php echo '</form>'; ?>
-                  <?php echo $type->fields['type_name']; ?>
+                  <?php echo zen_lookup_admin_menu_language_override('product_type', $type->fields['type_handler'], $type->fields['type_name']); ?>
                 </div>
                 <?php
               }
