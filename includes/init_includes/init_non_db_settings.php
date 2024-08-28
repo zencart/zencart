@@ -1,6 +1,6 @@
 <?php
 /**
- * Initializes non-database constants that were previously set in language modules,
+ * Initializes non-database constants that were previously set in language or template files,
  * overridable via site-specific /init_includes processing.  See
  * /includes/init_includes/dist-init_site_specific_non_db_settings.php.
  *
@@ -24,6 +24,11 @@ $non_db_settings = [
     // Storefront settings.
     //
     'CART_SHIPPING_METHOD_ZIP_REQUIRED' => 'true',  //- Either 'true' or 'false'.  Used by tpl_modules_shipping_estimator.php
+
+    'ORDER_STATUS_DISPLAY_PAYMENT' => 'true',       //- Either 'true' or 'false'. Used by tpl_order_status_default.php
+    'ORDER_STATUS_DISPLAY_SHIPPING' => 'true',      //- "
+    'ORDER_STATUS_DISPLAY_PRODUCTS' => 'true',      //- "
+    'ORDER_STATUS_SLAM_COUNT' => '3',               //- A numeric string (defaults to '3'). Used by order_status/header_php.php
 
     // Shared - Storefront and Admin 
     'TOPMOST_CATEGORY_PARENT_ID' => '0',

@@ -79,6 +79,17 @@ class systemChecker
 //echo print_r($this->systemChecks);
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
 //echo print_r($systemCheck);
+            // check for bypass
+            if (isset($systemCheck['skipWhen'])) {
+                $parts = explode('=', $systemCheck['skipWhen']);
+                $what = $parts[0];
+                $when = $parts[1];
+
+                if ($what === 'server' && $when === 'nginx' && str_starts_with($_SERVER['SERVER_SOFTWARE'], 'nginx')) {
+                    continue;
+                }
+            }
+
             if (in_array($systemCheck['runLevel'], $runLevels, false)) {
                 $resultCombined = true;
                 $criticalError = false;
@@ -178,6 +189,13 @@ class systemChecker
         }
         $this->log(($result ? 'TRUE' : 'FALSE'), __METHOD__, []);
         return $result;
+    }
+
+    public function configFileExists(): bool
+    {
+        $this->checkWriteableAdminFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        $this->checkWriteableFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        return $this->getServerConfig()->fileExists();
     }
 
     public function getServerConfig(): ?zcConfigureFileReader

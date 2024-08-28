@@ -1,7 +1,7 @@
 <?php
 /**
  * ajaxValidateAdminCredentials.php
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2022 Jul 26 Modified in v1.5.8-alpha2 $
  */
@@ -14,8 +14,8 @@ require DIR_FS_INSTALL . 'includes/application_top.php';
 $error = false;
 $systemChecker = new systemChecker();
 $adminCandidate = $systemChecker->validateAdminCredentials(
-    trim(stripslashes($_POST['admin_user'])),
-    trim(stripslashes($_POST['admin_password']))
+    trim(stripslashes($_POST['admin_user'] ?? '')),
+    trim(stripslashes($_POST['admin_password'] ?? ''))
 );
 
 if (!is_int($adminCandidate)) {

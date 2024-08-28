@@ -67,7 +67,6 @@ a[role=button] .fa-inverse {
     color: var(--fa-inverse,#eee);
 }
 
-
 td, th {
     padding: 1px;
 }
@@ -183,10 +182,6 @@ a.splitPageLinkCurrent {
 body {
     background-color: #ffffff;
     color: #333333;
-}
-
-.clearBoth {
-    clear: both;
 }
 
 input, select, textarea {
@@ -903,8 +898,8 @@ input.faint {
   opacity: 25%;
 }
 /* The classes below are copied from Bootstrap 4 and 5 */
-.font-weight-bold {
-  font-weight: 700;
+tbody>tr>td.align-bottom {
+  vertical-align: bottom;
 }
 .align-middle {
   vertical-align: middle;
@@ -912,18 +907,26 @@ input.faint {
 .align-top {
   vertical-align: top;
 }
-tbody>tr>td.align-bottom {
-  vertical-align: bottom;
+.d-flex {
+    display: flex;
 }
-
+.d-none {
+    display: none;
+}
+.font-weight-bold, .fw-bold {
+  font-weight: 700;
+}
+.justify-content-around {
+    justify-content: space-around;
+}
 .m-0 {
     margin: 0 !important;
 }
 .m-1 {
-    margin: 0.25rem !important;
+    margin: .25rem !important;
 }
 .m-2 {
-    margin: 0.5rem !important;
+    margin: .5rem !important;
 }
 .m-3 {
     margin: 1rem !important;
@@ -934,14 +937,68 @@ tbody>tr>td.align-bottom {
 .m-5 {
     margin: 3rem !important;
 }
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+.mb-1 {
+    margin-bottom: .25rem !important;
+}
+.mb-2 {
+    margin-bottom: .5rem !important;
+}
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+.ml-0, .ms-0 {
+    margin-left: 0 !important;
+}
+.ml-1, .ms-1 {
+    margin-left: .25rem !important;
+}
+.ml-2, .ms-2 {
+    margin-left: .5rem !important;
+}
+.ml-3, .ms-3 {
+    margin-left: 1rem !important;
+}
+.ml-4, .ms-4 {
+    margin-left: 1.5rem !important;
+}
+.ml-5, .ms-5 {
+    margin-left: 3rem !important;
+}
+.mr-0, .me-0 {
+    margin-right: 0 !important;
+}
+.mr-1, .me-1 {
+    margin-right: .25rem !important;
+}
+.mr-2, .me-2 {
+    margin-right: .5rem !important;
+}
+.mr-3, .me-3 {
+    margin-right: 1rem !important;
+}
+.mr-4, .me-4 {
+    margin-right: 1.5rem !important;
+}
+.mr-5, .me-5 {
+    margin-right: 3rem !important;
+}
 .mt-0 {
     margin-top: 0 !important;
 }
 .mt-1 {
-    margin-top: 0.25rem !important;
+    margin-top: .25rem !important;
 }
 .mt-2 {
-    margin-top: 0.5rem !important;
+    margin-top: .5rem !important;
 }
 .mt-3 {
     margin-top: 1rem !important;
@@ -950,6 +1007,196 @@ tbody>tr>td.align-bottom {
     margin-top: 1.5rem !important;
 }
 .mt-5 {
+    margin-top: 3rem !important;
+}
+.mx-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.mx-1 {
+    margin-left: .25rem !important;
+    margin-right: .25rem !important;
+}
+.mx-2 {
+    margin-left: .5rem !important;
+    margin-right: .5rem !important;
+}
+.mx-3 {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+}
+.mx-4 {
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
+}
+.mx-5 {
+    margin-left: 3rem !important;
+    margin-right: 3rem !important;
+}
+.my-0 {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+.my-1 {
+    margin-bottom: .25rem !important;
+    margin-top: .25rem !important;
+}
+.my-2 {
+    margin-bottom: .5rem !important;
+    margin-top: .5rem !important;
+}
+.my-3 {
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
+}
+.my-4 {
+    margin-bottom: 1.5rem !important;
+    margin-top: 1.5rem !important;
+}
+.my-5 {
+    margin-bottom: 3rem !important;
+    margin-top: 3rem !important;
+}
+.p-0 {
+    margin: 0 !important;
+}
+.p-1 {
+    margin: .25rem !important;
+}
+.p-2 {
+    margin: .5rem !important;
+}
+.p-3 {
+    margin: 1rem !important;
+}
+.p-4 {
+    margin: 1.5rem !important;
+}
+.p-5 {
+    margin: 3rem !important;
+}
+.pb-0 {
+    margin-bottom: 0 !important;
+}
+.pb-1 {
+    margin-bottom: .25rem !important;
+}
+.pb-2 {
+    margin-bottom: .5rem !important;
+}
+.pb-3 {
+    margin-bottom: 1rem !important;
+}
+.pb-4 {
+    margin-bottom: 1.5rem !important;
+}
+.pb-5 {
+    margin-bottom: 3rem !important;
+}
+.pl-0, .ps-0 {
+    margin-left: 0 !important;
+}
+.pl-1, .ps-1 {
+    margin-left: .25rem !important;
+}
+.pl-2, .ps-2 {
+    margin-left: .5rem !important;
+}
+.pl-3, .ps-3 {
+    margin-left: 1rem !important;
+}
+.pl-4, .ps-4 {
+    margin-left: 1.5rem !important;
+}
+.pl-5, .ps-5 {
+    margin-left: 3rem !important;
+}
+.pr-0, .pe-0 {
+    margin-right: 0 !important;
+}
+.pr-1, .pe-1 {
+    margin-right: .25rem !important;
+}
+.pr-2, .pe-2 {
+    margin-right: .5rem !important;
+}
+.pr-3, .pe-3 {
+    margin-right: 1rem !important;
+}
+.pr-4, .pe-4 {
+    margin-right: 1.5rem !important;
+}
+.pr-5, .pe-5 {
+    margin-right: 3rem !important;
+}
+.pt-0 {
+    margin-top: 0 !important;
+}
+.pt-1 {
+    margin-top: .25rem !important;
+}
+.pt-2 {
+    margin-top: .5rem !important;
+}
+.pt-3 {
+    margin-top: 1rem !important;
+}
+.pt-4 {
+    margin-top: 1.5rem !important;
+}
+.pt-5 {
+    margin-top: 3rem !important;
+}
+.px-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+.px-1 {
+    margin-left: .25rem !important;
+    margin-right: .25rem !important;
+}
+.px-2 {
+    margin-left: .5rem !important;
+    margin-right: .5rem !important;
+}
+.px-3 {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+}
+.px-4 {
+    margin-left: 1.5rem !important;
+    margin-right: 1.5rem !important;
+}
+.px-5 {
+    margin-left: 3rem !important;
+    margin-right: 3rem !important;
+}
+.py-0 {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+.py-1 {
+    margin-bottom: .25rem !important;
+    margin-top: .25rem !important;
+}
+.py-2 {
+    margin-bottom: .5rem !important;
+    margin-top: .5rem !important;
+}
+.py-3 {
+    margin-bottom: 1rem !important;
+    margin-top: 1rem !important;
+}
+.py-4 {
+    margin-bottom: 1.5rem !important;
+    margin-top: 1.5rem !important;
+}
+.py-5 {
+    margin-bottom: 3rem !important;
     margin-top: 3rem !important;
 }
 /**/

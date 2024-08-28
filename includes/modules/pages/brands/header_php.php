@@ -53,13 +53,13 @@ foreach ($listing as $record) {
 // These are "soft" configuration setting that can be overridden on a site-specific basis.
 //
 if (!defined('BRANDS_IMAGE_WIDTH')) {
-    define('BRANDS_IMAGE_WIDTH', '126');
+    define('BRANDS_IMAGE_WIDTH', IMAGE_PRODUCT_LISTING_WIDTH);
 }
 if (!defined('BRANDS_IMAGE_HEIGHT')) {
-    define('BRANDS_IMAGE_HEIGHT', '126');
+    define('BRANDS_IMAGE_HEIGHT', IMAGE_PRODUCT_LISTING_HEIGHT);
 }
 if (!defined('BRANDS_MAX_COLUMNS')) {
-    define('BRANDS_MAX_COLUMNS', '6');
+    define('BRANDS_MAX_COLUMNS', PRODUCT_LISTING_COLUMNS_PER_ROW);
 }
 
 // This should be last line of the script:

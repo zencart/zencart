@@ -136,12 +136,12 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 #############
 ### Added v158 bring address formats up to date
 
-### Move any none core address formats created by users
+### Move any non-core address formats created by users
 UPDATE address_format SET address_format_id = address_format_id + 13  WHERE address_format_id > 7;
 UPDATE countries SET address_format_id = address_format_id + 13  WHERE address_format_id > 7;
 UPDATE orders SET customers_address_format_id = customers_address_format_id + 13 WHERE customers_address_format_id  > 7;
-UPDATE orders SET  delivery_address_format_id = delivery_address_format_id + 13 WHERE delivery_address_format_id > 7;
-UPDATE orders SET  billing_address_format_id = billing_address_format_id + 13 WHERE billing_address_format_id > 7;
+UPDATE orders SET delivery_address_format_id = delivery_address_format_id + 13 WHERE delivery_address_format_id > 7;
+UPDATE orders SET billing_address_format_id = billing_address_format_id + 13 WHERE billing_address_format_id > 7;
 
 ### Updated address summary for original address format address_summary
 UPDATE address_format SET address_summary = 'Default $city $country' WHERE address_format_id = 1;

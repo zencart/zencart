@@ -182,7 +182,7 @@
          *
          * @return string
          */
-        public function generatePullDownHtml(string $name, string $parameters = '', bool $required = false)
+        public function generatePulldownHtml(string $name, string $parameters = '', bool $required = false)
         {
             $this->processSQL();
 

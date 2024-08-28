@@ -11,7 +11,7 @@
 
 /**
  * Set the status of a featured product
- * 
+ *
  * @global object $db
  * @param int $featured_id
  * @param int $status
@@ -29,7 +29,7 @@ function zen_set_featured_status(int $featured_id, int $status)
 
 /**
  * Auto expire products on featured
- * 
+ *
  * @global object $db
  */
 function zen_expire_featured()
@@ -59,7 +59,7 @@ function zen_expire_featured()
 
 /**
  * Auto start products on featured
- * 
+ *
  * @global object $db
  */
 function zen_start_featured()
@@ -97,4 +97,15 @@ function zen_start_featured()
       zen_set_featured_status((int)$featured['featured_id'], 0);
     }
   }
+}
+
+function zen_set_featured_category_status(int $category_id, int $status): void
+{
+    global $db;
+    $sql = "UPDATE " . TABLE_FEATURED_CATEGORIES . "
+          SET status = " . (int)$status . ",
+              date_status_change = now()
+          WHERE featured_categories_id = " . (int)$category_id;
+
+    $db->Execute($sql);
 }

@@ -42,19 +42,21 @@ $adjustWarnIssues = false;
     <?php
     if ($selectedAdminDir !== '') { ?>
     <?php
-    if ($hasSaneConfigFile && !$isCurrentDb && !$otherConfigErrors && $hasUpdatedConfigFile) { ?>
-        <?php
-        $adjustWarnIssues = true;
+
+    if ($hasSaneConfigFile && !$otherConfigErrors && $hasUpdatedConfigFile) {
+        if (!$isCurrentDb) {
+            $adjustWarnIssues = true;
         ?>
         <div class="alert alert-success">
             <?= TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE ?>
         </div>
-    <?php
-    } elseif ($hasSaneConfigFile && !$otherConfigErrors && $hasUpdatedConfigFile) { ?>
-        <div class="alert alert-success">
+        <?php
+        } else { ?>
+        <div class="alert alert-warning">
             <?= TEXT_ERROR_SUCCESS_EXISTING_CONFIGURE_NO_UPDATE ?>
         </div>
-    <?php
+        <?php
+        }
     }
     ?>
     <?php
@@ -175,7 +177,7 @@ $adjustWarnIssues = false;
         }
 
 
-        if (!$hasFatalErrors && !$hasWarnErrors && $hasUpdatedConfigFile) { ?>
+        if (!$hasFatalErrors && !$hasWarnErrors && ($hasUpdatedConfigFile || $hasSaneConfigFile || $configFilePresent)) { ?>
             <div class="alert alert-success">
                 <?= TEXT_ERROR_SUCCESS_NO_ERRORS ?>
             </div>

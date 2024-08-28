@@ -35,6 +35,7 @@ if (DEFINE_PRIVACY_STATUS <= 1) {
 if (DEFINE_CONDITIONS_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_CONDITIONS) . '">' . BOX_INFORMATION_CONDITIONS . '</a>';
 }
+
 // -----
 // The following flag is set by /includes/init_includes/init_common_elements.php; refer to that module's
 // comments for the way to override this setting.
@@ -46,7 +47,11 @@ if (DEFINE_CONTACT_US_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . BOX_INFORMATION_CONTACT . '</a>';
 }
 
-if (defined('FILENAME_ORDER_STATUS') && defined('BOX_INFORMATION_ORDER_STATUS')) {
+// -----
+// The following flag is set by /includes/init_includes/init_common_elements.php; refer to that module's
+// comments for the way to override the setting.
+//
+if ($show_order_status_sidebox_link === true) {
     $information[] = '<a href="' . zen_href_link(FILENAME_ORDER_STATUS, '', 'SSL') . '">' . BOX_INFORMATION_ORDER_STATUS . '</a>';
 }
 
