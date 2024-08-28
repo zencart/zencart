@@ -60,13 +60,7 @@ if ($cfg_group->RecordCount() == 0) {
     // multilanguage support:
     // For example, in admin/includes/languages/spanish/lang.configuration.php
     // define('CFG_GRP_TITLE_MY_STORE', 'Mi Tienda');
-    $str = $cfg_group->fields['configuration_group_title'];
-    $str = str_replace(' ', '_', $str);
-    $str = strtoupper(preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str));
-    $const_title = 'CFG_GRP_TITLE_' . $str;
-    if (defined($const_title)) {
-        $cfg_group->fields['configuration_group_title'] = constant($const_title);
-    }
+    $cfg_group->fields['configuration_group_title'] = zen_lookup_admin_menu_language_override('configuration_group_title', $cfg_group->fields['configuration_group_title'], $cfg_group->fields['configuration_group_title']);
 }
 
 if ($gID == 7) {
