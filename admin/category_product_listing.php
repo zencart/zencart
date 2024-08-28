@@ -1264,8 +1264,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
               if (empty($product_types)) {
                 // There are no restricted product types so offer all types instead
-                $lang_suffix = (!empty($_SESSION['languages_code']) && $_SESSION['languages_code'] != 'en') ? '_' . $_SESSION['languages_code'] : '';
-                $sql = "SELECT type_id, type_name$lang_suffix AS type_name FROM " . TABLE_PRODUCT_TYPES;
+                $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPES;
                 $product_types = $db->Execute($sql);
               }
 
@@ -1274,7 +1273,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               foreach ($product_types as $restrict_type) {
                 $product_restrict_types_array[] = [
                   'id' => $restrict_type['type_id'],
-                  'text' => $restrict_type['type_name'],
+                  'text' => zen_lookup_admin_menu_language_override('product_type', $restrict_type['type_handler'], $restrict_type['type_name']),
                 ];
               }
               ?>
