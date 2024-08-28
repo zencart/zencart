@@ -284,7 +284,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     while (!$product_types->EOF) {
       $type_array[] = [
         'id' => $product_types->fields['type_id'],
-        'text' => zen_lookup_admin_menu_language_override('product_type', $product_types->fields['type_handler'], $product_types->fields['type_name']),
+        'text' => zen_lookup_admin_menu_language_override('product_type_name', $product_types->fields['type_handler'], $product_types->fields['type_name']),
       ];
       $product_types->MoveNext();
     }
@@ -482,7 +482,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     <?php echo zen_draw_hidden_field('type_id', $restrict_types->fields['product_type_id']); ?>
                   <button type="submit" class="btn btn-warning"><?php echo IMAGE_DELETE; ?></button>
                   <?php echo '</form>'; ?>
-                  <?php echo zen_lookup_admin_menu_language_override('product_type', $type->fields['type_handler'], $type->fields['type_name']); ?>
+                  <?php echo zen_lookup_admin_menu_language_override('product_type_name', $type->fields['type_handler'], $type->fields['type_name']); ?>
                 </div>
                 <?php
               }

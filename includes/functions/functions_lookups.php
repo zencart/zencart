@@ -294,10 +294,7 @@ function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
 function zen_lookup_admin_menu_language_override(string $lookup_type, string $lookup_key, string $fallback): string
 {
     switch ($lookup_type) {
-        case 'order_status_name':
-            $lookup = strtoupper('ORDER_STATUS_NAME_FOR_' . $lookup_key);
-            break;
-        case 'product_type':
+        case 'product_type_name':
             $lookup = strtoupper('PRODUCT_TYPE_NAME_FOR_HANDLER_' . $lookup_key);
             break;
         case 'product_type_layout_title':
@@ -315,12 +312,12 @@ function zen_lookup_admin_menu_language_override(string $lookup_type, string $lo
         case 'configuration_group_title':
             $str = $lookup_key;
             $str = preg_replace('/[\s ]+/', '_', $str);
-//            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
-            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '_', $str);
-            $lookup = strtoupper('CFG_GROUP_TITLE_' . $str);
+            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
+//            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '_', $str);
+            $lookup = strtoupper('CFG_GRP_TITLE_' . $str);
             break;
         case 'plugin_description':
-            $lookup = strtoupper('PLUGIN_DESCRIPTION_FOR_' . $lookup_key);
+            $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $lookup_key);
             break;
     }
 
