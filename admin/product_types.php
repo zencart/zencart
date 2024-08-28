@@ -273,11 +273,11 @@ if (!empty($action)) {
                 $product_types_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $product_types_query_raw, $product_types_query_numrows);
                 $product_types = $db->Execute($product_types_query_raw);
                 foreach ($product_types as $product_type) {
+                  $product_type['type_name'] = zen_lookup_admin_menu_language_override('product_type', $product_type['type_handler'], $product_type['type_name']);
                   if ((!isset($_GET['ptID']) || (isset($_GET['ptID']) && ($_GET['ptID'] == $product_type['type_id']))) && !isset($ptInfo) && (substr($action, 0, 3) != 'new')) {
                     $product_type_products = $db->Execute("SELECT COUNT(*) AS products_count
                                                            FROM " . TABLE_PRODUCTS . "
                                                            WHERE products_type = " . (int)$product_type['type_id']);
-
                     $ptInfo_array = array_merge($product_type, $product_type_products->fields);
 
                     $ptInfo = new objectInfo($ptInfo_array);
@@ -330,11 +330,11 @@ if (!empty($action)) {
                 $contents[] = ['text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_HANDLER, 'handler', 'class="control-label"') . zen_draw_input_field('handler', $ptInfo->type_handler, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_handler') . ' class="form-control"')];
                 $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_ALLOW_ADD_CART, 'catalog_add_to_cart', 'class="control-label"') . zen_draw_checkbox_field('catalog_add_to_cart', $ptInfo->allow_add_to_cart, $ptInfo->allow_add_to_cart == 'Y', 'class="form-control"')];
-                $sql = "SELECT type_id, type_name FROM " . TABLE_PRODUCT_TYPES;
+                $sql = "SELECT type_id, type_name, type_handler FROM " . TABLE_PRODUCT_TYPES;
                 $product_type_list = $db->Execute($sql);
                 foreach ($product_type_list as $item) {
                   $product_type_array[] = [
-                    'text' => $item['type_name'],
+                    'text' => zen_lookup_admin_menu_language_override('product_type', $item['type_handler'], $item['type_name']),
                     'id' => $item['type_id']
                   ];
                 }
