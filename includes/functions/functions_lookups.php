@@ -313,7 +313,6 @@ function zen_lookup_admin_menu_language_override(string $lookup_type, string $lo
             $str = $lookup_key;
             $str = preg_replace('/[\s ]+/', '_', $str);
             $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
-//            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '_', $str);
             $lookup = strtoupper('CFG_GRP_TITLE_' . $str);
             break;
         case 'plugin_description':
