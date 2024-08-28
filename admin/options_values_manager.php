@@ -590,8 +590,6 @@ if ($action !== '') {
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <style>
-        .py-4 {padding-top: 1rem; padding-bottom: 1rem;}
-        .pb-4 {padding-bottom: 1rem;}
         .bg-white {background-color: white; }
         .border-bottom-ddd {border-bottom: 1px solid #ddd;}
     </style>
