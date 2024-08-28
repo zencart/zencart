@@ -487,6 +487,7 @@ $define = [
     'TEXT_DISPLAY_NUMBER_OF_CURRENCIES' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Currencies)',
     'TEXT_DISPLAY_NUMBER_OF_CUSTOMERS' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Customers)',
     'TEXT_DISPLAY_NUMBER_OF_FEATURED' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Featured Products)',
+    'TEXT_DISPLAY_NUMBER_OF_FEATURED_CATEGORIES' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Featured Categories)',
     'TEXT_DISPLAY_NUMBER_OF_GENERIC' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Entries)',
     'TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Gift Vouchers)',
     'TEXT_DISPLAY_NUMBER_OF_GROUPS' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Groups)',
