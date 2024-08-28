@@ -290,3 +290,43 @@ function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
     return $result->fields['orders_status_name'] . ' [' . (int)$order_status_id . ']';
 }
 
+
+function zen_lookup_admin_menu_language_override(string $lookup_type, string $lookup_key, string $fallback): string
+{
+    switch ($lookup_type) {
+        case 'order_status_name':
+            $lookup = strtoupper('ORDER_STATUS_NAME_FOR_' . $lookup_key);
+            break;
+        case 'product_type':
+            $lookup = strtoupper('PRODUCT_TYPE_NAME_FOR_HANDLER_' . $lookup_key);
+            break;
+        case 'product_type_layout_title':
+            $lookup = strtoupper('PRODUCT_TYPE_LAYOUT_TITLE_FOR_' . $lookup_key);
+            break;
+        case 'product_type_layout_description':
+            $lookup = strtoupper('PRODUCT_TYPE_LAYOUT_DESC_FOR_' . $lookup_key);
+            break;
+        case 'configuration_key_title':
+            $lookup = strtoupper('CFGTITLE_' . $lookup_key);
+            break;
+        case 'configuration_key_description':
+            $lookup = strtoupper('CFGDESC_' . $lookup_key);
+            break;
+        case 'configuration_group_title':
+            $str = $lookup_key;
+            $str = preg_replace('/[\s ]+/', '_', $str);
+//            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
+            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '_', $str);
+            $lookup = strtoupper('CFG_GROUP_TITLE_' . $str);
+            break;
+        case 'plugin_description':
+            $lookup = strtoupper('PLUGIN_DESCRIPTION_FOR_' . $lookup_key);
+            break;
+    }
+
+    if (isset($lookup) && defined($lookup)) {
+        return constant($lookup);
+    }
+
+    return $fallback;
+}
