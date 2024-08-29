@@ -305,7 +305,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
         </div>
         <div class="form-group">
             <div class="col-sm-3">
-                <p class="control-label"><?= TEXT_PAGES_TITLE ?></p>
+                <p class="control-label"><?= zen_draw_label(TEXT_PAGES_TITLE, 'pages_title[' . $languages[0]['id'] . ']', 'class="control-label"') ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
                 <?php
@@ -390,7 +390,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
         <div class="form-group">
             <?= zen_draw_label(TEXT_HEADER_SORT_ORDER, 'header_sort_order', 'class="control-label col-sm-3"') ?>
             <div class="col-sm-2">
-                <?= zen_draw_input_field('header_sort_order', $ezInfo->header_sort_order, zen_set_field_length(TABLE_EZPAGES, 'header_sort_order') . ' class="form-control" id="header_sort_order"') ?>
+                <?= zen_draw_input_field('header_sort_order', $ezInfo->header_sort_order, zen_set_field_length(TABLE_EZPAGES, 'header_sort_order') . ' class="form-control" id="header_sort_order"', false, 'number') ?>
             </div>
         </div>
         <hr>
@@ -406,7 +406,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
         <div class="form-group">
             <?= zen_draw_label(TEXT_SIDEBOX_SORT_ORDER, 'sidebox_sort_order', 'class="control-label col-sm-3"') ?>
             <div class="col-sm-2">
-                <?= zen_draw_input_field('sidebox_sort_order', $ezInfo->sidebox_sort_order, zen_set_field_length(TABLE_EZPAGES, 'sidebox_sort_order') . ' class="form-control" id="sidebox_sort_order"') ?>
+                <?= zen_draw_input_field('sidebox_sort_order', $ezInfo->sidebox_sort_order, zen_set_field_length(TABLE_EZPAGES, 'sidebox_sort_order') . ' class="form-control" id="sidebox_sort_order"', false, 'number') ?>
             </div>
         </div>
         <hr>
@@ -420,15 +420,15 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
             </div>
         </div>
         <div class="form-group">
-            <?= zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'status_footer', 'class="control-label col-sm-3"') ?>
+            <?= zen_draw_label(TEXT_FOOTER_SORT_ORDER, 'footer_sort_order', 'class="control-label col-sm-3"') ?>
             <div class="col-sm-2">
-                <?= zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control" id="footer_sort_order"') ?>
+                <?= zen_draw_input_field('footer_sort_order', $ezInfo->footer_sort_order, zen_set_field_length(TABLE_EZPAGES, 'footer_sort_order') . ' class="form-control" id="footer_sort_order"', false, 'number') ?>
             </div>
         </div>
         <hr>
         <div class="form-group">
             <div class="col-sm-3">
-                <p class="control-label"><?= TABLE_HEADING_STATUS_MOBILE ?></p>
+                <p class="control-label"><?= zen_draw_label(TABLE_HEADING_STATUS_MOBILE, 'status_mobile', 'class="control-label"') ?></p>
             </div>
             <div class="col-sm-9 col-md-6">
                 <label class="radio-inline"><?= zen_draw_radio_field('status_mobile', '1', ($ezInfo->status_mobile == 1)) . TEXT_YES ?></label>
@@ -437,16 +437,16 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
             </div>
         </div>
         <div class="form-group">
-            <?= zen_draw_label(TEXT_MOBILE_SORT_ORDER, 'status_mobile', 'class="control-label col-sm-3"') ?>
+            <?= zen_draw_label(TEXT_MOBILE_SORT_ORDER, 'mobile_sort_order', 'class="control-label col-sm-3"') ?>
             <div class="col-sm-2">
-                <?= zen_draw_input_field('mobile_sort_order', $ezInfo->mobile_sort_order, zen_set_field_length(TABLE_EZPAGES, 'mobile_sort_order') . ' class="form-control" id="mobile_sort_order"') ?>
+                <?= zen_draw_input_field('mobile_sort_order', $ezInfo->mobile_sort_order, zen_set_field_length(TABLE_EZPAGES, 'mobile_sort_order') . ' class="form-control" id="mobile_sort_order"', false, 'number') ?>
             </div>
         </div>
         <hr>
         <div class="form-group">
             <?= zen_draw_label(TABLE_HEADING_CHAPTER_PREV_NEXT, 'toc_chapter', 'class="control-label col-sm-3"') ?>
             <div class="col-sm-2">
-                <?= zen_draw_input_field('toc_chapter', $ezInfo->toc_chapter, zen_set_field_length(TABLE_EZPAGES, 'toc_chapter', '6') . ' class="form-control" id="toc_chapter"') ?>
+                <?= zen_draw_input_field('toc_chapter', $ezInfo->toc_chapter, zen_set_field_length(TABLE_EZPAGES, 'toc_chapter', '6') . ' class="form-control" id="toc_chapter"', false, 'number') ?>
             </div>
         </div>
         <hr>
@@ -462,7 +462,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
         <div class="form-group">
             <?= zen_draw_label(TEXT_TOC_SORT_ORDER, 'toc_sort_order', 'class="control-label col-sm-3"') ?>
             <div class="col-sm-2">
-                <?= zen_draw_input_field('toc_sort_order', $ezInfo->toc_sort_order, zen_set_field_length(TABLE_EZPAGES, 'toc_sort_order') . ' class="form-control" id="toc_sort_order"') ?>
+                <?= zen_draw_input_field('toc_sort_order', $ezInfo->toc_sort_order, zen_set_field_length(TABLE_EZPAGES, 'toc_sort_order') . ' class="form-control" id="toc_sort_order"', false, 'number') ?>
             </div>
         </div>
         <div class="col-sm-12">
