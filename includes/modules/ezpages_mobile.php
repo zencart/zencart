@@ -15,8 +15,6 @@ $zco_notifier->notify('NOTIFY_START_EZPAGES_MOBILE');
 
 $var_linksList = [];
 
-// test if bar should display:
-
 if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT) || !$sniffer->field_exists(TABLE_EZPAGES, 'status_mobile')) {
     return; // early exit; db not upgraded
 }
