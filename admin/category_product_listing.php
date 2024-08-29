@@ -1273,7 +1273,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               foreach ($product_types as $restrict_type) {
                 $product_restrict_types_array[] = [
                   'id' => $restrict_type['type_id'],
-                  'text' => $restrict_type['type_name'],
+                  'text' => zen_lookup_admin_menu_language_override('product_type_name', $restrict_type['type_handler'], $restrict_type['type_name']),
                 ];
               }
               ?>
