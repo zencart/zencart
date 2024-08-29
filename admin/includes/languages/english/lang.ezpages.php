@@ -32,8 +32,8 @@ $define = [
     'TABLE_HEADING_MOBILE_EXPLANATION' => 'Show as link on mobile menu? Mobile-enabled links will be sorted by sort-order and title.',
     'TABLE_HEADING_PAGE_OPEN_NEW_WINDOW' => 'Open New Window:',
     'TABLE_HEADING_PAGE_IS_VISIBLE' => 'Page is Visible:',
-    'TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION' => ' Page shown even if not in header, footer or sidebox<br>
-(If all the settings for Visible and Header and Footer and Sidebox are all OFF then visitors attempting to see the page will get a Page-Not-Found response.)',
+    'TABLE_HEADING_PAGE_IS_VISIBLE_EXPLANATION' => ' Page is reachable even if not linked in header, footer or sidebox<br>
+(But if all the settings for Visible and Header and Footer and Sidebox are all OFF then visitors attempting to see the page will get a Page-Not-Found response.)',
     'TEXT_DISPLAY_NUMBER_OF_PAGES' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> pages)',
     'IMAGE_NEW_PAGE' => 'New Page',
     'TEXT_INFO_PAGES_ID' => 'ID: ',
