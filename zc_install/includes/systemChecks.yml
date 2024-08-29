@@ -288,7 +288,7 @@ systemChecks:
     errorLevel: WARN
     mainErrorText: <?php echo TEXT_ERROR_GZIP .PHP_EOL; ?>
     mainErrorTextHelpId: helpIdGzip
-    skipWhen: server=nginx
+    onlyWhen: server=apache
     methods:
       checkIniGet:
         parameters:

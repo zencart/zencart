@@ -79,13 +79,40 @@ class systemChecker
 //echo print_r($this->systemChecks);
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
 //echo print_r($systemCheck);
-            // check for bypass
+
+            $server = strtolower($_SERVER['SERVER_SOFTWARE'] ?? 'unknown');
+
+            // check for bypasses
             if (isset($systemCheck['skipWhen'])) {
                 $parts = explode('=', $systemCheck['skipWhen']);
                 $what = $parts[0];
-                $when = $parts[1];
+                $when = strtolower($parts[1] ?? '');
 
-                if ($what === 'server' && $when === 'nginx' && str_starts_with($_SERVER['SERVER_SOFTWARE'], 'nginx')) {
+                if ($what === 'server' && str_contains($when, 'apache') && str_starts_with($server, 'apache')) {
+                    continue;
+                }
+                if ($what === 'server' && str_contains($when, 'nginx') && str_starts_with($server, 'nginx')) {
+                    continue;
+                }
+                if ($what === 'server' && str_contains($when, 'litespeed') && str_starts_with($server, 'nginx')) {
+                    continue;
+                }
+            } elseif (isset($systemCheck['onlyWhen'])) {
+                $parts = explode('=', $systemCheck['onlyWhen']);
+                $what = $parts[0];
+                $when = strtolower($parts[1] ?? '');
+
+                $skip = true;
+                if ($what === 'server' && str_contains($when, 'apache') && str_starts_with($server, 'apache')) {
+                    $skip = false;
+                }
+                if ($what === 'server' && str_contains($when, 'nginx') && str_starts_with($server, 'nginx')) {
+                    $skip = false;
+                }
+                if ($what === 'server' && str_contains($when, 'litespeed') && str_starts_with($server, 'litespeed')) {
+                    $skip = false;
+                }
+                if ($skip) {
                     continue;
                 }
             }
