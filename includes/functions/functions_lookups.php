@@ -318,6 +318,9 @@ function zen_lookup_admin_menu_language_override(string $lookup_type, string $lo
         case 'plugin_description':
             $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $lookup_key);
             break;
+        case 'install_order_status':
+            $lookup = strtoupper('INSTALL_ORDER_STATUS_' . $lookup_key);
+            break;
     }
 
     if (isset($lookup) && defined($lookup)) {
