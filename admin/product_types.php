@@ -130,12 +130,12 @@ if (!empty($action)) {
       <!-- body //-->
       <?php
       if (isset($_GET['action']) && ($_GET['action'] == 'layout' || $_GET['action'] == 'layout_edit')) {
-        $sql = "SELECT type_name
+        $sql = "SELECT type_name, type_handler
                 FROM " . TABLE_PRODUCT_TYPES . "
                 WHERE type_id = " . (int)$_GET['ptID'];
         $type_name = $db->Execute($sql);
         ?>
-        <h1><?php echo HEADING_TITLE_LAYOUT . $type_name->fields['type_name']; ?></h1>
+        <h1><?php echo HEADING_TITLE_LAYOUT . zen_lookup_admin_menu_language_override('product_type_name', $type_name->fields['type_handler'], $type_name->fields['type_name']); ?></h1>
 
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
@@ -155,6 +155,7 @@ if (!empty($action)) {
                                                WHERE product_type_id = " . (int)$_GET['ptID'] . "
                                                ORDER BY sort_order");
                 foreach ($configuration as $item) {
+                  $item['configuration_title'] = zen_lookup_admin_menu_language_override('product_type_layout_title', $item['configuration_key'], $item['configuration_title']);
                   if (!empty($item['use_function'])) {
                     $use_function = $item['use_function'];
                     if (preg_match('/->/', $use_function)) {
@@ -176,6 +177,7 @@ if (!empty($action)) {
                                                          FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
                                                          WHERE configuration_id = " . (int)$item['configuration_id']);
                     $cInfo_array = array_merge($item, $cfg_extra->fields);
+                    $cInfo_array['configuration_description'] = zen_lookup_admin_menu_language_override('product_type_layout_description', $cInfo_array['configuration_key'], $cInfo_array['configuration_description']);
                     $cInfo = new objectInfo($cInfo_array);
                   }
 
