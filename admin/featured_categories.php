@@ -295,7 +295,7 @@ if ($action !== '') {
                         <div class="form-group">
                             <?php echo zen_draw_label(TEXT_FEATURED_CATEGORY, 'categories_id', 'class="col-sm-3 control-label"'); ?>
                             <div class="col-sm-9 col-md-6">
-                               <?php echo  zen_draw_pulldown_categories_having_products('categories_id', 'required size="15" class="form-control"', $featured_array, true,'',true,); ?>
+                               <?php echo  zen_draw_pulldown_categories_having_products('categories_id', 'required size="15" class="form-control"', $featured_array, true,true,false,); ?>
                             </div>
                         </div>
                     <?php } ?>
@@ -360,7 +360,7 @@ if ($action !== '') {
                         <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ACTIVE_FROM; ?></th>
                         <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></th>
                         <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_STATUS; ?></th>
-                        <th class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_ACTION; ?></th>
+                        <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -461,7 +461,7 @@ if ($action !== '') {
                                 <?php echo '</form>'; ?>
                             <?php } ?>
                             </td>
-                            <td class="dataTableContent text-center actions">
+                            <td class="dataTableContent text-right actions">
                             <div class="btn-group">
                                 <a href="<?php echo zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . $search_parameters . 'action=edit' . '&fID=' . $featured['featured_categories_id']); ?>" class="btn btn-sm btn-default btn-edit" role="button">
                                 <?php echo zen_icon('pencil', ICON_EDIT) ?>
@@ -483,7 +483,7 @@ if ($action !== '') {
                     </tbody>
                 </table>
             <div class="row">
-                <div class="col-sm-6"><?php echo $featured_split->display_count($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_FEATURED); ?></div>
+                <div class="col-sm-6"><?php echo $featured_split->display_count($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_FEATURED_CATEGORIES); ?></div>
                     <div class="col-sm-6 text-right"><?php echo $featured_split->display_links($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'fID'])); ?></div>
                     </div>
                 </div>
