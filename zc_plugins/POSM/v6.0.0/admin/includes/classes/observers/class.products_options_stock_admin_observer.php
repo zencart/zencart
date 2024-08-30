@@ -595,12 +595,15 @@ class products_options_stock_observer extends base
               WHERE language_id = " . (int)$_SESSION['languages_id']
         );
 
+        $lang_data = $db->Execute("SELECT code FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$insert_id);
+        $lang_suffix = (!empty($lang_data->fields['code'])) ? $lang_data->fields['code'] : '';
+
         foreach ($products_option_stock_names as $option_stock_name) {
           $db->Execute(
               "INSERT IGNORE INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . "
                   (pos_name_id, language_id, pos_name)
                VALUES
-                  (" . $option_stock_name['pos_name_id'] . ", $insert_id, '" . zen_db_input($option_stock_name['pos_name']) . "')"
+                  (" . $option_stock_name['pos_name_id'] . ", $insert_id, '" . zen_db_input(zen_lookup_database_localization_language_switch('install_plugin', 'POS_NAME_' . $option_stock_name['pos_name_id'], $option_stock_name['pos_name'], (string)$lang_suffix)) . "')"
           );
         }
     }

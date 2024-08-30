@@ -139,6 +139,9 @@ if (!empty($action)) {
         }
 
 // create additional orders_status records
+        $lang_data = $db->Execute("SELECT code FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$insert_id);
+        $lang_suffix = (!empty($lang_data->fields['code'])) ? $lang_data->fields['code'] : '';
+
         $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name, sort_order
                                        FROM " . TABLE_ORDERS_STATUS . "
                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
@@ -147,7 +150,7 @@ if (!empty($action)) {
           $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, sort_order)
                         VALUES (" . $status['orders_status_id'] . ",
                                 " . (int)$insert_id . ",
-                                '" . zen_db_input(zen_lookup_admin_menu_language_override('install_order_status', $status['orders_status_name'], $status['orders_status_name'])) . "',
+                                '" . zen_db_input(zen_lookup_database_localization_language_switch('install_orders_status', $status['orders_status_id'], $status['orders_status_name'], (string)$lang_suffix)) . "',
                                 " . $status['sort_order'] . ")");
         }
 

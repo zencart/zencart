@@ -318,8 +318,26 @@ function zen_lookup_admin_menu_language_override(string $lookup_type, string $lo
         case 'plugin_description':
             $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $lookup_key);
             break;
-        case 'install_order_status':
-            $lookup = strtoupper('INSTALL_ORDER_STATUS_' . $lookup_key);
+    }
+
+    if (isset($lookup) && defined($lookup)) {
+        return constant($lookup);
+    }
+
+    return $fallback;
+}
+
+
+function zen_lookup_database_localization_language_switch(string $lookup_type, string $lookup_key, string $fallback, string $lgcode): string
+{
+    $str = $lookup_key;
+    $str .= (!empty($lgcode)) ? '_' . $lgcode : '';
+    switch ($lookup_type) {
+        case 'install_orders_status':
+            $lookup = strtoupper('INSTALL_ORDERS_STATUS_' . $str);
+            break;
+        case 'install_plugin':
+            $lookup = strtoupper('INSTALL_PLUGIN_' . $str);
             break;
     }
 
