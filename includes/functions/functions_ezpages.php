@@ -13,8 +13,7 @@
  * look up page_id and create link for ez_pages
  * to use this link add '\<a href="' . zen_ez_pages_link($pages_id) . '">\</a>';
  */
-// to use this link add '<a href="' . zen_ez_pages_link($pages_id) . '"></a>';
-  function zen_ez_pages_link($ez_pages_id, $ez_pages_chapter = 0, $ez_pages_is_ssl = false, $ez_pages_open_new_window = false, $ez_pages_return_full_url = false) {
+  function zen_ez_pages_link($ez_pages_id, $ez_pages_chapter = 0, $ez_pages_is_ssl = true, $ez_pages_open_new_window = false, $ez_pages_return_full_url = false) {
     global $db;
     $ez_link = 'unknown';
     $ez_pages_name = 'Click Here';
@@ -37,19 +36,19 @@
         case ($ez_pages_alturl != '' and $ez_pages_open_new_window == '1'):
           $ez_pages_linkto  = (substr($ez_pages_alturl,0,4) == 'http') ?
                               $ez_pages_alturl :
-                              ($ez_pages_alturl=='' ? '' : zen_href_link($ez_pages_alturl, '', ($ez_pages_is_ssl=='0' ? 'NONSSL' : 'SSL'), true, true, true));
+                              ($ez_pages_alturl=='' ? '' : zen_href_link($ez_pages_alturl, '', 'SSL', true, true, true));
           break;
           // internal link same window
         case ($ez_pages_alturl != '' and $ez_pages_open_new_window == '0'):
           $ez_pages_linkto  = (substr($ez_pages_alturl,0,4) == 'http') ?
                               $ez_pages_alturl :
-                              ($ez_pages_alturl=='' ? '' : zen_href_link($ez_pages_alturl, '', ($ez_pages_is_ssl=='0' ? 'NONSSL' : 'SSL'), true, true, true));
+                              ($ez_pages_alturl=='' ? '' : zen_href_link($ez_pages_alturl, '', 'SSL', true, true, true));
           break;
       }
 
       // if altURL is specified, use it; otherwise, use EZPage ID to create link
       $ez_link = ($ez_pages_linkto =='') ?
-        zen_href_link(FILENAME_EZPAGES, 'id=' . $ez_pages_id . ((int)$ez_pages_chapter != 0 ? '&chapter=' . $ez_pages_chapter : ''), ($ez_pages_is_ssl=='0' ? 'NONSSL' : 'SSL')) :
+        zen_href_link(FILENAME_EZPAGES, 'id=' . $ez_pages_id . ((int)$ez_pages_chapter != 0 ? '&chapter=' . $ez_pages_chapter : ''), 'SSL') :
         $ez_pages_linkto;
       $ez_link .= ($ez_pages_open_new_window == '1' ? '" rel="noopener" target="_blank' : '');
     }

@@ -693,7 +693,7 @@ class ot_coupon extends base
         //echo 'Current $orderTotalFull less taxes: ' . $orderTotalFull . '<br>';
         // left for total order amount ($orderTotalDetails['totalFull']) vs qualified order amount ($order_total['orderTotal']) - to include both in array
         // add total order amount ($orderTotalFull) to array for $order_total['totalFull'] vs $order_total['orderTotal']
-        return [
+        $return = [
             'totalFull' => $orderTotalFull,
             'orderTotal' => $orderTotal,
             'orderTaxGroups' => $orderTaxGroups,
@@ -701,6 +701,8 @@ class ot_coupon extends base
             'shipping' => $order->info['shipping_cost'] ?? 0,
             'shippingTax' => $order->info['shipping_tax'] ?? 0,
         ];
+        $this->notify('NOTIFY_OT_COUPON_ORDER_TOTAL_FINISHED', null, $return);
+        return $return;
     }
 
     /**

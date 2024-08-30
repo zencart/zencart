@@ -118,7 +118,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
 
 // show case only supercedes all other settings
     if (STORE_STATUS != '0') {
-        return '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
+        return '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . (int)$product_id, 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
     }
 
 // 0 = normal shopping

@@ -32,7 +32,6 @@
   $show_display_category = $db->Execute(SQL_SHOW_PRODUCT_INFO_MAIN);
   while (!$show_display_category->EOF) {
 ?>
-
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_PRODUCTS') { ?>
 <?php
 /**
@@ -41,6 +40,8 @@
 ?>
 <?php require($template->get_template_dir('tpl_modules_featured_products.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_products.php'); ?>
 <?php } ?>
+<?php
+?>
 
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_SPECIALS_PRODUCTS') { ?>
 <?php
@@ -68,9 +69,19 @@
 ?>
 <?php include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_UPCOMING_PRODUCTS)); ?><?php } ?>
 
+<?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_CATEGORIES') { ?>
+<?php
+/**
+ * display the Featured Categories Center Box
+ */
+?>
+<?php require($template->get_template_dir('tpl_modules_featured_categories.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_categories.php'); ?>
+<?php } ?>
+
 
 <?php
   $show_display_category->MoveNext();
 } // !EOF
 ?>
 </div>
+

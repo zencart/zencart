@@ -147,7 +147,7 @@ if (!empty($action)) {
           $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, sort_order)
                         VALUES (" . $status['orders_status_id'] . ",
                                 " . (int)$insert_id . ",
-                                '" . zen_db_input($status['orders_status_name']) . "',
+                                '" . zen_db_input(zen_lookup_admin_menu_language_override('install_order_status', $status['orders_status_name'], $status['orders_status_name'])) . "',
                                 " . $status['sort_order'] . ")");
         }
 

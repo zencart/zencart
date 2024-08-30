@@ -160,21 +160,21 @@ INSERT INTO customers_info (customers_info_id, customers_info_date_of_last_logon
 # Dumping data for table ezpages
 #
 
-INSERT INTO ezpages (pages_id, alt_url, alt_url_external, status_header, status_sidebox, status_footer, status_toc, header_sort_order, sidebox_sort_order, footer_sort_order, toc_sort_order, page_open_new_window, page_is_ssl, toc_chapter)
-VALUES (1, '', '', 1, 0, 0, 1, 10, 0, 0, 10, 0, 0, 10),
-(2, '', '', 0, 0, 0, 1, 0, 0, 0, 30, 0, 0, 10),
-(3, '', '', 0, 1, 0, 0, 0, 10, 0, 0, 0, 0, 0),
-(4, 'index.php?main_page=brands', '', 1, 0, 0, 0, 0, 5, 0, 0, 0, 1, 0),
-(5, '', '', 0, 1, 0, 0, 0, 20, 0, 0, 0, 0, 0),
-(6, '', '', 1, 1, 1, 0, 50, 50, 50, 0, 0, 0, 0),
-(7, 'index.php?main_page=account', '', 0, 0, 1, 0, 0, 0, 10, 0, 0, 1, 0),
-(8, 'index.php?main_page=site_map', '', 0, 1, 1, 0, 0, 40, 20, 0, 0, 0, 0),
-(9, 'index.php?main_page=privacy', '', 1, 0, 1, 0, 30, 0, 40, 0, 0, 0, 0),
-(10, '', 'https://www.zen-cart.com', 1, 0, 0, 0, 60, 0, 0, 0, 1, 0, 0),
-(11, 'index.php?main_page=index&cPath=21', '', 0, 1, 0, 0, 0, 60, 0, 0, 0, 0, 0),
-(12, 'index.php?main_page=index&cPath=3_10', '', 0, 0, 1, 0, 0, 0, 60, 0, 0, 0, 0),
-(13, '', 'https://www.google.com', 0, 1, 0, 0, 0, 70, 0, 0, 1, 0, 0),
-(14, '', '', 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 10);
+INSERT INTO ezpages (pages_id, alt_url, alt_url_external, status_header, status_sidebox, status_footer, status_toc, header_sort_order, sidebox_sort_order, footer_sort_order, toc_sort_order, page_open_new_window, page_is_ssl, toc_chapter, status_mobile, mobile_sort_order)
+VALUES (1, '', '', 1, 0, 0, 1, 10, 0, 0, 10, 0, 0, 10, 0, 0),
+(2, '', '', 0, 0, 0, 1, 0, 0, 0, 30, 0, 0, 10, 0, 0),
+(3, '', '', 0, 1, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0),
+(4, 'index.php?main_page=brands', '', 1, 0, 0, 0, 0, 5, 0, 0, 0, 1, 0, 1, 5),
+(5, '', '', 0, 1, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0),
+(6, '', '', 1, 1, 1, 0, 50, 50, 50, 0, 0, 0, 0, 0, 0),
+(7, 'index.php?main_page=account', '', 0, 0, 1, 0, 0, 0, 10, 0, 0, 1, 0, 1, 10),
+(8, 'index.php?main_page=site_map', '', 0, 1, 1, 0, 0, 40, 20, 0, 0, 0, 0, 0, 0),
+(9, 'index.php?main_page=privacy', '', 1, 0, 1, 0, 30, 0, 40, 0, 0, 0, 0, 1, 40),
+(10, '', 'https://www.zen-cart.com', 1, 0, 0, 0, 60, 0, 0, 0, 1, 0, 0, 0, 0),
+(11, 'index.php?main_page=index&cPath=21', '', 0, 1, 0, 0, 0, 60, 0, 0, 0, 0, 0, 1, 20),
+(12, 'index.php?main_page=index&cPath=3_10', '', 0, 0, 1, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0),
+(13, '', 'https://www.google.com', 0, 1, 0, 0, 0, 70, 0, 0, 1, 0, 0, 0, 0),
+(14, '', '', 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 10, 0, 0);
 
 #
 # Dumping data for table ezpages_content
@@ -1576,3 +1576,14 @@ INSERT INTO specials (specials_id, products_id, specials_new_products_price, spe
 (47, 177, '75.0000', '2004-10-05 16:49:33', NULL, '0001-01-01', NULL, 1, '0001-01-01'),
 (48, 178, '50.0000', '2004-10-05 16:56:46', NULL, '0001-01-01', NULL, 1, '0001-01-01'),
 (50, 40, '75.0000', '2004-01-08 14:07:31', NULL, '0001-01-01', '0001-01-01 00:00:00', 1, '0001-01-01');
+
+INSERT INTO featured_categories (categories_id, featured_date_added, featured_last_modified, expires_date, date_status_change, status, featured_date_available) VALUES
+(34, '2004-02-21 16:34:31', '2004-02-21 16:34:31', '0001-01-01', '2004-02-21 16:34:31', 1, '0001-01-01'),
+(8, '2004-02-21 17:04:54', '2004-02-21 22:31:52', '2004-02-27', '2004-04-25 22:50:50', 0, '2004-02-21'),
+(12, '2004-02-21 17:10:49', '2004-02-21 17:10:49', '0001-01-01', '2004-02-21 17:10:49', 1, '0001-01-01'),
+(26, '2004-02-21 22:31:24', NULL, '0001-01-01', NULL, 1, '0001-01-01'),
+(40, '2004-05-13 22:50:33', NULL, '0001-01-01', NULL, 1, '0001-01-01'),
+(47, '2024-08-03 21:51:51', NULL, '2025-08-15', NULL, 1, '2024-08-03'),
+(25, '2024-08-03 01:47:03', NULL, '2025-08-02', NULL, 1, '2024-08-02'),
+(62, '2024-08-03 01:44:32', NULL, '0001-01-01', NULL, 1, '0001-01-01'),
+(22, '2024-08-04 17:31:37', NULL, '0001-01-01', NULL, 1, '0001-01-01');

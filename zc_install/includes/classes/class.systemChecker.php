@@ -79,6 +79,44 @@ class systemChecker
 //echo print_r($this->systemChecks);
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
 //echo print_r($systemCheck);
+
+            $server = strtolower($_SERVER['SERVER_SOFTWARE'] ?? 'unknown');
+
+            // check for bypasses
+            if (isset($systemCheck['skipWhen'])) {
+                $parts = explode('=', $systemCheck['skipWhen']);
+                $what = $parts[0];
+                $when = strtolower($parts[1] ?? '');
+
+                if ($what === 'server' && str_contains($when, 'apache') && str_starts_with($server, 'apache')) {
+                    continue;
+                }
+                if ($what === 'server' && str_contains($when, 'nginx') && str_starts_with($server, 'nginx')) {
+                    continue;
+                }
+                if ($what === 'server' && str_contains($when, 'litespeed') && str_starts_with($server, 'nginx')) {
+                    continue;
+                }
+            } elseif (isset($systemCheck['onlyWhen'])) {
+                $parts = explode('=', $systemCheck['onlyWhen']);
+                $what = $parts[0];
+                $when = strtolower($parts[1] ?? '');
+
+                $skip = true;
+                if ($what === 'server' && str_contains($when, 'apache') && str_starts_with($server, 'apache')) {
+                    $skip = false;
+                }
+                if ($what === 'server' && str_contains($when, 'nginx') && str_starts_with($server, 'nginx')) {
+                    $skip = false;
+                }
+                if ($what === 'server' && str_contains($when, 'litespeed') && str_starts_with($server, 'litespeed')) {
+                    $skip = false;
+                }
+                if ($skip) {
+                    continue;
+                }
+            }
+
             if (in_array($systemCheck['runLevel'], $runLevels, false)) {
                 $resultCombined = true;
                 $criticalError = false;
@@ -178,6 +216,13 @@ class systemChecker
         }
         $this->log(($result ? 'TRUE' : 'FALSE'), __METHOD__, []);
         return $result;
+    }
+
+    public function configFileExists(): bool
+    {
+        $this->checkWriteableAdminFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        $this->checkWriteableFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        return $this->getServerConfig()->fileExists();
     }
 
     public function getServerConfig(): ?zcConfigureFileReader

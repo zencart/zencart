@@ -670,7 +670,7 @@ function zen_get_admin_pages(bool $menu_only): array
     $result = $db->Execute($sql);
     foreach ($result as $row) {
         $productTypes['_productTypes_' . $row['type_handler']] = [
-            'name' => $row['type_name'],
+            'name' => zen_lookup_admin_menu_language_override('product_type_name', $row['type_handler'], $row['type_name']),
             'file' => $row['type_handler'],
             'params' => '',
         ];

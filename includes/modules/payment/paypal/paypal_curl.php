@@ -578,7 +578,9 @@ class paypal_curl extends base {
     //$this->log('['.$string . "]\n\n[" . print_r($pairs, true) .']');
     $values = array();
     foreach ($pairs as $pair) {
-      list($name, $value) = explode('=', $pair, 2);
+      $arr = explode('=', $pair, 2);
+      $name = $arr[0] ?? '';
+      $value = $arr[1] ?? '';
       $values[$name] = str_replace('|', '&amp;', $value);
     }
     return $values;
@@ -620,7 +622,8 @@ class paypal_curl extends base {
       if (!$response) {
         $this->log('No response from server' . $errors, $token);
       } else {
-        if ((isset($values['RESULT']) && $values['RESULT'] != 0) || strstr($values['ACK'],'Failure')) {
+        if ((isset($values['RESULT']) && $values['RESULT'] != 0) ||
+           (isset($values['ACK']) && strstr($values['ACK'], 'Failure'))) {
           $this->log($response . $errors, $token);
         }
       }

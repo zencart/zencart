@@ -5,7 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: brittainmark 2022 Aug 23 Modified in v1.5.8-alpha2 $
  */
-
 namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
@@ -13,13 +12,14 @@ use Zencart\FileSystem\FileSystem;
 class ArraysLanguageLoader extends BaseLanguageLoader
 {
     protected $mainLoader;
-    
-    public function makeConstants($defines): void
+
+    public function makeConstants($defines): bool
     {
         if (!is_array($defines)) {
-            return;
+            return false;
         }
 
+        $constants_made = false;
         foreach ($defines as $defineKey => $defineValue) {
             if (defined($defineKey)) {
                 continue;
@@ -32,8 +32,11 @@ class ArraysLanguageLoader extends BaseLanguageLoader
                     }
                 }
             }
+
             define($defineKey, $defineValue);
+            $constants_made = true;
         }
+        return $constants_made;
     }
 
     public function getLanguageDefines(): array
@@ -80,7 +83,22 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $this->makeConstants($defineList);
     }
 
-    public function loadDefinesFromArrayFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): array
+    public function loadModuleLanguageFile(string $language, string $fileName, string $module_type): array
+    {
+        $defineList = $this->loadModuleDefinesFromArrayFile($language, $fileName, $module_type);
+
+        $defineListPlugins = $this->pluginLoadDefinesFromArrayFile($language, $fileName, 'catalog', '/modules/' . $module_type);
+        $defineList = array_merge($defineList, $defineListPlugins);
+
+        $defineListTemplate = $this->loadModuleDefinesFromArrayFile($language, $fileName, $module_type, $this->templateDir . '/');
+        $defineList = array_merge($defineList, $defineListTemplate);
+
+        $this->makeConstants($defineList);
+
+        return $defineList;
+    }
+
+    protected function loadDefinesFromArrayFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): array
     {
         $arrayFileName = 'lang.' . $fileName;
         $mainFile = $rootPath . $language . $extraPath. '/' . $arrayFileName;
@@ -89,20 +107,18 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $defineList;
     }
 
-    public function loadModuleDefinesFromArrayFile(string $rootPath, string $language, string $module_type, string $fileName, string $extraPath = ''): array
+    protected function loadModuleDefinesFromArrayFile(string $language, string $fileName, string $module_type, string $templateDir = ''): array
     {
+        $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES;
         $arrayFileName = 'lang.' . $fileName;
-        $extraBlock = ''; 
-        if (!empty($extraPath)) { 
-           $extraBlock = $extraPath. '/'; 
-        }
-        $mainFile = $rootPath . $language . '/modules/' . $module_type . '/' . $extraBlock . $arrayFileName;
-        $fallbackFile = $mainFile; // for now no fallback
+
+        $mainFile = $rootPath . $language . '/modules/' . $module_type . '/' . $templateDir . $arrayFileName;
+        $fallbackFile = $rootPath . $this->fallback . '/modules/' . $module_type . '/' . $templateDir . $arrayFileName;
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         return $defineList;
     }
 
-    public function pluginLoadDefinesFromArrayFile(string $language, string $fileName, string $context = 'admin', string $extraPath = ''): array
+    protected function pluginLoadDefinesFromArrayFile(string $language, string $fileName, string $context = 'admin', string $extraPath = ''): array
     {
         $defineList = [];
         foreach ($this->pluginList as $plugin) {
