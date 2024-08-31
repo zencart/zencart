@@ -603,7 +603,7 @@ class products_options_stock_observer extends base
               "INSERT IGNORE INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . "
                   (pos_name_id, language_id, pos_name)
                VALUES
-                  (" . $option_stock_name['pos_name_id'] . ", $insert_id, '" . zen_db_input(zen_lookup_database_localization_language_switch('install_plugin', 'POS_NAME_' . $option_stock_name['pos_name_id'], $option_stock_name['pos_name'], (string)$lang_suffix)) . "')"
+                  (" . $option_stock_name['pos_name_id'] . ", $insert_id, '" . zen_db_input(zen_lookup_database_localization_language_switch('install_plugin', 'POSM_NAME_' . $option_stock_name['pos_name_id'], $option_stock_name['pos_name'], (string)$lang_suffix)) . "')"
           );
         }
     }

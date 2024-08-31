@@ -133,7 +133,7 @@ class ScriptedInstaller extends ScriptedInstallBase
                 "INSERT IGNORE INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . "
                     (pos_name_id, language_id, pos_name)
                  VALUES
-                    (1, " . $current_language['id'] . ", '" . zen_db_input(zen_lookup_database_localization_language_switch('install_plugin', 'POS_NAME_1', 'Back-ordered', (string)$current_language['code'])) . "')"
+                    (1, " . $current_language['id'] . ", '" . zen_db_input(zen_lookup_database_localization_language_switch('install_plugin', 'POSM_NAME_1', 'Back-ordered', (string)$current_language['code'])) . "')"
             );
         }
 

@@ -7,7 +7,7 @@
 */
 
 $define = [
-    'INSTALL_PLUGIN_POS_NAME_1_EN' => 'Back-ordered',
+    'INSTALL_PLUGIN_POSM_NAME_1_EN' => 'Back-ordered',
 ];
 
 return $define;
