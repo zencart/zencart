@@ -10,8 +10,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 May 16 Modified in v2.0.1 $
  */
-
-//require(DIR_WS_MODULES . '/debug_blocks/product_info_prices.php');
 ?>
 <div class="centerColumn" id="productGeneral">
 
