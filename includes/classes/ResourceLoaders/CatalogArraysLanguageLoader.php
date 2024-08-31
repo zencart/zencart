@@ -75,7 +75,6 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
 
         $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, $files_regex);
         foreach ($files as $file) {
-            $file = substr($file, 5);    //- Drop the leading 'lang.' from the file's name
             $defines = $this->loadArrayDefineFile($directory . '/' . $file);
             $this->makeConstants($defines);
         }
