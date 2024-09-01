@@ -2,11 +2,10 @@
 /**
  * Side Box Template
  *
- * @package templateSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Drbyte Sun Jan 7 21:28:50 2018 -0500 Modified in v1.5.6 $
+ * @version $Id: Jeff Rutt 2024 Aug 21 Modified in v2.1.0-alpha2 $
  */
 $content = "";
 
