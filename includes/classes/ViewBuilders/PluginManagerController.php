@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2023 Jul 01 Modified in v2.0.0-alpha1 $
+ * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
  */
 
 namespace Zencart\ViewBuilders;
