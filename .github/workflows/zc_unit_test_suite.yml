@@ -38,5 +38,5 @@ jobs:
         with:
           name: artifacts-${{ matrix.php-version }}
           path: not_for_release/testFramework/logs/console
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 90
