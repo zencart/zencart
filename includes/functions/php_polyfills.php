@@ -9,56 +9,6 @@
 if (\PHP_VERSION_ID >= 80400) {
     return;
 }
-if (!function_exists('mb_ucfirst')) {
-    function mb_ucfirst(string $string, ?string $encoding = null): string
-    {
-        if (null === $encoding) {
-            $encoding = mb_internal_encoding();
-        }
-
-        try {
-            $validEncoding = @mb_check_encoding('', $encoding);
-        } catch (\ValueError $e) {
-            throw new \ValueError(sprintf('mb_ucfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
-        // BC for PHP 7.3 and lower
-        if (!$validEncoding) {
-            throw new \ValueError(sprintf('mb_ucfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
-        $firstChar = mb_substr($string, 0, 1, $encoding);
-        $firstChar = mb_convert_case($firstChar, MB_CASE_TITLE, $encoding);
-
-        return $firstChar . mb_substr($string, 1, null, $encoding);
-    }
-}
-
-if (!function_exists('mb_lcfirst')) {
-    function mb_lcfirst(string $string, ?string $encoding = null): string
-    {
-        if (null === $encoding) {
-            $encoding = mb_internal_encoding();
-        }
-
-        try {
-            $validEncoding = @mb_check_encoding('', $encoding);
-        } catch (\ValueError $e) {
-            throw new \ValueError(sprintf('mb_lcfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
-        // BC for PHP 7.3 and lower
-        if (!$validEncoding) {
-            throw new \ValueError(sprintf('mb_lcfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
-        $firstChar = mb_substr($string, 0, 1, $encoding);
-        $firstChar = mb_convert_case($firstChar, MB_CASE_LOWER, $encoding);
-
-        return $firstChar . mb_substr($string, 1, null, $encoding);
-    }
-}
-
 if (!function_exists('array_find')) {
     function array_find(array $array, callable $callback)
     {
@@ -180,6 +130,125 @@ if (!function_exists('mb_str_pad') && function_exists('mb_substr')) {
 
                 return mb_substr(str_repeat($pad_string, $leftPaddingLength), 0, $leftPaddingLength, $encoding).$string.mb_substr(str_repeat($pad_string, $rightPaddingLength), 0, $rightPaddingLength, $encoding);
         }
+    }
+}
+
+if (!function_exists('stream_context_set_options')) {
+    function stream_context_set_options($context, array $options): bool { return stream_context_set_option($context, $options); }
+}
+
+if (!function_exists('str_increment')) {
+    function str_increment(string $string): string
+    {
+        if ('' === $string) {
+            throw new \ValueError('str_increment(): Argument #1 ($string) cannot be empty');
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $string)) {
+            throw new \ValueError('str_increment(): Argument #1 ($string) must be composed only of alphanumeric ASCII characters');
+        }
+
+        if (is_numeric($string)) {
+            $offset = stripos($string, 'e');
+            if (false !== $offset) {
+                $char = $string[$offset];
+                ++$char;
+                $string[$offset] = $char;
+                ++$string;
+
+                switch ($string[$offset]) {
+                    case 'f':
+                        $string[$offset] = 'e';
+                        break;
+                    case 'F':
+                        $string[$offset] = 'E';
+                        break;
+                    case 'g':
+                        $string[$offset] = 'f';
+                        break;
+                    case 'G':
+                        $string[$offset] = 'F';
+                        break;
+                }
+
+                return $string;
+            }
+        }
+
+        return ++$string;
+    }
+}
+
+if (!function_exists('str_decrement')) {
+    function str_decrement(string $string): string
+    {
+        if ('' === $string) {
+            throw new \ValueError('str_decrement(): Argument #1 ($string) cannot be empty');
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $string)) {
+            throw new \ValueError('str_decrement(): Argument #1 ($string) must be composed only of alphanumeric ASCII characters');
+        }
+
+        if (preg_match('/\A(?:0[aA0]?|[aA])\z/', $string)) {
+            throw new \ValueError(sprintf('str_decrement(): Argument #1 ($string) "%s" is out of decrement range', $string));
+        }
+
+        if (!\in_array(substr($string, -1), ['A', 'a', '0'], true)) {
+            return implode('', \array_slice(str_split($string), 0, -1)).\chr(\ord(substr($string, -1)) - 1);
+        }
+
+        $carry = '';
+        $decremented = '';
+
+        for ($i = \strlen($string) - 1; $i >= 0; --$i) {
+            $char = $string[$i];
+
+            switch ($char) {
+                case 'A':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+                    $carry = 'Z';
+
+                    break;
+                case 'a':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+                    $carry = 'z';
+
+                    break;
+                case '0':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+                    $carry = '9';
+
+                    break;
+                case '1':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+
+                    break;
+                default:
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+
+                    if (!\in_array($char, ['A', 'a', '0'], true)) {
+                        $decremented = \chr(\ord($char) - 1).$decremented;
+                    }
+            }
+        }
+
+        return $decremented;
     }
 }
 
