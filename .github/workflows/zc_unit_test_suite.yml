@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0', '8.1', '8.2', '8.3']
-    continue-on-error: ${{ matrix.php == '8.3' }}
+        php-versions: ['8.0', '8.1', '8.2', '8.3', '8.4']
+    continue-on-error: ${{ matrix.php-versions == '8.4' }}
     name: PHP ${{ matrix.php-versions }} Unit Tests
     steps:
       - name: Checkout
@@ -33,10 +33,10 @@ jobs:
         run: php vendor/bin/phpunit --verbose --process-isolation --testsuite=Unit --debug
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts
+          name: artifacts-${{ matrix.php-versions }}
           path: not_for_release/testFramework/logs/console
           if-no-files-found: error
           retention-days: 90
