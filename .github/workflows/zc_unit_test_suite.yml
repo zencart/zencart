@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-versions: ['8.0', '8.1', '8.2', '8.3', '8.4']
-    continue-on-error: ${{ matrix.php-versions == '8.4' }}
-    name: PHP ${{ matrix.php-versions }} Unit Tests
+        php-version: ['8.0', '8.1', '8.2', '8.3', '8.4']
+    continue-on-error: ${{ matrix.php-version == '8.4' }}
+    name: PHP ${{ matrix.php-version }} Unit Tests
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
           tools: composer, phpunit
 
       - name: Install Composer dependencies
@@ -36,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts-${{ matrix.php-versions }}
+          name: artifacts-${{ matrix.php-version }}
           path: not_for_release/testFramework/logs/console
           if-no-files-found: error
           retention-days: 90
