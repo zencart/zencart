@@ -582,7 +582,7 @@ function zen_get_info_page($product_id): string
 /**
  * get products_type for specified $product_id
  * @param int $product_id
- * @return int|string
+ * @return int
  */
 function zen_get_products_type($product_id): int
 {

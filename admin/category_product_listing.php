@@ -11,7 +11,7 @@ require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (isset($_POST['products_id'])) {
-    $product_type = (int)zen_get_products_type($_POST['products_id']);
+    $product_type = zen_get_products_type($_POST['products_id']);
 } elseif (isset($_GET['product_type'])) {
     $product_type = (int)$_GET['product_type'];
 } else {
@@ -166,7 +166,7 @@ if (!empty($action)) {
             $cascaded_prod_cat_for_delete = [];
             $cascaded_prod_cat_for_delete[] = $categories[$i]['id'];
             // determine product-type-specific override script for this product
-            $product_type = (int)zen_get_products_type($category_product);
+            $product_type = zen_get_products_type($category_product);
             // now loop thru the delete_product_confirm script for each product in the current category
             require zen_get_admin_module_from_directory($product_type, 'delete_product_confirm.php');
           }
