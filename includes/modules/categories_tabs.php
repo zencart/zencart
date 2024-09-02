@@ -10,29 +10,28 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-$order_by = " order by c.sort_order, cd.categories_name ";
+$order_by = " ORDER BY c.sort_order, cd.categories_name";
 
 $sql = "SELECT c.sort_order, c.categories_id, cd.categories_name
         FROM " . TABLE_CATEGORIES . " c
         LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
         WHERE c.parent_id= " . (int)TOPMOST_CATEGORY_PARENT_ID . "
-        AND c.categories_status=1 " .
+        AND c.categories_status=1" .
         $order_by;
 $categories_tab = $db->Execute($sql);
 
-$links_list = array();
-while (!$categories_tab->EOF) {
+$links_list = [];
+foreach ($categories_tab as $category_tab) {
 
   // currently selected category
-  if ((int)$cPath == $categories_tab->fields['categories_id']) {
+  if ((int)$cPath == $category_tab['categories_id']) {
     $new_style = 'category-top';
-    $categories_tab_current = '<span class="category-subs-selected">' . $categories_tab->fields['categories_name'] . '</span>';
+    $categories_tab_current = '<span class="category-subs-selected">' . $category_tab['categories_name'] . '</span>';
   } else {
     $new_style = 'category-top';
-    $categories_tab_current = $categories_tab->fields['categories_name'];
+    $categories_tab_current = $category_tab['categories_name'];
   }
 
   // create link to top level category
-  $links_list[] = '<a class="' . $new_style . '" href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . (int)$categories_tab->fields['categories_id']) . '">' . $categories_tab_current . '</a> ';
-  $categories_tab->MoveNext();
+  $links_list[] = '<a class="' . $new_style . '" href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . (int)$category_tab['categories_id']) . '">' . $categories_tab_current . '</a> ';
 }
