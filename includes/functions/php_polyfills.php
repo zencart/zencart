@@ -61,6 +61,112 @@ if (!function_exists('array_all')) {
     }
 }
 
+
+if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
+    function mb_ucfirst(string $string, ?string $encoding = null): string
+    {
+        if (null === $encoding) {
+            $encoding = mb_internal_encoding();
+        }
+
+        try {
+            $validEncoding = @mb_check_encoding('', $encoding);
+        } catch (\ValueError $e) {
+            throw new \ValueError(sprintf('mb_ucfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
+        }
+
+        $firstChar = mb_substr($string, 0, 1, $encoding);
+        $firstChar = mb_convert_case($firstChar, MB_CASE_TITLE, $encoding);
+
+        return $firstChar . mb_substr($string, 1, null, $encoding);
+    }
+}
+
+if (!function_exists('mb_lcfirst') && function_exists('mb_substr')) {
+    function mb_lcfirst(string $string, ?string $encoding = null): string
+    {
+        if (null === $encoding) {
+            $encoding = mb_internal_encoding();
+        }
+
+        try {
+            $validEncoding = @mb_check_encoding('', $encoding);
+        } catch (\ValueError $e) {
+            throw new \ValueError(sprintf('mb_lcfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
+        }
+
+        $firstChar = mb_substr($string, 0, 1, $encoding);
+        $firstChar = mb_convert_case($firstChar, MB_CASE_LOWER, $encoding);
+
+        return $firstChar . mb_substr($string, 1, null, $encoding);
+    }
+}
+
+if (!function_exists('mb_internal_trim') && !function_exists('mb_trim') && function_exists('mb_convert_encoding')) {
+    /** Polyfill helper function, not to be called directly */
+    function mb_internal_trim(string $regex, string $string, ?string $characters, ?string $encoding, string $function): string
+    {
+        if (null === $encoding) {
+            $encoding = mb_internal_encoding();
+        }
+
+        try {
+            $validEncoding = @mb_check_encoding('', $encoding);
+        } catch (\ValueError $e) {
+            throw new \ValueError(sprintf('%s(): Argument #3 ($encoding) must be a valid encoding, "%s" given', $function, $encoding));
+        }
+
+        if ('' === $characters) {
+            return null === $encoding ? $string : mb_convert_encoding($string, $encoding);
+        }
+
+        if ('UTF-8' === $encoding || \in_array(strtolower($encoding), ['utf-8', 'utf8'], true)) {
+            $encoding = 'UTF-8';
+        }
+
+        $string = mb_convert_encoding($string, 'UTF-8', $encoding);
+
+        if (null !== $characters) {
+            $characters = mb_convert_encoding($characters, 'UTF-8', $encoding);
+        }
+
+        if (null === $characters) {
+            $characters = "\\0 \f\n\r\t\v\u{00A0}\u{1680}\u{2000}\u{2001}\u{2002}\u{2003}\u{2004}\u{2005}\u{2006}\u{2007}\u{2008}\u{2009}\u{200A}\u{2028}\u{2029}\u{202F}\u{205F}\u{3000}\u{0085}\u{180E}";
+        } else {
+            $characters = preg_quote($characters);
+        }
+
+        $string = preg_replace(sprintf($regex, $characters), '', $string);
+
+        if ('UTF-8' === $encoding) {
+            return $string;
+        }
+
+        return mb_convert_encoding($string, $encoding, 'UTF-8');
+    }
+}
+
+if (!function_exists('mb_trim')) {
+    function mb_trim(string $string, ?string $characters = null, ?string $encoding = null): string
+    {
+        return mb_internal_trim('{^[%s]+|[%1$s]+$}Du', $string, $characters, $encoding, __FUNCTION__);
+    }
+}
+
+if (!function_exists('mb_ltrim')) {
+    function mb_ltrim(string $string, ?string $characters = null, ?string $encoding = null): string
+    {
+        return mb_internal_trim('{^[%s]+}Du', $string, $characters, $encoding, __FUNCTION__);
+    }
+}
+
+if (!function_exists('mb_rtrim')) {
+    function mb_rtrim(string $string, ?string $characters = null, ?string $encoding = null): string
+    {
+        return mb_internal_trim('{[%s]+$}Du', $string, $characters, $encoding, __FUNCTION__);
+    }
+}
+
 if (\PHP_VERSION_ID >= 80300) {
     return;
 }
@@ -87,7 +193,7 @@ if (!function_exists('json_validate')) {
     }
 }
 
-if (!function_exists('mb_str_pad') && function_exists('mb_substr')) {
+if (!function_exists('mb_str_pad') && function_exists('mb_substr') && function_exists('mb_strlen')) {
     function mb_str_pad(string $string, int $length, string $pad_string = ' ', int $pad_type = \STR_PAD_RIGHT, ?string $encoding = null): string
     {
         if (!\in_array($pad_type, [\STR_PAD_RIGHT, \STR_PAD_LEFT, \STR_PAD_BOTH], true)) {
@@ -101,11 +207,6 @@ if (!function_exists('mb_str_pad') && function_exists('mb_substr')) {
         try {
             $validEncoding = @mb_check_encoding('', $encoding);
         } catch (\ValueError $e) {
-            throw new \ValueError(sprintf('mb_str_pad(): Argument #5 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
-        // BC for PHP 7.3 and lower
-        if (!$validEncoding) {
             throw new \ValueError(sprintf('mb_str_pad(): Argument #5 ($encoding) must be a valid encoding, "%s" given', $encoding));
         }
 
