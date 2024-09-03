@@ -284,7 +284,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MODEL . '</label>';
                     $lc_text .= $listing_model;
                     break;
 
@@ -304,7 +303,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MANUFACTURER . '</label>';
                     $lc_text .= '<a class="mfgLink" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
                     break;
 
@@ -312,7 +310,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    // if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_PRICE . '</label>';
                     $lc_text .= $listing_price;
                     $lc_text .= '<br><br>';
                     $lc_text .= zen_get_buy_now_button($record['products_id'], $lc_button, $more_info_button);
@@ -331,7 +328,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_QUANTITY . '</label>';
                     $lc_text .= TEXT_PRODUCTS_QUANTITY . $listing_quantity;
                     break;
 
@@ -339,7 +335,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_WEIGHT . '</label>';
                     $lc_text .= $listing_weight;
                     break;
 
