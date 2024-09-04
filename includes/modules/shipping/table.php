@@ -122,8 +122,8 @@ class table extends ZenShipping
         $shipping = 0;
         for ($i = 0, $n = $size; $i < $n; $i += 2) {
             if (round($order_total, 9) <= $table_cost[$i]) {
-                if (strstr($table_cost[$i + 1], '%')) {
-                    $shipping = ($table_cost[$i + 1] / 100) * $order_total_amount;
+                if (str_ends_with($table_cost[$i + 1], '%')) {
+                    $shipping = (rtrim($table_cost[$i + 1], '%') / 100) * $order_total_amount;
                 } else {
                     $shipping = $table_cost[$i + 1];
                 }
