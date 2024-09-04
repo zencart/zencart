@@ -470,7 +470,8 @@ if (!empty($action)) {
                 <tr class="dataTableHeadingRow">
                   <th class="dataTableHeadingContent"><?= TABLE_HEADING_BANNERS ?></th>
                   <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_GROUPS ?></th>
-                  <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_STATISTICS ?></th>
+                  <th class="dataTableHeadingContent"><?= TABLE_HEADING_POSITIONS ?></th>
+                  <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_STATISTICS ?></th>
                   <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_STATUS ?></th>
                   <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_BANNER_OPEN_NEW_WINDOWS ?></th>
                   <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_BANNER_SORT_ORDER ?></th>
@@ -479,11 +480,11 @@ if (!empty($action)) {
               </thead>
               <tbody>
                 <?php
-                $banners_query_raw = "SELECT banners_id, banners_title, banners_image, banners_group, status,
+                $banners_query_raw = 'SELECT banners_id, banners_title, banners_image, banners_group, status,
                                              expires_date, expires_impressions, date_status_change, date_scheduled,
                                              date_added, banners_open_new_windows, banners_sort_order
-                                      FROM " . TABLE_BANNERS . "
-                                      ORDER BY banners_title, banners_group";
+                                      FROM ' . TABLE_BANNERS . '
+                                      ORDER BY banners_group, banners_title';
 // Split Page
 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['bID'])) {
@@ -530,7 +531,26 @@ if (!empty($action)) {
                     <td class="dataTableContent">
                       <a href="javascript:popupImageWindow('<?= zen_href_link(FILENAME_POPUP_IMAGE, 'banner=' . $banner['banners_id']) ?>')" title="View Banner"><i class="fa-regular fa-window-restore fa-lg txt-black" aria-hidden="true"></i></a>&nbsp;<?= $banner['banners_title'] ?></td>
                     <td class="dataTableContent text-right"><?= $banner['banners_group'] ?></td>
-                    <td class="dataTableContent text-right"><?= $banners_shown . ' / ' . $banners_clicked ?></td>
+                    <td class="dataTableContent">
+                        <?php
+                        $banner_positions = $db->Execute(
+                            'SELECT configuration_key, configuration_title, configuration_value
+                                                 FROM ' . TABLE_CONFIGURATION . '
+                                                 WHERE configuration_key LIKE "SHOW_BANNERS_GROUP_SET%"
+                                                 AND INSTR(configuration_value, "' . $banner['banners_group'] . '")'
+                        );
+                        // a banner group may be used in multiple positions: get each position
+                        $positions = [];
+                        foreach ($banner_positions as $banner_position) {
+                            // remove text prior to the hyphen in the configuraiton_title to leave the position (e.g. "Banner Display Group - Side Box banner_box_all"  "Banner Display Groups - Footer Position 3")
+                            // allows for optional spaces around hyphens
+                            $position_texts = preg_split('/\s?-\s?/', $banner_position['configuration_title']);
+                            $positions[] = $position_texts !== false ? $position_texts[1] : '';
+                        }
+                        echo '<div class="text-nowrap">' . implode('<br>', $positions) . '</div>';
+                        ?>
+                    </td>
+                    <td class="dataTableContent text-center"><?= $banners_shown . ' / ' . $banners_clicked ?></td>
                     <td class="dataTableContent text-center">
                       <?php if ($banner['status'] == '1') { ?>
                         <a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banner['banners_id'] . '&action=setflag&flag=0') ?>" data-toggle="tooltip" title="<?= IMAGE_ICON_STATUS_ON ?>"><?= zen_icon('enabled', '', '2x', false, true) ?></a>
