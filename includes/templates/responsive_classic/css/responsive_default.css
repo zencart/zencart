@@ -5,7 +5,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: DrByte 2024 Feb 23 Modified in v2.0.0-beta1 $
+ * @version $Id: Jeff Rutt 2024 Aug 20 Modified in v2.1.0-alpha2 $
  *
  */
 
@@ -34,7 +34,7 @@ input.cssButton.submit_button.button.button_search, .button_search:hover{font-si
 #navMain ul li{border:none;}
 
 /*bof center-boxes*/
-.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {clear:both;width:100%!important;height:auto;margin:0;padding:10px 0;}
+.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent,  div.centerBoxContentsFeaturedCategories.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {clear:both;width:100%!important;height:auto;margin:0;padding:10px 0;}
 
 /*bof side-boxes*/
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
@@ -45,6 +45,7 @@ div#whatsnew {display:none;visibility:hidden;}
 div#manufacturers {display:none;visibility:hidden;}
 div#reviews {display:none;visibility:hidden;}
 div#featured {display:none;visibility:hidden;}
+div#featuredcategories {display:none;visibility:hidden;}
 div#information {display:none;visibility:hidden;}
 div#moreinformation {display:none;visibility:hidden;}
 div#bannerbox {display:none;visibility:hidden;}
@@ -217,7 +218,7 @@ input.cssButton.submit_button.button.button_search, .button_search:hover{font-si
 #navMain ul li{border:none;}
 
 /*bof center-boxes*/
-.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48%!important;height:auto;margin:0;padding:10px 0;}
+.centerBoxContentsAlsoPurch, div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centeredContent, div.categoryListBoxContents.centeredContent, div.centerBoxContentsAlsoPurch.centeredContent, div.centerBoxContentsFeatured.centeredContent, div.centerBoxContentsFeaturedCategories.centeredContent,  div.centerBoxContentsSpecials.centeredContent, div.specialsListBoxContents, div.categoryListBoxContents {width:48%!important;height:auto;margin:0;padding:10px 0;}
 
 /* side-boxes */
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
@@ -228,6 +229,7 @@ div#whatsnew {display:none;visibility:hidden;}
 div#manufacturers {display:none;visibility:hidden;}
 div#reviews {display:none;visibility:hidden;}
 div#featured {display:none;visibility:hidden;}
+div#featuredcategories {display:none;visibility:hidden;}
 div#information {display:none;visibility:hidden;}
 div#moreinformation {display:none;visibility:hidden;}
 div#bannerbox {display:none;visibility:hidden;}

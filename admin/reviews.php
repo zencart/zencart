@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: Steve 2024 Aug 02 Modified in v2.1.0-alpha2 $
  */
 require 'includes/application_top.php';
 
@@ -217,7 +217,7 @@ if (!empty($action)) {
               </div>
               <div class="col-sm-9 col-md-6">
                 <span class="form-control" style="border:none; -webkit-box-shadow: none" title="<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating) ?>">
-                  <?php echo str_repeat(zen_icon('star-shadow', size: 'lg'), $rInfo->reviews_rating); ?>
+                  <?php echo str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$rInfo->reviews_rating); ?>
                   &nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></span>
               </div>
             </div>
@@ -347,7 +347,7 @@ if (!empty($action)) {
                     <?php if (count($languages_array) > 1) { ?>
                       <td class="dataTableContent text-center"><?php echo zen_get_language_icon($review['languages_id']); ?></td>
                     <?php } ?>
-                    <td class="dataTableContent"><?php echo str_repeat(zen_icon('star-shadow', size: 'lg'), $review['reviews_rating']) ?></td>
+                    <td class="dataTableContent"><?php echo str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$review['reviews_rating']) ?></td>
                     <td class="dataTableContent text-center"><?php echo zen_date_short($review['date_added']); ?></td>
                     <td  class="dataTableContent text-center">
                       <?php echo zen_draw_form('setflag_products', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=setflag&rID=' . $review['reviews_id']); ?>
@@ -407,7 +407,7 @@ if (!empty($action)) {
                   $contents[] = array('text' => ENTRY_REVIEW . '<br>' . zen_output_string_protected($rInfo->reviews_text));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' .
-                    str_repeat(zen_icon('star-shadow', size: 'lg'), $rInfo->reviews_rating));
+                    str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$rInfo->reviews_rating));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');
                   $contents[] = array('text' => TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format((float)$rInfo->average_rating, 2) . '%');

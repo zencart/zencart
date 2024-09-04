@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 23 Modified in v1.5.8-alpha2 $
+ * @version $Id: lat9 2024 Aug 28 Modified in v2.1.0-alpha2 $
  */
 namespace Zencart\LanguageLoader;
 
@@ -12,7 +12,7 @@ use Zencart\FileSystem\FileSystem;
 class FilesLanguageLoader extends BaseLanguageLoader
 {
     protected $mainLoader;
-    
+
     public function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
     {
         if ($this->mainLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath .  '/' . $this->templateDir)) {
@@ -22,7 +22,18 @@ class FilesLanguageLoader extends BaseLanguageLoader
         }
     }
 
-    public function loadFileDefineFile(string $defineFile): bool
+    public function loadModuleLanguageFile(string $language, string $fileName, string $module_type): bool
+    {
+        $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES;
+        $extraPath = '/modules/' . $module_type;
+        
+        if ($this->mainLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath .  '/' . $this->templateDir)) {
+            return $this->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $this->templateDir . '/' . $fileName);
+        }
+        return $this->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $fileName);
+    }
+
+    protected function loadFileDefineFile(string $defineFile): bool
     {
         $pathInfo = pathinfo(($defineFile));
         if (preg_match('~^lang\.~i', $pathInfo['basename'])) {
@@ -35,7 +46,7 @@ class FilesLanguageLoader extends BaseLanguageLoader
             return false;
         }
         $this->mainLoader->addLanguageFilesLoaded('legacy', $defineFile);
-        include_once($defineFile);
+        include_once $defineFile;
         return true;
     }
 }

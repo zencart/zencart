@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Feb 14 Modified in v2.0.0-beta1 $
+ * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
  */
 require('includes/application_top.php');
 
@@ -60,12 +60,7 @@ if ($cfg_group->RecordCount() == 0) {
     // multilanguage support:
     // For example, in admin/includes/languages/spanish/lang.configuration.php
     // define('CFG_GRP_TITLE_MY_STORE', 'Mi Tienda');
-    $str = $cfg_group->fields['configuration_group_title'];
-    $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '_', $str);
-    $const = 'CFG_GRP_TITLE_' . strtoupper($str);
-    if (defined($const)) {
-        $cfg_group->fields['configuration_group_title'] = constant($const);
-    }
+    $cfg_group->fields['configuration_group_title'] = zen_lookup_admin_menu_language_override('configuration_group_title', $cfg_group->fields['configuration_group_title'], $cfg_group->fields['configuration_group_title']);
 }
 
 if ($gID == 7) {

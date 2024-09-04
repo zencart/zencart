@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 24 Modified in v2.1.0-alpha2 $
  * structurally identical to specials.php, modifications should be replicated
  */
 require 'includes/application_top.php';
@@ -11,8 +11,8 @@ require 'includes/application_top.php';
 require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
-$currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
+$action = $_GET['action'] ?? '';
+$currentPage = (int)($_GET['page'] ?? 0);
 
 if (!empty($action)) {
   // -----

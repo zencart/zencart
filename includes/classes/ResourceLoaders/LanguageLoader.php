@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 23 Modified in v1.5.8-alpha2 $
+ * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
 
 namespace Zencart\LanguageLoader;
@@ -54,7 +54,7 @@ class LanguageLoader
     {
         $defs = $this->arrayLoader->loadModuleDefinesFromArrayFile(DIR_FS_CATALOG . 'includes/languages/', $language, $module_type, $languageFile);
 
-        $this->arrayLoader->makeConstants($defs); 
+        $this->arrayLoader->makeConstants($defs);
         $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . $module_type . '/' . $languageFile);
         return true; 
     }
@@ -93,6 +93,14 @@ class LanguageLoader
             return true;
         }
         return false;
+    }
+
+    public function loadModuleLanguageFile(string $language, string $fileName, string $moduleType): bool
+    {
+        $defineList = $this->arrayLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
+        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
+
+        return ($legacy_file_loaded || count($defineList) !== 0);
     }
 
     public function isFileAlreadyLoaded(string $defineFile): bool

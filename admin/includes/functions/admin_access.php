@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 23 Modified in v2.1.0-alpha1 $
+ * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
  */
 
 // The admin login slamming threshold is the minimum number of failed logins before an email is sent to the storeowner reporting ongoing failed logins
@@ -670,7 +670,7 @@ function zen_get_admin_pages(bool $menu_only): array
     $result = $db->Execute($sql);
     foreach ($result as $row) {
         $productTypes['_productTypes_' . $row['type_handler']] = [
-            'name' => $row['type_name'],
+            'name' => zen_lookup_admin_menu_language_override('product_type_name', $row['type_handler'], $row['type_name']),
             'file' => $row['type_handler'],
             'params' => '',
         ];

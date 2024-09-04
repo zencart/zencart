@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jul 30 Modified in v2.1.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 Aug 27 Modified in v2.1.0-alpha2 $
  */
 require('includes/application_top.php');
 
@@ -1346,7 +1346,7 @@ if ($show_orders_weights === true) {
                       ];
                       $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
                   }
-                  $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.billing_company, o.billing_name, o.billing_street_address, o.payment_module_code, o.shipping_module_code, o.orders_status, o.ip_address, o.language_code, o.delivery_state, o.delivery_country, o.customers_state, o.customers_country ";
+                  $new_fields .= ", o.customers_company, o.customers_email_address, o.customers_street_address, o.delivery_company, o.delivery_name, o.delivery_street_address, o.delivery_postcode, o.billing_company, o.billing_name, o.billing_street_address, o.billing_postcode, o.payment_module_code, o.shipping_module_code, o.orders_status, o.ip_address, o.language_code, o.delivery_state, o.delivery_country, o.customers_state, o.customers_country ";
 
                   $order_by = " ORDER BY o.orders_id DESC";
                   $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_SEARCH_PARMS', $keywords, $search, $search_distinct, $new_fields, $new_table, $order_by);
@@ -1408,6 +1408,9 @@ if ($show_orders_weights === true) {
                       $show_difference = zen_icon('status-red', TEXT_BILLING_SHIPPING_MISMATCH) . '&nbsp;';
                     }
                     if (!empty($orders->fields['delivery_street_address']) && (strtoupper($orders->fields['delivery_street_address']) !== strtoupper($orders->fields['billing_street_address']))) {
+                      $show_difference = zen_icon('status-red', TEXT_BILLING_SHIPPING_MISMATCH) . '&nbsp;';
+                    }
+                    if (strtoupper($orders->fields['delivery_postcode']) !== strtoupper($orders->fields['billing_postcode']) && trim($orders->fields['delivery_postcode']) !== '') {
                       $show_difference = zen_icon('status-red', TEXT_BILLING_SHIPPING_MISMATCH) . '&nbsp;';
                     }
                     //-Additional "difference" icons can be added on a per-order basis and/or additional icons to be added to the "action" column.

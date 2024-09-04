@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 23 Modified in v2.1.0-alpha1 $
+ * @version $Id: Jeff Rutt 2024 Aug 12 Modified in v2.1.0-alpha2 $
  * @private
  */
 
@@ -52,6 +52,7 @@ define('TABLE_EMAIL_ARCHIVE', DB_PREFIX . 'email_archive');
 define('TABLE_EZPAGES', DB_PREFIX . 'ezpages');
 define('TABLE_EZPAGES_CONTENT', DB_PREFIX . 'ezpages_content');
 define('TABLE_FEATURED', DB_PREFIX . 'featured');
+define('TABLE_FEATURED_CATEGORIES', DB_PREFIX . 'featured_categories');
 define('TABLE_FILES_UPLOADED', DB_PREFIX . 'files_uploaded');
 define('TABLE_GROUP_PRICING', DB_PREFIX . 'group_pricing');
 define('TABLE_GET_TERMS_TO_FILTER', DB_PREFIX . 'get_terms_to_filter');

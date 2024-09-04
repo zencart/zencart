@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Mar 10 Modified in v2.0.0-rc2 $
+ * @version $Id: Scott Wilson 2024 Aug 25 Modified in v2.1.0-alpha2 $
  */
 
 function page_has_help()
@@ -107,6 +107,7 @@ function page_has_help()
         FILENAME_REVIEWS => 'https://docs.zen-cart.com/user/admin_pages/catalog/reviews/',
         FILENAME_SPECIALS => 'https://docs.zen-cart.com/user/admin_pages/catalog/specials/',
         FILENAME_FEATURED => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured/',
+        FILENAME_FEATURED_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured_categories/',
         FILENAME_SALEMAKER => 'https://docs.zen-cart.com/user/admin_pages/catalog/salemaker/',
         FILENAME_PRODUCTS_EXPECTED => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
         FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/products/product_management_admin/', 

@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2024 Jul 22 Modified in v2.1.0-alpha1 $
+ * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
  */
 
 /**
@@ -1020,7 +1020,7 @@ function zen_remove_restrict_sub_categories($category_id, $product_type_id) {
 function zen_get_category_restricted_product_types($category_id)
 {
     global $db;
-    $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
+    $sql = "SELECT ptc.product_type_id as type_id, pt.type_name, pt.type_handler
              FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
              LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (pt.type_id = ptc.product_type_id)
              WHERE ptc.category_id = " . (int)$category_id;
@@ -1062,11 +1062,13 @@ function zen_set_category_image($category_id, $image_name = '')
 
 
 /**
- * @TODO - refactor to category object?
+ * @deprecated 2.1.0 use Category class object instead
  * Return any field from categories or categories_description table
  * Example: zen_categories_lookup('10', 'parent_id');
  */
 function zen_categories_lookup($categories_id, $what_field = 'categories_name', $language = '') {
+    trigger_error('Call to deprecated function zen_categories_lookup. Use Category class object instead', E_USER_DEPRECATED);
+
     global $db;
 
     if (empty($language)) $language = $_SESSION['languages_id'];
@@ -1245,6 +1247,9 @@ function zen_remove_category($category_id)
     $db->Execute("DELETE FROM " . TABLE_COUPON_RESTRICT . "
                   WHERE category_id = " . (int)$category_id);
 
+    $db->Execute("DELETE FROM " . TABLE_FEATURED_CATEGORIES . "
+                  WHERE categories_id = " . (int)$category_id);
+
     zen_record_admin_activity('Deleted category ' . (int)$category_id . ' from database via admin console.', 'warning');
 }
 
@@ -1310,11 +1315,11 @@ function zen_childs_in_category_count($category_id) {
 
 
 /**
- * @TODO - is this even used?
  * get categories_name for product
  * @param int $product_id
  * @return string
- * @deprecated
+ * @deprecated Use zen_get_product_details()
+ * @TODO - delete from core in v2.2.0 or later
  */
 function zen_get_categories_name_from_product($product_id) {
     trigger_error('Call to deprecated function zen_get_categories_name_from_product. Use zen_get_product_details() instead', E_USER_DEPRECATED);

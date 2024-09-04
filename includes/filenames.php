@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 23 Modified in v2.1.0-alpha1 $
+ * @version $Id: Jeff Rutt 2024 Aug 12 Modified in v2.1.0-alpha2 $
  */
 /**
  * define project filenames
@@ -97,6 +97,7 @@ define('FILENAME_GV_MAIL', 'gv_mail');
 define('FILENAME_GV_SENT', 'gv_sent');
 define('FILENAME_FEATURED','featured');
 define('FILENAME_FEATURED_PRODUCTS','featured_products');
+define('FILENAME_FEATURED_CATEGORIES','featured_categories');
 define('FILENAME_INFO_SHOPPING_CART', 'info_shopping_cart');
 define('FILENAME_LANGUAGES', 'languages');
 define('FILENAME_LAYOUT_CONTROLLER','layout_controller');
@@ -188,6 +189,7 @@ define('FILENAME_CATEGORIES_TABS','categories_tabs.php');
 define('FILENAME_CREDIT_CARDS', 'credit_cards.php');
 define('FILENAME_DATABASE_TEMPORARILY_DOWN','nddbc.html');
 define('FILENAME_EMAIL_EXTRAS','email_extras.php');
+define('FILENAME_FEATURED_CATEGORIES_MODULE','featured_categories.php');
 define('FILENAME_FEATURED_PRODUCTS_MODULE','featured_products.php');
 define('FILENAME_HEADER','header.php');
 define('FILENAME_ICON_NAMES','icon_names.php');
@@ -199,4 +201,5 @@ define('FILENAME_PREV_NEXT_DISPLAY', 'products_previous_next_display.php');
 define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
 define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
+
 

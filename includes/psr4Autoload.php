@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Jun 18 Modified in v2.1.0-alpha1 $
+ * @version $Id: Jeff Rutt 2024 Aug 07 Modified in v2.1.0-alpha2 $
  */
 /** @var \Aura\Autoload\Loader $psr4Autoloader */
 $psr4Autoloader->addPrefix('Zencart\QueryBuilder', DIR_FS_CATALOG . DIR_WS_CLASSES);
@@ -67,3 +67,4 @@ $psr4Autoloader->setClassFile('zcDate', DIR_FS_CATALOG . DIR_WS_CLASSES . 'zcDat
 $psr4Autoloader->setClassFile('zcPassword', DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.zcPassword.php');
 $psr4Autoloader->setClassFile('ZenShipping', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ZenShipping.php');
 $psr4Autoloader->setClassFile('Zencart\SessionHandler', DIR_FS_CATALOG . DIR_WS_CLASSES . 'SessionHandler.php' );
+$psr4Autoloader->setClassFile('Category', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Category.php' );

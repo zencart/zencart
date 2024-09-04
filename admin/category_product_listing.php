@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jun 05 Modified in v2.1.0-alpha1 $
+ * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -11,7 +11,7 @@ require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (isset($_POST['products_id'])) {
-    $product_type = (int)zen_get_products_type($_POST['products_id']);
+    $product_type = zen_get_products_type($_POST['products_id']);
 } elseif (isset($_GET['product_type'])) {
     $product_type = (int)$_GET['product_type'];
 } else {
@@ -166,7 +166,7 @@ if (!empty($action)) {
             $cascaded_prod_cat_for_delete = [];
             $cascaded_prod_cat_for_delete[] = $categories[$i]['id'];
             // determine product-type-specific override script for this product
-            $product_type = (int)zen_get_products_type($category_product);
+            $product_type = zen_get_products_type($category_product);
             // now loop thru the delete_product_confirm script for each product in the current category
             require zen_get_admin_module_from_directory($product_type, 'delete_product_confirm.php');
           }
@@ -1273,7 +1273,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               foreach ($product_types as $restrict_type) {
                 $product_restrict_types_array[] = [
                   'id' => $restrict_type['type_id'],
-                  'text' => $restrict_type['type_name'],
+                  'text' => zen_lookup_admin_menu_language_override('product_type_name', $restrict_type['type_handler'], $restrict_type['type_name']),
                 ];
               }
               ?>

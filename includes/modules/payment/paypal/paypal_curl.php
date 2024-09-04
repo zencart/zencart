@@ -2,9 +2,9 @@
 /**
  * paypal_curl.php communications class for PayPal Express Checkout / Website Payments Pro / Payflow Pro payment methods
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: Scott Wilson 2024 Aug 28 Modified in v2.1.0-alpha2 $
  */
 
 /**
@@ -578,7 +578,9 @@ class paypal_curl extends base {
     //$this->log('['.$string . "]\n\n[" . print_r($pairs, true) .']');
     $values = array();
     foreach ($pairs as $pair) {
-      list($name, $value) = explode('=', $pair, 2);
+      $arr = explode('=', $pair, 2);
+      $name = $arr[0] ?? '';
+      $value = $arr[1] ?? '';
       $values[$name] = str_replace('|', '&amp;', $value);
     }
     return $values;
@@ -620,7 +622,8 @@ class paypal_curl extends base {
       if (!$response) {
         $this->log('No response from server' . $errors, $token);
       } else {
-        if ((isset($values['RESULT']) && $values['RESULT'] != 0) || strstr($values['ACK'],'Failure')) {
+        if ((isset($values['RESULT']) && $values['RESULT'] != 0) ||
+           (isset($values['ACK']) && strstr($values['ACK'], 'Failure'))) {
           $this->log($response . $errors, $token);
         }
       }

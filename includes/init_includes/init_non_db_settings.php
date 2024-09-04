@@ -1,14 +1,14 @@
 <?php
 /**
- * Initializes non-database constants that were previously set in language modules,
+ * Initializes non-database constants that were previously set in language or template files,
  * overridable via site-specific /init_includes processing.  See
  * /includes/init_includes/dist-init_site_specific_non_db_settings.php.
  *
  * Note: These settings apply to both the storefront and the admin!
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Feb 23 Modified in v1.5.8a $
+ * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
 // -----
 // If the site has provided a set of overrides for these base values, they will
@@ -24,6 +24,11 @@ $non_db_settings = [
     // Storefront settings.
     //
     'CART_SHIPPING_METHOD_ZIP_REQUIRED' => 'true',  //- Either 'true' or 'false'.  Used by tpl_modules_shipping_estimator.php
+
+    'ORDER_STATUS_DISPLAY_PAYMENT' => 'true',       //- Either 'true' or 'false'. Used by tpl_order_status_default.php
+    'ORDER_STATUS_DISPLAY_SHIPPING' => 'true',      //- "
+    'ORDER_STATUS_DISPLAY_PRODUCTS' => 'true',      //- "
+    'ORDER_STATUS_SLAM_COUNT' => '3',               //- A numeric string (defaults to '3'). Used by order_status/header_php.php
 
     // Shared - Storefront and Admin 
     'TOPMOST_CATEGORY_PARENT_ID' => '0',

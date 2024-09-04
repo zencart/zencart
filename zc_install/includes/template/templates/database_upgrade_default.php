@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2024 Jan 20 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 27 Modified in v2.1.0-alpha2 $
  */
 
 require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_progress_bar.php';
@@ -31,12 +31,12 @@ if (count($newArray)) { ?>
                     <?php
                     foreach ($newArray as $key => $value) { ?>
                         <?php
-                        $from = ($key === 0) ? $dbVersion : $newArray[($key - 1)]; ?>
+                        $from = ($key === 0) ? ($dbVersion ?? $versionArray[$value]['required']): $newArray[($key - 1)]; ?>
                         <?php
-                        $to = $newArray[$key]; ?>
-                        <div id="label-version-<?= str_replace('.', '_', $newArray[$key]) ?>" class="checkbox-wrapper">
-                            <label class="form-check-label" for="version-<?= str_replace('.', '_', $newArray[$key]) ?>">
-                                <input class="form-check-input" type="checkbox" name="version-<?= str_replace('.', '_', $newArray[$key]) ?>" id="version-<?= str_replace('.', '_', $newArray[$key]) ?>" checked="CHECKED">
+                        $to = $value; ?>
+                        <div id="label-version-<?= str_replace('.', '_', $value) ?>" class="checkbox-wrapper">
+                            <label class="form-check-label" for="version-<?= str_replace('.', '_', $value) ?>">
+                                <input class="form-check-input" type="checkbox" name="version-<?= str_replace('.', '_', $value) ?>" id="version-<?= str_replace('.', '_', $value) ?>" checked="CHECKED">
                                 <?= $from . ' to  ' . $to ?></label>
                         </div>
                     <?php
@@ -77,6 +77,11 @@ if (count($newArray)) { ?>
             </div>
         </fieldset>
     <?php
+    } elseif (empty($dbVersion)) { ?>
+        <div>
+            <div class="alert alert-danger round"><?= TEXT_CANNOT_DETECT_VERSION ?></div>
+        </div>
+    <?php
     } else { ?>
         <div>
             <div class="alert alert-success round"><?= TEXT_NO_REMAINING_UPGRADE_STEPS ?></div>
@@ -91,6 +96,9 @@ if (count($newArray)) { ?>
 <script>
     async function validateForm(form) {
         $('#upgradeResponsesHolder').html('');
+        if (form.id === 'db_upgrade_done') {
+            form.submit();
+        }
         $.ajax({
             type: "POST",
             timeout: 10000,
@@ -118,6 +126,7 @@ if (count($newArray)) { ?>
         let deferred = $.Deferred();
         let promise = deferred.promise();
         let length = $('input[type=checkbox]:checked').length;
+        let instance = 0;
         let error = false;
         let errorList = null;
         let response = null;
@@ -130,8 +139,9 @@ if (count($newArray)) { ?>
                         error = true;
                         return promise;
                     } else {
-                        console.log('Requesting upgrade for version ' + version);
-                        return doRequest(version);
+                        instance ++;
+                        console.log('Requesting upgrade for version ' + version + '; Step ' + instance + ' of ' + length);
+                        return doRequest(version, length, instance);
                     }
                 },
                 function (response, status, ajax) {
@@ -177,11 +187,11 @@ if (count($newArray)) { ?>
             }
         });
 
-        function doRequest(version) {
+        function doRequest(version, size, instance) {
             return $.ajax({
                 type: "post",
                 url: "ajaxLoadUpdatesSql.php",
-                data: {version: version},
+                data: {version: version, batchSize: size, batchInstance: instance},
                 dataType: "JSON"
             });
         }

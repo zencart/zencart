@@ -6,10 +6,10 @@
  * Displays greetings, welcome text (define-page content), and various centerboxes depending on switch settings in Admin
  * Centerboxes are called as necessary
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Aug 24 Modified in v2.1.0-alpha2 $
  */
 ?>
 <div class="centerColumn" id="indexDefault">
@@ -32,7 +32,6 @@
   $show_display_category = $db->Execute(SQL_SHOW_PRODUCT_INFO_MAIN);
   while (!$show_display_category->EOF) {
 ?>
-
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_PRODUCTS') { ?>
 <?php
 /**
@@ -41,6 +40,8 @@
 ?>
 <?php require($template->get_template_dir('tpl_modules_featured_products.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_products.php'); ?>
 <?php } ?>
+<?php
+?>
 
 <?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_SPECIALS_PRODUCTS') { ?>
 <?php
@@ -68,9 +69,19 @@
 ?>
 <?php include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_UPCOMING_PRODUCTS)); ?><?php } ?>
 
+<?php if ($show_display_category->fields['configuration_key'] == 'SHOW_PRODUCT_INFO_MAIN_FEATURED_CATEGORIES') { ?>
+<?php
+/**
+ * display the Featured Categories Center Box
+ */
+?>
+<?php require($template->get_template_dir('tpl_modules_featured_categories.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_featured_categories.php'); ?>
+<?php } ?>
+
 
 <?php
   $show_display_category->MoveNext();
 } // !EOF
 ?>
 </div>
+

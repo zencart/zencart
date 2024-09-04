@@ -74,10 +74,10 @@ jobs:
         run: php vendor/bin/phpunit  --verbose --testsuite FeatureAdmin --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: artifacts
+          name: artifacts-${{ matrix.php-version }}
           path: not_for_release/testFramework/logs/console
           if-no-files-found: warn
           retention-days: 90

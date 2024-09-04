@@ -2,9 +2,9 @@
 /**
  * tpl_brands_default
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Apr 30 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Aug 24 Modified in v2.1.0-alpha2 $
  */
 ?>
 <div id="indexBrandsList" class="centerColumn">
@@ -29,6 +29,8 @@ if (empty($brands['featured']) && empty($brands['other'])) {
         $list_box_contents = [];
         $row = 0;
         $col = 0;
+        $col_width = floor(100 / BRANDS_MAX_COLUMNS);
+
         foreach ($brands['featured'] as $record) {
             $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $record['manufacturers_id']) . '">';
             $lc_text .= '<div class="brandImage">' . zen_image(DIR_WS_IMAGES . $record['manufacturers_image'], $record['manufacturers_name'], BRANDS_IMAGE_WIDTH, BRANDS_IMAGE_HEIGHT) . '</div>';
@@ -36,7 +38,7 @@ if (empty($brands['featured']) && empty($brands['other'])) {
             $lc_text .= '</a>';
 
             $list_box_contents[$row][$col] = [
-                'params' => 'class="brandCell centeredContent col130"',
+                'params' => 'class="brandCell centeredContent"' . ' ' . 'style="width:' . $col_width . '%;"',
                 'text' => $lc_text,
             ];
 
@@ -66,6 +68,8 @@ if (empty($brands['featured']) && empty($brands['other'])) {
         $list_box_contents = [];
         $row = 0;
         $col = 0;
+        $col_width = floor(100 / BRANDS_MAX_COLUMNS);
+
         foreach ($brands['other'] as $record) {
             $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $record['manufacturers_id']) . '">';
             $lc_text .= '<div class="brandImage">' . zen_image(DIR_WS_IMAGES . $record['manufacturers_image'], $record['manufacturers_name'], BRANDS_IMAGE_WIDTH, BRANDS_IMAGE_HEIGHT) . '</div>';
@@ -73,7 +77,7 @@ if (empty($brands['featured']) && empty($brands['other'])) {
             $lc_text .= '</a>';
 
             $list_box_contents[$row][$col] = [
-                'params' => 'class="brandCell centeredContent col130"',
+                'params' => 'class="brandCell centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
                 'text' => $lc_text,
             ];
 

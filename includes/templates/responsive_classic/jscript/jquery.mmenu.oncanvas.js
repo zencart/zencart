@@ -290,7 +290,7 @@
 			);
 
 			//	Add markup
-			this.$pnls = $( '<div class="' + _c.panels + '"/>' )
+			this.$pnls = $( '<div class="' + _c.panels + '" />' )
 				.append( this.$menu.children( this.conf.panelNodetype ) )
 				.prependTo( this.$menu );
 
@@ -370,7 +370,7 @@
 
 						if ( $t.is( 'ul, ol' ) )
 						{
-							$t.wrap( '<div class="' + _c.panel + '"/>' );
+							$t.wrap( '<div class="' + _c.panel + '" />' );
 							$p = $t.parent();
 						}
 						else
@@ -415,7 +415,7 @@
 							if ( $p.parent().is( '.' + _c.listview ) )
 							{
 								var id = $t.attr( 'id' ),
-									$b = $( '<a class="' + _c.next + '" href="#' + id + '" data-target="#' + id + '"/>' ).insertBefore( $a );
+									$b = $( '<a class="' + _c.next + '" href="#' + id + '" data-target="#' + id + '" />' ).insertBefore( $a );
 
 								if ( $a.is( 'span' ) )
 								{
@@ -441,7 +441,7 @@
 										$p = $a.closest( '.' + _c.panel );
 								}
 
-								var $navbar = $( '<div class="' + _c.navbar + '"/>' );
+								var $navbar = $( '<div class="' + _c.navbar + '" />' );
 
 								if ( $p.length )
 								{
@@ -464,8 +464,8 @@
 									}
 
 									$navbar
-										.append( '<a class="' + _c.btn + ' ' + _c.prev + '" href="#' + id + '" data-target="#' + id + '"/>' )
-										.append( $('<a class="' + _c.title + '"' + ( _url ? ' href="' + _url + '"' : '' ) + '/>').text( $a.text() ) )
+										.append( '<a class="' + _c.btn + ' ' + _c.prev + '" href="#' + id + '" data-target="#' + id + '" />' )
+										.append( $('<a class="' + _c.title + '"' + ( _url ? ' href="' + _url + '"' : '' ) + ' />').text( $a.text() ) )
 										.prependTo( $t );
 
 									if ( that.opts.navbar.add )

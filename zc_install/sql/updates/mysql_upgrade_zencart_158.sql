@@ -2,10 +2,10 @@
 # * This SQL script upgrades the core Zen Cart database structure from v1.5.7 to v1.5.8
 # *
 # * @access private
-# * @copyright Copyright 2003-2023 Zen Cart Development Team
+# * @copyright Copyright 2003-2024 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Scott C Wilson 2023 Mar 18 Modified in v1.5.8a $
+# * @version $Id: DrByte 2024 Aug 27 Modified in v2.1.0-alpha2 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -136,12 +136,12 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 #############
 ### Added v158 bring address formats up to date
 
-### Move any none core address formats created by users
+### Move any non-core address formats created by users
 UPDATE address_format SET address_format_id = address_format_id + 13  WHERE address_format_id > 7;
 UPDATE countries SET address_format_id = address_format_id + 13  WHERE address_format_id > 7;
 UPDATE orders SET customers_address_format_id = customers_address_format_id + 13 WHERE customers_address_format_id  > 7;
-UPDATE orders SET  delivery_address_format_id = delivery_address_format_id + 13 WHERE delivery_address_format_id > 7;
-UPDATE orders SET  billing_address_format_id = billing_address_format_id + 13 WHERE billing_address_format_id > 7;
+UPDATE orders SET delivery_address_format_id = delivery_address_format_id + 13 WHERE delivery_address_format_id > 7;
+UPDATE orders SET billing_address_format_id = billing_address_format_id + 13 WHERE billing_address_format_id > 7;
 
 ### Updated address summary for original address format address_summary
 UPDATE address_format SET address_summary = 'Default $city $country' WHERE address_format_id = 1;

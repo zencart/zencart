@@ -11,7 +11,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Mar 01 Modified in v2.0.0-rc1 $
+ * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
 // -----
 // Identify whether the link to the 'accessibility' page is included in the "Information" sidebox.
@@ -91,3 +91,11 @@
 // false ... Do not show the column headings; this is the default.
 //
 //$show_table_header_row = false;
+
+// -----
+// Identify whether the link to the 'order_status' page is included in the "Information" sidebox.
+// 
+// true .... Display the link; this is the default.
+// false ... Do not show the link.
+//
+//$show_order_status_sidebox_link = true;

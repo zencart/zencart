@@ -3,7 +3,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Jun 12 Modified in v2.1.0-alpha1 $
+ * @version $Id: lat9 2024 Aug 30 Modified in v2.1.0-alpha2 $
  */
 namespace Zencart\LanguageLoader;
 
@@ -20,24 +20,63 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
 
     public function loadLanguageForView(): void
     {
-        $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage . '.php');
-        // Pick up additional plugin files which are substring matches
-        // Example: lang.create_account_register.php on create_account page.
-        $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
-        $tfiles = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . "lang." . $this->currentPage  . '(.+)\.php$~i');
-
-        $directory = DIR_WS_LANGUAGES . $_SESSION['language'];
-        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, '~^' . "lang." . $this->currentPage . '(.+)\.php$~i');
-        $files = array_merge($files, $tfiles);
-
-        foreach ($files as $file) {
-           $file = substr($file, 5);
-           $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
+        $languages = [
+            $_SESSION['language'],
+        ];
+        if ($_SESSION['language'] !== $this->fallback) {
+            $languages[] = $this->fallback;
         }
-        foreach ($this->pluginList as $plugin) {
-            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
-            $this->loadExtraLanguageFiles($pluginDir, $_SESSION['language'], $this->currentPage . '.php');
-            $this->loadExtraLanguageFiles($pluginDir, $_SESSION['language'], $this->currentPage . '.php', '/default');
+
+        $this->loadCurrentPageBaseFile($languages);
+
+        foreach ($languages as $next_lang) {
+            $baseDir = DIR_WS_LANGUAGES . $next_lang;
+
+            $this->loadCurrentPageExtraFilesFromDir($baseDir . '/' . $this->templateDir);
+
+            foreach ($this->pluginList as $plugin) {
+                $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/' . $next_lang;
+
+                $this->loadCurrentPageExtraFilesFromDir($pluginDir . '/default');
+                $this->loadCurrentPageExtraFilesFromDir($pluginDir);
+            }
+
+            $this->loadCurrentPageExtraFilesFromDir($baseDir);
+        }
+    }
+
+    protected function loadCurrentPageBaseFile(array $languages): void
+    {
+        $filename = 'lang.' . $this->currentPage . '.php';
+        foreach ($languages as $next_lang) {
+            $baseDir = DIR_WS_LANGUAGES . $next_lang . '/';
+
+            $defines = $this->loadArrayDefineFile($baseDir . $this->templateDir . '/' . $filename);
+            $this->makeConstants($defines);
+
+            foreach ($this->pluginList as $plugin) {
+                $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/' . $next_lang;
+
+                $defines = $this->loadArrayDefineFile($pluginDir . '/default/' . $filename);
+                $this->makeConstants($defines);
+
+                $defines = $this->loadArrayDefineFile($pluginDir . '/' . $filename);
+                $this->makeConstants($defines);
+            }
+
+            $defines = $this->loadArrayDefineFile($baseDir . $filename);
+            $this->makeConstants($defines);
+        }
+    }
+
+    protected function loadCurrentPageExtraFilesFromDir(string $directory): void
+    {
+        $files_regex = '~^' . 'lang.' . $this->currentPage  . '(.+)\.php$~i';
+
+        $files = $this->fileSystem->listFilesFromDirectoryAlphaSorted($directory, $files_regex);
+        foreach ($files as $file) {
+            $defines = $this->loadArrayDefineFile($directory . '/' . $file);
+            $this->makeConstants($defines);
         }
     }
 
@@ -70,7 +109,7 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $this->addLanguageDefines($defineList);
 
         foreach ($extraFiles as $file) {
-            $file = basename($file, '.php') . ".php";
+            $file = basename($file, '.php') . '.php';
             $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
         }
     }

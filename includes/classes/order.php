@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Jun 06 Modified in v2.1.0-alpha1 $
+ * @version $Id: pRose on charmes 2024 Aug 29 Modified in v2.1.0-alpha2 $
  */
 /**
  * order class
@@ -687,7 +687,7 @@ class order extends base
                 foreach ($products[$i]['attributes'] as $option => $value) {
 
                     $sql = "SELECT popt.products_options_name, poval.products_options_values_name,
-                                   pa.options_values_price, pa.price_prefix
+                                   pa.options_values_price, pa.price_prefix, pa.attributes_discounted
                             FROM " . TABLE_PRODUCTS_OPTIONS . " popt,
                                  " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval,
                                  " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -715,6 +715,7 @@ class order extends base
                         'value_id' => $value,
                         'prefix' => $attributes->fields['price_prefix'],
                         'price' => $attributes->fields['options_values_price'],
+                        'discountable' => $attributes->fields['attributes_discounted'],
                     ];
 
                     $this->notify('NOTIFY_ORDER_CART_ADD_ATTRIBUTE_LIST', ['index' => $index, 'subindex' => $subindex, 'products' => $products[$i], 'attributes' => $attributes]);

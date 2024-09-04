@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2005 CardinalCommerce
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Apr 25 Modified in v2.0.1 $
+ * @version $Id: Scott Wilson 2024 Aug 28 Modified in v2.1.0-alpha2 $
  */
 /**
  * The transaction URL for the Cardinal Centinel 3D-Secure service.
@@ -1976,6 +1976,9 @@ class paypaldp extends base {
         $errorInfo = 'Problem occurred during admin updates using PayPal Website Payments Pro.';
     }
 
+    $response['L_ERRORCODE0'] = ($response['L_ERRORCODE0'] ?? '');
+    $response['L_SHORTMESSAGE0'] = ($response['L_SHORTMESSAGE0'] ?? '');
+    $response['L_LONGMESSAGE0'] = ($response['L_LONGMESSAGE0'] ?? '');
     switch($operation) {
       case 'DoDirectPayment':
         if ($basicError ||
@@ -2013,7 +2016,6 @@ class paypaldp extends base {
             $errorNum = '15005';
           }
           if (!empty($response['RESPMSG'])) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED . ' ' . $errorText;
-
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALDP_INVALID_RESPONSE || $errorText == MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? (isset($response['RESULT']) && $response['RESULT'] != 0 ? MODULE_PAYMENT_PAYPALDP_CANNOT_BE_COMPLETED . ' (' . $errorNum . ')' : $errorNum) . ' ' . urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ' ' . $response['CURL_ERRORS']) : '';
           $explain = "\n\nProblem occurred while customer #" . $_SESSION['customer_id'] . ' -- ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' -- was attempting checkout.' . "\n";
           $detailedEmailMessage = MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0']  . ' ' . ($response['RESPMSG'] ?? ''). "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . ($response['L_ERRORCODE1'] ?? '') . "\n" . ($response['L_SHORTMESSAGE1'] ?? '') . "\n" . ($response['L_LONGMESSAGE1'] ?? ''). ($response['L_ERRORCODE2'] ?? '') . "\n" . ($response['L_SHORTMESSAGE2'] ?? '') . "\n" . ($response['L_LONGMESSAGE2']  ?? ''). ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . $errorInfo . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));

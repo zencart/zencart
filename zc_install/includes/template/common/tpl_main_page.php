@@ -2,13 +2,19 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 17 Modified in v2.1.0-alpha2 $
  */
 
 $show_language_selector = (count($languagesInstalled) > 1);
 if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
     $show_language_selector = true;
 }
+$skip_header = false;
+
+if (empty($hasFatalErrors) && empty($hasWarnErrors) && (!empty($hasUpdatedConfigFile) || !empty($hasSaneConfigFile) || !empty($configFilePresent))) {
+    $skip_header = true;
+}
+
 ?>
 <body id="<?= $body_id ?>">
 <div class="container">
@@ -53,7 +59,7 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
                 $header_text = constant('TEXT_HEADER_MAIN');
             }
 
-            if (!empty($header_text)) { ?>
+            if (!empty($header_text && empty($skip_header))) { ?>
                 <div class="alert alert-primary"><?= $header_text ?></div>
             <?php } ?>
 

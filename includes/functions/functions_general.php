@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Dec 31 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 Aug 25 Modified in v2.1.0-alpha2 $
  */
 
 
@@ -118,7 +118,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
 
 // show case only supercedes all other settings
     if (STORE_STATUS != '0') {
-        return '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
+        return '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . (int)$product_id, 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
     }
 
 // 0 = normal shopping

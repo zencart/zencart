@@ -9,7 +9,60 @@
 if (\PHP_VERSION_ID >= 80400) {
     return;
 }
-if (!function_exists('mb_ucfirst')) {
+if (!function_exists('array_find')) {
+    function array_find(array $array, callable $callback)
+    {
+        foreach ($array as $key => $value) {
+            if ($callback($value, $key)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('array_find_key')) {
+    function array_find_key(array $array, callable $callback)
+    {
+        foreach ($array as $key => $value) {
+            if ($callback($value, $key)) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('array_any')) {
+    function array_any(array $array, callable $callback): bool
+    {
+        foreach ($array as $key => $value) {
+            if ($callback($value, $key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('array_all')) {
+    function array_all(array $array, callable $callback): bool
+    {
+        foreach ($array as $key => $value) {
+            if (!$callback($value, $key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+
+if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
     function mb_ucfirst(string $string, ?string $encoding = null): string
     {
         if (null === $encoding) {
@@ -22,11 +75,6 @@ if (!function_exists('mb_ucfirst')) {
             throw new \ValueError(sprintf('mb_ucfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
         }
 
-        // BC for PHP 7.3 and lower
-        if (!$validEncoding) {
-            throw new \ValueError(sprintf('mb_ucfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
         $firstChar = mb_substr($string, 0, 1, $encoding);
         $firstChar = mb_convert_case($firstChar, MB_CASE_TITLE, $encoding);
 
@@ -34,7 +82,7 @@ if (!function_exists('mb_ucfirst')) {
     }
 }
 
-if (!function_exists('mb_lcfirst')) {
+if (!function_exists('mb_lcfirst') && function_exists('mb_substr')) {
     function mb_lcfirst(string $string, ?string $encoding = null): string
     {
         if (null === $encoding) {
@@ -47,15 +95,75 @@ if (!function_exists('mb_lcfirst')) {
             throw new \ValueError(sprintf('mb_lcfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
         }
 
-        // BC for PHP 7.3 and lower
-        if (!$validEncoding) {
-            throw new \ValueError(sprintf('mb_lcfirst(): Argument #2 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
         $firstChar = mb_substr($string, 0, 1, $encoding);
         $firstChar = mb_convert_case($firstChar, MB_CASE_LOWER, $encoding);
 
         return $firstChar . mb_substr($string, 1, null, $encoding);
+    }
+}
+
+if (!function_exists('mb_internal_trim') && !function_exists('mb_trim') && function_exists('mb_convert_encoding')) {
+    /** Polyfill helper function, not to be called directly */
+    function mb_internal_trim(string $regex, string $string, ?string $characters, ?string $encoding, string $function): string
+    {
+        if (null === $encoding) {
+            $encoding = mb_internal_encoding();
+        }
+
+        try {
+            $validEncoding = @mb_check_encoding('', $encoding);
+        } catch (\ValueError $e) {
+            throw new \ValueError(sprintf('%s(): Argument #3 ($encoding) must be a valid encoding, "%s" given', $function, $encoding));
+        }
+
+        if ('' === $characters) {
+            return null === $encoding ? $string : mb_convert_encoding($string, $encoding);
+        }
+
+        if ('UTF-8' === $encoding || \in_array(strtolower($encoding), ['utf-8', 'utf8'], true)) {
+            $encoding = 'UTF-8';
+        }
+
+        $string = mb_convert_encoding($string, 'UTF-8', $encoding);
+
+        if (null !== $characters) {
+            $characters = mb_convert_encoding($characters, 'UTF-8', $encoding);
+        }
+
+        if (null === $characters) {
+            $characters = "\\0 \f\n\r\t\v\u{00A0}\u{1680}\u{2000}\u{2001}\u{2002}\u{2003}\u{2004}\u{2005}\u{2006}\u{2007}\u{2008}\u{2009}\u{200A}\u{2028}\u{2029}\u{202F}\u{205F}\u{3000}\u{0085}\u{180E}";
+        } else {
+            $characters = preg_quote($characters);
+        }
+
+        $string = preg_replace(sprintf($regex, $characters), '', $string);
+
+        if ('UTF-8' === $encoding) {
+            return $string;
+        }
+
+        return mb_convert_encoding($string, $encoding, 'UTF-8');
+    }
+}
+
+if (!function_exists('mb_trim')) {
+    function mb_trim(string $string, ?string $characters = null, ?string $encoding = null): string
+    {
+        return mb_internal_trim('{^[%s]+|[%1$s]+$}Du', $string, $characters, $encoding, __FUNCTION__);
+    }
+}
+
+if (!function_exists('mb_ltrim')) {
+    function mb_ltrim(string $string, ?string $characters = null, ?string $encoding = null): string
+    {
+        return mb_internal_trim('{^[%s]+}Du', $string, $characters, $encoding, __FUNCTION__);
+    }
+}
+
+if (!function_exists('mb_rtrim')) {
+    function mb_rtrim(string $string, ?string $characters = null, ?string $encoding = null): string
+    {
+        return mb_internal_trim('{[%s]+$}Du', $string, $characters, $encoding, __FUNCTION__);
     }
 }
 
@@ -85,7 +193,7 @@ if (!function_exists('json_validate')) {
     }
 }
 
-if (!function_exists('mb_str_pad') && function_exists('mb_substr')) {
+if (!function_exists('mb_str_pad') && function_exists('mb_substr') && function_exists('mb_strlen')) {
     function mb_str_pad(string $string, int $length, string $pad_string = ' ', int $pad_type = \STR_PAD_RIGHT, ?string $encoding = null): string
     {
         if (!\in_array($pad_type, [\STR_PAD_RIGHT, \STR_PAD_LEFT, \STR_PAD_BOTH], true)) {
@@ -99,11 +207,6 @@ if (!function_exists('mb_str_pad') && function_exists('mb_substr')) {
         try {
             $validEncoding = @mb_check_encoding('', $encoding);
         } catch (\ValueError $e) {
-            throw new \ValueError(sprintf('mb_str_pad(): Argument #5 ($encoding) must be a valid encoding, "%s" given', $encoding));
-        }
-
-        // BC for PHP 7.3 and lower
-        if (!$validEncoding) {
             throw new \ValueError(sprintf('mb_str_pad(): Argument #5 ($encoding) must be a valid encoding, "%s" given', $encoding));
         }
 
@@ -128,6 +231,125 @@ if (!function_exists('mb_str_pad') && function_exists('mb_substr')) {
 
                 return mb_substr(str_repeat($pad_string, $leftPaddingLength), 0, $leftPaddingLength, $encoding).$string.mb_substr(str_repeat($pad_string, $rightPaddingLength), 0, $rightPaddingLength, $encoding);
         }
+    }
+}
+
+if (!function_exists('stream_context_set_options')) {
+    function stream_context_set_options($context, array $options): bool { return stream_context_set_option($context, $options); }
+}
+
+if (!function_exists('str_increment')) {
+    function str_increment(string $string): string
+    {
+        if ('' === $string) {
+            throw new \ValueError('str_increment(): Argument #1 ($string) cannot be empty');
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $string)) {
+            throw new \ValueError('str_increment(): Argument #1 ($string) must be composed only of alphanumeric ASCII characters');
+        }
+
+        if (is_numeric($string)) {
+            $offset = stripos($string, 'e');
+            if (false !== $offset) {
+                $char = $string[$offset];
+                ++$char;
+                $string[$offset] = $char;
+                ++$string;
+
+                switch ($string[$offset]) {
+                    case 'f':
+                        $string[$offset] = 'e';
+                        break;
+                    case 'F':
+                        $string[$offset] = 'E';
+                        break;
+                    case 'g':
+                        $string[$offset] = 'f';
+                        break;
+                    case 'G':
+                        $string[$offset] = 'F';
+                        break;
+                }
+
+                return $string;
+            }
+        }
+
+        return ++$string;
+    }
+}
+
+if (!function_exists('str_decrement')) {
+    function str_decrement(string $string): string
+    {
+        if ('' === $string) {
+            throw new \ValueError('str_decrement(): Argument #1 ($string) cannot be empty');
+        }
+
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $string)) {
+            throw new \ValueError('str_decrement(): Argument #1 ($string) must be composed only of alphanumeric ASCII characters');
+        }
+
+        if (preg_match('/\A(?:0[aA0]?|[aA])\z/', $string)) {
+            throw new \ValueError(sprintf('str_decrement(): Argument #1 ($string) "%s" is out of decrement range', $string));
+        }
+
+        if (!\in_array(substr($string, -1), ['A', 'a', '0'], true)) {
+            return implode('', \array_slice(str_split($string), 0, -1)).\chr(\ord(substr($string, -1)) - 1);
+        }
+
+        $carry = '';
+        $decremented = '';
+
+        for ($i = \strlen($string) - 1; $i >= 0; --$i) {
+            $char = $string[$i];
+
+            switch ($char) {
+                case 'A':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+                    $carry = 'Z';
+
+                    break;
+                case 'a':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+                    $carry = 'z';
+
+                    break;
+                case '0':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+                    $carry = '9';
+
+                    break;
+                case '1':
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+
+                    break;
+                default:
+                    if ('' !== $carry) {
+                        $decremented = $carry.$decremented;
+                        $carry = '';
+                    }
+
+                    if (!\in_array($char, ['A', 'a', '0'], true)) {
+                        $decremented = \chr(\ord($char) - 1).$decremented;
+                    }
+            }
+        }
+
+        return $decremented;
     }
 }
 
