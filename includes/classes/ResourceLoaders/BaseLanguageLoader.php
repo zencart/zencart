@@ -16,6 +16,7 @@ class BaseLanguageLoader
     protected array $languageDefines = [];
     protected array $pluginList;
     protected string $templateDir;
+    protected string $zcPluginsDir;
 
     public string $currentPage;
 
@@ -26,5 +27,6 @@ class BaseLanguageLoader
         $this->fallback = $fallback;
         $this->fileSystem = new FileSystem();
         $this->templateDir = $templateDir;
+        $this->zcPluginsDir = DIR_FS_CATALOG . 'zc_plugins/';
     }
 }

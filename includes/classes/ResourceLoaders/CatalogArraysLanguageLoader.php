@@ -47,7 +47,7 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         // definitions.
         //
         foreach ($this->pluginList as $plugin) {
-            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
+            $pluginDir = $this->zcPluginsDir . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
 
             $definesListPlugin = $this->loadCurrentPageExtraFilesFromDir($pluginDir . $this->fallback);
             if ($_SESSION['language'] !== $this->fallback) {
@@ -96,9 +96,8 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         // Next, check each enabled zc_plugin to see if any page-specific language file
         // is present.
         //
-        $pluginBaseDir = DIR_FS_CATALOG . 'zc_plugins/';
         foreach ($this->pluginList as $plugin) {
-            $pluginDir = $pluginBaseDir . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
+            $pluginDir = $this->zcPluginsDir . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
 
             $mainFile = $pluginDir . $_SESSION['language'] . $currentPageBaseFile;
             $fallbackFile = $pluginDir . $this->fallback . $currentPageBaseFile;
