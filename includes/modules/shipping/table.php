@@ -12,7 +12,6 @@
  */
 class table extends ZenShipping
 {
-
     /**
      * constructor
      *
@@ -104,10 +103,10 @@ class table extends ZenShipping
 
         // shipping adjustment
         switch (MODULE_SHIPPING_TABLE_MODE) {
-            case ('price'):
+            case 'price':
                 $order_total = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
                 break;
-            case ('weight'):
+            case 'weight':
                 $order_total = $shipping_weight;
                 break;
             case ('item'):
@@ -118,7 +117,7 @@ class table extends ZenShipping
         $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
 
         $table_cost = preg_split("/[:,]/", MODULE_SHIPPING_TABLE_COST);
-        $size = sizeof($table_cost);
+        $size = count($table_cost);
         $shipping = 0;
         for ($i = 0, $n = $size; $i < $n; $i += 2) {
             if (round($order_total, 9) <= $table_cost[$i]) {
@@ -132,17 +131,17 @@ class table extends ZenShipping
         }
 
         $show_box_weight = '';
-        if (MODULE_SHIPPING_TABLE_MODE == 'weight') {
+        if (MODULE_SHIPPING_TABLE_MODE === 'weight') {
             $shipping = $shipping * $shipping_num_boxes;
             // show boxes if weight
             switch (SHIPPING_BOX_WEIGHT_DISPLAY) {
-                case (0):
+                case 0:
                     $show_box_weight = '';
                     break;
-                case (1):
+                case 1:
                     $show_box_weight = ' (' . $shipping_num_boxes . ' ' . TEXT_SHIPPING_BOXES . ')';
                     break;
-                case (2):
+                case 2:
                     $show_box_weight = ' (' . number_format($shipping_weight * $shipping_num_boxes, 2) . TEXT_SHIPPING_WEIGHT . ')';
                     break;
                 default:
@@ -158,7 +157,7 @@ class table extends ZenShipping
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_TABLE_TEXT_WAY,
-                    'cost' => $shipping + (MODULE_SHIPPING_TABLE_HANDLING_METHOD == 'Box' ? MODULE_SHIPPING_TABLE_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_TABLE_HANDLING),
+                    'cost' => $shipping + (MODULE_SHIPPING_TABLE_HANDLING_METHOD === 'Box' ? MODULE_SHIPPING_TABLE_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_TABLE_HANDLING),
                 ],
             ],
         ];
@@ -216,7 +215,17 @@ class table extends ZenShipping
      */
     function keys(): array
     {
-        return ['MODULE_SHIPPING_TABLE_STATUS', 'MODULE_SHIPPING_TABLE_COST', 'MODULE_SHIPPING_TABLE_MODE', 'MODULE_SHIPPING_TABLE_HANDLING', 'MODULE_SHIPPING_TABLE_HANDLING_METHOD', 'MODULE_SHIPPING_TABLE_TAX_CLASS', 'MODULE_SHIPPING_TABLE_TAX_BASIS', 'MODULE_SHIPPING_TABLE_ZONE', 'MODULE_SHIPPING_TABLE_SORT_ORDER'];
+        return [
+            'MODULE_SHIPPING_TABLE_STATUS',
+            'MODULE_SHIPPING_TABLE_COST',
+            'MODULE_SHIPPING_TABLE_MODE',
+            'MODULE_SHIPPING_TABLE_HANDLING',
+            'MODULE_SHIPPING_TABLE_HANDLING_METHOD',
+            'MODULE_SHIPPING_TABLE_TAX_CLASS',
+            'MODULE_SHIPPING_TABLE_TAX_BASIS',
+            'MODULE_SHIPPING_TABLE_ZONE',
+            'MODULE_SHIPPING_TABLE_SORT_ORDER',
+        ];
     }
 
     function help()
