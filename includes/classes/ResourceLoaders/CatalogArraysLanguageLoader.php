@@ -82,35 +82,113 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
 
     protected function loadLanguageExtraDefinitions(): void
     {
-        $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions');
-        $this->addLanguageDefines($defineList);
+        // -----
+        // First, load the fallback (i.e. 'english') extra language definitions. If the current
+        // session language is different than 'english', load that language's files; they'll
+        // overwrite any like-named definitions in the 'english' fallback.
+        //
+        // Any definitions found here will overwrite any definitions in the 'main' language files.
+        //
+        $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $this->fallback, '/extra_definitions');
 
-        $defineList = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions', 'catalog');
-        $this->addLanguageDefines($defineList);
+        if ($_SESSION['language'] !== $this->fallback) {
+            $defineListLang = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions');
+            $defineList = array_merge($defineList, $defineListLang);
+        }
 
-        $defineList = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions/default', 'catalog');
-        $this->addLanguageDefines($defineList);
-        
-        $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions/' . $this->templateDir);
-        $this->addLanguageDefines($defineList);
+        // -----
+        // Next, load the fallback (i.e. 'english') extra language definitions from any enabled zc_plugins. If the current
+        // session language is different than 'english', load that language's files too; they'll
+        // overwrite any like-named definitions in the 'english' fallback.
+        //
+        // Any definitions found here will overwrite any non-plugin extra definitions as well as any definitions
+        // in the 'main' language files.
+        //
+        $defineListPlugin = $this->pluginLoadArraysFromDirectory($this->fallback, '/extra_definitions', 'catalog');
+        if ($_SESSION['language'] !== $this->fallback) {
+            $defineListLang = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions', 'catalog');
+            $defineListPlugin = array_merge($defineListPlugin, $defineListLang);
+        }
+        $defineList = array_merge($defineList, $defineListPlugin);
+
+        // -----
+        // Next, load the fallback (i.e. 'english') extra language definitions from any enabled zc_plugins' 'default' directory.
+        // If the current session language is different than 'english', load that language's files too; they'll
+        // overwrite any like-named definitions in the 'english' fallback.
+        //
+        // Any definitions found here will overwrite any non-'default' plugins' extra definitions, non-plugin extra definitions
+        // as well as any definitions in the 'main' language files.
+        //
+        $defineListPlugin = $this->pluginLoadArraysFromDirectory($this->fallback, '/extra_definitions/default', 'catalog');
+        if ($_SESSION['language'] !== $this->fallback) {
+            $defineListLang = $this->pluginLoadArraysFromDirectory($_SESSION['language'], '/extra_definitions/default', 'catalog');
+            $defineListPlugin = array_merge($defineListPlugin, $defineListLang);
+        }
+        $defineList = array_merge($defineList, $defineListPlugin);
+
+        // -----
+        // Finally, load any extra definitions in the current template's override directory, **for the current session language*.
+        //
+        // Any definitions found here overwrite **all** previous-found definitions.
+        //
+        $defineListTemplate = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $_SESSION['language'], '/extra_definitions/' . $this->templateDir);
+
+        // -----
+        // Add these extra definitions to the array of definitions to be created, if not further overridden
+        // by any 'legacy' language files to be loaded.
+        //
+        $this->addLanguageDefines(array_merge($defineList, $defineListTemplate));
     }
 
     protected function loadMainLanguageFiles(): void
     {
-        $extraFiles = [FILENAME_EMAIL_EXTRAS, FILENAME_HEADER, FILENAME_BUTTON_NAMES, FILENAME_ICON_NAMES, FILENAME_OTHER_IMAGES_NAMES, FILENAME_CREDIT_CARDS, FILENAME_WHOS_ONLINE, FILENAME_META_TAGS];
+        // -----
+        // First, load the main language file(s). The 'lang.english.php' file is always
+        // loaded, with its constant values possibly overwritten by a different main
+        // language file (e.g. lang.spanish.php).
+        //
+        // These definitions are added to the to-be-generated constants' list.
+        //
         $mainFile = DIR_WS_LANGUAGES . 'lang.' . $_SESSION['language'] . '.php';
         $fallbackFile = DIR_WS_LANGUAGES . 'lang.' . $this->fallback . '.php';
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         $this->addLanguageDefines($defineList);
 
-        $mainFile = DIR_WS_LANGUAGES . $this->templateDir . '/lang.' . $_SESSION['language'] . '.php';
-        $fallbackFile = DIR_WS_LANGUAGES . 'lang.' . $_SESSION['language'] . '.php';
-        $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
+        // -----
+        // Next, if there is a template-override file **in the current session's language**,
+        // load those definitions, adding to the to-be-generated constants' list.
+        //
+        // Any definitions found in this file overwrite the 'base' main language files.
+        //
+        $template_dir = '/' . $this->templateDir;
+        $templateMainFile = DIR_WS_LANGUAGES . $_SESSION['language'] . $template_dir . '/' . $mainFile;
+        $defineList = $this->loadArrayDefineFile($templateMainFile);
         $this->addLanguageDefines($defineList);
 
+        // -----
+        // Finally, load the various 'other' language files that have definitions used
+        // on multiple pages.
+        //
+        // Each of these files is first loaded from the 'fallback' (i.e. 'english') subdirectory,
+        // followed by the current session language directory and finally (if present) in the current
+        // language's template-override directory.
+        //
+        $extraFiles = [
+            FILENAME_EMAIL_EXTRAS,
+            FILENAME_HEADER,
+            FILENAME_BUTTON_NAMES,
+            FILENAME_ICON_NAMES,
+            FILENAME_OTHER_IMAGES_NAMES,
+            FILENAME_CREDIT_CARDS,
+            FILENAME_WHOS_ONLINE,
+            FILENAME_META_TAGS,
+        ];
         foreach ($extraFiles as $file) {
             $file = basename($file, '.php') . '.php';
-            $this->loadExtraLanguageFiles(DIR_WS_LANGUAGES, $_SESSION['language'], $file);
+            $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, $file);
+
+            $defineList = $this->loadArrayDefineFile(DIR_WS_LANGUAGES . $_SESSION['language'] . $template_dir . '/lang.' . $file);
+            $this->addLanguageDefines($defineList);
         }
     }
 }
