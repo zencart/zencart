@@ -13,10 +13,6 @@
   $new_banner_search = zen_build_banners_group(SHOW_BANNERS_GROUP_SET_ALL);
 
   $my_banner_filter = '';
-  // filter for display secure pages
-  if ($request_type == 'SSL') {
-    $my_banner_filter = " and banners_on_ssl=1 ";
-  }
 
   $sql = "select banners_id from " . TABLE_BANNERS . " where status = 1 " . $new_banner_search . $my_banner_filter . " order by banners_sort_order";
   $banners_all = $db->Execute($sql);

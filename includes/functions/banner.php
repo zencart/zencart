@@ -81,16 +81,9 @@
    */
   function zen_display_banner($action = '', $identifier = '') {
     if ($identifier == '' || $action == '') return FALSE;
-    global $db, $request_type;
+    global $db;
 
-    switch ($request_type) {
-      case ('SSL'):
-        $my_banner_filter = " and banners_on_ssl = 1 ";
-        break;
-      case ('NONSSL'):
-        $my_banner_filter = '';
-        break;
-    }
+    $my_banner_filter = '';
 
     if ($action == 'dynamic') {
       $new_banner_search = zen_build_banners_group($identifier);
@@ -161,16 +154,9 @@
  */
   function zen_banner_exists($action = '', $identifier = '') {
     if ($identifier == '' || $action == '') return FALSE;
-    global $db, $request_type;
+    global $db;
 
-    switch ($request_type) {
-      case ('SSL'):
-        $my_banner_filter = " AND banners_on_ssl= 1 ";
-        break;
-      case ('NONSSL'):
-        $my_banner_filter = '';
-        break;
-    }
+    $my_banner_filter = '';
 
     if ($action == 'dynamic') {
       $new_banner_search = zen_build_banners_group($identifier);
