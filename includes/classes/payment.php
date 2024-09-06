@@ -103,7 +103,7 @@ class payment
         for ($i = 0, $n = count($include_modules); $i < $n; $i++) {
             $next_module = $include_modules[$i];
 
-            if (!$languageLoader->loadModuleLanguageFile($_SESSION['language'], $next_module['file'], 'payment')) {
+            if (!$languageLoader->loadModuleLanguageFile($next_module['file'], 'payment')) {
                 $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', $next_module['file'], 'false');
                 if (is_object($messageStack)) {
                     if (IS_ADMIN_FLAG === false) {

@@ -95,12 +95,12 @@ class LanguageLoader
         return false;
     }
 
-    public function loadModuleLanguageFile(string $language, string $fileName, string $moduleType): bool
+    public function loadModuleLanguageFile(string $fileName, string $moduleType): bool
     {
-        $defineList = $this->arrayLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
-        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
+        $array_constants_created = $this->arrayLoader->loadModuleLanguageFile($fileName, $moduleType);
+        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($fileName, $moduleType);
 
-        return ($legacy_file_loaded || count($defineList) !== 0);
+        return ($legacy_file_loaded === true || $array_constants_created === true);
     }
 
     public function isFileAlreadyLoaded(string $defineFile): bool

@@ -90,7 +90,7 @@ class shipping
         }
 
         foreach ($modules_to_quote as $quote_module) {
-            if (!$languageLoader->loadModuleLanguageFile($_SESSION['language'], $quote_module['file'], 'shipping')) {
+            if (!$languageLoader->loadModuleLanguageFile($quote_module['file'], 'shipping')) {
                 $language_dir = (IS_ADMIN_FLAG === false) ? DIR_WS_LANGUAGES : (DIR_FS_CATALOG . DIR_WS_LANGUAGES);
                 $lang_file = zen_get_file_directory($language_dir . $_SESSION['language'] . '/modules/shipping/', $quote_module['file'], 'false');
 

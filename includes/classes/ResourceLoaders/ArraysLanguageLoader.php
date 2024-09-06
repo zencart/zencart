@@ -22,6 +22,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $constants_made = false;
         foreach ($defines as $defineKey => $defineValue) {
             if (defined($defineKey)) {
+                $constants_made = true;
                 continue;
             }
             preg_match_all('/%{2}([^%]+)%{2}/', $defineValue, $matches, PREG_PATTERN_ORDER);
@@ -93,19 +94,58 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $this->makeConstants($defineList);
     }
 
-    public function loadModuleLanguageFile(string $language, string $fileName, string $module_type): array
+    public function loadModuleLanguageFile(string $fileName, string $module_type): bool
     {
-        $defineList = $this->loadModuleDefinesFromArrayFile($language, $fileName, $module_type);
+        // -----
+        // First, gather the 'base' 'english' language file for the given order_total/payment/shipping module. If
+        // the current session's language is **other than** 'english', the file for that language (if present)
+        // overwrites any of the 'english' language constants.
+        //
+        $defineList = $this->loadModuleDefinesFromArrayFile($this->fallback, $fileName, $module_type);
+        if ($_SESSION['language'] !== $this->fallback) {
+            $defineList = array_merge($defineList, $this->loadModuleDefinesFromArrayFile($_SESSION['language'], $fileName, $module_type));
+        }
 
-        $defineListPlugins = $this->pluginLoadDefinesFromArrayFile($language, $fileName, 'catalog', '/modules/' . $module_type);
+        // -----
+        // Next, gather any 'english' language file from all zc_plugin's 'base' modules' directory; if the
+        // current session's language is **other than** 'english', see if any file for that language is
+        // provided by any enabled plugin.
+        //
+        // Any language definitions found in the plugins' files overwrite any previously-loaded ones.
+        //
+        $defineListPlugins = $this->pluginLoadDefinesFromArrayFile($this->fallback, $fileName, 'catalog', '/modules/' . $module_type);
         $defineList = array_merge($defineList, $defineListPlugins);
+        if ($_SESSION['language'] !== $this->fallback) {
+            $defineListPlugins = $this->pluginLoadDefinesFromArrayFile($_SESSION['language'], $fileName, 'catalog', '/modules/' . $module_type);
+            $defineList = array_merge($defineList, $defineListPlugins);
+        }
 
-        $defineListTemplate = $this->loadModuleDefinesFromArrayFile($language, $fileName, $module_type, $this->templateDir . '/');
+        // -----
+        // Next, gather any 'english' language file from all zc_plugin's 'default' modules' directory; if the
+        // current session's language is **other than** 'english', see if any file for that language is
+        // provided by any enabled plugin.
+        //
+        // Any language definitions found in the plugins' files overwrite any previously-loaded ones.
+        //
+        $defineListPlugins = $this->pluginLoadDefinesFromArrayFile($this->fallback, $fileName, 'catalog', '/modules/' . $module_type . '/default');
+        $defineList = array_merge($defineList, $defineListPlugins);
+        if ($_SESSION['language'] !== $this->fallback) {
+            $defineListPlugins = $this->pluginLoadDefinesFromArrayFile($_SESSION['language'], $fileName, 'catalog', '/modules/' . $module_type . '/default');
+            $defineList = array_merge($defineList, $defineListPlugins);
+        }
+
+        // -----
+        // Finally, gather any template-override definitions **for the current session language**. Any language
+        // definitions found here overwrite any previously-loaded ones.
+        //
+        $defineListTemplate = $this->loadModuleDefinesFromArrayFile($_SESSION['language'], $fileName, $module_type, $this->templateDir . '/');
         $defineList = array_merge($defineList, $defineListTemplate);
 
-        $this->makeConstants($defineList);
-
-        return $defineList;
+        // -----
+        // Create the language constants from the definitions found and return an indication of whether/not
+        // constants were made (or pre-existing).
+        //
+        return $this->makeConstants($defineList);
     }
 
     protected function loadDefinesFromArrayFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): array
