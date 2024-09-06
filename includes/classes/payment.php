@@ -5,8 +5,10 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Oct 26 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\ModuleFinder;
 use Zencart\Traits\NotifierManager;
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -50,7 +52,7 @@ class payment
 
     public function __construct($module = '')
     {
-        global $PHP_SELF, $language, $credit_covers, $messageStack, $languageLoader;
+        global $language, $credit_covers, $messageStack, $languageLoader, $installedPlugins;
 
         $this->doesCollectsCardDataOnsite = false;
 
@@ -63,25 +65,31 @@ class payment
             return;
         }
 
+        // -----
+        // Locate all payment modules, looking in both /includes/modules/payment
+        // and for those provided by zc_plugins.  Note that any module provided by a
+        // zc_plugin overrides the processing present in any 'base' file.
+        //
+        $moduleFinder = new ModuleFinder('payment', new Filesystem());
+        $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
+
         $include_modules = [];
 
-        if (!empty($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.') + 1)), $this->modules)) {
+        if (!empty($module) && in_array($module . '.php', $this->modules) && isset($modules_found[$module . '.php'])) {
             $this->selected_module = $module;
 
             $include_modules[] = ['class' => $module, 'file' => $module . '.php'];
         } else {
             // Free Payment Only shows
-            $freecharger_enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS === 'True');
+            $freecharger_enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS === 'True' && isset($modules_found['freecharger.php']));
             if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
                 $this->selected_module = $module;
-                if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . '/payment/' . 'freecharger.php')) {
-                    $include_modules[] = ['class'=> 'freecharger', 'file' => 'freecharger.php'];
-                }
+                $include_modules[] = ['class'=> 'freecharger', 'file' => 'freecharger.php'];
             } else {
                 // All Other Payment Modules show
                 foreach ($this->modules as $value) {
                     // double check that the module really exists before adding to the array
-                    if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . '/payment/' . $value)) {
+                    if (isset($modules_found[$value])) {
                         $class = pathinfo($value, PATHINFO_FILENAME);
                         // Don't show Free Payment Module
                         if ($class !== 'freecharger') {
@@ -107,7 +115,7 @@ class payment
                 continue;
             }
 
-            include_once DIR_WS_MODULES . 'payment/' . $next_module['file'];
+            include_once DIR_FS_CATALOG . $modules_found[$next_module['file']] . $next_module['file'];
 
             $this->paymentClass = new $next_module['class']();
             $this->notify('NOTIFY_PAYMENT_MODULE_ENABLE');

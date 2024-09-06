@@ -6,7 +6,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: $
+ * @version $Id: DrByte 2024 Aug 24 New in v2.1.0-alpha2 $
  */
 
 // Upgrader format: [target version => ['required' => pre-existing version]]

@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 23 Modified in v1.5.8-alpha2 $
+ * @version $Id: lat9 2024 Aug 18 Modified in v2.1.0-alpha2 $
  */
 namespace Zencart\LanguageLoader;
 
@@ -16,6 +16,7 @@ class BaseLanguageLoader
     protected array $languageDefines = [];
     protected array $pluginList;
     protected string $templateDir;
+    protected string $zcPluginsDir;
 
     public string $currentPage;
 
@@ -26,5 +27,6 @@ class BaseLanguageLoader
         $this->fallback = $fallback;
         $this->fileSystem = new FileSystem();
         $this->templateDir = $templateDir;
+        $this->zcPluginsDir = DIR_FS_CATALOG . 'zc_plugins/';
     }
 }

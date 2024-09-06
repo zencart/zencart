@@ -40,7 +40,8 @@ class queryFactory extends base
     private $ignored_error_codes = [
         2002, // connection refused via socket
         2003, // cannot connect to host
-        2006, // server has gone away
+        2006, // server has gone away / (MySQL server wait timeout)
+        4031, // server has gone away since MySQL 8.0.24
         2013, // lost connection during query
         1040, // too many connections
         1053, // server shutdown in progress
@@ -180,7 +181,7 @@ class queryFactory extends base
 
         // second attempt in case of 2006 response
         if (!$zp_db_resource) {
-            if (mysqli_errno($this->link) == 2006) {
+            if (in_array([2006, 4031], mysqli_errno($this->link), true)) {
                 $this->link = false;
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
                 // run the query directly, bypassing the queryCache

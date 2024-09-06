@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 24 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2024 Aug 11 Modified in v2.1.0-alpha2 $
  */
 
 ////
@@ -184,11 +184,6 @@ $iconMap = [
   'new-window' => 'fa-square txt-orange',
   'new-window-off' => [
     'fa-square fa-stack-2x opacity-25 txt-orange',
-    'fa-xmark fa-stack-1x txt-red'
-  ],
-  'ssl-on' => 'fa-square txt-blue',
-  'ssl-off' => [
-    'fa-square fa-stack-2x opacity-25 txt-blue',
     'fa-xmark fa-stack-1x txt-red'
   ],
   'line-chart' => 'fa-line-chart txt-black',

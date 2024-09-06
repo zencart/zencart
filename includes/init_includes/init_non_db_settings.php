@@ -6,9 +6,9 @@
  *
  * Note: These settings apply to both the storefront and the admin!
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Feb 23 Modified in v1.5.8a $
+ * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
 // -----
 // If the site has provided a set of overrides for these base values, they will

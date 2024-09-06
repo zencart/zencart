@@ -1,9 +1,9 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Jun 02 New in v1.5.8-alpha $
+ * @version $Id: lat9 2024 Aug 28 Modified in v2.1.0-alpha2 $
  */
 namespace Zencart\LanguageLoader;
 
@@ -19,13 +19,7 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
 
     protected function loadLanguageForView(): void
     {
-        $defineList = $this->loadDefinesFromArrayFile(DIR_WS_LANGUAGES, $this->fallback, $this->currentPage);
-        $this->addLanguageDefines($defineList);
-
-        if ($_SESSION['language'] !== $this->fallback) {
-            $defineList = $this->loadDefinesFromArrayFile(DIR_WS_LANGUAGES, $_SESSION['language'], $this->currentPage);
-            $this->addLanguageDefines($defineList);
-        }
+        $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, $this->currentPage);
 
         $defineList = $this->pluginLoadDefinesFromArrayFile($this->fallback, $this->currentPage, 'admin', '');
         $this->addLanguageDefines($defineList);
@@ -57,45 +51,38 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
 
     protected function loadBaseLanguageFiles()
     {
+        // -----
+        // First, load the main language file(). The 'lang.english.php' file is always
+        // loaded, with its constant values possibly overwritten by a different main
+        // language file (e.g. lang.spanish.php).
+        //
+        // These definitions are added to the to-be-generated constants' list.
+        //
         $mainFile = DIR_WS_LANGUAGES . 'lang.' . $_SESSION['language'] . '.php';
         $fallbackFile = DIR_WS_LANGUAGES . 'lang.' . $this->fallback . '.php';
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         $this->addLanguageDefines($defineList);
 
-        $defineList = $this->loadDefinesFromArrayFile(DIR_WS_LANGUAGES, $this->fallback, 'gv_name.php');
-        $this->addLanguageDefines($defineList);
+        // -----
+        // Next, load some other files with multi-page-use constants, adding their
+        // definitions to the to-be-generated constants' list.
+        //
+        // Each file is first loaded from the 'english' sub-directory for the given
+        // directory and then, if the session's language is non-english, overwritten
+        // by any such file found in that language sub-directory (e.g. 'spanish').
+        //
+        $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, 'gv_name.php');
+        $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, FILENAME_EMAIL_EXTRAS);
+        $this->loadDefinesFromDirFileWithFallback(DIR_FS_CATALOG . DIR_WS_LANGUAGES, FILENAME_OTHER_IMAGES_NAMES);
 
-        if ($_SESSION['language'] !== $this->fallback) {
-            $defineList = $this->loadDefinesFromArrayFile(DIR_WS_LANGUAGES, $_SESSION['language'], 'gv_name.php');
+        // -----
+        // Finally, if the 'lang.other_images_names.php' has a template-override file **in the
+        // current session's language**, load those definitions, adding to the
+        // to-be-generated constants' list.
+        //
+        if ($this->fileSystem->hasTemplateLanguageOverride($this->templateDir, DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES)) {
+            $defineList = $this->loadDefinesFromArrayFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES, '/' . $this->templateDir);
             $this->addLanguageDefines($defineList);
-        }
-
-        $defineList = $this->loadDefinesFromArrayFile(DIR_WS_LANGUAGES, $this->fallback, FILENAME_EMAIL_EXTRAS);
-        $this->addLanguageDefines($defineList);
-
-        if ($_SESSION['language'] !== $this->fallback) {
-            $defineList = $this->loadDefinesFromArrayFile(DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_EMAIL_EXTRAS);
-            $this->addLanguageDefines($defineList);
-        }
-
-        $defineList = $this->loadDefinesFromArrayFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $this->fallback, FILENAME_OTHER_IMAGES_NAMES);
-        $this->addLanguageDefines($defineList);
-
-        if ($_SESSION['language'] !== $this->fallback) {
-            $defineList = $this->loadDefinesFromArrayFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES);
-            $this->addLanguageDefines($defineList);
-        }
-
-        if ($this->fileSystem->hasTemplateLanguageOverride($this->templateDir, DIR_FS_CATALOG . DIR_WS_LANGUAGES, $this->fallback, FILENAME_OTHER_IMAGES_NAMES)) {
-            $defineList = $this->loadDefinesFromArrayFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $this->fallback, FILENAME_OTHER_IMAGES_NAMES, $this->templateDir . '/');
-            $this->addLanguageDefines($defineList);
-        }
-
-        if ($_SESSION['language'] !== $this->fallback) {
-            if ($this->fileSystem->hasTemplateLanguageOverride($this->templateDir, DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES)) {
-                $defineList = $this->loadDefinesFromArrayFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES, $this->templateDir . '/');
-                $this->addLanguageDefines($defineList);
-            }
         }
     }
 }

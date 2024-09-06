@@ -5,8 +5,10 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 19 Modified in v2.0.0-beta1 $
+ * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\ModuleFinder;
 use Zencart\Traits\NotifierManager;
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -59,14 +61,23 @@ class shipping
      */
     protected function initialize_modules($module = null): void
     {
-        global $PHP_SELF, $messageStack, $languageLoader;
+        global $messageStack, $languageLoader, $installedPlugins;
+
+        // -----
+        // Locate all shipping modules, looking in both /includes/modules/shipping
+        // and for those provided by zc_plugins.  Note that any module provided by a
+        // zc_plugin overrides the processing present in any 'base' file.
+        //
+        $moduleFinder = new ModuleFinder('shipping', new Filesystem());
+        $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
         $modules_to_quote = [];
 
-        if (!empty($module) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.') + 1)), $this->modules))) {
+        $module_name = (empty($module)) ? '0' : substr($module['id'], 0, strpos($module['id'], '_'));
+        if (!empty($module) && in_array($module_name . '.php', $this->modules) && isset($modules_found[$module_name])) {
             $modules_to_quote[] = [
-                'class' => substr($module['id'], 0, strpos($module['id'], '_')),
-                'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.') + 1)),
+                'class' => $module_name,
+                'file' => $module_name . '.php',
             ];
         } else {
             foreach ($this->modules as $value) {
@@ -94,10 +105,10 @@ class shipping
             }
 
             $this->enabled = true;
-            $module_file = DIR_FS_CATALOG . DIR_WS_MODULES . 'shipping/' . $quote_module['file'];
+
             $this->notify('NOTIFY_SHIPPING_MODULE_ENABLE', $quote_module['class'], $quote_module['class']);
-            if ($this->enabled) {
-                include_once $module_file;
+            if ($this->enabled && isset($modules_found[$quote_module['file']])) {
+                include_once DIR_FS_CATALOG . $modules_found[$quote_module['file']] . $quote_module['file'];
                 $GLOBALS[$quote_module['class']] = new $quote_module['class']();
 
                 $enabled = $this->check_enabled($GLOBALS[$quote_module['class']]);

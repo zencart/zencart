@@ -292,7 +292,6 @@ if ($num_products_count > 0) {
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
                     $lc_text .= '<div class="list-model">';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MODEL . '</label>';
                     $lc_text .= $listing_model;
                     $lc_text .= '</div>';
                     break;
@@ -313,7 +312,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MANUFACTURER . '</label>';
                     $lc_text .= '<a class="mfgLink list-mfg" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
                     break;
 
@@ -321,20 +319,15 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    // if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_PRICE . '</label>';
                     $lc_text .= '<div class="list-price">';
                     $lc_text .= $listing_price;
                     $lc_text .= '</div>';
-//                    $lc_text .= '<br><br>';
                     $lc_text .= zen_get_buy_now_button($record['products_id'], $lc_button, $more_info_button);
-//                    $lc_text .= '<br>';
                     $lc_text .= zen_get_products_quantity_min_units_display($record['products_id']);
-//                    $lc_text .= '<br>';
                     if (zen_get_show_product_switch($record['products_id'], 'ALWAYS_FREE_SHIPPING_IMAGE_SWITCH')) {
                         if (zen_get_product_is_always_free_shipping($record['products_id'])) {
                             $lc_text .= '<br>';
                             $lc_text .= TEXT_PRODUCT_FREE_SHIPPING_ICON;
-//                            $lc_text .= '<br>';
                         }
                     }
                     break;
@@ -344,7 +337,6 @@ if ($num_products_count > 0) {
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
                     $lc_text .= '<div class="list-quantity">';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_QUANTITY . '</label>';
                     $lc_text .= TEXT_PRODUCTS_QUANTITY . $listing_quantity;
                     $lc_text .= '</div>';
                     break;
@@ -354,7 +346,6 @@ if ($num_products_count > 0) {
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
                     $lc_text .= '<div class="list-weight">';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_WEIGHT . '</label>';
                     $lc_text .= $listing_weight;
                     $lc_text .= '</div>';
                     break;

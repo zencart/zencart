@@ -4,22 +4,32 @@
  *
  * Template stub used to display categories-tabs output
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
+ * @version $Id: v2.1.0-alpha3 $
  */
 
-  include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CATEGORIES_TABS));
+include DIR_WS_MODULES . zen_get_module_directory(FILENAME_CATEGORIES_TABS);
+
+if (CATEGORIES_TABS_STATUS === '1' && (!empty($links_list) || !empty($links_list_by_category))) {
 ?>
-<?php if (CATEGORIES_TABS_STATUS == '1' && sizeof($links_list) >= 1) { ?>
+
 <div id="navCatTabsWrapper">
 <div id="navCatTabs">
 <ul>
-<?php for ($i=0, $n=sizeof($links_list); $i<$n; $i++) { ?>
-  <li><?php echo $links_list[$i];?></li>
+<?php foreach (($links_list_by_category ?? $links_list) as $link_key => $link_val) { ?>
+    <?php
+    // Since v2.1.0, if $links_list_by_category is not empty,
+    // then $link_key is the category_id prefixed by the letter 'c'.
+    // So, $category_id = ltrim($link_key, 'c')
+    // ... which can then be used to query alternate details about the category or its products
+    // ... and therefore can be used inside this loop to do more things with this menu
+    ?>
+    <li><?php echo $link_val;?></li>
 <?php } ?>
 </ul>
 </div>
 </div>
 <?php } ?>
+

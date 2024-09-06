@@ -1,10 +1,22 @@
 /**
-* jquery.matchHeight.js master
+* jquery-match-height 0.7.2 by @liabru
 * http://brm.io/jquery-match-height/
 * License: MIT
 */
 
-;(function($) { // eslint-disable-line no-extra-semi
+;(function(factory) { // eslint-disable-line no-extra-semi
+    'use strict';
+    if (typeof define === 'function' && define.amd) {
+        // AMD
+        define(['jquery'], factory);
+    } else if (typeof module !== 'undefined' && module.exports) {
+        // CommonJS
+        module.exports = factory(require('jquery'));
+    } else {
+        // Global
+        factory(jQuery);
+    }
+})(function($) {
     /*
     *  internal
     */
@@ -131,7 +143,7 @@
     *  plugin global options
     */
 
-    matchHeight.version = 'master';
+    matchHeight.version = '0.7.2';
     matchHeight._groups = [];
     matchHeight._throttle = 80;
     matchHeight._maintainScroll = false;
@@ -176,7 +188,7 @@
                     display = $that.css('display');
 
                 // temporarily force a usable display value
-                if (display !== 'inline-block' && display !== 'inline-flex') {
+                if (display !== 'inline-block' && display !== 'flex' && display !== 'inline-flex') {
                     display = 'block';
                 }
 
@@ -220,10 +232,11 @@
                 // iterate the row and find the max height
                 $row.each(function(){
                     var $that = $(this),
+                        style = $that.attr('style'),
                         display = $that.css('display');
 
                     // temporarily force a usable display value
-                    if (display !== 'inline-block' && display !== 'inline-flex') {
+                    if (display !== 'inline-block' && display !== 'flex' && display !== 'inline-flex') {
                         display = 'block';
                     }
 
@@ -237,8 +250,12 @@
                         targetHeight = $that.outerHeight(false);
                     }
 
-                    // revert display block
-                    $that.css('display', '');
+                    // revert styles
+                    if (style) {
+                        $that.attr('style', style);
+                    } else {
+                        $that.css('display', '');
+                    }
                 });
             } else {
                 // if target set, use the height of the target element
@@ -355,14 +372,17 @@
     // apply on DOM ready event
     $(matchHeight._applyDataApi);
 
+    // use on or bind where supported
+    var on = $.fn.on ? 'on' : 'bind';
+
     // update heights on load and resize events
-    $(window).bind('load', function(event) {
+    $(window)[on]('load', function(event) {
         matchHeight._update(false, event);
     });
 
     // throttled update heights on resize events
-    $(window).bind('resize orientationchange', function(event) {
+    $(window)[on]('resize orientationchange', function(event) {
         matchHeight._update(true, event);
     });
 
-})(jQuery);
+});

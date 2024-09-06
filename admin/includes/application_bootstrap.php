@@ -124,8 +124,13 @@ if (file_exists('includes/defined_paths.php')) {
     die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
     exit;
 }
+
+if (file_exists($file = DIR_FS_CATALOG . 'laravel/vendor/symfony/polyfill-mbstring/bootstrap80.php')) {
+    include $file;
+}
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
+
 /**
  * ignore version-check if INI file setting has been set
  */
