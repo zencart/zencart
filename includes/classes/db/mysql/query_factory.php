@@ -181,7 +181,7 @@ class queryFactory extends base
 
         // second attempt in case of 2006 response
         if (!$zp_db_resource) {
-            if (in_array([2006, 4031], mysqli_errno($this->link), true)) {
+            if (in_array(mysqli_errno($this->link), [2006, 4031])) {
                 $this->link = false;
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
                 // run the query directly, bypassing the queryCache
