@@ -18,7 +18,7 @@ $redirect_search = (isset($_POST['search'])) ? '&search=' . $_POST['search'] : '
 
 if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
     $action = 'new_product';
-} elseif (($_POST['products_model'] ?? '') . implode('', $_POST['products_url'] ?? '') . implode('', $_POST['products_name'] ?? '') . implode('', $_POST['products_description'] ?? '') === '') {
+} elseif (($_POST['products_model'] ?? '') . implode('', $_POST['products_url'] ?? []) . implode('', $_POST['products_name'] ?? []) . implode('', $_POST['products_description'] ?? []) === '') {
     $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $products_id . $redirect_page . $redirect_search));
 } else {
@@ -33,7 +33,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
     }
     $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
-    if (!empty($products_id)) { 
+    if (!empty($products_id)) {
         $zco_notifier->notify('NOTIFY_MODULES_UPDATE_PRODUCT_START', ['action' => $action, 'products_id' => $products_id]);
     }
 
