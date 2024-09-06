@@ -22,15 +22,16 @@ class FilesLanguageLoader extends BaseLanguageLoader
         }
     }
 
-    public function loadModuleLanguageFile(string $language, string $fileName, string $module_type): bool
+    public function loadModuleLanguageFile(string $fileName, string $module_type): bool
     {
-        $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES;
-        $extraPath = '/modules/' . $module_type;
-        
-        if ($this->mainLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath .  '/' . $this->templateDir)) {
-            return $this->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $this->templateDir . '/' . $fileName);
+        $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'];
+        $extraPath = '/modules/' . $module_type . '/';
+
+        if ($this->loadFileDefineFile($rootPath . $extraPath . $this->templateDir . '/' . $fileName) === true) {
+            return true;
         }
-        return $this->loadFileDefineFile($rootPath . $language . $extraPath . '/' . $fileName);
+
+        return $this->loadFileDefineFile($rootPath . $extraPath . $fileName);
     }
 
     protected function loadFileDefineFile(string $defineFile): bool
