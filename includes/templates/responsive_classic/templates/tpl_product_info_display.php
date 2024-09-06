@@ -20,7 +20,7 @@ $product_info_class = $product_info_class ?? 'productGeneral';
 <div class="centerColumn" id="<?= $product_info_html_id ?>">
 
 <!--bof Form start-->
-<?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(['action']) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data" id="addToCartForm"') . "\n"; ?>
+<?= zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(['action']) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data" id="addToCartForm"') . "\n" ?>
 <!--eof Form start-->
 <?php
 if ($messageStack->size('product_info') > 0) {
@@ -51,7 +51,7 @@ if (PRODUCT_INFO_PREVIOUS_NEXT === '1' || PRODUCT_INFO_PREVIOUS_NEXT === '3') {
 
     <div id="prod-info-top">
 <!--bof Product Name-->
-        <h1 id="productName" class="<?= $product_info_class ?>"><?php echo $products_name; ?></h1>
+        <h1 id="productName" class="<?= $product_info_class ?>"><?= $products_name ?></h1>
 <!--eof Product Name-->
 
         <div id="pinfo-left" class="group">
@@ -112,7 +112,7 @@ if ($flag_show_ask_a_question) {
 <!-- bof Ask a Question -->
             <br>
             <span id="productQuestions">
-                <?php echo '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT, ' id="askAQuestionButton"') . '</a>'; ?>
+                <?= '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT, ' id="askAQuestionButton"') . '</a>' ?>
             </span>
             <br class="clearBoth">
             <br>
@@ -125,7 +125,7 @@ if ($flag_show_ask_a_question) {
 <?php
 if (zen_get_product_is_always_free_shipping($products_id_current) && $flag_show_product_info_free_shipping) {
 ?>
-            <div id="freeShippingIcon"><?php echo TEXT_PRODUCT_FREE_SHIPPING_ICON; ?></div>
+            <div id="freeShippingIcon"><?= TEXT_PRODUCT_FREE_SHIPPING_ICON ?></div>
 <?php
 }
 ?>
@@ -199,7 +199,7 @@ if (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM =
     if ($display_qty != '' || $display_button != '') {
 ?>
             <div id="cartAdd">
-                <?php echo $display_qty . $display_button; ?>
+                <?= $display_qty . $display_button ?>
             </div>
 <?php
     } // display qty and button
@@ -214,7 +214,7 @@ if (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM =
 if ($products_description != '') {
 ?>
     <div id="productDescription" class="<?= $product_info_class ?> biggerText">
-        <?php echo stripslashes($products_description); ?>
+        <?= stripslashes($products_description) ?>
     </div>
 <?php
 }
@@ -245,7 +245,7 @@ if ($flag_show_product_info_reviews == 1) {
         </a>
     </div>
     <br class="clearBoth">
-    <p class="reviewCount"><?php echo ($flag_show_product_info_reviews_count == 1 ? TEXT_CURRENT_REVIEWS . ' ' . $reviews->fields['count'] : ''); ?></p>
+    <p class="reviewCount"><?= ($flag_show_product_info_reviews_count == 1 ? TEXT_CURRENT_REVIEWS . ' ' . $reviews->fields['count'] : '') ?></p>
 <?php
     } else {
 ?>
@@ -267,14 +267,14 @@ if ($products_date_available > date('Y-m-d H:i:s')) {
     if ($flag_show_product_info_date_available == 1) {
 ?>
     <p id="productDateAvailable" class="<?= $product_info_class ?> centeredContent">
-        <?php echo sprintf(TEXT_DATE_AVAILABLE, zen_date_long($products_date_available)); ?>
+        <?= sprintf(TEXT_DATE_AVAILABLE, zen_date_long($products_date_available)) ?>
     </p>
 <?php
     }
 } elseif ($flag_show_product_info_date_added == 1) {
 ?>
     <p id="productDateAdded" class="<?= $product_info_class ?> centeredContent">
-        <?php echo sprintf(TEXT_DATE_ADDED, zen_date_long($products_date_added)); ?>
+        <?= sprintf(TEXT_DATE_ADDED, zen_date_long($products_date_added)) ?>
     </p>
 <?php
 } // $flag_show_product_info_date_added
@@ -286,7 +286,7 @@ if ($products_date_available > date('Y-m-d H:i:s')) {
 if (!empty($products_url) && $flag_show_product_info_url == 1) {
 ?>
     <p id="productInfoLink" class="<?= $product_info_class ?> centeredContent">
-        <?php echo sprintf(TEXT_MORE_INFORMATION, zen_href_link(FILENAME_REDIRECT, 'action=product&products_id=' . zen_output_string_protected($_GET['products_id']), 'NONSSL', true, false)); ?>
+        <?= sprintf(TEXT_MORE_INFORMATION, zen_href_link(FILENAME_REDIRECT, 'action=product&products_id=' . zen_output_string_protected($_GET['products_id']), 'NONSSL', true, false)) ?>
     </p>
 <?php
 } // $flag_show_product_info_url
@@ -298,6 +298,6 @@ if (!empty($products_url) && $flag_show_product_info_url == 1) {
 <!--eof also purchased products module-->
 
 <!--bof Form close-->
-<?php echo '</form>'; ?>
+<?= '</form>' ?>
 <!--bof Form close-->
 </div>
