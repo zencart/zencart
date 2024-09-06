@@ -10,8 +10,14 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Aug 31 Modified in v2.1.0-alpha2 $
  */
+// -----
+// Enabling this product-information template to be reused for other product
+// types.
+//
+$product_info_html_id = $product_info_html_id ?? 'productGeneral';
+$product_info_class = $product_info_class ?? 'productGeneral';
 ?>
-<div class="centerColumn" id="productGeneral">
+<div class="centerColumn" id="<?= $product_info_html_id ?>">
 
 <!--bof Form start-->
 <?php echo zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data" id="addToCartForm"') . "\n"; ?>
@@ -41,7 +47,7 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 
 <div id="prod-info-top">
 <!--bof Product Name-->
-<h1 id="productName" class="productGeneral"><?php echo $products_name; ?></h1>
+<h1 id="productName" class="<?= $product_info_class ?>"><?php echo $products_name; ?></h1>
 <!--eof Product Name-->
 
 <div id="pinfo-left" class="group">
@@ -70,15 +76,29 @@ require($template->get_template_dir('/tpl_products_next_previous.php',DIR_WS_TEM
 <div id="pinfo-right" class="group grids">
 <!--bof Product Price block -->
 <!--bof Product details list  -->
-<?php if ( (($flag_show_product_info_model == 1 and $products_model != '') or ($flag_show_product_info_weight == 1 and $products_weight !=0) or ($flag_show_product_info_quantity == 1) or ($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name))) ) { ?>
-<ul id="productDetailsList">
-  <?php echo (($flag_show_product_info_model == 1 and $products_model !='') ? '<li>' . TEXT_PRODUCT_MODEL . $products_model . '</li>' : '') . "\n"; ?>
-  <?php echo (($flag_show_product_info_weight == 1 and $products_weight !=0) ? '<li>' . TEXT_PRODUCT_WEIGHT .  $products_weight . TEXT_PRODUCT_WEIGHT_UNIT . '</li>'  : '') . "\n"; ?>
-  <?php echo (($flag_show_product_info_quantity == 1) ? '<li>' . $products_quantity . TEXT_PRODUCT_QUANTITY . '</li>'  : '') . "\n"; ?>
-  <?php echo (($flag_show_product_info_manufacturer == 1 and !empty($manufacturers_name)) ? '<li>' . TEXT_PRODUCT_MANUFACTURER . $manufacturers_name . '</li>' : '') . "\n"; ?>
-</ul>
 <?php
-  }
+// -----
+// A product type's base template can identify additional formatting for the specific product type, e.g. product-music.
+//
+if (isset($product_info_display_extra)) {
+    require $template->get_template_dir($product_info_display_extra, DIR_WS_TEMPLATE, $current_page_base, 'templates') . $product_info_display_extra;
+}
+
+// -----
+// The product-info display is now common to all product
+// types.  Some types, like product_music_info, might supply their own version
+// of the product-details list.
+//
+// If such a file, based on the current type, is available, use that override
+// instead of the base processing.
+//
+$product_details_filename = '/tpl_' . $current_page_base . '_display_details.php';
+$product_details_filepath = $template->get_template_dir($product_details_filename, DIR_WS_TEMPLATE, $current_page_base, 'templates') . $product_details_filename;
+if (file_exists($product_details_filepath)) {
+    require $product_details_filepath;
+} else {
+    require $template->get_template_dir('/tpl_product_info_display_details.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_product_info_display_details.php';
+}
 ?>
 <!--eof Product details list -->
 
@@ -104,9 +124,12 @@ if ($flag_show_ask_a_question) {
 <!--eof free ship icon  -->
 </div>
 
-<div id="cart-box" class="grids">
+<?php
+$add_to_cart_class = 'add-to-cart-' . zen_get_products_allow_add_to_cart((int)$_GET['products_id']);
+?>
+<div id="cart-box" class="grids <?= $product_info_class . ' ' . $add_to_cart_class ?>">
 <!--bof Product Price block -->
-<h2 id="productPrices" class="productGeneral">
+<h2 id="productPrices" class="<?= $product_info_class ?>">
 <?php
 // base price
   if ($show_onetime_charges_description == 'true') {
@@ -182,7 +205,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
 
 <!--bof Product description -->
 <?php if ($products_description != '') { ?>
-<div id="productDescription" class="productGeneral biggerText"><?php echo stripslashes($products_description); ?></div>
+<div id="productDescription" class="<?= $product_info_class ?> biggerText"><?php echo stripslashes($products_description); ?></div>
 <?php } ?>
 <!--eof Product description -->
 
@@ -219,13 +242,13 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
   if ($products_date_available > date('Y-m-d H:i:s')) {
     if ($flag_show_product_info_date_available == 1) {
 ?>
-  <p id="productDateAvailable" class="productGeneral centeredContent"><?php echo sprintf(TEXT_DATE_AVAILABLE, zen_date_long($products_date_available)); ?></p>
+  <p id="productDateAvailable" class="<?= $product_info_class ?> centeredContent"><?php echo sprintf(TEXT_DATE_AVAILABLE, zen_date_long($products_date_available)); ?></p>
 <?php
     }
   } else {
     if ($flag_show_product_info_date_added == 1) {
 ?>
-      <p id="productDateAdded" class="productGeneral centeredContent"><?php echo sprintf(TEXT_DATE_ADDED, zen_date_long($products_date_added)); ?></p>
+      <p id="productDateAdded" class="<?= $product_info_class ?> centeredContent"><?php echo sprintf(TEXT_DATE_ADDED, zen_date_long($products_date_added)); ?></p>
 <?php
     } // $flag_show_product_info_date_added
   }
@@ -237,7 +260,7 @@ if (CUSTOMERS_APPROVAL == 3 and TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == 
   if (!empty($products_url)) {
     if ($flag_show_product_info_url == 1) {
 ?>
-    <p id="productInfoLink" class="productGeneral centeredContent"><?php echo sprintf(TEXT_MORE_INFORMATION, zen_href_link(FILENAME_REDIRECT, 'action=product&products_id=' . zen_output_string_protected($_GET['products_id']), 'NONSSL', true, false)); ?></p>
+    <p id="productInfoLink" class="<?= $product_info_class ?> centeredContent"><?php echo sprintf(TEXT_MORE_INFORMATION, zen_href_link(FILENAME_REDIRECT, 'action=product&products_id=' . zen_output_string_protected($_GET['products_id']), 'NONSSL', true, false)); ?></p>
 <?php
     } // $flag_show_product_info_url
   }

@@ -43,6 +43,7 @@ fieldset, .rowEven, #shippingEstimatorContent tr:nth-child(odd), #order-comments
 #cartContentsDisplay .rowEven:hover, #cartContentsDisplay .rowOdd:hover {background:#e2e2e2;}
 #orderTotals{background:#ccc;}
 legend, #cart-box{background:#bbb;}
+#cart-box.add-to-cart-N { background: inherit; }
 #navMainWrapper, #navSuppWrapper, #shippingEstimatorContent h2, #checkoutConfirmDefault .cartTableHeading, .navSplitPagesLinks a, #navEZPagesTop, .productListing-rowheading a:hover, .list-more, #sendSpendWrapper h2, #accountDefault #sendSpendWrapper h2, #gvFaqDefaultSubHeading, #checkoutPayAddressDefaultAddress, #checkoutShipAddressDefaultAddress, #accountLinksWrapper h2, h2#addressBookDefaultPrimary, #reviewsWriteHeading, #myAccountPaymentInfo h3, #myAccountShipInfo h3, span.cssButton.normal_button.button.button_more_reviews, .button_more_reviews:hover, span.cssButton.normal_button.button.button_read_reviews, .button_read_reviews:hover {background:#333;}
 .rightBoxHeading, .leftBoxHeading, .centerBoxHeading {background:#444;}
 h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #03A9D3;}
