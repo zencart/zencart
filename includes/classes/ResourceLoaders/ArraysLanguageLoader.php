@@ -45,7 +45,6 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         return $this->languageDefines;
     }
 
-
     protected function loadArraysFromDirectory(string $rootPath, string $language, string $extraPath): array
     {
         $path = $rootPath . $language . $extraPath;
@@ -231,5 +230,41 @@ class ArraysLanguageLoader extends BaseLanguageLoader
             $defineList = $this->loadDefinesFromArrayFile($directory, $_SESSION['language'], $filename);
             $this->addLanguageDefines($defineList);
         }
+    }
+
+    // -----
+    // Load (and make associated constants) for a given **storefront** language file.  Used
+    // primarily by admin plugins that have common admin/storefront constant definitions.
+    //
+    // Note: The $extraDir, if non-blank, must start with a '/' and not end with one!
+    //
+    public function makeCatalogArrayConstants(string $fileName, string $extraDir = ''): void
+    {
+        if (str_starts_with($fileName, 'lang.') === false) {
+            $fileName = 'lang.' . $fileName;
+        }
+
+        $rootDir = DIR_FS_CATALOG . DIR_WS_LANGUAGES;
+
+        $mainFile = $rootDir . $_SESSION['language'] . $extraDir . '/' . $fileName;
+        $fallbackFile = $rootDir . $this->fallback . $extraDir . '/' . $fileName;
+
+        $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
+
+        foreach ($this->pluginList as $plugin) {
+            $pluginDir = $this->zcPluginsDir . $plugin['unique_key'] . '/' . $plugin['version'];
+            $pluginDir .=  '/catalog/includes/languages/';
+
+            $mainFile = $pluginDir . $_SESSION['language'] . $extraDir . '/' . $fileName;
+            $fallbackFile = $pluginDir . $this->fallback . $extraDir . '/' . $fileName;
+
+            $pluginDefineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
+            $defineList = array_merge($defineList, $pluginDefineList);
+        }
+
+        $templateFile = $rootDir . $_SESSION['language'] . $extraDir . '/' . $this->templateDir . '/' . $fileName;
+        $defineList = array_merge($defineList, $this->loadArrayDefineFile($templateFile));
+
+        $this->makeConstants($defineList);
     }
 }

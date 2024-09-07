@@ -3,7 +3,7 @@
 // Part of the "Product Options Stock" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
 // Copyright (c) 2014-2024 Vinos de Frutas Tropicales
 //
-// Last Updated:  POSM v5.0.0
+// Last Updated:  POSM v6.0.0
 //
 use App\Models\PluginControl;
 use App\Models\PluginControlVersion;
@@ -41,7 +41,7 @@ class products_options_stock_observer extends base
         $this->zcPluginDir = $plugin_manager->getPluginVersionDirectory('POSM', $plugin_manager->getInstalledPlugins());
 
         // -----
-        // Load the storefront common functions.  For the previous, unencapsulted, versions of the plugin, this
+        // Load the storefront common functions.  For the previous, unencapsulated, versions of the plugin, this
         // file was loaded by the admin's extra_functions file.
         //
         require $this->zcPluginDir('catalog') . 'includes/functions/products_options_stock_functions.php';
@@ -49,19 +49,8 @@ class products_options_stock_observer extends base
         // -----
         // Load the storefront common language file.
         //
-        $common_language_files = [
-            zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/extra_definitions/', FILENAME_CATALOG_POS_EXTRA_DEFINITIONS),
-            zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . 'english/extra_definitions/', FILENAME_CATALOG_POS_EXTRA_DEFINITIONS),
-            $this->zcPluginDir('catalog') . DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions/' . FILENAME_CATALOG_POS_EXTRA_DEFINITIONS,
-            $this->zcPluginDir('catalog') . DIR_WS_LANGUAGES . '/english/extra_definitions/' . FILENAME_CATALOG_POS_EXTRA_DEFINITIONS,
-        ];
-        array_unique($common_language_files);
-        foreach ($common_language_files as $next_file) {
-            if (file_exists($next_file)) {
-                require $next_file;
-                break;
-            }
-        }
+        global $languageLoader;
+        $languageLoader->makeCatalogArrayConstants(FILENAME_CATALOG_POS_EXTRA_DEFINITIONS, '/extra_definitions');
 
         $this->enabled = true;
         $this->debug = (POSM_ENABLE_DEBUG === 'true');
