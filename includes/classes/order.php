@@ -621,8 +621,8 @@ class order extends base
                 'country_id' => 0,
                 'format_id' => 0,
             ];
-        } elseif (count($shipping_address_override) !== 0) {
-            $this->delivery = $shipping_address_override;
+        } elseif (count($delivery_address_override) !== 0) {
+            $this->delivery = $delivery_address_override;
 
         } elseif (!$shipping_address->EOF) {
             $this->delivery = [
