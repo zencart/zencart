@@ -5,7 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
-
 namespace Zencart\LanguageLoader;
 
 class LanguageLoader
@@ -57,6 +56,11 @@ class LanguageLoader
         $this->arrayLoader->makeConstants($defs);
         $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . $module_type . '/' . $languageFile);
         return true; 
+    }
+
+    public function makeCatalogArrayConstants(string $fileName, string $extraDir = ''): void
+    {
+        $this->arrayLoader->makeCatalogArrayConstants($fileName, $extraDir);
     }
 
     /**
