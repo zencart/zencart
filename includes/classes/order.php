@@ -562,8 +562,22 @@ class order extends base
             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
         ];
 
+        // -----
+        // Provide a watching observer (think EO!) a means to override the order's information as
+        // well as the customer/delivery/billing addresses.
+        //
+        // Note: Any address-override array returned must provide ALL address-array keys as used by this class!
+        // For example, the $customer_address_override array must include a 'firstname' element, not 'customers_firstname'.
+        //
+        $customer_address_override = [];
+        $delivery_address_override = [];
+        $billing_address_override = [];
+        $this->notify('NOTIFY_ORDER_CART_ADDRESS_OVERRIDES', [], $customer_address_override, $delivery_address_override, $billing_address_override);
 
-        if ($customer_address->RecordCount() > 0) {
+        if (count($customer_address_override) !== 0) {
+            $this->customer = $customer_address_override;
+
+        } elseif (!$customer_address->EOF) {
             $this->customer = [
                 'firstname' => $customer_address->fields['customers_firstname'],
                 'lastname' => $customer_address->fields['customers_lastname'],
@@ -575,7 +589,12 @@ class order extends base
                 'state' => ((zen_not_null($customer_address->fields['entry_state'])) ? $customer_address->fields['entry_state'] : $customer_address->fields['zone_name']),
                 'state_code' => ((zen_not_null($customer_address->fields['zone_code'])) ? $customer_address->fields['zone_code'] : $customer_address->fields['zone_name']),
                 'zone_id' => $customer_address->fields['entry_zone_id'],
-                'country' => ['id' => $customer_address->fields['countries_id'], 'title' => $customer_address->fields['countries_name'], 'iso_code_2' => $customer_address->fields['countries_iso_code_2'], 'iso_code_3' => $customer_address->fields['countries_iso_code_3']],
+                'country' => [
+                    'id' => $customer_address->fields['countries_id'],
+                    'title' => $customer_address->fields['countries_name'],
+                    'iso_code_2' => $customer_address->fields['countries_iso_code_2'],
+                    'iso_code_3' => $customer_address->fields['countries_iso_code_3'],
+                ],
                 'format_id' => (int)$customer_address->fields['address_format_id'],
                 'telephone' => $customer_address->fields['customers_telephone'],
                 'email_address' => $customer_address->fields['customers_email_address'],
@@ -602,7 +621,10 @@ class order extends base
                 'country_id' => 0,
                 'format_id' => 0,
             ];
-        } elseif ($shipping_address->RecordCount() > 0) {
+        } elseif (count($delivery_address_override) !== 0) {
+            $this->delivery = $delivery_address_override;
+
+        } elseif (!$shipping_address->EOF) {
             $this->delivery = [
                 'firstname' => $shipping_address->fields['entry_firstname'],
                 'lastname' => $shipping_address->fields['entry_lastname'],
@@ -614,13 +636,21 @@ class order extends base
                 'state' => ((zen_not_null($shipping_address->fields['entry_state'])) ? $shipping_address->fields['entry_state'] : $shipping_address->fields['zone_name']),
                 'state_code' => ((zen_not_null($shipping_address->fields['zone_code'])) ? $shipping_address->fields['zone_code'] : $shipping_address->fields['zone_name']),
                 'zone_id' => $shipping_address->fields['entry_zone_id'],
-                'country' => ['id' => $shipping_address->fields['countries_id'], 'title' => $shipping_address->fields['countries_name'], 'iso_code_2' => $shipping_address->fields['countries_iso_code_2'], 'iso_code_3' => $shipping_address->fields['countries_iso_code_3']],
+                'country' => [
+                    'id' => $shipping_address->fields['countries_id'],
+                    'title' => $shipping_address->fields['countries_name'],
+                    'iso_code_2' => $shipping_address->fields['countries_iso_code_2'],
+                    'iso_code_3' => $shipping_address->fields['countries_iso_code_3'],
+                ],
                 'country_id' => $shipping_address->fields['entry_country_id'],
                 'format_id' => (int)$shipping_address->fields['address_format_id'],
             ];
         }
 
-        if ($billing_address->RecordCount() > 0) {
+        if (count($billing_address_override) !== 0) {
+            $this->billing = $billing_address_override;
+
+        } elseif (!$billing_address->EOF) {
             $this->billing = [
                 'firstname' => $billing_address->fields['entry_firstname'],
                 'lastname' => $billing_address->fields['entry_lastname'],
@@ -632,7 +662,12 @@ class order extends base
                 'state' => ((zen_not_null($billing_address->fields['entry_state'])) ? $billing_address->fields['entry_state'] : $billing_address->fields['zone_name']),
                 'state_code' => ((zen_not_null($billing_address->fields['zone_code'])) ? $billing_address->fields['zone_code'] : $billing_address->fields['zone_name']),
                 'zone_id' => $billing_address->fields['entry_zone_id'],
-                'country' => ['id' => $billing_address->fields['countries_id'], 'title' => $billing_address->fields['countries_name'], 'iso_code_2' => $billing_address->fields['countries_iso_code_2'], 'iso_code_3' => $billing_address->fields['countries_iso_code_3']],
+                'country' => [
+                    'id' => $billing_address->fields['countries_id'],
+                    'title' => $billing_address->fields['countries_name'],
+                    'iso_code_2' => $billing_address->fields['countries_iso_code_2'],
+                    'iso_code_3' => $billing_address->fields['countries_iso_code_3'],
+                ],
                 'country_id' => $billing_address->fields['entry_country_id'],
                 'format_id' => (int)$billing_address->fields['address_format_id'],
             ];
