@@ -225,7 +225,9 @@ class Product
         $product = $db->Execute($sql, 1, true, 900);
 
         if ($product->EOF) {
-            return [];
+            $data_override = [];
+            $this->notify('NOTIFY_GET_PRODUCT_OBJECT_DETAILS_NOT_FOUND', ['product_id' => $product_id, 'language_id' => $language_id], $data_override);
+            return $data_override;
         }
 
         $data = $product->fields;
