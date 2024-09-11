@@ -134,7 +134,7 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
             $temp[] = ADVANCED_SEARCH_DEFAULT_OPERATOR;
         }
     }
-    $temp[] = $objects[$i];
+    $temp[] = $objects[$i] ?? [];
     $objects = $temp;
 
     $keyword_count = 0;
