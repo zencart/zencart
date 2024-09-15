@@ -394,12 +394,13 @@ class order extends base
             }
         }
 
+        $customer_notified_clause = (IS_ADMIN_FLAG === true) ? '' : ' AND osh.customer_notified >= 0';
         $sql = "SELECT os.orders_status_name, osh.*
                 FROM   " . TABLE_ORDERS_STATUS . " os
                 LEFT JOIN " . TABLE_ORDERS_STATUS_HISTORY . " osh USING (orders_status_id)
                 WHERE osh.orders_id = :ordersID
                 AND os.language_id = :languageID
-                AND osh.customer_notified >= 0
+                $customer_notified_clause
                 ORDER BY osh.date_added";
 
         $sql = $db->bindVars($sql, ':ordersID', $order_id, 'integer');
