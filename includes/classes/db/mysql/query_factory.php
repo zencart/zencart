@@ -462,11 +462,10 @@ class queryFactory extends base
 
     /**
      * Return the number of seconds elapsed for querying, since the counter started
-     * @return int
      */
-    public function queryTime(): int
+    public function queryTime(): float
     {
-        return (int)$this->total_query_time;
+        return (float)$this->total_query_time;
     }
 
     /**
