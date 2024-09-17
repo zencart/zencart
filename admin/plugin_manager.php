@@ -6,6 +6,7 @@
  * @version $Id: torvista 2024 Jul 22 Modified in v2.1.0-alpha1 $
  */
 
+use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\SqlPatchInstaller;
 use Zencart\PluginSupport\ScriptedInstallerFactory;
 use Zencart\PluginSupport\InstallerFactory;
@@ -18,9 +19,9 @@ use Zencart\ViewBuilders\SimpleDataFormatter;
 use Zencart\Filters\FilterManager;
 use Zencart\ViewBuilders\DerivedItemsManager;
 
-/* @var $pluginManager PluginManager*/
-/* @var $db queryFactory */
-/* @var $messageStack messageStack */
+/* @var PluginManager $pluginManager */
+/* @var queryFactory $db */
+/* @var messageStack $messageStack */
 
 require('includes/application_top.php');
 $pluginManager->inspectAndUpdate();
