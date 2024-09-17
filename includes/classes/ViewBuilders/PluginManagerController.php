@@ -25,7 +25,7 @@ class PluginManagerController extends BaseController
 
     protected function processDefaultAction()
     {
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         if ($this->currentFieldValue('status') == 1) {
             $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->currentFieldValue('version')) . '<br>');
         }
@@ -94,11 +94,11 @@ class PluginManagerController extends BaseController
 
     protected function processActionInstall()
     {
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(
             zen_draw_form('plugininstall', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink() . '&action=doInstall', 'post', 'class="form-horizontal"')
         );
-        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . $this->currentFieldValue('description'));
+        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . zen_lookup_admin_menu_language_override('plugin_description', $this->currentFieldValue('unique_key'), $this->currentFieldValue('description')));
         $versions = $this->pluginManager->getPluginVersionsForPlugin($this->currentFieldValue('unique_key'));
         $hasMultiple = (count($versions) > 1);
         $firstKey = key($versions);
@@ -152,7 +152,7 @@ class PluginManagerController extends BaseController
 
     protected function processActionUninstall()
     {
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(
             zen_draw_form(
                 'pluginuninstall',
@@ -213,7 +213,7 @@ class PluginManagerController extends BaseController
             );
         }
         $versions = $this->pluginManager->getVersionsForUpgrade($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'));
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(zen_draw_form('pluginupgrade', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink() . '&action=confirmUpgrade', 'post', 'class="form-horizontal"'));
         $this->setBoxContent('<br>' . TEXT_INFO_UPGRADE . '<br>');
         $firstKey = key($versions);
@@ -251,7 +251,7 @@ class PluginManagerController extends BaseController
                 )
             );
         }
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(zen_draw_form(
                 'pluginupgrade',
                 FILENAME_PLUGIN_MANAGER,
@@ -310,7 +310,7 @@ class PluginManagerController extends BaseController
     protected function processActionCleanUp()
     {
         $versions = $this->pluginManager->getPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'));
-        $this->setBoxHeader('<h4>' . zen_output_string_protected($this->currentFieldValue('name')) . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_output_string_protected(zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name'))) . '</h4>');
         $this->setBoxForm(
             zen_draw_form(
                 'pluginupgrade',
@@ -352,7 +352,7 @@ class PluginManagerController extends BaseController
                 )
             );
         }
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(zen_draw_form(
             'pluginupgrade',
             FILENAME_PLUGIN_MANAGER,
@@ -401,7 +401,7 @@ class PluginManagerController extends BaseController
 
     protected function processActionEnable()
     {
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(zen_draw_form(
                 'pluginuninstall',
                 FILENAME_PLUGIN_MANAGER,
@@ -442,7 +442,7 @@ class PluginManagerController extends BaseController
 
     protected function processActionDisable()
     {
-        $this->setBoxHeader('<h4>' . $this->currentFieldValue('name') . '</h4>');
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(zen_draw_form(
                 'pluginuninstall',
                 FILENAME_PLUGIN_MANAGER,
