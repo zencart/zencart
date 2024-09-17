@@ -39,26 +39,27 @@ input.cssButton.submit_button.button.button_search, .button_search:hover{font-si
 /*bof side-boxes*/
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
 /* LEAVE BLANK {  } to Show Side-Box */
-div#documentcategories {display:none;visibility:hidden;}
+div#bannerbox {display:none;visibility:hidden;}
+div#bannerbox2 {display:none;visibility:hidden;}
+div#bannerboxall {display:none;visibility:hidden;}
+div#bestsellers {display:none;visibility:hidden;}
+div#brands {display:none;visibility:hidden;}
 div#categories {display:none;visibility:hidden;}
-div#whatsnew {display:none;visibility:hidden;}
-div#manufacturers {display:none;visibility:hidden;}
-div#reviews {display:none;visibility:hidden;}
+div#documentcategories {display:none;visibility:hidden;}
+div#ezpages {display:none;visibility:hidden;}
 div#featured {display:none;visibility:hidden;}
 div#featuredcategories {display:none;visibility:hidden;}
 div#information {display:none;visibility:hidden;}
+div#manufacturers {display:none;visibility:hidden;}
 div#moreinformation {display:none;visibility:hidden;}
-div#bannerbox {display:none;visibility:hidden;}
-div#ezpages {display:none;visibility:hidden;}
-div#recordcompanies {display:none;visibility:hidden;}
 div#musicgenres {display:none;visibility:hidden;}
-div#bannerboxall {display:none;visibility:hidden;}
+div#recordcompanies {display:none;visibility:hidden;}
+div#reviews {display:none;visibility:hidden;}
 div#search {display:none;visibility:hidden;}
-div#bannerbox2 {display:none;visibility:hidden;}
-div#bestsellers {display:none;visibility:hidden;}
-div#specials {display:none;visibility:hidden;}
-div#whosonline {display:none;visibility:hidden;}
 div#shoppingcart {display:none;visibility:hidden;}
+div#specials {display:none;visibility:hidden;}
+div#whatsnew {display:none;visibility:hidden;}
+div#whosonline {display:none;visibility:hidden;}
 
 
 /* bof login, create account */
@@ -223,24 +224,31 @@ input.cssButton.submit_button.button.button_search, .button_search:hover{font-si
 /* side-boxes */
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
 /* LEAVE BLANK {  } to Show Side-Box */
-div#documentcategories {display:none;visibility:hidden;}
+div#bannerbox {display:none;visibility:hidden;}
+div#bannerbox2 {display:none;visibility:hidden;}
+div#bannerboxall {display:none;visibility:hidden;}
+div#bestsellers {display:none;visibility:hidden;}
+div#brands {display:none;visibility:hidden;}
 div#categories {display:none;visibility:hidden;}
-div#whatsnew {display:none;visibility:hidden;}
-div#manufacturers {display:none;visibility:hidden;}
-div#reviews {display:none;visibility:hidden;}
+div#currencies{display:none;visibility:hidden;}
+div#documentcategories {display:none;visibility:hidden;}
+div#ezpages {display:none;visibility:hidden;}
 div#featured {display:none;visibility:hidden;}
 div#featuredcategories {display:none;visibility:hidden;}
 div#information {display:none;visibility:hidden;}
+div#languages{display:none;visibility:hidden;}
+div#manufacturerinfo{display:none;visibility:hidden;}
+div#manufacturers {display:none;visibility:hidden;}
 div#moreinformation {display:none;visibility:hidden;}
-div#bannerbox {display:none;visibility:hidden;}
-div#ezpages {display:none;visibility:hidden;}
-div#recordcompanies {display:none;visibility:hidden;}
 div#musicgenres {display:none;visibility:hidden;}
-div#bannerboxall {display:none;visibility:hidden;}
+div#orderhistory{display:none;visibility:hidden;}
+div#productnotifications{display:none;visibility:hidden;}
+div#recordcompanies {display:none;visibility:hidden; }
+div#reviews {display:none;visibility:hidden;}
 div#search {display:none;visibility:hidden;}
-div#bannerbox2 {display:none;visibility:hidden; }
-div#bestsellers {display:none;visibility:hidden; }
-div#specials {display:none;visibility:hidden; }
+div#shoppingcart{display:none;visibility:hidden;}
+div#specials {display:none;visibility:hidden;}
+div#whatsnew {display:none;visibility:hidden;}
 div#whosonline {display:none;visibility:hidden;}
 
 /*bof login, create account*/

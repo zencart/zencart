@@ -21,7 +21,7 @@ class queryFactory extends base
 {
     public $link; // mysqli object
     private $count_queries = 0;
-    private $total_query_time;
+    private float|int $total_query_time = 0;
     public $dieOnErrors = false;
     public $error_number = 0;
     public $error_text = '';
@@ -253,7 +253,7 @@ class queryFactory extends base
         }
 
 
-        $time_start = explode(' ', microtime());
+        $time_start = microtime(as_float: true);
 
         // Get MySQL query result
         $zp_db_resource = $this->runQuery($sqlQuery, $removeFromQueryCache);
@@ -286,8 +286,8 @@ class queryFactory extends base
             }
             $zc_cache->sql_cache_store($sqlQuery, $obj->result);
             $obj->is_cached = true;
-            $time_end = explode(' ', microtime());
-            $query_time = $time_end[1] + $time_end[0] - $time_start[1] - $time_start[0];
+            $time_end = microtime(as_float: true);
+            $query_time = $time_end - $time_start;
             $this->total_query_time += $query_time;
             $this->count_queries++;
 
@@ -308,8 +308,8 @@ class queryFactory extends base
                 }
             }
 
-            $time_end = explode(' ', microtime());
-            $query_time = $time_end[1] + $time_end[0] - $time_start[1] - $time_start[0];
+            $time_end = microtime(as_float: true);
+            $query_time = $time_end - $time_start;
             $this->total_query_time += $query_time;
             $this->count_queries++;
         }
@@ -337,7 +337,7 @@ class queryFactory extends base
      */
     public function ExecuteRandomMulti(string $sqlQuery, $limit = 0): \queryFactoryResult
     {
-        $time_start = explode(' ', microtime());
+        $time_start = microtime(as_float: true);
         $this->zf_sql = $sqlQuery;
         $obj = new queryFactoryResult($this->link);
         $obj->sql_query = $sqlQuery;
@@ -385,8 +385,8 @@ class queryFactory extends base
             }
         }
 
-        $time_end = explode(' ', microtime());
-        $query_time = $time_end[1] + $time_end[0] - $time_start[1] - $time_start[0];
+        $time_end = microtime(as_float: true);
+        $query_time = $time_end - $time_start;
         $this->total_query_time += $query_time;
         $this->count_queries++;
         return $obj;
@@ -462,11 +462,10 @@ class queryFactory extends base
 
     /**
      * Return the number of seconds elapsed for querying, since the counter started
-     * @return int
      */
-    public function queryTime(): int
+    public function queryTime(): float
     {
-        return (int)$this->total_query_time;
+        return (float)$this->total_query_time;
     }
 
     /**

@@ -8,14 +8,16 @@
 namespace Zencart\ViewBuilders;
 
 use Zencart\FileSystem\FileSystem;
+use Zencart\PluginManager\PluginManager;
+use Zencart\PluginSupport\InstallerFactory;
 
 class PluginManagerController extends BaseController
 {
 
-    protected $pluginManager;
-    protected $installerFactory;
+    protected PluginManager $pluginManager;
+    protected InstallerFactory $installerFactory;
 
-    public function init($pluginManager, $installerFactory)
+    public function init(PluginManager $pluginManager, InstallerFactory $installerFactory)
     {
         $this->pluginManager = $pluginManager;
         $this->installerFactory = $installerFactory;

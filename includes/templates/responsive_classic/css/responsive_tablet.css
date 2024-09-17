@@ -35,26 +35,33 @@ div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centered
 /* side-boxes */
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
 /* LEAVE BLANK {  } to Show Side-Box */
-div#documentcategories{}
-div#categories{}
-div#whatsnew{}
-div#manufacturers{}
-div#reviews{}
-div#featured{}
-div#featuredcategories{}
+div#bannerbox {}
+div#bannerbox2 {}
+div#bannerboxall {}
+div#bestsellers {}
+div#brands {}
+div#categories {}
+div#currencies{}
+div#documentcategories {}
+div#ezpages {}
+div#featured {}
+div#featuredcategories {}
 div#information {}
-div#moreinformation{}
-div#bannerbox{}
-div#ezpages{}
-div#recordcompanies{}
-div#musicgenres{}
-div#bannerboxall{}
-div#search{}
-div#bannerbox2{}
-div#bestsellers{}
-div#specials{}
-div#whosonline{}
-div#featuredcategories{}
+div#languages{}
+div#manufacturerinfo{}
+div#manufacturers {}
+div#moreinformation {}
+div#musicgenres {}
+div#orderhistory{}
+div#productnotifications{}
+div#recordcompanies { }
+div#reviews {}
+div#search {}
+div#shoppingcart{}
+div#specials {}
+div#whatsnew {}
+div#whosonline {}
+
 
 /* index & cPath (product listing pages) */
 div#productListing table, div#productListing thead, div#productListing tbody, div#productListing th, div#productListing td, div#productListing tr{display:block;}
@@ -127,32 +134,32 @@ div.centerBoxContentsProducts.centeredContent, div.centerBoxContentsNew.centered
 /*bof side-boxes*/
 /* ADD { display:none;visibility:hidden; } to Hide Side-Box */
 /* LEAVE BLANK {  } to Show Side-Box */
-div#documentcategories { display:none;visibility:hidden; }
-div#categories { display:none;visibility:hidden; }
-div#whatsnew { display:none;visibility:hidden; }
-div#manufacturers { display:none;visibility:hidden; }
-div#reviews { display:none;visibility:hidden; }
-div#featured { display:none;visibility:hidden; }
-div#featuredcategories { display:none;visibility:hidden; }
-div#information { display:none;visibility:hidden; }
-div#moreinformation { display:none;visibility:hidden; }
-div#bannerbox { display:none;visibility:hidden; }
-div#ezpages { display:none;visibility:hidden; }
-div#recordcompanies { display:none;visibility:hidden; }
-div#musicgenres { display:none;visibility:hidden; }
-div#bannerboxall { display:none;visibility:hidden; }
-div#search { display:none;visibility:hidden; }
-div#bannerbox2 { display:none;visibility:hidden; }
-div#bestsellers { display:none;visibility:hidden; }
-div#specials { display:none;visibility:hidden; }
-div#whosonline {display:none;visibility:hidden;}
-div#shoppingcart{display:none;visibility:hidden;}
-div#manufacturerinfo{display:none;visibility:hidden;}
-div#productnotifications{display:none;visibility:hidden;}
-div#orderhistory{display:none;visibility:hidden;}
+div#bannerbox {display:none;visibility:hidden;}
+div#bannerbox2 {display:none;visibility:hidden;}
+div#bannerboxall {display:none;visibility:hidden;}
+div#bestsellers {display:none;visibility:hidden;}
+div#brands {display:none;visibility:hidden;}
+div#categories {display:none;visibility:hidden;}
 div#currencies{display:none;visibility:hidden;}
+div#documentcategories {display:none;visibility:hidden;}
+div#ezpages {display:none;visibility:hidden;}
+div#featured {display:none;visibility:hidden;}
+div#featuredcategories {display:none;visibility:hidden;}
+div#information {display:none;visibility:hidden;}
 div#languages{display:none;visibility:hidden;}
-div#featuredcategories { display:none;visibility:hidden; }
+div#manufacturerinfo{display:none;visibility:hidden;}
+div#manufacturers {display:none;visibility:hidden;}
+div#moreinformation {display:none;visibility:hidden;}
+div#musicgenres {display:none;visibility:hidden;}
+div#orderhistory{display:none;visibility:hidden;}
+div#productnotifications{display:none;visibility:hidden;}
+div#recordcompanies {display:none;visibility:hidden; }
+div#reviews {display:none;visibility:hidden;}
+div#search {display:none;visibility:hidden;}
+div#shoppingcart{display:none;visibility:hidden;}
+div#specials {display:none;visibility:hidden;}
+div#whatsnew {display:none;visibility:hidden;}
+div#whosonline {display:none;visibility:hidden;}
 
 /*bof login, create account*/
 div#loginDefault input[type="text"], div#loginDefault input[type="password"], div#loginDefault select {height:40px;}
