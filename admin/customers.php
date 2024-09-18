@@ -158,21 +158,19 @@ if (!empty($action)) {
                 $error = true;
             }
 
-            $zone_id = 0;
             $entry_state_error = false;
             if (ACCOUNT_STATE === 'true') {
-                $entry_state_has_zones = count(zen_get_country_zones($entry_country_id)) > 0;
+                $entry_state_has_zones = count(zen_get_country_zones((int)$entry_country_id)) > 0;
                 if ($entry_state_has_zones) {
                     $zone_query = $db->Execute(
                         "SELECT zone_id
                            FROM " . TABLE_ZONES . "
                            WHERE zone_country_id = " . (int)$entry_country_id . "
-                             AND zone_name = '" . zen_db_input($entry_state) . "'"
+                             AND zone_id = " . (int)$entry_zone_id . "
+                           LIMIT 1"
                     );
 
-                    if (!$zone_query->EOF) {
-                        $entry_zone_id = $zone_query->fields['zone_id'];
-                    } else {
+                    if ($zone_query->EOF) {
                         $error = true;
                         $entry_state_error = true;
                     }
@@ -834,38 +832,27 @@ if ($action === 'edit' || $action === 'update') {
                 echo zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-9 col-md-6">
 <?php
-        $entry_state = zen_get_zone_name((int)$cInfo->country_id, (int)$cInfo->zone_id, $cInfo->state);
-        $zones_values = zen_get_country_zones((int)$cInfo->country_id);
-        if (count($zones_values) !== 0) {
-            $zones_array = [];
-            foreach ($zones_values as $zones_value) {
-                $zones_array[] = [
-                    'id' => $zones_value['text'],
-                    'text' => $zones_value['text']
-                ];
-            }
-            echo zen_draw_pull_down_menu(
-                'entry_state',
-                $zones_array,
-                $entry_state,
-                'class="form-control" id="entry_state"'
-            );
-        } else {
-            echo zen_draw_input_field(
-                'entry_state',
-                htmlspecialchars(
-                    zen_get_zone_name(
-                        (int)$cInfo->country_id,
-                        (int)$cInfo->zone_id,
-                        $cInfo->state ?? ''
-                    ),
-                    ENT_COMPAT,
-                    CHARSET,
-                    true
+        echo zen_draw_pull_down_menu(
+            'entry_zone_id',
+            zen_prepare_country_zones_pull_down((int)$cInfo->entry_country_id),
+            (int)$cInfo->entry_zone_id,
+            'class="form-control" id="entry_zone_id"'
+        );
+
+        echo zen_draw_input_field(
+            'entry_state',
+            htmlspecialchars(
+                zen_get_zone_name(
+                    (int)$cInfo->entry_country_id,
+                    (int)$cInfo->entry_zone_id,
+                    $cInfo->entry_state ?? ''
                 ),
-                'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"'
-            );
-        }
+                ENT_COMPAT,
+                CHARSET,
+                true
+            ),
+            'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"'
+        );
 ?>
                 </div>
             </div>

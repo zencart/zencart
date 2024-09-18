@@ -66,6 +66,12 @@ $define = [
     'TABLE_HEADING_WHOLESALE_LEVEL' => 'Wholesale Level',
     'TEXT_WHOLESALE_LEVEL' => 'Wholesale Level:',
     'HELPTEXT_WHOLESALE_LEVEL' => 'Enter 0 for "Retail" customers or a "Wholesale" pricing level. A customer can have either a wholesale pricing level or be part of a discount pricing group, but not both.',
+
+    // -----
+    // Added, since used by zen_prepare_country_zones_pull_down
+    //
+    'PLEASE_SELECT' => 'Please select',
+    'TYPE_BELOW' => 'Type a choice below ...',
 ];
 
 return $define;
