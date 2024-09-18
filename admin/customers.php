@@ -17,10 +17,8 @@ if (!isset($show_registration_ip_in_listing)) {
     $show_registration_ip_in_listing = false;
 }
 $action = $_GET['action'] ?? '';
-$customers_id = (int)($_GET['cID'] ?? 0);
-if (isset($_POST['cID'])) {
-    $customers_id = (int)$_POST['cID'];
-}
+$customers_id = (int)($_POST['cID'] ?? $_GET['cID'] ?? 0);
+
 if (!isset($_GET['page'])) {
     $_GET['page'] = '';
 }
@@ -82,6 +80,10 @@ if (!empty($action)) {
             $action = '';
             break;
         case 'update':
+            if ($customers_id === 0) {
+                zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
+            }
+
             $customers_firstname = zen_db_prepare_input(zen_sanitize_string($_POST['customers_firstname']));
             $customers_lastname = zen_db_prepare_input(zen_sanitize_string($_POST['customers_lastname']));
             $customers_email_address = zen_db_prepare_input($_POST['customers_email_address']);
@@ -394,6 +396,7 @@ if (!empty($action)) {
                 $cInfo->postcode = $cInfo->entry_postcode;
                 $cInfo->city =  $cInfo->entry_city;
                 $cInfo->state = $cInfo->entry_state;
+                $cInfo->customers_default_address_id = $default_address_id;
                 $processed = true;
             }
             break;
@@ -467,7 +470,11 @@ if (!empty($action)) {
             $customer->delete($delete_reviews, $forget_only);
             zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']), 'NONSSL'));
             break;
-        default:
+        case 'edit':
+            if ($customers_id === 0) {
+                zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
+            }
+        default:    //- Fall-through from above if $customers_id appears to be valid.
             $customer = new Customer($customers_id);
             $cInfo = new objectInfo($customer->getData());
             break;
@@ -542,6 +549,7 @@ if ($action === 'edit' || $action === 'update') {
         true
     );
     echo zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
+    echo zen_draw_hidden_field('cID', $customers_id);
     echo zen_hide_session_id();
 ?>
         <div class="row formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></div>
