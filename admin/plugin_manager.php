@@ -37,7 +37,13 @@ $tableDefinition = [
     'maxRowCount' => 20,
     'defaultRowAction' => '',
     'columns' => [
-        'name' => ['title' => TABLE_HEADING_NAME],
+        'name' => [
+            'title' => TABLE_HEADING_NAME,
+            'derivedItem' => [
+                'type' => 'local',
+                'method' => 'getLanguageTranslationForName'
+                ],
+            ],
         'unique_key' => ['title' => TABLE_HEADING_KEY],
         'filespace' => [
             'title' => TABLE_HEADING_FILE_SPACE,

@@ -315,8 +315,19 @@ function zen_lookup_admin_menu_language_override(string $lookup_type, string $lo
             $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
             $lookup = strtoupper('CFG_GRP_TITLE_' . $str);
             break;
+        case 'plugin_name':
+            $str = $lookup_key;
+            $str = preg_replace('/[\s -]+/', '_', $str);
+            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
+            $str = preg_replace('/_+/', '_', $str);
+            $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $str);
+            break;
         case 'plugin_description':
-            $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $lookup_key);
+            $str = $lookup_key;
+            $str = preg_replace('/[\s -]+/', '_', $str);
+            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
+            $str = preg_replace('/_+/', '_', $str);
+            $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $str);
             break;
     }
 
