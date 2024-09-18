@@ -332,7 +332,7 @@ function zen_clean_html($clean_it, $extraTags = '')
     if (!is_array($extraTags)) $extraTags = [$extraTags];
 
     // remove any embedded javascript
-    $clean_it = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $clean_it);
+    $clean_it = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $clean_it ?? '');
 
     $clean_it = preg_replace('/\r/', ' ', $clean_it);
     $clean_it = preg_replace('/\t/', ' ', $clean_it);
