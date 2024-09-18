@@ -879,7 +879,7 @@ if ($action === 'edit' || $action === 'update') {
                     echo zen_draw_pull_down_menu(
                         'entry_country_id',
                         zen_get_countries_for_admin_pulldown(),
-                        $cInfo->country_id,
+                        $cInfo->entry_country_id,
                         'class="form-control" id="entry_country_id"'
                     ); ?>
                 </div>
