@@ -86,7 +86,7 @@ $(function() {
             $('#entry_state').hide();
             $('#entry_zone_id').html(countryZones).prop('disabled', false).show();
         } else {
-            $('#entry_state').val('').show();
+            $('#entry_state').show();
             $('#entry_zone_id').prop('disabled', true).hide();
         }
     }

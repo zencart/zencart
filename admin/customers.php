@@ -850,11 +850,7 @@ if ($action === 'edit' || $action === 'update') {
         echo zen_draw_input_field(
             'entry_state',
             htmlspecialchars(
-                zen_get_zone_name(
-                    (int)$cInfo->entry_country_id,
-                    (int)$cInfo->entry_zone_id,
-                    $cInfo->entry_state ?? ''
-                ),
+                $cInfo->entry_state ?? '',
                 ENT_COMPAT,
                 CHARSET,
                 true
