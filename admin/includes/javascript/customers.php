@@ -52,10 +52,10 @@ $(function() {
 
     if ($('#entry_zone_id > option').length > 1) {
         $('#entry_state').hide();
-        $('#entry_zone_id').show();
+        $('#entry_zone_id').prop('disabled', false).show();
     } else {
         $('#entry_state').show();
-        $('#entry_zone_id').hide();
+        $('#entry_zone_id').prop('disabled', true).hide();
     }
 <?php
     // -----
@@ -84,17 +84,15 @@ $(function() {
             let sorted = split.sort();
             countryZones = '<option selected="selected" value="0"><?php echo addslashes(PLEASE_SELECT); ?><' + '/option><option' + sorted.join('<option');
             $('#entry_state').hide();
-            $('#entry_zone_id').html(countryZones).show();
+            $('#entry_zone_id').html(countryZones).prop('disabled', false).show();
         } else {
-            $('#entry_state').show();
-            $('#entry_zone_id').hide();
+            $('#entry_state').val('').show();
+            $('#entry_zone_id').prop('disabled', true).hide();
         }
     }
 
     $('#entry_country_id').on('change', function() {
         update_zone();
-
-        $('#entry_state').val('');
     });
 });
 </script>
