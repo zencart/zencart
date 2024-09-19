@@ -68,6 +68,9 @@ if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sidebo
   $body_id = ($this_is_home_page) ? 'indexHome' : str_replace('_', '', $_GET['main_page']);
 ?>
 <body id="<?php echo $body_id . 'Body'; ?>"<?php if($zv_onload !='') echo ' onload="'.$zv_onload.'"'; ?>>
+<?php /* add any start-of-body-section code via an observer class */
+$zco_notifier->notify('NOTIFY_PAGE_BODY_BEGIN', $current_page);
+?>
 <?php
   if (SHOW_BANNERS_GROUP_SET1 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET1)) {
     if ($banner->RecordCount() > 0) {
