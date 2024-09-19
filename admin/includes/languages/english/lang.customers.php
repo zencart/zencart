@@ -27,7 +27,6 @@ $define = [
     'TEXT_DELETE_INTRO' => 'Are you sure you want to delete this customer?<br>"Forget Only" - Delete identifiable personal details from the customer record.<br>"Delete" - Delete the customer record from the database.',
     'TEXT_DELETE_REVIEWS' => 'Delete %s review(s)',
     'TEXT_INFO_HEADING_DELETE_CUSTOMER' => 'Delete Customer',
-    'TYPE_BELOW' => 'Type below',
     'TEXT_INFO_NUMBER_OF_ORDERS' => 'Number of Orders:',
     'TEXT_INFO_LIFETIME_VALUE' => 'Customer Lifetime Value:',
     'TEXT_INFO_LAST_ORDER' => 'Last Order:',
