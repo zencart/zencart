@@ -13,28 +13,23 @@ class ScriptedInstaller
 {
     use ScriptedInstallHelpers;
 
-    protected queryFactory $dbConn;
-    protected PluginErrorContainer $errorContainer;
-
-    public function __construct($dbConn, $errorContainer)
+    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
     {
-        $this->dbConn = $dbConn;
-        $this->errorContainer = $errorContainer;
     }
 
-    public function doInstall()
+    public function doInstall(): ?bool
     {
         $installed = $this->executeInstall();
         return $installed;
     }
 
-    public function doUninstall()
+    public function doUninstall(): ?bool
     {
         $uninstalled = $this->executeUninstall();
         return $uninstalled;
     }
 
-    public function doUpgrade($oldVersion)
+    public function doUpgrade($oldVersion): ?bool
     {
         $upgraded = $this->executeUpgrade($oldVersion);
         return $upgraded;
@@ -55,7 +50,7 @@ class ScriptedInstaller
         return true;
     }
 
-    protected function executeInstallerSql($sql)
+    protected function executeInstallerSql($sql): bool
     {
         $this->dbConn->dieOnErrors = false;
         $this->dbConn->Execute($sql);

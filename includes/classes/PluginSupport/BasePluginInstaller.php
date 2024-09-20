@@ -7,38 +7,21 @@
 
 namespace Zencart\PluginSupport;
 
+use queryFactory;
+
 class BasePluginInstaller
 {
-
-    /**
-     * $dbConn is a database object
-     * @var object
-     */
-    protected $dbConn;
-    /**
-     * $errorContainer is a PluginErrorContainer object
-     * @var object
-     */
-    protected $errorContainer;
-    /**
-     * $errorContainer is a pluginInstaller object
-     * @var object
-     */
-    protected $pluginInstaller;
     /**
      * $pluginDir is the directory where the plugin is located
      * @var string
      */
-    protected $pluginDir;
+    protected string $pluginDir;
 
-    public function __construct($dbConn, $pluginInstaller, $errorContainer)
+    public function __construct(protected queryFactory $dbConn, protected Installer $pluginInstaller, protected PluginErrorContainer $errorContainer)
     {
-        $this->dbConn = $dbConn;
-        $this->pluginInstaller = $pluginInstaller;
-        $this->errorContainer = $errorContainer;
     }
 
-    public function processInstall($pluginKey, $version)
+    public function processInstall($pluginKey, $version): bool
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
@@ -50,7 +33,7 @@ class BasePluginInstaller
         return true;
     }
 
-    public function processUninstall($pluginKey, $version)
+    public function processUninstall($pluginKey, $version): bool
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
@@ -62,7 +45,7 @@ class BasePluginInstaller
         return true;
     }
 
-    public function processUpgrade($pluginKey, $version, $oldVersion)
+    public function processUpgrade($pluginKey, $version, $oldVersion): bool
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
@@ -75,17 +58,17 @@ class BasePluginInstaller
         return true;
     }
 
-    public function processDisable($pluginKey, $version)
+    public function processDisable($pluginKey, $version): void
     {
         $this->setPluginVersionStatus($pluginKey, $version, 2);
     }
 
-    public function processEnable($pluginKey, $version)
+    public function processEnable($pluginKey, $version): void
     {
         $this->setPluginVersionStatus($pluginKey, $version, 1);
     }
 
-    protected function setPluginVersionStatus($pluginKey, $version, $status)
+    protected function setPluginVersionStatus($pluginKey, $version, $status): void
     {
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL . " SET status = :status:, version = :version: WHERE unique_key = :uniqueKey:";
         $sql = $this->dbConn->bindVars($sql, ':status:', $status, 'integer');
@@ -94,7 +77,7 @@ class BasePluginInstaller
         $this->dbConn->execute($sql);
     }
 
-    protected function loadInstallerLanguageFile($file)
+    protected function loadInstallerLanguageFile($file): void
     {
         $lng = $_SESSION['language'];
         $filename = $this->pluginDir . '/Installer/languages/' . $lng . '/' . $file;
@@ -113,7 +96,7 @@ class BasePluginInstaller
         }
     }
 
-    public function getErrorContainer()
+    public function getErrorContainer(): PluginErrorContainer
     {
         return $this->errorContainer;
     }
