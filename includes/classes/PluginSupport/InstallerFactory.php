@@ -30,12 +30,14 @@ class InstallerFactory
         if (!file_exists($versionDir . 'manifest.php')) {
             throw new PluginInstallerException('NO VERSION MANIFEST');
         }
-        if (!file_exists($versionDir . 'installer/' . 'Installer.php')) {
+
+        if (!file_exists($versionDir . 'Installer/Installer.php')) {
             $installer = new BasePluginInstaller($this->dbConn, $this->pluginInstaller, $this->errorContainer);
             return $installer;
         }
-        require_once($versionDir . 'Installer');
-        $installer = new Installer($this->dbConn, $this->pluginInstaller, $this->errorContainer);
+
+        require_once $versionDir . 'Installer/Installer.php';
+        $installer = new \Installer($this->dbConn, $this->pluginInstaller, $this->errorContainer);
         return $installer;
     }
 }
