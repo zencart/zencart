@@ -80,7 +80,10 @@ class BasePluginInstaller
         $this->dbConn->execute($sql);
     }
 
-    protected function loadInstallerLanguageFile($file): void
+    /**
+     * Loads the "main.php" language file. This handles "defines" for language-strings. It does NOT handle language-arrays.
+     */
+    protected function loadInstallerLanguageFile(string $file): void
     {
         $lng = $_SESSION['language'];
         $filename = $this->pluginDir . '/Installer/languages/' . $lng . '/' . $file;
