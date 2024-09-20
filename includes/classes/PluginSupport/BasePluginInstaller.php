@@ -25,6 +25,7 @@ class BasePluginInstaller
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeInstallers($this->pluginDir);
         if ($this->errorContainer->hasErrors()) {
             return false;
@@ -38,6 +39,7 @@ class BasePluginInstaller
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
         $this->setPluginVersionStatus($pluginKey, '', 0);
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeUninstallers($this->pluginDir);
         if ($this->errorContainer->hasErrors()) {
             return false;
@@ -49,6 +51,7 @@ class BasePluginInstaller
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
         $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
         if ($this->errorContainer->hasErrors()) {
             return false;

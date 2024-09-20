@@ -9,9 +9,31 @@ namespace Zencart\PluginSupport;
 
 class Installer
 {
+    protected string $pluginDir;
+    protected string $pluginKey;
+    protected string $version;
+    protected ?string $oldVersion;
 
     public function __construct(protected SqlPatchInstaller $patchInstaller, protected ScriptedInstallerFactory $scriptedInstallerFactory, protected PluginErrorContainer $errorContainer)
     {
+    }
+
+    public function setVersions(string $pluginDir, string $pluginKey, string $version, ?string $oldVersion = null): void
+    {
+        $this->pluginDir = $pluginDir;
+        $this->pluginKey = $pluginKey;
+        $this->version = $version;
+        $this->oldVersion = $oldVersion;
+    }
+
+    public function getVersionInformation(): array
+    {
+        return [
+            'pluginKey' => $this->pluginKey,
+            'pluginDir' => $this->pluginDir,
+            'version' => $this->version,
+            'oldVersion' => $this->oldVersion,
+        ];
     }
 
     public function executeInstallers($pluginDir): void
@@ -68,6 +90,7 @@ class Installer
             return;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doInstall();
     }
 
@@ -77,6 +100,7 @@ class Installer
             return;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doUninstall();
     }
 
@@ -86,6 +110,7 @@ class Installer
             return;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doUpgrade($oldVersion);
     }
 

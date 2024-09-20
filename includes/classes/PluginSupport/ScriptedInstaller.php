@@ -13,6 +13,12 @@ class ScriptedInstaller
 {
     use ScriptedInstallHelpers;
 
+    // Extended classes can access these variables to understand what version/etc they are operating on.
+    protected string $pluginDir;
+    protected string $pluginKey;
+    protected string $version;
+    protected ?string $oldVersion;
+
     public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
     {
     }
@@ -44,7 +50,15 @@ class ScriptedInstaller
         return true;
     }
 
-    /** Internal methods   **************/
+    /******** Internal methods ***********/
+    public function setVersionDetails(array $versionDetails): void
+    {
+        $this->pluginKey = $versionDetails['pluginKey'];
+        $this->pluginDir = $versionDetails['pluginDir'];
+        $this->version = $versionDetails['version'];
+        $this->oldVersion = $versionDetails['oldVersion'];
+    }
+
     public function doInstall(): ?bool
     {
         $installed = $this->executeInstall();
