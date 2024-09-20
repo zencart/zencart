@@ -89,6 +89,8 @@ if (count($languages = $lng->get_language_list()) > 1) {
 ?>
 
 <?php
+$zco_notifier->notify('NOTIFY_HTML_HEAD_CSS_BEGIN', $current_page_base);
+
 /**
  * Load all template-specific stylesheets, via the common CSS loader.
  */
@@ -103,6 +105,8 @@ require $template->get_template_dir('html_header_css_loader.php', DIR_WS_TEMPLAT
 <script>window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js','template_default', $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
+$zco_notifier->notify('NOTIFY_HTML_HEAD_JS_BEGIN', $current_page_base);
+
 /**
  * Load all template-specific jscript files, via the common jscript loader.
  */
