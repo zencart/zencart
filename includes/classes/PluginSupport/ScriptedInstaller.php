@@ -17,23 +17,8 @@ class ScriptedInstaller
     {
     }
 
-    public function doInstall(): ?bool
-    {
-        $installed = $this->executeInstall();
-        return $installed;
-    }
-
-    public function doUninstall(): ?bool
-    {
-        $uninstalled = $this->executeUninstall();
-        return $uninstalled;
-    }
-
-    public function doUpgrade($oldVersion): ?bool
-    {
-        $upgraded = $this->executeUpgrade($oldVersion);
-        return $upgraded;
-    }
+    /***** THESE ARE THE 3 METHODS FOR IMPLEMENTATION IN EXTENDED CLASSES *********/
+    /***** There is no need to implement any other methods in extended classes ****/
 
     /**
      * @return bool
@@ -57,6 +42,25 @@ class ScriptedInstaller
     protected function executeUpgrade($oldVersion)
     {
         return true;
+    }
+
+    /** Internal methods   **************/
+    public function doInstall(): ?bool
+    {
+        $installed = $this->executeInstall();
+        return $installed;
+    }
+
+    public function doUninstall(): ?bool
+    {
+        $uninstalled = $this->executeUninstall();
+        return $uninstalled;
+    }
+
+    public function doUpgrade($oldVersion): ?bool
+    {
+        $upgraded = $this->executeUpgrade($oldVersion);
+        return $upgraded;
     }
 
     protected function executeInstallerSql($sql): bool
