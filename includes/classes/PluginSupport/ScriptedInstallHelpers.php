@@ -252,7 +252,7 @@ trait ScriptedInstallHelpers
         }
         $result = $this->executeInstallerSelectQuery($sql);
 
-        $cgi = (int)$result->fields['configuration_group_id'];
+        $cgi = (int)($result->fields['configuration_group_id'] ?? 0);
 
         if ($cascadeDeleteKeysToo) {
             $sql = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_group_id = $cgi";
