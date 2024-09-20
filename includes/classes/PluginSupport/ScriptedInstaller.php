@@ -13,49 +13,71 @@ class ScriptedInstaller
 {
     use ScriptedInstallHelpers;
 
-    protected queryFactory $dbConn;
-    protected PluginErrorContainer $errorContainer;
+    // Extended classes can access these variables to understand what version/etc they are operating on.
+    protected string $pluginDir;
+    protected string $pluginKey;
+    protected string $version;
+    protected ?string $oldVersion;
 
-    public function __construct($dbConn, $errorContainer)
+    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
     {
-        $this->dbConn = $dbConn;
-        $this->errorContainer = $errorContainer;
     }
 
-    public function doInstall()
-    {
-        $installed = $this->executeInstall();
-        return $installed;
-    }
+    /***** THESE ARE THE 3 METHODS FOR IMPLEMENTATION IN EXTENDED CLASSES *********/
+    /***** There is no need to implement any other methods in extended classes ****/
 
-    public function doUninstall()
-    {
-        $uninstalled = $this->executeUninstall();
-        return $uninstalled;
-    }
-
-    public function doUpgrade($oldVersion)
-    {
-        $upgraded = $this->executeUpgrade($oldVersion);
-        return $upgraded;
-    }
-
+    /**
+     * @return bool
+     */
     protected function executeInstall()
     {
         return true;
     }
 
+    /**
+     * @return bool
+     */
     protected function executeUninstall()
     {
         return true;
     }
 
+    /**
+     * @return bool
+     */
     protected function executeUpgrade($oldVersion)
     {
         return true;
     }
 
-    protected function executeInstallerSql($sql)
+    /******** Internal methods ***********/
+    public function setVersionDetails(array $versionDetails): void
+    {
+        $this->pluginKey = $versionDetails['pluginKey'];
+        $this->pluginDir = $versionDetails['pluginDir'];
+        $this->version = $versionDetails['version'];
+        $this->oldVersion = $versionDetails['oldVersion'];
+    }
+
+    public function doInstall(): ?bool
+    {
+        $installed = $this->executeInstall();
+        return $installed;
+    }
+
+    public function doUninstall(): ?bool
+    {
+        $uninstalled = $this->executeUninstall();
+        return $uninstalled;
+    }
+
+    public function doUpgrade($oldVersion): ?bool
+    {
+        $upgraded = $this->executeUpgrade($oldVersion);
+        return $upgraded;
+    }
+
+    protected function executeInstallerSql($sql): bool
     {
         $this->dbConn->dieOnErrors = false;
         $this->dbConn->Execute($sql);

@@ -9,31 +9,34 @@ namespace Zencart\PluginSupport;
 
 class Installer
 {
+    protected string $pluginDir;
+    protected string $pluginKey;
+    protected string $version;
+    protected ?string $oldVersion;
 
-    /**
-     * $errorContainer is a PluginErrorContainer object
-     * @var object
-     */
-    protected $errorContainer;
-    /**
-     * $errorContainer is a patchInstaller object
-     * @var object
-     */
-    protected $patchInstaller;
-    /**
-     * $errorContainer is a scriptedInstallerFactory object
-     * @var object
-     */
-    protected $scriptedInstallerFactory;
-
-    public function __construct($patchInstaller, $scriptedInstallerFactory, $errorContainer)
+    public function __construct(protected SqlPatchInstaller $patchInstaller, protected ScriptedInstallerFactory $scriptedInstallerFactory, protected PluginErrorContainer $errorContainer)
     {
-        $this->patchInstaller = $patchInstaller;
-        $this->scriptedInstallerFactory = $scriptedInstallerFactory;
-        $this->errorContainer = $errorContainer;
     }
 
-    public function executeInstallers($pluginDir)
+    public function setVersions(string $pluginDir, string $pluginKey, string $version, ?string $oldVersion = null): void
+    {
+        $this->pluginDir = $pluginDir;
+        $this->pluginKey = $pluginKey;
+        $this->version = $version;
+        $this->oldVersion = $oldVersion;
+    }
+
+    public function getVersionInformation(): array
+    {
+        return [
+            'pluginKey' => $this->pluginKey,
+            'pluginDir' => $this->pluginDir,
+            'version' => $this->version,
+            'oldVersion' => $this->oldVersion,
+        ];
+    }
+
+    public function executeInstallers($pluginDir): void
     {
         $this->executePatchInstaller($pluginDir);
         if ($this->errorContainer->hasErrors()) {
@@ -42,7 +45,7 @@ class Installer
         $this->executeScriptedInstaller($pluginDir);
     }
 
-    public function executeUninstallers($pluginDir)
+    public function executeUninstallers($pluginDir): void
     {
         $this->executePatchUninstaller($pluginDir);
         if ($this->errorContainer->hasErrors()) {
@@ -51,24 +54,24 @@ class Installer
         $this->executeScriptedUninstaller($pluginDir);
     }
 
-    public function executeUpgraders($pluginDir, $oldVersion)
+    public function executeUpgraders($pluginDir, $oldVersion): void
     {
         $this->executeScriptedUpgrader($pluginDir, $oldVersion);
     }
 
-    protected function executePatchInstaller($pluginDir)
+    protected function executePatchInstaller($pluginDir): void
     {
         $patchFile = 'install.sql';
         $this->executePatchFile($pluginDir, $patchFile);
-   }
+    }
 
-    protected function executePatchUninstaller($pluginDir)
+    protected function executePatchUninstaller($pluginDir): void
     {
         $patchFile = 'uninstall.sql';
         $this->executePatchFile($pluginDir, $patchFile);
     }
 
-    protected function executePatchFile($pluginDir, $patchFile)
+    protected function executePatchFile($pluginDir, $patchFile): void
     {
         if (!file_exists($pluginDir . '/Installer/' . $patchFile)) {
             return;
@@ -79,37 +82,39 @@ class Installer
             return;
         }
         $this->patchInstaller->executePatchSql($paramLines);
-
     }
 
-    protected function executeScriptedInstaller($pluginDir)
+    protected function executeScriptedInstaller($pluginDir): void
     {
         if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
             return;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doInstall();
     }
 
-    protected function executeScriptedUninstaller($pluginDir)
+    protected function executeScriptedUninstaller($pluginDir): void
     {
         if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
             return;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doUninstall();
     }
 
-    protected function executeScriptedUpgrader($pluginDir, $oldVersion)
+    protected function executeScriptedUpgrader($pluginDir, $oldVersion): void
     {
         if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
             return;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doUpgrade($oldVersion);
     }
 
-    public function getErrorContainer()
+    public function getErrorContainer(): PluginErrorContainer
     {
         return $this->errorContainer;
     }

@@ -7,32 +7,13 @@
 
 namespace Zencart\PluginSupport;
 
+use queryFactory;
 use Zencart\Exceptions\PluginInstallerException;
 
 class InstallerFactory
 {
-
-    /**
-     * $dbConn is a database object 
-     * @var object
-     */
-    protected $dbConn;
-    /**
-     * $errorContainer is a PluginErrorContainer object
-     * @var object
-     */
-    protected $errorContainer;
-    /**
-     * $errorContainer is a pluginInstaller object
-     * @var object
-     */
-    protected $pluginInstaller;
-
-    public function __construct($dbConn, $pluginInstaller, $errorContainer)
+    public function __construct(protected queryFactory $dbConn, protected Installer $pluginInstaller, protected PluginErrorContainer $errorContainer)
     {
-        $this->dbConn = $dbConn;
-        $this->pluginInstaller = $pluginInstaller;
-        $this->errorContainer = $errorContainer;
     }
 
     public function make($plugin, $version)
