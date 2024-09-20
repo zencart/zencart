@@ -35,16 +35,25 @@ class ScriptedInstaller
         return $upgraded;
     }
 
+    /**
+     * @return bool
+     */
     protected function executeInstall()
     {
         return true;
     }
 
+    /**
+     * @return bool
+     */
     protected function executeUninstall()
     {
         return true;
     }
 
+    /**
+     * @return bool
+     */
     protected function executeUpgrade($oldVersion)
     {
         return true;
