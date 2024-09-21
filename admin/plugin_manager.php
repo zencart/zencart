@@ -44,7 +44,7 @@ $tableDefinition = [
                 'method' => 'getLanguageTranslationForName',
             ],
         ],
-        'unique_key' => ['title' => TABLE_HEADING_KEY],
+        'version' => ['title' => TABLE_HEADING_VERSION_INSTALLED],
         'filespace' => [
             'title' => TABLE_HEADING_FILE_SPACE,
             'derivedItem' => [
@@ -52,6 +52,7 @@ $tableDefinition = [
                 'method' => 'getPluginFileSize',
             ],
         ],
+        'unique_key' => ['title' => TABLE_HEADING_KEY],
         'status' => [
             'title' => TABLE_HEADING_STATUS,
             'derivedItem' => [
@@ -60,7 +61,6 @@ $tableDefinition = [
                 'params' => ['0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED],
             ],
         ],
-        'version' => ['title' => TABLE_HEADING_VERSION_INSTALLED],
     ],
 ];
 
