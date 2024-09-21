@@ -6,18 +6,18 @@
  * @version $Id: torvista 2024 Jul 22 Modified in v2.1.0-alpha1 $
  */
 
-use Zencart\PluginManager\PluginManager;
-use Zencart\PluginSupport\SqlPatchInstaller;
-use Zencart\PluginSupport\ScriptedInstallerFactory;
-use Zencart\PluginSupport\InstallerFactory;
-use Zencart\PluginSupport\Installer;
-use Zencart\PluginSupport\PluginErrorContainer;
-use Zencart\ViewBuilders\PluginManagerController;
 use Zencart\Filters\FilterFactory;
+use Zencart\Filters\FilterManager;
+use Zencart\PluginManager\PluginManager;
+use Zencart\PluginSupport\Installer;
+use Zencart\PluginSupport\InstallerFactory;
+use Zencart\PluginSupport\PluginErrorContainer;
+use Zencart\PluginSupport\ScriptedInstallerFactory;
+use Zencart\PluginSupport\SqlPatchInstaller;
+use Zencart\ViewBuilders\DerivedItemsManager;
+use Zencart\ViewBuilders\PluginManagerController;
 use Zencart\ViewBuilders\PluginManagerDataSource;
 use Zencart\ViewBuilders\SimpleDataFormatter;
-use Zencart\Filters\FilterManager;
-use Zencart\ViewBuilders\DerivedItemsManager;
 
 /* @var PluginManager $pluginManager */
 /* @var queryFactory $db */
@@ -41,24 +41,24 @@ $tableDefinition = [
             'title' => TABLE_HEADING_NAME,
             'derivedItem' => [
                 'type' => 'local',
-                'method' => 'getLanguageTranslationForName'
-                ],
+                'method' => 'getLanguageTranslationForName',
             ],
+        ],
         'unique_key' => ['title' => TABLE_HEADING_KEY],
         'filespace' => [
             'title' => TABLE_HEADING_FILE_SPACE,
             'derivedItem' => [
                 'type' => 'local',
-                'method' => 'getPluginFileSize'
-            ]
+                'method' => 'getPluginFileSize',
+            ],
         ],
         'status' => [
             'title' => TABLE_HEADING_STATUS,
             'derivedItem' => [
                 'type' => 'local',
                 'method' => 'arrayReplace',
-                'params' => ['0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED]
-            ]
+                'params' => ['0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED],
+            ],
         ],
         'version' => ['title' => TABLE_HEADING_VERSION_INSTALLED],
     ],
@@ -80,8 +80,8 @@ $filterDefinitions = [
         'source' => 'options',
         'selectName' => 'plugin_status',
         'auto' => true,
-        'options' => ['*' => TEXT_ALL_STATUSES, '0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED]
-    ]
+        'options' => ['*' => TEXT_ALL_STATUSES, '0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED],
+    ],
 ];
 
 // filter manager changes the query based on defined filters
@@ -102,24 +102,22 @@ $tableController->processRequest();
 
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
 <head>
-    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+<?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require DIR_WS_INCLUDES . 'header.php'; ?>
 <!-- header_eof //-->
 
 <!-- body //-->
-
-<?php require "includes/templates/table_view.php"; ?>
-
+<?php require 'includes/templates/table_view.php'; ?>
 <!-- body_eof //-->
 
 <!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+<?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>

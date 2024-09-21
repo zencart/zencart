@@ -131,7 +131,7 @@ class FileSystem extends IlluminateFilesystem
         if (isset($size[$factor])) {
             $suffix = $size[$factor];
         }
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $suffix;
+        return sprintf("%.{$decimals}f ", $bytes / pow(1024, $factor)) . $suffix;
     }
 
     public function fileExistsInDirectory(string $fileDir, string $filePattern): bool

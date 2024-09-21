@@ -164,7 +164,7 @@ class PluginManagerController extends BaseController
         );
         $this->setBoxContent('<br>' . TEXT_CONFIRM_UNINSTALL . '<br>');
         $this->setBoxContent(
-            '<br><button type="submit" class="btn btn-primary">'
+            '<br><button type="submit" class="btn btn-danger">'
             . TEXT_UNINSTALL . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
                 $this->pageLink() . '&' . $this->colKeylink()
@@ -334,7 +334,7 @@ class PluginManagerController extends BaseController
             );
         }
         $this->setBoxContent(
-            '<br><button type="submit" class="btn btn-primary">'
+            '<br><button type="submit" class="btn btn-danger">'
             . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
                 $this->pageLink() . '&' . $this->colKeylink()
@@ -365,7 +365,7 @@ class PluginManagerController extends BaseController
             $this->setBoxContent('<br>' . $version . zen_draw_hidden_field('version[]', $version));
         }
         $this->setBoxContent(
-            '<br><button type="submit" class="btn btn-primary">'
+            '<br><button type="submit" class="btn btn-danger">'
             . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
                 $this->pageLink() . '&' . $this->colKeylink()
@@ -452,7 +452,7 @@ class PluginManagerController extends BaseController
             ) . zen_draw_hidden_field('version', $this->currentFieldValue('version')));
         $this->setBoxContent('<br>' . TEXT_CONFIRM_DISABLE . '<br>');
         $this->setBoxContent(
-            '<br><button type="submit" class="btn btn-primary">'
+            '<br><button type="submit" class="btn btn-danger">'
             . TEXT_DISABLE . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
                 $this->pageLink() . '&' . $this->colKeylink()
