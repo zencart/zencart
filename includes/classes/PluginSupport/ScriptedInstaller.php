@@ -17,7 +17,7 @@ class ScriptedInstaller
     protected string $pluginDir;
     protected string $pluginKey;
     protected string $version;
-    protected ?string $oldVersion;
+    protected ?string $oldVersion; // null if not in upgrade mode
 
     public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
     {
