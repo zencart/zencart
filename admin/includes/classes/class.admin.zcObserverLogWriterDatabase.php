@@ -24,6 +24,13 @@ class zcObserverLogWriterDatabase extends base {
     global $db;
     $this->initLogsTable();
 
+    // -----
+    // Don't record accesses coming from the keep-alive timer.
+    //
+    if ($log_data['page_accessed'] === 'keepalive.php') {
+        return;
+    }
+
     /**
      * gzip the passed postdata so that it takes less storage space in the database
      */
