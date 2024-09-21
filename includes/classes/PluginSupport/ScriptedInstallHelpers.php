@@ -314,21 +314,4 @@ trait ScriptedInstallHelpers
         $this->dbConn->dieOnErrors = true;
         return true;
     }
-
-
-
-    // @TODO - WORK IN PROGRESS...
-    protected function getSelfDetails(): array
-    {
-        global $installedPlugins;
-        foreach ($installedPlugins as $plugin) {
-            $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
-            $namespaceCatalog = 'Zencart\\Plugins\\Catalog\\' . ucfirst($plugin['unique_key']);
-            $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
-        }
-
-        // installed or not
-        // currently installed version
-        // manifest.php contents
-    }
 }
