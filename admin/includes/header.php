@@ -197,13 +197,13 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
 
   </div>
   <div class="row headerBar">
-    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 noprint">
         <?php
         if (!$hide_languages) {
-            echo zen_draw_form('languages', basename($PHP_SELF), '', 'get');
+            echo zen_draw_form('languages', basename($PHP_SELF), '', 'get', 'class="form-inline"');
             echo DEFINE_LANGUAGE . '&nbsp;&nbsp;' . (count($languages) > 1 ? zen_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onChange="this.form.submit();"') : '');
             echo zen_hide_session_id();
-            echo zen_post_all_get_params(array('language'));
+            echo zen_post_all_get_params(['language']);
             echo '</form>';
         } else {
             echo '&nbsp;';
