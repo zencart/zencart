@@ -6,9 +6,9 @@ Officially only the latest two releases of Zen Cart are supported for bugs and s
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 2.0.1   | :white_check_mark: |
-| 2.0.0   | :white_check_mark: |
-| <= 1.5.8   | :x:                |
+| 2.0.x   | :white_check_mark: |
+| 1.5.8   | :white_check_mark: |
+| <= 1.5.7   | :x:                |
 
 ## Reporting a Vulnerability
 
