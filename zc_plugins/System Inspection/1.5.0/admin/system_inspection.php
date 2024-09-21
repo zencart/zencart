@@ -41,8 +41,10 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                 <tbody>
                 <?php
                 $new_pages = [];
-                $pages_query_raw = " SELECT * FROM " . TABLE_ADMIN_PAGES;
-                $pages = $db->Execute($pages_query_raw);
+                $sql = "SELECT ap.* FROM " . TABLE_ADMIN_PAGES . " ap
+                        LEFT JOIN " . TABLE_ADMIN_MENUS . " am ON am.menu_key = ap.menu_key
+                        ORDER BY am.sort_order, ap.sort_order";
+                $pages = $db->Execute($sql);
                 if ($pages->RecordCount() <= 0) {
                     ?>
                     <tr>
