@@ -31,8 +31,10 @@
 
 #PROGRESS_FEEDBACK:!TEXT=Purging caches ...
 # Clear out active customer sessions. Truncating helps the database clean up behind itself.
+# Also, remove uninteresting 'keepalive.php' accesses logged in the admin_activity_logs table.
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
+DELETE FROM admin_activity_log WHERE page_accessed = 'keepalive.php';
 
 #PROGRESS_FEEDBACK:!TEXT=Adding error logging to email archive ...
 # Add column to store any errorinfo returned from phpmailer.
