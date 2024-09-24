@@ -291,7 +291,7 @@ function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
 }
 
 
-function zen_lookup_admin_menu_language_override(string $lookup_type, string $lookup_key, string $fallback): string
+function zen_lookup_admin_menu_language_override(string $lookup_type, ?string $lookup_key, ?string $fallback): ?string
 {
     switch ($lookup_type) {
         case 'product_type_name':
