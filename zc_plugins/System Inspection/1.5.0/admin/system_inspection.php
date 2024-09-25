@@ -183,7 +183,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                     $message = '';
                     if (!in_array($item, BUILT_IN_PAYMENTS)) {
                         $i++;
-                        $message = sprintf(NEW_MODULE, $item);
+                        $message = sprintf(NEW_MODULE_FOUND, $item);
                     }
                     if (array_key_exists($item, REPLACEMENTS)) {
                         $message = sprintf(REPLACE_MODULE_WITH, $item, REPLACEMENTS[$item]);
@@ -208,7 +208,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                     $message = '';
                     if (!in_array($item, BUILT_IN_SHIPPINGS)) {
                         $i++;
-                        $message = sprintf(NEW_MODULE, $item);
+                        $message = sprintf(NEW_MODULE_FOUND, $item);
                     }
                     if (array_key_exists($item, REPLACEMENTS)) {
                         $message = sprintf(REPLACE_MODULE_WITH, $item, REPLACEMENTS[$item]);
@@ -233,7 +233,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                     $message = '';
                     if (!in_array($item, BUILT_IN_ORDER_TOTALS)) {
                         $i++;
-                        $message = sprintf(NEW_MODULE, $item);
+                        $message = sprintf(NEW_MODULE_FOUND, $item);
                     }
                     if (array_key_exists($item, REPLACEMENTS)) {
                         $message = sprintf(REPLACE_MODULE_WITH, $item, REPLACEMENTS[$item]);

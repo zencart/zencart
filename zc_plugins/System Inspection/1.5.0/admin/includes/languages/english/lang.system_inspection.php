@@ -31,6 +31,7 @@ return [
     'NO_PLUGINS_ENABLED' => 'No enabled plugins found.',
     'NO_MISSING_ADMIN_PAGES' => 'No missing admin pages found.',
     'MISSING_TABLE' => 'Missing table: %s',
+    'NEW_MODULE_FOUND' => 'New Module: %s',
     'OBSOLETE_MODULE' => 'Module %s is obsolete. Recommended to remove it.',
     'REPLACE_MODULE_WITH' => 'Module %1s should be replaced with %2s.',
     'PLUGIN_FOUND' => '%1s (%2s), version %3s (Author: %4s)',
