@@ -174,6 +174,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
         <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1">
             <h2><?= MODULE_LIST ?></h2>
             <div class="ml-4">
+            <p><em><?= MODULES_SUBNOTE ?></em></p>
             <h3><?= BOX_MODULES_PAYMENT ?></h3>
             <ul>
                 <?php

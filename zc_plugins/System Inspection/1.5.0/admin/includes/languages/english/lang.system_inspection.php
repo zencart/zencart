@@ -20,7 +20,7 @@ return [
     'HEADING_PAGE_MENU_KEY' => 'Menu Section Key',
     'HEADING_PAGE_LINK' => 'Link',
     'HEADING_DISPLAY' => 'Display Flag',
-
+    'MODULES_SUBNOTE' => 'NOTE: The following only refers to modules which are "enabled" (status=true). It does not necessarily report on new "files exist but not in use" modules.',
     'NO_EXTRAS' => 'No [new] modules found.',
     'NO_LINK' => '[Unable to create a Link to this]',
     'NO_PAGES_TABLE_FOUND' => 'Problem: No Admin Pages found!',
