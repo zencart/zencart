@@ -10,12 +10,16 @@
  */
 
 require 'includes/application_top.php';
-require DIR_WS_INCLUDES . 'admin_html_head.php';
 ?>
+<!doctype html >
+<html <?= HTML_PARAMS; ?>>
+<head>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
 <body>
-<?php
-require DIR_WS_INCLUDES . 'header.php'; ?>
+<!-- header //-->
+<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<!-- header_eof //-->
 
 <!-- body //-->
 <div class="container-fluid">
