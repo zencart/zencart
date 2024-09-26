@@ -111,8 +111,8 @@ class ot_loworderfee
                 $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
 
                 // calculate from flat fee or percentage
-                if (substr(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, -1) === '%') {
-                    $low_order_fee = $order->info['subtotal'] * MODULE_ORDER_TOTAL_LOWORDERFEE_FEE / 100;
+                if (str_ends_with(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, '%')) {
+                    $low_order_fee = $order->info['subtotal'] * rtrim(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, '%') / 100;
                 } else {
                     $low_order_fee = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
                 }

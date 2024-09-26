@@ -1677,7 +1677,7 @@ function zen_get_retail_or_wholesale_price($retail_price, string $wholesale_pric
     // If the wholesale price is to be a percent-off the retail price, calculate
     // that prior to return.
     //
-    if (strpos($wholesale_price, '%') !== false) {
+    if (str_ends_with($wholesale_price, '%')) {
         $wholesale_percent = rtrim($wholesale_price, '%');
         $wholesale_price = $retail_price * (100 - (float)$wholesale_percent) / 100;
     }

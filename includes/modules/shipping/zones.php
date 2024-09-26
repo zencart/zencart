@@ -226,8 +226,8 @@ class zones extends ZenShipping
 
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country . $show_box_weight;
                             $done = true;
-                            if (strstr($zones_table[$i + 1], '%')) {
-                                $shipping = ($zones_table[$i + 1] / 100) * $order_total_amount;
+                            if (str_ends_with($zones_table[$i + 1], '%')) {
+                                $shipping = (rtrim($zones_table[$i + 1], '%') / 100) * $order_total_amount;
                             } else {
                                 $shipping = $zones_table[$i + 1];
                             }
@@ -238,8 +238,8 @@ class zones extends ZenShipping
                         // shipping adjustment
                         if (($_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices()) <= $zones_table[$i]) {
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
-                            if (strstr($zones_table[$i + 1], '%')) {
-                                $shipping = ($zones_table[$i + 1] / 100) * $order_total_amount;
+                            if (str_ends_with($zones_table[$i + 1], '%')) {
+                                $shipping = (rtrim($zones_table[$i + 1], '%') / 100) * $order_total_amount;
                             } else {
                                 $shipping = $zones_table[$i + 1];
                             }
@@ -252,8 +252,8 @@ class zones extends ZenShipping
                         if (($total_count - $_SESSION['cart']->free_shipping_items()) <= $zones_table[$i]) {
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
                             $done = true;
-                            if (strstr($zones_table[$i + 1], '%')) {
-                                $shipping = ($zones_table[$i + 1] / 100) * $order_total_amount;
+                            if (str_ends_with($zones_table[$i + 1], '%')) {
+                                $shipping = (rtrim($zones_table[$i + 1], '%') / 100) * $order_total_amount;
                             } else {
                                 $shipping = $zones_table[$i + 1];
                             }
