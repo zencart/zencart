@@ -394,7 +394,7 @@ switch ($action) {
             if (ADMIN_CONFIGURATION_KEY_ON === '1') {
                 $displayKey = 'Key: ' . $key . '<br>';
             }
-            $keys .= '<b>' . $displayKey . $value['title'] . '</b><br>' . $value['description'] . '<br>';
+            $keys .= '<b>' . $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>' . zen_lookup_admin_menu_language_override('configuration_key_description', $key, $value['description']) . '<br>';
             if ($value['set_function']) {
                 eval('$keys .= ' . $value['set_function'] . '"' . zen_output_string($value['value'], ['"' => '&quot;', '`' => 'null;return;exit;']) . '", "' . $key . '");');
             } else {
@@ -452,7 +452,7 @@ switch ($action) {
                 if (ADMIN_CONFIGURATION_KEY_ON === '1') {
                     $displayKey = 'Key: ' . $key . '<br>';
                 }
-                $keys .= '<b>'. $displayKey . $value['title'] . '</b><br>';
+                $keys .= '<b>'. $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>';
                 if ($value['use_function']) {
                     $use_function = $value['use_function'];
                     if (strpos($use_function, '->') !== false) {

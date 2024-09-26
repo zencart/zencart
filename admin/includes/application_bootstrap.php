@@ -190,8 +190,8 @@ foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
     $namespaceCatalog = 'Zencart\\Plugins\\Catalog\\' . ucfirst($plugin['unique_key']);
     $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
-    $filePathAdmin = $filePath . 'classes/admin';
-    $filePathCatalog = $filePath . 'classes/';
+    $filePathAdmin = $filePath . 'admin/includes/classes/';
+    $filePathCatalog = $filePath . 'catalog/includes/classes/';
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
 }

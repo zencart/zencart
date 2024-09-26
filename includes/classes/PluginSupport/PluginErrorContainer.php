@@ -11,20 +11,18 @@ class PluginErrorContainer
 {
 
     /**
-     * $logger "null" the logger to used.
+     * $logger "null" the logger to use.
      * @var object
      */
     protected $logger;
     /**
      * $logErrors is an array of error messages
-     * @var array
      */
-    protected $logErrors = [];
+    protected array $logErrors = [];
     /**
-     * $friendlyErrors is a subset of $logErrors that have a friendly message (a know error with additional information)
-     * @var array
+     * $friendlyErrors is a subset of $logErrors that have a friendly message (a known error with additional information)
      */
-    protected $friendlyErrors = [];
+    protected array $friendlyErrors = [];
 
     public function __construct($logger = null)
     {

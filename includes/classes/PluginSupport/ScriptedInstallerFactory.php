@@ -11,17 +11,11 @@ use queryFactory;
 
 class ScriptedInstallerFactory
 {
-    protected queryFactory $dbConn;
-
-    protected PluginErrorContainer $errorContainer;
-
-    public function __construct($dbConn, $errorContainer)
+    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
     {
-        $this->dbConn = $dbConn;
-        $this->errorContainer = $errorContainer;
     }
 
-    public function make($pluginDir): \ScriptedInstaller
+    public function make($pluginDir): ScriptedInstaller
     {
         require_once $pluginDir . '/Installer/ScriptedInstaller.php';
         $scriptedInstaller = new \ScriptedInstaller($this->dbConn, $this->errorContainer);

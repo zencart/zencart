@@ -66,7 +66,8 @@
         $products_name = $product_info->fields['lang'][$_SESSION['languages_code']]['products_name'];
         $products_model = $product_info->fields['products_model'];
         // if no common markup tags in description, add line breaks for readability:
-        $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['lang'][$_SESSION['languages_code']]['products_description']) ? nl2br($product_info->fields['lang'][$_SESSION['languages_code']]['products_description']) : $product_info->fields['lang'][$_SESSION['languages_code']]['products_description']);
+        $products_description = $product_info->fields['lang'][$_SESSION['languages_code']]['products_description'] ?? '';
+        $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $products_description) ? nl2br($products_description) : $products_description);
 
         $products_image = (($product_not_found || $product_info->fields['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
         if ($product_info->fields['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS != '1') {
