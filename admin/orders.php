@@ -1472,7 +1472,7 @@ if ($show_orders_weights === true) {
                 </td>
 <?php } ?>
                 <td class="dataTableContent text-center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
-                <td class="dataTableContent text-right"><?php echo ($orders->fields['orders_status_name'] !== '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
+                <td class="dataTableContent text-right"><?php echo !empty($orders->fields['orders_status_name']) ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS; ?></td>
                 <?php
                    $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id']));
                    if (!empty($order_comments)) {

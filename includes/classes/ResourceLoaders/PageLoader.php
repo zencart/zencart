@@ -93,9 +93,13 @@ class PageLoader
         return $path;
     }
 
-    public function getTemplatePluginDir($templateCode, $templateDir)
+    public function getTemplatePluginDir(string $templateCode, string $templateDir, ?string $whichPlugin = '')
     {
         foreach ($this->installedPlugins as $plugin) {
+            if (!empty($whichPlugin) && $plugin['unique_key'] !== $whichPlugin) {
+                continue;
+            }
+
             $checkDir = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/templates/default/' . $templateDir . '/';
             if ($this->fileSystem->fileExistsInDirectory($checkDir, preg_replace('/\//', '', $templateCode))) {
                 return $checkDir;

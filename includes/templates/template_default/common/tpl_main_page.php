@@ -67,7 +67,7 @@ if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sidebo
   $right_column_file = 'column_right.php';
   $body_id = ($this_is_home_page) ? 'indexHome' : str_replace('_', '', $_GET['main_page']);
 ?>
-<body id="<?php echo $body_id . 'Body'; ?>"<?php if($zv_onload !='') echo ' onload="'.$zv_onload.'"'; ?>>
+<body id="<?php echo $body_id . 'Body'; ?>"<?php if($zv_onload !='') echo ' onload="'.$zv_onload.'"'; ?> class="<?= 'tpl_' . $template_dir ?>">
 <?php /* add any start-of-body-section code via an observer class */
 $zco_notifier->notify('NOTIFY_PAGE_BODY_BEGIN', $current_page);
 ?>
