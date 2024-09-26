@@ -782,7 +782,7 @@ class order extends base
         $this->calculateProductsTaxForOrder();
 
         // Update the final total to include tax if not already tax-inc
-        if (DISPLAY_PRICE_WITH_TAX == 'true') {
+        if (DISPLAY_PRICE_WITH_TAX === 'true') {
             $this->info['total'] = $this->info['subtotal'] + $this->info['shipping_cost'];
         } else {
             $this->info['total'] = $this->info['subtotal'] + $this->info['tax'] + $this->info['shipping_cost'];
@@ -820,7 +820,7 @@ class order extends base
                     if (isset($this->billing['zone_id']) && $this->billing['zone_id'] == STORE_ZONE) {
                         $address_book_id = $billToAddressId;
                     } else {
-                        $address_book_id = ($this->content_type === 'virtual' ? $billToAddressId : $shipToAddressId);
+                        $address_book_id = ($this->content_type === 'virtual' ? $billToAddressId : -1);
                     }
             }
             $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
