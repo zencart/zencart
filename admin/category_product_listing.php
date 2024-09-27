@@ -786,6 +786,25 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                           <?= zen_icon('metatags', size: '', hidden: true) ?>
                         </a>
                       <?php } ?>
+<?php
+                // -----
+                // Give an observer the chance to insert additional 'action' buttons into the listing's
+                // 'action-button' section. If supplied, the observer is responsible for properly formatting
+                // the button-link.
+                //
+                $extra_action_buttons = '';
+                $zco_notifier->notify(
+                    'NOTIFY_ADMIN_PROD_LISTING_ADD_ACTION_ICONS',
+                    [
+                        'category' => ($category ?? null),
+                        'product' => ($product ?? null),
+                        'cPath' => ($cPath ?? null),
+                        'current_category_id' => $current_category_id
+                    ],
+                    $extra_action_buttons
+                );
+                echo $extra_action_buttons;
+?>
                     </div>
                   </td>
                 <?php } ?>
