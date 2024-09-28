@@ -26,6 +26,9 @@ class queryFactory extends base
     public $error_number = 0;
     public $error_text = '';
 
+    public ?string $dbDefaultCharacterSet;
+    public ?string $dbDefaultCollation;
+
     private $pConnect;
     /**
      * @var bool
@@ -120,8 +123,11 @@ class queryFactory extends base
                     mysqli_query($this->link, "SET SESSION sql_mode = '" . preg_replace('/[^A-Z_,]/', '', DB_MYSQL_MODE) . "'");
                 }
 
-                return true;
+                $result = $this->Execute("SELECT @@character_set_database, @@collation_database");
+                $this->dbDefaultCharacterSet = $result->fields['@@character_set_database'] ?? null;
+                $this->dbDefaultCollation = $result->fields['@@collation_database'] ?? null;
 
+                return true;
             }
 
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $dieOnErrors);
@@ -631,7 +637,12 @@ class queryFactory extends base
     public function selectdb(string $db_name): bool
     {
         $result = mysqli_select_db($this->link, $db_name);
-        if ($result) return $result;
+        if ($result) {
+            $collationQuery = $this->Execute("SELECT @@character_set_database, @@collation_database");
+            $this->dbDefaultCharacterSet = $collationQuery->fields['@@character_set_database'] ?? null;
+            $this->dbDefaultCollation = $collationQuery->fields['@@collation_database'] ?? null;
+            return true;
+        }
 
         $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         return false;
