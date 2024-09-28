@@ -590,6 +590,136 @@ class systemChecker
         return $result;
     }
 
+    public function checkDbCharsetLatin1($parameters): bool
+    {
+        $dbCharset = $this->getServerConfig()->getDefine('DB_CHARSET');
+        if ($dbCharset === 'latin1') {
+            $this->localErrors = TEXT_ERROR_DB_LATIN1_DEPRECATED;
+            return false;
+        }
+        return true;
+    }
+
+    public function checkDbCharsetUtf8Short($parameters): bool
+    {
+        $dbCharset = $this->getServerConfig()->getDefine('DB_CHARSET');
+        if ($dbCharset === 'utf8') {
+            $this->localErrors = TEXT_ERROR_DB_CHARSET_UTF8_TOO_GENERIC;
+            return false;
+        }
+        return true;
+    }
+
+    public function checkDbCollation($parameters): bool
+    {
+        if (!function_exists('mysqli_connect')) {
+            return false;
+        }
+
+        $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+        $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+        $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+        $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+
+        global $db; // global'd here for $sniffer use later
+        $db = new queryFactory();
+
+        $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+        if (!$result) {
+            $this->localErrors = $db->error_number . ':' . $db->error_text;
+        } else {
+            $result = $db->selectdb($dbNameVal);
+        }
+        if (!$result) {
+            $this->localErrors = $db->error_number . ':' . $db->error_text;
+            return false;
+        }
+
+        if (empty($db->dbDefaultCharacterSet) || empty($db->dbDefaultCollation)) {
+            $this->localErrors .= TEXT_ERROR_DB_UNABLE_TO_DETECT_COLLATION;
+            return false;
+        }
+
+        // If DB default charset/collation are not of utf8mb4 class, attempt to update the default.
+        if (!str_starts_with($db->dbDefaultCharacterSet, 'utf8mb4') || !str_starts_with($db->dbDefaultCollation, 'utf8mb4')) {
+            $collate_lang = preg_replace('/(^[a-z0-9]+_|_ci$)/', '', str_replace('latin1_swedish_ci', 'latin1_general_ci', $db->dbDefaultCollation));
+            $charset = 'utf8mb4';
+            $collation = 'utf8mb4_' . $collate_lang . '_ci';
+            $sql = "SHOW COLLATION LIKE '$collation'";
+            $query = $db->Execute($sql);
+            if ($query->RecordCount() === 0) {
+                // didn't find a collation matching prior collation pattern, so fallback to 'general'
+                $collation = 'utf8mb4_general_ci';
+            }
+
+            $this->log('Charset/Collation: Attempting to convert database *default* character-set and collation from ' . $db->dbDefaultCharacterSet . ' and ' . $db->dbDefaultCollation . " to $charset and $collation", __METHOD__, []);
+            $sql = "ALTER DATABASE $dbNameVal CHARACTER SET $charset COLLATE $collation";
+            $db->Execute($sql);
+
+            // reselect db again, to prompt queryFactory to re-read collations
+            $result = $db->selectdb($dbNameVal);
+            if (!str_starts_with($db->dbDefaultCharacterSet, 'utf8mb4') || !str_starts_with($db->dbDefaultCollation, 'utf8mb4')) {
+                // if not utf8mb4 at this point, then we were unable to update it: will have to be done manually by hosting company
+                $this->log('Database Default Collation problem: The default character-set and collation in the database are not utf8mb4.' . "\n" . 'Found character-set ' . $db->dbDefaultCharacterSet . ' and collation ' . $db->dbDefaultCollation . ".\n" . 'Unable to convert automatically. Must convert manually by server admin or hosting company. Skipping further collation checks.', __METHOD__, []);
+                $this->localErrors = sprintf(TEXT_ERROR_DB_UNSUPPORTED_COLLATION, $db->dbDefaultCharacterSet, $db->dbDefaultCollation);
+                return false;
+            }
+        }
+
+        if (!$this->checkTableCollations()) {
+            return false;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check a sample of tables and text-content fields to see if they still need conversion
+     */
+    public function checkTableCollations(): bool
+    {
+        include_once DIR_FS_ROOT . 'includes/classes/sniffer.php';
+        $sniffer = new sniffer;
+
+        $dbPrefix = $this->getServerConfig()->getDefine('DB_PREFIX');
+
+        $tableDefaultCollationsWrong = false;
+        $tableColumnCollationsWrong = false;
+
+        $tablesToCheck = [
+            'categories_description' => ['categories_name', 'categories_description'],
+            'products_description' => ['products_name', 'products_description'],
+            'ezpages_content' => ['pages_title', 'pages_html_text'],
+            'orders' => ['customers_name'],
+            'customers' => ['customers_lastname'],
+        ];
+
+        foreach($tablesToCheck as $table => $fields) {
+            if (!$sniffer->table_exists($dbPrefix . $table)) {
+                $this->log('Skipping further inspection: could not find table: ' . $dbPrefix . $table, __METHOD__, []);
+                continue;
+            }
+            if (!str_starts_with($collation = $sniffer->get_table_collation($dbPrefix . $table), 'utf8mb4')) {
+                $tableDefaultCollationsWrong = true;
+                $this->log('Table collation problem: ' . $dbPrefix . $table . ' table default charset/collation are not utf8mb4.' . "\n" . 'Found ' . $collation . '. Skipping further checks.', __METHOD__, []);
+            }
+            foreach ($fields as $field) {
+                if (!str_starts_with($collation = $sniffer->get_field_collation($dbPrefix . $table, $field), 'utf8mb4')) {
+                    $tableColumnCollationsWrong = true;
+                    $this->log('Field collation problem: ' . $dbPrefix . $table . '.' . $field . ' column collation is not a variant of utf8mb4.' . "\n" . 'Found ' . $collation . '. Skipping further checks.', __METHOD__, []);
+                    break;
+                }
+            }
+
+            if ($tableColumnCollationsWrong || $tableDefaultCollationsWrong) {
+                $this->localErrors = TEXT_ERROR_DB_CHARSET_CONVERSION_REQUIRED;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function checkDBConnection($parameters): bool
     {
         if (! function_exists('mysqli_connect')) {
@@ -608,9 +738,65 @@ class systemChecker
         return $result;
     }
 
+    public function checkDbPrefix($parameters): bool
+    {
+        $prefixes = $this->findDbPrefixes();
+
+        if (empty($prefixes)) {
+            // no prefixes found, so no tables found, so not triggering any error
+            $this->log('Unable to discern any DB table-prefixes. Skipping further prefix inspection.', __METHOD__, []);
+            return true;
+        }
+
+        $dbPrefixFromConfigureFile = $this->getServerConfig()->getDefine('DB_PREFIX');
+
+        if (!in_array($dbPrefixFromConfigureFile, $prefixes, true)) {
+            $reportedPrefix = empty($dbPrefixFromConfigureFile) ? 'blank (meaning none)' : "'" . $dbPrefixFromConfigureFile . "'";
+            $prefixesList = str_replace("'(none)'", "none/blank", "'" . implode("' or '", $prefixes) . "'");
+            $message = sprintf(TEXT_ERROR_DB_PREFIX_MISMATCH_INSTRUCTIONS, $reportedPrefix, $prefixesList);
+            $this->log($message, __METHOD__, []);
+            $this->localErrors = $message;
+            return false;
+        }
+        return true;
+    }
+
+    public function findDbPrefixes(): ?array
+    {
+        $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
+        $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
+        $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
+        $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+
+        $db = new queryFactory();
+        $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
+        if (!$result) {
+            $this->localErrors = $db->error_number . ':' . $db->error_text;
+            return null;
+        }
+
+        $sql = "SHOW TABLES LIKE '%admin\_activity\_log'";
+        $results = $db->Execute($sql);
+        if (!$results->EOF) {
+            $prefixes = [];
+            foreach ($results as $result) {
+                foreach ($result as $heading => $table) {
+                    if ($table === 'admin_activity_log') {
+                        $prefixes[] = '(none)';
+                        continue 2;
+                    }
+                }
+                $prefixes[] = preg_replace('/admin_activity_log$/', '', $table);
+            }
+            if (!empty($prefixes)) {
+                return $prefixes;
+            }
+        }
+        return null;
+    }
+
     public function checkNewDBConnection($parameters): bool|queryFactoryResult
     {
-
         $db = new queryFactory();
         $result = $db->simpleConnect(zcRegistry::getValue('db_host'), zcRegistry::getValue('db_user'), zcRegistry::getValue('db_password'), zcRegistry::getValue('db_name'));
         if (!$result) {
