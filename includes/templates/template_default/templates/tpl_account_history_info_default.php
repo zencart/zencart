@@ -137,7 +137,7 @@ if (!empty($order->statuses)) {
         <th scope="col" id="myAccountStatus"><?php echo TABLE_HEADING_STATUS_ORDER_STATUS; ?></th>
 <?php
     $extra_headings = [];
-    $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_OSH_HEADINGS', [$order, $extra_headings);
+    $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_OSH_HEADINGS', $order, $extra_headings);
     foreach ($extra_headings as $next_heading) {
 ?>
         <th scope="col"><?= $next_heading ?></th>
