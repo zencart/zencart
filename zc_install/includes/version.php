@@ -15,7 +15,7 @@
 
 define('PROJECT_VERSION_NAME', 'Zen Cart');
 define('PROJECT_VERSION_MAJOR', '2');
-define('PROJECT_VERSION_MINOR', '1.0-alpha2');
+define('PROJECT_VERSION_MINOR', '1.0-beta1');
 define('PROJECT_VERSION_PATCH1', '');
 define('PROJECT_VERSION_PATCH2', '');
 define('PROJECT_VERSION_PATCH1_SOURCE', '');
