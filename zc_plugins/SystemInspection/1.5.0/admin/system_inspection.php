@@ -6,7 +6,7 @@
  * @copyright Copyright 2015-2023 That Software Guy
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  $
+ * @version $Id: Scott Wilson 2024 Sep 29 New in v2.1.0-beta1 $
  */
 
 require 'includes/application_top.php';
