@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: New in 2.1.0 $
+ * @version $Id: DrByte 2024 Sep 06 New in v2.1.0-beta1 $
  *
  * @var notifier $zco_notifier
  */

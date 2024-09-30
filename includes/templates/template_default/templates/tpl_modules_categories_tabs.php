@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: v2.1.0-alpha3 $
+ * @version $Id: DrByte 2024 Sep 02 Modified in v2.1.0-beta1 $
  */
 
 include DIR_WS_MODULES . zen_get_module_directory(FILENAME_CATEGORIES_TABS);
