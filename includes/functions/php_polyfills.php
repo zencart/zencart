@@ -3,7 +3,7 @@
  * polyfills to accommodate older PHP versions, adapted from https://github.com/symfony/polyfill/
  * @copyright Portions  (c) Fabien Potencier <fabien@symfony.com>
  *
- * @version $Id: DrByte 2023 Aug 01 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Sep 02 Modified in v2.1.0-beta1 $
  */
 
 if (\PHP_VERSION_ID >= 80400) {
