@@ -34,7 +34,12 @@ if (!isset($flag_disable_footer) || !$flag_disable_footer) {
 </div>
 </div>
 <!--eof-navigation display -->
-
+<?php
+    // -----
+    // Add notification for plugin content insertion.
+    //
+    $zco_notifier->notify('NOTIFY_FOOTER_AFTER_NAVSUPP', []);
+?>
 <!--bof-ip address display -->
 <?php
 if (SHOW_FOOTER_IP == '1') {
