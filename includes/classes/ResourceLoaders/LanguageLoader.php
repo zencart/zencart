@@ -5,7 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
-
 namespace Zencart\LanguageLoader;
 
 class LanguageLoader
@@ -59,6 +58,11 @@ class LanguageLoader
         return true; 
     }
 
+    public function makeCatalogArrayConstants(string $fileName, string $extraDir = ''): void
+    {
+        $this->arrayLoader->makeCatalogArrayConstants($fileName, $extraDir);
+    }
+
     /**
      * Used on the catalog-side to set the current page for the language-load, since it's not necessarily
      * available during the autoload process (e.g. for AJAX handlers).
@@ -95,12 +99,12 @@ class LanguageLoader
         return false;
     }
 
-    public function loadModuleLanguageFile(string $language, string $fileName, string $moduleType): bool
+    public function loadModuleLanguageFile(string $fileName, string $moduleType): bool
     {
-        $defineList = $this->arrayLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
-        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($language, $fileName, $moduleType);
+        $array_constants_created = $this->arrayLoader->loadModuleLanguageFile($fileName, $moduleType);
+        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($fileName, $moduleType);
 
-        return ($legacy_file_loaded || count($defineList) !== 0);
+        return ($legacy_file_loaded === true || $array_constants_created === true);
     }
 
     public function isFileAlreadyLoaded(string $defineFile): bool

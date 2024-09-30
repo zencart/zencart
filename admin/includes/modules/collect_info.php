@@ -193,7 +193,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : zen_get_products_name($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name') . ' class="form-control"'); ?>
+          <?php echo zen_draw_input_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : zen_get_products_name($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name') . ' class="form-control"', true); ?>
         </div>
         <br>
         <?php
@@ -258,12 +258,74 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     </div>
   </div>
   <div class="well product-tax-prices">
+    <?php
+    // -----
+    // If a plugin has additional fields to add to the form, it supplies that information here.
+    // Additional fields are specified as a simple array of arrays,
+    // with each array element identifying a new input element:
+    //
+    // $additional_fields = [
+    //      [
+    //          'label' => 'The text to include for the field label' (leave blank for radio buttons)
+    //          'fieldname' => 'label "for" attribute, must match id of input field' (leave blank for radio buttons)
+    //          'input' => 'The form-related portion of the field' (for radio buttons, embed label with input fields, all in this one element)
+    //      ],
+    //      ...
+    // ];
+    //
+    $additional_fields = [];
+    $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_PRICE_EDIT_SECTION_TOP', $pInfo, $additional_fields);
+    if (!empty($additional_fields)) {
+        foreach ($additional_fields as $current_field) {
+    ?>
+    <div class="form-group">
+    <?php if (!empty($current_field['label'])) { ?>
+        <?= zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"') ?>
+    <?php } ?>
+    <?php if (!empty($current_field['fieldname'])) { ?>
+        <div class="col-sm-9 col-md-6"><?= $current_field['input'] ?></div>
+    <?php } else { ?>
+        <?= $current_field['input'] ?>
+    <?php } ?>
+    </div>
+    <?php
+        }
+    }
+    ?>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_TAX_CLASS, 'products_tax_class_id', 'class="col-sm-3 control-label"'); ?>
-      <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'onchange="updateTaxIncl()" class="form-control" id="products_tax_class_id"'); ?>
-      </div>
+        <div class="col-sm-9 col-md-6">
+            <?php echo zen_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'onchange="updateTaxIncl()" class="form-control" id="products_tax_class_id"'); ?>
+        </div>
     </div>
+    <?php
+    // -----
+    // If a plugin has additional fields to add to the form, it supplies that information here.
+    // Additional fields are specified as a simple array of arrays,
+    // with each array element identifying a new input element:
+    //
+    // $additional_fields = [
+    //      [
+    //          'label' => 'The text to include for the field label' (leave blank for radio buttons)
+    //          'fieldname' => 'label "for" attribute, must match id of input field' (leave blank for radio buttons)
+    //          'input' => 'The form-related portion of the field' (for radio buttons, embed label with input fields, all in this one element)
+    //      ],
+    //      ...
+    // ];
+    //
+    $additional_fields = [];
+    $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_PRICE_EDIT_ABOVE', $pInfo, $additional_fields);
+    if (!empty($additional_fields)) {
+        foreach ($additional_fields as $current_field) {
+    ?>
+    <div class="form-group">
+        <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
+    </div>
+    <?php
+        }
+    }
+    ?>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_PRODUCTS_PRICE_EXCL, 'products_price', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
@@ -290,6 +352,34 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     }
 ?>
   </div>
+    <?php
+    // -----
+    // If a plugin has additional fields to add to the form, it supplies that information here.
+    // Additional fields are specified as a simple array of arrays,
+    // with each array element identifying a new input element:
+    //
+    // $additional_fields = [
+    //      [
+    //          'label' => 'The text to include for the field label',
+    //          'fieldname' => 'label "for" attribute, must match id of input field'
+    //          'input' => 'The form-related portion of the field',
+    //      ],
+    //      ...
+    // ];
+    //
+    $additional_fields = [];
+    $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_PRICE_EDIT_BELOW', $pInfo, $additional_fields);
+    if (!empty($additional_fields)) {
+        foreach ($additional_fields as $current_field) {
+    ?>
+    <div class="form-group">
+        <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
+    </div>
+    <?php
+        }
+    }
+    ?>
   <script>
     updateTaxIncl();
   </script>

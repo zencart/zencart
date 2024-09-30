@@ -17,10 +17,8 @@ if (!isset($show_registration_ip_in_listing)) {
     $show_registration_ip_in_listing = false;
 }
 $action = $_GET['action'] ?? '';
-$customers_id = (int)($_GET['cID'] ?? 0);
-if (isset($_POST['cID'])) {
-    $customers_id = (int)$_POST['cID'];
-}
+$customers_id = (int)($_POST['cID'] ?? $_GET['cID'] ?? 0);
+
 if (!isset($_GET['page'])) {
     $_GET['page'] = '';
 }
@@ -82,6 +80,10 @@ if (!empty($action)) {
             $action = '';
             break;
         case 'update':
+            if ($customers_id === 0) {
+                zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
+            }
+
             $customers_firstname = zen_db_prepare_input(zen_sanitize_string($_POST['customers_firstname']));
             $customers_lastname = zen_db_prepare_input(zen_sanitize_string($_POST['customers_lastname']));
             $customers_email_address = zen_db_prepare_input($_POST['customers_email_address']);
@@ -158,21 +160,19 @@ if (!empty($action)) {
                 $error = true;
             }
 
-            $zone_id = 0;
             $entry_state_error = false;
             if (ACCOUNT_STATE === 'true') {
-                $entry_state_has_zones = count(zen_get_country_zones($entry_country_id)) > 0;
+                $entry_state_has_zones = count(zen_get_country_zones((int)$entry_country_id)) > 0;
                 if ($entry_state_has_zones) {
                     $zone_query = $db->Execute(
                         "SELECT zone_id
                            FROM " . TABLE_ZONES . "
                            WHERE zone_country_id = " . (int)$entry_country_id . "
-                             AND zone_name = '" . zen_db_input($entry_state) . "'"
+                             AND zone_id = " . (int)$entry_zone_id . "
+                           LIMIT 1"
                     );
 
-                    if (!$zone_query->EOF) {
-                        $entry_zone_id = $zone_query->fields['zone_id'];
-                    } else {
+                    if ($zone_query->EOF) {
                         $error = true;
                         $entry_state_error = true;
                     }
@@ -396,6 +396,7 @@ if (!empty($action)) {
                 $cInfo->postcode = $cInfo->entry_postcode;
                 $cInfo->city =  $cInfo->entry_city;
                 $cInfo->state = $cInfo->entry_state;
+                $cInfo->customers_default_address_id = $default_address_id;
                 $processed = true;
             }
             break;
@@ -469,7 +470,11 @@ if (!empty($action)) {
             $customer->delete($delete_reviews, $forget_only);
             zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']), 'NONSSL'));
             break;
-        default:
+        case 'edit':
+            if ($customers_id === 0) {
+                zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
+            }
+        default:    //- Fall-through from above if $customers_id appears to be valid.
             $customer = new Customer($customers_id);
             $cInfo = new objectInfo($customer->getData());
             break;
@@ -544,6 +549,7 @@ if ($action === 'edit' || $action === 'update') {
         true
     );
     echo zen_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id);
+    echo zen_draw_hidden_field('cID', $customers_id);
     echo zen_hide_session_id();
 ?>
         <div class="row formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></div>
@@ -834,38 +840,23 @@ if ($action === 'edit' || $action === 'update') {
                 echo zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"'); ?>
                 <div class="col-sm-9 col-md-6">
 <?php
-        $entry_state = zen_get_zone_name((int)$cInfo->country_id, (int)$cInfo->zone_id, $cInfo->state);
-        $zones_values = zen_get_country_zones((int)$cInfo->country_id);
-        if (count($zones_values) !== 0) {
-            $zones_array = [];
-            foreach ($zones_values as $zones_value) {
-                $zones_array[] = [
-                    'id' => $zones_value['text'],
-                    'text' => $zones_value['text']
-                ];
-            }
-            echo zen_draw_pull_down_menu(
-                'entry_state',
-                $zones_array,
-                $entry_state,
-                'class="form-control" id="entry_state"'
-            );
-        } else {
-            echo zen_draw_input_field(
-                'entry_state',
-                htmlspecialchars(
-                    zen_get_zone_name(
-                        (int)$cInfo->country_id,
-                        (int)$cInfo->zone_id,
-                        $cInfo->state ?? ''
-                    ),
-                    ENT_COMPAT,
-                    CHARSET,
-                    true
-                ),
-                'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"'
-            );
-        }
+        echo zen_draw_pull_down_menu(
+            'entry_zone_id',
+            zen_prepare_country_zones_pull_down((int)$cInfo->entry_country_id),
+            (int)$cInfo->entry_zone_id,
+            'class="form-control" id="entry_zone_id"'
+        );
+
+        echo zen_draw_input_field(
+            'entry_state',
+            htmlspecialchars(
+                $cInfo->entry_state ?? '',
+                ENT_COMPAT,
+                CHARSET,
+                true
+            ),
+            'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"'
+        );
 ?>
                 </div>
             </div>
@@ -879,7 +870,7 @@ if ($action === 'edit' || $action === 'update') {
                     echo zen_draw_pull_down_menu(
                         'entry_country_id',
                         zen_get_countries_for_admin_pulldown(),
-                        $cInfo->country_id,
+                        $cInfo->entry_country_id,
                         'class="form-control" id="entry_country_id"'
                     ); ?>
                 </div>

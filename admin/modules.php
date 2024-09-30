@@ -117,7 +117,7 @@ if (!empty($action)) {
             }
 
             if (in_array($class_file, array_keys($modules_found))) {
-                if ($languageLoader->loadModuleLanguageFile($_SESSION['language'], $class_file, $module_type)) {
+                if ($languageLoader->loadModuleLanguageFile($class_file, $module_type)) {
                     require DIR_FS_CATALOG . $modules_found[$class_file] . $class_file;
                     $module = new $class();
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
@@ -145,7 +145,7 @@ if (!empty($action)) {
             $class = basename($_POST['module']);
             $class_file = $class . '.' . $file_extension;
             if (in_array($class_file, array_keys($modules_found))) {
-                if ($languageLoader->loadModuleLanguageFile($_SESSION['language'], $class_file, $module_type)) {
+                if ($languageLoader->loadModuleLanguageFile($class_file, $module_type)) {
                     require DIR_FS_CATALOG . $modules_found[$class_file] . $class_file;
                     $module = new $class();
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/[^\w]/', '*', $_POST['module']), $admname);
@@ -207,7 +207,7 @@ $installed_modules = [];
 $temp_for_sort = [];
 $module_directory = DIR_FS_CATALOG . DIR_WS_MODULES . $module_type;
 foreach ($modules_found as $module_name => $module_file_dir) {
-    if (!$languageLoader->loadModuleLanguageFile($_SESSION['language'], $module_name, $module_type)) {
+    if (!$languageLoader->loadModuleLanguageFile($module_name, $module_type)) {
         echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $module_name . '<br>';
         continue;
     }
@@ -394,7 +394,7 @@ switch ($action) {
             if (ADMIN_CONFIGURATION_KEY_ON === '1') {
                 $displayKey = 'Key: ' . $key . '<br>';
             }
-            $keys .= '<b>' . $displayKey . $value['title'] . '</b><br>' . $value['description'] . '<br>';
+            $keys .= '<b>' . $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>' . zen_lookup_admin_menu_language_override('configuration_key_description', $key, $value['description']) . '<br>';
             if ($value['set_function']) {
                 eval('$keys .= ' . $value['set_function'] . '"' . zen_output_string($value['value'], ['"' => '&quot;', '`' => 'null;return;exit;']) . '", "' . $key . '");');
             } else {
@@ -452,7 +452,7 @@ switch ($action) {
                 if (ADMIN_CONFIGURATION_KEY_ON === '1') {
                     $displayKey = 'Key: ' . $key . '<br>';
                 }
-                $keys .= '<b>'. $displayKey . $value['title'] . '</b><br>';
+                $keys .= '<b>'. $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>';
                 if ($value['use_function']) {
                     $use_function = $value['use_function'];
                     if (strpos($use_function, '->') !== false) {

@@ -79,7 +79,7 @@ $adjustWarnIssues = false;
             <?php
             foreach ($listFatalErrors as $error) { ?>
                 <div class="alert bg-danger">
-                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText link-light text-decoration-none"' ?>>
+                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText link-dark fw-bold" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText link-light text-decoration-none"' ?>>
                         <?= ($error['mainErrorText']) ?>
                     </a>
                     <?php

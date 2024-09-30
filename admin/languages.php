@@ -224,11 +224,11 @@ if (!empty($action)) {
       break;
     case 'deleteconfirm':
       $lID = zen_db_prepare_input($_POST['lID']);
-      $lng = $db->Execute("SELECT languages_id
+      $result = $db->Execute("SELECT languages_id
                            FROM " . TABLE_LANGUAGES . "
                            WHERE code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
 
-      if ($lng->fields['languages_id'] == $lID) {
+      if ($result->fields['languages_id'] == $lID) {
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                       SET configuration_value = ''
                       WHERE configuration_key = 'DEFAULT_LANGUAGE'");
@@ -259,11 +259,11 @@ if (!empty($action)) {
       break;
     case 'delete':
       $lID = zen_db_prepare_input($_GET['lID']);
-      $lng = $db->Execute("SELECT code
+      $result = $db->Execute("SELECT code
                            FROM " . TABLE_LANGUAGES . "
                            WHERE languages_id = " . (int)$lID);
       $remove_language = true;
-      if ($lng->fields['code'] == DEFAULT_LANGUAGE) {
+      if ($result->fields['code'] == DEFAULT_LANGUAGE) {
         $remove_language = false;
         $messageStack->add(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
       }

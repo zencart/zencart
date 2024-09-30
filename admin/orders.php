@@ -1049,12 +1049,9 @@ if ($show_orders_weights === true) {
             </thead>
             <tbody>
                 <?php
-                $orders_history = $db->Execute("SELECT *
-                                              FROM " . TABLE_ORDERS_STATUS_HISTORY . "
-                                              WHERE orders_id = " . zen_db_input($oID) . "
-                                              ORDER BY orders_status_history_id");
+                $orders_history = $order->statuses;
 
-                if ($orders_history->RecordCount() > 0) {
+                if (count($orders_history) !== 0) {
                   $first = true;
                   foreach ($orders_history as $item) {
                     ?>
@@ -1078,7 +1075,7 @@ if ($show_orders_weights === true) {
                     //
                     // $extra_data = array(
                     //     array(
-                    //       'align' => $alignment,    // One of 'center', 'right', or 'left' (optional)
+                    //       'align' => $alignment,    // One of 'center', 'right' or 'left' (optional)
                     //       'text' => $value
                     //     ),
                     // );
@@ -1087,7 +1084,7 @@ if ($show_orders_weights === true) {
                     // multiple observers might be injecting content!
                     //
                     $extra_data = false;
-                    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $orders_history->fields, $extra_data);
+                    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_STATUS_HISTORY_EXTRA_COLUMN_DATA', $item, $extra_data);
                     if (is_array($extra_data)) {
                         foreach ($extra_data as $data_info) {
                             $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
@@ -1475,7 +1472,7 @@ if ($show_orders_weights === true) {
                 </td>
 <?php } ?>
                 <td class="dataTableContent text-center"><?php echo zen_datetime_short($orders->fields['date_purchased']); ?></td>
-                <td class="dataTableContent text-right"><?php echo ($orders->fields['orders_status_name'] !== '' ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS); ?></td>
+                <td class="dataTableContent text-right"><?php echo !empty($orders->fields['orders_status_name']) ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS; ?></td>
                 <?php
                    $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id']));
                    if (!empty($order_comments)) {

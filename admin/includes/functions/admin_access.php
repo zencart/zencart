@@ -431,6 +431,17 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         $expired = true;
         $error = true;
     }
+
+    // -----
+    // Give an observer a chance to disallow the login for other reasons.
+    //
+    if ($error === false) {
+        global $zco_notifier;
+        $zco_notifier->notify('NOTIFY_ADMIN_LOGIN_DENY', $admin_name, $error, $message);
+        $error = (bool)$error;
+        $message = (string)$message;
+    }
+
     if ($error === false) {
         if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
             $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);

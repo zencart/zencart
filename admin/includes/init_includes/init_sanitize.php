@@ -76,7 +76,6 @@ $group = [
     'fID',
     'filename',
     'flag',
-    'flagbanners_on_ssl',
     'flagbanners_open_new_windows',
     'gID',
     'gid',

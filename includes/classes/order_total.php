@@ -7,6 +7,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\ModuleFinder;
 use Zencart\Traits\NotifierManager;
 
 /**
@@ -39,13 +41,21 @@ class order_total
     // class constructor
     public function __construct()
     {
-        global $messageStack, $languageLoader;
+        global $messageStack, $languageLoader, $installedPlugins;
 
         if (defined('MODULE_ORDER_TOTAL_INSTALLED') && MODULE_ORDER_TOTAL_INSTALLED !== '') {
+            // -----
+            // Locate all order_total modules, looking in both /includes/modules/order_total
+            // and for those provided by zc_plugins.  Note that any module provided by a
+            // zc_plugin overrides the processing present in any 'base' file.
+            //
+            $moduleFinder = new ModuleFinder('order_total', new Filesystem());
+            $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
+
             $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
             foreach ($module_list as $value) {
-                if (!$languageLoader->loadModuleLanguageFile($_SESSION['language'], $value, 'order_total')) {
+                if (!$languageLoader->loadModuleLanguageFile($value, 'order_total')) {
                     $language_dir = (IS_ADMIN_FLAG === false) ? DIR_WS_LANGUAGES : (DIR_FS_CATALOG . DIR_WS_LANGUAGES);
                     $lang_file = zen_get_file_directory($language_dir . $_SESSION['language'] . '/modules/order_total/', $value, 'false');
  
@@ -59,9 +69,8 @@ class order_total
                     continue;
                 }
 
-                $module_file = DIR_FS_CATALOG . DIR_WS_MODULES . 'order_total/' . $value;
-                if (file_exists($module_file)) {
-                    include_once $module_file;
+                if (isset($modules_found[$value])) {
+                    include_once DIR_FS_CATALOG . $modules_found[$value] . $value;
                     $class = pathinfo($value, PATHINFO_FILENAME);
                     $GLOBALS[$class] = new $class();
                     $this->modules[] = $value;

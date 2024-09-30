@@ -60,4 +60,9 @@ class DerivedItemsManager
         $dirSize = $fs->getDirectorySize($filePath);
         return $dirSize;
     }
+
+    protected function getLanguageTranslationForName(Model $tableRow, string $colName, array $columnInfo) : string
+    {
+        return zen_lookup_admin_menu_language_override('plugin_name', $tableRow['unique_key'], $tableRow['name']);
+    }
 }

@@ -186,11 +186,6 @@ $iconMap = [
     'fa-square fa-stack-2x opacity-25 txt-orange',
     'fa-xmark fa-stack-1x txt-red'
   ],
-  'ssl-on' => 'fa-square txt-blue',
-  'ssl-off' => [
-    'fa-square fa-stack-2x opacity-25 txt-blue',
-    'fa-xmark fa-stack-1x txt-red'
-  ],
   'line-chart' => 'fa-line-chart txt-black',
   'calendar-days' => 'fa-regular fa-calendar-days',
   'status-green' => [

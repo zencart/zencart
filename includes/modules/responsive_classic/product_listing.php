@@ -214,7 +214,7 @@ if ($num_products_count > 0) {
             $listing_product_name = $record['products_name'] ?? '';
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
-                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'])), PRODUCT_LIST_DESCRIPTION);
+                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'] ?? '')), PRODUCT_LIST_DESCRIPTION);
                 $lc_text .= '<div class="listingDescription">' . $listing_description . '</div>';
             }
             $listing_model = $record['products_model'] ?? '';
