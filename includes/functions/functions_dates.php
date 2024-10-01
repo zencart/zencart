@@ -127,6 +127,25 @@ function zen_datetime_short($raw_datetime)
     return $zcDate->output(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
 }
 
+// return date and time but without seconds (ie. 2024/10/01 9:54)
+function zen_datetime_short_frontend ($raw_datetime)
+{
+    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
+
+    $year = (int)substr($raw_datetime, 0, 4);
+    $month = (int)substr($raw_datetime, 5, 2);
+    $day = (int)substr($raw_datetime, 8, 2);
+    $hour = (int)substr($raw_datetime, 11, 2);
+    $minute = (int)substr($raw_datetime, 14, 2);
+
+    global $zcDate;
+    $formattedDate = $zcDate->output(DATE_FORMAT, mktime(0, 0, 0, $month, $day, $year));
+
+    $formattedTime = sprintf('%02d:%02d', $hour, $minute);
+
+    return $formattedDate . ' ' . $formattedTime;
+}
+
 /**
  * @param $date
  * @param string $formatOut
