@@ -114,7 +114,8 @@ function zen_get_top_level_domain(string $url) {
 
 
 // Set back button
-function zen_back_link($link_only = false)
+// optional parameters for the <a> element
+function zen_back_link($link_only = false, $parameters = '')
 {
     if (count($_SESSION['navigation']->path) - 2 >= 0) {
         $back = count($_SESSION['navigation']->path) - 2;
@@ -132,6 +133,6 @@ function zen_back_link($link_only = false)
     if ($link_only == true) {
         return $link;
     } else {
-        return '<a href="' . $link . '">';
+        return '<a href="' . $link . '"'.$parameters.'>';
     }
 }
