@@ -501,9 +501,8 @@ class zcDatabaseInstaller
                         $this->ignoreLine = true;
                     }
                 }
-            } else {
-                $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
             }
+            $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
         }
     }
 
