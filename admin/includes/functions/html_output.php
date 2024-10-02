@@ -140,11 +140,27 @@ function zen_catalog_base_link($connection = '')
       $image .= ' title="' . zen_output_string($alt) . '"';
     }
 
-    // If either attribute is set, use CSS to size the image, not the old HTML attribute. (This allows for keeping the image proportional where necessary (ie. category listing).)
-    if ($height != '' || $width != '') $image .= ' style="' . ($width ? 'width="' . $width . 'px;" ' : '') . ($height ? 'height="' . $height . 'px;" ' : '') . '"';
+    $styles = '';
+
+    if ($width !== '' && !str_contains($params, 'width:')) {
+        $width = trim($width);
+        $styles .= 'width:' . $width . (!str_ends_with($width, '%') ? 'px' : '') . '; ';
+    }
+
+    if ($height !== '' && !str_contains($params, 'height:')) {
+        $height = trim($height);
+        $styles .= 'height:' . $height . (!str_ends_with($height, '%') ? 'px' : '') . '; ';
+    }
+
+    if (str_contains($params, 'style=')) {
+        $params = str_replace('style="', 'style="' . $styles, $params);
+    } else {
+        $params .= ' style="' . $styles . '"';
+    }
+
 
     if ($params) {
-      $image .= ' ' . $params;
+      $image .= ' ' . trim($params);
     }
     $image .= '>';
 
