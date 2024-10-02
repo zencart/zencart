@@ -139,12 +139,10 @@ function zen_catalog_base_link($connection = '')
     if ($alt) {
       $image .= ' title="' . zen_output_string($alt) . '"';
     }
-    if ($width) {
-      $image .= ' width="' . $width . '"';
-    }
-    if ($height) {
-      $image .= ' height="' . $height . '"';
-    }
+
+    // If either attribute is set, use CSS to size the image, not the old HTML attribute. (This allows for keeping the image proportional where necessary (ie. category listing).)
+    if ($height != '' || $width != '') $image .= ' style="' . ($width ? 'width="' . $width . 'px;" ' : '') . ($height ? 'height="' . $height . 'px;" ' : '') . '"';
+
     if ($params) {
       $image .= ' ' . $params;
     }
