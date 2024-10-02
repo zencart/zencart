@@ -2167,4 +2167,4 @@ function zen_js_option_values_list($selectedName, $fieldName)
     </script>
   </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php');  ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
