@@ -113,9 +113,10 @@ function zen_get_top_level_domain(string $url) {
 }
 
 
-// Set back button
-// optional parameters for the <a> element
-function zen_back_link($link_only = false, $parameters = '')
+/**
+  * Generate A HREF link for an HTML-based "Back" button, determined from user's session browsing history
+  */
+function zen_back_link(bool $link_only = false, string $parameters = ''): string
 {
     if (count($_SESSION['navigation']->path) - 2 >= 0) {
         $back = count($_SESSION['navigation']->path) - 2;
@@ -130,9 +131,9 @@ function zen_back_link($link_only = false, $parameters = '')
         $_SESSION['navigation'] = new navigationHistory;
     }
 
-    if ($link_only == true) {
+    if ($link_only) {
         return $link;
     } else {
-        return '<a href="' . $link . '"'.$parameters.'>';
+        return '<a href="' . $link . '"' . $parameters . '>';
     }
 }
