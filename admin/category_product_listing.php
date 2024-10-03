@@ -694,7 +694,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <a href="<?= zen_catalog_href_link('index', zen_get_path($category['categories_id'])) ?>" rel="noopener" target="_blank" title="<?= BOX_HEADING_CATALOG ?>"><?= zen_icon('popup', BOX_HEADING_CATALOG, '') ?></a>
                   <a href="<?= zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])) ?>" class="folder"><i class="fa-solid fa-lg fa-folder"></i>&nbsp;<strong><?= $category['categories_name'] ?></strong></a>
                 </td>
-                  <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) ?></td>
+                  <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'style="object-fit: contain;"') ?></td>
                 <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
                   <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
