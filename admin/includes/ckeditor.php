@@ -20,7 +20,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // To "upgrade" to a newer version, set the number here. See https://github.com/ckeditor/ckeditor5/releases for latest.
-const CKEDITOR_VERSION = '43.1.1';
+const CKEDITOR_VERSION = '43.2.0';
 
 
 // for compatibility with pre-ZC-v2.0.0 where class is PSR-autoloaded
@@ -83,6 +83,7 @@ if (method_exists($lng, 'get_language_list')) {
         Font,
         GeneralHtmlSupport,
         Heading,
+        HorizontalLine,
         HtmlEmbed,
         Image,
         ImageCaption,
@@ -139,6 +140,7 @@ if (method_exists($lng, 'get_language_list')) {
             Essentials, Font, Bold, Italic, Underline, Strikethrough, Subscript, Superscript, Code,
             Clipboard, PasteFromOffice, Autoformat, PasteFromMarkdownExperimental, FindAndReplace,
             CodeBlock, Heading, Paragraph, Undo, BlockQuote, Indent, IndentBlock, List, SelectAll,
+            HorizontalLine,
             Alignment, GeneralHtmlSupport, HtmlEmbed, Style, SourceEditing, MediaEmbed, TextPartLanguage, ShowBlocks,
             SpecialCharacters, SpecialCharactersEssentials, RemoveFormat,
             Table, TableToolbar, TableProperties, TableCellProperties, TableColumnResize,
@@ -158,7 +160,7 @@ if (method_exists($lng, 'get_language_list')) {
                 // 'superscript', 'subscript',
                 'code',
                 '|', 'removeFormat',
-                '|', 'numberedList', 'bulletedList', 'indent', 'outdent', 'blockQuote', 'alignment',
+                '|', 'numberedList', 'bulletedList', 'indent', 'outdent', 'blockQuote', 'alignment', 'horizontalLine',
                 '|', 'fontColor', 'fontBackgroundColor',
             ],
             shouldNotGroupWhenFull: true

@@ -183,7 +183,7 @@ class zcDatabaseInstaller
                 if ($this->keepTogetherCount === $this->keepTogetherLines) {
                     $this->completeLine = true;
                     $this->keepTogetherCount = 0;
-                    if (isset($this->collateSuffix) && $this->collateSuffix !== ''
+                    if (!empty($this->collateSuffix)
                         && (!defined('IGNORE_DB_CHARSET') || (defined('IGNORE_DB_CHARSET') && IGNORE_DB_CHARSET !== false))
                     ) {
                         $this->newLine = rtrim($this->newLine, ';') . $this->collateSuffix . ';';
@@ -501,9 +501,8 @@ class zcDatabaseInstaller
                         $this->ignoreLine = true;
                     }
                 }
-            } else {
-                $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
             }
+            $this->line = 'UPDATE ' . $this->dbPrefix . substr($this->line, 7);
         }
     }
 
