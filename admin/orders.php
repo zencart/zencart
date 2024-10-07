@@ -829,7 +829,7 @@ if (is_array($address_footer_suffix)) {
           ?>
           <br>
           <div class="row noprint">
-            <a href="javascript:void();" class="noprint" data-toggle="collapse" data-target="#payment-details-section">
+            <a href="javascript:void(0);" class="noprint" data-toggle="collapse" data-target="#payment-details-section">
                 <?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?>
             </a>
           </div>
