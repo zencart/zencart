@@ -230,10 +230,10 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
-    if (isset($response['TRANSACTIONID'])) { 
+    if (isset($response['TRANSACTIONID'])) {
        $outputPayPal .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&amp;id=' . urldecode($response['TRANSACTIONID']) . '" rel="noopener" target="_blank">' . urldecode($response['TRANSACTIONID']) . '</a>' ."\n";
     } else {
-       $outputPayPal .= 'n/a'; 
+       $outputPayPal .= 'n/a';
     }
     $outputPayPal .= '</td></tr>'."\n";
 
@@ -282,21 +282,21 @@ if (!empty($response['RESPMSG'])) {
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PENDING_REASON."\n";
-    $outputPayPal .= '</td><td>'."\n"; 
-    if (isset($response['PENDINGREASON'])) { 
+    $outputPayPal .= '</td><td>'."\n";
+    if (isset($response['PENDINGREASON'])) {
        $outputPayPal .= urldecode($response['PENDINGREASON']) . (empty($response['REASONCODE']) || $response['REASONCODE'] == 'None' ? '' : urldecode($response['PENDINGREASON'])) ."\n";
     } else {
-       $outputPayPal .= 'n/a'; 
+       $outputPayPal .= 'n/a';
     }
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_INVOICE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    if (!empty($ipn->fields['invoice'])) { 
+    if (!empty($ipn->fields['invoice'])) {
        $outputPayPal .= urldecode($ipn->fields['invoice']) . (urldecode($ipn->fields['invoice']) != urldecode($response['INVNUM'] ?? '') ? '<br>' . urldecode($response['INVNUM'] ?? '') : '') ."\n";
     } else {
-       $outputPayPal .= 'n/a'; 
+       $outputPayPal .= 'n/a';
     }
     $outputPayPal .= '</td></tr>'."\n";
 
@@ -313,13 +313,13 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CURRENCY."\n";
     $outputPayPal .= '</td><td>'."\n";
-    if (!empty($ipn->fields['mc_currency']) && !empty($response['CURRENCYCODE'])) { 
+    if (!empty($ipn->fields['mc_currency']) && !empty($response['CURRENCYCODE'])) {
        $outputPayPal .= $ipn->fields['mc_currency'] ."\n";
        if ($ipn->fields['mc_currency'] !== urldecode($response['CURRENCYCODE'])) {
            $outputPayPal .= ' ' . urldecode($response['CURRENCYCODE']);
        }
     } else {
-           $outputPayPal .= 'n/a'; 
+           $outputPayPal .= 'n/a';
     }
     $outputPayPal .= "\n";
     $outputPayPal .= '</td></tr>'."\n";
@@ -365,7 +365,7 @@ if (method_exists($this, '_doRefund')) {
         $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PAYFLOW_TEXT;
     }
     //partial refund - input field
-    $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PARTIAL_TEXT . ' ' . zen_draw_input_field('refamt', 'enter amount', 'size="8"');
+    $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PARTIAL_TEXT . ' ' . zen_draw_input_field('refamt', '', 'size="8"');
     $outputRefund .= '<input type="submit" name="partialrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '"><br>';
     //comment field
     $counterParams = 'onkeydown="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);" onkeyup="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);"';
