@@ -56,7 +56,7 @@ function zen_get_path($current_category_id = null)
  */
 function zen_count_products_in_category($category_id, $include_inactive = false)
 {
-//  Check if only want to count destinct peoducts in a category
+//  Check if only want to count distinct products in a category
     $distinct = defined('COUNT_DISTINCT_PRODUCTS') ? COUNT_DISTINCT_PRODUCTS : false;
     if ($distinct === true) {
         return zen_count_distinct_products_in_category($category_id, $include_inactive);
