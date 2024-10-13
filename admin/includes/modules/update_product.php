@@ -122,6 +122,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
         ///////////////////////////////////////////////////////
         //// INSERT PRODUCT-TYPE-SPECIFIC *UPDATES* HERE //////
 
+        $zco_notifier->notify('NOTIFY_ADMIN_UPDATE_PRODUCT_UPDATE', $products_id, $sql_data_array);
 
         ////    *END OF PRODUCT-TYPE-SPECIFIC UPDATES* ////////
         ///////////////////////////////////////////////////////
