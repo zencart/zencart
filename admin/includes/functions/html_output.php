@@ -139,14 +139,28 @@ function zen_catalog_base_link($connection = '')
     if ($alt) {
       $image .= ' title="' . zen_output_string($alt) . '"';
     }
-    if ($width) {
-      $image .= ' width="' . $width . '"';
+
+    $styles = '';
+
+    if ($width !== '' && !str_contains($params, 'width:')) {
+        $width = trim($width);
+        $styles .= 'width:' . $width . (!str_ends_with($width, '%') ? 'px' : '') . '; ';
     }
-    if ($height) {
-      $image .= ' height="' . $height . '"';
+
+    if ($height !== '' && !str_contains($params, 'height:')) {
+        $height = trim($height);
+        $styles .= 'height:' . $height . (!str_ends_with($height, '%') ? 'px' : '') . '; ';
     }
+
+    if (str_contains($params, 'style=')) {
+        $params = str_replace('style="', 'style="' . $styles, $params);
+    } else {
+        $params .= ' style="' . $styles . '"';
+    }
+
+
     if ($params) {
-      $image .= ' ' . $params;
+      $image .= ' ' . trim($params);
     }
     $image .= '>';
 
