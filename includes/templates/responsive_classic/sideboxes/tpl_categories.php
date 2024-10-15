@@ -74,7 +74,7 @@ if (SHOW_CATEGORIES_BOX_SPECIALS === 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_NEW 
         // display limits
         $display_limit = zen_get_new_date_range();
 
-        $show_this = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS . " WHERE products_status = 1 " . $display_limit . " limit 1");
+        $show_this = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS . " p WHERE products_status = 1 " . $display_limit . " limit 1");
         if (!$show_this->EOF) {
             $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a></li>' . "\n";
         }
