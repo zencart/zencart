@@ -35,14 +35,14 @@ $zen_session_handler = new \Zencart\SessionHandler;
 session_set_save_handler($zen_session_handler, true);
 
 
-function zen_session_start()
+function zen_session_start(): bool
 {
     global $SESS_LIFE;
     @ini_set('session.gc_maxlifetime', $SESS_LIFE);
     @ini_set('session.gc_probability', 1);
     @ini_set('session.gc_divisor', 2);
 
-    if (preg_replace('/[a-zA-Z0-9,-]/', '', session_id()) != '') {
+    if (preg_replace('/[a-zA-Z0-9,-]/', '', session_id()) !== '') {
         zen_session_id(md5(uniqid(rand(), true)));
     }
     $temp = session_start();
@@ -53,7 +53,7 @@ function zen_session_start()
     return $temp;
 }
 
-function zen_session_id($sessid = '')
+function zen_session_id($sessid = ''): bool|string
 {
     if (!empty($sessid)) {
         $tempSessid = $sessid;
@@ -67,7 +67,7 @@ function zen_session_id($sessid = '')
     return session_id();
 }
 
-function zen_session_name($name = '')
+function zen_session_name($name = ''): bool|string
 {
     if (!empty($name)) {
         $tempName = $name;
@@ -98,10 +98,10 @@ function zen_session_save_path($path = '')
     return session_save_path();
 }
 
-function zen_session_recreate()
+function zen_session_recreate(): void
 {
     global $http_domain, $https_domain;
-    if ($http_domain == $https_domain) {
+    if ($http_domain === $https_domain) {
         $saveSession = $_SESSION;
         $oldSessID   = session_id();
         session_regenerate_id();

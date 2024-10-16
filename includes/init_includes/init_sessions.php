@@ -34,7 +34,7 @@ zen_session_save_path(SESSION_WRITE_DIRECTORY);
  * set the session cookie parameters
  */
 $path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-if (defined('SESSION_USE_ROOT_COOKIE_PATH') && SESSION_USE_ROOT_COOKIE_PATH  == 'True') {
+if (defined('SESSION_USE_ROOT_COOKIE_PATH') && SESSION_USE_ROOT_COOKIE_PATH === 'True') {
     $path = '/';
 }
 $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
@@ -42,7 +42,7 @@ $domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PRE
 if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) {
     $domainPrefix = '';
 }
-$secureFlag = ((ENABLE_SSL === 'true' && strpos(HTTP_SERVER, 'https:') === 0 && strpos(HTTPS_SERVER, 'https:') === 0) || (ENABLE_SSL === 'false' && strpos(HTTP_SERVER, 'https:') === 0));
+$secureFlag = ((ENABLE_SSL === 'true' && str_starts_with(HTTP_SERVER, 'https:') && str_starts_with(HTTPS_SERVER, 'https:')) || (ENABLE_SSL === 'false' && str_starts_with(HTTP_SERVER, 'https:')));
 
 $samesite = (defined('COOKIE_SAMESITE')) ? COOKIE_SAMESITE : 'lax';
 if (!in_array($samesite, ['lax', 'strict', 'none'])) {
@@ -94,8 +94,8 @@ if (SESSION_FORCE_COOKIE_USE === 'True') {
     if (!empty($user_agent)) {
         $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
         for ($i=0, $n = count($spiders); $i < $n; $i++) {
-            if (!empty($spiders[$i]) && strpos($spiders[$i], '$Id:') !== 0) {
-                if (is_integer(strpos($user_agent, trim($spiders[$i])))) {
+            if (!empty($spiders[$i]) && !str_starts_with($spiders[$i], '$Id:')) {
+                if (is_int(strpos($user_agent, trim($spiders[$i])))) {
                     $spider_flag = true;
                     break;
                 }
@@ -105,8 +105,8 @@ if (SESSION_FORCE_COOKIE_USE === 'True') {
     if ($spider_flag === false) {
         zen_session_start();
         $session_started = true;
-    } elseif (isset($_GET[$zenSessionId]) && $_GET[$zenSessionId] != '') {
-        $tmp = (isset($_GET['main_page']) && $_GET['main_page'] != '') ? $_GET['main_page'] : FILENAME_DEFAULT;
+    } elseif (isset($_GET[$zenSessionId]) && $_GET[$zenSessionId] !== '') {
+        $tmp = (isset($_GET['main_page']) && $_GET['main_page'] !== '') ? $_GET['main_page'] : FILENAME_DEFAULT;
         @header("HTTP/1.1 301 Moved Permanently");
         @zen_redirect(@zen_href_link($tmp, @zen_get_all_get_params([$zenSessionId]), $request_type, false));
         unset($tmp);
@@ -151,7 +151,7 @@ if (SESSION_CHECK_USER_AGENT === 'True') {
     if (empty($_SESSION['SESSION_USER_AGENT'])) {
         $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
     }
-    if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
+    if ($_SESSION['SESSION_USER_AGENT'] !== $http_user_agent) {
         zen_session_destroy();
         zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
     }
