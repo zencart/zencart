@@ -111,7 +111,7 @@ trait BuildsQueries
      * @param  string|null  $alias
      * @return bool
      */
-    public function chunkById($count, callable $callback, $column = null, $alias = null)
+    public function chunkById($count, ?callable $callback, $column = null, $alias = null)
     {
         $column ??= $this->defaultKeyName();
 

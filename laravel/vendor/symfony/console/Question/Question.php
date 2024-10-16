@@ -36,7 +36,7 @@ class Question
      * @param string                     $question The question to ask to the user
      * @param string|bool|int|float|null $default  The default answer to return if the user enters nothing
      */
-    public function __construct(string $question, string|bool|int|float $default = null)
+    public function __construct(string $question, string|bool|int|float|null $default = null)
     {
         $this->question = $question;
         $this->default = $default;
@@ -176,7 +176,7 @@ class Question
      *
      * @return $this
      */
-    public function setAutocompleterCallback(callable $callback = null): static
+    public function setAutocompleterCallback(?callable $callback = null): static
     {
         if ($this->hidden && null !== $callback) {
             throw new LogicException('A hidden question cannot use the autocompleter.');
@@ -192,7 +192,7 @@ class Question
      *
      * @return $this
      */
-    public function setValidator(callable $validator = null): static
+    public function setValidator(?callable $validator = null): static
     {
         $this->validator = null === $validator || $validator instanceof \Closure ? $validator : \Closure::fromCallable($validator);
 

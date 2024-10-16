@@ -21,7 +21,7 @@ class MultipleRecordsFoundException extends RuntimeException
      * @param  \Throwable|null  $previous
      * @return void
      */
-    public function __construct($count, $code = 0, $previous = null)
+    public function __construct($count, $code = 0, ?$previous = null)
     {
         $this->count = $count;
 
