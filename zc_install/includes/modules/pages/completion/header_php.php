@@ -38,6 +38,9 @@ if (!isset($_POST['admin_directory']) || !file_exists(DIR_FS_ROOT . $_POST['admi
 $adminLink = zen_output_string_protected($adminServer) . zen_output_string_protected($dir_ws_http_catalog) . zen_output_string_protected($adminDir);
 $catalogLink = zen_output_string_protected($catalogHttpServer) . zen_output_string_protected($dir_ws_http_catalog);
 
+$adminLink = preg_replace('~(?<!:)/+~', '/', $adminLink);
+$catalogLink = preg_replace('~(?<!:)/+~', '/', $catalogLink);
+
 if (isset($_POST['upgrade_mode']) && $_POST['upgrade_mode'] === 'yes') {
     $isUpgrade = true;
 }
