@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2024 Sep 06 Modified in v2.1.0-beta1 $
  */
 use Zencart\FileSystem\FileSystem;
 use Zencart\ResourceLoaders\ModuleFinder;
@@ -151,7 +151,7 @@ class payment
         $credit_is_covered = false;
         if (isset($credit_covers) && $credit_covers === true) {
             $credit_is_covered = true;
-            $this->modules = '';
+            $this->modules = [];
             $this->selected_module = '';
         }
         return $credit_is_covered;

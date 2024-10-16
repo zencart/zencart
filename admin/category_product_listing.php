@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2024 Sep 27 Modified in v2.1.0-beta1 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -694,7 +694,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <a href="<?= zen_catalog_href_link('index', zen_get_path($category['categories_id'])) ?>" rel="noopener" target="_blank" title="<?= BOX_HEADING_CATALOG ?>"><?= zen_icon('popup', BOX_HEADING_CATALOG, '') ?></a>
                   <a href="<?= zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])) ?>" class="folder"><i class="fa-solid fa-lg fa-folder"></i>&nbsp;<strong><?= $category['categories_name'] ?></strong></a>
                 </td>
-                  <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) ?></td>
+                  <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'style="object-fit: contain;"') ?></td>
                 <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
                   <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
@@ -786,6 +786,25 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                           <?= zen_icon('metatags', size: '', hidden: true) ?>
                         </a>
                       <?php } ?>
+<?php
+                // -----
+                // Give an observer the chance to insert additional 'action' buttons into the listing's
+                // 'action-button' section. If supplied, the observer is responsible for properly formatting
+                // the button-link.
+                //
+                $extra_action_buttons = '';
+                $zco_notifier->notify(
+                    'NOTIFY_ADMIN_PROD_LISTING_ADD_ACTION_ICONS',
+                    [
+                        'category' => ($category ?? null),
+                        'product' => ($product ?? null),
+                        'cPath' => ($cPath ?? null),
+                        'current_category_id' => $current_category_id
+                    ],
+                    $extra_action_buttons
+                );
+                echo $extra_action_buttons;
+?>
                     </div>
                   </td>
                 <?php } ?>

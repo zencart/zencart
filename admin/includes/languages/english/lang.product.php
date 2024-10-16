@@ -36,6 +36,7 @@ $define = [
     'TEXT_PRODUCTS_LENGTH' => 'Length:',
     'TEXT_PRODUCTS_WIDTH' => 'Width:',
     'TEXT_PRODUCTS_HEIGHT' => 'Height:',
+    'TEXT_PRODUCT_MPN' => 'Product MPN (Mfg Part No.):',
     'TEXT_PRODUCT_SHIPS_IN_OWN_BOX' => 'Ships in Own Box?',
     'TEXT_PRODUCT_SHIPS_IN_OWN_BOX_HELP' => 'Item ships in its original box? (ie: will not be combined in another box for shipping, and no additional packaging costs to be added)',
     'TEXT_PRODUCT_IS_FREE' => 'Product is Free:',

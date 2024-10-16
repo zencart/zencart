@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Aug 18 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2024 Sep 20 Modified in v2.1.0-beta1 $
  */
 require 'includes/application_top.php';
 
@@ -88,17 +88,12 @@ if (!empty($action)) {
             $customers_lastname = zen_db_prepare_input(zen_sanitize_string($_POST['customers_lastname']));
             $customers_email_address = zen_db_prepare_input($_POST['customers_email_address']);
             $customers_telephone = zen_db_prepare_input($_POST['customers_telephone']);
-            $customers_fax = '';
-            if (ACCOUNT_FAX_NUMBER === 'true') {
-                $customers_fax = zen_db_prepare_input($_POST['customers_fax']);
-            }
+            $customers_fax = zen_db_prepare_input($_POST['customers_fax'] ?? '');
             $customers_newsletter = zen_db_prepare_input($_POST['customers_newsletter']);
             $customers_group_pricing = (int)($_POST['customers_group_pricing'] ?? 0); //- Not present if wholesale pricing is selected!
             $customers_email_format = zen_db_prepare_input($_POST['customers_email_format']);
-            $customers_gender = !empty($_POST['customers_gender']) ?
-                zen_db_prepare_input($_POST['customers_gender']) : '';
-            $customers_dob = (empty($_POST['customers_dob'])) ?
-                zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['customers_dob']);
+            $customers_gender = zen_db_prepare_input($_POST['customers_gender'] ?? '');
+            $customers_dob = zen_db_prepare_input($_POST['customers_dob'] ?? '0001-01-01 00:00:00');
 
             $customers_authorization = (int)$_POST['customers_authorization'];
             $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
@@ -116,12 +111,12 @@ if (!empty($action)) {
 
             $default_address_id = (int)$_POST['default_address_id'];
             $entry_street_address = zen_db_prepare_input($_POST['entry_street_address']);
-            $entry_suburb = !empty($_POST['entry_suburb']) ? zen_db_prepare_input($_POST['entry_suburb']) : '';
+            $entry_suburb = zen_db_prepare_input($_POST['entry_suburb'] ?? '');
             $entry_postcode = zen_db_prepare_input($_POST['entry_postcode']);
             $entry_city = zen_db_prepare_input($_POST['entry_city']);
             $entry_country_id = (int)$_POST['entry_country_id'];
-            $entry_company = !empty($_POST['entry_company']) ? zen_db_prepare_input($_POST['entry_company']) : '';
-            $entry_state = !empty($_POST['entry_state']) ? zen_db_prepare_input($_POST['entry_state']) : '';
+            $entry_company = zen_db_prepare_input($_POST['entry_company'] ?? '');
+            $entry_state = zen_db_prepare_input($_POST['entry_state'] ?? '');
             $entry_zone_id = (int)($_POST['entry_zone_id'] ?? 0);
 
             if (ACCOUNT_GENDER === 'true' && empty($customers_gender)) {

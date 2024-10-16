@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 17 Modified in v2.0.0-beta1 $
+ * @version $Id: pRose on charmes 2024 Sep 05 Modified in v2.1.0-beta1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -44,6 +44,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
         'products_quantity' => convertToFloat($_POST['products_quantity']),
         'products_type' => (int)$_POST['product_type'],
         'products_model' => zen_db_prepare_input($_POST['products_model']),
+        'products_mpn' => zen_db_prepare_input($_POST['products_mpn'] ?? ''),
         'products_price' => convertToFloat($_POST['products_price']),
         'products_price_w' => zen_db_prepare_input($products_price_w),
         'products_date_available' => $products_date_available,
@@ -121,6 +122,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
         ///////////////////////////////////////////////////////
         //// INSERT PRODUCT-TYPE-SPECIFIC *UPDATES* HERE //////
 
+        $zco_notifier->notify('NOTIFY_ADMIN_UPDATE_PRODUCT_UPDATE', $products_id, $sql_data_array);
 
         ////    *END OF PRODUCT-TYPE-SPECIFIC UPDATES* ////////
         ///////////////////////////////////////////////////////

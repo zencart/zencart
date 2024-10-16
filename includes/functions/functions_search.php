@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Jul 28 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2024 Sep 11 Modified in v2.1.0-beta1 $
  */
 
 

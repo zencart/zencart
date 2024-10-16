@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
 * @copyright Portions Copyright 2003 osCommerce
 * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-* @version $Id: DrByte 2024 May 24 Modified in v2.1.0-alpha1 $
+* @version $Id: lat9 2024 Sep 28 Modified in v2.1.0-beta1 $
 */
 if (isset($current_category_id) && ($current_category_id > 0)) {
     $best_sellers_query =
@@ -36,12 +36,14 @@ $limit = (trim(MAX_DISPLAY_BESTSELLERS) === '') ? '' : (' LIMIT ' . (int)MAX_DIS
 $best_sellers_query .= $limit;
 $best_sellers = $db->Execute($best_sellers_query);
 if ($best_sellers->RecordCount() >= MIN_DISPLAY_BESTSELLERS) {
+    $rows = 0;
     $bestsellers_list = [];
     foreach ($best_sellers as $bestseller) {
         $product_info = (new Product((int)$bestseller['products_id']))->withDefaultLanguage();
         $bestseller = array_merge($bestseller, $product_info->getData());
         $best_products_id = $bestseller['products_id'];
-        $bestsellers_list[] = [
+        $rows++;
+        $bestsellers_list[$rows] = [
             'id' => $best_products_id,
             'name'  => $bestseller['products_name'],
             'image' => zen_image(DIR_WS_IMAGES . $bestseller['products_image'], $bestseller['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT),

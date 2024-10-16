@@ -42,7 +42,7 @@ if ($error) {
 
 $options = $systemChecker->getDbConfigOptions();
 $dbInstaller = new zcDatabaseInstaller($options);
-$result = $dbInstaller->getConnection();
+$connected = $dbInstaller->getConnection();
 
 // Run zero-date cleanup on first upgrade step only
 if ($batchInstance <= 1 || $batchSize <= 1) {
@@ -67,7 +67,7 @@ $extendedOptions = [
     'message' => sprintf(TEXT_UPGRADING_TO_VERSION, $updateVersion),
 ];
 logDetails($file, 'Running upgrade SQL');
-$result = $dbInstaller->getConnection();
+$connected = $dbInstaller->getConnection();
 $errorUpg = $dbInstaller->parseSqlFile($file, $extendedOptions);
 if (is_int($errorUpg)) {
     $errorList[] = $errorUpg;

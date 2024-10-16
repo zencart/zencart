@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2024 Sep 26 Modified in v2.1.0-beta1 $
  */
 class ot_loworderfee
 {
@@ -111,8 +111,8 @@ class ot_loworderfee
                 $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
 
                 // calculate from flat fee or percentage
-                if (substr(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, -1) === '%') {
-                    $low_order_fee = $order->info['subtotal'] * MODULE_ORDER_TOTAL_LOWORDERFEE_FEE / 100;
+                if (str_ends_with(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, '%')) {
+                    $low_order_fee = $order->info['subtotal'] * rtrim(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, '%') / 100;
                 } else {
                     $low_order_fee = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
                 }

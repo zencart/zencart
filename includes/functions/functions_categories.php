@@ -56,7 +56,7 @@ function zen_get_path($current_category_id = null)
  */
 function zen_count_products_in_category($category_id, $include_inactive = false)
 {
-//  Check if only want to count destinct peoducts in a category
+//  Check if only want to count distinct products in a category
     $distinct = defined('COUNT_DISTINCT_PRODUCTS') ? COUNT_DISTINCT_PRODUCTS : false;
     if ($distinct === true) {
         return zen_count_distinct_products_in_category($category_id, $include_inactive);
@@ -160,6 +160,12 @@ function zen_get_categories($categories_array = array(), $parent_id = TOPMOST_CA
     $results = $db->Execute($categories_query);
 
     foreach ($results as $result) {
+        if ($status_flag !== null) {
+            $count = zen_products_in_category_count($result['categories_id']);
+            if ($count === 0) {
+                continue;
+            }
+        }
         $categories_array[] = [
             'id' => $result['categories_id'],
             'text' => $indent . $result['categories_name'],

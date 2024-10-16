@@ -1323,6 +1323,39 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       } // ATTRIBUTES_ENABLED_TEXT_PRICES
                       ?>
                       <!-- eof: Edit Prices -->
+                        <?php
+                        // -----
+                        // Give an observer the chance to supply some additional inputs.  Each
+                        // entry in the $extra_attributes_inputs returned contains:
+                        //
+                        // [
+                        //    'label' => [
+                        //        'text' => 'The label text',   (required)
+                        //        'field_name' => 'The name of the field associated with the label', (required)
+                        //        'addl_class' => {Any additional class to be applied to the label} (optional)
+                        //        'parms' => {Any additional parameters for the label, e.g. 'style="font-weight: 700;"} (optional)
+                        //    ],
+                        //    'input' => 'The HTML to be inserted' (required)
+                        // ]
+                        //
+                        $extra_attributes_inputs = [];
+                        $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_ATTRIBUTES_COLLECT_INFO_EXTRA_INPUTS', $attributes_value, $extra_attributes_inputs);
+                        if (!empty($extra_attributes_inputs)) {
+                            foreach ($extra_attributes_inputs as $extra_input) {
+                                $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
+                                $parms = (isset($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
+                                ?>
+                                <div class="form-group">
+                                    <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms); ?>
+                                    <div class="col-sm-9 col-md-6"><?php echo $extra_input['input']; ?></div>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                            <hr style="border: inherit; margin: 10px 0;">
+                            <?php
+                        }
+                        ?>
                       <h4><?php echo TEXT_ATTRIBUTES_FLAGS; ?></h4>
                       <div class="col-sm-12">
                         <table class="table" style="width: auto">
@@ -1525,7 +1558,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   $attributes_price_final = $currencies->display_price($attributes_price_final, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
                   $attributes_price_final_onetime = zen_get_attributes_price_final_onetime($attributes_value['products_attributes_id'], 1, $attributes_values);
                   $attributes_price_final_onetime = $currencies->display_price($attributes_price_final_onetime, zen_get_tax_rate($product_check->fields['products_tax_class_id']), 1);
-                  
+
                   $attribute_has_wholesale = ($wholesale_pricing_enabled === true && $attributes_value['options_values_price_w'] !== '0') ? $wholesale_pricing_indicator : '';
                   ?>
 
@@ -1910,6 +1943,39 @@ function zen_js_option_values_list($selectedName, $fieldName)
                     } // ATTRIBUTES_ENABLED_TEXT_PRICES
                     ?>
                     <!-- eof: Edit Prices -->
+                      <?php
+                      // -----
+                      // Give an observer the chance to supply some additional inputs.  Each
+                      // entry in the $extra_attributes_inputs returned contains:
+                      //
+                      // [
+                      //    'label' => [
+                      //        'text' => 'The label text',   (required)
+                      //        'field_name' => 'The name of the field associated with the label', (required)
+                      //        'addl_class' => {Any additional class to be applied to the label} (optional)
+                      //        'parms' => {Any additional parameters for the label, e.g. 'style="font-weight: 700;"} (optional)
+                      //    ],
+                      //    'input' => 'The HTML to be inserted' (required)
+                      // ]
+                      //
+                      $extra_attributes_inputs = [];
+                      $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_ATTRIBUTES_COLLECT_INFO_EXTRA_INPUTS', $attributes_value, $extra_attributes_inputs);
+                      if (!empty($extra_attributes_inputs)) {
+                          foreach ($extra_attributes_inputs as $extra_input) {
+                              $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
+                              $parms = (isset($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
+                              ?>
+                              <div class="form-group">
+                                  <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms); ?>
+                                  <div class="col-sm-9 col-md-6"><?php echo $extra_input['input']; ?></div>
+                              </div>
+                              <?php
+                          }
+                          ?>
+                          <hr style="border: inherit; margin: 10px 0;">
+                          <?php
+                      }
+                      ?>
                     <h4><?php echo TEXT_ATTRIBUTES_FLAGS; ?></h4>
                     <div class="col-sm-12">
                       <table class="table" style="width: auto">

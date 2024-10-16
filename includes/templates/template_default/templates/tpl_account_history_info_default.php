@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Aug 20 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2024 Sep 28 Modified in v2.1.0-beta1 $
  */
 ?>
 <div class="centerColumn" id="accountHistInfo">
@@ -130,39 +130,61 @@ $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order
  */
 if (!empty($order->statuses)) {
 ?>
-
 <h2 id="orderHistoryStatus"><?php echo HEADING_ORDER_HISTORY; ?></h2>
 <table id="myAccountOrdersStatus">
     <tr class="tableHeading">
         <th scope="col" id="myAccountStatusDate"><?php echo TABLE_HEADING_STATUS_DATE; ?></th>
         <th scope="col" id="myAccountStatus"><?php echo TABLE_HEADING_STATUS_ORDER_STATUS; ?></th>
-        <th scope="col" id="myAccountStatusComments"><?php echo TABLE_HEADING_STATUS_COMMENTS; ?></th>
-       </tr>
 <?php
-  // -----
-  // The *first* comment, made by the customer, is 'protected' from using HTML taga; all others are
-  // made by the admin or a 'known' entity and HTML is allowed.
-  //
-  $protected = true;
-  foreach ($order->statuses as $statuses) {
+    $extra_headings = [];
+    $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_OSH_HEADINGS', $order, $extra_headings);
+    foreach ($extra_headings as $next_heading) {
+?>
+        <th scope="col"><?= $next_heading ?></th>
+<?php
+    }
+?>
+        <th scope="col" id="myAccountStatusComments"><?php echo TABLE_HEADING_STATUS_COMMENTS; ?></th>
+    </tr>
+<?php
+    // -----
+    // The *first* comment, made by the customer, is 'protected' from using HTML taga; all others are
+    // made by the admin or a 'known' entity and HTML is allowed.
+    //
+    $protected = true;
+    foreach ($order->statuses as $statuses) {
 ?>
     <tr>
         <td><?php echo zen_date_short($statuses['date_added']); ?></td>
         <td><?php echo $statuses['orders_status_name']; ?></td>
+<?php
+        $extra_data = [];
+        $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_OSH_DATA', $statuses, $extra_data);
+        foreach ($extra_data as $next_data) {
+            if ($protected === true) {
+                $next_data = zen_output_string_protected($next_data);
+            }
+?>
+        <td><?= $next_data ?></td>
+<?php
+        }
+?>
         <td>
 <?php
-    if (!empty($statuses['comments'])) {
-       echo nl2br(zen_output_string($statuses['comments'], false, $protected));
-    }
+        if (!empty($statuses['comments'])) {
+           echo nl2br(zen_output_string($statuses['comments'], false, $protected));
+        }
 ?>
        </td>
-     </tr>
+    </tr>
 <?php
-    $protected = false;
-  }
+        $protected = false;
+    }
 ?>
 </table>
-<?php } ?>
+<?php
+}
+?>
 
 <hr>
 <div id="myAccountShipInfo" class="floatingBox back">

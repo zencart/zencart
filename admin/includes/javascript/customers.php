@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Apr 10 Modified in v2.0.1 $
+ * @version $Id: lat9 2024 Sep 20 New in v2.1.0-beta1 $
  */
 // -----
 // If the site does NOT require a 'State' entry in an address, nothing to be done here!
