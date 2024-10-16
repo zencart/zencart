@@ -25,7 +25,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 <!-- product count eof-->
 <!-- prev-cat-next navigation -->
 <div class="row">
-    <?php if ($counter > 0) { ?>
+    <?php if ($counter > 0 && !empty($previous)) { ?>
         <div class="col-sm-2 text-center">
             <a href="<?php echo zen_href_link($curr_page, "products_filter=" . $previous . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo BUTTON_PREVIOUS_ALT; ?></a>
         </div>
@@ -42,7 +42,7 @@ if (!defined('IS_ADMIN_FLAG')) {
         ?>
         <?php echo '</form>'; ?>
     </div>
-    <?php if ($counter > 0) { ?>
+    <?php if ($counter > 0 && !empty($next_item)) { ?>
         <div class="col-sm-2 text-center">
             <a href="<?php echo zen_href_link($curr_page, "products_filter=" . $next_item . '&current_category_id=' . $current_category_id); ?>" class="btn btn-default" role="button"><?php echo BUTTON_NEXT_ALT; ?></a>
         </div>
