@@ -93,7 +93,7 @@ switch ($action) {
     <script>
       function checkAll(form, header, value) {
           for (var i = 0; i < form.elements.length; i++) {
-              if (form.elements[i].className == header) {
+              if (form.elements[i].classList.contains(header)) {
                   form.elements[i].checked = value;
               }
           }
