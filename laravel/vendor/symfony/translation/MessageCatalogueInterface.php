@@ -39,7 +39,7 @@ interface MessageCatalogueInterface
      *
      * @param string $domain The domain name
      */
-    public function all(string $domain = null): array;
+    public function all(?string $domain = null): array;
 
     /**
      * Sets a message translation.
