@@ -230,6 +230,7 @@ class queryFactory extends base
 
         $obj = new queryFactoryResult($this->link);
 
+        $limit = (int)$limit;
         if ($limit) {
             $sqlQuery .= ' LIMIT ' . $limit;
             $obj->limit = $limit;
@@ -341,6 +342,7 @@ class queryFactory extends base
         $this->zf_sql = $sqlQuery;
         $obj = new queryFactoryResult($this->link);
         $obj->sql_query = $sqlQuery;
+        $limit = (int)$limit;
         $obj->limit = $limit;
 
         $zp_db_resource = $this->runQuery($sqlQuery, true);
