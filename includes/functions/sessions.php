@@ -43,11 +43,11 @@ function zen_session_start(): bool
     @ini_set('session.gc_divisor', 2);
 
     if (preg_replace('/[a-zA-Z0-9,-]/', '', session_id()) !== '') {
-        zen_session_id(md5(uniqid(rand(), true)));
+        zen_session_id(\bin2hex(\random_bytes(16)));
     }
     $temp = session_start();
     if (!isset($_SESSION['securityToken'])) {
-        $_SESSION['securityToken'] = md5(uniqid(rand(), true));
+        $_SESSION['securityToken'] = \bin2hex(\random_bytes(16));
     }
 
     return $temp;
@@ -58,7 +58,7 @@ function zen_session_id($sessid = ''): bool|string
     if (!empty($sessid)) {
         $tempSessid = $sessid;
         if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempSessid) != '') {
-            $sessid = md5(uniqid(rand(), true));
+            $sessid = \bin2hex(\random_bytes(16));
         }
 
         return session_id($sessid);
