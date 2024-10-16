@@ -885,6 +885,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $keyword_search_fields = [
                     'pd.products_name',
                     'p.products_model',
+                    'p.products_mpn',
                     'pd.products_description',
                     'p.products_id',
                 ];
