@@ -304,7 +304,7 @@ class authorizenet extends base {
   function process_button() {
     global $order;
 
-    $sequence = rand(1, 1000);
+    $sequence = random_int(1, 1000);
     $submit_data_core = array(
       'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
       'x_amount' => round($order->info['total'], 2),

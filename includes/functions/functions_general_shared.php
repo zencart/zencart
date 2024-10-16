@@ -389,12 +389,12 @@ function zen_rand($min = null, $max = null)
     if (isset($min) && isset($max)) {
         if ($min >= $max) {
             return $min;
-        } else {
-            return mt_rand($min, $max);
         }
-    } else {
-        return mt_rand();
+
+        return random_int($min, $max);
     }
+
+    return mt_rand();
 }
 
 

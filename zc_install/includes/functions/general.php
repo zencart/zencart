@@ -50,7 +50,7 @@ function zen_rand(int $min = null, int $max = null): int
         if ($min >= $max) {
             return $min;
         }
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     return mt_rand();
