@@ -43,7 +43,7 @@ $query_email_address = '';
 // -----
 // Create the store-specific name of the spam "honeypot" by hashing the store's defined name.
 //
-$spam_input_name = md5(STORE_NAME);
+$spam_input_name = hash('md5', STORE_NAME);
 
 if (isset($_GET['action']) && $_GET['action'] === 'status') {
     $error = false;

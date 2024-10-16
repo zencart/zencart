@@ -95,7 +95,7 @@ class zcPassword extends base
       $stack = explode(':', $encrypted);
       if (sizeof($stack) != 2)
         return false;
-      if (md5($stack [1] . $plain) == $stack [0]) {
+      if (hash('md5', $stack [1] . $plain) == $stack [0]) {
         return true;
       }
     }

@@ -147,7 +147,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
 
         if ($entropy) {
           // echo('Adding random data to entropy using CAPICOM.Utilities');
-          $stat ['CAPICOM_Utilities_random'] = md5($entropy, TRUE);
+          $stat ['CAPICOM_Utilities_random'] = hash('md5', $entropy, TRUE);
         }
         unset($CAPI_Util, $entropy);
       } catch ( Exception $ex ) {
