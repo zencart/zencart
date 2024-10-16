@@ -18,7 +18,7 @@
 class zcObserverLogEventListener extends base {
 
     private $notifier;
-    
+
   /**
    * using integer values implemented by monolog API
    */
@@ -45,7 +45,7 @@ class zcObserverLogEventListener extends base {
           600 => 'EMERGENCY',
   );
 
-  public function __construct(notifier $zco_notifier = null) {
+  public function __construct(?notifier $zco_notifier = null) {
     if (!$zco_notifier) $zco_notifier = new notifier;
     $this->notifier = $zco_notifier;
     $this->notifier->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', 'NOTIFY_ADMIN_ACTIVITY_LOG_RESET'));
