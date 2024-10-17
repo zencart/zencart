@@ -48,7 +48,7 @@ class PluginErrorContainer
         }
         $this->logErrors[] = $logMessage;
         if ($friendlyMessage === '') return;
-        $friendlyHash = md5($friendlyMessage);
+        $friendlyHash = hash('md5', $friendlyMessage);
         $this->friendlyErrors[$friendlyHash] = $friendlyMessage;
         if ($this->logger) {
             // do something here for external logging;

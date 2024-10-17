@@ -385,7 +385,7 @@ function zen_get_uprid(int|string $prid, array|string $params): string
         }
     }
 
-    $md_uprid = md5($uprid);
+    $md_uprid = hash('md5', $uprid);
     return $prid . ':' . $md_uprid;
 }
 

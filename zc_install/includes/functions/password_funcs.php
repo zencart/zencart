@@ -32,7 +32,7 @@ function zen_validate_password(string $plain, string $encrypted): bool
     // split apart the hash / salt
     $stack = explode(':', $encrypted);
     if (count($stack) === 2) {
-        return (md5($stack[1] . $plain) === $stack[0]);
+        return (hash('md5', $stack[1] . $plain) === $stack[0]);
     }
 
     return false;
@@ -175,7 +175,7 @@ function zen_get_entropy(string $hash = 'sha1', int $size = 32): string
 
                 if ($entropy) {
                     //echo('Adding random data to entrohy using CAPICOM.Utilities');
-                    $stat['CAPICOM_Utilities_random'] = md5($entropy, true);
+                    $stat['CAPICOM_Utilities_random'] = hash('md5', $entropy, true);
                 }
                 unset($CAPI_Util, $entropy);
             } catch (Exception $ex) {
