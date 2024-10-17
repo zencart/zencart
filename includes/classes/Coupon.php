@@ -198,11 +198,10 @@ class Coupon extends base
             return '';
         }
         $random_string = bin2hex(random_bytes(128));
-        mt_srand((int)microtime() * 1000000); // seed the random number generator
         $good_result = 0;
         $new_code = '';
         while ($good_result === 0) {
-            $random_start = @rand(0, (128 - $length));
+            $random_start = random_int(0, (128 - $length));
             $new_code = substr($random_string, $random_start, $length);
 
             $new_code = strtoupper($new_code);
