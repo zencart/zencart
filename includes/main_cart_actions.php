@@ -21,33 +21,24 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 
 /**
- * Gather all PHP files present in the extra_cart_actions subdirectory.
+ * Load all PHP files present in the extra_cart_actions subdirectory.
  */
-$baseDir = DIR_WS_INCLUDES . 'extra_cart_actions/';
-$main_cart_actions = [];
+$baseDir = DIR_FS_CATALOG . DIR_WS_INCLUDES . 'extra_cart_actions/';
 $mca_filesystem = new FileSystem();
-$files = $mca_filesystem->listFilesFromDirectoryAlphaSorted(DIR_FS_CATALOG . $baseDir);
+$files = $mca_filesystem->listFilesFromDirectoryAlphaSorted($baseDir);
 foreach ($files as $file) {
-    $main_cart_actions[$file] = $baseDir;
+    require $baseDir . $file;
 }
 
 /**
- * Gather all PHP files present in enabled zc_plugins, noting that any like-named file
- * in one of these directories **overrides** any file present in the 'base' directory!
+ * Load all PHP files present in enabled zc_plugins' extra_cart_actions subdirectories.
  */
 foreach ($installedPlugins as $plugin) {
-    $pluginDir = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/extra_cart_actions/';
-    $files = $mca_filesystem->listFilesFromDirectoryAlphaSorted(DIR_FS_CATALOG . $pluginDir);
+    $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/extra_cart_actions/';
+    $files = $mca_filesystem->listFilesFromDirectoryAlphaSorted($pluginDir);
     foreach ($files as $file) {
-        $main_cart_actions[$file] = $pluginDir;
+        require $pluginDir . $file;
     }
-}
-
-/**
- * Now, load any extra_cart_actions files located ...
- */
-foreach ($main_cart_actions as $file => $file_dir) {
-    require DIR_FS_CATALOG . $file_dir . $file;
 }
 
 switch ($_GET['action']) {
