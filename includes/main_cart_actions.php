@@ -10,6 +10,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2023 Aug 23 Modified in v2.0.0-alpha1 $
  */
+use Zencart\FileSystem\FileSystem;
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -19,10 +21,33 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 
 /**
- * include the list of extra cart action files  (*.php in the extra_cart_actions folder)
+ * Gather all PHP files present in the extra_cart_actions subdirectory.
  */
-foreach (zen_get_files_in_directory(DIR_WS_INCLUDES . 'extra_cart_actions') as $file) {
-    include($file);
+$baseDir = DIR_WS_INCLUDES . 'extra_cart_actions/';
+$main_cart_actions = [];
+$mca_filesystem = new FileSystem();
+$files = $mca_filesystem->listFilesFromDirectoryAlphaSorted(DIR_FS_CATALOG . $baseDir);
+foreach ($files as $file) {
+    $main_cart_actions[$file] = $baseDir;
+}
+
+/**
+ * Gather all PHP files present in enabled zc_plugins, noting that any like-named file
+ * in one of these directories **overrides** any file present in the 'base' directory!
+ */
+foreach ($installedPlugins as $plugin) {
+    $pluginDir = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/extra_cart_actions/';
+    $files = $mca_filesystem->listFilesFromDirectoryAlphaSorted(DIR_FS_CATALOG . $pluginDir);
+    foreach ($files as $file) {
+        $main_cart_actions[$file] = $pluginDir;
+    }
+}
+
+/**
+ * Now, load any extra_cart_actions files located ...
+ */
+foreach ($main_cart_actions as $file => $file_dir) {
+    require DIR_FS_CATALOG . $file_dir . $file;
 }
 
 switch ($_GET['action']) {
