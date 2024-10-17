@@ -372,7 +372,7 @@ function zen_convert_linefeeds($from, $to, $string)
 /**
  * Return a random value
  */
-function zen_rand($min = null, $max = null)
+function zen_rand(?int $min = null, ?int $max = null): int
 {
     static $seeded;
 
