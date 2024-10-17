@@ -217,7 +217,7 @@ class PendingRequest
      * @param  \Illuminate\Http\Client\Factory|null  $factory
      * @return void
      */
-    public function __construct(Factory $factory = null)
+    public function __construct(?Factory $factory = null)
     {
         $this->factory = $factory;
         $this->middleware = new Collection;
@@ -619,7 +619,7 @@ class PendingRequest
      * @param  callable|null  $callback
      * @return $this
      */
-    public function throw(callable $callback = null)
+    public function throw(?callable $callback = null)
     {
         $this->throwCallback = $callback ?: fn () => null;
 
