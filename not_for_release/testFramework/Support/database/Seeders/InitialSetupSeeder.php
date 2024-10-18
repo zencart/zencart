@@ -53,7 +53,8 @@ class InitialSetupSeeder extends Seeder
         $lof->save();
         // set SSLPWSTATUSCHECK to avoid redirect on admin login
         $statusCheck = \App\Models\Configuration::where('configuration_key', 'SSLPWSTATUSCHECK')->first();
-        $statusCheck->configuration_value = 1;
+        $e = (str_starts_with(HTTP_SERVER, 'https')) ? '1' : '0';
+        $statusCheck->configuration_value = "$e:$e";
         $statusCheck->save();
         // disable low order fee by  default
         $email = \App\Models\Configuration::where('configuration_key', 'SEND_EMAILS')->first();
