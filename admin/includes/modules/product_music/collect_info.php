@@ -53,13 +53,10 @@ if (isset($_GET['pID']) && empty($_POST)) {
                                   p.*,
                                   pe.artists_id, pe.record_company_id,pe.music_genre_id,
                                   date_format(p.products_date_available, '" .  zen_datepicker_format_forsql() . "') as products_date_available
-                           FROM " . TABLE_PRODUCTS . " p,
-                                " . TABLE_PRODUCTS_DESCRIPTION . " pd,
-                                " . TABLE_PRODUCT_MUSIC_EXTRA . " pe
-                           WHERE p.products_id = " . (int)$_GET['pID'] . "
-                           AND p.products_id = pd.products_id
-                           AND p.products_id = pe.products_id
-                           AND pd.language_id = " . (int)$_SESSION['languages_id']);
+                           FROM " . TABLE_PRODUCTS . " p
+                           LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
+                           LEFT JOIN " . TABLE_PRODUCT_MUSIC_EXTRA . " pe ON (p.products_id = pe.products_id)
+                           WHERE p.products_id = " . (int)$_GET['pID']);
 
   $pInfo->updateObjectInfo($product->fields);
   $pInfo->product_type = $pInfo->products_type;
