@@ -56,10 +56,10 @@ class InitialSetupSeeder extends Seeder
         $e = (str_starts_with(HTTP_SERVER, 'https')) ? '1' : '0';
         $statusCheck->configuration_value = "$e:$e";
         $statusCheck->save();
-        // disable low order fee by  default
-        $email = \App\Models\Configuration::where('configuration_key', 'SEND_EMAILS')->first();
-        $email->configuration_value = 'false';
-        $email->save();
+
+        // disable low order fee by default
+        // @TODO
+
         // create a currency with 4 digits
         $currency = new Currency([
             'title' => 'Swedish Kroner',
