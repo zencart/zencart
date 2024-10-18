@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['8.0', '8.1', '8.2', '8.3']
-    continue-on-error: ${{ matrix.php-version == '8.3' }}
+        php-version: ['8.0', '8.1', '8.2', '8.3', '8.4']
+    continue-on-error: ${{ matrix.php-version == '8.4' }}
     name: PHP ${{ matrix.php-version }} Unit Tests
     steps:
       - name: Checkout
@@ -23,7 +23,10 @@ jobs:
           tools: composer, phpunit
 
       - name: Install Composer dependencies
-        run: composer install --no-progress --no-interaction --no-suggest --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
+        run: composer install --no-progress --no-interaction --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts
+
+      - name: Patch composer files for PHP 8.4 compatibility
+        run: sh not_for_release/testFramework/copyVendorFiles.sh
 
       - name: Prepare the application
         run: |
