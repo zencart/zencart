@@ -50,6 +50,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
             'products_last_modified',
             'products_date_added',
             'products_date_available',
+            'products_ordered',
         ];
         $casted_fields = [
             'products_quantity' =>  'float',
@@ -105,6 +106,7 @@ if (isset($_POST['products_id'], $_POST['categories_id'])) {
         $sql_data_array['products_status'] = 0;
         $sql_data_array['products_date_added'] = 'now()';
         $sql_data_array['products_date_available'] = (!empty($product->fields['products_date_available']) ? zen_db_input($product->fields['products_date_available']) : 'null');
+        $sql_data_array['products_ordered'] = 0;
 
         $sql_data_array['master_categories_id'] = $categories_id;
 
