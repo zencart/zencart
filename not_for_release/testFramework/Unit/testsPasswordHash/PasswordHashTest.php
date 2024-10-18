@@ -48,7 +48,14 @@ class PasswordHashTest extends zcUnitTestCase
         $hash = 'c7d6976483032e03d48c1255cc9714838915e58007952f9f5f9c2af6f81f20d7:4972adcbae0c13a8bf77560479341f0beb2fb200ff21c16fc1ade1d467208751';
         $this->assertTrue(password_needs_rehash($hash, PASSWORD_DEFAULT));
         $hash = '$2y$10$XP.PqzC8/M.NbVIRVVael.WU8YxBss.qBUIzXtoIuWPbFHYxjGySC';
-        $this->assertNotTrue(password_needs_rehash($hash, PASSWORD_DEFAULT));
+        if (version_compare(PHP_VERSION, '8.3.999', '<')) {
+            $this->assertNotTrue(password_needs_rehash($hash, PASSWORD_DEFAULT));
+        } else {
+            // PHP 8.4 hashing "cost" default changed, so must test differently
+            $this->assertTrue(password_needs_rehash($hash, PASSWORD_DEFAULT));
+            $hash = '$2y$12$nF06GV6Oi6CQ39vtfdkII.jwqxpLnRbsCNpXpQQ0kLuU.rV5Tnl8G';
+            $this->assertNotTrue(password_needs_rehash($hash, PASSWORD_DEFAULT));
+        }
     }
 
     public function testDetectPasswordType(): void
