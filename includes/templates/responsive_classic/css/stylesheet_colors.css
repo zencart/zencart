@@ -26,7 +26,7 @@ legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxCon
 .list-more{color:#fff !important;}
 
 /* Added by dbltoe for more accent on center page items.  Comment out any not wanted */
-centerBoxContentsListing:hover, .centerBoxContents:hover, {border-radius: 5px;background:#e2e3e4;box-shadow: 21px 21px 41px #bdbdbd, -21px -21px 41px #d9d9d9;}
+.centerBoxContentsListing:hover, .centerBoxContents:hover, {border-radius: 5px;background:#e2e3e4;box-shadow: 21px 21px 41px #bdbdbd, -21px -21px 41px #d9d9d9;}
 .categoryListBoxContents:hover, .centerBoxContentsFeaturedCategories:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsNew:hover, .centerBoxContentsSpecials:hover, .specialsListBoxContents:hover {border-radius: 5px;background:#f4f4f4;;box-shadow: 21px 21px 41px #bdbdbd,-21px -21px 41px #d9d9d9;}
 
 /*bof background colors*/
