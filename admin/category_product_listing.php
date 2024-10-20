@@ -221,12 +221,19 @@ if (!empty($action)) {
         $delete_linked = 'false';
       }
       require zen_get_admin_module_from_directory($product_type, 'delete_product_confirm.php');
+      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath));
       break;
     case 'move_product_confirm':
       require zen_get_admin_module_from_directory($product_type, 'move_product_confirm.php');
+      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $new_parent_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
       break;
     case 'copy_product_confirm':
       require zen_get_admin_module_from_directory($product_type, 'copy_product_confirm.php');
+      if ($_POST['copy_as'] === 'duplicate' && !empty($_POST['edit_duplicate'])) {
+        zen_redirect(zen_href_link(FILENAME_PRODUCT, 'action=new_product&cPath=' . $categories_id . '&pID=' . $dup_products_id . '&products_type=' . (int)$product->fields['products_type']));
+      } else {
+        zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+      }
       break;
     case 'delete_attributes':
       zen_delete_products_attributes($_GET['products_id']);

@@ -45,8 +45,3 @@ if ($do_delete_flag) {
     zen_remove_product($product_id, $delete_linked);
   }
 } // endif $do_delete_flag
-// if this is a single-product delete, redirect to categories page
-// if not, then this file was called by the cascading delete initiated by the category-delete process
-if ($action === 'delete_product_confirm') {
-  zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath));
-}
