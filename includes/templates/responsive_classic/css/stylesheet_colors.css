@@ -9,20 +9,16 @@
 
 /*bof font colors*/
 body, .messageStackSuccess, .messageStackCaution, #tagline, #productQuantityDiscounts table, .categoryListBoxContents a, h2.greeting a {color:#000000;}
-a:link, a:visited, #navEZPagesTOC ul li a, a:hover, #navEZPagesTOC ul li a:hover, fieldset fieldset legend, #siteinfoLegal a, .cartTotalDisplay, .cartOldItem, .specialsListBoxContents, .centerBoxContentsSpecials, .centerBoxContentsFeaturedCategories, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .list-price, .itemTitle a, h2.greeting, #icon, h1, .header {color:#364fb5;}
-h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #03A9D3;}
+a:link, a:visited, #navEZPagesTOC ul li a, a:hover, #navEZPagesTOC ul li a:hover, fieldset fieldset legend, .cartTotalDisplay, .cartOldItem, .specialsListBoxContents, .centerBoxContentsSpecials, .centerBoxContentsFeaturedCategories, .centerBoxContentsAlsoPurch, .centerBoxContentsFeatured, .centerBoxContentsNew, .list-price, .itemTitle a, h2.greeting, #icon, h1, .header {color:#364fb5;}
 .cat-count, .itemTitle a:hover, h2.greeting a:hover {color:#666;}
-h3.rightBoxHeading a:hover, h3.leftBoxHeading a:hover {color: #aaa;}
-span.normal_button:hover {background: #666666;}
 span.button_back{font-size: 1.0em;}
 span.button_back:hover{font-size: 1.0em;}
 a:active {color:#0000ff;}
 h2, h3, .cartAttribsList, #cart-box {color:#000000;}
 #navMain ul li a:hover, #navSupp ul li a:hover{color:#03a5ce;}
-#navMain ul li a.navCartContentsIndicator:hover {color:#ffffff;}
 .alert {color: #8b0000;}
-legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxContentsFeatured a, .centerBoxContentsSpecials a, .centerBoxContentsNew a, .productPriceDiscount, .centerBoxContentsFeaturedCategories a {color:#333;}
-.messageStackWarning, .messageStackError, #navMainWrapper, #navMain ul li a, #navCatTabsWrapper, #navCatTabs li a, #navCatTabs li a:hover, #navCatTabs li:hover, #navEZPagesTop, .pagination li a, #navSuppWrapper, #navSupp li a, #siteinfoIP, #siteinfoLegal, #bannerSix, #siteinfoLegal a:hover, h2.centerBoxHeading, h3.rightBoxHeading, h3.leftBoxHeading, h3.rightBoxHeading a, h3.leftBoxHeading a, .seDisplayedAddressLabel, TR.tableHeading, #shippingEstimatorContent h2, #shippingEstimatorContent th, #checkoutConfirmDefault .cartTableHeading, #filter-wrapper, .navSplitPagesLinks a, .current, .productListing-rowheading a, .productListing-rowheading a, .prod-list-wrap, #productQuantityDiscounts table tr:first-child td, #reviewsWriteHeading, #sendSpendWrapper h2, #accountDefault #sendSpendWrapper h2, #gvFaqDefaultSubHeading, #checkoutPayAddressDefaultAddress, #checkoutShipAddressDefaultAddress, #accountLinksWrapper h2, h2#addressBookDefaultPrimary, #myAccountPaymentInfo h3, #myAccountShipInfo h3, #myAccountPaymentInfo h4, #myAccountShipInfo h4, input.submit_button, input.submit_button:hover, input.cssButtonHover, span.normal_button, .fa-bars{color: #ffffff;}
+legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxContentsFeatured a, .centerBoxContentsSpecials a, .centerBoxContentsNew a, .centerBoxContentsFeaturedCategories a {color:#333;}
+.messageStackWarning, .messageStackError, #navMainWrapper, #navMain ul li a, #navCatTabsWrapper, #navCatTabs li a, #navCatTabs li a:hover, #navCatTabs li:hover, #navEZPagesTop, .pagination li a, #navSuppWrapper, #navSupp li a, #siteinfoIP, #siteinfoLegal, #bannerSix, #siteinfoLegal a:hover, h2.centerBoxHeading, h3.rightBoxHeading, h3.leftBoxHeading, h3.rightBoxHeading a, h3.leftBoxHeading a, .seDisplayedAddressLabel, TR.tableHeading, #shippingEstimatorContent h2, #shippingEstimatorContent th, #checkoutConfirmDefault .cartTableHeading, #filter-wrapper, .navSplitPagesLinks a, .current, .prod-list-wrap, #productQuantityDiscounts table tr:first-child td, #reviewsWriteHeading, #sendSpendWrapper h2, #accountDefault #sendSpendWrapper h2, #gvFaqDefaultSubHeading, #checkoutPayAddressDefaultAddress, #checkoutShipAddressDefaultAddress, #accountLinksWrapper h2, h2#addressBookDefaultPrimary, #myAccountPaymentInfo h3, #myAccountShipInfo h3, #myAccountPaymentInfo h4, #myAccountShipInfo h4, input.submit_button, input.submit_button:hover, input.cssButtonHover, span.normal_button, .fa-bars{color: #ffffff;}
 .cartNewItem {color:#DB3A00;}
 #orderhistoryContent ul li a i.fa,
 .productSpecialPrice, .productSalePrice, .productSpecialPriceSale, .productPriceDiscount {color:#900404;}
@@ -30,11 +26,12 @@ legend, .specialsListBoxContents a, .centerBoxContentsAlsoPurch a, .centerBoxCon
 .list-more{color:#fff !important;}
 
 /* Added by dbltoe for more accent on center page items.  Comment out any not wanted */
-.categoryListBoxContents:hover, centerBoxContentsListing:hover, .centerBoxContents:hover, .centerBoxContentsNew:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsSpecials:hover, .specialsListBoxContents:hover, .centerBoxContentsFeaturedCategories:hover {border-radius: 5px;background:#e2e3e4;box-shadow: 21px 21px 41px #bdbdbd, -21px -21px 41px #d9d9d9;}
+.centerBoxContentsListing:hover, .centerBoxContents:hover, {border-radius: 5px;background:#e2e3e4;box-shadow: 21px 21px 41px #bdbdbd, -21px -21px 41px #d9d9d9;}
+.categoryListBoxContents:hover, .centerBoxContentsFeaturedCategories:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsNew:hover, .centerBoxContentsSpecials:hover, .specialsListBoxContents:hover {border-radius: 5px;background:#f4f4f4;;box-shadow: 21px 21px 41px #bdbdbd,-21px -21px 41px #d9d9d9;}
 
 /*bof background colors*/
-body, #mainWrapper, #headerWrapper, #contentMainWrapper, #logoWrapper, #cartBoxListWrapper, #ezPageBoxList, #cartBoxListWrapper ul, #ezPageBoxList ul, #mainWrapper, #popupAdditionalImage, #contentMainWrapper, #headerWrapper, .sideBoxContent, .rightBoxContent, .rowOdd, #productQuantityDiscounts table, #accountLinksWrapper {background:#fff;}
-input:focus, select:focus, textarea:focus, #mainWrapper, .specialsListBoxContents:hover, .centerBoxContentsSpecials:hover, .centerBoxContentsAlsoPurch:hover, .centerBoxContentsFeatured:hover, .centerBoxContentsNew:hover, .centerBoxContentsProducts:hover, .categoryListBoxContents:hover, .sideBoxContentItem:hover, .productListing-odd, .centerBoxContentsFeaturedCategories:hover, #pinfo-right, #sendSpendWrapper {background:#f4f4f4;}
+body, #logoWrapper, #cartBoxListWrapper, #ezPageBoxList, #cartBoxListWrapper ul, #ezPageBoxList ul, #contentMainWrapper, #headerWrapper, .sideBoxContent, .rightBoxContent, .rowOdd, #productQuantityDiscounts table, #accountLinksWrapper {background:#fff;}
+input:focus, select:focus, textarea:focus, #mainWrapper, .centerBoxContentsAlsoPurch:hover, .centerBoxContentsProducts:hover, .sideBoxContentItem:hover, .productListing-odd, #pinfo-right, #sendSpendWrapper {background:#f4f4f4;}
 .messageStackCaution {background-color:#ffff66;}
 .brandCell:hover,
 fieldset, .rowEven, #shippingEstimatorContent tr:nth-child(odd), #order-comments, ul.list-links li:hover, ol.list-links li:hover, #no-products, .listing-wrapper:nth-child(odd), #reviews-write-wrapper, #gvFaqDefaultContent, #checkoutPayAddressDefault .instructions, #checkoutShipAddressDefault .instructions, #addressBookDefault .instructions, #myAccountNotify, #myAccountGen, .reviews-wrapper, #accountHistInfo table td, #prevOrders td, #myAccountPaymentInfo, #myAccountShipInfo, #accountDefault #sendSpendWrapper{background:#eee;}
@@ -64,6 +61,7 @@ span.cssButton.normal_button.button.button_logoff, span.cssButton.normal_button.
 #navMain ul li a.navCartContentsIndicator {color: #000000;background: #ff662e;font-weight: bold;}
 
 /*bof border colors*/
+#cartAdd input[type=text], #navMainSearch input[type=text], input[type=file], input[type=image], fieldset, select, #productQuantityDiscounts td, #productQuantityDiscounts td:last-child {border:none}
 HR {border-bottom:1px solid #9a9a9a;}
 input, TEXTAREA{border:3px solid #ccc;}
 #navMain ul li {border-right:1px solid #fff;}
@@ -80,6 +78,9 @@ ol.list-links li{border-bottom:1px solid #ddd;}
 #cartSubTotal {border-top: 3px solid #ddd;}
 #productQuantityDiscounts td{border-right:1px solid #eee;}
 #seQuoteResults td, .listBoxContentTable td, .tableBorder1 td {border: 1px solid #000;}
+#productQuantityDiscounts table{border:none !important;border-spacing:0 !important;border-collapse:separate !important;}
+.last, #productQuantityDiscounts table tr:first-child td, #shippingEstimatorContent table, #shippingEstimatorContent td, #shippingEstimatorContent th {border:none !important;}
+table, .tabTable{border:none;border-spacing:0;border-collapse:collapse;}
 
 /*bof placeholders*/
 ::-moz-placeholder, :-moz-placeholder, ::-webkit-input-placeholder, :-ms-input-placeholder, :placeholder-shown {color: #D01;}
@@ -95,4 +96,8 @@ th#seProductsHeading, th#seTotalHeading {background: #000000;}
 .image-grid img {border: 1px solid #364fb5; box-shadow: 1px 1px 1px #364fb5;}
 .imgmodal img {border: none; box-shadow: none;}
 .imgmodal-content {background-color: #fff;}
+
+/*blue text color change to your color*/
+.blue{}
+.blue:hover{}
 
