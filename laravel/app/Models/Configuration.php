@@ -35,7 +35,7 @@ class Configuration extends Eloquent
                 $configValue = (int)$configValue;
             }
             if (!defined(strtoupper($config['configuration_key']))) {
-                define(strtoupper($config['configuration_key']), $configValue);
+                define(trim(strtoupper($config['configuration_key'])), $configValue);
             }
         }
     }
