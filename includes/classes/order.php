@@ -716,9 +716,10 @@ class order extends base
                 'products_mixed_discount_quantity' => (int)$products[$i]['products_mixed_discount_quantity'],
             ];
 
-            $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', ['index' => $index, 'products' => $products[$i]]);
+            $attributes_handled = false;
+            $this->notify('NOTIFY_ORDER_CART_ADD_PRODUCT_LIST', ['index' => $index, 'products' => $products[$i]], $attributes_handled);
 
-            if (!empty($products[$i]['attributes'])) {
+            if ($attributes_handled === false && !empty($products[$i]['attributes'])) {
                 $subindex = 0;
                 foreach ($products[$i]['attributes'] as $option => $value) {
 
