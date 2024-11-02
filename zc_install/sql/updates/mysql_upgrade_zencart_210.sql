@@ -63,7 +63,7 @@ ALTER TABLE orders MODIFY billing_postcode varchar(64) NOT NULL default '';
 ALTER TABLE orders MODIFY billing_state varchar(128) default NULL;
 ALTER TABLE paypal MODIFY address_zip varchar(64) default NULL;
 ALTER TABLE paypal_testing MODIFY address_zip varchar(64) default NULL;
-ALTER TABLE zoness MODIFY zone_name varchar(128) NOT NULL default '';
+ALTER TABLE zones MODIFY zone_name varchar(128) NOT NULL default '';
 
 ALTER TABLE admin ADD COLUMN mfa TEXT DEFAULT NULL;
 DROP TABLE IF EXISTS admin_expired_tokens;
