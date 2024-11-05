@@ -41,12 +41,29 @@ ALTER TABLE email_archive ADD INDEX idx_email_date_sent_zen (date_sent);
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
 # Postcode/zip fields expand to accomodate Portugal formatting
+ALTER TABLE address_book MODIFY entry_street_address varchar(128) NOT NULL default '';
+ALTER TABLE address_book MODIFY entry_suburb varchar(128) NOT NULL default '';
 ALTER TABLE address_book MODIFY entry_postcode varchar(64) NOT NULL default '';
+ALTER TABLE address_book MODIFY entry_city varchar(128) NOT NULL default '';
+ALTER TABLE address_book MODIFY entry_state varchar(128) default NULL;
+ALTER TABLE orders MODIFY customers_street_address varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY customers_suburb varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY customers_city varchar(128) NOT NULL default '';
 ALTER TABLE orders MODIFY customers_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY customers_state varchar(128) default NULL;
+ALTER TABLE orders MODIFY delivery_street_address varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_suburb varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_city varchar(128) NOT NULL default '';
 ALTER TABLE orders MODIFY delivery_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_state varchar(128) default NULL;
+ALTER TABLE orders MODIFY billing_street_address varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_suburb varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_city varchar(128) NOT NULL default '';
 ALTER TABLE orders MODIFY billing_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_state varchar(128) default NULL;
 ALTER TABLE paypal MODIFY address_zip varchar(64) default NULL;
 ALTER TABLE paypal_testing MODIFY address_zip varchar(64) default NULL;
+ALTER TABLE zones MODIFY zone_name varchar(128) NOT NULL default '';
 
 ALTER TABLE admin ADD COLUMN mfa TEXT DEFAULT NULL;
 DROP TABLE IF EXISTS admin_expired_tokens;
