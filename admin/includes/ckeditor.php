@@ -17,7 +17,7 @@
  */
 
 // To use a newer version, set the number here. See https://github.com/ckeditor/ckeditor5/releases for latest.
-const CKEDITOR_VERSION = '43.3.0';
+const CKEDITOR_VERSION = '43.3.1';
 
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
