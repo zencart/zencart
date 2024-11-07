@@ -70,12 +70,14 @@ $email_address = '';
 $telephone = '';
 
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
-    $name = zen_db_prepare_input($_POST['contactname']);
-    $email_address = zen_db_prepare_input($_POST['email']);
-    $telephone = zen_db_prepare_input($_POST['telephone']);
+    $name = zen_db_prepare_input($_POST['contactname'] ?? '');
+    $email_address = zen_db_prepare_input($_POST['email'] ?? '');
+    $telephone = zen_db_prepare_input($_POST['telephone'] ?? '');
     $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry'] ?? ''));
     $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
-    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
+    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) {
+        $antiSpam = 'spam';
+    }
 
     $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_CAPTCHA_CHECK', $_POST);
 
