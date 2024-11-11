@@ -34,6 +34,24 @@ $(function(){
     // 8. attribImgSelector.  Identifies the selector for attributes' images' blocks' wrapper.
     // 9. showModelNum.  Identifies whether/not each variant's model-number is shown when the final attribute choices are displayed.
     //
+    function escapeHtml(unsafe) {
+        return unsafe.replace(/[&<"']/g, function (m) {
+            switch (m) {
+                case '&':
+                    return '&amp;';
+                case '<':
+                    return '&lt;';
+                case '>':
+                    return '&gt;';
+                case '"':
+                    return '&quot;';
+                case "'":
+                    return '&#039;';
+                default:
+                    return m;
+            }
+        });
+    }
     let firstGroup = null;
     let firstGroupIsImage = false;
     let optionID = 0;
@@ -438,7 +456,7 @@ $(function(){
             if ($(this).find(inputTypes).length > 0) {
                 if ($(this).find('option:selected, input[type="radio"]:checked').length === 0 || $(this).find('option[value=0]:selected').length !== 0) {
                     submitAllowed = false;
-                    let optionName = $(this).find(optionNameSelector).text().replace(/:/g, '');
+                    let optionName = escapeHtml($(this).find(optionNameSelector).text().replace(/:/g, ''));
                     $(this).find(optionNameSelector).after('<span class="posm-error">' + noSelectionText + optionName + '<\/span>');
                 }
             }
