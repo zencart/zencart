@@ -2769,10 +2769,24 @@ Licensed under the MIT license.
                     rowStarted = true;
                 }
 
-                fragments.push(
-                    '<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
-                    '<td class="legendLabel">' + entry.label + '</td>'
-                );
+                var colorBox = document.createElement('td');
+                colorBox.className = 'legendColorBox';
+                var colorDiv = document.createElement('div');
+                colorDiv.style.border = '1px solid ' + options.legend.labelBoxBorderColor;
+                colorDiv.style.padding = '1px';
+                var innerColorDiv = document.createElement('div');
+                innerColorDiv.style.width = '4px';
+                innerColorDiv.style.height = '0';
+                innerColorDiv.style.border = '5px solid ' + entry.color;
+                innerColorDiv.style.overflow = 'hidden';
+                colorDiv.appendChild(innerColorDiv);
+                colorBox.appendChild(colorDiv);
+
+                var labelBox = document.createElement('td');
+                labelBox.className = 'legendLabel';
+                labelBox.textContent = entry.label;
+
+                fragments.push(colorBox.outerHTML + labelBox.outerHTML);
             }
 
             if (rowStarted)
