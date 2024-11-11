@@ -2,7 +2,7 @@
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin
 // Copyright (c) 2014-2024 Vinos de Frutas Tropicales
 //
-// Last updated: POSM v5.0.0
+// Last updated: POSM v6.0.0
 //
 $(function(){
     // -----
@@ -425,7 +425,6 @@ $(function(){
     //
     $(document).on('submit', 'form[name="cart_quantity"]', function(event) {
         let submitAllowed = true;
-        let missingOption = '';
 
         // -----
         // Remove any previously-issued error messages
@@ -439,9 +438,8 @@ $(function(){
             if ($(this).find(inputTypes).length > 0) {
                 if ($(this).find('option:selected, input[type="radio"]:checked').length === 0 || $(this).find('option[value=0]:selected').length !== 0) {
                     submitAllowed = false;
-                    missingOption = $(this).find(optionNameSelector);
-                    let optionName = missingOption.text().replace(/:/g, '');
-                    missingOption.after('<span class="posm-error">' + noSelectionText + optionName + '<\/span>');
+                    let optionName = $(this).find(optionNameSelector).text().replace(/:/g, '');
+                    $(this).find(optionNameSelector).after('<span class="posm-error">' + noSelectionText + optionName + '<\/span>');
                 }
             }
         });
@@ -454,7 +452,7 @@ $(function(){
             event.stopImmediatePropagation();
             event.preventDefault();
             $('html, body').stop().animate({
-                scrollTop: $(missingOption).parent().offset().top
+                scrollTop: $(this).find(optionNameSelector).parent().offset().top
             }, 1000);
         }
         return submitAllowed;
