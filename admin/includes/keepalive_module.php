@@ -19,6 +19,10 @@ if (!defined('TEXT_TIMEOUT_TIMED_OUT_TITLE')) define('TEXT_TIMEOUT_TIMED_OUT_TIT
 if (!defined('TEXT_TIMEOUT_LOGIN_AGAIN')) define('TEXT_TIMEOUT_LOGIN_AGAIN', 'Login Again');
 if (!defined('TEXT_TIMEOUT_TIMED_OUT_MESSAGE')) define('TEXT_TIMEOUT_TIMED_OUT_MESSAGE', 'Your session has timed out. You were inactive, so we logged you out automatically.');
 
+if (in_array(($PHP_SELF ?? ''), ['login.php', 'login', 'password_forgotten.php', 'password_forgotten'], true)) {
+    return;
+}
+
 $camefrom = 'index.php?cmd=' . basename($PHP_SELF, '.php') . (empty($params = zen_get_all_get_params()) ? '' : '&' . trim($params, '&'));
 $mouseDebounce = 120;
 

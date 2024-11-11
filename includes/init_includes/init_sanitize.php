@@ -31,7 +31,7 @@ foreach ($_GET as $varname => $varvalue) {
 $csrfBlackListLocal = [];
 $csrfBlackList = (isset($csrfBlackListCustom)) ? array_merge($csrfBlackListLocal, $csrfBlackListCustom) : $csrfBlackListLocal;
 if (!isset($_SESSION ['securityToken'])) {
-    $_SESSION ['securityToken'] = md5(uniqid(rand(), true));
+    $_SESSION ['securityToken'] = \bin2hex(\random_bytes(16));
 }
 
 if (zen_is_hmac_login()) {

@@ -32,6 +32,14 @@ class sniffer
         return $result->RecordCount() > 0;
     }
 
+    public function get_table_collation(string $table_name): ?string
+    {
+        global $db;
+        $sql = "SHOW TABLE STATUS LIKE '" . $db->prepare_input($table_name) . "'";
+        $result = $db->Execute($sql);
+        return $result->fields['Collation'] ?? null;
+    }
+
     /**
      * Check whether the field exists in the table
      */
@@ -46,6 +54,19 @@ class sniffer
             }
         }
         return false;
+    }
+
+    public function get_field_collation(string $table_name, string $field_name): ?string
+    {
+        global $db;
+        $sql = "SHOW FULL FIELDS FROM " . $db->prepare_input($table_name);
+        $result = $db->Execute($sql);
+        foreach ($result as $record) {
+            if ($record['Field'] === $field_name) {
+                return $record['Collation'];
+            }
+        }
+        return null;
     }
 
     /**

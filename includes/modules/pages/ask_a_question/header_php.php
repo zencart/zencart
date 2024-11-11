@@ -70,12 +70,14 @@ $email_address = '';
 $telephone = '';
 
 if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
-    $name = zen_db_prepare_input($_POST['contactname']);
-    $email_address = zen_db_prepare_input($_POST['email']);
-    $telephone = zen_db_prepare_input($_POST['telephone']);
+    $name = zen_db_prepare_input($_POST['contactname'] ?? '');
+    $email_address = zen_db_prepare_input($_POST['email'] ?? '');
+    $telephone = zen_db_prepare_input($_POST['telephone'] ?? '');
     $enquiry = zen_db_prepare_input(strip_tags($_POST['enquiry'] ?? ''));
     $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
-    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) $antiSpam = 'spam';
+    if (!empty($_POST['contactname']) && preg_match('~https?://?~', $_POST['contactname'])) {
+        $antiSpam = 'spam';
+    }
 
     $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_CAPTCHA_CHECK', $_POST);
 
@@ -133,7 +135,9 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             // Prepare Text-only portion of message
             $text_message = OFFICE_FROM . "\t" . $name . "\n" .
             OFFICE_EMAIL . "\t" . $email_address . "\n";
-            if (!empty($telephone)) $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
+            if (!empty($telephone)) {
+                $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
+            }
             $text_message .= TEXT_PRODUCT_NAME . "\t" . $product_details['products_name'] . "\n" .
             zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) .
             "\n";
@@ -144,7 +148,8 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             $extra_info['TEXT'];
             // Prepare HTML-portion of message
             $html_msg['EMAIL_MESSAGE_HTML'] = '<b>' . TEXT_PRODUCT_NAME . '</b> <a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) . '">' . $product_details['products_name'] . '</a><br>' . strip_tags($_POST['enquiry']);
-            $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br>' . OFFICE_EMAIL . '(' . $email_address . ')';
+            $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br>' . OFFICE_EMAIL . ' ' . $email_address .
+                (!empty($telephone) ? '<br>' . OFFICE_LOGIN_PHONE . ' ' . $telephone : '');
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message
             zen_mail($send_to_name, $send_to_email, $email_subject, $text_message, $name, $email_address, $html_msg,'ask_a_question');

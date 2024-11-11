@@ -85,7 +85,7 @@ class authorizenet_aim extends base {
    * @var string the currency enabled in this gateway's merchant account
    */
   private $gateway_currency;
-  
+
     private $_check;
     public $auth_code;
     protected $avs_response;
@@ -355,7 +355,7 @@ class authorizenet_aim extends base {
 
     // Calculate the next expected order id (adapted from code written by Eric Stamper - 01/30/2004 Released under GPL)
     $last_order_id = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " ORDER BY orders_id desc LIMIT 1");
-    $new_order_id = $last_order_id->fields['orders_id'];
+    $new_order_id = $last_order_id->fields['orders_id'] ?? 0;
     $new_order_id = ($new_order_id + 1);
 
     // add randomized suffix to order id to produce uniqueness ... since it's unwise to submit the same order-number twice to authorize.net

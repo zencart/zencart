@@ -199,13 +199,13 @@ class cache extends base {
   function cache_generate_cache_name($zf_query) {
     switch (SQL_CACHE_METHOD) {
       case 'file':
-      return 'zc_' . md5($zf_query);
+      return 'zc_' . hash('md5', $zf_query);
       break;
       case 'database':
-      return 'zc_' . md5($zf_query);
+      return 'zc_' . hash('md5', $zf_query);
       break;
       case 'memory':
-      return 'zc_' . md5($zf_query);
+      return 'zc_' . hash('md5', $zf_query);
       break;
       case 'none':
       default:

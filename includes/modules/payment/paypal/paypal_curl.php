@@ -431,7 +431,7 @@ class paypal_curl extends base {
 
     // request-id must be unique within 30 days
     if ($requestId === null) {
-      $requestId = md5(uniqid(mt_rand()));
+      $requestId = \bin2hex(\random_bytes(16));
     }
 
     $headers[] = 'Content-Type: text/namevalue';
@@ -442,7 +442,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.8';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 2.1.0';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();

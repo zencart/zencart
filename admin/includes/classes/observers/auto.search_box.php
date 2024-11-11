@@ -25,6 +25,7 @@ class zcObserverSearchBox extends base
                     $removeElements = [
                         'pd.products_name',
                         'p.products_model',
+                        'p.products_mpn',
                         'pd.products_description',
                         'cd.categories_name',
                         'cd.categories_description',

@@ -28,7 +28,7 @@ final class FragmentUriGenerator implements FragmentUriGeneratorInterface
     private $signer;
     private $requestStack;
 
-    public function __construct(string $fragmentPath, UriSigner $signer = null, RequestStack $requestStack = null)
+    public function __construct(string $fragmentPath, ?UriSigner $signer = null, ?RequestStack $requestStack = null)
     {
         $this->fragmentPath = $fragmentPath;
         $this->signer = $signer;

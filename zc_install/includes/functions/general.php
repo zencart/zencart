@@ -37,7 +37,7 @@ function logDetails(string $details, string $location = "General"): void
     }
 }
 
-function zen_rand(int $min = null, int $max = null): int
+function zen_rand(?int $min = null, ?int $max = null): int
 {
     static $seeded;
 
@@ -50,7 +50,7 @@ function zen_rand(int $min = null, int $max = null): int
         if ($min >= $max) {
             return $min;
         }
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     return mt_rand();

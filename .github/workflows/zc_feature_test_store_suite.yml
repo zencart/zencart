@@ -53,8 +53,14 @@ jobs:
       - name: Enable PHP Modules
         run: sudo apt-get install libapache2-mod-php${{ matrix.php-version }} && sudo a2enmod php${{ matrix.php-version }}
 
+      - name: Backward Compatibility
+        if: matrix.php-version == '8.0'
+        run: |
+          rm composer.lock
+          composer require symfony/polyfill-php81
+
       - name: Install Composer Dependencies
-        run: composer install --no-progress --no-interaction --no-suggest
+        run: composer install --no-progress --no-interaction
 
       - name: Set Apache2 Environment Variables
         run: |

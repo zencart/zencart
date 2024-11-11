@@ -502,7 +502,7 @@ function zen_get_categories_parent_name($categories_id)
  * use as:
  * $my_products_id_list = array();
  * $my_products_id_list = zen_get_categories_products_list($categories_id)
- * @param int $categories_id
+ * @param int|string $categories_id (may be a cPath)
  * @param bool $include_deactivated
  * @param bool $include_child
  * @param string $parent_category
@@ -513,6 +513,7 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
 {
     global $db;
     global $categories_products_id_list;
+    $categories_id = (string)$categories_id;
 
     if (!empty($display_limit)) {
         $display_limit = $db->prepare_input($display_limit);
