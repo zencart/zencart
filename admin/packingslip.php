@@ -292,7 +292,7 @@ if (empty($order->info)) {
                   ?>
                 <tr>
                   <td class="text-center"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
-                  <td><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
+                  <td><?php echo $orders_status_array[$order_history['orders_status_id']] ?? ''; ?></td>
                   <td class="text-left">
                   <?php
                   if (empty($order_history['comments'])) {
