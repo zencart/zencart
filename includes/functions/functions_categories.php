@@ -793,15 +793,18 @@ function zen_get_category_description($category_id, $language_id = null): string
  * @param $category_id
  * @return string
  */
-function zen_get_categories_image($category_id) {
+function zen_get_categories_image($category_id): string
+{
     global $db;
 
-    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id= " . (int)$category_id;
-    $result = $db->Execute($sql);
+    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id = " . (int)$category_id;
+    $result = $db->Execute($sql, 1);
 
-    if ($result->EOF) return '';
+    if ($result->EOF) {
+        return '';
+    }
 
-    return $result->fields['categories_image'];
+    return (string)$result->fields['categories_image'];
 }
 
 /**
