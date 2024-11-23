@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2024 Jun 01 Modified in v2.1.0-alpha1 $
+ * @version $Id: lat9 2024 Nov 19 Modified in v2.1.0 $
  */
 require('includes/application_top.php');
 
