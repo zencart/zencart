@@ -167,6 +167,7 @@ $fieldAttributes .= match ($_SESSION['mfa']['type'] ?? 'digits') {
                                     echo sprintf('<img class="text-center" src="%s" alt="QR Code"/>', $qrCode);
                                 }
                                 ?></div>
+                            <?php echo "<pre>" . $_SESSION['mfa']['secret'] . "</pre>";?></div>
                         </div>
                     <?php
                     } ?>
