@@ -61,7 +61,7 @@ legend{padding:0;display:table;text-align:center;width:100%;padding:10px 0;font-
 fieldset{padding:20px 0;margin:0 0 20px 0;min-width:0;}
 body:not(:-moz-handler-blocked) fieldset{display:table-cell;}
 fieldset > fieldset{}
-fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;}
+fieldset fieldset legend{text-align:left;padding:0;margin:0;position:relative;left:20px;font-size:120%;display:table;background:none;}
 fieldset p{margin-left:20px;}
 fieldset label, fieldset .inputLabel, fieldset h3, fieldset address, #advSearchDefault input, fieldset .buttonRow.back, fieldset select, fieldset input[type=radio], fieldset input[type=checkbox], fieldset div{margin-left:20px;}
 fieldset div, fieldset .buttonRow.forward{margin-right:20px;}
