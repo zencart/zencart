@@ -12,7 +12,7 @@ class VersionServer
 
     protected const TIMEOUT = 3;
 
-    protected const CONNECTTIMEOUT = 1;
+    protected const CONNECTTIMEOUT = 2;
 
     public function __construct()
     {
