@@ -51,14 +51,14 @@ try {
     $_GET['sort'] = $searchOptions->sort;
 
     // if no results were found, show a customisable message.
-    if ($result->number_of_rows === 0) {
+    if ((int)$result->number_of_rows === 0) {
         $message = TEXT_NO_PRODUCTS;
         $zco_notifier->notify('NOTIFY_SEARCH_NO_RESULTS_MESSAGE', $result, $search, $message);
         $messageStack->add_session('search', $message, 'caution');
         zen_redirect(zen_href_link(FILENAME_SEARCH, zen_get_all_get_params('action')));
     }
     // if only one product found in search results, go directly to the product page, instead of displaying a link to just one item:
-    if ($result->number_of_rows === 1 && SKIP_SINGLE_PRODUCT_CATEGORIES === 'True') {
+    if ((int)$result->number_of_rows === 1 && SKIP_SINGLE_PRODUCT_CATEGORIES === 'True') {
         $result = $db->Execute($result->sql_query);
         zen_redirect(zen_href_link(zen_get_info_page($result->fields['products_id']), 'cPath=' . zen_get_product_path($result->fields['products_id']) . '&products_id=' . $result->fields['products_id']));
     }
