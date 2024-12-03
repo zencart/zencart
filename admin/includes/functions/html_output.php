@@ -289,7 +289,7 @@ function zen_icon(string $icon, ?string $tooltip = null, string $size = '', bool
         }
 		$param = 'style="width:' . $width . ';"';
 	} else {
-		$param = NULL;
+		$param = '';
 	}
     return zen_image(DIR_WS_IMAGES . $image, '', '', $height, $param);
   }
