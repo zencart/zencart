@@ -151,7 +151,7 @@ switch (true) {
     /**
      * for all/new/special/featured listings:
      */
-    case (in_array($current_page, array(FILENAME_FEATURED_PRODUCTS, FILENAME_SPECIALS, FILENAME_PRODUCTS_NEW, FILENAME_PRODUCTS_ALL))):
+    case (in_array($current_page, [FILENAME_FEATURED_PRODUCTS, FILENAME_SPECIALS, FILENAME_PRODUCTS_NEW, FILENAME_PRODUCTS_ALL])):
     /**
      * for manufacturer listings:
      */
