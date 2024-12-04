@@ -117,7 +117,7 @@ switch (true) {
     /**
      * for products (esp those linked to multiple categories):
      */
-    case (str_ends_with($current_page, '_info') && isset($_GET['products_id'])):
+    case ($current_page !== FILENAME_PRODUCT_REVIEWS_INFO && str_ends_with($current_page, '_info') && isset($_GET['products_id'])):
         $canonicalLink = zen_href_link($current_page, ($includeCPath ? 'cPath=' . zen_get_generated_category_path_rev(zen_get_products_category_id($_GET['products_id'])) . '&' : '') . 'products_id=' . $_GET['products_id'], 'NONSSL', false);
         break;
     /**
@@ -127,6 +127,12 @@ switch (true) {
         $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
         // alternate way, depending on specialized site needs:
         //    $canonicalLink = zen_href_link($current_page,'cPath=' . zen_get_generated_category_path_rev($current_category_id) , 'NONSSL', false);
+        break;
+    /**
+     * For specific product reviews
+     */
+    case ($current_page === FILENAME_PRODUCT_REVIEWS_INFO && !empty($_GET['products_id']) && !empty($_GET['reviews_id'])):
+        $canonicalLink = zen_href_link($current_page, 'products_id=' . $_GET['products_id'] . '&reviews_id=' . $_GET['reviews_id'], 'NONSSL', false);
         break;
     /**
      * for music filters:
