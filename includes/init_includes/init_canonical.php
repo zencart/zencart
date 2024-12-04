@@ -117,13 +117,13 @@ switch (true) {
     /**
      * for products (esp those linked to multiple categories):
      */
-    case (strstr($current_page, '_info') && isset($_GET['products_id'])):
+    case (str_ends_with($current_page, '_info') && isset($_GET['products_id'])):
         $canonicalLink = zen_href_link($current_page, ($includeCPath ? 'cPath=' . zen_get_generated_category_path_rev(zen_get_products_category_id($_GET['products_id'])) . '&' : '') . 'products_id=' . $_GET['products_id'], 'NONSSL', false);
         break;
     /**
      * for product listings (ie: "categories"):
      */
-    case ($current_page == FILENAME_DEFAULT && isset($_GET['cPath'])):
+    case ($current_page === FILENAME_DEFAULT && isset($_GET['cPath'])):
         $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
         // alternate way, depending on specialized site needs:
         //    $canonicalLink = zen_href_link($current_page,'cPath=' . zen_get_generated_category_path_rev($current_category_id) , 'NONSSL', false);
@@ -131,7 +131,7 @@ switch (true) {
     /**
      * for music filters:
      */
-    case ($current_page == FILENAME_DEFAULT && isset($_GET['typefilter']) && $_GET['typefilter'] != '' && ( (isset($_GET['music_genre_id']) && $_GET['music_genre_id'] != '' ) || (isset($_GET['record_company_id']) && $_GET['record_company_id'] != '' ) ) ):
+    case ($current_page === FILENAME_DEFAULT && !empty($_GET['typefilter']) && (!empty($_GET['music_genre_id']) || !empty($_GET['record_company_id']))):
         unset($excludeParams[array_search('typefilter', $excludeParams)]);
         $canonicalLink = zen_href_link($current_page, zen_get_all_get_params($excludeParams), 'NONSSL', false);
         break;
@@ -143,21 +143,17 @@ switch (true) {
         $canonicalLink = preg_replace('/(index.php)(\?)(main_page=)(' . FILENAME_DEFAULT . ')$/', '', zen_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
         break;
     /**
-     * for new/special/featured listings:
+     * for all/new/special/featured listings:
      */
-    case (in_array($current_page, array(FILENAME_FEATURED_PRODUCTS, FILENAME_SPECIALS, FILENAME_PRODUCTS_NEW))):
-    /**
-     * for products_all:
-     */
-    case ($current_page == FILENAME_PRODUCTS_ALL):
+    case (in_array($current_page, array(FILENAME_FEATURED_PRODUCTS, FILENAME_SPECIALS, FILENAME_PRODUCTS_NEW, FILENAME_PRODUCTS_ALL))):
     /**
      * for manufacturer listings:
      */
-    case ($current_page == FILENAME_DEFAULT && isset($_GET['manufacturers_id'])):
+    case ($current_page === FILENAME_DEFAULT && isset($_GET['manufacturers_id'])):
     /**
      * for ez-pages:
      */
-    case ($current_page == FILENAME_EZPAGES && isset($_GET['id'])):
+    case ($current_page === FILENAME_EZPAGES && isset($_GET['id'])):
         /**
          * all the above cases get treated here:
          */
