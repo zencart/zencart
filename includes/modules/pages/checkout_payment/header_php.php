@@ -120,7 +120,7 @@ if (isset($_GET['payment_error']) && is_object(${$_GET['payment_error']}) && ($e
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2);
 
-$gv_balance = $customer->getData('gv_balance');
+$gv_balance = $customer->getData('gv_balance') ?? 0;
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_CHECKOUT_PAYMENT');
