@@ -40,7 +40,7 @@ HR {height: 1px;margin-top:0.5em;}
 .alert {margin-left:0.5em;}
 .important {font-weight:bold;}
 .gvBal {float:right;}
-.centerColumn, #bannerOne, #bannerTwo,  #bannerThree,  #bannerFour,  #bannerFive, {padding:0.8em;}
+.centerColumn, #bannerOne, #bannerTwo,  #bannerThree,  #bannerFour,  #bannerFive {padding:0.8em;}
 .smallText, #siteinfoLegal, #siteinfoCredits, #siteinfoStatus, #siteinfoIP {font-size:0.9em;}
 .information {padding: 10px 3px; line-height: 150%;}
 .group:after {content: "";display:table;clear:both;}
@@ -57,7 +57,7 @@ input{height:35px;padding-left:5px;margin-bottom:10px;}
 select{padding-left:5px;width:51%;}
 TEXTAREA {margin:auto;display:block;width:66%;}
 input:focus, select:focus, textarea:focus {}
-legend{padding:0;display:table;text-align:center;width:100%;padding:10px 0;font-size:1.3em;}
+legend{display:table;text-align:center;width:100%;padding:10px 0;font-size:1.3em;}
 fieldset{padding:20px 0;margin:0 0 20px 0;min-width:0;}
 body:not(:-moz-handler-blocked) fieldset{display:table-cell;}
 fieldset > fieldset{}
@@ -81,7 +81,7 @@ select#country, .wrapperAttribsOptions select, #advSearchDefault select, select#
 select#send-to {font-size: 1.1em; margin-bottom: 10px; margin-left: 0;}
 select#country, select#stateZone, #state {margin-left:0;}
 .ccinfo select{width:auto;height:25px;margin-bottom:10px;}
-.sideBoxContent select{width:90%; margin: auto; margin-bottom: 5px;}
+.sideBoxContent select{width:90%;margin: auto auto 5px;}
 #currenciesContent select{height:35px;}
 
 /*bof warnings, errors, messages*/
@@ -220,7 +220,7 @@ ul.list-links li:hover, ol.list-links li:hover{}
 .normalprice, .productSpecialPriceSale {text-decoration:line-through;}
 .productSalePrice {}
 #ezPageBoxList ul {list-style-type:none;}
-#ezPageBoxList li, {margin:0;padding: 0.2em 0;}
+#ezPageBoxList li {margin:0;padding: 0.2em 0;}
 #cartBoxEmpty, #cartBoxVoucherBalance {font-weight:bold;}
 .totalBox {width:5.5em;text-align:right;padding:0.2em;}
 .lineTitle, .amount {text-align:right;padding:0.2em;}
@@ -322,16 +322,16 @@ span.list-addtext{display:block;text-align:center;}
 /*product listing column-layout overrides*/
 .gridlayout.centerBoxContentsProducts { padding: 2em 0;}
 .gridlayout.categoryListBoxContents { padding: 2em 0;}
-.gridlayout .list-image {float:none}
-.gridlayout .list-image {min-height: revert; min-width: revert}
+.gridlayout .list-image {float:none;}
+.gridlayout .list-image {min-height: revert; min-width: revert;}
 .gridlayout .list-image {margin-right: inherit;}
 .gridlayout .list-more {float: none;}
-#productListing .gridlayout .list-more {margin: auto; width: 30%}
-#indexCategories .gridlayout .list-more {margin: auto; width: 30%}
-.gridlayout .itemTitle {width:90%;margin:5px auto}
-.gridlayout .listingDescription {width:90%;margin:10px auto}
+#productListing .gridlayout .list-more {margin: auto; width: 30%;}
+#indexCategories .gridlayout .list-more {margin: auto; width: 30%;}
+.gridlayout .itemTitle {width:90%;margin:5px auto;}
+.gridlayout .listingDescription {width:90%;margin:10px auto;}
 .gridlayout .cart-add {float:none;}
-.gridlayout .list-input {float:none;width:30%;margin:auto}
+.gridlayout .list-input {float:none;width:30%;margin:auto;}
 
 
 /*bof new, featured, all listing (old style when each had their own listing page, not using main .productListing */
@@ -464,9 +464,9 @@ h2.greeting a:hover{}
 .paypal-button-hidden{visibility:hidden;}
 
 /* markup for tables used to present tabular data */
-.alignLeft {text-align: left}
-.alignCenter {text-align: center}
-.alignRight {text-align: right}
+.alignLeft {text-align: left;}
+.alignCenter {text-align: center;}
+.alignRight {text-align: right;}
 table, .tabTable{width:100%;padding:0;margin:0;}
 #cartContentsDisplay {width: 100%;}
 #myAccountOrdersStatus, #orderHistoryHeading, #prevOrders {width: 100%;}
