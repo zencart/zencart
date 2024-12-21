@@ -89,7 +89,8 @@ function zen_mfa_by_totp(array $admin_info = []): bool
         $_SESSION['mfa'] = [];
     }
 
-    $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER);
+    $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER) . ' - Zen Cart';
+    $domain = defined('MFA_DESCRIPTIVE_NAME') && !empty(MFA_DESCRIPTIVE_NAME) ? MFA_DESCRIPTIVE_NAME : $domain;
 
     $ga = new MultiFactorAuth();
 
