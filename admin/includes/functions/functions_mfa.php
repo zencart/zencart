@@ -89,7 +89,8 @@ function zen_mfa_by_totp(array $admin_info = []): bool
         $_SESSION['mfa'] = [];
     }
 
-    $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER);
+    $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER) . ' - Zen Cart';
+    $domain = defined('MFA_DESCRIPTIVE_NAME') ? MFA_DESCRIPTIVE_NAME : $domain;
 
     $ga = new MultiFactorAuth();
 
@@ -97,7 +98,7 @@ function zen_mfa_by_totp(array $admin_info = []): bool
     $secret = !empty($user_mfa_data['secret']) ? $user_mfa_data['secret'] : $ga->createSecret();
     if (empty($user_mfa_data['secret'])) {
         $_SESSION['mfa']['secret_not_yet_persisted'] = true;
-        $qrCode = $ga->getQrCode(STORE_NAME . " - ZenCart", $secret, $admin_info['admin_name'] ?? '', 200);
+        $qrCode = $ga->getQrCode($domain, $secret, $admin_info['admin_name'] ?? '', 200);
         $_SESSION['mfa']['qrcode'] = $qrCode;
     }
 
