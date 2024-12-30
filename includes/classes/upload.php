@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: zenexpert 2024 Dec 30 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -184,7 +184,7 @@ class upload extends base
      */
     function set_filename($filename)
     {
-        $this->filename = $filename;
+        $this->filename = $this->sanitizeFileName($filename);
     }
 
     /**
@@ -258,5 +258,14 @@ class upload extends base
                 $messageStack->add_session('upload', $msg, $type);
             }
         }
+    }
+
+    function sanitizeFileName($filename) {
+        $filename = strtolower($filename);
+        $filename = str_replace(' ', '-', $filename);
+        $filename = preg_replace('/[^a-z0-9_\-\.]/', '', $filename);
+        $filename = preg_replace('/\.+/', '.', $filename);
+
+        return $filename;
     }
 }
