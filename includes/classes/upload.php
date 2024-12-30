@@ -260,10 +260,18 @@ class upload extends base
         }
     }
 
-    function sanitizeFileName($filename) {
+    protected function sanitizeFileName(string $filename): string
+    {
+        // Convert to lowercase
         $filename = strtolower($filename);
+
+        // Replace spaces with hyphens
         $filename = str_replace(' ', '-', $filename);
+
+        // Remove special characters (keep alphanumerics, dashes, underscores, and dots)
         $filename = preg_replace('/[^a-z0-9_\-\.]/', '', $filename);
+
+        // Replace multiple dots with a single dot
         $filename = preg_replace('/\.+/', '.', $filename);
 
         return $filename;
