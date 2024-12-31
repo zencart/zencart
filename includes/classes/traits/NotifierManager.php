@@ -12,11 +12,12 @@ use Zencart\Events\EventDto;
 trait NotifierManager
 {
     /**
-     * @var array of aliases
+     * Array of notifier aliases (where Notifier hook names have been renamed, such as for minor misspellings)
+     * In your own application code, you may add to this list by calling $this->registerObserverAlias($old,$new)
      */
     private array $observerAliases = [
-        // this one is an alias to accommodate an old misspelling:
         'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE',
+        'NOTIFY_ADMIN_INVOIVE_HEADERS_AFTER_TAX' => 'NOTIFY_ADMIN_INVOICE_HEADERS_AFTER_TAX',
     ];
 
     public function getRegisteredObservers(): array
