@@ -43,6 +43,10 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
         $separator = '?';
     }
     else if (!empty($parameters)) {
+        // Special handling for 'search' parameter
+        if (strpos($parameters, 'search=') !== false) {
+            $parameters = str_replace('"', '%22', $parameters); // Encode quotes manually
+        }
         $link .= 'index.php?cmd='. $page . '&' . zen_output_string($parameters);
     }
     else {
