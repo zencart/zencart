@@ -204,7 +204,7 @@ if (empty($order->info)) {
           //   'NOTIFY_ADMIN_INVOICE_DATA_AFTER_TAX' notification.
           //
           $extra_headings = false;
-          $zco_notifier->notify('NOTIFY_ADMIN_INVOIVE_HEADERS_AFTER_TAX', '', $extra_headings);
+          $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_HEADERS_AFTER_TAX', '', $extra_headings);
           if (is_array($extra_headings)) {
               foreach ($extra_headings as $heading_info) {
                   $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';

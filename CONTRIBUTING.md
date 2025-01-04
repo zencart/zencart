@@ -30,5 +30,5 @@ Thank you for your contributions!
 
 &nbsp;  
   
-*&copy;Copyright 2003-2024, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2025, Zen Cart&reg;. All rights reserved.*
 

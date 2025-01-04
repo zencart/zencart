@@ -235,6 +235,7 @@ class order extends base
             'ip_address' => $order->fields['ip_address'],
             'language_code' => $order->fields['language_code'],
             'order_weight' => $order->fields['order_weight'],
+            'is_wholesale' => $order->fields['is_wholesale'],  //- Note: Either 0/1 or null if not recorded
         ];
 
         $this->customer = [
@@ -561,6 +562,7 @@ class order extends base
             'tax_groups' => [],
             'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
+            'is_wholesale' => (int)Customer::isWholesaleCustomer(),
         ];
 
         // -----
@@ -1008,6 +1010,7 @@ class order extends base
             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
             'language_code' => $_SESSION['languages_code'],
             'order_weight' => $_SESSION['cart']->weight,
+            'is_wholesale' => $this->info['is_wholesale'],
         ];
 
         zen_db_perform(TABLE_ORDERS, $sql_data_array);
