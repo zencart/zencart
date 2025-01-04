@@ -259,7 +259,7 @@ class shipping
                     $quotes['tax'] = 0;
                 }
                 $shipping_weight = $save_shipping_weight;
-                if (is_array($quotes)) {
+                if (!empty($quotes) && is_array($quotes)) {
                     $quotes_array[] = $quotes;
                 }
             }
