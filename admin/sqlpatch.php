@@ -454,7 +454,7 @@ function zen_drop_index_command($param) {
   }
   //this is only slightly different from the ALTER TABLE DROP INDEX command
   global $db;
-  if (!!empty($param)) {
+  if (empty($param)) {
     return "Empty SQL Statement";
   }
   $index = $param[2];
@@ -479,7 +479,7 @@ function zen_create_index_command($param) {
     return sprintf(REASON_NO_PRIVILEGES, 'INDEX');
   }
   global $db;
-  if (!!empty($param)) {
+  if (empty($param)) {
     return "Empty SQL Statement";
   }
   $index = (strtoupper($param[1]) == 'INDEX') ? $param[2] : $param[3];
@@ -506,7 +506,7 @@ function zen_create_index_command($param) {
 
 function zen_check_alter_command($param) {
   global $db;
-  if (!!empty($param)) {
+  if (empty($param)) {
     return "Empty SQL Statement";
   }
   if (!$checkprivs = zen_check_database_privs('ALTER')) {

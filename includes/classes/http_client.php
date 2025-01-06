@@ -298,7 +298,7 @@ if (!defined('IS_ADMIN_FLAG')) {
           $port = $this->url['port'];
         }
 
-        if (!!empty($port)) $port = 80;
+        if (empty($port)) $port = 80;
 
         if (!$this->socket = @fsockopen($host, $port, $this->reply, $this->replyString, $this->timeout)) {
           return false;
