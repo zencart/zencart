@@ -171,7 +171,8 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     $file_cnt++;
     $file = $directory_array[$i];
     // clean path name
-    $file = preg_replace('~/+~', '/', $file);
+    $foldsep = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') ? '\\' : '/';
+    $file = preg_replace('~/+~', $foldsep, $file);
 
     $show_file = '';
     if (file_exists($file)) {
