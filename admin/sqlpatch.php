@@ -251,7 +251,7 @@ function executeSql($lines, $database, $table_prefix = '') {
         case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line_upper, 'FROM ') > 0):
           $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
-        case (substr($line_upper, 0, 10) == 'INNER JOIN '):
+        case (substr($line_upper, 0, 11) == 'INNER JOIN '):
           $line = 'INNER JOIN ' . $table_prefix . ltrim(substr($line, 11));
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
