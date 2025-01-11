@@ -3,7 +3,7 @@
 // Part of the "Product Options Stock" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
 // Copyright (c) 2014-2024 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 5.0.0
+// Last updated: POSM 6.1.0
 //
 $define = [
     'BOX_REPORTS_PRODUCTS_OPTIONS_STOCK' => 'Sales by Product Options',
@@ -56,6 +56,11 @@ $define = [
     'POSM_TEXT_SORT_BY_MODEL_ASC' => 'Model-number, A-Z',
     'POSM_TEXT_SORT_BY_MODEL_DESC' => 'Model-number, Z-A',
     'POSM_TEXT_SORT_BY_DEFINITION' => "Attributes' Sort Order",
+
+    // -----
+    // Used during POSM's EO-5 integration, checking updated/added attributes for validity.
+    //
+    'ERROR_INVALID_OPTION_COMBINATION' => 'The option-combination that you chose is not currently available; please re-enter.',
 
     // -----
     // Used by  incudes/javascript/attributes_controller_posm.php.
