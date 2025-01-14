@@ -15,7 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 $includeCPath = false;
 
 // EXCLUDE certain parameters which should not be included in canonical links:
-// NOTE: These are alphabeticized!
+// NOTE: These are alphabetized for readability.
 $excludeParams = [
     'act',
     'action',
@@ -47,9 +47,9 @@ $excludeParams = [
     'search_in_description',
     'set_session_login',
     'token',
+    'tx',
     'type',
     'typefilter',
-    'tx',
     'zenid',
     $zenSessionId,
 ];
@@ -71,7 +71,7 @@ if (isset($_GET['page']) && (!is_numeric($_GET['page']) || $_GET['page'] < 2)) {
 }
 
 // The following are additional whitelisted params used for sanitizing the generated canonical URL (to prevent rogue params from getting added to canonical maliciously)
-// NOTE: These are alphabeticized!
+// NOTE: These are alphabetized for readability.
 $keepableParams = [
     'categories_id',
     'chapter',
