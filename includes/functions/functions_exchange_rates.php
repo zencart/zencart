@@ -12,6 +12,8 @@
  * NOTE: admin application_top cannot be loaded successfully without an admin login ID.
  */
 
+if(!defined('HTTP_CATALOG_SERVER')) define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+
 function zen_update_currencies($cli_Output = FALSE)
 {
   global $db, $messageStack, $zco_notifier;
