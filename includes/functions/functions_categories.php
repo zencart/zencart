@@ -529,8 +529,12 @@ function zen_get_categories_products_list($categories_id, bool $include_deactiva
         $categories_products_id_list = [];
     }
 
-    $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
-
+    $is_cPath = strrpos($categories_id, '_');
+    if ($is_cPath) {
+        $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
+    } else {
+        $childCatID = $categories_id;
+    }
     $current_cPath = ($parent_category != TOPMOST_CATEGORY_PARENT_ID ? $parent_category . '_' : '') . $categories_id;
 
     $sql = "SELECT p.products_id
