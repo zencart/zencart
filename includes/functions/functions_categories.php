@@ -362,7 +362,7 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id): b
  * @param  bool  $includeAttributes
  * @return string
  */
-function zen_draw_pulldown_products(string $field_name, string $parameters = '', array $exclude = [], bool $show_id = false, $set_selected = 0, bool $show_model = false, bool $show_current_category = false, string $order_by = '', $filter_by_option_name = null, bool $includeAttributes = false): string
+function zen_draw_pulldown_products(string $field_name, string $parameters = '', $exclude = [], bool $show_id = false, $set_selected = 0, bool $show_model = false, bool $show_current_category = false, string $order_by = '', $filter_by_option_name = null, bool $includeAttributes = false): string
 {
     global $current_category_id;
 
