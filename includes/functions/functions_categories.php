@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2024 Nov 04 Modified in v2.1.0 $
  */
 
 /**
@@ -808,12 +808,14 @@ function zen_get_categories_image($category_id): string
 {
     global $db;
 
-    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id= " . (int)$category_id;
-    $result = $db->Execute($sql);
+    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id = " . (int)$category_id;
+    $result = $db->Execute($sql, 1);
 
-    if ($result->EOF) return '';
+    if ($result->EOF) {
+        return '';
+    }
 
-    return $result->fields['categories_image'];
+    return (string)$result->fields['categories_image'];
 }
 
 /**

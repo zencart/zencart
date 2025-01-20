@@ -8,20 +8,20 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2010 Kuroi Web Design
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Sep 25 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2024 Nov 06 Modified in v2.1.0 $
  *
  * @var language $lng
  *
  * Ref: https://ckeditor.com/docs/ckeditor5/latest/getting-started/installation/quick-start.html#installing-ckeditor-5-from-cdn
  * Ref: https://github.com/ckeditor/ckeditor5/releases
  */
+
+// To use a newer version, set the number here. See https://github.com/ckeditor/ckeditor5/releases for latest.
+const CKEDITOR_VERSION = '43.3.1';
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-
-// To "upgrade" to a newer version, set the number here. See https://github.com/ckeditor/ckeditor5/releases for latest.
-const CKEDITOR_VERSION = '43.3.0';
-
 
 // for compatibility with pre-ZC-v2.0.0 where class is PSR-autoloaded
 if (!isset($lng)) {
