@@ -108,7 +108,7 @@ function zen_count_distinct_products_in_category($category_id, bool $include_ina
         $sql .= " AND p.products_status = 1";
     }
     $products = $db->Execute($sql);
-    $products_count += $products->fields['total'];
+    $products_count += (int)$products->fields['total'];
     return $products_count;
 }
 
@@ -381,7 +381,7 @@ function zen_draw_pulldown_products(string $field_name, string $parameters = '',
     $pulldown = new productPulldown();
 
     if ($show_current_category) {
-        $pulldown->setCategory($current_category_id);
+        $pulldown->setCategory((int)$current_category_id);
     }
 
     $pulldown->includeAttributes($includeAttributes);
