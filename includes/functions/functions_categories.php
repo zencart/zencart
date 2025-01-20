@@ -192,7 +192,7 @@ function zen_get_subcategories(array &$subcategories_array, $parent_id = TOPMOST
     $subcategories = $db->Execute($subcategories_query);
 
     foreach ($subcategories as $result) {
-        $subcategories_array[count($subcategories_array)] = $result['categories_id'];
+        $subcategories_array[] = $result['categories_id'];
         if ($result['categories_id'] != $parent_id) {
             zen_get_subcategories($subcategories_array, $result['categories_id']);
         }
@@ -219,7 +219,7 @@ function zen_get_parent_categories(array &$categories, $category_id)
 
         if ($result['parent_id'] == TOPMOST_CATEGORY_PARENT_ID) return true;
 
-        $categories[count($categories)] = $result['parent_id'];
+        $categories[] = $result['parent_id'];
         if ($result['parent_id'] != $category_id) {
             zen_get_parent_categories($categories, $result['parent_id']);
         }
@@ -635,7 +635,7 @@ function zen_output_generated_category_path($category_id, string $from = 'catego
             if ($from == 'category') {
                 $calculated_category_path_string = $innerValue['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
             } else {
-                $calculated_category_path_string .= $calculated_category_path[$outerKey][$innerKey]['text'];
+                $calculated_category_path_string .= $innerValue['text'];
                 $calculated_category_path_string .= ' [ ' . TEXT_INFO_ID . $innerValue['id'] . ' ] ';
                 $calculated_category_path_string .= '<br>';
                 $calculated_category_path_string .= '&nbsp;&nbsp;';
