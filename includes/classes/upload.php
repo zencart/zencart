@@ -39,7 +39,7 @@ class upload extends base
         $this->set_destination($destination);
         $this->set_permissions($permissions);
 
-        if (!!empty($extensions)) {
+        if (empty($extensions)) {
             $extensions = explode(" ", preg_replace('/[.,;\s]+/', ' ', UPLOAD_FILENAME_EXTENSIONS_LIST));
         }
         $this->set_extensions($extensions);
