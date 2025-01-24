@@ -626,7 +626,8 @@ class queryFactory extends base
                 return $this->prepare_input($value);
 
             default:
-                trigger_error("var-type undefined: $type ($value).", E_USER_ERROR);
+                trigger_error("FATAL ERROR: var-type undefined: $type ($value).", E_USER_WARNING);
+                exit();
         }
     }
 
@@ -730,7 +731,8 @@ class queryFactory extends base
                 break;
             }
         }
-        trigger_error('MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
+        trigger_error('FATAL MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_WARNING);
+        exit();
     }
 
     /**
