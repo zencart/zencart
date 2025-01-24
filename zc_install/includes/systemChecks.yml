@@ -151,7 +151,7 @@ systemChecks:
     methods:
       checkWriteableDir:
         parameters:
-          fileDir: <?php echo DIR_FS_ROOT . 'zc_install/includes/nginx_conf' . PHP_EOL; ?>
+          fileDir: <?php echo DIR_FS_INSTALL . 'includes/nginx_conf' . PHP_EOL; ?>
   htaccessSupport:
     runLevel: always
     errorLevel: WARN
