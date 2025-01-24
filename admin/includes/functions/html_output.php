@@ -80,7 +80,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
         $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       }
     } else {
-      trigger_error("zen_catalog_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
+      trigger_error("FATAL ERROR: zen_catalog_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_WARNING);
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_catalog_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
     if ($parameters == '') {

@@ -50,6 +50,11 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
         case E_USER_WARNING:
             $error_type = 'Warning';
             $this_log_suffix = '-warning.log';
+            // upgrade E_USER_WARNING to ERROR if message starts with 'FATAL'
+            if (str_starts_with($errstr, 'FATAL ')) {
+                $error_type = 'Fatal error';
+                $this_log_suffix = '-error.log';
+            }
             break;
         case E_ERROR:
         case E_USER_ERROR:
@@ -90,7 +95,7 @@ function zen_fatal_error_handler()
 {
     $last_error = error_get_last();
 
-    if (!empty($last_error) && in_array($last_error['type'], [E_ERROR, E_USER_ERROR, E_PARSE])) {
+    if (!empty($last_error) && (in_array($last_error['type'], [E_ERROR, E_USER_ERROR, E_PARSE]) || ($last_error['type'] === E_USER_ERROR && str_starts_with($last_error['message'], 'FATAL')))) {
         $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . ($_SERVER['REQUEST_URI'] ?? 'not set') . ', IP address: ' . ($_SERVER['REMOTE_ADDR'] ?? 'not set') . PHP_EOL;
         $message_type = ($last_error['type'] == E_PARSE) ? 'Parse' : (($last_error['type'] == E_RECOVERABLE_ERROR) ? 'Catchable Fatal' : 'Fatal');
         $message .= "--> PHP $message_type error: {$last_error['message']} in {$last_error['file']} on line {$last_error['line']}.";
