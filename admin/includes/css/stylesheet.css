@@ -1199,6 +1199,21 @@ tbody>tr>td.align-bottom {
     padding-bottom: 3rem !important;
     padding-top: 3rem !important;
 }
+.object-fit-contain {
+    object-fit: contain;
+}
+.object-fit-cover {
+    object-fit: cover;
+}
+.object-fit-fill {
+    object-fit: fill;
+}
+.object-fit-scale {
+    object-fit: scale-down;
+}
+.object-fit-none {
+    object-fit: none;
+}
 /**/
 
 /* CKEditor */

@@ -23,7 +23,7 @@ abstract class zcUnitTestCase extends TestCase
      * This allows us to run in full isolation mode including
      * classes, functions, and defined statements
      */
-    public function run(TestResult $result = null): TestResult
+    public function run(?TestResult $result = null): TestResult
     {
         $this->setPreserveGlobalState(false);
         return parent::run($result);

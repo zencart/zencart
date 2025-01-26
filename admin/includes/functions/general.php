@@ -286,61 +286,55 @@ function zen_mod_select_option($select_array, $key_name, $key_value)
 
 ////
 // Collect server information
-function zen_get_system_information($privacy = false)
+function zen_get_system_information($privacy = false): array
 {
     global $db;
 
     // determine database size stats
     $indsize = 0;
     $datsize = 0;
-    $result = $db->Execute("SHOW TABLE STATUS" . (DB_PREFIX == '' ? '' : " LIKE '" . str_replace('_', '\_', DB_PREFIX) . "%'"));
-    while (!$result->EOF) {
-        $datsize += $result->fields['Data_length'];
-        $indsize += $result->fields['Index_length'];
-        $result->MoveNext();
+    $results = $db->Execute("SHOW TABLE STATUS" . (DB_PREFIX === '' ? '' : " LIKE '" . str_replace('_', '\_', DB_PREFIX) . "%'"));
+    foreach ($results as $result) {
+        $datsize += $result['Data_length'];
+        $indsize += $result['Index_length'];
     }
 
-    $strictmysql = false;
-    $mysql_mode = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'sql\_mode'");
-    if (!$result->EOF) {
-        $mysql_mode = $result->fields['Value'];
-        if (strstr($result->fields['Value'], 'strict_')) $strictmysql = true;
-    }
+    $mysql_mode = $result->fields['Value'] ?? '';
+    $strictmysql = str_contains($mysql_mode, 'strict_');
+
     $mysql_slow_query_log_status = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log'");
     if (!$result->EOF) {
        $mysql_slow_query_log_status = '0';
-       if (in_array($result->fields['Value'], ['On', 'ON', '1',])) {
+       if (in_array($result->fields['Value'] ?? '', ['On', 'ON', '1',], false)) {
          $mysql_slow_query_log_status = '1';
        }
     }
-    $mysql_slow_query_log_file = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log\_file'");
-    if (!$result->EOF) {
-        $mysql_slow_query_log_file = $result->fields['Value'];
-    }
+    $mysql_slow_query_log_file = $result->fields['Value'] ?? '';
+
     $result = $db->Execute("select now() as datetime");
-    $mysql_date = $result->fields['datetime'];
+    $mysql_date = $result->fields['datetime'] ?? '';
 
     $errnum = 0;
     $system = $host = $kernel = $output = '';
-    $uptime = (DISPLAY_SERVER_UPTIME == 'true') ? 'Unsupported' : 'Disabled/Unavailable';
+    $uptime = (DISPLAY_SERVER_UPTIME === 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
     $exec_disabled = false;
     $php_disabled_functions = @ini_get("disable_functions");
-    if ($php_disabled_functions != '') {
+    if ($php_disabled_functions !== '') {
         if (in_array('exec', preg_split('/,/', str_replace(' ', '', $php_disabled_functions)))) {
             $exec_disabled = true;
         }
     }
     if (!$exec_disabled) {
-        [$system, $host, $kernel] = array('', $_SERVER['SERVER_NAME'], php_uname());
+        [$system, $host, $kernel] = ['', $_SERVER['SERVER_NAME'] ?? '', php_uname()];
         @exec('uname -a 2>&1', $output, $errnum);
         if ($errnum == 0 && count($output)) [$system, $host, $kernel] = preg_split('/[\s,]+/', $output[0], 5);
         $output = '';
-        if (DISPLAY_SERVER_UPTIME == 'true') {
+        if (DISPLAY_SERVER_UPTIME === 'true') {
             @exec('uptime 2>&1', $output, $errnum);
             if ($errnum == 0 && isset($output[0])) {
                 $uptime = $output[0];
@@ -358,7 +352,7 @@ function zen_get_system_information($privacy = false)
         'host' => $host,
         'ip' => gethostbyname($host),
         'uptime' => $uptime,
-        'http_server' => $_SERVER['SERVER_SOFTWARE'],
+        'http_server' => $_SERVER['SERVER_SOFTWARE'] ?? '',
         'php' => PHP_VERSION,
         'zend' => (function_exists('zend_version') ? zend_version() : ''),
         'db_server' => DB_SERVER,

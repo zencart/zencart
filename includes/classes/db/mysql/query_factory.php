@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Sep 16 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2024 Oct 19 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -25,6 +25,9 @@ class queryFactory extends base
     public $dieOnErrors = false;
     public $error_number = 0;
     public $error_text = '';
+
+    public ?string $dbDefaultCharacterSet;
+    public ?string $dbDefaultCollation;
 
     private $pConnect;
     /**
@@ -120,8 +123,11 @@ class queryFactory extends base
                     mysqli_query($this->link, "SET SESSION sql_mode = '" . preg_replace('/[^A-Z_,]/', '', DB_MYSQL_MODE) . "'");
                 }
 
-                return true;
+                $result = $this->Execute("SELECT @@character_set_database, @@collation_database");
+                $this->dbDefaultCharacterSet = $result->fields['@@character_set_database'] ?? null;
+                $this->dbDefaultCollation = $result->fields['@@collation_database'] ?? null;
 
+                return true;
             }
 
             $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $dieOnErrors);
@@ -230,6 +236,7 @@ class queryFactory extends base
 
         $obj = new queryFactoryResult($this->link);
 
+        $limit = (int)$limit;
         if ($limit) {
             $sqlQuery .= ' LIMIT ' . $limit;
             $obj->limit = $limit;
@@ -341,6 +348,7 @@ class queryFactory extends base
         $this->zf_sql = $sqlQuery;
         $obj = new queryFactoryResult($this->link);
         $obj->sql_query = $sqlQuery;
+        $limit = (int)$limit;
         $obj->limit = $limit;
 
         $zp_db_resource = $this->runQuery($sqlQuery, true);
@@ -618,7 +626,8 @@ class queryFactory extends base
                 return $this->prepare_input($value);
 
             default:
-                trigger_error("var-type undefined: $type ($value).", E_USER_ERROR);
+                trigger_error("FATAL ERROR: var-type undefined: $type ($value).", E_USER_WARNING);
+                exit();
         }
     }
 
@@ -629,7 +638,12 @@ class queryFactory extends base
     public function selectdb(string $db_name): bool
     {
         $result = mysqli_select_db($this->link, $db_name);
-        if ($result) return $result;
+        if ($result) {
+            $collationQuery = $this->Execute("SELECT @@character_set_database, @@collation_database");
+            $this->dbDefaultCharacterSet = $collationQuery->fields['@@character_set_database'] ?? null;
+            $this->dbDefaultCollation = $collationQuery->fields['@@collation_database'] ?? null;
+            return true;
+        }
 
         $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
         return false;
@@ -717,7 +731,8 @@ class queryFactory extends base
                 break;
             }
         }
-        trigger_error('MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
+        trigger_error('FATAL MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_WARNING);
+        exit();
     }
 
     /**

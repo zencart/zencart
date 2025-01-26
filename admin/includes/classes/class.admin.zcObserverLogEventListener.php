@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Jul 23 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  *
  * Designed for ZC >= v1.5.4
  *
@@ -18,7 +18,7 @@
 class zcObserverLogEventListener extends base {
 
     private $notifier;
-    
+
   /**
    * using integer values implemented by monolog API
    */
@@ -45,7 +45,7 @@ class zcObserverLogEventListener extends base {
           600 => 'EMERGENCY',
   );
 
-  public function __construct(notifier $zco_notifier = null) {
+  public function __construct(?notifier $zco_notifier = null) {
     if (!$zco_notifier) $zco_notifier = new notifier;
     $this->notifier = $zco_notifier;
     $this->notifier->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', 'NOTIFY_ADMIN_ACTIVITY_LOG_RESET'));

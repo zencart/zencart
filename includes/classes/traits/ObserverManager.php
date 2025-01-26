@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 May 22 Modified in v2.1.0-alpha1 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 
 namespace Zencart\Traits;
@@ -38,7 +38,7 @@ trait ObserverManager
             }
 
             // handle attach
-            $nameHash = md5(get_class($observer) . $eventID);
+            $nameHash = hash('md5', get_class($observer) . $eventID);
             EventDto::getInstance()->setObserver($nameHash, ['obs' => &$observer, 'eventID' => $eventID]);
         }
     }
@@ -52,7 +52,7 @@ trait ObserverManager
     public function detach($observer, array $eventIDArray): void
     {
         foreach ($eventIDArray as $eventID) {
-            $nameHash = md5(get_class($observer) . $eventID);
+            $nameHash = hash('md5', get_class($observer) . $eventID);
             EventDto::getInstance()->removeObserver($nameHash);
         }
     }

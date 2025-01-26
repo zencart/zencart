@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2024 Mar 12 Modified in v2.0.0-rc2 $
+ * @version $Id: DrByte 2024 Oct 13 Modified in v2.1.0 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CREATE_ACCOUNT');
@@ -411,7 +411,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
 /*
  * Set flags for template use:
  */
-$selected_country = (!empty($_POST['zone_country_id'])) ? $country : SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
+$selected_country = !empty($_POST['zone_country_id']) ? (int)$_POST['zone_country_id'] : $country ?? (int)SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
 $flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true' || ($process === true && $entry_state_has_zones === true && $zone_name === '' && $error_state_input === true));
 $state = ($flag_show_pulldown_states === true) ? ($state == '' ? '&nbsp;' : $state) : $zone_name;
 $state_field_label = ($flag_show_pulldown_states === true) ? '' : ENTRY_STATE;

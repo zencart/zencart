@@ -100,7 +100,7 @@ function generate_pos_option_hash($pID, $options_array): string
             }
         }
     }
-    $hash_out = md5($hash_in);
+    $hash_out = hash('md5', $hash_in);
     $posObserver->debug_message(
         "products_options_stock_functions: $hash_out = generate_pos_option_hash($pID, options_array\n" .
         json_encode($options_array, JSON_PRETTY_PRINT) . "\n" .

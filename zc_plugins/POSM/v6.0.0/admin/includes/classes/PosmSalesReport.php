@@ -102,7 +102,7 @@ class PosmSalesReport
                 $this->options[$options_id]['values'][$options_values_id]['total_price'] += $product_price;
             }
 
-            $options_hash = md5($options);
+            $options_hash = hash('md5', $options);
             if (!isset($this->orders[$options_hash])) {
                 $this->orders[$options_hash] = [
                     'options' => $options_array,

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * File Built by %%_INSTALLER_METHOD_%% on %%_DATE_NOW_%%
@@ -63,7 +63,7 @@ define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
  */
 define('DB_TYPE', '%%_DB_TYPE_%%'); // always 'mysql'
 define('DB_PREFIX', '%%_DB_PREFIX_%%'); // prefix for database table names -- preferred to be left empty
-define('DB_CHARSET', '%%_DB_CHARSET_%%'); // 'utf8mb4' or older 'utf8' / 'latin1' are most common
+define('DB_CHARSET', '%%_DB_CHARSET_%%'); // 'utf8mb4' required. If using older 'utf8' or 'latin1', convert your database to utf8mb4. See conversion util in docs site.
 define('DB_SERVER', '%%_DB_SERVER_%%');  // address of your db server
 define('DB_SERVER_USERNAME', '%%_DB_SERVER_USERNAME_%%');
 define('DB_SERVER_PASSWORD', '%%_DB_SERVER_PASSWORD_%%');

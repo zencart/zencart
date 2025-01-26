@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 
 // This should be first line of the script:
@@ -43,7 +43,7 @@ $query_email_address = '';
 // -----
 // Create the store-specific name of the spam "honeypot" by hashing the store's defined name.
 //
-$spam_input_name = md5(STORE_NAME);
+$spam_input_name = hash('md5', STORE_NAME);
 
 if (isset($_GET['action']) && $_GET['action'] === 'status') {
     $error = false;

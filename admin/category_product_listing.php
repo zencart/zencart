@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Sep 27 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2024 Oct 18 Modified in v2.1.0 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -221,12 +221,19 @@ if (!empty($action)) {
         $delete_linked = 'false';
       }
       require zen_get_admin_module_from_directory($product_type, 'delete_product_confirm.php');
+      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath));
       break;
     case 'move_product_confirm':
       require zen_get_admin_module_from_directory($product_type, 'move_product_confirm.php');
+      zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $new_parent_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
       break;
     case 'copy_product_confirm':
       require zen_get_admin_module_from_directory($product_type, 'copy_product_confirm.php');
+      if ($_POST['copy_as'] === 'duplicate' && !empty($_POST['edit_duplicate'])) {
+        zen_redirect(zen_href_link(FILENAME_PRODUCT, 'action=new_product&cPath=' . $categories_id . '&pID=' . $dup_products_id . '&products_type=' . (int)$product->fields['products_type']));
+      } else {
+        zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $categories_id . '&pID=' . $products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
+      }
       break;
     case 'delete_attributes':
       zen_delete_products_attributes($_GET['products_id']);
@@ -694,7 +701,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                       <a href="<?= zen_catalog_href_link('index', zen_get_path($category['categories_id'])) ?>" rel="noopener" target="_blank" title="<?= BOX_HEADING_CATALOG ?>"><?= zen_icon('popup', BOX_HEADING_CATALOG, '') ?></a>
                   <a href="<?= zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_path($category['categories_id'])) ?>" class="folder"><i class="fa-solid fa-lg fa-folder"></i>&nbsp;<strong><?= $category['categories_name'] ?></strong></a>
                 </td>
-                  <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) ?></td>
+                  <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="object-fit-contain"') ?></td>
                 <?php if ($show_prod_labels) { ?>
                   <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
                   <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
@@ -885,6 +892,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 $keyword_search_fields = [
                     'pd.products_name',
                     'p.products_model',
+                    'p.products_mpn',
                     'pd.products_description',
                     'p.products_id',
                 ];
@@ -943,7 +951,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <?= $product['products_name'] ?>
                     </a>
                 </td>
-                <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT) ?></td>
+                <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="object-fit-contain"') ?></td>
                 <td class="hidden-sm hidden-xs"><?= $product['products_model'] ?></td>
                 <td class="text-right hidden-sm hidden-xs"><?= zen_get_products_display_price($product['products_id']) . $products_wholesale_indicator ?></td>
 <?php

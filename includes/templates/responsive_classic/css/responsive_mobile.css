@@ -5,7 +5,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @author ZCAdditions.com, ZCA Responsive Template Default
  * @author picaflor-azul.com
- * @version $Id: Jeff Rutt 2024 Aug 20 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 19 Modified in v2.1.0 $
  *
  */
 
@@ -354,7 +354,7 @@ div#productListing tr.productListing-odd {clear:both;}
 .list-more{margin:10px 0;float:none;padding:15px 0;}
 .productListing-even, .productListing-odd{text-align:center;line-height:165%;}
 .listingDescription{width:100%;}
-.specialsListBoxContents:nth-child(odd), .centerBoxContentsAlsoPurch:nth-child(odd), .centerBoxContentsFeatured:nth-child(odd), ..centerBoxContentsFeaturedCategories:nth-child(odd), centerBoxContentsSpecials:nth-child(odd), .centerBoxContentsNew:nth-child(odd) {background:#f4f4f4;}
+.specialsListBoxContents:nth-child(odd), .centerBoxContentsAlsoPurch:nth-child(odd), .centerBoxContentsFeatured:nth-child(odd), .centerBoxContentsFeaturedCategories:nth-child(odd), centerBoxContentsSpecials:nth-child(odd), .centerBoxContentsNew:nth-child(odd) {background:#f4f4f4;}
 .navSplitPagesResult{text-align:center;}
 .navSplitPagesLinks{display:block;text-align:center;}
 #indexProductList .list-more{margin-top:0;}

@@ -63,7 +63,7 @@
       // bof: field set
 // allows FedEx to work comment comment out Standard and Uncomment FedEx
 //      if ($quotes[$i]['id'] != '' || $quotes[$i]['module'] != '') { // FedEx
-      if ($quotes[$i]['module'] != '') { // Standard
+      if (!empty($quotes[$i]['module'])) { // Standard
 ?>
 <fieldset>
 <legend><?php echo $quotes[$i]['module']; ?>&nbsp;<?php if (isset($quotes[$i]['icon']) && !empty($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></legend>

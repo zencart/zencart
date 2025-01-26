@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Sep 21 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2024 Oct 17 Modified in v2.1.0 $
  */
 
 namespace Zencart\ViewBuilders;
@@ -30,6 +30,13 @@ class PluginManagerController extends BaseController
             $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->currentFieldValue('version')) . '<br>');
         }
         $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . zen_lookup_admin_menu_language_override('plugin_description', $this->currentFieldValue('unique_key'), $this->currentFieldValue('description')));
+
+        if (!empty($this->currentFieldValue('author'))) {
+            $this->setBoxContent(
+                sprintf(TEXT_PLUGIN_AUTHOR, $this->currentFieldValue('author'))
+            );
+        }
+
         if ($this->currentFieldValue('status') == 0) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
@@ -42,6 +49,10 @@ class PluginManagerController extends BaseController
         if ($available = $this->pluginManager->isNewDownloadAvailable($this->currentFieldValue('zc_contrib_id'), $this->currentFieldValue('version'))) {
             $this->setBoxContent(
                 sprintf(TEXT_NEW_PLUGIN_DOWNLOAD_AVAILABLE, $available['latest_plugin_version'], $available['id'])
+            );
+        } elseif (!empty($this->currentFieldValue('zc_contrib_id'))) {
+            $this->setBoxContent(
+                sprintf(TEXT_PLUGIN_DOWNLOAD_PAGE, $this->currentFieldValue('zc_contrib_id'))
             );
         }
 
@@ -81,7 +92,7 @@ class PluginManagerController extends BaseController
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
             );
         }
-        if ($this->pluginManager->hasPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
+        if ($this->pluginManager->hasPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version')) && !empty($this->currentFieldValue('version'))) {
             $this->setBoxContent('<br>' . TEXT_INFO_CLEANUP);
             $this->setBoxContent(
                 '<a href="' . zen_href_link(

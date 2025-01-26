@@ -2,10 +2,10 @@
 /**
  * password_funcs functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Jul 11 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 // //
 // This function validates a plain text password with an encrypted password
@@ -147,7 +147,7 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
 
         if ($entropy) {
           // echo('Adding random data to entropy using CAPICOM.Utilities');
-          $stat ['CAPICOM_Utilities_random'] = md5($entropy, TRUE);
+          $stat ['CAPICOM_Utilities_random'] = hash('md5', $entropy, TRUE);
         }
         unset($CAPI_Util, $entropy);
       } catch ( Exception $ex ) {

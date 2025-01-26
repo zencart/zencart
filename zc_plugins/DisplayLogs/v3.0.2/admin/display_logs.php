@@ -77,7 +77,7 @@ foreach (array (DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . '/includes/modul
             if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
                 if (preg_match('/^' . $files_to_match . '\.log$/', $file)) {
                     if ($files_to_exclude == '' || !preg_match('/^' . $files_to_exclude . '\.log$/', $file)) {
-                        $hash = sha1($logFolder . '/' . $file);
+                        $hash = hash('sha1', $logFolder . '/' . $file);
                         $logFiles[$hash] = array (
                             'name'  => $logFolder . '/' . $file,
                             'mtime' => filemtime($logFolder . '/' . $file),

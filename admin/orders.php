@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Sep 26 Modified in v2.1.0-beta1 $
+ * @version $Id: torvista 2024 Oct 07 Modified in v2.1.0 $
  */
 require('includes/application_top.php');
 
@@ -829,7 +829,7 @@ if (is_array($address_footer_suffix)) {
           ?>
           <br>
           <div class="row noprint">
-            <a href="javascript:void();" class="noprint" data-toggle="collapse" data-target="#payment-details-section">
+            <a href="javascript:void(0);" class="noprint" data-toggle="collapse" data-target="#payment-details-section">
                 <?php echo TEXT_ADDITIONAL_PAYMENT_OPTIONS; ?>
             </a>
           </div>
