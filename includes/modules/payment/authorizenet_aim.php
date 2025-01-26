@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Jun 25 Modified in v2.1.0-alpha1 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
@@ -85,7 +85,7 @@ class authorizenet_aim extends base {
    * @var string the currency enabled in this gateway's merchant account
    */
   private $gateway_currency;
-  
+
     private $_check;
     public $auth_code;
     protected $avs_response;
@@ -355,7 +355,7 @@ class authorizenet_aim extends base {
 
     // Calculate the next expected order id (adapted from code written by Eric Stamper - 01/30/2004 Released under GPL)
     $last_order_id = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " ORDER BY orders_id desc LIMIT 1");
-    $new_order_id = $last_order_id->fields['orders_id'];
+    $new_order_id = $last_order_id->fields['orders_id'] ?? 0;
     $new_order_id = ($new_order_id + 1);
 
     // add randomized suffix to order id to produce uniqueness ... since it's unwise to submit the same order-number twice to authorize.net

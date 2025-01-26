@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2023 Feb 02 Modified in v1.5.8a $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -70,13 +70,14 @@ foreach ($products_ids as $products_id) {
 }
 
 $counter = 0;
+$position = 0;
 // if invalid product id skip
 $id_array_size = count($id_array);
 if ($id_array_size) {
   foreach ($id_array as $key => $value) {
     if ($value == $products_filter) {
       $position = $counter;
-      if ($key == 0) {
+      if ($key === 0) {
         $previous = -1; // it was the first to be found
       } else {
         $previous = $id_array[$key - 1];
@@ -91,7 +92,7 @@ if ($id_array_size) {
     $counter++;
   }
 
-  if ($previous == -1) {
+  if (!empty($previous) && $previous === -1) {
     $previous = $last;
   }
 

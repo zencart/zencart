@@ -3,10 +3,10 @@
  * html_output.php
  * HTML-generating functions used throughout the core
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Feb 15 Modified in v1.5.8a $
+ * @version $Id: lat9 2024 Oct 04 Modified in v2.1.0 $
  */
 
 /*
@@ -19,9 +19,8 @@
     if($link !== null) return $link;
 
     if (empty($page)) {
-      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
-            E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine the page link!</strong><br><br><!--' . $page . '<br>' . $parameters . ' -->');
+        trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.");
+        $page = FILENAME_DEFAULT;
     }
 
     if ($connection == 'NONSSL') {
@@ -33,8 +32,8 @@
         $link = HTTP_SERVER;
       }
     } else {
-      trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL</strong><br><br>');
+      trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL");
+      $link = HTTP_SERVER;
     }
 
     if ($use_dir_ws_catalog) {

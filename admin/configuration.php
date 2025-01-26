@@ -35,6 +35,9 @@ if (!empty($action)) {
                               LIMIT 1");
       zen_record_admin_activity('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value, 'warning');
 
+      // Send a notifier that a configuration change has been made
+      $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', $result->fields['configuration_key']);
+
       // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
       if ((WARN_BEFORE_DOWN_FOR_MAINTENANCE == 'true') && (DOWN_FOR_MAINTENANCE == 'true')) {
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "

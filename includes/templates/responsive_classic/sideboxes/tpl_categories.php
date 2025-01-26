@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Jeff Rutt 2024 Aug 21 Modified in v2.1.0-alpha2 $
+ * @version $Id: piloujp 2024 Oct 15 Modified in v2.1.0 $
  */
 $content = "";
 
@@ -74,7 +74,7 @@ if (SHOW_CATEGORIES_BOX_SPECIALS === 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_NEW 
         // display limits
         $display_limit = zen_get_new_date_range();
 
-        $show_this = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS . " WHERE products_status = 1 " . $display_limit . " limit 1");
+        $show_this = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS . " p WHERE products_status = 1 " . $display_limit . " limit 1");
         if (!$show_this->EOF) {
             $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a></li>' . "\n";
         }

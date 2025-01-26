@@ -8,20 +8,20 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2010 Kuroi Web Design
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Aug 07 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Nov 06 Modified in v2.1.0 $
  *
  * @var language $lng
  *
  * Ref: https://ckeditor.com/docs/ckeditor5/latest/getting-started/installation/quick-start.html#installing-ckeditor-5-from-cdn
  * Ref: https://github.com/ckeditor/ckeditor5/releases
  */
+
+// To use a newer version, set the number here. See https://github.com/ckeditor/ckeditor5/releases for latest.
+const CKEDITOR_VERSION = '43.3.1';
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-
-// To "upgrade" to a newer version, set the number here. See https://github.com/ckeditor/ckeditor5/releases for latest.
-const CKEDITOR_VERSION = '43.1.1';
-
 
 // for compatibility with pre-ZC-v2.0.0 where class is PSR-autoloaded
 if (!isset($lng)) {
@@ -83,6 +83,7 @@ if (method_exists($lng, 'get_language_list')) {
         Font,
         GeneralHtmlSupport,
         Heading,
+        HorizontalLine,
         HtmlEmbed,
         Image,
         ImageCaption,
@@ -139,6 +140,7 @@ if (method_exists($lng, 'get_language_list')) {
             Essentials, Font, Bold, Italic, Underline, Strikethrough, Subscript, Superscript, Code,
             Clipboard, PasteFromOffice, Autoformat, PasteFromMarkdownExperimental, FindAndReplace,
             CodeBlock, Heading, Paragraph, Undo, BlockQuote, Indent, IndentBlock, List, SelectAll,
+            HorizontalLine,
             Alignment, GeneralHtmlSupport, HtmlEmbed, Style, SourceEditing, MediaEmbed, TextPartLanguage, ShowBlocks,
             SpecialCharacters, SpecialCharactersEssentials, RemoveFormat,
             Table, TableToolbar, TableProperties, TableCellProperties, TableColumnResize,
@@ -158,7 +160,7 @@ if (method_exists($lng, 'get_language_list')) {
                 // 'superscript', 'subscript',
                 'code',
                 '|', 'removeFormat',
-                '|', 'numberedList', 'bulletedList', 'indent', 'outdent', 'blockQuote', 'alignment',
+                '|', 'numberedList', 'bulletedList', 'indent', 'outdent', 'blockQuote', 'alignment', 'horizontalLine',
                 '|', 'fontColor', 'fontBackgroundColor',
             ],
             shouldNotGroupWhenFull: true

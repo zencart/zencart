@@ -4,7 +4,7 @@
 # * @access private
 # * @copyright Copyright 2003-2024 Zen Cart Development Team
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Scott Wilson 2024 Sep 01 Modified in v2.1.0-alpha2 $
+# * @version $Id: Scott Wilson 2024 Nov 23 Modified in v2.1.0 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -41,12 +41,29 @@ ALTER TABLE email_archive ADD INDEX idx_email_date_sent_zen (date_sent);
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
 # Postcode/zip fields expand to accomodate Portugal formatting
+ALTER TABLE address_book MODIFY entry_street_address varchar(128) NOT NULL default '';
+ALTER TABLE address_book MODIFY entry_suburb varchar(128) NOT NULL default '';
 ALTER TABLE address_book MODIFY entry_postcode varchar(64) NOT NULL default '';
+ALTER TABLE address_book MODIFY entry_city varchar(128) NOT NULL default '';
+ALTER TABLE address_book MODIFY entry_state varchar(128) default NULL;
+ALTER TABLE orders MODIFY customers_street_address varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY customers_suburb varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY customers_city varchar(128) NOT NULL default '';
 ALTER TABLE orders MODIFY customers_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY customers_state varchar(128) default NULL;
+ALTER TABLE orders MODIFY delivery_street_address varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_suburb varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_city varchar(128) NOT NULL default '';
 ALTER TABLE orders MODIFY delivery_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY delivery_state varchar(128) default NULL;
+ALTER TABLE orders MODIFY billing_street_address varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_suburb varchar(128) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_city varchar(128) NOT NULL default '';
 ALTER TABLE orders MODIFY billing_postcode varchar(64) NOT NULL default '';
+ALTER TABLE orders MODIFY billing_state varchar(128) default NULL;
 ALTER TABLE paypal MODIFY address_zip varchar(64) default NULL;
 ALTER TABLE paypal_testing MODIFY address_zip varchar(64) default NULL;
+ALTER TABLE zones MODIFY zone_name varchar(128) NOT NULL default '';
 
 ALTER TABLE admin ADD COLUMN mfa TEXT DEFAULT NULL;
 DROP TABLE IF EXISTS admin_expired_tokens;
@@ -76,6 +93,7 @@ CREATE TABLE featured_categories (
 );
 
 
+#PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, set_function) VALUES ('MFA Multi-Factor Authentication Required', 'MFA_ENABLED', 'False', '2-Factor authentication for Admin users', 1, 29, now(), 'zen_cfg_select_option([\'True\', \'False\'],');
 
 
@@ -92,6 +110,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 # Updates
 UPDATE configuration SET configuration_description = 'Product Listing Default sort order?<br>NOTE: Leave Blank for Product Sort Order; otherwise use a number from 1-8 corresponding to the sort order dropdown on the listing page. Example: 1' WHERE configuration_key = 'PRODUCT_LISTING_DEFAULT_SORT_ORDER';
+UPDATE configuration SET configuration_description = 'Recreate the session to generate a new session ID when the customer logs on or creates an account.' WHERE configuration_key = 'SESSION_RECREATE';
 
 #There are now five featured main page items so add one more
 UPDATE configuration SET set_function = 'zen_cfg_select_option(array(\'0\', \'1\', \'2\', \'3\', \'4\', \'5\'), ' WHERE configuration_key = 'SHOW_PRODUCT_INFO_MAIN_NEW_PRODUCTS';
@@ -126,7 +145,7 @@ SELECT project_version_key, project_version_major, project_version_minor, projec
 FROM project_version;
 
 ## Now set to new version
-UPDATE project_version SET project_version_major='2', project_version_minor='1.0', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 2.0.0->2.1.0-beta1', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
-UPDATE project_version SET project_version_major='2', project_version_minor='1.0', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 2.0.0->2.1.0-beta1', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
+UPDATE project_version SET project_version_major='2', project_version_minor='1.0', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 2.0.0->2.1.0', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Main';
+UPDATE project_version SET project_version_major='2', project_version_minor='1.0', project_version_patch1='', project_version_patch1_source='', project_version_patch2='', project_version_patch2_source='', project_version_comment='Version Update 2.0.0->2.1.0', project_version_date_applied=now() WHERE project_version_key = 'Zen-Cart Database';
 
 ##### END OF UPGRADE SCRIPT

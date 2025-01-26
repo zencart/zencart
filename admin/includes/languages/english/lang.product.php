@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 17 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2024 Oct 12 Modified in v2.1.0 $
 */
 
 $define = [
@@ -36,6 +36,7 @@ $define = [
     'TEXT_PRODUCTS_LENGTH' => 'Length:',
     'TEXT_PRODUCTS_WIDTH' => 'Width:',
     'TEXT_PRODUCTS_HEIGHT' => 'Height:',
+    'TEXT_PRODUCT_MPN' => 'Product MPN (Mfg Part No.):',
     'TEXT_PRODUCT_SHIPS_IN_OWN_BOX' => 'Ships in Own Box?',
     'TEXT_PRODUCT_SHIPS_IN_OWN_BOX_HELP' => 'Item ships in its original box? (ie: will not be combined in another box for shipping, and no additional packaging costs to be added)',
     'TEXT_PRODUCT_IS_FREE' => 'Product is Free:',

@@ -4,7 +4,7 @@
 # * @copyright Copyright 2003-2024 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Scott Wilson 2024 Sep 01 Modified in v2.1.0-alpha2 $
+# * @version $Id: Scott Wilson 2024 Nov 23 Modified in v2.1.0 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -50,11 +50,11 @@ CREATE TABLE address_book (
   entry_company varchar(64) default NULL,
   entry_firstname varchar(32) NOT NULL default '',
   entry_lastname varchar(32) NOT NULL default '',
-  entry_street_address varchar(64) NOT NULL default '',
-  entry_suburb varchar(32) default NULL,
+  entry_street_address varchar(128) NOT NULL default '',
+  entry_suburb varchar(128) default NULL,
   entry_postcode varchar(64) NOT NULL default '',
-  entry_city varchar(32) NOT NULL default '',
-  entry_state varchar(32) default NULL,
+  entry_city varchar(128) NOT NULL default '',
+  entry_state varchar(128) default NULL,
   entry_country_id int(11) NOT NULL default '0',
   entry_zone_id int(11) NOT NULL default '0',
   PRIMARY KEY  (address_book_id),
@@ -1150,31 +1150,31 @@ CREATE TABLE orders (
   customers_id int(11) NOT NULL default 0,
   customers_name varchar(64) NOT NULL default '',
   customers_company varchar(64) default NULL,
-  customers_street_address varchar(64) NOT NULL default '',
-  customers_suburb varchar(32) default NULL,
-  customers_city varchar(32) NOT NULL default '',
+  customers_street_address varchar(128) NOT NULL default '',
+  customers_suburb varchar(128) default NULL,
+  customers_city varchar(128) NOT NULL default '',
   customers_postcode varchar(64) NOT NULL default '',
-  customers_state varchar(32) default NULL,
+  customers_state varchar(128) default NULL,
   customers_country varchar(64) NOT NULL default '',
   customers_telephone varchar(32) NOT NULL default '',
   customers_email_address varchar(96) NOT NULL default '',
   customers_address_format_id int(5) NOT NULL default 0,
   delivery_name varchar(64) NOT NULL default '',
   delivery_company varchar(64) default NULL,
-  delivery_street_address varchar(64) NOT NULL default '',
-  delivery_suburb varchar(32) default NULL,
-  delivery_city varchar(32) NOT NULL default '',
+  delivery_street_address varchar(128) NOT NULL default '',
+  delivery_suburb varchar(128) default NULL,
+  delivery_city varchar(128) NOT NULL default '',
   delivery_postcode varchar(64) NOT NULL default '',
-  delivery_state varchar(32) default NULL,
+  delivery_state varchar(128) default NULL,
   delivery_country varchar(64) NOT NULL default '',
   delivery_address_format_id int(5) NOT NULL default 0,
   billing_name varchar(64) NOT NULL default '',
   billing_company varchar(64) default NULL,
-  billing_street_address varchar(64) NOT NULL default '',
-  billing_suburb varchar(32) default NULL,
-  billing_city varchar(32) NOT NULL default '',
+  billing_street_address varchar(128) NOT NULL default '',
+  billing_suburb varchar(128) default NULL,
+  billing_city varchar(128) NOT NULL default '',
   billing_postcode varchar(64) NOT NULL default '',
-  billing_state varchar(32) default NULL,
+  billing_state varchar(128) default NULL,
   billing_country varchar(64) NOT NULL default '',
   billing_address_format_id int(5) NOT NULL default 0,
   payment_method varchar(128) NOT NULL default '',
@@ -2244,7 +2244,7 @@ CREATE TABLE zones (
   zone_id int(11) NOT NULL auto_increment,
   zone_country_id int(11) NOT NULL default '0',
   zone_code varchar(32) NOT NULL default '',
-  zone_name varchar(32) NOT NULL default '',
+  zone_name varchar(128) NOT NULL default '',
   PRIMARY KEY  (zone_id),
   KEY idx_zone_country_id_zen (zone_country_id),
   KEY idx_zone_code_zen (zone_code)
@@ -2870,7 +2870,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Check User Agent', 'SESSION_CHECK_USER_AGENT', 'False', 'Validate the clients browser user agent on every page request.', '15', '4', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Check IP Address', 'SESSION_CHECK_IP_ADDRESS', 'False', 'Validate the clients IP address on every page request.', '15', '5', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Prevent Spider Sessions', 'SESSION_BLOCK_SPIDERS', 'True', 'Prevent known spiders from starting a session.', '15', '6', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Recreate Session', 'SESSION_RECREATE', 'True', 'Recreate the session to generate a new session ID when the customer logs on or creates an account (PHP >=4.1 needed).', '15', '7', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Recreate Session', 'SESSION_RECREATE', 'True', 'Recreate the session to generate a new session ID when the customer logs on or creates an account.', '15', '7', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('IP to Host Conversion Status', 'SESSION_IP_TO_HOST_ADDRESS', 'true', 'Convert IP Address to Host Address<br /><br />Note: on some servers this can slow down the initial start of a session or execution of Emails', '15', '10', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Length of the redeem code', 'SECURITY_CODE_LENGTH', '10', 'Enter the length of the redeem code<br />The longer the more secure', 16, 1, NULL, now(), NULL, NULL);
@@ -3541,9 +3541,9 @@ INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPA
 # Dumping data for table project_version
 #
 
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '1.0-beta1', '', '', '', '', 'New Installation-v210-beta1', now());
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '1.0-beta1', '', '', '', '', 'New Installation-v210-beta1', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '1.0-beta1', '', 'New Installation-v210-beta1', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '1.0-beta1', '', 'New Installation-v210-beta1', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '1.0', '', '', '', '', 'New Installation-v210', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '1.0', '', '', '', '', 'New Installation-v210', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '1.0', '', 'New Installation-v210', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '1.0', '', 'New Installation-v210', now());
 
 ##### End of SQL setup for Zen Cart.

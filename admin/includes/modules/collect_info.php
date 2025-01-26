@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jun 05 Modified in v2.1.0-alpha1 $
+ * @version $Id: DrByte 2024 Oct 12 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,6 +15,7 @@ $parameters = [
   'products_id' => '',
   'products_quantity' => '0',
   'products_model' => '',
+  'products_mpn' => '',
   'products_image' => '',
   'products_price' => '0.0000',
   'products_price_w' => '0',
@@ -451,6 +452,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       ?>
     </div>
   </div>
+  <hr>
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCTS_QUANTITY, 'products_quantity', 'class="col-sm-3 control-label"'); ?>
     <div class="col-sm-9 col-md-6">
@@ -462,6 +464,12 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <div class="col-sm-9 col-md-6">
         <?php echo zen_draw_input_field('products_model', htmlspecialchars(stripslashes($pInfo->products_model ?? ''), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control" id="products_model"'); ?>
     </div>
+  </div>
+  <div class="form-group">
+      <?php echo zen_draw_label(TEXT_PRODUCT_MPN, 'products_mpn', 'class="col-sm-3 control-label"'); ?>
+      <div class="col-sm-9 col-md-6">
+          <?php echo zen_draw_input_field('products_mpn', htmlspecialchars(stripslashes($pInfo->products_mpn ?? ''), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control" id="products_mpn"'); ?>
+      </div>
   </div>
     <hr>
     <h2><?php echo TEXT_PRODUCTS_IMAGE; ?></h2>

@@ -2,9 +2,9 @@
 /**
  * URL functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Aug 09 New in v1.5.8-alpha $
+ * @version $Id: Leonard 2024 Oct 02 Modified in v2.1.0 $
  */
 
 
@@ -113,8 +113,10 @@ function zen_get_top_level_domain(string $url) {
 }
 
 
-// Set back button
-function zen_back_link($link_only = false)
+/**
+  * Generate A HREF link for an HTML-based "Back" button, determined from user's session browsing history
+  */
+function zen_back_link(bool $link_only = false, string $parameters = ''): string
 {
     if (count($_SESSION['navigation']->path) - 2 >= 0) {
         $back = count($_SESSION['navigation']->path) - 2;
@@ -129,9 +131,9 @@ function zen_back_link($link_only = false)
         $_SESSION['navigation'] = new navigationHistory;
     }
 
-    if ($link_only == true) {
+    if ($link_only) {
         return $link;
     } else {
-        return '<a href="' . $link . '">';
+        return '<a href="' . $link . '"' . $parameters . '>';
     }
 }

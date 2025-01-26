@@ -3,7 +3,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Aug 17 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 19 Modified in v2.1.0 $
  */
 require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.php';
 $adjustWarnIssues = false;
@@ -79,8 +79,9 @@ $adjustWarnIssues = false;
             <?php
             foreach ($listFatalErrors as $error) { ?>
                 <div class="alert bg-danger">
-                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText link-dark fw-bold" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText link-light text-decoration-none"' ?>>
+                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText link-dark fw-bold" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText link-dark text-decoration-none"' ?>>
                         <?= ($error['mainErrorText']) ?>
+                        <?= (isset($error['mainErrorTextHelpId'])) ? '<i class="bi-question-circle"></i>' : '' ?>
                     </a>
                     <?php
                     if (isset($error['extraErrors'])) {

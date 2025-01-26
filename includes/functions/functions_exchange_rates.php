@@ -12,6 +12,8 @@
  * NOTE: admin application_top cannot be loaded successfully without an admin login ID.
  */
 
+zen_define_default('HTTP_CATALOG_SERVER', HTTP_SERVER);
+
 function zen_update_currencies($cli_Output = FALSE)
 {
   global $db, $messageStack, $zco_notifier;
@@ -104,7 +106,7 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
       }
     }
   }
-  // Check for valid data  
+  // Check for valid data
   if (!isset($currencyArray[$base]) || !isset($currencyArray[$currencyCode]) || 0 == $currencyArray[$base]) {
      return ''; // no valid value, so abort
   }

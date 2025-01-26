@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 May 28 Modified in v2.1.0-alpha1 $
+ * @version $Id: lat9 2024 Oct 17 Modified in v2.1.0 $
  */
 
 function zen_get_zcversion()
@@ -372,7 +372,7 @@ function zen_convert_linefeeds($from, $to, $string)
 /**
  * Return a random value
  */
-function zen_rand($min = null, $max = null)
+function zen_rand(?int $min = null, ?int $max = null): int
 {
     static $seeded;
 
@@ -389,12 +389,12 @@ function zen_rand($min = null, $max = null)
     if (isset($min) && isset($max)) {
         if ($min >= $max) {
             return $min;
-        } else {
-            return mt_rand($min, $max);
         }
-    } else {
-        return mt_rand();
+
+        return random_int($min, $max);
     }
+
+    return mt_rand();
 }
 
 

@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Jul 23 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Oct 18 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -45,8 +45,3 @@ if ($do_delete_flag) {
     zen_remove_product($product_id, $delete_linked);
   }
 } // endif $do_delete_flag
-// if this is a single-product delete, redirect to categories page
-// if not, then this file was called by the cascading delete initiated by the category-delete process
-if ($action === 'delete_product_confirm') {
-  zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath));
-}

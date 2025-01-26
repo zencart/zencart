@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Aug 28 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 
 /**
@@ -431,7 +431,7 @@ class paypal_curl extends base {
 
     // request-id must be unique within 30 days
     if ($requestId === null) {
-      $requestId = md5(uniqid(mt_rand()));
+      $requestId = \bin2hex(\random_bytes(16));
     }
 
     $headers[] = 'Content-Type: text/namevalue';
@@ -442,7 +442,7 @@ class paypal_curl extends base {
     } elseif ($this->_mode == 'nvp') {
       $headers[] = 'X-VPS-VIT-Integration-Product: PHP::Zen Cart(R) - PayPal/NVP';
     }
-    $headers[] = 'X-VPS-VIT-Integration-Version: 1.5.8';
+    $headers[] = 'X-VPS-VIT-Integration-Version: 2.1.0';
     $this->lastHeaders = $headers;
 
     $ch = curl_init();

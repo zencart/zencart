@@ -5,7 +5,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 May 23 Modified in v2.1.0-alpha1 $
+ * @version $Id: DrByte 2024 Oct 19 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -32,6 +32,14 @@ class sniffer
         return $result->RecordCount() > 0;
     }
 
+    public function get_table_collation(string $table_name): ?string
+    {
+        global $db;
+        $sql = "SHOW TABLE STATUS LIKE '" . $db->prepare_input($table_name) . "'";
+        $result = $db->Execute($sql);
+        return $result->fields['Collation'] ?? null;
+    }
+
     /**
      * Check whether the field exists in the table
      */
@@ -46,6 +54,19 @@ class sniffer
             }
         }
         return false;
+    }
+
+    public function get_field_collation(string $table_name, string $field_name): ?string
+    {
+        global $db;
+        $sql = "SHOW FULL FIELDS FROM " . $db->prepare_input($table_name);
+        $result = $db->Execute($sql);
+        foreach ($result as $record) {
+            if ($record['Field'] === $field_name) {
+                return $record['Collation'];
+            }
+        }
+        return null;
     }
 
     /**

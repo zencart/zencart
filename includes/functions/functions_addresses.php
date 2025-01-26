@@ -4,7 +4,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Mar 03 Modified in v2.0.0-rc1 $
+ * @version $Id: DrByte 2024 Oct 13 Modified in v2.1.0 $
  */
 
 /**
@@ -189,12 +189,12 @@ function zen_get_zone_code(int $country_id, int $zone_id, ?string $default_zone 
 /**
  * Build an array of country zones for pulldown use
  *
- * @param int|string $country_id
+ * @param int|string|null $country_id
  * @return array
  */
-function zen_prepare_country_zones_pull_down(int|string $country_id = 0): array
+function zen_prepare_country_zones_pull_down(int|string|null $country_id = 0): array
 {
-    $zones = zen_get_country_zones($country_id);
+    $zones = zen_get_country_zones($country_id ?? 0);
 
     if (count($zones) > 0) {
         $zones_select = [['id' => '', 'text' => PLEASE_SELECT]];

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jun 16 Modified in v1.5.8-alpha $
+ * @version $Id: torvista 2024 Oct 13 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -32,6 +32,8 @@ for ($i = 0, $n = count($product_categories); $i < $n; $i++) {
     }
 }
 if (!isset($product_master_category_string)) $product_master_category_string = zen_get_category_name($pInfo->master_categories_id, (int)$_SESSION['languages_id']);
+
+$zco_notifier->notify('NOTIFY_ADMIN_DELETE_PRODUCT_INFOBOX', $pInfo, $product_master_category_string, $product_categories_string);
 
 $heading = [];
 $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_PRODUCT . '</h4>'];

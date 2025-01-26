@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2024 Aug 29 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2024 Nov 04 Modified in v2.1.0 $
  */
 
 /**
@@ -56,7 +56,7 @@ function zen_get_path($current_category_id = null)
  */
 function zen_count_products_in_category($category_id, $include_inactive = false)
 {
-//  Check if only want to count destinct peoducts in a category
+//  Check if only want to count distinct products in a category
     $distinct = defined('COUNT_DISTINCT_PRODUCTS') ? COUNT_DISTINCT_PRODUCTS : false;
     if ($distinct === true) {
         return zen_count_distinct_products_in_category($category_id, $include_inactive);
@@ -160,6 +160,12 @@ function zen_get_categories($categories_array = array(), $parent_id = TOPMOST_CA
     $results = $db->Execute($categories_query);
 
     foreach ($results as $result) {
+        if ($status_flag !== null) {
+            $count = zen_products_in_category_count($result['categories_id']);
+            if ($count === 0) {
+                continue;
+            }
+        }
         $categories_array[] = [
             'id' => $result['categories_id'],
             'text' => $indent . $result['categories_name'],
@@ -496,7 +502,7 @@ function zen_get_categories_parent_name($categories_id)
  * use as:
  * $my_products_id_list = array();
  * $my_products_id_list = zen_get_categories_products_list($categories_id)
- * @param int $categories_id
+ * @param int|string $categories_id (may be a cPath)
  * @param bool $include_deactivated
  * @param bool $include_child
  * @param string $parent_category
@@ -507,6 +513,7 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
 {
     global $db;
     global $categories_products_id_list;
+    $categories_id = (string)$categories_id;
 
     if (!empty($display_limit)) {
         $display_limit = $db->prepare_input($display_limit);
@@ -786,15 +793,18 @@ function zen_get_category_description($category_id, $language_id = null): string
  * @param $category_id
  * @return string
  */
-function zen_get_categories_image($category_id) {
+function zen_get_categories_image($category_id): string
+{
     global $db;
 
-    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id= " . (int)$category_id;
-    $result = $db->Execute($sql);
+    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id = " . (int)$category_id;
+    $result = $db->Execute($sql, 1);
 
-    if ($result->EOF) return '';
+    if ($result->EOF) {
+        return '';
+    }
 
-    return $result->fields['categories_image'];
+    return (string)$result->fields['categories_image'];
 }
 
 /**

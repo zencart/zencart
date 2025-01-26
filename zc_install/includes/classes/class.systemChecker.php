@@ -3,7 +3,7 @@
  * file contains systemChecker Class
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Aug 29 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 
 /**
@@ -480,16 +480,19 @@ class systemChecker
 
     public function checkPhpVersion($parameters): bool|int
     {
+        $this->log('Found ' . PHP_VERSION, __METHOD__, []);
         return version_compare((string)PHP_VERSION, (string)$parameters['version'], (string)$parameters['versionTest']);
     }
 
     public function checkHtaccessSupport($parameters): bool
     {
         if (!function_exists('curl_init')) { // can't test if this fails
+            $this->log('curl_init() not found. Aborting check.', __METHOD__, []);
             return true;
         }
 
         if (false !== stripos($_SERVER['SERVER_SOFTWARE'], "nginx")) { // not relevant if nginx
+            $this->log('Found Nginx. Aborting .htaccess check.', __METHOD__, []);
             return true;
         }
 
@@ -658,11 +661,8 @@ class systemChecker
 // error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" . print_r($commInfo, TRUE));
 // error_log('CURL Response: ' . $result);
         curl_close($ch);
-        if ($errnum !== 0 || trim($result) !== 'PASS') {
-            return false;
-        }
 
-        return true;
+        return $errnum === 0 && trim($result) === 'PASS';
     }
 
     public function checkHttpsRequest($parameters): bool
@@ -783,6 +783,9 @@ class systemChecker
         if (empty($lines)) {
             return true;
         }
+
+        // Abort check if incoming version doesn't make sense (could be an HTTP error message, or other server message.)
+        // @TODO - This will require updating when "Major" ZC version numbers are used in releases.
         if (!in_array(trim($lines[0]), ['1', '2', '3'])) {
             return true;
         }
@@ -865,6 +868,7 @@ class systemChecker
     {
         if (!function_exists('mysqli_connect')) {
             // mysqli_connect not available don't fail test
+            $this->log('mysqli_connect not available. Aborting MySQL version check.', __METHOD__, []);
             return true;
         }
         $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
@@ -876,14 +880,17 @@ class systemChecker
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if ((int)$db->error_number === 2002) {
             // Cannot connect to database; don't fail check
+            $this->log('Error 2002, cannot connect to database; aborting MySQL version check.', __METHOD__, []);
             return true;
         }
         $version = $db->get_server_info();
         if ($version === 'UNKNOWN') {
             // versions not found don't fail check
+            $this->log('Version === UNKNOWN. Aborting version check.', __METHOD__, []);
             return true;
         }
 
+        $this->log('Found ' . $version, __METHOD__, []);
         if (strripos($version, '-MariaDB') === false) {
             // mysql database check version
             $checkVersion = $parameters['mysqlVersion'];

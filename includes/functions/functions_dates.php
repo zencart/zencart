@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jul 30 Modified in v2.1.0-alpha1 $
+ * @version $Id: Leonard 2024 Oct 02 Modified in v2.1.0 $
  */
 
 // Normally this zen_date_raw function will ONLY be defined here.
@@ -125,6 +125,25 @@ function zen_datetime_short($raw_datetime)
 
     global $zcDate;
     return $zcDate->output(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
+}
+
+/**
+ * Return locale-formatted date and time without seconds (ie. 2024/10/01 9:54)
+ */
+function zen_datetime_without_seconds (string $raw_datetime): string
+{
+    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
+
+    $year = (int)substr($raw_datetime, 0, 4);
+    $month = (int)substr($raw_datetime, 5, 2);
+    $day = (int)substr($raw_datetime, 8, 2);
+    $hour = (int)substr($raw_datetime, 11, 2);
+    $minute = (int)substr($raw_datetime, 14, 2);
+
+    zen_define_default('DATE_TIME_FORMAT_WITHOUT_SECONDS', '%m/%d/%Y %H:%M');
+
+    global $zcDate;
+    return $zcDate->output(DATE_TIME_FORMAT_WITHOUT_SECONDS, mktime($hour, $minute, 0, $month, $day, $year));
 }
 
 /**

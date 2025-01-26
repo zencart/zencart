@@ -16,7 +16,6 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
@@ -31,7 +30,6 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'S' => 
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
-            'Symfony\\Polyfill\\Php72\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
             'Symfony\\Polyfill\\Intl\\Idn\\' => 26,
@@ -112,10 +110,6 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Symfony\\Polyfill\\Php80\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
-        ),
-        'Symfony\\Polyfill\\Php72\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php72',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -313,15 +307,24 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'App\\Models\\Configuration' => __DIR__ . '/../..' . '/app/Models/Configuration.php',
         'App\\Models\\ConfigurationGroup' => __DIR__ . '/../..' . '/app/Models/ConfigurationGroup.php',
         'App\\Models\\Country' => __DIR__ . '/../..' . '/app/Models/Country.php',
+        'App\\Models\\Coupon' => __DIR__ . '/../..' . '/app/Models/Coupon.php',
+        'App\\Models\\CouponDescription' => __DIR__ . '/../..' . '/app/Models/CouponDescription.php',
+        'App\\Models\\CouponGvCustomer' => __DIR__ . '/../..' . '/app/Models/CouponGvCustomer.php',
+        'App\\Models\\Currency' => __DIR__ . '/../..' . '/app/Models/Currency.php',
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
         'App\\Models\\CustomerInfo' => __DIR__ . '/../..' . '/app/Models/CustomerInfo.php',
+        'App\\Models\\GeoZone' => __DIR__ . '/../..' . '/app/Models/GeoZone.php',
+        'App\\Models\\GroupPricing' => __DIR__ . '/../..' . '/app/Models/GroupPricing.php',
         'App\\Models\\LayoutBox' => __DIR__ . '/../..' . '/app/Models/LayoutBox.php',
         'App\\Models\\ModelFactory' => __DIR__ . '/../..' . '/app/Models/ModelFactory.php',
         'App\\Models\\PluginControl' => __DIR__ . '/../..' . '/app/Models/PluginControl.php',
         'App\\Models\\PluginControlVersion' => __DIR__ . '/../..' . '/app/Models/PluginControlVersion.php',
         'App\\Models\\ProductTypeLayout' => __DIR__ . '/../..' . '/app/Models/ProductTypeLayout.php',
         'App\\Models\\ProjectVersion' => __DIR__ . '/../..' . '/app/Models/ProjectVersion.php',
+        'App\\Models\\TaxClass' => __DIR__ . '/../..' . '/app/Models/TaxClass.php',
+        'App\\Models\\TaxRate' => __DIR__ . '/../..' . '/app/Models/TaxRate.php',
         'App\\Models\\Zone' => __DIR__ . '/../..' . '/app/Models/Zone.php',
+        'App\\Models\\ZonesToGeoZone' => __DIR__ . '/../..' . '/app/Models/ZonesToGeoZone.php',
         'App\\Services\\MigrationsRunner' => __DIR__ . '/../..' . '/app/Services/MigrationsRunner.php',
         'App\\Services\\SeederRunner' => __DIR__ . '/../..' . '/app/Services/SeederRunner.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
@@ -1825,7 +1828,6 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Symfony\\Polyfill\\Intl\\Idn\\Resources\\unidata\\Regex' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/Resources/unidata/Regex.php',
         'Symfony\\Polyfill\\Intl\\Normalizer\\Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Normalizer.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
-        'Symfony\\Polyfill\\Php72\\Php72' => __DIR__ . '/..' . '/symfony/polyfill-php72/Php72.php',
         'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
         'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',

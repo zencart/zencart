@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Aug 14 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 
 use Zencart\PageLoader\PageLoader;
@@ -31,7 +31,7 @@ foreach ($_GET as $varname => $varvalue) {
 $csrfBlackListLocal = [];
 $csrfBlackList = (isset($csrfBlackListCustom)) ? array_merge($csrfBlackListLocal, $csrfBlackListCustom) : $csrfBlackListLocal;
 if (!isset($_SESSION ['securityToken'])) {
-    $_SESSION ['securityToken'] = md5(uniqid(rand(), true));
+    $_SESSION ['securityToken'] = \bin2hex(\random_bytes(16));
 }
 
 if (zen_is_hmac_login()) {

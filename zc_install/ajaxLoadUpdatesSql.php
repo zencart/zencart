@@ -5,7 +5,7 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Aug 27 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 01 Modified in v2.1.0 $
  */
 define('IS_ADMIN_FLAG', false);
 define('DIR_FS_INSTALL', __DIR__ . '/');
@@ -42,7 +42,7 @@ if ($error) {
 
 $options = $systemChecker->getDbConfigOptions();
 $dbInstaller = new zcDatabaseInstaller($options);
-$result = $dbInstaller->getConnection();
+$connected = $dbInstaller->getConnection();
 
 // Run zero-date cleanup on first upgrade step only
 if ($batchInstance <= 1 || $batchSize <= 1) {
@@ -67,7 +67,7 @@ $extendedOptions = [
     'message' => sprintf(TEXT_UPGRADING_TO_VERSION, $updateVersion),
 ];
 logDetails($file, 'Running upgrade SQL');
-$result = $dbInstaller->getConnection();
+$connected = $dbInstaller->getConnection();
 $errorUpg = $dbInstaller->parseSqlFile($file, $extendedOptions);
 if (is_int($errorUpg)) {
     $errorList[] = $errorUpg;

@@ -2,7 +2,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Aug 28 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2024 Sep 15 Modified in v2.1.0-beta1 $
  */
 
 body {
@@ -1198,6 +1198,21 @@ tbody>tr>td.align-bottom {
 .py-5 {
     padding-bottom: 3rem !important;
     padding-top: 3rem !important;
+}
+.object-fit-contain {
+    object-fit: contain;
+}
+.object-fit-cover {
+    object-fit: cover;
+}
+.object-fit-fill {
+    object-fit: fill;
+}
+.object-fit-scale {
+    object-fit: scale-down;
+}
+.object-fit-none {
+    object-fit: none;
 }
 /**/
 

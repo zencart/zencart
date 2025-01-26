@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Jul 07 Modified in v2.1.0-alpha1 $
+ * @version $Id: lat9 2024 Nov 19 Modified in v2.1.0 $
  */
 require('includes/application_top.php');
 // To override the $show_* or $attr_img_width values, see
@@ -204,7 +204,7 @@ if (empty($order->info)) {
           //   'NOTIFY_ADMIN_INVOICE_DATA_AFTER_TAX' notification.
           //
           $extra_headings = false;
-          $zco_notifier->notify('NOTIFY_ADMIN_INVOIVE_HEADERS_AFTER_TAX', '', $extra_headings);
+          $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_HEADERS_AFTER_TAX', '', $extra_headings);
           if (is_array($extra_headings)) {
               foreach ($extra_headings as $heading_info) {
                   $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
@@ -433,7 +433,7 @@ if (empty($order->info)) {
                   ?>
                 <tr>
                   <td class="text-left"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
-                  <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
+                  <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']] ?? ''; ?></td>
                   <td class="text-left">
                   <?php
                   if (empty($order_history['comments'])) {

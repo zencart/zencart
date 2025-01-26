@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 May 16 Modified in v2.0.1 $
+ * @version $Id: lat9 2024 Sep 17 New in v2.1.0-beta1 $
  */
 $display_product_model = ($flag_show_product_info_model === '1' && $products_model !== '');
 $display_product_weight = ($flag_show_product_info_weight === '1' && $products_weight != 0);
