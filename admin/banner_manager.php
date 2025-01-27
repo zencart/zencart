@@ -129,13 +129,19 @@ if (!empty($action)) {
       $banners_image->set_destination(DIR_FS_CATALOG_IMAGES . $banners_image_target);
       $has_uploaded_image = $banners_image->parse();
 
-      // if we can't save the uploaded image, and no local image is supplied, then if the banner has no HTML content, throw error
-      if (empty($banners_image_local) || $has_uploaded_image) {
-          if (!($uploaded_image = $banners_image->save())) {
-              if (empty($banners_html_text)) {
-                  $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
-                  $banner_error = true;
-              }
+      // Check if an image has been uploaded successfully
+      if ($has_uploaded_image) {
+          // Try to save the uploaded image
+          $uploaded_image = $banners_image->save();
+          if (!$uploaded_image && empty($banners_image_local) && empty($banners_html_text)) {
+              $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
+              $banner_error = true;
+          }
+      } else {
+          // If no image is uploaded and no local image is provided, ensure HTML content exists
+          if (empty($banners_image_local) && empty($banners_html_text)) {
+              $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
+              $banner_error = true;
           }
       }
 
