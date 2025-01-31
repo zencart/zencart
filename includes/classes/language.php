@@ -27,7 +27,7 @@ class language extends base
      * @deprecated
      * Legacy array of language codes.
      * Core ZC before v2.0 depended on this array's "keys" in html_header.php for generating alt-lang hrefs.
-     * After v2.0 it calls get_languages()
+     * After v2.0 it calls zen_get_languages()
      */
     public array $catalog_languages = [];
 
