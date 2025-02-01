@@ -108,7 +108,7 @@ switch ($action) {
         }
         break;
     case 'update': // update existing user's details in database. Post data is prep'd for db in the first function call
-        $errors = zen_update_user($_POST['name'], $_POST['email'], $_POST['id'], $_POST['profile']);
+        $errors = zen_update_user($_POST['name'], $_POST['email'], $_POST['id'], $_POST['profile'] ?? 0);
         if (count($errors) > 0) {
             foreach ($errors as $error) {
                 $messageStack->add($error, 'error');
