@@ -110,7 +110,7 @@ CREATE TABLE admin (
 
 # --------------------------------------------------------
 #
-# Table structure for table 'admin_expired_tokens'
+# Table structure for table 'admin_expired_tokens' (mfa tokens)
 #
 
 DROP TABLE IF EXISTS admin_expired_tokens;
