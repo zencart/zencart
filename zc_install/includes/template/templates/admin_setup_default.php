@@ -128,15 +128,21 @@ if (!empty($errors)) { ?>
 <script>
     (() => {
         'use strict'
-        document.getElementById('admin_email2').addEventListener('change', el => {
-            if (el.target.value === $('#admin_email').value) {
+
+        function checkMatches(el)
+        {
+            document.getElementById("admin_email").checkValidity();
+            if (document.getElementById("admin_email").checkValidity() && document.getElementById("admin_email").value === document.getElementById("admin_email2").value) {
                 el.target.classList.remove("form-control:is-invalid", "form-control:invalid", "is-invalid", "invalid");
                 el.target.classList.add("form-control:valid", "form-control:is-valid", "is-valid", "valid");
             } else {
                 el.target.classList.add("form-control:is-invalid", "form-control:invalid", "is-invalid", "invalid");
                 el.target.classList.remove("form-control:valid", "form-control:is-valid", "is-valid", "valid");
             }
-        })
+        }
+        document.getElementById('admin_email2').addEventListener('input', checkMatches);
+        document.getElementById('admin_email2').addEventListener('paste', checkMatches);
+        document.getElementById('admin_email2').addEventListener('keyup', checkMatches);
     })();
 
     async function validateForm(form) {
