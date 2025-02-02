@@ -64,9 +64,6 @@
         if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS === 'false') {
             return false;
         }  // disable email sending when in developer mode
-        if (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS !== '') {
-            $to_address = DEVELOPER_OVERRIDE_EMAIL_ADDRESS;
-        }
 
         // ignore sending emails for any of the following pages
         // (The EMAIL_MODULES_TO_SKIP constant can be defined in a new file in the "extra_configures" folder)
@@ -363,6 +360,15 @@
             // if mailserver requires that all outgoing mail must go "from" an email address matching domain on server, set it to store address
             if (EMAIL_SEND_MUST_BE_STORE === 'Yes') {
                 $mail->From = EMAIL_FROM;
+            }
+            // override to developer email address if set
+            if (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS !== '') {
+                $to_email_address = DEVELOPER_OVERRIDE_EMAIL_ADDRESS;
+                // ensure the address is valid, to prevent unnecessary delivery failures
+                if (!zen_validate_email($to_email_address)) {
+                    error_log(sprintf(EMAIL_SEND_FAILED . ' (devEmail failed validation)', $to_name, $to_email_address, $email_subject));
+                    continue;
+                }
             }
 
             $mail->addAddress($to_email_address, $to_name);
