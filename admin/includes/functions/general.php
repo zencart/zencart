@@ -255,8 +255,8 @@ function zen_cfg_select_option($select_array, $key_value, $key = '')
 
     for ($i = 0, $n = count($select_array); $i < $n; $i++) {
         $name = (zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
-
-        $string .= '<div class="radio"><label>' . zen_draw_radio_field($name, $select_array[$i], ($key_value == $select_array[$i] ? true : false), '', 'id="' . strtolower($select_array[$i] . '-' . $name) . '" class="inputSelect"') . $select_array[$i] . '</label></div>';
+        $element_id = preg_replace('/[^a-z0-9_-]/', '-', strtolower($select_array[$i] . '-' . $name));
+        $string .= '<div class="radio"><label>' . zen_draw_radio_field($name, $select_array[$i], ($key_value == $select_array[$i]), '', 'id="' . $element_id . '" class="inputSelect"') . $select_array[$i] . '</label></div>';
     }
 
     return $string;
