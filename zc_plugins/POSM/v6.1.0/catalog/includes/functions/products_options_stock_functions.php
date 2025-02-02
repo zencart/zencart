@@ -3,7 +3,7 @@
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
 // Copyright (c) 2014-2024 Vinos de Frutas Tropicales
 //
-// Last updated: v4.5.1
+// Last updated: v6.1.0
 //
 function product_has_pos_attributes($products_id): bool
 {
@@ -82,11 +82,11 @@ function generate_pos_option_hash($pID, $options_array): string
             $checkbox_options = explode('_chk', $key);
             $key = $checkbox_options[0];
             $value = $checkbox_options[1];
-        } elseif (strpos($key, TEXT_PREFIX) !== false) {
+        } elseif (strpos($key, TEXT_PREFIX) !== false || strpos($key, 'file_') !== false) {
             if ($value == '') {
                 continue;
             }
-            $key = str_replace(TEXT_PREFIX, '', $key);
+            $key = str_replace([TEXT_PREFIX, 'file_'], '', $key);
         }
         if (!in_array($key, $optional_options_ids)) {
             $check = $db->Execute(

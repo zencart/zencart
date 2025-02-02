@@ -3,7 +3,7 @@
 // Part of the "Product Options Stock" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
 // Copyright (c) 2014-2024 Vinos de Frutas Tropicales
 //
-// Last Updated:  POSM v6.0.0
+// Last Updated:  POSM v6.1.0
 //
 use App\Models\PluginControl;
 use App\Models\PluginControlVersion;
@@ -94,10 +94,6 @@ class products_options_stock_observer extends base
                 'NOTIFY_ATTRIBUTE_CONTROLLER_DELETE_OPTION_NAME_VALUES',
                 'NOTIFY_ATTRIBUTE_CONTROLLER_ADDITIONAL_ACTIONS_DROPDOWN_SUBMENU',
 
-                /* Issued by /includes/functions/extra_functions/edit_orders_functions.php */
-                'EDIT_ORDERS_REMOVE_PRODUCT',
-                'EDIT_ORDERS_ADD_PRODUCT',
-
                 /* Issued by /admin/category_product_listing.php */
                 'NOTIFY_ADMIN_PROD_LISTING_ADD_ICON',
 
@@ -117,6 +113,27 @@ class products_options_stock_observer extends base
                 'NOTIFY_ADMIN_LANGUAGE_DELETE',
             ]
         );
+
+        global $current_page;
+        if ($current_page === 'edit_orders.php') {
+            $this->attach($this, [
+                /* Issued by EO-4's /includes/functions/extra_functions/edit_orders_functions.php */
+                'EDIT_ORDERS_REMOVE_PRODUCT',
+                'EDIT_ORDERS_ADD_PRODUCT',
+
+                /* Issued by EO-5's EoOrderChanges.php class */
+
+                'NOTIFY_EO_RECORD_CHANGES',
+
+                /* Issued by EO-5's EditOrders.php class */
+                'NOTIFY_EO_ADD_PRODUCT_TO_CART',
+                'NOTIFY_EO_GET_PRODUCTS_AVAILABLE_STOCK',
+                'NOTIFY_EO_PRODUCT_REMOVED',
+                'NOTIFY_EO_PRODUCT_ADDED',
+                'NOTIFY_EO_PRODUCT_CHECK_INPUTS',
+                'NOTIFY_EO_PRODUCT_CHANGED',
+            ]);
+        }
     }
 
     // -----
@@ -166,7 +183,7 @@ class products_options_stock_observer extends base
     }
 
     // -----
-    // Issued by Edit Orders when a product is being removed from the order.  We'll update any
+    // Issued by Edit Orders (v4) when a product is being removed from the order.  We'll update any
     // POSM-managed product's stock levels.
     //
     protected function updateEditOrdersRemoveProduct(&$class, string $e, array $product)
@@ -175,7 +192,7 @@ class products_options_stock_observer extends base
     }
 
     // -----
-    // Issued by Edit Orders when a product is being added to the order.
+    // Issued by Edit Orders (v4) when a product is being added to the order.
     //
     protected function updateEditOrdersAddProduct(&$class, string $e, array $info)
     {
@@ -213,7 +230,7 @@ class products_options_stock_observer extends base
         //
         $products_name = zen_db_prepare_input($prod_info->fields['products_name']);
         $name_length = $this->stringLen($products_name);
-        $stock_message = $this->getInStockMessage($info['orders_products_id']);
+        $stock_message = $this->getInStockMessage((int)$info['orders_products_id']);
         $message_length = $this->stringLen($stock_message);
         if ($name_length + $message_length > $this->name_max_length) {
             $excess = $name_length + $message_length - $this->name_max_length;
@@ -605,11 +622,541 @@ class products_options_stock_observer extends base
         $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " WHERE language_id = $lID");
     }
 
+    // -----
+    // Additional notifications for EO-5.
+    // -----
 
+    // -----
+    // Issued during EO-5's processing, when a new product is added to the to-be-reviewed order.
+    //
+    // POSM's processing adjusts a managed product-variant's name to include its current in/out-of-stock
+    // indication.
+    //
+    // - $parameters ..... Contains the product's 'uprid' and and the order-class format of the product's as-ordered information ('original_product').
+    // - $cart_product ... Essentially, the shopping-cart format returned by its 'get_products' method:
+    //    - 'quantity' ......... The new overall quantity (int|float) for the product
+    //    - 'model' ............ The model number to be recorded in the order.
+    //    - 'name' ............. The name to be used for the product.
+    //    - 'final_price' ...... The (optional) final price of the product. Included only if manual-pricing is enabled.
+    //    - 'onetime_charge' ... The (optional) one-time charge for the product. Included only if manual-pricing is enabled and the product has attributes.
+    //    - 'attributes' ....... The (optional) attributes for the product, included only if the product has attributes.
+    //
+    public function notify_eo_add_product_to_cart(&$class, string $e, array $parameters, array &$cart_product): void
+    {
+        global $db;
 
+        $prid = (int)$cart_product['id'];
+        $attributes = $cart_product['attributes'] ?? [];
+
+        if (empty($attributes) || !is_pos_product($prid)) {
+            $pos_record = false;
+        } else {
+            $hash = generate_pos_option_hash($prid, $attributes);
+            $pos_record = $db->Execute(
+                "SELECT *
+                   FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . "
+                  WHERE products_id = $prid
+                    AND pos_hash = '$hash'
+                  LIMIT 1"
+            );
+        }
+
+        $cart_product['name'] = $this->getProductNameWithMessage($pos_record, $prid, '', $cart_product['name'], 0, $cart_product['quantity']);
+    }
+
+    // -----
+    // Issued during EO-5's order-change processing, when a product is added/updated in the to-be-reviewed order.
+    //
+    // POSM's processing adjusts a managed product's name to include its current in/out-of-stock
+    // indication.
+    //
+    // - $parameters ....... Contains the product's 'uprid' and and the order-class format of the product's as-ordered information ('original_product').
+    // - $product_update ... Essentially, the posted values from the update form, containing:
+    //    - 'qty' .............. The new overall quantity (int|float) for the product
+    //    - 'model' ............ The model number to be recorded in the order.
+    //    - 'name' ............. The name to be used for the product (might include a previous POSM stock-message).
+    //    - 'tax' .............. The tax-rate to be applied to the product (int|float).
+    //    - 'final_price' ...... The (optional) final price of the product. Included only if manual-pricing is enabled.
+    //    - 'onetime_charge' ... The (optional) one-time charge for the product. Included only if manual-pricing is enabled and the product has attributes.
+    //    - 'attributes' ....... The (optional) attributes for the product, included only if the product has attributes.
+    //
+    public function notify_eo_record_changes(&$class, string $e, array $parameters, array &$product_update): void
+    {
+        global $db;
+
+        $prid = (int)$parameters['uprid'];
+        $attributes = $product_update['cart_contents']['attributes'] ?? [];
+
+        if (empty($attributes) || !is_pos_product($prid)) {
+            $pos_record = false;
+        } else {
+            $hash = generate_pos_option_hash($prid, $attributes);
+            $pos_record = $db->Execute(
+                "SELECT *
+                   FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . "
+                  WHERE products_id = $prid
+                    AND pos_hash = '$hash'
+                  LIMIT 1"
+            );
+        }
+
+        $original_product = $parameters['original_product'];
+        $original_qty = $original_product['qty'] ?? 0;
+        $original_name = $original_product['name'] ?? '';
+        $changed_qty = $product_update['qty'] - $original_qty;
+        $product_update['name'] = $this->getProductNameWithMessage($pos_record, $prid, $original_name, $product_update['name'], $original_qty, $changed_qty);
+    }
+
+    // -----
+    // Enables an observer to override the base product's quantity-available for use during EO's order-update.
+    //
+    // The $uprid_attrs input is an associative array containing the product's 'uprid' and its cart-formatted
+    // 'attributes' array (which might be empty).
+    //
+    public function notify_eo_get_products_available_stock(&$class, string $e, array $uprid_attrs, &$stock_quantity, &$stock_handled): void
+    {
+        $prid = (int)$uprid_attrs['uprid'];
+        $attributes = $uprid_attrs['attributes'];
+        if (empty($attributes) || !is_pos_product($prid)) {
+            return;
+        }
+
+        global $db;
+        $hash = generate_pos_option_hash($prid, $attributes);
+        $check = $db->ExecuteNoCache(
+            "SELECT *
+               FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . "
+              WHERE products_id = $prid
+                AND pos_hash = '$hash'
+              LIMIT 1"
+        );
+        if (!$check->EOF) {
+            $stock_quantity = $check->fields['products_quantity'];
+            $stock_handled = true;
+        }
+    }
+
+    // -----
+    // Issued during EO-5's database update, removing a product from the order.
+    //
+    // POSM's processing (unless overridden) adjusts a managed product-variant's stock
+    // level and also updates the base product's overall quantity.
+    //
+    public function notify_eo_product_removed(&$class, string $e, array $parameters, bool &$product_quantity_updated): void
+    {
+        // -----
+        // Give an observer the opportunity to bypass the stock-quantity modifications on a product's removal
+        // from an order.
+        //
+        $bypass_quantity_updates = false;
+        $this->notify(
+            'NOTIFY_POSM_EO_REMOVED_BYPASS',
+            $parameters
+        );
+        if ($bypass_quantity_updates !== false) {
+            $this->debug('notify_eo_product_removed, bypassed by observer request.');
+            return;
+        }
+
+        $original_product = $parameters['original_product'];
+        $prid = (int)$original_product['id'];
+        $attributes = $original_product['cart_contents']['attributes'] ?? [];
+
+        $product_quantity_updated = $this->removeProductVariantStock($prid, $attributes, $original_product['name'], $original_product['qty']);
+    }
+
+    // -----
+    // Issued during EO-5's database update, when a new product is being added to the order.
+    //
+    // POSM's processing adjusts a managed product-variant's stock level and also updates the
+    // base product's overall quantity.
+    //
+    // The $parameters array provides:
+    //
+    // - 'sql' ............... The sql_data_array used to create the new ordered-product record.
+    // - 'updated_product' ... EO's products record, identifying the product's updated information.
+    //
+    public function notify_eo_product_added(&$class, string $e, array $parameters, bool &$product_quantity_updated): void
+    {
+        global $db;
+
+        $sql_data_array = $parameters['sql'];
+        $orders_products_id = (int)$sql_data_array['orders_products_id'];
+
+        $updated_product = $parameters['updated_product'];
+        $prid = (int)$updated_product['id'];
+        $attributes = $updated_product['cart_contents']['attributes'] ?? [];
+        if (empty($attributes) || !is_pos_product($prid)) {
+            $pos_record = false;
+        } else {
+            $hash = generate_pos_option_hash($prid, $attributes);
+            $pos_record = $db->Execute(
+                "SELECT *
+                   FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . "
+                  WHERE products_id = $prid
+                    AND pos_hash = '$hash'
+                  LIMIT 1"
+            );
+        }
+
+        // -----
+        // Make sure that the product's name+stock-message length isn't going to overflow (and potentially
+        // result in a MySQL error).  If it will, the product's name will be truncated in deference
+        // to the formatted stock-message.
+        //
+        $stock_adjustment = $updated_product['qty'];
+        $products_name = $this->getProductNameWithMessage($pos_record, $prid, '', $updated_product['name'], 0, $stock_adjustment);
+        $products_name = $db->prepareInput($products_name);
+        $db->Execute(
+            "UPDATE " . TABLE_ORDERS_PRODUCTS . "
+                SET products_name = '$products_name'
+              WHERE orders_products_id = $orders_products_id
+              LIMIT 1"
+        );
+
+        // -----
+        // If the current product does not have its options' stock managed ... update the product's
+        // quantity and make sure it doesn't go negative.
+        //
+        if ($pos_record === false) {
+            $product_quantity_changed = true;
+            $this->updateUnmanagedProductsQuantity($prid, $stock_adjustment);
+            return;
+        }
+
+        // -----
+        // Give an observer the chance to 'opt-out' of the product's "managed" quantity update.
+        //
+        $bypass_managed_stock_update = false;
+        $parameters['pos_record'] = $pos_record;
+        $parameters['stock_adjustment'] = $stock_adjustment;
+        $this->notify('NOTIFY_POSM_EO_PRODUCT_ADDED_STOCK_UPDATE', $parameters, $bypass_managed_stock_update);
+
+        // -----
+        // If the current product's option-combination is not being stock-managed or an observer has indicated that the managed
+        // stock quantities shouldn't be updated, add its quantity back into the base product's overall quantity.
+        //
+        if ($pos_record->EOF || $bypass_managed_stock_update === true) {
+            $product_quantity_changed = true;
+            $this->updateUnmanagedProductsQuantity($prid, $stock_adjustment);
+            return;
+        }
+
+        // -----
+        // Otherwise, the current product's option-combination IS being stock-managed.  Subtract from the option-specific stock -- the overall product's stock has
+        // previously been reduced by the order class' processing.  Check that the overall product's stock value hasn't gone negative and set it back to 0 if it has.
+        //
+        $product_quantity_changed = true;
+        $this->updateManagedProductsQuantity($pos_record, $stock_adjustment);
+    }
+
+    // -----
+    // Issued during EO-5's AJAX processing, when an ordered product has been updated and the
+    // entered inputs are being checked.
+    //
+    // POSM's processing (since dependent-attributes' handling isn't yet provided in the
+    // admin) checks to see that any POSM-managed product's selected variant is a valid combination.
+    //
+    // The $parameters array provides:
+    //
+    // - 'messages' ... The current messages to be posted, implying that there's something amiss with at least one of the posted value.
+    // - 'post' ....... Albeit redundant, a copy of the current $_POST values. Of interest here are 'uprid' and 'id' (the attributes, in cart-like format).
+    //
+    public function notify_eo_product_check_inputs(&$class, string $e, array $parameters, array &$additional_messages): void
+    {
+        global $db;
+
+        $prid = (int)($_POST['uprid'] ?? '0');
+        $attributes = $_POST['id'] ?? [];
+        if (empty($attributes) || !is_pos_product($prid)) {
+            return;
+        }
+
+        $hash = generate_pos_option_hash($prid, $attributes);
+        $pos_record = $db->Execute(
+            "SELECT *
+               FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . "
+              WHERE products_id = $prid
+                AND pos_hash = '$hash'
+              LIMIT 1"
+        );
+        if ($pos_record->EOF) {
+            $message = (isset($additional_messages['attributes'])) ? '<br>' : '';
+            $message .= ERROR_INVALID_OPTION_COMBINATION;
+            $additional_messages['attributes'] = $message;
+        }
+    }
+
+    // -----
+    // Issued during EO-5's database update, changing one or more fields associated with
+    // a product in the order, but keeping the same option-combinations.
+    //
+    // POSM's processing adjusts a managed product-variant's stock level and also updates the
+    // base product's overall quantity.
+    //
+    // The $parameters array provides:
+    //
+    // - 'orders_products_id' ... The database record-id for the orders_products table.
+    // - 'original_product' ..... The order's products record, identifying the product's information, as originally placed in the order.
+    // - 'updated_product' ...... The order's products record, identifying the product's updated information.
+    // - 'changed_qty' .......... The change (might be negative) to the ordered product's quantity.
+    //
+    public function notify_eo_product_changed(&$class, string $e, array $parameters, bool &$product_quantity_changed): void
+    {
+        global $db;
+
+        $orders_products_id = (int)$parameters['orders_products_id'];
+
+        $updated_product = $parameters['updated_product'];
+        $prid = (int)$updated_product['id'];
+        $attributes = $updated_product['cart_contents']['attributes'] ?? [];
+        $original_product = $parameters['original_product'];
+        $changed_qty = $parameters['changed_qty'];
+
+        if (empty($attributes) || !is_pos_product($prid)) {
+            $pos_record = false;
+        } else {
+            $hash = generate_pos_option_hash($prid, $attributes);
+            $pos_record = $db->Execute(
+                "SELECT *
+                   FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . "
+                  WHERE products_id = $prid
+                    AND pos_hash = '$hash'
+                  LIMIT 1"
+            );
+        }
+
+        // -----
+        // Make sure that the product's name+stock-message length isn't going to overflow (and potentially
+        // result in a MySQL error).  If it will, the product's name will be truncated in deference
+        // to the formatted stock-message.
+        //
+        $original_name = $original_product['name'];
+        $original_qty = $original_product['qty'];
+        $products_name = $this->getProductNameWithMessage($pos_record, $prid, $original_name, $updated_product['name'], $original_qty, $changed_qty);
+        $products_name = $db->prepareInput($products_name);
+        $db->Execute(
+            "UPDATE " . TABLE_ORDERS_PRODUCTS . "
+                SET products_name = '$products_name'
+              WHERE orders_products_id = $orders_products_id
+              LIMIT 1"
+        );
+
+        // -----
+        // Determine the amount by which the product's stock is to be adjusted.
+        //
+        ['in_stock' => $ordered_in_stock, 'out_of_stock' => $ordered_out_of_stock] = $this->getStockCountsFromName($original_name, $original_qty);
+        $stock_adjustment = $ordered_out_of_stock + $changed_qty;
+
+        // -----
+        // If the current product does not have its options' stock managed ... update the product's
+        // quantity and make sure it doesn't go negative.
+        //
+        if ($pos_record === false) {
+            $product_quantity_changed = true;
+            $this->updateUnmanagedProductsQuantity($prid, $stock_adjustment);
+            return;
+        }
+
+        // -----
+        // Give an observer the chance to 'opt-out' of the product's "managed" quantity update.
+        //
+        $bypass_managed_stock_update = false;
+        $parameters['pos_record'] = $pos_record;
+        $parameters['stock_adjustment'] = $stock_adjustment;
+        $this->notify('NOTIFY_POSM_EO_PRODUCT_CHANGED_STOCK_UPDATE', $parameters, $bypass_managed_stock_update);
+
+        // -----
+        // If the current product's option-combination is not being stock-managed or an observer has indicated that the managed
+        // stock quantities shouldn't be updated, add its quantity back into the base product's overall quantity.
+        //
+        if ($pos_record->EOF || $bypass_managed_stock_update === true) {
+            $product_quantity_changed = true;
+            $this->updateUnmanagedProductsQuantity($prid, $stock_adjustment);
+            return;
+        }
+
+        // -----
+        // Otherwise, the current product's option-combination IS being stock-managed.  Subtract from the option-specific stock -- the overall product's stock has
+        // previously been reduced by the order class' processing.  Check that the overall product's stock value hasn't gone negative and set it back to 0 if it has.
+        //
+        $product_quantity_changed = true;
+        $this->updateManagedProductsQuantity($pos_record, $stock_adjustment);
+    }
 
     // -----
     // End notification handlers.
+    // -----
+
+    // -----
+    // Start methods unique to the EO-5 integration.
+    // -----
+
+    protected function updateUnmanagedProductsQuantity(int $prid, $changed_qty): void
+    {
+        global $db;
+
+        if ($changed_qty < 0) {
+            $db->Execute(
+                "UPDATE " . TABLE_PRODUCTS . "
+                    SET products_quantity = products_quantity + " . ($changed_qty * -1) . "
+                  WHERE products_id = $prid
+                  LIMIT 1"
+            );
+        } else {
+            $db->Execute(
+                "UPDATE " . TABLE_PRODUCTS . "
+                    SET products_quantity = products_quantity - $changed_qty
+                  WHERE products_id = $prid
+                  LIMIT 1"
+            );
+        }
+        $db->Execute(
+            "UPDATE " . TABLE_PRODUCTS . "
+                SET products_quantity = 0
+              WHERE products_id = $prid
+                AND products_quantity < 0
+              LIMIT 1"
+        );
+    }
+    protected function updateManagedProductsQuantity(\QueryFactoryResult $pos_record, $changed_qty): void
+    {
+        global $db;
+
+        $pos_id = (int)$pos_record->fields['pos_id'];
+        $updated_qty = $pos_record->fields['products_quantity'] - $changed_qty;
+        if ($updated_qty < 0) {
+            $updated_qty = 0;
+        }
+
+        $db->Execute(
+            "UPDATE " . TABLE_PRODUCTS_OPTIONS_STOCK . "
+                SET products_quantity = $updated_qty
+              WHERE pos_id = $pos_id
+              LIMIT 1"
+        );
+
+        $prid = (int)$pos_record->fields['products_id'];
+        posm_update_base_product_quantity($prid);
+        $db->Execute(
+            "UPDATE " . TABLE_PRODUCTS . "
+                SET products_quantity = 0
+              WHERE products_id = $prid
+                AND products_quantity < 0
+              LIMIT 1"
+        );
+    }
+
+    // -----
+    // Return an ordered product's name, appended with any in/oos message.
+    //
+    protected function getProductNameWithMessage(bool|\QueryFactoryResult $pos_record, int $prid, string $original_name, string $updated_name, $original_qty, $changed_qty): string
+    {
+        // -----
+        // Make sure that the product's name+stock-message length isn't going to overflow (and potentially
+        // result in a MySQL error).  If it will, the product's name will be truncated in deference
+        // to the formatted stock-message.
+        //
+        $products_name = $this->stripStockMessage($updated_name);
+        $name_length = $this->stringLen(zen_db_input($products_name));
+        $stock_message = $this->getProductsStockMessage($pos_record, $prid, $original_name, $original_qty, $changed_qty);
+        $message_length = $this->stringLen(zen_db_input($stock_message));
+        if ($name_length + $message_length > $this->name_max_length) {
+            $excess = $name_length + $message_length - $this->name_max_length;
+            $products_name = $this->subString($products_name, 0, $name_length - $excess - 3) . '...';
+            trigger_error("Product #$prid, name truncated to '$products_name', due to database size limitation ($name_length + $message_length > {$this->name_max_length}).", E_USER_WARNING);
+        }
+        return $products_name . $stock_message;
+    }
+
+    protected function getProductsStockMessage(bool|\QueryFactoryResult $pos_record, int $prid, string $original_name, $original_qty, $changed_qty): string
+    {
+        global $db;
+
+        $product = $db->Execute(
+            "SELECT products_type, products_quantity
+               FROM " . TABLE_PRODUCTS . "
+              WHERE products_id = $prid
+              LIMIT 1"
+        );
+
+        if ($pos_record !== false) {
+            $available_qty = $pos_record->fields['products_quantity'];
+        } else {
+            $available_qty = $product->fields['products_quantity'] ?? 0;
+
+        }
+        if ($available_qty < 0) {
+            $available_qty = 0;
+        }
+
+        ['in_stock' => $ordered_in_stock, 'out_of_stock' => $ordered_out_of_stock] = $this->getStockCountsFromName($original_name, $original_qty);
+
+        // -----
+        // Give a watching observer the opportunity to inject its own 'stock message' or, for stock-managed
+        // products, to force the base POSM's out-of-stock message for the current product.
+        //
+        $msg_text = '';
+        $msg_text_override = '';
+        $force_out_of_stock_message = false;
+        $this->notify(
+            'NOTIFY_POSM_GET_PRODUCT_STOCK_MESSAGE_BYPASS',
+            [
+                'prid' => $prid,
+                'pos_record' => $pos_record,
+                'prod_info' => $product->fields ?? [],
+                'original_name' => $original_name,
+                'available_qty' => $available_qty,
+                'original_qty' => $original_qty,
+                'changed_qty' => $changed_qty,
+                'ordered_in_stock' => $ordered_in_stock,
+                'ordered_out_of_stock' => $ordered_out_of_stock,
+            ],
+            $msg_text_override,
+            $force_out_of_stock_message
+        );
+
+        $stock_in_stock = $ordered_in_stock + $available_qty;
+        $addl_qty_needed = $ordered_out_of_stock + $changed_qty;
+        $stock_remaining = $available_qty - $addl_qty_needed;
+
+        if (!$product->EOF && $msg_text_override !== '') {
+            $msg_text = $msg_text_override;
+            $this->debug("getProductsStockMessage($prid), stock message overridden ($msg_text_override).");
+        } elseif ($pos_record === false) {
+            if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') {
+                if ($available_qty >= $addl_qty_needed) {
+                    $msg_text = PRODUCTS_OPTIONS_STOCK_IN_STOCK;
+                } elseif ($available_qty == 0) {
+                    $msg_text = PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK;
+                } else {
+                    $stock_remaining *= ($stock_remaining < 0) ? -1 : 1;
+                    $msg_text = sprintf(PRODUCTS_OPTIONS_STOCK_MIXED, $stock_in_stock, PRODUCTS_OPTIONS_STOCK_IN_STOCK, $stock_remaining, PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK);
+                }
+            }
+            $this->debug("getProductsStockMessage ($original_name [$prid]) is not a POSM product, message = $msg_text");
+        } elseif ($pos_record->EOF || $force_out_of_stock_message !== false) {
+            if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true' || $force_out_of_stock_message !== false) {
+                $msg_text = PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK;
+                $this->debug("getProductsStockMessage ($original_name [$prid]), is not a POSM variant or overridden ($force_out_of_stock_message).");
+            }
+        } else {
+            if ($available_qty >= $addl_qty_needed) {
+                $msg_text = PRODUCTS_OPTIONS_STOCK_IN_STOCK;
+            } else {
+                $msg_text = str_replace('[date]', $pos_record->fields['pos_date'], get_pos_oos_name($pos_record->fields['pos_name_id'], $_SESSION['languages_id']));
+                if ($stock_remaining < 0) {
+                    $msg_text = sprintf(PRODUCTS_OPTIONS_STOCK_MIXED, $stock_in_stock, PRODUCTS_OPTIONS_STOCK_IN_STOCK, $stock_remaining * -1, $msg_text);
+                }
+            }
+            $this->debug("getProductsStockMessage ($original_name [$prid]), is a POSM product. ordered quantity = $original_qty, additional quantity = $addl_qty_needed, message = $msg_text");
+        }
+
+        return ($msg_text === '') ? '' : sprintf(PRODUCTS_OPTIONS_STOCK_STOCK_TEXT, $msg_text);
+    }
+
+    // -----
+    // End methods unique to the EO-5 integration.
     // -----
 
     // -----
@@ -635,8 +1182,7 @@ class products_options_stock_observer extends base
     //
     protected function duplicatePosmProduct(int $source_pid, int $target_pid)
     {
-        global $db,
-               $messageStack;
+        global $db, $messageStack;
 
         // -----
         // Gather the managed-option 'base' information for the original/source product.
@@ -849,6 +1395,8 @@ class products_options_stock_observer extends base
     // When called from the built-in processing, the option exists to conditionally update the products' quantities
     // and the base processing will handle the update of the overall product's quantities.
     //
+    // Note: This processing is used for EO-4 only.
+    //
     protected function removeProductUpdateQuantity($orders_products_id, bool $update_overall_product = true)
     {
         global $db;
@@ -874,44 +1422,84 @@ class products_options_stock_observer extends base
               WHERE orders_products_id = $orders_products_id
               LIMIT 1"
         );
-        $products_id = $product_info->fields['products_id'];
-        $trace_info = '';
+
+        $products_id = (int)$product_info->fields['products_id'];
+        $attributes_array = $this->ordersProductsAttributesArray((int)$orders_products_id);
+        $this->removeProductVariantStock($products_id, $attributes_array, $product_info->fields['products_name'], $product_info->fields['products_quantity']);
+    }
+
+    // -----
+    // Called when a product is being removed from an order, either via the entire order's removal or
+    // a single product.
+    //
+    // This method is common to the EO-4 and EO-5 integrations.
+    //
+    protected function removeProductVariantStock(int $products_id, array $attributes_array, string $ordered_products_name, $ordered_quantity): bool
+    {
+        global $db;
+
+        $product_quantity_updated = false;
         if (is_pos_product($products_id)) {
-            $trace_info = ', is_pos_product';
-            $attributes_array = $this->ordersProductsAttributesArray($orders_products_id);
-            if (count($attributes_array) > 0) {
-                $trace_info .= ', has attributes';
-                if (preg_match('/.*\[(\d*).*, (\d*).*\]$/', $product_info->fields['products_name'], $matches)) {
-                    $options_stock = $matches[1];  // Mixed in stock/to be made, gather quantity in stock
-                    $trace_info .= ', mixed';
-                } elseif (strpos($product_info->fields['products_name'], PRODUCTS_OPTIONS_STOCK_IN_STOCK) !== false) {
-                    $options_stock = $product_info->fields['products_quantity'];  // All products in stock
-                    $trace_info .= ", in stock, add back ($options_stock)";
-                } else {
-                    $options_stock = 0;  // All products to be made
-                    $trace_info .= ', to be made';
-                }
-                $trace_info .= " ($options_stock)";
+            $product_quantity_updated = true;
+            if (count($attributes_array) !== 0) {
+                ['in_stock' => $in_stock, 'out_of_stock' => $out_of_stock] = $this->getStockCountsFromName($ordered_products_name, $ordered_quantity);
 
                 $option_hash = generate_pos_option_hash($products_id, $attributes_array);
                 $db->Execute(
                     "UPDATE " . TABLE_PRODUCTS_OPTIONS_STOCK . "
-                        SET products_quantity = products_quantity + $options_stock, last_modified = now()
+                        SET products_quantity = products_quantity + $in_stock,
+                            last_modified = now()
                       WHERE products_id = $products_id
                         AND pos_hash = '$option_hash'
                       LIMIT 1"
                 );
-
-                if ($update_overall_product === true) {
-                    $trace_info .= ', product quantity updated to ' . $this->adjustOverallProductQuantity($products_id);
-                }
             }
             posm_update_base_product_quantity($products_id);
         }
-        $this->debug("removeProductUpdateQuantity, products ID $products_id" . $trace_info);
+        return $product_quantity_updated;
     }
 
-    protected function ordersProductsAttributesArray($orders_products_id): array
+    // -----
+    // Returns an array containing the in-stock and out-of-stock quantities, as determined from
+    // an ordered product's name.
+    //
+    protected function getStockCountsFromName(string $ordered_product_name, $ordered_quantity): array
+    {
+        // -----
+        // If the product's name doesn't end with the bracketed in/oos message, the
+        // 'assumption' is that the ordered-quantity was all in-stock.
+        //
+        if (!preg_match('/^.*(\[.*\])$/', $ordered_product_name, $matches)) {
+            return ['in_stock' => $ordered_quantity, 'out_of_stock' => 0];
+        }
+
+        // -----
+        // Otherwise, the bracketed stock message *is* present. The in/oos quantities can be derived
+        // from the bracketed stock-message.
+        //
+        $stock_message = $matches[1];
+        if (preg_match('/^\[(\d*).*, (\d*).*\]$/', $stock_message, $matches)) {
+            $in_stock = $matches[1];    // Mixed in stock/to be made, gather in-stock/oos quantities
+            $out_of_stock = $matches[2];
+        } elseif (str_contains($stock_message, PRODUCTS_OPTIONS_STOCK_IN_STOCK)) {
+            $in_stock = $ordered_quantity;  // Product was in stock
+            $out_of_stock = 0;
+        } else {
+            $in_stock = 0;  // Product was out of stock
+            $out_of_stock = $ordered_quantity;
+        }
+        return ['in_stock' => $in_stock, 'out_of_stock' => $out_of_stock];
+    }
+
+    // -----
+    // This method, used for EO-4 integration only, creates and returns an associative
+    // array (keyed by the option's ID) and containing the option value's id.
+    //
+    // Note: While checkbox-type attributes will appear only once in the array, it's
+    // inconsequential since checkbox-type attributes don't contribute to a POSM-managed
+    // product's attribute-hash.
+    //
+    protected function ordersProductsAttributesArray(int $orders_products_id): array
     {
         global $db;
 
@@ -928,11 +1516,11 @@ class products_options_stock_observer extends base
     }
 
     // -----
-    // Return the in-/out-of-stock message for the specified product; used by edit_orders processing.
+    // Return the in-/out-of-stock message for the specified product; used by edit_orders (v4) processing.
     //
     // Note: As of v4.1.4, the method is available publically, supporting store-specific integrations.
     //
-    public function getInStockMessage($orders_products_id): string
+    public function getInStockMessage(int $orders_products_id): string
     {
         global $db;
 
@@ -1001,8 +1589,8 @@ class products_options_stock_observer extends base
                 } else {
                     $msg_text = sprintf(PRODUCTS_OPTIONS_STOCK_MIXED, $quantity, PRODUCTS_OPTIONS_STOCK_IN_STOCK, $ordered_quantity - $quantity, PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK);
                 }
-          }
-          $this->debug("getInStockMessage ($orders_products_id), not POSM product. quantity = $quantity, message = $msg_text");
+            }
+            $this->debug("getInStockMessage ($orders_products_id), not POSM product. quantity = $quantity, message = $msg_text");
         } else {
             if ($check->EOF || $force_out_of_stock_message) {
                 $this->debug("getInStockMessage ($orders_products_id), not POSM variant or overridden ($force_out_of_stock_message).");
@@ -1022,7 +1610,7 @@ class products_options_stock_observer extends base
                 $this->debug("getInStockMessage ($orders_products_id), is POSM product. ordered quantity = $ordered_quantity, quantity = $options_quantity, message = $msg_text");
             }
         }
-        return ($msg_text == '') ? '' : sprintf(PRODUCTS_OPTIONS_STOCK_STOCK_TEXT, $msg_text);
+        return ($msg_text === '') ? '' : sprintf(PRODUCTS_OPTIONS_STOCK_STOCK_TEXT, $msg_text);
     }
 
     // -----
@@ -1031,7 +1619,7 @@ class products_options_stock_observer extends base
     //
     public function stripStockMessage($products_name): string
     {
-        return preg_replace('/\[.*\]/', '', (string)$products_name);
+        return rtrim(preg_replace('/\[.*\]$/', '', (string)$products_name));
     }
 
     // -----
