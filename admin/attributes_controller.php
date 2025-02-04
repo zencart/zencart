@@ -1959,7 +1959,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       // ]
                       //
                       $extra_attributes_inputs = [];
-                      $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_ATTRIBUTES_COLLECT_INFO_EXTRA_INPUTS', $attributes_value, $extra_attributes_inputs);
+                      $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_ATTRIBUTES_COLLECT_INFO_EXTRA_INPUTS', [], $extra_attributes_inputs);
                       if (!empty($extra_attributes_inputs)) {
                           foreach ($extra_attributes_inputs as $extra_input) {
                               $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';
