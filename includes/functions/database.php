@@ -48,30 +48,27 @@ function zen_db_output(string $string)
  * Rudimentary input sanitizer
  * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
  *
- * @param string|null $string
- * @param bool $trimspace
- * @return array|string
  */
-function zen_db_prepare_input($string, bool $trimspace = true)
+function zen_db_prepare_input(array|string|null $string, bool $trimspace = true): array|string|null
 {
 
     if (!IS_ADMIN_FLAG && is_string($string)) {
         $string = zen_sanitize_string($string);
     }
     if (is_string($string)) {
-        if ($trimspace == true) {
+        if ($trimspace === true) {
             return trim(stripslashes($string));
-        } else {
-            return stripslashes($string);
         }
-    } elseif (is_array($string)) {
+        return stripslashes($string);
+    }
+
+    if (is_array($string)) {
         foreach ($string as $key => $value) {
             $string[$key] = zen_db_prepare_input($value);
         }
-        return $string;
-    } else {
-        return $string;
     }
+
+    return $string;
 }
 
 
