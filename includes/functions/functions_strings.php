@@ -32,6 +32,17 @@ function zen_output_string($string, $translate = false, $protected = false): str
 }
 
 /**
+ * Returns a string with quotes converted to html entities
+ * so that they can be passed through from page to page
+ * without mistakenly being converted to specialchars or go missing
+ */
+function zen_preserve_search_quotes(?string $search_string): string
+{
+    return urlencode($search_string);
+    //return zen_output_string($string, ['"' => '%22', "'", '%21'], false);
+}
+
+/**
  * Returns a string with conversions for security.
  *
  * Simply calls the zen_output_string function
