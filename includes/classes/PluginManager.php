@@ -238,7 +238,7 @@ class PluginManager
         $this->pluginControl->upsert(
             $insertValues,
             ['id'],
-            ['infs']
+            ['name', 'description', 'infs', 'author', 'zc_contrib_id']
         );
         $this->pluginControlVersion->upsert(
             $versionInsertValues,
