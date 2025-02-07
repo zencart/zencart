@@ -384,7 +384,7 @@ if (is_array($extra_data)) {
 
               $contents[] = ['text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
 
-              $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+              $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="object-fit-contain"')];
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', zen_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . ' class="form-control"') . '</div><br>';
@@ -420,7 +420,7 @@ if (is_array($extra_data)) {
                 if (zen_not_null($mInfo->last_modified)) {
                   $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified)];
                 }
-                $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+                $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="object-fit-contain"')];
                 $contents[] = ['text' => TEXT_PRODUCTS . ' ' . $mInfo->products_count];
               }
               break;
