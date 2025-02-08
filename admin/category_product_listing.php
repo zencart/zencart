@@ -25,9 +25,9 @@ $buttonText = $_SESSION['imageView'] ?  TEXT_HIDE_IMAGES : TEXT_SHOW_IMAGES ;
 $additionalClass = $_SESSION['imageView'] ? '' : ' hidden ';
 
 $action = $_GET['action'] ?? '';
-$search_result = isset($_GET['search']) && zen_not_null($_GET['search']);
+$search_result = zen_not_null($_GET['search'] ?? null);
 
-$search_parameter = $search_result ? '&search=' . $_GET['search'] : '';
+$search_parameter = $search_result ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '';
 $keywords = $search_result ? zen_db_input(zen_db_prepare_input($_GET['search'])) : '';
 $max_results = MAX_DISPLAY_RESULTS_CATEGORIES;
 if (!empty($search_parameter)) {
