@@ -45,11 +45,11 @@ jQuery(document).ready(function() {
                 if (jQuery(this).is(':selected')) {
                     isSelected = ' selected="selected"';
                 }
-                theOptions += '<option value="'+jQuery(this).val()+'"'+isSelected+'>'+jQuery(this).text()+'</option>';
+                theOptions += '<option value="'+jQuery(this).val()+'"'+isSelected+'>'+jQuery(this).text()+'<\/option>';
             }
         });
         if (optGroup === true) {
-            theOptions += '</optgroup>';
+            theOptions += '<\/optgroup>';
         }
         jQuery(this).empty().append(theOptions);
         jQuery('optgroup', this).css({'font-style':'normal'});
