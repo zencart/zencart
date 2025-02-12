@@ -147,6 +147,8 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                     $email_subject = OSH_EMAIL_TEXT_SUBJECT . ' #' . $orders_id;
                 }
 
+                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_BEFORE_SENDING_CUSTOMER_EMAIL', $orders_id, $email_subject, $email_text, $html_msg, $notify_customer);
+                
                 if ($notify_customer == 1) {
                     zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status', $filename);
                 }
