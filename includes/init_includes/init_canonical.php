@@ -95,6 +95,11 @@ $keepableParams[] = 'record_company_id';
 $keepableParams[] = 'music_genre_id';
 $keepableParams[] = 'artists_id';
 
+if ($current_page === FILENAME_SEARCH_RESULT) {
+    $excludeParams = array_diff($excludeParams, ['search_in_description']);
+    $keepableParams[] = 'search_in_description';
+}
+
 $zco_notifier->notify('NOTIFY_INIT_CANONICAL_PARAM_WHITELIST', $current_page, $excludeParams, $keepableParams, $includeCPath);
 
 // Go thru all GET params and prepare list of potentially-rogue keys to not include in generated canonical URL
