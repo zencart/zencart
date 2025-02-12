@@ -126,6 +126,7 @@ define('FILENAME_PAGE_2', 'page_2');
 define('FILENAME_PAGE_3', 'page_3');
 define('FILENAME_PAGE_4', 'page_4');
 define('FILENAME_PASSWORD_FORGOTTEN', 'password_forgotten');
+define('FILENAME_PASSWORD_RESET', 'password_reset');
 define('FILENAME_PLUGIN_MANAGER', 'plugin_manager');
 define('FILENAME_POPUP_COUPON_HELP', 'popup_coupon_help');
 define('FILENAME_POPUP_IMAGE', 'popup_image');

@@ -2,10 +2,15 @@
 /**
  * Password Forgotten
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Nov 30 Modified in v1.5.8a $
+ * @version $Id:  $
+ *
+ * @var queryFactory $db
+ * @var messageStack $messageStack
+ * @var breadcrumb $breadcrumb
+ * @var notifier $zco_notifier
  */
 
 // This should be first line of the script:
@@ -18,7 +23,8 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $_SESSION['navigation']->remove_current_page();
 
 if (isset($_GET['action']) && $_GET['action'] === 'process') {
-// Slam prevention:
+
+    // Slam prevention:
     if (isset($_SESSION['login_attempt']) && $_SESSION['login_attempt'] > 9) {
         header('HTTP/1.1 406 Not Acceptable');
         exit(0);
@@ -31,6 +37,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'process') {
         $_SESSION['login_attempt']++;
     } // END SLAM PREVENTION
 
+
     if (empty($_POST['email_address'])) {
         $messageStack->add_session('password_forgotten', ENTRY_EMAIL_ADDRESS_ERROR, 'error');
         zen_redirect(zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'));
@@ -38,47 +45,53 @@ if (isset($_GET['action']) && $_GET['action'] === 'process') {
 
     $email_address = zen_db_prepare_input(trim($_POST['email_address']));
 
-    $sql = "SELECT customers_firstname, customers_lastname, customers_password, customers_id
+    $sql = "SELECT customers_firstname, customers_lastname, customers_id, customers_email_address
             FROM " . TABLE_CUSTOMERS . "
             WHERE customers_email_address = :emailAddress";
 
     $sql = $db->bindVars($sql, ':emailAddress', $email_address, 'string');
-    $check_customer = $db->Execute($sql);
+    $check_customer = $db->Execute($sql, 1);
 
-    $sessionMessage = SUCCESS_PASSWORD_SENT;
+    $sessionMessage = SUCCESS_PASSWORD_RESET_SENT;
 
     if ($check_customer->RecordCount() > 0) {
+        // customer exists for the provided email address
+
+        $email_address = $check_customer->fields['customers_email_address'];
+
         $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED', $email_address, $sessionMessage);
 
-        $new_password = zen_create_PADSS_password((ENTRY_PASSWORD_MIN_LENGTH > 0 ? ENTRY_PASSWORD_MIN_LENGTH : 5));
-        $crypted_password = zen_encrypt_password($new_password);
+        $length = defined('PASSWORD_RESET_TOKEN_LENGTH') ? constant('PASSWORD_RESET_TOKEN_LENGTH') : 24;
+        if ($length < 12 || $length > 100) { // under 12 is impractical; over 100 is too large for db field
+            $length = 24;
+        }
+        $token = zen_create_random_value($length);
 
-        $sql = "UPDATE " . TABLE_CUSTOMERS . "
-                SET customers_password = :password
-                WHERE customers_id = :customersID";
-
-        $sql = $db->bindVars($sql, ':password', $crypted_password, 'string');
-        $sql = $db->bindVars($sql, ':customersID', $check_customer->fields['customers_id'], 'integer');
+        $sql = "DELETE FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " WHERE customer_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
+        $db->Execute($sql);
+        $sql = "INSERT INTO " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " (customer_id, token) VALUES (:customerID, :token)";
+        $sql = $db->bindVars($sql, ':token', $token, 'string');
+        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
         $db->Execute($sql);
 
-        $html_msg['EMAIL_CUSTOMERS_NAME'] = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
-        $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password);
+        $reset_url = zen_href_link(FILENAME_PASSWORD_RESET, "reset_token=$token");
 
-        // send the email
-        // Note: If this mail frequently winds up in spam folders, try replacing $html_msg with 'none' in the call below.
-        zen_mail(
-            $html_msg['EMAIL_CUSTOMERS_NAME'],
-            $email_address,
-            EMAIL_PASSWORD_REMINDER_SUBJECT,
-            $html_msg['EMAIL_MESSAGE_HTML'],
-            STORE_NAME,
-            EMAIL_FROM,
-            $html_msg,
-            'password_forgotten'
-        );
+        $name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+        $body = sprintf(EMAIL_PASSWORD_RESET_BODY, zen_get_ip_address(), STORE_NAME, $reset_url);
+
+        $html_msg = [];
+        $html_msg['EMAIL_CUSTOMERS_NAME'] = $name;
+        $html_msg['EMAIL_MESSAGE_HTML'] = $body;
+
+        // Note: If this mail frequently winds up in spam folders, try replacing $html_msg with 'none' below.
+        // $html_msg = 'none';
+
+        // Send the email
+        zen_mail($name, $email_address, EMAIL_PASSWORD_RESET_SUBJECT, $body, STORE_NAME, EMAIL_FROM, $html_msg, 'password_forgotten');
 
         // handle 3rd-party integrations
-        $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_CHANGED', $email_address, $check_customer->fields['customers_id'], $new_password);
+        $zco_notifier->notify('NOTIFY_PASSWORD_RESET_URL_SENT', $email_address, $check_customer->fields['customers_id'], $token);
     } else {
         $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address, $sessionMessage);
     }
