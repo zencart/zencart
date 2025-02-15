@@ -619,23 +619,17 @@ class Customer extends base
         $language = $_SESSION['languages_id'];
         global $db, $currencies;
         $sql =
-            "SELECT o.orders_id, o.date_purchased, o.delivery_name,
+              "SELECT o.orders_id, o.date_purchased, o.delivery_name,
                     o.order_total, o.currency, o.currency_value,
                     o.delivery_country, o.billing_name, o.billing_country,
                     s.orders_status_name,
                     o.language_code
-               FROM " . TABLE_ORDERS . " o
+              FROM " . TABLE_ORDERS . " o
                     INNER JOIN " . TABLE_ORDERS_STATUS . " s
+                        ON s.orders_status_id = o.orders_status
+                       AND s.language_id = :languagesID
               WHERE o.customers_id = :customersID
-                AND s.orders_status_id = (
-                        SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " osh
-                         WHERE osh.orders_id = o.orders_id
-                           AND osh.customer_notified >= 0
-                         ORDER BY osh.date_added DESC LIMIT 1
-                    )
-                AND s.language_id = :languagesID
               ORDER BY orders_id DESC";
-
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $language, 'integer');
         if ($returned_history_split !== null) {
