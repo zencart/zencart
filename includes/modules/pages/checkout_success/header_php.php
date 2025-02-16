@@ -19,24 +19,6 @@ if (!zen_is_logged_in()) {
 $customer = new Customer;
 
 if (!isset($_GET['action']) || $_GET['action'] !== 'confirm') {
-    $notify_string = '';
-    if (isset($_GET['action']) && $_GET['action'] === 'update') {
-        $notify_string = 'action=notify&';
-        $notify = $_POST['notify'] ?? null;
-
-        if (is_array($notify)) {
-            for ($i = 0, $n = count($notify); $i < $n; $i++) {
-                $notify_string .= 'notify[]=' . $notify[$i] . '&';
-            }
-            $notify_string = rtrim($notify_string, '&');
-        }
-        if ($notify_string === 'action=notify&') {
-            zen_redirect(zen_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
-        } else {
-            zen_redirect(zen_href_link(FILENAME_DEFAULT, $notify_string));
-        }
-    }
-
     require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
     $breadcrumb->add(NAVBAR_TITLE_1);
     $breadcrumb->add(NAVBAR_TITLE_2);
