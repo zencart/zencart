@@ -85,7 +85,7 @@ require($template->get_template_dir('tpl_account_history_info_default.php',DIR_W
 ?>
 <fieldset id="csNotifications">
 <legend><?php echo TEXT_NOTIFY_PRODUCTS; ?></legend>
-<?php echo zen_draw_form('order', zen_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')); ?>
+<?php echo zen_draw_form('order', zen_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=notify', 'SSL')); ?>
 
 <?php foreach ($notificationsArray as $notifications) { ?>
 <?php echo zen_draw_checkbox_field('notify[]', $notifications['products_id'], true, 'id="notify-' . $notifications['counter'] . '"') ;?>
