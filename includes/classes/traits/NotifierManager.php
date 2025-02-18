@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 May 22 Modified in v2.1.0-alpha1 $
+ * @version $Id: DrByte 2025 Jan 02  $
  */
 
 namespace Zencart\Traits;
@@ -12,11 +12,12 @@ use Zencart\Events\EventDto;
 trait NotifierManager
 {
     /**
-     * @var array of aliases
+     * Array of notifier aliases (where Notifier hook names have been renamed, such as for minor misspellings)
+     * In your own application code, you may add to this list by calling $this->registerObserverAlias($old,$new)
      */
     private array $observerAliases = [
-        // this one is an alias to accommodate an old misspelling:
         'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE',
+        'NOTIFY_ADMIN_INVOIVE_HEADERS_AFTER_TAX' => 'NOTIFY_ADMIN_INVOICE_HEADERS_AFTER_TAX',
     ];
 
     public function getRegisteredObservers(): array

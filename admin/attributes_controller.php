@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Jul 04 Modified in v2.1.0-alpha1 $
+ * @version $Id: proseLA 2024 Oct 02 Modified in v2.1.0 $
  */
 require('includes/application_top.php');
 
@@ -1959,7 +1959,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                       // ]
                       //
                       $extra_attributes_inputs = [];
-                      $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_ATTRIBUTES_COLLECT_INFO_EXTRA_INPUTS', $attributes_value, $extra_attributes_inputs);
+                      $zco_notifier->notify('NOTIFY_ADMIN_PRODUCT_ATTRIBUTES_COLLECT_INFO_EXTRA_INPUTS', [], $extra_attributes_inputs);
                       if (!empty($extra_attributes_inputs)) {
                           foreach ($extra_attributes_inputs as $extra_input) {
                               $addl_class = (isset($extra_input['label']['addl_class'])) ? (' ' . $extra_input['label']['addl_class']) : '';

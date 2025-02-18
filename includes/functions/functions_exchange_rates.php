@@ -104,7 +104,7 @@ function quote_ecb_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
       }
     }
   }
-  // Check for valid data  
+  // Check for valid data
   if (!isset($currencyArray[$base]) || !isset($currencyArray[$currencyCode]) || 0 == $currencyArray[$base]) {
      return ''; // no valid value, so abort
   }
@@ -156,12 +156,13 @@ function quote_boc_currency($currencyCode = '', $base = DEFAULT_CURRENCY)
   function doCurlCurrencyRequest($method, $url, $vars = '') {
     //echo '-----------------<br>';
     //echo 'URL: ' . $url . ' VARS: ' . $vars . '<br>';
+    $base_UA_host = defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER;
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);
     curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_USERAGENT, empty($_SERVER['HTTP_USER_AGENT']) ? HTTP_CATALOG_SERVER . DIR_WS_CATALOG : $_SERVER['HTTP_USER_AGENT']);
-    curl_setopt($ch, CURLOPT_REFERER, HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
+    curl_setopt($ch, CURLOPT_USERAGENT, empty($_SERVER['HTTP_USER_AGENT']) ? $base_UA_host . DIR_WS_CATALOG : $_SERVER['HTTP_USER_AGENT']);
+    curl_setopt($ch, CURLOPT_REFERER, $base_UA_host . DIR_WS_CATALOG);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     if (strtoupper($method) == 'POST' && $vars != '') {

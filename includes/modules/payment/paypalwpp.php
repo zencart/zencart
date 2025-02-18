@@ -1922,22 +1922,27 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // will we be creating an account for this customer?  We must if the cart contents are virtual, so can login to download etc.
     if ($_SESSION['cart']->get_content_type('true') > 0 || in_array($_SESSION['cart']->get_content_type(), array('mixed', 'virtual'))) $this->new_acct_notify = 'Yes';
 
-    // get the payer_id from the customer's info as returned from PayPal
-    $_SESSION['paypal_ec_payer_id'] = $response['PAYERID'];
-    $this->notify('NOTIFY_PAYPAL_EXPRESS_CHECKOUT_PAYERID_DETERMINED', $response['PAYERID']);
-
     // More optional response elements; initialize them to prevent follow-on PHP notices.
-    $response_optional = array(
+    $response_optional = [
         'PAYMENTREQUEST_0_SHIPTOPHONENUM',
+        'PAYERID',
+        'EMAIL',
         'PHONENUM',
+        'FIRSTNAME',
+        'LASTNAME',
         'BUSINESS',
-    );
+        'PAYERSTATUS',
+    ];
     foreach ($response_optional as $optional) {
         if (!isset($response[$optional])) {
             $response[$optional] = '';
         }
     }
 
+    // get the payer_id from the customer's info as returned from PayPal
+    $_SESSION['paypal_ec_payer_id'] = ($response['PAYERID'] ?? '--none--');
+    $this->notify('NOTIFY_PAYPAL_EXPRESS_CHECKOUT_PAYERID_DETERMINED', $response['PAYERID']);
+    
     // prepare the information to pass to the ec_step2_finish() function, which does the account creation, address build, etc
     $step2_payerinfo = [
         'payer_id' => $response['PAYERID'],
@@ -3105,6 +3110,19 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           }
           if ($response['L_ERRORCODE0'] == 10736) $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_ADDR_ERROR;
           if ($response['L_ERRORCODE0'] == 10752) $errorText = MODULE_PAYMENT_PAYPALWPP_TEXT_DECLINED;
+
+          // More optional response elements; initialize them to prevent follow-on PHP notices.
+          $response_optional = [
+            'L_ERRORCODE1',
+            'L_SHORTMESSAGE1',
+            'L_LONGMESSAGE1',
+            'L_ERRORCODE2',
+            'L_SHORTMESSAGE2',
+            'L_LONGMESSAGE2',
+          ];
+          foreach ($response_optional as $optional) {
+            $response[$optional] ??= '';
+          }
 
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_ERROR || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? $errorNum . ' ' . urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . (isset($response['RESPMSG']) ? ' ' . $response['RESPMSG'] : '') . ' ' . $response['CURL_ERRORS']) : '';
           $detailedEmailMessage = ($detailedMessage == '') ? '' : $errorInfo . MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $errorText);

@@ -8,19 +8,19 @@
 
 /**
  * Returns a string with conversions for security.
- * @param string $string The string to be parsed
- * @param string|bool $translate contains a string to be translated, otherwise just quote is translated
+ * @param ?string $string The string to be parsed
+ * @param array|bool $translate contains a string to be translated, otherwise just quote is translated
  * @param bool $protected Do we run htmlspecialchars over the string
  * @return string
  */
-function zen_output_string($string, $translate = false, $protected = false): string
+function zen_output_string(?string $string, array|bool $translate = false, bool $protected = false): string
 {
     if (is_null($string) === true) {
         return '';
     }
 
     if ($protected === true) {
-        $double_encode = (IS_ADMIN_FLAG ? FALSE : TRUE);
+        $double_encode = !IS_ADMIN_FLAG;
         return htmlspecialchars($string, ENT_COMPAT, CHARSET, $double_encode);
     }
 
@@ -62,10 +62,8 @@ function zen_sanitize_string($string)
 /**
  * Checks whether a string/array is null/blank/empty or uppercase string 'NULL'
  * Differs from empty() in that it doesn't test for boolean false or '0' string/int
- * @param string|array|Countable $value
- * @return bool
  */
-function zen_not_null($value)
+function zen_not_null(Countable|array|string|null $value): bool
 {
     if (null === $value) {
         return false;

@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Sep 21 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2024 Oct 17 Modified in v2.1.0 $
  */
 
 namespace Zencart\ViewBuilders;
@@ -92,7 +92,7 @@ class PluginManagerController extends BaseController
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
             );
         }
-        if ($this->pluginManager->hasPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
+        if ($this->pluginManager->hasPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version')) && !empty($this->currentFieldValue('version'))) {
             $this->setBoxContent('<br>' . TEXT_INFO_CLEANUP);
             $this->setBoxContent(
                 '<a href="' . zen_href_link(

@@ -163,6 +163,7 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
 
         $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
         $where_str = '';
+        $validWhere = false;
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
             if ($startWithWhere) {
@@ -190,11 +191,13 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
                                     $first_field = false;
                                     $sql_add .= $sql_or;
                                     $sql_add .= " :field_name = :numeric_keyword";
+                                    $validWhere = true;
                                 }
                             } else {
                                 $first_field = false;
                                 $sql_add .= $sql_or;
                                 $sql_add .= " :field_name LIKE '%:keyword%'";
+                                $validWhere = true;
                             }
                             $sql_add = $db->bindVars($sql_add, ':field_name', $field_name, 'noquotestring');
                         }
@@ -209,7 +212,7 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
             }
             $where_str .= " )";
         }
-        if (substr($where_str, -7) === '( ()  )') {
+        if (substr($where_str, -7) === '( ()  )' || !$validWhere) {
             return ' ';
         }
         return $where_str;

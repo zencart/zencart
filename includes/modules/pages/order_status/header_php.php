@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 
 // This should be first line of the script:

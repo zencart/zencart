@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 New in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Oct 18 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
@@ -17,20 +17,6 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
     static $last_log_suffix;
     if (!isset($last_log_suffix)) {
         $last_log_suffix = '.log';
-    }
-    $ignore_dups = false;
-    if (IS_ADMIN_FLAG === true) {
-        $ignore_dups = (defined('REPORT_ALL_ERRORS_ADMIN') && REPORT_ALL_ERRORS_ADMIN == 'IgnoreDups');
-    } else {
-        $ignore_dups = (defined('REPORT_ALL_ERRORS_STORE') && REPORT_ALL_ERRORS_STORE == 'IgnoreDups');
-    }
-
-    if ($ignore_dups && preg_match('#Constant .* already defined#', $errstr)) {
-        return true;
-    }
-
-    if (($errno == E_NOTICE || $errno == E_USER_NOTICE) && defined('REPORT_ALL_ERRORS_NOTICE_BACKTRACE') && REPORT_ALL_ERRORS_NOTICE_BACKTRACE == 'No') {
-        return false;
     }
 
     switch ($errno) {
@@ -50,6 +36,11 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
         case E_USER_WARNING:
             $error_type = 'Warning';
             $this_log_suffix = '-warning.log';
+            // upgrade E_USER_WARNING to ERROR if message starts with 'FATAL'
+            if (str_starts_with($errstr, 'FATAL ')) {
+                $error_type = 'Fatal error';
+                $this_log_suffix = '-error.log';
+            }
             break;
         case E_ERROR:
         case E_USER_ERROR:
@@ -90,7 +81,7 @@ function zen_fatal_error_handler()
 {
     $last_error = error_get_last();
 
-    if (!empty($last_error) && in_array($last_error['type'], [E_ERROR, E_USER_ERROR, E_PARSE])) {
+    if (!empty($last_error) && (in_array($last_error['type'], [E_ERROR, E_USER_ERROR, E_PARSE]) || ($last_error['type'] === E_USER_WARNING && str_starts_with($last_error['message'], 'FATAL')))) {
         $message = date('[d-M-Y H:i:s e]') . ' Request URI: ' . ($_SERVER['REQUEST_URI'] ?? 'not set') . ', IP address: ' . ($_SERVER['REMOTE_ADDR'] ?? 'not set') . PHP_EOL;
         $message_type = ($last_error['type'] == E_PARSE) ? 'Parse' : (($last_error['type'] == E_RECOVERABLE_ERROR) ? 'Catchable Fatal' : 'Fatal');
         $message .= "--> PHP $message_type error: {$last_error['message']} in {$last_error['file']} on line {$last_error['line']}.";

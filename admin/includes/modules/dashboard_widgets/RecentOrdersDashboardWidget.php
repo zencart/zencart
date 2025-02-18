@@ -11,7 +11,8 @@ if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;
 // return;
 
 // Configure settings
-// To override the $show_* or $attr_img_width values, see
+// To override the $includeAttributesInPopoverRows or $recentOrdersMaxRows 
+// values, see
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 $includeAttributesInPopoverRows = $includeAttributesInPopoverRows ?? true;
 $maxRows = $recentOrdersMaxRows ?? 25;

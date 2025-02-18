@@ -297,5 +297,5 @@ if (!empty($products_url) && $flag_show_product_info_url == 1) {
 
 <!--bof Form close-->
 <?= '</form>'; ?>
-<!--bof Form close-->
+<!--eof Form close-->
 </div>

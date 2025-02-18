@@ -7,7 +7,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions adapted from http://www.data-diggers.com/
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Sep 16 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2024 Oct 19 Modified in v2.1.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -626,7 +626,8 @@ class queryFactory extends base
                 return $this->prepare_input($value);
 
             default:
-                trigger_error("var-type undefined: $type ($value).", E_USER_ERROR);
+                trigger_error("FATAL ERROR: var-type undefined: $type ($value).", E_USER_WARNING);
+                exit();
         }
     }
 
@@ -730,7 +731,8 @@ class queryFactory extends base
                 break;
             }
         }
-        trigger_error('MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_ERROR);
+        trigger_error('FATAL MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_WARNING);
+        exit();
     }
 
     /**

@@ -3,7 +3,7 @@
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
 // Copyright (c) 2014-2024 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 4.5.0
+// Last updated: POSM 6.1.0
 //
 require 'includes/application_top.php';
 
@@ -145,7 +145,7 @@ function checkSubmit() {
 <!-- body_text //-->
     <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
-        <td class="pageHeading"><?= HEADING_TITLE . ' <span class="version">(v' . POSM_CURRENT_VERSION . ' &mdash; Last Updated: ' . POSM_CURRENT_UPDATE_DATE . ')</span>' ?></td>
+        <td class="pageHeading"><?= HEADING_TITLE ?></td>
       </tr>
 
       <tr>
