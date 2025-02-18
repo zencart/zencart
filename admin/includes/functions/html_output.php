@@ -206,6 +206,10 @@ $iconMap = [
     'fa-solid fa-circle fa-stack-1x txt-status-on',
     'fa-regular fa-circle fa-stack-1x txt-black'
   ],
+  'status-green-light' => [
+    'fa-solid fa-circle fa-stack-1x txt-status-on txt-light',
+    'fa-regular fa-circle fa-stack-1x txt-black'
+  ],
   'status-yellow' => [
     'fa-solid fa-circle fa-stack-1x txt-linked',
     'fa-regular fa-circle fa-stack-1x txt-black'
