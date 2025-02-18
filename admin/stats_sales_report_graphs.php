@@ -292,7 +292,7 @@ for ($i = 0; $i < $report->size; $i++) {
             <td class="dataTableContent text-right"><?php echo FILTER_VALUE ?></td>
           </tr>
           <?php
-          if (($sales_report_filter) == 0) {
+          if (empty($sales_report_filter)) {
             for ($i = 0; $i < $report->status_available_size; $i++) {
               $sales_report_filter .= "0";
             }
