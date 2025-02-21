@@ -107,13 +107,13 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     //dofsockTest('ipnpb.sandbox.paypal.com', 443);
     //doCurlTest('https://ipnpb.sandbox.paypal.com');
 
-    echo 'Connecting to PayPal Express/Pro Server ...<br>';
+    echo 'Connecting to PayPal Express/Pro NVP Server ...<br>';
     doCurlTest('https://api-3t.paypal.com/nvp');
 
-    echo 'Connecting to PayPal Express/Pro Sandbox ...<br>';
+    echo 'Connecting to PayPal Express/Pro NVP Sandbox ...<br>';
     doCurlTest('https://api-3t.sandbox.paypal.com/nvp');
 
-    echo 'Connecting to PayPal REST ...<br>';
+    echo 'Connecting to PayPal REST Live Endpoint...<br>';
     doCurlTest('https://api-m.paypal.com');
 
     echo 'Connecting to PayPal REST Sandbox ...<br>';
