@@ -68,6 +68,9 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     echo 'Connecting to USPS Test/Staging/Sandbox Server ...<br>';
     doCurlTest('https://stg-secure.shippingapis.com/ShippingApi.dll');
 
+    echo 'Connecting to USPS REST API Server ...<br>';
+    doCurlTest('https://apis.usps.com');
+
     echo 'Connecting to UPS (onlinetools.ups.com) ...<br>';
     doCurlTest('https://onlinetools.ups.com/api/rating/v1/Shop');
     //doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
@@ -109,6 +112,12 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
 
     echo 'Connecting to PayPal Express/Pro Sandbox ...<br>';
     doCurlTest('https://api-3t.sandbox.paypal.com/nvp');
+
+    echo 'Connecting to PayPal REST ...<br>';
+    doCurlTest('https://api-m.paypal.com');
+
+    echo 'Connecting to PayPal REST Sandbox ...<br>';
+    doCurlTest('https://api-m.sandbox.paypal.com');
 
     echo 'Connecting to PayPal Payflowpro Server ...<br>';
     doCurlTest('https://payflowpro.paypal.com/transaction');
