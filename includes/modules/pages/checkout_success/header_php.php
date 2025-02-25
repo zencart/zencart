@@ -61,7 +61,6 @@ if (!isset($_GET['action']) || $_GET['action'] !== 'confirm') {
     $additional_payment_messages = '';
     if (isset($_SESSION['payment_method_messages']) && $_SESSION['payment_method_messages'] !== '') {
         $additional_payment_messages = $_SESSION['payment_method_messages'];
-        unset($_SESSION['payment_method_messages']);
     }
 
     $statusArray = [];
