@@ -53,7 +53,7 @@ $editors_list['CKEDITOR'] = [
     'handler' => 'ckeditor.php',
     'special_needs' => '',
 ];
-if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tiny_mce')) {
+if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tinymce')) {
     $editors_list['TINYMCE'] = [
         'desc' => EDITOR_TINYMCE,
         'handler' => 'tinymce.php',
