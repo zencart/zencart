@@ -69,7 +69,7 @@ $editor_jquery_patch_src = file_exists($editor_jquery_patch_filename_path) ? $ed
 // Determine whether TinyMCE editor JS files are self-hosted. If yes, use it. If not, use CDN. But if not GPL then use TinyCloud CDN with API key.
 if (strtoupper(TINYMCE_EDITOR_API_KEY) === 'GPL' || empty(TINYMCE_EDITOR_API_KEY)) {
     $tinymceCDNversion = $tinymceFallbackCDNversion;
-    if (function_exists('zenGetLatestTinyMceReleaseTag') && $editor_latest_tag = zenGetLatestTinyMceReleaseTag()) {
+    if (function_exists('zenDoCurlRequest') && $editor_latest_tag = zenGetLatestTinyMceReleaseTag()) {
         $tinymceCDNversion = $editor_latest_tag;
     }
     $editor_js_filename_url = $editor_assets_url . 'tinymce.min.js';
