@@ -942,7 +942,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $type_handler = zen_get_handler_from_type($product['products_type']);
               $products_wholesale_indicator = ($wholesale_pricing_enabled === true && $product['products_price_w'] !== '0') ? $wholesale_pricing_indicator : '';
               ?>
-              <tr class="product-listing-row" data-pid="<?= $product['products_id'] ?>">
+              <tr class="product-listing-row" data-pid="<?= $product['products_id'] ?>" data-cpath="<?= $cPath ?>" data-ptype="<?= $product['products_type'] ?>">
                 <td class="text-right"><?= $product['products_id'] ?></td>
                 <td class="dataTableButtonCell"><a href="<?= zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']) ?>" rel="noopener" target="_blank">
                         <?= zen_icon('popup', BOX_HEADING_CATALOG, '', hidden: true) ?>
