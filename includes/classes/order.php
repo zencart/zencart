@@ -252,7 +252,7 @@ class order extends base
             'telephone' => $order->fields['customers_telephone'],
             'email_address' => $order->fields['customers_email_address'],
         ];
-        $this->customer['zone_id'] = $this->getCountryZoneId((int)$this->customer['country'], $this->customer['state']);
+        $this->customer['zone_id'] = $this->getCountryZoneId((int)$this->customer['country']['id'], $this->customer['state']);
 
         $this->delivery = [
             'name' => $order->fields['delivery_name'],
@@ -283,7 +283,7 @@ class order extends base
             'country' => $this->getCountryInfo($order->fields['billing_country']),
             'format_id' => $order->fields['billing_address_format_id'],
         ];
-        $this->billing['zone_id'] = $this->getCountryZoneId((int)$this->billing['country'], $this->billing['state']);
+        $this->billing['zone_id'] = $this->getCountryZoneId((int)$this->billing['country']['id'], $this->billing['state']);
 
         $index = 0;
         $orders_products_query = "SELECT *

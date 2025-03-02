@@ -14,7 +14,7 @@ if (isset($_GET['pID'])) {
 }
 
 $redirect_page = (isset($_GET['page'])) ? '&page=' . $_GET['page'] : '';
-$redirect_search = (isset($_POST['search'])) ? '&search=' . $_POST['search'] : '';
+$redirect_search = (isset($_POST['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '';
 
 if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
     $action = 'new_product';
