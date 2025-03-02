@@ -60,6 +60,8 @@ class Customer extends base
                     ];
                 }
             }
+            global $zco_notifier;
+            $zco_notifier->notify('NOTIFY_GET_CUSTOMER_WHOLESALE_INFO', $wholesale->fields ?? [], $wholesaleInfo);
         }
         return $wholesaleInfo;
     }
