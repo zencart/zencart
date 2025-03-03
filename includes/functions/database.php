@@ -49,26 +49,29 @@ function zen_db_output(string $string)
  * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
  *
  */
-function zen_db_prepare_input(array|string|null $string, bool $trimspace = true): array|string|null
+function zen_db_prepare_input(array|string|int|null $input, bool $trimspace = true): array|string|int|null
 {
-
-    if (!IS_ADMIN_FLAG && is_string($string)) {
-        $string = zen_sanitize_string($string);
+    if (is_int($input)) {
+        return $input;
     }
-    if (is_string($string)) {
+
+    if (!IS_ADMIN_FLAG && is_string($input)) {
+        $input = zen_sanitize_string($input);
+    }
+    if (is_string($input)) {
         if ($trimspace === true) {
-            return trim(stripslashes($string));
+            return trim(stripslashes($input));
         }
-        return stripslashes($string);
+        return stripslashes($input);
     }
 
-    if (is_array($string)) {
-        foreach ($string as $key => $value) {
-            $string[$key] = zen_db_prepare_input($value);
+    if (is_array($input)) {
+        foreach ($input as $key => $value) {
+            $input[$key] = zen_db_prepare_input($value);
         }
     }
 
-    return $string;
+    return $input;
 }
 
 
