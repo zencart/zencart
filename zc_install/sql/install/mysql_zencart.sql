@@ -1269,7 +1269,7 @@ CREATE TABLE orders_products_attributes (
   orders_products_attributes_id int(11) NOT NULL auto_increment,
   orders_id int(11) NOT NULL default '0',
   orders_products_id int(11) NOT NULL default '0',
-  products_options varchar(32) NOT NULL default '',
+  products_options varchar(191) NOT NULL default '',
   products_options_values text NOT NULL,
   options_values_price decimal(15,4) NOT NULL default '0.0000',
   price_prefix char(1) NOT NULL default '',
@@ -1859,7 +1859,7 @@ DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
   products_options_id int(11) NOT NULL default '0',
   language_id int(11) NOT NULL default '1',
-  products_options_name varchar(32) NOT NULL default '',
+  products_options_name varchar(191) NOT NULL default '',
   products_options_sort_order int(11) NOT NULL default '0',
   products_options_type int(5) NOT NULL default '0',
   products_options_length smallint(2) NOT NULL default '32',
@@ -1898,7 +1898,7 @@ DROP TABLE IF EXISTS products_options_values;
 CREATE TABLE products_options_values (
   products_options_values_id int(11) NOT NULL default '0',
   language_id int(11) NOT NULL default '1',
-  products_options_values_name varchar(64) NOT NULL default '',
+  products_options_values_name varchar(191) NOT NULL default '',
   products_options_values_sort_order int(11) NOT NULL default '0',
   PRIMARY KEY (products_options_values_id,language_id),
   KEY idx_products_options_values_name_zen (products_options_values_name),
