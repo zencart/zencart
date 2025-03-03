@@ -42,6 +42,9 @@ CREATE TABLE customer_password_reset_tokens (
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY  (token, customer_id)
 );
+ALTER TABLE orders_products_attributes MODIFY products_options varchar(191) NOT NULL default '';
+ALTER TABLE products_options MODIFY products_options_name varchar(191) NOT NULL default '';
+ALTER TABLE products_options_values MODIFY products_options_values_name varchar(191) NOT NULL default '';
 
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
