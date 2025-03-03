@@ -882,10 +882,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $products_query_raw .= " FROM " . TABLE_PRODUCTS . " p";
             $products_query_raw .= $extra_from;
 
-            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
+            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")";
             $products_query_raw .= $extra_joins;
 
-            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
+            $where = " WHERE 1 ";
             $where .= $extra_ands;
 
             if ($search_result && $action !== 'edit_category') {
