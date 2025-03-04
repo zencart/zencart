@@ -25,6 +25,8 @@ class Product
     /** @deprecated use !exists()  */
     public bool $EOF = true;
 
+    public bool $has_description = false; 
+
     public function __construct(protected ?int $product_id = null)
     {
         $this->initLanguages();
@@ -35,6 +37,7 @@ class Product
             // set some backward compatibility properties
             $this->fields = $this->data;
             $this->EOF = empty($this->data);
+            $this->has_description = (!empty($this->data['products_name'] ?? '') || $this->hasProductDescription($this->product_id)); 
         }
     }
 
@@ -99,7 +102,12 @@ class Product
 
     public function exists(): bool
     {
-        return !empty($this->product_id) && !empty($this->data);
+        if (!empty($this->product_id)) { 
+            if (!empty($this->data['products_name']) || $this->has_description) {
+                return true; 
+            }
+        }
+        return false;
     }
     public function isValid(): bool
     {
@@ -179,6 +187,15 @@ class Product
         $sql = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$this->product_id;
         $results = $db->Execute($sql, 1);
         return !$results->EOF;
+    }
+
+    public function hasProductDescription(int $product_id)
+    {
+        // Remember constructor has not yet completed running.  No $this.
+        global $db;
+        $sql = "SELECT count(products_id) AS found FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE products_id = " . (int)$product_id . " AND language_id = " . (int)$_SESSION['languages_id'];
+        $result = $db->Execute($sql, 1);
+        return !empty($result->fields['found']);
     }
 
     public function hasPriceSpecials()
