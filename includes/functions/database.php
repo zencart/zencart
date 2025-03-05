@@ -49,12 +49,8 @@ function zen_db_output(string $string)
  * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
  *
  */
-function zen_db_prepare_input(array|string|int|null $input, bool $trimspace = true): array|string|int|null
+function zen_db_prepare_input(array|string|int|float|null $input, bool $trimspace = true): array|string|int|float|null
 {
-    if (is_int($input)) {
-        return $input;
-    }
-
     if (!IS_ADMIN_FLAG && is_string($input)) {
         $input = zen_sanitize_string($input);
     }
@@ -73,7 +69,6 @@ function zen_db_prepare_input(array|string|int|null $input, bool $trimspace = tr
 
     return $input;
 }
-
 
 /**
  * Performs an INSERT or UPDATE based on a supplied array of field data.
