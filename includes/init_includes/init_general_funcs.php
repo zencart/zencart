@@ -29,6 +29,7 @@ require DIR_WS_FUNCTIONS . 'functions_customers.php';
 require DIR_WS_FUNCTIONS . 'functions_customer_groups.php';
 require DIR_WS_FUNCTIONS . 'functions_lookups.php';
 require DIR_WS_FUNCTIONS . 'functions_urls.php';
+require DIR_WS_FUNCTIONS . 'functions_communications.php';
 require DIR_WS_FUNCTIONS . 'html_output.php';
 require DIR_WS_FUNCTIONS . 'functions_email.php';
 require DIR_WS_FUNCTIONS . 'functions_ezpages.php';
