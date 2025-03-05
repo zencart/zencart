@@ -123,12 +123,13 @@ class zcPassword extends base
   /**
    * Update a logged in Customer password.
    * e.g. when customer wants to change password
+   * Also used with password_reset page when reset_token links to a customer_id
    *
    * @param string $plain
-   * @param integer $customerId
+   * @param ?integer $customerId
    * @return string
    */
-  public function updateLoggedInCustomerPassword($plain, $customerId)
+  public function updateLoggedInCustomerPassword(string $plain, ?int $customerId): string
   {
     $this->confirmDbSchema('customer');
     global $db;
@@ -137,7 +138,7 @@ class zcPassword extends base
               SET customers_password = :password:
               WHERE customers_id = :customersId:";
 
-    $sql = $db->bindVars($sql, ':customersId:', $_SESSION ['customer_id'], 'integer');
+    $sql = $db->bindVars($sql, ':customersId:', $customerId ?? $_SESSION['customer_id'] ?? 0, 'integer');
     $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
     $db->Execute($sql);
     return $updatedPassword;

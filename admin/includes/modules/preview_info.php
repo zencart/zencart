@@ -19,16 +19,15 @@ if (!empty($_POST)) {
   $products_description = $_POST['products_description'];
   $products_url = $_POST['products_url'];
   foreach ($products_url as &$url){ // remove protocol
-      $url = str_replace(array('http://', 'https://'), '', $url);
+      $url = str_replace(['http://', 'https://'], '', $url);
   }
   unset ($url);
 } else {
   $product = $db->Execute("SELECT p.*,
                                   pd.language_id, pd.products_name, pd.products_description, pd.products_url
-                           FROM " . TABLE_PRODUCTS . " p,
-                                " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                           WHERE p.products_id = pd.products_id
-                           AND p.products_id = " . (int)$_GET['pID']);
+                           FROM " . TABLE_PRODUCTS . " p
+                           LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id)
+                           WHERE p.products_id = " . (int)$_GET['pID']);
 
   $pInfo = new objectInfo($product->fields);
   $products_image_name = $pInfo->products_image;
@@ -45,7 +44,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
 <div class="container-fluid">
     <?php
     if (!isset($_GET['read']) || ($_GET['read'] !== 'only')) {
-      echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
+      echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : ''), 'post', 'enctype="multipart/form-data"');
     }
 
     for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -139,7 +138,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     }
     ?>
     <div class="row text-right">
-      <a href="<?php echo zen_href_link($back_url, $back_url_params . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+      <a href="<?php echo zen_href_link($back_url, $back_url_params . (!empty($_GET['search']) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
     </div>
     <?php
   } else {
@@ -148,7 +147,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         <?php
         /* Re-Post all POST'ed variables */
         foreach ($_POST as $key => $value) {
-          if (!is_array($_POST[$key])) {
+          if (!is_array($_POST[$key]) && $key !== 'search') {
             echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
           }
         }
@@ -159,7 +158,10 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           echo zen_draw_hidden_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_url[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
         }
         echo zen_draw_hidden_field('products_image', stripslashes($products_image_name));
-        echo ( (isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
+
+        if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+            echo zen_draw_hidden_field('search', $_GET['search']);
+        }
       ?>
         <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
       <?php
@@ -173,7 +175,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         <?php
       }
       ?>
-      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
     </div>
       <?php
   }

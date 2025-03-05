@@ -60,7 +60,7 @@ foreach ($oos_messages as $oos_message) {
 $check_select = false;
 $check_radio = false;
 if (POSM_OPTIONS_TYPES_TO_MANAGE === '') {
-    trigger_error("Products' Options' Stock Manager -- Option Types to Manage cannot be empty.", E_USER_ERROR);
+    trigger_error("FATAL ERROR: Products' Options' Stock Manager -- Option Types to Manage cannot be empty.", E_USER_WARNING);
     die();
 }
 $the_list = explode(',', POSM_OPTIONS_TYPES_TO_MANAGE);
@@ -107,8 +107,8 @@ $option_check = $db->Execute(
        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS . " po
       WHERE pa.products_id = " . (int)$_GET['products_id'] . "
         AND pa.options_id = po.products_options_id
-        AND po.products_options_type IN (" . POSM_OPTIONS_TYPES_TO_MANAGE . ")" . 
-        ((POSM_OPTIONAL_OPTION_NAMES_LIST === '') ? '' : " AND pa.options_id NOT IN (" . POSM_OPTIONAL_OPTION_NAMES_LIST . ")") 
+        AND po.products_options_type IN (" . POSM_OPTIONS_TYPES_TO_MANAGE . ")" .
+        ((POSM_OPTIONAL_OPTION_NAMES_LIST === '') ? '' : " AND pa.options_id NOT IN (" . POSM_OPTIONAL_OPTION_NAMES_LIST . ")")
 );
 $is_single_option = ($option_check->RecordCount() < 2);
 ?>
@@ -116,9 +116,9 @@ let swatchOptions = {};
 <?php
 foreach ($option_check as $next_option) {
     $option_info = $db->Execute(
-        "SELECT products_options_id, products_options_images_per_row, products_options_images_style 
+        "SELECT products_options_id, products_options_images_per_row, products_options_images_style
            FROM " . TABLE_PRODUCTS_OPTIONS . "
-          WHERE products_options_id = " . $next_option['options_id'] . " 
+          WHERE products_options_id = " . $next_option['options_id'] . "
           LIMIT 1"
     );
 ?>

@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Feb 10 Modified in v1.5.8a $
+ * @version $Id:  Modified in v2.2.0 $
  */
 zen_define_default('DIR_WS_EDITORS', 'editors/');
 
@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * List of potential editors apps
  *
- * CONSTANTS are used for language-specific display names, and are defined in /YOUR_ADMIN_FOLDER/includes/languages/extra_definitions/editor_MYEDITOR.php
+ * CONSTANTS are used for language-specific display names, and are defined in /YOUR_ADMIN_FOLDER/includes/languages/extra_definitions/lang.editor_MYEDITOR.php
  * - You'll define the language-specific description of MYEDITOR in the constant EDITOR_MYEDITOR:
  * <?php
  * define('EDITOR_MYEDITOR', 'A description of myeditor.');
@@ -33,13 +33,11 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * NOTE: THERE SHOULD BE NO NEED TO EDIT ANYTHING BELOW THIS LINE:
  */
-if (!isset($editors_list)) {
-    $editors_list = [];
-}
+$editors_list = $editors_list ?? [];
 
 /**
- * Note the key associated with the plain-text editor.  It'll
- * be needed if an unsupported or misconfigured HTML editor is the
+ * Note the key associated with the plain-text editor, added below as 'NONE'.
+ * It'll be needed if an unsupported or misconfigured HTML editor is the
  * current editor-of-choice.
  */
 $plain_editor_key = count($editors_list) + 1;
@@ -47,13 +45,15 @@ $editors_list['NONE'] = [
     'desc' => EDITOR_NONE,
     'handler' => '',
     'special_needs' => '',
-];                 // Plain-text editor
+];
+
+// Add supported known editors:
 $editors_list['CKEDITOR'] = [
     'desc' => EDITOR_CKEDITOR,
     'handler' => 'ckeditor.php',
     'special_needs' => '',
 ];
-if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tiny_mce')) {
+if (is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS . 'tinymce')) {
     $editors_list['TINYMCE'] = [
         'desc' => EDITOR_TINYMCE,
         'handler' => 'tinymce.php',
@@ -71,7 +71,7 @@ foreach ($editors_list as $key => $value) {
     $editors_pulldown[] = [
         'id' => $i,
         'text' => $value['desc'],
-        'key' => $key
+        'key' => $key,
     ];
 }
 

@@ -241,7 +241,7 @@ for ($i = 0; $i < $report->size; $i++) {
                 <?php
               }
               ?>
-            <tbody>
+            </tbody>
             <tfoot>
                 <?php
                 if (strlen($report->previous . " " . $report->next) > 1) {
@@ -292,7 +292,7 @@ for ($i = 0; $i < $report->size; $i++) {
             <td class="dataTableContent text-right"><?php echo FILTER_VALUE ?></td>
           </tr>
           <?php
-          if (($sales_report_filter) == 0) {
+          if (empty($sales_report_filter)) {
             for ($i = 0; $i < $report->status_available_size; $i++) {
               $sales_report_filter .= "0";
             }
@@ -300,7 +300,7 @@ for ($i = 0; $i < $report->size; $i++) {
           for ($i = 0; $i < $report->status_available_size; $i++) {
             ?>
             <tr>
-              <td class="dataTableContent text-left"><?php echo $report->status_available[$i]['text'] ?></a></td>
+              <td class="dataTableContent text-left"><?php echo $report->status_available[$i]['text'] ?></td>
               <?php
               if (substr($sales_report_filter, $i, 1) == "0") {
                 $tmp = substr($sales_report_filter, 0, $i) . "1" . substr($sales_report_filter, $i + 1, $report->status_available_size - ($i + 1));

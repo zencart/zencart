@@ -47,6 +47,7 @@ define('TABLE_CUSTOMERS_BASKET_ATTRIBUTES', DB_PREFIX . 'customers_basket_attrib
 define('TABLE_CUSTOMERS_INFO', DB_PREFIX . 'customers_info');
 define('TABLE_CUSTOMER_GROUPS', DB_PREFIX . 'customer_groups');
 define('TABLE_CUSTOMERS_TO_GROUPS', DB_PREFIX . 'customers_to_groups');
+define('TABLE_CUSTOMER_PASSWORD_RESET_TOKENS', DB_PREFIX . 'customer_password_reset_tokens');
 define('TABLE_DB_CACHE', DB_PREFIX . 'db_cache');
 define('TABLE_EMAIL_ARCHIVE', DB_PREFIX . 'email_archive');
 define('TABLE_EZPAGES', DB_PREFIX . 'ezpages');

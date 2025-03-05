@@ -14,7 +14,7 @@ if (isset($_GET['pID'])) {
 }
 
 $redirect_page = (isset($_GET['page'])) ? '&page=' . $_GET['page'] : '';
-$redirect_search = (isset($_POST['search'])) ? '&search=' . $_POST['search'] : '';
+$redirect_search = (isset($_POST['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '';
 
 if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
     $action = 'new_product';
@@ -138,7 +138,12 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
           'products_url' => zen_db_prepare_input($_POST['products_url'][$language_id])
         ];
 
-        if ($action === 'insert_product') {
+        // For database consistency, check whether a record exists for this language already; if not, we will create it even if we're in update mode
+        $sql = "SELECT count(products_id) AS found FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE products_id = " . (int)$products_id . " AND language_id = " . (int)$language_id;
+        $result = $db->Execute($sql, 1);
+        $record_exists = !empty($result->fields['found']);
+
+        if ($action === 'insert_product' || !$record_exists) {
             $insert_sql_data = [
                 'products_id' => (int)$products_id,
                 'language_id' => (int)$language_id,
