@@ -40,15 +40,23 @@ let myTinyMceConfig = {
 
     //menubar: 'file edit view insert format tools table help',
 
+    custom_undo_redo_levels : 10,
+    extended_valid_elements : "hr[class|width|size|noshade]",
+    // file_browser_callback : "fileBrowserCallBack",
+    file_picker_types: 'image media file',
+    // images_file_types: 'jpg,svg,webp',
+    paste_use_dialog : false,
+    plugin_insertdate_dateFormat : "%Y-%m-%d",
+    plugin_insertdate_timeFormat : "%H:%M:%S",
     relative_urls : false,
     remove_script_host : true,
 
-    plugin_insertdate_dateFormat : "%Y-%m-%d",
-    plugin_insertdate_timeFormat : "%H:%M:%S",
-    extended_valid_elements : "hr[class|width|size|noshade]",
-    file_browser_callback : "fileBrowserCallBack",
-    custom_undo_redo_levels : 10,
-    paste_use_dialog : false,
+    // For multilanguage support in spellcheck, activate a paid account and fill in content_langs below:
+    // content_langs: [
+    //     { title: 'English (United States)', code: 'en_US' },
+    //     { title: 'French', code: 'fr' },
+    //     { title: 'Spanish', code: 'es' },
+    // ],
 
     // premium
     mediaembed_max_width: 650,

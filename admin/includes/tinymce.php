@@ -56,6 +56,9 @@ if (!defined('TINYMCE_EDITOR_API_KEY')) {
     define('TINYMCE_EDITOR_API_KEY', 'GPL');
 }
 
+// Language Support Setup
+$lng ??= new language;
+
 // Some of these are output in the js config:
 $editor_doc_base_url = (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : DIR_WS_CATALOG);
 $editor_assets_url = $editor_doc_base_url . DIR_WS_EDITORS . 'tinymce/';
@@ -119,6 +122,17 @@ document.addEventListener('focusin', (e) => {
             content_css: "<?= $editor_assets_url . 'custom.css' ?>",
 
         }
+        let languagesConfig = {
+            language: '<?= zen_output_string_protected($_SESSION['languages_code']) ?>',
+            content_langs: [
+
+            <?php
+            foreach ($lng->get_languages_by_code() as $lang) {
+                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($lang['code']) . "' },\n";
+            }
+            ?>
+            ],
+        }
         // In case the override/custom config.js doesn't load or is not present, fallback to empty object.
         let customConfig = {};
         if (typeof myTinyMceConfig !== 'undefined') {
@@ -132,7 +146,7 @@ document.addEventListener('focusin', (e) => {
         };
 
         // merge all configs in order
-        return {...editorConfig, ...directoriesConfig, ...licenseFree, ...licenseKeyAdmin, ...customConfig, ...configOverrides};
+        return {...editorConfig, ...directoriesConfig, ...licenseFree, ...licenseKeyAdmin, ...languagesConfig, ...customConfig, ...configOverrides};
     }
 </script>
 
