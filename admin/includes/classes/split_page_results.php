@@ -336,7 +336,7 @@ class splitPageResults
                     }
                 }
 
-                if (defined('SID') && !empty(SID)) $display_links .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
+                if (!empty(zen_session_id())) $display_links .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
 
                 $display_links .= '</form>';
             }
