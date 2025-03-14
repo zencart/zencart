@@ -7,6 +7,9 @@
  */
 require('includes/application_top.php');
 
+    use Zencart\FileSystem\FileSystem;
+    use Zencart\ResourceLoaders\ModuleFinder;
+
 // unset variable which is sometimes tainted by bad plugins like magneticOne tools
 if (isset($module)) {
   unset($module);
@@ -506,11 +509,19 @@ if (!empty($action) && $order_exists === true) {
         if ($order->info['payment_module_code'] && $order->info['payment_module_code'] !== PAYMENT_MODULE_GV) {
           $messageStack->reset();
           $payment_module = DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php';
+          global $installedPlugins;
+            $moduleFinder = new ModuleFinder('payment', new Filesystem());
+            $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
+            $payment = $order->info['payment_module_code'] . '.php';
+            if (array_key_exists($payment, $modules_found) && file_exists(DIR_FS_CATALOG . $modules_found[$payment] . $payment)) {
+                $payment_module = DIR_FS_CATALOG . $modules_found[$payment] . $payment;
+            }
+
           if (!file_exists($payment_module)) {
               $messageStack->add(sprintf(WARNING_PAYMENT_MODULE_DOESNT_EXIST, $order->info['payment_module_code']), 'warning');
           } else {
             require $payment_module;
-            zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
+            $languageLoader->loadModuleLanguageFile($payment, 'payment');
             $module = new $order->info['payment_module_code']();
             if ((is_object($module) && method_exists($module, 'admin_notification')) && !$module->enabled) {
                 $messageStack->add(sprintf(WARNING_PAYMENT_MODULE_NOTIFICATIONS_DISABLED, $order->info['payment_module_code']), 'warning');
