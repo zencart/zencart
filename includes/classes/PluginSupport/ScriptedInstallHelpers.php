@@ -72,7 +72,7 @@ trait ScriptedInstallHelpers
         $insert_id = $this->dbConn->insert_ID();
 
         $sql_data_array[] = ['fieldName' => 'configuration_key_id', 'value' => $insert_id, 'type' => 'integer'];
-        zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($sql_data_array, true), 'warning');
+        zen_record_admin_activity('Added configuration record: ' . print_r($sql_data_array, true), 'warning');
 
         return $insert_id;
     }
