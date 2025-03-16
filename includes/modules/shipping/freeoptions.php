@@ -76,14 +76,24 @@ class freeoptions extends ZenShipping
     protected function checkForFreeOptions()
     {
         global $order;
+        
+        // -----
+        // Convert each of the min/max configured values into their floating-point equivalent.
+        //
+        $total_min = (float)MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN;
+        $total_max = (float)MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX;
+        $weight_min = (float)MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN;
+        $weight_max = (float)MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX;
+        $items_min = (float)MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN;
+        $items_max = (float)MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX;
 
         // -----
         // First, see if any of the 3 options for free shipping are configured.  If none are configured, there's no quote
         // to be returned.
         //
-        $freeoptions_total = (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX !== '');
-        $freeoptions_weight = (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX !== '');
-        $freeoptions_items = (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '');
+        $freeoptions_total = ($total_min != 0 || $total_max != 0);
+        $freeoptions_weight = ($weight_min != 0 || $weight_max != 0);
+        $freeoptions_items = ($items_min != 0 || $items_max != 0);
         $this->debug[] = [$freeoptions_total, $freeoptions_weight, $freeoptions_items];
 
         $this->enabled = ($freeoptions_total === true || $freeoptions_weight === true || $freeoptions_items === true);
@@ -96,12 +106,12 @@ class freeoptions extends ZenShipping
         //
         if ($freeoptions_total === true) {
             $cart_total = $_SESSION['cart']->show_total();
-            if (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '' && MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX !== '') {
-                $freeoptions_total = ($cart_total >= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN && $cart_total <= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX);
-            } elseif (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '') {
-                $freeoptions_total = ($cart_total >= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN);
+            if ($total_min != 0 && $total_max != 0) {
+                $freeoptions_total = ($cart_total >= $total_min && $cart_total <= $total_max);
+            } elseif ($total_min != 0) {
+                $freeoptions_total = ($cart_total >= $total_min);
             } else {
-                $freeoptions_total = ($cart_total <= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX);
+                $freeoptions_total = ($cart_total <= $total_max);
             }
             $this->debug[] = ['total', $cart_total, $freeoptions_total, MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN, MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX];
         }
@@ -111,12 +121,12 @@ class freeoptions extends ZenShipping
         //
         if ($freeoptions_weight === true) {
             $order_weight = round($_SESSION['cart']->show_weight(), 9);
-            if (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '' && MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX !== '') {
-                $freeoptions_weight = ($order_weight >= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN && $order_weight <= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX);
-            } elseif (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '') {
-                $freeoptions_weight = ($order_weight >= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN);
+            if ($weight_min != 0 && $weight_max != 0) {
+                $freeoptions_weight = ($order_weight >= $weight_min && $order_weight <= $weight_max);
+            } elseif ($weight_min != 0) {
+                $freeoptions_weight = ($order_weight >= $weight_min);
             } else {
-                $freeoptions_weight = ($order_weight <= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX);
+                $freeoptions_weight = ($order_weight <= $weight_max);
             }
             $this->debug[] = ['weight', $order_weight, $freeoptions_weight, MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN, MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX];
         }
@@ -126,12 +136,12 @@ class freeoptions extends ZenShipping
         //
         if ($freeoptions_items === true) {
             $num_items = $_SESSION['cart']->count_contents();
-            if (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' && MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '') {
-                $freeoptions_items = ($num_items >= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN && $num_items <= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX);
-            } elseif (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '') {
-                $freeoptions_items = ($num_items >= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN);
+            if ($items_min != 0 && $items_max != 0) {
+                $freeoptions_items = ($num_items >= $items_min && $num_items <= $items_max);
+            } elseif ($items_min != 0) {
+                $freeoptions_items = ($num_items >= $items_min);
             } else {
-                $freeoptions_items = ($num_items <= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX);
+                $freeoptions_items = ($num_items <= $items_max);
             }
             $this->debug[] = ['items', $num_items, $freeoptions_items, MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN, MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX];
         }
