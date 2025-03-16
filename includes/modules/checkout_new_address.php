@@ -29,7 +29,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'submit')) {
     if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['street_address'])) {
         $process = true;
         if (ACCOUNT_GENDER === 'true') {
-            $gender = zen_db_prepare_input($_POST['gender']);
+            $gender = zen_db_prepare_input($_POST['gender'] ?? '');
         }
         if (ACCOUNT_COMPANY === 'true') {
             $company = zen_db_prepare_input($_POST['company']);
