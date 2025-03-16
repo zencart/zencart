@@ -34,7 +34,7 @@ if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
 //$timeoutAfter = 15;
 //$mouseDebounce = 10;
 ?>
-<style>
+<style title="jAlert">
 .jAlert {font-size: 1.5rem;}
 .ja_btn {font-size: 1.5rem; padding: 15px !important;}
 </style>
