@@ -61,9 +61,7 @@
       $radio_buttons = 0;
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
       // bof: field set
-// allows FedEx to work comment comment out Standard and Uncomment FedEx
-//      if ($quotes[$i]['id'] != '' || $quotes[$i]['module'] != '') { // FedEx
-      if (!empty($quotes[$i]['module'])) { // Standard
+      if (!empty($quotes[$i]['module'])) { 
 ?>
 <fieldset>
 <legend><?php echo $quotes[$i]['module']; ?>&nbsp;<?php if (isset($quotes[$i]['icon']) && !empty($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></legend>
@@ -80,11 +78,6 @@
             if (isset($_SESSION['shipping']) && isset($_SESSION['shipping']['id'])) {
               $checked = ($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']);
             }
-            if ( ($checked == true) || ($n == 1 && $n2 == 1) ) {
-              //echo '      <div id="defaultSelected" class="moduleRowSelected">' . "\n";
-            //} else {
-              //echo '      <div class="moduleRow">' . "\n";
-            }
 ?>
 <?php
             if ( ($n > 1) || ($n2 > 1) ) {
@@ -100,7 +93,6 @@
 
 <?php echo zen_draw_radio_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'], $checked, 'id="ship-'.$quotes[$i]['id'] . '-' . str_replace(' ', '-', $quotes[$i]['methods'][$j]['id']) .'"'); ?>
 <label for="ship-<?php echo $quotes[$i]['id'] . '-' . str_replace(' ', '-', $quotes[$i]['methods'][$j]['id']); ?>" class="checkboxLabel"><?php echo $quotes[$i]['methods'][$j]['title']; ?></label>
-<!--</div>-->
 <br class="clearBoth">
 <?php
             $radio_buttons++;
