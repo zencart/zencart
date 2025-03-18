@@ -1,7 +1,7 @@
 <?php
 // -----
 // Part of the "Product Options Stock" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2014-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2014-2025 Vinos de Frutas Tropicales
 //
 // Last Updated:  POSM v6.1.0
 //
@@ -1080,7 +1080,7 @@ class products_options_stock_observer extends base
               LIMIT 1"
         );
 
-        if ($pos_record !== false) {
+        if ($pos_record !== false && !$pos_record->EOF) {
             $available_qty = $pos_record->fields['products_quantity'];
         } else {
             $available_qty = $product->fields['products_quantity'] ?? 0;
