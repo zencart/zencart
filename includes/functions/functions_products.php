@@ -105,17 +105,22 @@ function zen_set_disabled_upcoming_status($products_id, $status): void
 
 /**
  * Enable all disabled products whose date_available is prior to the specified date
- * @param int $datetime optional timestamp
+ *
+ * @param int|null $activationDateTime optional timestamp
+ * @param bool $useMidnight true=all products for the day; false=exact timestamp
+ * @param bool $outputMessagesToCommandLine will output a status report, useful in command-line/cron mode
  */
-function zen_enable_disabled_upcoming($datetime = null): void
+function zen_enable_disabled_upcoming(?int $activationDateTime = null, bool $useMidnight = true, bool $outputMessagesToCommandLine = false): void
 {
     global $db;
 
-    if (empty($datetime)) {
-        $datetime = time();
+    if (empty($activationDateTime)) {
+        $activationDateTime = time();
     }
 
-    $zc_disabled_upcoming_date = date('Ymd', $datetime);
+    $formatSpecificityString = $useMidnight ? 'Ymd' : 'YmdHis';
+
+    $zc_disabled_upcoming_date = date($formatSpecificityString, $activationDateTime);
 
     $sql = "SELECT products_id
             FROM " . TABLE_PRODUCTS . "
@@ -126,9 +131,19 @@ function zen_enable_disabled_upcoming($datetime = null): void
             ";
 
     $results = $db->Execute($sql);
+    $count = $results->count();
 
+    if ($outputMessagesToCommandLine) {
+        echo "$count eligible products found.";
+    }
     foreach ($results as $result) {
+        if ($outputMessagesToCommandLine) {
+            echo "\nEnabling product ID: " . $result['products_id'];
+        }
         zen_set_disabled_upcoming_status($result['products_id'], 1);
+    }
+    if ($outputMessagesToCommandLine) {
+        echo "\n--\n$count product activation queries submitted.\n";
     }
 }
 
