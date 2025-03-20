@@ -76,7 +76,7 @@ require $template->get_template_dir('html_header_css_loader.php', DIR_WS_TEMPLAT
 /** CDN for jQuery core **/
 ?>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
+<script title="jQuery check - template">window.jQuery || document.write(unescape('%3Cscript src="<?php echo $template->get_template_dir('.js',DIR_WS_TEMPLATE, $current_page_base,'jscript'); ?>/jquery.min.js"%3E%3C/script%3E'));</script>
 
 <?php
 $zco_notifier->notify('NOTIFY_HTML_HEAD_JS_BEGIN', $current_page_base);
@@ -91,4 +91,3 @@ $zco_notifier->notify('NOTIFY_HTML_HEAD_END', $current_page_base);
 
 </head>
 <?php // NOTE: Blank line following is intended: ?>
-

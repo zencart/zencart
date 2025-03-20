@@ -17,7 +17,7 @@
 //       the 'select' tag itself must include the 'required' attribute.
 //
 ?>
-<script>
+<script title="sidebox_select">
 jQuery(document).ready(function() {
 <?php
     // -----
