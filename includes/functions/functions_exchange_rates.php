@@ -105,7 +105,7 @@ function quote_ecb_currency(string $currencyCode = '', string $base = DEFAULT_CU
     if (empty($XMLContent)) {
         $XMLContent = @file($url);
         if (empty($XMLContent)) {
-            $XMLContent = doCurlCurrencyRequest('GET', $url);
+            $XMLContent = zenDoCurlRequest($url, 'GET');
             $XMLContent = explode("\n", $XMLContent);
         }
     }
@@ -145,7 +145,7 @@ function quote_boc_currency(string $currencyCode = '', string $base = DEFAULT_CU
     static $BOCdata = [];
 
     if (empty($BOCdata)) {
-        $result = doCurlCurrencyRequest('GET', $url);
+        $result = zenDoCurlRequest($url, 'GET');
         if (empty($result)) {
             return false;
         }
@@ -181,43 +181,5 @@ function quote_boc_currency(string $currencyCode = '', string $base = DEFAULT_CU
 
 function doCurlCurrencyRequest($method, $url, $vars = ''): string
 {
-
-    //echo '-----------------<br>';
-    //echo 'URL: ' . $url . ' VARS: ' . $vars . '<br>';
-    $base_UA_host = defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$url);
-    curl_setopt($ch, CURLOPT_VERBOSE, 0);
-    curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_USERAGENT, empty($_SERVER['HTTP_USER_AGENT']) ? $base_UA_host . DIR_WS_CATALOG : $_SERVER['HTTP_USER_AGENT']);
-    curl_setopt($ch, CURLOPT_REFERER, $base_UA_host . DIR_WS_CATALOG);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    if (strtoupper($method) == 'POST' && $vars != '') {
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $vars);
-    }
-    if (CURL_PROXY_REQUIRED == 'True') {
-        $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
-        curl_setopt ($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
-        curl_setopt ($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-        curl_setopt ($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
-    }
-    $data = curl_exec($ch);
-    $error = curl_error($ch);
-    //$info=curl_getinfo($ch);
-    curl_close($ch);
-
-    if ($error != '') {
-        global $messageStack;
-        if (is_object($messageStack)) $messageStack->add_session('cURL communication ERROR: ' . $error, 'error');
-    }
-    //echo 'INFO: <pre>'; print_r($info); echo '</pre><br>';
-    //echo 'ERROR: ' . $error . '<br>';
-    //print_r($data) ;
-
-    if ($data != '') {
-        return $data;
-    }
-    return $error;
+    return zenDoCurlRequest($url, $method, $vars);
 }
