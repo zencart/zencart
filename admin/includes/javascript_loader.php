@@ -16,7 +16,7 @@
 <!--<script src="includes/javascript/bootstrap.min.js"></script>-->
 
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>
-<script title="jQuery.datepicker">
+<script title="jQuery plugin initializations">
 // init datepicker defaults with localization
   jQuery(function () {
     jQuery.datepicker.setDefaults(jQuery.extend({}, jQuery.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
