@@ -8,7 +8,7 @@
 ?>
 <!-- Modal -->
 <div id="<?php echo $modal_id; ?>" class="imgmodal">
-    <div id="<?php echo $modal_content_id; ?>"  class="imgmodal-content">
+    <div id="<?php echo $modal_content_id; ?>" class="imgmodal-content">
         <span onclick="closeModal('<?php echo $modal_id; ?>')">
         <?php echo zen_image($image['products_image_large'], $image['products_name'], '', '', 'class="centered-image"'); ?>
         <div class="imgmodal-close"><i class="fa-solid fa-circle-xmark"></i></div>
