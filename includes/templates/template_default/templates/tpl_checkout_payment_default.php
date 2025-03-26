@@ -45,7 +45,7 @@
 <legend id="checkoutPaymentHeadingTotal"><?php echo TEXT_YOUR_TOTAL; ?></legend>
 <?php
   if (MODULE_ORDER_TOTAL_INSTALLED) {
-    $order_totals = $order_total_modules->process();
+//    $order_totals = $order_total_modules->process();
 ?>
 <?php $order_total_modules->output(); ?>
 <?php

@@ -99,6 +99,9 @@ require(DIR_WS_CLASSES . 'order_total.php');
 $order_total_modules = new order_total;
 $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
+    if (MODULE_ORDER_TOTAL_INSTALLED) {
+        $order_totals = $order_total_modules->process();
+    }
 
 //  $_SESSION['comments'] = '';
 $comments = !empty($_SESSION['comments']) ? $_SESSION['comments'] : '';

@@ -155,7 +155,7 @@
 
 <?php
   if (MODULE_ORDER_TOTAL_INSTALLED) {
-    $order_totals = $order_total_modules->process();
+//    $order_totals = $order_total_modules->process();
 ?>
 <div id="orderTotals"><?php $order_total_modules->output(); ?></div>
 <?php
