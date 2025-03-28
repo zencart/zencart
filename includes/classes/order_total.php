@@ -217,7 +217,7 @@ class order_total
     // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
     // total, we don't want to go to paypal etc.
     //
-    public function pre_confirmation_check(bool $returnOrderTotalOnly = false)
+    public function pre_confirmation_check(bool|string $returnOrderTotalOnly = false)
     {
         global $order, $credit_covers;
 
@@ -231,10 +231,14 @@ class order_total
                 $GLOBALS[$class]->output = [];
             }
             $reCalculatedOrderTotal = $order->info['total'];
+            $orderInfo = $order->info;
             if ($reCalculatedOrderTotal <= 0.009 && !(isset($_SESSION['payment']) && $_SESSION['payment'] === 'freecharger')) {
                 $credit_covers = true;
             }
             $order->info = $orderInfoSaved;
+            if (is_string($returnOrderTotalOnly)) {
+                return $orderInfo;
+            }
             if ($returnOrderTotalOnly === true) {
                 return $reCalculatedOrderTotal;
             }
