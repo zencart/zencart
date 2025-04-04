@@ -14,13 +14,22 @@ $display_product_model = ($flag_show_product_info_model === '1' && $products_mod
 $display_product_weight = ($flag_show_product_info_weight === '1' && $products_weight != 0);
 $display_product_quantity = ($flag_show_product_info_quantity === '1');
 $display_product_manufacturer = ($flag_show_product_info_manufacturer === '1' && !empty($manufacturers_name));
-if ($display_product_model || $display_product_weight || $display_product_quantity || $display_product_manufacturer) {
+
+$additional_details = [];
+$zco_notifier->notify('NOTIFY_PRODUCT_INFO_DISPLAY_DETAILS', [], $additional_details);
+
+if ($display_product_model || $display_product_weight || $display_product_quantity || $display_product_manufacturer || count($additional_details) !== 0) {
 ?>
 <ul id="productDetailsList">
     <?= (($display_product_model === true) ? '<li>' . TEXT_PRODUCT_MODEL . $products_model . '</li>' : '') . "\n" ?>
     <?= (($display_product_weight === true) ? '<li>' . TEXT_PRODUCT_WEIGHT .  $products_weight . TEXT_PRODUCT_WEIGHT_UNIT . '</li>'  : '') . "\n" ?>
     <?= (($display_product_quantity === true) ? '<li>' . $products_quantity . TEXT_PRODUCT_QUANTITY . '</li>'  : '') . "\n" ?>
     <?= (($display_product_manufacturer === true) ? '<li>' . TEXT_PRODUCT_MANUFACTURER . $manufacturers_name . '</li>' : '') . "\n" ?>
+<?php
+    foreach ($additional_details as $next_detail) {
+        echo '<li>' . $next_detail . '</li>' . "\n";
+    }
+?>
 </ul>
 <?php
 }
