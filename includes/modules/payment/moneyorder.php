@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
-  class moneyorder {
+  class moneyorder extends base {
 
       /**
      * $_check is used to check the configuration key set up
@@ -67,7 +67,11 @@
         $this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
       }
 
+
+
       if (is_object($order)) $this->update_status();
+
+        $this->notify('NOTIFY_MONEYORDER_CONSTRUCTOR');
 
       $this->email_footer = MODULE_PAYMENT_MONEYORDER_TEXT_EMAIL_FOOTER;
     }
