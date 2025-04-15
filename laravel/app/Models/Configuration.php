@@ -18,6 +18,11 @@ class Configuration extends Eloquent
     protected $configAsIntArray = ['SECURITY_CODE_LENGTH',];
     protected $keepAsStringArray = ['PRODUCTS_MANUFACTURERS_STATUS',];
 
+    protected $casts = [
+        'status' => 'integer',
+    ];
+
+
     // @todo relocate to service class
     public function loadConfigSettings()
     {

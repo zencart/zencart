@@ -20,7 +20,7 @@ dev-*.*
 .settings
 .buildpath
 
-# Ignore phpStorm/intellij configuration
+# Ignore phpStorm/intellij stuff
 .idea
 *.iml
 .vscode
