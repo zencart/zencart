@@ -173,6 +173,12 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
     if (is_array($rates_array)) {
         return $rates_array;
     }
+    // tax-exempt get no taxes
+    if (Customer::isTaxExempt() === true) {
+        return [
+            WHOLESALE_TAX_EXEMPT_DESCRIPTION => 0,
+        ];
+    }
 
     $rates_array = [];
 
