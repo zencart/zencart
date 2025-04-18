@@ -15,6 +15,18 @@
  */
 function zen_redirect($url, $httpResponseCode = null)
 {
+    // -----
+    // Enable an observer to override the redirect.  For instance, an AJAX
+    // add-to-cart handler wouldn't want the shopping_cart class to do its
+    // page-redirect since the AJAX handler is dealing with that.
+    //
+    $request_handled = false;
+    global $zco_notifier;
+    $zco_notifier->notify('NOTIFY_ZEN_REDIRECT', ['url' => $url, 'httpResponseCode' => $httpResponseCode], $request_handled);
+    if ($request_handled === true) {
+        return;
+    }
+
     // @TODO - rework admin so this exclusion isn't necessary
     if (IS_ADMIN_FLAG !== true) {
         $url = zen_get_site_url_for_request($url);
