@@ -173,6 +173,11 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
     if (is_array($rates_array)) {
         return $rates_array;
     }
+    if (Customer::isTaxExempt() === true) {
+        return [
+            TAX_EXEMPT_DESCRIPTION => 0,
+        ];
+    }
 
     $rates_array = [];
 
@@ -434,6 +439,11 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
     );
     if (is_array($tax_descriptions)) {
         return $tax_descriptions;
+    }
+    if (Customer::isTaxExempt() === true) {
+        return [
+            TAX_EXEMPT_DESCRIPTION => 0,
+        ];
     }
 
     if ($country_id == -1 && $zone_id == -1) {

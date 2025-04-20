@@ -367,6 +367,7 @@ $define = [
     'TABLE_HEADING_UPCOMING_PRODUCTS' => 'Upcoming Products',
     'TABLE_HEADING_WEIGHT' => 'Weight',
     'TABLE_HEADING_FEATURED_CATEGORIES' => 'Featured Categories',
+    'TAX_EXEMPT_DESCRIPTION' => 'Tax Exempt',
     'TEXT_ADMIN_DOWN_FOR_MAINTENANCE' => 'NOTICE: The website is currently down for maintenance to the public',
     'TEXT_ALL_CATEGORIES' => 'All Categories',
     'TEXT_ALL_MANUFACTURERS' => 'All Manufacturers',
