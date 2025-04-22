@@ -32,7 +32,7 @@ if (!defined('IS_ADMIN_FLAG')) {
       } elseif ($type == 'success') {
         $this->errors[] = array('params' => 'messageStackAlert alert alert-success', 'text' => '<i class="fa-solid fa-2x fa-circle-check"></i> ' . $message);
       } elseif ($type == 'caution') {
-        $this->errors[] = array('params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa-solid fa-2x fa-hand-stop-o"></i> ' . $message);
+        $this->errors[] = array('params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa-solid fa-2x fa-circle-xmark"></i> ' . $message);
       } else {
         $this->errors[] = array('params' => 'messageStackAlert alert alert-danger', 'text' => $message);
       }
