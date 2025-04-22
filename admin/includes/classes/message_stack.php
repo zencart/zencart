@@ -6,7 +6,7 @@
  * @version $Id: Nick Fenwick 2023 Jul 03 Modified in v2.0.0-alpha1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 
 /*
@@ -18,54 +18,58 @@ if (!defined('IS_ADMIN_FLAG')) {
   if ($messageStack->size > 0) echo $messageStack->output();
 */
 
-  class messageStack extends boxTableBlock {
-    var $size = 0;
-    var $errors = array();
+class messageStack extends boxTableBlock
+{
+    public int $size = 0;
+    public array $errors = [];
 
-    function add($message, $type = 'error') {
-      if ($type == 'error') {
-        $this->errors[] = array('params' => 'messageStackAlert alert alert-danger', 'text' => '<i class="fa-solid fa-2x fa-circle-exclamation"></i> ' . $message);
-      } elseif ($type == 'warning') {
-        $this->errors[] = array('params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa-solid fa-2x fa-circle-question"></i> ' . $message);
-      } elseif ($type == 'info') {
-        $this->errors[] = array('params' => 'messageStackAlert alert alert-info', 'text' => '<i class="fa-solid fa-2x fa-circle-info"></i> ' . $message);
-      } elseif ($type == 'success') {
-        $this->errors[] = array('params' => 'messageStackAlert alert alert-success', 'text' => '<i class="fa-solid fa-2x fa-circle-check"></i> ' . $message);
-      } elseif ($type == 'caution') {
-        $this->errors[] = array('params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa-solid fa-2x fa-circle-xmark"></i> ' . $message);
-      } else {
-        $this->errors[] = array('params' => 'messageStackAlert alert alert-danger', 'text' => $message);
-      }
-
-
-      $this->size++;
-    }
-
-    function add_session($message, $type = 'error') {
-
-      if (!(!empty($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack']))) {
-        $_SESSION['messageToStack'] = array();
-      }
-
-      $_SESSION['messageToStack'][] = array('text' => $message, 'type' => $type);
-    }
-
-    function add_from_session() {
-      if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
-        for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
-          $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
+    public function add(string $message, string $type = 'error'): void
+    {
+        if ($type === 'error') {
+            $this->errors[] = ['params' => 'messageStackAlert alert alert-danger', 'text' => '<i class="fa-solid fa-2x fa-circle-exclamation"></i> ' . $message];
+        } elseif ($type === 'warning') {
+            $this->errors[] = ['params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa-solid fa-2x fa-circle-question"></i> ' . $message];
+        } elseif ($type === 'info') {
+            $this->errors[] = ['params' => 'messageStackAlert alert alert-info', 'text' => '<i class="fa-solid fa-2x fa-circle-info"></i> ' . $message];
+        } elseif ($type === 'success') {
+            $this->errors[] = ['params' => 'messageStackAlert alert alert-success', 'text' => '<i class="fa-solid fa-2x fa-circle-check"></i> ' . $message];
+        } elseif ($type === 'caution') {
+            $this->errors[] = ['params' => 'messageStackAlert alert alert-warning', 'text' => '<i class="fa-solid fa-2x fa-circle-xmark"></i> ' . $message];
+        } else {
+            $this->errors[] = ['params' => 'messageStackAlert alert alert-danger', 'text' => $message];
         }
-        $_SESSION['messageToStack'] = '';
-      }
+
+        $this->size++;
     }
 
-    function reset() {
-      $this->errors = array();
-      $this->size = 0;
+    public function add_session(string $message, string $type = 'error'): void
+    {
+        if (!isset($_SESSION['messageToStack']) || !is_array($_SESSION['messageToStack'])) {
+            $_SESSION['messageToStack'] = [];
+        }
+
+        $_SESSION['messageToStack'][] = ['text' => $message, 'type' => $type];
     }
 
-    function output() {
-      $this->table_data_parameters = 'class="messageBox"';
-      return $this->tableBlock($this->errors);
+    public function add_from_session(): void
+    {
+        if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
+            for ($i = 0, $n = count($_SESSION['messageToStack']); $i < $n; $i++) {
+                $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
+            }
+            $_SESSION['messageToStack'] = '';
+        }
     }
-  }
+
+    public function reset(): void
+    {
+        $this->errors = [];
+        $this->size = 0;
+    }
+
+    public function output(): string
+    {
+        $this->table_data_parameters = 'class="messageBox"';
+        return $this->tableBlock($this->errors);
+    }
+}
