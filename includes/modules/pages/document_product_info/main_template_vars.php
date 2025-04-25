@@ -93,52 +93,51 @@
 
     $products_discount_type = $product_info->fields['products_discount_type'];
     $products_discount_type_from = $product_info->fields['products_discount_type_from'];
-  }
 
   require(DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php'));
-
-  $module_show_categories = PRODUCT_INFO_CATEGORIES;
-  $module_next_previous = PRODUCT_INFO_PREVIOUS_NEXT;
-
-  $products_id_current = (int)$_GET['products_id'];
-
-/**
- * Load product-type-specific main_template_vars
- */
-  $prod_type_specific_vars_info = DIR_WS_MODULES . 'pages/' . $current_page_base . '/main_template_vars_product_type.php';
-  if (file_exists($prod_type_specific_vars_info)) {
-    include_once($prod_type_specific_vars_info);
+  
+    $module_show_categories = PRODUCT_INFO_CATEGORIES;
+    $module_next_previous = PRODUCT_INFO_PREVIOUS_NEXT;
+  
+    $products_id_current = (int)$_GET['products_id'];
+  
+  /**
+   * Load product-type-specific main_template_vars
+   */
+    $prod_type_specific_vars_info = DIR_WS_MODULES . 'pages/' . $current_page_base . '/main_template_vars_product_type.php';
+    if (file_exists($prod_type_specific_vars_info)) {
+      include_once($prod_type_specific_vars_info);
+    }
+    $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_PRODUCT_TYPE_VARS_DOCUMENT_PRODUCT_INFO');
+  
+  
+  /**
+   * Load all *.PHP files from the /includes/templates/MYTEMPLATE/PAGENAME/extra_main_template_vars
+   */
+    $extras_dir = $template->get_template_dir('.php', DIR_WS_TEMPLATE, $current_page_base . 'extra_main_template_vars', $current_page_base . '/' . 'extra_main_template_vars');
+    foreach(zen_get_files_in_directory($extras_dir) as $file) {
+        include($file);
+    }
+  
+  // build show flags from product type layout settings
+    $flag_show_product_info_starting_at = zen_get_show_product_switch($_GET['products_id'], 'starting_at');
+    $flag_show_product_info_model = zen_get_show_product_switch($_GET['products_id'], 'model');
+    $flag_show_product_info_weight = zen_get_show_product_switch($_GET['products_id'], 'weight');
+    $flag_show_product_info_quantity = zen_get_show_product_switch($_GET['products_id'], 'quantity');
+    $flag_show_product_info_manufacturer = zen_get_show_product_switch($_GET['products_id'], 'manufacturer');
+    $flag_show_product_info_in_cart_qty = zen_get_show_product_switch($_GET['products_id'], 'in_cart_qty');
+    $flag_show_product_info_reviews = zen_get_show_product_switch($_GET['products_id'], 'reviews');
+    $flag_show_product_info_reviews_count = zen_get_show_product_switch($_GET['products_id'], 'reviews_count');
+    $flag_show_product_info_date_available = zen_get_show_product_switch($_GET['products_id'], 'date_available');
+    $flag_show_product_info_date_added = zen_get_show_product_switch($_GET['products_id'], 'date_added');
+    $flag_show_product_info_url = zen_get_show_product_switch($_GET['products_id'], 'url');
+    $flag_show_product_info_additional_images = zen_get_show_product_switch($_GET['products_id'], 'additional_images');
+    $flag_show_product_info_free_shipping = zen_get_show_product_switch($_GET['products_id'], 'always_free_shipping_image_switch');
+    $flag_show_ask_a_question = !empty(zen_get_show_product_switch($_GET['products_id'], 'ask_a_question'));
+    require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS));
+  
+    $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_DOCUMENT_PRODUCT_INFO');
   }
-  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_PRODUCT_TYPE_VARS_DOCUMENT_PRODUCT_INFO');
-
-
-/**
- * Load all *.PHP files from the /includes/templates/MYTEMPLATE/PAGENAME/extra_main_template_vars
- */
-  $extras_dir = $template->get_template_dir('.php', DIR_WS_TEMPLATE, $current_page_base . 'extra_main_template_vars', $current_page_base . '/' . 'extra_main_template_vars');
-  foreach(zen_get_files_in_directory($extras_dir) as $file) {
-      include($file);
-  }
-
-// build show flags from product type layout settings
-  $flag_show_product_info_starting_at = zen_get_show_product_switch($_GET['products_id'], 'starting_at');
-  $flag_show_product_info_model = zen_get_show_product_switch($_GET['products_id'], 'model');
-  $flag_show_product_info_weight = zen_get_show_product_switch($_GET['products_id'], 'weight');
-  $flag_show_product_info_quantity = zen_get_show_product_switch($_GET['products_id'], 'quantity');
-  $flag_show_product_info_manufacturer = zen_get_show_product_switch($_GET['products_id'], 'manufacturer');
-  $flag_show_product_info_in_cart_qty = zen_get_show_product_switch($_GET['products_id'], 'in_cart_qty');
-  $flag_show_product_info_reviews = zen_get_show_product_switch($_GET['products_id'], 'reviews');
-  $flag_show_product_info_reviews_count = zen_get_show_product_switch($_GET['products_id'], 'reviews_count');
-  $flag_show_product_info_date_available = zen_get_show_product_switch($_GET['products_id'], 'date_available');
-  $flag_show_product_info_date_added = zen_get_show_product_switch($_GET['products_id'], 'date_added');
-  $flag_show_product_info_url = zen_get_show_product_switch($_GET['products_id'], 'url');
-  $flag_show_product_info_additional_images = zen_get_show_product_switch($_GET['products_id'], 'additional_images');
-  $flag_show_product_info_free_shipping = zen_get_show_product_switch($_GET['products_id'], 'always_free_shipping_image_switch');
-  $flag_show_ask_a_question = !empty(zen_get_show_product_switch($_GET['products_id'], 'ask_a_question'));
-  require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS));
-
-  $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_DOCUMENT_PRODUCT_INFO');
-
 
   require($template->get_template_dir($tpl_page_body,DIR_WS_TEMPLATE, $current_page_base,'templates'). $tpl_page_body);
 
