@@ -942,7 +942,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $type_handler = zen_get_handler_from_type($product['products_type']);
               $products_wholesale_indicator = ($wholesale_pricing_enabled === true && $product['products_price_w'] !== '0') ? $wholesale_pricing_indicator : '';
               ?>
-              <tr class="product-listing-row" data-pid="<?= $product['products_id'] ?>">
+              <tr class="product-listing-row" data-pid="<?= $product['products_id'] ?>" data-cpath="<?= $cPath ?>" data-ptype="<?= $product['products_type'] ?>">
                 <td class="text-right"><?= $product['products_id'] ?></td>
                 <td class="dataTableButtonCell"><a href="<?= zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']) ?>" rel="noopener" target="_blank">
                         <?= zen_icon('popup', BOX_HEADING_CATALOG, '', hidden: true) ?>
@@ -1343,18 +1343,27 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <script>
         <?php
         $categorySelectLink = str_replace('&amp;', '&', zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_all_get_params(['cPath', 'action']) . "cPath=[*]"));
-        $productEditLink = str_replace('&amp;', '&', zen_href_link(FILENAME_PRODUCT, zen_get_all_get_params(['pID', 'action']) . "pID=[*]&action=new_product"));
+        $productEditLink = str_replace('&amp;', '&', zen_href_link(FILENAME_PRODUCT, zen_get_all_get_params(['pID', 'action']) . "cPath=[cpath]&product_type=[ptype]&pID=[pid]&action=new_product"));
         ?>
         jQuery(function () {
-            const categorySelectlink = '<?= $categorySelectLink ?>';
+            const categorySelectLink = '<?= $categorySelectLink ?>';
             const productEditLink = '<?= $productEditLink ?>';
-            jQuery("tr.category-listing-row td").not('.dataTableButtonCell').on('click', (function() {
-                window.location.href = categorySelectlink.replace('[*]', jQuery(this).parent().attr('data-cid'));
-            })).css('cursor', 'pointer');
-            jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', (function() {
-                window.location.href = productEditLink.replace('[*]', jQuery(this).parent().attr('data-pid'));
-            })).css('cursor', 'pointer');
+
+            jQuery("tr.category-listing-row td").not('.dataTableButtonCell').on('click', function() {
+                window.location.href = categorySelectLink.replace('[*]', jQuery(this).parent().attr('data-cid'));
+            }).css('cursor', 'pointer');
+
+            jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', function() {
+                let $row = jQuery(this).parent();
+                let link = productEditLink
+                    .replace('[pid]', $row.attr('data-pid'))
+                    .replace('[cpath]', $row.attr('data-cpath'))
+                    .replace('[ptype]', $row.attr('data-ptype'));
+
+                window.location.href = link;
+            }).css('cursor', 'pointer');
         });
+    
         $(document).ready(function () {
             $('#imageView').on('click', function() {
                 if ($('#imageView').val() == '<?= TEXT_HIDE_IMAGES ?>') {

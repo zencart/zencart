@@ -710,7 +710,9 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, string $
 
     $limit_count = $limit ? " limit 1" : '';
 
-    if (!is_array($category_tree_array)) $category_tree_array = [];
+    if (!is_array($category_tree_array)) {
+        $category_tree_array = [];
+    }
 
     // init pulldown with Top category if list is empty and top cat not marked as excluded
     if (count($category_tree_array) < 1 && $exclude != TOPMOST_CATEGORY_PARENT_ID) {
@@ -718,15 +720,7 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, string $
     }
 
     if ($include_itself) {
-        $sql = "SELECT cd.categories_name
-                FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                AND cd.categories_id = " . (int)$parent_id . "
-                LIMIT 1";
-        $results = $db->Execute($sql);
-        if ($results->RecordCount()) {
-            $category_tree_array[] = ['id' => $parent_id, 'text' => $results->fields['categories_name']];
-        }
+        $category_tree_array[] = ['id' => $parent_id, 'text' => zen_get_category_name($parent_id)];
     }
 
     $sql = "SELECT c.categories_id, cd.categories_name, c.parent_id

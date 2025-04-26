@@ -893,7 +893,7 @@ if ($action === 'edit' || $action === 'update') {
                             'customers_telephone',
                             15
                         ) . ' class="form-control" id="customers_telephone" minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '"',
-                        true
+                        (ENTRY_TELEPHONE_MIN_LENGTH > 0 ? true : false)
                     ); ?>
                 </div>
             </div>

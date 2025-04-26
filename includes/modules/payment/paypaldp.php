@@ -1642,7 +1642,7 @@ class paypaldp extends base {
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
       $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
       if (!empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
-        if (isset($GLOBALS[$module]) && $GLOBALS[$module]->tax_class > 0) {
+        if (isset($GLOBALS[$module]) && ($GLOBALS[$module]->tax_class ?? 0) > 0) {
           $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
           $shippingOnDelivery = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);

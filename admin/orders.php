@@ -107,6 +107,16 @@ switch (NOTIFY_CUSTOMER_DEFAULT) {
 
 if (!empty($action) && $order_exists === true) {
     $order = new order($oID);
+    $module = false;
+    global $installedPlugins;
+    $moduleFinder = new ModuleFinder('payment', new Filesystem());
+    $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
+    $payment = ($order->info['payment_module_code'] ?? 'nothing') . '.php';
+    if (array_key_exists($payment, $modules_found) && file_exists(DIR_FS_CATALOG . $modules_found[$payment] . $payment)) {
+        $languageLoader->loadModuleLanguageFile($payment, 'payment');
+        require_once DIR_FS_CATALOG . $modules_found[$payment] . $payment;
+        $module = new $order->info['payment_module_code']();
+    }
   switch ($action) {
     case 'download':
 
@@ -248,16 +258,10 @@ if (!empty($action) && $order_exists === true) {
       $order_updated = ($status_updated > 0);
 
       // trigger any appropriate updates which should be sent back to the payment gateway:
-      if ($order->info['payment_module_code']) {
-        if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
-          $module = new $order->info['payment_module_code']();
-          if (method_exists($module, '_doStatusUpdate')) {
+
+          if ($module && method_exists($module, '_doStatusUpdate')) {
             $response = $module->_doStatusUpdate($oID, $status, $comments, $customer_notified, $order->info['orders_status']);
           }
-        }
-      }
 
       if ($order_updated === true) {
         if ($status == DOWNLOADS_ORDERS_STATUS_UPDATED_VALUE) {
@@ -336,57 +340,29 @@ if (!empty($action) && $order_exists === true) {
       break;
 
     case 'doRefund':
-      if ($order->info['payment_module_code']) {
-        if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
-          $module = new $order->info['payment_module_code']();
-          if (method_exists($module, '_doRefund')) {
+          if ($module && method_exists($module, '_doRefund')) {
             $module->_doRefund($oID);
+              zen_record_admin_activity('Order ' . $oID . ' refund processed. See order comments for details.', 'info');
           }
-        }
-      }
-      zen_record_admin_activity('Order ' . $oID . ' refund processed. See order comments for details.', 'info');
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
     case 'doAuth':
-      if ($order->info['payment_module_code']) {
-        if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
-          $module = new $order->info['payment_module_code']();
-          if (method_exists($module, '_doAuth')) {
+          if ($module && method_exists($module, '_doAuth')) {
             $module->_doAuth($oID, $order->info['total'], $order->info['currency']);
           }
-        }
-      }
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
     case 'doCapture':
-      if ($order->info['payment_module_code']) {
-        if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
-          $module = new $order->info['payment_module_code']();
-          if (method_exists($module, '_doCapt')) {
+          if ($module && method_exists($module, '_doCapt')) {
             $module->_doCapt($oID, 'Complete', $order->info['total'], $order->info['currency']);
           }
-        }
-      }
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
     case 'doVoid':
-      if ($order->info['payment_module_code']) {
-        if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php')) {
-          require_once(DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php');
-          zen_include_language_file($order->info['payment_module_code'] . '.php', '/modules/payment/','inline');
-          $module = new $order->info['payment_module_code']();
-          if (method_exists($module, '_doVoid')) {
+          if ($module && method_exists($module, '_doVoid')) {
             $module->_doVoid($oID);
+              zen_record_admin_activity('Order ' . $oID . ' void processed. See order comments for details.', 'info');
           }
-        }
-      }
-      zen_record_admin_activity('Order ' . $oID . ' void processed. See order comments for details.', 'info');
       zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=edit', 'NONSSL'));
       break;
       default:
@@ -508,26 +484,12 @@ if (!empty($action) && $order_exists === true) {
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_EDIT_BEGIN', $oID, $order);
         if ($order->info['payment_module_code'] && $order->info['payment_module_code'] !== PAYMENT_MODULE_GV) {
           $messageStack->reset();
-          $payment_module = DIR_FS_CATALOG_MODULES . 'payment/' . $order->info['payment_module_code'] . '.php';
-          global $installedPlugins;
-            $moduleFinder = new ModuleFinder('payment', new Filesystem());
-            $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
-            $payment = $order->info['payment_module_code'] . '.php';
-            if (array_key_exists($payment, $modules_found) && file_exists(DIR_FS_CATALOG . $modules_found[$payment] . $payment)) {
-                $payment_module = DIR_FS_CATALOG . $modules_found[$payment] . $payment;
-            }
-
-          if (!file_exists($payment_module)) {
+          if (!$module) {
               $messageStack->add(sprintf(WARNING_PAYMENT_MODULE_DOESNT_EXIST, $order->info['payment_module_code']), 'warning');
-          } else {
-            require $payment_module;
-            $languageLoader->loadModuleLanguageFile($payment, 'payment');
-            $module = new $order->info['payment_module_code']();
-            if ((is_object($module) && method_exists($module, 'admin_notification')) && !$module->enabled) {
+          } elseif ((is_object($module) && method_exists($module, 'admin_notification')) && !$module->enabled) {
                 $messageStack->add(sprintf(WARNING_PAYMENT_MODULE_NOTIFICATIONS_DISABLED, $order->info['payment_module_code']), 'warning');
             }
 //        echo $module->admin_notification($oID);
-          }
           if ($messageStack->size !== 0) {
 ?>
         <div class="messageStack-header noprint"><?php echo $messageStack->output(); ?></div><br>

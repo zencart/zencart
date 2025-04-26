@@ -115,11 +115,12 @@
           $order->info['total'] += $cod_cost;
           if ($tax > 0) {
             $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
-            $order->info['tax'] += zen_calculate_tax($cod_cost, $tax);
-            $order->info['tax_groups'][$tax_description] += zen_calculate_tax($cod_cost, $tax);
-            $order->info['total'] += zen_calculate_tax($cod_cost, $tax);
+            $tax_amount = zen_calculate_tax($cod_cost, $tax);
+            $order->info['tax'] += $tax_amount; 
+            $order->info['tax_groups'][$tax_description] += $tax_amount; 
+            $order->info['total'] += $tax_amount; 
             if (DISPLAY_PRICE_WITH_TAX == 'true') {
-              $cod_cost += zen_calculate_tax($cod_cost, $tax);
+              $cod_cost += $tax_amount; 
             }
           }
 
