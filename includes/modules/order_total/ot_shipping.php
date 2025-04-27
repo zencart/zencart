@@ -59,7 +59,9 @@ class ot_shipping extends base
  
         $this->output = [];
         unset($_SESSION['shipping_tax_description']);
-        
+        if (empty($order->delivery['country_id'])) {
+            $order->delivery['country_id'] = '';
+        } 
         if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING === 'true') {
             $pass = false;
             switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
