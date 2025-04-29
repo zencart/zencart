@@ -1956,30 +1956,37 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         'ship_country_code' => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
         'ship_address_status' => (empty($response[$this->requestPrefix . 'ADDRESSSTATUS'])) ? 'NONE' : urldecode($response[$this->requestPrefix . 'ADDRESSSTATUS']),
         'ship_phone' => urldecode($response[$this->requestPrefix . 'SHIPTOPHONENUM'] != '' ? $response[$this->requestPrefix . 'SHIPTOPHONENUM'] : $response['PHONENUM']),
-        'order_comment' => (isset($response['NOTE']) && isset($response[$this->requestPrefix . 'NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response[$this->requestPrefix . 'NOTETEXT']) : ''),
+        'order_comment' => (isset($response['NOTE'], $response[$this->requestPrefix . 'NOTETEXT']) ? urldecode($response['NOTE']) . ' ' . urldecode($response[$this->requestPrefix . 'NOTETEXT']) : ''),
     ];
 
 //    if (strtoupper($response['ADDRESSSTATUS']) == 'NONE' || !isset($response['SHIPTOSTREET']) || $response['SHIPTOSTREET'] == '') {
 //      $step2_shipto = array();
 //    } else {
       // accomodate PayPal bug which repeats 1st line of address for 2nd line if 2nd line is empty.
-      if ($response[$this->requestPrefix . 'SHIPTOSTREET2'] == $response[$this->requestPrefix . 'SHIPTOSTREET']) $response[$this->requestPrefix . 'SHIPTOSTREET2'] = '';
+      if ($response[$this->requestPrefix . 'SHIPTOSTREET2'] == $response[$this->requestPrefix . 'SHIPTOSTREET']) {
+          $response[$this->requestPrefix . 'SHIPTOSTREET2'] = '';
+      }
 
       // accomodate PayPal bug which incorrectly treats 'Yukon Territory' as YK instead of ISO standard of YT.
-      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] == 'YK') $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'YT';
+      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] === 'YK') {
+          $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'YT';
+      }
       // same with Newfoundland
-      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] == 'NF') $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'NL';
+      if ($response[$this->requestPrefix . 'SHIPTOSTATE'] === 'NF') {
+          $response[$this->requestPrefix . 'SHIPTOSTATE'] = 'NL';
+      }
 
       // process address details supplied
-      $step2_shipto = array('ship_name'     => urldecode($response[$this->requestPrefix . 'SHIPTONAME']),
-                            'ship_street_1' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET']),
-                            'ship_street_2' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET2']),
-                            'ship_city'     => urldecode($response[$this->requestPrefix . 'SHIPTOCITY']),
-                            'ship_state'    => (isset($response[$this->requestPrefix . 'SHIPTOSTATE']) && $response[$this->requestPrefix . 'SHIPTOSTATE'] !='' ? urldecode($response[$this->requestPrefix . 'SHIPTOSTATE']) : urldecode($response[$this->requestPrefix . 'SHIPTOCITY'])),
-                            'ship_postal_code' => urldecode($response[$this->requestPrefix . 'SHIPTOZIP']),
-                            'ship_country_code'  => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
-                            'ship_country_name'  => (isset($response['SHIPTOCOUNTRY']) ? urldecode($response['SHIPTOCOUNTRY']) : (isset($response['SHIPTOCOUNTRYNAME']) ? urldecode($response['SHIPTOCOUNTRYNAME']) : '')));
-//    }
+    $step2_shipto = [
+        'ship_name' => urldecode($response[$this->requestPrefix . 'SHIPTONAME']),
+        'ship_street_1' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET']),
+        'ship_street_2' => urldecode($response[$this->requestPrefix . 'SHIPTOSTREET2']),
+        'ship_city' => urldecode($response[$this->requestPrefix . 'SHIPTOCITY']),
+        'ship_state' => (($response[$this->requestPrefix . 'SHIPTOSTATE'] ?? '') !== '') ? urldecode($response[$this->requestPrefix . 'SHIPTOSTATE']) : urldecode($response[$this->requestPrefix . 'SHIPTOCITY']),
+        'ship_postal_code' => urldecode($response[$this->requestPrefix . 'SHIPTOZIP']),
+        'ship_country_code' => urldecode($response[$this->requestPrefix . 'SHIPTOCOUNTRYCODE']),
+        'ship_country_name' => urldecode($response['SHIPTOCOUNTRY'] ?? $response['SHIPTOCOUNTRYNAME'] ?? ''),
+    ];
 
     // reset all previously-selected shipping choices, because cart contents may have been changed
     if ((isset($response['SHIPPINGCALCULATIONMODE']) && $response['SHIPPINGCALCULATIONMODE'] != 'Callback') && (!(isset($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1))) unset($_SESSION['shipping']);
@@ -1987,28 +1994,34 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // set total temporarily based on amount returned from PayPal, so validations continue to work properly
     global $order, $order_totals;
     if (!isset($order) || !isset($order->info) || !is_array($order->info) || !zen_not_null($order)) {
-      $this->zcLog('ec_step2 ', 'Re-instantiating $order object.');
-      // init new order object
-      if (!class_exists('order')) require(DIR_WS_CLASSES . 'order.php');
-      $order = new order;
+        $this->zcLog('ec_step2 ', 'Re-instantiating $order object.');
+        // init new order object
+        if (!class_exists('order')) {
+            require DIR_WS_CLASSES . 'order.php';
+        }
+        $order = new order();
 
-      // load the selected shipping module so that shipping taxes can be assessed
-      if (isset($_SESSION['shipping'])) {
-          if (!class_exists('shipping')) {
-              require DIR_WS_CLASSES . 'shipping.php';
-          }
-          $shipping_modules = new shipping($_SESSION['shipping']);
-      }
+        // load the selected shipping module so that shipping taxes can be assessed
+        if (isset($_SESSION['shipping'])) {
+            if (!class_exists('shipping')) {
+                require DIR_WS_CLASSES . 'shipping.php';
+            }
+            $shipping_modules = new shipping($_SESSION['shipping']);
+        }
 
-      // load OT modules so that discounts and taxes can be assessed
-      if (!class_exists('order_total')) require(DIR_WS_CLASSES . 'order_total.php');
-      $order_total_modules = new order_total;
-      $order_totals = $order_total_modules->pre_confirmation_check();
-      $order_totals = $order_total_modules->process();
-      $this->zcLog('ec_step2 ', 'Instantiated $order object contents: ' . print_r($order, true));
+        // load OT modules so that discounts and taxes can be assessed
+        if (!class_exists('order_total')) {
+            require DIR_WS_CLASSES . 'order_total.php';
+        }
+        $order_total_modules = new order_total();
+        $order_totals = $order_total_modules->pre_confirmation_check();
+        $order_totals = $order_total_modules->process();
+        $this->zcLog('ec_step2 ', 'Instantiated $order object contents: ' . print_r($order, true));
     }
 
-    if ($order->info['total'] < 0.01 && urldecode($response[$this->requestPrefix . 'AMT']) > 0) $order->info['total'] = urldecode($response[$this->requestPrefix . 'AMT']);
+    if ($order->info['total'] < 0.01 && urldecode($response[$this->requestPrefix . 'AMT']) > 0) {
+        $order->info['total'] = urldecode($response[$this->requestPrefix . 'AMT']);
+    }
     //$this->zcLog('ec_step2 - processed info', print_r(array_merge($step2_payerinfo, $step2_shipto), true));
 
     // send data off to build account, log in, set addresses, place order
@@ -2018,7 +2031,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Complete the step2 phase by creating accounts if needed, linking data, placing order, etc.
    */
-  function ec_step2_finish($paypal_ec_payer_info, $new_acct_notify) {
+  protected function ec_step2_finish($paypal_ec_payer_info, $new_acct_notify): void
+  {
     global $db, $order;
 
     // register the payer_info in the session
