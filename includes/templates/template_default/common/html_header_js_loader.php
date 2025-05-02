@@ -16,9 +16,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * load all site-wide jscript_*.js files from includes/templates/YOURTEMPLATE/jscript, alphabetically
  */
-$directory_array = $template->get_template_part($template->get_template_dir('.js', DIR_WS_TEMPLATE, $current_page_base, 'jscript'), '/^jscript_/', '.js');
+$directory_array = $template->get_template_part($template->get_template_dir('^jscript_.*\.js', DIR_WS_TEMPLATE, $current_page_base, 'jscript'), '/^jscript_/', '.js');
 foreach ($directory_array as $value) {
-    echo '<script src="' .  $template->get_template_dir('.js', DIR_WS_TEMPLATE, $current_page_base, 'jscript') . '/' . $value . '"></script>' . "\n";
+    echo '<script src="' .  $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'jscript') . '/' . $value . '"></script>' . "\n";
 }
 
 /**
@@ -32,13 +32,13 @@ foreach ($directory_array as $value) {
 /**
  * load all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically
  */
-$directory_array = $template->get_template_part($template->get_template_dir('.php', DIR_WS_TEMPLATE, $current_page_base, 'jscript'), '/^jscript_/', '.php');
+$directory_array = $template->get_template_part($template->get_template_dir('^jscript_.*\.php', DIR_WS_TEMPLATE, $current_page_base, 'jscript'), '/^jscript_/', '.php');
 foreach ($directory_array as $value) {
     /**
      * include content from all site-wide jscript_*.php files from includes/templates/YOURTEMPLATE/jscript, alphabetically.
      * These .PHP files can be manipulated by PHP when they're called, and are copied in-full to the browser page
      */
-    require $template->get_template_dir('.php', DIR_WS_TEMPLATE, $current_page_base, 'jscript') . '/' . $value;
+    require $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'jscript') . '/' . $value;
     echo "\n";
 }
 

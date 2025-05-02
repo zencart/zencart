@@ -16,9 +16,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * load all template-specific stylesheets, named like "style*.css", alphabetically
  */
-$directory_array = $template->get_template_part($template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^style/', '.css');
+$directory_array = $template->get_template_part($template->get_template_dir('^style.*\.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^style/', '.css');
 foreach ($directory_array as $value) {
-    echo '<link rel="stylesheet" href="' . $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value . '">' . "\n";
+    echo '<link rel="stylesheet" href="' . $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value . '">' . "\n";
 }
 
 /**
@@ -42,7 +42,7 @@ $sheets_array = [
     '/' . $_SESSION['language'] . '_p_' . $tmp_products_id,
 ];
 foreach ($sheets_array as $value) {
-    $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
+    $perpagefile = $template->get_template_dir('^' . $value . '.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) {
         echo '<link rel="stylesheet" href="' . $perpagefile . '">' . "\n";
     }
@@ -55,11 +55,13 @@ $tmp_cats = explode('_', $cPath);
 $value = '';
 foreach ($tmp_cats as $val) {
     $value .= $val;
-    $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/c_' . $value . '_children.css';
+    $ppfile = 'c_' . $value . '_children.css';
+    $perpagefile = $template->get_template_dir('^' . $ppfile, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $ppfile;
     if (file_exists($perpagefile)) {
         echo '<link rel="stylesheet" href="' . $perpagefile . '">' . "\n";
     }
-    $perpagefile = $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $_SESSION['language'] . '_c_' . $value . '_children.css';
+    $ppfile = $_SESSION['language'] . '_c_' . $value . '_children.css';
+    $perpagefile = $template->get_template_dir('^' . $ppfile, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $ppfile;
     if (file_exists($perpagefile)) {
         echo '<link rel="stylesheet" href="' . $perpagefile . '">' . "\n";
     }
@@ -69,17 +71,17 @@ foreach ($tmp_cats as $val) {
 /**
  * load printer-friendly stylesheets -- named like "print*.css", alphabetically
  */
-$directory_array = $template->get_template_part($template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^print/', '.css');
+$directory_array = $template->get_template_part($template->get_template_dir('^print.*\.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^print/', '.css');
 foreach ($directory_array as $value) {
-    echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value . '">' . "\n";
+    echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value . '">' . "\n";
 }
 
 /**
  * load all DYNAMIC template-specific stylesheets, named like "style*.php", alphabetically
  */
-$directory_array = $template->get_template_part($template->get_template_dir('.php', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^style/', '.php');
+$directory_array = $template->get_template_part($template->get_template_dir('^style.*\.php', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^style/', '.php');
 foreach ($directory_array as $value) {
-    require $template->get_template_dir('.php', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value;
+    require $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value;
 }
 
 // User defined styles come last
