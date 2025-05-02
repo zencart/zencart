@@ -94,10 +94,20 @@ class zcObserverNonCaptchaObserver extends base
         ];
 
         // prepare for inspection
+        $array_found = false; 
         foreach ($fields as $field) {
             if (!empty($_POST[$field])) {
-                $test_string .= $_POST[$field];
+                if (is_array($_POST[$field])) {
+                   $array_found = true; 
+                   $_POST[$field] = '';
+                } else {
+                   $test_string .= $_POST[$field];
+                }
             }
+        }
+        if ($array_found) { 
+            $GLOBALS['antiSpam'] = 'spam';
+            return; 
         }
 
         if (empty(trim($test_string))) return;
