@@ -2233,8 +2233,8 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // Retrieve the address' country/state IDs as determined by the ec_step 2
     // observer (see above).
     //
-    $country_id = $this->country_state['country_id'];
-    $state_id = $this->country_state['state_id'];
+    $country_id = $this->country_state['country_id'] ?? $order->customer['country']['id'];
+    $state_id = $this->country_state['state_id'] ?? $order->customer['zone_id'];
 
     // check to see whether PayPal should still be offered to this customer, based on the zone of their address:
     $this->update_status();
