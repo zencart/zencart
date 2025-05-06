@@ -56,7 +56,7 @@
     if ((int)$year == 0) $year = date('Y');
     $set1 = $set2 = $stats = $months = array();
     for ($i=1; $i<13; $i++) {
-      $m = $zcDate->output('%b', mktime(0,0,0,$i));
+      $m = $zcDate->output('%b', mktime(0,0,0,$i,1));
       $months[] = array((int)$i, $m);
       $set1[] = $set2[] = $stats[] = array($i, 0);
     }
