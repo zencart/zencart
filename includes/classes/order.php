@@ -1388,8 +1388,14 @@ class order extends base
         $html_msg['INTRO_DATE_ORDERED'] = $zcDate->output(DATE_FORMAT_LONG);
         $html_msg['INTRO_URL_TEXT'] = EMAIL_TEXT_INVOICE_URL_CLICK;
         $html_msg['INTRO_URL_VALUE'] = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
-        $html_msg['EMAIL_CUSTOMER_PHONE'] = $this->customer['telephone'];
-        $html_msg['EMAIL_TEXT_TELEPHONE'] = EMAIL_TEXT_TELEPHONE;
+
+        if (empty($this->customer['telephone'])) {
+            $html_msg['EMAIL_CUSTOMER_PHONE'] = '';
+            $html_msg['EMAIL_TEXT_TELEPHONE'] = '';
+        } else {
+            $html_msg['EMAIL_CUSTOMER_PHONE'] = $this->customer['telephone'];
+            $html_msg['EMAIL_TEXT_TELEPHONE'] = EMAIL_TEXT_TELEPHONE;
+        }
 
         //comments area
         $html_msg['ORDER_COMMENTS'] = '';
@@ -1434,7 +1440,10 @@ class order extends base
                 EMAIL_SEPARATOR . "\n" .
                 zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], false, '', "\n") . "\n";
         }
-        $email_order .= EMAIL_TEXT_TELEPHONE . $this->customer['telephone'] . "\n\n";
+
+        if (!empty($this->customer['telephone'])) {
+            $email_order .= EMAIL_TEXT_TELEPHONE . $this->customer['telephone'] . "\n\n";
+        }
 
         //addresses area: Billing
         $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
