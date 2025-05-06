@@ -80,16 +80,50 @@ class FileSystem extends IlluminateFilesystem
         return $found;
     }
 
+    public function isAdminRootDir(string $filePath): bool
+    {
+        if (!defined('DIR_FS_ADMIN')) {
+            return false;
+        }
+        $filePath = $filePath . DIRECTORY_SEPARATOR;
+        $test = str_replace(DIR_FS_ADMIN, '', $filePath);
+        if ($test !== $filePath && ($test === '' || $test === DIRECTORY_SEPARATOR)) {
+            return true;
+        }
+        return false;
+    }
+
     public function isAdminDir(string $filePath): bool
     {
         if (!defined('DIR_FS_ADMIN')) {
             return false;
         }
+        if ($this->isAdminRootDir($filePath)) {
+            return true;
+        }
+        $filePath = $filePath . DIRECTORY_SEPARATOR;
         $test = str_replace(DIR_FS_ADMIN, '', $filePath);
-        if ($test != $filePath) {
+        if ($test !== $filePath) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isCatalogRootDir(string $filePath): bool
+    {
+        if ($this->isAdminDir($filePath)) {
             return false;
         }
-        return true;
+        if (!defined('DIR_FS_CATALOG')) {
+            return false;
+        }
+        $filePath = $filePath . DIRECTORY_SEPARATOR;
+        $test = str_replace(DIR_FS_CATALOG, '', $filePath);
+        if ($test !== $filePath && ($test === '' || $test === DIRECTORY_SEPARATOR)) {
+            return true;
+        }
+        return false;
+
     }
 
     public function isCatalogDir(string $filePath): bool
@@ -100,21 +134,29 @@ class FileSystem extends IlluminateFilesystem
         if (!defined('DIR_FS_CATALOG')) {
             return false;
         }
+        if ($this->isCatalogRootDir($filePath)) {
+            return true;
+        }
+        $filePath = $filePath . DIRECTORY_SEPARATOR;
         $test = str_replace(DIR_FS_CATALOG, '', $filePath);
         if ($test !== $filePath) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
 
     }
 
     public function getRelativeDir(string $filePath): string
     {
         if ($this->isAdminDir($filePath)) {
-            return str_replace(DIR_FS_ADMIN, '', $filePath);
+            $returnPath = str_replace(substr(DIR_FS_ADMIN, 0, -1), '', $filePath);
+            $returnPath = substr($returnPath, 1);
+            return $returnPath;
         }
         if ($this->isCatalogDir($filePath)) {
-            return str_replace(DIR_FS_CATALOG, '', $filePath);
+            $returnPath = str_replace(substr(DIR_FS_CATALOG, 0, -1), '', $filePath);
+            $returnPath = substr($returnPath, 1);
+            return $returnPath;
         }
         return $filePath;
     }
