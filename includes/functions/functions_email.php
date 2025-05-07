@@ -202,6 +202,8 @@
             $email_text = preg_replace('/(&gt;)+/', '>', $email_text);
             // prevent null characters
             $email_text = preg_replace('/\0+/', ' ', $email_text);
+            // Convert &nbsp; to a single space
+            $email_text = str_replace('&nbsp;', ' ', $email_text);
 
             // fix slashes
             $text = stripslashes($email_text);
