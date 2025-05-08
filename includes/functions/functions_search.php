@@ -215,5 +215,9 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
         if (substr($where_str, -7) === '( ()  )' || !$validWhere) {
             return ' ';
         }
-        return $where_str;
+        $problemArray = [
+            ' ()  AND ',
+            ' AND  () ',
+        ];
+        return str_replace($problemArray, ' ', $where_str);
     }
