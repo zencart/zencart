@@ -92,11 +92,17 @@ if (empty($order->info)) {
               <tr>
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
               </tr>
+<?php
+    if (!empty($order->customer['telephone'])) {
+?>
               <tr>
                 <td class="main">
                     <?php echo ENTRY_TELEPHONE_NUMBER . ' ' . $order->customer['telephone']; ?>
                 </td>
               </tr>
+<?php
+    }
+?>
               <tr>
                 <td class="main"><?php echo '<a href="mailto:' . $order->customer['email_address'] . '">' . $order->customer['email_address'] . '</a>'; ?></td>
               </tr>
