@@ -23,7 +23,7 @@ if (isset($_GET['sort']) && strlen($_GET['sort']) > 3) {
     $_GET['sort'] = substr($_GET['sort'], 0, 3);
 }
 if (isset($_GET['alpha_filter_id']) && (int)$_GET['alpha_filter_id'] > 0) {
-    $alpha_sort = " AND pd.products_name LIKE '" . chr((int)$_GET['alpha_filter_id']) . "%' ";
+    $alpha_sort = " AND pd.products_name LIKE '" . zen_db_input(chr((int)$_GET['alpha_filter_id'])) . "%' ";
 } else {
     $alpha_sort = '';
 }
