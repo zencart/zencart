@@ -19,6 +19,11 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
         $last_log_suffix = '.log';
     }
 
+    // -----
+    // E_USER_ERROR is deprecated as of PHP 8.4; substitute the 'base'
+    // E_ERROR if the constant isn't defined.
+    //
+    $e_user_error = (defined('E_USER_ERROR')) ? E_USER_ERROR : E_ERROR;
     switch ($errno) {
         case E_NOTICE:
         case E_USER_NOTICE:
@@ -27,7 +32,9 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
             break;
         case E_DEPRECATED:
             //@TODO: Remove this after we remove the use of the SID constant from html_output etc
-            if (str_contains($errstr, 'Constant SID is deprecated')) return true;
+            if (str_contains($errstr, 'Constant SID is deprecated')) {
+                return true;
+            }
         case E_USER_DEPRECATED:
             $error_type = 'Deprecated';
             $this_log_suffix = '-deprecated.log';
@@ -43,7 +50,7 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
             }
             break;
         case E_ERROR:
-        case E_USER_ERROR:
+        case $e_user_error:
             $error_type = 'Fatal error';
             $this_log_suffix = '-error.log';
             break;
@@ -128,7 +135,7 @@ function zen_set_error_logging_filename(): string
     return $debug_logfile_path;
 }
 
-function zen_enable_error_logging(array $pages_to_debug = ['*'], $logging_level = E_ALL & ~E_NOTICE): void
+function zen_enable_error_logging(array $pages_to_debug = ['*'], $logging_level = E_ALL): void
 {
     global $current_page_base, $debug_logfile_path;
 

@@ -23,16 +23,12 @@ $pages_to_debug[] = '*';
 //   $pages_to_debug[] = '';
 //   $pages_to_debug[] = '';
 
-
-
 /**
  * Error reporting level to log
- * Default: E_ALL & ~E_NOTICE
+ * Default: E_ALL
  */
-$errors_to_log = E_ALL & ~E_NOTICE;
-
+$errors_to_log = E_ALL;
 
 ///// DO NOT EDIT BELOW THIS LINE /////
 // This passes the updated settings above into the error handling configuration to override the defaults
 zen_enable_error_logging($pages_to_debug, $errors_to_log);
-
