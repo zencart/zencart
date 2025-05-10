@@ -99,12 +99,23 @@ class LanguageLoader
         return false;
     }
 
+    // -----
+    // Returns a boolean indication as to whether/not the requested module language file
+    // was loaded.
+    //
     public function loadModuleLanguageFile(string $fileName, string $moduleType): bool
     {
-        $array_constants_created = $this->arrayLoader->loadModuleLanguageFile($fileName, $moduleType);
-        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($fileName, $moduleType);
+        $this->arrayLoader->loadModuleLanguageFile($fileName, $moduleType);
+        $this->fileLoader->loadModuleLanguageFile($fileName, $moduleType);
 
-        return ($legacy_file_loaded === true || $array_constants_created === true);
+        $language_files_loaded = array_merge($this->languageFilesLoaded['arrays'], $this->languageFilesLoaded['legacy']);
+        $match_string = '~modules/' . $moduleType . '/(lang\.)?' . $fileName . '$~';
+        foreach ($language_files_loaded as $next_file) {
+            if (preg_match($match_string, $next_file)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function isFileAlreadyLoaded(string $defineFile): bool
