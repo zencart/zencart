@@ -497,7 +497,7 @@ if ($action !== '') {
                             $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_FEATURED . '</h4>'];
                             $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED_CATEGORIES, 'action=deleteconfirm' . $page_search_parameters) . zen_draw_hidden_field('fID', $fInfo->featured_categories_id)];
                             $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
-                            $contents[] = ['text' => '<b>' . zen_clean_html($fInfo->categories_name) . '"</b>'];
+                            $contents[] = ['text' => '<b>' . zen_clean_html($fInfo->categories_name) . '</b>'];
                             $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES, 'fID=' . $fInfo->featured_categories_id . $page_search_parameters) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                             break;
 
