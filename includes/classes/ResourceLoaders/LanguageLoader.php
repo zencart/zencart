@@ -110,8 +110,9 @@ class LanguageLoader
 
         $language_files_loaded = array_merge($this->languageFilesLoaded['arrays'], $this->languageFilesLoaded['legacy']);
         $match_string = '~modules/' . $moduleType . '/(lang\.)?' . $fileName . '$~';
+        $match_string_template = '~modules/' . $moduleType . '/' . $this->arrayLoader->getTemplateDir() . '/(lang\.)?' . $fileName . '$~';
         foreach ($language_files_loaded as $next_file) {
-            if (preg_match($match_string, $next_file)) {
+            if (preg_match($match_string, $next_file) || preg_match($match_string_template, $next_file)) {
                 return true;
             }
         }
