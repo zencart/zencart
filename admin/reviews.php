@@ -98,10 +98,9 @@ if (!empty($action)) {
           $rID = (int)$_GET['rID'];
 
           $reviews = $db->Execute("SELECT r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating
-                                   FROM " . TABLE_REVIEWS . " r,
+                                   FROM " . TABLE_REVIEWS . " r LEFT OUTER JOIN 
                                         " . TABLE_REVIEWS_DESCRIPTION . " rd
-                                   WHERE r.reviews_id = " . (int)$rID . "
-                                   AND r.reviews_id = rd.reviews_id");
+                                   ON (r.reviews_id = rd.reviews_id) WHERE r.reviews_id = " . (int)$rID); 
 
           $products = $db->Execute("SELECT p.products_image, pd.products_name
                                     FROM " . TABLE_PRODUCTS . " p
@@ -147,7 +146,7 @@ if (!empty($action)) {
           <div class="form-group">
             <?php echo zen_draw_label(ENTRY_REVIEW, 'reviews_text', 'class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="reviews_text"'); ?>
+              <?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text ?? ''), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="reviews_text"'); ?>
               <span class="help-block"><?php echo ENTRY_REVIEW_TEXT; ?></span>
             </div>
           </div>
