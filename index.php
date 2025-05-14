@@ -19,20 +19,25 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2020 Aug 01 Modified in v1.5.8-alpha $
  */
+use Zencart\PageLoader\PageLoader;
+
 /**
  * Load common library stuff
  */
 require 'includes/application_top.php';
 
 $language_page_directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/';
-$directory_array = $template->get_template_part($code_page_directory, '/^header_php/');
+
+$pageLoader = PageLoader::getInstance();
+$directory_array = $pageLoader->listModulePagesFiles('header_php', '.php');
 foreach ($directory_array as $value) {
     /**
      * We now load header code for a given page.
-     * Page code is stored in includes/modules/pages/PAGE_NAME/directory
-     * 'header_php.php' files in that directory are loaded now.
+     * Page code is stored in includes/modules/pages/PAGE_NAME and/or
+     *  zc_plugins/xx/vv/catalog/includes/modules/pages/PAGE_NAME directories.
+     * 'header_php.php' files in those directory are loaded now.
      */
-    require $code_page_directory . '/' . $value;
+    require $value;
 }
 
 /**
@@ -50,15 +55,15 @@ require $template->get_template_dir('html_header.php', DIR_WS_TEMPLATE, $current
 require $template->get_template_dir('main_template_vars.php', DIR_WS_TEMPLATE, $current_page_base, 'common') . '/main_template_vars.php';
 
 /**
- * Read the "on_load" scripts for the individual page, and from the site-wide template settings
+ * Read the "on_load" scripts for the individual page and from the site-wide template settings
  * NOTE: on_load_*.js files must contain just the raw code to be inserted in the <body> tag in the on_load="" parameter.
- * Looking in "/includes/modules/pages" for files named "on_load_*.js"
+ *
+ * Looking in "/includes/modules/pages/PAGE_NAME" and 'zc_plugins/xx/vv/catalog/includes/modules/pages/PAGE_NAME for files named "on_load_*.js"
  */
-$directory_array = $template->get_template_part(DIR_WS_MODULES . 'pages/' . $current_page_base, '/^on_load_/', '.js');
+$directory_array = $pageLoader->listModulePagesFiles('on_load_', '.js');
 foreach ($directory_array as $value) {
-    $onload_file = DIR_WS_MODULES . 'pages/' . $current_page_base . '/' . $value;
     $read_contents = '';
-    if ($lines = @file($onload_file)) {
+    if ($lines = @file($value)) {
         $read_contents = implode('', $lines);
     }
     $za_onload_array[] = $read_contents;

@@ -25,19 +25,41 @@ class PageLoader
         $this->fileSystem = $fileSystem;
     }
 
+    // -----
+    // This method locates the 'base' module-page directory, either in the
+    // storefront's /includes/modules/pages or in an encapsulated plugin's
+    // /catalog/includes/modules/pages directory.
+    //
     public function findModulePageDirectory(string $context = 'catalog'): bool|string
     {
         if (is_dir(DIR_WS_MODULES . 'pages/' . $this->mainPage)) {
             return DIR_WS_MODULES . 'pages/' . $this->mainPage;
         }
         foreach ($this->installedPlugins as $plugin) {
-            $rootDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context ;
+            $rootDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context;
             $checkDir = $rootDir . '/includes/modules/pages/' . $this->mainPage;
             if (is_dir($checkDir)) {
                 return $checkDir;
             }
         }
         return false;
+    }
+
+    // -----
+    // This method locates **all** files matching a given pattern from the 'base'
+    // module-page directory and any module-page directories found in zc_plugins.
+    //
+    public function listModulePagesFiles(string $nameStartsWith, string $fileExtension = '.php', string $context = 'catalog'): array
+    {
+        $module_page_dir = DIR_WS_MODULES . 'pages/' . $this->mainPage;
+        $fileRegx = '~^' . $nameStartsWith . '.*\\' . $fileExtension . '$~i';
+        $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($module_page_dir, $fileRegx, true);
+        foreach ($this->installedPlugins as $plugin) {
+            $rootDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context;
+            $checkDir = $rootDir . '/' . $module_page_dir;
+            $fileList = array_merge($fileList, $this->fileSystem->listFilesFromDirectoryAlphaSorted($checkDir, $fileRegx, true));
+        }
+        return $fileList;
     }
 
     public function getTemplatePart(string $pageDirectory, string $templatePart, string $fileExtension = '.php'): array
