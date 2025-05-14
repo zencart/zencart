@@ -82,13 +82,17 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $message .= $text_coupon_help . "\n\n";
     if ($coupon_result->fields['coupon_is_valid_for_sales']) {
       $message .= TEXT_COUPON_IS_VALID_FOR_SALES_EMAIL . "\n\n";
+      $coupon_description = TEXT_COUPON_IS_VALID_FOR_SALES_EMAIL . '<br><br>';
     } else {
       $message .= TEXT_NO_COUPON_IS_VALID_FOR_SALES_EMAIL . "\n\n";
+      $coupon_description = TEXT_NO_COUPON_IS_VALID_FOR_SALES_EMAIL . '<br><br>';
     }
     if ($coupon_result->fields['coupon_product_count']) {
       $message .= TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT . "\n\n";
+      $coupon_description .= TEXT_COUPON_PRODUCT_COUNT_PER_PRODUCT . '<br><br>';
     } else {
       $message .= TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . "\n\n";
+      $coupon_description .= TEXT_COUPON_PRODUCT_COUNT_PER_ORDER . '<br><br>';
     }
 
     $message .= TEXT_REMEMBER . "\n\n";
@@ -105,7 +109,7 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $html_msg['COUPON_TEXT_TO_REDEEM'] = TEXT_TO_REDEEM;
     $html_msg['COUPON_TEXT_VOUCHER_IS'] = TEXT_VOUCHER_IS;
     $html_msg['COUPON_CODE'] = $coupon_result->fields['coupon_code'] . $html_coupon_help;
-    $html_msg['COUPON_DESCRIPTION'] = (!empty($coupon_result->fields['coupon_description']) ? $coupon_result->fields['coupon_description'] : '');
+    $html_msg['COUPON_DESCRIPTION'] = $coupon_description . (!empty($coupon_result->fields['coupon_description']) ? $coupon_result->fields['coupon_description'] : '');
     $html_msg['COUPON_TEXT_REMEMBER'] = TEXT_REMEMBER;
     $html_msg['COUPON_REDEEM_STORENAME_URL'] = sprintf(TEXT_VISIT, '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . STORE_NAME . '</a>');
 
