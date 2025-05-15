@@ -187,7 +187,7 @@ while (!$products_options_names->EOF) {
             if ($products_options->fields['attributes_price_onetime'] != 0 || $products_options->fields['attributes_price_factor_onetime'] != 0) {
                 $show_onetime_charges_description = true;
                 $new_onetime_charges = zen_get_attributes_price_final_onetime($products_options->fields["products_attributes_id"], 1, '');
-                $price_onetime = TEXT_ONETIME_CHARGE_SYMBOL . $currencies->display_price($new_onetime_charges, zen_get_tax_rate($product_info->fields['products_tax_class_id']));
+                $price_onetime = TEXT_ONETIME_CHARGE_SYMBOL . $currencies->display_price($new_onetime_charges, zen_get_tax_rate($product_data['products_tax_class_id']));
             } else {
                 $price_onetime = '';
             }
@@ -197,22 +197,22 @@ while (!$products_options_names->EOF) {
                 $show_attributes_qty_prices_icon = true;
             }
 
-            if ($products_options->fields['options_values_price'] != '0' && ($products_options->fields['product_attribute_is_free'] != '1' && $product_info->fields['product_is_free'] != '1')) {
+            if ($products_options->fields['options_values_price'] != '0' && ($products_options->fields['product_attribute_is_free'] != '1' && $product_data['product_is_free'] != '1')) {
                 // show sale maker discount if a percentage
-                $products_options_display_price = ATTRIBUTES_PRICE_DELIMITER_PREFIX . $products_options->fields['price_prefix'] . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_info->fields['products_tax_class_id'])) . ATTRIBUTES_PRICE_DELIMITER_SUFFIX;
+                $products_options_display_price = ATTRIBUTES_PRICE_DELIMITER_PREFIX . $products_options->fields['price_prefix'] . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_data['products_tax_class_id'])) . ATTRIBUTES_PRICE_DELIMITER_SUFFIX;
 
-                $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_SALEMAKER_DISPLAY_PRICE_PERCENTAGE', $products_options->fields, $product_info->fields, $products_options_display_price, $data_properties);
+                $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_SALEMAKER_DISPLAY_PRICE_PERCENTAGE', $products_options->fields, $product_data, $products_options_display_price, $data_properties);
 
             } else {
                 // if product_is_free and product_attribute_is_free
-                if ($products_options->fields['product_attribute_is_free'] == '1' && $product_info->fields['product_is_free'] == '1') {
-                    $products_options_display_price = TEXT_ATTRIBUTES_PRICE_WAS . $products_options->fields['price_prefix'] . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_info->fields['products_tax_class_id'])) . TEXT_ATTRIBUTE_IS_FREE;
+                if ($products_options->fields['product_attribute_is_free'] == '1' && $product_data['product_is_free'] == '1') {
+                    $products_options_display_price = TEXT_ATTRIBUTES_PRICE_WAS . $products_options->fields['price_prefix'] . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_data['products_tax_class_id'])) . TEXT_ATTRIBUTE_IS_FREE;
                 } else {
                     // normal price
                     if (empty($new_attributes_price)) {
                         $products_options_display_price = '';
                     } else {
-                        $products_options_display_price = ATTRIBUTES_PRICE_DELIMITER_PREFIX . $products_options->fields['price_prefix'] . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_info->fields['products_tax_class_id'])) . ATTRIBUTES_PRICE_DELIMITER_SUFFIX;
+                        $products_options_display_price = ATTRIBUTES_PRICE_DELIMITER_PREFIX . $products_options->fields['price_prefix'] . $currencies->display_price($new_attributes_price, zen_get_tax_rate($product_data['products_tax_class_id'])) . ATTRIBUTES_PRICE_DELIMITER_SUFFIX;
                     }
                 }
             }
@@ -481,10 +481,10 @@ while (!$products_options_names->EOF) {
                 $tmp_word_price = zen_get_word_count_price($tmp_word_cnt_string, $products_options->fields['attributes_price_words_free'], $products_options->fields['attributes_price_words']);
 
                 if ($products_options->fields['attributes_price_words'] != 0) {
-                    $tmp_html .= TEXT_PER_WORD . $currencies->display_price($products_options->fields['attributes_price_words'], zen_get_tax_rate($product_info->fields['products_tax_class_id'])) . ($products_options->fields['attributes_price_words_free'] !=0 ? TEXT_WORDS_FREE . $products_options->fields['attributes_price_words_free'] : '');
+                    $tmp_html .= TEXT_PER_WORD . $currencies->display_price($products_options->fields['attributes_price_words'], zen_get_tax_rate($product_data['products_tax_class_id'])) . ($products_options->fields['attributes_price_words_free'] !=0 ? TEXT_WORDS_FREE . $products_options->fields['attributes_price_words_free'] : '');
                 }
                 if ($tmp_word_cnt != 0 && $tmp_word_price != 0) {
-                    $tmp_word_price = $currencies->display_price($tmp_word_price, zen_get_tax_rate($product_info->fields['products_tax_class_id']));
+                    $tmp_word_price = $currencies->display_price($tmp_word_price, zen_get_tax_rate($product_data['products_tax_class_id']));
                     $tmp_html .= '<br>' . TEXT_CHARGES_WORD . ' ' . $tmp_word_cnt . ' = ' . $tmp_word_price;
                 }
                 // calculate letter charges
@@ -494,10 +494,10 @@ while (!$products_options_names->EOF) {
                 $tmp_letters_price = zen_get_letters_count_price($tmp_letters_cnt_string, $products_options->fields['attributes_price_letters_free'], $products_options->fields['attributes_price_letters']);
 
                 if ($products_options->fields['attributes_price_letters'] != 0) {
-                    $tmp_html .= TEXT_PER_LETTER . $currencies->display_price($products_options->fields['attributes_price_letters'], zen_get_tax_rate($product_info->fields['products_tax_class_id'])) . ($products_options->fields['attributes_price_letters_free'] != 0 ? TEXT_LETTERS_FREE . $products_options->fields['attributes_price_letters_free'] : '');
+                    $tmp_html .= TEXT_PER_LETTER . $currencies->display_price($products_options->fields['attributes_price_letters'], zen_get_tax_rate($product_data['products_tax_class_id'])) . ($products_options->fields['attributes_price_letters_free'] != 0 ? TEXT_LETTERS_FREE . $products_options->fields['attributes_price_letters_free'] : '');
                 }
                 if ($tmp_letters_cnt != 0 && $tmp_letters_price != 0) {
-                    $tmp_letters_price = $currencies->display_price($tmp_letters_price, zen_get_tax_rate($product_info->fields['products_tax_class_id']));
+                    $tmp_letters_price = $currencies->display_price($tmp_letters_price, zen_get_tax_rate($product_data['products_tax_class_id']));
                     $tmp_html .= '<br>' . TEXT_CHARGES_LETTERS . ' ' . $tmp_letters_cnt . ' = ' . $tmp_letters_price;
                 }
                } // test ATTRIBUTES_ENABLED_TEXT_PRICES
