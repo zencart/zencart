@@ -301,6 +301,21 @@ systemChecks:
     methods:
       checkHttpsRequest:
 
+  checkDBVersion220:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '2.2.0'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v2.2.0') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configKeyExists
+            keyName: TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH
+          - checkType: fieldSchema
+            tableName: customer_password_reset_tokens
+            fieldName: token
+            fieldCheck: Exists
+
   checkDBVersion210:
     runLevel: dbVersion
     errorLevel: WARN
