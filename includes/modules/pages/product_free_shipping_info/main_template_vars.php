@@ -14,16 +14,14 @@
   // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_START_PRODUCT_FREE_SHIPPING_INFO');
 
-  $product_info = $product_info ?? new Product((int)$_GET['products_id']);
-
-  if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$_GET['products_id']) {
+  if (!isset($product_info) || get_class($product_info) !== 'Product' || $product_info->getID() !== (int)$_GET['products_id']) {
       $product_info = new Product((int)$_GET['products_id']);
   }
 
   $product_not_found = !$product_info->exists();
 
   if (!defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') || DISABLED_PRODUCTS_TRIGGER_HTTP200 !== 'true') {
-      if (!$product_not_found && $product_info->fields['products_status'] != 1) {
+      if (!$product_not_found && $product_info->status() !== 1) {
       $product_not_found = true;
     }
   }
@@ -36,14 +34,16 @@
 
     $zco_notifier->notify('NOTIFY_PRODUCT_VIEWS_HIT_INCREMENTOR', (int)$_GET['products_id']);
 
-    $products_price_sorter = $product_info->fields['products_price_sorter'];
+    $product_data = $product_info->getDataForLanguage();
 
-    $products_price = $currencies->display_price($product_info->fields['products_price'], zen_get_tax_rate($product_info->fields['products_tax_class_id']));
+    $products_price_sorter = $product_data['products_price_sorter'];
 
-    $manufacturers_name = $product_info->fields['manufacturers_name'];
+    $products_price = $currencies->display_price($product_data['products_price'], zen_get_tax_rate($product_data['products_tax_class_id']));
 
-    if ($new_price = zen_get_products_special_price($product_info->fields['products_id'])) {
-      $specials_price = $currencies->display_price($new_price, zen_get_tax_rate($product_info->fields['products_tax_class_id']));
+    $manufacturers_name = $product_data['manufacturers_name'];
+
+    if ($new_price = zen_get_products_special_price($product_data['products_id'])) {
+      $specials_price = $currencies->display_price($new_price, zen_get_tax_rate($product_data['products_tax_class_id']));
     }
 
 // set flag for attributes module usage:
@@ -63,36 +63,37 @@
 
     $reviews = $db->Execute($reviews_query);
 
-  $products_name = $product_info->fields['lang'][$_SESSION['languages_code']]['products_name'];
-  $products_model = $product_info->fields['products_model'];
+  $products_name = $product_data['products_name'];
+  $products_model = $product_data['products_model'];
   // if no common markup tags in description, add line breaks for readability:
-  $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $product_info->fields['lang'][$_SESSION['languages_code']]['products_description']) ? nl2br($product_info->fields['lang'][$_SESSION['languages_code']]['products_description']) : $product_info->fields['lang'][$_SESSION['languages_code']]['products_description']);
+  $products_description = $product_data['products_description'] ?? '';
+  $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $products_description) ? nl2br($products_description) : $products_description);
 
-  $products_image = (($product_not_found || $product_info->fields['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
-  if ($product_info->fields['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS != '1') {
-    $products_image = $product_info->fields['products_image'];
+  $products_image = (($product_not_found || $product_data['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
+  if ($product_data['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS != '1') {
+    $products_image = $product_data['products_image'];
   }
 
-  $products_url = $product_info->fields['lang'][$_SESSION['languages_code']]['products_url'];
-  $products_date_available = $product_info->fields['products_date_available'];
-  $products_date_added = $product_info->fields['products_date_added'];
+  $products_url = $product_data['products_url'];
+  $products_date_available = $product_data['products_date_available'];
+  $products_date_added = $product_data['products_date_added'];
   $products_manufacturer = $manufacturers_name;
-  $products_weight = $product_info->fields['products_weight'];
-  $products_quantity = $product_info->fields['products_quantity'];
+  $products_weight = $product_data['products_weight'];
+  $products_quantity = $product_data['products_quantity'];
 
-  $products_qty_box_status = $product_info->fields['products_qty_box_status'];
-  $products_quantity_order_max = $product_info->fields['products_quantity_order_max'];
+  $products_qty_box_status = $product_data['products_qty_box_status'];
+  $products_quantity_order_max = $product_data['products_quantity_order_max'];
   $products_get_buy_now_qty = zen_get_buy_now_qty($_GET['products_id']);
 
   $products_base_price = $currencies->display_price(zen_get_products_base_price((int)$_GET['products_id']),
-                      zen_get_tax_rate($product_info->fields['products_tax_class_id']));
+                      zen_get_tax_rate($product_data['products_tax_class_id']));
 
-  $product_is_free = $product_info->fields['product_is_free'];
+  $product_is_free = $product_data['product_is_free'];
 
-  $products_tax_class_id = $product_info->fields['products_tax_class_id'];
+  $products_tax_class_id = $product_data['products_tax_class_id'];
 
-    $products_discount_type = $product_info->fields['products_discount_type'];
-    $products_discount_type_from = $product_info->fields['products_discount_type_from'];
+    $products_discount_type = $product_data['products_discount_type'];
+    $products_discount_type_from = $product_data['products_discount_type_from'];
 
     require(DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php'));
   
