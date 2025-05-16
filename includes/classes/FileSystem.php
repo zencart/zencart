@@ -27,7 +27,7 @@ class FileSystem extends IlluminateFilesystem
         $dir->close();
     }
 
-    public function listFilesFromDirectory(string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i'): array
+    public function listFilesFromDirectory(string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i', bool $keepDir = false): array
     {
         if (!is_dir($rootDir)) {
             return [];
@@ -38,16 +38,20 @@ class FileSystem extends IlluminateFilesystem
         $fileList = [];
         while ($file = $dir->read()) {
             if (preg_match($fileRegx, $file) > 0) {
-                $fileList[] = basename($rootDir . '/' . $file);
+                $fileName = $rootDir . '/' . $file;
+                if ($keepDir === false) {
+                    $fileName = basename($fileName);
+                }
+                $fileList[] = $fileName;
             }
         }
         $dir->close();
         return $fileList;
     }
 
-    public function listFilesFromDirectoryAlphaSorted(string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i'): array
+    public function listFilesFromDirectoryAlphaSorted(string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i', bool $keepDir = false): array
     {
-        $fileList = $this->listFilesFromDirectory($rootDir, $fileRegx);
+        $fileList = $this->listFilesFromDirectory($rootDir, $fileRegx, $keepDir);
         sort($fileList);
         return $fileList;
     }
