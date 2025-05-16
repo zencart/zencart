@@ -612,26 +612,30 @@ foreach ($products_options_names as $next_option_name) {
                     $tmp_word_cnt_string = '';
 
                     // calculate word charges
-                    $tmp_word_cnt = 0;
                     $tmp_word_cnt_string = $tmp_value;
                     $tmp_word_cnt = zen_get_word_count($tmp_word_cnt_string, $next_option['attributes_price_words_free']);
                     $tmp_word_price = zen_get_word_count_price($tmp_word_cnt_string, $next_option['attributes_price_words_free'], $next_option['attributes_price_words']);
 
                     if ($next_option['attributes_price_words'] != 0) {
-                        $tmp_html .= TEXT_PER_WORD . $currencies->display_price($next_option['attributes_price_words'], zen_get_tax_rate($product_data['products_tax_class_id'])) . ($next_option['attributes_price_words_free'] != 0 ? TEXT_WORDS_FREE . $next_option['attributes_price_words_free'] : '');
+                        $tmp_html .= 
+                            TEXT_PER_WORD .
+                            $currencies->display_price($next_option['attributes_price_words'], zen_get_tax_rate($product_data['products_tax_class_id'])) .
+                            ($next_option['attributes_price_words_free'] != 0 ? TEXT_WORDS_FREE . $next_option['attributes_price_words_free'] : '');
                     }
                     if ($tmp_word_cnt != 0 && $tmp_word_price != 0) {
                         $tmp_word_price = $currencies->display_price($tmp_word_price, zen_get_tax_rate($product_data['products_tax_class_id']));
                         $tmp_html .= '<br>' . TEXT_CHARGES_WORD . ' ' . $tmp_word_cnt . ' = ' . $tmp_word_price;
                     }
                     // calculate letter charges
-                    $tmp_letters_cnt = 0;
                     $tmp_letters_cnt_string = $tmp_value;
                     $tmp_letters_cnt = zen_get_letters_count($tmp_letters_cnt_string, $next_option['attributes_price_letters_free']);
                     $tmp_letters_price = zen_get_letters_count_price($tmp_letters_cnt_string, $next_option['attributes_price_letters_free'], $next_option['attributes_price_letters']);
 
                     if ($next_option['attributes_price_letters'] != 0) {
-                        $tmp_html .= TEXT_PER_LETTER . $currencies->display_price($next_option['attributes_price_letters'], zen_get_tax_rate($product_data['products_tax_class_id'])) . ($next_option['attributes_price_letters_free'] != 0 ? TEXT_LETTERS_FREE . $next_option['attributes_price_letters_free'] : '');
+                        $tmp_html .=
+                            TEXT_PER_LETTER .
+                            $currencies->display_price($next_option['attributes_price_letters'], zen_get_tax_rate($product_data['products_tax_class_id'])) .
+                            ($next_option['attributes_price_letters_free'] != 0 ? TEXT_LETTERS_FREE . $next_option['attributes_price_letters_free'] : '');
                     }
                     if ($tmp_letters_cnt != 0 && $tmp_letters_price != 0) {
                         $tmp_letters_price = $currencies->display_price($tmp_letters_price, zen_get_tax_rate($product_data['products_tax_class_id']));
@@ -690,9 +694,6 @@ foreach ($products_options_names as $next_option_name) {
             $selected_dropdown_attribute = $products_options_value_id;
         }
         $selected_attribute = $selected_dropdown_attribute;
-
-        $products_options->MoveNext();
-        // end of inner while() loop
     }
 
     $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_BEFORE_ASSEMBLE_OUTPUTS', $next_option, $data_properties, $inputFieldId, $field_disabled);
