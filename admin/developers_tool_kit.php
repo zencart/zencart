@@ -61,7 +61,7 @@ function getDirList($dirName, $filetypes = 1) {
 function zen_display_files($include_root = false, $filetypesincluded = 1) {
   global $check_directory, $found, $configuration_key_lookup, $outCount, $output;
   global $db;
-  $max_context_lines_before = $max_context_lines_after = !empty($_POST['context_lines']) ? abs((int)$_POST['context_lines']) : 0;
+  $max_context_lines_before = $max_context_lines_after = abs((int)($_POST['context_lines'] ?? 0));
 
   $directory_array = array();
   for ($i = 0, $n = count($check_directory); $i < $n; $i++) {
