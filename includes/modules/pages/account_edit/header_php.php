@@ -42,12 +42,12 @@ if (!empty($_POST['action']) && $_POST['action'] == 'process') {
     }
   }
 
-  if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+  if (mb_strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
     $error = true;
     $messageStack->add('account_edit', ENTRY_FIRST_NAME_ERROR);
   }
 
-  if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+  if (mb_strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
     $error = true;
     $messageStack->add('account_edit', ENTRY_LAST_NAME_ERROR);
   }
@@ -61,7 +61,7 @@ if (!empty($_POST['action']) && $_POST['action'] == 'process') {
     }
   }
 
-  if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+  if (mb_strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
     $error = true;
     $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR);
   }
