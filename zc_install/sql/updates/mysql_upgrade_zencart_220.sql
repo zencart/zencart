@@ -54,6 +54,19 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href="https://www.tiny.cloud/auth/signup/" target="_blank">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now());
 
 
+#PROGRESS_FEEDBACK:!TEXT=Creating new table tax_rates_description...
+# Table structure for table 'tax_rates_description'
+DROP TABLE IF EXISTS tax_rates_description;
+CREATE TABLE tax_rates_description (
+  tax_rates_id int(11) NOT NULL default '0',
+  language_id int(11) NOT NULL default '1',
+  tax_description varchar(255) NOT NULL default '',
+  PRIMARY KEY  (tax_rates_id,language_id),
+  KEY idx_tax_rates_description_zen (tax_description(250))
+) ENGINE=MyISAM;
+INSERT INTO tax_rates_description SELECT tr.tax_rates_id, lg.languages_id, tr.tax_description FROM tax_rates tr, languages lg;
+ALTER TABLE tax_rates DROP COLUMN tax_description;
+
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
 #### VERSION UPDATE STATEMENTS

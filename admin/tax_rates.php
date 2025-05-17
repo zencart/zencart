@@ -8,6 +8,7 @@
 require('includes/application_top.php');
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
+$languages = zen_get_languages();
 
 if (!empty($action)) {
   switch ($action) {
@@ -25,6 +26,11 @@ if (!empty($action)) {
                             '" . zen_db_input($tax_description) . "',
                             '" . zen_db_input($tax_priority) . "',
                             now())");
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        $language_id = $languages[$i]['id'];
+        $db->Execute("INSERT INTO " . TABLE_TAX_RATES_DESCRIPTION . " (tax_rates_id, language_id, tax_description)
+                      VALUES (LAST_INSERT_ID(), " . $language_id . ", '" . $tax_description . "')");
+      }
 
       $new_taxrate_id = $db->Insert_ID();
       zen_record_admin_activity('Tax Rate added, assigned ID ' . $new_taxrate_id, 'info');
@@ -47,6 +53,10 @@ if (!empty($action)) {
                         tax_priority = '" . zen_db_input($tax_priority) . "',
                         last_modified = now()
                     WHERE tax_rates_id = " . (int)$tax_rates_id);
+      $db->Execute("UPDATE " . TABLE_TAX_RATES_DESCRIPTION . "
+                    SET tax_description = '" . zen_db_input($tax_description) . "'
+                    WHERE tax_rates_id =" . (int)$tax_rates_id . "
+                        AND language_id = " . (int)$_SESSION['languages_id']);
 
       zen_record_admin_activity('Tax Rate updated for tax-rate-id ' . $tax_rates_id, 'info');
       zen_redirect(zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $tax_rates_id));
@@ -55,6 +65,8 @@ if (!empty($action)) {
       $tax_rates_id = zen_db_prepare_input($_POST['tID']);
 
       $db->Execute("DELETE FROM " . TABLE_TAX_RATES . "
+                    WHERE tax_rates_id = " . (int)$tax_rates_id);
+      $db->Execute("DELETE FROM " . TABLE_TAX_RATES_DESCRIPTION . "
                     WHERE tax_rates_id = " . (int)$tax_rates_id);
       zen_record_admin_activity('Tax Rate deleted for tax-rate-id ' . (int)$tax_rates_id, 'notice');
       zen_redirect(zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page']));
@@ -91,11 +103,12 @@ if (!empty($action)) {
             </thead>
             <tbody>
                 <?php
-                $rates_query_raw = "select r.tax_rates_id, z.geo_zone_id, z.geo_zone_name, tc.tax_class_title, tc.tax_class_id, r.tax_priority, r.tax_rate, r.tax_description, r.date_added, r.last_modified
+                $rates_query_raw = "select r.tax_rates_id, z.geo_zone_id, z.geo_zone_name, tc.tax_class_title, tc.tax_class_id, r.tax_priority, r.tax_rate, rd.tax_description, r.date_added, r.last_modified
                                     from " . TABLE_TAX_CLASS . " tc,
-                                         " . TABLE_TAX_RATES . " r
+                                         " . TABLE_TAX_RATES_DESCRIPTION . " rd
+                                    left join " . TABLE_TAX_RATES . " r on r.tax_rates_id = rd.tax_rates_id
                                     left join " . TABLE_GEO_ZONES . " z on r.tax_zone_id = z.geo_zone_id
-                                    where r.tax_class_id = tc.tax_class_id";
+                                    where r.tax_class_id = tc.tax_class_id and rd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
                 $rates_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $rates_query_raw, $rates_query_numrows);
                 $rates = $db->Execute($rates_query_raw);
                 foreach ($rates as $rate) {
