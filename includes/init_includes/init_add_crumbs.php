@@ -70,14 +70,8 @@ foreach ($get_terms as $next_get_term) {
  * add the products name to the breadcrumb trail
  */
 if (isset($_GET['products_id'])) {
-    $productname_query =
-        "SELECT products_name
-           FROM " . TABLE_PRODUCTS_DESCRIPTION . "
-          WHERE products_id = " . (int)$_GET['products_id'] . "
-            AND language_id = " . (int)$_SESSION['languages_id'];
-    $productname = $db->Execute($productname_query, 1);
-
-    if (!$productname->EOF) {
-        $breadcrumb->add($productname->fields['products_name'], zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
+    $productname = zen_get_products_name($_GET['products_id']);
+    if (!empty($productname)) {
+        $breadcrumb->add($productname, zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
     }
 }
