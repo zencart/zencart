@@ -582,7 +582,8 @@ class Customer extends base
                     zone_name, zone_code AS zone_iso,
                     entry_country_id AS country_id,
                     countries_name AS country_name,
-                    countries_iso_code_3 AS country_iso
+                    countries_iso_code_3 AS country_iso,
+                    countries_iso_code_2 AS country_iso_2
                FROM " . TABLE_ADDRESS_BOOK . " ab
                     INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
                     LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id AND z.zone_country_id = c.countries_id)
