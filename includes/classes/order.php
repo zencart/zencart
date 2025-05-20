@@ -472,10 +472,6 @@ class order extends base
 
         $this->content_type = $_SESSION['cart']->get_content_type();
 
-        $customerAddresses = $customer->getData('addresses');
-        $deliveryKey = $this->getAddressKey($customerAddresses , $sendto);
-        $billKey = $this->getAddressKey($customerAddresses, $billto);
-
         $paymentModule = !empty($_SESSION['payment']) ? $_SESSION['payment'] : 'NOT SET YET';
 
         if (isset($_SESSION['cc_id'])) {
@@ -528,6 +524,15 @@ class order extends base
             'is_wholesale' => (int)Customer::isWholesaleCustomer(),
         ];
 
+        $customer ??= new Customer();
+        $customerAddresses = $customer->getData('addresses');
+        $deliveryKey = null;
+        $billKey = null;
+        if (!empty($customerAddresses)) {
+            $deliveryKey = $this->getAddressKey($customerAddresses, $sendto);
+            $billKey = $this->getAddressKey($customerAddresses, $billto);
+        }
+
         // -----
         // Provide a watching observer (think EO!) a means to override the order's information as
         // well as the customer/delivery/billing addresses.
@@ -572,14 +577,14 @@ class order extends base
         } elseif (count($delivery_address_override) !== 0) {
             $this->delivery = $delivery_address_override;
 
-        } elseif (!empty($deliveryKey)) {
+        } elseif (!is_null($deliveryKey)) {
             $this->delivery = $this->getAddress($customerAddresses, $deliveryKey);
         }
 
         if (count($billing_address_override) !== 0) {
             $this->billing = $billing_address_override;
 
-        } elseif (!empty($billKey)) {
+        } elseif (!is_null($billKey)) {
             $this->billing = $this->getAddress($customerAddresses, $billKey);
         }
 
@@ -1437,14 +1442,14 @@ class order extends base
         $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
     }
 
-    private function getAddressKey(array $customerAddresses, int $bookId): int
+    private function getAddressKey(array $customerAddresses, int $bookId): null|int
     {
         foreach ($customerAddresses as $k => $address) {
             if (isset($address['address_book_id']) && $bookId === (int) $address['address_book_id']) {
                 return $k;
             }
         }
-        return 0;
+        return null;
     }
     
     private function getAddress(array $customerAddresses, int $arrayKey): array
