@@ -151,6 +151,18 @@ if (!empty($action)) {
                                 " . $status['sort_order'] . ")");
         }
 
+        // create additional tax_rates_description records
+        $tax_rates_description = $db->Execute("SELECT tax_rates_id, tax_description
+                                       FROM " . TABLE_TAX_RATES_DESCRIPTION . "
+                                       WHERE language_id = " . (int)$_SESSION['languages_id']);
+
+        foreach ($tax_rates_description as $rates_description) {
+          $db->Execute("INSERT INTO " . TABLE_TAX_RATES_DESCRIPTION . " (tax_rates_id, language_id, tax_description)
+                        VALUES (" . $rates_description['tax_rates_id'] . ",
+                                " . (int)$insert_id . ",
+                                '" . zen_db_input($rates_description['tax_description']) . "')");
+        }
+
         // create additional coupons_description records
         $coupons = $db->Execute("SELECT coupon_id, coupon_name, coupon_description
                                  FROM " . TABLE_COUPONS_DESCRIPTION . "
@@ -241,6 +253,7 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_MANUFACTURERS_INFO . " WHERE languages_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_TAX_RATES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
