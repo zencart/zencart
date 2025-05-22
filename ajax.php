@@ -8,9 +8,17 @@
  * @version $Id: lat9 2024 Aug 13 Modified in v2.1.0-alpha2 $
  */
 // Abort if the request was not an AJAX call
-if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'], $_SERVER['REMOTE_ADDR']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
     http_response_code(400); // "Bad Request"
     exit();
+}
+
+// -----
+// Ensure that the two required $_GET variables are (a) set and (b) contain
+// only alphanumeric characters.
+//
+if (!isset($_GET['act'], $_GET['method']) || !preg_match('/^[a-zA-Z0-9]+$/', $_GET['act']) || !preg_match('/^[a-zA-Z0-9]+$/', $_GET['method'])) {
+    ajaxAbort();
 }
 
 // -----
@@ -43,14 +51,6 @@ function ajaxAbort($status = 400, $msg = null)
     exit();
 }
 // --- support functions ------------------
-
-// -----
-// Ensure that the two required $_GET variables are (a) set and (b) contain
-// only alphanumeric characters.
-//
-if (!isset($_GET['act'], $_GET['method']) || !preg_match('/^[a-zA-Z0-9]+$/', $_GET['act']) || !preg_match('/^[a-zA-Z0-9]+$/', $_GET['method'])) {
-    ajaxAbort();
-}
 
 $language_page_directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/';
 
