@@ -18,7 +18,9 @@ function zen_output_string(?string $string, array|bool $translate = false, bool 
     if (is_null($string) === true) {
         return '';
     }
-
+    if (is_array($string) === true) {
+        return '';
+    }
     if ($protected === true) {
         $double_encode = !IS_ADMIN_FLAG;
         return htmlspecialchars($string, ENT_COMPAT, CHARSET, $double_encode);
