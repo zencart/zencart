@@ -192,6 +192,7 @@ class PluginManager
             }
             $manifest = require $fileinfo->getPathname() . '/manifest.php';
             $versionList[$fileinfo->getFilename()] = $manifest;
+            $this->loadPluginLanguageConstants($fileinfo);
         }
         return $versionList;
     }
@@ -307,5 +308,27 @@ class PluginManager
     public function getPluginControl()
     {
         return $this->pluginControl;
+    }
+
+    protected function loadPluginLanguageConstants($parent)
+    {
+        $filePath = [];
+        foreach ($this->getInstalledPlugins() as $plugin) {
+            $filePath[] = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
+        }
+
+        $dir = new \DirectoryIterator($parent->getPathName());
+        foreach ($dir as $fileinfo) {
+            $univ_path_name = rtrim(str_replace('\\', '/', $fileinfo->getPathname()), '.');
+            if ($fileinfo == '.' && !in_array($univ_path_name, $filePath)) {
+                $lang_file = $univ_path_name . '/lang.manifest_' . $_SESSION['languages_code'] . '.php';
+                if (file_exists($lang_file)) {
+                    include $lang_file;
+                    foreach ($define as $key => $value) {
+                        define($key, $value);
+                    }
+                }
+            }
+        }
     }
 }
