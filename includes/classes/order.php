@@ -461,7 +461,7 @@ class order extends base
 
     function cart()
     {
-        global $db, $currencies;
+        global $db, $currencies, $customer;
 
         $this->notify('NOTIFY_ORDER_CART_BEGINS');
 
@@ -471,47 +471,6 @@ class order extends base
         $decimals = $currencies->get_decimal_places($_SESSION['currency']);
 
         $this->content_type = $_SESSION['cart']->get_content_type();
-
-        $customer_address_query = "SELECT c.customers_firstname, c.customers_lastname, c.customers_telephone,
-                                    c.customers_email_address, ab.entry_company, ab.entry_street_address,
-                                    ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id,
-                                    z.zone_code, z.zone_name, co.countries_id, co.countries_name,
-                                    co.countries_iso_code_2, co.countries_iso_code_3,
-                                    co.address_format_id, ab.entry_state
-                                   FROM " . TABLE_CUSTOMERS . " c
-                                   INNER JOIN " . TABLE_ADDRESS_BOOK . " ab ON (c.customers_id = ab.customers_id)
-                                   LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                   LEFT JOIN " . TABLE_COUNTRIES . " co ON (ab.entry_country_id = co.countries_id)
-                                   WHERE c.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                   AND c.customers_default_address_id = ab.address_book_id";
-
-        $customer_address = $db->Execute($customer_address_query);
-
-        $shipping_address_query = "SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
-                                    ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
-                                    ab.entry_city, ab.entry_zone_id, z.zone_code, z.zone_name, ab.entry_country_id,
-                                    c.countries_id, c.countries_name, c.countries_iso_code_2,
-                                    c.countries_iso_code_3, c.address_format_id, ab.entry_state
-                                   FROM " . TABLE_ADDRESS_BOOK . " ab
-                                   LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                   LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
-                                   WHERE ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                   AND ab.address_book_id = " . $sendto;
-
-        $shipping_address = $db->Execute($shipping_address_query);
-
-        $billing_address_query = "SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
-                                   ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
-                                   ab.entry_city, ab.entry_zone_id, z.zone_code, z.zone_name, ab.entry_country_id,
-                                   c.countries_id, c.countries_name, c.countries_iso_code_2,
-                                   c.countries_iso_code_3, c.address_format_id, ab.entry_state
-                                  FROM " . TABLE_ADDRESS_BOOK . " ab
-                                  LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                  LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
-                                  WHERE ab.customers_id = " . (!empty($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : 0) . "
-                                  AND ab.address_book_id = " . $billto;
-
-        $billing_address = $db->Execute($billing_address_query);
 
         $paymentModule = !empty($_SESSION['payment']) ? $_SESSION['payment'] : 'NOT SET YET';
 
@@ -565,6 +524,15 @@ class order extends base
             'is_wholesale' => (int)Customer::isWholesaleCustomer(),
         ];
 
+        $customer ??= new Customer();
+        $customerAddresses = $customer->getData('addresses');
+        $deliveryKey = null;
+        $billKey = null;
+        if (!empty($customerAddresses)) {
+            $deliveryKey = $this->getAddressKey($customerAddresses, $sendto);
+            $billKey = $this->getAddressKey($customerAddresses, $billto);
+        }
+
         // -----
         // Provide a watching observer (think EO!) a means to override the order's information as
         // well as the customer/delivery/billing addresses.
@@ -580,28 +548,10 @@ class order extends base
         if (count($customer_address_override) !== 0) {
             $this->customer = $customer_address_override;
 
-        } elseif (!$customer_address->EOF) {
-            $this->customer = [
-                'firstname' => $customer_address->fields['customers_firstname'],
-                'lastname' => $customer_address->fields['customers_lastname'],
-                'company' => $customer_address->fields['entry_company'],
-                'street_address' => $customer_address->fields['entry_street_address'],
-                'suburb' => $customer_address->fields['entry_suburb'],
-                'city' => $customer_address->fields['entry_city'],
-                'postcode' => $customer_address->fields['entry_postcode'],
-                'state' => ((zen_not_null($customer_address->fields['entry_state'])) ? $customer_address->fields['entry_state'] : $customer_address->fields['zone_name']),
-                'state_code' => ((zen_not_null($customer_address->fields['zone_code'])) ? $customer_address->fields['zone_code'] : $customer_address->fields['zone_name']),
-                'zone_id' => $customer_address->fields['entry_zone_id'],
-                'country' => [
-                    'id' => $customer_address->fields['countries_id'],
-                    'title' => $customer_address->fields['countries_name'],
-                    'iso_code_2' => $customer_address->fields['countries_iso_code_2'],
-                    'iso_code_3' => $customer_address->fields['countries_iso_code_3'],
-                ],
-                'format_id' => (int)$customer_address->fields['address_format_id'],
-                'telephone' => $customer_address->fields['customers_telephone'],
-                'email_address' => $customer_address->fields['customers_email_address'],
-            ];
+        } elseif (!empty($customer->getData('customers_firstname'))) {
+            $this->customer = $this->getAddress($customerAddresses, $this->getAddressKey($customerAddresses, $customer->getData('customers_default_address_id')));
+            $this->customer['telephone'] = $customer->getData('customers_telephone');
+            $this->customer['email_address'] = $customer->getData('customers_email_address');
         }
 
         if ($this->content_type == 'virtual') {
@@ -627,53 +577,15 @@ class order extends base
         } elseif (count($delivery_address_override) !== 0) {
             $this->delivery = $delivery_address_override;
 
-        } elseif (!$shipping_address->EOF) {
-            $this->delivery = [
-                'firstname' => $shipping_address->fields['entry_firstname'],
-                'lastname' => $shipping_address->fields['entry_lastname'],
-                'company' => $shipping_address->fields['entry_company'],
-                'street_address' => $shipping_address->fields['entry_street_address'],
-                'suburb' => $shipping_address->fields['entry_suburb'],
-                'city' => $shipping_address->fields['entry_city'],
-                'postcode' => $shipping_address->fields['entry_postcode'],
-                'state' => ((zen_not_null($shipping_address->fields['entry_state'])) ? $shipping_address->fields['entry_state'] : $shipping_address->fields['zone_name']),
-                'state_code' => ((zen_not_null($shipping_address->fields['zone_code'])) ? $shipping_address->fields['zone_code'] : $shipping_address->fields['zone_name']),
-                'zone_id' => $shipping_address->fields['entry_zone_id'],
-                'country' => [
-                    'id' => $shipping_address->fields['countries_id'],
-                    'title' => $shipping_address->fields['countries_name'],
-                    'iso_code_2' => $shipping_address->fields['countries_iso_code_2'],
-                    'iso_code_3' => $shipping_address->fields['countries_iso_code_3'],
-                ],
-                'country_id' => $shipping_address->fields['entry_country_id'],
-                'format_id' => (int)$shipping_address->fields['address_format_id'],
-            ];
+        } elseif (!is_null($deliveryKey)) {
+            $this->delivery = $this->getAddress($customerAddresses, $deliveryKey);
         }
 
         if (count($billing_address_override) !== 0) {
             $this->billing = $billing_address_override;
 
-        } elseif (!$billing_address->EOF) {
-            $this->billing = [
-                'firstname' => $billing_address->fields['entry_firstname'],
-                'lastname' => $billing_address->fields['entry_lastname'],
-                'company' => $billing_address->fields['entry_company'],
-                'street_address' => $billing_address->fields['entry_street_address'],
-                'suburb' => $billing_address->fields['entry_suburb'],
-                'city' => $billing_address->fields['entry_city'],
-                'postcode' => $billing_address->fields['entry_postcode'],
-                'state' => ((zen_not_null($billing_address->fields['entry_state'])) ? $billing_address->fields['entry_state'] : $billing_address->fields['zone_name']),
-                'state_code' => ((zen_not_null($billing_address->fields['zone_code'])) ? $billing_address->fields['zone_code'] : $billing_address->fields['zone_name']),
-                'zone_id' => $billing_address->fields['entry_zone_id'],
-                'country' => [
-                    'id' => $billing_address->fields['countries_id'],
-                    'title' => $billing_address->fields['countries_name'],
-                    'iso_code_2' => $billing_address->fields['countries_iso_code_2'],
-                    'iso_code_3' => $billing_address->fields['countries_iso_code_3'],
-                ],
-                'country_id' => $billing_address->fields['entry_country_id'],
-                'format_id' => (int)$billing_address->fields['address_format_id'],
-            ];
+        } elseif (!is_null($billKey)) {
+            $this->billing = $this->getAddress($customerAddresses, $billKey);
         }
 
         [$taxCountryId, $taxZoneId] = $this->determineTaxAddressZones($billto, $sendto);
@@ -1388,7 +1300,6 @@ class order extends base
         $html_msg['INTRO_DATE_ORDERED'] = $zcDate->output(DATE_FORMAT_LONG);
         $html_msg['INTRO_URL_TEXT'] = EMAIL_TEXT_INVOICE_URL_CLICK;
         $html_msg['INTRO_URL_VALUE'] = zen_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $zf_insert_id, 'SSL', false);
-
         if (empty($this->customer['telephone'])) {
             $html_msg['EMAIL_CUSTOMER_PHONE'] = '';
             $html_msg['EMAIL_TEXT_TELEPHONE'] = '';
@@ -1440,7 +1351,6 @@ class order extends base
                 EMAIL_SEPARATOR . "\n" .
                 zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], false, '', "\n") . "\n";
         }
-
         if (!empty($this->customer['telephone'])) {
             $email_order .= EMAIL_TEXT_TELEPHONE . $this->customer['telephone'] . "\n\n";
         }
@@ -1530,6 +1440,41 @@ class order extends base
             }
         }
         $this->notify('NOTIFY_ORDER_AFTER_SEND_ORDER_EMAIL', $zf_insert_id, $email_order, $extra_info, $html_msg);
+    }
+
+    private function getAddressKey(array $customerAddresses, int $bookId): null|int
+    {
+        foreach ($customerAddresses as $k => $address) {
+            if (isset($address['address_book_id']) && $bookId === (int) $address['address_book_id']) {
+                return $k;
+            }
+        }
+        return null;
+    }
+    
+    private function getAddress(array $customerAddresses, int $arrayKey): array
+    {
+        $address = $customerAddresses[$arrayKey]['address'];
+        return [
+            'firstname' => $address['firstname'],
+            'lastname' => $address['lastname'],
+            'company' => $address['company'],
+            'street_address' => $address['street_address'],
+            'suburb' => $address['suburb'],
+            'city' => $address['city'],
+            'postcode' => $address['postcode'],
+            'state' => ((zen_not_null($address['state'])) ? $address['state'] : $address['zone_name']),
+            'state_code' => ((zen_not_null($address['zone_iso'])) ? $address['zone_iso'] : $address['zone_name']),
+            'zone_id' => $address['zone_id'],
+            'country' => [
+                'id' => $address['country_id'],
+                'title' => $address['country_name'],
+                'iso_code_2' => $address['country_iso_2'],
+                'iso_code_3' => $address['country_iso'],
+            ],
+            'country_id' => $address['country_id'],
+            'format_id' => $customerAddresses[$arrayKey]['format_id'],
+        ];
     }
 
 }
