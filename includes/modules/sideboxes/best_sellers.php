@@ -39,8 +39,8 @@ if ($best_sellers->RecordCount() >= MIN_DISPLAY_BESTSELLERS) {
     $rows = 0;
     $bestsellers_list = [];
     foreach ($best_sellers as $bestseller) {
-        $product_info = (new Product((int)$bestseller['products_id']))->withDefaultLanguage();
-        $bestseller = array_merge($bestseller, $product_info->getData());
+        $bs_product_info = (new Product((int)$bestseller['products_id']))->withDefaultLanguage();
+        $bestseller = array_merge($bestseller, $bs_product_info->getData());
         $best_products_id = $bestseller['products_id'];
         $rows++;
         $bestsellers_list[$rows] = [
