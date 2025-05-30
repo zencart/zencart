@@ -2195,12 +2195,26 @@ CREATE TABLE tax_rates (
   tax_class_id int(11) NOT NULL default '0',
   tax_priority int(5) default '1',
   tax_rate decimal(7,4) NOT NULL default '0.0000',
-  tax_description varchar(255) NOT NULL default '',
   last_modified datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (tax_rates_id),
   KEY idx_tax_zone_id_zen (tax_zone_id),
   KEY idx_tax_class_id_zen (tax_class_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'tax_rates_description'
+#
+
+DROP TABLE IF EXISTS tax_rates_description;
+CREATE TABLE tax_rates_description (
+  tax_rates_id int(11) NOT NULL default '0',
+  language_id int(11) NOT NULL default '1',
+  tax_description varchar(255) NOT NULL default '',
+  PRIMARY KEY  (tax_rates_id,language_id),
+  KEY idx_tax_rates_description_zen (tax_description(250))
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -3335,7 +3349,8 @@ INSERT INTO products_options_types (products_options_types_id, products_options_
 INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name) VALUES (0, 1, 'TEXT');
 
 # USA/Florida
-INSERT INTO tax_rates VALUES (1, 1, 1, 1, 7.0, 'FL TAX 7.0%', now(), now());
+INSERT INTO tax_rates VALUES (1, 1, 1, 1, 7.0, now(), now());
+INSERT INTO tax_rates_Description VALUES (1, 1, 'FL TAX 7.0%');
 INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,date_added) VALUES (1,'Florida','Florida local sales tax zone',now());
 INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (1,223,18,1,now());
 INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, date_added) VALUES (1, 'Taxable Goods', 'The following types of products are included: non-food, services, etc', now());
