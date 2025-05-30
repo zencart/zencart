@@ -12,6 +12,10 @@
  * Please Note : This file should be placed in includes/extra_configures and will automatically load.
  *
  */
+
+if (isset($_GET['keyword']) && is_array($_GET['keyword'])) {
+   $_GET['keyword'] = '';
+}
 if (isset($_GET['keyword']) && $_GET['keyword'] != '')
 {
   $count =  substr_count($_GET['keyword'], '"');
