@@ -46,7 +46,7 @@ class navigationHistory extends base
     public function add_current_page()
     {
         // check whether there are pages which should be blacklisted against entering navigation history
-        if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && $_GET['act'] !== '') {
+        if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && isset($_GET['act']) && $_GET['act'] !== '') {
             return;
         }
 
