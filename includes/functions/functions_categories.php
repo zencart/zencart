@@ -1112,7 +1112,10 @@ function zen_categories_lookup($categories_id, $what_field = 'categories_name', 
  */
 function zen_remove_category($category_id): void
 {
-    if ((int)$category_id == TOPMOST_CATEGORY_PARENT_ID) return;
+    if ((int)$category_id === (int)TOPMOST_CATEGORY_PARENT_ID) {
+        return;
+    }
+
     global $db, $zco_notifier;
     $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_CATEGORY', [], $category_id);
 
@@ -1132,114 +1135,58 @@ function zen_remove_category($category_id): void
         OR sale_categories_all LIKE '%," . (int)$category_id . "'
         OR sale_categories_all LIKE '" . (int)$category_id . ",%'");
 
-//echo 'WORKING ON: ' . (int)$category_id . ' chk_sale_categories_selected: ' . $chk_sale_categories_selected->RecordCount() . ' chk_sale_categories_all: ' . $chk_sale_categories_all->RecordCount() . '<br>';
-    while (!$chk_sale_categories_selected->EOF) {
-        $skip_cats = false; // used when deleting
+    // -----
+    // In the salemaker_sales table, 'sale_categories_selected' is a comma-separated list of
+    // categories to which the sale applies; 'sale_categories_all' is a comma-separated list of
+    // categories, further enclosed in starting/ending commas.  Examples:
+    //
+    // - Sale applies to *all* categories: '0' and ',{comma-separated-list},'
+    // - Sale applies to a single category: '1' and ',1,'
+    // - Sale applies to 5 categories: '25,28,25,47,58' and ',25,28,25,47,58,'
+    //
+    $skip_sale_id = 0;  //- Set for sale_categories_all check, in case the category's not present in sale_categories_selected
+    foreach ($chk_sale_categories_selected as $sale_categories_selected) {
         $skip_sale_id = 0;
-//echo '<br>FIRST LOOP: sale_id ' . $chk_sale_categories_selected->fields['sale_id'] . ' sale_categories_selected: ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-        // 9 or ,9 or 9,
-        // delete record if sale_categories_selected = 9 and  sale_categories_all = ,9,
-        if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id and $chk_sale_categories_selected->fields['sale_categories_all'] == ',' . (int)$category_id . ',') { // delete record
-//echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_selected->fields['sale_id'] . '<br><br>';
-            $skip_cats = true;
-            $skip_sale_id = $chk_sale_categories_selected->fields['sale_id'];
-            $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id="  . (int)$skip_sale_id;
+
+        // delete record if sale_categories_selected = 9 and  sale_categories_all = ,9, (single category)
+        if ($sale_categories_selected['sale_categories_selected'] == (int)$category_id && $sale_categories_selected['sale_categories_all'] == ',' . (int)$category_id . ',') { // delete record
+            $skip_sale_id = $sale_categories_selected['sale_id'];
+            $db->Execute("DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id = "  . (int)$skip_sale_id . " LIMIT 1");
+            continue;
         }
 
-        // if in the front - remove 9,
-        //  if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id . ',') { // front
-        if (!$skip_cats && (preg_match('/^' . (int)$category_id . ',/', $chk_sale_categories_selected->fields['sale_categories_selected'])) ) { // front
-//echo 'B: I need to remove - ' . (int)$category_id . ', - from the front of ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], strlen((int)$category_id . ','));
-//echo 'B: new_sale_categories_selected: ' . $new_sale_categories_selected . '<br><br>';
-        }
-
-        // if in the middle or end - remove ,9,
-        if (!$skip_cats && (strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',')) ) { // middle or end
-//echo 'C: I need to remove - ,' . (int)$category_id . ', - from the middle or end ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
-            $end_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_selected->fields['sale_categories_selected'], $start_cat);
-//echo 'C: new_sale_categories_selected: ' . $new_sale_categories_selected. '<br><br>';
-            $skip_cat_last = true;
-        }
-
-
-// not needed in loop 1 if middle does end
-        // if on the end - remove ,9 skip if middle cleaned it
-        if (!$skip_cats && !$skip_cat_last && (strripos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id)) ) { // end
-            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id) + strlen(',' . (int)$category_id);
-//echo 'D: I need to remove - ,' . (int)$category_id . ' - from the end ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
-//echo 'D: new_sale_categories_selected: ' . $new_sale_categories_selected. '<br><br>';
-        }
-
-        if (!$skip_cats) {
-            $salemakerupdate =
+        $categories_selected = explode(',', $sale_categories_selected['sale_categories_selected']);
+        $key = array_search($category_id, $categories_selected);
+        if ($key !== false) {
+            unset($categories_selected[$key]);
+            $new_sale_categories_selected = implode(',', $categories_selected);
+            $db->Execute(
                 "UPDATE " . TABLE_SALEMAKER_SALES . "
-                 SET sale_categories_selected='" . $new_sale_categories_selected . "'
-                 WHERE sale_id = " . (int)$chk_sale_categories_selected->fields['sale_id'];
-//echo 'Update new_sale_categories_selected: ' . $salemakerupdate . '<br>';
-            $db->Execute($salemakerupdate);
-        } else {
-//echo 'Record was deleted sale_id ' . $skip_sale_id . '<br>' . $salemakerdelete;
-            $db->Execute($salemakerdelete);
+                    SET sale_categories_selected = '" . $new_sale_categories_selected . "'
+                  WHERE sale_id = " . (int)$sale_categories_selected['sale_id'] . "
+                  LIMIT 1"
+            );
         }
-
-        $chk_sale_categories_selected->MoveNext();
     }
 
-    while (!$chk_sale_categories_all->EOF) {
-//echo '<br><br>SECOND LOOP: sale_id ' . $chk_sale_categories_all->fields['sale_id'] . ' sale_categories_all: ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br><br>';
-        // remove ,9 if on front as ,9, - remove ,9 if in the middle as ,9, - remove ,9 if on the end as ,9,
-        // beware of ,79, or ,98, or ,99, when cleaning 9
-        // if ($chk_sale_categories_all->fields['sale_categories_all'] == ',9') { // front
-        // if (something for the middle) { // middle
-        // if (right($chk_sale_categories_all->fields['sale_categories_all']) == ',9,') { // end
-
-        $skip_cats = false;
-        if ($skip_sale_id == $chk_sale_categories_all->fields['sale_id']) { // was deleted
-//echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_all->fields['sale_id'] . ' but already done' . '<br><br>';
-            $skip_cats = true;
+    foreach ($chk_sale_categories_all as $sale_categories_all) {
+        if ($skip_sale_id == $sale_categories_all['sale_id']) { // was deleted
+            continue;
         }
 
-        // if in the front - remove 9,
-        //  if ($chk_sale_categories_all->fields['sale_categories_all'] == (int)$category_id . ',') { // front
-        if (!$skip_cats && (preg_match('/^' . ',' . (int)$category_id . ',/', $chk_sale_categories_all->fields['sale_categories_all'])) ) { // front
-//echo 'B: I need to remove - ' . (int)$category_id . ', - from the front of ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], strlen(',' . (int)$category_id));
-//echo 'B: new_sale_categories_all: ' . $new_sale_categories_all . '<br><br>';
+        $categories_all = explode(',', trim($sale_categories_all['sale_categories_all'], ','));
+        $key = array_search($category_id, $categories_all);
+        if ($key !== false) {
+            unset($categories_all[$key]);
+            $new_sale_categories_all = ',' . implode(',', $categories_all) . ',';
+            $db->Execute(
+                "UPDATE " . TABLE_SALEMAKER_SALES . "
+                 SET sale_categories_all = '" . $new_sale_categories_all . "'
+                 WHERE sale_id = " . (int)$sale_categories_all['sale_id'] . "
+                 LIMIT 1"
+            );
         }
-
-        // if in the middle or end - remove ,9,
-        if (!$skip_cats && (strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // middle
-//echo 'C: I need to remove - ,' . (int)$category_id . ', - from the middle or end ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
-            $start_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
-            $end_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_all->fields['sale_categories_all'], $start_cat);
-//echo 'C: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
-        }
-
-        /*
-        // not needed in loop 2
-          // if on the end - remove ,9,
-          if (!$skip_cats && (strripos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // end
-            $start_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id) + strlen(',' . (int)$category_id . ',');
-            echo 'D: I need to remove from the end - ,' . (int)$category_id . ', - from the end ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
-            echo 'D: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
-          }
-        */
-        if (!empty($new_sale_categories_all)) {
-            $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
-            $db->Execute($salemakerupdate);
-//echo 'Update sale_categories_all: ' . $salemakerupdate . '<br>';
-        }
-
-        $chk_sale_categories_all->MoveNext();
     }
-
-//die('DONE TESTING');
 
     $category_image = $db->Execute("SELECT categories_image
                                     FROM " . TABLE_CATEGORIES . "
