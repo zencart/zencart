@@ -1133,6 +1133,7 @@ function zen_remove_category($category_id): void
         OR sale_categories_all LIKE '" . (int)$category_id . ",%'");
 
 //echo 'WORKING ON: ' . (int)$category_id . ' chk_sale_categories_selected: ' . $chk_sale_categories_selected->RecordCount() . ' chk_sale_categories_all: ' . $chk_sale_categories_all->RecordCount() . '<br>';
+    $skip_sale_id = 0;  //- Set for sale_categories_all check, in case the category's not present in sale_categories_selected
     while (!$chk_sale_categories_selected->EOF) {
         $skip_cats = false; // used when deleting
         $skip_sale_id = 0;
