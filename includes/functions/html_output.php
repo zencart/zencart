@@ -220,7 +220,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     if (PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !is_file($src)) {
         $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
-    
+
     $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $title, $width, $height, $parameters);
 
     // Determine if the source-file exists.
@@ -301,7 +301,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
  */
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_SUBMIT');
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';

@@ -52,7 +52,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   $zco_notifier->notify('NOTIFY_REVIEWS_WRITE_CAPTCHA_CHECK');
 
-  if (strlen($review_text) < REVIEW_TEXT_MIN_LENGTH) {
+  if (mb_strlen($review_text) < REVIEW_TEXT_MIN_LENGTH) {
     $error = true;
     $messageStack->add('review_text', JS_REVIEW_TEXT);
   }
