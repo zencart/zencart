@@ -352,6 +352,11 @@
                 $mail->Sender = EMAIL_FROM;
             }
 
+            // if a Reply-To override is configured, use that
+            if (defined('EMAIL_REPLY_TO_OVERRIDE') && zen_validate_email(EMAIL_REPLY_TO_OVERRIDE)) {
+                $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : EMAIL_REPLY_TO_OVERRIDE;
+            }
+
             // set the reply-to address.  If none set yet, then use Store's default email name/address.
             // If sending from checkout or contact-us, use the supplied info
             $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_address : EMAIL_FROM);
