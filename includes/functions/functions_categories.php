@@ -1136,53 +1136,51 @@ function zen_remove_category($category_id): void
         OR sale_categories_all LIKE '" . (int)$category_id . ",%'");
 
     $skip_sale_id = 0;  //- Set for sale_categories_all check, in case the category's not present in sale_categories_selected
-    while (!$chk_sale_categories_selected->EOF) {
+    foreach ($chk_sale_categories_selected as $sale_category_selected) {
         $skip_cats = false; // used when deleting
         $skip_sale_id = 0;
 
         // delete record if sale_categories_selected = 9 and  sale_categories_all = ,9,
-        if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id and $chk_sale_categories_selected->fields['sale_categories_all'] == ',' . (int)$category_id . ',') { // delete record
+        if ($sale_category_selected['sale_categories_selected'] == (int)$category_id && $sale_category_selected['sale_categories_all'] == ',' . (int)$category_id . ',') { // delete record
             $skip_cats = true;
-            $skip_sale_id = $chk_sale_categories_selected->fields['sale_id'];
+            $skip_sale_id = $sale_category_selected['sale_id'];
             $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id="  . (int)$skip_sale_id;
         }
 
         // if in the front - remove 9,
-        //  if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id . ',') { // front
-        if (!$skip_cats && (preg_match('/^' . (int)$category_id . ',/', $chk_sale_categories_selected->fields['sale_categories_selected'])) ) { // front
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], strlen((int)$category_id . ','));
+        //  if ($sale_category_selected['sale_categories_selected'] == (int)$category_id . ',') { // front
+        if (!$skip_cats && (preg_match('/^' . (int)$category_id . ',/', $sale_category_selected['sale_categories_selected'])) ) { // front
+            $new_sale_categories_selected = substr($sale_category_selected['sale_categories_selected'], strlen((int)$category_id . ','));
         }
 
         // if in the middle or end - remove ,9,
-        if (!$skip_cats && (strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',')) ) { // middle or end
-            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
-            $end_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_selected->fields['sale_categories_selected'], $start_cat);
+        if (!$skip_cats && (strpos($sale_category_selected['sale_categories_selected'], ',' . (int)$category_id . ',')) ) { // middle or end
+            $start_cat = (int)strpos($sale_category_selected['sale_categories_selected'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
+            $end_cat = (int)strpos($sale_category_selected['sale_categories_selected'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
+            $new_sale_categories_selected = substr($sale_category_selected['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($sale_category_selected['sale_categories_selected'], $start_cat);
             $skip_cat_last = true;
         }
 
 
 // not needed in loop 1 if middle does end
         // if on the end - remove ,9 skip if middle cleaned it
-        if (!$skip_cats && !$skip_cat_last && (strripos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id)) ) { // end
-            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id) + strlen(',' . (int)$category_id);
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
+        if (!$skip_cats && !$skip_cat_last && (strripos($sale_category_selected['sale_categories_selected'], ',' . (int)$category_id)) ) { // end
+            $start_cat = (int)strpos($sale_category_selected['sale_categories_selected'], ',' . (int)$category_id) + strlen(',' . (int)$category_id);
+            $new_sale_categories_selected = substr($sale_category_selected['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
         }
 
         if (!$skip_cats) {
             $salemakerupdate =
                 "UPDATE " . TABLE_SALEMAKER_SALES . "
                  SET sale_categories_selected='" . $new_sale_categories_selected . "'
-                 WHERE sale_id = " . (int)$chk_sale_categories_selected->fields['sale_id'];
+                 WHERE sale_id = " . (int)$sale_category_selected['sale_id'];
             $db->Execute($salemakerupdate);
         } else {
             $db->Execute($salemakerdelete);
         }
-
-        $chk_sale_categories_selected->MoveNext();
     }
 
-    while (!$chk_sale_categories_all->EOF) {
+    foreach ($chk_sale_categories_all as $sale_categories_all) {
         // remove ,9 if on front as ,9, - remove ,9 if in the middle as ,9, - remove ,9 if on the end as ,9,
         // beware of ,79, or ,98, or ,99, when cleaning 9
         // if ($chk_sale_categories_all->fields['sale_categories_all'] == ',9') { // front
@@ -1190,21 +1188,21 @@ function zen_remove_category($category_id): void
         // if (right($chk_sale_categories_all->fields['sale_categories_all']) == ',9,') { // end
 
         $skip_cats = false;
-        if ($skip_sale_id == $chk_sale_categories_all->fields['sale_id']) { // was deleted
+        if ($skip_sale_id == $sale_categories_all['sale_id']) { // was deleted
             $skip_cats = true;
         }
 
         // if in the front - remove 9,
-        //  if ($chk_sale_categories_all->fields['sale_categories_all'] == (int)$category_id . ',') { // front
-        if (!$skip_cats && (preg_match('/^' . ',' . (int)$category_id . ',/', $chk_sale_categories_all->fields['sale_categories_all'])) ) { // front
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], strlen(',' . (int)$category_id));
+        //  if ($sale_categories_all['sale_categories_all'] == (int)$category_id . ',') { // front
+        if (!$skip_cats && (preg_match('/^' . ',' . (int)$category_id . ',/', $sale_categories_all['sale_categories_all'])) ) { // front
+            $new_sale_categories_all = substr($sale_categories_all['sale_categories_all'], strlen(',' . (int)$category_id));
         }
 
         // if in the middle or end - remove ,9,
-        if (!$skip_cats && (strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // middle
-            $start_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
-            $end_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_all->fields['sale_categories_all'], $start_cat);
+        if (!$skip_cats && (strpos($sale_categories_all['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // middle
+            $start_cat = (int)strpos($sale_categories_all['sale_categories_all'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
+            $end_cat = (int)strpos($sale_categories_all['sale_categories_all'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
+            $new_sale_categories_all = substr($sale_categories_all['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_all->fields['sale_categories_all'], $start_cat);
         }
 
         /*
@@ -1221,8 +1219,6 @@ function zen_remove_category($category_id): void
             $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
             $db->Execute($salemakerupdate);
         }
-
-        $chk_sale_categories_all->MoveNext();
     }
 
     $category_image = $db->Execute("SELECT categories_image
