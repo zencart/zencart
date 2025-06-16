@@ -45,9 +45,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'process') {
 
     $email_address = zen_db_prepare_input(trim($_POST['email_address']));
 
-    $sql = "SELECT customers_firstname, customers_lastname, customers_id, customers_email_address
-            FROM " . TABLE_CUSTOMERS . "
-            WHERE customers_email_address = :emailAddress";
+    $sql =
+        "SELECT customers_firstname, customers_lastname, customers_id, customers_email_address
+           FROM " . TABLE_CUSTOMERS . "
+          WHERE customers_email_address = :emailAddress
+            AND customers_authorization != 4";
 
     $sql = $db->bindVars($sql, ':emailAddress', $email_address, 'string');
     $check_customer = $db->Execute($sql, 1);
