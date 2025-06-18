@@ -72,7 +72,7 @@ $currencies = new currencies();
         <tr>
           <td>
             <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink">
-                <?php echo $order['orders_id'] . ' - ' . substr($order['customers_name'], 0, 20); ?>
+                <?php echo $order['orders_id'] . ' - ' . mb_substr($order['customers_name'], 0, 20); ?>
             </a>
           </td>
           <td class="text-right" title="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br>' => '', '<br />' => '', '<hr>' => "----\n")); ?>">

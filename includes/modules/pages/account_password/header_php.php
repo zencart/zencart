@@ -24,7 +24,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $error = false;
 
-  if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
+  if (mb_strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
     $error = true;
 
     $messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR);

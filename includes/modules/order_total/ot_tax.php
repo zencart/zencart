@@ -94,7 +94,7 @@
             }
             if (SHOW_SPLIT_TAX_CHECKOUT !== 'true' && ($taxValue > 0 || STORE_TAX_DISPLAY_STATUS === '1')) {
                 $this->output[] = [
-                    'title' => substr($taxDescription, 0, strlen($taxDescription) - 3) . ':',
+                    'title' => mb_substr($taxDescription, 0, mb_strlen($taxDescription) - 3) . ':',
                     'text' => $currencies->format($taxValue, true, $order->info['currency'], $order->info['currency_value']),
                     'value' => $taxValue,
                 ];

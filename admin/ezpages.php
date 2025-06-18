@@ -63,7 +63,7 @@ if (!empty($action)) {
             $pages_html_url_flag = false;
             $page_error = false;
             for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                if (!empty($_POST['pages_html_text'][$languages[$i]['id']]) && strlen(trim($_POST['pages_html_text'][$languages[$i]['id']])) > 6) {
+                if (!empty($_POST['pages_html_text'][$languages[$i]['id']]) && mb_strlen(trim($_POST['pages_html_text'][$languages[$i]['id']])) > 6) {
                     $pages_html_url_flag = true;
                 }
                 if (empty($_POST['pages_title'][$languages[$i]['id']])) {
@@ -81,7 +81,7 @@ if (!empty($action)) {
             }
             $pages_html_text_count = 0;
             for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                if (!empty($pages_html_text[$languages[$i]['id']]) && strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
+                if (!empty($pages_html_text[$languages[$i]['id']]) && mb_strlen(trim($pages_html_text[$languages[$i]['id']])) > 6) {
                     $pages_html_text_count = $i + 1;
                 }
             }
@@ -619,7 +619,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         if ($page['alt_url_external'] !== '') {
                             $zv_link_method_cnt++;
                         }
-                        if ($page['pages_html_text'] !== '' && strlen(trim($page['pages_html_text'])) > 6) {
+                        if ($page['pages_html_text'] !== '' && mb_strlen(trim($page['pages_html_text'])) > 6) {
                             $zv_link_method_cnt++;
                         }
                         if (isset($ezInfo) && is_object($ezInfo) && ($page['pages_id'] == $ezInfo->pages_id)) {
@@ -828,7 +828,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                             if ($ezInfo->alt_url_external !== '') {
                                 $zv_link_method_cnt++;
                             }
-                            if ($ezInfo->pages_html_text !== '' && strlen(trim($ezInfo->pages_html_text)) > 6) {
+                            if ($ezInfo->pages_html_text !== '' && mb_strlen(trim($ezInfo->pages_html_text)) > 6) {
                                 $zv_link_method_cnt++;
                             }
 
