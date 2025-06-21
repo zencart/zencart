@@ -594,7 +594,7 @@ class ot_coupon extends base
                             $od_amount['tax_groups'][$key] = zen_round($this_tax * $ratio, $currencyDecimalPlaces);
                             $od_amount['tax'] += $od_amount['tax_groups'][$key];
                         }
-                        if (DISPLAY_PRICE_WITH_TAX == 'true' && $coupon_details['coupon_type'] == 'F') {
+                        if (DISPLAY_PRICE_WITH_TAX === 'true' && $coupon_details['coupon_type'] === 'F' && $this->include_tax === 'true') {
                             $od_amount['total'] += $od_amount['tax'];
                         }
                         break;
@@ -680,7 +680,7 @@ class ot_coupon extends base
                 $orderTotalTax -= $order->info['shipping_tax'] ?? 0;
             }
         }
-        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
+        if (DISPLAY_PRICE_WITH_TAX !== 'true' || $this->include_tax !== 'true') {
             $orderTotal -= $orderTotalTax;
         }
 
