@@ -29,4 +29,14 @@ class BaseLanguageLoader
         $this->templateDir = $templateDir;
         $this->zcPluginsDir = DIR_FS_CATALOG . 'zc_plugins/';
     }
+
+    public function getTemplateDir(): string
+    {
+        return $this->templateDir;
+    }
+
+    public function getFallback(): string
+    {
+        return $this->fallback;
+    }
 }
