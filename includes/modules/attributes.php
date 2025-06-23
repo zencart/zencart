@@ -206,7 +206,7 @@ foreach ($products_options_names as $next_option_name) {
                 $price_onetime = '';
             }
 
-            if ($next_option['attributes_qty_prices'] !== '' || $next_option['attributes_qty_prices_onetime'] !== '') {
+            if (!empty($next_option['attributes_qty_prices']) || !empty($next_option['attributes_qty_prices_onetime'])) {
                 $show_attributes_qty_prices_description = true;
                 $show_attributes_qty_prices_icon = true;
             }
