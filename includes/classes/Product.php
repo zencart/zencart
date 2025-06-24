@@ -248,6 +248,17 @@ class Product
             unset($result['products_id']);
             $data['lang'][$this->languages[$result['language_id']]] = $result;
         }
+        if (IS_ADMIN_FLAG === false && !isset($data['lang'][$_SESSION['languages_code']])) {
+            $data['lang'][$_SESSION['languages_code']] = [
+                'language_id' => $_SESSION['languages_id'],
+                'products_name' => '',
+                'products_description' => '',
+                'products_url' => null,
+                'products_viewed' => 0,
+                'description_record_missing' => true,
+            ];
+            $this->notify('NOTIFY_PRODUCT_DETAILS_NO_DESCRIPTION', (int)$product_id, $data);
+        }
 
         // count linked categories
         $sql = "SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc WHERE products_id=" . (int)$product_id;
@@ -269,10 +280,8 @@ class Product
         $categories[] = $data['master_categories_id'];
         $data['cPath'] = implode('_', $categories);
 
-
         //Allow an observer to modify details
         $this->notify('NOTIFY_GET_PRODUCT_OBJECT_DETAILS', $product_id, $data);
-
         return $data;
     }
 
