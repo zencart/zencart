@@ -88,16 +88,21 @@ class InitSystem
         if (isset($entry['classPath'])) {
             $filePath = $entry['classPath'];
         }
-        if ($entry['loaderType'] === 'plugin') {
-            $filePath = $this->findPluginDirectory($entry['classPath'] ?? DIR_WS_CLASSES, $entry['pluginInfo']['unique_key']);
+        $classResult = 'ZC';
+        if ($entry['loaderType'] == 'plugin') {
+            $pluginFilePath = $this->findPluginDirectory($filePath, $entry['pluginInfo']['unique_key']);
+            if (file_exists($pluginFilePath . $entry['loadFile'])) {
+                $filePath = $pluginFilePath;
+                $classResult = 'PLUGIN';
+            }
         }
-        $this->debugList[] = 'processing class - ' . $filePath  . $entry['loadFile'];
+        $this->debugList[] = 'processing ' . $classResult . ' class - ' . $filePath  . $entry['loadFile'];
         $result = 'FAILED';
         if (file_exists($filePath . $entry['loadFile'])) {
             $result = 'SUCCESS';
             $this->actionList[] = ['type' => 'include', 'filePath' => $filePath . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
         }
-        $this->debugList[] = 'loading class - ' . $filePath . $entry['loadFile'] . ' - ' . $result;
+        $this->debugList[] = 'loading ' . $classResult . ' class - ' . $filePath . $entry['loadFile'] . ' - ' . $result;
     }
 
     /**
@@ -287,6 +292,12 @@ class InitSystem
         $relDir = $this->fileSystem->getRelativeDir($filePath);
         $pluginDir = $this->pluginManager->getPluginVersionDirectory($pluginName, $this->installedPlugins);
         $actualDir = $pluginDir . $this->context . '/' . $relDir;
-        return $actualDir;
+        if ($this->fileSystem->isAdminDir($filePath)) {
+            return $actualDir;
+        }
+        if (defined('DIR_FS_CATALOG') && $this->fileSystem->isCatalogDir($filePath)) {
+          return $pluginDir . 'catalog' . '/' . $relDir;
+        }
+        return $actualDir; // OR should $filePath be returned?
     }
 }
