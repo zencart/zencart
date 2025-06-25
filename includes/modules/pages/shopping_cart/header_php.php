@@ -74,7 +74,9 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
             $sql = $db->bindVars($sql, ':optionsValuesID', $value, 'integer');
             $sql = $db->bindVars($sql, ':languageID', $_SESSION['languages_id'], 'integer');
             $attributes_values = $db->Execute($sql);
-
+            if ($attributes_values->EOF) {
+                continue;
+            }
             if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
                 $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . TEXT_PREFIX . $option . ']', $products[$i]['attributes_values'][$option]);
                 $attr_value = htmlspecialchars($products[$i]['attributes_values'][$option], ENT_COMPAT, CHARSET, TRUE);
