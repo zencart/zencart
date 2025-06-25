@@ -586,7 +586,7 @@ foreach ($products_options_names as $next_option_name) {
 
         // text
         if ($products_options_type === PRODUCTS_OPTIONS_TYPE_TEXT) {
-            $option_form_name . '[' . TEXT_PREFIX . $products_options_id . ']';
+            $option_form_name = 'id[' . TEXT_PREFIX . $products_options_id . ']';
             if (!empty($_POST['id']) && is_array($_POST['id'])) {
                 foreach ($_POST['id'] as $key => $value) {
                     if (preg_replace('/txt_/', '', $key) == $products_options_id) {
