@@ -262,14 +262,15 @@ class upload extends base
 
     protected function sanitizeFileName(string $filename): string
     {
-        // Convert to lowercase
-        $filename = strtolower($filename);
+        // Convert file-extension to lowercase
+        $file_pieces = pathinfo($filename);
+        $filename = $file_pieces['filename'] . '.' . strtolower($file_pieces['extension']);
 
         // Replace spaces with hyphens
         $filename = str_replace(' ', '-', $filename);
 
         // Remove special characters (keep alphanumerics, dashes, underscores, and dots)
-        $filename = preg_replace('/[^a-z0-9_\-\.]/', '', $filename);
+        $filename = preg_replace('/[^a-zA-Z0-9_\-\.]/', '', $filename);
 
         // Replace multiple dots with a single dot
         $filename = preg_replace('/\.+/', '.', $filename);
