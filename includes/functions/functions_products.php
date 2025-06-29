@@ -31,7 +31,7 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 
     $response_code = 200;
 
-    $product_not_found = !$product_info->exists();
+    $product_not_found = !$product_info->exists() || !empty($product_info->get('description_record_missing'));
     $should_throw_404 = $product_not_found;
 
     if ($should_throw_404 === true) {
