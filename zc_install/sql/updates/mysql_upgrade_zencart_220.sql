@@ -33,7 +33,7 @@
 # Clear out active customer sessions. Truncating helps the database clean up behind itself.
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
-DELETE FROM customer_password_reset_tokens WHERE created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1440 MINUTE);
+#DELETE FROM customer_password_reset_tokens WHERE created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1440 MINUTE);
 
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
