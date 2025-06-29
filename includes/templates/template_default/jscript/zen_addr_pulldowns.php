@@ -76,10 +76,12 @@ jQuery(document).ready(function() {
     }
     if (jQuery('#stateZone > option').length > 1) {
         jQuery('#state').hide();
+        jQuery('#stateLabel').hide();
         jQuery('#stateZone').show();
         jQuery('#stateZone').next('span.alert').show();
     } else {
         jQuery('#state').show();
+        jQuery('#stateLabel').show();
         jQuery('#stateZone').hide();
         jQuery('#stateZone').next('span.alert').hide();
     }
@@ -111,11 +113,15 @@ jQuery(document).ready(function() {
             jQuery('#state').hide();
             jQuery('#stateZone').html(countryZones);
             jQuery('#stateZone').show();
-            jQuery('#stateZone').next('span.alert').show();
+            jQuery('#stateLabel').hide();
+            jQuery('#zoneLabel').show();
+            jQuery('#zoneLabel').next('span.alert').show();
         } else {
             jQuery('#state').show();
             jQuery('#stateZone').hide();
-            jQuery('#stateZone').next('span.alert').hide();
+            jQuery('#stateLabel').show();
+            jQuery('#zoneLabel').hide();
+            jQuery('#zoneLabel').next('span.alert').hide();
         }
     }
 });
