@@ -24,21 +24,14 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 {
     global $zco_notifier, $breadcrumb, $robotsNoIndex;
 
-    // make sure we got a dbResponse
-    if ($product_info === null || !isset($product_info->EOF)) {
+    // make sure we got a Product-class instance and it's for the current product
+    if ($product_info === null || get_class($product_info) !== 'Product' || $product_info->getID() !== (int)$product_id) {
         $product_info = new Product((int)$product_id);
     }
-
-    // make sure it's for the current product
-    if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$product_id) {
-        $product_info = new Product((int)$product_id);
-    }
-
-    $product = $product_info->getData();
 
     $response_code = 200;
 
-    $product_not_found = empty($product);
+    $product_not_found = !$product_info->exists() || !empty($product_info->get('description_record_missing'));
     $should_throw_404 = $product_not_found;
 
     if ($should_throw_404 === true) {
@@ -47,7 +40,7 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 
     global $product_status;
 
-    $product_status = (int)($product_not_found === false && $product['products_status'] !== '0') ? $product['products_status'] : 0;
+    $product_status = ($product_not_found === true) ? 0 : $product_info->status();
     if ($product_status === 0) {
         $response_code = 410;
     }

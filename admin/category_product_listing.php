@@ -277,9 +277,25 @@ if (!empty($action)) {
       $_GET['action'] = '';
       zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $_POST['products_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
       break;
+    // -----
+    // Some 'special case' checks for the "Move Category" action, to make sure
+    // that the admin didn't use the browser's back button to arrive at this already-performed
+    // action where the current 'cID' is no longer present within the 'cPath'.
+    //
+    case 'move_category':
+        if (empty($_GET['cID'])) {
+            zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+        }
+        $category_tree = [];
+        zen_get_parent_categories($category_tree, $_GET['cID']);
+        array_reverse($category_tree);
+        $category_tree_string = implode('_', $category_tree);
+        if ($category_tree_string !== $cPath) {
+            zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $category_tree_string));
+        }
+        unset($category_tree, $category_tree_string);
     case 'setflag_categories':
     case 'delete_category':
-    case 'move_category':
     case 'delete_product':
     case 'move_product':
     case 'copy_product':

@@ -46,10 +46,13 @@ function zen_get_attribute_details(int $products_id, int $options_id, int $optio
 
     $sql =
         "SELECT *
-           FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-          WHERE products_id = $products_id
-            AND options_id = $options_id
-            AND options_values_id = $options_values_id";
+           FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                INNER JOIN " . TABLE_PRODUCTS_OPTIONS . " po
+                    ON po.products_options_id = pa.options_id
+                    AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+          WHERE pa.products_id = $products_id
+            AND pa.options_id = $options_id
+            AND pa.options_values_id = $options_values_id";
     $result = $db->Execute($sql, 1);
 
     // -----
@@ -85,17 +88,24 @@ function zen_has_product_attributes($product_id, $not_readonly = true)
     $exclude_readonly = ($not_readonly === true || $not_readonly === 'true');
 
     if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED === '1' && $exclude_readonly === true) {
-        // don't include READONLY attributes
-        $sql = "SELECT pa.products_attributes_id
-                FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON (pa.options_id = po.products_options_id)
-                WHERE pa.products_id = " . (int)$product_id . "
+        // don't include READONLY attributes or *invalid* options
+        $sql =
+            "SELECT pa.products_attributes_id
+               FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                    INNER JOIN " . TABLE_PRODUCTS_OPTIONS . " po
+                        ON pa.options_id = po.products_options_id
+                       AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+              WHERE pa.products_id = " . (int)$product_id . "
                 AND po.products_options_type != '" . $db->prepare_input(PRODUCTS_OPTIONS_TYPE_READONLY) . "'";
     } else {
-        // regardless of READONLY attributes
-        $sql = "SELECT pa.products_attributes_id
-                FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                WHERE pa.products_id = " . (int)$product_id;
+        // regardless of READONLY attributes, at least one *valid* option must exist
+        $sql =
+            "SELECT pa.products_attributes_id
+               FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                    INNER JOIN " . TABLE_PRODUCTS_OPTIONS . " po
+                        ON pa.options_id = po.products_options_id
+                       AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+              WHERE pa.products_id = " . (int)$product_id;
     }
 
     $result = $db->Execute($sql, 1);
@@ -140,11 +150,14 @@ function zen_requires_attribute_selection($products_id)
         $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
     }
 
-    $query = "SELECT products_options_id, COUNT(pa.options_values_id) AS number_of_choices, po.products_options_type AS options_type
-              FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS . " po ON (pa.options_id = po.products_options_id AND po.language_id = " . (int)$_SESSION['languages_id'] . ")
-              WHERE pa.products_id = " . (int)$products_id . "
-              GROUP BY products_options_id, options_type";
+    $query =
+        "SELECT products_options_id, COUNT(pa.options_values_id) AS number_of_choices, po.products_options_type AS options_type
+          FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+             INNER JOIN " . TABLE_PRODUCTS_OPTIONS . " po
+                ON pa.options_id = po.products_options_id
+               AND po.language_id = " . (int)$_SESSION['languages_id'] . "
+         WHERE pa.products_id = " . (int)$products_id . "
+         GROUP BY products_options_id, options_type";
 
     $zco_notifier->notify('NOTIFY_FUNCTIONS_LOOKUPS_REQUIRES_ATTRIBUTES_SELECTION', '', $query, $noSingles, $noDoubles);
 

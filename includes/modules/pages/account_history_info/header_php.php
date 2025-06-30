@@ -21,6 +21,9 @@ if (empty($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
 
 require DIR_WS_CLASSES . 'order.php';
 $order = new order($_GET['order_id']);
+if (empty($order->info)) { 
+  zen_redirect(zen_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+}
 $statusArray = $order->statuses;    //- For compatability with pre-existing templates
 
 $customer = new Customer;

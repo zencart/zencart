@@ -605,7 +605,7 @@ foreach ($products_options_type_array as $products_options_type) {
 function translate_type_to_name($opt_type)
 {
   global $products_options_types_list;
-  return $products_options_types_list[$opt_type];
+  return $products_options_types_list[$opt_type] ?? TEXT_NONE;
 }
 
 function zen_js_option_values_list($selectedName, $fieldName)
@@ -1108,7 +1108,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                 $sql_result = $db->Execute($sql);
 
                 if (empty($attributes_value['options_values_id'])) {
-                  $value_type = translate_type_to_name($sql_result->fields['products_options_type']);
+                  $value_type = translate_type_to_name($sql_result->fields['products_options_type'] ?? '');
                 }
                 $values_name = (!empty($attributes_value['options_values_id']) ? zen_values_name($attributes_value['options_values_id']) : $value_type);
 // delete all option name values

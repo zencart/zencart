@@ -89,6 +89,61 @@ class Customer extends base
         return $wholesale_info['wholesale_tier'];
     }
 
+    public static function createPasswordResetToken(string $email_address): array|false
+    {
+        global $db;
+
+        $sql =
+            "SELECT customers_firstname, customers_lastname, customers_id, customers_email_address
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_email_address = :emailAddress
+                AND customers_authorization != 4";
+
+        $sql = $db->bindVars($sql, ':emailAddress', $email_address, 'string');
+        $check_customer = $db->Execute($sql, 1);
+        if ($check_customer->EOF) {
+            return false;
+        }
+
+        $length = defined('PASSWORD_RESET_TOKEN_LENGTH') ? constant('PASSWORD_RESET_TOKEN_LENGTH') : 24;
+        if ($length < 12 || $length > 100) { // under 12 is impractical; over 100 is too large for db field
+            $length = 24;
+        }
+        $token = zen_create_random_value($length);
+
+        $sql = "DELETE FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " WHERE customer_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
+        $db->Execute($sql);
+        $sql = "INSERT INTO " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " (customer_id, token) VALUES (:customerID, :token)";
+        $sql = $db->bindVars($sql, ':token', $token, 'string');
+        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
+        $db->Execute($sql);
+
+        $check_customer->fields['token'] = $token;
+        return $check_customer->fields;
+    }
+
+    public static function getPasswordResetTokenInfo(string $reset_token): array|false
+    {
+        global $db;
+
+        $token_valid_minutes = defined('PASSWORD_RESET_TOKEN_MINUTES_VALID') ? (int)constant('PASSWORD_RESET_TOKEN_MINUTES_VALID') : 60;
+        if ($token_valid_minutes < 1 || $token_valid_minutes > 1440) {
+            $token_valid_minutes = 60;
+        }
+
+        $sql = "SELECT c.customers_nick, c.customers_id
+                FROM   " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " ct
+                WHERE  ct.token = :reset_token AND c.customers_id = ct.customer_id AND ct.created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL $token_valid_minutes MINUTE)";
+        $sql = $db->bindVars($sql, ':reset_token', $reset_token, 'string');
+        $result = $db->Execute($sql);
+
+        if ($result->EOF) {
+            return false;
+        }
+        return $result->fields;
+    }
+
     public function getData(?string $element = null)
     {
         if (empty($element)) {
@@ -210,6 +265,8 @@ class Customer extends base
               WHERE customers_id = " . (int)$customer_id;
         $db->Execute($sql);
 
+        $this->clearPasswordResetTokens($customer_id);
+
         // these session variables are used in various places across the catalog
         $_SESSION['customer_id'] = (int)$customer_id;
         $_SESSION['customers_email_address'] = $this->data['customers_email_address'];
@@ -228,6 +285,20 @@ class Customer extends base
 
         // fire any notifiers
         return true;
+    }
+
+    /**
+     * Clears any existing password reset-tokens for the specified customers_id.
+     */
+    protected function clearPasswordResetTokens(int $customers_id): void
+    {
+        global $db;
+
+        $sql =
+            "DELETE FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . "
+              WHERE customer_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $customers_id, 'integer');
+        $db->Execute($sql);
     }
 
     /**
@@ -723,6 +794,20 @@ class Customer extends base
               WHERE customers_info_id = :customersID";
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $db->Execute($sql);
+
+        $this->clearPasswordResetTokens($this->customer_id);
+    }
+
+    public function setPasswordUsingEmailAddress(string $new_password, string $email_address): void
+    {
+        global $db;
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
+                SET customers_password = :password
+              WHERE customers_email_address = :emailAddress";
+        $sql = $db->bindVars($sql, ':emailAddress', $email_address, 'string');
+        $sql = $db->bindVars($sql, ':password', zen_encrypt_password($new_password), 'string');
+        $db->Execute($sql, 1);
     }
 
     /**
@@ -833,6 +918,8 @@ class Customer extends base
             "DELETE FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
               WHERE customers_id = " . (int)$this->customer_id
         );
+
+        $this->clearPasswordResetTokens($this->customer_id);
 
         $this->notify('NOTIFY_CUSTOMER_AFTER_RECORD_DELETED', (int)$this->customer_id);
 

@@ -14,10 +14,14 @@ if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'], $_SERVER['REMOTE_ADDR']) || strtol
 }
 
 // -----
-// Ensure that the two required $_GET variables are (a) set and (b) contain
-// only alphanumeric characters.
+// Ensure that the two required $_GET variables are (a) set and (b) reflect a valid PHP
+// class- or method-name. See https://www.php.net/manual/en/language.oop5.basic.php for
+// additional information.
 //
-if (!isset($_GET['act'], $_GET['method']) || !preg_match('/^[a-zA-Z0-9]+$/', $_GET['act']) || !preg_match('/^[a-zA-Z0-9]+$/', $_GET['method'])) {
+// Note that as of PHP 8.4.0, a single '_' as a class name is deprecated, so it's not allowed.
+//
+$class_method_regex = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
+if (!isset($_GET['act'], $_GET['method']) || $_GET['act'] === '_' || !preg_match($class_method_regex, $_GET['act']) || !preg_match($class_method_regex, $_GET['method'])) {
     ajaxAbort();
 }
 
