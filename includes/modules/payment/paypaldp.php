@@ -1448,6 +1448,8 @@ class paypaldp extends base {
           if (!isset($response['ORDERTIME'])) $response['ORDERTIME'] = date("M-d-Y h:i:s");
         }
         // Success, so save the results
+        $response['PNREF'] ??= TEXT_NONE;
+        $response['AUTHCODE'] ??= TEXT_NONE;
         $comments = 'FUNDS CAPTURED. Trans ID: ' . urldecode($response['TRANSACTIONID']) . $response['PNREF']. "\n" . ' Amount: ' . urldecode($response['AMT']) . ' ' . $currency . "\n" . 'Time: ' . urldecode($response['ORDERTIME']) . "\n" . 'Auth Code: ' . $response['AUTHCODE'] . (isset($response['PPREF']) ? "\nPPRef: " . $response['PPREF'] : '') . "\n" . $captureNote;
         zen_update_orders_history($oID, $comments, null, $new_order_status, 0);
 
