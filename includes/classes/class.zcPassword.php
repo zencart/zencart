@@ -120,51 +120,7 @@ class zcPassword extends base
     }
     return false;
   }
-  /**
-   * Update a logged in Customer password.
-   * e.g. when customer wants to change password
-   * Also used with password_reset page when reset_token links to a customer_id
-   *
-   * @param string $plain
-   * @param ?integer $customerId
-   * @return string
-   */
-  public function updateLoggedInCustomerPassword(string $plain, ?int $customerId): string
-  {
-    $this->confirmDbSchema('customer');
-    global $db;
-    $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
-    $sql = "UPDATE " . TABLE_CUSTOMERS . "
-              SET customers_password = :password:
-              WHERE customers_id = :customersId:";
 
-    $sql = $db->bindVars($sql, ':customersId:', $customerId ?? $_SESSION['customer_id'] ?? 0, 'integer');
-    $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
-    $db->Execute($sql);
-    return $updatedPassword;
-  }
-  /**
-   * Update a not logged in Customer password.
-   * e.g. login/timeout
-   *
-   * @param string $plain
-   * @param string $emailAddress
-   * @return string
-   */
-  public function updateNotLoggedInCustomerPassword($plain, $emailAddress)
-  {
-    $this->confirmDbSchema('customer');
-    global $db;
-    $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
-    $sql = "UPDATE " . TABLE_CUSTOMERS . "
-              SET customers_password = :password:
-              WHERE customers_email_address = :emailAddress:";
-
-    $sql = $db->bindVars($sql, ':emailAddress:', $emailAddress, 'string');
-    $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
-    $db->Execute($sql);
-    return $updatedPassword;
-  }
   /**
    * Update a not logged in Admin password.
    *

@@ -44,40 +44,19 @@ if (isset($_GET['action']) && $_GET['action'] === 'process') {
     }
 
     $email_address = zen_db_prepare_input(trim($_POST['email_address']));
-
-    $sql = "SELECT customers_firstname, customers_lastname, customers_id, customers_email_address
-            FROM " . TABLE_CUSTOMERS . "
-            WHERE customers_email_address = :emailAddress";
-
-    $sql = $db->bindVars($sql, ':emailAddress', $email_address, 'string');
-    $check_customer = $db->Execute($sql, 1);
+    $check_customer = Customer::createPasswordResetToken($email_address);
 
     $sessionMessage = SUCCESS_PASSWORD_RESET_SENT;
 
-    if ($check_customer->RecordCount() > 0) {
-        // customer exists for the provided email address
-
-        $email_address = $check_customer->fields['customers_email_address'];
-
+    if ($check_customer === false) {
+        $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address, $sessionMessage);
+    } else {
         $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_VALIDATED', $email_address, $sessionMessage);
 
-        $length = defined('PASSWORD_RESET_TOKEN_LENGTH') ? constant('PASSWORD_RESET_TOKEN_LENGTH') : 24;
-        if ($length < 12 || $length > 100) { // under 12 is impractical; over 100 is too large for db field
-            $length = 24;
-        }
-        $token = zen_create_random_value($length);
-
-        $sql = "DELETE FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " WHERE customer_id = :customerID";
-        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
-        $db->Execute($sql);
-        $sql = "INSERT INTO " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " (customer_id, token) VALUES (:customerID, :token)";
-        $sql = $db->bindVars($sql, ':token', $token, 'string');
-        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
-        $db->Execute($sql);
-
+        $token = $check_customer['token'];
         $reset_url = zen_href_link(FILENAME_PASSWORD_RESET, "reset_token=$token");
 
-        $name = $check_customer->fields['customers_firstname'] . ' ' . $check_customer->fields['customers_lastname'];
+        $name = $check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'];
         $body = sprintf(EMAIL_PASSWORD_RESET_BODY, zen_get_ip_address(), STORE_NAME, $reset_url);
 
         $html_msg = [];
@@ -91,9 +70,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'process') {
         zen_mail($name, $email_address, EMAIL_PASSWORD_RESET_SUBJECT, $body, STORE_NAME, EMAIL_FROM, $html_msg, 'password_forgotten');
 
         // handle 3rd-party integrations
-        $zco_notifier->notify('NOTIFY_PASSWORD_RESET_URL_SENT', $email_address, $check_customer->fields['customers_id'], $token);
-    } else {
-        $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address, $sessionMessage);
+        $zco_notifier->notify('NOTIFY_PASSWORD_RESET_URL_SENT', $email_address, $check_customer['customers_id'], $token);
     }
 
     $messageStack->add_session('login', $sessionMessage, 'success');
