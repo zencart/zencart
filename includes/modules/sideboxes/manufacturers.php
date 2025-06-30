@@ -41,8 +41,8 @@ if (!$manufacturer_sidebox->EOF) {
 
     foreach ($manufacturer_sidebox as $sidebox_element) {
         $manufacturer_sidebox_name = $sidebox_element['manufacturers_name'];
-        if (strlen($manufacturer_sidebox_name) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) {
-            $manufacturer_sidebox_name = substr($manufacturer_sidebox_name, 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..';
+        if (mb_strlen($manufacturer_sidebox_name) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) {
+            $manufacturer_sidebox_name = mb_substr($manufacturer_sidebox_name, 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..';
         }
         $manufacturer_sidebox_array[] = [
             'id' => $sidebox_element['manufacturers_id'],

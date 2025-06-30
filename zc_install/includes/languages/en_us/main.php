@@ -157,6 +157,7 @@ return [
 'TEXT_ERROR_SET_TIME_LIMIT' => 'max_execution_time setting disabled',
 'TEXT_ERROR_GD' => 'GD Extension not enabled',
 'TEXT_ERROR_INTL' => 'INTL Extension not enabled. Required for date-handling and locale support.',
+'TEXT_ERROR_MBSTRING' => 'MBSTRING Extension not enabled. Required for multibyte characters support (accentuated letters and most of non-English languages).',
 'TEXT_ERROR_JSON' => 'JSON Extension not enabled. Required for parsing data in many parts of the application.',
 'TEXT_ERROR_FILEINFO' => 'Fileinfo extension not enabled. Used for calculating file sizes.',
 'TEXT_ERROR_ZLIB' => 'Zlib Extension not enabled',

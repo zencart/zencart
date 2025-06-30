@@ -27,8 +27,8 @@ if (!$record_company->EOF) {
 
     foreach ($record_company as $next_company) {
         $record_company_name = $next_company['record_company_name'];
-        if (strlen($record_company_name) > (int)MAX_DISPLAY_RECORD_COMPANY_NAME_LEN) {
-            $record_company_name = substr($record_company_name, 0, (int)MAX_DISPLAY_RECORD_COMPANY_NAME_LEN) . '..';
+        if (mb_strlen($record_company_name) > (int)MAX_DISPLAY_RECORD_COMPANY_NAME_LEN) {
+            $record_company_name = mb_substr($record_company_name, 0, (int)MAX_DISPLAY_RECORD_COMPANY_NAME_LEN) . '..';
         }
         $record_company_array[] = [
             'id' => $next_company['record_company_id'],

@@ -113,19 +113,19 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         $messageStack->add('create_account', ENTRY_GENDER_ERROR);
     }
 
-    if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+    if (mb_strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
         $error = true;
         $messageStack->add('create_account', ENTRY_FIRST_NAME_ERROR);
     }
 
-    if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+    if (mb_strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
         $error = true;
         $messageStack->add('create_account', ENTRY_LAST_NAME_ERROR);
     }
 
     if (ACCOUNT_DOB === 'true') {
         if (ENTRY_DOB_MIN_LENGTH > 0 or !empty($_POST['dob'])) {
-			if (strlen($dob) >10 || zen_valid_date($dob) === false) {
+            if (strlen($dob) >10 || zen_valid_date($dob) === false) {
                 $error = true;
                 $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
             }
@@ -133,7 +133,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
     }
 
     if (ACCOUNT_COMPANY === 'true') {
-        if ((int)ENTRY_COMPANY_MIN_LENGTH > 0 && strlen($company) < ENTRY_COMPANY_MIN_LENGTH) {
+        if ((int)ENTRY_COMPANY_MIN_LENGTH > 0 && mb_strlen($company) < ENTRY_COMPANY_MIN_LENGTH) {
             $error = true;
             $messageStack->add('create_account', ENTRY_COMPANY_ERROR);
         }
@@ -141,7 +141,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
 
 
     $nick_error = false;
-    if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+    if (mb_strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
         $error = true;
         $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
     } elseif (zen_validate_email($email_address) == false) {
@@ -185,12 +185,12 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         }
     }
 
-    if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
+    if (mb_strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
         $error = true;
         $messageStack->add('create_account', ENTRY_STREET_ADDRESS_ERROR);
     }
 
-    if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
+    if (mb_strlen($city) < ENTRY_CITY_MIN_LENGTH) {
         $error = true;
         $messageStack->add('create_account', ENTRY_CITY_ERROR);
     }
@@ -238,14 +238,14 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
                 $error_state_input = true;
                 $messageStack->add('create_account', ENTRY_STATE_ERROR_SELECT);
             }
-        } elseif (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+        } elseif (mb_strlen($state) < ENTRY_STATE_MIN_LENGTH) {
             $error = true;
             $error_state_input = true;
             $messageStack->add('create_account', ENTRY_STATE_ERROR);
         }
     }
 
-    if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
+    if (mb_strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
         $error = true;
         $messageStack->add('create_account', ENTRY_POST_CODE_ERROR);
     }
