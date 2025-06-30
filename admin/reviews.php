@@ -207,7 +207,7 @@ if (!empty($action)) {
                 <p class="control-label"><?php echo ENTRY_REVIEW; ?></p>
               </div>
               <div class="col-sm-9 col-md-6">
-                <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo nl2br(zen_output_string_protected(zen_break_string($rInfo->reviews_text, 15))); ?></span>
+                <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo nl2br(zen_output_string_protected(zen_trunc_string($rInfo->reviews_text, 15))); ?></span>
               </div>
             </div>
             <div class="form-group">
