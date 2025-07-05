@@ -696,10 +696,10 @@ class Customer extends base
               "SELECT o.orders_id, o.date_purchased, o.delivery_name,
                     o.order_total, o.currency, o.currency_value,
                     o.delivery_country, o.billing_name, o.billing_country,
-                    s.orders_status_name,
+                    o.orders_status, s.orders_status_name,
                     o.language_code
               FROM " . TABLE_ORDERS . " o
-                    INNER JOIN " . TABLE_ORDERS_STATUS . " s
+                    LEFT JOIN " . TABLE_ORDERS_STATUS . " s
                         ON s.orders_status_id = o.orders_status
                        AND s.language_id = :languagesID
               WHERE o.customers_id = :customersID
@@ -739,7 +739,7 @@ class Customer extends base
                 'order_type' => $order_type,
                 'order_name' => $order_name,
                 'order_country' => $order_country,
-                'orders_status_name' => $result['orders_status_name'],
+                'orders_status_name' => $result['orders_status_name'] ?? sprintf(TEXT_UNKNOWN_ORDERS_STATUS_NAME, (int)$result['orders_status']),
                 'order_total' => $currencies->format($result['order_total'], true, $result['currency'], $result['currency_value']),
                 'order_total_raw' => $result['order_total'],
                 'currency' => $result['currency'],
