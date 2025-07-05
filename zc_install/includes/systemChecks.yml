@@ -216,6 +216,14 @@ systemChecks:
       checkExtension:
         parameters:
           extension: intl
+  checkmbstring:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_MBSTRING . PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: mbstring
   checkjson:
     runLevel: always
     errorLevel: FAIL
