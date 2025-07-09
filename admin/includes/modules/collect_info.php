@@ -466,7 +466,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
   <div class="form-group">
       <?php echo zen_draw_label(TEXT_PRODUCT_MPN, 'products_mpn', 'class="col-sm-3 control-label"'); ?>
       <div class="col-sm-9 col-md-6">
-          <?php echo zen_draw_input_field('products_mpn', htmlspecialchars(stripslashes($pInfo->products_mpn ?? ''), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_model') . ' class="form-control" id="products_mpn"'); ?>
+          <?php echo zen_draw_input_field('products_mpn', htmlspecialchars(stripslashes($pInfo->products_mpn ?? ''), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS, 'products_mpn') . ' class="form-control" id="products_mpn"'); ?>
       </div>
   </div>
     <hr>
