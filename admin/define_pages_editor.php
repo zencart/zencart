@@ -69,7 +69,7 @@ switch ($_GET['action']) {
         @rename($file, 'bak' . $file);
         $new_file = fopen($file, 'w');
         $file_contents = stripslashes($_POST['file_contents']);
-        fwrite($new_file, $file_contents, mb_strlen($file_contents));
+        fwrite($new_file, $file_contents, strlen($file_contents));
         fclose($new_file);
       }
       zen_record_admin_activity('Define-Page-Editor was used to save changes to file ' . $file, 'info');
