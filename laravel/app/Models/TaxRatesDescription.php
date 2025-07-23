@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class TaxRatesDescription extends Eloquent
 {
     protected $table = TABLE_TAX_RATES_DESCRIPTION;
-    protected $primaryKey = ['id'];
+    protected $primaryKey = 'id';
     public $timestamps = false;
     protected $guarded = [];
 
