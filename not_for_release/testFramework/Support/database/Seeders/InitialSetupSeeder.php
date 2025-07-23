@@ -111,3 +111,16 @@ class InitialSetupSeeder extends Seeder
         }
     }
 }
+
+if (!function_exists('logDetails')) {
+    function logDetails(string $details, string $location = "General"): void
+    {
+        if (!isset($_SESSION['logfilename']) || $_SESSION['logfilename'] === '') {
+            $_SESSION['logfilename'] = date('m-d-Y_h-i-s-') . zen_create_random_value(6);
+        }
+        if ($fp = @fopen(DEBUG_LOG_FOLDER . '/zcInstallLog_' . $_SESSION['logfilename'] . '.log', 'a')) {
+            fwrite($fp, '---------------' . "\n" . date('M d Y G:i') . ' -- ' . $location . "\n" . $details . "\n\n");
+            fclose($fp);
+        }
+    }
+}
