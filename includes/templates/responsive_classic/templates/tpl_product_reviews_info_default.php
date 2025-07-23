@@ -12,7 +12,7 @@
 
 <?php
   if (!empty($products_image)) {
-   	/**
+    /**
      * require the image display code
      */
 ?>
@@ -50,7 +50,7 @@
 <div class="reviews-wrapper clearBoth">
 <h3 class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $review_info->fields['reviews_rating'] . '.png', sprintf(TEXT_OF_5_STARS, $review_info->fields['reviews_rating'])), sprintf(TEXT_OF_5_STARS, $review_info->fields['reviews_rating']); ?></h3>
 
-<div id="reviewsInfoDefaultMainContent" class="content"><?php echo zen_break_string(nl2br(zen_output_string_protected(stripslashes($review_info->fields['reviews_text']))), 60); ?></div>
+<div id="reviewsInfoDefaultMainContent" class="content"><?php echo nl2br(zen_output_string_protected(stripslashes($review_info->fields['reviews_text']))); ?></div>
 <div id="reviewsInfoDefaultDate"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($review_info->fields['date_added'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($review_info->fields['customers_name'])); ?></div>
 
 </div>

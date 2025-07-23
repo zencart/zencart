@@ -70,8 +70,9 @@
         $cod_country = false;
 
         //check if payment method is cod. If yes, check if cod is possible.
-
+        
         if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'cod') {
+          $cod_zones = []; 
           //process installed shipping modules
           if (substr_count($_SESSION['shipping']['id'], 'flat') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FLAT));
           if (substr_count($_SESSION['shipping']['id'], 'free') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FREE));

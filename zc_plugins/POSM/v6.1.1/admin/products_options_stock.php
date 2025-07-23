@@ -3,7 +3,7 @@
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
 // Copyright (c) 2014-2024 Vinos de Frutas Tropicales
 //
-// Last updated: POSM v5.0.0
+// Last updated: POSM v6.1.1
 //
 require 'includes/application_top.php';
 
@@ -717,7 +717,6 @@ if (!$check->EOF) {
 unset($check);
 
 $product_type = zen_get_products_type($pID);
-$type_handler = $zc_products->get_admin_handler($product_type);
 ?>
 <div class="container-fluid">
     <h1><?= HEADING_TITLE ?></h1>
@@ -806,7 +805,7 @@ if (count($products_select) !== 0) {
     <a href="<?= zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, "products_filter=$pID&current_category_id=$current_category_id", 'NONSSL') ?>" class="btn btn-sm btn-info">
         <?= IMAGE_EDIT_ATTRIBUTES ?>
     </a>
-    <a href="<?= zen_href_link($type_handler, 'cPath=' . zen_get_product_path($pID) . "&product_type=$product_type&pID=$pID&action=new_product") ?>" class="btn btn-sm btn-info">
+    <a href="<?= zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_product_path($pID) . "&product_type=$product_type&pID=$pID&action=new_product") ?>" class="btn btn-sm btn-info">
         <?= IMAGE_EDIT_PRODUCT ?>
     </a>
 <?php
