@@ -103,12 +103,12 @@ if (!empty($action)) {
             </thead>
             <tbody>
                 <?php
-                $rates_query_raw = "select r.tax_rates_id, z.geo_zone_id, z.geo_zone_name, tc.tax_class_title, tc.tax_class_id, r.tax_priority, r.tax_rate, rd.tax_description, r.date_added, r.last_modified
-                                    from " . TABLE_TAX_CLASS . " tc,
+                $rates_query_raw = "SELECT r.tax_rates_id, z.geo_zone_id, z.geo_zone_name, tc.tax_class_title, tc.tax_class_id, r.tax_priority, r.tax_rate, rd.tax_description, r.date_added, r.last_modified
+                                    FROM " . TABLE_TAX_CLASS . " tc,
                                          " . TABLE_TAX_RATES_DESCRIPTION . " rd
-                                    left join " . TABLE_TAX_RATES . " r on r.tax_rates_id = rd.tax_rates_id
-                                    left join " . TABLE_GEO_ZONES . " z on r.tax_zone_id = z.geo_zone_id
-                                    where r.tax_class_id = tc.tax_class_id and rd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+                                    LEFT JOIN " . TABLE_TAX_RATES . " r ON (r.tax_rates_id = rd.tax_rates_id)
+                                    LEFT JOIN " . TABLE_GEO_ZONES . " z ON (r.tax_zone_id = z.geo_zone_id)
+                                    WHERE r.tax_class_id = tc.tax_class_id AND rd.language_id = " . (int)$_SESSION['languages_id'];
                 $rates_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $rates_query_raw, $rates_query_numrows);
                 $rates = $db->Execute($rates_query_raw);
                 foreach ($rates as $rate) {
