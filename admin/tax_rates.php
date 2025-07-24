@@ -19,20 +19,20 @@ if (!empty($action)) {
       $tax_description = zen_db_prepare_input($_POST['tax_description']);
       $tax_priority = zen_db_prepare_input((int)$_POST['tax_priority']);
 
-      $db->Execute("INSERT INTO " . TABLE_TAX_RATES . " (tax_zone_id, tax_class_id, tax_rate, tax_description, tax_priority, date_added)
+      $db->Execute("INSERT INTO " . TABLE_TAX_RATES . " (tax_zone_id, tax_class_id, tax_rate, tax_priority, date_added)
                     VALUES ('" . (int)$tax_zone_id . "',
                             '" . (int)$tax_class_id . "',
                             '" . zen_db_input($tax_rate) . "',
-                            '" . zen_db_input($tax_description) . "',
                             '" . zen_db_input($tax_priority) . "',
                             now())");
+      $new_taxrate_id = $db->Insert_ID();
+
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];
         $db->Execute("INSERT INTO " . TABLE_TAX_RATES_DESCRIPTION . " (tax_rates_id, language_id, tax_description)
-                      VALUES (LAST_INSERT_ID(), " . $language_id . ", '" . $tax_description . "')");
+                      VALUES (" . $new_taxrate_id . ", " . $language_id . ", '" . zen_db_input($tax_description) . "')");
       }
 
-      $new_taxrate_id = $db->Insert_ID();
       zen_record_admin_activity('Tax Rate added, assigned ID ' . $new_taxrate_id, 'info');
       zen_redirect(zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $new_taxrate_id));
       break;
@@ -49,7 +49,6 @@ if (!empty($action)) {
                         tax_zone_id = " . (int)$tax_zone_id . ",
                         tax_class_id = " . (int)$tax_class_id . ",
                         tax_rate = '" . zen_db_input($tax_rate) . "',
-                        tax_description = '" . zen_db_input($tax_description) . "',
                         tax_priority = '" . zen_db_input($tax_priority) . "',
                         last_modified = now()
                     WHERE tax_rates_id = " . (int)$tax_rates_id);
