@@ -441,6 +441,22 @@ class zcDatabaseInstaller
 
     public function parserFrom(): void
     {
+        if (str_ends_with($this->line, ';') && substr_count($this->line, ',') > 0) {
+            $this->lineSplit[0] = 'FROM';
+            // check each word on this line to see if it's a table name, and inject prefix
+            $foundTable = false;
+            foreach ($this->lineSplit as $key => $word) {
+                if ($this->tableExists(rtrim($word, ','))) {
+                    $this->lineSplit[$key] = $this->dbPrefix . $word;
+                    $foundTable = true;
+                }
+            }
+            if ($foundTable) {
+                $this->line = implode(' ', $this->lineSplit) . ';';
+                return;
+            }
+        }
+        // fallback
         if (!$this->tableExists($this->lineSplit[1])) {
             $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[1]) . ' CHECK PREFIXES!';
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
@@ -540,6 +556,9 @@ class zcDatabaseInstaller
                     switch (strtoupper($this->lineSplit[4])) {
                         case 'COLUMN':
                             $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[5]);
+                            if (strtoupper($this->lineSplit[3]) === 'DROP') {
+                                $exists = ! $exists;
+                            }
                             break;
                         case 'INDEX':
                         case 'KEY':
