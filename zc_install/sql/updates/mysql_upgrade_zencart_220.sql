@@ -60,10 +60,12 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 # Table structure for table 'tax_rates_description'
 DROP TABLE IF EXISTS tax_rates_description;
 CREATE TABLE tax_rates_description (
-  tax_rates_id int(11) NOT NULL default '0',
-  language_id int(11) NOT NULL default '1',
-  tax_description varchar(255) NOT NULL default '',
-  PRIMARY KEY  (tax_rates_id,language_id),
+  id int(11) NOT NULL auto_increment,
+  tax_rates_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
+  tax_description varchar(250) NOT NULL default '',
+  PRIMARY KEY  (id),
+  UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id),
   KEY idx_tax_rates_description_zen (tax_description(250))
 ) ENGINE=MyISAM;
 INSERT INTO tax_rates_description SELECT tr.tax_rates_id, lg.languages_id, tr.tax_description FROM tax_rates tr, languages lg;
