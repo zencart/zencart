@@ -2215,8 +2215,7 @@ CREATE TABLE tax_rates_description (
   language_id int(11) NOT NULL default 1,
   tax_description varchar(250) NOT NULL default '',
   PRIMARY KEY  (id),
-  UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id),
-  KEY idx_tax_rates_description_zen (tax_description(250))
+  UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
