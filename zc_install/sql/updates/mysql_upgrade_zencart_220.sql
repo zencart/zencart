@@ -68,7 +68,9 @@ CREATE TABLE tax_rates_description (
   UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id),
   KEY idx_tax_rates_description_zen (tax_description(250))
 ) ENGINE=MyISAM;
-INSERT INTO tax_rates_description (tax_rates_id, language_id, tax_description) SELECT tr.tax_rates_id, lg.languages_id, tr.tax_description FROM tax_rates tr, languages lg;
+INSERT INTO tax_rates_description (tax_rates_id, language_id, tax_description) 
+SELECT tr.tax_rates_id, lg.languages_id, tr.tax_description 
+FROM tax_rates tr, languages lg;
 ALTER TABLE tax_rates DROP COLUMN tax_description;
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
