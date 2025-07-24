@@ -118,8 +118,9 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
         }
     }
 
-    $tax_query = "SELECT tax_description
-                  FROM " . TABLE_TAX_RATES . " tr
+    $tax_query = "SELECT trd.tax_description
+                  FROM " . TABLE_TAX_RATES_DESCRIPTION . " trd
+                  LEFT JOIN " . TABLE_TAX_RATES . " tr ON (trd.tax_rates_id = tr.tax_rates_id)
                   LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za ON (tr.tax_zone_id = za.geo_zone_id)
                   LEFT JOIN " . TABLE_GEO_ZONES . " tz ON (tz.geo_zone_id = tr.tax_zone_id)
                   WHERE (za.zone_country_id IS null OR za.zone_country_id = 0
@@ -128,6 +129,7 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
                         OR za.zone_id = 0
                         OR za.zone_id = " . (int)$zone_id . ")
                   AND tr.tax_class_id = " . (int)$class_id . "
+                  AND trd.language_id = " . (int)$_SESSION['languages_id'] . "
                   ORDER BY tr.tax_priority";
 
     $tax = $db->Execute($tax_query);
@@ -191,16 +193,18 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
         }
     }
 
-    $tax_query = "SELECT tax_description, tax_rate, tax_priority
-                  FROM " . TABLE_TAX_RATES . " tr
+    $tax_query = "SELECT trd.tax_description, tr.tax_rate, tr.tax_priority
+                  FROM " . TABLE_TAX_RATES_DESCRIPTION . " trd
+                  LEFT JOIN " . TABLE_TAX_RATES . " tr ON (trd.tax_rates_id = tr.tax_rates_id)
                   LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za ON (tr.tax_zone_id = za.geo_zone_id)
                   LEFT JOIN " . TABLE_GEO_ZONES . " tz ON (tz.geo_zone_id = tr.tax_zone_id)
                   WHERE (za.zone_country_id IS null OR za.zone_country_id = 0
-                    OR za.zone_country_id = " . (int)$country_id . ")
+                        OR za.zone_country_id = " . (int)$country_id . ")
                   AND (za.zone_id IS null
-                    OR za.zone_id = 0
-                    OR za.zone_id = " . (int)$zone_id . ")
+                        OR za.zone_id = 0
+                        OR za.zone_id = " . (int)$zone_id . ")
                   AND tr.tax_class_id = " . (int)$class_id . "
+                  AND trd.language_id = " . (int)$_SESSION['languages_id'] . "
                   ORDER BY tr.tax_priority";
     $results = $db->Execute($tax_query);
 
@@ -316,8 +320,10 @@ function zen_get_tax_rate_from_desc(string $tax_desc)
     $tax_descriptions = explode(' + ', $tax_desc);
     foreach ($tax_descriptions as $tax_description) {
         $sql = "SELECT tax_rate
-                FROM " . TABLE_TAX_RATES . "
-                WHERE tax_description = :taxDescLookup";
+                FROM " . TABLE_TAX_RATES . " tr
+                LEFT JOIN " . TABLE_TAX_RATES_DESCRIPTION . " trd ON (trd.tax_rates_id = tr.tax_rates_id)
+                WHERE tax_description = :taxDescLookup
+                AND trd.language_id = " . (int)$_SESSION['languages_id'];
         $sql = $db->bindVars($sql, ':taxDescLookup', $tax_description, 'string');
 
         $result = $db->Execute($sql);
@@ -456,8 +462,9 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
         }
     }
 
-    $sql = "SELECT tr.*
-            FROM " . TABLE_TAX_RATES . " tr
+    $sql = "SELECT trd.tax_description
+            FROM " . TABLE_TAX_RATES_DESCRIPTION . " trd
+            LEFT JOIN " . TABLE_TAX_RATES . " tr ON (trd.tax_rates_id = tr.tax_rates_id)
             LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za ON (tr.tax_zone_id = za.geo_zone_id)
             LEFT JOIN " . TABLE_GEO_ZONES . " tz ON (tz.geo_zone_id = tr.tax_zone_id)
             WHERE (za.zone_country_id IS null
@@ -465,7 +472,8 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
               OR za.zone_country_id = " . (int)$country_id . ")
             AND (za.zone_id IS null
               OR za.zone_id = 0
-              OR za.zone_id = " . (int)$zone_id . ")";
+              OR za.zone_id = " . (int)$zone_id . ")
+            AND trd.language_id = " . $_SESSION['languages_id'];
     $results = $db->Execute($sql);
     $taxDescriptions = [];
     foreach ($results as $result) {
