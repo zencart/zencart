@@ -128,11 +128,11 @@ for ($i = 0; $i < $report->size; $i++) {
 
   if ($j == 0) {
   // first value
-  echo round($report->info[$i]['sum'], 2);
+  echo round($report->info[$i]['sum'], $currencies->get_decimal_places(DEFAULT_CURRENCY));
   } else {
     // second value
     if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
-      echo round($report->info[$i]['avg'], 2);
+      echo round($report->info[$i]['avg'], $currencies->get_decimal_places(DEFAULT_CURRENCY));
     }
   }
   echo ']';
