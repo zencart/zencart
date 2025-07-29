@@ -15,7 +15,7 @@ class statsSalesReportGraph
     const YEARLY_VIEW = 5;
 
     /** @var int Number of years to look backward in yearly mode */
-    const LOOKBACK_YEARS = 4;
+    const LOOKBACK_YEARS = 10;
 
     protected
         $mode = self::MONTHLY_VIEW,
@@ -310,25 +310,22 @@ class statsSalesReportGraph
             $this->info[$i]['sum'] = $report->fields['value'] ?? 0;
             $this->info[$i]['avg'] = $report->fields['avg'] ?? 0;
             $this->info[$i]['count'] = $report->fields['count'];
+            $this->info[$i]['startDates'] = $this->startDates[$i];
+            $this->info[$i]['endDates'] = $this->endDates[$i];
             switch ($this->mode) {
                 case self::HOURLY_VIEW:
-                    $this->info[$i]['text'] = $zcDate->output('%H', $this->startDates[$i]) . " - " . $zcDate->output('%H', $this->endDates[$i]);
                     $this->info[$i]['link'] = '';
                     break;
                 case self::DAILY_VIEW:
-                    $this->info[$i]['text'] = $zcDate->output(DATE_FORMAT_SHORT, $this->startDates[$i]);
                     $this->info[$i]['link'] = "report=" . self::HOURLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) + 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::WEEKLY_VIEW:
-                    $this->info[$i]['text'] = $zcDate->output(DATE_FORMAT_SHORT, $this->startDates[$i]) . " - " . $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i])));
                     $this->info[$i]['link'] = "report=" . self::DAILY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::MONTHLY_VIEW:
-                    $this->info[$i]['text'] = $zcDate->output('%b %y', $this->startDates[$i]);
                     $this->info[$i]['link'] = "report=" . self::WEEKLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]), date('d', $this->endDates[$i]) - 1, date('Y', $this->endDates[$i]));
                     break;
                 case self::YEARLY_VIEW:
-                    $this->info[$i]['text'] = date('Y', $this->startDates[$i]);
                     $this->info[$i]['link'] = "report=" . self::MONTHLY_VIEW . "&startDate=" . $this->startDates[$i] . "&endDate=" . mktime(0, 0, 0, date('m', $this->endDates[$i]) - 1, date('d', $this->endDates[$i]), date('Y', $this->endDates[$i]));
                     break;
             }
