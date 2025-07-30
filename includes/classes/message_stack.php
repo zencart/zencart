@@ -13,16 +13,15 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Manage messageStack alerts
- *
  */
 class messageStack extends base
 {
     /** to override these, call setMessageFormatting() and pass it an array of the desired formats, similar to what getDefaultFormats() returns */
-    private $formats = [];
+    private array $formats = [];
     /** array of messages to be displayed */
-    public $messages = [];
+    public array $messages = [];
 
-    function __construct()
+    public function __construct()
     {
         $this->messages = [];
 
@@ -31,7 +30,7 @@ class messageStack extends base
         }
     }
 
-    function add($class, $message, $type = 'error')
+    public function add(string $class, string $message, string $type = 'error'): void
     {
         $message = trim($message);
         $duplicate = false;
@@ -66,7 +65,7 @@ class messageStack extends base
         }
     }
 
-    function add_session($class, $message, $type = 'error')
+    public function add_session(string $class, string $message, string $type = 'error'): void
     {
         if (empty($_SESSION['messageToStack'])) {
             $messageToStack = [];
@@ -83,7 +82,7 @@ class messageStack extends base
         $this->add($class, $message, $type);
     }
 
-    function reset()
+    public function reset(): void
     {
         $this->messages = [];
     }
@@ -106,7 +105,7 @@ class messageStack extends base
 
         $output = [];
         foreach ($this->messages as $next_message) {
-            if ($next_message['class'] == $class) {
+            if ($next_message['class'] === $class) {
                 $output[] = $next_message;
             }
         }
@@ -117,7 +116,7 @@ class messageStack extends base
         require $template->get_template_dir('tpl_message_stack_default.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_message_stack_default.php';
     }
 
-    function size($class)
+    public function size(string $class): int
     {
         if (!empty($_SESSION['messageToStack'])) {
             foreach ($_SESSION['messageToStack'] as $next_message) {
@@ -128,7 +127,7 @@ class messageStack extends base
         $count = 0;
 
         foreach ($this->messages as $next_message) {
-            if ($next_message['class'] == $class) {
+            if ($next_message['class'] === $class) {
                 $count++;
             }
         }
@@ -136,18 +135,15 @@ class messageStack extends base
         return $count;
     }
 
-    /**
-     * @param array $formattingArray
-     */
-    function setMessageFormatting($formattingArray = [])
+    public function setMessageFormatting(array $formattingArray = []): void
     {
         foreach ($formattingArray as $messageType => $keys) {
             foreach ($keys as $key => $value) {
-                if ($key == 'params') {
+                if ($key === 'params') {
                     $this->formats[$messageType]['params'] = $value;
                     continue;
                 }
-                if ($key == 'icon') {
+                if ($key === 'icon') {
                     $this->formats[$messageType]['icon'] = $value;
                 }
             }
@@ -157,7 +153,7 @@ class messageStack extends base
     /**
      * @return array
      */
-    function getDefaultFormats()
+    public function getDefaultFormats(): array
     {
         global $template, $current_page_base;
 
