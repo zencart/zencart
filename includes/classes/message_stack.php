@@ -87,7 +87,7 @@ class messageStack extends base
         $this->messages = [];
     }
 
-    function output($class)
+    public function output(string $class = 'default')
     {
         global $template, $current_page_base;
 
