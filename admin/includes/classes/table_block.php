@@ -6,69 +6,70 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: brittainmark 2022 Aug 22 Modified in v1.5.8-alpha2 $
  */
-class boxTableBlock {
-    protected 
-        $table_row_parameters,
-        $table_data_parameters;
-     
-function tableBlock($contents) {
-    $tableBox_string = '';
+class boxTableBlock
+{
+    protected string $table_row_parameters;
+    protected string $table_data_parameters;
 
-    $form_set = false;
-    if (isset($contents['form'])) {
-      $tableBox_string .= $contents['form'] . "\n";
-      $form_set = true;
-      array_shift($contents);
-    }
+    public function tableBlock($contents): string
+    {
+        $tableBox_string = '';
 
-    for ($i = 0, $n = sizeof($contents); $i < $n; $i++) {
-      if (isset($contents[$i][0]) && is_array($contents[$i][0])) {
-        for ($x = 0, $y = sizeof($contents[$i]); $x < $y; $x++) {
-          if (isset($contents[$i][$x]['text']) && zen_not_null($contents[$i][$x]['text'])) {
-            $tableBox_string .= '<div class="row';
-            if (zen_not_null($this->table_row_parameters)) {
-              $tableBox_string .= ' ' . $this->table_row_parameters;
-            }
-            if (isset($contents[$i][$x]['align']) && zen_not_null($contents[$i][$x]['align'])) {
-              $tableBox_string .= ' ' . $contents[$i][$x]['align'];
-            }
-            if (isset($contents[$i][$x]['params']) && zen_not_null($contents[$i][$x]['params'])) {
-              $tableBox_string .= ' ' . $contents[$i][$x]['params'];
-            } elseif (zen_not_null($this->table_data_parameters)) {
-              $tableBox_string .= ' ' . $this->table_data_parameters;
-            }
-            $tableBox_string .= '"';
-            $tableBox_string .= '>';
-            if (isset($contents[$i][$x]['form']) && zen_not_null($contents[$i][$x]['form'])){
-              $tableBox_string .= $contents[$i][$x]['form'];
-            }
-            $tableBox_string .= $contents[$i][$x]['text'];
-            if (isset($contents[$i][$x]['form']) && zen_not_null($contents[$i][$x]['form'])){
-              $tableBox_string .= '</form>';
-            }
-            $tableBox_string .= '</div>' . "\n";
-          }
+        $form_set = false;
+        if (isset($contents['form'])) {
+            $tableBox_string .= $contents['form'] . "\n";
+            $form_set = true;
+            array_shift($contents);
         }
-      } else {
-        $tableBox_string .= '<div class="row';
-        if (isset($contents[$i]['align']) && zen_not_null($contents[$i]['align'])) {
-          $tableBox_string .= ' ' . $contents[$i]['align'];
-        }
-        if (isset($contents[$i]['params']) && zen_not_null($contents[$i]['params'])) {
-          $tableBox_string .= ' ' . $contents[$i]['params'];
-        } elseif (zen_not_null($this->table_data_parameters)) {
-          $tableBox_string .= ' ' . $this->table_data_parameters;
-        }
-        $tableBox_string .= '"';
-        $tableBox_string .= '>' . $contents[$i]['text'] . '</div>' . "\n";
-      }
-    }
 
-    if ($form_set == true) {
-      $tableBox_string .= '</form>' . "\n";
-    }
+        foreach ($contents as $rowKey => $row) {
+            if (isset($row[0]) && is_array($row[0])) {
+                foreach ($row as $cell => $content) {
+                    if (isset($content['text']) && zen_not_null($content['text'])) {
+                        $tableBox_string .= '<div class="row';
+                        if (zen_not_null($this->table_row_parameters)) {
+                            $tableBox_string .= ' ' . $this->table_row_parameters;
+                        }
+                        if (isset($content['align']) && zen_not_null($content['align'])) {
+                            $tableBox_string .= ' ' . $content['align'];
+                        }
+                        if (isset($content['params']) && zen_not_null($content['params'])) {
+                            $tableBox_string .= ' ' . $content['params'];
+                        } elseif (zen_not_null($this->table_data_parameters)) {
+                            $tableBox_string .= ' ' . $this->table_data_parameters;
+                        }
+                        $tableBox_string .= '"';
+                        $tableBox_string .= '>';
+                        if (isset($content['form']) && zen_not_null($content['form'])) {
+                            $tableBox_string .= $contents[$rowKey][$cell]['form'];
+                        }
+                        $tableBox_string .= $contents[$rowKey][$cell]['text'];
+                        if (isset($content['form']) && zen_not_null($content['form'])) {
+                            $tableBox_string .= '</form>';
+                        }
+                        $tableBox_string .= '</div>' . "\n";
+                    }
+                }
+            } else {
+                $tableBox_string .= '<div class="row';
+                if (isset($row['align']) && zen_not_null($row['align'])) {
+                    $tableBox_string .= ' ' . $row['align'];
+                }
+                if (isset($row['params']) && zen_not_null($row['params'])) {
+                    $tableBox_string .= ' ' . $row['params'];
+                } elseif (zen_not_null($this->table_data_parameters)) {
+                    $tableBox_string .= ' ' . $this->table_data_parameters;
+                }
+                $tableBox_string .= '"';
+                $tableBox_string .= '>' . $row['text'] . '</div>' . "\n";
+            }
+        }
 
-    return $tableBox_string;
-  }
+        if ($form_set === true) {
+            $tableBox_string .= '</form>' . "\n";
+        }
+
+        return $tableBox_string;
+    }
 
 }
