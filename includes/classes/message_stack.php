@@ -30,7 +30,7 @@ class messageStack extends base
         }
     }
 
-    public function add(string $class, string $message, string $type = 'error'): void
+    public function add($class, $message, $type = 'error')
     {
         $message = trim($message);
         $duplicate = false;
