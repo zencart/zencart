@@ -20,7 +20,7 @@ $startDate = time() - (365 * 2) * 3600 * 24;
 //$startDate = mktime() - (365)*3600*24;
 $report = new statsSalesReportGraph($report, $startDate, $endDate);
 for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
-    $month = $report->info[$i]['text'];
+    $month = $zcDate->output(DATE_FORMAT_SHORT_NO_DAY, $report->info[$i]['startDates']);
     $salesData .= "['$month'," . round($report->info[$i]['sum'], 2) . "]";
     if ($i < $report->size - 1) {
         $salesData .= ",";
