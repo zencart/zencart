@@ -67,7 +67,7 @@ class messageStack extends boxTableBlock
         $this->size = 0;
     }
 
-    public function output(): string
+    public function output(string $class='')
     {
         $this->table_data_parameters = 'class="messageBox"';
         return $this->tableBlock($this->errors);
