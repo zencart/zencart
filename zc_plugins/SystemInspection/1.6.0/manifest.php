@@ -6,7 +6,7 @@ return [
     'pluginDescription' => 'Lists database changes that have been made to a base Zen Cart installation. (formerly called ModList)',
     'pluginAuthor' => 'That Software Guy (swguy)',
     'pluginId' => 0, // ID from Zen Cart forum
-    'zcVersions' => ['v157', 'v158', 'v200', 'v201', 'v210', 'v220],
+    'zcVersions' => ['v157', 'v158', 'v200', 'v201', 'v210', 'v220'],
     'changelog' => '', // online URL (eg github release tag page, or changelog file there) or local filename only, ie: changelog.txt (in same dir as this manifest file)
     'github_repo' => '', // url
     'pluginGroups' => [],
