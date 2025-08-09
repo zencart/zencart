@@ -598,7 +598,7 @@ DROP TABLE IF EXISTS currencies;
 CREATE TABLE currencies (
   currencies_id int(11) NOT NULL auto_increment,
   title varchar(32) NOT NULL default '',
-  code char(3) NOT NULL default '',
+  code char(4) NOT NULL default '',
   symbol_left varchar(32) default NULL,
   symbol_right varchar(32) default NULL,
   decimal_point char(1) default NULL,
@@ -1204,7 +1204,7 @@ CREATE TABLE orders (
   date_purchased datetime default NULL,
   orders_status int(5) NOT NULL default 0,
   orders_date_finished datetime default NULL,
-  currency char(3) default NULL,
+  currency char(4) default NULL,
   currency_value decimal(14,6) default NULL,
   order_total decimal(15,4) default NULL,
   order_tax decimal(15,4) default NULL,

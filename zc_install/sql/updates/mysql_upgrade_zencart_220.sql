@@ -47,7 +47,8 @@ CREATE TABLE customer_password_reset_tokens (
 ALTER TABLE orders_products_attributes MODIFY products_options varchar(191) NOT NULL default '';
 ALTER TABLE products_options MODIFY products_options_name varchar(191) NOT NULL default '';
 ALTER TABLE products_options_values MODIFY products_options_values_name varchar(191) NOT NULL default '';
-
+ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
+ALTER TABLE orders MODIFY currency char(4) default NULL;
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');
