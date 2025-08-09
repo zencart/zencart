@@ -111,7 +111,7 @@ for ($i = 0; $i < $report->size; $i++) {
   // column name
   echo "           ['";
 
-  Switch ($sales_report_view) {
+  switch ($sales_report_view) {
       case statsSalesReportGraph::YEARLY_VIEW:
           echo $zcDate->output('%Y', $report->info[$i]['startDates']);
           break;
