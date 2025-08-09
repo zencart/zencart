@@ -107,7 +107,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
 ?>
 <div class="container-fluid">
     <?php
-    echo zen_draw_form('new_product', FILENAME_PRODUCT, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
+    echo zen_draw_form('new_product', FILENAME_PRODUCT, 'cPath=' . zen_get_generated_category_path_rev($current_category_id) . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
     if (isset($product_type)) {
       echo zen_draw_hidden_field('product_type', $product_type);
     }

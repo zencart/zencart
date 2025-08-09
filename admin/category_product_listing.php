@@ -208,7 +208,7 @@ if (!empty($action)) {
             zen_update_products_price_sorter($product_id);
           }
 
-          zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $new_parent_id));
+          zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . zen_get_generated_category_path_rev((int)$new_parent_id)));
         }
       } else {
         $messageStack->add_session(ERROR_CANNOT_MOVE_CATEGORY_TO_CATEGORY_SELF . $cPath, 'error');
@@ -288,7 +288,7 @@ if (!empty($action)) {
         }
         $category_tree = [];
         zen_get_parent_categories($category_tree, $_GET['cID']);
-        array_reverse($category_tree);
+        $category_tree = array_reverse($category_tree);
         $category_tree_string = implode('_', $category_tree);
         if ($category_tree_string !== $cPath) {
             zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $category_tree_string));
@@ -495,7 +495,14 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                   <?= zen_draw_label(HEADING_TITLE_GOTO, 'cPath') ?>
                 </div>
                 <div class="col-sm-6 col-md-8">
-                  <?= zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $current_category_id, 'onchange="this.form.submit();" class="form-control" id="cPath"') ?>
+                <?php
+                 $category_tree = zen_get_category_tree();
+                 foreach ($category_tree as $key => $branch) {
+                    $category_tree[$key]['id'] = zen_get_generated_category_path_rev((int)$branch['id']);
+                 }
+                 echo zen_draw_pull_down_menu('cPath', $category_tree, $cPath, 'onchange="this.form.submit();" class="form-control" id="cPath"');
+                 unset($category_tree);
+                 ?>
                 </div>
               <?php } else { ?>
                 <div class="col-sm-6 col-md-4 control-label">
@@ -701,7 +708,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $categories_count++;
 // Get parent_id for subcategories if search
               if (isset($_GET['search'])) {
-                $cPath = $category['parent_id'];
+                $cPath = zen_get_generated_category_path_rev($category['parent_id']);
               }
 
               if ((!isset($_GET['cID']) && !isset($_GET['pID']) || (isset($_GET['cID']) && ($_GET['cID'] == $category['categories_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -947,7 +954,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $products_count++;
 // Get categories_id for product if search
               if (isset($_GET['search'])) {
-                $cPath = $product['master_categories_id'];
+               $cPath = zen_get_generated_category_path_rev($product['master_categories_id']);
               }
 
               if ((!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] === (int)$product['products_id']))) && !isset($pInfo) && !isset($cInfo) && (strpos($action, 'new')
@@ -1379,7 +1386,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                 window.location.href = link;
             }).css('cursor', 'pointer');
         });
-    
+
         $(document).ready(function () {
             $('#imageView').on('click', function() {
                 if ($('#imageView').val() == '<?= TEXT_HIDE_IMAGES ?>') {
