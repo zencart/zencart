@@ -120,7 +120,7 @@ for ($i = 0; $i < $report->size; $i++) {
           $chartHeader = ($chartHeader === '' && $i === 0) ? ' ' . $zcDate->output('%Y', $report->info[$i]['startDates']) : $chartHeader;
           break;
       case statsSalesReportGraph::WEEKLY_VIEW:
-          echo $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['startDates']) . '\r' . $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['endDates'] - 1);
+          echo $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['startDates']) . '\n' . $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['endDates'] - 1);
           break;
       case statsSalesReportGraph::DAILY_VIEW:
           echo $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['startDates']);
