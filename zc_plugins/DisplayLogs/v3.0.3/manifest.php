@@ -1,7 +1,7 @@
 <?php
 return [
     'pluginVersion' => 'v3.0.3',
-    'pluginName' => 'Display logs',
+    'pluginName' => 'Display Logs',
     'pluginDescription' => 'Display and manage Zen Cart log files.',
     'pluginAuthor' => 'Vinos de Frutas Tropicales (lat9)',
     'pluginId' => 1583, // ID from Zen Cart forum
