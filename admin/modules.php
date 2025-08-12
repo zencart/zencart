@@ -1,18 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2024 Sep 25 Modified in v2.1.0-beta1 $
+ * @version $Id: 2025 Aug 11 Modified in v2.2.0-alpha $
  */
 use Zencart\FileSystem\FileSystem;
 use Zencart\ResourceLoaders\ModuleFinder;
 
 require 'includes/application_top.php';
-
-if (file_exists(DIR_FS_CATALOG . 'includes/classes/dbencdata.php')) {
-    require_once DIR_FS_CATALOG . 'includes/classes/dbencdata.php';
-}
 
 $set = $_GET['set'] ?? $_POST['set'] ?? '';
 
