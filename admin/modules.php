@@ -302,7 +302,7 @@ foreach ($modules_found as $module_name => $module_file_dir) {
         );
 ?>
                   <td class="dataTableContent text-center">
-                    <?= (is_numeric($module->sort_order) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : '') ?>
+                    <?= (is_numeric($module->order_status) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : '') ?>
                   </td>
 <?php
     }
