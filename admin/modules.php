@@ -14,6 +14,10 @@ $set = $_GET['set'] ?? $_POST['set'] ?? '';
 
 $is_ssl_protected = strpos(HTTP_SERVER, 'https') === 0;
 
+zen_define_default('TEXT_AVAILABLE', 'Available');
+zen_define_default('TEXT_DISABLED', 'Disabled');
+zen_define_default('TEXT_ENABLED', 'Enabled');
+
 switch ($set) {
     case 'shipping':
         $module_type = 'shipping';
@@ -163,44 +167,10 @@ if (!empty($action)) {
             break;
     }
 }
-?>
-<!doctype html>
-<html <?= HTML_PARAMS ?>>
-  <head>
-    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-  </head>
-  <body>
-    <!-- header //-->
-    <?php require DIR_WS_INCLUDES . 'header.php'; ?>
-    <!-- header_eof //-->
 
-    <!-- body //-->
-    <div class="container-fluid">
-      <!-- body_text //-->
-      <h1><?= HEADING_TITLE ?></h1>
-      <div class="row">
-        <?php require_once DIR_WS_MODULES . 'notificationsDisplay.php'; ?>
-        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
-          <table class="table table-hover">
-            <thead>
-              <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent"><?= TABLE_HEADING_MODULES ?></th>
-                <th class="dataTableHeadingContent">&nbsp;</th>
-                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_SORT_ORDER ?></th>
-<?php
-if ($set == 'payment') {
-?>
-                <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ORDERS_STATUS ?></th>
-<?php
-}
-?>
-                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_ACTION ?>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-<?php
 $installed_modules = [];
 $temp_for_sort = [];
+$modules_for_display = [];
 $module_directory = DIR_FS_CATALOG . DIR_WS_MODULES . $module_type;
 foreach ($modules_found as $module_name => $module_file_dir) {
     if (!$languageLoader->loadModuleLanguageFile($module_name, $module_type)) {
@@ -215,8 +185,13 @@ foreach ($modules_found as $module_name => $module_file_dir) {
     }
 
     $module = new $class();
+    $modules_for_display[$class] = ['class' => $class];
     // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
-    if ($module->check() > 0) {
+    $check = $module->check();
+    $modules_for_display[$class]['status'] = $check;
+    $modules_for_display[$class]['code'] = $module->code ?? '';
+    $modules_for_display[$class]['title'] = $module->title ?? '**BROKEN**';
+    if ($check > 0) {
         // determine sort orders (using up to 6 digits, then filename) and add to list of installed modules
         $temp_for_sort[$module_name] = str_pad((int)$module->sort_order, 6, '0', STR_PAD_LEFT) . $module_name;
         asort($temp_for_sort);
@@ -227,7 +202,7 @@ foreach ($modules_found as $module_name => $module_file_dir) {
             'code' => $module->code,
             'title' => $module->title,
             'description' => $module->description,
-            'status' => $module->check(),
+            'status' => $check,
         ];
 
         $keys_extra = [];
@@ -248,82 +223,15 @@ foreach ($modules_found as $module_name => $module_file_dir) {
         }
 
         $mInfo = new objectInfo($module_info);
-    }
 
-    if (isset($mInfo) && is_object($mInfo) && $class === $mInfo->code) { // a module row is selected
-        if ($module->check() > 0) { // a module row is selected, module is installed, infoBox is showing module parameters
-            if (isset($_GET['action']) && $_GET['action'] === 'edit') { // a module row is selected, module is installed, infoBox is showing module Edit parameters
-?>
-              <tr id="defaultSelected" class="dataTableRowSelected">
-<?php
-            } else { // a module row is selected, module is installed, infoBox is only showing module parameters
-?>
-              <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href='<?= zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') ?>'">
-<?php
-            }
-        } else { // a module row is selected, module is NOT installed
-?>
-              <tr id="defaultSelected" class="dataTableRowSelected">
-<?php
-        }
-    } else { // module row is not selected: click to show install option or module parameters
-?>
-              <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?= zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') ?>'">
-<?php
+        $modules_for_display[$class] = array_merge($modules_for_display[$class], $module_info);
     }
-?>
-                  <td class="dataTableContent"><?= $module->title ?></td>
-                  <td class="dataTableContent"><?= $module->code ?></td>
-                  <td class="dataTableContent text-right">
-<?php
-    if (is_numeric($module->sort_order)) {
-        echo $module->sort_order;
-    }
-
-    // show current status
-    if ($set === 'payment' || $set === 'shipping') {
-        echo ((!empty($module->enabled) && is_numeric($module->sort_order)) ? zen_icon('status-green') : ((empty($module->enabled) && is_numeric($module->sort_order)) ? zen_icon('status-yellow') : zen_icon('status-red')));
-    } else {
-        echo (is_numeric($module->sort_order) ? zen_icon('status-green') : zen_icon('status-red'));
-    }
-?>
-                  </td>
-<?php
-    if ($set === 'payment') {
-        if (!isset($module->order_status)) {
-            $module->order_status = 0;
-        }
-
-        $orders_status_name = $db->Execute(
-            "SELECT orders_status_id, orders_status_name
-               FROM " . TABLE_ORDERS_STATUS . "
-              WHERE orders_status_id = " . (int)$module->order_status . "
-                AND language_id = " . (int)$_SESSION['languages_id']
-        );
-?>
-                  <td class="dataTableContent text-center">
-                    <?= (is_numeric($module->order_status) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : '') ?>
-                  </td>
-<?php
-    }
-?>
-                  <td class="dataTableContent text-right">
-<?php
-    if (isset($mInfo) && is_object($mInfo) && $class === $mInfo->code) {
-        echo zen_icon('caret-right', '', '2x', true);
-        $_GET['module'] = $_GET['module'] ?? $mInfo->code;
-    } else {
-        echo
-            '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' .
-                zen_icon('circle-info', '', '2x', true, false) .
-            '</a>';
-    }
-?>
-                    &nbsp;
-                  </td>
-              </tr>
-<?php
+    $modules_for_display[$class]['module'] = $module;
+    $modules_for_display[$class]['enabled'] = $module->enabled ?? ($set === 'ordertotal');
+    $modules_for_display[$class]['sort_order'] = $module->sort_order ?? null;
 }
+// sort by sort_order then title
+uasort($modules_for_display, static fn($a, $b) => strnatcmp($a['sort_order'] ?? 0, $b['sort_order'] ?? 0) ?: strnatcmp($a['title'] ?? '', $b['title'] ?? ''));
 
 ksort($installed_modules);
 $installed_modules_list = zen_db_input(implode(';', $installed_modules));
@@ -345,15 +253,139 @@ if (!$check->EOF) {
         );
     }
 } else {
-  $db->Execute(
-    "INSERT INTO " . TABLE_CONFIGURATION . "
+    $db->Execute(
+        "INSERT INTO " . TABLE_CONFIGURATION . "
         (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added)
      VALUES
         ('Installed Modules', '" . zen_db_input($module_key) . "', '" . $installed_modules_list . "', 'This is automatically updated. No need to edit.', 6, 0, now())");
 }
+
+?>
+<!doctype html>
+<html <?= HTML_PARAMS ?>>
+  <head>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+  </head>
+  <body>
+    <!-- header //-->
+    <?php require DIR_WS_INCLUDES . 'header.php'; ?>
+    <!-- header_eof //-->
+
+    <!-- body //-->
+    <div class="container-fluid">
+      <!-- body_text //-->
+      <h1><?= HEADING_TITLE ?></h1>
+      <div class="row">
+        <?php require_once DIR_WS_MODULES . 'notificationsDisplay.php'; ?>
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+<?php
+// show enabled modules first
+foreach (($set === 'payment' || $set === 'shipping') ? [true, false] : [null] as $status_group) {
+?>
+          <table class="table table-hover">
+            <thead>
+              <tr class="dataTableHeadingRow">
+                <th class="dataTableHeadingContent"><?= $status_group ? TEXT_ENABLED : TEXT_AVAILABLE ?> <?= TABLE_HEADING_MODULES ?></th>
+                <th class="dataTableHeadingContent">&nbsp;</th>
+                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_SORT_ORDER ?></th>
+<?php
+if ($set === 'payment') {
+?>
+                <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ORDERS_STATUS ?></th>
+<?php
+}
+?>
+                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_ACTION ?>&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+    <?php
+    foreach ($modules_for_display as $class => $detail) {
+        // show enabled modules first
+        if ($status_group !== null && $status_group !== $detail['enabled']) {
+            continue;
+        }
+
+        if (isset($mInfo) && is_object($mInfo) && $class === $mInfo->code) { // a module row is selected
+            if (!empty($detail['status'])) { // a module row is selected, module is installed, infoBox is showing module parameters
+                if (isset($_GET['action']) && $_GET['action'] === 'edit') { // a module row is selected, module is installed, infoBox is showing module Edit parameters
+    ?>
+                  <tr id="defaultSelected" class="dataTableRowSelected">
+    <?php
+                } else { // a module row is selected, module is installed, infoBox is only showing module parameters
+    ?>
+                  <tr id="defaultSelected" class="dataTableRowSelected" style="cursor:pointer" onclick="document.location.href='<?= zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL') ?>'">
+    <?php
+                }
+            } else { // a module row is selected, module is NOT installed
+    ?>
+                  <tr id="defaultSelected" class="dataTableRowSelected">
+    <?php
+            }
+        } else { // module row is not selected: click to show install option or module parameters
+    ?>
+                  <tr class="dataTableRow" style="cursor:pointer" onclick="document.location.href='<?= zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') ?>'">
+    <?php
+        }
+    ?>
+                      <td class="dataTableContent"><?= $detail['title'] ?></td>
+                      <td class="dataTableContent"><?= $detail['code'] ?></td>
+                      <td class="dataTableContent text-right">
+    <?php
+        if (is_numeric($detail['sort_order'])) {
+            echo $detail['sort_order'];
+        }
+
+        // show current status
+        if ($set === 'payment' || $set === 'shipping') {
+            echo ((!empty($detail['enabled']) && is_numeric($detail['sort_order'])) ? zen_icon('status-green') : ((empty($detail['enabled']) && is_numeric($detail['sort_order'])) ? zen_icon('status-yellow') : zen_icon('status-red')));
+        } else {
+            echo (is_numeric($detail['sort_order']) ? zen_icon('status-green') : zen_icon('status-red'));
+        }
+    ?>
+                      </td>
+    <?php
+        if ($set === 'payment') {
+            if (!isset($detail['module']->order_status)) {
+                $detail['module']->order_status = 0;
+            }
+
+            $orders_status_name = $db->Execute(
+                "SELECT orders_status_id, orders_status_name
+                   FROM " . TABLE_ORDERS_STATUS . "
+                  WHERE orders_status_id = " . (int)$detail['module']->order_status . "
+                    AND language_id = " . (int)$_SESSION['languages_id']
+            );
+    ?>
+                      <td class="dataTableContent text-center">
+                        <?= (is_numeric($detail['module']->order_status) ? (empty($orders_status_name->fields['orders_status_id']) ? TEXT_DEFAULT : $orders_status_name->fields['orders_status_name']) : '') ?>
+                      </td>
+    <?php
+        }
+    ?>
+                      <td class="dataTableContent text-right">
+    <?php
+        if (isset($mInfo) && is_object($mInfo) && $class === $mInfo->code) {
+            echo zen_icon('caret-right', '', '2x', true);
+            $_GET['module'] = $_GET['module'] ?? $mInfo->code;
+        } else {
+            echo
+                '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' .
+                    zen_icon('circle-info', '', '2x', true, false) .
+                '</a>';
+        }
+    ?>
+
+                      </td>
+                  </tr>
+    <?php
+    }
 ?>
             </tbody>
           </table>
+<?php
+}
+?>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
 <?php
@@ -413,7 +445,7 @@ switch ($action) {
                 '<button type="submit" class="btn btn-danger" id="saveButton">' .
                     IMAGE_UPDATE .
                 '</button>&nbsp;' .
-                '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] != '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" id="cancelButton">' .
+                '<a href="' . zen_href_link(FILENAME_MODULES, 'set=' . $set . ($_GET['module'] !== '' ? '&module=' . $_GET['module'] : ''), 'SSL') . '" class="btn btn-default" role="button" id="cancelButton">' .
                     IMAGE_CANCEL .
                 '</a>'
         ];
