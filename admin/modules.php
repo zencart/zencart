@@ -265,6 +265,11 @@ if (!$check->EOF) {
 <html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+      <style>
+          .w-40 {width: 40%}
+          .w-20 {width: 20%}
+          .w-10 {width: 10%}
+      </style>
   </head>
   <body>
     <!-- header //-->
@@ -285,17 +290,17 @@ foreach (($set === 'payment' || $set === 'shipping') ? [true, false] : [null] as
           <table class="table table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent"><?= $status_group ? TEXT_ENABLED : TEXT_AVAILABLE ?> <?= TABLE_HEADING_MODULES ?></th>
-                <th class="dataTableHeadingContent">&nbsp;</th>
-                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_SORT_ORDER ?></th>
+                <th class="dataTableHeadingContent w-40"><?= $status_group ? TEXT_ENABLED : TEXT_AVAILABLE ?> <?= TABLE_HEADING_MODULES ?></th>
+                <th class="dataTableHeadingContent w-20"><?= defined('TEXT_INTERNAL_MODULE_ID') ? TEXT_INTERNAL_MODULE_ID : '(Module ID)' ?></th>
+                <th class="dataTableHeadingContent w-10 text-right"><?= TABLE_HEADING_SORT_ORDER ?></th>
 <?php
 if ($set === 'payment') {
 ?>
-                <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ORDERS_STATUS ?></th>
+                <th class="dataTableHeadingContent w-20 text-center"><?= TABLE_HEADING_ORDERS_STATUS ?></th>
 <?php
 }
 ?>
-                <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_ACTION ?>&nbsp;</th>
+                <th class="dataTableHeadingContent w-10 text-right"><?= TABLE_HEADING_ACTION ?>&nbsp;</th>
               </tr>
             </thead>
             <tbody>
