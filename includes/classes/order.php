@@ -370,7 +370,7 @@ class order extends base
 
         $this->statuses = $this->getStatusHistory($this->orderId);
 
-        $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId);
+        $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId, $order->fields);
 
         /**
          * @deprecated since v1.5.6; use NOTIFY_ORDER_AFTER_QUERY instead
