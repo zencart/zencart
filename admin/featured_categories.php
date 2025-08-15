@@ -217,7 +217,8 @@ if ($action !== '') {
                     $form_action = 'update';
 
                     $category = $db->Execute("SELECT c.categories_id, cd.categories_name,
-                                            fc.expires_date, fc.featured_date_available
+                                            date_format(fc.expires_date, '" .  zen_datepicker_format_forsql() . "') as expires_date,
+                                            date_format(fc.featured_date_available, '" .  zen_datepicker_format_forsql() . "') as featured_date_available
                                             FROM " . TABLE_CATEGORIES . " c,
                                             " . TABLE_CATEGORIES_DESCRIPTION . " cd,
                                             " . TABLE_FEATURED_CATEGORIES . " fc
