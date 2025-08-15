@@ -70,9 +70,6 @@ if (!empty($action)) {
                     $value = implode(', ', $value);
                     $value = preg_replace('/, --none--/', '', $value);
                 }
-                if (function_exists('dbenc_encrypt') && function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
-                    $value = dbenc_encrypt($value);
-                }
 
                 // See if there are any configuration checks
                 $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $key . "'");
@@ -241,7 +238,6 @@ $check = $db->Execute(
       WHERE configuration_key = '" . zen_db_input($module_key) . "'
       LIMIT 1"
 );
-
 if (!$check->EOF) {
     if ($check->fields['configuration_value'] !== implode(';', $installed_modules)) {
         $db->Execute(
