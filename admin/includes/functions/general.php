@@ -609,14 +609,25 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
  * Alias function for Store configuration values in the Administration Tool
  * adapted from USPS-related contributions by Brad Waite and Fritz Clapp
  */
-function zen_cfg_select_multioption($select_array, $key_value, $key = '')
+function zen_cfg_select_multioption(array $choices_array, string $stored_value, string $config_key_name = ''): string
 {
     $string = '';
-    for ($i = 0, $n = count($select_array); $i < $n; $i++) {
-        $name = (($key) ? 'configuration[' . $key . '][]' : 'configuration_value');
-        $key_values = explode(", ", $key_value);
-        $string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field($name, $select_array[$i], (in_array($select_array[$i], $key_values) ? true : false), 'id="' . strtolower($select_array[$i] . '-' . $name) . '"') . $select_array[$i] . '</label></div>' . "\n";
+    $name = (($config_key_name) ? 'configuration[' . $config_key_name . '][]' : 'configuration_value');
+    $chosen_already = explode(", ", $stored_value);
+
+    foreach ($choices_array as $value) {
+        // Account for cases where an = sign is used to allow key->value pairs where the value is friendly display text
+        $beforeEquals = strstr($value, '=', true);
+
+        // this entry's checkbox should be pre-selected if the key matches
+        $ticked = (in_array($value, $chosen_already, true) || in_array($beforeEquals, $chosen_already, true));
+
+        // determine the value to show (the part after the =; if no =, just the whole string)
+        $display_value = strpos($value, '=') !== false ? explode('=', $value, 2)[1] : $value;
+
+        $string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field($name, $value, $ticked, 'id="' . strtolower($value . '-' . $name) . '"') . $display_value . '</label></div>' . "\n";
     }
+
     $string .= zen_draw_hidden_field($name, '--none--');
     return $string;
 }
