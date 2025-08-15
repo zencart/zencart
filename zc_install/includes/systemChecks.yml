@@ -323,6 +323,19 @@ systemChecks:
             tableName: customer_password_reset_tokens
             fieldName: token
             fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: currency
+            fieldCheck: Type
+            expectedResult: 'CHAR(4) DEFAULT NULL'
+          - checkType: fieldSchema
+            tableName: tax_rates_description
+            fieldName: tax_rates_id
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: tax_rates_description
+            fieldName: tax_description
+            fieldCheck: Exists
 
   checkDBVersion210:
     runLevel: dbVersion
