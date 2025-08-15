@@ -1,14 +1,83 @@
 <?php
 /**
- * polyfills to accommodate older PHP versions, adapted from https://github.com/symfony/polyfill/
+ * polyfills to accommodate older/newer PHP versions, adapted from https://github.com/symfony/polyfill/
  * @copyright Portions  (c) Fabien Potencier <fabien@symfony.com>
  *
- * @version $Id: DrByte 2024 Sep 02 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2025 August  Modified in v2.2.0-beta1 $
  */
+
+
+if (\PHP_VERSION_ID >= 80500) {
+    return;
+}
+
+if (!function_exists('get_error_handler')) {
+    function get_error_handler(): ?callable
+    {
+        $handler = set_error_handler(null);
+        restore_error_handler();
+
+        return $handler;
+    }
+}
+
+if (!function_exists('get_exception_handler')) {
+    function get_exception_handler(): ?callable
+    {
+        $handler = set_exception_handler(null);
+        restore_exception_handler();
+
+        return $handler;
+    }
+}
+
+if (!function_exists('array_first')) {
+    function array_first(array $array)
+    {
+        foreach ($array as $value) {
+            return $value;
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('array_last')) {
+    function array_last(array $array)
+    {
+        return $array ? current(array_slice($array, -1)) : null;
+    }
+}
+
 
 if (\PHP_VERSION_ID >= 80400) {
     return;
 }
+
+if ((defined('CURL_VERSION_HTTP3') || PHP_VERSION_ID < 80200) && function_exists('curl_version') && curl_version()['version'] >= 0x074200) { // libcurl >= 7.66.0
+    if (!defined('CURL_HTTP_VERSION_3')) {
+        define('CURL_HTTP_VERSION_3', 30);
+    }
+
+    if (!defined('CURL_HTTP_VERSION_3ONLY') && defined('CURLOPT_SSH_HOST_PUBLIC_KEY_SHA256')) { // libcurl >= 7.80.0 (7.88 would be better but is slow to check)
+        define('CURL_HTTP_VERSION_3ONLY', 31);
+    }
+}
+
+if (extension_loaded('bcmath')) {
+    if (!function_exists('bcdivmod')) {
+        function bcdivmod(string $num1, string $num2, ?int $scale = null): ?array
+        {
+            if (null === $quot = \bcdiv($num1, $num2, 0)) {
+                return null;
+            }
+            $scale = $scale ?? (\PHP_VERSION_ID >= 70300 ? \bcscale() : (ini_get('bcmath.scale') ?: 0));
+
+            return [$quot, \bcmod($num1, $num2, $scale)];
+        }
+    }
+}
+
 if (!function_exists('array_find')) {
     function array_find(array $array, callable $callback)
     {
@@ -61,6 +130,12 @@ if (!function_exists('array_all')) {
     }
 }
 
+if (!function_exists('fpow')) {
+    function fpow(float $num, float $exponent): float
+    {
+        return $num ** $exponent;
+    }
+}
 
 if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
     function mb_ucfirst(string $string, ?string $encoding = null): string

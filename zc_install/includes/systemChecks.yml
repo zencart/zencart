@@ -318,10 +318,23 @@ systemChecks:
       dbVersionChecker:
         parameters:
           - checkType: configKeyExists
-            keyName: TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH
+            keyName: PASSWORD_RESET_TOKEN_LENGTH
           - checkType: fieldSchema
             tableName: customer_password_reset_tokens
             fieldName: token
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: currency
+            fieldCheck: Type
+            expectedResult: 'CHAR(4)'
+          - checkType: fieldSchema
+            tableName: tax_rates_description
+            fieldName: tax_rates_id
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: tax_rates_description
+            fieldName: tax_description
             fieldCheck: Exists
 
   checkDBVersion210:

@@ -362,7 +362,7 @@ class order extends base
 
             $this->info['tax_groups']["{$this->products[$index]['tax']}"] = '1';
 
-            $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $this->products[$index], $index);
+            $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $this->products[$index], $index, $orders_products->fields);
 
             $index++;
             $orders_products->MoveNext();
@@ -370,7 +370,7 @@ class order extends base
 
         $this->statuses = $this->getStatusHistory($this->orderId);
 
-        $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId);
+        $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId, $order->fields);
 
         /**
          * @deprecated since v1.5.6; use NOTIFY_ORDER_AFTER_QUERY instead
