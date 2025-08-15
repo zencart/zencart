@@ -247,6 +247,25 @@ function zen_check_url_get_terms()
 
 
 /**
+ * Returns the status id number of an order-status, based on the name
+ * @return int|false (false if not found)
+ */
+function zen_get_orders_status_id_from_name(string $status_name): int|false
+{
+    global $db;
+    if (empty($status_name)) {
+        return false;
+    }
+
+    $sql = "SELECT orders_status_id
+            FROM " . TABLE_ORDERS_STATUS . "
+            WHERE LOWER(orders_status_name) = '" . zen_db_input(strtolower($status_name)) . "'";
+    $result = $db->Execute($sql, 1);
+
+    return $result->EOF ? false : $result->fields['orders_status_id'];
+}
+
+/**
  * Returns the "name" associated with the specified orders_status_id.
  * @param int $order_status_id
  * @param int $language_id
