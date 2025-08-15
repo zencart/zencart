@@ -473,7 +473,9 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
             if (method_exists($this, '_doRefund') && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp')) {
                 $output .= $outputRefund;
             }
-            if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') {
+            zen_define_default('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', '');
+            zen_define_default('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE', '');
+            if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE === 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE === 'Auth Only') {
                 if (method_exists($this, '_doAuth')) {
                     $output .= $outputAuth;
                 }

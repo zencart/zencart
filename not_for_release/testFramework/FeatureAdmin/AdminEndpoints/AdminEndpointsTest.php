@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
@@ -32,7 +32,7 @@ class AdminEndpointsTest extends zcFeatureTestCaseAdmin
         'modules&set=payment' => ['strings' => ['Authorize.net']],
         'modules&set=shipping' => ['strings' => ['Free Shipping Options']],
         'modules&set=ordertotal' => ['strings' => ['Low Order Fee']],
-        'plugin_manager' => ['strings' => ['Display logs']],
+        'plugin_manager' => ['strings' => ['Display Logs']],
 
         'customers' => ['strings' => ['Account Created']],
         'orders' => ['strings' => ['Date Purchased']],
