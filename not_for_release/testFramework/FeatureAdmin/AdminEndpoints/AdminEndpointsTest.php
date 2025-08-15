@@ -54,7 +54,7 @@ class AdminEndpointsTest extends zcFeatureTestCaseAdmin
         'stats_products_lowstock' => ['strings' => ['Product Stock Report']],
         'stats_products_purchased' => ['strings' => ['Best Products Purchased']],
         'stats_products_viewed' => ['strings' => ['Most-Viewed Products']],
-        'stats_sales_report_graphs' => ['strings' => ['Monthly Sales Reports']],
+        'stats_sales_report_graphs' => ['strings' => ['Sales Reports']],
 
         'banner_manager' => ['strings' => ['Banner Manager']],
         'define_pages_editor' => ['strings' => ['Define Pages Editor for:']],
