@@ -51,6 +51,7 @@ class zcDate extends base
     // method convertFormat's processing (essentially a str_replace on the submitted format string).
     //
     // strftime reference: https://www.php.net/manual/en/function.strftime.php
+    // date_format reference: https://www.php.net/manual/en/datetime.format.php
     // intl format reference: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
     //
     protected function initializeConversionArrays()
