@@ -287,6 +287,7 @@ function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
 }
 
 /**
+ * Used by Admin configuration dropdown selectors
  * @TODO collapse with zen_get_orders_status_name()
  * @param int $order_status_id
  * @param int $language_id
