@@ -190,6 +190,20 @@ function executeSql($lines, $database, $table_prefix = '') {
             $line = 'ALTER TABLE ' . $table_prefix . ltrim(substr($line, 12));
           }
           break;
+        case (substr($line_upper, 0, 18) === "AND table_name = '"):
+          // look for the tablename between the quotes
+          preg_match("/'([^']+)'/", $param[3], $m);
+          $tablename = $m[1];
+
+          if (!$tbl_exists = zen_table_exists($tablename)) {
+            $result = sprintf(REASON_TABLE_NOT_FOUND, $tablename) . ' CHECK PREFIXES!';
+            zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
+            $ignore_line = true;
+            break;
+          } else {
+            $line = 'AND table_name = \'' . $table_prefix . ltrim(substr($line, 18));
+          }
+          break;
         case (substr($line_upper, 0, 13) == 'RENAME TABLE '):
           // RENAME TABLE command cannot be parsed to insert table prefixes, so skip if zen is using prefixes
           if (!empty(DB_PREFIX)) {
@@ -254,8 +268,14 @@ function executeSql($lines, $database, $table_prefix = '') {
         case (substr($line_upper, 0, 11) == 'INNER JOIN '):
           $line = 'INNER JOIN ' . $table_prefix . ltrim(substr($line, 11));
           break;
+        case (substr($line_upper, 0, 11) == 'CROSS JOIN '):
+          $line = 'CROSS JOIN ' . $table_prefix . ltrim(substr($line, 11));
+          break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));
+          break;
+        case ($line_upper === 'FROM INFORMATION_SCHEMA.COLUMNS'):
+          // do nothing; but we list it here instead of in Default so that it comes before less specific FROM matching below
           break;
         case (substr($line_upper, 0, 5) == 'FROM '):
           if (substr_count($line, ',') > 0) { // contains FROM and a comma, thus must parse for multiple tablenames

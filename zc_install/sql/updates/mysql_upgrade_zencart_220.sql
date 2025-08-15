@@ -59,8 +59,7 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 
 #PROGRESS_FEEDBACK:!TEXT=Creating new table tax_rates_description...
 # Table structure for table 'tax_rates_description'
-DROP TABLE IF EXISTS tax_rates_description;
-CREATE TABLE tax_rates_description (
+CREATE TABLE IF NOT EXISTS tax_rates_description (
   id int(11) NOT NULL auto_increment,
   tax_rates_id int(11) NOT NULL default 0,
   language_id int(11) NOT NULL default 1,
@@ -68,10 +67,37 @@ CREATE TABLE tax_rates_description (
   PRIMARY KEY  (id),
   UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id)
 ) ENGINE=MyISAM;
+# check that we haven't already deleted the tax-rates.tax_description column:
+#NEXT_X_ROWS_AS_ONE_COMMAND:9
+SELECT EXISTS(
+SELECT 1
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE table_schema = DATABASE()
+AND table_name = 'tax_rates'
+AND column_name = 'tax_description'
+) INTO @has_col;
+SET @copyrecords = CASE
+WHEN @has_col = 1 THEN '
 INSERT INTO tax_rates_description (tax_rates_id, language_id, tax_description)
 SELECT tr.tax_rates_id, lg.languages_id, tr.tax_description
-FROM tax_rates tr, languages lg;
-ALTER TABLE tax_rates DROP COLUMN tax_description;
+FROM tax_rates tr
+CROSS JOIN languages lg;'
+ELSE
+'SELECT 1;'
+END;
+SET @dropcolumn = CASE
+WHEN @has_col = 1 THEN '
+ALTER TABLE tax_rates DROP COLUMN tax_description ;'
+ELSE
+'SELECT 1;'
+END;
+PREPARE stmt FROM @copyrecords;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+PREPARE stmt2 FROM @dropcolumn;
+EXECUTE stmt2;
+DEALLOCATE PREPARE stmt2;
+
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
