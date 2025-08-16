@@ -119,7 +119,7 @@ if (!empty($action)) {
                   products_tax_class_id = " . (int)$_POST['products_tax_class_id'] . ",
                   products_date_available = " . ($products_date_available != 'null' ? "'" . $products_date_available . "'" : $products_date_available) . ",
                   products_last_modified = now(),
-                  products_status = " . (int)$_POST['products_status'] . ",
+                  products_status = " . (int)($products_date_available === 'null' ? $_POST['products_status'] : 0) . ",
                   products_quantity_order_min = " . (float)$_POST['products_quantity_order_min'] . ",
                   products_quantity_order_units = " . (float)$_POST['products_quantity_order_units'] . ",
                   products_quantity_order_max = " . (float)$_POST['products_quantity_order_max'] . ",
