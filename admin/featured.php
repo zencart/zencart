@@ -213,8 +213,8 @@ if (!empty($action)) {
           $form_action = 'update';
 
           $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute,
-                                          date_format(f.expires_date, '" .  zen_datepicker_format_forsql() . "') AS expires_date,
-                                          date_format(f.featured_date_available, '" .  zen_datepicker_format_forsql() . "') AS featured_date_available
+                                          DATE_FORMAT(f.expires_date, '" .  zen_datepicker_format_forsql() . "') AS expires_date,
+                                          DATE_FORMAT(f.featured_date_available, '" .  zen_datepicker_format_forsql() . "') AS featured_date_available
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd,
                                         " . TABLE_FEATURED . " f
