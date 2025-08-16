@@ -79,8 +79,8 @@
 
     function remove() {
       global $db, $messageStack;
-      if (!isset($_GET['override']) && $_GET['override'] != '1') {
-        $messageStack->add('header', ERROR_MODULE_REMOVAL_PROHIBITED . $this->code);
+      if (empty($_GET['override'])) {
+        $messageStack->add_session(ERROR_MODULE_REMOVAL_PROHIBITED . $this->code);
         return false;
       }
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
