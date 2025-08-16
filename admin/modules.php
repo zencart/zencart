@@ -188,12 +188,12 @@ foreach ($modules_found as $module_name => $module_file_dir) {
     $modules_for_display[$class]['code'] = $module->code ?? '';
     $modules_for_display[$class]['title'] = $module->title ?? '**BROKEN**';
     $modules_for_display[$class]['module'] = $module;
-    $modules_for_display[$class]['enabled'] = $module->enabled ?? ($set === 'ordertotal');
+    $modules_for_display[$class]['enabled'] = $module->enabled ?? (bool)$check;
     $modules_for_display[$class]['sort_order'] = $module->sort_order ?? null;
     $modules_for_display[$class]['padded_sort_order'] = str_pad((string)(int)($module->sort_order ?? 0), 6, '0', STR_PAD_LEFT);
 
     // this grouping sort helps order the sections. First the enabled is a boolean, but we invert it by *-1 because we want enabled to show first; then we append sorting/padding/title for refinement
-    $modules_for_display[$class]['grouping_sort'] = (int)($module->enabled ?? ($set === 'ordertotal')) * -1 . (is_numeric($module->sort_order ?? null) ? '0' : '1') . $modules_for_display[$class]['padded_sort_order'] . $modules_for_display[$class]['title'];
+    $modules_for_display[$class]['grouping_sort'] = (int)($module->enabled ?? (bool)$check) * -1 . (is_numeric($module->sort_order ?? null) ? '0' : '1') . $modules_for_display[$class]['padded_sort_order'] . $modules_for_display[$class]['title'];
 
     if ($check > 0) {
         // determine cached key sort orders (using up to 6 digits, then filename) to add to list of installed modules
@@ -313,7 +313,7 @@ if ($set === 'payment') {
     <?php
     foreach ($modules_for_display as $class => $detail) {
         // show enabled modules first
-        if ($status_group !== null && $status_group !== $detail['enabled']) {
+        if ($status_group !== $detail['enabled']) {
             continue;
         }
 
