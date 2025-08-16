@@ -51,6 +51,7 @@ class zcDate extends base
     // method convertFormat's processing (essentially a str_replace on the submitted format string).
     //
     // strftime reference: https://www.php.net/manual/en/function.strftime.php
+    // date_format reference: https://www.php.net/manual/en/datetime.format.php
     // intl format reference: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
     //
     protected function initializeConversionArrays()
@@ -71,8 +72,8 @@ class zcDate extends base
             '%X' => 'H:i:s',
             '%y' => 'y',
             '%Y' => 'Y',
-            '%z' => 'ZZZZ',
-            '%Z' => 'ZZZZ',
+            '%z' => 'eP',
+            '%Z' => 'T',
         ];
         $this->strftime2date = [
             'from' => array_keys($strftime2date),
@@ -121,7 +122,7 @@ class zcDate extends base
                 '%y' => 'yy',
                 '%Y' => 'y',
                 '%z' => 'ZZZZ',
-                '%Z' => 'ZZZZ',
+                '%Z' => 'zzzz',
             ];
             $this->strftime2intl = [
                 'from' => array_keys($strftime2intl),
