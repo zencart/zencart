@@ -67,7 +67,7 @@ if (function_exists('zen_enable_disabled_upcoming')) {
     if (IS_CLI === 'VERBOSE') {
         echo 'Updating products according to available/expire dates... ' . "\n";
     }
-    zen_enable_disabled_upcoming(time(), false, IS_CLI === 'VERBOSE');
+    zen_enable_disabled_upcoming(time(), IS_CLI === 'VERBOSE');
     if (IS_CLI === 'VERBOSE') {
         echo 'Done.' . "\n\n";
     }
