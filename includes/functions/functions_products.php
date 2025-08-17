@@ -90,41 +90,84 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
  * @param int $status
  * @since ZC v1.5.7
  */
-function zen_set_disabled_upcoming_status($products_id, $status): void
+function zen_set_disabled_upcoming_status($products_id, $status, string|null $releaseTime = ''): void
 {
-    global $db;
+    global $db, $messageStack;
 
-    $sql = "UPDATE " . TABLE_PRODUCTS . "
-            SET products_status = " . (int)$status . ", products_date_available = NULL
-            WHERE products_id = " . (int)$products_id;
+    if (empty($products_id)) {
+        return;
+    }
 
-    $db->Execute($sql, 1);
+    $result = $db->Execute("SHOW VARIABLES WHERE Variable_name = 'event_scheduler'");
+    if ($result->fields['Value'] === 'OFF') {
+        $messageStack->add_session(ERROR_MYSQL_EVENT_SCHEDULER_NOT_ACTIVATED, 'error');
+        return;
+    }
+    $results = $db->Execute('SHOW GRANTS');
+    foreach($results as $result) {
+        $eventprivilege = strpos(implode($result), 'EVENT');
+        if ($eventprivilege !== false) {
+            break;
+        }
+    }
+    if ($eventprivilege === false) {
+        $messageStack->add_session(ERROR_MYSQL_EVENT_PRIVILEGE_NEEDED, 'error');
+        return;
+    }
+
+    $sql = '';
+    $event_name = 'Pid_' . $products_id . '_available_at';
+    if (empty($releaseTime)) {
+        if ($releaseTime !== '') {
+            $db->Execute('UPDATE ' . TABLE_PRODUCTS . '
+            SET products_status = ' . $status . ', products_date_available = NULL
+            WHERE products_id = ' . $products_id);
+        }
+        $sql = 'DROP EVENT IF EXISTS ' . $event_name;
+    } else {
+        $releaseTime = strlen($releaseTime) > 5 ? substr($releaseTime, 0, 5) : $releaseTime;
+        $event_data = $db->Execute("SHOW EVENTS WHERE Name = '" . $event_name . "';");
+        if (empty($event_data->fields)) {
+            $sql = "CREATE EVENT " . $event_name . " ON SCHEDULE AT CAST(DATE(NOW()) AS DATETIME)
+                    + INTERVAL '" . $releaseTime . "' HOUR_MINUTE
+                    DO UPDATE " . TABLE_PRODUCTS . "
+                    SET products_status = " . $status . ", products_date_available = NULL
+                    WHERE products_id = " . $products_id;
+        } elseif (!empty($event_data->fields['Execute at']) && substr($event_data->fields['Execute at'], 11) !==  $releaseTime) {
+            $sql = "ALTER EVENT " . $event_name . " ON SCHEDULE AT CAST(DATE(NOW()) AS DATETIME)
+                    + INTERVAL '" . $releaseTime . "' HOUR_MINUTE
+                    DO UPDATE " . TABLE_PRODUCTS . "
+                    SET products_status = " . $status . ", products_date_available = NULL
+                    WHERE products_id = " . $products_id;
+        } else {
+            return;
+        }
+    }
+
+    if (!empty($sql)) {
+        $db->Execute($sql);
+    }
 }
 
 /**
  * Enable all disabled products whose date_available is prior to the specified date
  *
  * @param int|null $activationDateTime optional timestamp
- * @param bool $useMidnight true=all products for the day; false=exact timestamp
  * @param bool $outputMessagesToCommandLine will output a status report, useful in command-line/cron mode
  * @since ZC v1.5.7
  */
-function zen_enable_disabled_upcoming(?int $activationDateTime = null, bool $useMidnight = true, bool $outputMessagesToCommandLine = false): void
+function zen_enable_disabled_upcoming(?int $activationDateTime = null, bool $outputMessagesToCommandLine = false): void
 {
     global $db;
 
     if (empty($activationDateTime)) {
-        $activationDateTime = time();
+        $activationDateTime = strtotime('tomorrow');
     }
 
-    $formatSpecificityString = $useMidnight ? 'Ymd' : 'YmdHis';
-
-    $zc_disabled_upcoming_date = date($formatSpecificityString, $activationDateTime);
-
-    $sql = "SELECT products_id
+    $sql = "SELECT products_id, products_date_available
             FROM " . TABLE_PRODUCTS . "
             WHERE products_status = 0
-            AND products_date_available <= " . $zc_disabled_upcoming_date . "
+            AND products_date_available < " . date('YmdHis', $activationDateTime) . "
             AND products_date_available != '0001-01-01'
             AND products_date_available IS NOT NULL
             ";
@@ -139,7 +182,12 @@ function zen_enable_disabled_upcoming(?int $activationDateTime = null, bool $use
         if ($outputMessagesToCommandLine) {
             echo "\nEnabling product ID: " . $result['products_id'];
         }
-        zen_set_disabled_upcoming_status($result['products_id'], 1);
+        if (strtotime($result['products_date_available']) > time() && strtotime($result['products_date_available']) < $activationDateTime) {
+            $releaseTime = substr($result['products_date_available'], 11, 5);
+        } else {
+            $releaseTime = null;
+        }
+        zen_set_disabled_upcoming_status($result['products_id'], 1, $releaseTime);
     }
     if ($outputMessagesToCommandLine) {
         echo "\n--\n$count product activation queries submitted.\n";

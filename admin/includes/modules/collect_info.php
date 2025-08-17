@@ -53,7 +53,7 @@ $pInfo = new objectInfo($parameters);
 if (isset($_GET['pID']) && empty($_POST)) {
   $product = $db->Execute("SELECT pd.products_name, pd.products_description, pd.products_url,
                                   p.*,
-                                  date_format(p.products_date_available, '" .  zen_datepicker_format_forsql() . "') as products_date_available
+                                  date_format(p.products_date_available, '" .  zen_datetimepicker_format_forsql() . "') as products_date_available
                            FROM " . TABLE_PRODUCTS . " p
                            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
                            WHERE p.products_id = " . (int)$_GET['pID']);

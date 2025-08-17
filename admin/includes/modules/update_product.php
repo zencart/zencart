@@ -24,14 +24,14 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
 } else {
     $products_date_available = zen_db_prepare_input($_POST['products_date_available']);
     if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($products_date_available)) {
-        $local_fmt = zen_datepicker_format_fordate();
+        $local_fmt = zen_datetimepicker_format_fordate();
         $dt = DateTime::createFromFormat($local_fmt, $products_date_available);
         $products_date_available = 'null';
         if (!empty($dt)) {
-            $products_date_available = $dt->format('Y-m-d');
+            $products_date_available = $dt->format('Y-m-d H:i');
         }
     }
-    $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
+    $products_date_available = (date('Y-m-d H:i') < $products_date_available) ? $products_date_available : 'null';
 
     if (!empty($products_id)) {
         $zco_notifier->notify('NOTIFY_MODULES_UPDATE_PRODUCT_START', ['action' => $action, 'products_id' => $products_id]);
@@ -116,6 +116,15 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
 
         zen_record_admin_activity('Updated product ' . (int)$products_id . ' via admin console.', 'info');
 
+        // create an SQL event if availabilty date is today
+        if (defined('ENABLE_DISABLED_UPCOMING_PRODUCT') && ENABLE_DISABLED_UPCOMING_PRODUCT == 'Automatic') {
+            if (strtotime($products_date_available) > time() && strtotime($products_date_available) < strtotime('tomorrow')) {
+                $releaseTime = substr($products_date_available, 11, 5);
+            } else {
+                $releaseTime = '';
+            }
+            zen_set_disabled_upcoming_status((int)$products_id, 1, $releaseTime);
+        }
         // reset products_price_sorter for searches etc.
         zen_update_products_price_sorter((int)$products_id);
 
