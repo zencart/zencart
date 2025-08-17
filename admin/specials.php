@@ -59,8 +59,8 @@ if (!empty($action)) {
         }
 
         $specials_date_available_raw = zen_db_prepare_input($_POST['specials_date_available']);
-        if ($specials_date_available_raw === '') {
-            $specials_date_available = '0001-01-01';
+        if (empty($specials_date_available_raw)) {
+            $specials_date_available = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($specials_date_available_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -79,8 +79,8 @@ if (!empty($action)) {
         }
 
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-        if ($expires_date_raw === '') {
-            $expires_date = '0001-01-01';
+        if (empty($expires_date_raw)) {
+            $expires_date = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -104,7 +104,7 @@ if (!empty($action)) {
         }
 
         $db->Execute("INSERT INTO " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
-                      VALUES (" . (int)$products_id . ", " . (float)$specials_price . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($specials_date_available) . "')");
+                      VALUES (" . (int)$products_id . ", " . (float)$specials_price . ", now(), '" . zen_db_input(!empty($expires_date) ? $expires_date : '0001-01-01') . "', 1, '" . zen_db_input(!empty($specials_date_available) ? $specials_date_available : '0001-01-01') . "')");
 
         $new_special = $db->Execute("SELECT specials_id
                                      FROM " . TABLE_SPECIALS . "
@@ -138,8 +138,8 @@ if (!empty($action)) {
       }
 
         $specials_date_available_raw = zen_db_prepare_input($_POST['specials_date_available']);
-        if ($specials_date_available_raw === '') {
-            $specials_date_available = '0001-01-01';
+        if (empty($specials_date_available_raw)) {
+            $specials_date_available = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($specials_date_available_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -158,8 +158,8 @@ if (!empty($action)) {
         }
 
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-        if ($expires_date_raw === '') {
-            $expires_date = '0001-01-01';
+        if (empty($expires_date_raw)) {
+            $expires_date = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -185,8 +185,8 @@ if (!empty($action)) {
       $db->Execute("UPDATE " . TABLE_SPECIALS . "
                     SET specials_new_products_price = '" . zen_db_input($specials_price) . "',
                         specials_last_modified = now(),
-                        expires_date = '" . zen_db_input($expires_date) . "',
-                        specials_date_available = '" . zen_db_input($specials_date_available) . "'
+                        expires_date = '" . zen_db_input(!empty($expires_date) ? $expires_date : '0001-01-01') . "',
+                        specials_date_available = '" . zen_db_input(!empty($specials_date_available) ? $specials_date_available : '0001-01-01') . "'
                     WHERE specials_id = " . (int)$specials_id);
 
       // reset products_price_sorter for searches etc.
@@ -287,6 +287,15 @@ if (!empty($action)) {
                                    AND s.specials_id = " . (int)$_GET['sID']);
 
           $sInfo = new objectInfo($product->fields);
+
+          // Set date to empty strings for values in database like 0001-01-01 or 01-01-0001 to accomodate different locales
+          if ($sInfo->specials_date_available === '0001-01-01' || $sInfo->specials_date_available === '01-01-0001') {
+              $sInfo->specials_date_available = '';
+          }
+
+          if ($sInfo->expires_date === '0001-01-01' || $sInfo->expires_date === '01-01-0001') {
+              $sInfo->expires_date = '';
+          }
 
           if ($sInfo->products_priced_by_attribute === '1') {
             $sInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
@@ -404,7 +413,7 @@ if (!empty($action)) {
                 <span class="input-group-addon datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
-                <?php echo zen_draw_input_field('specials_date_available', (($sInfo->specials_date_available == '0001-01-01') ? '' : $sInfo->specials_date_available), 'class="form-control" id="specials_date_available"'); ?>
+                <?php echo zen_draw_input_field('specials_date_available', $sInfo->specials_date_available, 'class="form-control" id="specials_date_available"'); ?>
               </div>
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_ACTIVE_DATE; ?></span></span>
             </div>
@@ -416,7 +425,7 @@ if (!empty($action)) {
                 <span class="input-group-addon datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
-                <?php echo zen_draw_input_field('expires_date', (($sInfo->expires_date == '0001-01-01') ? '' : $sInfo->expires_date), 'class="form-control" id="expires_date"'); ?>
+                <?php echo zen_draw_input_field('expires_date', $sInfo->expires_date, 'class="form-control" id="expires_date"'); ?>
               </div>
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_EXPIRES_DATE; ?></span></span>
             </div>
