@@ -16,6 +16,7 @@
 <!--<script src="includes/javascript/bootstrap.min.js"></script>-->
 
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>
+<script src="includes/javascript/jquery.datetimepicker.full.min.js"></script>
 <script title="jQuery plugin initializations">
 // init datepicker defaults with localization
   jQuery(function () {
@@ -32,6 +33,7 @@
         container: 'body'
     });
   });
+$.datetimepicker.setLocale("<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>");
 </script>
 <?php
 $searchBoxScriptArray = [

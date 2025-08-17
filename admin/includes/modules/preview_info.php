@@ -24,7 +24,7 @@ if (!empty($_POST)) {
   unset ($url);
   $p_date_available = $pInfo->products_date_available;
   if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($pInfo->products_date_available)) {
-      $dt = DateTime::createFromFormat(zen_datepicker_format_fordate(), $pInfo->products_date_available);
+      $dt = DateTime::createFromFormat(zen_datetimepicker_format_fordate(), $pInfo->products_date_available);
       $p_date_available = 'null';
       if (!empty($dt)) {
           $p_date_available = $dt->format("Y-m-d H:i");
@@ -145,7 +145,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     <?php
     if ($p_date_available > date('Y-m-d')) {
       ?>
-      <div class="row"><?php echo sprintf(TEXT_PRODUCT_DATE_AVAILABLE, zen_date_long($p_date_available)); ?></div>
+      <div class="row"><?php echo sprintf(TEXT_PRODUCT_DATE_AVAILABLE, zen_date_long($p_date_available) . ' ' . substr($p_date_available, 10)); ?></div>
       <?php
     } else {
       ?>
