@@ -8,6 +8,7 @@
 
 namespace Zencart\PluginSupport;
 
+use App\Models\LayoutBox;
 use queryFactory;
 use queryFactoryResult;
 
@@ -131,7 +132,6 @@ trait ScriptedInstallHelpers
 
         return $rows;
     }
-
 
     protected function getOrCreateConfigGroupId(string $config_group_title, string $config_group_description, ?int $sort_order = 1): int
     {
@@ -313,5 +313,26 @@ trait ScriptedInstallHelpers
         }
         $this->dbConn->dieOnErrors = true;
         return true;
+    }
+
+    // -----
+    // This method provides the means to update various database fields
+    // that are managed by core Zen Cart processes on the update of an encapsulated
+    // plugin.
+    //
+    protected function updateZenCoreDbFields(string $pluginKey, string $version, string $oldVersion): void
+    {
+        LayoutBox::where('plugin_details', 'LIKE', $pluginKey . '/%')
+            ->update(['plugin_details' => $pluginKey . '/' . $version]);
+    }
+
+    // -----
+    // This method provides the means to update various database fields
+    // that are managed by core Zen Cart processes on the uninstall of an encapsulated
+    // plugin.
+    //
+    protected function uninstallZenCoreDbFields(string $pluginKey, string $version): void
+    {
+        LayoutBox::where('plugin_details', 'LIKE', $pluginKey . '/%')->delete();
     }
 }

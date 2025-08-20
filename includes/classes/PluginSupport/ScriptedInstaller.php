@@ -39,6 +39,7 @@ class ScriptedInstaller
      */
     protected function executeUninstall()
     {
+        $this->uninstallZenCoreDbFields($this->pluginKey, $this->version);
         return true;
     }
 
@@ -47,6 +48,7 @@ class ScriptedInstaller
      */
     protected function executeUpgrade($oldVersion)
     {
+        $this->updateZenCoreDbFields($this->pluginKey, $this->version, $oldVersion);
         return true;
     }
 
