@@ -123,12 +123,27 @@ document.addEventListener('focusin', (e) => {
 
         }
         let languagesConfig = {
-            language: '<?= zen_output_string_protected($_SESSION['languages_code']) ?>',
+            <?php
+            $lancode = ['bg' => 'bg_BG', 'bn' => 'bn_BD', 'fr' => 'fr_FR', 'he' => 'he_IL', 'hu' => 'hu_HU', 'is' => 'is_IS', 'ko' => 'ko_KR', 'nb' => 'nb_NO', 'pt' => 'pt_PT', 'sl' => 'sl_SL', 'sv' => 'sv_SE', 'th' => 'yh_TH', 'zh' => 'zh_CN'];
+            if (array_key_exists($_SESSION['languages_code'], $lancode)) {
+                $tinylangcode = $lancode[$_SESSION['languages_code']];
+            } else {
+                $tinylangcode = $_SESSION['languages_code'];
+            }
+            ?>
+            language_url: '<?= '../' . DIR_WS_EDITORS . 'tinymce/langs/' . zen_output_string_protected($tinylangcode) ?>.js',
+            language_load: false,
+            language: '<?= zen_output_string_protected($tinylangcode) ?>',
             content_langs: [
 
-            <?php
+            <?php // For spellchecker language with paid premium account
             foreach ($lng->get_languages_by_code() as $lang) {
-                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($lang['code']) . "' },\n";
+                if (array_key_exists($lang['code'], $lancode)) {
+                    $spelchecklangcode = $lancode[$lang['code']];
+                } else {
+                    $spelchecklangcode = $lang['code'];
+                }
+                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($spelchecklangcode) . "' },\n";
             }
             ?>
             ],
