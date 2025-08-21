@@ -115,8 +115,8 @@ class PluginManagerController extends BaseController
         $firstKey = key($versions);
         if ($hasMultiple) {
             foreach ($versions as $version) {
-                $checked = ($version['version'] == $firstKey) ? true : false;
-                $this->setBoxContent('<br>' . zen_draw_label($version['version'], 'version', 'class="control-label"') . zen_draw_radio_field('version', $version['version'], $checked));
+                $checked = ($version['version'] == $firstKey);
+                $this->setBoxContent('<br><label class="radio-inline">' . zen_draw_radio_field('version', $version['version'], $checked) . $version['version']);
             }
         }
         if (!$hasMultiple) {
@@ -230,7 +230,7 @@ class PluginManagerController extends BaseController
         $firstKey = key($versions);
         foreach ($versions as $version) {
             $checked = ($version == $firstKey);
-            $this->setBoxContent('<br>' . zen_draw_label($version, 'version', 'class="control-label"') . zen_draw_radio_field('version', $version, $checked));
+            $this->setBoxContent('<br><label class="radio-inline">' . zen_draw_radio_field('version', $version, $checked) . $version);
         }
         $this->setBoxContent(
             '<br><button type="submit" class="btn btn-primary">'
@@ -248,7 +248,7 @@ class PluginManagerController extends BaseController
         if (!$this->pluginManager->isUpgradeAvailable($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
             $error = true;
         }
-        if ((!$this->request->has('version'))) {
+        if (!$this->request->has('version')) {
             $error = true;
         }
         if (!in_array($this->request->input('version'), $versions)) {
@@ -333,16 +333,7 @@ class PluginManagerController extends BaseController
         );
         $this->setBoxContent('<br>' . TEXT_INFO_SELECT_CLEAN . '<br>');
         foreach ($versions as $version) {
-            $this->setBoxContent('<br>' . zen_draw_label
-                    (
-                        $version['version'],
-                        'version',
-                        'class="control-label"'
-                    ) . zen_draw_checkbox_field(
-                        'version[]',
-                        $version['version']
-                    )
-            );
+            $this->setBoxContent('<br>' . zen_draw_checkbox_field('version[]', $version['version']) . ' ' . $version['version']);
         }
         $this->setBoxContent(
             '<br><button type="submit" class="btn btn-danger">'
@@ -481,5 +472,4 @@ class PluginManagerController extends BaseController
         $this->messageStack->add_session(TEXT_DISABLE_SUCCESS, 'success');
         zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
     }
-
 }
