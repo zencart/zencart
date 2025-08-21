@@ -308,11 +308,8 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
  */
 function zen_get_shipping_enabled(string $shipping_module): bool
 {
-    global $PHP_SELF;
-
-    // for admin always true
-    if (IS_ADMIN_FLAG && strstr($PHP_SELF, FILENAME_MODULES)) {
-        return true;
+    if (!isset($_SESSION['cart'])) {
+        return true; // if no cart, then no shipping module is needed
     }
 
     $check_cart_free = $_SESSION['cart']->in_cart_check('product_is_always_free_shipping', '1');
