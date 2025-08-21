@@ -320,10 +320,15 @@ trait ScriptedInstallHelpers
     // that are managed by core Zen Cart processes on the update of an encapsulated
     // plugin.
     //
-    protected function updateZenCoreDbFields(string $pluginKey, string $version, string $oldVersion): void
+    private function updateZenCoreDbFields(string $oldVersion): void
     {
-        LayoutBox::where('plugin_details', 'LIKE', $pluginKey . '/%')
-            ->update(['plugin_details' => $pluginKey . '/' . $version]);
+        // -----
+        // Update any layout_boxes table entries that reference the current
+        // plugin, ensuring that the 'plugin_details' field contains the updated
+        // plugin version number.
+        //
+        LayoutBox::where('plugin_details', 'LIKE', $this->pluginKey . '/%')
+            ->update(['plugin_details' => $this->pluginKey . '/' . $this->version]);
     }
 
     // -----
@@ -331,8 +336,44 @@ trait ScriptedInstallHelpers
     // that are managed by core Zen Cart processes on the uninstall of an encapsulated
     // plugin.
     //
-    protected function uninstallZenCoreDbFields(string $pluginKey, string $version): void
+    private function uninstallZenCoreDbFields(): void
     {
-        LayoutBox::where('plugin_details', 'LIKE', $pluginKey . '/%')->delete();
+        // -----
+        // Remove any entries in the layout_boxes table that reference this now
+        // uninstalled plugin.
+        //
+        LayoutBox::where('plugin_details', 'LIKE', $this->pluginKey . '/%')->delete();
+
+        // -----
+        // If a plugin includes order_total, payment or shipping modules, any
+        // modules that are currently "installed" must be removed from the
+        // respective configuration setting (set by the admin's Modules processing)
+        // or various PHP errors/warnings could occur.
+        //
+        $module_types = [
+            'order_total' => 'MODULE_ORDER_TOTAL_INSTALLED',
+            'payment' => 'MODULE_PAYMENT_INSTALLED',
+            'shipping' => 'MODULE_SHIPPING_INSTALLED',
+        ];
+        foreach ($module_types as $module_type => $configuration_key) {
+            $module_path = $this->pluginDir . "/catalog/includes/modules/$module_type";
+            if (!is_dir($module_path)) {
+                continue;
+            }
+            $modules = explode(';', constant($configuration_key));
+            foreach (glob($module_path . '/*.php') as $next_file) {
+                $filename = pathinfo($next_file, PATHINFO_BASENAME);
+                $key = array_search($filename, $modules);
+                if ($key !== false) {
+                    unset($modules[$key]);
+                }
+            }
+            $this->executeInstallerSql(
+                "UPDATE " . TABLE_CONFIGURATION . "
+                    SET configuration_value = '" . implode(';', $modules) . "'
+                  WHERE configuration_key = '$configuration_key'
+                  LIMIT 1"
+            );
+        }
     }
 }
