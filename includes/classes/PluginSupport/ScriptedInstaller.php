@@ -39,7 +39,6 @@ class ScriptedInstaller
      */
     protected function executeUninstall()
     {
-        $this->uninstallZenCoreDbFields();
         return true;
     }
 
@@ -48,7 +47,6 @@ class ScriptedInstaller
      */
     protected function executeUpgrade($oldVersion)
     {
-        $this->updateZenCoreDbFields($oldVersion);
         return true;
     }
 
@@ -70,12 +68,14 @@ class ScriptedInstaller
     public function doUninstall(): ?bool
     {
         $uninstalled = $this->executeUninstall();
+        $this->uninstallZenCoreDbFields();
         return $uninstalled;
     }
 
     public function doUpgrade($oldVersion): ?bool
     {
         $upgraded = $this->executeUpgrade($oldVersion);
+        $this->updateZenCoreDbFields($oldVersion);
         return $upgraded;
     }
 
