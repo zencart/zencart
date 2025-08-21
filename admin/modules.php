@@ -231,8 +231,7 @@ if (!empty($class) && !isset($mInfo)) {
     $modules_for_display[$class] = array_merge($modules_for_display[$class], $module_info);
 }
 
-zen_update_modules_cache($module_type, $_GET['module'] ?? '');
-
+zen_update_modules_cache($module_type);
 
 ?>
 <!doctype html>

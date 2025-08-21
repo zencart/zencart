@@ -472,10 +472,18 @@ function zen_get_admin_name($id = null)
     return $result->RecordCount() ? $result->fields['admin_name'] : null;
 }
 
-
+/**
+ * The list of installed modules is cached in the database.
+ * This function updates the cache for the specified module type, or all module types if no filter is provided.
+ * The cached list is used by the base shipping/payment/order_total classes to limit which modules get instantiated during checkout.
+ *
+ * This function is typically called after installing or uninstalling a module, or when the module's configuration changes.
+ *
+ * @param string $module_type_filter Optionally limit the update to a specific module type (order_total, payment, shipping)
+ */
 function zen_update_modules_cache(string $module_type_filter = ''): void
 {
-    global $languageLoader, $db, $installedPlugins;
+    global $db, $languageLoader, $installedPlugins;
 
     $module_types = [
         'order_total' => 'MODULE_ORDER_TOTAL_INSTALLED',
@@ -522,7 +530,7 @@ function zen_update_modules_cache(string $module_type_filter = ''): void
               LIMIT 1"
         );
         if (!$check->EOF) {
-            if ($check->fields['configuration_value'] !== implode(';', $installed_modules)) {
+            if (empty($check->fields['configuration_value']) || $check->fields['configuration_value'] !== implode(';', $installed_modules)) {
                 $db->Execute(
                     "UPDATE " . TABLE_CONFIGURATION . "
                     SET configuration_value = '" . $installed_modules_list . "', last_modified = now()
