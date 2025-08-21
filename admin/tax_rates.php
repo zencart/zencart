@@ -159,9 +159,13 @@ if (!empty($action)) {
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_id', 'class="control-label"') . zen_tax_classes_pull_down('name="tax_class_id" class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONE_NAME, 'tax_zone_id', 'class="control-label"') . zen_geo_zones_pull_down('name="tax_zone_id" class="form-control"'));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_TAX_RATE, 'tax_rate', 'class="control-label"') . zen_draw_input_field('tax_rate', '', 'class="form-control"'));
+
+                $tax_rate_description_input_string = '';
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                    $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_RATE_DESCRIPTION, 'tax_description', 'class="control-label"') . '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_draw_input_field('tax_description[' . $languages[$i]['id'] . ']', '', 'class="form-control"'));
+                    $tax_rate_description_input_string .= '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '<br>' . zen_draw_input_field('tax_description[' . $languages[$i]['id'] . ']', '', 'class="form-control"');
                 }
+                $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_RATE_DESCRIPTION, 'tax_description', 'class="control-label"') . $tax_rate_description_input_string];
+
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_TAX_RATE_PRIORITY, 'tax_priority', 'class="control-label"') . zen_draw_input_field('tax_priority', '', 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
@@ -173,9 +177,13 @@ if (!empty($action)) {
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_CLASS_TITLE, 'tax_class_id', 'class="control-label"') . zen_tax_classes_pull_down('name="tax_class_id" class="form-control"', $trInfo->tax_class_id));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_ZONE_NAME, 'tax_zone_id', 'class="control-label"') . zen_geo_zones_pull_down('name="tax_zone_id" class="form-control"', $trInfo->geo_zone_id));
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_TAX_RATE, 'tax_rate', 'class="control-label"') . zen_draw_input_field('tax_rate', $trInfo->tax_rate, 'class="form-control"'));
+
+                $tax_rate_description_input_string = '';
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                    $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_RATE_DESCRIPTION, 'tax_description', 'class="control-label"') . '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_draw_input_field('tax_description[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_localized_tax_description((int)$trInfo->tax_rates_id, (int)$languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"'));
+                    $tax_rate_description_input_string .= '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '<br>' . zen_draw_input_field('tax_description[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_localized_tax_description((int)$trInfo->tax_rates_id, (int)$languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"');
                 }
+                $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_RATE_DESCRIPTION, 'tax_description', 'class="control-label"') . $tax_rate_description_input_string];
+
                 $contents[] = array('text' => '<br>' . zen_draw_label(TEXT_INFO_TAX_RATE_PRIORITY, 'tax_priority', 'class="control-label"') . zen_draw_input_field('tax_priority', $trInfo->tax_priority, 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_UPDATE . '</button> <a href="' . zen_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
                 break;
@@ -194,9 +202,12 @@ if (!empty($action)) {
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_GEO_ZONES, '', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_DEFINE_ZONES . '</a>');
                   $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($trInfo->date_added));
                   $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($trInfo->last_modified));
+
+                  $tax_rate_description_input_string = '';
                   for ($i = 0, $n = count($languages); $i < $n; $i++) {
-                      $contents[] = array('text' => '<br>' . TEXT_INFO_RATE_DESCRIPTION . '&nbsp;' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '<br>' . zen_get_localized_tax_description((int)$trInfo->tax_rates_id, (int)$languages[$i]['id']));
+                      $tax_rate_description_input_string .= '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_get_localized_tax_description((int)$trInfo->tax_rates_id, (int)$languages[$i]['id']);
                   }
+                  $contents[] = ['text' => '<br>' . TEXT_INFO_RATE_DESCRIPTION . $tax_rate_description_input_string];
                 }
                 break;
             }
