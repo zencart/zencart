@@ -491,3 +491,22 @@ function zen_get_tax_rate_value($class_id)
 {
     return zen_get_tax_rate($class_id);
 }
+
+function zen_get_localized_tax_description(int $tax_rates_id, int $language_id = 0): string
+{
+    global $db;
+
+    if ($language_id === 0) {
+        $language_id = $_SESSION['languages_id'];
+    }
+    $tax_query = "SELECT tax_description
+                  FROM " . TABLE_TAX_RATES_DESCRIPTION . "
+                  WHERE tax_rates_id = " . $tax_rates_id . "
+                  AND language_id = " . $language_id . ";";
+    $tax_desc = $db->Execute($tax_query);
+
+    if ($tax_desc->RecordCount() > 0) {
+        return $tax_desc->fields['tax_description'];
+    }
+    return TEXT_UNKNOWN_TAX_RATE;
+}
