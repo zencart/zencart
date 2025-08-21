@@ -1559,7 +1559,7 @@ CREATE TABLE plugin_control (
   managed tinyint(1) NOT NULL default 0,
   status tinyint(1) NOT NULL default 0,
   author varchar(64) NOT NULL,
-  version varchar(10),
+  version varchar(20),
   zc_versions text NOT NULL,
   zc_contrib_id int(11),
   infs tinyint(1) NOT NULL default 0,
@@ -1575,7 +1575,7 @@ CREATE TABLE plugin_control (
 DROP TABLE IF EXISTS plugin_control_versions;
 CREATE TABLE plugin_control_versions (
   unique_key varchar(40) NOT NULL,
-  version varchar(10),
+  version varchar(20),
   author varchar(64) NOT NULL,
   zc_versions text NOT NULL,
   infs tinyint(1) NOT NULL default 0,
