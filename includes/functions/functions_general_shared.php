@@ -472,6 +472,75 @@ function zen_get_admin_name($id = null)
     return $result->RecordCount() ? $result->fields['admin_name'] : null;
 }
 
+
+function zen_update_modules_cache(string $module_type_filter = ''): void
+{
+    global $languageLoader, $db, $installedPlugins;
+
+    $module_types = [
+        'order_total' => 'MODULE_ORDER_TOTAL_INSTALLED',
+        'payment' => 'MODULE_PAYMENT_INSTALLED',
+        'shipping' => 'MODULE_SHIPPING_INSTALLED',
+    ];
+    // if a filter has been supplied, limit the array to just that element.
+    $module_types = isset($module_types[$module_type_filter]) ? [$module_type_filter => $module_types[$module_type_filter]] : $module_types;
+
+    foreach ($module_types as $module_type => $configuration_key) {
+        $moduleFinder = new Zencart\ResourceLoaders\ModuleFinder($module_type, new Zencart\FileSystem\FileSystem());
+        $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
+
+        $temp_for_sort = [];
+
+        foreach ($modules_found as $module_name => $module_file_dir) {
+            if (!$languageLoader->loadModuleLanguageFile($module_name, $module_type)) {
+                continue;
+            }
+
+            require_once DIR_FS_CATALOG . $module_file_dir . $module_name;
+            $class = pathinfo($module_name, PATHINFO_FILENAME);
+            if (!class_exists($class)) {
+                continue;
+            }
+
+            $module = new $class();
+            if ($module->check() > 0) {
+                // determine cached key sort orders (using up to 6 digits, then filename) to add to list of installed modules
+                $sort = str_pad((string)(int)($module->sort_order ?? 0), 6, '0', STR_PAD_LEFT);
+                $temp_for_sort[$module_name] = $sort . $module_name;
+                asort($temp_for_sort);
+            }
+        }
+        $installed_modules = array_flip($temp_for_sort);
+
+        // Save updated cached list of installed modules
+        ksort($installed_modules);
+        $installed_modules_list = zen_db_input(implode(';', $installed_modules));
+        $check = $db->Execute(
+            "SELECT configuration_value
+               FROM " . TABLE_CONFIGURATION . "
+              WHERE configuration_key = '" . zen_db_input($configuration_key) . "'
+              LIMIT 1"
+        );
+        if (!$check->EOF) {
+            if ($check->fields['configuration_value'] !== implode(';', $installed_modules)) {
+                $db->Execute(
+                    "UPDATE " . TABLE_CONFIGURATION . "
+                    SET configuration_value = '" . $installed_modules_list . "', last_modified = now()
+                  WHERE configuration_key = '" . zen_db_input($configuration_key) . "'
+                  LIMIT 1"
+                );
+            }
+        } else {
+            $db->Execute(
+                "INSERT INTO " . TABLE_CONFIGURATION . "
+               (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added)
+                  VALUES
+                ('Installed Modules', '" . zen_db_input($configuration_key) . "', '" . $installed_modules_list . "', 'This is automatically updated. No need to edit.', 6, 0, now())"
+            );
+        }
+    }
+}
+
 // Compatibility
 
 function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
