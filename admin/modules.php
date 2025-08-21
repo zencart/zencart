@@ -164,8 +164,7 @@ if (!empty($action)) {
     }
 }
 
-$installed_modules = [];
-$temp_for_sort = [];
+
 $modules_for_display = [];
 $module_directory = DIR_FS_CATALOG . DIR_WS_MODULES . $module_type;
 foreach ($modules_found as $module_name => $module_file_dir) {
@@ -174,7 +173,7 @@ foreach ($modules_found as $module_name => $module_file_dir) {
         continue;
     }
 
-    require DIR_FS_CATALOG . $module_file_dir . $module_name;
+    require_once DIR_FS_CATALOG . $module_file_dir . $module_name;
     $class = pathinfo($module_name, PATHINFO_FILENAME);
     if (!class_exists($class)) {
         continue;
@@ -194,13 +193,6 @@ foreach ($modules_found as $module_name => $module_file_dir) {
 
     // this grouping sort helps order the sections. First the enabled is a boolean, but we invert it by *-1 because we want enabled to show first; then we append sorting/padding/title for refinement
     $modules_for_display[$class]['grouping_sort'] = (int)($module->enabled ?? (bool)$check) * -1 . (is_numeric($module->sort_order ?? null) ? '0' : '1') . $modules_for_display[$class]['padded_sort_order'] . $modules_for_display[$class]['title'];
-
-    if ($check > 0) {
-        // determine cached key sort orders (using up to 6 digits, then filename) to add to list of installed modules
-        $temp_for_sort[$module_name] = $modules_for_display[$class]['padded_sort_order'] . $module_name;
-        asort($temp_for_sort);
-        $installed_modules = array_flip($temp_for_sort);
-    }
 }
 // sort by enabled status, sort_order then title
 uasort($modules_for_display, static fn($a, $b) => strnatcmp($a['grouping_sort'], $b['grouping_sort']));
@@ -239,32 +231,8 @@ if (!empty($class) && !isset($mInfo)) {
     $modules_for_display[$class] = array_merge($modules_for_display[$class], $module_info);
 }
 
-// update cached installed-modules list
-ksort($installed_modules);
-$installed_modules_list = zen_db_input(implode(';', $installed_modules));
-$check = $db->Execute(
-    "SELECT configuration_value
-       FROM " . TABLE_CONFIGURATION . "
-      WHERE configuration_key = '" . zen_db_input($module_key) . "'
-      LIMIT 1"
-);
-if (!$check->EOF) {
-    if ($check->fields['configuration_value'] !== implode(';', $installed_modules)) {
-        $db->Execute(
-            "UPDATE " . TABLE_CONFIGURATION . "
-                SET configuration_value = '" . $installed_modules_list . "',
-                    last_modified = now()
-              WHERE configuration_key = '" . zen_db_input($module_key) . "'
-              LIMIT 1"
-        );
-    }
-} else {
-    $db->Execute(
-        "INSERT INTO " . TABLE_CONFIGURATION . "
-        (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added)
-     VALUES
-        ('Installed Modules', '" . zen_db_input($module_key) . "', '" . $installed_modules_list . "', 'This is automatically updated. No need to edit.', 6, 0, now())");
-}
+zen_update_modules_cache($module_type, $_GET['module'] ?? '');
+
 
 ?>
 <!doctype html>
