@@ -350,30 +350,6 @@ trait ScriptedInstallHelpers
         // respective configuration setting (set by the admin's Modules processing)
         // or various PHP errors/warnings could occur.
         //
-        $module_types = [
-            'order_total' => 'MODULE_ORDER_TOTAL_INSTALLED',
-            'payment' => 'MODULE_PAYMENT_INSTALLED',
-            'shipping' => 'MODULE_SHIPPING_INSTALLED',
-        ];
-        foreach ($module_types as $module_type => $configuration_key) {
-            $module_path = $this->pluginDir . "/catalog/includes/modules/$module_type";
-            if (!is_dir($module_path)) {
-                continue;
-            }
-            $modules = explode(';', constant($configuration_key));
-            foreach (glob($module_path . '/*.php') as $next_file) {
-                $filename = pathinfo($next_file, PATHINFO_BASENAME);
-                $key = array_search($filename, $modules);
-                if ($key !== false) {
-                    unset($modules[$key]);
-                }
-            }
-            $this->executeInstallerSql(
-                "UPDATE " . TABLE_CONFIGURATION . "
-                    SET configuration_value = '" . implode(';', $modules) . "'
-                  WHERE configuration_key = '$configuration_key'
-                  LIMIT 1"
-            );
-        }
+        zen_update_modules_cache();
     }
 }
