@@ -57,7 +57,7 @@ function zen_prepare_date(string $raw_date, string $past_date = ''): string
     if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($date)) {
         $local_fmt = zen_datepicker_format_fordate();
         $dt = DateTime::createFromFormat($local_fmt, $date);
-        $date = 'null';
+        $date = '';
         if (!empty($dt)) {
             $date = $dt->format('Y-m-d');
         }
