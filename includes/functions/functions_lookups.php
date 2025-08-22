@@ -31,6 +31,22 @@ function zen_get_handler_from_type($product_type): string
     return $handler->fields['type_handler'];
 }
 
+/**
+ * Get a list of product page names that identify buyable products.
+ * This allows us to mark a page as containing a product which can
+ * be allowed to add-to-cart or buy-now with various modules.
+ */
+function zen_get_buyable_product_type_handlers(): array
+{
+    global $db;
+    $sql = "SELECT type_handler from " . TABLE_PRODUCT_TYPES . " WHERE allow_add_to_cart = 'Y'";
+    $results = $db->Execute($sql);
+    $retVal = [];
+    foreach ($results as $result) {
+        $retVal[] = $result['type_handler'] . '_info';
+    }
+    return $retVal;
+}
 
 /*
  * List manufacturers (returned in an array)
