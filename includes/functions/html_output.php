@@ -61,15 +61,16 @@
     $separator = '&';
 
     while (substr($link, -1) == '&' || substr($link, -1) == '?') $link = substr($link, 0, -1);
-// Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ($add_session_id == true && $session_started == true && SESSION_FORCE_COOKIE_USE == 'False') {
-      if (defined('SID') && !empty(constant('SID'))) {
-        $sid = constant('SID');
-      } elseif ( ($request_type == 'NONSSL' && $connection == 'SSL' && ENABLE_SSL == 'true') || ($request_type == 'SSL' && $connection == 'NONSSL') ) {
-        if ($http_domain != $https_domain) {
-          $sid = zen_session_name() . '=' . zen_session_id();
+
+    // Add the session ID when moving from different HTTP and HTTPS servers
+    if ($add_session_id === true && $session_started === true && SESSION_FORCE_COOKIE_USE === 'False') {
+        if (PHP_VERSION_ID < 80401 && defined('SID') && !empty(constant('SID'))) {
+            $sid = constant('SID');
+        } elseif ( ($request_type === 'NONSSL' && $connection === 'SSL' && ENABLE_SSL === 'true') || ($request_type === 'SSL' && $connection === 'NONSSL') ) {
+            if ($http_domain !== $https_domain) {
+                $sid = zen_session_name() . '=' . zen_session_id();
+            }
         }
-      }
     }
 
 // clean up the link before processing
@@ -779,13 +780,15 @@ function zen_js_zone_list(string $country, string $form, string $field) {
  *  Hide form elements while including session id info
  *  IMPORTANT: This should be used in every FORM that has an OnSubmit() function tied to it, to prevent unexpected logouts
  */
-  function zen_hide_session_id() {
+function zen_hide_session_id(): string
+{
     global $session_started;
 
-    if ($session_started == true && defined('SID') && !empty(SID) ) {
-      return zen_draw_hidden_field(zen_session_name(), zen_session_id());
+    if ($session_started && !empty(zen_session_id())) {
+        return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
-  }
+    return '';
+}
 
   /**
  *  Output a form pull down menu
