@@ -175,6 +175,8 @@ class ScriptedInstaller extends ScriptedInstallBase
             );
         }
 
+        parent::executeInstall();
+
         return true;
     }
 
@@ -187,6 +189,7 @@ class ScriptedInstaller extends ScriptedInstallBase
     //
     protected function executeUpgrade($oldVersion)
     {
+        parent::executeUpgrade($oldVersion);
     }
 
     protected function executeUninstall()
@@ -217,6 +220,8 @@ class ScriptedInstaller extends ScriptedInstallBase
 //        $this->executeInstallerSql("DROP TABLE IF EXISTS " . TABLE_PRODUCTS_OPTIONS_STOCK);
 //        $this->executeInstallerSql("DROP TABLE IF EXISTS " . TABLE_PRODUCTS_OPTIONS_STOCK_ATTRIBUTES);
 //        $this->executeInstallerSql("DROP TABLE IF EXISTS " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES);
+
+        parent::executeUninstall();
     }
 
     protected function executeInstallerSelectSql(string $sql)

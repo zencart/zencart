@@ -21,6 +21,8 @@ class ScriptedInstaller extends ScriptedInstallBase
         // Delete old ModList plugin fragments
         $this->removeOldModListPlugin();
 
+        parent::executeInstall();
+
         return true;
     }
 
@@ -30,6 +32,9 @@ class ScriptedInstaller extends ScriptedInstallBase
     protected function executeUninstall()
     {
         zen_deregister_admin_pages('system_inspection');
+
+        parent::executeUninstall();
+
         return true;
     }
 
@@ -89,5 +94,4 @@ class ScriptedInstaller extends ScriptedInstallBase
             }
         }
     }
-
 }
