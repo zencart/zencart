@@ -1949,6 +1949,9 @@ class shoppingCart extends base
                         '<a href="' . zen_href_link(zen_get_info_page($_POST['products_id']), 'cPath=' . (zen_get_generated_category_path_rev(zen_get_products_category_id($_POST['products_id']))) . '&products_id=' . $_POST['products_id']) . '">' .
                             zen_get_products_name($_POST['products_id']) .
                         '</a>';
+                    if (is_array($_POST['cart_quantity'])) {
+                        $_POST['cart_quantity'] = '';
+                    }
                     $messageStack->add_session(
                         'header',
                         ERROR_CORRECTIONS_HEADING .

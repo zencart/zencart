@@ -42,7 +42,7 @@ class SideboxFinder
     {
         if (!empty($sideboxInfo['plugin_details'])) {
             $path = $this->sideboxPathInPlugin($sideboxInfo);
-            $path = ($withFullPath) ? DIR_FS_CATALOG . 'zc_plugins/' . $path . '/catalog/includes/modules/sideboxes/': $path;
+            $path = ($withFullPath) ? DIR_FS_CATALOG . 'zc_plugins/' . $path . '/catalog/includes/modules/sideboxes/': ($path . '/');
             return $path;
         }
         $baseDir = DIR_FS_CATALOG . DIR_WS_MODULES . 'sideboxes/';

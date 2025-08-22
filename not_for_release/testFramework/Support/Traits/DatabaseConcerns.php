@@ -56,6 +56,10 @@ trait DatabaseConcerns
             'message' => '',
         ];
 
+        // Debug utils
+        require_once ROOTCWD . 'zc_install/includes/functions/general.php';
+        require_once ROOTCWD . 'zc_install/includes/functions/password_funcs.php';
+
         echo 'Running mysql_zencart.sql' . PHP_EOL;
         $file = ROOTCWD . 'zc_install/sql/install/mysql_zencart.sql';
         $dbInstaller = new \zcDatabaseInstaller($options);

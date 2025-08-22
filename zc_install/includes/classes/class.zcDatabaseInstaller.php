@@ -77,8 +77,10 @@ class zcDatabaseInstaller
             'DROP INDEX ',
             'INNER JOIN ',
             'LEFT JOIN ',
+            'CROSS JOIN ',
             'FROM ',
             ') ENGINE=MYISAM',
+            'AND table_name = \'',
         ];
     }
 
@@ -224,6 +226,9 @@ class zcDatabaseInstaller
             if (str_starts_with(strtoupper($this->line), $parseString)) {
                 if ($parseMethod === 'parser)Engine=myisam') {
                     $parseMethod = 'parserEngineInnodb';
+                }
+                if (str_starts_with($parseMethod, 'parserAndTable_name')) {
+                    $parseMethod = 'parserAndTableName';
                 }
                 if (method_exists($this, $parseMethod)) {
                     $this->$parseMethod();
@@ -441,6 +446,25 @@ class zcDatabaseInstaller
 
     public function parserFrom(): void
     {
+        if ($this->lineSplit[0] === 'FROM' && $this->lineSplit[1] === 'INFORMATION_SCHEMA.COLUMNS') {
+            return;
+        }
+        if (str_ends_with($this->line, ';') && substr_count($this->line, ',') > 0) {
+            $this->lineSplit[0] = 'FROM';
+            // check each word on this line to see if it's a table name, and inject prefix
+            $foundTable = false;
+            foreach ($this->lineSplit as $key => $word) {
+                if ($this->tableExists(rtrim($word, ','))) {
+                    $this->lineSplit[$key] = $this->dbPrefix . $word;
+                    $foundTable = true;
+                }
+            }
+            if ($foundTable) {
+                $this->line = implode(' ', $this->lineSplit) . ';';
+                return;
+            }
+        }
+        // fallback
         if (!$this->tableExists($this->lineSplit[1])) {
             $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[1]) . ' CHECK PREFIXES!';
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
@@ -540,6 +564,9 @@ class zcDatabaseInstaller
                     switch (strtoupper($this->lineSplit[4])) {
                         case 'COLUMN':
                             $exists = $this->tableColumnExists($this->lineSplit[2], $this->lineSplit[5]);
+                            if (strtoupper($this->lineSplit[3]) === 'DROP') {
+                                $exists = ! $exists;
+                            }
                             break;
                         case 'INDEX':
                         case 'KEY':
@@ -648,6 +675,35 @@ class zcDatabaseInstaller
             error_log($result . "\n" . $this->line . "\n---------------\n\n");
         } else {
             $this->line = 'LEFT JOIN ' . $this->dbPrefix . substr($this->line, 10);
+        }
+    }
+
+    public function parserCrossJoin(): void
+    {
+        if (!$this->tableExists($this->lineSplit[2])) {
+            $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]) . ' CHECK PREFIXES!';
+            $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+            error_log($result . "\n" . $this->line . "\n---------------\n\n");
+        } else {
+            $this->line = 'CROSS JOIN ' . $this->dbPrefix . substr($this->line, 11);
+        }
+    }
+
+    /**
+     * Parses "AND table_name = 'foo'" syntax, checking that the table exists, using the configured prefix.
+     */
+    public function parserAndTableName(): void
+    {
+        // look for the tablename between the quotes
+        preg_match("/'([^']+)'/", $this->lineSplit[3], $m);
+        $tablename = $m[1];
+
+        if (!$this->tableExists($tablename)) {
+            $result = sprintf(REASON_TABLE_NOT_FOUND, $tablename) . ' CHECK PREFIXES!';
+            $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+            error_log($result . "\n" . $this->line . "\n---------------\n\n");
+        } else {
+            $this->line = 'AND table_name = \'' . $this->dbPrefix . substr($this->line, 18);
         }
     }
 

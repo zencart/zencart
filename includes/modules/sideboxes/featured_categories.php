@@ -25,10 +25,12 @@ if ($show_featured) {
                                         ORDER BY RAND() LIMIT 1";
 
     $random_featured_categories = $db->Execute($random_featured_categories_query);
+    if ($random_featured_categories->EOF) {
+        return;
+    }
 
     require $template->get_template_dir('tpl_featured_categories.php' , DIR_WS_TEMPLATE , $current_page_base ,'sideboxes') . '/tpl_featured_categories.php';
     $title =  BOX_HEADING_FEATURED_CATEGORIES;
     $title_link = FILENAME_FEATURED_CATEGORIES;
     require $template->get_template_dir($column_box_default , DIR_WS_TEMPLATE , $current_page_base ,'common') . '/' . $column_box_default;
 }
-

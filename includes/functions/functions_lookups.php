@@ -247,6 +247,25 @@ function zen_check_url_get_terms()
 
 
 /**
+ * Returns the status id number of an order-status, based on the name
+ * @return int|false (false if not found)
+ */
+function zen_get_orders_status_id_from_name(string $status_name): int|false
+{
+    global $db;
+    if (empty($status_name)) {
+        return false;
+    }
+
+    $sql = "SELECT orders_status_id
+            FROM " . TABLE_ORDERS_STATUS . "
+            WHERE LOWER(orders_status_name) = '" . zen_db_input(strtolower($status_name)) . "'";
+    $result = $db->Execute($sql, 1);
+
+    return $result->EOF ? false : $result->fields['orders_status_id'];
+}
+
+/**
  * Returns the "name" associated with the specified orders_status_id.
  * @param int $order_status_id
  * @param int $language_id
@@ -268,6 +287,7 @@ function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
 }
 
 /**
+ * Used by Admin configuration dropdown selectors
  * @TODO collapse with zen_get_orders_status_name()
  * @param int $order_status_id
  * @param int $language_id
@@ -311,20 +331,20 @@ function zen_lookup_admin_menu_language_override(string $lookup_type, ?string $l
             break;
         case 'configuration_group_title':
             $str = $lookup_key;
-            $str = preg_replace('/[\s ]+/', '_', $str);
+            $str = preg_replace('/[\s -\/]+/', '_', $str);
             $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
             $lookup = strtoupper('CFG_GRP_TITLE_' . $str);
             break;
         case 'plugin_name':
             $str = $lookup_key;
-            $str = preg_replace('/[\s -]+/', '_', $str);
+            $str = preg_replace('/[\s -\/]+/', '_', $str);
             $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
             $str = preg_replace('/_+/', '_', $str);
             $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $str);
             break;
         case 'plugin_description':
             $str = $lookup_key;
-            $str = preg_replace('/[\s -]+/', '_', $str);
+            $str = preg_replace('/[\s -\/]+/', '_', $str);
             $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
             $str = preg_replace('/_+/', '_', $str);
             $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $str);

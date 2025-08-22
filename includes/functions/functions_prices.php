@@ -1394,9 +1394,9 @@ function zen_get_letters_count($string, $free = 0)
     $string = preg_replace('/[ ]+/', ' ', $string);
     $string = trim($string);
     if (TEXT_SPACES_FREE === '1') {
-        $letters_count = strlen(str_replace(' ', '', $string));
+        $letters_count = mb_strlen(str_replace(' ', '', $string));
     } else {
-        $letters_count = strlen($string);
+        $letters_count = mb_strlen($string);
     }
     if ($letters_count - $free >= 1) {
         return ($letters_count - $free);

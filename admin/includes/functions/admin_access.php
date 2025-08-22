@@ -167,7 +167,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile): array
         $errors[] = ERROR_ADMIN_INVALID_CHARS_IN_USERNAME;
     }
     $name = zen_db_prepare_input($name);
-    if (strlen($name) < ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH)) {
+    if (mb_strlen($name) < ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH)) {
         $errors[] = sprintf(ERROR_ADMIN_NAME_TOO_SHORT, ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH));
     }
     $existingCheck = zen_read_user($name);
@@ -219,7 +219,7 @@ function zen_update_user($name, $email, $id, $profile): array
     global $db;
     $errors = [];
     if ($name !== false) {
-        if (strlen($name) >= ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH)) {
+        if (mb_strlen($name) >= ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH)) {
             $name = zen_db_prepare_input($name);
         } else {
             $errors[] = sprintf(ERROR_ADMIN_NAME_TOO_SHORT, ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH));

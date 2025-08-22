@@ -468,12 +468,14 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
         $output .= $outputStartBlock; //start second table
 
         $transaction_type_authorization = (isset($response['TRANSACTION_TYPE']) && $response['TRANSACTION_TYPE'] == 'Authorization');
-        $transactiontype_payment = (isset($response['TRANSACTION_TYPE']) && in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']));
+        $transactiontype_payment = (isset($response['TRANSACTIONTYPE']) && in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']));
         if ($transaction_type_authorization || ($transactiontype_payment && $response['PAYMENTTYPE'] == 'instant' && $response['PENDINGREASON'] == 'authorization') || $authcapt_on) {
             if (method_exists($this, '_doRefund') && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp')) {
                 $output .= $outputRefund;
             }
-            if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') {
+            zen_define_default('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', '');
+            zen_define_default('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE', '');
+            if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE === 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE === 'Auth Only') {
                 if (method_exists($this, '_doAuth')) {
                     $output .= $outputAuth;
                 }

@@ -139,8 +139,8 @@ if ($_POST['copy_as'] === 'link') {
     $maxlen = zen_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name');
     foreach ($descriptions as $description) {
         $name = TEXT_DUPLICATE_IDENTIFIER . " " . $description['products_name'];
-        if (strlen($name) > $maxlen) {
-            $name = substr($name, 0, $maxlen - 1);
+        if (mb_strlen($name) > $maxlen) {
+            $name = mb_substr($name, 0, $maxlen - 1);
         }
         $sql_data_array = [
             'products_id' => $dup_products_id,

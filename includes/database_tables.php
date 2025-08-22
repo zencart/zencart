@@ -104,6 +104,7 @@ define('TABLE_SPECIALS', DB_PREFIX . 'specials');
 define('TABLE_TEMPLATE_SELECT', DB_PREFIX . 'template_select');
 define('TABLE_TAX_CLASS', DB_PREFIX . 'tax_class');
 define('TABLE_TAX_RATES', DB_PREFIX . 'tax_rates');
+define('TABLE_TAX_RATES_DESCRIPTION', DB_PREFIX . 'tax_rates_description');
 define('TABLE_GEO_ZONES', DB_PREFIX . 'geo_zones');
 define('TABLE_ZONES_TO_GEO_ZONES', DB_PREFIX . 'zones_to_geo_zones');
 define('TABLE_UPGRADE_EXCEPTIONS', DB_PREFIX . 'upgrade_exceptions');

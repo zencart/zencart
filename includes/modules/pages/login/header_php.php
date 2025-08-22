@@ -78,8 +78,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
             if (zen_validate_password($password, $dbPassword)) {
                 $loginAuthorized = true;
                 if (password_needs_rehash($dbPassword, PASSWORD_DEFAULT)) {
-                    $newPassword = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInCustomerPassword(
-                        $password, $email_address);
+                    $customer->setPasswordUsingEmailAddress($password, $email_address);
                 }
             } else {
                 $loginAuthorized = zen_validate_storefront_admin_login($password, $email_address);

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
@@ -32,7 +32,7 @@ class AdminEndpointsTest extends zcFeatureTestCaseAdmin
         'modules&set=payment' => ['strings' => ['Authorize.net']],
         'modules&set=shipping' => ['strings' => ['Free Shipping Options']],
         'modules&set=ordertotal' => ['strings' => ['Low Order Fee']],
-        'plugin_manager' => ['strings' => ['Display logs']],
+        'plugin_manager' => ['strings' => ['Display Logs']],
 
         'customers' => ['strings' => ['Account Created']],
         'orders' => ['strings' => ['Date Purchased']],
@@ -54,7 +54,7 @@ class AdminEndpointsTest extends zcFeatureTestCaseAdmin
         'stats_products_lowstock' => ['strings' => ['Product Stock Report']],
         'stats_products_purchased' => ['strings' => ['Best Products Purchased']],
         'stats_products_viewed' => ['strings' => ['Most-Viewed Products']],
-        'stats_sales_report_graphs' => ['strings' => ['Monthly Sales Reports']],
+        'stats_sales_report_graphs' => ['strings' => ['Sales Reports']],
 
         'banner_manager' => ['strings' => ['Banner Manager']],
         'define_pages_editor' => ['strings' => ['Define Pages Editor for:']],

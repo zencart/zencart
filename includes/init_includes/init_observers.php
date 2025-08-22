@@ -27,7 +27,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 $observersMain = (new FileSystem)->listFilesFromDirectory(DIR_WS_CLASSES . 'observers/', '~(^(auto\.|Auto[A-Z]).*\.php$)~');
 $observersMain = collect($observersMain)->map(fn($item, $key) => DIR_WS_CLASSES . 'observers/' . $item)->toArray();
-$context = (new FileSystem)->isAdminDir(__DIR__) ? 'admin' : 'catalog';
+$context = IS_ADMIN_FLAG ? 'admin' : 'catalog';
 $observersPlugins = [];
 foreach ($installedPlugins as $plugin) {
     $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_CLASSES . 'observers/';
@@ -53,7 +53,7 @@ foreach ($observers as $observer) {
     } elseif (class_exists($psr4ClassName)) {
         // 'Auto' prefix in filename and class name matches filename
         $$objectName = new $psr4ClassName();
-    } elseif (class_exists($alternateClassName = $preg_replace('~^Auto~', '', $psr4ClassName))) {
+    } elseif (class_exists($alternateClassName = preg_replace('~^Auto~', '', $psr4ClassName))) {
         // 'Auto' prefix in filename but not in class name
         $$objectName = new $alternateClassName();
     } else {

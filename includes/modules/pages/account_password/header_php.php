@@ -24,7 +24,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $error = false;
 
-  if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
+  if (mb_strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
     $error = true;
 
     $messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR);
@@ -43,14 +43,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $check_customer = $db->Execute($check_customer_query);
 
     if (zen_validate_password($password_current, $check_customer->fields['customers_password'])) {
-      zcPassword::getInstance(PHP_VERSION)->updateLoggedInCustomerPassword($password_new, $_SESSION['customer_id']);
-
-      $sql = "UPDATE " . TABLE_CUSTOMERS_INFO . "
-              SET    customers_info_date_account_last_modified = now()
-              WHERE  customers_info_id = :customersID";
-
-      $sql = $db->bindVars($sql, ':customersID',$_SESSION['customer_id'], 'integer');
-      $db->Execute($sql);
+        $customer = new Customer();     //- Note, customer-id is set from session value
+        $customer->setPassword($password_new);
 
       // handle 3rd-party integrations
       $zco_notifier->notify('NOTIFY_HEADER_ACCOUNT_PASSWORD_CHANGED', $_SESSION['customer_id'], $password_new, $check_customer->fields['customers_nick']);

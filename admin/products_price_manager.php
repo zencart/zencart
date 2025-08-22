@@ -115,11 +115,11 @@ if (!empty($action)) {
       $products_price_sorter = (!zen_not_null($tmp_value) || $tmp_value == '' || $tmp_value == 0) ? 0 : $tmp_value;
 
       $sql = "UPDATE " . TABLE_PRODUCTS . "
-              SET products_price = " . (float)$_POST['products_price'] . ",
+              SET products_price = " . (float)$_POST['products_price_tax_excl'] . ",
                   products_tax_class_id = " . (int)$_POST['products_tax_class_id'] . ",
                   products_date_available = " . ($products_date_available != 'null' ? "'" . $products_date_available . "'" : $products_date_available) . ",
                   products_last_modified = now(),
-                  products_status = " . (int)$_POST['products_status'] . ",
+                  products_status = " . (int)($products_date_available === 'null' ? $_POST['products_status'] : 0) . ",
                   products_quantity_order_min = " . (float)$_POST['products_quantity_order_min'] . ",
                   products_quantity_order_units = " . (float)$_POST['products_quantity_order_units'] . ",
                   products_quantity_order_max = " . (float)$_POST['products_quantity_order_max'] . ",
@@ -141,17 +141,17 @@ if (!empty($action)) {
         $specials_id = zen_db_prepare_input($_POST['specials_id']);
 
         if ($_POST['products_priced_by_attribute'] == '1') {
-          $products_price = zen_get_products_base_price($products_filter);
+          $products_price_tax_excl = zen_get_products_base_price($products_filter);
         } else {
-          $products_price = zen_db_prepare_input($_POST['products_price']);
+          $products_price_tax_excl = zen_db_prepare_input($_POST['products_price_tax_excl']);
         }
 
-        $specials_price = zen_db_prepare_input($_POST['specials_price']);
-        if (substr($specials_price, -1) == '%') {
-          $specials_price = ((float)$products_price - (((float)$specials_price / 100) * (float)$products_price));
+        $specials_price_tax_excl = zen_db_prepare_input($_POST['specials_price_tax_excl']);
+        if (substr($specials_price_tax_excl, -1) == '%') {
+          $specials_price_tax_excl = ((float)$products_price_tax_excl - (((float)$specials_price_tax_excl / 100) * (float)$products_price_tax_excl));
         }
         $db->Execute("UPDATE " . TABLE_SPECIALS . "
-                      SET specials_new_products_price = " . (float)$specials_price . ",
+                      SET specials_new_products_price = " . (float)$specials_price_tax_excl . ",
                           specials_date_available = '" . $specials_date_available . "',
                           specials_last_modified = NOW(),
                           expires_date = '" . $specials_expires_date . "',
@@ -456,51 +456,51 @@ if (!empty($action)) {
                 return 0;
               }
             }
-            function updateGross() {
+            function updateTaxIncl() {
               const taxRate = getTaxRate();
-              let grossValue = $('input[name="products_price"]').val();
+              let TaxInclValue  = $('input[name="products_price_tax_excl"]').val();
               if (taxRate > 0) {
-                grossValue = grossValue * ((taxRate / 100) + 1);
+                TaxInclValue  = TaxInclValue  * ((taxRate / 100) + 1);
               }
 
-              $('input[name="products_price_gross"]').val(doRound(grossValue, 4));
+              $('input[name="products_price_tax_incl"]').val(doRound(TaxInclValue , 4));
             }
 
-            function updateNet() {
+            function updateTaxExcl() {
               const taxRate = getTaxRate();
-              let netValue = document.forms["new_prices"].products_price_gross.value;
+              let TaxExclValue = document.forms["new_prices"].products_price_tax_incl.value;
               if (taxRate > 0) {
-                netValue = netValue / ((taxRate / 100) + 1);
+                TaxExclValue = TaxExclValue / ((taxRate / 100) + 1);
               }
 
-              $('input[name="products_price"]').val(doRound(netValue, 4));
+              $('input[name="products_price_tax_excl"]').val(doRound(TaxExclValue, 4));
             }
     <?php if (isset($sInfo->products_id) && $sInfo->products_id != '') { ?>
-              function updateSpecialsGross() {
+              function updateSpecialsTaxIncl() {
                 const taxRate = getTaxRate();
-                let grossSpecialsValue = document.forms["new_prices"].specials_price.value;
-                if (/^\d+(\.\d+)?%$/.test(grossSpecialsValue)) {
-                  document.forms["new_prices"].specials_price_gross.value = grossSpecialsValue.slice(0, grossSpecialsValue.length - 1) + "%";
+                let TaxInclSpecialsValue = document.forms["new_prices"].specials_price_tax_excl.value;
+                if (/^\d+(\.\d+)?%$/.test(TaxInclSpecialsValue)) {
+                  document.forms["new_prices"].specials_price_tax_incl.value = TaxInclSpecialsValue.slice(0, TaxInclSpecialsValue.length - 1) + "%";
                 } else {
                   if (taxRate > 0) {
-                    grossSpecialsValue = grossSpecialsValue * ((taxRate / 100) + 1);
+                    TaxInclSpecialsValue = TaxInclSpecialsValue * ((taxRate / 100) + 1);
                   }
 
-                  document.forms["new_prices"].specials_price_gross.value = doRound(grossSpecialsValue, 4);
+                  document.forms["new_prices"].specials_price_tax_incl.value = doRound(TaxInclSpecialsValue, 4);
                 }
               }
 
-              function updateSpecialsNet() {
+              function updateSpecialsTaxExcl() {
                 const taxRate = getTaxRate();
-                let netSpecialsValue = document.forms["new_prices"].specials_price_gross.value;
-                if (/^\d+(\.\d+)?%$/.test(netSpecialsValue)) {
-                  document.forms["new_prices"].specials_price.value = netSpecialsValue.slice(0, netSpecialsValue.length - 1) + "%";
+                let TaxExclSpecialsValue = document.forms["new_prices"].specials_price_tax_incl.value;
+                if (/^\d+(\.\d+)?%$/.test(TaxExclSpecialsValue)) {
+                  document.forms["new_prices"].specials_price_tax_excl.value = TaxExclSpecialsValue.slice(0, TaxExclSpecialsValue.length - 1) + "%";
                 } else {
                   if (taxRate > 0) {
-                    netSpecialsValue = netSpecialsValue / ((taxRate / 100) + 1);
+                    TaxExclSpecialsValue = TaxExclSpecialsValue / ((taxRate / 100) + 1);
                   }
 
-                  document.forms["new_prices"].specials_price.value = doRound(netSpecialsValue, 4);
+                  document.forms["new_prices"].specials_price_tax_excl.value = doRound(TaxExclSpecialsValue, 4);
                 }
               }
     <?php } ?>
@@ -628,21 +628,21 @@ if (!empty($action)) {
                 <div class="well" style="color: #31708f;background-color: #d9edf7;border-color: #bce8f1;;padding: 10px 10px 0 0;">
                   <div class="col-sm-12"><?php echo TEXT_PRODUCTS_PRICE_INFO; ?></div>
                   <div class="form-group">
-                    <?php echo zen_draw_label(TEXT_PRICE_NET, 'products_price', 'class="col-sm-3 control-label"'); ?>
+                    <?php echo zen_draw_label(TEXT_PRICE_EXCL, 'products_price_tax_excl', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
-                      <?php echo zen_draw_input_field('products_price', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateGross()" class="form-control" id="products_price"' . $readonly); ?>
+                      <?php echo zen_draw_input_field('products_price_tax_excl', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateTaxIncl()" class="form-control" id="products_price_tax_excl"' . $readonly); ?>
                     </div>
                   </div>
                   <div class="form-group">
-                    <?php echo zen_draw_label(TEXT_PRICE_GROSS, 'products_price_gross', 'class="col-sm-3 control-label"'); ?>
+                    <?php echo zen_draw_label(TEXT_PRICE_INCL, 'products_price_tax_incl', 'class="col-sm-3 control-label"'); ?>
                     <div class="col-sm-9 col-md-6">
-                      <?php echo zen_draw_input_field('products_price_gross', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateNet()" class="form-control" id="products_price_gross"' . $readonly); ?>
+                      <?php echo zen_draw_input_field('products_price_tax_incl', (isset($pInfo->products_price) ? $pInfo->products_price : ''), 'OnKeyUp="updateTaxExcl()" class="form-control" id="products_price_tax_incl"' . $readonly); ?>
                     </div>
                   </div>
                 </div>
               </div>
               <script>
-                updateGross();
+                updateTaxIncl();
               </script>
               <div class="form-group">
                 <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
@@ -745,21 +745,21 @@ if (!empty($action)) {
                   <div class="well" style="color: #31708f;background-color: #ebebff;border-color: #bce8f1;;padding: 10px 10px 0 0;">
                     <div class="col-sm-12"><?php echo TEXT_SPECIALS_PRODUCT_INFO; ?></div>
                     <div class="form-group">
-                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_NET, 'specials_price', 'class="col-sm-3 control-label"'); ?>
+                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_EXCL, 'specials_price_tax_excl', 'class="col-sm-3 control-label"'); ?>
                       <div class="col-sm-9 col-md-6">
-                        <?php echo zen_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsGross()" class="form-control" id="specials_price"' . $readonly); ?>
+                        <?php echo zen_draw_input_field('specials_price_tax_excl', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsTaxIncl()" class="form-control" id="specials_price_tax_excl"' . $readonly); ?>
                       </div>
                     </div>
                     <div class="form-group">
-                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_GROSS, 'specials_price_gross', 'class="col-sm-3 control-label"'); ?>
+                      <?php echo zen_draw_label(TEXT_SPECIALS_SPECIAL_PRICE_INCL, 'specials_price_tax_incl', 'class="col-sm-3 control-label"'); ?>
                       <div class="col-sm-9 col-md-6">
-                        <?php echo zen_draw_input_field('specials_price_gross', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsNet()" class="form-control" id="specials_price_gross"' . $readonly); ?>
+                        <?php echo zen_draw_input_field('specials_price_tax_incl', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : ''), 'OnKeyUp="updateSpecialsTaxExcl()" class="form-control" id="specials_price_tax_incl"' . $readonly); ?>
                       </div>
                     </div>
                   </div>
                 </div>
                 <script>
-                  updateSpecialsGross();
+                  updateSpecialsTaxIncl();
                 </script>
                 <div class="form-group">
                   <?php echo zen_draw_label(TEXT_AVAILABLE_DATE, 'specials_date_available', 'class="col-sm-3 control-label"'); ?>

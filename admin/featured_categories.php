@@ -217,7 +217,8 @@ if ($action !== '') {
                     $form_action = 'update';
 
                     $category = $db->Execute("SELECT c.categories_id, cd.categories_name,
-                                            fc.expires_date, fc.featured_date_available
+                                            DATE_FORMAT(fc.expires_date, '" .  zen_datepicker_format_forsql() . "') AS expires_date,
+                                            DATE_FORMAT(fc.featured_date_available, '" .  zen_datepicker_format_forsql() . "') AS featured_date_available
                                             FROM " . TABLE_CATEGORIES . " c,
                                             " . TABLE_CATEGORIES_DESCRIPTION . " cd,
                                             " . TABLE_FEATURED_CATEGORIES . " fc
@@ -497,7 +498,7 @@ if ($action !== '') {
                             $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_FEATURED . '</h4>'];
                             $contents = ['form' => zen_draw_form('featured', FILENAME_FEATURED_CATEGORIES, 'action=deleteconfirm' . $page_search_parameters) . zen_draw_hidden_field('fID', $fInfo->featured_categories_id)];
                             $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
-                            $contents[] = ['text' => '<b>' . zen_clean_html($fInfo->categories_name) . '"</b>'];
+                            $contents[] = ['text' => '<b>' . zen_clean_html($fInfo->categories_name) . '</b>'];
                             $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES, 'fID=' . $fInfo->featured_categories_id . $page_search_parameters) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                             break;
 

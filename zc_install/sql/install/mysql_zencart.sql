@@ -598,7 +598,7 @@ DROP TABLE IF EXISTS currencies;
 CREATE TABLE currencies (
   currencies_id int(11) NOT NULL auto_increment,
   title varchar(32) NOT NULL default '',
-  code char(3) NOT NULL default '',
+  code char(4) NOT NULL default '',
   symbol_left varchar(32) default NULL,
   symbol_right varchar(32) default NULL,
   decimal_point char(1) default NULL,
@@ -1204,7 +1204,7 @@ CREATE TABLE orders (
   date_purchased datetime default NULL,
   orders_status int(5) NOT NULL default 0,
   orders_date_finished datetime default NULL,
-  currency char(3) default NULL,
+  currency char(4) default NULL,
   currency_value decimal(14,6) default NULL,
   order_total decimal(15,4) default NULL,
   order_tax decimal(15,4) default NULL,
@@ -1559,7 +1559,7 @@ CREATE TABLE plugin_control (
   managed tinyint(1) NOT NULL default 0,
   status tinyint(1) NOT NULL default 0,
   author varchar(64) NOT NULL,
-  version varchar(10),
+  version varchar(20),
   zc_versions text NOT NULL,
   zc_contrib_id int(11),
   infs tinyint(1) NOT NULL default 0,
@@ -1575,7 +1575,7 @@ CREATE TABLE plugin_control (
 DROP TABLE IF EXISTS plugin_control_versions;
 CREATE TABLE plugin_control_versions (
   unique_key varchar(40) NOT NULL,
-  version varchar(10),
+  version varchar(20),
   author varchar(64) NOT NULL,
   zc_versions text NOT NULL,
   infs tinyint(1) NOT NULL default 0,
@@ -2195,12 +2195,27 @@ CREATE TABLE tax_rates (
   tax_class_id int(11) NOT NULL default '0',
   tax_priority int(5) default '1',
   tax_rate decimal(7,4) NOT NULL default '0.0000',
-  tax_description varchar(255) NOT NULL default '',
   last_modified datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (tax_rates_id),
   KEY idx_tax_zone_id_zen (tax_zone_id),
   KEY idx_tax_class_id_zen (tax_class_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'tax_rates_description'
+#
+
+DROP TABLE IF EXISTS tax_rates_description;
+CREATE TABLE tax_rates_description (
+  id int(11) NOT NULL auto_increment,
+  tax_rates_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
+  tax_description varchar(250) NOT NULL default '',
+  PRIMARY KEY  (id),
+  UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -3335,7 +3350,8 @@ INSERT INTO products_options_types (products_options_types_id, products_options_
 INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name) VALUES (0, 1, 'TEXT');
 
 # USA/Florida
-INSERT INTO tax_rates VALUES (1, 1, 1, 1, 7.0, 'FL TAX 7.0%', now(), now());
+INSERT INTO tax_rates VALUES (1, 1, 1, 1, 7.0, now(), now());
+INSERT INTO tax_rates_description (tax_rates_id, language_id, tax_description) VALUES (1, 1, 'FL TAX 7.0%');
 INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,date_added) VALUES (1,'Florida','Florida local sales tax zone',now());
 INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (1,223,18,1,now());
 INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, date_added) VALUES (1, 'Taxable Goods', 'The following types of products are included: non-food, services, etc', now());
@@ -3552,9 +3568,9 @@ INSERT INTO get_terms_to_filter VALUES ('record_company_id', 'TABLE_RECORD_COMPA
 # Dumping data for table project_version
 #
 
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '1.0', '', '', '', '', 'New Installation-v210', now());
-INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '1.0', '', '', '', '', 'New Installation-v210', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '1.0', '', 'New Installation-v210', now());
-INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '1.0', '', 'New Installation-v210', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '2.0-alpha', '', '', '', '', 'New Installation-v220-alpha', now());
+INSERT INTO project_version (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch1, project_version_patch1_source, project_version_patch2, project_version_patch2_source, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '2.0-alpha', '', '', '', '', 'New Installation-v220-alpha', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (1, 'Zen-Cart Main', '2', '2.0-alpha', '', 'New Installation-v220-alpha', now());
+INSERT INTO project_version_history (project_version_id, project_version_key, project_version_major, project_version_minor, project_version_patch, project_version_comment, project_version_date_applied) VALUES (2, 'Zen-Cart Database', '2', '2.0-alpha', '', 'New Installation-v220-alpha', now());
 
 ##### End of SQL setup for Zen Cart.

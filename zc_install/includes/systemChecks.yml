@@ -45,18 +45,18 @@ systemChecks:
       checkPhpVersionMax:
         method: checkPhpVersion
         parameters:
-          version: 8.5
+          version: 8.6
           versionTest: lt
           localErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_MAX, '8.4.x') . PHP_EOL; ?>
   checkPhpVersionRecommendation:
     runLevel: always
     errorLevel: WARN
-    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '8.3') . PHP_EOL; ?>
+    mainErrorText: <?php echo sprintf(TEXT_ERROR_PHP_VERSION_RECOMMENDED, '8.4') . PHP_EOL; ?>
     methods:
       checkPhpVersionRecommended:
         method: checkPhpVersion
         parameters:
-          version: 8.3.0
+          version: 8.4.0
           versionTest: ge
   checkZCversion:
     runLevel: always
@@ -216,6 +216,14 @@ systemChecks:
       checkExtension:
         parameters:
           extension: intl
+  checkmbstring:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorText: <?php echo TEXT_ERROR_MBSTRING . PHP_EOL; ?>
+    methods:
+      checkExtension:
+        parameters:
+          extension: mbstring
   checkjson:
     runLevel: always
     errorLevel: FAIL
@@ -300,6 +308,34 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_HTTPS .PHP_EOL; ?>
     methods:
       checkHttpsRequest:
+
+  checkDBVersion220:
+    runLevel: dbVersion
+    errorLevel: WARN
+    version: '2.2.0'
+    mainErrorText: <?php echo sprintf(TEXT_DB_VERSION_NOT_FOUND, 'v2.2.0') . PHP_EOL; ?>
+    methods:
+      dbVersionChecker:
+        parameters:
+          - checkType: configKeyExists
+            keyName: PASSWORD_RESET_TOKEN_LENGTH
+          - checkType: fieldSchema
+            tableName: customer_password_reset_tokens
+            fieldName: token
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: orders
+            fieldName: currency
+            fieldCheck: Type
+            expectedResult: 'CHAR(4)'
+          - checkType: fieldSchema
+            tableName: tax_rates_description
+            fieldName: tax_rates_id
+            fieldCheck: Exists
+          - checkType: fieldSchema
+            tableName: tax_rates_description
+            fieldName: tax_description
+            fieldCheck: Exists
 
   checkDBVersion210:
     runLevel: dbVersion
