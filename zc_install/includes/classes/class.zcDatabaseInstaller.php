@@ -80,7 +80,7 @@ class zcDatabaseInstaller
             'CROSS JOIN ',
             'FROM ',
             ') ENGINE=MYISAM',
-            'AND table_name = \'',
+            'AND TABLE_NAME = \'',
         ];
     }
 
@@ -690,7 +690,7 @@ class zcDatabaseInstaller
     }
 
     /**
-     * Parses "AND table_name = 'foo'" syntax, checking that the table exists, using the configured prefix.
+     * Parses "AND TABLE_NAME = 'foo'" syntax, checking that the table exists, using the configured prefix.
      */
     public function parserAndTableName(): void
     {
@@ -703,7 +703,7 @@ class zcDatabaseInstaller
             $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
             error_log($result . "\n" . $this->line . "\n---------------\n\n");
         } else {
-            $this->line = 'AND table_name = \'' . $this->dbPrefix . substr($this->line, 18);
+            $this->line = 'AND TABLE_NAME = \'' . $this->dbPrefix . substr($this->line, 18);
         }
     }
 

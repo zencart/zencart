@@ -50,7 +50,7 @@ ALTER TABLE products_options_values MODIFY products_options_values_name varchar(
 ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
 ALTER TABLE orders MODIFY currency char(4) default NULL;
 ALTER TABLE plugin_control MODIFY `version` varchar(20);
-ALTER TABLE plugin_control_versions MODIFY `version` varchar(20); 
+ALTER TABLE plugin_control_versions MODIFY `version` varchar(20);
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');
@@ -74,9 +74,9 @@ CREATE TABLE IF NOT EXISTS tax_rates_description (
 SELECT EXISTS(
 SELECT 1
 FROM INFORMATION_SCHEMA.COLUMNS
-WHERE table_schema = DATABASE()
-AND table_name = 'tax_rates'
-AND column_name = 'tax_description'
+WHERE TABLE_SCHEMA = DATABASE()
+AND TABLE_NAME = 'tax_rates'
+AND COLUMN_NAME = 'tax_description'
 ) INTO @has_col;
 SET @copyrecords = CASE
 WHEN @has_col = 1 THEN '

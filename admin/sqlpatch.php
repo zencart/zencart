@@ -190,7 +190,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $line = 'ALTER TABLE ' . $table_prefix . ltrim(substr($line, 12));
           }
           break;
-        case (substr($line_upper, 0, 18) === "AND table_name = '"):
+        case (substr($line_upper, 0, 18) === "AND TABLE_NAME = '"):
           // look for the tablename between the quotes
           preg_match("/'([^']+)'/", $param[3], $m);
           $tablename = $m[1];
@@ -201,7 +201,7 @@ function executeSql($lines, $database, $table_prefix = '') {
             $ignore_line = true;
             break;
           } else {
-            $line = 'AND table_name = \'' . $table_prefix . ltrim(substr($line, 18));
+            $line = 'AND TABLE_NAME = \'' . $table_prefix . ltrim(substr($line, 18));
           }
           break;
         case (substr($line_upper, 0, 13) == 'RENAME TABLE '):
