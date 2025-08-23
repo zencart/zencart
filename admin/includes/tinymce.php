@@ -124,28 +124,24 @@ document.addEventListener('focusin', (e) => {
         }
         let languagesConfig = {
             <?php
-            $lancode = ['bg' => 'bg_BG', 'bn' => 'bn_BD', 'fr' => 'fr_FR', 'he' => 'he_IL', 'hu' => 'hu_HU', 'is' => 'is_IS', 'ko' => 'ko_KR', 'nb' => 'nb_NO', 'pt' => 'pt_PT', 'sl' => 'sl_SL', 'sv' => 'sv_SE', 'th' => 'yh_TH', 'zh' => 'zh_CN'];
-            if (array_key_exists($_SESSION['languages_code'], $lancode)) {
-                $tinylangcode = $lancode[$_SESSION['languages_code']];
-            } else {
-                $tinylangcode = $_SESSION['languages_code'];
+            $localesDirectory = '../' . DIR_WS_EDITORS . 'tinymce/langs';
+            if (is_dir($localesDirectory) && is_readable($localesDirectory)) {
+                $tinyLanguageFiles = scandir($localesDirectory);
+                $tinyLanguageFiles = array_diff($tinyLanguageFiles, array('.', '..'));
+                $tinyLanguageCode = 'en';
+                foreach ($tinyLanguageFiles as $tinyLanguageFile) {
+                    if (is_file($localesDirectory . '/' . $tinyLanguageFile) && strpos($tinyLanguageFile, $_SESSION['languages_code']) === 0) {
+                        echo "language_url: '" . $localesDirectory . "/" . $tinyLanguageFile . "',\n";
+                        $tinyLanguageCode = substr($tinyLanguageFile, 0, -3);
+                        break;
+                    }
+               }
             }
             ?>
-            language_url: '<?= '../' . DIR_WS_EDITORS . 'tinymce/langs/' . zen_output_string_protected($tinylangcode) ?>.js',
             language_load: false,
-            language: '<?= zen_output_string_protected($tinylangcode) ?>',
+            language: '<?= zen_output_string_protected($tinyLanguageCode) ?>',
             content_langs: [
-
-            <?php // For spellchecker language with paid premium account
-            foreach ($lng->get_languages_by_code() as $lang) {
-                if (array_key_exists($lang['code'], $lancode)) {
-                    $spellchecklangcode = $lancode[$lang['code']];
-                } else {
-                    $spellchecklangcode = $lang['code'];
-                }
-                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($spellchecklangcode) . "' },\n";
-            }
-            ?>
+            <?= "    { title: '" . zen_output_string_protected($_SESSION['language']) . "', code: '" . zen_output_string_protected($tinyLanguageCode) . "' },\n" ?>
             ],
         }
         // In case the override/custom config.js doesn't load or is not present, fallback to empty object.
