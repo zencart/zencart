@@ -69,7 +69,9 @@ CREATE TABLE IF NOT EXISTS tax_rates_description (
   PRIMARY KEY  (id),
   UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id)
 ) ENGINE=MyISAM;
-# check that we haven't already deleted the tax-rates.tax_description column:
+# Transfer any existing tax_description entries from tax_rates to tax_rates_description, then drop the tax_description column from tax_rates.
+# This is done via dynamic SQL to avoid errors if the tax_description column does not exist (for example, if this upgrade script is run on a database that has already been partially upgraded).
+# Note that the formatting here is intentionally without indentation and with spaces and quotes in strange places, because we do tablename parsing to insert any table prefixes.
 #NEXT_X_ROWS_AS_ONE_COMMAND:9
 SELECT EXISTS(
 SELECT 1
