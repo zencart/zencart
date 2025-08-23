@@ -139,7 +139,7 @@ document.addEventListener('focusin', (e) => {
             <?php // For spellchecker language with paid premium account
             foreach ($lng->get_languages_by_code() as $lang) {
                 if (array_key_exists($lang['code'], $lancode)) {
-                    $spelchecklangcode = $lancode[$lang['code']];
+                    $spellchecklangcode = $lancode[$lang['code']];
                 } else {
                     $spelchecklangcode = $lang['code'];
                 }
