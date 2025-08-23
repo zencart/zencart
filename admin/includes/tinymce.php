@@ -141,9 +141,9 @@ document.addEventListener('focusin', (e) => {
                 if (array_key_exists($lang['code'], $lancode)) {
                     $spellchecklangcode = $lancode[$lang['code']];
                 } else {
-                    $spelchecklangcode = $lang['code'];
+                    $spellchecklangcode = $lang['code'];
                 }
-                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($spelchecklangcode) . "' },\n";
+                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($spellchecklangcode) . "' },\n";
             }
             ?>
             ],
