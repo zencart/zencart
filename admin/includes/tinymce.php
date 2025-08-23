@@ -125,12 +125,12 @@ document.addEventListener('focusin', (e) => {
         let languagesConfig = {
             <?php
             $localesDirectory = '../' . DIR_WS_EDITORS . 'tinymce/langs';
-            $tinyLanguageCode = '';
+            $tinyLanguageCode = $_SESSION['languages_code'];
             if (is_dir($localesDirectory) && is_readable($localesDirectory)) {
                 $tinyLanguageFiles = scandir($localesDirectory);
                 $tinyLanguageFiles = array_diff($tinyLanguageFiles, array('.', '..'));
                 foreach ($tinyLanguageFiles as $tinyLanguageFile) {
-                    if (is_file($localesDirectory . '/' . $tinyLanguageFile) && strpos($tinyLanguageFile, $_SESSION['languages_code']) === 0) {
+                    if (is_file($localesDirectory . '/' . $tinyLanguageFile) && strpos($tinyLanguageFile, $tinyLanguageCode) === 0) {
                         echo "language_url: '" . $localesDirectory . "/" . $tinyLanguageFile . "',\n            language_load: false,\n";
                         $tinyLanguageCode = substr($tinyLanguageFile, 0, -3);
                         break;
