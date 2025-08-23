@@ -131,14 +131,13 @@ document.addEventListener('focusin', (e) => {
                 $tinyLanguageFiles = array_diff($tinyLanguageFiles, array('.', '..'));
                 foreach ($tinyLanguageFiles as $tinyLanguageFile) {
                     if (is_file($localesDirectory . '/' . $tinyLanguageFile) && strpos($tinyLanguageFile, $_SESSION['languages_code']) === 0) {
-                        echo "language_url: '" . $localesDirectory . "/" . $tinyLanguageFile . "',\n";
+                        echo "language_url: '" . $localesDirectory . "/" . $tinyLanguageFile . "',\n            language_load: false,\n";
                         $tinyLanguageCode = substr($tinyLanguageFile, 0, -3);
                         break;
                     }
                }
             }
             ?>
-            language_load: false,
             language: '<?= zen_output_string_protected($tinyLanguageCode) ?>',
             content_langs: [
             <?= "    { title: '" . zen_output_string_protected($_SESSION['language']) . "', code: '" . zen_output_string_protected($tinyLanguageCode) . "' },\n" ?>
