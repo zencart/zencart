@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Aug 25  Modified in v2.2.0-alpha1 $
  */
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_SHIPPING');
@@ -188,7 +188,7 @@ if (isset($_SESSION['cart']->cartID)) {
   if (isset($_SESSION['shipping']['id'])) {
     $checklist = [];
     foreach ($quotes as $key=>$val) {
-      if (is_array($val['methods'])) {
+      if (is_array($val['methods'] ?? null)) {
         foreach($val['methods'] as $key2=>$method) {
           $checklist[] = $val['id'] . '_' . $method['id'];
         }
