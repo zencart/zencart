@@ -97,6 +97,15 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                   LIMIT 1"
             );
 
+            // PayPal Trans ID, if any
+            $paypalLookup = $GLOBALS['db']->Execute(
+                "SELECT *
+                 FROM " . TABLE_PAYPAL . "
+                 WHERE order_id = $orders_id
+                 ORDER BY last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC"
+            );
+            $paypal = $paypalLookup->EOF ? [] : $paypalLookup->fields;
+
             $notify_customer = ($notify_customer == 1 || $notify_customer == -1 || $notify_customer == -2) ? $notify_customer : 0;
 
             if ($notify_customer == 1 || $notify_customer == -2) {
@@ -148,21 +157,14 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 }
 
                 $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_BEFORE_SENDING_CUSTOMER_EMAIL', $orders_id, $email_subject, $email_text, $html_msg, $notify_customer);
-                
+
                 if ($notify_customer == 1) {
                     zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status', $filename);
                 }
 
-                // PayPal Trans ID, if any
-                $result = $GLOBALS['db']->Execute(
-                    "SELECT txn_id, parent_txn_id
-                       FROM " . TABLE_PAYPAL . "
-                      WHERE order_id = $orders_id
-                   ORDER BY last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC"
-                );
-                if (!$result->EOF) {
-                    $email_text .= "\n\n" . ' PayPal Trans ID: ' . $result->fields['txn_id'];
-                    $html_msg['EMAIL_PAYPAL_TRANSID'] = $result->fields['txn_id'];
+                if (!empty($paypal['txn_id'])) {
+                    $email_text .= "\n\n" . ' PayPal Trans ID: ' . $paypal['txn_id'];
+                    $html_msg['EMAIL_PAYPAL_TRANSID'] = $paypal['txn_id'];
                 }
 
                 //send extra emails
@@ -199,6 +201,8 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
 
             zen_db_perform (TABLE_ORDERS_STATUS_HISTORY, $osh_sql);
             $osh_id = $GLOBALS['db']->Insert_ID();
+
+            $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_AFTER_INSERT', $osh_id, $osh_sql, $paypalLookup);
         }
     }
     return $osh_id;
