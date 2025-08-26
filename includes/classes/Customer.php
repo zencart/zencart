@@ -127,10 +127,7 @@ class Customer extends base
     {
         global $db;
 
-        $token_valid_minutes = defined('PASSWORD_RESET_TOKEN_MINUTES_VALID') ? (int)constant('PASSWORD_RESET_TOKEN_MINUTES_VALID') : 60;
-        if ($token_valid_minutes < 1 || $token_valid_minutes > 1440) {
-            $token_valid_minutes = 60;
-        }
+        $token_valid_minutes = self::getPasswordResetTokenMinutesValid();
 
         $sql = "SELECT c.customers_nick, c.customers_id
                 FROM   " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " ct
@@ -142,6 +139,35 @@ class Customer extends base
             return false;
         }
         return $result->fields;
+    }
+
+    public static function getPasswordResetTokenForEmail(string $email_address): array|false
+    {
+        global $db;
+
+        $token_valid_minutes = self::getPasswordResetTokenMinutesValid();
+
+        $sql =
+            "SELECT ct.*
+               FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " ct
+                    INNER JOIN " . TABLE_CUSTOMERS . " c
+                        ON ct.customer_id = c.customers_id
+              WHERE c.customers_email_address = :email_address
+                AND ct.created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL $token_valid_minutes MINUTE)
+              ORDER BY ct.created_at DESC";
+        $sql = $db->bindVars($sql, ':email_address', $email_address, 'string');
+        $result = $db->Execute($sql, 1);
+
+        return ($result->EOF) ? false : $result->fields;
+    }
+
+    public static function getPasswordResetTokenMinutesValid(): int
+    {
+        $token_valid_minutes = defined('PASSWORD_RESET_TOKEN_MINUTES_VALID') ? (int)constant('PASSWORD_RESET_TOKEN_MINUTES_VALID') : 60;
+        if ($token_valid_minutes < 1 || $token_valid_minutes > 1440) {
+            $token_valid_minutes = 60;
+        }
+        return $token_valid_minutes;
     }
 
     public function getData(?string $element = null)

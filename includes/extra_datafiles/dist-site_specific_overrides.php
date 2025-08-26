@@ -99,3 +99,11 @@
 // false ... Do not show the link.
 //
 //$show_order_status_sidebox_link = true;
+
+// -----
+// Indicate the maximum number of times in a session an error during either a
+// login or forgotten-password attempt can fail.
+//
+// This value is an integer and defaults to 9.
+//
+//$max_login_attempts = 9;

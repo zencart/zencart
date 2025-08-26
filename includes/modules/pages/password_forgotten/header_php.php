@@ -16,24 +16,28 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_PASSWORD_FORGOTTEN');
 
-
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // remove from snapshot
 $_SESSION['navigation']->remove_current_page();
 
-if (isset($_GET['action']) && $_GET['action'] === 'process') {
+if (($_GET['action'] ?? '') === 'process') {
+    // -----
+    // Enable a site to control the number of failed login and/or password-reset attempts.
+    //
+    $max_login_attempts = (int)($max_login_attempts ?? 9);
+    if ($max_login_attempts < 2) {
+        $max_login_attempts = 9;
+    }
 
     // Slam prevention:
-    if (isset($_SESSION['login_attempt']) && $_SESSION['login_attempt'] > 9) {
+    $_SESSION['login_attempt'] ??= 0;
+    if ($_SESSION['login_attempt'] > $max_login_attempts) {
         header('HTTP/1.1 406 Not Acceptable');
         exit(0);
     }
     // BEGIN SLAM PREVENTION
     if (!empty($_POST['email_address'])) {
-        if (!isset($_SESSION['login_attempt'])) {
-            $_SESSION['login_attempt'] = 0;
-        }
         $_SESSION['login_attempt']++;
     } // END SLAM PREVENTION
 
@@ -43,10 +47,32 @@ if (isset($_GET['action']) && $_GET['action'] === 'process') {
         zen_redirect(zen_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL'));
     }
 
-    $email_address = zen_db_prepare_input(trim($_POST['email_address']));
-    $check_customer = Customer::createPasswordResetToken($email_address);
-
     $sessionMessage = SUCCESS_PASSWORD_RESET_SENT;
+    $email_address = zen_db_prepare_input(trim($_POST['email_address']));
+
+    // -----
+    // Check to see if a password reset-token was already sent for the
+    // email address. If one was and the token's less than halfway to
+    // expiration, the customer is being impatient and we'll redisplay the
+    // login page indicating that they should check their email for
+    // the password-reset link.
+    //
+    $check_token_sent = Customer::getPasswordResetTokenForEmail($email_address);
+    if ($check_token_sent !== false) {
+        $max_minutes_token_valid = Customer::getPasswordResetTokenMinutesValid();
+        if ((strtotime($check_token_sent['created_at']) + $max_minutes_token_valid / 2) < time()) {
+            $continue_with_reset_email = false;
+            $check_token_sent['email_address'] = $email_address;
+            $check_token_sent['max_minutes_token_valid'] = $max_minutes_token_valid;
+            $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_ALREADY_SENT', $check_token_sent, $sessionMessage, $continue_with_reset_email);
+            if ((bool)$continue_with_reset_email === false) {
+                $messageStack->add_session('login', $sessionMessage, 'success');
+                zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+            }
+        }
+    }
+
+    $check_customer = Customer::createPasswordResetToken($email_address);
 
     if ($check_customer === false) {
         $zco_notifier->notify('NOTIFY_PASSWORD_FORGOTTEN_NOT_FOUND', $email_address, $sessionMessage);
