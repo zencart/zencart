@@ -86,7 +86,7 @@ $lng ??= new language;
 $localesDirectory = $editor_assets_path . '/langs';
 $tinyLanguagesUrl = $editor_assets_url . '/langs';
 $tinyLanguageCode = $_SESSION['languages_code'];
-$tinyLanguageFiles = (new FileSystem)->listFilesFromDirectory($localesDirectory, '~^[a-zA-Z]{2}[-_][a-zA-Z]{2,4}\.js$~i', false);
+$tinyLanguageFiles = (new FileSystem)->listFilesFromDirectory($localesDirectory, '~^[a-zA-Z]{2}[-_]?[a-zA-Z]{0,4}\.js$~i', false);
 foreach ($tinyLanguageFiles as $key => $tinyLanguageFile) {
     // extra sanity check
     if (!is_file($localesDirectory . '/' . $tinyLanguageFile)) {
