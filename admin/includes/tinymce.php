@@ -51,7 +51,7 @@ $tinymceFallbackCDNversion = '7.7.0';
 
 // Ensure API Key configuration entry is set; Can be overridden via an extra_configures or extra_datafiles file.
 if (!defined('TINYMCE_EDITOR_API_KEY')) {
-    $db->Execute("INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href=\"https://www.tiny.cloud/auth/signup/\" target=\"_blank\">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now())");
+    $db->Execute("INSERT IGNORE INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href=\"https://www.tiny.cloud/auth/signup/\" target=\"_blank\">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now())");
     // the following will be ignored on next load of the page, so should not be edited here
     define('TINYMCE_EDITOR_API_KEY', 'GPL');
 }
