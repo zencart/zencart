@@ -644,10 +644,10 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                         $selected_categories[] = (int)$product_linked_category['categories_id'];
                     }
                     ?>
-                    <span id="toggleCheckbox"></span><?php // placeholder for toggle checkbox: no content when javascript disabled ?>
+                    <p id="toggleCheckbox">
+                        <label><input type="checkbox" onclick="toggle(this)"> <?= TEXT_LABEL_SELECT_ALL_OR_NONE ?></label>
+                    </p>
                     <script title="toggle all checkboxes">
-                        document.getElementById('toggleCheckbox').innerHTML = '<p><label><input type="checkbox" onClick="toggle(this)"> <?php echo TEXT_LABEL_SELECT_ALL_OR_NONE; ?></label></p>';
-
                         function toggle(source) {
                             let checkboxes = document.getElementsByClassName('TargetCategoryCheckbox');
                             for (let i = 0, n = checkboxes.length; i < n; i++) {
