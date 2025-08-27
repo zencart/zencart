@@ -314,14 +314,29 @@ class PluginManager
 
     protected function loadPluginLanguageConstants($pluginpath)
     {
+        $pluginpath = str_replace('\\', '/', $pluginpath);
+        if (!is_dir($pluginpath) || !str_contains($pluginpath, DIR_FS_CATALOG . 'zc_plugins/')) {
+            return;
+        }
         $filePath = [];
-        foreach ($this->getInstalledPlugins() as $plugin) {
-            $filePath[] = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
+        foreach ($this->getInstalledPlugins() as $plugin) { // make an array of all installed plugins paths
+            $filePath[$plugin['unique_key']] = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
         }
         if (!in_array($pluginpath, $filePath)) {
-            $lang_file = $pluginpath . '/lang.manifest_' . $_SESSION['languages_code'] . '.php';
-            if (file_exists($lang_file)) {
-                require_once $lang_file;
+            $pluginuniquekey = preg_replace('/\/v?\d+\.\d+\.\d+$/', '', $pluginpath);
+            $pluginuniquekey = substr($pluginuniquekey, strrpos($pluginuniquekey, '/') + 1); // retrieve plugin's unique key
+            $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.' . $pluginuniquekey . '.php'; // The language constant file must be in this folder and use a file name format like 'lang.uniquekey.php'
+            if (is_file($pluginconstantspath)) {
+                $pluginsconstants = require_once $pluginconstantspath; // Load language override constants definitions
+                $pluginuniquekey = strtoupper($pluginuniquekey);
+                $pluginnameconstant = 'ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $pluginuniquekey;
+                $plugindescriptionconstant = 'ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $pluginuniquekey;
+                if (!defined($pluginnameconstant) && array_key_exists($pluginnameconstant, $pluginsconstants)) {
+                    define($pluginnameconstant, $pluginsconstants[$pluginnameconstant]);
+                }
+                if (!defined($plugindescriptionconstant) && array_key_exists($plugindescriptionconstant, $pluginsconstants)) {
+                    define($plugindescriptionconstant, $pluginsconstants[$plugindescriptionconstant]);
+                }
             }
         }
     }
