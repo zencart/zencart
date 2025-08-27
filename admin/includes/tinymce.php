@@ -28,6 +28,8 @@
  *    To use this mode, simply set "GPL" as your TinyMCE API Key. This is the default configuration with a new Zen Cart install.
  */
 
+use Zencart\FileSystem\FileSystem;
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -56,9 +58,6 @@ if (!defined('TINYMCE_EDITOR_API_KEY')) {
     define('TINYMCE_EDITOR_API_KEY', 'GPL');
 }
 
-// Language Support Setup
-$lng ??= new language;
-
 // Some of these are output in the js config:
 $editor_doc_base_url = (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : DIR_WS_CATALOG);
 $editor_assets_url = $editor_doc_base_url . DIR_WS_EDITORS . 'tinymce/';
@@ -80,6 +79,19 @@ if (strtoupper(TINYMCE_EDITOR_API_KEY) === 'GPL' || empty(TINYMCE_EDITOR_API_KEY
     $editor_js_src = file_exists($editor_js_filename_path) ? $editor_js_filename_url : "https://cdn.jsdelivr.net/npm/tinymce@$tinymceCDNversion/tinymce.min.js";
 } else {
     $editor_js_src = "https://cdn.tiny.cloud/1/" . TINYMCE_EDITOR_API_KEY . "/tinymce/7/tinymce.min.js";
+}
+
+// Language Support Setup
+$lng ??= new language;
+$localesDirectory = $editor_assets_path . 'langs';
+$tinyLanguagesUrl = $editor_assets_url . 'langs';
+$tinyLanguageCode = $_SESSION['languages_code'];
+$tinyLanguageFiles = (new FileSystem)->listFilesFromDirectory($localesDirectory, '~^([a-z]{2})([-_][A-Z]{2,4})?\.js$~', false);
+foreach ($tinyLanguageFiles as $key => $tinyLanguageFile) {
+    // extra sanity check
+    if (!is_file($localesDirectory . '/' . $tinyLanguageFile)) {
+        unset($tinyLanguageFiles[$key]);
+    }
 }
 ?>
 
@@ -123,14 +135,31 @@ document.addEventListener('focusin', (e) => {
 
         }
         let languagesConfig = {
-            language: '<?= zen_output_string_protected($_SESSION['languages_code']) ?>',
+<?php
+foreach ($tinyLanguageFiles as $tinyLanguageFile) {
+    if (strpos($tinyLanguageFile, $tinyLanguageCode) === 0) {
+        echo "            language_url: '" . $tinyLanguagesUrl . "/" . $tinyLanguageFile . "',\n            language_load: false,\n";
+        $tinyLanguageCode = substr($tinyLanguageFile, 0, -3);
+        break;
+    }
+}
+?>
+            language: '<?= zen_output_string_protected($tinyLanguageCode) ?>',
             content_langs: [
-
-            <?php
-            foreach ($lng->get_languages_by_code() as $lang) {
-                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($lang['code']) . "' },\n";
-            }
-            ?>
+<?php
+$contentLangs = $lng->get_languages_by_code();
+foreach ($contentLangs as $key => $lang) {
+    foreach($tinyLanguageFiles as $tinyLanguageFile) {
+        if (strpos($tinyLanguageFile, $lang['code']) === 0) {
+            $contentLangs[$key]['code'] = substr($tinyLanguageFile, 0, -3);
+            break;
+        }
+    }
+}
+foreach ($contentLangs as $lang) {
+    echo "                { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($lang['code']) . "' },\n";
+}
+?>
             ],
         }
         // In case the override/custom config.js doesn't load or is not present, fallback to empty object.
