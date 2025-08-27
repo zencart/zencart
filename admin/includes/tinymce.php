@@ -83,8 +83,8 @@ if (strtoupper(TINYMCE_EDITOR_API_KEY) === 'GPL' || empty(TINYMCE_EDITOR_API_KEY
 
 // Language Support Setup
 $lng ??= new language;
-$localesDirectory = $editor_assets_path . '/langs';
-$tinyLanguagesUrl = $editor_assets_url . '/langs';
+$localesDirectory = $editor_assets_path . 'langs';
+$tinyLanguagesUrl = $editor_assets_url . 'langs';
 $tinyLanguageCode = $_SESSION['languages_code'];
 $tinyLanguageFiles = (new FileSystem)->listFilesFromDirectory($localesDirectory, '~^([a-z]{2})([-_][A-Z]{2,4})?\.js$~', false);
 foreach ($tinyLanguageFiles as $key => $tinyLanguageFile) {
