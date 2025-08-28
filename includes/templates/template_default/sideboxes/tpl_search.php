@@ -16,7 +16,7 @@ $content .= zen_draw_hidden_field('search_in_description', '1') . zen_hide_sessi
 $content .= zen_draw_input_field('keyword', $_GET['keyword'] ?? '', 'size="18" maxlength="100" style="width: ' . ((int)$column_width - 30) . 'px" placeholder="' . SEARCH_DEFAULT_TEXT . '"  aria-label="' . SEARCH_DEFAULT_TEXT . '"');
 $content .= '<br>';
 
-if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || (strtolower(IMAGE_USE_CSS_BUTTONS) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . BUTTON_IMAGE_SEARCH))) {
+if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || strtolower(IMAGE_USE_CSS_BUTTONS) === 'found') {
     $content .= zen_image_submit(BUTTON_IMAGE_SEARCH, HEADER_SEARCH_BUTTON);
 } else {
     $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 55px">';
