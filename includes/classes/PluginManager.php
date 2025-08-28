@@ -315,7 +315,7 @@ class PluginManager
     protected function loadPluginLanguageConstants($pluginpath)
     {
         $pluginpath = str_replace('\\', '/', $pluginpath);
-        if (!is_dir($pluginpath) || !str_contains($pluginpath, DIR_FS_CATALOG . 'zc_plugins/')) {
+        if (!is_dir($pluginpath) || !str_starts_with($pluginpath, DIR_FS_CATALOG . 'zc_plugins/')) {
             return;
         }
         $filePath = [];
