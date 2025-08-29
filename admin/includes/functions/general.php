@@ -235,9 +235,6 @@ function zen_cfg_pull_down_exchange_rate_sources($source, $key = '')
 
 function zen_cfg_password_input($value, $key = '')
 {
-    if (function_exists('dbenc_is_encrypted_value_key') && dbenc_is_encrypted_value_key($key)) {
-        $value = dbenc_decrypt($value);
-    }
     return zen_draw_password_field('configuration[' . $key . ']', $value, false, 'class="form-control"');
 }
 
@@ -265,8 +262,6 @@ function zen_cfg_select_option($select_array, $key_value, $key = '')
 
 function zen_cfg_select_drop_down($select_array, $key_value, $key = '')
 {
-    $string = '';
-
     $name = (zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
     return zen_draw_pull_down_menu($name, $select_array, (int)$key_value, 'class="form-control"');
 }
