@@ -240,8 +240,7 @@ function zen_cfg_password_input($value, $key = '')
 
 function zen_cfg_password_display($value)
 {
-    $length = strlen($value);
-    return str_repeat('*', ($length > 16 ? 16 : $length));
+    return str_repeat('*', min(strlen($value), 16));
 }
 
 ////
