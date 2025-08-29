@@ -312,7 +312,7 @@ class PluginManager
         return $this->pluginControl;
     }
 
-    protected function loadPluginLanguageConstants($pluginpath)
+    protected function loadPluginLanguageConstants(string $pluginpath): void // Load plugins names and description when they are not installed or de-activated
     {
         $pluginpath = str_replace('\\', '/', $pluginpath);
         if (!is_dir($pluginpath) || !str_starts_with($pluginpath, DIR_FS_CATALOG . 'zc_plugins/')) {
@@ -324,11 +324,10 @@ class PluginManager
         }
         if (!in_array($pluginpath, $filePath)) {
             $pluginuniquekey = preg_replace('/\/v?\d+\.\d+\.\d+$/', '', $pluginpath);
-            $pluginuniquekey = substr($pluginuniquekey, strrpos($pluginuniquekey, '/') + 1); // retrieve plugin's unique key
-            $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.' . $pluginuniquekey . '.php'; // The language constant file must be in this folder and use a file name format like 'lang.uniquekey.php'
+            $pluginuniquekey = strtoupper(substr($pluginuniquekey, strrpos($pluginuniquekey, '/') + 1)); // retrieve plugin's unique key
+            $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.database_constants.php'; // The language constant file 'lang.database_constants.php' must be in this folder
             if (is_file($pluginconstantspath)) {
                 $pluginsconstants = require_once $pluginconstantspath; // Load language override constants definitions
-                $pluginuniquekey = strtoupper($pluginuniquekey);
                 $pluginnameconstant = 'ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $pluginuniquekey;
                 $plugindescriptionconstant = 'ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $pluginuniquekey;
                 if (!defined($pluginnameconstant) && array_key_exists($pluginnameconstant, $pluginsconstants)) {
