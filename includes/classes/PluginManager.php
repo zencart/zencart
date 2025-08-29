@@ -315,16 +315,13 @@ class PluginManager
     protected function loadPluginLanguageConstants(string $pluginpath): void // Load plugins names and description when they are not installed or de-activated
     {
         $pluginpath = str_replace('\\', '/', $pluginpath);
-        if (!is_dir($pluginpath) || !str_starts_with($pluginpath, DIR_FS_CATALOG . 'zc_plugins/')) {
-            return;
-        }
         $filePath = [];
         foreach ($this->getInstalledPlugins() as $plugin) { // make an array of all installed plugins paths
             $filePath[$plugin['unique_key']] = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
         }
         if (!in_array($pluginpath, $filePath)) {
-            $pluginuniquekey = preg_replace('/\/v?\d+\.\d+\.\d+$/', '', $pluginpath);
-            $pluginuniquekey = strtoupper(substr($pluginuniquekey, strrpos($pluginuniquekey, '/') + 1)); // retrieve plugin's unique key
+            $explodedpath = explode('/', $pluginpath);
+            $pluginuniquekey = strtoupper($explodedpath[count($explodedpath) - 2]); // retrieve plugin's unique key
             $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.database_constants.php'; // The language constant file 'lang.database_constants.php' must be in this folder
             if (is_file($pluginconstantspath)) {
                 $pluginsconstants = require_once $pluginconstantspath; // Load language override constants definitions
