@@ -192,6 +192,9 @@ class PluginManager
             }
             $manifest = require $fileinfo->getPathname() . '/manifest.php';
             $versionList[$fileinfo->getFilename()] = $manifest;
+            if ($_SESSION['languages_code'] !== 'en') {
+                $this->loadPluginLanguageConstants($fileinfo->getPathname());
+            }
         }
         return $versionList;
     }
@@ -307,5 +310,30 @@ class PluginManager
     public function getPluginControl()
     {
         return $this->pluginControl;
+    }
+
+    protected function loadPluginLanguageConstants(string $pluginpath): void // Load plugins names and description when they are not installed or de-activated
+    {
+        $pluginpath = str_replace('\\', '/', $pluginpath);
+        $filePath = [];
+        foreach ($this->getInstalledPlugins() as $plugin) { // make an array of all installed plugins paths
+            $filePath[$plugin['unique_key']] = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
+        }
+        if (!in_array($pluginpath, $filePath)) {
+            $explodedpath = explode('/', $pluginpath);
+            $pluginuniquekey = strtoupper($explodedpath[count($explodedpath) - 2]); // retrieve plugin's unique key
+            $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.database_constants.php'; // The language constant file 'lang.database_constants.php' must be in this folder
+            if (is_file($pluginconstantspath)) {
+                $pluginsconstants = require_once $pluginconstantspath; // Load language override constants definitions
+                $pluginnameconstant = 'ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $pluginuniquekey;
+                $plugindescriptionconstant = 'ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $pluginuniquekey;
+                if (!defined($pluginnameconstant) && array_key_exists($pluginnameconstant, $pluginsconstants)) {
+                    define($pluginnameconstant, $pluginsconstants[$pluginnameconstant]);
+                }
+                if (!defined($plugindescriptionconstant) && array_key_exists($plugindescriptionconstant, $pluginsconstants)) {
+                    define($plugindescriptionconstant, $pluginsconstants[$plugindescriptionconstant]);
+                }
+            }
+        }
     }
 }
