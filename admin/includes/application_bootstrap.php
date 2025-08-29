@@ -185,6 +185,7 @@ $fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^database_tables\.php$~i');
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^filenames\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/functions/extra_functions', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {

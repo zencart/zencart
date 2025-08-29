@@ -301,6 +301,7 @@ $fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^database_tables\.php$~i');
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^filenames\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
