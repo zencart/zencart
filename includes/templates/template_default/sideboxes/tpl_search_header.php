@@ -16,7 +16,7 @@ $content .= zen_draw_input_field('keyword', $_GET['keyword'] ?? '', 'size="6" ma
 
 $content .= '&nbsp;';
 
-if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
+if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || strtolower(IMAGE_USE_CSS_BUTTONS) === 'found') {
     $content .= zen_image_submit(BUTTON_IMAGE_SEARCH, HEADER_SEARCH_BUTTON);
 } else {
     $content .= '<input type="submit" value="' . HEADER_SEARCH_BUTTON . '" style="width: 60px">';
