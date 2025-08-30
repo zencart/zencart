@@ -57,6 +57,9 @@ class VersionServer
      */
     public function getPluginVersion($ids): bool|string
     {
+        if (empty($ids)) {
+            return false;
+        }
         $keylist = implode(',', array_map(static fn($value) => (int)trim($value), explode(',', $ids)));
         $type = '[' . (int)$ids . ']';
         if (strpos($ids, ',') > 0) {
