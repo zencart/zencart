@@ -208,3 +208,38 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
 
     return $return_button;
 }
+
+/**
+ * Returns the string content of the named define page, processed either:
+ * - by an observer running its own processing/substitution/templating engine
+ * or
+ * - by the PHP engine (this is the classic default behaviour)
+ *
+ * @param string $define_page_name Name of the define page e.g. 'define_contact_us'
+ * @param array|null $context An object of extra data that may be used by the observer.
+ * @return string The final content from the define page.
+ */
+function zen_get_define_page_content(string $define_page_name, ?array $context = null) : string {
+    global $zco_notifier;
+
+    $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', $define_page_name, false);
+    if (!file_exists($define_page)) {
+        trigger_error("Define Page file '$define_page' does not exist!");
+        return ''; // no action
+    }
+
+    // Give an observer a chance to process the define page
+    $processed_content = null;
+    $zco_notifier->notify('NOTIFY_ZEN_PROCESS_DEFINE_PAGE', $define_page, $processed_content, $context);
+
+    if (!empty($processed_content)) {
+        return $processed_content;
+    }
+
+    ob_start();
+    require($define_page);
+    $output = ob_get_contents();
+    ob_end_clean();
+
+    return $output;
+}
