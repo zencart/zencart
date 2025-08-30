@@ -4,6 +4,8 @@ on: [push, pull_request]
 
 jobs:
   unit-tests:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     strategy:
       matrix:
