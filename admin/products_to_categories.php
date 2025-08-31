@@ -61,15 +61,16 @@ if ($action === 'new_cat') {//this form action is from products_previous_next_di
 }
 
 // set categories and products if not set
-if ($products_filter === '' && !empty($current_category_id)) { // when prev-next has been changed to a category without products/with subcategories
+// when prev-next has been changed to a category without products/with subcategories
+if ($products_filter === 0 && !empty($current_category_id)) {
     $new_product_query = $db->Execute("SELECT ptc.products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc WHERE ptc.categories_id = " . $current_category_id . " LIMIT 1");
     $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : ''; // Empty if category has no products/has subcategories
     if ($products_filter !== '') {
         $messageStack->add_session(WARNING_PRODUCTS_LINK_TO_CATEGORY_REMOVED, 'caution');
         zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id));
     }
-
-} elseif ($products_filter === '' && empty($current_category_id)) {// on first entry into page from Admin menu
+// on first entry into page from Admin menu
+} elseif ($products_filter === 0 && empty($current_category_id)) {
     $reset_categories_id = zen_get_category_tree('', '', TOPMOST_CATEGORY_PARENT_ID, '', '', true);
     $current_category_id = (int)$reset_categories_id[0]['id'];
     $new_product_query = $db->Execute("SELECT ptc.products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc WHERE ptc.categories_id = " . $current_category_id . " LIMIT 1");
@@ -91,7 +92,7 @@ if (!empty($action)) {
             $copy_categories_type = !empty($_POST['type']) && $_POST['type'] !== 'replace' ? 'add' : 'replace';
             $target_product_id = (int)$_POST['target_product_id'];
 
-            if ($target_product_id === '') {
+            if ($target_product_id === 0) {
                 $messageStack->add(WARNING_COPY_LINKED_CATEGORIES_NO_TARGET, 'error');
             } else {
                 $target_product_details = zen_get_products_model($target_product_id) . ' - "' . zen_get_products_name($target_product_id, (int)$_SESSION['languages_id']) . '" (#' . $target_product_id . ')'; // string only used in messageStack
