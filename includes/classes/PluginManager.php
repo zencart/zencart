@@ -322,7 +322,7 @@ class PluginManager
         if (!in_array($pluginpath, $filePath)) {
             $explodedpath = explode('/', $pluginpath);
             $pluginuniquekey = strtoupper($explodedpath[count($explodedpath) - 2]); // retrieve plugin's unique key
-            $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.database_constants.php'; // The language constant file 'lang.database_constants.php' must be in this folder
+            $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.menu.php'; // The language constant file 'lang.menu.php' must be in this folder
             if (is_file($pluginconstantspath)) {
                 $pluginsconstants = require_once $pluginconstantspath; // Load language override constants definitions
                 $pluginnameconstant = 'ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $pluginuniquekey;
