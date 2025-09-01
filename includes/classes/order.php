@@ -651,6 +651,9 @@ class order extends base
                             AND poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
 
                     $attributes = $db->Execute($sql);
+                    if ($attributes->EOF) {
+                        continue;
+                    }
 
                     //clr 030714 Account for text attributes
                     if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
@@ -1451,7 +1454,7 @@ class order extends base
         }
         return null;
     }
-    
+
     private function getAddress(array $customerAddresses, int $arrayKey): array
     {
         $address = $customerAddresses[$arrayKey]['address'];
