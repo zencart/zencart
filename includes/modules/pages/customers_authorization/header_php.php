@@ -31,7 +31,7 @@ if ($_SESSION['customers_authorization'] !== '1' && $_SESSION['customers_authori
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $breadcrumb->add(NAVBAR_TITLE);
 
-$flag_disable_right = (CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF === 'true');
-$flag_disable_left = (CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF === 'true');
-$flag_disable_footer = (CUSTOMERS_AUTHORIZATION_FOOTER_OFF === 'true');
-$flag_disable_header = (CUSTOMERS_AUTHORIZATION_HEADER_OFF === 'true');
+$flag_disable_right ??= (CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF === 'true');
+$flag_disable_left ??= (CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF === 'true');
+$flag_disable_footer ??= (CUSTOMERS_AUTHORIZATION_FOOTER_OFF === 'true');
+$flag_disable_header ??= (CUSTOMERS_AUTHORIZATION_HEADER_OFF === 'true');
