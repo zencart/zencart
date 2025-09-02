@@ -17,15 +17,14 @@ $_GET['products_filter'] = $products_filter;
 $current_category_id = (int)($_POST['current_category_id'] ?? $_GET['current_category_id'] ?? 0);
 $_GET['current_category_id'] = $current_category_id; // for any redirects
 
-// enable_copy_links_dropdown: checkbox to allow the copy categories to another product dropdown. This is a dropdown of all products so is disabled by default.
-if (isset($_POST['enable_copy_links_dropdown'])) {// only set if checked
-    $enable_copy_links_dropdown = ($_POST['enable_copy_links_dropdown'] === 'true');
-} elseif (isset($_SESSION['enable_copy_links_dropdown'])) {
-    $enable_copy_links_dropdown = $_SESSION['enable_copy_links_dropdown'];
-} else {
-    $enable_copy_links_dropdown = false;
+if (isset($_POST['form'])) {
+    switch (true) {
+
+        case($_POST['form'] === 'copy_links_dropdown_form'):
+            $_SESSION['copy_links_dropdown'] = isset($_POST['copy_links_dropdown']);
+            break;
+    }
 }
-$_SESSION['enable_copy_links_dropdown'] = $enable_copy_links_dropdown;
 
 // Verify that at least one product exists
 $result = $db->Execute("SELECT *
@@ -750,12 +749,13 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
             </div>
             <?php
             if ($products_filter > 0) {
-                echo '<br>' . zen_draw_form('enable_copy_links_dropdown_form', FILENAME_PRODUCTS_TO_CATEGORIES, zen_get_all_get_params(), 'post');
-                echo zen_draw_label(TEXT_LABEL_ENABLE_COPY_LINKS, 'enable_copy_links_dropdown_checkbox', 'class="control-label"');
-                echo zen_draw_checkbox_field('enable_copy_links_dropdown_checkbox', '1', $enable_copy_links_dropdown, '', 'id="enable_copy_links_dropdown_checkbox" onClick="this.form.submit();"');
-                echo zen_draw_hidden_field('enable_copy_links_dropdown', (!$enable_copy_links_dropdown ? 'true' : ''));
+                echo '<br>' . zen_draw_form('copy_links_dropdown_form', FILENAME_PRODUCTS_TO_CATEGORIES, zen_get_all_get_params(['action']), 'post');
+                echo zen_draw_hidden_field('form', 'copy_links_dropdown_form');
+                echo zen_draw_label(TEXT_LABEL_ENABLE_COPY_LINKS, 'copy_links_dropdown', 'class="control-label"') . ' ';
+                echo zen_draw_checkbox_field('copy_links_dropdown', '1', empty($_SESSION['copy_links_dropdown']) ? false : $_SESSION['copy_links_dropdown'], '', 'id="copy_links_dropdown" onClick="this.form.submit();"');
                 echo '</form>';
-                if ($enable_copy_links_dropdown) {
+
+                if (!empty($_SESSION['copy_links_dropdown'])) {
                     echo zen_draw_form('copy_linked_categories_to_another_product', FILENAME_PRODUCTS_TO_CATEGORIES, zen_get_all_get_params('action') . '&action=copy_linked_categories_to_another_product', 'post', 'class="form-horizontal"');
                     // Get the list of products and build a select gadget
                     $category_product_tree_array = [];
@@ -778,7 +778,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                                     value="replace"><?= BUTTON_COPY_LINKED_CATEGORIES_REPLACE ?></button>
                         </div>
                     </div>
-                    <?php echo '</form>';
+                    <?= '</form>';
                 }
             } ?>
         </div>
