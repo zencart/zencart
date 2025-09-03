@@ -166,7 +166,6 @@ if ($credit_covers === false && isset(${$_SESSION['payment']}->flagDisablePaymen
   $flagDisablePaymentAddressChange = ${$_SESSION['payment']}->flagDisablePaymentAddressChange;
 }
 
-unset($_SESSION['payment_method_messages']);
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));

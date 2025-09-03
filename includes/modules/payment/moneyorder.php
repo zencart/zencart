@@ -154,6 +154,11 @@
 
         function after_process()
         {
+            global $insert_id;
+
+            $comments = MODULE_PAYMENT_MONEYORDER_TEXT_EMAIL_FOOTER . " " . MODULE_PAYMENT_MONEYORDER_REMINDER;
+            zen_update_orders_history($insert_id, $comments, null, -1, 0);
+
             return false;
         }
 
