@@ -1172,7 +1172,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           $optionValuesArray = [];
                           foreach ($values_values as $value) {
 
-                            if ($show_value_numbers == false) {
+                            if (!$show_value_numbers) {
                               $show_option_name = '&nbsp;&nbsp;&nbsp;[' . strtoupper(zen_get_products_options_name_from_value($value['products_options_values_id'])) . ' ]';
                             } else {
                               $show_option_name = ' [ #' . $value['products_options_values_id'] . ' ] ' . '&nbsp;&nbsp;&nbsp;[' . strtoupper(zen_get_products_options_name_from_value($value['products_options_values_id'])) . ' ]';
