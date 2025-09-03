@@ -42,27 +42,28 @@ function zen_datepicker_format_forsql()
 }
 
 /**
- * Convert Date to the correct format
- * @param string $raw_date Date value
- * @param string $past_date is the value to set the date if it is in the past or empty
+ * Format a date for database storage when date is blank or is in the past.
+ *
+ * @param string $raw_date Date to check against today
+ * @param string $past_date Date to use if $raw_date is empty or in the past. Normal options are '' or '0001-01-01'.
  * @return string
  */
-function zen_prepare_date($raw_date, $past_date = '')
+function zen_prepare_date(string $raw_date, string $past_date = ''): string
 {
     if (empty($raw_date)) {
         return $past_date;
     }
-  $date = zen_db_prepare_input($raw_date);
-  if (DATE_FORMAT_DATE_PICKER != 'yy-mm-dd' && !empty($date)) {
-    $local_fmt = zen_datepicker_format_fordate();
-    $dt = DateTime::createFromFormat($local_fmt, $date);
-    $date = 'null';
-    if (!empty($dt)) {
-      $date = $dt->format('Y-m-d');
+    $date = zen_db_prepare_input($raw_date);
+    if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($date)) {
+        $local_fmt = zen_datepicker_format_fordate();
+        $dt = DateTime::createFromFormat($local_fmt, $date);
+        $date = '';
+        if (!empty($dt)) {
+            $date = $dt->format('Y-m-d');
+        }
     }
-  }
-  if (!empty($past_date)) {
-    $date = (date('Y-m-d') < $date) ? $date : $past_date;
-  }
-  return $date;
+    if (!empty($past_date)) {
+        $date = (date('Y-m-d') < $date) ? $date : $past_date;
+    }
+    return $date;
 }

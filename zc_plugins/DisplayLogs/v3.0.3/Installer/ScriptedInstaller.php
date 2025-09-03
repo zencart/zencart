@@ -1,5 +1,4 @@
 <?php
-
 use Zencart\PluginSupport\ScriptedInstaller as ScriptedInstallBase;
 
 class ScriptedInstaller extends ScriptedInstallBase
@@ -43,6 +42,8 @@ class ScriptedInstaller extends ScriptedInstallBase
             'configuration_group_id' => 10,
             'sort_order' => 103,
         ]);
+
+        parent::executeInstall();
     }
 
     protected function executeUninstall()
@@ -50,5 +51,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         zen_deregister_admin_pages(['toolsDisplayLogs']);
 
         $this->deleteConfigurationKeys(['DISPLAY_LOGS_MAX_DISPLAY', 'DISPLAY_LOGS_MAX_FILE_SIZE', 'DISPLAY_LOGS_INCLUDED_FILES', 'DISPLAY_LOGS_EXCLUDED_FILES']);
+
+        parent::executeUninstall();
     }
 }

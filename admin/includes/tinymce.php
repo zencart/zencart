@@ -28,11 +28,24 @@
  *    To use this mode, simply set "GPL" as your TinyMCE API Key. This is the default configuration with a new Zen Cart install.
  */
 
+use Zencart\FileSystem\FileSystem;
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
-function zenGetLatestTinyMceReleaseTag() {
+$tinymceVersionSeries = 8; // should be single-digit int or string.
+$tinymceFallbackCDNversion = match((string)$tinymceVersionSeries) {
+    '7' => '7.9.1',
+    '8' => '8.0.2',
+    default => '8.0.2',
+};
+
+/**
+ * In case the user has selected GPL (and is not self-hosted), and in case we cannot calculate the latest via github, the following is a fallback version we've tested with.
+ * See https://github.com/tinymce/tinymce-dist/tags for latest, but make sure it exists on https://www.jsdelivr.com/package/npm/tinymce
+ */
+function zenGetLatestTinyMceReleaseTag(int|string $majorVersion = 0): string|false
+{
     $url = 'https://api.github.com/repos/tinymce/tinymce-dist/tags';
     $response = zenDoCurlRequest($url);
     if (empty($response)) {
@@ -40,24 +53,29 @@ function zenGetLatestTinyMceReleaseTag() {
     }
     $tagInfo = json_decode($response, true);
 
-    return $tagInfo[0]['name'] ?? false;
-}
+    if (empty($tagInfo) || !is_array($tagInfo)) {
+        return false;
+    }
 
-/**
- * In case the user has selected GPL (and is not self-hosted), and in case we cannot calculate the latest via github, the following is a fallback version we've tested with.
- * See https://github.com/tinymce/tinymce-dist/tags for latest, but make sure it exists on https://www.jsdelivr.com/package/npm/tinymce
- */
-$tinymceFallbackCDNversion = '7.7.0';
+    if (empty($majorVersion)) {
+        return $tagInfo[0]['name'] ?? false;
+    }
+
+    // If a specific major version is requested, return most recent
+    foreach ($tagInfo as $key => $tag) {
+        if (str_starts_with($tag['name'], (string)$majorVersion)) {
+            return $tag['name'];
+        }
+    }
+    return false;
+}
 
 // Ensure API Key configuration entry is set; Can be overridden via an extra_configures or extra_datafiles file.
 if (!defined('TINYMCE_EDITOR_API_KEY')) {
-    $db->Execute("INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href=\"https://www.tiny.cloud/auth/signup/\" target=\"_blank\">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now())");
+    $db->Execute("INSERT IGNORE INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href=\"https://www.tiny.cloud/auth/signup/\" target=\"_blank\">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now())");
     // the following will be ignored on next load of the page, so should not be edited here
     define('TINYMCE_EDITOR_API_KEY', 'GPL');
 }
-
-// Language Support Setup
-$lng ??= new language;
 
 // Some of these are output in the js config:
 $editor_doc_base_url = (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : DIR_WS_CATALOG);
@@ -70,16 +88,29 @@ $editor_jquery_patch_filename_path = $editor_assets_path . 'tinymce-jquery.min.j
 $editor_jquery_patch_src = file_exists($editor_jquery_patch_filename_path) ? $editor_jquery_patch_filename_url : 'https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery@2/dist/tinymce-jquery.min.js';
 
 // Determine whether TinyMCE editor JS files are self-hosted. If yes, use it. If not, use CDN. But if not GPL then use TinyCloud CDN with API key.
-if (strtoupper(TINYMCE_EDITOR_API_KEY) === 'GPL' || empty(TINYMCE_EDITOR_API_KEY)) {
+if (str_starts_with(strtoupper(TINYMCE_EDITOR_API_KEY), 'GPL') || empty(TINYMCE_EDITOR_API_KEY)) {
     $tinymceCDNversion = $tinymceFallbackCDNversion;
-    if (function_exists('zenDoCurlRequest') && $editor_latest_tag = zenGetLatestTinyMceReleaseTag()) {
+    if (function_exists('zenDoCurlRequest') && $editor_latest_tag = zenGetLatestTinyMceReleaseTag($tinymceVersionSeries)) {
         $tinymceCDNversion = $editor_latest_tag;
     }
     $editor_js_filename_url = $editor_assets_url . 'tinymce.min.js';
     $editor_js_filename_path = $editor_assets_path . 'tinymce.min.js';
     $editor_js_src = file_exists($editor_js_filename_path) ? $editor_js_filename_url : "https://cdn.jsdelivr.net/npm/tinymce@$tinymceCDNversion/tinymce.min.js";
 } else {
-    $editor_js_src = "https://cdn.tiny.cloud/1/" . TINYMCE_EDITOR_API_KEY . "/tinymce/7/tinymce.min.js";
+    $editor_js_src = "https://cdn.tiny.cloud/1/" . TINYMCE_EDITOR_API_KEY . "/tinymce/$tinymceVersionSeries/tinymce.min.js";
+}
+
+// Language Support Setup
+$lng ??= new language;
+$localesDirectory = $editor_assets_path . 'langs';
+$tinyLanguagesUrl = $editor_assets_url . 'langs';
+$tinyLanguageCode = $_SESSION['languages_code'];
+$tinyLanguageFiles = (new FileSystem)->listFilesFromDirectory($localesDirectory, '~^([a-z]{2})([-_][A-Z]{2,4})?\.js$~', false);
+foreach ($tinyLanguageFiles as $key => $tinyLanguageFile) {
+    // extra sanity check
+    if (!is_file($localesDirectory . '/' . $tinyLanguageFile)) {
+        unset($tinyLanguageFiles[$key]);
+    }
 }
 ?>
 
@@ -123,14 +154,31 @@ document.addEventListener('focusin', (e) => {
 
         }
         let languagesConfig = {
-            language: '<?= zen_output_string_protected($_SESSION['languages_code']) ?>',
+<?php
+foreach ($tinyLanguageFiles as $tinyLanguageFile) {
+    if (strpos($tinyLanguageFile, $tinyLanguageCode) === 0) {
+        echo "            language_url: '" . $tinyLanguagesUrl . "/" . $tinyLanguageFile . "',\n            language_load: false,\n";
+        $tinyLanguageCode = substr($tinyLanguageFile, 0, -3);
+        break;
+    }
+}
+?>
+            language: '<?= zen_output_string_protected($tinyLanguageCode) ?>',
             content_langs: [
-
-            <?php
-            foreach ($lng->get_languages_by_code() as $lang) {
-                echo "    { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($lang['code']) . "' },\n";
-            }
-            ?>
+<?php
+$contentLangs = $lng->get_languages_by_code();
+foreach ($contentLangs as $key => $lang) {
+    foreach($tinyLanguageFiles as $tinyLanguageFile) {
+        if (strpos($tinyLanguageFile, $lang['code']) === 0) {
+            $contentLangs[$key]['code'] = substr($tinyLanguageFile, 0, -3);
+            break;
+        }
+    }
+}
+foreach ($contentLangs as $lang) {
+    echo "                { title: '" . zen_output_string_protected($lang['name']) . "', code: '" . zen_output_string_protected($lang['code']) . "' },\n";
+}
+?>
             ],
         }
         // In case the override/custom config.js doesn't load or is not present, fallback to empty object.

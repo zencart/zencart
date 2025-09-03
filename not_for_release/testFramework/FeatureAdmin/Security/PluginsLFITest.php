@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
@@ -31,7 +31,7 @@ class PluginsLFITest extends zcFeatureTestCaseAdmin
         // need to hit the plugin manager end point to get the scanned modules into the database, if not already there.
         $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=plugin_manager');
         // set the display logs to be installed
-        $pm = PluginControl::where('name', 'Display logs')->update(['status' => 1, 'version' => 'v3.0.2']);
+        $pm = PluginControl::where('name', 'Display Logs')->update(['status' => 1, 'version' => 'v3.0.3']);
         $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=display_logs');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());

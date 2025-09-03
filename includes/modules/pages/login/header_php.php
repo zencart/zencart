@@ -21,17 +21,17 @@ if (!zen_in_guest_checkout() && zen_is_logged_in() && !isset($_GET['hmac'])) {
     zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
-include(DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
+include DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT);
 
 // -----
 // Gather any posted email_address prior to the processing loop, in case this is a 'Place Order'
 // request coming from the admin.
 //
-$email_address = zen_db_prepare_input(isset($_POST['email_address']) ? trim($_POST['email_address']) : '');
+$email_address = zen_db_prepare_input(trim($_POST['email_address'] ?? ''));
 
 $error = false;
-if (isset($_GET['action']) && $_GET['action'] == 'process') {
+if (($_GET['action'] ?? '') === 'process') {
     $loginAuthorized = false;
 
     if (isset($_GET['hmac'])) {
@@ -60,8 +60,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     }
     */
 
-
-    $customer = new Customer;
+    $customer = new Customer();
     $login_attempt = $customer->doLoginLookupByEmail($email_address);
 
     if ($login_attempt === false) {
@@ -139,6 +138,24 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 }
 if ($error == true) {
     $zco_notifier->notify('NOTIFY_LOGIN_FAILURE');
+
+    // -----
+    // Enable a site to control the number of failed login and/or password-reset attempts.
+    //
+    $max_login_attempts = (int)($max_login_attempts ?? 9);
+    if ($max_login_attempts < 2) {
+        $max_login_attempts = 9;
+    }
+
+    // -----
+    // Slamming prevention ...
+    //
+    $_SESSION['login_attempt'] ??= 0;
+    if ($_SESSION['login_attempt'] > $max_login_attempts) {
+        header('HTTP/1.1 406 Not Acceptable');
+        exit(0);
+    }
+    $_SESSION['login_attempt']++;
 }
 
 $breadcrumb->add(NAVBAR_TITLE);

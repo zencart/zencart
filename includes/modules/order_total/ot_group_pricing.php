@@ -172,7 +172,7 @@ class ot_group_pricing {
             $ratio = 1;
           }
           $adjustedTax = $orderTotalTax * $ratio;
-          if ($order->info['tax'] == 0) return $od_amount;
+          if ($order->info['tax'] == 0) break;
           $ratioTax = ($orderTotalTax != 0 ) ? $adjustedTax/$orderTotalTax : 0;
           $tax_deduct = 0;
           foreach ($taxGroups as $key=>$value) {

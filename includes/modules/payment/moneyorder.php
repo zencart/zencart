@@ -137,12 +137,15 @@
             return false;
         }
 
-        function confirmation()
+        function selection()
         {
-            return ['title' => MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION];
+            return [
+                'id' => $this->code,
+                'module' => $this->title,
+            ];
         }
 
-        function process_button()
+        function pre_confirmation_check()
         {
             return false;
         }
@@ -158,6 +161,7 @@
 
             $comments = MODULE_PAYMENT_MONEYORDER_TEXT_EMAIL_FOOTER . " " . MODULE_PAYMENT_MONEYORDER_REMINDER;
             zen_update_orders_history($insert_id, $comments, null, -1, 0);
+
 
             return false;
         }

@@ -91,14 +91,14 @@ $paramsToCheck = [
     'inc_subcat',
     'payment_error',
     'order',
-    'gv_no', 
+    'gv_no',
     'pos',
     'addr',
     'error',
     'count',
     'error_message',
     'info_message',
-    'cID', 
+    'cID',
     'page',
     'credit_class_error_code',
 ];
@@ -300,6 +300,8 @@ $installedPlugins = $pluginManager->getInstalledPlugins();
 $fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/includes/extra_datafiles', '~^[^\._].*\.php$~i');
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^database_tables\.php$~i');
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^filenames\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);

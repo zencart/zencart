@@ -362,7 +362,7 @@ class order extends base
 
             $this->info['tax_groups']["{$this->products[$index]['tax']}"] = '1';
 
-            $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $this->products[$index], $index);
+            $this->notify('NOTIFY_ORDER_QUERY_ADD_PRODUCT', $this->products[$index], $index, $orders_products->fields);
 
             $index++;
             $orders_products->MoveNext();
@@ -370,7 +370,7 @@ class order extends base
 
         $this->statuses = $this->getStatusHistory($this->orderId);
 
-        $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId);
+        $this->notify('NOTIFY_ORDER_AFTER_QUERY', IS_ADMIN_FLAG, $this->orderId, $order->fields);
 
         /**
          * @deprecated since v1.5.6; use NOTIFY_ORDER_AFTER_QUERY instead
@@ -651,6 +651,9 @@ class order extends base
                             AND poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
 
                     $attributes = $db->Execute($sql);
+                    if ($attributes->EOF) {
+                        continue;
+                    }
 
                     //clr 030714 Account for text attributes
                     if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
@@ -1451,7 +1454,7 @@ class order extends base
         }
         return null;
     }
-    
+
     private function getAddress(array $customerAddresses, int $arrayKey): array
     {
         $address = $customerAddresses[$arrayKey]['address'];

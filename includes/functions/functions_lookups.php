@@ -31,6 +31,22 @@ function zen_get_handler_from_type($product_type): string
     return $handler->fields['type_handler'];
 }
 
+/**
+ * Get a list of product page names that identify buyable products.
+ * This allows us to mark a page as containing a product which can
+ * be allowed to add-to-cart or buy-now with various modules.
+ */
+function zen_get_buyable_product_type_handlers(): array
+{
+    global $db;
+    $sql = "SELECT type_handler from " . TABLE_PRODUCT_TYPES . " WHERE allow_add_to_cart = 'Y'";
+    $results = $db->Execute($sql);
+    $retVal = [];
+    foreach ($results as $result) {
+        $retVal[] = $result['type_handler'] . '_info';
+    }
+    return $retVal;
+}
 
 /*
  * List manufacturers (returned in an array)
@@ -247,6 +263,25 @@ function zen_check_url_get_terms()
 
 
 /**
+ * Returns the status id number of an order-status, based on the name
+ * @return int|false (false if not found)
+ */
+function zen_get_orders_status_id_from_name(string $status_name): int|false
+{
+    global $db;
+    if (empty($status_name)) {
+        return false;
+    }
+
+    $sql = "SELECT orders_status_id
+            FROM " . TABLE_ORDERS_STATUS . "
+            WHERE LOWER(orders_status_name) = '" . zen_db_input(strtolower($status_name)) . "'";
+    $result = $db->Execute($sql, 1);
+
+    return $result->EOF ? false : $result->fields['orders_status_id'];
+}
+
+/**
  * Returns the "name" associated with the specified orders_status_id.
  * @param int $order_status_id
  * @param int $language_id
@@ -268,6 +303,7 @@ function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
 }
 
 /**
+ * Used by Admin configuration dropdown selectors
  * @TODO collapse with zen_get_orders_status_name()
  * @param int $order_status_id
  * @param int $language_id

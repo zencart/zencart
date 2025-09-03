@@ -46,7 +46,7 @@ class LanguageLoader
     {
         $this->arrayLoader->loadDefinesFromArrayFile($baseDirectory, $language, $languageFile);
         $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . '/' . $languageFile);
-        return true; 
+        return true;
     }
 
     public function loadModuleDefinesFromFile(string $baseDirectory, string $language, string $module_type, string $languageFile): bool
@@ -55,7 +55,7 @@ class LanguageLoader
 
         $this->arrayLoader->makeConstants($defs);
         $this->fileLoader->loadFileDefineFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . $baseDirectory . $module_type . '/' . $languageFile);
-        return true; 
+        return true;
     }
 
     public function makeCatalogArrayConstants(string $fileName, string $extraDir = ''): void
@@ -101,10 +101,18 @@ class LanguageLoader
 
     public function loadModuleLanguageFile(string $fileName, string $moduleType): bool
     {
-        $array_constants_created = $this->arrayLoader->loadModuleLanguageFile($fileName, $moduleType);
-        $legacy_file_loaded = $this->fileLoader->loadModuleLanguageFile($fileName, $moduleType);
+        $this->arrayLoader->loadModuleLanguageFile($fileName, $moduleType);
+        $this->fileLoader->loadModuleLanguageFile($fileName, $moduleType);
 
-        return ($legacy_file_loaded === true || $array_constants_created === true);
+        $language_files_loaded = array_merge($this->languageFilesLoaded['arrays'], $this->languageFilesLoaded['legacy']);
+        $match_string = '~modules/' . $moduleType . '/(lang\.)?' . $fileName . '$~';
+        $match_string_template = '~modules/' . $moduleType . '/' . $this->arrayLoader->getTemplateDir() . '/(lang\.)?' . $fileName . '$~';
+        foreach ($language_files_loaded as $next_file) {
+            if (preg_match($match_string, $next_file) || preg_match($match_string_template, $next_file)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function isFileAlreadyLoaded(string $defineFile): bool

@@ -8,6 +8,7 @@
 
 namespace Zencart\PluginSupport;
 
+use App\Models\LayoutBox;
 use queryFactory;
 use queryFactoryResult;
 
@@ -131,7 +132,6 @@ trait ScriptedInstallHelpers
 
         return $rows;
     }
-
 
     protected function getOrCreateConfigGroupId(string $config_group_title, string $config_group_description, ?int $sort_order = 1): int
     {
@@ -313,5 +313,43 @@ trait ScriptedInstallHelpers
         }
         $this->dbConn->dieOnErrors = true;
         return true;
+    }
+
+    // -----
+    // This method provides the means to update various database fields
+    // that are managed by core Zen Cart processes on the update of an encapsulated
+    // plugin.
+    //
+    private function updateZenCoreDbFields(string $oldVersion): void
+    {
+        // -----
+        // Update any layout_boxes table entries that reference the current
+        // plugin, ensuring that the 'plugin_details' field contains the updated
+        // plugin version number.
+        //
+        LayoutBox::where('plugin_details', 'LIKE', $this->pluginKey . '/%')
+            ->update(['plugin_details' => $this->pluginKey . '/' . $this->version]);
+    }
+
+    // -----
+    // This method provides the means to update various database fields
+    // that are managed by core Zen Cart processes on the uninstall of an encapsulated
+    // plugin.
+    //
+    private function uninstallZenCoreDbFields(): void
+    {
+        // -----
+        // Remove any entries in the layout_boxes table that reference this now
+        // uninstalled plugin.
+        //
+        LayoutBox::where('plugin_details', 'LIKE', $this->pluginKey . '/%')->delete();
+
+        // -----
+        // If a plugin includes order_total, payment or shipping modules, any
+        // modules that are currently "installed" must be removed from the
+        // respective configuration setting (set by the admin's Modules processing)
+        // or various PHP errors/warnings could occur.
+        //
+        zen_update_modules_cache();
     }
 }

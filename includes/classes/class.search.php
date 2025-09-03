@@ -452,7 +452,10 @@ class Search extends \base
 
         $this->notify('NOTIFY_SEARCH_REAL_ORDERBY_STRING', $order_str, $order_str);
 
-        $listing_sql = $select_str . $from_str . $where_str . $order_str;
+        $listing_sql = $select_str . $from_str;
+        $this->notify('NOTIFY_SEARCH_LISTING_QUERY_STRING', ['default'], $listing_sql, $where_str, $order_str);
+        $listing_sql .= ' ' . $where_str . ' ' . $order_str;
+
         // Notifier Point
         $this->notify('NOTIFY_SEARCH_ORDERBY_STRING', $listing_sql);
 
