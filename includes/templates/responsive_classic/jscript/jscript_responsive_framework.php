@@ -6,7 +6,7 @@
  */
 ?>
 
-<script>
+<script title="responsive_framework">
 
 (function($) {
 $(document).ready(function() {

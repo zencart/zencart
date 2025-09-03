@@ -111,7 +111,7 @@ for ($i = 0; $i < $report->size; $i++) {
   echo "           ['";
 
   if ($sales_report_view == statsSalesReportGraph::YEARLY_VIEW && $report->size > 5) {
-    echo substr($report->info[$i]['text'], 0, 1);
+    echo substr($report->info[$i]['text'], 2, 2);
   } elseif ($sales_report_view == statsSalesReportGraph::MONTHLY_VIEW) {
     echo substr($report->info[$i]['text'], 0, 3);
   } elseif ($sales_report_view == statsSalesReportGraph::WEEKLY_VIEW) {
@@ -128,11 +128,11 @@ for ($i = 0; $i < $report->size; $i++) {
 
   if ($j == 0) {
   // first value
-  echo round($report->info[$i]['sum'], 2);
+  echo round($report->info[$i]['sum'], $currencies->get_decimal_places(DEFAULT_CURRENCY));
   } else {
     // second value
     if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
-      echo round($report->info[$i]['avg'], 2);
+      echo round($report->info[$i]['avg'], $currencies->get_decimal_places(DEFAULT_CURRENCY));
     }
   }
   echo ']';

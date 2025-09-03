@@ -32,12 +32,25 @@ class navigationHistory extends base
         $this->snapshot = [];
     }
 
+    // -----
+    // Since the 'path' and 'snapshot' properties are public, make sure that their
+    // values are set and an array, resetting if not.
+    //
+    protected function checkProperties(): void
+    {
+        if (!is_array($this->path ?? '') || !is_array($this->snapshot ?? '')) {
+            $this->reset();
+        }
+    }
+
     public function add_current_page()
     {
         // check whether there are pages which should be blacklisted against entering navigation history
         if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && $_GET['act'] !== '') {
             return;
         }
+
+        $this->checkProperties();
 
         global $request_type, $cPath;
         $get_vars = $_GET;
@@ -93,6 +106,8 @@ class navigationHistory extends base
 
     public function remove_current_page()
     {
+        $this->checkProperties();
+
         $last_entry_position = count($this->path) - 1;
         if (isset($this->path[$last_entry_position]['page']) && isset($_GET['main_page']) && $this->path[$last_entry_position]['page'] === $_GET['main_page']) {
             unset($this->path[$last_entry_position]);
@@ -124,7 +139,9 @@ class navigationHistory extends base
 
     public function set_path_as_snapshot($history = 0)
     {
-        $pos = count($this->path) -1 -$history;
+        $this->checkProperties();
+
+        $pos = count($this->path) - 1 - $history;
         $this->snapshot = [
             'page' => $this->path[$pos]['page'],
             'mode' => $this->path[$pos]['mode'],
@@ -135,6 +152,8 @@ class navigationHistory extends base
 
     public function debug()
     {
+        $this->checkProperties();
+
         for ($i = 0, $n = count($this->path); $i < $n; $i++) {
             echo $this->path[$i]['page'] . '?';
             foreach ($this->path[$i]['get'] as $key => $value) {

@@ -5,6 +5,7 @@ namespace Seeders;
 use App\Models\Currency;
 use App\Models\TaxClass;
 use App\Models\TaxRate;
+use App\Models\TaxRatesDescription;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -81,8 +82,12 @@ class InitialSetupSeeder extends Seeder
         $taxRate->tax_class_id = $taxClass->tax_class_id;
         $taxRate->tax_priority = 1;
         $taxRate->tax_rate = 10;
-        $taxRate->tax_description = 'SHIPPING TAX 10%';
         $taxRate->save();
+        $taxRateDesc = new TaxRatesDescription();
+        $taxRateDesc->tax_rates_id = $taxRate->tax_rates_id;
+        $taxRateDesc->language_id = 1;
+        $taxRateDesc->tax_description = 'SHIPPING TAX 10%';
+        $taxRateDesc->save();
         // see if we need to set a custom smtp server - e.g. for mailpit
         if (isset($mainConfigs['use-server']) && $mainConfigs['use-mailserver'] ) {
             $email = \App\Models\Configuration::where('configuration_key', 'SEND_EMAILS')->first();

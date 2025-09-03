@@ -152,13 +152,20 @@ if (WARN_DATABASE_VERSION_PROBLEM != 'false') {
   }
 
 // if welcome email coupon is set and <= 21 days warn shop owner
-    if (NEW_SIGNUP_DISCOUNT_COUPON > 0) {
-      $zc_welcome_check = $db->Execute("SELECT coupon_expire_date FROM " . TABLE_COUPONS . " WHERE coupon_id=" . (int)NEW_SIGNUP_DISCOUNT_COUPON);
-      $zc_current_date = date('Y-m-d');
-      $zc_days_to_expire = zen_date_diff($zc_current_date, $zc_welcome_check->fields['coupon_expire_date']);
-      if ($zc_days_to_expire <= 21) {
-        $zc_caution_warning = ($zc_days_to_expire <= 5 ? 'warning' : 'caution');
-        $messageStack->add(sprintf(WARNING_WELCOME_DISCOUNT_COUPON_EXPIRES_IN, $zc_days_to_expire), $zc_caution_warning);
+    if ((int)NEW_SIGNUP_DISCOUNT_COUPON > 0) {
+      $zc_welcome_check = $db->Execute("SELECT coupon_expire_date FROM " . TABLE_COUPONS . " WHERE coupon_id = " . (int)NEW_SIGNUP_DISCOUNT_COUPON . " LIMIT 1");
+      if ($zc_welcome_check->EOF) {
+          if (!isset($_SESSION['nsdc_missing'])) {
+            $_SESSION['nsdc_missing'] = 'logged';
+            trigger_error('New Signup Discount Coupon ID#' . (int)NEW_SIGNUP_DISCOUNT_COUPON . ' does not exist. You can change that using the GV Coupons configuration settings.', E_USER_NOTICE);
+          }
+      } else {
+          $zc_current_date = date('Y-m-d');
+          $zc_days_to_expire = zen_date_diff($zc_current_date, $zc_welcome_check->fields['coupon_expire_date']);
+          if ($zc_days_to_expire <= 21) {
+            $zc_caution_warning = ($zc_days_to_expire <= 5 ? 'warning' : 'caution');
+            $messageStack->add(sprintf(WARNING_WELCOME_DISCOUNT_COUPON_EXPIRES_IN, $zc_days_to_expire), $zc_caution_warning);
+          }
       }
     }
 

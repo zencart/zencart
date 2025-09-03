@@ -19,16 +19,15 @@ if (!empty($_POST)) {
   $products_description = $_POST['products_description'];
   $products_url = $_POST['products_url'];
   foreach ($products_url as &$url){ // remove protocol
-      $url = str_replace(array('http://', 'https://'), '', $url);
+      $url = str_replace(['http://', 'https://'], '', $url);
   }
   unset ($url);
 } else {
   $product = $db->Execute("SELECT p.*,
                                   pd.language_id, pd.products_name, pd.products_description, pd.products_url
-                           FROM " . TABLE_PRODUCTS . " p,
-                                " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                           WHERE p.products_id = pd.products_id
-                           AND p.products_id = " . (int)$_GET['pID']);
+                           FROM " . TABLE_PRODUCTS . " p
+                           LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id)
+                           WHERE p.products_id = " . (int)$_GET['pID']);
 
   $pInfo = new objectInfo($product->fields);
   $products_image_name = $pInfo->products_image;

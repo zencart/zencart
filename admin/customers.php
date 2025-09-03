@@ -400,7 +400,7 @@ if (!empty($action)) {
                 $password_new = zen_db_prepare_input($_POST['newpassword']);
                 $password_confirmation = zen_db_prepare_input($_POST['newpasswordConfirm']);
                 $error = false;
-                if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
+                if (mb_strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
                     $error = true;
                     $messageStack->add_session(ERROR_PWD_TOO_SHORT . '(' . ENTRY_PASSWORD_MIN_LENGTH . ')', 'error');
                 } elseif ($password_new !== $password_confirmation) {
@@ -893,7 +893,7 @@ if ($action === 'edit' || $action === 'update') {
                             'customers_telephone',
                             15
                         ) . ' class="form-control" id="customers_telephone" minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '"',
-                        true
+                        (ENTRY_TELEPHONE_MIN_LENGTH > 0 ? true : false)
                     ); ?>
                 </div>
             </div>

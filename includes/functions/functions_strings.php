@@ -32,6 +32,17 @@ function zen_output_string(?string $string, array|bool $translate = false, bool 
 }
 
 /**
+ * Returns a string with quotes converted to html entities
+ * so that they can be passed through from page to page
+ * without mistakenly being converted to specialchars or go missing
+ */
+function zen_preserve_search_quotes(?string $search_string): string
+{
+    return urlencode($search_string);
+    //return zen_output_string($string, ['"' => '%22', "'", '%21'], false);
+}
+
+/**
  * Returns a string with conversions for security.
  *
  * Simply calls the zen_output_string function
@@ -89,8 +100,8 @@ function zen_break_string($string, $len, $break_char = '-')
     }
     $l = 0;
     $output = '';
-    for ($i = 0, $n = strlen($string); $i < $n; $i++) {
-        $char = substr($string, $i, 1);
+    for ($i = 0, $n = mb_strlen($string); $i < $n; $i++) {
+        $char = mb_substr($string, $i, 1);
         if ($char != ' ') {
             $l++;
         } else {
@@ -125,9 +136,9 @@ function zen_trunc_string($str = "", $len = 150, $more = 'true')
     $len = (int)$len;
     if ($len == 0) return '';
     // if it's les than the size given, then return it
-    if (strlen($str) <= $len) return $str;
+    if (mb_strlen($str) <= $len) return $str;
     // else get that size of text
-    $str = substr($str, 0, $len);
+    $str = mb_substr($str, 0, $len);
     // backtrack to the end of a word
     if ($str != "") {
         // check to see if there are any spaces left
@@ -136,10 +147,10 @@ function zen_trunc_string($str = "", $len = 150, $more = 'true')
             return $str;
         }
         // backtrack
-        while (strlen($str) && ($str[strlen($str) - 1] != " ")) {
-            $str = substr($str, 0, -1);
+        while (mb_strlen($str) && ($str[mb_strlen($str) - 1] != " ")) {
+            $str = mb_substr($str, 0, -1);
         }
-        $str = substr($str, 0, -1);
+        $str = mb_substr($str, 0, -1);
         if ($more == 'true') $str .= "...";
         if ($more != 'true' and $more != 'false') $str .= $more;
     }

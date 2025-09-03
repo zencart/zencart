@@ -59,41 +59,39 @@ for ($i=0, $j=sizeof($box_categories_array); $i<$j; $i++) {
     }
 }
 
-if (SHOW_CATEGORIES_BOX_SPECIALS === 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_NEW === 'true' || SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS === 'true' || SHOW_CATEGORIES_BOX_PRODUCTS_ALL === 'true' || SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES === 'true') {
-    // display a separator between categories and links
-    if (SHOW_CATEGORIES_SEPARATOR_LINK === '1') {
-        $content .= '' . "\n";
+// display a separator between categories and links
+if (SHOW_CATEGORIES_SEPARATOR_LINK === '1') {
+    $content .= '' . "\n";
+}
+if (SHOW_CATEGORIES_BOX_SPECIALS === 'true') {
+    $show_this = $db->Execute("SELECT products_id FROM " . TABLE_SPECIALS . " WHERE status= 1 limit 1");
+    if ($show_this->EOF) {
+        $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_SPECIALS) . '">' . CATEGORIES_BOX_HEADING_SPECIALS . '</a></li>' . "\n";
     }
-    if (SHOW_CATEGORIES_BOX_SPECIALS === 'true') {
-        $show_this = $db->Execute("SELECT products_id FROM " . TABLE_SPECIALS . " WHERE status= 1 limit 1");
-        if ($show_this->EOF) {
-            $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_SPECIALS) . '">' . CATEGORIES_BOX_HEADING_SPECIALS . '</a></li>' . "\n";
-        }
-    }
-    if (SHOW_CATEGORIES_BOX_PRODUCTS_NEW === 'true') {
-        // display limits
-        $display_limit = zen_get_new_date_range();
+}
+if (SHOW_CATEGORIES_BOX_PRODUCTS_NEW === 'true') {
+    // display limits
+    $display_limit = zen_get_new_date_range();
 
-        $show_this = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS . " p WHERE products_status = 1 " . $display_limit . " limit 1");
-        if (!$show_this->EOF) {
-            $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a></li>' . "\n";
-        }
+    $show_this = $db->Execute("SELECT products_id FROM " . TABLE_PRODUCTS . " p WHERE products_status = 1 " . $display_limit . " limit 1");
+    if (!$show_this->EOF) {
+        $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_NEW) . '">' . CATEGORIES_BOX_HEADING_WHATS_NEW . '</a></li>' . "\n";
     }
-    if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS === 'true') {
-        $show_this = $db->Execute("SELECT products_id FROM " . TABLE_FEATURED . " WHERE status= 1 limit 1");
-        if (!$show_this->EOF) {
-            $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a></li>' . "\n";
-        }
+}
+if (SHOW_CATEGORIES_BOX_FEATURED_PRODUCTS === 'true') {
+    $show_this = $db->Execute("SELECT products_id FROM " . TABLE_FEATURED . " WHERE status= 1 limit 1");
+    if (!$show_this->EOF) {
+        $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_PRODUCTS) . '">' . CATEGORIES_BOX_HEADING_FEATURED_PRODUCTS . '</a></li>' . "\n";
     }
-    if (SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES === 'true') {
-        $show_this = $db->Execute("SELECT categories_id FROM " . TABLE_FEATURED_CATEGORIES . " WHERE status= 1 limit 1");
-        if (!$show_this->EOF) {
-            $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES) . '">' . CATEGORIES_BOX_HEADING_FEATURED_CATEGORIES . '</a></li>' . "\n";
-        }
+}
+if (SHOW_CATEGORIES_BOX_FEATURED_CATEGORIES === 'true') {
+    $show_this = $db->Execute("SELECT categories_id FROM " . TABLE_FEATURED_CATEGORIES . " WHERE status= 1 limit 1");
+    if (!$show_this->EOF) {
+        $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_FEATURED_CATEGORIES) . '">' . CATEGORIES_BOX_HEADING_FEATURED_CATEGORIES . '</a></li>' . "\n";
     }
-    if (SHOW_CATEGORIES_BOX_PRODUCTS_ALL === 'true') {
-        $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_ALL) . '">' . CATEGORIES_BOX_HEADING_PRODUCTS_ALL . '</a></li>' . "\n";
-    }
+}
+if (SHOW_CATEGORIES_BOX_PRODUCTS_ALL === 'true') {
+    $content .= '<li><a class="category-links" href="' . zen_href_link(FILENAME_PRODUCTS_ALL) . '">' . CATEGORIES_BOX_HEADING_PRODUCTS_ALL . '</a></li>' . "\n";
 }
 $content .= '</ul></div>';
 

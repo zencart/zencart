@@ -27,8 +27,8 @@ if (!$music_genres->EOF) {
 
     foreach ($music_genres as $next_genre) {
         $music_genre_name = $next_genre['music_genre_name'];
-        if (strlen($music_genre_name) > (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) {
-            $music_genre_name = substr($music_genre_name, 0, (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) . '..';
+        if (mb_strlen($music_genre_name) > (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) {
+            $music_genre_name = mb_substr($music_genre_name, 0, (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) . '..';
         }
         $music_genres_array[] = [
             'id' => $next_genre['music_genre_id'],

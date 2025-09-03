@@ -53,7 +53,7 @@ foreach ($observers as $observer) {
     } elseif (class_exists($psr4ClassName)) {
         // 'Auto' prefix in filename and class name matches filename
         $$objectName = new $psr4ClassName();
-    } elseif (class_exists($alternateClassName = $preg_replace('~^Auto~', '', $psr4ClassName))) {
+    } elseif (class_exists($alternateClassName = preg_replace('~^Auto~', '', $psr4ClassName))) {
         // 'Auto' prefix in filename but not in class name
         $$objectName = new $alternateClassName();
     } else {

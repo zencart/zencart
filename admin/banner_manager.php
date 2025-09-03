@@ -551,7 +551,7 @@ if (!empty($action)) {
                             // remove text prior to the hyphen in the configuraiton_title to leave the position (e.g. "Banner Display Group - Side Box banner_box_all"  "Banner Display Groups - Footer Position 3")
                             // allows for optional spaces around hyphens
                             $position_texts = preg_split('/\s?-\s?/', $banner_position['configuration_title']);
-                            $positions[] = $position_texts !== false ? $position_texts[1] : '';
+                            $positions[] = $position_texts[1] ?? '';
                         }
                         echo '<div class="text-nowrap">' . implode('<br>', $positions) . '</div>';
                         ?>

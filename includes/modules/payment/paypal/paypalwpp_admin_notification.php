@@ -359,7 +359,8 @@ if (method_exists($this, '_doRefund')) {
     if (!isset($response['RESPMSG'])) {
         // full refund (only for PayPal transactions, not Payflow)
         $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_FULL;
-        $outputRefund .= '<br><input type="submit" name="fullrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '">' . ' ' . MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_FULL_CONFIRM_CHECK . zen_draw_checkbox_field('reffullconfirm', '', false) . '<br>';
+        $outputRefund .= '<br>' . MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_FULL_CONFIRM_CHECK . zen_draw_checkbox_field('reffullconfirm', '', false, '', 'id="reffullconfirm"') . ' <input type="submit" id="fullrefund" name="fullrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '">';
+        $outputRefund .= '<script>$("#reffullconfirm").change(function () {$("#fullrefund").prop("disabled", !this.checked);}).change()</script>';
         $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_TEXT_FULL_OR;
     } else {
         $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PAYFLOW_TEXT;
@@ -415,7 +416,8 @@ if (method_exists($this, '_doVoid')) {
     $outputVoid .= '<td>' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_TITLE . '<br>'. "\n";
     $outputVoid .= zen_draw_form('ppvoid', FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=doVoid', 'post', '', true) . zen_hide_session_id();
     $outputVoid .= MODULE_PAYMENT_PAYPAL_ENTRY_VOID . '<br>' . zen_draw_input_field('voidauthid', '', 'size="16"');
-    $outputVoid .= '<input type="submit" name="ordervoid" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '">' . ' ' . MODULE_PAYMENT_PAYPALWPP_TEXT_VOID_CONFIRM_CHECK . zen_draw_checkbox_field('voidconfirm', '', false);
+    $outputVoid .= MODULE_PAYMENT_PAYPALWPP_TEXT_VOID_CONFIRM_CHECK . zen_draw_checkbox_field('voidconfirm', '', false, '', 'id="voidconfirm"') . ' ' . '<input type="submit" id="ordervoid" name="ordervoid" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '">';
+    $outputVoid .= '<script>$("#voidconfirm").change(function () {$("#ordervoid").prop("disabled", !this.checked);}).change()</script>';
     //comment field
     $outputVoid .= '<br>' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_TEXT_COMMENTS . '<br>' . zen_draw_textarea_field('voidnote', 'soft', '50', '3', MODULE_PAYMENT_PAYPAL_ENTRY_VOID_DEFAULT_MESSAGE);
     //message text
@@ -466,7 +468,7 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
         $output .= $outputStartBlock; //start second table
 
         $transaction_type_authorization = (isset($response['TRANSACTION_TYPE']) && $response['TRANSACTION_TYPE'] == 'Authorization');
-        $transactiontype_payment = (isset($response['TRANSACTION_TYPE']) && in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']));
+        $transactiontype_payment = (isset($response['TRANSACTIONTYPE']) && in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']));
         if ($transaction_type_authorization || ($transactiontype_payment && $response['PAYMENTTYPE'] == 'instant' && $response['PENDINGREASON'] == 'authorization') || $authcapt_on) {
             if (method_exists($this, '_doRefund') && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp')) {
                 $output .= $outputRefund;

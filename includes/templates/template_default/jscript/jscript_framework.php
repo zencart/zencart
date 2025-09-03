@@ -5,7 +5,7 @@
  * @version $Id: torvista 2019 Oct 21 Modified in v1.5.7 $
  */
 ?>
-<script>
+<script title="zcJS.ajax">
 if (typeof zcJS == "undefined" || !zcJS) {
   window.zcJS = { name: 'zcJS', version: '0.1.0.0' };
 }

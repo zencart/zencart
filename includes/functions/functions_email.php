@@ -202,6 +202,8 @@
             $email_text = preg_replace('/(&gt;)+/', '>', $email_text);
             // prevent null characters
             $email_text = preg_replace('/\0+/', ' ', $email_text);
+            // Convert &nbsp; to a single space
+            $email_text = str_replace('&nbsp;', ' ', $email_text);
 
             // fix slashes
             $text = stripslashes($email_text);
@@ -348,6 +350,11 @@
 
             if ($email_transport === 'sendmail-f' || EMAIL_SEND_MUST_BE_STORE === 'Yes') {
                 $mail->Sender = EMAIL_FROM;
+            }
+
+            // if a Reply-To override is configured, use that
+            if (defined('EMAIL_REPLY_TO_OVERRIDE') && zen_validate_email(EMAIL_REPLY_TO_OVERRIDE)) {
+                $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : EMAIL_REPLY_TO_OVERRIDE;
             }
 
             // set the reply-to address.  If none set yet, then use Store's default email name/address.

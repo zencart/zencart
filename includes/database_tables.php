@@ -47,6 +47,7 @@ define('TABLE_CUSTOMERS_BASKET_ATTRIBUTES', DB_PREFIX . 'customers_basket_attrib
 define('TABLE_CUSTOMERS_INFO', DB_PREFIX . 'customers_info');
 define('TABLE_CUSTOMER_GROUPS', DB_PREFIX . 'customer_groups');
 define('TABLE_CUSTOMERS_TO_GROUPS', DB_PREFIX . 'customers_to_groups');
+define('TABLE_CUSTOMER_PASSWORD_RESET_TOKENS', DB_PREFIX . 'customer_password_reset_tokens');
 define('TABLE_DB_CACHE', DB_PREFIX . 'db_cache');
 define('TABLE_EMAIL_ARCHIVE', DB_PREFIX . 'email_archive');
 define('TABLE_EZPAGES', DB_PREFIX . 'ezpages');
@@ -103,6 +104,7 @@ define('TABLE_SPECIALS', DB_PREFIX . 'specials');
 define('TABLE_TEMPLATE_SELECT', DB_PREFIX . 'template_select');
 define('TABLE_TAX_CLASS', DB_PREFIX . 'tax_class');
 define('TABLE_TAX_RATES', DB_PREFIX . 'tax_rates');
+define('TABLE_TAX_RATES_DESCRIPTION', DB_PREFIX . 'tax_rates_description');
 define('TABLE_GEO_ZONES', DB_PREFIX . 'geo_zones');
 define('TABLE_ZONES_TO_GEO_ZONES', DB_PREFIX . 'zones_to_geo_zones');
 define('TABLE_UPGRADE_EXCEPTIONS', DB_PREFIX . 'upgrade_exceptions');

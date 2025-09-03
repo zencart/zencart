@@ -4,7 +4,7 @@
 # * @access private
 # * @copyright Copyright 2003-2025 Zen Cart Development Team
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Scott Wilson 2024 Nov 23 Modified in v2.1.0 $
+# * @version $Id: New in v2.2.0 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -33,9 +33,45 @@
 # Clear out active customer sessions. Truncating helps the database clean up behind itself.
 TRUNCATE TABLE whos_online;
 TRUNCATE TABLE db_cache;
+#DELETE FROM customer_password_reset_tokens WHERE created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1440 MINUTE);
+
+
+#PROGRESS_FEEDBACK:!TEXT=Updating table structures!
+DROP TABLE IF EXISTS customer_password_reset_tokens;
+CREATE TABLE customer_password_reset_tokens (
+    customer_id int(11) NOT NULL default 0,
+    token varchar(100) NOT NULL default '',
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY  (token, customer_id)
+);
+ALTER TABLE orders_products_attributes MODIFY products_options varchar(191) NOT NULL default '';
+ALTER TABLE products_options MODIFY products_options_name varchar(191) NOT NULL default '';
+ALTER TABLE products_options_values MODIFY products_options_values_name varchar(191) NOT NULL default '';
+ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
+ALTER TABLE orders MODIFY currency char(4) default NULL;
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Length', 'PASSWORD_RESET_TOKEN_LENGTH', '24', 'Number of characters in a generated password-reset token. Default is 24. Allowed: 12-100, but it affects the URL length, so 12-30 is most ideal', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":10, \"max_range\":100}}}');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Valid For', 'PASSWORD_RESET_TOKEN_MINUTES_VALID', '60', 'How many minutes a password-reset token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href="https://www.tiny.cloud/auth/signup/" target="_blank">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now());
+
+
+#PROGRESS_FEEDBACK:!TEXT=Creating new table tax_rates_description...
+# Table structure for table 'tax_rates_description'
+DROP TABLE IF EXISTS tax_rates_description;
+CREATE TABLE tax_rates_description (
+  id int(11) NOT NULL auto_increment,
+  tax_rates_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
+  tax_description varchar(250) NOT NULL default '',
+  PRIMARY KEY  (id),
+  UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id)
+) ENGINE=MyISAM;
+INSERT INTO tax_rates_description (tax_rates_id, language_id, tax_description)
+SELECT tr.tax_rates_id, lg.languages_id, tr.tax_description
+FROM tax_rates tr, languages lg;
+ALTER TABLE tax_rates DROP COLUMN tax_description;
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 

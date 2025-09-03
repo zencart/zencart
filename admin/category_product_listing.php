@@ -25,9 +25,9 @@ $buttonText = $_SESSION['imageView'] ?  TEXT_HIDE_IMAGES : TEXT_SHOW_IMAGES ;
 $additionalClass = $_SESSION['imageView'] ? '' : ' hidden ';
 
 $action = $_GET['action'] ?? '';
-$search_result = isset($_GET['search']) && zen_not_null($_GET['search']);
+$search_result = zen_not_null($_GET['search'] ?? null);
 
-$search_parameter = $search_result ? '&search=' . $_GET['search'] : '';
+$search_parameter = $search_result ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '';
 $keywords = $search_result ? zen_db_input(zen_db_prepare_input($_GET['search'])) : '';
 $max_results = MAX_DISPLAY_RESULTS_CATEGORIES;
 if (!empty($search_parameter)) {
@@ -277,9 +277,25 @@ if (!empty($action)) {
       $_GET['action'] = '';
       zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $_POST['products_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
       break;
+    // -----
+    // Some 'special case' checks for the "Move Category" action, to make sure
+    // that the admin didn't use the browser's back button to arrive at this already-performed
+    // action where the current 'cID' is no longer present within the 'cPath'.
+    //
+    case 'move_category':
+        if (empty($_GET['cID'])) {
+            zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
+        }
+        $category_tree = [];
+        zen_get_parent_categories($category_tree, $_GET['cID']);
+        array_reverse($category_tree);
+        $category_tree_string = implode('_', $category_tree);
+        if ($category_tree_string !== $cPath) {
+            zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $category_tree_string));
+        }
+        unset($category_tree, $category_tree_string);
     case 'setflag_categories':
     case 'delete_category':
-    case 'move_category':
     case 'delete_product':
     case 'move_product':
     case 'copy_product':
@@ -882,10 +898,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $products_query_raw .= " FROM " . TABLE_PRODUCTS . " p";
             $products_query_raw .= $extra_from;
 
-            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)";
+            $products_query_raw .= " LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")";
             $products_query_raw .= $extra_joins;
 
-            $where = " WHERE pd.language_id = " . (int)$_SESSION['languages_id'];
+            $where = " WHERE 1 ";
             $where .= $extra_ands;
 
             if ($search_result && $action !== 'edit_category') {
@@ -942,7 +958,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
               $type_handler = zen_get_handler_from_type($product['products_type']);
               $products_wholesale_indicator = ($wholesale_pricing_enabled === true && $product['products_price_w'] !== '0') ? $wholesale_pricing_indicator : '';
               ?>
-              <tr class="product-listing-row" data-pid="<?= $product['products_id'] ?>">
+              <tr class="product-listing-row" data-pid="<?= $product['products_id'] ?>" data-cpath="<?= $cPath ?>" data-ptype="<?= $product['products_type'] ?>">
                 <td class="text-right"><?= $product['products_id'] ?></td>
                 <td class="dataTableButtonCell"><a href="<?= zen_catalog_href_link($type_handler . '_info', 'cPath=' . $cPath . '&products_id=' . $product['products_id'] . '&language=' . $_SESSION['languages_code'] . '&product_type=' . $product['products_type']) ?>" rel="noopener" target="_blank">
                         <?= zen_icon('popup', BOX_HEADING_CATALOG, '', hidden: true) ?>
@@ -1343,18 +1359,27 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     <script>
         <?php
         $categorySelectLink = str_replace('&amp;', '&', zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, zen_get_all_get_params(['cPath', 'action']) . "cPath=[*]"));
-        $productEditLink = str_replace('&amp;', '&', zen_href_link(FILENAME_PRODUCT, zen_get_all_get_params(['pID', 'action']) . "pID=[*]&action=new_product"));
+        $productEditLink = str_replace('&amp;', '&', zen_href_link(FILENAME_PRODUCT, zen_get_all_get_params(['pID', 'action']) . "cPath=[cpath]&product_type=[ptype]&pID=[pid]&action=new_product"));
         ?>
         jQuery(function () {
-            const categorySelectlink = '<?= $categorySelectLink ?>';
+            const categorySelectLink = '<?= $categorySelectLink ?>';
             const productEditLink = '<?= $productEditLink ?>';
-            jQuery("tr.category-listing-row td").not('.dataTableButtonCell').on('click', (function() {
-                window.location.href = categorySelectlink.replace('[*]', jQuery(this).parent().attr('data-cid'));
-            })).css('cursor', 'pointer');
-            jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', (function() {
-                window.location.href = productEditLink.replace('[*]', jQuery(this).parent().attr('data-pid'));
-            })).css('cursor', 'pointer');
+
+            jQuery("tr.category-listing-row td").not('.dataTableButtonCell').on('click', function() {
+                window.location.href = categorySelectLink.replace('[*]', jQuery(this).parent().attr('data-cid'));
+            }).css('cursor', 'pointer');
+
+            jQuery("tr.product-listing-row td").not('.dataTableButtonCell').on('click', function() {
+                let $row = jQuery(this).parent();
+                let link = productEditLink
+                    .replace('[pid]', $row.attr('data-pid'))
+                    .replace('[cpath]', $row.attr('data-cpath'))
+                    .replace('[ptype]', $row.attr('data-ptype'));
+
+                window.location.href = link;
+            }).css('cursor', 'pointer');
         });
+    
         $(document).ready(function () {
             $('#imageView').on('click', function() {
                 if ($('#imageView').val() == '<?= TEXT_HIDE_IMAGES ?>') {

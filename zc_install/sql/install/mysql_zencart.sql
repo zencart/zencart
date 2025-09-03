@@ -598,7 +598,7 @@ DROP TABLE IF EXISTS currencies;
 CREATE TABLE currencies (
   currencies_id int(11) NOT NULL auto_increment,
   title varchar(32) NOT NULL default '',
-  code char(3) NOT NULL default '',
+  code char(4) NOT NULL default '',
   symbol_left varchar(32) default NULL,
   symbol_right varchar(32) default NULL,
   decimal_point char(1) default NULL,
@@ -715,6 +715,19 @@ CREATE TABLE customer_groups (
   updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (group_id),
   UNIQUE KEY idx_groupname_zen (group_name)
+);
+
+# --------------------------------------------------------
+#
+# Table structure for table 'customer_password_reset_tokens'
+#
+
+DROP TABLE IF EXISTS customer_password_reset_tokens;
+CREATE TABLE customer_password_reset_tokens (
+  customer_id int(11) NOT NULL default 0,
+  token varchar(100) NOT NULL default '',
+  created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY  (token, customer_id)
 );
 
 # --------------------------------------------------------
@@ -1191,7 +1204,7 @@ CREATE TABLE orders (
   date_purchased datetime default NULL,
   orders_status int(5) NOT NULL default 0,
   orders_date_finished datetime default NULL,
-  currency char(3) default NULL,
+  currency char(4) default NULL,
   currency_value decimal(14,6) default NULL,
   order_total decimal(15,4) default NULL,
   order_tax decimal(15,4) default NULL,
@@ -1256,7 +1269,7 @@ CREATE TABLE orders_products_attributes (
   orders_products_attributes_id int(11) NOT NULL auto_increment,
   orders_id int(11) NOT NULL default '0',
   orders_products_id int(11) NOT NULL default '0',
-  products_options varchar(32) NOT NULL default '',
+  products_options varchar(191) NOT NULL default '',
   products_options_values text NOT NULL,
   options_values_price decimal(15,4) NOT NULL default '0.0000',
   price_prefix char(1) NOT NULL default '',
@@ -1846,7 +1859,7 @@ DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
   products_options_id int(11) NOT NULL default '0',
   language_id int(11) NOT NULL default '1',
-  products_options_name varchar(32) NOT NULL default '',
+  products_options_name varchar(191) NOT NULL default '',
   products_options_sort_order int(11) NOT NULL default '0',
   products_options_type int(5) NOT NULL default '0',
   products_options_length smallint(2) NOT NULL default '32',
@@ -1885,7 +1898,7 @@ DROP TABLE IF EXISTS products_options_values;
 CREATE TABLE products_options_values (
   products_options_values_id int(11) NOT NULL default '0',
   language_id int(11) NOT NULL default '1',
-  products_options_values_name varchar(64) NOT NULL default '',
+  products_options_values_name varchar(191) NOT NULL default '',
   products_options_values_sort_order int(11) NOT NULL default '0',
   PRIMARY KEY (products_options_values_id,language_id),
   KEY idx_products_options_values_name_zen (products_options_values_name),
@@ -2182,12 +2195,27 @@ CREATE TABLE tax_rates (
   tax_class_id int(11) NOT NULL default '0',
   tax_priority int(5) default '1',
   tax_rate decimal(7,4) NOT NULL default '0.0000',
-  tax_description varchar(255) NOT NULL default '',
   last_modified datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (tax_rates_id),
   KEY idx_tax_zone_id_zen (tax_zone_id),
   KEY idx_tax_class_id_zen (tax_class_id)
+) ENGINE=MyISAM;
+
+# --------------------------------------------------------
+
+#
+# Table structure for table 'tax_rates_description'
+#
+
+DROP TABLE IF EXISTS tax_rates_description;
+CREATE TABLE tax_rates_description (
+  id int(11) NOT NULL auto_increment,
+  tax_rates_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
+  tax_description varchar(250) NOT NULL default '',
+  PRIMARY KEY  (id),
+  UNIQUE KEY idx_rate_lang_zen (tax_rates_id,language_id)
 ) ENGINE=MyISAM;
 
 # --------------------------------------------------------
@@ -2491,6 +2519,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Admin Session Timeout Enforced?', 'PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED', '1', 'PA-DSS Compliance requires that any Admin login sessions expire after 15 minutes of inactivity. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Strong Password Rules Enforced?', 'PADSS_PWD_EXPIRY_ENFORCED', '1', 'PA-DSS Compliance requires that admin passwords must be changed after 90 days and cannot re-use the last 4 passwords. <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('PA-DSS Ajax Checkout?', 'PADSS_AJAX_CHECKOUT', '1', 'PA-DSS Compliance requires that for some inbuilt payment methods, that we use ajax to draw the checkout confirmation screen. While this will only happen if one of those payment methods is actually present, some people may want the traditional checkout flow <strong>Disabling this makes your site NON-COMPLIANT with PA-DSS rules, thus invalidating any certification.</strong>', 1, 30, now(), now(), NULL, 'zen_cfg_select_drop_down(array(array(\'id\'=>\'0\', \'text\'=>\'Non-Compliant\'), array(\'id\'=>\'1\', \'text\'=>\'On\')),');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Length', 'PASSWORD_RESET_TOKEN_LENGTH', '24', 'Number of characters in a generated password-reset token. Default is 24. Allowed: 12-100, but it affects the URL length, so 12-30 is most ideal', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":10, \"max_range\":100}}}');
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Valid For', 'PASSWORD_RESET_TOKEN_MINUTES_VALID', '60', 'How many minutes a password-reset token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
 
 # Admin storefront login configuration.  Using INSERT IGNORE followed by an UPDATE in consideration of shops with EMP already installed.
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Customer <em>Place Order</em>: Single Admin ID', 'EMP_LOGIN_ADMIN_ID', '0', 'Identify the ID number of an admin that is permitted to use the <em>Place Order</em> feature on the customers list, regardless of their assigned admin-profile. Set the value to 0 to disable the <em>Single Admin ID</em> feature.', 1, 300, now());
@@ -2514,7 +2544,8 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('cURL Proxy Address', 'CURL_PROXY_SERVER_DETAILS', '', 'If you have a hosting service that requires use of a proxy to talk to external sites via cURL, enter their proxy address here.<br />format: address:port<br />ie: 127.0.0.1:3128', 6, 51, NULL, now(), NULL, NULL);
 
 
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('HTML Editor', 'HTML_EDITOR_PREFERENCE', 'NONE', 'Please select the HTML/Rich-Text editor you wish to use for composing Admin-related emails, newsletters, and product descriptions', '1', '110', 'zen_cfg_pull_down_htmleditors(', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('HTML Editor', 'HTML_EDITOR_PREFERENCE', 'TINYMCE', 'Please select the HTML/Rich-Text editor you wish to use for composing Admin-related emails, newsletters, and product descriptions', '1', '110', 'zen_cfg_pull_down_htmleditors(', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href="https://www.tiny.cloud/auth/signup/" target="_blank">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('Default for Notify Customer on Order Status Update?', 'NOTIFY_CUSTOMER_DEFAULT', '1', 'Set the default email behavior on status update to Send Email, Do Not Send Email, or Hide Update.', 1, 120, now(), now(), NULL, 'zen_cfg_select_drop_down(array( array(\'id\'=>\'1\', \'text\'=>\'Email\'), array(\'id\'=>\'0\', \'text\'=>\'No Email\'), array(\'id\'=>\'-1\', \'text\'=>\'Hide\')),');
 
@@ -3236,7 +3267,6 @@ INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, l
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('template_default', 'manufacturers.php', 1, 0, 30, 20, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('template_default', 'manufacturer_info.php', 1, 1, 35, 95, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('template_default', 'more_information.php', 1, 0, 200, 200, 1);
-INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('template_default', 'my_broken_box.php', 1, 0, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('template_default', 'order_history.php', 1, 1, 0, 0, 0);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('template_default', 'product_notifications.php', 1, 1, 55, 85, 1);
 INSERT INTO layout_boxes (layout_template, layout_box_name, layout_box_status, layout_box_location, layout_box_sort_order, layout_box_sort_order_single, layout_box_status_single) VALUES ('template_default', 'reviews.php', 1, 0, 40, 0, 0);
@@ -3320,7 +3350,8 @@ INSERT INTO products_options_types (products_options_types_id, products_options_
 INSERT INTO products_options_values (products_options_values_id, language_id, products_options_values_name) VALUES (0, 1, 'TEXT');
 
 # USA/Florida
-INSERT INTO tax_rates VALUES (1, 1, 1, 1, 7.0, 'FL TAX 7.0%', now(), now());
+INSERT INTO tax_rates VALUES (1, 1, 1, 1, 7.0, now(), now());
+INSERT INTO tax_rates_description (tax_rates_id, language_id, tax_description) VALUES (1, 1, 'FL TAX 7.0%');
 INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,date_added) VALUES (1,'Florida','Florida local sales tax zone',now());
 INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (1,223,18,1,now());
 INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, date_added) VALUES (1, 'Taxable Goods', 'The following types of products are included: non-food, services, etc', now());

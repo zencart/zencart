@@ -24,21 +24,14 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 {
     global $zco_notifier, $breadcrumb, $robotsNoIndex;
 
-    // make sure we got a dbResponse
-    if ($product_info === null || !isset($product_info->EOF)) {
+    // make sure we got a Product-class instance and it's for the current product
+    if ($product_info === null || get_class($product_info) !== 'Product' || $product_info->getID() !== (int)$product_id) {
         $product_info = new Product((int)$product_id);
     }
-
-    // make sure it's for the current product
-    if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$product_id) {
-        $product_info = new Product((int)$product_id);
-    }
-
-    $product = $product_info->getData();
 
     $response_code = 200;
 
-    $product_not_found = empty($product);
+    $product_not_found = !$product_info->exists() || !empty($product_info->get('description_record_missing'));
     $should_throw_404 = $product_not_found;
 
     if ($should_throw_404 === true) {
@@ -47,7 +40,7 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 
     global $product_status;
 
-    $product_status = (int)($product_not_found === false && $product['products_status'] !== '0') ? $product['products_status'] : 0;
+    $product_status = ($product_not_found === true) ? 0 : $product_info->status();
     if ($product_status === 0) {
         $response_code = 410;
     }
@@ -105,17 +98,22 @@ function zen_set_disabled_upcoming_status($products_id, $status): void
 
 /**
  * Enable all disabled products whose date_available is prior to the specified date
- * @param int $datetime optional timestamp
+ *
+ * @param int|null $activationDateTime optional timestamp
+ * @param bool $useMidnight true=all products for the day; false=exact timestamp
+ * @param bool $outputMessagesToCommandLine will output a status report, useful in command-line/cron mode
  */
-function zen_enable_disabled_upcoming($datetime = null): void
+function zen_enable_disabled_upcoming(?int $activationDateTime = null, bool $useMidnight = true, bool $outputMessagesToCommandLine = false): void
 {
     global $db;
 
-    if (empty($datetime)) {
-        $datetime = time();
+    if (empty($activationDateTime)) {
+        $activationDateTime = time();
     }
 
-    $zc_disabled_upcoming_date = date('Ymd', $datetime);
+    $formatSpecificityString = $useMidnight ? 'Ymd' : 'YmdHis';
+
+    $zc_disabled_upcoming_date = date($formatSpecificityString, $activationDateTime);
 
     $sql = "SELECT products_id
             FROM " . TABLE_PRODUCTS . "
@@ -126,9 +124,19 @@ function zen_enable_disabled_upcoming($datetime = null): void
             ";
 
     $results = $db->Execute($sql);
+    $count = $results->count();
 
+    if ($outputMessagesToCommandLine) {
+        echo "$count eligible products found.";
+    }
     foreach ($results as $result) {
+        if ($outputMessagesToCommandLine) {
+            echo "\nEnabling product ID: " . $result['products_id'];
+        }
         zen_set_disabled_upcoming_status($result['products_id'], 1);
+    }
+    if ($outputMessagesToCommandLine) {
+        echo "\n--\n$count product activation queries submitted.\n";
     }
 }
 

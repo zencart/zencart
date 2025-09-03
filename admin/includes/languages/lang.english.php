@@ -235,6 +235,7 @@ $define = [
     'ERROR_PASSWORDS_NOT_MATCHING' => 'Password and confirmation must match',
     'ERROR_PASSWORD_RULES' => 'Passwords must contain both letters and numbers, must be at least %s characters long, and must not be the same as the last 4 passwords used. Passwords expire every 90 days, after which you will be prompted to choose a new password.',
     'ERROR_PAYMENT_MODULES_NOT_DEFINED' => 'NOTE: You have no payment modules activated. Please go to Modules->Payment to configure.',
+    'ERROR_PRODUCT_OPTION_SELECTION' => '<br> ... Invalid Option Values Selected ',
     'ERROR_SHIPPING_CONFIGURATION' => '<strong>Shipping Configuration errors!</strong>',
     'ERROR_SHIPPING_MODULES_NOT_DEFINED' => 'NOTE: You have no shipping modules activated. Please go to Modules->Shipping to configure.',
     'ERROR_SHIPPING_ORIGIN_ZIP' => '<strong>Warning:</strong> Store Zip Code is not defined. See Configuration | Shipping/Packaging to set it.',
