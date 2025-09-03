@@ -864,7 +864,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <div class="form-group">
             <div class="col-sm-6 text-center">
               <span class="text-danger"><strong><?= TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO ?></strong></span><br>
-              <?= zen_draw_pulldown_categories_having_products('categories_update_id', 'size="5" class="form-control"', '', true, true) ?></div>
+              <?= zen_draw_pulldown_categories_having_products('categories_update_id', 'size="5" class="form-control"', [], true, true) ?></div>
             <div class="col-sm-6 text-center">
               <button type="submit" class="btn btn-primary"><i class="fa-solid fa-copy" aria-hidden="true"></i> <?= IMAGE_COPY ?></button>
               <?= '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' ?></div>
