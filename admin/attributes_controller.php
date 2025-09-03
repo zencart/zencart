@@ -2157,17 +2157,17 @@ function zen_js_option_values_list($selectedName, $fieldName)
         document.body.style.cursor = "wait";
 
         // set initial values
-        var SelectedOption = theForm.options_id.options[theForm.options_id.selectedIndex].value;
-        var theField = document.getElementById("OptionValue");
+        let SelectedOption = theForm.options_id.options[theForm.options_id.selectedIndex].value;
+        let theField = document.getElementById("OptionValue");
 
         // reset the array of pulldown options so it can be repopulated
-        var Opts = theField.options.length;
+        let Opts = theField.options.length;
         while (Opts > 0) {
-          Opts = Opts - 1;
+          Opts -= 1;
           theField.options[Opts] = null;
         }
 
-<?= zen_js_option_values_list('SelectedOption', 'theField') ?>
+<?php echo zen_js_option_values_list('SelectedOption', 'theField'); ?>
 
         // turn off hourglass
         document.body.style.cursor = "default";
