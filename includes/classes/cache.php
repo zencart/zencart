@@ -154,6 +154,9 @@ class cache extends base {
       case 'database':
       $sql = "select * from " . TABLE_DB_CACHE . " where cache_entry_name = '" . $zp_cache_name . "'";
       $zp_cache_result = $db->Execute($sql);
+      if ($zp_cache_result->EOF) {
+          return false;
+      }
       $zp_result_array = unserialize(base64_decode($zp_cache_result->fields['cache_data']));
       return $zp_result_array;
       break;
