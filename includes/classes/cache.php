@@ -57,7 +57,8 @@ class cache
         $zp_cache_name = $this->cache_generate_cache_name($zf_query);
         switch (SQL_CACHE_METHOD) {
             case 'file':
-                if (@filemtime(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql') > (time() - $zf_cachetime)) {
+                $filename = DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql';
+                if (file_exists($filename) && filemtime($filename) > (time() - $zf_cachetime)) {
                     return false;
                 } else {
                     return true;
@@ -93,7 +94,10 @@ class cache
         if ($this->sql_cache_exists($zf_query)) {
             switch (SQL_CACHE_METHOD) {
                 case 'file':
-                    @unlink(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql');
+                    $filename = DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql';
+                    if (file_exists($filename)) {
+                        unlink($filename);
+                    }
                     break;
                 case 'database':
                     $sql = "DELETE FROM " . TABLE_DB_CACHE . " WHERE cache_entry_name = '" . $zp_cache_name . "'";
@@ -113,10 +117,7 @@ class cache
         $zp_cache_name = $this->cache_generate_cache_name($zf_query);
         switch (SQL_CACHE_METHOD) {
             case 'file':
-                $OUTPUT = serialize($zf_result_array);
-                $fp = fopen(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql',"w");
-                fputs($fp, $OUTPUT);
-                fclose($fp);
+                file_put_contents(DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql', serialize($zf_result_array));
                 break;
             case 'database':
                 $sql = "SELECT * FROM " . TABLE_DB_CACHE . " WHERE cache_entry_name = '" . $zp_cache_name . "'";
@@ -174,8 +175,8 @@ class cache
             case 'file':
                 if ($za_dir = @dir(DIR_FS_SQL_CACHE)) {
                     while ($zv_file = $za_dir->read()) {
-                        if (strstr($zv_file, '.sql') && strstr($zv_file, 'zc_')) {
-                            @unlink(DIR_FS_SQL_CACHE . '/' . $zv_file);
+                        if (str_ends_with($zv_file, '.sql') && str_starts_with($zv_file, 'zc_')) {
+                            unlink(DIR_FS_SQL_CACHE . '/' . $zv_file);
                         }
                     }
                     $za_dir->close();
