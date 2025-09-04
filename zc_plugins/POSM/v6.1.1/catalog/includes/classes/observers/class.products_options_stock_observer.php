@@ -587,7 +587,7 @@ class products_options_stock_observer extends base
     // Notes:
     // - When STOCK_CHECK is set to 'true', the in-stock message must be null ('') or a redirect back to the shopping-cart page occurs during checkout.
     //
-    public function get_in_stock_message($prid, $html_or_text = 'html', $always_output = false)
+    public function get_in_stock_message($prid, $html_or_text = 'html', $always_output = false): string
     {
         $msg = '';
         $options_quantity = $cart_quantity = $pos_record = 'n/a';
@@ -624,7 +624,9 @@ class products_options_stock_observer extends base
                 ],
                 $message_override,
                 $use_in_stock_message,
-                $show_mixed_stock_messages
+                $show_mixed_stock_messages,
+                $no_stock_message,
+                $in_stock_message
             );
 
             // -----
@@ -635,21 +637,25 @@ class products_options_stock_observer extends base
                 $this->debugMessage("Stock message overridden by observer ($use_in_stock_message)." . json_encode($pos_record));
                 if ($use_in_stock_message === true) {
                     $extra_class = 'in-stock';
-                    $msg_html = $msg_text = $in_stock_message;
+                    $msg_text = $in_stock_message;
+                    $msg_html = $in_stock_message;
                 } else {
                     $extra_class = 'no-stock';
-                    $msg_html = $msg_text = $no_stock_message;
+                    $msg_html = no_stock_message;
+                    $msg_text = $no_stock_message;
                 }
             } elseif ($pos_record === false) {
                 if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') {
                     $quantity = zen_get_products_stock($prid);
                     if ($quantity >= $_SESSION['cart']->contents[$prid]['qty']) {
                         $extra_class = 'in-stock';
-                        $msg_html = $msg_text = $in_stock_message;
+                        $msg_html = $in_stock_message;
+                        $msg_text = $in_stock_message;
 
                     } elseif ($quantity == 0 || $show_mixed_stock_messages !== true) {
                         $extra_class = 'no-stock';
-                        $msg_html = $msg_text = $no_stock_message;
+                        $msg_html = $no_stock_message;
+                        $msg_text = $no_stock_message;
 
                     } else {
                         $msg_text = sprintf(PRODUCTS_OPTIONS_STOCK_MIXED, $quantity, PRODUCTS_OPTIONS_STOCK_IN_STOCK, $_SESSION['cart']->contents[$prid]['qty'] - $quantity, $no_stock_message);
@@ -662,7 +668,8 @@ class products_options_stock_observer extends base
             } else {
                 if ($pos_record->EOF) {
                     if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') {
-                        $msg_html = $msg_text = $no_stock_message;
+                        $msg_html = $no_stock_message;
+                        $msg_text = $no_stock_message;
                         $extra_class = 'no-stock';
                     }
                 } else {
