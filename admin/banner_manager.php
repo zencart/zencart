@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -137,12 +138,10 @@ if (!empty($action)) {
               $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
               $banner_error = true;
           }
-      } else {
-          // If no image is uploaded and no local image is provided, ensure HTML content exists
-          if (empty($banners_image_local) && empty($banners_html_text)) {
+         // If no image is uploaded and no local image is provided, ensure HTML content exists
+      } elseif (empty($banners_image_local) && empty($banners_html_text)) {
               $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
               $banner_error = true;
-          }
       }
 
       // use local (or user-typed) image filename first
@@ -380,7 +379,7 @@ if (!empty($action)) {
             </div>
           </div>
 
-          <div style="border: 1px solid grey; padding: 10px">
+          <div style="border: 1px solid grey; padding: 10px;">
             <div class="form-group row mt-2">
                 <div class="col-sm-offset-3 col-sm-9"><?= TEXT_BANNERS_IMAGE_LOCAL ?></div>
                 <?= zen_draw_label(TEXT_BANNERS_CURRENT_IMAGE, 'banners_image_local', 'class="col-sm-3 control-label"') ?>
@@ -516,7 +515,7 @@ if (!empty($action)) {
                                         FROM " . TABLE_BANNERS_HISTORY . "
                                         WHERE banners_id = " . (int)$banner['banners_id']);
 
-                  if ((empty($_GET['bID']) || $_GET['bID'] == $banner['banners_id']) && empty($bInfo) && substr($action, 0, 3) != 'new') {
+                  if ((empty($_GET['bID']) || $_GET['bID'] == $banner['banners_id']) && empty($bInfo) && !str_starts_with($action, 'new')) {
                     $bInfo_array = array_merge($banner, $info->fields);
                     $bInfo = new objectInfo($bInfo_array);
                   }
