@@ -524,119 +524,121 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
         </div>
     </div>
-    <h3><?php echo TEXT_PRODUCTS_ADDITIONAL_IMAGES; ?></h3>
-    <?php if(!empty($additional_images)) { ?>
-        <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-9 col-md-6">
-            <?php foreach($additional_images as $img) { ?>
-                <div class="col-sm-3 col-md-3 col-lg-3">
-                    <?php echo zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"'); ?>
-                    <br>
-                    <?php echo $img['additional_image']; ?><br>
-                    <?php echo zen_draw_hidden_field('previous_additional_images[]', $img['additional_image'], 'data-img-id="' . $img['id'] . '"'); ?>
-                    <label>
-                        <?php echo zen_draw_checkbox_field('additional_image_delete[' . $img['id'] . ']', '1', false); ?> Delete?
-                    </label>
+    <?php if(ADDITIONAL_IMAGES_APPROACH === 'modern') { ?>
+        <h3><?php echo TEXT_PRODUCTS_ADDITIONAL_IMAGES; ?></h3>
+        <?php if(!empty($additional_images)) { ?>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9 col-md-6">
+                    <?php foreach($additional_images as $img) { ?>
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <?php echo zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"'); ?>
+                            <br>
+                            <?php echo $img['additional_image']; ?><br>
+                            <?php echo zen_draw_hidden_field('previous_additional_images[]', $img['additional_image'], 'data-img-id="' . $img['id'] . '"'); ?>
+                            <label>
+                                <?php echo zen_draw_checkbox_field('additional_image_delete[' . $img['id'] . ']', '1', false); ?> Delete?
+                            </label>
+                        </div>
+                    <?php } ?>
                 </div>
-            <?php } ?>
+            </div>
+
+        <?php } ?>
+        <div class="form-group">
+            <?php echo zen_draw_label(TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD, 'additional_images', 'class="col-sm-3 control-label"'); ?>
+            <div class="col-sm-9 col-md-9 col-lg-6">
+                <div id="additional-images-dropzone" class="dropzone" style="border:2px dashed #ccc; padding:20px; text-align:center;">
+                    <p><?php echo TEXT_BUTTON_DRAG_DROP_ADDITIONAL_IMAGE; ?></p>
+                    <input type="file" name="additional_images[]" class="form-control" multiple style="display:none;" id="additional-images-input" />
+                    <div id="additional-images-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
+                </div>
+                <button type="button" class="btn btn-secondary mt-2" onclick="document.getElementById('additional-images-input').click();"><?php echo TEXT_BUTTON_ADD_ADDITIONAL_IMAGE; ?></button>
             </div>
         </div>
+        <script>
+            const dropzone = document.getElementById('additional-images-dropzone');
+            const input = document.getElementById('additional-images-input');
+            const preview = document.getElementById('additional-images-preview');
+            let files = [];
 
-    <?php } ?>
-    <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD, 'additional_images', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9 col-md-9 col-lg-6">
-            <div id="additional-images-dropzone" class="dropzone" style="border:2px dashed #ccc; padding:20px; text-align:center;">
-                <p><?php echo TEXT_BUTTON_DRAG_DROP_ADDITIONAL_IMAGE; ?></p>
-                <input type="file" name="additional_images[]" class="form-control" multiple style="display:none;" id="additional-images-input" />
-                <div id="additional-images-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
-            </div>
-            <button type="button" class="btn btn-secondary mt-2" onclick="document.getElementById('additional-images-input').click();"><?php echo TEXT_BUTTON_ADD_ADDITIONAL_IMAGE; ?></button>
-        </div>
-    </div>
-    <script>
-        const dropzone = document.getElementById('additional-images-dropzone');
-        const input = document.getElementById('additional-images-input');
-        const preview = document.getElementById('additional-images-preview');
-        let files = [];
+            dropzone.addEventListener('click', () => input.click());
 
-        dropzone.addEventListener('click', () => input.click());
+            dropzone.addEventListener('dragover', e => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#007bff';
+            });
 
-        dropzone.addEventListener('dragover', e => {
-            e.preventDefault();
-            dropzone.style.borderColor = '#007bff';
-        });
+            dropzone.addEventListener('dragleave', e => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#ccc';
+            });
 
-        dropzone.addEventListener('dragleave', e => {
-            e.preventDefault();
-            dropzone.style.borderColor = '#ccc';
-        });
+            dropzone.addEventListener('drop', e => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#ccc';
+                handleFiles(e.dataTransfer.files);
+            });
 
-        dropzone.addEventListener('drop', e => {
-            e.preventDefault();
-            dropzone.style.borderColor = '#ccc';
-            handleFiles(e.dataTransfer.files);
-        });
+            input.addEventListener('change', e => {
+                handleFiles(e.target.files);
+            });
 
-        input.addEventListener('change', e => {
-            handleFiles(e.target.files);
-        });
-
-        function handleFiles(selectedFiles) {
-            for (let file of selectedFiles) {
-                if (!file.type.startsWith('image/')) continue;
-                files.push(file);
-                showPreview(file);
+            function handleFiles(selectedFiles) {
+                for (let file of selectedFiles) {
+                    if (!file.type.startsWith('image/')) continue;
+                    files.push(file);
+                    showPreview(file);
+                }
+                updateInputFiles();
             }
-            updateInputFiles();
-        }
 
-        function showPreview(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const div = document.createElement('div');
-                div.style.position = 'relative';
-                div.style.width = '100px';
-                div.style.height = '100px';
-                div.style.display = 'inline-block';
+            function showPreview(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.width = '100px';
+                    div.style.height = '100px';
+                    div.style.display = 'inline-block';
 
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.width = '100%';
-                img.style.height = '100%';
-                img.style.objectFit = 'cover';
-                img.style.border = '1px solid #ddd';
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    img.style.border = '1px solid #ddd';
 
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.innerHTML = '&times;';
-                removeBtn.style.position = 'absolute';
-                removeBtn.style.top = '2px';
-                removeBtn.style.right = '2px';
-                removeBtn.style.background = '#fff';
-                removeBtn.style.border = 'none';
-                removeBtn.style.cursor = 'pointer';
-                removeBtn.style.fontSize = '18px';
-                removeBtn.onclick = function(event) {
-                    event.stopPropagation();
-                    files = files.filter(f => f !== file);
-                    div.remove();
-                    updateInputFiles();
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.style.position = 'absolute';
+                    removeBtn.style.top = '2px';
+                    removeBtn.style.right = '2px';
+                    removeBtn.style.background = '#fff';
+                    removeBtn.style.border = 'none';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.fontSize = '18px';
+                    removeBtn.onclick = function(event) {
+                        event.stopPropagation(); // Prevent dropzone click event
+                        files = files.filter(f => f !== file);
+                        div.remove();
+                        updateInputFiles();
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(removeBtn);
+                    preview.appendChild(div);
                 };
+                reader.readAsDataURL(file);
+            }
 
-                div.appendChild(img);
-                div.appendChild(removeBtn);
-                preview.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function updateInputFiles() {
-            const dataTransfer = new DataTransfer();
-            files.forEach(file => dataTransfer.items.add(file));
-            input.files = dataTransfer.files;
-        }
-    </script>
+            function updateInputFiles() {
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                input.files = dataTransfer.files;
+            }
+        </script>
+    <?php } ?>
 
     <div class="form-group">
         <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_OVERWRITE; ?></p>

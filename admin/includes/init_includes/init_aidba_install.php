@@ -3,8 +3,11 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
+if(!defined('ADDITIONAL_IMAGES_APPROACH')) {
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images Approach', 'ADDITIONAL_IMAGES_APPROACH', 'old', 'Enable Additional Images Module', '4', '100', 'zen_cfg_select_option(array(\'old\', \'modern\'), ', NOW())");
+}
 
-if(!$sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES)) {
+if(!$sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES) && defined('ADDITIONAL_IMAGES_APPROACH') && ADDITIONAL_IMAGES_APPROACH == 'modern') {
     // alter product table to InnoDB if not already done
     $db->Execute("ALTER TABLE " . TABLE_PRODUCTS ." ENGINE=InnoDB;");
 
