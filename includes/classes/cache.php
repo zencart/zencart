@@ -58,7 +58,7 @@ class cache
         switch (SQL_CACHE_METHOD) {
             case 'file':
                 $filename = DIR_FS_SQL_CACHE . '/' . $zp_cache_name . '.sql';
-                if (file_exists($filename) && filemtime($filename) > (time() - $zf_cachetime)) {
+                if (file_exists($filename) && @filemtime($filename) > (time() - $zf_cachetime)) {
                     return false;
                 } else {
                     return true;
