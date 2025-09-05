@@ -1184,6 +1184,15 @@ if ($show_orders_weights === true) {
         </div>
         <div class="row noprint"><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></div>
 <?php
+    $additional_content = false;
+    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_AFTER_COMMENTS', $oID, $additional_content);
+    if ($additional_content !== false) {
+?>
+        <div class="row noprint"><?php echo $additional_content; ?></div>
+<?php
+    }
+?>
+<?php
         // -----
         // Enable the addition of extra buttons when editing the order.
         //
