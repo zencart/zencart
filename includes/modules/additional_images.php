@@ -26,7 +26,7 @@ $images_array = [];
 if ($products_image !== '' && !empty($flag_show_product_info_additional_images)) {
     if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
         $images_array = [];
-        $sql = "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = :productsID";
+        $sql = "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = :productsID ORDER BY sort_order";
         $sql = $db->bindVars($sql, ':productsID', (int)$_GET['products_id'], 'integer');
         $images_query = $db->Execute($sql);
 
