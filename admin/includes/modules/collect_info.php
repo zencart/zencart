@@ -617,7 +617,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
                 removeBtn.style.border = 'none';
                 removeBtn.style.cursor = 'pointer';
                 removeBtn.style.fontSize = '18px';
-                removeBtn.onclick = function() {
+                removeBtn.onclick = function(event) {
+                    event.stopPropagation();
                     files = files.filter(f => f !== file);
                     div.remove();
                     updateInputFiles();
