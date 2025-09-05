@@ -78,6 +78,8 @@ $define = [
     'TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD' => 'Add Additional Product Images',
     'TEXT_IMAGES_OVERWRITE' => 'Overwrite Existing Image(s) on Server? Applies to main image and additional images.',
     'TEXT_IMAGE_USED_BY_OTHER_PRODUCTS' => 'Image file not deleted from server because it is used by another product.',
+    'TEXT_BUTTON_ADD_ADDITIONAL_IMAGE' => 'Add Additional Image(s)',
+    'TEXT_BUTTON_DRAG_DROP_ADDITIONAL_IMAGE' => 'Drag & drop images here or click to select',
 ];
 
 return $define;
