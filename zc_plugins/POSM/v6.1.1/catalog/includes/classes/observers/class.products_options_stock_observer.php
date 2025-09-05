@@ -641,7 +641,7 @@ class products_options_stock_observer extends base
                     $msg_html = $in_stock_message;
                 } else {
                     $extra_class = 'no-stock';
-                    $msg_html = no_stock_message;
+                    $msg_html = $no_stock_message;
                     $msg_text = $no_stock_message;
                 }
             } elseif ($pos_record === false) {
