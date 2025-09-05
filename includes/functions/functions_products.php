@@ -815,8 +815,8 @@ function zen_remove_product($product_id, $ptc = 'true'): void
     if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
         // Get all additional images for this product
         $images_query = $db->Execute("SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id");
-        while (!$images_query->EOF) {
-            $image_name = $images_query->fields['additional_image'];
+        foreach ($images_query as $image) {
+            $image_name = $image['additional_image'];
 
             // Check if this image is used by any other product
             $check_query = $db->Execute(
@@ -830,8 +830,6 @@ function zen_remove_product($product_id, $ptc = 'true'): void
                     @unlink($file_path);
                 }
             }
-
-            $images_query->MoveNext();
         }
     }
     // Now delete the database records for additional images
