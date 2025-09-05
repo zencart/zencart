@@ -811,6 +811,30 @@ function zen_remove_product($product_id, $ptc = 'true'): void
         }
     }
 
+    // remove additional images
+    // Get all additional images for this product
+    $images_query = $db->Execute("SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id");
+    while (!$images_query->EOF) {
+        $image_name = $images_query->fields['additional_image'];
+
+        // Check if this image is used by any other product
+        $check_query = $db->Execute(
+            "SELECT COUNT(*) AS total FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE additional_image = '" . zen_db_input($image_name) . "' AND products_id != $product_id"
+        );
+
+        // If not used elsewhere, delete the file
+        if ($check_query->fields['total'] == 0 && !empty($image_name)) {
+            $file_path = DIR_FS_CATALOG_IMAGES . $image_name;
+            if (file_exists($file_path)) {
+                @unlink($file_path);
+            }
+        }
+
+        $images_query->MoveNext();
+    }
+    // Now delete the database records for additional images
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id");
+
     $db->Execute("DELETE FROM " . TABLE_SPECIALS . " WHERE products_id = $product_id");
 
     $db->Execute("DELETE FROM " . TABLE_PRODUCTS . " WHERE products_id = $product_id LIMIT 1");

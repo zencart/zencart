@@ -24,75 +24,14 @@ $images_array = [];
 
 // do not check for additional images when turned off
 if ($products_image !== '' && !empty($flag_show_product_info_additional_images)) {
-    // prepare image name
-    $products_image_extension = substr($products_image, strrpos($products_image, '.'));
-    $products_image_base = str_replace($products_image_extension, '', $products_image);
+    $images_array = [];
+    $sql = "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = :productsID";
+    $sql = $db->bindVars($sql, ':productsID', (int)$_GET['products_id'], 'integer');
+    $images_query = $db->Execute($sql);
 
-    // if in a subdirectory
-    if (strrpos($products_image, '/')) {
-        $products_image_match = substr($products_image, strrpos($products_image, '/') + 1);
-        //echo 'TEST 1: I match ' . $products_image_match . ' - ' . $file . ' -  base ' . $products_image_base . '<br>';
-        $products_image_match = str_replace($products_image_extension, '', $products_image_match) . '_';
-        $products_image_base = $products_image_match;
-    }
-
-    // Unless legacy mode is turned on, force the use of a '_' suffix when detecting additional images NOT in a subdirectory
-    if (defined('ADDITIONAL_IMAGES_MODE') && ADDITIONAL_IMAGES_MODE !== 'legacy') {
-        $products_image_base .= '_';
-    }
-    if (str_ends_with($products_image_base, '__')) {
-        $products_image_base = substr($products_image_base, 0, -1);
-    }
-
-    $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
-    if ($products_image_directory !== '') {
-        $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
-    } else {
-        $products_image_directory = DIR_WS_IMAGES;
-    }
-
-    // Check for additional matching images
-    $file_extension = $products_image_extension;
-    $products_image_match_array = [];
-    if ($dir = @dir($products_image_directory)) {
-        while ($file = $dir->read()) {
-            if (!is_dir($products_image_directory . $file)) {
-                // -----
-                // Some additional-image-display plugins (like Fual Slimbox) have some additional checks to see
-                // if the file is "valid"; this notifier "accommodates" that processing, providing these parameters:
-                //
-                // $p1 ... (r/o) ... An array containing the variables identifying the current image.
-                // $p2 ... (r/w) ... A boolean indicator, set to true by any observer to note that the image is "acceptable".
-                //
-                $current_image_match = false;
-                $GLOBALS['zco_notifier']->notify(
-                    'NOTIFY_MODULES_ADDITIONAL_IMAGES_FILE_MATCH',
-                    [
-                        'file' => $file,
-                        'file_extension' => $file_extension,
-                        'products_image' => $products_image,
-                        'products_image_base' => $products_image_base,
-                    ],
-                    $current_image_match
-                );
-                if ($current_image_match || substr($file, strrpos($file, '.')) === $file_extension) {
-                    if ($current_image_match || preg_match('/' . preg_quote($products_image_base, '/') . '/i', $file) === 1) {
-                        if ($current_image_match || $file !== $products_image) {
-                            if ($products_image_base . str_replace($products_image_base, '', $file) === $file) {
-                                //  echo 'I AM A MATCH ' . $file . '<br>';
-                                $images_array[] = $file;
-                            } else {
-                                //  echo 'I AM NOT A MATCH ' . $file . '<br>';
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (count($images_array)) {
-            sort($images_array);
-        }
-        $dir->close();
+    while (!$images_query->EOF) {
+        $images_array[] = DIR_WS_IMAGES . $images_query->fields['additional_image'];
+        $images_query->MoveNext();
     }
 }
 

@@ -17,6 +17,7 @@ $parameters = [
   'products_model' => '',
   'products_mpn' => '',
   'products_image' => '',
+  'additional_images' => [],
   'products_price' => '0.0000',
   'products_price_w' => '0',
   'products_virtual' => DEFAULT_PRODUCT_PRODUCTS_VIRTUAL,
@@ -70,6 +71,17 @@ if (isset($_GET['pID']) && empty($_POST)) {
   $products_name = $_POST['products_name'] ?? '';
   $products_description = $_POST['products_description'] ?? '';
   $products_url = $_POST['products_url'] ?? '';
+}
+
+// additional images
+$additional_images_query = $db->Execute("SELECT id, additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . (int)$_GET['pID'] . " ORDER BY sort_order");
+$additional_images = [];
+while (!$additional_images_query->EOF) {
+    $additional_images[] = [
+        'id' => $additional_images_query->fields['id'],
+        'additional_image' => $additional_images_query->fields['additional_image']
+    ];
+    $additional_images_query->MoveNext();
 }
 
 $category_lookup = $db->Execute("SELECT *
@@ -507,18 +519,67 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         </div>
     </div>
     <div class="form-group">
+        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-9 col-lg-6">
+            <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
+        </div>
+    </div>
+    <h3><?php echo TEXT_PRODUCTS_ADDITIONAL_IMAGES; ?></h3>
+    <?php if(!empty($additional_images)) { ?>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9 col-md-6">
+            <?php foreach($additional_images as $img) { ?>
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <?php echo zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"'); ?>
+                    <br>
+                    <?php echo $img['additional_image']; ?><br>
+                    <?php echo zen_draw_hidden_field('previous_additional_images[]', $img['additional_image'], 'data-img-id="' . $img['id'] . '"'); ?>
+                    <label>
+                        <?php echo zen_draw_checkbox_field('additional_image_delete[' . $img['id'] . ']', '1', false); ?> Delete?
+                    </label>
+                </div>
+            <?php } ?>
+            </div>
+        </div>
+
+    <?php } ?>
+    <div class="form-group">
+        <?php echo zen_draw_label(TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD, 'additional_images', 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-9 col-lg-6" id="additional-images-container">
+            <input type="file" name="additional_images[]" class="form-control" />
+        </div>
+        <div class="col-sm-9 col-md-9 col-lg-6 col-sm-offset-3 mt-2">
+            <button type="button" class="btn btn-secondary" onclick="addAdditionalImageInput()">Add Another Image</button>
+        </div>
+    </div>
+    <script>
+        function addAdditionalImageInput() {
+            var container = document.getElementById('additional-images-container');
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.name = 'additional_images[]';
+            input.className = 'form-control';
+            container.appendChild(input);
+        }
+        document.querySelector('form[name="new_product"]').addEventListener('submit', function(e) {
+            document.querySelectorAll('input[type="checkbox"][name^="additional_image_delete"]').forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    var id = checkbox.name.match(/\d+/)[0];
+                    var hidden = document.querySelector('input[type="hidden"][name="previous_additional_images[]"][data-img-id="' + id + '"]');
+                    if (hidden) hidden.remove();
+                }
+            });
+        });
+    </script>
+
+    <div class="form-group">
         <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_OVERWRITE; ?></p>
         <div class="col-sm-9 col-md-9 col-lg-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
         </div>
     </div>
-    <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9 col-md-9 col-lg-6">
-            <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
-        </div>
-    </div>
+
     <hr>
   <div class="form-group">
     <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_URL; ?><span class="help-block"><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></span></p>

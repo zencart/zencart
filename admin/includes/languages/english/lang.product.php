@@ -74,6 +74,10 @@ $define = [
     'TEXT_PRODUCTS_PRICE_INFO' => 'Price:',
     'WARNING_PRODUCT_DOES_NOT_EXIST' => 'Warning: Product ID#%u cannot be modified, it does not exist.',
     'TEXT_PRODUCTS_WHOLESALE_PRICE' => 'Wholesale Price:',
+    'TEXT_PRODUCTS_ADDITIONAL_IMAGES' => 'Additional Product Images',
+    'TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD' => 'Add Additional Product Images',
+    'TEXT_IMAGES_OVERWRITE' => 'Overwrite Existing Image(s) on Server? Applies to main image and additional images.',
+    'TEXT_IMAGE_USED_BY_OTHER_PRODUCTS' => 'Image file not deleted from server because it is used by another product.',
 ];
 
 return $define;
