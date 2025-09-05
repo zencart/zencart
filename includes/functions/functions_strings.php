@@ -10,7 +10,7 @@
  * Returns a string with conversions for security.
  * @param ?string $string The string to be parsed
  * @param array|bool $translate contains a string to be translated, otherwise just quote is translated
- * @param bool $protected Do we run htmlspecialchars over the string
+ * @param bool $protected Do we run htmlspecialchars and strip_tags over the string
  * @return string
  */
 function zen_output_string(?string $string, array|bool $translate = false, bool $protected = false): string
@@ -21,6 +21,7 @@ function zen_output_string(?string $string, array|bool $translate = false, bool 
 
     if ($protected === true) {
         $double_encode = !IS_ADMIN_FLAG;
+        $string = strip_tags($string);
         return htmlspecialchars($string, ENT_COMPAT, CHARSET, $double_encode);
     }
 
