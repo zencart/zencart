@@ -83,6 +83,7 @@ define('TABLE_PRODUCTS', DB_PREFIX . 'products');
 define('TABLE_PRODUCT_TYPES', DB_PREFIX . 'product_types');
 define('TABLE_PRODUCT_TYPE_LAYOUT', DB_PREFIX . 'product_type_layout');
 define('TABLE_PRODUCT_TYPES_TO_CATEGORY', DB_PREFIX . 'product_types_to_category');
+define('TABLE_PRODUCTS_ADDITIONAL_IMAGES', DB_PREFIX . 'products_additional_images');
 define('TABLE_PRODUCTS_ATTRIBUTES', DB_PREFIX . 'products_attributes');
 define('TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD', DB_PREFIX . 'products_attributes_download');
 define('TABLE_PRODUCTS_DESCRIPTION', DB_PREFIX . 'products_description');

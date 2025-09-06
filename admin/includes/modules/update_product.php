@@ -128,6 +128,73 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
         ///////////////////////////////////////////////////////
     }
 
+    // Process additional images if any
+    $additional_images = $_POST['additional_images'] ?? [];
+
+    if (!empty($additional_images) && is_array($additional_images)) {
+        // get max sort order for existing additional images
+        $max_sort_order = 0;
+        $existing_images = $db->Execute(
+            "SELECT MAX(sort_order) AS max_sort_order
+               FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+              WHERE products_id = " . (int)$products_id
+        );
+        if ($existing_images->RecordCount() > 0 && $existing_images->fields['max_sort_order'] !== null) {
+            $max_sort_order = (int)$existing_images->fields['max_sort_order'] + 1;
+        }
+
+        // Insert each additional image
+        foreach ($additional_images as $sort_order => $img) {
+            if (!empty($img)) {
+                $db->Execute(
+                    "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
+                 VALUES (" . (int)$products_id . ", '" . zen_db_input($img) . "', " . (int)$max_sort_order . ")"
+                );
+            }
+            $max_sort_order++;
+        }
+    }
+    // delete any additional images marked for removal
+    if (isset($_POST['additional_image_delete']) && is_array($_POST['additional_image_delete'])) {
+        foreach ($_POST['additional_image_delete'] as $img_id) {
+            $img_id = (int)$img_id;
+            if ($img_id > 0) {
+                // get image filename before deleting record
+                $img_to_delete = $db->Execute(
+                    "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                   WHERE id = " . $img_id . "
+                     AND products_id = " . (int)$products_id
+                );
+                $img_name = $img_to_delete->fields['additional_image'];
+
+                // check if not used by another product
+                $img_to_delete = $db->Execute(
+                    "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                   WHERE additional_image = (SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE id = " . $img_id . ")
+                     AND products_id <> " . (int)$products_id
+                );
+
+                // delete file if not used by another product
+                if ($img_to_delete->RecordCount() < 1) {
+                    $img_file = DIR_FS_CATALOG_IMAGES . $img_name;
+                    if (file_exists($img_file)) {
+                        @unlink($img_file);
+                    }
+                } else {
+                    // another product is using this image
+                    $messageStack->add_session(TEXT_IMAGE_USED_BY_OTHER_PRODUCTS, 'warning');
+                }
+
+                // delete record
+                $db->Execute(
+                    "DELETE FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                   WHERE products_id = " . (int)$products_id . "
+                     AND id = " . $img_id
+                );
+            }
+        }
+    }
+
     $languages = zen_get_languages();
     for ($i = 0, $n = count($languages); $i < $n; $i++) {
         $language_id = $languages[$i]['id'];

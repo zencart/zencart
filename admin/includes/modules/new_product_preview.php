@@ -18,6 +18,32 @@ if (!defined('IS_ADMIN_FLAG')) {
     } else {
       $products_image_name = (isset($_POST['products_previous_image']) ? $_POST['products_previous_image'] : '');
     }
+
+      // Process additional images if any
+      $additional_images_names = [];
+      if (!empty($_FILES['additional_images']['name'][0])) {
+          $img_dir = isset($_POST['img_dir']) ? $_POST['img_dir'] : '';
+          $allowed_ext = array('jpg','jpeg','gif','png','webp','flv','webm','ogg');
+          for ($i = 0; $i < count($_FILES['additional_images']['name']); $i++) {
+              if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK && !empty($_FILES['additional_images']['name'][$i])) {
+                  $field_name = 'additional_image_' . $i;
+                  $_FILES[$field_name] = [
+                      'name' => $_FILES['additional_images']['name'][$i],
+                      'type' => $_FILES['additional_images']['type'][$i],
+                      'tmp_name' => $_FILES['additional_images']['tmp_name'][$i],
+                      'error' => $_FILES['additional_images']['error'][$i],
+                      'size' => $_FILES['additional_images']['size'][$i]
+                  ];
+                  $upload = new upload($field_name);
+                  $upload->set_extensions($allowed_ext);
+                  $upload->set_destination(DIR_FS_CATALOG_IMAGES . $img_dir);
+                  if ($upload->parse() && $upload->save(isset($_POST['overwrite']) ? $_POST['overwrite'] : false)) {
+                      $additional_images_names[] = $img_dir . $upload->filename;
+                  }
+                  unset($_FILES[$field_name]);
+              }
+          }
+      }
   }
 
 // hook to allow interception of product-image uploading by admin-side observer class
