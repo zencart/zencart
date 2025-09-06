@@ -85,11 +85,13 @@ if (!empty($action) && $action === 'convert') {
         if (file_exists($processed_file)) {
             @unlink($processed_file);
         }
-        $messageStack->add_session('No more additional images to convert. You can now delete this file from your server.', 'info');
+        $messageStack->add_session(TEXT_ALL_CONVERTED, 'info');
+        $db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET display_on_menu = 'N' WHERE page_key = 'toolsAidba'");
+
     } else {
-        $messageStack->add_session($counter . ' products processed in this run.', 'success');
+        $messageStack->add_session($counter . TEXT_PRODUCTS_PROCESSED, 'success');
+        $messageStack->add_session(TEXT_CONVERSION_COMPLETED, 'success');
     }
-    $messageStack->add_session('Additional images conversion completed.', 'success');
     zen_redirect(zen_href_link(FILENAME_AIDBA));
 }
 

@@ -24,6 +24,16 @@ $images_array = [];
 
 // do not check for additional images when turned off
 if ($products_image !== '' && !empty($flag_show_product_info_additional_images)) {
+
+    // legacy support
+    $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
+    if ($products_image_directory !== '') {
+        $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
+    } else {
+        $products_image_directory = DIR_WS_IMAGES;
+    }
+    $products_image_extension = substr($products_image, strrpos($products_image, '.'));
+
     if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
         $images_array = [];
         $sql = "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = :productsID ORDER BY sort_order";
@@ -35,7 +45,6 @@ if ($products_image !== '' && !empty($flag_show_product_info_additional_images))
         }
     } else {
         // prepare image name
-        $products_image_extension = substr($products_image, strrpos($products_image, '.'));
         $products_image_base = str_replace($products_image_extension, '', $products_image);
 
         // if in a subdirectory
@@ -52,13 +61,6 @@ if ($products_image !== '' && !empty($flag_show_product_info_additional_images))
         }
         if (str_ends_with($products_image_base, '__')) {
             $products_image_base = substr($products_image_base, 0, -1);
-        }
-
-        $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
-        if ($products_image_directory !== '') {
-            $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
-        } else {
-            $products_image_directory = DIR_WS_IMAGES;
         }
 
         // Check for additional matching images
