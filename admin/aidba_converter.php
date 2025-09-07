@@ -16,7 +16,7 @@ if (!empty($action) && $action === 'convert') {
 
     $counter = 0;
 
-    $products_query = $db->Execute("SELECT products_id, products_image FROM " . TABLE_PRODUCTS);
+    $products_query = $db->Execute("SELECT products_id, products_image FROM " . TABLE_PRODUCTS . " WHERE products_image IS NOT NULL");
     while (!$products_query->EOF) {
         $products_id = (int)$products_query->fields['products_id'];
         if (in_array($products_id, $processed_ids)) {
@@ -25,20 +25,19 @@ if (!empty($action) && $action === 'convert') {
         }
         $products_image = $products_query->fields['products_image'];
 
-        if (empty($products_image)) {
-            $products_query->MoveNext();
-            continue;
-        }
-
         $image_extension = substr($products_image, strrpos($products_image, '.'));
         $image_base = str_replace($image_extension, '', $products_image);
 
-        // If in subdirectory
-        if (strrpos($products_image, '/')) {
-            $image_match = substr($products_image, strrpos($products_image, '/') + 1);
-            $image_match = str_replace($image_extension, '', $image_match) . '_';
-            $image_base = $image_match;
+        // Detect subdirectory
+        $subdir = '';
+        if (strpos($products_image, '/') !== false) {
+            $subdir = substr($products_image, 0, strrpos($products_image, '/') + 1);
         }
+        $image_dir = DIR_FS_CATALOG_IMAGES . $subdir;
+
+        // Get base filename without extension
+        $image_filename = basename($products_image, $image_extension);
+        $image_base = $image_filename;
 
         // Use '_' suffix unless legacy mode
         if (defined('ADDITIONAL_IMAGES_MODE') && ADDITIONAL_IMAGES_MODE !== 'legacy') {
@@ -48,7 +47,6 @@ if (!empty($action) && $action === 'convert') {
             $image_base = substr($image_base, 0, -1);
         }
 
-        $image_dir = DIR_FS_CATALOG_IMAGES;
         $matches = [];
         if ($dir = @dir($image_dir)) {
             while ($file = $dir->read()) {
@@ -70,7 +68,7 @@ if (!empty($action) && $action === 'convert') {
             if ($exists_query->EOF) {
                 $db->Execute(
                     "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order) VALUES (" .
-                    $products_id . ", '" . zen_db_input($additional_image) . "', " . (int)$sort_order . ")"
+                    $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
                 );
             }
         }
