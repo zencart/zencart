@@ -131,6 +131,8 @@ if (!empty($action)) {
                     $result = $module->install();
                 }
             }
+            $zco_notifier->notify('NOTIFY_ADMIN_MODULES_DO_INSTALL', ['module_name' => $class], $result);
+
             if ($result !== 'failed') {
                 zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL'));
             }
@@ -159,6 +161,8 @@ if (!empty($action)) {
                     $result = $module->remove();
                 }
             }
+            $zco_notifier->notify('NOTIFY_ADMIN_MODULES_DO_UNINSTALL', ['module_name' => $class], $result ?? 'failed');
+
             zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'));
             break;
     }
