@@ -156,6 +156,7 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
         // reset the session variables
         $_SESSION['customer_first_name'] = $firstname;
         $_SESSION['customer_last_name'] = $lastname;
+        $_SESSION['customers_email_address'] = $email_address;
 
         $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
 
