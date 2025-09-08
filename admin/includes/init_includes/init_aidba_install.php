@@ -13,13 +13,8 @@ if(!$sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES) && defined('ADDITIO
             additional_image VARCHAR(255) NOT NULL,
             sort_order INT(11) DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_products_id (products_id)
+            INDEX idx_products_id (products_id),
+            UNIQUE KEY idx_pid_img_zen (products_id, additional_image)
             ) ENGINE=MyISAM;");
 
-    zen_register_admin_page('toolsAidba', 'BOX_TOOLS_CONVERT_AIDBA', 'FILENAME_AIDBA', '', 'tools', 'Y');
-}
-
-// remove converter page from Tools if switched BACK to legacy
-if(defined('ADDITIONAL_IMAGES_APPROACH') && ADDITIONAL_IMAGES_APPROACH == 'legacy' && zen_page_key_exists('toolsAidba')) {
-    zen_deregister_admin_pages('toolsAidba');
 }

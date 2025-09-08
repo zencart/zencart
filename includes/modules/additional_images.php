@@ -25,27 +25,30 @@ $images_array = [];
 // do not check for additional images when turned off
 if ($products_image !== '' && !empty($flag_show_product_info_additional_images)) {
 
-    // legacy support
-    $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
-    if ($products_image_directory !== '') {
-        $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
-    } else {
-        $products_image_directory = DIR_WS_IMAGES;
-    }
-    $products_image_extension = substr($products_image, strrpos($products_image, '.'));
-
     if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
+        $products_image_directory = DIR_WS_IMAGES;
+        // legacy support
+        $products_image_extension = '';
+
         $images_array = [];
         $sql = "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = :productsID ORDER BY sort_order";
         $sql = $db->bindVars($sql, ':productsID', (int)$_GET['products_id'], 'integer');
         $images_query = $db->Execute($sql);
 
         foreach ($images_query as $image) {
-            $images_array[] = DIR_WS_IMAGES . $image['additional_image'];
+            $images_array[] = $image['additional_image'];
         }
     } else {
         // prepare image name
         $products_image_base = str_replace($products_image_extension, '', $products_image);
+
+        $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
+        if ($products_image_directory !== '') {
+            $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
+        } else {
+            $products_image_directory = DIR_WS_IMAGES;
+        }
+        $products_image_extension = substr($products_image, strrpos($products_image, '.'));
 
         // if in a subdirectory
         if (strrpos($products_image, '/')) {

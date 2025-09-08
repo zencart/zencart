@@ -11,18 +11,11 @@ require('includes/application_top.php');
 $action = $_POST['action'] ?? '';
 
 if (!empty($action) && $action === 'convert') {
-    $processed_file = 'processed_products_ids.txt';
-    $processed_ids = file_exists($processed_file) ? array_map('intval', file($processed_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) : [];
-
-    $counter = 0;
+    $counter = $inserted = 0;
 
     $products_query = $db->Execute("SELECT products_id, products_image FROM " . TABLE_PRODUCTS . " WHERE products_image IS NOT NULL");
     while (!$products_query->EOF) {
         $products_id = (int)$products_query->fields['products_id'];
-        if (in_array($products_id, $processed_ids)) {
-            $products_query->MoveNext();
-            continue;
-        }
         $products_image = $products_query->fields['products_image'];
 
         $image_extension = substr($products_image, strrpos($products_image, '.'));
@@ -63,26 +56,22 @@ if (!empty($action) && $action === 'convert') {
         foreach ($matches as $sort_order => $additional_image) {
             // Check if already exists
             $exists_query = $db->Execute(
-                "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . $products_id . " AND additional_image = '" . zen_db_input($additional_image) . "'"
+                "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . $products_id . " AND additional_image = '" . zen_db_input($subdir .$additional_image) . "'"
             );
             if ($exists_query->EOF) {
                 $db->Execute(
                     "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order) VALUES (" .
                     $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
                 );
+                $inserted++;
             }
         }
 
-        file_put_contents($processed_file, $products_id . PHP_EOL, FILE_APPEND);
-
         $counter++;
-
         $products_query->MoveNext();
     }
-    if($counter === 0) {
-        if (file_exists($processed_file)) {
-            @unlink($processed_file);
-        }
+    if($inserted === 0) {
+
         $messageStack->add_session(TEXT_ALL_CONVERTED, 'info');
         $db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET display_on_menu = 'N' WHERE page_key = 'toolsAidba'");
 

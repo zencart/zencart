@@ -11,7 +11,7 @@ $define = [
     'TEXT_STEP_3_DETAIL' => 'Once the conversion is complete, you will see a confirmation message. Verify that your product and category images are displaying correctly on the frontend.',
     'BUTTON_START_CONVERSION' => 'Start Conversion',
 
-    'TEXT_ALL_CONVERTED' => 'All additional images have been converted. The link to this tool has been removed from your Tools menu.',
+    'TEXT_ALL_CONVERTED' => 'All additional images have been converted. You can now remove this plugin using Plugin Manager if you wish.',
     'TEXT_PRODUCTS_PROCESSED' => ' products processed in this run.',
     'TEXT_CONVERSION_COMPLETED' => 'Additional images conversion completed. Please re-run this tool until it reports 0 images remaining to convert.',
 ];
