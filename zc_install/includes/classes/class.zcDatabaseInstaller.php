@@ -81,6 +81,8 @@ class zcDatabaseInstaller
             'FROM ',
             ') ENGINE=MYISAM',
             'AND TABLE_NAME = \'',
+            'FOREIGN KEY ',
+            'REFERENCES ',
         ];
     }
 
@@ -210,7 +212,10 @@ class zcDatabaseInstaller
 
     private function parseLineContent(): void
     {
+        // Break string into words, using space as delimiter. Doesn't need mb support since we're parsing SQL keywords.
         $this->lineSplit = explode(" ", (str_ends_with($this->line, ';')) ? rtrim($this->line, ';') : $this->line);
+
+        // Ensure that the array has at least these elements to avoid undefined index errors
         if (!isset($this->lineSplit[3])) {
             $this->lineSplit[3] = "";
         }
@@ -220,16 +225,20 @@ class zcDatabaseInstaller
         if (!isset($this->lineSplit[5])) {
             $this->lineSplit[5] = "";
         }
+        // Determine parser method to call
         foreach ($this->basicParseStrings as $parseString) {
             $parseMethod = 'parser' . trim($this->camelize($parseString));
 
+            // Parsers only match if the line starts with the parse string
             if (str_starts_with(strtoupper($this->line), $parseString)) {
+                // handle some unique cases
                 if ($parseMethod === 'parser)Engine=myisam') {
                     $parseMethod = 'parserEngineInnodb';
                 }
                 if (str_starts_with($parseMethod, 'parserAndTable_name')) {
                     $parseMethod = 'parserAndTableName';
                 }
+
                 if (method_exists($this, $parseMethod)) {
                     $this->$parseMethod();
                     break;
@@ -688,6 +697,41 @@ class zcDatabaseInstaller
             $this->line = 'CROSS JOIN ' . $this->dbPrefix . substr($this->line, 11);
         }
     }
+
+    public function parserReferences(): void
+    {
+        $parts = explode('(',$this->lineSplit[1]);
+        $table = $parts[0];
+        if (!$this->tableExists($table)) {
+            $result = sprintf(REASON_TABLE_NOT_FOUND, $table) . ' CHECK PREFIXES!';
+            $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+            error_log($result . "\n" . $this->line . "\n---------------\n\n");
+        } else {
+            $this->line = 'REFERENCES ' . $this->dbPrefix . substr($this->line, 11);
+        }
+    }
+
+    public function parserForeignKey(): void
+    {
+        // For foreign keys, we only check for the REFERENCES clause
+        $referencesWordPosition = array_search('REFERENCES', $this->lineSplit, true);
+        // if there is no REFERENCES keyword, or if there is no tablename after the REFERENCES keyword, we have nothing to do
+        if ($referencesWordPosition === false || !isset($this->lineSplit[$referencesWordPosition + 1])) {
+            return;
+        }
+        // To get the table name, we check whether it might have no space before the opening parenthesis
+        $parts = explode('(', $referencesWordPosition + 1);
+        $table = $parts[0];
+        if (!$this->tableExists($table)) {
+            $result = sprintf(REASON_TABLE_NOT_FOUND, $table) . ' CHECK PREFIXES!';
+            $this->writeUpgradeExceptions($this->line, $result, $this->fileName);
+            error_log($result . "\n" . $this->line . "\n---------------\n\n");
+        } else {
+            $this->lineSplit[$referencesWordPosition + 1] = $this->dbPrefix . $this->lineSplit[$referencesWordPosition + 1];
+            $this->line = implode(' ', $this->lineSplit) . (str_ends_with($this->line, ';') ? ';' : '');
+        }
+    }
+
 
     /**
      * Parses "AND TABLE_NAME = 'foo'" syntax, checking that the table exists, using the configured prefix.

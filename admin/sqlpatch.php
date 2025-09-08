@@ -204,6 +204,25 @@ function executeSql($lines, $database, $table_prefix = '') {
             $line = 'AND TABLE_NAME = \'' . $table_prefix . ltrim(substr($line, 18));
           }
           break;
+        case (str_starts_with(ltrim($line_upper), "FOREIGN KEY")):
+            // For foreign keys, we only check for the REFERENCES clause
+            $referencesWordPosition = array_search('REFERENCES', $param, true);
+            // if there is no REFERENCES keyword, or if there is no tablename after the REFERENCES keyword, we have nothing to do
+            if ($referencesWordPosition === false || !isset($param[$referencesWordPosition + 1])) {
+                break;
+            }
+            // To get the table name, we check whether it might have no space before the opening parenthesis
+            $parts = explode('(', $referencesWordPosition + 1);
+            $table = $parts[0];
+            if (!zen_table_exists($table)) {
+                $result = sprintf(REASON_TABLE_NOT_FOUND, $table) . ' CHECK PREFIXES!';
+                zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
+                error_log($result . "\n" . $line . "\n---------------\n\n");
+            } else {
+                $param[$referencesWordPosition + 1] = $table_prefix . $param[$referencesWordPosition + 1];
+                $line = implode(' ', $param) . (str_ends_with($line, ';') ? ';' : '');
+            }
+            break;
         case (substr($line_upper, 0, 13) == 'RENAME TABLE '):
           // RENAME TABLE command cannot be parsed to insert table prefixes, so skip if zen is using prefixes
           if (!empty(DB_PREFIX)) {
