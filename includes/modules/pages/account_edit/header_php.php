@@ -163,23 +163,19 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
     }
 }
 
-$account_query =
-    "SELECT * 
-       FROM " . TABLE_CUSTOMERS . "
-      WHERE customers_id = :customersID";
-$account_query = $db->bindVars($account_query, ':customersID', $_SESSION['customer_id'], 'integer');
-$account = $db->Execute($account_query, 1);
+$customer = new Customer();
+$account_data = $customer->getData();
 if (ACCOUNT_GENDER === 'true') {
     if (isset($gender)) {
         $male = ($gender === 'm');
     } else {
-        $male = ($account->fields['customers_gender'] === 'm');
+        $male = ($account_data['customers_gender'] === 'm');
     }
     $female = !$male;
 }
 
 if (($_POST['action'] ?? '') !== 'process') {
-    $dob = zen_date_short($account->fields['customers_dob']);
+    $dob = zen_date_short($account_data['customers_dob']);
     if ($dob <= '0001-01-01') {
         $dob = '0001-01-01 00:00:00';
     }
@@ -187,18 +183,25 @@ if (($_POST['action'] ?? '') !== 'process') {
 // if DOB field has database default setting, show blank:
 $dob = (empty($dob) || $dob === '0001-01-01 00:00:00') ? '' : $dob;
 
-$customers_referral = $account->fields['customers_referral'];
+$customers_referral = $account_data['customers_referral'];
 
 if (isset($customers_email_format)) {
     $email_pref_html = ($customers_email_format === 'HTML');
     $email_pref_none = ($customers_email_format === 'NONE');
     $email_pref_optout = ($customers_email_format === 'OUT');
 } else {
-    $email_pref_html = ($account->fields['customers_email_format'] === 'HTML');
-    $email_pref_none = ($account->fields['customers_email_format'] === 'NONE');
-    $email_pref_optout = ($account->fields['customers_email_format'] === 'OUT');
+    $email_pref_html = ($account_data['customers_email_format'] === 'HTML');
+    $email_pref_none = ($account_data['customers_email_format'] === 'NONE');
+    $email_pref_optout = ($account_data['customers_email_format'] === 'OUT');
 }
 $email_pref_text = !($email_pref_html || $email_pref_none || $email_pref_optout);  // if not in any of the others, assume TEXT
+
+// -----
+// Convert customer's account-data array to mimic a MySQL object returned for
+// template compatibility.
+//
+$account = new stdClass();
+$account->fields = $account_data;
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2);
