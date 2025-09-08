@@ -1759,7 +1759,7 @@ CREATE TABLE IF NOT EXISTS products_additional_images (
   sort_order INT(11) DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY idx_pid_img_zen (products_id, additional_image)
-) ENGINE=MyISAM"
+) ENGINE=MyISAM;
 # --------------------------------------------------------
 
 #
