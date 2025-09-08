@@ -300,7 +300,7 @@ $opts = array(
   $data = array(array('label'=>TEXT_BANNERS_BANNER_VIEWS, 'data'=>$stats[0]), array('label'=>TEXT_BANNERS_BANNER_CLICKS, 'data'=>$stats[1]));
   $title = sprintf(
       TEXT_BANNERS_DAILY_STATISTICS, $banner->fields['banners_title'],
-      $zcDate->output('%B', mktime(0,0,0,(isset($_GET['month']) ? (int)$_GET['month'] : date('n')), 1)),
+      $zcDate->output('%B', mktime(0,0,0, (isset($_GET['month']) ? (int)$_GET['month'] : (int)date('n')), 1)),
       (isset($_GET['year']) ? (int)$_GET['year'] : date('Y'))
   );
 ?>
