@@ -336,6 +336,7 @@ if (!is_writable(DIR_FS_CATALOG_IMAGES)) {
         <h1>
             <a href="<?= zen_catalog_href_link('index', zen_get_path($current_category_id)) ?>" rel="noopener" target="_blank" title="<?= BOX_HEADING_CATALOG ?>"><?= zen_icon('popup', BOX_HEADING_CATALOG, '') ?></a>
             <?= HEADING_TITLE ?>&nbsp;-&nbsp;<?= zen_output_generated_category_path($current_category_id) ?>
+            <?php if ($current_category_id != 0) { ?><a href="<?=zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $current_category_id . '&action=edit_category')?>" class="" role="button"><?= zen_icon('edit', IMAGE_EDIT_CATEGORY, '') ?></a> <?php } ?>
         </h1>
         <?php if ($action === '') { ?>
             <div class="row">
@@ -1286,13 +1287,13 @@ if (!is_writable(DIR_FS_CATALOG_IMAGES)) {
             <div class="row">
                 <div class="col-md-3"><?= TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br>' . TEXT_PRODUCTS . '&nbsp;' . $products_count ?></div>
                 <div class="col-md-9 text-right">
-                    <?php if ($cPath > 0) { ?>
+                    <?php if ($current_category_id > 0) { ?>
                         <div class="col-sm-1">
-                            <a href="<?=zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (($str = strrchr($cPath, "_")) !== false ? substr($str, 1) : $cPath) . '&action=edit_category')?>" class="btn btn-default" role="button"><?= IMAGE_EDIT_CATEGORY ?></a>
+                            <a href="<?=zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $current_category_id . '&action=edit_category')?>" class="btn btn-default" role="button"><?= IMAGE_EDIT_CATEGORY ?></a>
                         </div>
                     <?php } ?>
                     <?php if (count($cPath_array) > 0) { ?>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <a href="<?= zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, $cPath_back . 'cID=' . $current_category_id) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a>
                         </div>
                         <?php
