@@ -27,8 +27,6 @@ if ($products_image !== '' && !empty($flag_show_product_info_additional_images))
 
     if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
         $products_image_directory = DIR_WS_IMAGES;
-        // legacy support
-        $products_image_extension = '';
 
         $images_array = [];
         $sql = "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = :productsID ORDER BY sort_order";
@@ -133,6 +131,7 @@ if ($num_images > 0) {
 
     for ($i = 0, $n = $num_images; $i < $n; $i++) {
         $file = $images_array[$i];
+        $products_image_extension = substr($file, strrpos($file, '.'));
         $products_image_large = str_replace(DIR_WS_IMAGES, DIR_WS_IMAGES . 'large/', $products_image_directory) . str_replace($products_image_extension, '', $file) . IMAGE_SUFFIX_LARGE . $products_image_extension;
 
         // -----
