@@ -1,12 +1,13 @@
+
 <?php
 /**
  * Convert additional images from file-based approach to database approach
  *
  * Copyright 2003-2025 Zen Cart Development Team
  * copyright ZenExpert 2025
- * */
+ */
 
-require('includes/application_top.php');
+require 'includes/application_top.php';
 
 $action = $_POST['action'] ?? '';
 
@@ -14,9 +15,9 @@ if (!empty($action) && $action === 'convert') {
     $counter = $inserted = 0;
 
     $products_query = $db->Execute("SELECT products_id, products_image FROM " . TABLE_PRODUCTS . " WHERE products_image IS NOT NULL");
-    while (!$products_query->EOF) {
-        $products_id = (int)$products_query->fields['products_id'];
-        $products_image = $products_query->fields['products_image'];
+    foreach ($products_query as $product) {
+        $products_id = (int)$product['products_id'];
+        $products_image = $product['products_image'];
 
         $image_extension = substr($products_image, strrpos($products_image, '.'));
         $image_base = str_replace($image_extension, '', $products_image);
@@ -41,40 +42,37 @@ if (!empty($action) && $action === 'convert') {
         }
 
         $matches = [];
-        if ($dir = @dir($image_dir)) {
-            while ($file = $dir->read()) {
-                if (!is_dir($image_dir . $file) && substr($file, strrpos($file, '.')) === $image_extension) {
-                    if (preg_match('/' . preg_quote($image_base, '/') . '/i', $file) === 1 && $file !== $products_image) {
-                        $matches[] = $file;
-                    }
+        // Scan directory for matching files using glob, which sorts alphabetically
+        $images = zen_get_files_in_directory($image_dir, $image_extension);
+        foreach ($images as $file) {
+            $file = preg_replace('/^' . preg_quote($image_dir, '/') . '/i', '', $file);
+            if (!is_dir($image_dir . $file)) {
+                if (preg_match('/' . preg_quote($image_base, '/') . '/i', $file) === 1 && $file !== $products_image) {
+                    $matches[] = $file;
                 }
             }
-            $dir->close();
         }
 
         // Insert matches into products_additional_images table
         foreach ($matches as $sort_order => $additional_image) {
             // Check if already exists
             $exists_query = $db->Execute(
-                "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . $products_id . " AND additional_image = '" . zen_db_input($subdir .$additional_image) . "'"
+                "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . $products_id . " AND additional_image = '" . zen_db_input($subdir . $additional_image) . "'"
             );
             if ($exists_query->EOF) {
                 $db->Execute(
-                    "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order) VALUES (" .
-                    $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
+                    "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order) 
+                    VALUES (" . $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
                 );
                 $inserted++;
             }
         }
 
         $counter++;
-        $products_query->MoveNext();
     }
-    if($inserted === 0) {
-
+    if ($inserted === 0) {
         $messageStack->add_session(TEXT_ALL_CONVERTED, 'info');
         $db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET display_on_menu = 'N' WHERE page_key = 'toolsAidba'");
-
     } else {
         $messageStack->add_session($counter . TEXT_PRODUCTS_PROCESSED, 'success');
         $messageStack->add_session(TEXT_CONVERSION_COMPLETED, 'success');
@@ -122,8 +120,8 @@ if (!empty($action) && $action === 'convert') {
 </div>
 <!-- body_eof //-->
 <!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+<?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
