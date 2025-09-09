@@ -979,6 +979,48 @@ class order extends base
     }
 
     /**
+     * @param bool $restock Should the items within the order be restocked.
+     * @return void
+     */
+    function delete($restock = false)
+    {
+        global $db;
+        $this->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $this->orderId, $restock);
+        if ($restock == 'on') {
+            $order_products = $db->Execute("select products_id, products_quantity
+                                from " . TABLE_ORDERS_PRODUCTS . "
+                                where orders_id = " . (int)$this->orderId);
+
+            while (!$order_products->EOF) {
+                $db->Execute("update " . TABLE_PRODUCTS . "
+                        set products_quantity = products_quantity + " . $order_products->fields['products_quantity'] . ", products_ordered = products_ordered - " . $order_products->fields['products_quantity'] . " where products_id = " . $order_products->fields['products_id']);
+                $order_products->MoveNext();
+            }
+        }
+
+        $db->Execute("delete from " . TABLE_ORDERS . " where orders_id = " . (int)$this->orderId);
+        $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS . "
+                                    where orders_id = " . (int)$this->orderId);
+
+        $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                                    where orders_id = " . (int)$this->orderId);
+
+        $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
+                                    where orders_id = " . (int)$this->orderId);
+
+        $db->Execute("delete from " . TABLE_ORDERS_STATUS_HISTORY . "
+                                    where orders_id = " . (int)$this->orderId);
+
+        $db->Execute("delete from " . TABLE_ORDERS_TOTAL . "
+                                    where orders_id = " . (int)$this->orderId);
+
+        $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
+                                    where order_id = " . (int)$this->orderId . " and release_flag = 'N'");
+
+        zen_record_admin_activity('Deleted order ' . (int)$this->orderId . ' from database via admin console.', 'warning');
+
+    }
+    /**
      * @param null $zf_insert_id - OrderNumber - deprecated since 1.5.7
      * @param bool $zf_mode Deprecated/unused since 1.5.0
      */
