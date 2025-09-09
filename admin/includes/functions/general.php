@@ -372,6 +372,17 @@ function zen_get_system_information($privacy = false): array
     return $systemInfo;
 }
 
+/**
+ *  @deprecated Moved to non-admin includes since v2.2.0 - Use $order->delete() instead.
+ *  @param int $order_id Contains the order number of the order to be deleted.
+ *  @param bool|string $restock Should the items within the order be restocked into inventory. (Old method used 'on', now can be set to true.)
+ *  @return void
+*/
+function zen_remove_order($order_id, $restock = false) {
+    $order = new order($order_id);
+    $order->delete($restock);
+}
+
 function zen_call_function($function, $parameter, $object = '')
 {
     if ($object === '') {

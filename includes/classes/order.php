@@ -979,14 +979,14 @@ class order extends base
     }
 
     /**
-     * @param bool $restock Should the items within the order be restocked.
+     * @param bool|string $restock Should the items within the order be restocked into inventory.
      * @return void
      */
-    function delete($restock = false)
+    function delete(bool|string $restock = false)
     {
         global $db;
         $this->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $this->orderId, $restock);
-        if ($restock == 'on') {
+        if ($restock || $restock == 'on') {
             $order_products = $db->Execute("select products_id, products_quantity
                                 from " . TABLE_ORDERS_PRODUCTS . "
                                 where orders_id = " . (int)$this->orderId);
