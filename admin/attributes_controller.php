@@ -864,7 +864,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
           <div class="form-group">
             <div class="col-sm-6 text-center">
               <span class="text-danger"><strong><?= TEXT_INFO_ATTRIBUTES_FEATURE_CATEGORIES_COPY_TO ?></strong></span><br>
-              <?= zen_draw_pulldown_categories_having_products('categories_update_id', 'size="5" class="form-control"', '', true, true) ?></div>
+              <?= zen_draw_pulldown_categories_having_products('categories_update_id', 'size="5" class="form-control"', [], true, true) ?></div>
             <div class="col-sm-6 text-center">
               <button type="submit" class="btn btn-primary"><i class="fa-solid fa-copy" aria-hidden="true"></i> <?= IMAGE_COPY ?></button>
               <?= '<a href="' . zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>' ?></div>
@@ -1172,7 +1172,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
                           $optionValuesArray = [];
                           foreach ($values_values as $value) {
 
-                            if ($show_value_numbers == false) {
+                            if (!$show_value_numbers) {
                               $show_option_name = '&nbsp;&nbsp;&nbsp;[' . strtoupper(zen_get_products_options_name_from_value($value['products_options_values_id'])) . ' ]';
                             } else {
                               $show_option_name = ' [ #' . $value['products_options_values_id'] . ' ] ' . '&nbsp;&nbsp;&nbsp;[' . strtoupper(zen_get_products_options_name_from_value($value['products_options_values_id'])) . ' ]';
@@ -2157,17 +2157,17 @@ function zen_js_option_values_list($selectedName, $fieldName)
         document.body.style.cursor = "wait";
 
         // set initial values
-        var SelectedOption = theForm.options_id.options[theForm.options_id.selectedIndex].value;
-        var theField = document.getElementById("OptionValue");
+        let SelectedOption = theForm.options_id.options[theForm.options_id.selectedIndex].value;
+        let theField = document.getElementById("OptionValue");
 
         // reset the array of pulldown options so it can be repopulated
-        var Opts = theField.options.length;
+        let Opts = theField.options.length;
         while (Opts > 0) {
-          Opts = Opts - 1;
+          Opts -= 1;
           theField.options[Opts] = null;
         }
 
-<?= zen_js_option_values_list('SelectedOption', 'theField') ?>
+<?php echo zen_js_option_values_list('SelectedOption', 'theField'); ?>
 
         // turn off hourglass
         document.body.style.cursor = "default";
