@@ -372,46 +372,16 @@ function zen_get_system_information($privacy = false): array
     return $systemInfo;
 }
 
-
-//@TODO move to Order class
-function zen_remove_order($order_id, $restock = false)
-{
-    global $db, $zco_notifier;
-    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $order_id, $restock);
-    if ($restock == 'on') {
-        $order = $db->Execute("select products_id, products_quantity
-                             from " . TABLE_ORDERS_PRODUCTS . "
-                             where orders_id = " . (int)$order_id);
-
-        while (!$order->EOF) {
-            $db->Execute("update " . TABLE_PRODUCTS . "
-                      set products_quantity = products_quantity + " . $order->fields['products_quantity'] . ", products_ordered = products_ordered - " . $order->fields['products_quantity'] . " where products_id = " . (int)$order->fields['products_id']);
-            $order->MoveNext();
-        }
-    }
-
-    $db->Execute("delete from " . TABLE_ORDERS . " where orders_id = " . (int)$order_id);
-    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS . "
-                  where orders_id = " . (int)$order_id);
-
-    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                  where orders_id = " . (int)$order_id);
-
-    $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
-                  where orders_id = " . (int)$order_id);
-
-    $db->Execute("delete from " . TABLE_ORDERS_STATUS_HISTORY . "
-                  where orders_id = " . (int)$order_id);
-
-    $db->Execute("delete from " . TABLE_ORDERS_TOTAL . "
-                  where orders_id = " . (int)$order_id);
-
-    $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
-                  where order_id = " . (int)$order_id . " and release_flag = 'N'");
-
-    zen_record_admin_activity('Deleted order ' . (int)$order_id . ' from database via admin console.', 'warning');
+/**
+ *  @deprecated Moved to non-admin includes since v2.2.0 - Use $order->delete() instead.
+ *  @param int $order_id Contains the order number of the order to be deleted.
+ *  @param bool|string $restock Should the items within the order be restocked into inventory. (Old method used 'on', now can be set to true.)
+ *  @return void
+*/
+function zen_remove_order($order_id, $restock = false) {
+    $order = new order($order_id);
+    $order->delete($restock);
 }
-
 
 function zen_call_function($function, $parameter, $object = '')
 {
