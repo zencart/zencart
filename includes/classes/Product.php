@@ -27,10 +27,16 @@ class Product
 
     public function __construct(protected ?int $product_id = null)
     {
+        global $productLoaded;
         $this->initLanguages();
 
         if ($this->product_id !== null) {
-            $this->data = $this->loadProductDetails($this->product_id);
+            if (!empty($productLoaded) && $this->product_id === (int)$productLoaded['products_id']) {
+                $this->data = $productLoaded;
+            } else {
+                $this->data = $this->loadProductDetails($this->product_id);
+                $productLoaded = $this->data;
+            }
 
             // set some backward compatibility properties
             $this->fields = $this->data;
