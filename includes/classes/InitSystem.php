@@ -203,7 +203,7 @@ class InitSystem
         if ($loaderType === 'core') {
             $core_loader_file = $this->loaderPrefix . '.core.php';
             if ($this->overrideFileExists($core_loader_file, $overrideDir)) {
-                $newFileList[] = $orderrideDir . '/' . $core_loader_file;
+                $newFileList[] = $overrideDir . '/' . $core_loader_file;
             } else {
                 $newFileList[] = $baseDir . '/' . $core_loader_file;
             }
