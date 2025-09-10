@@ -320,7 +320,7 @@ if (!empty($action) && $order_exists === true) {
             break;
 
         case 'deleteconfirm':
-            $order->delete(!empty($_POST['restock']) && $_POST['restock'] === 'on');
+            $order->delete(!empty($_POST['restock']) && $_POST['restock'] === true);
             zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']), 'NONSSL'));
             break;
         case 'delete_cvv':
