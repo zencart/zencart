@@ -38,16 +38,16 @@ if (!empty($action)) {
         case 'status':
             if (isset($_POST['current_status']) && ctype_digit($_POST['current_status'])) {
                 if ($_POST['current_status'] === CUSTOMERS_APPROVAL_AUTHORIZATION) {
-                    if (CUSTOMERS_APPROVAL_AUTHORIZATION === '1' || CUSTOMERS_APPROVAL_AUTHORIZATION === '2') {
-                        $customers_authorization = 0;
+                    if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION !== Customer::AUTH_OK) {
+                        $customers_authorization = Customer::AUTH_OK;
                     } else {
-                        $customers_authorization = 4;
+                        $customers_authorization = Customer::AUTH_BANNED;
                     }
 
                     $customer = new Customer($customers_id);
-                    $old = $customer->getData('customers_authorization');
+                    $old = (int)$customer->getData('customers_authorization');
                     $custinfo = $customer->setCustomerAuthorizationStatus($customers_authorization);
-                    if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION > 0 && (int)$_POST['current_status'] > 0 && $old != $customers_authorization) {
+                    if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION !== Customer::AUTH_OK && $customers_authorization !== Customer::AUTH_BANNED && $old !== $customers_authorization) {
                         $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
                         $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
                         zen_mail(
@@ -62,12 +62,12 @@ if (!empty($action)) {
                         );
                     }
                     zen_record_admin_activity(
-                        'Customer-approval-authorization set customer auth status to 0 for customer ID ' . $customers_id,
+                        "Customer-approval-authorization set customer auth status to $customers_authorization for customer ID $customers_id",
                         'info'
                     );
                 } else {
                     $customer = new Customer($customers_id);
-                    $customer->setCustomerAuthorizationStatus(CUSTOMERS_APPROVAL_AUTHORIZATION);
+                    $customer->setCustomerAuthorizationStatus((int)CUSTOMERS_APPROVAL_AUTHORIZATION);
                     zen_record_admin_activity(
                         'Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . (int)$customers_id,
                         'info'
@@ -178,69 +178,21 @@ if (!empty($action)) {
 
             if ($error === false) {
                 $sql_data_array = [
-                    [
-                        'fieldName' => 'customers_firstname',
-                        'value' => $customers_firstname,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_lastname',
-                        'value' => $customers_lastname,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_email_address',
-                        'value' => $customers_email_address,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_telephone',
-                        'value' => $customers_telephone,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_fax',
-                        'value' => $customers_fax,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_group_pricing',
-                        'value' => $customers_group_pricing,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_newsletter',
-                        'value' => $customers_newsletter,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_email_format',
-                        'value' => $customers_email_format,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_authorization',
-                        'value' => $customers_authorization,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_referral',
-                        'value' => $customers_referral,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'customers_whole',
-                        'value' => $customers_whole,
-                        'type' => 'stringIgnoreNull'
-                    ],
+                    ['fieldName' => 'customers_firstname', 'value' => $customers_firstname, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_lastname', 'value' => $customers_lastname, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_email_address', 'value' => $customers_email_address, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_telephone', 'value' => $customers_telephone, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_fax', 'value' => $customers_fax, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_group_pricing', 'value' => $customers_group_pricing, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_newsletter', 'value' => $customers_newsletter, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_email_format', 'value' => $customers_email_format, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_authorization', 'value' => $customers_authorization, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_referral', 'value' => $customers_referral, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'customers_whole', 'value' => $customers_whole, 'type' => 'stringIgnoreNull'],
                 ];
 
                 if (ACCOUNT_GENDER === 'true') {
-                    $sql_data_array[] = [
-                        'fieldName' => 'customers_gender',
-                        'value' => $customers_gender,
-                        'type' => 'stringIgnoreNull'
-                    ];
+                    $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $customers_gender, 'type' => 'stringIgnoreNull'];
                 }
                 if (ACCOUNT_DOB === 'true') {
                     $sql_data_array[] = [
@@ -252,90 +204,36 @@ if (!empty($action)) {
                 }
 
                 $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_CUSTOMER_UPDATE', $customers_id, $sql_data_array);
-                $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = " . (int)$customers_id . " LIMIT 1");
-
-                $db->Execute(
-                    "UPDATE " . TABLE_CUSTOMERS_INFO . "
-                      SET customers_info_date_account_last_modified = now()
-                      WHERE customers_info_id = " . (int)$customers_id . "
-                      LIMIT 1"
-                );
+                $customer = new Customer($customers_id);
+                $customer->update($sql_data_array);
 
                 if ($entry_zone_id > 0) {
                     $entry_state = '';
                 }
 
                 $sql_data_array = [
-                    [
-                        'fieldName' => 'entry_firstname',
-                        'value' => $customers_firstname,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'entry_lastname',
-                        'value' => $customers_lastname,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'entry_street_address',
-                        'value' => $entry_street_address,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'entry_postcode',
-                        'value' => $entry_postcode,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'entry_city',
-                        'value' => $entry_city,
-                        'type' => 'stringIgnoreNull'
-                    ],
-                    [
-                        'fieldName' => 'entry_country_id',
-                        'value' => $entry_country_id,
-                        'type' => 'integer'
-                    ],
+                    ['fieldName' => 'entry_firstname', 'value' => $customers_firstname, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'entry_lastname', 'value' => $customers_lastname, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'entry_street_address', 'value' => $entry_street_address, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'entry_postcode', 'value' => $entry_postcode, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'entry_city', 'value' => $entry_city, 'type' => 'stringIgnoreNull'],
+                    ['fieldName' => 'entry_country_id', 'value' => $entry_country_id, 'type' => 'integer'],
                 ];
 
                 if (ACCOUNT_COMPANY === 'true') {
-                    $sql_data_array[] = [
-                        'fieldName' => 'entry_company',
-                        'value' => $entry_company,
-                        'type' => 'stringIgnoreNull'
-                    ];
+                    $sql_data_array[] = ['fieldName' => 'entry_company', 'value' => $entry_company, 'type' => 'stringIgnoreNull'];
                 }
                 if (ACCOUNT_SUBURB === 'true') {
-                    $sql_data_array[] = [
-                        'fieldName' => 'entry_suburb',
-                        'value' => $entry_suburb,
-                        'type' => 'stringIgnoreNull'
-                    ];
+                    $sql_data_array[] = ['fieldName' => 'entry_suburb', 'value' => $entry_suburb, 'type' => 'stringIgnoreNull'];
                 }
 
                 if (ACCOUNT_STATE === 'true') {
                     if ($entry_zone_id > 0) {
-                        $sql_data_array[] = [
-                            'fieldName' => 'entry_zone_id',
-                            'value' => $entry_zone_id,
-                            'type' => 'integer'
-                        ];
-                        $sql_data_array[] = [
-                            'fieldName' => 'entry_state',
-                            'value' => '',
-                            'type' => 'string'
-                        ];
+                        $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => $entry_zone_id, 'type' => 'integer'];
+                        $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => '', 'type' => 'string'];
                     } else {
-                        $sql_data_array[] = [
-                            'fieldName' => 'entry_zone_id',
-                            'value' => 0,
-                            'type' => 'integer'
-                        ];
-                        $sql_data_array[] = [
-                            'fieldName' => 'entry_state',
-                            'value' => $entry_state,
-                            'type' => 'string'
-                        ];
+                        $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => 0, 'type' => 'integer'];
+                        $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => $entry_state, 'type' => 'string'];
                     }
                 }
 
@@ -345,14 +243,9 @@ if (!empty($action)) {
                     $sql_data_array
                 );
 
-                $db->perform(
-                    TABLE_ADDRESS_BOOK,
-                    $sql_data_array,
-                    'update',
-                    "customers_id = " . (int)$customers_id . " AND address_book_id = " . (int)$default_address_id . " LIMIT 1"
-                );
+                $customer->updatePrimaryAddress($sql_data_array);
 
-                if (isset($_POST['customer_groups']) && is_array($_POST['customer_groups'])) {
+                if (is_array($_POST['customer_groups'] ?? false)) {
                     zen_sync_customer_group_assignments($customers_id, $_POST['customer_groups']);
                 }
 
@@ -460,8 +353,8 @@ if (!empty($action)) {
         case 'deleteconfirm':
             $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_CUSTOMERS_DELETE_CONFIRM', ['customers_id' => $customers_id]);
             $customer = new Customer($customers_id);
-            $delete_reviews = (isset($_POST['delete_reviews']) && $_POST['delete_reviews'] === 'on');
-            $forget_only = (isset($_POST['delete_type_forget']) && $_POST['delete_type_forget'] === 'forget');
+            $delete_reviews = ($_POST['delete_reviews'] ?? '') === 'on';
+            $forget_only = ($_POST['delete_type_forget'] ?? '') === 'forget';
             $customer->delete($delete_reviews, $forget_only);
             zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']), 'NONSSL'));
             break;
@@ -579,13 +472,30 @@ if ($action === 'edit' || $action === 'update') {
 <?php
     }
 
-    $customers_authorization_array = [
-        ['id' => '0', 'text' => CUSTOMERS_AUTHORIZATION_0],
-        ['id' => '1', 'text' => CUSTOMERS_AUTHORIZATION_1],
-        ['id' => '2', 'text' => CUSTOMERS_AUTHORIZATION_2],
-        ['id' => '3', 'text' => CUSTOMERS_AUTHORIZATION_3],
-        ['id' => '4', 'text' => CUSTOMERS_AUTHORIZATION_4], // banned
-    ];
+    // -----
+    // Choices for a customer's authorization are limited by the store's current default. A customer can
+    // **always** be fully authorized or banned, but the 'pending' choices are only offered if they're the
+    // store's default.
+    //
+    $customers_authorization_array = [['id' => Customer::AUTH_OK, 'text' => CUSTOMERS_AUTHORIZATION_0]];
+    switch (CUSTOMERS_APPROVAL_AUTHORIZATION) {
+        case '1':
+            $customers_authorization_array[] = ['id' => Customer::AUTH_NO_BROWSE, 'text' => CUSTOMERS_AUTHORIZATION_1];
+            break;
+        case '2':
+            $customers_authorization_array[] = ['id' => Customer::AUTH_NO_PRICES, 'text' => CUSTOMERS_AUTHORIZATION_2];
+            break;
+        case '3':
+            $customers_authorization_array[] = ['id' => Customer::AUTH_NO_PURCHASE, 'text' => CUSTOMERS_AUTHORIZATION_3];
+            break;
+        default:
+            break;
+    }
+    $customers_authorization_array[] = ['id' => Customer::AUTH_BANNED, 'text' => CUSTOMERS_AUTHORIZATION_4]; // banned
+
+    if ($cInfo->customers_authorization === Customer::AUTH_NO_PURCHASE && $cInfo->activation_required) {
+        $show_activation_waiting = zen_draw_checkbox_field('unused', '', (bool)$cInfo->activation_required, '', 'disabled="disabled"') . ' ' . CUSTOMERS_AUTH_WAITING_FOR_ACTIVATION;
+    }
 ?>
             <div class="form-group">
                 <?php
@@ -602,6 +512,7 @@ if ($action === 'edit' || $action === 'update') {
                         $cInfo->customers_authorization,
                         'class="form-control" id="customers_authorization"'
                     ); ?>
+                    <?= $show_activation_waiting ?? '' ?>
                 </div>
             </div>
             <div class="form-group">
@@ -1578,7 +1489,7 @@ if ($action === 'edit' || $action === 'update') {
     $customers_query_raw =
         "SELECT c.customers_id " . $new_fields . ", cgc.amount
            FROM " . TABLE_CUSTOMERS . " c
-                LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON c.customers_id= ci.customers_info_id
+                LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON c.customers_id = ci.customers_info_id
                 LEFT JOIN " . TABLE_ADDRESS_BOOK . " a ON c.customers_id = a.customers_id AND c.customers_default_address_id = a.address_book_id
                 LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON c.customers_id = cgc.customer_id
                     " . $search . "
@@ -1752,9 +1663,13 @@ if ($action === 'edit' || $action === 'update') {
                                     ); ?>
                                     <button type="submit" class="btn btn-status">
 <?php
-        if ($customer['customers_authorization'] === 0) {
+        if ($customer['customers_authorization'] === Customer::AUTH_OK) {
 ?>
                                         <i class="fa-solid fa-square txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+<?php
+        } elseif ($customer['activation_required'] && $customer['customers_authorization'] === Customer::AUTH_NO_PURCHASE) {
+?>
+                                        <i class="fa-solid fa-square text-warning" title="<?= CUSTOMERS_AUTH_WAITING_FOR_ACTIVATION ?>"></i>
 <?php
         } else {
 ?>

@@ -25,7 +25,10 @@ class FilesLanguageLoader extends BaseLanguageLoader
     public function loadModuleLanguageFile(string $fileName, string $module_type): bool
     {
         $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'];
-        $extraPath = '/modules/' . $module_type . '/';
+        if ($module_type !== '') {
+            $module_type .= '/';
+        }
+        $extraPath = '/modules/' . $module_type;
 
         if ($this->loadFileDefineFile($rootPath . $extraPath . $this->templateDir . '/' . $fileName) === true) {
             return true;
