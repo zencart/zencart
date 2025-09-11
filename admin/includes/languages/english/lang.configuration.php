@@ -71,6 +71,8 @@ $define = [
     'TEXT_MAX_ADMIN_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_EZPAGE_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_PREVIEW' => 'Value must be an integer.',
+    'TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_LENGTH' => 'Value must be an integer between 12-100.',
+    'TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_VALID_MINUTES' => 'Value must be an integer between 1-1440.',
     'TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH' => 'Value must be an integer between 12-100.',
     'TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES' => 'Value must be an integer between 1-1440.',
 ];
