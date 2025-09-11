@@ -30,14 +30,14 @@ class Product
         $this->initLanguages();
 
         if ($this->product_id !== null) {
-            if (empty(self::$data) || (int)self::$data['products_id'] !== $this->products_id) {
+            if (empty(self::$data) || (int)self::$data['products_id'] !== $this->product_id) {
                 self::$data = $this->loadProductDetails($this->product_id);
-
-                // set some backward compatibility properties
-                $this->fields = self::$data;
-                $this->EOF = empty(self::$data);
             }
         }
+
+        // set some backward compatibility properties
+        $this->fields = self::$data ?? [];
+        $this->EOF = empty(self::$data);
     }
 
     public function forLanguage(?int $language_id): self
