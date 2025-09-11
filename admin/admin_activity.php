@@ -94,11 +94,11 @@ if ($action != '') {
         $sort = ' ASC ';
       }
       if ($format === 'HTML') {
-        $FIELDSTART = '<td>';
-        $FIELDEND = '</td>';
+        $FIELDSTART = '<th>';
+        $FIELDEND = '</th>';
         $FIELDSEPARATOR = "";
-        $LINESTART = "<tr>";
-        $LINEBREAK = "</tr>" . $NL;
+        $LINESTART = '<thead><tr>';
+        $LINEBREAK = '</tr></thead>' . $NL;
         $sort = ' DESC ';
       }
 
@@ -140,7 +140,7 @@ if ($action != '') {
         $exporter_output = '';
         // make a <table> tag if HTML output
         if ($format === "HTML") {
-          $exporter_output .= '<table class="table table-bordered">' . $NL;
+          $exporter_output .= '<table class="table table-bordered table-striped">' . $NL;
         }
         // add column headers if CSV or HTML format
         if ($format === "CSV" || $format === "HTML") {
@@ -166,6 +166,12 @@ if ($action != '') {
           $exporter_output .= $FIELDSTART . "postdata" . $FIELDEND;
           $exporter_output .= $LINEBREAK;
         }
+          if ($format === "HTML") {
+              $FIELDSTART = '<td>';
+              $FIELDEND = '</td>';
+              $LINESTART = '<tr>';
+              $LINEBREAK = '</tr>' . $NL;
+          }
         // headers - XML
         if ($format === "XML") {
           $exporter_output .= '<?xml version="1.0" encoding="' . CHARSET . '"?>' . "\n";
@@ -273,7 +279,26 @@ if ($action != '') {
             <!doctype html>
             <html <?php echo HTML_PARAMS; ?>>
               <head>
-                  <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+                  <?php require DIR_WS_INCLUDES . 'admin_html_head.php';
+                  if ($format === 'HTML') { ?>
+                      <style>
+                          /* Set header row static */
+                          thead tr:nth-child(1) th {
+                              background: white;
+                              position: sticky;
+                              top: 0;
+                              z-index: 10;
+                          }
+                          /* header/column row aligns */
+                          thead tr th:nth-child(2), thead tr th:nth-child(3), thead th:nth-child(7) {
+                              text-align: center;
+                          }
+                          tbody tr td:nth-child(2), tbody tr td:nth-child(3), tbody tr td:nth-child(7) {
+                              text-align: center;
+                          }
+                      </style>
+                  <?php
+                  } ?>
               </head>
               <body>
                   <?php
