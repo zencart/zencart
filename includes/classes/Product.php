@@ -30,7 +30,7 @@ class Product
         $this->initLanguages();
 
         if ($this->product_id !== null) {
-            if (empty(self::$data) || (int)self::$data['products_id'] !== $this->product_id) {
+            if (empty(self::$data) || $this->product_id !== (int)self::$data['products_id']) {
                 self::$data = $this->loadProductDetails($this->product_id);
             }
         }
@@ -44,6 +44,7 @@ class Product
     {
         self::$data = $this->getDataForLanguage($language_id);
         $this->fields = self::$data;
+        unset($this->fields['lang']);
 
         return $this;
     }
@@ -52,6 +53,7 @@ class Product
     {
         self::$data = $this->getDataForLanguage();
         $this->fields = self::$data;
+        unset($this->fields['lang']);
 
         return $this;
     }
@@ -89,14 +91,13 @@ class Product
         foreach ($data['lang'][$this->languages[$language_id]] as $key => $value) {
             $data[$key] = $value;
         }
-        unset($data['lang']);
 
         return $data;
     }
 
     public function getId(): ?int
     {
-        return $this->product_id;
+        return ($this->product_id === (int)self::$data['products_id']) ? $this->product_id : null;
     }
 
     public function exists(): bool
