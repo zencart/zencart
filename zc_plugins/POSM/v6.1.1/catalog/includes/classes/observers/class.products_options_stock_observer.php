@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2014-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2014-2025 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 5.0.0
+// Last updated: POSM 6.1.1
 //
 use App\Models\PluginControl;
 use App\Models\PluginControlVersion;
@@ -504,8 +504,9 @@ class products_options_stock_observer extends base
         echo '<link rel="stylesheet" href="' . $this->getZcPluginDir() . DIR_WS_TEMPLATES . "default/css/$stylesheet" . '">' . "\n";
 
         $stylesheet_dir = $template->get_template_dir($stylesheet, DIR_WS_TEMPLATE, $current_page_base, 'css');
-        if (strpos($stylesheet_dir, $this->getZcPluginDir()) === false && file_exists($stylesheet_dir . $stylesheet)) {
-            echo '<link rel="stylesheet" href="' . $stylesheet_dir . $stylesheet . '">' . "\n";
+        $stylesheet_dir .= '/' . $stylesheet;
+        if (strpos($stylesheet_dir, $this->getZcPluginDir()) === false && file_exists($stylesheet_dir)) {
+            echo '<link rel="stylesheet" href="' . $stylesheet_dir . '">' . "\n";
         }
 
         // -----
