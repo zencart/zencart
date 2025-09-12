@@ -902,9 +902,8 @@ function zen_js_option_values_list($selectedName, $fieldName)
                   echo zen_get_products_quantity_min_units_display($_GET['products_filter'], $include_break = true);
                   ?>
                 </div>
-                <div class="col-xs-8 col-sm-8 col-md-6 col-lg-4 text-center"><?= zen_draw_pulldown_products('products_filter', 'class="form-control"', '', true, $_GET['products_filter'], true, true) ?></div>
-                <div class="col-xs-2 col-sm-3 col-md-5 col-lg-7">
-                  <button type="submit" class="btn btn-primary"><?= IMAGE_DISPLAY ?></button>
+                <div class="col-xs-10"><?= zen_draw_pulldown_products('products_filter', 'class="form-control" size="10" onchange="this.form.submit()"', '', true, $_GET['products_filter'], true, true, 'products_model'); ?>
+                    <noscript><button type="submit" class="btn btn-primary"><?= IMAGE_DISPLAY ?></button></noscript>
                 </div>
               </div>
             <?php } // product dropdown
