@@ -16,6 +16,7 @@ class Product
 {
     use NotifierManager;
 
+    protected static ?int $product_id;
     protected static array $data;
     protected array $languages;
 
@@ -25,13 +26,14 @@ class Product
     /** @deprecated use !exists()  */
     public bool $EOF = true;
 
-    public function __construct(protected ?int $product_id = null)
+    public function __construct(?int $product_id = null)
     {
         $this->initLanguages();
 
-        if ($this->product_id !== null) {
-            if (empty(self::$data) || $this->product_id !== (int)self::$data['products_id']) {
-                self::$data = $this->loadProductDetails($this->product_id);
+        if ($product_id !== null) {
+            if (empty(self::$data) || $product_id !== self::$product_id) {
+                self::$product_id = $product_id;
+                self::$data = $this->loadProductDetails($product_id);
             }
         }
 
@@ -42,8 +44,7 @@ class Product
 
     public function forLanguage(?int $language_id): self
     {
-        self::$data = $this->getDataForLanguage($language_id);
-        $this->fields = self::$data;
+        $this->fields = $this->getDataForLanguage($language_id);
         unset($this->fields['lang']);
 
         return $this;
@@ -51,8 +52,7 @@ class Product
 
     public function withDefaultLanguage(): self
     {
-        self::$data = $this->getDataForLanguage();
-        $this->fields = self::$data;
+        $this->fields = $this->getDataForLanguage();
         unset($this->fields['lang']);
 
         return $this;
@@ -97,12 +97,12 @@ class Product
 
     public function getId(): ?int
     {
-        return ($this->product_id === (int)self::$data['products_id']) ? $this->product_id : null;
+        return self::$product_id;
     }
 
     public function exists(): bool
     {
-        return !empty($this->product_id) && !empty(self::$data);
+        return !empty(self::$product_id) && !empty(self::$data);
     }
     public function isValid(): bool
     {
@@ -149,7 +149,7 @@ class Product
             }
         }
 
-        $this->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $this->product_id, $allow_add_to_cart, self::$data);
+        $this->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', self::$product_id, $allow_add_to_cart, self::$data);
 
         // test for boolean and for 'Y', since observer might try to return 'Y'
         return in_array($allow_add_to_cart, [true, 'Y'], true);
@@ -158,7 +158,7 @@ class Product
     public function getProductQuantity(): int|float
     {
         $quantity = self::$data['products_quantity'] ?? '0';
-        $this->notify('NOTIFY_GET_PRODUCT_QUANTITY', $this->product_id, $quantity);
+        $this->notify('NOTIFY_GET_PRODUCT_QUANTITY', self::$product_id, $quantity);
         return zen_str_to_numeric((string)$quantity);
     }
 
@@ -179,7 +179,7 @@ class Product
         }
 
         global $db;
-        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$this->product_id;
+        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)self::$product_id;
         $results = $db->Execute($sql, 1);
         return !$results->EOF;
     }
@@ -191,7 +191,7 @@ class Product
         }
 
         global $db;
-        $sql = "SELECT products_id FROM " . TABLE_SPECIALS . " WHERE products_id=" . (int)$this->product_id;
+        $sql = "SELECT products_id FROM " . TABLE_SPECIALS . " WHERE products_id=" . (int)self::$product_id;
         $results = $db->Execute($sql, 1);
         return !$results->EOF;
     }
