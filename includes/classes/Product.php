@@ -44,7 +44,8 @@ class Product
 
     public function forLanguage(?int $language_id): self
     {
-        $this->fields = $this->getDataForLanguage($language_id);
+        self::$data = $this->getDataForLanguage($language_id);
+        $this->fields = self::$data;
         unset($this->fields['lang']);
 
         return $this;
@@ -52,7 +53,8 @@ class Product
 
     public function withDefaultLanguage(): self
     {
-        $this->fields = $this->getDataForLanguage();
+        self::$data = $this->getDataForLanguage();
+        $this->fields = self::$data;
         unset($this->fields['lang']);
 
         return $this;
