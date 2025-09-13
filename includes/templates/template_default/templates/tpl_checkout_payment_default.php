@@ -148,6 +148,12 @@
 <?php
     }
 ?>
+<?php
+    if (!empty(($selection[$i]['text']))) { ?>
+        <div class="ccinfoText"><?= $selection[$i]['text'] ?></div>
+<?php
+    }
+?>
 <br class="clearBoth">
 
 <?php
