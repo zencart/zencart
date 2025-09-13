@@ -57,20 +57,44 @@ if (!empty($action)) {
             zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . (int)$cID));
             break;
         case 'saveall':
+
+            $counter = 0;
             // Handle radio fields (configuration[cfg_XX])
             if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
                 foreach ($_POST['configuration'] as $key => $value) {
                     if (strpos($key, 'cfg_') === 0) {
                         $config_id = (int)substr($key, 4);
                         $configuration_value = zen_db_prepare_input($value);
+
+                        // See if there are any configuration checks
+                        $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
+                        if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
+                            require_once 'includes/functions/configuration_checks.php';
+                            if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'])) {
+                                zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID']));
+                            }
+                        }
+
                         if (isset($_POST['orig_' . $key]) && $_POST['orig_' . $key] === $configuration_value) {
                             continue; // No change, skip update
                         }
                         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
-                    SET configuration_value = '" . zen_db_input($configuration_value) . "',
-                        last_modified = now()
-                    WHERE configuration_id = " . $config_id);
+                                        SET configuration_value = '" . zen_db_input($configuration_value) . "',
+                                        last_modified = now()
+                                        WHERE configuration_id = " . $config_id);
+                        $counter++;
                     }
+
+                    $result = $db->Execute(
+                        "SELECT configuration_key
+                                FROM " . TABLE_CONFIGURATION . "
+                                WHERE configuration_id = " . $config_id . "
+                                LIMIT 1"
+                    );
+                    zen_record_admin_activity('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value, 'warning');
+
+                    // Send a notifier that a configuration change has been made
+                    $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', $result->fields['configuration_key']);
                 }
             }
             // Handle text fields (cfg_XX)
@@ -78,15 +102,51 @@ if (!empty($action)) {
                 if (strpos($key, 'cfg_') === 0 && !is_array($value)) {
                     $config_id = (int)substr($key, 4);
                     $configuration_value = zen_db_prepare_input($value);
+
+                    // See if there are any configuration checks
+                    $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
+                    if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
+                        require_once 'includes/functions/configuration_checks.php';
+                        if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'])) {
+                            zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID']));
+                        }
+                    }
+
                     if (isset($_POST['orig_' . $key]) && $_POST['orig_' . $key] === $configuration_value) {
                         continue; // No change, skip update
                     }
                     $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
-                SET configuration_value = '" . zen_db_input($configuration_value) . "',
-                    last_modified = now()
-                WHERE configuration_id = " . $config_id);
+                                    SET configuration_value = '" . zen_db_input($configuration_value) . "',
+                                    last_modified = now()
+                                    WHERE configuration_id = " . $config_id);
+                    $counter++;
+
+                    $result = $db->Execute(
+                        "SELECT configuration_key
+                                FROM " . TABLE_CONFIGURATION . "
+                                WHERE configuration_id = " . $config_id . "
+                                LIMIT 1"
+                    );
+                    zen_record_admin_activity('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value, 'warning');
+
+                    // Send a notifier that a configuration change has been made
+                    $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', $result->fields['configuration_key']);
                 }
             }
+
+            // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
+            if (WARN_BEFORE_DOWN_FOR_MAINTENANCE === 'true' && DOWN_FOR_MAINTENANCE === 'true') {
+                $db->Execute(
+                    "UPDATE " . TABLE_CONFIGURATION . "
+                        SET configuration_value = 'false',
+                            last_modified = now()
+                      WHERE configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'
+                      LIMIT 1"
+                );
+            }
+
+            $messageStack->add_session(sprintf(TEXT_CONFIG_SAVED_SUCCESS, $counter), 'success');
+
             zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID']));
             break;
 
@@ -369,7 +429,7 @@ if ($gID === 7) {
                     ?>
                 </div>
                 <div class="save-button">
-                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save All Changes</button>
+                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> <?= BUTTON_SAVE_ALL ?></button>
                 </div>
                 </form>
             </div>
