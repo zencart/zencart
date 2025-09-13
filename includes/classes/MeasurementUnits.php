@@ -5,8 +5,6 @@
  * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
  */
 
-use TypeError;
-
 class MeasurementUnits
 {
     /**
@@ -15,10 +13,10 @@ class MeasurementUnits
     public static function convertWeight(float|int $incoming, string $from_unit, string $to_unit, ?int $precision = null): float|int
     {
         if (!in_array($from_unit, ['lbs', 'kgs', 'oz', 'g'])) {
-            throw new TypeError('Invalid weight unit for $from_unit: ' . $from_unit);
+            throw new \TypeError('Invalid weight unit for $from_unit: ' . $from_unit);
         }
         if (!in_array($to_unit, ['lbs', 'kgs', 'oz', 'g'])) {
-            throw new TypeError('Invalid weight unit for $to_unit: ' . $to_unit);
+            throw new \TypeError('Invalid weight unit for $to_unit: ' . $to_unit);
         }
 
         $ratio = [];
@@ -57,10 +55,10 @@ class MeasurementUnits
     public static function convertLength(float|int $incoming, string $from_unit, string $to_unit, ?int $precision = null): float
     {
         if (!in_array($from_unit, ['in', 'cm'])) {
-            throw new TypeError('Invalid length unit for $from_unit: ' . $from_unit);
+            throw new \TypeError('Invalid length unit for $from_unit: ' . $from_unit);
         }
         if (!in_array($to_unit, ['in', 'cm'])) {
-            throw new TypeError('Invalid length unit for $to_unit: ' . $to_unit);
+            throw new \TypeError('Invalid length unit for $to_unit: ' . $to_unit);
         }
 
         $ratio = [];
