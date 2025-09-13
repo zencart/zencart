@@ -7,7 +7,7 @@
  */
 require('includes/application_top.php');
 
-$use = 'legacy'; // legacy vs modern
+$use = 'modern'; // legacy vs modern
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -54,6 +54,9 @@ if (!empty($action)) {
                     if (strpos($key, 'cfg_') === 0) {
                         $config_id = (int)substr($key, 4);
                         $configuration_value = zen_db_prepare_input($value);
+                        if(isset($_POST['orig_' . $key]) && $_POST['orig_' . $key] === $configuration_value) {
+                            continue; // No change, skip update
+                        }
                         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                     SET configuration_value = '" . zen_db_input($configuration_value) . "',
                         last_modified = now()
@@ -66,6 +69,9 @@ if (!empty($action)) {
                 if (strpos($key, 'cfg_') === 0 && !is_array($value)) {
                     $config_id = (int)substr($key, 4);
                     $configuration_value = zen_db_prepare_input($value);
+                    if(isset($_POST['orig_' . $key]) && $_POST['orig_' . $key] === $configuration_value) {
+                        continue; // No change, skip update
+                    }
                     $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                 SET configuration_value = '" . zen_db_input($configuration_value) . "',
                     last_modified = now()
