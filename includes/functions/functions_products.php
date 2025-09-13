@@ -545,7 +545,7 @@ function zen_get_products_manufacturers_image($product_id): string
  */
 function zen_get_products_manufacturers_id($product_id): int
 {
-    return (new Product((int)$product_id))->get('manufacturers_id') ?? 0;
+    return (int)(new Product((int)$product_id))->get('manufacturers_id') ?? 0;
 }
 
 /**
