@@ -204,6 +204,8 @@ class PluginManagerController extends BaseController
                 )
             );
         }
+        $this->notify('NOTIFY_PLUGINMANAGER_DO_UNINSTALL', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version')]);
+
         $this->messageStack->add_session(TEXT_UNINSTALL_SUCCESS, 'success');
         zen_redirect(
             zen_href_link(
@@ -309,6 +311,8 @@ class PluginManagerController extends BaseController
                 )
             );
         }
+        $this->notify('NOTIFY_PLUGINMANAGER_DO_UPGRADE', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version'), 'old_version' => $this->currentFieldValue('version')]);
+
         $this->messageStack->add_session(TEXT_UPGRADE_SUCCESS, 'success');
         zen_redirect(
             zen_href_link(
@@ -398,6 +402,8 @@ class PluginManagerController extends BaseController
         } else {
             $this->messageStack->add_session(TEXT_CLEANUP_ERROR . $error, 'error');
         }
+        $this->notify('NOTIFY_PLUGINMANAGER_DO_CLEANUP', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version')]);
+
         zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink()));
     }
 
@@ -433,6 +439,8 @@ class PluginManagerController extends BaseController
         }
         $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $installer->processEnable($this->currentFieldValue('unique_key'), $this->request->input('version'));
+        $this->notify('NOTIFY_PLUGINMANAGER_DO_ENABLE', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version')]);
+
         $this->messageStack->add_session(TEXT_ENABLE_SUCCESS, 'success');
         zen_redirect(
             zen_href_link(
@@ -469,6 +477,8 @@ class PluginManagerController extends BaseController
         }
         $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $installer->processDisable($this->currentFieldValue('unique_key'), $this->request->input('version'));
+        $this->notify('NOTIFY_PLUGINMANAGER_DO_DISABLE', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version')]);
+
         $this->messageStack->add_session(TEXT_DISABLE_SUCCESS, 'success');
         zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
     }

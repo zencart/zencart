@@ -131,12 +131,15 @@ if (!empty($action)) {
                     $result = $module->install();
                 }
             }
+            $zco_notifier->notify('NOTIFY_ADMIN_MODULES_DO_INSTALL', ['module_name' => $class], $result);  // $result may not be reliable because many modules do not return a success/fail indicator
+
             if ($result !== 'failed') {
                 zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit', 'SSL'));
             }
             break;
 
         case 'removeconfirm':
+            $result = 'failed';
             $file_extension = pathinfo($PHP_SELF, PATHINFO_EXTENSION);
             $class = basename($_POST['module']);
             $class_file = $class . '.' . $file_extension;
@@ -159,6 +162,8 @@ if (!empty($action)) {
                     $result = $module->remove();
                 }
             }
+            $zco_notifier->notify('NOTIFY_ADMIN_MODULES_DO_UNINSTALL', ['module_name' => $class], $result);  // $result may not be reliable because many modules return nothing regardless of success/fail
+
             zen_redirect(zen_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class, 'SSL'));
             break;
     }
