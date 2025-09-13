@@ -327,7 +327,7 @@ if ($gID === 7) {
                     $query .= " ORDER BY configuration_title";
                 }
                 $configuration = $db->Execute($query);
-                echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=saveall', 'post', 'class="form-horizontal"');
+                echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&action=saveall', 'post', 'class="form-horizontal"');
                 ?>
                 <div class="container-full">
                     <div class="row font-weight-bold">
