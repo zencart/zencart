@@ -334,6 +334,18 @@ class Customer extends base
         $db->Execute($sql);
     }
 
+    public static function setWelcomeEmailSent(int $customers_id): void
+    {
+        global $db;
+
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
+                SET welcome_email_sent = 1
+              WHERE customers_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $customers_id, 'integer');
+        $db->Execute($sql, 1);
+    }
+
     /**
      * Clears any existing account-authorization tokens for the current customer.
      */
@@ -419,34 +431,7 @@ class Customer extends base
         }
         return $result->fields;
     }
-/*
-    public function getAuthTokenInfoOld(): array|false
-    {
-        if (empty($this->data) || $this->data['activation_required'] === 0) {
-            return false;
-        }
 
-        global $db;
-
-        $sql =
-            "SELECT *
-               FROM " . TABLE_CUSTOMERS_AUTH_TOKENS . "
-              WHERE customers_id = :customer_id";
-        $sql = $db->bindVars($sql, ':customer_id', $this->customer_id, 'integer');
-        $result = $db->ExecuteNoCache($sql, 1);
-
-        $token_current_email_address = $result->fields['email_address'] ?? '';
-        $token_valid_minutes = self::getAuthTokenMinutesValid();
-        if ($result->EOF || $result->fields['created_at'] + $token_valid_minutes > time()) {
-            if ($this->createAuthToken() === false) {
-                return false;
-            }
-            $result = $db->ExecuteNoCache($sql, 1);
-        }
-        $result->fields['email_address_changed'] = ($result->fields['email_address'] !== $token_current_email_address);
-        return $result->fields;
-    }
-*/
     public function createAuthToken(): string|false
     {
         if (empty($this->data) || CUSTOMERS_ACTIVATION_REQUIRED === 'false') {
@@ -781,7 +766,12 @@ class Customer extends base
         return $this->data;
     }
 
-    public static function authorizeCustomer(int $customers_id): void
+    // -----
+    // Unconditionally authorizes the specified customer, returning
+    // an array containing the customer's current information, if that
+    // customer's present in the database.
+    //
+    public static function authorizeCustomer(int $customers_id): array
     {
         global $db;
 
@@ -793,6 +783,15 @@ class Customer extends base
         $db->Execute($sql, 1);
 
         self::clearAuthTokens($customers_id);
+        
+        $customer = $db->Execute(
+            "SELECT *
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_id = " . (int)$customers_id . "
+              LIMIT 1"
+        );
+
+        return ($customer->EOF) ? [] : $customer->fields;
     }
 
     public function resetCustomerCart(): void
@@ -1168,6 +1167,7 @@ class Customer extends base
             ['fieldName' => 'customers_password', 'value' => zen_encrypt_password($data['password']), 'type' => 'stringIgnoreNull'],
             ['fieldName' => 'customers_authorization', 'value' => $data['customers_authorization'], 'type' => 'integer'],
             ['fieldName' => 'activation_required', 'value' => $activation_required, 'type' => 'integer'],
+            ['fieldName' => 'welcome_email_sent', 'value' => 0, 'type' => 'integer'],
             ['fieldName' => 'registration_ip', 'value' => $data['ip_address'], 'type' => 'string'],
             ['fieldName' => 'last_login_ip', 'value' => $data['ip_address'], 'type' => 'string'],
         ];

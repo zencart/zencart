@@ -307,6 +307,8 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         }
 
         require DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT_SEND_EMAIL);
+        Customer::setWelcomeEmailSent((int)$result['customers_id']);
+
         zen_redirect(zen_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
 
     } //endif !error

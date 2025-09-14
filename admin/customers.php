@@ -48,18 +48,27 @@ if (!empty($action)) {
                     $old = (int)$customer->getData('customers_authorization');
                     $custinfo = $customer->setCustomerAuthorizationStatus($customers_authorization);
                     if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION !== Customer::AUTH_OK && $customers_authorization !== Customer::AUTH_BANNED && $old !== $customers_authorization) {
-                        $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
-                        $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
-                        zen_mail(
-                            $custinfo['customers_firstname'] . ' ' . $custinfo['customers_lastname'],
-                            $custinfo['customers_email_address'],
-                            EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT,
-                            $message,
-                            STORE_NAME,
-                            EMAIL_FROM,
-                            $html_msg,
-                            'default'
-                        );
+                        $firstname = $custinfo['customers_firstname'];
+                        $lastname = $custinfo['customers_lastname'];
+                        $gender = $custinfo['customers_gender'];
+                        $email_address = $custinfo['customers_email_address'];
+                        if ($custinfo['welcome_email_sent'] === '0') {
+                            require DIR_FS_CATALOG . DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT_SEND_EMAIL);
+                            Customer::setWelcomeEmailSent((int)$customers_id);
+                        } else {
+                            $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
+                            $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
+                            zen_mail(
+                                $firstname . ' ' . $lastname,
+                                $email_address,
+                                EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT,
+                                $message,
+                                STORE_NAME,
+                                EMAIL_FROM,
+                                $html_msg,
+                                'default'
+                            );
+                        }
                     }
                     zen_record_admin_activity(
                         "Customer-approval-authorization set customer auth status to $customers_authorization for customer ID $customers_id",
