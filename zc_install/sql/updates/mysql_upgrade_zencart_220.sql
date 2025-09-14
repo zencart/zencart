@@ -59,7 +59,8 @@ ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
 ALTER TABLE orders MODIFY currency char(4) default NULL;
 ALTER TABLE plugin_control MODIFY `version` varchar(20);
 ALTER TABLE plugin_control_versions MODIFY `version` varchar(20);
-ALTER TABLE customers ADD COLUMN activation_required int(1) NOT NULL default 0 AFTER customers_authorization;
+ALTER TABLE customers ADD COLUMN activation_required tinyint(1) NOT NULL default 0 AFTER customers_authorization;
+ALTER TABLE customers ADD COLUMN welcome_email_sent tinyint(1) default NULL AFTER activation_required;
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');

@@ -14,8 +14,20 @@ if (!empty($_GET['reset_token'])) {
     if ($token_info === false) {
         zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
     }
-    Customer::authorizeCustomer((int)$token_info['customers_id']);
-    zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
+
+    $messageStack->add_session('header', TEXT_SUCCESS_AUTHORIZED, 'success');
+    $customer_data = Customer::authorizeCustomer((int)$token_info['customers_id']);
+    if ($customer_data['welcome_email_sent'] === '0') {
+        $firstname = $customer_data['customers_firstname'];
+        $lastname = $customer_data['customers_lastname'];
+        $gender = $customer_data['customers_gender'];
+        $email_address = $customer_data['customers_email_address'];
+
+        require DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT_SEND_EMAIL);
+        Customer::setWelcomeEmailSent((int)$token_info['customers_id']);
+        zen_redirect(zen_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
+    }
+    zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
 if (!zen_is_logged_in() || zen_in_guest_checkout()) {
@@ -31,7 +43,6 @@ if (!in_array($_SESSION['customers_authorization'], [Customer::AUTH_NO_BROWSE, C
 
 if (($_GET['action'] ?? '') === 'resend') {
     require DIR_WS_MODULES . zen_get_module_directory(FILENAME_SEND_AUTH_TOKEN_EMAIL);
-
 }
 
 if (empty($customer_data['activation_required'])) {
