@@ -11,7 +11,7 @@ class Customer extends base
     public const AUTH_OK = 0;           //- customer is authorized
     public const AUTH_NO_BROWSE = 1;    //- customer must be authorized to browse
     public const AUTH_NO_PRICES = 2;    //- customer can browse, but no prices until authorized
-    public const AUTH_NO_PURCHASE = 3;       //- customer can browse with prices, but no cart/checkout until authorized
+    public const AUTH_NO_PURCHASE = 3;  //- customer can browse with prices, but no cart/checkout until authorized
     public const AUTH_BANNED = 4;       //- customer is banned
 
     protected ?int $customer_id = null;
@@ -337,11 +337,10 @@ class Customer extends base
     /**
      * Clears any existing account-authorization tokens for the current customer.
      */
-    protected static function clearAuthTokens(?int $customers_id = null): void
+    protected static function clearAuthTokens(int $customers_id): void
     {
         global $db;
 
-        $customers_id ??= $this->customer_id;
         $sql =
             "DELETE FROM " . TABLE_CUSTOMERS_AUTH_TOKENS . "
               WHERE customers_id = :customerID";
@@ -777,7 +776,7 @@ class Customer extends base
         $this->data['customers_authorization'] = (int)$status;
         $this->data['activation_required'] = $activation_required;
 
-        self::clearAuthTokens();
+        self::clearAuthTokens((int)$this->customer_id);
 
         return $this->data;
     }
@@ -1141,7 +1140,7 @@ class Customer extends base
         );
 
         $this->clearPasswordResetTokens($this->customer_id);
-        self::clearAuthTokens();
+        self::clearAuthTokens($this->customer_id);
 
         $this->notify('NOTIFY_CUSTOMER_AFTER_RECORD_DELETED', (int)$this->customer_id);
 
