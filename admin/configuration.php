@@ -12,7 +12,6 @@ $action = $_GET['action'] ?? '';
 if (!empty($action)) {
     switch ($action) {
         case 'saveall':
-
             $counter = 0;
             // Handle radio fields (configuration[cfg_XX])
             if (isset($_POST['configuration']) && is_array($_POST['configuration'])) {
@@ -90,7 +89,7 @@ if (!empty($action)) {
             }
 
             // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
-            if (zen_get_configuration_key_value(WARN_BEFORE_DOWN_FOR_MAINTENANCE) === 'true' && zen_get_configuration_key_value(DOWN_FOR_MAINTENANCE) === 'true') {
+            if (zen_get_configuration_key_value('WARN_BEFORE_DOWN_FOR_MAINTENANCE') === 'true' && zen_get_configuration_key_value('DOWN_FOR_MAINTENANCE') === 'true') {
                 $db->Execute(
                     "UPDATE " . TABLE_CONFIGURATION . "
                         SET configuration_value = 'false',
