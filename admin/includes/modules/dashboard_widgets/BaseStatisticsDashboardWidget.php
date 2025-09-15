@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -36,45 +37,45 @@ if ($result->RecordCount()) {
 }
 ?>
 <div class="panel panel-default reportBox">
-    <div class="panel-heading header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
+    <div class="panel-heading header"><?= BOX_TITLE_STATISTICS ?> </div>
     <table class="table table-striped table-condensed">
         <tr>
-          <td> <?php echo BOX_ENTRY_COUNTER_DATE; ?></td>
-          <td class="text-right"><?php echo $counter_startdate_formatted; ?></td>
+          <td> <?= BOX_ENTRY_COUNTER_DATE ?></td>
+          <td class="text-right"><?= $counter_startdate_formatted ?></td>
         </tr>
         <tr>
-          <td><?php echo BOX_ENTRY_COUNTER; ?></td>
-          <td class="text-right"><?php echo $counter; ?></td>
+          <td><?= BOX_ENTRY_COUNTER ?></td>
+          <td class="text-right"><?= $counter ?></td>
         </tr>
 <?php if (zen_is_superuser() || check_page(FILENAME_CUSTOMERS, '')) { ?>
       <tr>
-        <td><?php echo BOX_ENTRY_CUSTOMERS; ?></td>
-        <td class="text-right"><?php echo $customers; ?></td>
+        <td><?= BOX_ENTRY_CUSTOMERS ?></td>
+        <td class="text-right"><?= $customers ?></td>
       </tr>
 <?php } ?>
 <?php if (zen_is_superuser() || check_page(FILENAME_PRODUCT, '')) { ?>
       <tr>
-        <td><?php echo BOX_ENTRY_PRODUCTS; ?></td>
-        <td class="text-right"><?php echo $products; ?></td>
+        <td><?= BOX_ENTRY_PRODUCTS ?></td>
+        <td class="text-right"><?= $products ?></td>
       </tr>
       <tr>
-        <td><?php echo BOX_ENTRY_PRODUCTS_OFF; ?></td>
-        <td class="text-right"><?php echo $products_off; ?></td>
+        <td><?= BOX_ENTRY_PRODUCTS_OFF ?></td>
+        <td class="text-right"><?= $products_off ?></td>
       </tr>
 <?php } ?>
       <tr>
-        <td><?php echo BOX_ENTRY_REVIEWS; ?></td>
-        <td class="text-right"><?php echo $reviews; ?></td>
+        <td><?= BOX_ENTRY_REVIEWS ?></td>
+        <td class="text-right"><?= $reviews ?></td>
       </tr>
       <?php if (REVIEWS_APPROVAL == '1') { ?>
         <tr>
-          <td><a href="<?php echo zen_href_link(FILENAME_REVIEWS, 'status=1'); ?>"><?php echo BOX_ENTRY_REVIEWS_PENDING; ?></a></td>
-          <td class="text-right"><?php echo $reviews_pending; ?></td>
+          <td><a href="<?= zen_href_link(FILENAME_REVIEWS, 'status=1') ?>"><?= BOX_ENTRY_REVIEWS_PENDING ?></a></td>
+          <td class="text-right"><?= $reviews_pending ?></td>
         </tr>
       <?php } ?>
       <tr>
-        <td><?php echo BOX_ENTRY_NEWSLETTERS; ?></td>
-        <td class="text-right"><?php echo $newsletters; ?></td>
+        <td><?= BOX_ENTRY_NEWSLETTERS ?></td>
+        <td class="text-right"><?= $newsletters ?></td>
       </tr>
     </table>
 </div>
