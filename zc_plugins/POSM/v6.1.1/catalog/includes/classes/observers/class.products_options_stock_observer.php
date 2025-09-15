@@ -63,7 +63,8 @@ class products_options_stock_observer extends base
         );
 
         // -----
-        // Load the storefront common functions.  For the previous, unencapsulted, versions of the plugin, this
+        // Load the storefront common functions.
+        // For the previous, unencapsulated, versions of the plugin, this
         // file was loaded by the admin's extra_functions file.
         //
         require $this->getZcPluginDir() . DIR_WS_FUNCTIONS . 'products_options_stock_functions.php';
@@ -115,27 +116,27 @@ class products_options_stock_observer extends base
         // doesn't "overflow" that field length -- especially important for stores with MySql Strict-mode where
         // that "too big" value will result in an error.
         //
-        $this->name_max_length = (int)zen_field_length(TABLE_ORDERS_PRODUCTS, 'products_name');
+        $this->name_max_length = zen_field_length(TABLE_ORDERS_PRODUCTS, 'products_name');
     }
 
     // -----
     // Start observing methods ...
     // -----
 
-    protected function notify_ajax_bootstrap_search_clauses(&$class, string $e, $search_keywords, string &$select_clause, string &$from_clause, string &$where_clause, string &$order_by_clause, string &$limit_clause)
+    protected function notify_ajax_bootstrap_search_clauses(&$class, string $e, $search_keywords, string &$select_clause, string &$from_clause, string &$where_clause, string &$order_by_clause, string &$limit_clause): void
     {
         $from_clause .= $this->getSearchFromClause();
     }
-    protected function notify_search_from_string(&$class, string $e, string $from_str_in, string &$from_str_out)
+    protected function notify_search_from_string(&$class, string $e, string $from_str_in, string &$from_str_out): void
     {
         $from_str_out .= $this->getSearchFromClause();
     }
-    protected function getSearchFromClause()
+    protected function getSearchFromClause(): string
     {
         return " LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_STOCK . " posm ON posm.products_id = p.products_id";
     }
 
-    protected function notify_build_keyword_search(&$class, string $e, $not_used, array &$fields)
+    protected function notify_build_keyword_search(&$class, string $e, $not_used, array &$fields): void
     {
         $fields[] = 'posm.pos_model';
     }
@@ -145,7 +146,7 @@ class products_options_stock_observer extends base
     // its shopping-cart format to its order format.  Gives us the chance to update a
     // product's model-number from its generic value to its option-specific value.
     //
-    protected function notify_order_cart_finished(\order &$order, string $e)
+    protected function notify_order_cart_finished(\order &$order, string $e): void
     {
         foreach ($order->products as &$current_product) {
             $pos_record = $this->getOptionsStockRecord($current_product['id']);
@@ -161,7 +162,7 @@ class products_options_stock_observer extends base
     // to create the in/out-of-stock message to accompany the product in the order (used by the
     // NOTIFY_ORDER_PROCESSING_STOCK_DECREMENT_END processing).
     //
-    protected function notify_order_processing_stock_decrement_init(\order &$order, string $e, array $products)
+    protected function notify_order_processing_stock_decrement_init(\order &$order, string $e, array $products): void
     {
         $this->stock_message = $this->get_in_stock_message($order->products[$products['i']]['id'], 'text', true);
     }
@@ -170,7 +171,7 @@ class products_options_stock_observer extends base
     // Issued during order-creation by the order-class on a product-by-product basis.  If the current product
     // has stock managed by POSM, update that in-stock quantity.
     //
-    protected function notify_order_processing_stock_decrement_begin(\order &$order, string $e, $index, &$result)
+    protected function notify_order_processing_stock_decrement_begin(\order &$order, string $e, $index, &$result): void
     {
         global $db;
 
@@ -218,11 +219,11 @@ class products_options_stock_observer extends base
     }
 
     // -----
-    // Issued during order-creation by the order-class at the very end of each product's stock-handling.  We'll
-    // append any in-/out-of-stock message to the product's name (ensuring that it doesn't 'overflow' the allowable
-    // database field and save the unmodified version of the product's name to be used during the low-stock email.
+    // Issued during order-creation by the order-class at the very end of each product's stock-handling.
+    // We'll append any in-/out-of-stock message to the product's name (ensuring that it doesn't 'overflow' the allowable
+    // database field) and save the unmodified version of the product's name to be used during the low-stock email.
     //
-    protected function notify_order_processing_stock_decrement_end(\order &$order, string $e, $index)
+    protected function notify_order_processing_stock_decrement_end(\order &$order, string $e, $index): void
     {
         $i = (int)$index;
         $this->products_name_saved = $order->products[$i]['name'];  //-For use in options' low-stock emails
@@ -248,7 +249,7 @@ class products_options_stock_observer extends base
     // Issued during order-creation by the order-class, just after recording the product as an orders_products
     // entry.
     //
-    protected function notify_order_during_create_added_product_line_item(\order &$order, string $e, array $ordered_product)
+    protected function notify_order_during_create_added_product_line_item(\order &$order, string $e, array $ordered_product): void
     {
         global $db;
 
@@ -369,7 +370,7 @@ class products_options_stock_observer extends base
     // -----
     // Issued before "normal" stock handling
     //
-    protected function updateZenGetProductsStock(&$class, string $e, $products_id, &$products_quantity, bool &$quantity_handled)
+    protected function updateZenGetProductsStock(&$class, string $e, $products_id, &$products_quantity, bool &$quantity_handled): void
     {
         $posm_options = false;
         if (isset($_GET['action'], $_POST['products_id'], $_POST['id']) && $_GET['action'] === 'add_product' && $_POST['products_id'] == $products_id && is_array($_POST['id'])) {
@@ -387,7 +388,7 @@ class products_options_stock_observer extends base
     // the addition of stock-related status.  Previously contained in header_php_options_stock.php
     // for that page.
     //
-    protected function notify_header_end_account_history_info(&$class, string $e)
+    protected function notify_header_end_account_history_info(&$class, string $e): void
     {
         $this->addStockMessagesToOrderedProducts();
     }
@@ -397,7 +398,7 @@ class products_options_stock_observer extends base
     // the addition of stock-related status.  Previously contained in header_php_options_stock.php
     // for that page.
     //
-    protected function notify_header_end_checkout_confirmation(&$class, string $e)
+    protected function notify_header_end_checkout_confirmation(&$class, string $e): void
     {
         $this->addStockMessagesToOrder();
     }
@@ -407,7 +408,7 @@ class products_options_stock_observer extends base
     // the addition of stock-related status.  Previously contained in header_php_checkout_one_options_stock.php
     // for that page.
     //
-    protected function notify_header_end_checkout_one(&$class, string $e)
+    protected function notify_header_end_checkout_one(&$class, string $e): void
     {
         $this->addStockMessagesToOrder();
     }
@@ -417,7 +418,7 @@ class products_options_stock_observer extends base
     // the addition of stock-related status.  Previously contained in header_php_checkout_one__configuration_options_stock.php
     // for that page.
     //
-    protected function notify_header_end_checkout_one_confirmation(&$class, string $e)
+    protected function notify_header_end_checkout_one_confirmation(&$class, string $e): void
     {
         $this->addStockMessagesToOrder();
     }
@@ -427,7 +428,7 @@ class products_options_stock_observer extends base
     // the addition of stock-related status.  Previously contained in header_php_options_stock.php
     // for that page.
     //
-    protected function notify_header_end_checkout_success(&$class, string $e)
+    protected function notify_header_end_checkout_success(&$class, string $e): void
     {
         global $flag_show_products_notification, $notificationsArray;
 
@@ -454,7 +455,7 @@ class products_options_stock_observer extends base
     // the addition of stock-related status.  Previously contained in header_php_options_stock.php
     // for that page.
     //
-    protected function notify_header_end_shopping_cart(&$class, string $e)
+    protected function notify_header_end_shopping_cart(&$class, string $e): void
     {
         global $productArray;
 
@@ -489,10 +490,10 @@ class products_options_stock_observer extends base
     }
 
     // -----
-    // Issued at the end of the active template's html_header.php (just before
-    // the </head> tag, enables the plugin's CSS and JS files to be inserted.
+    // Issued at the end of the active template's html_header.php (just before the </head> tag)
+    // Enables the plugin's CSS and JS files to be inserted.
     //
-    protected function notify_html_head_end(&$class, string $e)
+    protected function notify_html_head_end(&$class, string $e): void
     {
         global $template, $current_page_base;
 
@@ -505,7 +506,7 @@ class products_options_stock_observer extends base
 
         $stylesheet_dir = $template->get_template_dir($stylesheet, DIR_WS_TEMPLATE, $current_page_base, 'css');
         $stylesheet_dir .= '/' . $stylesheet;
-        if (strpos($stylesheet_dir, $this->getZcPluginDir()) === false && file_exists($stylesheet_dir)) {
+        if (!str_contains($stylesheet_dir, $this->getZcPluginDir()) && file_exists($stylesheet_dir)) {
             echo '<link rel="stylesheet" href="' . $stylesheet_dir . '">' . "\n";
         }
 
@@ -523,7 +524,7 @@ class products_options_stock_observer extends base
     // -----
     // Return the plugin's currently-installed zc_plugin directory for the catalog.
     //
-    public function getZcPluginDir()
+    public function getZcPluginDir(): string
     {
         return $this->zcPluginDir;
     }
@@ -532,7 +533,7 @@ class products_options_stock_observer extends base
     // Add stock-related messages to an order's products.  Used on the `checkout_confirmation`,
     // `checkout_one` and `checkout_one_confirmation` pages.
     //
-    protected function addStockMessagesToOrder()
+    protected function addStockMessagesToOrder(): void
     {
         global $order, $flagAnyOutOfStock;
 
@@ -548,7 +549,7 @@ class products_options_stock_observer extends base
     // Add stock-related messages to previously-placed orders.  Used in updating the ordered
     // products in the `account_history_info` and `checkout_success` pages.
     //
-    protected function addStockMessagesToOrderedProducts()
+    protected function addStockMessagesToOrderedProducts(): void
     {
         global $order;
 
@@ -566,7 +567,7 @@ class products_options_stock_observer extends base
                     if (POSM_SHOW_IN_STOCK_MESSAGE === 'false') {
                         $msg = '';
                     }
-                } elseif (strpos($msg, ', ') === false) {
+                } elseif (!str_contains($msg, ', ')) {
                     $extra_class = 'no-stock';
                 } else {
                     $extra_class = 'in-stock';
@@ -812,7 +813,7 @@ class products_options_stock_observer extends base
         global $db;
 
         $pid = (int)$prid;
-        if ($posm_options === false && isset($_SESSION['cart']->contents[$prid], $_SESSION['cart']->contents[$prid]['attributes'])) {
+        if ($posm_options === false && isset($_SESSION['cart']->contents[$prid]['attributes'])) {
             $posm_options = $_SESSION['cart']->contents[$prid]['attributes'];
         }
         if (!(is_pos_product($pid) && is_array($posm_options))) {
@@ -843,7 +844,7 @@ class products_options_stock_observer extends base
         $this->initMbStrings();
         return ($this->use_mb === true) ? mb_strlen((string)$string, CHARSET) : strlen((string)$string);
     }
-    public function subString($string, $start, $length = null)
+    public function subString($string, $start, $length = null): string
     {
         // -----
         // Return the substring requested, using either substr or mb_substr, as determined by the
@@ -852,7 +853,7 @@ class products_options_stock_observer extends base
         $this->initMbStrings();
         return ($this->use_mb === true) ? mb_substr((string)$string, $start, $length, CHARSET) : substr((string)$string, $start, $length);
     }
-    public function stringPos($string, $needle, $offset = 0)
+    public function stringPos($string, $needle, $offset = 0): bool|int
     {
         // -----
         // Return the position requested, using either strpos or mb_strpos, as determined by the
@@ -861,10 +862,10 @@ class products_options_stock_observer extends base
         $this->initMbStrings();
         return ($this->use_mb === true) ? mb_strpos((string)$string, (string)$needle, (int)$offset, CHARSET) : strpos((string)$string, (string)$needle, (int)$offset);
     }
-    protected function initMbStrings()
+    protected function initMbStrings(): void
     {
         // -----
-        // If haven't yet determined whether to use mb_strlen, check to see that the
+        // If it hasn't yet been determined whether to use mb_strlen, check to see that the
         // PHP function mb_encoding_aliases exists and, if so, whether the site's defined
         // CHARSET is valid.  If both are true, then we'll use mb_strlen instead of strlen.
         //
@@ -884,12 +885,12 @@ class products_options_stock_observer extends base
     // -----
     // Write a debug-output to the current session's myDEBUG-POSM-*.log file, if enabled.
     //
-    protected function debugMessage($msg)
+    protected function debugMessage($msg): void
     {
         $this->debug_message("products_options_stock_observer: $msg");
     }
 
-    public function debug_message($msg)
+    public function debug_message($msg): void
     {
         if ($this->debug === true) {
             error_log("$msg\n", 3, $this->debug_log_file);
