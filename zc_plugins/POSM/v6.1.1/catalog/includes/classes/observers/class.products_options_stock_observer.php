@@ -377,7 +377,7 @@ class products_options_stock_observer extends base
         }
         $pos_record = $this->getOptionsStockRecord($products_id, $posm_options);
         if ($pos_record !== false) {
-            $products_quantity = ($pos_record->EOF) ? 0 : $pos_record->fields['products_quantity'];
+            $products_quantity = $pos_record->EOF ? 0 : zen_str_to_numeric((string)$pos_record->fields['products_quantity']);
             $quantity_handled = true;
         }
     }
