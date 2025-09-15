@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -23,12 +24,13 @@ $menuTitles = zen_get_menu_titles();
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-adm1-collapse">
     <ul class="nav navbar-nav">
-          <?php foreach (zen_get_admin_menu_for_user() as $menuKey => $pages) { ?>
+          <?php
+          foreach (zen_get_admin_menu_for_user() as $menuKey => $pages) { ?>
             <li class="dropdown">
-              <a href="<?php echo zen_href_link(FILENAME_ALT_NAV) ?>" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><?php echo $menuTitles[$menuKey] ?><b class="caret">&nbsp;</b></a>
+              <a href="<?= zen_href_link(FILENAME_ALT_NAV) ?>" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><?= $menuTitles[$menuKey] ?><b class="caret">&nbsp;</b></a>
               <ul class="dropdown-menu">
                 <?php foreach ($pages as $page) { ?>
-                  <li><a href="<?php echo zen_href_link($page['file'], $page['params']) ?>"><?php echo $page['name'] ?></a></li>
+                  <li><a href="<?= zen_href_link($page['file'], $page['params']) ?>"><?= $page['name'] ?></a></li>
                 <?php } ?>
               </ul>
             </li>
@@ -36,16 +38,16 @@ $menuTitles = zen_get_menu_titles();
           }
           foreach ($upperMenuArray as $upperMenu) {
           ?>
-          <li class="upperMenuItems"><a href="<?= $upperMenu['a'] . '" '. ($upperMenu['params'] ?? 'class="headerLink"') . '>' . $upperMenu['title'] ?></a></li>
+          <li class="upperMenuItems"><a href="<?= $upperMenu['a'] ?>"<?= ($upperMenu['params'] ?? ' class="headerLink"') ?>><?= $upperMenu['title'] ?></a></li>
           <?php
-              }
-              ?>
+          }
+          ?>
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>
 <?php if ($url = page_has_help()) { ?>
 <div class="pull-right noprint">
-  <a href="<?php echo $url; ?>" rel="noopener" target="_blank" class="btn btn-sm btn-default btn-help" role="button" title="Help">
+  <a href="<?= $url ?>" rel="noopener" target="_blank" class="btn btn-sm btn-default btn-help" role="button" title="Help">
     <i class="fa-regular fa-question fa-lg" aria-hidden="true"></i>
   </a>
 </div>
