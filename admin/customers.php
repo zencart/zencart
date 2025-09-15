@@ -13,18 +13,13 @@ $group_array = [];
 
 // Override instructions in:
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
-if (!isset($show_registration_ip_in_listing)) {
-    $show_registration_ip_in_listing = false;
-}
+$show_registration_ip_in_listing ??= false;
+
 $action = $_GET['action'] ?? '';
 $customers_id = (int)($_POST['cID'] ?? $_GET['cID'] ?? 0);
 
-if (!isset($_GET['page'])) {
-    $_GET['page'] = '';
-}
-if (!isset($_GET['list_order'])) {
-    $_GET['list_order'] = '';
-}
+$_GET['page'] ??= '';
+$_GET['list_order'] ??= '';
 
 $error = false;
 $processed = false;
@@ -35,6 +30,7 @@ if (!empty($action)) {
             $customer = new Customer($customers_id);
             $addressArray = $customer->getData('addresses');
             break;
+
         case 'status':
             $customer = new Customer($customers_id);
             $custinfo = $customer->getData();
@@ -79,6 +75,7 @@ if (!empty($action)) {
 
             zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action'])));
             break;
+
         case 'update':
             if ($customers_id === 0) {
                 zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
@@ -269,12 +266,7 @@ if (!empty($action)) {
                     $sql_data_array
                 );
 
-                zen_redirect(
-                    zen_href_link(
-                        FILENAME_CUSTOMERS,
-                        zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customers_id
-                    )
-                );
+                zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customers_id));
             } elseif ($error === true) {
                 $cInfo = new objectInfo($_POST);
                 $cInfo->company = $cInfo->entry_company;
@@ -287,8 +279,9 @@ if (!empty($action)) {
                 $processed = true;
             }
             break;
+
         case 'pwdresetconfirm':
-            if ($customers_id > 0 && isset($_POST['newpassword']) && $_POST['newpassword'] !== '' && isset($_POST['newpasswordConfirm']) && $_POST['newpasswordConfirm'] !== '') {
+            if ($customers_id !== 0 && isset($_POST['newpassword']) && $_POST['newpassword'] !== '' && isset($_POST['newpasswordConfirm']) && $_POST['newpasswordConfirm'] !== '') {
                 $password_new = zen_db_prepare_input($_POST['newpassword']);
                 $password_confirmation = zen_db_prepare_input($_POST['newpasswordConfirm']);
                 $error = false;
@@ -341,14 +334,10 @@ if (!empty($action)) {
 
                     $messageStack->add_session(SUCCESS_PASSWORD_UPDATED, 'success');
                 }
-                zen_redirect(
-                    zen_href_link(
-                        FILENAME_CUSTOMERS,
-                        zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customers_id
-                    )
-                );
+                zen_redirect(zen_href_link(FILENAME_CUSTOMERS,zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customers_id));
             }
             break;
+
         case 'deleteconfirm':
             $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_CUSTOMERS_DELETE_CONFIRM', ['customers_id' => $customers_id]);
             $customer = new Customer($customers_id);
@@ -357,35 +346,38 @@ if (!empty($action)) {
             $customer->delete($delete_reviews, $forget_only);
             zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
             break;
+
         case 'edit':
-            if ($customers_id === 0) {
+        default:
+            $customer = new Customer($customers_id);
+            $custdata = $customer->getData();
+            if (empty($custdata)) {
                 zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
             }
-        default:    //- Fall-through from above if $customers_id appears to be valid.
-            $customer = new Customer($customers_id);
-            $cInfo = new objectInfo($customer->getData());
+
+            $cInfo = new objectInfo($custdata);
             break;
     }
 }
 ?>
 <!doctype html>
-    <html <?php echo HTML_PARAMS; ?>>
+    <html <?= HTML_PARAMS ?>>
     <head>
-        <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+        <?php require DIR_WS_INCLUDES . 'admin_html_head.php' ?>
 <?php
 if ($action === 'edit' || $action === 'update') {
 ?>
         <script>
             function check_form() {
                 var error = 0;
-                var error_message = '<?php echo JS_ERROR; ?>';
+                var error_message = '<?= JS_ERROR ?>';
 
 <?php
     if (ACCOUNT_GENDER === 'true') {
 ?>
                 if (document.customers.customers_gender[0].checked || document.customers.customers_gender[1].checked) {
                 } else {
-                    error_message = error_message + '<?php echo JS_GENDER; ?>';
+                    error_message = error_message + '<?= JS_GENDER ?>';
                     error = 1;
                 }
 <?php
@@ -394,7 +386,7 @@ if ($action === 'edit' || $action === 'update') {
 
                 if (document.customers.elements['entry_country_id'].type != 'hidden') {
                     if (document.customers.entry_country_id.value == 0) {
-                        error_message = error_message + '<?php echo JS_COUNTRY; ?>';
+                        error_message = error_message + '<?= JS_COUNTRY ?>';
                         error = 1;
                     }
                 }
@@ -413,13 +405,13 @@ if ($action === 'edit' || $action === 'update') {
     </head>
     <body>
     <!-- header //-->
-    <?php require DIR_WS_INCLUDES . 'header.php'; ?>
+    <?php require DIR_WS_INCLUDES . 'header.php' ?>
     <!-- header_eof //-->
 
     <!-- body //-->
     <div class="container-fluid">
         <!-- body_text //-->
-        <h1><?php echo HEADING_TITLE; ?></h1>
+        <h1><?= HEADING_TITLE ?></h1>
 <?php
 if ($action === 'edit' || $action === 'update') {
     $newsletter_array = [
@@ -439,33 +431,23 @@ if ($action === 'edit' || $action === 'update') {
     echo zen_draw_hidden_field('cID', $customers_id);
     echo zen_hide_session_id();
 ?>
-        <div class="row formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></div>
+        <div class="row formAreaTitle"><?= CATEGORY_PERSONAL ?></div>
         <div class="formArea">
 <?php
     if (ACCOUNT_GENDER === 'true') {
 ?>
             <div class="form-group">
                 <div class="col-sm-3">
-                    <p class="control-label"><?php echo ENTRY_GENDER; ?></p>
+                    <p class="control-label"><?= ENTRY_GENDER ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
-                    <label class="radio-inline"><?php
-                        echo zen_draw_radio_field(
-                                'customers_gender',
-                                'm',
-                                false,
-                                $cInfo->customers_gender
-                            ) . MALE; ?>
+                    <label class="radio-inline">
+                        <?= zen_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender) . MALE ?>
                     </label>
-                    <label class="radio-inline"><?php
-                        echo zen_draw_radio_field(
-                                'customers_gender',
-                                'f',
-                                false,
-                                $cInfo->customers_gender
-                            ) . FEMALE; ?>
+                    <label class="radio-inline">
+                        <?= zen_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender) . FEMALE ?>
                     </label>
-                    <?php echo ($error == true && $entry_gender_error == true) ? '&nbsp;' . ENTRY_GENDER_ERROR : ''; ?>
+                    <?= ($error === true && $entry_gender_error === true) ? '&nbsp;' . ENTRY_GENDER_ERROR : '' ?>
                 </div>
             </div>
 <?php
@@ -497,29 +479,21 @@ if ($action === 'edit' || $action === 'update') {
     }
 ?>
             <div class="form-group">
-                <?php
-                echo zen_draw_label(
-                    CUSTOMERS_AUTHORIZATION,
-                    'customers_authorization',
-                    'class="col-sm-3 control-label"'
-                ); ?>
+                <?= zen_draw_label(CUSTOMERS_AUTHORIZATION, 'customers_authorization', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_pull_down_menu(
+                    <?= zen_draw_pull_down_menu(
                         'customers_authorization',
                         $customers_authorization_array,
                         $cInfo->customers_authorization,
                         'class="form-control" id="customers_authorization"'
-                    ); ?>
+                    ) ?>
                     <?= $show_activation_waiting ?? '' ?>
                 </div>
             </div>
             <div class="form-group">
-                <?php
-                echo zen_draw_label(ENTRY_FIRST_NAME, 'customers_firstname', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_FIRST_NAME, 'customers_firstname', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'customers_firstname',
                         htmlspecialchars(
                             $cInfo->customers_firstname,
@@ -533,15 +507,13 @@ if ($action === 'edit' || $action === 'update') {
                             50
                         ) . ' class="form-control" id="customers_firstname" minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '"',
                         true
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
             <div class="form-group">
-                <?php
-                echo zen_draw_label(ENTRY_LAST_NAME, 'customers_lastname', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_LAST_NAME, 'customers_lastname', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'customers_lastname',
                         htmlspecialchars(
                             $cInfo->customers_lastname,
@@ -555,36 +527,33 @@ if ($action === 'edit' || $action === 'update') {
                             50
                         ) . ' class="form-control" id="customers_lastname" minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '"',
                         true
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
 <?php
     if (ACCOUNT_DOB === 'true') {
 ?>
             <div class="form-group">
-                <?php
-                echo zen_draw_label(ENTRY_DATE_OF_BIRTH, 'customers_dob', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_DATE_OF_BIRTH, 'customers_dob', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'customers_dob',
                         ((empty($cInfo->customers_dob) || $cInfo->customers_dob <= '0001-01-01' || $cInfo->customers_dob === '0001-01-01 00:00:00') ? '' :
                             (($action === 'edit') ? zen_date_short($cInfo->customers_dob) : $cInfo->customers_dob)
                         ),
                         'maxlength="10" class="form-control" id="customers_dob" minlength="' . ENTRY_DOB_MIN_LENGTH . '"',
                         (ACCOUNT_DOB === 'true' && (int)ENTRY_DOB_MIN_LENGTH !== 0)
-                    );
-                    echo ($error === true && $entry_date_of_birth_error === true) ? '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR : '';?>
+                    ) ?>
+                    <?= ($error === true && $entry_date_of_birth_error === true) ? '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR : '' ?>
                 </div>
             </div>
 <?php
     }
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_EMAIL_ADDRESS, 'customers_email_address', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_EMAIL_ADDRESS, 'customers_email_address', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'customers_email_address',
                         htmlspecialchars(
                             $cInfo->customers_email_address,
@@ -598,8 +567,8 @@ if ($action === 'edit' || $action === 'update') {
                             50
                         ) . ' class="form-control" id="customers_email_address" minlength="' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . '"',
                         true
-                        );
-                        echo ($error === true && $entry_email_address_check_error === true) ? '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR : ''; ?>
+                    ) ?>
+                    <?= ($error === true && $entry_email_address_check_error === true) ? '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR : '' ?>
                 </div>
             </div>
  <?php
@@ -623,8 +592,8 @@ if ($action === 'edit' || $action === 'update') {
         foreach ($additional_fields as $current_field) {
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"'); ?>
-                <div class="col-sm-9 col-md-6"><?php echo $current_field['input']; ?></div>
+                <?= zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"') ?>
+                <div class="col-sm-9 col-md-6"><?= $current_field['input'] ?></div>
             </div>
 <?php
         }
@@ -635,17 +604,16 @@ if ($action === 'edit' || $action === 'update') {
     if (ACCOUNT_COMPANY === 'true') {
 ?>
         <div class="row">
-            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
+            <?= zen_draw_separator('pixel_trans.gif', '1', '10') ?>
         </div>
         <div class="row formAreaTitle">
-            <?php echo CATEGORY_COMPANY; ?>
+            <?= CATEGORY_COMPANY ?>
         </div>
         <div class="formArea">
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_COMPANY, 'entry_company', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_COMPANY, 'entry_company', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'entry_company',
                         htmlspecialchars(($cInfo->company ?? ''), ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
@@ -653,7 +621,7 @@ if ($action === 'edit' || $action === 'update') {
                             'entry_company',
                             50
                         ) . ' class="form-control" id="entry_company" minlength="' . ENTRY_COMPANY_MIN_LENGTH . '"'
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
         </div>
@@ -661,16 +629,15 @@ if ($action === 'edit' || $action === 'update') {
     }
 ?>
         <div class="row">
-            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
+            <?= zen_draw_separator('pixel_trans.gif', '1', '10') ?>
         </div>
-        <div class="row formAreaTitle"><?php echo CATEGORY_ADDRESS; ?></div>
+        <div class="row formAreaTitle"><?= CATEGORY_ADDRESS ?></div>
         <div class="formArea">
             <div class="form-group">
                 <?php
-                echo zen_draw_label(ENTRY_STREET_ADDRESS, 'entry_street_address', 'class="col-sm-3 control-label"'); ?>
+                echo zen_draw_label(ENTRY_STREET_ADDRESS, 'entry_street_address', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'entry_street_address',
                         htmlspecialchars($cInfo->street_address ?? '', ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
@@ -679,36 +646,33 @@ if ($action === 'edit' || $action === 'update') {
                             50
                         ) . ' class="form-control" id="entry_street_address" minlength="' . ENTRY_STREET_ADDRESS_MIN_LENGTH . '"',
                         true
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
 <?php
     if (ACCOUNT_SUBURB === 'true') {
 ?>
             <div class="form-group">
-                <?php
-                echo zen_draw_label(ENTRY_SUBURB, 'entry_suburb', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_SUBURB, 'entry_suburb', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'entry_suburb',
-                        htmlspecialchars((string)$cInfo->suburb ?? '', ENT_COMPAT, CHARSET, true),
+                        htmlspecialchars((string)($cInfo->suburb ?? ''), ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
                             TABLE_ADDRESS_BOOK,
                             'entry_suburb',
                             50
                         ) . ' class="form-control" id="entry_suburb"'
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
 <?php
     }
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_POST_CODE, 'entry_postcode', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_POST_CODE, 'entry_postcode', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'entry_postcode',
                         htmlspecialchars($cInfo->postcode ?? '', ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
@@ -717,15 +681,13 @@ if ($action === 'edit' || $action === 'update') {
                             10
                         ) . ' class="form-control" id="entry_postcode" minlength="' . ENTRY_POSTCODE_MIN_LENGTH . '"',
                         true
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
             <div class="form-group">
-                <?php
-                echo zen_draw_label(ENTRY_CITY, 'entry_city', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_CITY, 'entry_city', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'entry_city',
                         htmlspecialchars($cInfo->city ?? '', ENT_COMPAT, CHARSET, true),
                         zen_set_field_length(
@@ -734,63 +696,57 @@ if ($action === 'edit' || $action === 'update') {
                             50
                         ) . ' class="form-control" id="entry_city" minlength="' . ENTRY_CITY_MIN_LENGTH . '"',
                         true
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
 <?php
     if (ACCOUNT_STATE === 'true') {
 ?>
             <div class="form-group">
-                <?php
-                echo zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-<?php
-        echo zen_draw_pull_down_menu(
-            'entry_zone_id',
-            zen_prepare_country_zones_pull_down((int)$cInfo->entry_country_id),
-            (int)$cInfo->entry_zone_id,
-            'class="form-control" id="entry_zone_id"'
-        );
-
-        echo zen_draw_input_field(
-            'entry_state',
-            htmlspecialchars(
-                $cInfo->entry_state ?? '',
-                ENT_COMPAT,
-                CHARSET,
-                true
-            ),
-            'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"'
-        );
-?>
+                    <?= zen_draw_pull_down_menu(
+                        'entry_zone_id',
+                        zen_prepare_country_zones_pull_down((int)$cInfo->entry_country_id),
+                        (int)$cInfo->entry_zone_id,
+                        'class="form-control" id="entry_zone_id"'
+                    ) ?>
+                    <?= zen_draw_input_field(
+                        'entry_state',
+                        htmlspecialchars(
+                            $cInfo->entry_state ?? '',
+                            ENT_COMPAT,
+                            CHARSET,
+                            true
+                        ),
+                        'class="form-control" id="entry_state" minlength="' . ENTRY_STATE_MIN_LENGTH . '"'
+                    ) ?>
                 </div>
             </div>
 <?php
     }
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_COUNTRY, 'entry_country_id', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_COUNTRY, 'entry_country_id', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_pull_down_menu(
+                    <?= zen_draw_pull_down_menu(
                         'entry_country_id',
                         zen_get_countries_for_admin_pulldown(),
                         $cInfo->entry_country_id,
                         'class="form-control" id="entry_country_id"'
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
         </div>
         <div class="row">
-            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
+            <?= zen_draw_separator('pixel_trans.gif', '1', '10') ?>
         </div>
-        <div class="row formAreaTitle"><?php echo CATEGORY_CONTACT; ?></div>
+        <div class="row formAreaTitle"><?= CATEGORY_CONTACT ?></div>
         <div class="formArea">
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_TELEPHONE_NUMBER, 'customers_telephone', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_TELEPHONE_NUMBER, 'customers_telephone', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'customers_telephone',
                         htmlspecialchars(
                             $cInfo->customers_telephone,
@@ -803,15 +759,15 @@ if ($action === 'edit' || $action === 'update') {
                             'customers_telephone',
                             15
                         ) . ' class="form-control" id="customers_telephone" minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '"',
-                        (ENTRY_TELEPHONE_MIN_LENGTH > 0 ? true : false)
-                    ); ?>
+                        (ENTRY_TELEPHONE_MIN_LENGTH > 0)
+                    ) ?>
                 </div>
             </div>
 <?php
     if (ACCOUNT_FAX_NUMBER === 'true') {
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_FAX_NUMBER, 'customers_fax', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_FAX_NUMBER, 'customers_fax', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
 <?php
         if ($processed === true) {
@@ -840,13 +796,13 @@ if ($action === 'edit' || $action === 'update') {
 ?>
         </div>
         <div class="row">
-            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
+            <?= zen_draw_separator('pixel_trans.gif', '1', '10') ?>
         </div>
-        <div class="row formAreaTitle"><?php echo CATEGORY_OPTIONS; ?></div>
+        <div class="row formAreaTitle"><?= CATEGORY_OPTIONS ?></div>
         <div class="formArea">
             <div class="form-group">
                 <div class="col-sm-3">
-                    <p class="control-label"><?php echo ENTRY_EMAIL_PREFERENCE; ?></p>
+                    <p class="control-label"><?= ENTRY_EMAIL_PREFERENCE ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
 <?php
@@ -858,19 +814,11 @@ if ($action === 'edit' || $action === 'update') {
         $email_pref_text = ($cInfo->customers_email_format === 'TEXT');
         $email_pref_html = !$email_pref_text;
 ?>
-                    <label class="radio-inline"><?php
-                        echo zen_draw_radio_field(
-                                'customers_email_format',
-                                'HTML',
-                                $email_pref_html
-                            ) . ENTRY_EMAIL_HTML_DISPLAY; ?>
+                    <label class="radio-inline">
+                        <?= zen_draw_radio_field('customers_email_format', 'HTML', $email_pref_html) . ENTRY_EMAIL_HTML_DISPLAY ?>
                     </label>
-                    <label class="radio-inline"><?php
-                        echo zen_draw_radio_field(
-                                'customers_email_format',
-                                'TEXT',
-                                $email_pref_text
-                            ) . ENTRY_EMAIL_TEXT_DISPLAY; ?>
+                    <label class="radio-inline">
+                        <?= zen_draw_radio_field('customers_email_format', 'TEXT', $email_pref_text) . ENTRY_EMAIL_TEXT_DISPLAY ?>
                     </label>
 <?php
     }
@@ -878,7 +826,7 @@ if ($action === 'edit' || $action === 'update') {
                 </div>
             </div>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_NEWSLETTER, 'customers_newsletter', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_NEWSLETTER, 'customers_newsletter', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
 <?php
     if ($processed === true) {
@@ -903,24 +851,23 @@ if ($action === 'edit' || $action === 'update') {
     if (WHOLESALE_PRICING_CONFIG !== 'false') {
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(TEXT_WHOLESALE_LEVEL, 'customers-whole', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(TEXT_WHOLESALE_LEVEL, 'customers-whole', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'customers_whole',
                         $cInfo->customers_whole,
                         ' class="form-control" id="customers-whole" min="0"',
                         false,
                         'number'
-                    ); ?>
-                    <span class="help-block" id="whole-help"><?php echo HELPTEXT_WHOLESALE_LEVEL; ?></span>
+                    ) ?>
+                    <span class="help-block" id="whole-help"><?= HELPTEXT_WHOLESALE_LEVEL ?></span>
                 </div>
             </div>
 <?php
     }
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label(ENTRY_PRICING_GROUP, 'customers_group_pricing', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(ENTRY_PRICING_GROUP, 'customers_group_pricing', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
 <?php
     if ($processed === true) {
@@ -962,10 +909,9 @@ if ($action === 'edit' || $action === 'update') {
                 </div>
             </div>
             <div class="form-group">
-                <?php echo zen_draw_label(CUSTOMERS_REFERRAL, 'customers_referral', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(CUSTOMERS_REFERRAL, 'customers_referral', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php
-                    echo zen_draw_input_field(
+                    <?= zen_draw_input_field(
                         'customers_referral',
                         htmlspecialchars(
                             $cInfo->customers_referral,
@@ -978,13 +924,13 @@ if ($action === 'edit' || $action === 'update') {
                             'customers_referral',
                             15
                         ) . ' class="form-control" id="customers_referral"'
-                    ); ?>
+                    ) ?>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-sm-3">
-                    <p class="control-label"><?php echo TEXT_CUSTOMER_GROUPS; ?></p>
+                    <p class="control-label"><?= TEXT_CUSTOMER_GROUPS ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
                     <div class="row">
@@ -993,16 +939,12 @@ if ($action === 'edit' || $action === 'update') {
 <?php
     $groups_already_in = zen_groups_customer_belongs_to($cInfo->customers_id);
     foreach (zen_get_all_customer_groups() as $group) {
+        $checked = array_key_exists($group['id'], $groups_already_in) ? 'checked' : '';
 ?>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="customer_groups[]" value="<?php
-                                    echo $group['id']; ?>" <?php
-                                    if (array_key_exists($group['id'], $groups_already_in)) {
-                                        echo 'checked';
-                                    } ?>>
-                                    <?php
-                                    echo $group['text']; ?>
+                                    <input type="checkbox" name="customer_groups[]" value="<?= $group['id'] ?>" <?= $checked ?>>
+                                     <?= $group['text'] ?>
                                 </label>
                             </div>
 <?php
@@ -1014,27 +956,26 @@ if ($action === 'edit' || $action === 'update') {
             </div>
         </div>
         <div class="row">
-            <?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?>
+            <?= zen_draw_separator('pixel_trans.gif', '1', '10') ?>
         </div>
         <div class="row text-right">
             <button type="submit" class="btn btn-primary">
-                <?php echo IMAGE_UPDATE; ?>
+                <?= IMAGE_UPDATE ?>
             </button>
-            <a href="<?php
-            echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action'])); ?>"
-               class="btn btn-default"><?php
-                echo IMAGE_CANCEL; ?></a>
+            <a href="<?= zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action'])) ?>" class="btn btn-default">
+                <?= IMAGE_CANCEL ?>
+            </a>
         </div>
-        <?php echo '</form>'; ?>
+        <?= '</form>' ?>
 <?php
 } elseif ($action === 'list_addresses') {
 ?>
         <div class="row">
             <fieldset>
-                <legend><?php
-                    echo ADDRESS_BOOK_TITLE; ?></legend>
-                <div class="alert forward"><?php
-                    echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
+                <legend><?= ADDRESS_BOOK_TITLE ?></legend>
+                <div class="alert forward">
+                    <?= sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES) ?>
+                </div>
                 <br class="clearBoth">
 <?php
     /**
@@ -1042,21 +983,20 @@ if ($action === 'edit' || $action === 'update') {
      */
     foreach ($addressArray as $addresses) {
 ?>
-                    <h3 class="addressBookDefaultName"><?php
-                        echo zen_output_string_protected(
-                            $addresses['firstname'] . ' ' . $addresses['lastname']
-                        );
-                        echo ((int)$addresses['address_book_id'] === zen_get_customers_address_primary((int)$_GET['cID'])) ?
-                            '&nbsp;' . PRIMARY_ADDRESS : ''; ?>
+                    <h3 class="addressBookDefaultName">
+                        <?= zen_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']) ?>
+                        <?= ((int)$addresses['address_book_id'] === zen_get_customers_address_primary((int)$_GET['cID'])) ?
+                            '&nbsp;' . PRIMARY_ADDRESS :
+                            '' ?>
                     </h3>
-                    <address><?php
-                        echo zen_address_format(
+                    <address>
+                        <?= zen_address_format(
                             $addresses['format_id'],
                             $addresses['address'],
                             true,
                             ' ',
                             '<br>'
-                        ); ?>
+                        ) ?>
                     </address>
 
                     <br class="clearBoth">
@@ -1064,8 +1004,8 @@ if ($action === 'edit' || $action === 'update') {
     }
 ?>
                     <div class="buttonRow forward">
-                        <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action'])); ?>" class="btn btn-default" role="button">
-                            <?php echo IMAGE_BACK; ?>
+                        <a href="<?= zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action'])) ?>" class="btn btn-default" role="button">
+                            <?= IMAGE_BACK ?>
                         </a>
                     </div>
                 </fieldset>
@@ -1083,62 +1023,27 @@ if ($action === 'edit' || $action === 'update') {
             </div>
 <?php
 // Sort Listing
-    switch ($_GET['list_order']) {
-        case 'id-asc':
-            $disp_order = "ci.customers_info_date_account_created";
-            break;
-        case 'firstname':
-            $disp_order = "c.customers_firstname";
-            break;
-        case 'firstname-desc':
-            $disp_order = "c.customers_firstname DESC";
-            break;
-        case 'group-asc':
-            $disp_order = "c.customers_group_pricing";
-            break;
-        case 'group-desc':
-            $disp_order = "c.customers_group_pricing DESC";
-            break;
-        case 'lastname':
-            $disp_order = "c.customers_lastname, c.customers_firstname";
-            break;
-        case 'lastname-desc':
-            $disp_order = "c.customers_lastname DESC, c.customers_firstname";
-            break;
-        case 'company':
-            $disp_order = "a.entry_company";
-            break;
-        case 'company-desc':
-            $disp_order = "a.entry_company DESC";
-            break;
-        case 'login-asc':
-            $disp_order = "ci.customers_info_date_of_last_logon";
-            break;
-        case 'login-desc':
-            $disp_order = "ci.customers_info_date_of_last_logon DESC";
-            break;
-        case 'approval-asc':
-            $disp_order = "c.customers_authorization";
-            break;
-        case 'approval-desc':
-            $disp_order = "c.customers_authorization DESC";
-            break;
-        case 'gv_balance-asc':
-            $disp_order = "cgc.amount, c.customers_lastname, c.customers_firstname";
-            break;
-        case 'gv_balance-desc':
-            $disp_order = "cgc.amount DESC, c.customers_lastname, c.customers_firstname";
-            break;
-        case 'wholesale-asc':
-            $disp_order = 'c.customers_whole, c.customers_lastname, c.customers_firstname';
-            break;
-        case 'wholesale-desc':
-            $disp_order = 'c.customers_whole DESC, c.customers_lastname, c.customers_firstname';
-            break;
-        default:
-            $disp_order = "ci.customers_info_date_account_created DESC";
-            break;
-    }
+    $disp_order = match ($_GET['list_order']) {
+        'id-asc' => "ci.customers_info_date_account_created",
+        'firstname' => "c.customers_firstname",
+        'firstname-desc' => "c.customers_firstname DESC",
+        'group-asc' => "c.customers_group_pricing",
+        'group-desc' => "c.customers_group_pricing DESC",
+        'lastname' => "c.customers_lastname, c.customers_firstname",
+        'lastname-desc' => "c.customers_lastname DESC, c.customers_firstname",
+        'company' => "a.entry_company",
+        'company-desc' => "a.entry_company DESC",
+        'login-asc' => "ci.customers_info_date_of_last_logon",
+        'login-desc' => "ci.customers_info_date_of_last_logon DESC",
+        'approval-asc' => "c.customers_authorization",
+        'approval-desc' => "c.customers_authorization DESC",
+        'gv_balance-asc' => "cgc.amount, c.customers_lastname, c.customers_firstname",
+        'gv_balance-desc' => "cgc.amount DESC, c.customers_lastname, c.customers_firstname",
+        'wholesale-asc' => 'c.customers_whole, c.customers_lastname, c.customers_firstname',
+        'wholesale-desc' => 'c.customers_whole DESC, c.customers_lastname, c.customers_firstname',
+        default => "ci.customers_info_date_account_created DESC"
+    };
+    $list_order_params = zen_get_all_get_params(['list_order', 'page']);
 ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
@@ -1146,84 +1051,60 @@ if ($action === 'edit' || $action === 'update') {
                         <thead>
                         <tr class="dataTableHeadingRow">
                             <th class="dataTableHeadingContent text-right">
-                                <?php echo TABLE_HEADING_ID; ?>
+                                <?= TABLE_HEADING_ID ?>
                             </th>
                             <th class="dataTableHeadingContent">
                                 &nbsp;
                             </th>
                             <th class="dataTableHeadingContent">
-                                <?php echo (($_GET['list_order'] === 'lastname' || $_GET['list_order'] === 'lastname-desc') ?
+                                <?= (($_GET['list_order'] === 'lastname' || $_GET['list_order'] === 'lastname-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_LASTNAME . '</span>' :
-                                    TABLE_HEADING_LASTNAME); ?>
+                                    TABLE_HEADING_LASTNAME) ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=lastname'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'lastname') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=lastname') ?>">
+                                    <?= ($_GET['list_order'] === 'lastname') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=lastname-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'lastname-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=lastname-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'lastname-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
                             <th class="dataTableHeadingContent">
-                                <?php echo ($_GET['list_order'] === 'firstname' || $_GET['list_order'] === 'firstname-desc') ?
+                                <?= ($_GET['list_order'] === 'firstname' || $_GET['list_order'] === 'firstname-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_FIRSTNAME . '</span>' :
-                                    TABLE_HEADING_FIRSTNAME; ?>
+                                    TABLE_HEADING_FIRSTNAME ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=firstname'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'firstname') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=firstname') ?>">
+                                    <?= ($_GET['list_order'] === 'firstname') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=firstname-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'firstname-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=firstname-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'firstname-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
 <?php
     if (ACCOUNT_COMPANY === 'true') {
 ?>
                             <th class="dataTableHeadingContent">
-                                <?php echo ($_GET['list_order'] === 'company' || $_GET['list_order'] === 'company-desc') ?
+                                <?= ($_GET['list_order'] === 'company' || $_GET['list_order'] === 'company-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_COMPANY . '</span>' :
-                                    TABLE_HEADING_COMPANY; ?>
+                                    TABLE_HEADING_COMPANY ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=company'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'company') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=company') ?>">
+                                    <?= ($_GET['list_order'] === 'company') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=company-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'company-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=company-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'company-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
 <?php
@@ -1231,7 +1112,7 @@ if ($action === 'edit' || $action === 'update') {
     if ($show_registration_ip_in_listing) {
 ?>
                             <th class="dataTableHeadingContent">
-                                <?php echo TABLE_HEADING_REGISTRATION_IP; ?>
+                                <?= TABLE_HEADING_REGISTRATION_IP ?>
                             </th>
 <?php
     }
@@ -1263,114 +1144,82 @@ if ($action === 'edit' || $action === 'update') {
             $additional_parms = (isset($heading_data['parms'])) ? (' ' . $heading_data['parms']) : '';
             $heading_content = $heading_data['content'];
 ?>
-                            <th class="dataTableHeadingContent<?php echo $additional_class; ?>"<?php echo $additional_parms; ?>>
-                                <?php echo $heading_content; ?>
+                            <th class="dataTableHeadingContent<?= $additional_class ?>"<?= $additional_parms ?>>
+                                <?= $heading_content ?>
                             </th>
 <?php
         }
     }
 ?>
                             <th class="dataTableHeadingContent">
-                                <?php echo ($_GET['list_order'] === 'id-asc' || $_GET['list_order'] === 'id-desc') ?
+                                <?= ($_GET['list_order'] === 'id-asc' || $_GET['list_order'] === 'id-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_ACCOUNT_CREATED . '</span>' :
-                                    TABLE_HEADING_ACCOUNT_CREATED; ?>
+                                    TABLE_HEADING_ACCOUNT_CREATED ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=id-asc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'id-asc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=id-asc') ?>">
+                                    <?= ($_GET['list_order'] === 'id-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=id-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'id-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=id-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'id-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
 
                             <th class="dataTableHeadingContent">
-                                <?php echo ($_GET['list_order'] === 'login-asc' || $_GET['list_order'] === 'login-desc') ?
+                                <?= ($_GET['list_order'] === 'login-asc' || $_GET['list_order'] === 'login-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_LOGIN . '</span>' :
-                                    TABLE_HEADING_LOGIN; ?>
+                                    TABLE_HEADING_LOGIN ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=login-asc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'login-asc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=login-asc') ?>">
+                                    <?= ($_GET['list_order'] === 'login-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=login-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'login-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=login-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'login-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
 <?php
     if (WHOLESALE_PRICING_CONFIG !== 'false') {
 ?>
                             <th class="dataTableHeadingContent">
-                                <?php echo ($_GET['list_order'] === 'wholesale-asc' || $_GET['list_order'] === 'wholesale-desc') ?
+                                <?= ($_GET['list_order'] === 'wholesale-asc' || $_GET['list_order'] === 'wholesale-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_WHOLESALE_LEVEL . '</span>' :
-                                    TABLE_HEADING_WHOLESALE_LEVEL; ?>
+                                    TABLE_HEADING_WHOLESALE_LEVEL ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-asc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'wholesale-asc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=wholesale-asc') ?>">
+                                    <?= ($_GET['list_order'] === 'wholesale-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'wholesale-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=wholesale-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'wholesale-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
 <?php
     }
 ?>
                             <th class="dataTableHeadingContent">
-                                <?php echo ($_GET['list_order'] === 'group-asc' || $_GET['list_order'] === 'group-desc') ?
+                                <?= ($_GET['list_order'] === 'group-asc' || $_GET['list_order'] === 'group-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_PRICING_GROUP . '</span>' :
-                                    TABLE_HEADING_PRICING_GROUP; ?>
+                                    TABLE_HEADING_PRICING_GROUP ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=group-asc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'group-asc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=group-asc') ?>">
+                                    <?= ($_GET['list_order'] === 'group-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=group-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'group-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=group-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'group-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
 
@@ -1378,59 +1227,43 @@ if ($action === 'edit' || $action === 'update') {
     if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS === 'true') {
 ?>
                             <th class="dataTableHeadingContent text-right">
-                                <?php echo ($_GET['list_order'] === 'gv_balance-asc' or $_GET['list_order'] === 'gv_balance-desc') ?
+                                <?= ($_GET['list_order'] === 'gv_balance-asc' or $_GET['list_order'] === 'gv_balance-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_GV_AMOUNT . '</span>' :
-                                    TABLE_HEADING_GV_AMOUNT; ?>
+                                    TABLE_HEADING_GV_AMOUNT ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=gv_balance-asc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'gv_balance-asc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=gv_balance-asc') ?>">
+                                    <?= ($_GET['list_order'] === 'gv_balance-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=gv_balance-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'gv_balance-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=gv_balance-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'gv_balance-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                </a>
                             </th>
 <?php
     }
 ?>
                             <th class="dataTableHeadingContent text-center">
-                                <?php echo ($_GET['list_order'] === 'approval-asc' || $_GET['list_order'] === 'approval-desc') ?
+                                <?= ($_GET['list_order'] === 'approval-asc' || $_GET['list_order'] === 'approval-desc') ?
                                     '<span class="SortOrderHeader">' . TABLE_HEADING_AUTHORIZATION_APPROVAL . '</span>' :
-                                    TABLE_HEADING_AUTHORIZATION_APPROVAL; ?>
+                                    TABLE_HEADING_AUTHORIZATION_APPROVAL ?>
                                 <br>
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=approval-asc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'approval-asc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=approval-asc') ?>">
+                                    <?= ($_GET['list_order'] === 'approval-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_ASC . '</span>' ?>
                                 </a>&nbsp;
-                                <a href="<?php
-                                echo zen_href_link(
-                                    basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=approval-desc'
-                                ); ?>">
-                                    <?php echo ($_GET['list_order'] === 'approval-desc') ?
+                                <a href="<?= zen_href_link(FILENAME_CUSTOMERS, $list_order_params . 'list_order=approval-desc') ?>">
+                                    <?= ($_GET['list_order'] === 'approval-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
-                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>'; ?>
+                                        '<span class="SortOrderHeaderLink">' . TEXT_DESC . '</span>' ?>
                                 </a>
                             </th>
 
                             <th class="dataTableHeadingContent text-right">
-                                <?php echo TABLE_HEADING_ACTION; ?>
+                                <?= TABLE_HEADING_ACTION ?>
                             </th>
                         </tr>
                         </thead>
@@ -1511,28 +1344,28 @@ if ($action === 'edit' || $action === 'update') {
 
         if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] === (int)$cInfo->customers_id)) {
 ?>
-                            <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php
-                                echo zen_href_link(
+                            <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?= zen_href_link(
                                     FILENAME_CUSTOMERS,
                                     zen_get_all_get_params(['cID', 'action']
                                     ) . 'cID=' . $cInfo->customers_id . '&action=edit'
-                                ); ?>'" role="option" aria-selected="true">
+                                ) ?>'" role="option" aria-selected="true">
 <?php
         } else {
 ?>
-                            <tr class="dataTableRow" onclick="document.location.href = '<?php
-                                echo zen_href_link(
+                            <tr class="dataTableRow" onclick="document.location.href = '<?= zen_href_link(
                                     FILENAME_CUSTOMERS,
                                     zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customer['customers_id']
-                                ); ?>'" role="option" aria-selected="false">
+                                ) ?>'" role="option" aria-selected="false">
 <?php
         }
 
         $zc_address_book_count = count($customer['addresses']);
 ?>
-                                <td class="dataTableContent text-right"><?php echo $customer['customers_id']; ?></td>
-                                <td class="dataTableContent"><?php
-                                    echo ($zc_address_book_count === 1) ? TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE : sprintf(
+                                <td class="dataTableContent text-right"><?= $customer['customers_id'] ?></td>
+                                <td class="dataTableContent">
+                                    <?= ($zc_address_book_count === 1) ?
+                                    TEXT_INFO_ADDRESS_BOOK_COUNT_SINGLE :
+                                    sprintf(
                                         TEXT_INFO_ADDRESS_BOOK_COUNT,
                                         zen_href_link(
                                             FILENAME_CUSTOMERS,
@@ -1540,19 +1373,19 @@ if ($action === 'edit' || $action === 'update') {
                                             ) . 'cID=' . $customer['customers_id'] . '&action=list_addresses'
                                         ),
                                         $zc_address_book_count
-                                    ); ?>
+                                    ) ?>
                                 </td>
-                                <td class="dataTableContent"><?php echo $customer['customers_lastname']; ?></td>
-                                <td class="dataTableContent"><?php echo $customer['customers_firstname']; ?></td>
+                                <td class="dataTableContent"><?= $customer['customers_lastname'] ?></td>
+                                <td class="dataTableContent"><?= $customer['customers_firstname'] ?></td>
 <?php
         if (ACCOUNT_COMPANY === 'true') {
 ?>
-                                <td class="dataTableContent"><?php echo zen_output_string_protected($customer['company'] ?? ''); ?></td>
+                                <td class="dataTableContent"><?= zen_output_string_protected($customer['company'] ?? '') ?></td>
 <?php
         }
         if ($show_registration_ip_in_listing) {
 ?>
-                                <td class="dataTableContent"><?php echo $customer['registration_ip']; ?></td>
+                                <td class="dataTableContent"><?= $customer['registration_ip'] ?></td>
 <?php
         }
 
@@ -1595,52 +1428,51 @@ if ($action === 'edit' || $action === 'update') {
                 $additional_parms = (isset($column_data['parms'])) ? (' ' . $column_data['parms']) : '';
                 $element_content = $column_data['content'];
 ?>
-                                <td class="dataTableContent<?php echo $additional_class; ?>"<?php echo $additional_parms; ?>>
-                                    <?php echo $element_content; ?>
+                                <td class="dataTableContent<?= $additional_class ?>"<?= $additional_parms ?>>
+                                    <?= $element_content ?>
                                 </td>
 <?php
             }
         }
 ?>
                                 <td class="dataTableContent">
-                                    <?php echo zen_date_short($customer['date_account_created']); ?>
+                                    <?= zen_date_short($customer['date_account_created']) ?>
                                 </td>
                                 <td class="dataTableContent">
-                                    <?php echo zen_date_short($customer['date_of_last_login']); ?>
+                                    <?= zen_date_short($customer['date_of_last_login']) ?>
                                 </td>
 <?php
         if (WHOLESALE_PRICING_CONFIG !== 'false') {
 ?>
                                 <td class="dataTableContent text-center">
-                                    <?php echo $customer['customers_whole']; ?>
+                                    <?= $customer['customers_whole'] ?>
                                 </td>
 <?php
         }
 ?>
                                 <td class="dataTableContent">
-                                    <?php echo $customer['pricing_group_name']; ?>
+                                    <?= $customer['pricing_group_name'] ?>
                                 </td>
 <?php
         if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS === 'true') {
 ?>
                                 <td class="dataTableContent text-right">
-                                    <?php echo $currencies->format($customer['gv_balance']); ?>
+                                    <?= $currencies->format($customer['gv_balance']) ?>
                                 </td>
 <?php
         }
 ?>
                                 <td class="dataTableContent text-center">
-                                <?php
-                                    echo zen_draw_form(
+                                    <?= zen_draw_form(
                                         'set_status_' . $customer['customers_id'],
                                         FILENAME_CUSTOMERS,
                                         zen_get_all_get_params(['action', 'cID']) . 'action=status&cID=' . $customer['customers_id']
-                                    ); ?>
+                                    ) ?>
                                     <button type="submit" class="btn btn-status">
 <?php
         if ($customer['customers_authorization'] === Customer::AUTH_OK) {
 ?>
-                                        <i class="fa-solid fa-square txt-status-on" title="<?php echo IMAGE_ICON_STATUS_ON; ?>"></i>
+                                        <i class="fa-solid fa-square txt-status-on" title="<?= IMAGE_ICON_STATUS_ON ?>"></i>
 <?php
         } elseif ($customer['activation_required'] && $customer['customers_authorization'] === Customer::AUTH_NO_PURCHASE) {
 ?>
@@ -1648,25 +1480,24 @@ if ($action === 'edit' || $action === 'update') {
 <?php
         } else {
 ?>
-                                        <i class="fa-solid fa-square txt-status-off" title="<?php echo IMAGE_ICON_STATUS_OFF; ?>"></i>
+                                        <i class="fa-solid fa-square txt-status-off" title="<?= IMAGE_ICON_STATUS_OFF ?>"></i>
 <?php
-}
+        }
 ?>
                                     </button>
-                                <?php echo '</form>'; ?>
+                                <?= '</form>' ?>
                                 </td>
                                 <td class="dataTableContent text-right">
 <?php
         if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] === (int)$cInfo->customers_id)) {
-                                    echo zen_icon('caret-right', '', '2x', true);
+            echo zen_icon('caret-right', '', '2x', true);
         } else {
 ?>
-                                    <a href="<?php
-                                        echo zen_href_link(
-                                            FILENAME_CUSTOMERS,
-                                                zen_get_all_get_params(['cID']) . 'cID=' . $customer['customers_id']
-                                        ); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
-                                        <?php echo zen_icon('circle-info', '', '2x', true, false) ?>
+                                    <a href="<?= zen_href_link(
+                                        FILENAME_CUSTOMERS,
+                                        zen_get_all_get_params(['cID']) . 'cID=' . $customer['customers_id']
+                                    ) ?>" title="<?= IMAGE_ICON_INFO ?>" role="button">
+                                        <?= zen_icon('circle-info', '', '2x', true, false) ?>
                                     </a>
 <?php
         }
@@ -1685,6 +1516,7 @@ if ($action === 'edit' || $action === 'update') {
     $heading = [];
     $contents = [];
 
+    $get_params_no_cid_or_action = zen_get_all_get_params(['cID', 'action']);
     switch ($action) {
         case 'confirm':
             $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_CUSTOMER . '</h4>'];
@@ -1706,7 +1538,7 @@ if ($action === 'edit' || $action === 'update') {
                     TEXT_DELETE_INTRO . '<br><br>' .
                     '<b>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</b>'
             ];
-            if (isset($cInfo->number_of_reviews) && $cInfo->number_of_reviews > 0) {
+            if (($cInfo->number_of_reviews ?? 0) > 0) {
                 $contents[] = [
                     'text' =>
                         '<br>' .
@@ -1726,7 +1558,7 @@ if ($action === 'edit' || $action === 'update') {
                     '<a href="' .
                         zen_href_link(
                             FILENAME_CUSTOMERS,
-                            zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id
+                            $get_params_no_cid_or_action . 'cID=' . $cInfo->customers_id
                         ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL .
                     '</a>'
             ];
@@ -1740,7 +1572,7 @@ if ($action === 'edit' || $action === 'update') {
                     zen_draw_form(
                         'customers',
                         FILENAME_CUSTOMERS,
-                        zen_get_all_get_params(['cID', 'action']) . 'action=pwdresetconfirm',
+                        $get_params_no_cid_or_action . 'action=pwdresetconfirm',
                         'post',
                         'id="pReset" class="form-horizontal"',
                         true
@@ -1788,7 +1620,7 @@ if ($action === 'edit' || $action === 'update') {
                     '<a href="' .
                         zen_href_link(
                             FILENAME_CUSTOMERS,
-                            zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id
+                            $get_params_no_cid_or_action . 'cID=' . $cInfo->customers_id
                         ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL .
                     '</a>'
             ];
@@ -1816,14 +1648,14 @@ if ($action === 'edit' || $action === 'update') {
                         '<a href="' .
                             zen_href_link(
                                 FILENAME_CUSTOMERS,
-                                zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=edit'
+                                $get_params_no_cid_or_action . 'cID=' . $cInfo->customers_id . '&action=edit'
                             ) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT .
                         '</a>' .
                         ' ' .
                         '<a href="' .
                             zen_href_link(
                                 FILENAME_CUSTOMERS,
-                                zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=confirm'
+                                $get_params_no_cid_or_action . 'cID=' . $cInfo->customers_id . '&action=confirm'
                             ) . '" class="btn btn-warning" role="button">' . IMAGE_DELETE .
                         '</a>'
                 ];
@@ -1853,7 +1685,7 @@ if ($action === 'edit' || $action === 'update') {
                         '<a href="' .
                             zen_href_link(
                                 FILENAME_CUSTOMERS,
-                                zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=pwreset'
+                                $get_params_no_cid_or_action . 'cID=' . $cInfo->customers_id . '&action=pwreset'
                             ) .
                             '" class="btn btn-warning" role="button">' . IMAGE_RESET_PWD .
                         '</a>'
@@ -1863,12 +1695,8 @@ if ($action === 'edit' || $action === 'update') {
                 // Give an observer the opportunity to provide an override to the "Place Order" button.
                 //
                 $place_order_override = false;
-                $zco_notifier->notify(
-                    'NOTIFY_ADMIN_CUSTOMERS_PLACE_ORDER_BUTTON',
-                    $cInfo,
-                    $contents,
-                    $place_order_override
-                );
+                $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_PLACE_ORDER_BUTTON', $cInfo, $contents, $place_order_override);
+
                 if ($place_order_override === false && zen_admin_authorized_to_place_order()) {
                     $login_form_start =
                         '<form rel="noopener" target="_blank" name="login" action="' .
@@ -1886,11 +1714,8 @@ if ($action === 'edit' || $action === 'update') {
                         ];
                         $hmacUri = zen_create_hmac_uri($hmacpostdata, $secret);
                         $login_form_start = '<form id="loginform" rel="noopener" target="_blank" name="login" action="' .
-                            zen_catalog_href_link(
-                                FILENAME_LOGIN,
-                                $hmacUri . '&action=process',
-                                'SSL'
-                            ) . '" method="post">';
+                            zen_catalog_href_link(FILENAME_LOGIN, $hmacUri . '&action=process', 'SSL') .
+                            '" method="post">';
                         $hiddenFields .=
                             zen_draw_hidden_field('aid', $_SESSION['admin_id']) .
                             zen_draw_hidden_field('cid', $cInfo->customers_id) .
@@ -2024,21 +1849,21 @@ if ($action === 'edit' || $action === 'update') {
                 <table class="table">
                     <tr>
                         <td>
-                            <?php echo $customers_split->display_count(
+                            <?= $customers_split->display_count(
                                 $customers_query_numrows,
                                 MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER,
                                 $_GET['page'],
                                 TEXT_DISPLAY_NUMBER_OF_CUSTOMERS
-                            ); ?>
+                            ) ?>
                         </td>
                         <td class="text-right">
-                            <?php echo $customers_split->display_links(
+                            <?= $customers_split->display_links(
                                 $customers_query_numrows,
                                 MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER,
                                 MAX_DISPLAY_PAGE_LINKS,
                                 $_GET['page'],
                                 zen_get_all_get_params(['page', 'info', 'x', 'y', 'cID'])
-                            ); ?>
+                            ) ?>
                         </td>
                     </tr>
 <?php
@@ -2046,8 +1871,8 @@ if ($action === 'edit' || $action === 'update') {
 ?>
                     <tr>
                         <td colspan="2" class="text-right">
-                            <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS); ?>" class="btn btn-default" role="button">
-                                <?php echo IMAGE_RESET; ?>
+                            <a href="<?= zen_href_link(FILENAME_CUSTOMERS) ?>" class="btn btn-default" role="button">
+                                <?= IMAGE_RESET ?>
                             </a>
                         </td>
                     </tr>
@@ -2064,7 +1889,7 @@ if ($action === 'edit' || $action === 'update') {
     <!-- body_eof //-->
 
     <!-- footer //-->
-    <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
+    <?php require DIR_WS_INCLUDES . 'footer.php' ?>
     <!-- footer_eof //-->
     <script>
         $(function () {
