@@ -260,3 +260,19 @@ function zen_delete_customer_group($group_id, $also_unassign_customers = true)
     return true;
 }
 
+/**
+  * @param string $group_name The name of the group to be retrieved (ie. the value from the group_name column of the DB)
+ */
+function zen_get_customer_group_comment(string $group_name): string
+{
+    global $db;
+
+    $sql = "SELECT group_comment FROM " .
+            TABLE_CUSTOMER_GROUPS . "
+            WHERE group_name = :group_name:";
+    $sql = $db->bindVars($sql, ':group_name:', $group_name, 'stringIgnoreNull');
+
+    $results = $db->Execute($sql, 1);
+
+    return $results->fields['group_comment'] ?? '';
+}
