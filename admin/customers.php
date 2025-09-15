@@ -32,61 +32,52 @@ $processed = false;
 if (!empty($action)) {
     switch ($action) {
         case 'list_addresses':
-            $customer = new Customer($_GET['cID']);
+            $customer = new Customer($customers_id);
             $addressArray = $customer->getData('addresses');
             break;
         case 'status':
-            if (isset($_POST['current_status']) && ctype_digit($_POST['current_status'])) {
-                if ($_POST['current_status'] === CUSTOMERS_APPROVAL_AUTHORIZATION) {
-                    if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION !== Customer::AUTH_OK) {
-                        $customers_authorization = Customer::AUTH_OK;
-                    } else {
-                        $customers_authorization = Customer::AUTH_BANNED;
-                    }
+            $customer = new Customer($customers_id);
+            $custinfo = $customer->getData();
+            if (empty($custinfo)) {
+                zen_redirect(zen_href_list(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
+            }
 
-                    $customer = new Customer($customers_id);
-                    $old = (int)$customer->getData('customers_authorization');
-                    $custinfo = $customer->setCustomerAuthorizationStatus($customers_authorization);
-                    if ((int)CUSTOMERS_APPROVAL_AUTHORIZATION !== Customer::AUTH_OK && $customers_authorization !== Customer::AUTH_BANNED && $old !== $customers_authorization) {
-                        $firstname = $custinfo['customers_firstname'];
-                        $lastname = $custinfo['customers_lastname'];
-                        $gender = $custinfo['customers_gender'];
-                        $email_address = $custinfo['customers_email_address'];
-                        if ($custinfo['welcome_email_sent'] === '0') {
-                            require DIR_FS_CATALOG . DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT_SEND_EMAIL);
-                            Customer::setWelcomeEmailSent((int)$customers_id);
-                        } else {
-                            $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
-                            $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
-                            zen_mail(
-                                $firstname . ' ' . $lastname,
-                                $email_address,
-                                EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT,
-                                $message,
-                                STORE_NAME,
-                                EMAIL_FROM,
-                                $html_msg,
-                                'default'
-                            );
-                        }
-                    }
-                    zen_record_admin_activity(
-                        "Customer-approval-authorization set customer auth status to $customers_authorization for customer ID $customers_id",
-                        'info'
-                    );
+            $current_authorization = $custinfo['customers_authorization'];
+            $updated_authorization = ($current_authorization === Customer::AUTH_OK) ? Customer::AUTH_BANNED : Customer::AUTH_OK;
+            if ($current_authorization !== $updated_authorization) {
+                $customer->setCustomerAuthorizationStatus($updated_authorization);
+                if ($updated_authorization === Customer::AUTH_BANNED) {
+                    Customer::setWelcomeEmailSent($customers_id);
                 } else {
-                    $customer = new Customer($customers_id);
-                    $customer->setCustomerAuthorizationStatus((int)CUSTOMERS_APPROVAL_AUTHORIZATION);
-                    zen_record_admin_activity(
-                        'Customer-approval-authorization set customer auth status to ' . CUSTOMERS_APPROVAL_AUTHORIZATION . ' for customer ID ' . (int)$customers_id,
-                        'info'
-                    );
+                    $firstname = $custinfo['customers_firstname'];
+                    $lastname = $custinfo['customers_lastname'];
+                    $gender = $custinfo['customers_gender'];
+                    $email_address = $custinfo['customers_email_address'];
+                    if ($custinfo['welcome_email_sent'] === '0') {
+                        require DIR_FS_CATALOG . DIR_WS_MODULES . zen_get_module_directory(FILENAME_CREATE_ACCOUNT_SEND_EMAIL);
+                        Customer::setWelcomeEmailSent($customers_id);
+                    } else {
+                        $message = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
+                        $html_msg['EMAIL_MESSAGE_HTML'] = EMAIL_CUSTOMER_STATUS_CHANGE_MESSAGE;
+                        zen_mail(
+                            $firstname . ' ' . $lastname,
+                            $email_address,
+                            EMAIL_CUSTOMER_STATUS_CHANGE_SUBJECT,
+                            $message,
+                            STORE_NAME,
+                            EMAIL_FROM,
+                            $html_msg,
+                            'default'
+                        );
+                    }
                 }
-                zen_redirect(
-                    zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action']), 'NONSSL')
+                zen_record_admin_activity(
+                    "Customer-approval-authorization set customer auth status to $updated_authorization for customer ID $customers_id",
+                    'info'
                 );
             }
-            $action = '';
+
+            zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action'])));
             break;
         case 'update':
             if ($customers_id === 0) {
@@ -281,8 +272,7 @@ if (!empty($action)) {
                 zen_redirect(
                     zen_href_link(
                         FILENAME_CUSTOMERS,
-                        zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customers_id,
-                        'NONSSL'
+                        zen_get_all_get_params(['cID', 'action']) . 'cID=' . $customers_id
                     )
                 );
             } elseif ($error === true) {
@@ -365,7 +355,7 @@ if (!empty($action)) {
             $delete_reviews = ($_POST['delete_reviews'] ?? '') === 'on';
             $forget_only = ($_POST['delete_type_forget'] ?? '') === 'forget';
             $customer->delete($delete_reviews, $forget_only);
-            zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action']), 'NONSSL'));
+            zen_redirect(zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['cID', 'action'])));
             break;
         case 'edit':
             if ($customers_id === 0) {
@@ -1074,12 +1064,7 @@ if ($action === 'edit' || $action === 'update') {
     }
 ?>
                     <div class="buttonRow forward">
-                        <a href="<?php
-                            echo zen_href_link(
-                                FILENAME_CUSTOMERS,
-                                zen_get_all_get_params(['action']),
-                                'NONSSL'
-                            ); ?>" class="btn btn-default" role="button">
+                        <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, zen_get_all_get_params(['action'])); ?>" class="btn btn-default" role="button">
                             <?php echo IMAGE_BACK; ?>
                         </a>
                     </div>
@@ -1174,8 +1159,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=lastname',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=lastname'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'lastname') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1184,8 +1168,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=lastname-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=lastname-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'lastname-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1200,8 +1183,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=firstname',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=firstname'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'firstname') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1210,8 +1192,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=firstname-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=firstname-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'firstname-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1229,8 +1210,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=company',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=company'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'company') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1239,8 +1219,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=company-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=company-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'company-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1299,8 +1278,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=id-asc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=id-asc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'id-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1309,8 +1287,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=id-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=id-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'id-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1326,8 +1303,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=login-asc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=login-asc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'login-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1336,8 +1312,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=login-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=login-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'login-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1355,8 +1330,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-asc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-asc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'wholesale-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1365,8 +1339,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=wholesale-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'wholesale-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1384,8 +1357,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=group-asc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=group-asc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'group-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1394,8 +1366,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=group-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=group-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'group-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1414,8 +1385,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=gv_balance-asc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=gv_balance-asc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'gv_balance-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1424,9 +1394,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']
-                                    ) . 'list_order=gv_balance-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=gv_balance-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'gv_balance-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1444,8 +1412,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=approval-asc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=approval-asc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'approval-asc') ?
                                         '<span class="SortOrderHeader">' . TEXT_ASC . '</span>' :
@@ -1454,8 +1421,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <a href="<?php
                                 echo zen_href_link(
                                     basename($PHP_SELF),
-                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=approval-desc',
-                                    'NONSSL'
+                                    zen_get_all_get_params(['list_order', 'page']) . 'list_order=approval-desc'
                                 ); ?>">
                                     <?php echo ($_GET['list_order'] === 'approval-desc') ?
                                         '<span class="SortOrderHeader">' . TEXT_DESC . '</span>' :
@@ -1523,7 +1489,7 @@ if ($action === 'edit' || $action === 'update') {
                     ) != 0 ? .5 : 0)),
                 0
             );
-    //    zen_redirect(zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'NONSSL'));
+    //    zen_redirect(zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
         } else {
             $_GET['page'] = '1';
         }
@@ -1687,7 +1653,6 @@ if ($action === 'edit' || $action === 'update') {
 }
 ?>
                                     </button>
-                                    <?php echo zen_draw_hidden_field('current_status', (string)$customer['customers_authorization']); ?>
                                 <?php echo '</form>'; ?>
                                 </td>
                                 <td class="dataTableContent text-right">
@@ -1699,8 +1664,7 @@ if ($action === 'edit' || $action === 'update') {
                                     <a href="<?php
                                         echo zen_href_link(
                                             FILENAME_CUSTOMERS,
-                                                zen_get_all_get_params(['cID']) . 'cID=' . $customer['customers_id'],
-                                                'NONSSL'
+                                                zen_get_all_get_params(['cID']) . 'cID=' . $customer['customers_id']
                                         ); ?>" title="<?php echo IMAGE_ICON_INFO; ?>" role="button">
                                         <?php echo zen_icon('circle-info', '', '2x', true, false) ?>
                                     </a>
@@ -1762,8 +1726,7 @@ if ($action === 'edit' || $action === 'update') {
                     '<a href="' .
                         zen_href_link(
                             FILENAME_CUSTOMERS,
-                            zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id,
-                            'NONSSL'
+                            zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id
                         ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL .
                     '</a>'
             ];
@@ -1853,16 +1816,14 @@ if ($action === 'edit' || $action === 'update') {
                         '<a href="' .
                             zen_href_link(
                                 FILENAME_CUSTOMERS,
-                                zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=edit',
-                                'NONSSL'
+                                zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=edit'
                             ) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT .
                         '</a>' .
                         ' ' .
                         '<a href="' .
                             zen_href_link(
                                 FILENAME_CUSTOMERS,
-                                zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=confirm',
-                                'NONSSL'
+                                zen_get_all_get_params(['cID', 'action']) . 'cID=' . $cInfo->customers_id . '&action=confirm'
                             ) . '" class="btn btn-warning" role="button">' . IMAGE_DELETE .
                         '</a>'
                 ];
@@ -1873,8 +1834,7 @@ if ($action === 'edit' || $action === 'update') {
                             '<a href="' .
                                 zen_href_link(
                                     FILENAME_ORDERS,
-                                    'cID=' . $cInfo->customers_id,
-                                    'NONSSL'
+                                    'cID=' . $cInfo->customers_id
                                 ) . '" class="btn btn-default" role="button">' . IMAGE_ORDERS .
                             '</a>' :
                             ''
@@ -1883,8 +1843,7 @@ if ($action === 'edit' || $action === 'update') {
                         '<a href="' .
                             zen_href_link(
                                 FILENAME_MAIL,
-                                'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id,
-                                'NONSSL'
+                                'origin=customers.php&customer=' . $cInfo->customers_email_address . '&cID=' . $cInfo->customers_id
                             ) . '" class="btn btn-default" role="button">' . IMAGE_EMAIL .
                         '</a>'
                 ];
@@ -2004,8 +1963,7 @@ if ($action === 'edit' || $action === 'update') {
                     foreach ($customer->getOrderHistory(5) as $order) {
                         $text .= '<a href="' . zen_href_link(
                             FILENAME_ORDERS,
-                            'cID=' . $cInfo->customers_id . '&oID=' . $order['orders_id'] . '&action=edit',
-                            'NONSSL'
+                            'cID=' . $cInfo->customers_id . '&oID=' . $order['orders_id'] . '&action=edit'
                         ) . '" title="Purchased: ' . zen_date_short($order['date_purchased']) . ', status ' . $order['orders_status_name'] . '">' . $order['orders_id'] . '</a> ';
                     }
                     if ($cInfo->number_of_orders > 5) {
