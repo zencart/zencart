@@ -32,10 +32,8 @@ $result = $db->Execute("SELECT startdate, counter FROM " . TABLE_COUNTER, false,
 if ($result->RecordCount()) {
     $counter_startdate = $result->fields['startdate'];
     $counter = $result->fields['counter'];
-    $counter_startdate_formatted = $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, substr($counter_startdate, 4, 2), substr($counter_startdate, -2), substr($counter_startdate, 0, 4)));
+    $counter_startdate_formatted = $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, (int)substr($counter_startdate, 4, 2), (int)substr($counter_startdate, -2), (int)substr($counter_startdate, 0, 4)));
 }
-
-
 ?>
 <div class="panel panel-default reportBox">
     <div class="panel-heading header"><?php echo BOX_TITLE_STATISTICS; ?> </div>
@@ -80,4 +78,3 @@ if ($result->RecordCount()) {
       </tr>
     </table>
 </div>
-
