@@ -269,7 +269,8 @@ function zen_get_customer_group_comment(string $group_name)
 
     $sql = "SELECT group_comment FROM " .
             TABLE_CUSTOMER_GROUPS . "
-            WHERE group_name = '" . $group_name ."'";
+            WHERE group_name = ':group_name:'";
+    $sql = $db->bindVars($sql, ':group_name:', $group_name, 'string');
 
     $results = $db->Execute($sql);
 
