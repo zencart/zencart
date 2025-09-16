@@ -1493,8 +1493,8 @@ if ($show_orders_weights === true) {
                                 <td class="dataTableContent noprint text-right actions dataTableButtonCell">
                                     <div class="btn-group">
                                         <?php
-                                        echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '" class="btn btn-sm btn-default btn-edit" data-toggle="tooltip" title="' . ICON_EDIT . '">' .
-                                            zen_icon('pencil', hidden: true) .
+                                        echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID', 'action']) . 'oID=' . $orders->fields['orders_id'] . '&action=edit', 'NONSSL') . '" class="btn btn-sm btn-default btn-edit" data-toggle="tooltip" title="' . IMAGE_DETAILS . '">' .
+                                            zen_icon('clipboard', hidden: true) .
                                         '</a>' . $extra_action_icons;
                                         ?>
                                         </div>
