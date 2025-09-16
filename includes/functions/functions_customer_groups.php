@@ -262,7 +262,7 @@ function zen_delete_customer_group($group_id, $also_unassign_customers = true)
 
 /**
   * @param string $group_name The name of the group to be retrieved (ie. the value from the group_name column of the DB)
- */
+  */
 function zen_get_customer_group_comment(string $group_name): string
 {
     global $db;
@@ -275,4 +275,18 @@ function zen_get_customer_group_comment(string $group_name): string
     $results = $db->Execute($sql, 1);
 
     return $results->fields['group_comment'] ?? '';
+}
+
+/**
+ * @param string $group_name The name of the group to be found
+ * @return int Will return the ID number or -1 if not found.
+ */
+function zen_get_customer_group_id_from_name(string $group_name): int
+{
+    global $db;
+
+    $sql = "SELECT group_id FROM " . TABLE_CUSTOMER_GROUPS . " WHERE group_name = :group_name:";
+    $sql = $db->bindVars($sql, ':group_name:', $group_name, 'stringIgnoreNull');
+
+    return $db->Execute($sql, 1)->fields['group_id'] ?? -1; // Don't assign 0, that's the "Everyone" default, -1 should NEVER match
 }
