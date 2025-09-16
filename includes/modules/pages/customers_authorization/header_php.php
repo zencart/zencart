@@ -15,7 +15,7 @@ if (!empty($_GET['reset_token'])) {
         zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
     }
 
-    $messageStack->add_session('header', TEXT_SUCCESS_AUTHORIZED, 'success');
+    $messageStack->add_session('header', SUCCESS_AUTHORIZED, 'success');
     $customer_data = Customer::authorizeCustomer((int)$token_info['customers_id']);
     if ($customer_data['welcome_email_sent'] === '0') {
         $firstname = $customer_data['customers_firstname'];
