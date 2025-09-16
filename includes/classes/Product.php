@@ -16,7 +16,8 @@ class Product
 {
     use NotifierManager;
 
-    protected array $data;
+    protected static ?int $product_id;
+    protected static array $data;
     protected array $languages;
 
     /** @deprecated use ->get('property') or ->getData()  */
@@ -25,43 +26,48 @@ class Product
     /** @deprecated use !exists()  */
     public bool $EOF = true;
 
-    public function __construct(protected ?int $product_id = null)
+    public function __construct(?int $product_id = null)
     {
         $this->initLanguages();
 
-        if ($this->product_id !== null) {
-            $this->data = $this->loadProductDetails($this->product_id);
-
-            // set some backward compatibility properties
-            $this->fields = $this->data;
-            $this->EOF = empty($this->data);
+        if ($product_id !== null) {
+            if (empty(self::$data) || $product_id !== self::$product_id) {
+                self::$product_id = $product_id;
+                self::$data = $this->loadProductDetails($product_id);
+            }
         }
+
+        // set some backward compatibility properties
+        $this->fields = self::$data ?? [];
+        $this->EOF = empty(self::$data);
     }
 
     public function forLanguage(?int $language_id): self
     {
-        $this->data = $this->getDataForLanguage($language_id);
-        $this->fields = $this->data;
+        self::$data = $this->getDataForLanguage($language_id);
+        $this->fields = self::$data;
+        unset($this->fields['lang']);
 
         return $this;
     }
 
     public function withDefaultLanguage(): self
     {
-        $this->data = $this->getDataForLanguage();
-        $this->fields = $this->data;
+        self::$data = $this->getDataForLanguage();
+        $this->fields = self::$data;
+        unset($this->fields['lang']);
 
         return $this;
     }
 
     public function getData(): ?array
     {
-        return $this->data;
+        return self::$data;
     }
 
     public function get(string $name)
     {
-        return $this->data[$name] ?? $this->data['lang'][$this->languages[(int)$_SESSION['languages_id']]][$name] ?? null;
+        return self::$data[$name] ?? self::$data['lang'][$this->languages[(int)$_SESSION['languages_id']]][$name] ?? null;
     }
 
     /**
@@ -72,7 +78,7 @@ class Product
         if (empty($language_id)) { // empty allows for 0 which might occur if null is pre-casted to int before passing to this function
             $language_id = (int)$_SESSION['languages_id'];
         }
-        $data = $this->data;
+        $data = self::$data;
 
         // -----
         // If this request is for a product being created, it might not yet have
@@ -87,57 +93,56 @@ class Product
         foreach ($data['lang'][$this->languages[$language_id]] as $key => $value) {
             $data[$key] = $value;
         }
-        unset($data['lang']);
 
         return $data;
     }
 
     public function getId(): ?int
     {
-        return $this->product_id;
+        return self::$product_id;
     }
 
     public function exists(): bool
     {
-        return !empty($this->product_id) && !empty($this->data);
+        return !empty(self::$product_id) && !empty(self::$data);
     }
     public function isValid(): bool
     {
-        return !empty($this->data);
+        return !empty(self::$data);
     }
 
     public function isLinked(): bool
     {
-        return ($this->data['linked_categories_count'] ?? 0) > 0;
+        return (self::$data['linked_categories_count'] ?? 0) > 0;
     }
 
     public function isVirtual(): bool
     {
-        return ($this->data['products_virtual'] ?? 0) === '1';
+        return (self::$data['products_virtual'] ?? 0) === '1';
     }
 
     public function isAlwaysFreeShipping(): bool
     {
-        return ($this->data['product_is_always_free_shipping'] ?? '') === '1';
+        return (self::$data['product_is_always_free_shipping'] ?? '') === '1';
     }
 
     public function status(): int
     {
-        return (int)($this->data['products_status'] ?? 0);
+        return (int)(self::$data['products_status'] ?? 0);
     }
 
     public function isGiftVoucher(): bool
     {
-        return str_starts_with($this->data['products_model'] ?? '', 'GIFT');
+        return str_starts_with(self::$data['products_model'] ?? '', 'GIFT');
     }
 
     public function allowsAddToCart(): bool
     {
-        if (empty($this->data)) {
+        if (empty(self::$data)) {
             return false;
         }
 
-        $allow_add_to_cart = ($this->data['allow_add_to_cart'] ?? 'N') !== 'N';
+        $allow_add_to_cart = (self::$data['allow_add_to_cart'] ?? 'N') !== 'N';
 
         if ($allow_add_to_cart && $this->isGiftVoucher()) {
             // if GV feature disabled, can't allow GV's to be added to cart
@@ -146,7 +151,7 @@ class Product
             }
         }
 
-        $this->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $this->product_id, $allow_add_to_cart, $this->data);
+        $this->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', self::$product_id, $allow_add_to_cart, self::$data);
 
         // test for boolean and for 'Y', since observer might try to return 'Y'
         return in_array($allow_add_to_cart, [true, 'Y'], true);
@@ -154,14 +159,14 @@ class Product
 
     public function getProductQuantity(): int|float
     {
-        $quantity = $this->data['products_quantity'] ?? '0';
-        $this->notify('NOTIFY_GET_PRODUCT_QUANTITY', $this->product_id, $quantity);
+        $quantity = self::$data['products_quantity'] ?? '0';
+        $this->notify('NOTIFY_GET_PRODUCT_QUANTITY', self::$product_id, $quantity);
         return zen_str_to_numeric((string)$quantity);
     }
 
     public function getTypeHandler(): string
     {
-        return ($this->data['type_handler'] ?? 'product');
+        return (self::$data['type_handler'] ?? 'product');
     }
 
     public function getInfoPage(): string
@@ -171,41 +176,41 @@ class Product
 
     public function hasPriceQuantityDiscounts(): bool
     {
-        if (empty($this->data)) {
+        if (empty(self::$data)) {
             return false;
         }
 
         global $db;
-        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$this->product_id;
+        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)self::$product_id;
         $results = $db->Execute($sql, 1);
         return !$results->EOF;
     }
 
     public function hasPriceSpecials()
     {
-        if (empty($this->data)) {
+        if (empty(self::$data)) {
             return false;
         }
 
         global $db;
-        $sql = "SELECT products_id FROM " . TABLE_SPECIALS . " WHERE products_id=" . (int)$this->product_id;
+        $sql = "SELECT products_id FROM " . TABLE_SPECIALS . " WHERE products_id=" . (int)self::$product_id;
         $results = $db->Execute($sql, 1);
         return !$results->EOF;
     }
 
     public function priceIsByAttribute(): bool
     {
-        return ($this->data['products_priced_by_attribute'] ?? '0') === '1';
+        return (self::$data['products_priced_by_attribute'] ?? '0') === '1';
     }
 
     public function priceIsFree(): bool
     {
-        return ($this->data['product_is_free'] ?? '0') === '1';
+        return (self::$data['product_is_free'] ?? '0') === '1';
     }
 
     public function priceIsCall(): bool
     {
-        return ($this->data['product_is_call'] ?? '0') === '1';
+        return (self::$data['product_is_call'] ?? '0') === '1';
     }
 
     public function __get(string $name)
