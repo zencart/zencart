@@ -379,15 +379,16 @@ class Customer extends base
         $sql =
             "SELECT customers_authorization
                FROM " . TABLE_CUSTOMERS . "
-              WHERE customers_id = :customersID";
+              WHERE customers_id = :customersID
+              LIMIT 1";
 
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
-        $check_customer = $db->ExecuteNoCache($sql, 1);
+        $check_customer = $db->ExecuteNoCache($sql);
         if ($check_customer->EOF) {
             return false;
         }
         $this->data['customers_authorization'] = (int)$check_customer->fields['customers_authorization'];
-        $_SESSION['customers_authorization'] = $this->data['customers_authorization'];
+        $_SESSION['customers_authorization'] = (int)$this->data['customers_authorization'];
 
         return $this->data;
     }
@@ -403,9 +404,10 @@ class Customer extends base
         $sql =
             "SELECT *
                FROM " . TABLE_CUSTOMERS_AUTH_TOKENS . "
-              WHERE customers_id = :customer_id";
+              WHERE customers_id = :customer_id
+              LIMIT 1";
         $sql = $db->bindVars($sql, ':customer_id', $this->customer_id, 'integer');
-        $result = $db->ExecuteNoCache($sql, 1);
+        $result = $db->ExecuteNoCache($sql);
 
         return ($result->EOF) ? false : $result->fields;
     }
@@ -575,9 +577,9 @@ class Customer extends base
                FROM " . TABLE_CUSTOMERS . " c
                     LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON (c.customers_id = ci.customers_info_id)
                     LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON (c.customers_id = cgc.customer_id)
-              WHERE c.customers_id = " . (int)$customer_id;
-
-        $result = $db->Execute($sql, 1);
+              WHERE c.customers_id = " . (int)$customer_id . "
+              LIMIT 1";
+        $result = $db->ExecuteNoCache($sql);
 
         $this->data = [];
         if ($result->EOF) {
@@ -614,7 +616,7 @@ class Customer extends base
             'number_of_orders',
         ];
         foreach ($ints as $key) {
-            if (isset($this->data[$key]) && is_numeric($this->data[$key])) {
+            if (isset($this->data[$key])) {
                 $this->data[$key] = (int)$this->data[$key];
             }
         }
@@ -784,7 +786,7 @@ class Customer extends base
 
         self::clearAuthTokens($customers_id);
         
-        $customer = $db->Execute(
+        $customer = $db->ExecuteNoCache(
             "SELECT *
                FROM " . TABLE_CUSTOMERS . "
               WHERE customers_id = " . (int)$customers_id . "
