@@ -131,6 +131,13 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
         }
 
         $customer = new Customer();
+        $email_address_changed = false;
+        if (CUSTOMERS_ACTIVATION_REQUIRED === 'true' && $customer->getData('customers_email_address') !== $email_address) {
+            $email_address_changed = true;
+            $sql_data_array[] = ['fieldName' => 'activation_required', 'value' => 1, 'type' => 'integer'];
+            $sql_data_array[] = ['fieldName' => 'customers_authorization', 'value' => Customer::AUTH_NO_PURCHASE, 'type' => 'integer'];
+        }
+
         $customer_data = $customer->update($sql_data_array);
 
         $sql_data_array = [
@@ -145,6 +152,7 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
         $_SESSION['customer_first_name'] = $firstname;
         $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customers_email_address'] = $email_address;
+        $_SESSION['customers_authorization'] = (int)$customer_data['customers_authorization'];
 
         $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
 
@@ -152,12 +160,8 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
             $auth_token_info = $customer->getAuthTokenInfo();
             $token_valid_minutes = Customer::getAuthTokenMinutesValid();
             if ($auth_token_info === false || $auth_token_info['email_address'] !== $email_address || strtotime($auth_token_info['created_at']) + $token_valid_minutes > time()) {
-                if ($customer->createAuthToken() !== false) {
-                    $auth_token_info = $customer->getAuthTokenInfo();
-                }
+                require DIR_WS_MODULES . zen_get_module_directory(FILENAME_SEND_AUTH_TOKEN_EMAIL);
             }
-
-            require DIR_WS_MODULES . zen_get_module_directory(FILENAME_SEND_AUTH_TOKEN_EMAIL);
             zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
         }
 
