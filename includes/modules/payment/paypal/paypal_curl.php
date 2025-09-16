@@ -573,7 +573,7 @@ class paypal_curl extends base {
    * as they should not be present.
    */
   function _parseNameValueList($string) {
-    $string = str_replace('&amp;', '|', $string);
+    $string = str_replace('&amp;', '|', $string ?? '');
     $pairs = explode('&', str_replace(array("\r\n","\n"), '', $string));
     //$this->log('['.$string . "]\n\n[" . print_r($pairs, true) .']');
     $values = array();
