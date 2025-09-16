@@ -288,5 +288,6 @@ function zen_get_customer_group_id_from_name(string $group_name): int
     $sql = "SELECT group_id FROM " . TABLE_CUSTOMER_GROUPS . " WHERE group_name = :group_name:";
     $sql = $db->bindVars($sql, ':group_name:', $group_name, 'stringIgnoreNull');
 
-    return $db->Execute($sql, 1)->fields['group_id'] ?? -1; // Don't assign 0, that's the "Everyone" default, -1 should NEVER match
+    $result = (int)($db->Execute($sql, 1)->fields['group_id'] ?? -1);
+    return $result; // Don't assign 0, that's the "Everyone" default, -1 should NEVER match
 }
