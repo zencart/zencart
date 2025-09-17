@@ -25,7 +25,7 @@ $images_array = [];
 // do not check for additional images when turned off
 if ($products_image !== '' && !empty($flag_show_product_info_additional_images)) {
 
-    if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
+    if (ADDITIONAL_IMAGES_HANDLING === 'Database') {
         $products_image_directory = DIR_WS_IMAGES;
         $images_array = (new Product((int)$_GET['products_id']))->get('additional_images') ?? [];
         $images_array = array_map(static fn($f) => $f['image_filename'], $images_array);
