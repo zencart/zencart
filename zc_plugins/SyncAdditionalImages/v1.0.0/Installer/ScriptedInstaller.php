@@ -15,7 +15,7 @@ class ScriptedInstaller extends ScriptedInstallBase
             'configuration_value' => 'legacy',
             'configuration_description' => 'Use Legacy mode for old-school directory scanning and matching filenames. Additional images must be uploaded manually via FTP or using Image Handler.<br>Use Modern mode to add additional images directly from the admin product page. Filenames and extensions do not need to match.<br><strong>NOTE:</strong> if you are switching from Legacy to Modern for the first time, you can use the converter tool found in your Tools menu to update all existing product data with existing additional images. Switching back and forth is not recommended.',
             'configuration_group_id' => 4,
-            'sort_order' => 80,
+            'sort_order' => 26,
             'set_function' => 'zen_cfg_select_option([\'legacy\', \'modern\'], ',
         ];
         $this->addConfigurationKey('ADDITIONAL_IMAGES_APPROACH', $fields);
@@ -26,10 +26,10 @@ class ScriptedInstaller extends ScriptedInstallBase
 //
 //        // create products_additional_images table
 //        $sql = "CREATE TABLE IF NOT EXISTS " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (
-//            id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-//            products_id INT(11) NOT NULL,
-//            additional_image VARCHAR(255) NOT NULL,
-//            sort_order INT(11) DEFAULT 0,
+//            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+//            products_id INT NOT NULL,
+//            additional_image VARCHAR(191) NOT NULL,
+//            sort_order INT DEFAULT 0,
 //            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 //            FOREIGN KEY (products_id) REFERENCES " . TABLE_PRODUCTS . "(products_id) ON DELETE CASCADE
 //        ) ENGINE=InnoDB";
@@ -37,12 +37,12 @@ class ScriptedInstaller extends ScriptedInstallBase
 
         // create products_additional_images table
         $sql = "CREATE TABLE IF NOT EXISTS " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (
-            id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            products_id INT(11) NOT NULL,
-            additional_image VARCHAR(255) NOT NULL,
-            sort_order INT(11) DEFAULT 0,
+            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            products_id INT NOT NULL,
+            additional_image VARCHAR(191) NOT NULL,
+            sort_order INT DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_products_id (products_id)
+            UNIQUE KEY idx_pid_img_zen (products_id, additional_image)
         ) ENGINE=MyISAM";
         $this->executeInstallerSql($sql);
     }
