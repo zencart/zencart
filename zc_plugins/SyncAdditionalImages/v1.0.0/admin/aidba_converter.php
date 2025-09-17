@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Convert additional images from file-based approach to database approach
@@ -61,7 +60,7 @@ if (!empty($action) && $action === 'convert') {
             );
             if ($exists_query->EOF) {
                 $db->Execute(
-                    "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order) 
+                    "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
                     VALUES (" . $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
                 );
                 $inserted++;
@@ -72,7 +71,7 @@ if (!empty($action) && $action === 'convert') {
     }
     if ($inserted === 0) {
         $messageStack->add_session(TEXT_ALL_CONVERTED, 'info');
-        $db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET display_on_menu = 'N' WHERE page_key = 'toolsAidba'");
+        //$db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET display_on_menu = 'N' WHERE page_key = 'toolsAidba'");
     } else {
         $messageStack->add_session($counter . TEXT_PRODUCTS_PROCESSED, 'success');
         $messageStack->add_session(TEXT_CONVERSION_COMPLETED, 'success');
@@ -82,13 +81,13 @@ if (!empty($action) && $action === 'convert') {
 
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
 <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 </head>
 <body>
 <!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require DIR_WS_INCLUDES . 'header.php'; ?>
 <!-- header_eof //-->
 
 <!-- body //-->
@@ -96,25 +95,25 @@ if (!empty($action) && $action === 'convert') {
 <div class="container-fluid">
     <!-- body_text //-->
 
-    <h1><?php echo HEADING_TITLE; ?></h1>
-    <?php echo TEXT_MAIN; ?>
-    <br><br>
-    <h3><?php echo TEXT_STEP_1; ?></h3>
-    <p><?php echo TEXT_STEP_1_DETAIL; ?></p>
-    <h3><?php echo TEXT_STEP_2; ?></h3>
-    <p><?php echo TEXT_STEP_2_DETAIL; ?></p>
-    <h3><?php echo TEXT_STEP_3; ?></h3>
-    <p><?php echo TEXT_STEP_3_DETAIL; ?></p>
+    <h1><?= HEADING_TITLE ?></h1>
+    <?= TEXT_MAIN ?><br>
+    <br>
+    <h3><?= TEXT_STEP_1 ?></h3>
+    <p><?= TEXT_STEP_1_DETAIL ?></p>
+    <h3><?= TEXT_STEP_2 ?></h3>
+    <p><?= TEXT_STEP_2_DETAIL ?></p>
+    <h3><?= TEXT_STEP_3 ?></h3>
+    <p><?= TEXT_STEP_3_DETAIL ?></p>
     <?php
     echo zen_draw_form('convert_images_to_db', FILENAME_AIDBA, '', 'post', 'class="form-horizontal"');
     echo zen_draw_hidden_field('action', 'convert');
     ?>
 
     <div class="buttonRow">
-        <button type="submit" class="btn btn-primary"><?php echo BUTTON_START_CONVERSION; ?></button>
+        <button type="submit" class="btn btn-primary"><?= BUTTON_START_CONVERSION ?></button>
     </div>
 
-    <?php echo '</form>'; ?>
+    <?= '</form>' ?>
 
     <!-- body_text_eof //-->
 </div>
