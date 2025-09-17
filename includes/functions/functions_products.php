@@ -812,7 +812,7 @@ function zen_remove_product($product_id, $ptc = 'true'): void
     }
 
     // remove additional images
-    if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
+    if (ADDITIONAL_IMAGES_HANDLING === 'Database') {
         // Get all additional images for this product
         $images_query = $db->Execute("SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id");
         foreach ($images_query as $image) {
