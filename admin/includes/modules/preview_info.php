@@ -110,12 +110,23 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
             echo '<div class="clearfix"></div>';
             echo '<div class="row">';
             if (!empty($pInfo->previous_additional_images)) {
-                foreach ($pInfo->previous_additional_images as $img) {
-                    echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                foreach ($pInfo->previous_additional_images as $imgindex => $img) {
+                    if (empty($pInfo->additional_image_delete) || !array_key_exists($imgindex, $pInfo->additional_image_delete)) {
+                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                    }
                 }
             }
-            foreach ($additional_images_names as $img) {
-                echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+            echo '</div>';
+            if (!empty($pInfo->previous_additional_images) && !empty($pInfo->additional_image_delete)) {
+                echo '<div class="clearfix"></div>';
+                echo '<h4 class="pull-right">' . TEXT_PRODUCTS_ADDITIONAL_IMAGES . ' FOR DELETION:</h4><br>';
+                echo '<div class="clearfix"></div>';
+                echo '<div class="row">';
+                foreach ($pInfo->previous_additional_images as $imgindex => $img) {
+                    if (!empty($pInfo->additional_image_delete) && array_key_exists($imgindex, $pInfo->additional_image_delete)) {
+                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                    }
+                }
             }
             echo '</div>';
         }
