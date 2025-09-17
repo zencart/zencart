@@ -22,6 +22,14 @@ if (!empty($_POST)) {
       $url = str_replace(['http://', 'https://'], '', $url);
   }
   unset ($url);
+  $p_date_available = $pInfo->products_date_available;
+  if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($pInfo->products_date_available)) {
+      $dt = DateTime::createFromFormat(zen_datepicker_format_fordate(), $pInfo->products_date_available);
+      $p_date_available = 'null';
+      if (!empty($dt)) {
+          $p_date_available = $dt->format("Y-m-d H:i");
+      }
+  }
 } else {
   $product = $db->Execute("SELECT p.*,
                                   pd.language_id, pd.products_name, pd.products_description, pd.products_url
@@ -44,7 +52,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
 <div class="container-fluid">
     <?php
     if (!isset($_GET['read']) || ($_GET['read'] !== 'only')) {
-      echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'enctype="multipart/form-data"');
+      echo zen_draw_form($form_action, FILENAME_PRODUCT, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : ''), 'post', 'enctype="multipart/form-data"');
     }
 
     for ($i = 0, $n = count($languages); $i < $n; $i++) {
@@ -74,7 +82,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         if ((isset($_POST['image_delete']) && $_POST['image_delete'] == '1') || ($products_image_name == '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1')) {
           echo zen_image(DIR_WS_CATALOG_IMAGES . PRODUCTS_IMAGE_NO_IMAGE, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
         } else {
-          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right object-fit-contain"');
         }
         echo str_replace('src="images/', 'src="' . DIR_WS_CATALOG_IMAGES, $pInfo->products_description);
 
@@ -85,12 +93,23 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
             echo '<div class="clearfix"></div>';
             echo '<div class="row">';
             if (!empty($pInfo->previous_additional_images)) {
-                foreach ($pInfo->previous_additional_images as $img) {
-                    echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                foreach ($pInfo->previous_additional_images as $imgindex => $img) {
+                    if (empty($pInfo->additional_image_delete) || !array_key_exists($imgindex, $pInfo->additional_image_delete)) {
+                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                    }
                 }
             }
-            foreach ($additional_images_names as $img) {
-                echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+            echo '</div>';
+            if (!empty($pInfo->previous_additional_images) && !empty($pInfo->additional_image_delete)) {
+                echo '<div class="clearfix"></div>';
+                echo '<h4 class="pull-right">' . TEXT_PRODUCTS_ADDITIONAL_IMAGES . ' FOR DELETION:</h4><br>';
+                echo '<div class="clearfix"></div>';
+                echo '<div class="row">';
+                foreach ($pInfo->previous_additional_images as $imgindex => $img) {
+                    if (!empty($pInfo->additional_image_delete) && array_key_exists($imgindex, $pInfo->additional_image_delete)) {
+                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                    }
+                }
             }
             echo '</div>';
         }
@@ -107,9 +126,9 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     ?>
     <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
     <?php
-    if ($pInfo->products_date_available > date('Y-m-d')) {
+    if ($p_date_available > date('Y-m-d')) {
       ?>
-      <div class="row"><?php echo sprintf(TEXT_PRODUCT_DATE_AVAILABLE, zen_date_long($pInfo->products_date_available)); ?></div>
+      <div class="row"><?php echo sprintf(TEXT_PRODUCT_DATE_AVAILABLE, zen_date_long($p_date_available)); ?></div>
       <?php
     } else {
       ?>
@@ -139,7 +158,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
     }
     ?>
     <div class="row text-right">
-      <a href="<?php echo zen_href_link($back_url, $back_url_params . (isset($_POST['search']) ? '&search=' . $_POST['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
+      <a href="<?php echo zen_href_link($back_url, $back_url_params . (!empty($_GET['search']) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_BACK; ?></a>
     </div>
     <?php
   } else {
@@ -148,7 +167,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         <?php
         /* Re-Post all POST'ed variables */
         foreach ($_POST as $key => $value) {
-          if (!is_array($_POST[$key])) {
+          if (!is_array($_POST[$key]) && $key !== 'search') {
             echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, TRUE));
           }
         }
@@ -173,7 +192,9 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         }
         // EOF additional images
 
-        echo ( (isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
+        if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
+            echo zen_draw_hidden_field('search', $_GET['search']);
+        }
       ?>
         <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
       <?php
@@ -187,7 +208,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
         <?php
       }
       ?>
-      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+      <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . (isset($_GET['search']) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
     </div>
       <?php
   }
