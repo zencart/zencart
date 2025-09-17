@@ -589,10 +589,11 @@ function zen_draw_label($text, $for, $parameters = '')
 /**
  * Output a day/month/year dropdown selector
  * @param string $fieldname_prefix
- * @param string $default_date
+ * @param int|null $default_date_timestamp
  * @return string
  */
-function zen_draw_date_selector($fieldname_prefix, $default_date='') {
+function zen_draw_date_selector(string $fieldname_prefix, ?int $default_date_timestamp = null): string
+{
     $month_array = array();
     $month_array[1] =_JANUARY;
     $month_array[2] =_FEBRUARY;
@@ -606,7 +607,7 @@ function zen_draw_date_selector($fieldname_prefix, $default_date='') {
     $month_array[10] =_OCTOBER;
     $month_array[11] =_NOVEMBER;
     $month_array[12] =_DECEMBER;
-    $usedate = getdate($default_date);
+    $usedate = getdate($default_date_timestamp);
     $day = $usedate['mday'];
     $month = $usedate['mon'];
     $year = $usedate['year'];
