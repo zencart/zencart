@@ -525,12 +525,12 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
         </div>
     </div>
-    <?php if(ADDITIONAL_IMAGES_APPROACH === 'modern') { ?>
+    <?php if (ADDITIONAL_IMAGES_HANDLING === 'Database') { ?>
         <h3><?= TEXT_PRODUCTS_ADDITIONAL_IMAGES ?></h3>
-        <?php if(!empty($additional_images)) { ?>
+        <?php if (!empty($additional_images)) { ?>
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                    <?php foreach($additional_images as $img) { ?>
+                    <?php foreach ($additional_images as $img) { ?>
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <?= zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"') ?>
                             <br>
