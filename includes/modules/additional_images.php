@@ -27,15 +27,8 @@ if ($products_image !== '' && !empty($flag_show_product_info_additional_images))
 
     if (ADDITIONAL_IMAGES_APPROACH === 'modern') {
         $products_image_directory = DIR_WS_IMAGES;
-
-        $images_array = [];
-        $sql = "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = :productsID ORDER BY sort_order";
-        $sql = $db->bindVars($sql, ':productsID', (int)$_GET['products_id'], 'integer');
-        $images_query = $db->Execute($sql);
-
-        foreach ($images_query as $image) {
-            $images_array[] = $image['additional_image'];
-        }
+        $images_array = (new Product((int)$_GET['products_id']))->get('additional_images') ?? [];
+        $images_array = array_map(static fn($f) => $f['image_filename'], $images_array);
     } else {
         // prepare image name
         $products_image_base = str_replace($products_image_extension, '', $products_image);
