@@ -481,6 +481,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       </div>
   </div>
     <hr>
+
+<div class="well product-images-area">
     <h2><?php echo TEXT_PRODUCTS_IMAGE; ?></h2>
     <?php
     if (!empty($pInfo->products_image)) { ?>
@@ -533,7 +535,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
                             <?= zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"') ?>
                             <br>
                             <?= $img['additional_image'] ?><br>
-                            <?= zen_draw_hidden_field('previous_additional_images[]', $img['additional_image'], 'data-img-id="' . $img['id'] . '"') ?>
+                            <?= zen_draw_hidden_field('previous_additional_images[' . $img['id'] . ']', $img['additional_image'], 'data-img-id="' . $img['id'] . '"') ?>
                             <label>
                                 <?= zen_draw_checkbox_field('additional_image_delete[' . $img['id'] . ']', '1', false); ?> <?= TEXT_DELETE_IMAGE ?>
                             </label>
@@ -551,13 +553,14 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
                     <input type="file" name="additional_images[]" class="form-control" multiple style="display:none;" id="additional-images-input" />
                     <div id="additional-images-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
                 </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="document.getElementById('additional-images-input').click();"><?= TEXT_BUTTON_ADD_ADDITIONAL_IMAGE ?></button>
+                <button type="button" class="btn btn-info mt-2" id="addl_images_button" onclick="document.getElementById('additional-images-input').click();"><?= TEXT_BUTTON_ADD_ADDITIONAL_IMAGE ?></button>
             </div>
         </div>
         <script>
             const dropzone = document.getElementById('additional-images-dropzone');
             const input = document.getElementById('additional-images-input');
             const preview = document.getElementById('additional-images-preview');
+            const addl_images_button = document.getElementById('addl_images_button');
             let files = [];
 
             dropzone.addEventListener('click', () => input.click());
@@ -565,6 +568,26 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             dropzone.addEventListener('dragover', e => {
                 e.preventDefault();
                 dropzone.style.borderColor = '#007bff';
+            });
+
+            dropzone.addEventListener('mouseover', e => {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '#007bff';
+                dropzone.style.color = '#fff';
+                dropzone.style.cursor = 'pointer';
+                addl_images_button.style.backgroundColor = '#007bff';
+                addl_images_button.style.color = '#fff';
+                addl_images_button.style.borderColor = '#269adc';
+            });
+
+            dropzone.addEventListener('mouseout', e => {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '';
+                dropzone.style.color = '';
+                dropzone.style.cursor = '';
+                addl_images_button.style.backgroundColor = '';
+                addl_images_button.style.color = '';
+                addl_images_button.style.borderColor = '';
             });
 
             dropzone.addEventListener('dragleave', e => {
@@ -646,7 +669,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
         </div>
     </div>
-
+</div>
     <hr>
   <div class="form-group">
     <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_URL; ?><span class="help-block"><?php echo TEXT_PRODUCTS_URL_WITHOUT_HTTP; ?></span></p>
