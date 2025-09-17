@@ -260,6 +260,18 @@ class Product
             $this->notify('NOTIFY_PRODUCT_DETAILS_NO_DESCRIPTION', (int)$product_id, $data);
         }
 
+        // additional product images
+        $data['additional_images'] = [];
+        $sql = "SELECT id, sort_order, additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id ORDER BY sort_order";
+        $results = $db->Execute($sql);
+        foreach ($results as $additional_image) {
+            $data['additional_images'] = [
+                'id' => $additional_image['id'],
+                'image_filename' => $additional_image['additional_image'],
+                'sort_order' => $additional_image['sort_order'],
+            ];
+        }
+
         // count linked categories
         $sql = "SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc WHERE products_id=" . (int)$product_id;
         $results = $db->Execute($sql, null, true, 900);
