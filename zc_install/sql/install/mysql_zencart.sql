@@ -1752,11 +1752,12 @@ CREATE TABLE products (
 # Table structure for table 'products_additional_images'
 #
 
+DROP TABLE IF EXISTS products_additional_images;
 CREATE TABLE IF NOT EXISTS products_additional_images (
-  id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  products_id INT(11) NOT NULL,
-  additional_image VARCHAR(255) NOT NULL,
-  sort_order INT(11) DEFAULT 0,
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  products_id INT NOT NULL,
+  additional_image VARCHAR(191) NOT NULL,
+  sort_order INT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY idx_pid_img_zen (products_id, additional_image)
 ) ENGINE=MyISAM;
@@ -2671,6 +2672,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Product Info - Image Medium Suffix', 'IMAGE_SUFFIX_MEDIUM', '_MED', 'Product Info Medium Image Suffix<br />Default = _MED', '4', '22', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Product Info - Image Large Suffix', 'IMAGE_SUFFIX_LARGE', '_LRG', 'Product Info Large Image Suffix<br />Default = _LRG', '4', '23', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images matching pattern', 'ADDITIONAL_IMAGES_MODE', 'strict', '&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict', '4', '25', 'zen_cfg_select_option(array(\'strict\', \'legacy\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images Approach', 'ADDITIONAL_IMAGES_APPROACH', 'modern', 'Use Legacy mode for old-school directory scanning and matching filenames. Additional images must be uploaded manually via FTP or using Image Handler.<br>Use Modern mode to add additional images directly from the admin product page. Filenames and extensions do not need to match.<br><strong>NOTE:</strong> if you are switching from Legacy to Modern for the first time, you can use the converter tool found in your Tools menu to update all existing product data with existing additional images. Switching back and forth is not recommended.', '4', '26', 'zen_cfg_select_option([\'legacy\', \'modern\'], ', NOW());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Product Info - Number of Additional Images per Row', 'IMAGES_AUTO_ADDED', '3', 'Product Info - Enter the number of additional images to display per row<br />Default = 3', '4', '30', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Image - Product Listing Width', 'IMAGE_PRODUCT_LISTING_WIDTH', '100', 'Default = 100', 4, 40, now());
@@ -2690,7 +2692,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Product And Category Image - No Image picture', 'PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif', 'Use automatic No Image when none is added to product or category<br>Default = no_picture.gif', '4', '61', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Image - Use Proportional Images on Products and Categories', 'PROPORTIONAL_IMAGES_STATUS', '1', 'Use Proportional Images on Products and Categories?<br /><br />NOTE: Do not use 0 height or width settings for Proportion Images<br />0= off 1= on', 4, 75, 'zen_cfg_select_option(array(\'0\', \'1\'), ', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images Approach', 'ADDITIONAL_IMAGES_APPROACH', 'modern', 'Use Legacy mode for old-school directory scanning and matching filenames. Additional images must be uploaded manually via FTP or using Image Handler.<br>Use Modern mode to add additional images directly from the admin product page. Filenames and extensions do not need to match.<br><strong>NOTE:</strong> if you are switching from Legacy to Modern for the first time, you can use the converter tool found in your Tools menu to update all existing product data with existing additional images. Switching back and forth is not recommended.', '4', '80', 'zen_cfg_select_option([\'legacy\', \'modern\'], ', NOW())");
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Email Salutation', 'ACCOUNT_GENDER', 'false', 'Display salutation choice during account creation and with account information', '5', '1', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Date of Birth', 'ACCOUNT_DOB', 'false', 'Display date of birth field during account creation and with account information<br />NOTE: Set Minimum Value Date of Birth to blank for not required<br />Set Minimum Value Date of Birth > 0 to require', '5', '2', 'zen_cfg_select_option(array(\'true\', \'false\'), ', now());
