@@ -265,10 +265,10 @@ class Product
         $sql = "SELECT id, sort_order, additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id ORDER BY sort_order";
         $results = $db->Execute($sql);
         foreach ($results as $additional_image) {
-            $data['additional_images'] = [
-                'id' => $additional_image['id'],
+            $data['additional_images'][] = [
+                'id' => (int)$additional_image['id'],
                 'image_filename' => $additional_image['additional_image'],
-                'sort_order' => $additional_image['sort_order'],
+                'sort_order' => (int)$additional_image['sort_order'],
             ];
         }
 
