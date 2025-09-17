@@ -524,18 +524,18 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         </div>
     </div>
     <?php if(ADDITIONAL_IMAGES_APPROACH === 'modern') { ?>
-        <h3><?php echo TEXT_PRODUCTS_ADDITIONAL_IMAGES; ?></h3>
+        <h3><?= TEXT_PRODUCTS_ADDITIONAL_IMAGES ?></h3>
         <?php if(!empty($additional_images)) { ?>
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9 col-md-6">
                     <?php foreach($additional_images as $img) { ?>
                         <div class="col-sm-3 col-md-3 col-lg-3">
-                            <?php echo zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"'); ?>
+                            <?= zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"') ?>
                             <br>
-                            <?php echo $img['additional_image']; ?><br>
-                            <?php echo zen_draw_hidden_field('previous_additional_images[]', $img['additional_image'], 'data-img-id="' . $img['id'] . '"'); ?>
+                            <?= $img['additional_image'] ?><br>
+                            <?= zen_draw_hidden_field('previous_additional_images[]', $img['additional_image'], 'data-img-id="' . $img['id'] . '"') ?>
                             <label>
-                                <?php echo zen_draw_checkbox_field('additional_image_delete[' . $img['id'] . ']', '1', false); ?> Delete?
+                                <?= zen_draw_checkbox_field('additional_image_delete[' . $img['id'] . ']', '1', false); ?> <?= TEXT_DELETE_IMAGE ?>
                             </label>
                         </div>
                     <?php } ?>
@@ -544,14 +544,14 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
 
         <?php } ?>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD, 'additional_images', 'class="col-sm-3 control-label"'); ?>
+            <?= zen_draw_label(TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD, 'additional_images', 'class="col-sm-3 control-label"') ?>
             <div class="col-sm-9 col-md-9 col-lg-6">
                 <div id="additional-images-dropzone" class="dropzone" style="border:2px dashed #ccc; padding:20px; text-align:center;">
-                    <p><?php echo TEXT_BUTTON_DRAG_DROP_ADDITIONAL_IMAGE; ?></p>
+                    <p><?= TEXT_BUTTON_DRAG_DROP_ADDITIONAL_IMAGE ?></p>
                     <input type="file" name="additional_images[]" class="form-control" multiple style="display:none;" id="additional-images-input" />
                     <div id="additional-images-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
                 </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="document.getElementById('additional-images-input').click();"><?php echo TEXT_BUTTON_ADD_ADDITIONAL_IMAGE; ?></button>
+                <button type="button" class="btn btn-secondary mt-2" onclick="document.getElementById('additional-images-input').click();"><?= TEXT_BUTTON_ADD_ADDITIONAL_IMAGE ?></button>
             </div>
         </div>
         <script>
