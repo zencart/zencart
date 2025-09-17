@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin Activity Log Viewer/Archiver
  *
@@ -11,8 +12,8 @@
  * @TODO: prettify by hiding postdata until requested, either with hidden layers or other means
  * @TODO: Consider streaming to file line-by-line as an alternate output method in case of RAM blowout with large data quantities or low RAM config on servers.
  */
-require ('includes/application_top.php');
 
+require 'includes/application_top.php';
 
 // change destination here for path when using "save to file on server"
 if (!defined('DIR_FS_ADMIN_ACTIVITY_EXPORT')) {
@@ -30,7 +31,9 @@ $available_export_formats[1] = array('id' => '1', 'text' => TEXT_EXPORTFORMAT1, 
 $save_to_file_checked = (isset($_POST['savetofile']) && !empty($_POST['savetofile']) ? $_POST['savetofile'] : 0);
 $post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
-$file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . date('Y-m-d_H-i-s') . '.csv');
+$result = $db->Execute('SELECT access_date FROM ' . TABLE_ADMIN_ACTIVITY_LOG . ' WHERE log_id=1 LIMIT 1');
+$date_start = date('Y-m-d_H-i-s', strtotime($result->fields['access_date']));
+$file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . $date_start . '__' . date('Y-m-d_H-i-s') . '.csv');
 if (!preg_match('/.*\.(csv|txt|html?|xml)$/', $file)) {
   $file .= '.txt';
 }
@@ -420,9 +423,9 @@ if ($action != '') {
       <!-- body_text_eof //-->
     </div>
     <!-- body_eof //--> <!-- footer //-->
-    <?php require (DIR_WS_INCLUDES . 'footer.php'); ?>
+    <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //--> <br>
 
   </body>
 </html>
-<?php require (DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
