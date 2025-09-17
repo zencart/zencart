@@ -561,7 +561,7 @@ if (!empty($action)) {
       zen_copy_products_attributes($_POST['products_filter'], $_POST['products_update_id']);
       $_GET['action'] = '';
       $products_filter = $_POST['products_update_id'];
-      $_POST['current_category_id'] = zen_products_lookup($products_filter, 'master_categories_id');
+      $_POST['current_category_id'] = (new Product((int)$products_filter))->get('master_categories_id');
       zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, 'products_filter=' . $products_filter . '&current_category_id=' . $_POST['current_category_id']));
       break;
 
