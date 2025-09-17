@@ -224,7 +224,7 @@ class ot_gv {
     if (preg_match('/^GIFT/', addslashes($order->products[$i]['model']))) {
       // determine how much GV was purchased
       // check if GV was purchased on Special
-      $gv_original_price = zen_products_lookup((int)$order->products[$i]['id'], 'products_price');
+      $gv_original_price = (new Product((int)$order->products[$i]['id']))->get('products_price');
        // if prices differ assume Special and get Special Price
 
         // Do not use this on GVs Priced by Attribute
