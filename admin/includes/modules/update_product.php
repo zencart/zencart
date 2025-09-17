@@ -132,15 +132,15 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
     $additional_images = $_POST['additional_images'] ?? [];
 
     if (!empty($additional_images) && is_array($additional_images)) {
-        // get max sort order for existing additional images
-        $max_sort_order = 0;
-        $existing_images = $db->Execute(
+        // get sort order for existing additional images
+        $next_sort_order = 0;
+        $existing_sort = $db->Execute(
             "SELECT MAX(sort_order) AS max_sort_order
                FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
               WHERE products_id = " . (int)$products_id
         );
-        if ($existing_images->RecordCount() > 0 && $existing_images->fields['max_sort_order'] !== null) {
-            $max_sort_order = (int)$existing_images->fields['max_sort_order'] + 1;
+        if ($existing_sort->RecordCount() > 0 && $existing_sort->fields['max_sort_order'] !== null) {
+            $next_sort_order = (int)$existing_sort->fields['max_sort_order'] + 1;
         }
 
         // Insert each additional image
@@ -148,10 +148,10 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
             if (!empty($img)) {
                 $db->Execute(
                     "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
-                 VALUES (" . (int)$products_id . ", '" . zen_db_input($img) . "', " . (int)$max_sort_order . ")"
+                 VALUES (" . (int)$products_id . ", '" . zen_db_input($img) . "', " . (int)$next_sort_order . ")"
                 );
             }
-            $max_sort_order++;
+            $next_sort_order++;
         }
     }
     // delete any additional images marked for removal
@@ -185,7 +185,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
                     $messageStack->add_session(TEXT_IMAGE_USED_BY_OTHER_PRODUCTS, 'warning');
                 }
 
-                // delete record
+                // delete record for this product
                 $db->Execute(
                     "DELETE FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
                    WHERE products_id = " . (int)$products_id . "
