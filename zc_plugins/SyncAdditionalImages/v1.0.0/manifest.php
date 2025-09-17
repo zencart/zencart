@@ -2,8 +2,8 @@
 
 return [
     'pluginVersion' => 'v1.0.0',
-    'pluginName' => 'Sync Additional Images to Database',
-    'pluginDescription' => 'Tools to convert legacy additional images to database approach, and keep them in sync.',
+    'pluginName' => 'Sync Additional Product Images to Database',
+    'pluginDescription' => 'Tool to convert additional product images from filesystem into database, and keep them in sync.',
     'pluginAuthor' => 'ZenExpert (balihr)',
     'pluginId' => '0', // ID from Zen Cart forum
     'zcVersions' => ['v2.0.0', 'v2.0.1', 'v2.1.0'], // compatible versions of Zen Cart
