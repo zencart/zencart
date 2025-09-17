@@ -851,6 +851,12 @@ input.faint {
     border-color: #bce8f1;
     padding: 10px 10px 0 10px;
 }
+.well.product-images-area {
+    color: #383d41;
+    background-color: #f7f7f7;
+    border-color: #ddd;
+    padding: 10px 10px 0 10px;
+}
 
 /** utility */
 
