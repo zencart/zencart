@@ -198,9 +198,9 @@ $configuration = $db->Execute($query);
 echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&action=saveall', 'post', 'class="form-horizontal"');
 ?>
     <div class="row font-weight-bold">
-        <div class="col-md-2"><?= TABLE_HEADING_CONFIGURATION_TITLE ?></div>
+        <div class="col-md-3"><?= TABLE_HEADING_CONFIGURATION_TITLE ?></div>
         <div class="col-md-4"><?= TABLE_HEADING_CONFIGURATION_VALUE ?></div>
-        <div class="col-md-6"></div>
+        <div class="col-md-5"></div>
     </div>
 <?php
 foreach ($configuration as $item) {
@@ -216,9 +216,9 @@ foreach ($configuration as $item) {
 
 ?>
     <div class="row row-hover align-items-center py-2">
-        <div class="col-md-2 font-weight-bold">
+        <div class="col-md-3">
             <?php
-            echo $item['configuration_title'];
+            echo '<strong>' . $item['configuration_title'] . '</strong>';
             if (ADMIN_CONFIGURATION_KEY_ON == 1) {
                 echo '<br>Key: ' . $item['configuration_key'];
             }
@@ -236,7 +236,7 @@ foreach ($configuration as $item) {
             echo '<input type="hidden" name="orig_' . $fieldName . '" value="' . htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, true) . '">';
             ?>
         </div>
-        <div class="col-md-6"><?= $item['configuration_description'] ?></div>
+        <div class="col-md-5"><?= $item['configuration_description'] ?></div>
     </div>
     <hr>
 <?php
