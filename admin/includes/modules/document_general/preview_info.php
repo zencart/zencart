@@ -77,6 +77,24 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
         }
         echo str_replace('src="images/', 'src="' . DIR_WS_CATALOG_IMAGES, $pInfo->products_description);
+
+        // BOF Additional Images
+        if (!empty($additional_images_names) || !empty($pInfo->previous_additional_images)) {
+            echo '<div class="clearfix"></div>';
+            echo '<h4 class="pull-right">' . TEXT_PRODUCTS_ADDITIONAL_IMAGES . '</h4><br>';
+            echo '<div class="clearfix"></div>';
+            echo '<div class="row">';
+            if (!empty($pInfo->previous_additional_images)) {
+                foreach ($pInfo->previous_additional_images as $img) {
+                    echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                }
+            }
+            foreach ($additional_images_names as $img) {
+                echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+            }
+            echo '</div>';
+        }
+        // EOF Additional Images
         ?>
     </div>
     <?php
@@ -141,6 +159,20 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           echo zen_draw_hidden_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars(stripslashes($products_url[$languages[$i]['id']]), ENT_COMPAT, CHARSET, TRUE));
         }
         echo zen_draw_hidden_field('products_image', stripslashes($products_image_name));
+
+        // BOF additional images
+        if (!empty($additional_images_names)) {
+            foreach ($additional_images_names as $img) {
+                echo zen_draw_hidden_field('additional_images[]', $img);
+            }
+        }
+        if(!empty($pInfo->additional_image_delete)) {
+            foreach ($pInfo->additional_image_delete as $img_id => $value) {
+                echo zen_draw_hidden_field('additional_image_delete[]', $img_id);
+            }
+        }
+        // EOF additional images
+
         echo ( (isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
       ?>
         <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
