@@ -24,7 +24,6 @@ define('FILENAME_ADDRESS_BOOK', 'address_book');
 define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process');
 define('FILENAME_ADMIN_ACCOUNT', 'admin_account');
 define('FILENAME_ADMIN_ACTIVITY', 'admin_activity');
-define('FILENAME_ADMIN_PAGE_REGISTRATION', 'admin_page_registration');
 define('FILENAME_ADVANCED_SEARCH', 'search'); // alias since 1.5.8; to be removed later
 define('FILENAME_ADVANCED_SEARCH_RESULT', 'search_result'); // alias since 1.5.8; to be removed later
 define('FILENAME_AJAX', 'ajax');
