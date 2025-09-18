@@ -778,7 +778,8 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                                     value="replace"><?= BUTTON_COPY_LINKED_CATEGORIES_REPLACE ?></button>
                         </div>
                     </div>
-                    <?= '</form>';
+                <?php 
+                    echo '</form>';
                 }
             } ?>
         </div>
