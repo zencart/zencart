@@ -32,7 +32,7 @@ $save_to_file_checked = (isset($_POST['savetofile']) && !empty($_POST['savetofil
 $post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
 $result = $db->Execute('SELECT access_date FROM ' . TABLE_ADMIN_ACTIVITY_LOG . ' WHERE log_id=1 LIMIT 1');
-$date_start = date('Y-m-d_H-i-s', strtotime($result->fields['access_date']));
+$date_start = $result->RecordCount() ? date('Y-m-d_H-i-s', strtotime($result->fields['access_date'])) : '';
 $file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . $date_start . '__' . date('Y-m-d_H-i-s') . '.csv');
 if (!preg_match('/.*\.(csv|txt|html?|xml)$/', $file)) {
   $file .= '.txt';
