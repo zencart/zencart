@@ -127,78 +127,86 @@ switch ($metatag_page_name) {
             zen_define_default('META_TAG_TITLE', str_replace('"', '', $category_metatags->fields['metatags_title']));
             zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', $category_metatags->fields['metatags_description']));
             zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', $category_metatags->fields['metatags_keywords']));
-        } else {
-            // build categories meta tags
-            // eof: categories meta tags
-            if ($category_depth === 'nested') {
-                $sql =
-                    "SELECT cd.categories_name
-                       FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                      WHERE c.categories_id = cd.categories_id
-                        AND cd.categories_id = " . (int)$current_category_id . "
-                        AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                        AND c.categories_status = 1";
-                $category_metatags = $db->Execute($sql, 1);
-                if ($category_metatags->EOF) {
-                    $meta_tags_over_ride = true;
+            break;
+        }
+
+        // build categories meta tags
+        // eof: categories meta tags
+        if ($category_depth === 'nested') {
+            $sql =
+                "SELECT cd.categories_name
+                   FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                  WHERE c.categories_id = cd.categories_id
+                    AND cd.categories_id = " . (int)$current_category_id . "
+                    AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                    AND c.categories_status = 1";
+            $category_metatags = $db->Execute($sql, 1);
+            if ($category_metatags->EOF) {
+                $meta_tags_over_ride = true;
+            } else {
+                $metatag_name = zen_clean_html($category_metatags->fields['categories_name']);
+                zen_define_default('META_TAG_TITLE', str_replace('"', '', $metatag_name) . PRIMARY_SECTION . TITLE . TAGLINE);
+                zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . $metatag_name) . SECONDARY_SECTION . KEYWORDS);
+                zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', KEYWORDS . METATAGS_DIVIDER . $metatag_name));
+            }
+            break;
+        }
+
+        if ($category_depth === 'products') {
+            if (isset($_GET['manufacturers_id']) || (($_GET['filter_id'] ?? 0) > 0 && isset($_GET['cPath']))) {
+                if (isset($_GET['filter_id'], $_GET['cPath'])) {
+                    $include_manufacturers_id = $_GET['filter_id'];
                 } else {
-                    $metatag_name = zen_clean_html($category_metatags->fields['categories_name']);
-                    zen_define_default('META_TAG_TITLE', str_replace('"', '', $metatag_name) . PRIMARY_SECTION . TITLE . TAGLINE);
-                    zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . $metatag_name) . SECONDARY_SECTION . KEYWORDS);
-                    zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', KEYWORDS . METATAGS_DIVIDER . $metatag_name));
+                    $include_manufacturers_id = $_GET['manufacturers_id'];
                 }
-            } elseif ($category_depth === 'products') {
-                if (isset($_GET['manufacturers_id']) || (($_GET['filter_id'] ?? 0) > 0 && isset($_GET['cPath']))) {
-                    if (isset($_GET['filter_id'], $_GET['cPath'])) {
-                        $include_manufacturers_id = $_GET['filter_id'];
-                    } else {
-                        $include_manufacturers_id = $_GET['manufacturers_id'];
-                    }
-                    $sql = "SELECT manufacturers_name FROM " . TABLE_MANUFACTURERS . " WHERE manufacturers_id = " . (int)$include_manufacturers_id;
-                    $manufacturer_metatags = $db->Execute($sql, 1);
-                    if ($manufacturer_metatags->EOF) {
-                        $meta_tags_over_ride = true;
-                    } else {
-                        $metatag_name = $manufacturer_metatags->fields['manufacturers_name'];
-                        zen_define_default('META_TAG_TITLE', str_replace('"', '', $metatag_name . PRIMARY_SECTION . TITLE . TAGLINE));
-                        zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . $metatag_name . SECONDARY_SECTION . KEYWORDS));
-                        zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', $metatag_name . METATAGS_DIVIDER . KEYWORDS));
-                    }
-                } else {
-                    $sql =
-                        "SELECT cd.categories_name
-                           FROM " . TABLE_CATEGORIES . ' c, ' . TABLE_CATEGORIES_DESCRIPTION . " cd
-                          WHERE c.categories_id = cd.categories_id
-                            AND cd.categories_id = " . (int)$current_category_id . "
-                            AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                            AND c.categories_status = 1";
-                    $category_metatags = $db->Execute($sql, 1);
-                    if ($category_metatags->EOF) {
-                        $meta_tags_over_ride = true;
-                    } else {
-                        $metatag_name = zen_clean_html($category_metatags->fields['categories_name']);
-                        zen_define_default('META_TAG_TITLE', str_replace('"', '', $metatag_name . PRIMARY_SECTION . TITLE . TAGLINE));
-                        zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . $metatag_name . SECONDARY_SECTION . KEYWORDS));
-                        zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', KEYWORDS . METATAGS_DIVIDER . $metatag_name));
-                    } // EOF
-                }
-            } elseif (isset($_GET['manufacturers_id'])) {
-                $sql = "SELECT manufacturers_name FROM " . TABLE_MANUFACTURERS . " WHERE manufacturers_id = " . (int)$_GET['manufacturers_id'];
+                $sql = "SELECT manufacturers_name FROM " . TABLE_MANUFACTURERS . " WHERE manufacturers_id = " . (int)$include_manufacturers_id;
                 $manufacturer_metatags = $db->Execute($sql, 1);
                 if ($manufacturer_metatags->EOF) {
-                    zen_define_default('META_TAG_TITLE', TITLE . TAGLINE);
-                    zen_define_default('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . str_replace(["'", '"'], '', strip_tags(HEADING_TITLE)) . SECONDARY_SECTION . KEYWORDS);
-                    zen_define_default('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . str_replace(["'", '"'], '', strip_tags(HEADING_TITLE)));
+                    $meta_tags_over_ride = true;
                 } else {
                     $metatag_name = $manufacturer_metatags->fields['manufacturers_name'];
                     zen_define_default('META_TAG_TITLE', str_replace('"', '', $metatag_name . PRIMARY_SECTION . TITLE . TAGLINE));
                     zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . $metatag_name . SECONDARY_SECTION . KEYWORDS));
                     zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', $metatag_name . METATAGS_DIVIDER . KEYWORDS));
                 }
-            } else {
-                // nothing custom main page
-                $meta_tags_over_ride = true;
+                break;
             }
+
+            $sql =
+                "SELECT cd.categories_name
+                   FROM " . TABLE_CATEGORIES . ' c, ' . TABLE_CATEGORIES_DESCRIPTION . " cd
+                  WHERE c.categories_id = cd.categories_id
+                    AND cd.categories_id = " . (int)$current_category_id . "
+                    AND cd.language_id = " . (int)$_SESSION['languages_id'] . "
+                    AND c.categories_status = 1";
+            $category_metatags = $db->Execute($sql, 1);
+            if ($category_metatags->EOF) {
+                $meta_tags_over_ride = true;
+            } else {
+                $metatag_name = zen_clean_html($category_metatags->fields['categories_name']);
+                zen_define_default('META_TAG_TITLE', str_replace('"', '', $metatag_name . PRIMARY_SECTION . TITLE . TAGLINE));
+                zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . $metatag_name . SECONDARY_SECTION . KEYWORDS));
+                zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', KEYWORDS . METATAGS_DIVIDER . $metatag_name));
+            }
+            break;
+        }
+
+        if (isset($_GET['manufacturers_id'])) {
+            $sql = "SELECT manufacturers_name FROM " . TABLE_MANUFACTURERS . " WHERE manufacturers_id = " . (int)$_GET['manufacturers_id'];
+            $manufacturer_metatags = $db->Execute($sql, 1);
+            if ($manufacturer_metatags->EOF) {
+                zen_define_default('META_TAG_TITLE', TITLE . TAGLINE);
+                zen_define_default('META_TAG_DESCRIPTION', TITLE . PRIMARY_SECTION . str_replace(["'", '"'], '', strip_tags(HEADING_TITLE)) . SECONDARY_SECTION . KEYWORDS);
+                zen_define_default('META_TAG_KEYWORDS', KEYWORDS . METATAGS_DIVIDER . str_replace(["'", '"'], '', strip_tags(HEADING_TITLE)));
+            } else {
+                $metatag_name = $manufacturer_metatags->fields['manufacturers_name'];
+                zen_define_default('META_TAG_TITLE', str_replace('"', '', $metatag_name . PRIMARY_SECTION . TITLE . TAGLINE));
+                zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . $metatag_name . SECONDARY_SECTION . KEYWORDS));
+                zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', $metatag_name . METATAGS_DIVIDER . KEYWORDS));
+            }
+        } else {
+            // nothing custom main page
+            $meta_tags_over_ride = true;
         }
         break;
         // eof: categories meta tags
@@ -257,77 +265,78 @@ switch ($metatag_page_name) {
         $product_info_metatags = $db->Execute($sql);
         if ($product_info_metatags->EOF) {
             $meta_tags_over_ride = true;
-        } else {
-            // custom meta tags per product
-            if (!empty($product_info_metatags->fields['metatags_keywords']) || !empty($product_info_metatags->fields['metatags_description'])) {
-                $meta_products_name = '';
-                $meta_products_price = '';
-                $metatags_keywords = '';
+            break;
+        }
 
-                $meta_products_price = ($product_info_metatags->fields['metatags_price_status'] === '1' ? SECONDARY_SECTION . ($product_info_metatags->fields['products_price_sorter'] > 0 ? $currencies->display_price($product_info_metatags->fields['products_price_sorter'], zen_get_tax_rate($product_info_metatags->fields['products_tax_class_id'])) : SECONDARY_SECTION . META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT) : '');
+        // custom meta tags per product
+        if (!empty($product_info_metatags->fields['metatags_keywords']) || !empty($product_info_metatags->fields['metatags_description'])) {
+            $meta_products_name = '';
+            $meta_products_price = '';
+            $metatags_keywords = '';
 
-                $meta_products_name .= ($product_info_metatags->fields['metatags_products_name_status'] === '1' ? $product_info_metatags->fields['products_name'] : '');
-                $meta_products_name .= ($product_info_metatags->fields['metatags_title_status'] === '1' ? ' ' . $product_info_metatags->fields['metatags_title'] : '');
-                $meta_products_name .= ($product_info_metatags->fields['metatags_model_status'] === '1' ? ' [' . $product_info_metatags->fields['products_model'] . ']' : '');
-                if (zen_check_show_prices() == true) {
-                    $meta_products_name .= $meta_products_price;
-                }
-                $meta_products_name .= ($product_info_metatags->fields['metatags_title_tagline_status'] === '1' ? PRIMARY_SECTION . TITLE . TAGLINE : '');
+            $meta_products_price = ($product_info_metatags->fields['metatags_price_status'] === '1' ? SECONDARY_SECTION . ($product_info_metatags->fields['products_price_sorter'] > 0 ? $currencies->display_price($product_info_metatags->fields['products_price_sorter'], zen_get_tax_rate($product_info_metatags->fields['products_tax_class_id'])) : SECONDARY_SECTION . META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT) : '');
 
-                if (!empty($product_info_metatags->fields['metatags_description'])) {
-                    // use custom description
-                    $metatags_description = $product_info_metatags->fields['metatags_description'];
-                } else {
-                    // no custom description defined use product_description
-                    $metatags_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
-                }
+            $meta_products_name .= ($product_info_metatags->fields['metatags_products_name_status'] === '1' ? $product_info_metatags->fields['products_name'] : '');
+            $meta_products_name .= ($product_info_metatags->fields['metatags_title_status'] === '1' ? ' ' . $product_info_metatags->fields['metatags_title'] : '');
+            $meta_products_name .= ($product_info_metatags->fields['metatags_model_status'] === '1' ? ' [' . $product_info_metatags->fields['products_model'] . ']' : '');
+            if (zen_check_show_prices() == true) {
+                $meta_products_name .= $meta_products_price;
+            }
+            $meta_products_name .= ($product_info_metatags->fields['metatags_title_tagline_status'] === '1' ? PRIMARY_SECTION . TITLE . TAGLINE : '');
 
-                $metatags_description = zen_clean_html($metatags_description);
-
-                if (!empty($product_info_metatags->fields['metatags_keywords'])) {
-                    // use custom keywords
-                    $metatags_keywords = $product_info_metatags->fields['metatags_keywords'] . METATAGS_DIVIDER . CUSTOM_KEYWORDS;  // CUSTOM skips categories
-                } else {
-                    // no custom keywords defined use product_description
-                    $metatags_keywords = KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER;
-                }
-
-                zen_define_default('META_TAG_TITLE', str_replace('"','',zen_clean_html($review_on . $meta_products_name)));
-                zen_define_default('META_TAG_DESCRIPTION', str_replace('"','',zen_clean_html($metatags_description . ' ')));
-                zen_define_default('META_TAG_KEYWORDS', str_replace('"','',zen_clean_html($metatags_keywords)));  // KEYWORDS and CUSTOM_KEYWORDS are added above
-
+            if (!empty($product_info_metatags->fields['metatags_description'])) {
+                // use custom description
+                $metatags_description = $product_info_metatags->fields['metatags_description'];
             } else {
-                $meta_products_price = '';
+                // no custom description defined use product_description
+                $metatags_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
+            }
 
-                // build un-customized meta tag
-                if (META_TAG_INCLUDE_PRICE === '1' && !strstr($_GET['main_page'], 'document_general')) {
-                    if ($product_info_metatags->fields['product_is_free'] !== '1') {
-                        if (zen_check_show_prices() == true) {
-                            $meta_products_price = zen_get_products_actual_price($product_info_metatags->fields['products_id']);
-                            $prod_is_call_and_no_price = ($product_info_metatags->fields['product_is_call'] === '1' && $meta_products_price == 0);
-                            $meta_products_price = (!$prod_is_call_and_no_price ? SECONDARY_SECTION . $currencies->display_price($meta_products_price, zen_get_tax_rate($product_info_metatags->fields['products_tax_class_id'])) : '');
-                        }
-                    } else {
-                        $meta_products_price = SECONDARY_SECTION . META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT;
-                    }
+            $metatags_description = zen_clean_html($metatags_description);
+
+            if (!empty($product_info_metatags->fields['metatags_keywords'])) {
+                // use custom keywords
+                $metatags_keywords = $product_info_metatags->fields['metatags_keywords'] . METATAGS_DIVIDER . CUSTOM_KEYWORDS;  // CUSTOM skips categories
+            } else {
+                // no custom keywords defined use product_description
+                $metatags_keywords = KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER;
+            }
+
+            zen_define_default('META_TAG_TITLE', str_replace('"','',zen_clean_html($review_on . $meta_products_name)));
+            zen_define_default('META_TAG_DESCRIPTION', str_replace('"','',zen_clean_html($metatags_description . ' ')));
+            zen_define_default('META_TAG_KEYWORDS', str_replace('"','',zen_clean_html($metatags_keywords)));  // KEYWORDS and CUSTOM_KEYWORDS are added above
+            break;
+        }
+
+        $meta_products_price = '';
+
+        // build un-customized meta tag
+        if (META_TAG_INCLUDE_PRICE === '1' && !strstr($_GET['main_page'], 'document_general')) {
+            if ($product_info_metatags->fields['product_is_free'] !== '1') {
+                if (zen_check_show_prices() == true) {
+                    $meta_products_price = zen_get_products_actual_price($product_info_metatags->fields['products_id']);
+                    $prod_is_call_and_no_price = ($product_info_metatags->fields['product_is_call'] === '1' && $meta_products_price == 0);
+                    $meta_products_price = (!$prod_is_call_and_no_price ? SECONDARY_SECTION . $currencies->display_price($meta_products_price, zen_get_tax_rate($product_info_metatags->fields['products_tax_class_id'])) : '');
                 }
+            } else {
+                $meta_products_price = SECONDARY_SECTION . META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT;
+            }
+        }
 
-                if (META_TAG_INCLUDE_MODEL == '1' && !empty($product_info_metatags->fields['products_model'])) {
-                    $meta_products_name = $product_info_metatags->fields['products_name'] . ' [' . $product_info_metatags->fields['products_model'] . ']';
-                } else {
-                    $meta_products_name = $product_info_metatags->fields['products_name'];
-                }
-                $meta_products_name = zen_clean_html($meta_products_name);
+        if (META_TAG_INCLUDE_MODEL == '1' && !empty($product_info_metatags->fields['products_model'])) {
+            $meta_products_name = $product_info_metatags->fields['products_name'] . ' [' . $product_info_metatags->fields['products_model'] . ']';
+        } else {
+            $meta_products_name = $product_info_metatags->fields['products_name'];
+        }
+        $meta_products_name = zen_clean_html($meta_products_name);
 
-                $meta_products_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
+        $meta_products_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
 
-                $meta_products_description = zen_clean_html($meta_products_description);
+        $meta_products_description = zen_clean_html($meta_products_description);
 
-                zen_define_default('META_TAG_TITLE', str_replace('"', '', $review_on . $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TAGLINE));
-                zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description . ' '));
-                zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', $meta_products_name . METATAGS_DIVIDER . KEYWORDS));
-            } // CUSTOM META TAGS
-        } // EOF
+        zen_define_default('META_TAG_TITLE', str_replace('"', '', $review_on . $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TAGLINE));
+        zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . ' ' . $meta_products_name . SECONDARY_SECTION . $meta_products_description . ' '));
+        zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', $meta_products_name . METATAGS_DIVIDER . KEYWORDS));
         break;
 
     case 'product_reviews_info_OFF':
@@ -344,33 +353,34 @@ switch ($metatag_page_name) {
         $review_metatags = $db->Execute($sql, 1);
         if ($review_metatags->EOF) {
             $meta_tags_over_ride = true;
-        } else {
-            if (META_TAG_INCLUDE_PRICE == '1') {
-                if ($review_metatags->fields['product_is_free'] != '1') {
-                    $meta_products_price = zen_get_products_actual_price($review_metatags->fields['products_id']);
-                    $meta_products_price = SECONDARY_SECTION . $currencies->display_price($meta_products_price, zen_get_tax_rate($review_metatags->fields['products_tax_class_id']));
-                } else {
-                        $meta_products_price = SECONDARY_SECTION . META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT;
-                }
-            } else {
-                $meta_products_price = '';
-            }
-
-            if (!empty($review_metatags->fields['products_model'])) {
-                $meta_products_name = $review_metatags->fields['products_name'] . ' [' . $review_metatags->fields['products_model'] . ']';
-            } else {
-                $meta_products_name = $review_metatags->fields['products_name'];
-            }
-
-            $meta_products_name = zen_clean_html($meta_products_name);
-
-            $review_text_metatags = substr(strip_tags(stripslashes($review_metatags->fields['reviews_text'])), 0, 60);
-            $reviews_rating_metatags = SUB_TITLE_RATING . ' ' . sprintf(TEXT_OF_5_STARS, $review_metatags->fields['reviews_rating']);
-
-            zen_define_default('META_TAG_TITLE', str_replace('"', '', $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TERTIARY_SECTION . NAVBAR_TITLE));
-            zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . NAVBAR_TITLE . SECONDARY_SECTION . $meta_products_name . SECONDARY_SECTION . $review_metatags->fields['customers_name'] . SECONDARY_SECTION . $review_text_metatags . ' ' . SECONDARY_SECTION . $reviews_rating_metatags));
-            zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER . $review_metatags->fields['customers_name'] . METATAGS_DIVIDER . $reviews_rating_metatags));
+            break;
         }
+
+        if (META_TAG_INCLUDE_PRICE == '1') {
+            if ($review_metatags->fields['product_is_free'] != '1') {
+                $meta_products_price = zen_get_products_actual_price($review_metatags->fields['products_id']);
+                $meta_products_price = SECONDARY_SECTION . $currencies->display_price($meta_products_price, zen_get_tax_rate($review_metatags->fields['products_tax_class_id']));
+            } else {
+                    $meta_products_price = SECONDARY_SECTION . META_TAG_PRODUCTS_PRICE_IS_FREE_TEXT;
+            }
+        } else {
+            $meta_products_price = '';
+        }
+
+        if (!empty($review_metatags->fields['products_model'])) {
+            $meta_products_name = $review_metatags->fields['products_name'] . ' [' . $review_metatags->fields['products_model'] . ']';
+        } else {
+            $meta_products_name = $review_metatags->fields['products_name'];
+        }
+
+        $meta_products_name = zen_clean_html($meta_products_name);
+
+        $review_text_metatags = substr(strip_tags(stripslashes($review_metatags->fields['reviews_text'])), 0, 60);
+        $reviews_rating_metatags = SUB_TITLE_RATING . ' ' . sprintf(TEXT_OF_5_STARS, $review_metatags->fields['reviews_rating']);
+
+        zen_define_default('META_TAG_TITLE', str_replace('"', '', $meta_products_name . $meta_products_price . PRIMARY_SECTION . TITLE . TERTIARY_SECTION . NAVBAR_TITLE));
+        zen_define_default('META_TAG_DESCRIPTION', str_replace('"', '', TITLE . PRIMARY_SECTION . NAVBAR_TITLE . SECONDARY_SECTION . $meta_products_name . SECONDARY_SECTION . $review_metatags->fields['customers_name'] . SECONDARY_SECTION . $review_text_metatags . ' ' . SECONDARY_SECTION . $reviews_rating_metatags));
+        zen_define_default('META_TAG_KEYWORDS', str_replace('"', '', KEYWORDS . METATAGS_DIVIDER . $meta_products_name . METATAGS_DIVIDER . $review_metatags->fields['customers_name'] . METATAGS_DIVIDER . $reviews_rating_metatags));
         break;
 
     // EZ-Pages:
