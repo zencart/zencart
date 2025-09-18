@@ -76,7 +76,6 @@ class AdminEndpointsTest extends zcFeatureTestCaseAdmin
 
         'profiles' => ['strings' => ['User Profiles']],
         'users' => ['strings' => ['Reset Password']],
-        'admin_page_registration' => ['strings' => ['Page Parameters']],
         'admin_activity' => ['strings' => ['Review or Export Logs']],
 
         'record_artists' => ['strings' => ['Recording Artists']],

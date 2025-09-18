@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin Activity Log Viewer/Archiver
  *
@@ -7,12 +8,14 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2023 Aug 01 Modified in v2.0.0-alpha1 $
  *
+ * @TODO: change download file extension per type selected
+ * @TODO: resolve use of TXT/XML types
  * @TODO: prettify so on-screen output is more friendly, perhaps adding pagination support etc (using existing "s" and "p" params)
  * @TODO: prettify by hiding postdata until requested, either with hidden layers or other means
  * @TODO: Consider streaming to file line-by-line as an alternate output method in case of RAM blowout with large data quantities or low RAM config on servers.
  */
-require ('includes/application_top.php');
 
+require 'includes/application_top.php';
 
 // change destination here for path when using "save to file on server"
 if (!defined('DIR_FS_ADMIN_ACTIVITY_EXPORT')) {
@@ -22,26 +25,29 @@ $confirmation_needed = false;
 $action = ($_GET['action'] ?? '');
 $start = (isset($_GET['s']) ? (int)$_GET['s'] : 0);
 $perpage = (isset($_GET['p']) ? (int)$_GET['p'] : 50);
-$available_export_formats = array();
-$available_export_formats[0] = array('id' => '0', 'text' => TEXT_EXPORTFORMAT0, 'format' => 'HTML'); // review on screen
-$available_export_formats[1] = array('id' => '1', 'text' => TEXT_EXPORTFORMAT1, 'format' => 'CSV'); // export to CSV
-//  $available_export_formats[2]=array('id' => '2', 'text' => TEXT_EXPORTFORMAT2, 'format' => 'TXT');
-//  $available_export_formats[3]=array('id' => '3', 'text' => TEXT_EXPORTFORMAT3, 'format' => 'XML');
-$save_to_file_checked = (isset($_POST['savetofile']) && !empty($_POST['savetofile']) ? $_POST['savetofile'] : 0);
+$available_export_formats = [];
+$available_export_formats[0] = ['id' => '0', 'text' => TEXT_EXPORTFORMAT0, 'format' => 'HTML']; // review on screen
+$available_export_formats[1] = ['id' => '1', 'text' => TEXT_EXPORTFORMAT1, 'format' => 'CSV']; // export to CSV
+//$available_export_formats[2] = ['id' => '2', 'text' => TEXT_EXPORTFORMAT2, 'format' => 'TXT'];
+//$available_export_formats[3] = ['id' => '3', 'text' => TEXT_EXPORTFORMAT3, 'format' => 'XML'];
+$save_to_file_checked = !empty($_POST['savetofile']) ? $_POST['savetofile'] : 0;
 $post_format = (isset($_POST['format']) && zen_not_null($_POST['format']) ? $_POST['format'] : 1);
 $format = $available_export_formats[$post_format]['format'];
-$file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . date('Y-m-d_H-i-s') . '.csv');
+$result = $db->Execute('SELECT access_date FROM ' . TABLE_ADMIN_ACTIVITY_LOG . ' WHERE log_id=1 LIMIT 1');
+$date_start = $result->RecordCount() ? date('Y-m-d_H-i-s', strtotime($result->fields['access_date'])) : '';
+$file = (isset($_POST['filename']) ? preg_replace('/[^\w\.-]/', '', $_POST['filename']) : 'admin_activity_archive_' . $date_start . '__' . date('Y-m-d_H-i-s') . '.csv');
 if (!preg_match('/.*\.(csv|txt|html?|xml)$/', $file)) {
   $file .= '.txt';
 }
-$filter_options = array();
-$filter_options[0] = array('id' => '0', 'text' => TEXT_EXPORTFILTER0, 'filter' => 'all');
-$filter_options[1] = array('id' => '1', 'text' => TEXT_EXPORTFILTER1, 'filter' => 'info');
-$filter_options[2] = array('id' => '2', 'text' => TEXT_EXPORTFILTER2, 'filter' => 'notice');
-$filter_options[3] = array('id' => '3', 'text' => TEXT_EXPORTFILTER3, 'filter' => 'warning');
-$filter_options[4] = array('id' => '4', 'text' => TEXT_EXPORTFILTER4, 'filter' => 'notice+warning');
+$filter_options = [];
+$filter_options[0] = ['id' => '0', 'text' => TEXT_EXPORTFILTER0, 'filter' => 'all'];
+$filter_options[1] = ['id' => '1', 'text' => TEXT_EXPORTFILTER1, 'filter' => 'info'];
+$filter_options[2] = ['id' => '2', 'text' => TEXT_EXPORTFILTER2, 'filter' => 'notice'];
+$filter_options[3] = ['id' => '3', 'text' => TEXT_EXPORTFILTER3, 'filter' => 'warning'];
+$filter_options[4] = ['id' => '4', 'text' => TEXT_EXPORTFILTER4, 'filter' => 'notice+warning'];
 $post_filter = (isset($_POST['filter']) && (int)$_POST['filter'] >= 0 && (int)$_POST['filter'] < 5) ? (int)$_POST['filter'] : ($post_format == 1 ? 0 : 4);
 $selected_filter = $filter_options[$post_filter]['filter'];
+
 //filter by admin user
 $filter_by_user = empty($_POST['filter_user']) ? 0 : (int)$_POST['filter_user'];
 $filter_by_user = zen_get_admin_name($filter_by_user) !== null ? $filter_by_user : 0; //  check for a valid admin id
@@ -252,7 +258,7 @@ if ($action != '') {
             } elseif ($format === "XML") {
               $content_type = 'text/xml; charset=' . CHARSET;
             }
-            if (false !== strpos($_SERVER['HTTP_USER_AGENT'], "MSIE")) {
+            if (str_contains($_SERVER['HTTP_USER_AGENT'], "MSIE")) {
               header('Content-Type: application/octetstream');
 //              header('Content-Type: '.$content_type);
 //              header('Content-Disposition: inline; filename="' . $file . '"');
@@ -277,7 +283,7 @@ if ($action != '') {
             // HTML
             ?>
             <!doctype html>
-            <html <?php echo HTML_PARAMS; ?>>
+            <html <?= HTML_PARAMS ?>>
               <head>
                   <?php require DIR_WS_INCLUDES . 'admin_html_head.php';
                   if ($format === 'HTML') { ?>
@@ -344,7 +350,7 @@ if ($action != '') {
 } //endif $action
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
@@ -356,73 +362,75 @@ if ($action != '') {
     <!-- header_eof //-->
     <div class="container-fluid">
       <!-- body //-->
-      <h1><?php echo HEADING_TITLE; ?></h1>
+      <h1><?= HEADING_TITLE ?></h1>
       <!-- body_text //-->
 
       <?php if ($action == '') { ?>
         <div class="row">
             <?php echo zen_draw_form('export', FILENAME_ADMIN_ACTIVITY, 'action=save', 'post', 'class="form-horizontal"'); //, 'onsubmit="return check_form(export);"');     ?>
-          <h4><?php echo HEADING_SUB1; ?></h4>
-            <div class="row"><?php echo TEXT_INSTRUCTIONS; ?></div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER, 'filter', 'class="col-sm-3 control-label"'); ?>
+          <h4><?= HEADING_SUB1 ?></h4>
+            <div class="row"><?= TEXT_INSTRUCTIONS ?></div>
+            <div class="form-group"><?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER, 'filter', 'class="col-sm-3 control-label"') ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('filter', $filter_options, $post_filter, 'class="form-control" id="filter"'); ?>
+                  <?= zen_draw_pull_down_menu('filter', $filter_options, $post_filter, 'class="form-control" id="filter"') ?>
               </div>
             </div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER_USER, 'filter_user', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group"><?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FILTER_USER, 'filter_user', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?php echo zen_draw_pull_down_menu('filter_user', $admin_users, $filter_by_user, 'class="form-control" id="filter_user"'); ?>
+                    <?= zen_draw_pull_down_menu('filter_user', $admin_users, $filter_by_user, 'class="form-control" id="filter_user"') ?>
                 </div>
             </div>
-            <div class="form-group"><?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 control-label"'); ?>
+            <div class="form-group"><?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FORMAT, 'format', 'class="col-sm-3 control-label"') ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_pull_down_menu('format', $available_export_formats, $post_format, 'class="form-control" id="format"'); ?>
+                  <?= zen_draw_pull_down_menu('format', $available_export_formats, $post_format, 'class="form-control" id="format"') ?>
               </div>
             </div>
             <div class="form-group">
-                <?php echo zen_draw_label(TEXT_ACTIVITY_EXPORT_FILENAME, 'filename', 'class="col-sm-3 control-label"'); ?>
+                <?= zen_draw_label(TEXT_ACTIVITY_EXPORT_FILENAME, 'filename', 'class="col-sm-3 control-label"') ?>
               <div class="col-sm-9 col-md-6">
-                  <?php echo zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), 'class="form-control" size="60" id="filename"'); ?>
+                  <?= zen_draw_input_field('filename', htmlspecialchars($file, ENT_COMPAT, CHARSET, TRUE), 'class="form-control" size="60" id="filename"') ?>
               </div>
             </div>
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-9 col-md-6">
                 <div class="checkbox">
-                  <label><?php echo zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked); ?><?php echo TEXT_ACTIVITY_EXPORT_SAVETOFILE; ?></label>
+                  <label><?= zen_draw_checkbox_field('savetofile', '1', $save_to_file_checked) ?><?= TEXT_ACTIVITY_EXPORT_SAVETOFILE ?></label>
                 </div>
-                <div><strong><?php echo TEXT_ACTIVITY_EXPORT_DEST; ?></strong> <em><?php echo DIR_FS_ADMIN_ACTIVITY_EXPORT; ?></em></div>
+                <div><strong><?= TEXT_ACTIVITY_EXPORT_DEST ?></strong> <em><?= DIR_FS_ADMIN_ACTIVITY_EXPORT ?></em></div>
               </div>
             </div>
             <div class="text-right">
-              <button class="btn btn-primary"><?php echo IMAGE_GO; ?></button> <a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a></div>
-            <div class="row"><?php echo TEXT_INTERPRETING_LOG_DATA; ?></div>
-            <?php echo '</form>'; ?>
+              <button class="btn btn-primary"><?= IMAGE_GO ?></button> <a href="<?= zen_href_link(FILENAME_ADMIN_ACTIVITY) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a></div>
+            <div class="row"><?= TEXT_INTERPRETING_LOG_DATA ?></div>
+            <?= '</form>' ?>
         </div>
 
         <!-- bof: reset admin_activity_log -->
-        <h4><?php echo HEADING_SUB2; ?></h4>
+        <h4><?= HEADING_SUB2 ?></h4>
         <div class="row">
-          <div class="col <?php echo (!empty($_SESSION['reset_admin_activity_log']) ? "text-danger" : "main"); ?>"><?php echo TEXT_INFO_ADMIN_ACTIVITY_LOG; ?></div>
-          <div class="text-right"><a href="<?php echo zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_RESET; ?></a></div>
+          <div class="col <?= !empty($_SESSION['reset_admin_activity_log']) ? "text-danger" : "main" ?>"><?= TEXT_INFO_ADMIN_ACTIVITY_LOG ?></div>
+          <div class="text-right"><a href="<?= zen_href_link(FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log') ?>" class="btn btn-primary" role="button"><?= IMAGE_RESET ?></a></div>
         </div>
         <!-- eof: reset admin_activity_log -->
 
       <?php } elseif ($confirmation_needed) { ?>
         <div class="row">
-            <?php echo TEXT_ADMIN_LOG_PLEASE_CONFIRM_ERASE; ?>
-            <?php echo zen_draw_form('admin_activity_erase', FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log'); ?>
-          <button type="submit" class="btn btn-primary"><?php echo IMAGE_RESET; ?></button>
-          <?php echo zen_draw_hidden_field('confirm', 'yes'); ?>
-          <?php echo '</form>'; ?>
+            <?php
+            echo TEXT_ADMIN_LOG_PLEASE_CONFIRM_ERASE;
+            echo zen_draw_form('admin_activity_erase', FILENAME_ADMIN_ACTIVITY, 'action=clean_admin_activity_log');
+            ?>
+          <button type="submit" class="btn btn-primary"><?= IMAGE_RESET ?></button>
+          <?php
+          echo zen_draw_hidden_field('confirm', 'yes');
+          echo '</form>';
+          ?>
         </div>
-
       <?php } ?>
       <!-- body_text_eof //-->
     </div>
     <!-- body_eof //--> <!-- footer //-->
-    <?php require (DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //--> <br>
-
+    <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
+    <!-- footer_eof //-->
   </body>
 </html>
-<?php require (DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
