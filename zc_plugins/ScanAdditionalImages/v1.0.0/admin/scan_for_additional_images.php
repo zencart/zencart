@@ -1,6 +1,6 @@
 <?php
 /**
- * Convert additional images from file-based approach to database approach
+ * Scan additional image names from filesystem to database table
  *
  * Copyright 2003-2025 Zen Cart Development Team
  * copyright ZenExpert 2025
@@ -10,7 +10,7 @@ require 'includes/application_top.php';
 
 $action = $_POST['action'] ?? '';
 
-if (!empty($action) && $action === 'convert') {
+if (!empty($action) && $action === 'scan') {
     $counter = $inserted = 0;
 
     $products_query = $db->Execute("SELECT products_id, products_image FROM " . TABLE_PRODUCTS . " WHERE products_image IS NOT NULL");
@@ -41,7 +41,7 @@ if (!empty($action) && $action === 'convert') {
         }
 
         $matches = [];
-        // Scan directory for matching files using glob, which sorts alphabetically
+        // Scan directory for matching files using glob iterator, which sorts alphabetically (so sort_order is retained)
         $images = zen_get_files_in_directory($image_dir, $image_extension);
         foreach ($images as $file) {
             $file = preg_replace('/^' . preg_quote($image_dir, '/') . '/i', '', $file);
@@ -70,13 +70,13 @@ if (!empty($action) && $action === 'convert') {
         $counter++;
     }
     if ($inserted === 0) {
-        $messageStack->add_session(TEXT_ALL_CONVERTED, 'info');
+        $messageStack->add_session(TEXT_ALL_SCANNED, 'info');
         //$db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET display_on_menu = 'N' WHERE page_key = 'toolsAidba'");
     } else {
         $messageStack->add_session($counter . TEXT_PRODUCTS_PROCESSED, 'success');
-        $messageStack->add_session(TEXT_CONVERSION_COMPLETED, 'success');
+        $messageStack->add_session(TEXT_SCAN_COMPLETED, 'success');
     }
-    zen_redirect(zen_href_link(FILENAME_AIDBA));
+    zen_redirect(zen_href_link(FILENAME_SCAN_FOR_ADDITIONAL_IMAGES));
 }
 
 ?>
@@ -105,12 +105,12 @@ if (!empty($action) && $action === 'convert') {
     <h3><?= TEXT_STEP_3 ?></h3>
     <p><?= TEXT_STEP_3_DETAIL ?></p>
     <?php
-    echo zen_draw_form('convert_images_to_db', FILENAME_AIDBA, '', 'post', 'class="form-horizontal"');
-    echo zen_draw_hidden_field('action', 'convert');
+    echo zen_draw_form('scan_images_to_db', FILENAME_SCAN_FOR_ADDITIONAL_IMAGES, '', 'post', 'class="form-horizontal"');
+    echo zen_draw_hidden_field('action', 'scan');
     ?>
 
     <div class="buttonRow">
-        <button type="submit" class="btn btn-primary"><?= BUTTON_START_CONVERSION ?></button>
+        <button type="submit" class="btn btn-primary"><?= BUTTON_START_SCANNING ?></button>
     </div>
 
     <?= '</form>' ?>
