@@ -31,8 +31,7 @@ window.onload = function() {
             display.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 
             if (--timer < 0) {
-                clearInterval(countdownInterval);
-                display.textContent = "<?= TEXT_EXPIRED ?>";
+                window.location.replace("<?= zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL') ?>");
             }
         }, 1000); // Update every 1 second
     }
