@@ -1,7 +1,7 @@
 <?php
 $define = [
     'HEADING_TITLE' => 'Account Authorization Pending ...',
-    'HEADING_TITLE_ACTIVATE' => 'Authorization Pending &mdash; Check your email',
+    'HEADING_TITLE_ACTIVATE' => 'Check Your Email &mdash; Authorization Pending',
 
     'CUSTOMERS_AUTHORIZATION_TEXT_INFORMATION' => 'Your account is being reviewed for authorization.',
     'CUSTOMERS_AUTHORIZATION_STATUS_TEXT' => 'To verify your authorization status ... click here:',

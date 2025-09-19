@@ -786,7 +786,7 @@ class Customer extends base
         $db->Execute($sql, 1);
 
         self::clearAuthTokens($customers_id);
-        
+
         $customer = $db->ExecuteNoCache(
             "SELECT *
                FROM " . TABLE_CUSTOMERS . "
