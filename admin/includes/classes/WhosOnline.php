@@ -3,6 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2024 May 24 Modified in v2.1.0-alpha1 $
+ * @since ZC v1.5.7
  */
 
 class WhosOnline extends base
@@ -51,31 +52,49 @@ class WhosOnline extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getTimerInactive()
     {
         return (int)$this->timer_inactive_threshold;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getTimerDead()
     {
         return (int)$this->timer_dead_threshold;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getUniques()
     {
         return (int)$this->unique_sessions;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getDuplicates()
     {
         return (int)$this->duplicates;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getTotalSessions()
     {
         return (int)$this->total_sessions;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function retrieve($selectedView = '', $sessionToInspect = '', $exclude_spiders = false, $exclude_admins = true)
     {
         switch ($selectedView) {
@@ -187,6 +206,9 @@ class WhosOnline extends base
         return $this->whos_online;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getImageForStatus($status_code = 0)
     {
         switch ($status_code) {
@@ -203,6 +225,9 @@ class WhosOnline extends base
     }
 
     // future-use CSS classes for icons
+    /**
+     * @since ZC v1.5.7
+     */
     public function getIconClassForStatus($status_code = 0)
     {
         switch ($status_code) {
@@ -218,6 +243,9 @@ class WhosOnline extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getStats()
     {
         if ($this->statsCacheLastCalculatedAt < (time() - 15)) {
@@ -227,12 +255,18 @@ class WhosOnline extends base
         return ['user_array' => $this->user_array, 'guest_array' => $this->guest_array, 'spider_array' => $this->spider_array];
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getHumanFriendlyTimeSince($timestamp_of_last_click)
     {
         $diff_in_seconds = (time() - $timestamp_of_last_click);
         return gmdate('H:i:s', $diff_in_seconds);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getStatusCode($data)
     {
         $xx_mins_ago_long = (time() - (int)$this->timer_inactive_threshold);
@@ -265,6 +299,9 @@ class WhosOnline extends base
         return 0; // not-empty, active
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function calculateStats()
     {
         foreach ($this->whos_online as $session) {
@@ -282,6 +319,7 @@ class WhosOnline extends base
 
     /**
      * Remove expired entries
+     * @since ZC v1.5.7
      */
     public function doGarbageCollection()
     {
@@ -301,6 +339,7 @@ class WhosOnline extends base
      * @param string $session_id
      * @param string $session_data
      * @return array|null
+     * @since ZC v1.5.7
      */
     protected function inspectSessionCart($session_id = '', $session_data = '')
     {

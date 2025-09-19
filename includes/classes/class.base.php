@@ -5,6 +5,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Zcwilt 2020 Jul 01 Modified in v1.5.8-alpha $
+ * @since ZC v1.3.0
  */
 use Zencart\Traits\NotifierManager;
 use Zencart\Traits\ObserverManager;
@@ -14,6 +15,9 @@ class base
     use NotifierManager;
     use ObserverManager;
 
+    /**
+     * @since ZC v1.5.2
+     */
     public static function camelize($rawName, $camelFirst = false)
     {
         if ($rawName == "")

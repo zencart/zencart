@@ -6,11 +6,17 @@
  * @version $Id: DrByte 2024 Apr 10 Modified in v2.0.1 $
  */
 
+/**
+ * @since ZC v1.5.5
+ */
 function layoutTypes()
 {
     return ['default', 'mobile', 'tablet', 'full'];
 }
 
+/**
+ * @since ZC v1.5.5
+ */
 function initLayoutType()
 {
     // Safety check.

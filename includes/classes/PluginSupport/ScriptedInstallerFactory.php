@@ -9,12 +9,18 @@ namespace Zencart\PluginSupport;
 
 use queryFactory;
 
+/**
+ * @since ZC v1.5.7
+ */
 class ScriptedInstallerFactory
 {
     public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
     {
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function make($pluginDir): ScriptedInstaller
     {
         require_once $pluginDir . '/Installer/ScriptedInstaller.php';

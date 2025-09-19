@@ -19,6 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * shipping class
  * Class used for interfacing with shipping modules
  *
+ * @since ZC v1.0.3
  */
 class shipping
 {
@@ -58,6 +59,7 @@ class shipping
     /**
      * Load language files and check "enabled" configuration status of each module.
      * If $module is specified, limits the initialization to just that module; else processes all "installed" modules listed in Admin.
+     * @since ZC v2.0.0
      */
     protected function initialize_modules($module = null): void
     {
@@ -121,6 +123,9 @@ class shipping
         }
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function getInitializedModules(): array
     {
         return $this->initialized_modules;
@@ -128,6 +133,7 @@ class shipping
 
     /**
      * NOTE: Could eventually replace zen_count_shipping_modules() function
+     * @since ZC v2.0.0
      */
     public function countEnabledModules(): int
     {
@@ -136,6 +142,7 @@ class shipping
 
     /**
      * Check whether a module is enabled for the active checkout zone
+     * @since ZC v1.5.5
      */
     public function check_enabled($module_class): bool
     {
@@ -158,6 +165,7 @@ class shipping
      * Rudimentarily takes the sum of all weights and then divides into number of boxes required based on admin-configured max weight per box.
      * Includes adding tare/padding percentage based on box size.
      * DOES NOT TAKE PACKAGE DIMENSIONS INTO ACCOUNT.
+     * @since ZC v1.3.8
      */
     public function calculate_boxes_weight_and_tare()
     {
@@ -217,6 +225,7 @@ class shipping
      * @param $calc_boxes_weight_tare - Do box/tare calculations?
      * @param $insurance_exclusions - Pass rules for excluding from insurance calculations; requires customization.
      * @return array
+     * @since ZC v1.0.3
      */
     public function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = []): array
     {
@@ -271,6 +280,7 @@ class shipping
     /**
      * Determine cheapest-available shipping method.
      * Excludes store-pickup unless store-pickup is the only option
+     * @since ZC v1.0.3
      */
     public function cheapest(): array|bool
     {

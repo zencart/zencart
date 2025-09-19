@@ -9,6 +9,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v1.5.8
+ */
 class Configuration extends Eloquent
 {
     protected $table = TABLE_CONFIGURATION;
@@ -19,6 +22,9 @@ class Configuration extends Eloquent
     protected $keepAsStringArray = ['PRODUCTS_MANUFACTURERS_STATUS',];
 
     // @todo relocate to service class
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadConfigSettings()
     {
         $configs = self::all();

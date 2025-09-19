@@ -14,6 +14,7 @@
 /**
  * Return table heading with sorting capabilities
  * Used in Product Listing module
+ * @since ZC v1.0.3
  */
 function zen_create_sort_heading($sortby, $colnum, $heading)
 {
@@ -32,6 +33,7 @@ function zen_create_sort_heading($sortby, $colnum, $heading)
  * Count number of modules of a certain type are enabled
  * @param string $modules
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_count_modules($modules = '')
 {
@@ -53,11 +55,17 @@ function zen_count_modules($modules = '')
     return $count;
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_count_payment_modules()
 {
     return zen_count_modules(MODULE_PAYMENT_INSTALLED);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_count_shipping_modules()
 {
     return zen_count_modules(MODULE_SHIPPING_INSTALLED);
@@ -70,6 +78,7 @@ function zen_count_shipping_modules()
  * @param string $code
  * @param bool $getFirstDefault
  * @return false|string
+ * @since ZC v1.0.3
  */
 function zen_currency_exists(string $code, bool $getFirstDefault = false)
 {
@@ -96,6 +105,7 @@ function zen_currency_exists(string $code, bool $getFirstDefault = false)
  * Sidebox Box Builder helper to calculate an HTML id tag value
  * @param string $box_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_box_id(string $box_id)
 {
@@ -111,6 +121,7 @@ function zen_get_box_id(string $box_id)
  * @param string $buy_now_link the actual button link to use if "buy now" is allowed
  * @param string|bool $additional_link
  * @return string
+ * @since ZC v1.1.0
  */
 function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_link = false)
 {

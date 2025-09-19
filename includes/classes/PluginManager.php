@@ -8,6 +8,9 @@
 
 namespace Zencart\PluginManager;
 
+/**
+ * @since ZC v1.5.7
+ */
 class PluginManager
 {
     private
@@ -20,12 +23,18 @@ class PluginManager
         $this->pluginControlVersion = $pluginControlVersion;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function inspectAndUpdate()
     {
         $pluginsFromFilesystem = $this->getPluginsFromFileSystem();
         $this->updateDbPlugins($pluginsFromFilesystem);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getInstalledPlugins()
     {
         $results = $this->pluginControl->where(['status' => 1])->orderBy('name')->orderBy('unique_key')->get();
@@ -36,6 +45,9 @@ class PluginManager
         return $pluginList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getPluginVersionDirectory($pluginName, $installedPlugins)
     {
         if (!array_key_exists($pluginName, $installedPlugins)) {
@@ -45,6 +57,9 @@ class PluginManager
         return $filePath;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function isUpgradeAvailable($uniqueKey, $currentVersion)
     {
         if (empty($currentVersion)) {
@@ -54,6 +69,9 @@ class PluginManager
         return count($versionList);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getVersionsForUpgrade($uniqueKey, $currentVersion)
     {
         if (empty($currentVersion)) {
@@ -68,11 +86,17 @@ class PluginManager
         return $versionList;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function isNewDownloadAvailable($pluginId, $currentVersion)
     {
         $isAvailable = plugin_version_check_for_updates($pluginId, $currentVersion);
         return $isAvailable;
     }
+    /**
+     * @since ZC v1.5.7
+     */
     public function getPluginsAfterCheckingForNewVersionsOnline()
     {
         $plugins = $this->getPluginsFromDb();
@@ -122,6 +146,9 @@ class PluginManager
         return $plugins;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getLatestPluginVersionsOnline($plugin_ids_csv = 0)
     {
         if (empty(trim($plugin_ids_csv, ','))) {
@@ -152,12 +179,18 @@ class PluginManager
         return $data;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getPluginVersions($uniqueKey)
     {
         $result = $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getPluginsFromFileSystem()
     {
         $pluginDir = DIR_FS_CATALOG . 'zc_plugins';
@@ -179,6 +212,9 @@ class PluginManager
         return $pluginList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getPluginVersionDirectories($parent)
     {
         $versionList = [];
@@ -199,6 +235,9 @@ class PluginManager
         return $versionList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getPluginsFromDb()
     {
         $pluginList = [];
@@ -209,11 +248,17 @@ class PluginManager
         return $pluginList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function updateDbPlugins($pluginsFromFilesystem)
     {
         $this->updatePluginControl($pluginsFromFilesystem);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function updatePluginControl($pluginsFromFilesystem)
     {
         $this->pluginControl->query()->update(['infs' => 0]);
@@ -252,6 +297,9 @@ class PluginManager
         $this->pluginControlVersion->where(['infs' => 0])->delete();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processUpdatePluginControlVersions($uniqueKey, $pluginsFromFilesystem, $versionInsertValues)
     {
         $currentPlugin = $pluginsFromFilesystem[$uniqueKey];
@@ -270,6 +318,9 @@ class PluginManager
         return $versionInsertValues;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function mergeInVersionInfo($pluginList, $uniqueKey, $versionInfo)
     {
         $versionList = [];
@@ -283,6 +334,9 @@ class PluginManager
         return $pluginList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getPluginVersionsForPlugin($uniqueKey)
     {
         $results = $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
@@ -295,6 +349,9 @@ class PluginManager
         return $versions;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getPluginVersionsToClean($uniqueKey, $version)
     {
         $versions = $this->getPluginVersionsForPlugin($uniqueKey);
@@ -302,16 +359,25 @@ class PluginManager
         return $versions;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function hasPluginVersionsToClean($uniqueKey, $version)
     {
         return count($this->getPluginVersionsToClean($uniqueKey, $version));
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getPluginControl()
     {
         return $this->pluginControl;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     protected function loadPluginLanguageConstants(string $pluginpath): void // Load plugins names and description when they are not installed or de-activated
     {
         $pluginpath = str_replace('\\', '/', $pluginpath);

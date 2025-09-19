@@ -5,6 +5,9 @@
  * @version $Id: Scott Wilson 2024 Aug 25 Modified in v2.1.0-alpha2 $
  */
 
+/**
+ * @since ZC v1.5.7
+ */
 function page_has_help()
 {
     global $PHP_SELF;

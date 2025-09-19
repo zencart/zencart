@@ -18,6 +18,7 @@ zen_define_default('ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS', 'Yes');
  * @param string $page FILENAME_XYZ page name
  * @param array $params
  * @return bool
+ * @since ZC v1.5.0
  */
 function check_page(string $page, $params = []): bool
 {
@@ -73,6 +74,7 @@ function check_page(string $page, $params = []): bool
  *
  * @param string $page FILENAME_XYZ page name
  * @param array $params (usually $_GET)
+ * @since ZC v1.5.7
  */
 function check_related_page(string $page, $params = []): bool
 {
@@ -85,6 +87,9 @@ function check_related_page(string $page, $params = []): bool
     return false;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_is_superuser(): bool
 {
     global $db;
@@ -103,6 +108,7 @@ function zen_is_superuser(): bool
  * Get array of registered admin users
  * @param ?int $limit
  * @return array of Admin Users
+ * @since ZC v1.5.0
  */
 function zen_get_users($limit = null): array
 {
@@ -128,6 +134,9 @@ function zen_get_users($limit = null): array
     return $retVal;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_delete_user($id): void
 {
     global $db, $messageStack;
@@ -149,6 +158,9 @@ function zen_delete_user($id): void
     }
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_check_for_invalid_admin_chars($val): bool
 {
     $matchstring = '[\d\w._-]'; // could expand this regex to allow other than non-accented latin chars
@@ -159,6 +171,9 @@ function zen_check_for_invalid_admin_chars($val): bool
     return $isValid;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_insert_user($name, $email, $password, $confirm, $profile): array
 {
     global $db;
@@ -214,6 +229,9 @@ function zen_insert_user($name, $email, $password, $confirm, $profile): array
     return $errors;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_update_user($name, $email, $id, $profile): array
 {
     global $db;
@@ -294,6 +312,7 @@ function zen_update_user($name, $email, $id, $profile): array
 
 /**
  * Lookup admin user login details based on admin username
+ * @since ZC v1.5.0
  */
 function zen_read_user(string $name): bool|array
 {
@@ -315,6 +334,7 @@ function zen_read_user(string $name): bool|array
 
 /**
  * Verify login according to security requirements
+ * @since ZC v1.5.0
  */
 function zen_validate_user_login(string $admin_name, string $admin_pass): array
 {
@@ -470,6 +490,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
  * @param string $password
  * @param int $adminID
  * @return bool Error status
+ * @since ZC v1.5.0
  */
 function zen_check_for_password_problems(string $password, $adminID = 0): bool
 {
@@ -510,6 +531,7 @@ function zen_check_for_password_problems(string $password, $adminID = 0): bool
  * THIS IS A PA-DSS REQUIREMENT AND MUST NOT BE CHANGED WITHOUT VOIDING COMPLIANCE
  *
  * @param int $adminID
+ * @since ZC v1.5.0
  */
 function zen_check_for_expired_pwd($adminID): bool
 {
@@ -525,6 +547,9 @@ function zen_check_for_expired_pwd($adminID): bool
     return (bool)$result->RecordCount();
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_reset_password($id, $password, $compare): array
 {
     global $db;
@@ -559,6 +584,7 @@ function zen_reset_password($id, $password, $compare): array
  * Validate whether the password-reset request is permissible
  *
  * @return array error messages
+ * @since ZC v1.5.0
  */
 function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd, string $adm_new_pwd, string $adm_conf_pwd): array
 {
@@ -616,6 +642,7 @@ function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd,
 
 /**
  * Retrieve profiles list
+ * @since ZC v1.5.0
  */
 function zen_get_profiles(bool $withUsers = false): array
 {
@@ -647,6 +674,9 @@ function zen_get_profiles(bool $withUsers = false): array
     return $retVal;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_get_profile_name($profile_id): string
 {
     global $db;
@@ -656,6 +686,9 @@ function zen_get_profile_name($profile_id): string
     return $result->fields['profile_name'] ?? '';
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_update_profile_name($profile_id, string $profile_name): void
 {
     global $db;
@@ -668,6 +701,9 @@ function zen_update_profile_name($profile_id, string $profile_name): void
     zen_record_admin_activity('Admin profile renamed.', 'notice');
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_get_admin_pages(bool $menu_only): array
 {
     global $db;
@@ -722,6 +758,7 @@ function zen_get_admin_pages(bool $menu_only): array
     }
     /**
      * Then we'll deal with the exceptions
+ * @since ZC v1.5.0
      */
     // Include PayPal Standard menu only if that payment mod is enabled
     if (!(defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS === 'True') &&
@@ -763,6 +800,9 @@ function zen_get_permitted_pages_for_profile($profile_id): array
     return $retVal;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_delete_profile($profile): string
 {
     global $db;
@@ -783,6 +823,9 @@ function zen_delete_profile($profile): string
     return $error;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_create_profile(array $profileData): string
 {
     global $db;
@@ -821,6 +864,9 @@ function zen_create_profile(array $profileData): string
     return ERROR_UNABLE_TO_CREATE_PROFILE;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_remove_profile_permits($profile_id): void
 {
     global $db;
@@ -830,6 +876,9 @@ function zen_remove_profile_permits($profile_id): void
     zen_record_admin_activity('Deleted profile permissions from profile #' . (int)$profile_id, 'warning');
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_insert_pages_into_profile($profile_id, array $pages): void
 {
     global $db;
@@ -848,6 +897,9 @@ function zen_insert_pages_into_profile($profile_id, array $pages): void
     zen_record_admin_activity('Added pages to profile #' . (int)$profile_id, 'warning');
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_get_admin_menu_for_user(): array
 {
     global $db;
@@ -880,6 +932,9 @@ function zen_get_admin_menu_for_user(): array
     return $retVal;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_get_menu_titles(): array
 {
     global $db;
@@ -895,6 +950,9 @@ function zen_get_menu_titles(): array
     return $retVal;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_page_key_exists(string $page_key): bool
 {
     global $db;
@@ -904,6 +962,9 @@ function zen_page_key_exists(string $page_key): bool
     return $result->RecordCount() > 0;
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_register_admin_page(string $page_key, string $language_key, string $main_page, string $page_params, string $menu_key, string $display_on_menu, $sort_order = -1): void
 {
     global $db;
@@ -932,6 +993,9 @@ function zen_register_admin_page(string $page_key, string $language_key, string 
     zen_record_admin_activity('Registered new admin menu page "' . $page_key . '"', 'warning');
 }
 
+/**
+ * @since ZC v1.5.0
+ */
 function zen_deregister_admin_pages(string|array $pages): void
 {
     global $db;
@@ -952,6 +1016,9 @@ function zen_deregister_admin_pages(string|array $pages): void
     }
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_admin_authorized_to_place_order(): bool
 {
     global $db;
@@ -981,6 +1048,7 @@ function zen_admin_authorized_to_place_order(): bool
 
 /**
  * callback function for sorting admin menu entries
+ * @since ZC v1.5.8
  */
 function admin_menu_name_sort_callback($a, $b): int
 {
@@ -993,6 +1061,9 @@ function admin_menu_name_sort_callback($a, $b): int
     return 1;
 }
 
+/**
+ * @since ZC v2.1.0
+ */
 function zen_check_if_mfa_token_is_reused(string $token, ?string $admin_name): bool
 {
     global $db;

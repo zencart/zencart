@@ -9,6 +9,9 @@ namespace Zencart\PluginSupport;
 
 use queryFactory;
 
+/**
+ * @since ZC v1.5.7
+ */
 class ScriptedInstaller
 {
     use ScriptedInstallHelpers;
@@ -28,6 +31,7 @@ class ScriptedInstaller
 
     /**
      * @return bool
+     * @since ZC v1.5.7
      */
     protected function executeInstall()
     {
@@ -36,6 +40,7 @@ class ScriptedInstaller
 
     /**
      * @return bool
+     * @since ZC v1.5.7
      */
     protected function executeUninstall()
     {
@@ -44,6 +49,7 @@ class ScriptedInstaller
 
     /**
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function executeUpgrade($oldVersion)
     {
@@ -51,6 +57,9 @@ class ScriptedInstaller
     }
 
     /******** Internal methods ***********/
+    /**
+     * @since ZC v2.1.0
+     */
     public function setVersionDetails(array $versionDetails): void
     {
         $this->pluginKey = $versionDetails['pluginKey'];
@@ -59,12 +68,18 @@ class ScriptedInstaller
         $this->oldVersion = $versionDetails['oldVersion'];
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function doInstall(): ?bool
     {
         $installed = $this->executeInstall();
         return $installed;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function doUninstall(): ?bool
     {
         $uninstalled = $this->executeUninstall();
@@ -72,6 +87,9 @@ class ScriptedInstaller
         return $uninstalled;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function doUpgrade($oldVersion): ?bool
     {
         $upgraded = $this->executeUpgrade($oldVersion);
@@ -79,6 +97,9 @@ class ScriptedInstaller
         return $upgraded;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function executeInstallerSql($sql): bool
     {
         $this->dbConn->dieOnErrors = false;

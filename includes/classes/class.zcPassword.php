@@ -13,6 +13,7 @@
  *
  * Updates admin/customer tables on successful login
  *
+ * @since ZC v1.5.3
  */
 class zcPassword extends base
 {
@@ -25,6 +26,7 @@ class zcPassword extends base
    * enforce singleton
    *
    * @param string $phpVersion
+   * @since ZC v1.5.3
    */
   public static function getInstance($phpVersion)
   {
@@ -51,6 +53,7 @@ class zcPassword extends base
    *
    * @param string $encryptedPassword
    * @return string
+   * @since ZC v1.5.3
    */
   function detectPasswordType($encryptedPassword)
   {
@@ -71,6 +74,7 @@ class zcPassword extends base
    * @param string $plain
    * @param string $encrypted
    * @return boolean
+   * @since ZC v1.5.3
    */
   public function validatePassword($plain, $encrypted)
   {
@@ -88,6 +92,7 @@ class zcPassword extends base
    * @param string $plain
    * @param string $encrypted
    * @return boolean
+   * @since ZC v1.5.3
    */
   public function validatePasswordOldMd5($plain, $encrypted)
   {
@@ -107,6 +112,7 @@ class zcPassword extends base
    * @param string $plain
    * @param string $encrypted
    * @return boolean
+   * @since ZC v1.5.3
    */
   public function validatePasswordCompatSha256($plain, $encrypted)
   {
@@ -127,6 +133,7 @@ class zcPassword extends base
    * @param string $plain
    * @param string $admin
    * @return string
+   * @since ZC v1.5.3
    */
   public function updateNotLoggedInAdminPassword($plain, $admin)
   {
@@ -145,6 +152,7 @@ class zcPassword extends base
   /**
    * Ensure db schema has been updated to support the required password lengths
    * @param string $mode
+   * @since ZC v1.5.3
    */
   public function confirmDbSchema($mode = '') {
     global $db;

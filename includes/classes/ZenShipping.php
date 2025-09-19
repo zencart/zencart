@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @since ZC v2.1.0
+ */
 abstract class ZenShipping extends base
 {
     /**
@@ -56,18 +59,26 @@ abstract class ZenShipping extends base
     /**
      * $title is the displayed name for this shipping method
      * @var string
+     * @since ZC v2.1.0
      */
     public $title;
 
     abstract public function quote($method = ''): array;
 
+    /**
+     * @since ZC v2.1.0
+     */
     abstract public function keys(): array;
 
+    /**
+     * @since ZC v2.1.0
+     */
     abstract public function install(): void;
 
     /**
      * Remove the module's settings
      *
+     * @since ZC v2.1.0
      */
     public function remove(): void
     {

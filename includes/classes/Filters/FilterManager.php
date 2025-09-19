@@ -10,6 +10,9 @@ namespace Zencart\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
+/**
+ * @since ZC v1.5.8
+ */
 class FilterManager
 {
 
@@ -23,6 +26,9 @@ class FilterManager
         $this->filterFactory = $filterFactory;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function build() : void
     {
         $this->filters = [];
@@ -36,6 +42,9 @@ class FilterManager
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function processRequest(Request $request, Builder $query) : Builder
     {
         if (!$this->hasFilters()) {
@@ -47,6 +56,9 @@ class FilterManager
         return $query;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function hasFilters() : bool
     {
         if (!count($this->filterDefinitions)) {
@@ -55,6 +67,9 @@ class FilterManager
         return true;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getFilters() : array
     {
         return $this->filters;

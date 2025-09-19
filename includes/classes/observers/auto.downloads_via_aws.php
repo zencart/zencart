@@ -10,6 +10,7 @@
  * from Amazon AWS S3 buckets, and also automatically expire the links
  * so that customers can't share them or otherwise steal the files
  *
+ * @since ZC v1.5.6
  */
 class zcObserverDownloadsViaAws extends base {
 
@@ -65,6 +66,7 @@ class zcObserverDownloadsViaAws extends base {
    * @param string $eventID name of the observer event fired
    * @param array $array $download->fields data
    * @param array $data array passed by reference
+   * @since ZC v1.5.6
    */
   protected function updateNotifyModuleDownloadTemplateDetails(&$class, $eventID, $array, &$data)
   {
@@ -108,6 +110,7 @@ class zcObserverDownloadsViaAws extends base {
    * @param string $eventID name of the observer event fired
    * @param string $filename filename to verify exists
    * @param string $handler  name of external service handler
+   * @since ZC v1.5.6
    */
   protected function updateNotifyTestDownloadableFileExists(&$class, $eventID, $filename, &$handler)
   {
@@ -127,6 +130,7 @@ class zcObserverDownloadsViaAws extends base {
    * @param string $browser_filename (mutable)
    * @param string $source_directory (mutable)
    * @param boolean $file_exists (mutable)
+   * @since ZC v1.5.6
    */
   protected function updateNotifyCheckDownloadHandler(&$class, $eventID, $var, &$fields, &$origin_filename, &$browser_filename, &$source_directory, &$file_exists, &$service, &$isExpired, &$download_timestamp)
   {
@@ -154,6 +158,7 @@ class zcObserverDownloadsViaAws extends base {
    * @param string $mime_type (mutable)
    * @param array $fields  array of data from db query feeding the download page
    * @param string $browser_extra_headers (mutable)
+   * @since ZC v1.5.6
    */
   protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_extra_headers)
   {
@@ -183,6 +188,7 @@ class zcObserverDownloadsViaAws extends base {
    *
    * @param string $filename
    * @return boolean|array
+   * @since ZC v1.5.6
    */
   private function parseFileParts($filename) {
 
@@ -198,6 +204,7 @@ class zcObserverDownloadsViaAws extends base {
    *
    * @param string $bucketAndFilename
    * @return string $url
+   * @since ZC v1.5.6
    */
   private function buildRedirectUrl($bucketAndFilename) {
 
@@ -218,6 +225,7 @@ class zcObserverDownloadsViaAws extends base {
    *
    * @param string $filename
    * @return boolean Result of SDK test
+   * @since ZC v1.5.6
    */
   private function testFileExists($filename)
   {

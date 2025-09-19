@@ -9,6 +9,7 @@
  * This observer class is intended to allow downloadable files to be served
  * by redirecting the customer's browser page to a temporary symlink on
  * the server; the symlinked file expires to help prevent theft
+ * @since ZC v1.5.6
  */
 class zcObserverDownloadsViaRedirect extends base {
 
@@ -63,6 +64,7 @@ class zcObserverDownloadsViaRedirect extends base {
    * @param string $browser_filename (mutable)
    * @param string $source_directory (mutable)
    * @param boolean $link_create_status (mutable)
+   * @since ZC v1.5.6
    */
   protected function updateNotifyDownloadReadyToRedirect(&$class, $eventID, $array, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$link_create_status)
   {
@@ -87,6 +89,7 @@ class zcObserverDownloadsViaRedirect extends base {
    * There are more than 10^28 combinations
    * This is used to build a random directory foldername. And, the directory is "hidden", ie: starts with '.'
    * @return string
+   * @since ZC v1.5.6
    */
   private function generateRandomName()
   {
@@ -108,6 +111,7 @@ class zcObserverDownloadsViaRedirect extends base {
    * Works only on one subdir level, will not recurse
    *
    * @param string $dir folder whose contents will be inspected for cleanup
+   * @since ZC v1.5.6
    */
   private function garbageCollectionUnlinkTempFolders($dir)
   {

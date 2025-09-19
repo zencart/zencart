@@ -7,6 +7,9 @@
 
 namespace Zencart\Exceptions;
 
+/**
+ * @since ZC v2.0.0
+ */
 class SearchException extends \Exception
 {
 };

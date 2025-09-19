@@ -18,11 +18,17 @@ if (!defined('IS_ADMIN_FLAG')) {
   if ($messageStack->size > 0) echo $messageStack->output();
 */
 
+/**
+ * @since ZC v1.0.3
+ */
 class messageStack extends boxTableBlock
 {
     public int $size = 0;
     public array $errors = [];
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function add(string $message, string $type = 'error'): void
     {
         if ($type === 'error') {
@@ -42,6 +48,9 @@ class messageStack extends boxTableBlock
         $this->size++;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function add_session(string $message, string $type = 'error'): void
     {
         if (!isset($_SESSION['messageToStack']) || !is_array($_SESSION['messageToStack'])) {
@@ -51,6 +60,9 @@ class messageStack extends boxTableBlock
         $_SESSION['messageToStack'][] = ['text' => $message, 'type' => $type];
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function add_from_session(): void
     {
         if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
@@ -61,12 +73,18 @@ class messageStack extends boxTableBlock
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function reset(): void
     {
         $this->errors = [];
         $this->size = 0;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function output(string $class='')
     {
         $this->table_data_parameters = 'class="messageBox"';

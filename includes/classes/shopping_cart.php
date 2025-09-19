@@ -6,6 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Aug 13 Modified in v2.1.0-alpha2 $
+ * @since ZC v1.0.3
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -97,6 +98,7 @@ class shoppingCart extends base
      * these are merged with the stored contents.
      *
      * @return bool
+     * @since ZC v1.0.3
      */
     public function restore_contents()
     {
@@ -203,6 +205,7 @@ class shoppingCart extends base
      *
      * @param bool whether to reset customers db basket
      * @return void
+     * @since ZC v1.0.3
      */
     public function reset($reset_database = false)
     {
@@ -246,6 +249,7 @@ class shoppingCart extends base
      * @param array $attributes any attributes that are attached to the product
      * @param bool $notify whether to add the product to the notify list
      * @return void
+     * @since ZC v1.0.3
      */
     public function add_cart($product_id, $qty = 1, $attributes = [], $notify = true)
     {
@@ -390,6 +394,7 @@ class shoppingCart extends base
      * @param int|float $quantity the quantity to update the item to
      * @param array $attributes product attributes attached to the item
      * @return bool
+     * @since ZC v1.0.3
      */
     function update_quantity($uprid, $quantity = 0, $attributes = [])
     {
@@ -502,6 +507,7 @@ class shoppingCart extends base
      * is also updated where necessary
      *
      * @return void
+     * @since ZC v1.0.3
      */
     function cleanup()
     {
@@ -519,6 +525,7 @@ class shoppingCart extends base
      *
      * @param string|int $uprid 'uprid' of product to remove
      * @return void
+     * @since ZC v2.0.0
      */
     protected function removeUprid($uprid)
     {
@@ -550,6 +557,7 @@ class shoppingCart extends base
      * the other with a quantity of 4 our total number of items would be 7
      *
      * @return int|float total number of items in cart
+     * @since ZC v1.0.3
      */
     public function count_contents()
     {
@@ -572,6 +580,7 @@ class shoppingCart extends base
      *
      * @param int|string $uprid product ID of item to check
      * @return int|float the quantity of the item
+     * @since ZC v1.0.3
      */
     public function get_quantity($uprid)
     {
@@ -590,6 +599,7 @@ class shoppingCart extends base
      *
      * @param mixed $uprid product ID of product to check
      * @return boolean
+     * @since ZC v1.0.3
      */
     public function in_cart($uprid)
     {
@@ -608,6 +618,7 @@ class shoppingCart extends base
      *
      * @param string|int $uprid product ID of product to remove
      * @return void
+     * @since ZC v1.0.3
      */
     public function remove($uprid)
     {
@@ -621,6 +632,7 @@ class shoppingCart extends base
 
     /**
      * Remove all products from the cart
+     * @since ZC v1.0.3
      */
     public function remove_all()
     {
@@ -634,6 +646,7 @@ class shoppingCart extends base
      * NOTE: Not used in core ZC, but some plugins and shipping modules make use of it as a helper function
      *
      * @return string csv
+     * @since ZC v1.0.3
      */
     public function get_product_id_list()
     {
@@ -647,6 +660,7 @@ class shoppingCart extends base
      * Calculate cart totals(price and weight)
      *
      * @return int
+     * @since ZC v1.0.3
      */
     public function calculate()
     {
@@ -994,6 +1008,7 @@ class shoppingCart extends base
      *
      * @param mixed $uprid the product ID of the item to check
      * @return float the price of the item's attributes
+     * @since ZC v1.0.3
      */
     public function attributes_price($uprid)
     {
@@ -1116,6 +1131,7 @@ class shoppingCart extends base
      * @param mixed $uprid the product ID of the item to check
      * @param float $qty item quantity
      * @return float the price of the items attributes
+     * @since ZC v1.2.0d
      */
     public function attributes_price_onetime_charges($uprid, $qty)
     {
@@ -1177,6 +1193,7 @@ class shoppingCart extends base
      *
      * @param mixed $product_id the product ID of the item to check
      * @return float the weight of the items attributes
+     * @since ZC v1.0.3
      */
     public function attributes_weight($uprid)
     {
@@ -1215,6 +1232,7 @@ class shoppingCart extends base
      *
      * @param bool $check_for_valid_cart whether to also check if cart contents are valid
      * @return array|false
+     * @since ZC v1.0.3
      */
     public function get_products(bool $check_for_valid_cart = false)
     {
@@ -1416,6 +1434,7 @@ class shoppingCart extends base
      * Calculate total price of items in cart
      *
      * @return float Total Price
+     * @since ZC v1.0.3
      */
     public function show_total()
     {
@@ -1429,6 +1448,7 @@ class shoppingCart extends base
      * Calculate total price of items in cart before Specials, Sales, Discounts
      *
      * @return float Total Price before Specials, Sales, Discounts
+     * @since ZC v1.5.2
      */
     public function show_total_before_discounts()
     {
@@ -1442,6 +1462,7 @@ class shoppingCart extends base
      * Calculate total weight of items in cart
      *
      * @return float Total Weight
+     * @since ZC v1.0.3
      */
     public function show_weight()
     {
@@ -1454,6 +1475,7 @@ class shoppingCart extends base
      *
      * @param int $length length of ID to generate
      * @return string cart ID
+     * @since ZC v1.0.3
      */
     public function generate_cart_id($length = 5)
     {
@@ -1465,6 +1487,7 @@ class shoppingCart extends base
      *
      * @param bool $gv_only whether to test for Gift Vouchers only
      * @return string
+     * @since ZC v1.0.3
      */
     public function get_content_type($gv_only = false)
     {
@@ -1579,6 +1602,7 @@ class shoppingCart extends base
      * Calculate item quantity, bounded by the mixed/min units settings
      *
      * @param int|string $uprid_to_check product id of item to check
+     * @since ZC v1.1.0
      */
     public function in_cart_mixed(int|string $uprid_to_check): float|int
     {
@@ -1615,6 +1639,7 @@ class shoppingCart extends base
      *
      * @param int|string $uprid_to_check product id of item to check
      * @return float
+     * @since ZC v1.2.0d
      */
     public function in_cart_mixed_discount_quantity($uprid_to_check)
     {
@@ -1653,6 +1678,7 @@ class shoppingCart extends base
      * @param string $check_what product field to check
      * @param mixed $check_value value to check for
      * @return int number of items matching constraint
+     * @since ZC v1.1.0
      */
     public function in_cart_check($check_what, $check_value = '1')
     {
@@ -1677,6 +1703,7 @@ class shoppingCart extends base
      * Check whether cart contains only Gift Vouchers
      *
      * @return float|bool value of Gift Vouchers in cart
+     * @since ZC v1.2.0d
      */
     public function gv_only()
     {
@@ -1687,6 +1714,7 @@ class shoppingCart extends base
      * Return the number of free shipping items in the cart
      *
      * @return float
+     * @since ZC v1.2.2d
      */
     public function free_shipping_items()
     {
@@ -1698,6 +1726,7 @@ class shoppingCart extends base
      * Return the total price of free shipping items in the cart
      *
      * @return float
+     * @since ZC v1.2.2d
      */
     public function free_shipping_prices()
     {
@@ -1709,6 +1738,7 @@ class shoppingCart extends base
      * Return the total weight of free shipping items in the cart
      *
      * @return float
+     * @since ZC v1.2.2d
      */
     public function free_shipping_weight()
     {
@@ -1720,6 +1750,7 @@ class shoppingCart extends base
      * Return the total number of downloads in the cart
      *
      * @return int|float
+     * @since ZC v1.5.2
      */
     public function download_counts()
     {
@@ -1732,6 +1763,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionUpdateProduct($goto, $parameters)
     {
@@ -1898,6 +1930,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionAddProduct($goto, $parameters = [])
     {
@@ -2106,6 +2139,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionBuyNow($goto, $parameters = [])
     {
@@ -2170,6 +2204,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionMultipleAddProduct($goto, $parameters = [])
     {
@@ -2259,6 +2294,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionNotify($goto, $parameters = ['ignored'])
     {
@@ -2294,6 +2330,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionNotifyRemove($goto, $parameters = ['ignored'])
     {
@@ -2316,6 +2353,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionCustomerOrder($goto, $parameters)
     {
@@ -2347,6 +2385,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionRemoveProduct($goto, $parameters)
     {
@@ -2363,6 +2402,7 @@ class shoppingCart extends base
      *
      * @param string $goto forward destination
      * @param array $parameters URL parameters to ignore
+     * @since ZC v1.3.0
      */
     public function actionCartUserAction($goto, $parameters)
     {
@@ -2377,6 +2417,7 @@ class shoppingCart extends base
      * @param int $product_id
      * @param string $messageStackPosition messageStack placement
      * @return float|int
+     * @since ZC v1.3.6
      */
     public function adjust_quantity($check_qty, $product_id, $messageStackPosition = 'shopping_cart')
     {
@@ -2411,6 +2452,7 @@ class shoppingCart extends base
      * @param int $check_option_id
      * @param int $check_option_values_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_check_attrib_quantity($check_option_id, $check_option_values_id)
     {
@@ -2442,6 +2484,7 @@ class shoppingCart extends base
      *
      * @param mixed $product_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_price($product_id)
     {
@@ -2463,6 +2506,7 @@ class shoppingCart extends base
      *
      * @param mixed $product_id
      * @return int|mixed
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_quantity($product_id)
     {
@@ -2484,6 +2528,7 @@ class shoppingCart extends base
      *
      * @param mixed $product_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_weight($product_id)
     {
@@ -2504,6 +2549,7 @@ class shoppingCart extends base
      *
      * @param int $category_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_weight_category($category_id)
     {
@@ -2524,6 +2570,7 @@ class shoppingCart extends base
      *
      * @param int $category_id
      * @return float|int
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_price_category($category_id)
     {
@@ -2545,6 +2592,7 @@ class shoppingCart extends base
      *
      * @param int $category_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_quantity_category($category_id)
     {
@@ -2566,6 +2614,7 @@ class shoppingCart extends base
      *
      * @param int $category_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_weight_category_sub($category_id)
     {
@@ -2589,6 +2638,7 @@ class shoppingCart extends base
      *
      * @param int $category_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_price_category_sub($category_id)
     {
@@ -2612,6 +2662,7 @@ class shoppingCart extends base
      *
      * @param int $category_id
      * @return float
+     * @since ZC v1.5.5b
      */
     public function in_cart_product_total_quantity_category_sub($category_id)
     {
@@ -2638,6 +2689,7 @@ class shoppingCart extends base
      * @param int|string $product_id
      * @param bool $chk
      * @return array|bool
+     * @since ZC v1.5.6
      */
     public function in_cart_product_mixed_changed($product_id, $chk = false)
     {

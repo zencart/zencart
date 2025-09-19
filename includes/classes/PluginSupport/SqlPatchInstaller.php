@@ -7,6 +7,9 @@
 
 namespace Zencart\PluginSupport;
 
+/**
+ * @since ZC v1.5.7
+ */
 class SqlPatchInstaller
 {
 
@@ -49,6 +52,9 @@ class SqlPatchInstaller
         $this->errorContainer = $errorContainer;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function parse($lines)
     {
         $builtLines = $this->getFullLines($lines);
@@ -59,6 +65,9 @@ class SqlPatchInstaller
         return $paramLines;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function executePatchSql($paramLines)
     {
         $this->dbConn->dieOnErrors = false;
@@ -73,6 +82,9 @@ class SqlPatchInstaller
         $this->dbConn->dieOnErrors = true;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getFullLines($lines)
     {
         $fullLine = '';
@@ -88,6 +100,9 @@ class SqlPatchInstaller
         return $builtLines;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processLine($line)
     {
         $params = explode(" ", (substr($line, -1) == ';') ? substr($line, 0, strlen($line) - 1) : $line);
@@ -108,6 +123,9 @@ class SqlPatchInstaller
         return $newParams;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function findSqlLineType($line)
     {
         $result = [];
@@ -121,12 +139,18 @@ class SqlPatchInstaller
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processLineBasic($params, $typeEntry)
     {
         $params[$typeEntry['tableParamsOffset']] = DB_PREFIX . $params[$typeEntry['tableParamsOffset']];
         return $params;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processLineSelect($params, $typeEntry)
     {
         $fromKey = array_search('FROM', $params);
@@ -143,6 +167,9 @@ class SqlPatchInstaller
         return $params;
     }
     
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processLineIndex($params, $typeEntry)
     {
         $fromKey = array_search('ON', $params);
@@ -153,6 +180,9 @@ class SqlPatchInstaller
         return $params;
     }
     
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processLineRenameTable($params, $typeEntry)
     {
         $params[$typeEntry['tableParamsOffset']] = DB_PREFIX . $params[$typeEntry['tableParamsOffset']];

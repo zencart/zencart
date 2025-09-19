@@ -15,6 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * upload Class.
  * This class is used to manage file uploads
  *
+ * @since ZC v1.0.3
  */
  //
 // This is the old UPLOAD_FILENAME_EXTENSIONS which was in the database
@@ -63,6 +64,7 @@ class upload extends base
     /**
      * @param string $key  - differentiates between different files uploaded
      * @return bool
+     * @since ZC v1.0.3
      */
     function parse($key = '')
     {
@@ -124,6 +126,7 @@ class upload extends base
     /**
      * @param bool $overwrite
      * @return bool
+     * @since ZC v1.0.3
      */
     function save($overwrite = true)
     {
@@ -157,6 +160,7 @@ class upload extends base
 
     /**
      * @param string $file
+     * @since ZC v1.0.3
      */
     function set_file($file)
     {
@@ -165,6 +169,7 @@ class upload extends base
 
     /**
      * @param string $destination
+     * @since ZC v1.0.3
      */
     function set_destination($destination)
     {
@@ -173,6 +178,7 @@ class upload extends base
 
     /**
      * @param string $permissions
+     * @since ZC v1.0.3
      */
     function set_permissions($permissions)
     {
@@ -181,6 +187,7 @@ class upload extends base
 
     /**
      * @param string $filename
+     * @since ZC v1.0.3
      */
     function set_filename($filename)
     {
@@ -189,6 +196,7 @@ class upload extends base
 
     /**
      * @param string $filename
+     * @since ZC v1.0.3
      */
     function set_tmp_filename($filename)
     {
@@ -197,6 +205,7 @@ class upload extends base
 
     /**
      * @param array $extensions
+     * @since ZC v1.0.3
      */
     function set_extensions($extensions)
     {
@@ -211,6 +220,9 @@ class upload extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check_destination()
     {
         if (!is_writeable($this->destination)) {
@@ -228,6 +240,7 @@ class upload extends base
 
     /**
      * @param string $location
+     * @since ZC v1.0.3
      */
     function set_output_messages($location)
     {
@@ -242,6 +255,9 @@ class upload extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.5e
+     */
     function message_stack($msg = '', $type = '')
     {
         global $messageStack;
@@ -260,6 +276,9 @@ class upload extends base
         }
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     protected function sanitizeFileName(string $filename): string
     {
         // Convert file-extension to lowercase

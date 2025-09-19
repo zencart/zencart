@@ -9,8 +9,14 @@ namespace Zencart\FileSystem;
 
 use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
 
+/**
+ * @since ZC v1.5.7
+ */
 class FileSystem extends IlluminateFilesystem
 {
+    /**
+     * @since ZC v1.5.7
+     */
     public function loadFilesFromDirectory(string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i'): void
     {
         if (!is_dir($rootDir)) {
@@ -27,6 +33,9 @@ class FileSystem extends IlluminateFilesystem
         $dir->close();
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function listFilesFromDirectory(string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i', bool $keepDir = false): array
     {
         if (!is_dir($rootDir)) {
@@ -49,6 +58,9 @@ class FileSystem extends IlluminateFilesystem
         return $fileList;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function listFilesFromDirectoryAlphaSorted(string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i', bool $keepDir = false): array
     {
         $fileList = $this->listFilesFromDirectory($rootDir, $fileRegx, $keepDir);
@@ -56,6 +68,9 @@ class FileSystem extends IlluminateFilesystem
         return $fileList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function loadFilesFromPluginsDirectory(array $installedPlugins, string $rootDir, string $fileRegx = '~^[^\._].*\.php$~i'): void
     {
         foreach ($installedPlugins as $plugin) {
@@ -65,6 +80,9 @@ class FileSystem extends IlluminateFilesystem
         }
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function findPluginAdminPage(array $installedPlugins, string $page)
     {
         $found = null;
@@ -84,6 +102,9 @@ class FileSystem extends IlluminateFilesystem
         return $found;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function isAdminDir(string $filePath): bool
     {
         if (!defined('DIR_FS_ADMIN')) {
@@ -96,6 +117,9 @@ class FileSystem extends IlluminateFilesystem
         return true;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function isCatalogDir(string $filePath): bool
     {
         if ($this->isAdminDir($filePath)) {
@@ -112,6 +136,9 @@ class FileSystem extends IlluminateFilesystem
 
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getRelativeDir(string $filePath): string
     {
         if ($this->isAdminDir($filePath)) {
@@ -123,6 +150,9 @@ class FileSystem extends IlluminateFilesystem
         return $filePath;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getDirectorySize(string $path, $decimals = 2, bool $addSuffix = true): string
     {
         $bytes = 0;
@@ -138,6 +168,9 @@ class FileSystem extends IlluminateFilesystem
         return sprintf("%.{$decimals}f ", $bytes / pow(1024, $factor)) . $suffix;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function fileExistsInDirectory(string $fileDir, string $filePattern): bool
     {
         $found = false;
@@ -157,6 +190,9 @@ class FileSystem extends IlluminateFilesystem
         return $found;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setFileExtension(string $file, string $extension = 'php'): string
     {
         if (preg_match('~\.' . $extension . '~i', $file)) {
@@ -165,6 +201,9 @@ class FileSystem extends IlluminateFilesystem
         return $file . '.php';
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function hasTemplateLanguageOverride(string $templateDir, string $rootPath, string $language, string $file, string $extraPath = ''): bool
     {
         $file = $this->setFileExtension($file);
@@ -175,6 +214,9 @@ class FileSystem extends IlluminateFilesystem
         return true;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getExtraPathForTemplateOverrrideOrOriginal(string $templateDir, string $rootPath, string $language, string $file, string $extraPath = ''): string
     {
         if (!$this->hasTemplateLanguageOverride($templateDir, $rootPath, $language, $file, $extraPath)) {
@@ -184,6 +226,9 @@ class FileSystem extends IlluminateFilesystem
         return $extraPath;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     protected function realpath(string $path): string
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {

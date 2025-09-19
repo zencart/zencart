@@ -7,6 +7,9 @@
 
 namespace Zencart\ViewBuilders;
 
+/**
+ * @since ZC v1.5.8
+ */
 class TableViewDefinition
 {
     /**
@@ -20,41 +23,62 @@ class TableViewDefinition
         $this->setDefaults();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getDefinition() : array
     {
         return $this->definition;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setParameter(string $field, $definition) : TableViewDefinition
     {
         $this->definition[$field] = $definition;
         return $this;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getParameter(string $field)
     {
         $def = $this->definition[$field] ?? null;
         return $def;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function addButtonAction($definition) : TableViewDefinition
     {
         $this->definition['buttonActions'][] = $definition;
         return $this;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function addRowAction($definition) : TableViewDefinition
     {
         $this->definition['rowActions'][] = $definition;
         return $this;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function addColumn(string $field, $definition) : TableViewDefinition
     {
         $this->definition['columns'][$field] = $definition;
         return $this;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function addColumnBefore($index, $newKey, $data) : TableViewDefinition
     {
         $columns = $this->definition['columns'];
@@ -63,6 +87,9 @@ class TableViewDefinition
         return $this;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function addColumnAfter($index, $newKey, $data) : TableViewDefinition
     {
         $columns = $this->definition['columns'];
@@ -71,37 +98,58 @@ class TableViewDefinition
         return $this;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getHeaders()
     {
         $headers = collect($this->definition['columns'])->pluck('title');
         return $headers;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function isPaginated() : bool
     {
         return ($this->definition['paginated']);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function colKeyName() : string
     {
         return $this->definition['colKeyName'];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function hasRowActions() : bool
     {
         return (count($this->definition['rowActions']) >0);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getRowActions() : array
     {
         return $this->definition['rowActions'];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getButtonActions() : array
     {
         return $this->definition['buttonActions'];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function setDefaults()
     {
         $this->definition['paginated'] = $this->definition['paginated'] ?? true;
@@ -114,11 +162,17 @@ class TableViewDefinition
         $this->definition['colKey'] = $this->definition['colKey'] ?? 'id';
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function addDefinitions($original, $addition)
     {
         return $original + $addition;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function insertBefore($input, $index, $newKey, $element) {
         if (!array_key_exists($index, $input)) {
             return $input;
@@ -133,6 +187,9 @@ class TableViewDefinition
         return $tmpArray;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function insertAfter($input, $index, $newKey, $element) {
         if (!array_key_exists($index, $input)) {
             return $input;

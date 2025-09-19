@@ -8,6 +8,7 @@ declare(strict_types=1);
  *
  * @var language $lng
  * @var queryFactory $db
+ * @since ZC v2.1.0
  */
 
 use Zencart\Traits\NotifierManager;
@@ -42,6 +43,9 @@ class Product
         $this->EOF = empty(self::$data);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function forLanguage(?int $language_id): self
     {
         self::$data = $this->getDataForLanguage($language_id);
@@ -51,6 +55,9 @@ class Product
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function withDefaultLanguage(): self
     {
         self::$data = $this->getDataForLanguage();
@@ -60,11 +67,17 @@ class Product
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getData(): ?array
     {
         return self::$data;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function get(string $name)
     {
         return self::$data[$name] ?? self::$data['lang'][$this->languages[(int)$_SESSION['languages_id']]][$name] ?? null;
@@ -72,6 +85,7 @@ class Product
 
     /**
      * Same as getData(), but for specific language only
+     * @since ZC v2.1.0
      */
     public function getDataForLanguage(?int $language_id = null): ?array
     {
@@ -97,45 +111,72 @@ class Product
         return $data;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getId(): ?int
     {
         return self::$product_id;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function exists(): bool
     {
         return !empty(self::$product_id) && !empty(self::$data);
     }
+    /**
+     * @since ZC v2.1.0
+     */
     public function isValid(): bool
     {
         return !empty(self::$data);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isLinked(): bool
     {
         return (self::$data['linked_categories_count'] ?? 0) > 0;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isVirtual(): bool
     {
         return (self::$data['products_virtual'] ?? 0) === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isAlwaysFreeShipping(): bool
     {
         return (self::$data['product_is_always_free_shipping'] ?? '') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function status(): int
     {
         return (int)(self::$data['products_status'] ?? 0);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isGiftVoucher(): bool
     {
         return str_starts_with(self::$data['products_model'] ?? '', 'GIFT');
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function allowsAddToCart(): bool
     {
         if (empty(self::$data)) {
@@ -157,6 +198,9 @@ class Product
         return in_array($allow_add_to_cart, [true, 'Y'], true);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getProductQuantity(): int|float
     {
         $quantity = self::$data['products_quantity'] ?? '0';
@@ -164,16 +208,25 @@ class Product
         return zen_str_to_numeric((string)$quantity);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getTypeHandler(): string
     {
         return (self::$data['type_handler'] ?? 'product');
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getInfoPage(): string
     {
         return $this->getTypeHandler() . '_info';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function hasPriceQuantityDiscounts(): bool
     {
         if (empty(self::$data)) {
@@ -186,6 +239,9 @@ class Product
         return !$results->EOF;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function hasPriceSpecials()
     {
         if (empty(self::$data)) {
@@ -198,26 +254,41 @@ class Product
         return !$results->EOF;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function priceIsByAttribute(): bool
     {
         return (self::$data['products_priced_by_attribute'] ?? '0') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function priceIsFree(): bool
     {
         return (self::$data['product_is_free'] ?? '0') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function priceIsCall(): bool
     {
         return (self::$data['product_is_call'] ?? '0') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function __get(string $name)
     {
         return $this->get($name);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     protected function loadProductDetails(int $product_id, ?int $language_id = null): array
     {
         global $db;
@@ -243,6 +314,7 @@ class Product
 
         /**
          * Add $data['lang'][code] = [products_name, products_description, etc] for each language
+         * @since ZC v2.1.0
          */
         $sql = "SELECT pd.*
                 FROM " . TABLE_PRODUCTS_DESCRIPTION . " pd

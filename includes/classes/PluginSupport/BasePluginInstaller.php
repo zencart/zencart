@@ -9,6 +9,9 @@ namespace Zencart\PluginSupport;
 
 use queryFactory;
 
+/**
+ * @since ZC v1.5.7
+ */
 class BasePluginInstaller
 {
     /**
@@ -21,6 +24,9 @@ class BasePluginInstaller
     {
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function processInstall($pluginKey, $version): bool
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
@@ -34,6 +40,9 @@ class BasePluginInstaller
         return true;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function processUninstall($pluginKey, $version): bool
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
@@ -47,6 +56,9 @@ class BasePluginInstaller
         return true;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function processUpgrade($pluginKey, $version, $oldVersion): bool
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
@@ -61,16 +73,25 @@ class BasePluginInstaller
         return true;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function processDisable($pluginKey, $version): void
     {
         $this->setPluginVersionStatus($pluginKey, $version, 2);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function processEnable($pluginKey, $version): void
     {
         $this->setPluginVersionStatus($pluginKey, $version, 1);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function setPluginVersionStatus($pluginKey, $version, $status): void
     {
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL . " SET status = :status:, version = :version: WHERE unique_key = :uniqueKey:";
@@ -82,6 +103,7 @@ class BasePluginInstaller
 
     /**
      * Loads the "main.php" language file. This handles "defines" for language-strings. It does NOT handle language-arrays.
+     * @since ZC v1.5.7
      */
     protected function loadInstallerLanguageFile(string $file): void
     {
@@ -102,6 +124,9 @@ class BasePluginInstaller
         }
     }
 
+    /**
+     * @since ZC v1.5.8a
+     */
     public function getErrorContainer(): PluginErrorContainer
     {
         return $this->errorContainer;

@@ -6,6 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @since ZC v1.5.8
  */
 
     class categoryPulldown extends pulldown
@@ -38,6 +39,7 @@
          * @param bool $status
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function showParent(bool $status)
         {
@@ -49,6 +51,7 @@
          * @param bool $status
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function showFullPath(bool $status)
         {
@@ -58,6 +61,7 @@
 
         /**
          * @return mixed|void
+         * @since ZC v1.5.8
          */
         protected function setSQL()
         {
@@ -72,6 +76,7 @@
 
         /**
          * @return mixed|void
+         * @since ZC v1.5.8
          */
         protected function processSQL()
         {
@@ -93,6 +98,7 @@
          * @param $category
          *
          * @return string|string[]|null
+         * @since ZC v1.5.8
          */
         private function categoryText($category)
         {

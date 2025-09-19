@@ -10,6 +10,9 @@ namespace Zencart\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
+/**
+ * @since ZC v1.5.8
+ */
 class SelectWhereFilter extends baseFilter implements RequestFilter
 {
     private $default;
@@ -17,6 +20,9 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
     protected $options = [];
     protected $parameters =[];
     
+    /**
+     * @since ZC v1.5.8
+     */
     public function make(array $filterDefinition) : void
     {
         $this->filterDefinition = $filterDefinition;
@@ -25,12 +31,18 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
         $this->parameters = $this->setParameters($filterDefinition);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function output() : string
     {
         $select = $this->makeSelect($this->options, $this->default, $this->parameters);
         return $select;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function processRequest(Request $request, Builder $query) : Builder
     {
         $this->default = $request->input($this->filterDefinition['selectName'], '*');
@@ -41,11 +53,17 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
         return $query;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function getOptionsForSelect(array $filterDefinition) : array
     {
         return $filterDefinition['options'];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function setParameters($filterDefinition) : array
     {
         $parameters['label'] = $filterDefinition['label'];

@@ -234,6 +234,9 @@ class splitPageResults extends base {
     }
   }
 
+  /**
+   * @since ZC v1.5.7
+   */
   public function getSqlQuery()
   {
       return $this->sql_query;

@@ -13,6 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * site_map.php
  *
+ * @since ZC v1.3.0
  */
  class zen_SiteMapTree {
      
@@ -98,6 +99,9 @@ if (!defined('IS_ADMIN_FLAG')) {
          }
    }
 
+   /**
+    * @since ZC v1.3.0
+    */
    function buildBranch($parent_id, $level = 0, $parent_link = '') {
     $parent_id = (int)$parent_id;
     $level = (int)$level;
@@ -140,6 +144,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 
     return $result;
   }
+   /**
+    * @since ZC v1.3.0
+    */
    function buildTree() {
      return $this->buildBranch($this->root_category_id);
    }

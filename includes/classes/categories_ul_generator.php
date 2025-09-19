@@ -4,6 +4,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  Modified in v2.2.0 $
+ * @since ZC v1.5.5
  */
 
 class zen_categories_ul_generator
@@ -37,6 +38,9 @@ class zen_categories_ul_generator
         }
     }
 
+    /**
+     * @since ZC v1.5.5
+     */
     public function buildBranch($parent_id, $level = 0, $submenu = true, string $parent_link = ''): string
     {
         $parent_id = (int)$parent_id;
@@ -68,6 +72,9 @@ class zen_categories_ul_generator
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.5
+     */
     public function buildTree($submenu = false, ?int $max_levels = null): string
     {
         if (empty($this->data)) {

@@ -24,6 +24,7 @@ zen_define_default('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', 'zen_mfa_handle
  *
  * @param array $admin_info receives four values: admin_id, email, admin_name, mfa array
  * @return bool
+ * @since ZC v2.1.0
  */
 function zen_mfa_handler(array $admin_info = []): bool
 {
@@ -82,6 +83,7 @@ function zen_mfa_handler(array $admin_info = []): bool
 
 /**
  * Prepare to do OTP MFA validation
+ * @since ZC v2.1.0
  */
 function zen_mfa_by_totp(array $admin_info = []): bool
 {
@@ -116,6 +118,7 @@ function zen_mfa_by_totp(array $admin_info = []): bool
 
 /**
  * Prepare to do MFA validation via email
+ * @since ZC v2.1.0
  */
 function zen_mfa_by_email(array $admin_info = []): bool
 {

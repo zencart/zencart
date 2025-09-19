@@ -16,6 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Queryfactory - A simple database abstraction layer
  *
+ * @since ZC v1.2.0d
  */
 class queryFactory extends base
 {
@@ -67,6 +68,7 @@ class queryFactory extends base
      * @param false $dieOnErrors debug flag
      * @param array $options additional configuration
      * @return bool
+     * @since ZC v1.2.0d
      */
     public function connect(string $db_host, string $db_user, string $db_password, string $db_name, $pconnect = 'unused', bool $dieOnErrors = false, array $options = []): bool
     {
@@ -144,6 +146,7 @@ class queryFactory extends base
      * @param string $db_password db password
      * @param string $db_name database name
      * @return bool
+     * @since ZC v1.5.2
      */
     public function simpleConnect($db_host, $db_user, $db_password, $db_name): bool
     {
@@ -173,6 +176,7 @@ class queryFactory extends base
      * @param string $sqlQuery
      * @param bool $removeFromQueryCache Whether to skip the MySQL resource cache for repeats of the same query string during the same page-load
      * @return bool|mixed|mysqli_result
+     * @since ZC v1.5.8
      */
     protected function runQuery(string $sqlQuery, bool $removeFromQueryCache)
     {
@@ -202,6 +206,7 @@ class queryFactory extends base
      *
      * @param string|null|mixed $string
      * @return string
+     * @since ZC v1.2.0d
      */
     public function prepare_input($string): string
     {
@@ -213,6 +218,7 @@ class queryFactory extends base
      * @param string|null|mixed $string
      * @return string
      * @see $this->prepare_input()
+     * @since ZC v1.3.0
      */
     function prepareInput($string)
     {
@@ -226,6 +232,7 @@ class queryFactory extends base
      * @param int $cacheSeconds
      * @param bool $removeFromQueryCache
      * @return queryFactoryResult
+     * @since ZC v1.2.0d
      */
     public function Execute(string $sqlQuery, $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
     {
@@ -328,6 +335,7 @@ class queryFactory extends base
      * Use this form of the Execute method to ensure that any SELECT result is pulled from the database, bypassing the cache.
      * @param string $sqlQuery
      * @return queryFactoryResult
+     * @since ZC v1.5.5f
      */
     function ExecuteNoCache(string $sqlQuery)
     {
@@ -341,6 +349,7 @@ class queryFactory extends base
      * @param string $sqlQuery
      * @param int $limit
      * @return queryFactoryResult
+     * @since ZC v1.2.0d
      */
     public function ExecuteRandomMulti(string $sqlQuery, $limit = 0): \queryFactoryResult
     {
@@ -402,6 +411,7 @@ class queryFactory extends base
 
     /**
      * @deprecated since 1.5.8 use ExecuteRandomMulti
+     * @since ZC v1.5.5f
      */
     function ExecuteRandomMultiNoCache($sqlQuery)
     {
@@ -417,6 +427,7 @@ class queryFactory extends base
      * @param string $query
      * @param bool $removeFromQueryCache
      * @return bool|mixed|mysqli_result
+     * @since ZC v1.5.1
      */
     protected function query($link, string $query, bool $removeFromQueryCache = false)
     {
@@ -445,6 +456,7 @@ class queryFactory extends base
      * Get ID of last inserted record
      *
      * @return int|string
+     * @since ZC v1.2.0d
      */
     public function insert_ID()
     {
@@ -453,6 +465,7 @@ class queryFactory extends base
 
     /**
      * Return the number of rows affected by the last INSERT, UPDATE, REPLACE or DELETE query.
+     * @since ZC v1.5.5f
      */
     public function affectedRows()
     {
@@ -462,6 +475,7 @@ class queryFactory extends base
     /**
      * Return the number of queries executed since the counter started
      * @return int
+     * @since ZC v1.2.0d
      */
     public function queryCount(): int
     {
@@ -470,6 +484,7 @@ class queryFactory extends base
 
     /**
      * Return the number of seconds elapsed for querying, since the counter started
+     * @since ZC v1.2.0d
      */
     public function queryTime(): float
     {
@@ -484,6 +499,7 @@ class queryFactory extends base
      * @param string $performType INSERT or UPDATE or INSERTIGNORE or UPDATEIGNORE
      * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
      * @param false $debug developer use only
+     * @since ZC v1.3.0
      */
     public function perform(string $tableName, array $tableData, string $performType = 'INSERT', string $whereCondition = '', ?bool $debug = false): void
     {
@@ -545,6 +561,7 @@ class queryFactory extends base
      * @param mixed $valueToBind  the variable/value to be bound
      * @param string $bindingRule the pattern to cast the value to
      * @return string original $sql query fragment with patterns substituted
+     * @since ZC v1.3.0
      */
     public function bindVars(string $sql, string $parameterToReplace, $valueToBind, string $bindingRule): string
     {
@@ -559,6 +576,7 @@ class queryFactory extends base
      * @param mixed $value value to be bound/sanitized
      * @param string $type binding rule to apply
      * @return float|int|string
+     * @since ZC v1.3.0
      */
     protected function getBindVarValue($value, string $type)
     {
@@ -634,6 +652,7 @@ class queryFactory extends base
     /**
      * @param string $db_name
      * @return bool
+     * @since ZC v1.2.0d
      */
     public function selectdb(string $db_name): bool
     {
@@ -651,6 +670,7 @@ class queryFactory extends base
 
     /**
      * Close db connection
+     * @since ZC v1.2.0d
      */
     public function close(): void
     {
@@ -662,6 +682,7 @@ class queryFactory extends base
 
     /**
      * Close db connection on destroy/shutdown/exit
+     * @since ZC v1.5.5f
      */
     public function __destruct()
     {
@@ -670,6 +691,7 @@ class queryFactory extends base
 
     /**
      * Internal queryfactory error handling
+     * @since ZC v1.2.0d
      */
     protected function set_error($err_num, $err_text, $dieOnErrors = true): void
     {
@@ -686,6 +708,7 @@ class queryFactory extends base
     /**
      * Display DB Connection Failure error message
      * and trigger error logging
+     * @since ZC v1.2.0d
      */
     protected function show_error()
     {
@@ -737,6 +760,7 @@ class queryFactory extends base
 
     /**
      * Get column properties for a table
+     * @since ZC v1.2.0d
      */
     public function metaColumns(string $tablename): array
     {
@@ -749,6 +773,9 @@ class queryFactory extends base
         return $obj ?? [];
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     function get_server_info()
     {
         if ($this->link) {
@@ -761,6 +788,7 @@ class queryFactory extends base
     /**
      * If logging is enabled, log SELECT queries for later analysis
      * @param $sqlQuery
+     * @since ZC v1.5.8
      */
     protected function logQuery($sqlQuery)
     {
@@ -796,6 +824,9 @@ class queryFactory extends base
     }
 }
 
+/**
+ * @since ZC v1.2.0d
+ */
 class queryFactoryResult implements Countable, Iterator
 {
     /**
@@ -876,6 +907,9 @@ class queryFactoryResult implements Countable, Iterator
      * @see Iterator::current()
      */
      #[ReturnTypeWillChange]
+    /**
+     * @since ZC v1.5.5
+     */
     public function current()
     {
         return $this->fields;
@@ -885,6 +919,9 @@ class queryFactoryResult implements Countable, Iterator
      * @see Iterator::key()
      */
      #[ReturnTypeWillChange]
+    /**
+     * @since ZC v1.5.5
+     */
     public function key()
     {
         return $this->cursor;
@@ -894,6 +931,9 @@ class queryFactoryResult implements Countable, Iterator
      * @see Iterator::next()
      */
      #[ReturnTypeWillChange]
+    /**
+     * @since ZC v1.5.5
+     */
     public function next()
     {
         $this->MoveNext();
@@ -901,6 +941,7 @@ class queryFactoryResult implements Countable, Iterator
 
     /**
      * Moves the cursor to the next row.
+     * @since ZC v1.2.0d
      */
     public function MoveNext()
     {
@@ -931,6 +972,7 @@ class queryFactoryResult implements Countable, Iterator
 
     /**
      * Moves to the next randomized result. Typically only used on a result generated by ExecuteRandomMulti
+     * @since ZC v1.2.0d
      */
     public function MoveNextRandom()
     {
@@ -946,6 +988,9 @@ class queryFactoryResult implements Countable, Iterator
      * @see Iterator::rewind()
      */
      #[ReturnTypeWillChange]
+    /**
+     * @since ZC v1.5.5
+     */
     public function rewind()
     {
         $this->EOF = ($this->RecordCount() == 0);
@@ -958,6 +1003,9 @@ class queryFactoryResult implements Countable, Iterator
      * @see Iterator::valid()
      */
      #[ReturnTypeWillChange]
+    /**
+     * @since ZC v1.5.5
+     */
     public function valid()
     {
         return $this->cursor < $this->RecordCount() && !$this->EOF;
@@ -967,6 +1015,9 @@ class queryFactoryResult implements Countable, Iterator
      * @see Iterator::count()
      */
      #[ReturnTypeWillChange]
+    /**
+     * @since ZC v1.5.5
+     */
     public function count()
     {
         return $this->RecordCount();
@@ -976,6 +1027,7 @@ class queryFactoryResult implements Countable, Iterator
      * Returns the number of rows (records).
      *
      * @return int
+     * @since ZC v1.2.0d
      */
     public function RecordCount()
     {
@@ -994,6 +1046,7 @@ class queryFactoryResult implements Countable, Iterator
      * the cursor will be moved past the last row and EOF will be set false.
      *
      * @param int $zp_row the row to move to
+     * @since ZC v1.2.0d
      */
     public function Move($zp_row)
     {
@@ -1016,6 +1069,9 @@ class queryFactoryResult implements Countable, Iterator
     }
 }
 
+/**
+ * @since ZC v1.2.0d
+ */
 class queryFactoryMeta extends base
 {
     public string $field;
@@ -1082,6 +1138,7 @@ class queryFactoryMeta extends base
      * Determine native scalar PHP type which most closely matches the db field type.
      * Basically anything that's not int|float will be treated as string here.
      * (more complex type matching/casting can be done in userland code)
+     * @since ZC v2.1.0
      */
     protected function match_native_type(string $mysql_field_type): string
     {

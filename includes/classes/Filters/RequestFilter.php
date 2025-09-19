@@ -10,9 +10,21 @@ namespace Zencart\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
+/**
+ * @since ZC v1.5.8
+ */
 interface RequestFilter
 {
+    /**
+     * @since ZC v1.5.8
+     */
     public function make(array $filterDefinition) : void;
+    /**
+     * @since ZC v1.5.8
+     */
     public function processRequest(Request $request, Builder $query);
+    /**
+     * @since ZC v1.5.8
+     */
     public function output() : string;
 }

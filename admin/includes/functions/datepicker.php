@@ -9,6 +9,7 @@
 /**
  * converts mm-dd-yy to MM-DD-YYYY
  * @return string
+ * @since ZC v1.5.7
  */
 function zen_datepicker_format_full()
 {
@@ -18,6 +19,7 @@ function zen_datepicker_format_full()
 /**
  * converts mm-dd-yy to m-d-Y
  * @return string
+ * @since ZC v1.5.7
  */
 function zen_datepicker_format_fordate()
 {
@@ -31,6 +33,7 @@ function zen_datepicker_format_fordate()
 /**
  * converts mm-dd-yy to %m-%d-%Y
  * @return string
+ * @since ZC v1.5.7
  */
 function zen_datepicker_format_forsql()
 {
@@ -47,6 +50,7 @@ function zen_datepicker_format_forsql()
  * @param string $raw_date Date to check against today
  * @param string $past_date Date to use if $raw_date is empty or in the past. Normal options are '' or '0001-01-01'.
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_prepare_date(string $raw_date, string $past_date = ''): string
 {

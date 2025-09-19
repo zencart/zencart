@@ -15,9 +15,13 @@ if (!defined('IS_ADMIN_FLAG')) {
  * cache Class.
  * handles query caching
  *
+ * @since ZC v1.2.0d
  */
 class cache
 {
+    /**
+     * @since ZC v1.2.0d
+     */
     public function sql_cache_exists($zf_query, $zf_cachetime = null): bool
     {
         global $db;
@@ -51,6 +55,9 @@ class cache
         }
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     public function sql_cache_is_expired($zf_query, $zf_cachetime): bool
     {
         global $db;
@@ -87,6 +94,9 @@ class cache
         }
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     public function sql_cache_expire_now($zf_query): void
     {
         global $db;
@@ -111,6 +121,9 @@ class cache
         }
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     public function sql_cache_store($zf_query, $zf_result_array): void
     {
         global $db;
@@ -138,6 +151,9 @@ class cache
         }
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     public function sql_cache_read($zf_query): bool|array
     {
         global $db;
@@ -168,6 +184,9 @@ class cache
         }
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     public function sql_cache_flush_cache(): void
     {
         global $db;
@@ -193,6 +212,9 @@ class cache
         }
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     public function cache_generate_cache_name($zf_query): bool|string
     {
         switch (SQL_CACHE_METHOD) {

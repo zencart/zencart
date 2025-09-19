@@ -116,6 +116,9 @@ class messageStack extends base
         require $template->get_template_dir('tpl_message_stack_default.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_message_stack_default.php';
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function size(string $class): int
     {
         if (!empty($_SESSION['messageToStack'])) {
@@ -135,6 +138,9 @@ class messageStack extends base
         return $count;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setMessageFormatting(array $formattingArray = []): void
     {
         foreach ($formattingArray as $messageType => $keys) {
@@ -152,6 +158,7 @@ class messageStack extends base
 
     /**
      * @return array
+     * @since ZC v1.5.8
      */
     public function getDefaultFormats(): array
     {

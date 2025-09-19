@@ -53,6 +53,7 @@
      * @param array $attachments_list Array of attachment names/mime-types to be included  (this portion still in testing, and not fully reliable)
      * @param string $email_reply_to_name Name of the "reply-to" header (defaults to store name if not specified, except for contact-us and order-confirmation)
      * @param string $email_reply_to_address Email address for reply-to header (defaults to store email address if not specified, except for contact-us and order-confirmation)
+     * @since ZC v1.0.3
      **/
     function zen_mail($to_name, $to_address, $email_subject, $email_text, $from_email_name, $from_email_address, $block = [], $module = 'default', $attachments_list = '', $email_reply_to_name = '', $email_reply_to_address = '')
     {
@@ -551,6 +552,7 @@
      * @param string $email_html
      * @param array $email_text
      * @param string $module
+     * @since ZC v1.2.0d
      **/
     function zen_mail_archive_write($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $email_text, $module, $error_msgs)
     {
@@ -587,6 +589,7 @@
      * However, the following email types are marketing-related or first-time-interaction with recipient, so should probably have disclaimers
      * @param string $email_module_name
      * @return bool
+     * @since ZC v1.5.7
      */
     function zen_is_non_transactional_email($email_module_name)
     {
@@ -608,6 +611,7 @@
      * select email template based on 'module' (supplied as param to function)
      * selectively go thru each template tag and substitute appropriate text
      * finally, build full html content as "return" output from class
+     * @since ZC v1.2.0d
      **/
     function zen_build_html_email_from_template($module = 'default', $content = '')
     {
@@ -795,6 +799,7 @@
     /**
      * Function to build array of additional email content collected and sent on admin-copies of emails:
      *
+     * @since ZC v1.2.0d
      */
     function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone = '', $login_fax = '', $moreinfo = [])
     {
@@ -866,6 +871,7 @@
      *
      * @param string $email address to validate
      * @return boolean
+     * @since ZC v1.0.3
      **/
     function zen_validate_email($email)
     {
@@ -927,6 +933,7 @@
      *
      * @param string $email_html
      * return string
+     * @since ZC v1.3.9a
      */
     function processEmbeddedImages($email_html, &$mail)
     {
@@ -976,6 +983,7 @@
      *
      * @param string $customers_id
      * return string
+     * @since ZC v1.5.5
      */
     function zen_get_email_from_customers_id($customers_id)
     {
@@ -989,6 +997,9 @@
         return $customers_values->fields['customers_email_address'];
     }
 
+    /**
+     * @since ZC v1.5.6b
+     */
     function zen_db_prepare_input_html_safe($string)
     {
         if (is_string($string)) {

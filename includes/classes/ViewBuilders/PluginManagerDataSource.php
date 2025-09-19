@@ -10,8 +10,14 @@ namespace Zencart\ViewBuilders;
 use App\Models\PluginControl;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @since ZC v1.5.8
+ */
 class PluginManagerDataSource extends DataTableDataSource
 {
+    /**
+     * @since ZC v1.5.8
+     */
     protected function buildInitialQuery(): Builder
     {
         return (new PluginControl())->query()->orderBy('name')->orderBy('unique_key');

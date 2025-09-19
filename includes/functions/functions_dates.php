@@ -18,6 +18,7 @@ if (!function_exists('zen_date_raw')) {
      * @param string $date
      * @param bool $reverse
      * @return string
+     * @since ZC v1.0.3
      */
     function zen_date_raw($date, $reverse = false) {
         // sometimes zen_date_short is called with a zero-date value which returns false, which is then passed to $date here, so this just reformats to avoid confusion.
@@ -55,6 +56,7 @@ if (!function_exists('zen_date_raw')) {
  * @param string $date
  * @param string $format (optional) needs to be a valid short date format for DateTimeImmutableObject using / or - or nothing as separators
  * @return bool
+ * @since ZC v2.0.0
  */
 function zen_valid_date(string $date, string $format = DATE_FORMAT): bool
 {
@@ -74,6 +76,7 @@ function zen_valid_date(string $date, string $format = DATE_FORMAT): bool
  *
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string
+ * @since ZC v1.0.3
  */
 function zen_date_long($raw_date)
 {
@@ -96,6 +99,7 @@ function zen_date_long($raw_date)
  *
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string|string[]|null
+ * @since ZC v1.0.3
  */
 function zen_date_short($raw_date)
 {
@@ -112,6 +116,9 @@ function zen_date_short($raw_date)
 }
 
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_datetime_short($raw_datetime)
 {
     if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
@@ -129,6 +136,7 @@ function zen_datetime_short($raw_datetime)
 
 /**
  * Return locale-formatted date and time without seconds (ie. 2024/10/01 9:54)
+ * @since ZC v2.1.0
  */
 function zen_datetime_without_seconds (string $raw_datetime): string
 {
@@ -151,6 +159,7 @@ function zen_datetime_without_seconds (string $raw_datetime): string
  * @param string $formatOut
  * @param $formatIn
  * @return string
+ * @since ZC v1.5.2
  */
 function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
 {
@@ -182,6 +191,7 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
  * @param string $format_string
  * @param array $date_array updated by reference
  * @return bool and also updates $date_array by reference
+ * @since ZC v1.0.3
  */
 function zen_checkdate($date_to_check, $format_string, &$date_array)
 {
@@ -291,6 +301,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
  * Check if year is a leap year
  * @param int $year
  * @return bool
+ * @since ZC v1.0.3
  */
 function zen_is_leap_year($year)
 {
@@ -309,6 +320,7 @@ function zen_is_leap_year($year)
  * @param string $date1
  * @param string $date2
  * @return int
+ * @since ZC v1.3.9a
  */
 function zen_date_diff($date1, $date2)
 {
@@ -367,6 +379,7 @@ function zen_date_diff($date1, $date2)
  * $end2 raw_datetime, raw_date or effectively blank (if $start2 is array, the value here is replaced, otherwise this datetime is considered eternally effective)
  * $future_only boolean or string of 'past': values should be true, false, or 'past'
  * returns a boolean true/false.  In error case of array provided without proper keys true returned and warning log also generated
+ * @since ZC v1.5.6
  */
 function zen_datetime_overlap($start1, $start2, $end1 = null, $end2 = null, $future_only = true)
 {
@@ -460,6 +473,9 @@ function zen_datetime_overlap($start1, $start2, $end1 = null, $end2 = null, $fut
 }
 
 
+/**
+ * @since ZC v1.3.0
+ */
 function zen_count_days($start_date, $end_date, $lookup = 'm')
 {
     if ($lookup == 'd') {

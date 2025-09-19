@@ -4,6 +4,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
+ * @since ZC v1.1.0
  */
 
 //
@@ -33,6 +34,7 @@ class freeshipper extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
@@ -71,6 +73,9 @@ class freeshipper extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.1.0
+     */
     function quote($method = ''): array
     {
         global $order;
@@ -98,6 +103,9 @@ class freeshipper extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.1.0
+     */
     function check()
     {
         global $db;
@@ -108,6 +116,9 @@ class freeshipper extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function get_configuration_errors()
     {
         if (!zen_check_for_misconfigured_downloads()) {
@@ -115,6 +126,9 @@ class freeshipper extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.1.0
+     */
     function install(): void
     {
         global $db;
@@ -126,11 +140,17 @@ class freeshipper extends ZenShipping
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_FREESHIPPER_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/'];
     }
 
+    /**
+     * @since ZC v1.1.0
+     */
     function keys(): array
     {
         return ['MODULE_SHIPPING_FREESHIPPER_STATUS', 'MODULE_SHIPPING_FREESHIPPER_COST', 'MODULE_SHIPPING_FREESHIPPER_HANDLING', 'MODULE_SHIPPING_FREESHIPPER_TAX_CLASS', 'MODULE_SHIPPING_FREESHIPPER_ZONE', 'MODULE_SHIPPING_FREESHIPPER_SORT_ORDER'];

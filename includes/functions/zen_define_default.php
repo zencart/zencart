@@ -4,6 +4,7 @@
  * to simplify the processing to set a default value for a 'define' if the definition is not yet present.
  *
  * @version $Id: lat9 2022 May 30 New in v1.5.8-alpha $
+ * @since ZC v1.5.8
  */
 function zen_define_default(string $name, $default_value)
 {

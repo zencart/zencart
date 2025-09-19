@@ -3,6 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Zcwilt 2023 Nov 16 Modified in v2.0.0-alpha1 $
+ * @since ZC v1.5.5f
  */
 
 class VersionServer
@@ -24,11 +25,17 @@ class VersionServer
         }
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     public function getZcVersioninfo(): array
     {
         return $this->buildCurrentInfo();
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     public function getProjectVersion(): mixed
     {
         $currentInfo = $this->getZcVersioninfo();
@@ -54,6 +61,7 @@ class VersionServer
     /**
      * @param int|string $ids An integer or a comma-separated string of integers denoting the plugin ID from the ZC plugin library
      * @return bool|false|string json string
+     * @since ZC v1.5.5f
      */
     public function getPluginVersion($ids): bool|string
     {
@@ -86,6 +94,9 @@ class VersionServer
         return $response;
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     public function isProjectCurrent(?array $newVersionInfo = null): bool
     {
         if (empty($newVersionInfo)) {
@@ -103,6 +114,9 @@ class VersionServer
         return true;
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     public function hasProjectPatches(?array $newVersionInfo = null): int
     {
         if (empty($newVersionInfo)) {
@@ -120,6 +134,9 @@ class VersionServer
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     protected function buildCurrentInfo(): array
     {
         $systemInfo = json_encode(zen_get_system_information(true));
@@ -140,6 +157,9 @@ class VersionServer
         return $results;
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     protected function getModuleinfo(): array
     {
         $modules = [
@@ -151,6 +171,9 @@ class VersionServer
         return $modules;
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     protected function getCountryIso()
     {
         global $db;
@@ -162,6 +185,9 @@ class VersionServer
         return '';
     }
 
+    /**
+     * @since ZC v1.5.5f
+     */
     protected function formatCurlError($errorno, $error): bool|string
     {
         return json_encode(['error' => $error . '[' . $errorno . ']']);

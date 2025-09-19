@@ -9,6 +9,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v2.0.0
+ */
 class GroupPricing extends Eloquent
 {
     protected $table = TABLE_GROUP_PRICING;

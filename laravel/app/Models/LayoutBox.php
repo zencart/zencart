@@ -9,6 +9,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v1.5.8
+ */
 class LayoutBox extends Eloquent
 {
     protected $table = TABLE_LAYOUT_BOXES;

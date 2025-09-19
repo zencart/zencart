@@ -3,6 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Aug 16 Modified in v2.1.0-alpha2 $
+ * @since ZC v1.5.8
  */
 
 class Customer extends base
@@ -35,6 +36,9 @@ class Customer extends base
         }
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     protected static function getCustomerWholesaleInfo(): array
     {
         static $wholesaleInfo;
@@ -66,12 +70,18 @@ class Customer extends base
         return $wholesaleInfo;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function isWholesaleCustomer(): bool
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
         return $wholesale_info['is_wholesale'];
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function isTaxExempt(): bool
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
@@ -83,12 +93,18 @@ class Customer extends base
         return (bool)$is_tax_exempt;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function getCustomerWholesaleTier(): int
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
         return $wholesale_info['wholesale_tier'];
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public static function createPasswordResetToken(string $email_address): array|false
     {
         global $db;
@@ -123,6 +139,9 @@ class Customer extends base
         return $check_customer->fields;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public static function getPasswordResetTokenInfo(string $reset_token): array|false
     {
         global $db;
@@ -141,6 +160,9 @@ class Customer extends base
         return $result->fields;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public static function getPasswordResetTokenForEmail(string $email_address): array|false
     {
         global $db;
@@ -161,6 +183,9 @@ class Customer extends base
         return ($result->EOF) ? false : $result->fields;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public static function getPasswordResetTokenMinutesValid(): int
     {
         $token_valid_minutes = defined('PASSWORD_RESET_TOKEN_MINUTES_VALID') ? (int)constant('PASSWORD_RESET_TOKEN_MINUTES_VALID') : 60;
@@ -170,6 +195,9 @@ class Customer extends base
         return $token_valid_minutes;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getData(?string $element = null)
     {
         if (empty($element)) {
@@ -183,6 +211,9 @@ class Customer extends base
         return $this->data[$element];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getCurrentCustomerId(): int
     {
         if (empty($this->customer_id)) {
@@ -191,6 +222,9 @@ class Customer extends base
         return (int)$this->customer_id;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setCustomerIdFromSession(): int
     {
         if (!empty($_SESSION['customer_id'])) {
@@ -203,6 +237,7 @@ class Customer extends base
     /**
      * Return whether the indicated customer is currently logged into the site.
      * If no customer is specified, we check the one already assigned to this class
+     * @since ZC v1.5.8
      */
     public function isSameAsLoggedIn(?int $idToCheck = null): bool
     {
@@ -216,6 +251,7 @@ class Customer extends base
 
     /**
      * Return whether "any" customer is currently logged into the site.
+     * @since ZC v1.5.8
      */
     public function someoneIsLoggedIn(): bool
     {
@@ -224,6 +260,9 @@ class Customer extends base
         return (bool)$is_logged_in;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function doLoginLookupByEmail(string $email): array|false
     {
         global $db;
@@ -242,6 +281,9 @@ class Customer extends base
         return $result->fields;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function login(int $customer_id, $restore_cart = true): bool
     {
         global $db;
@@ -315,6 +357,7 @@ class Customer extends base
 
     /**
      * Clears any existing password reset-tokens for the specified customers_id.
+     * @since ZC v2.2.0
      */
     protected function clearPasswordResetTokens(int $customers_id): void
     {
@@ -329,6 +372,7 @@ class Customer extends base
 
     /**
      * Return whether the current customer session is associated with a guest-checkout process.
+     * @since ZC v1.5.8
      */
     public function isInGuestCheckout(): bool
     {
@@ -337,6 +381,9 @@ class Customer extends base
         return (bool)$in_guest_checkout;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function customerExistsInDatabase(?int $customer_id = null): bool
     {
         global $db;
@@ -358,6 +405,9 @@ class Customer extends base
         return $result->RecordCount() > 0;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function load(?int $customer_id = null): bool
     {
         global $db;
@@ -467,6 +517,7 @@ class Customer extends base
 
     /**
      * Return the count of the current customer's previous orders.
+     * @since ZC v1.5.8
      */
     protected function countCustomersPreviousOrders(): int
     {
@@ -482,6 +533,7 @@ class Customer extends base
     /**
      * Retrieve the current customer's lifetime value,
      * the sum of all previously-placed orders.
+     * @since ZC v1.5.8
      */
     protected function getLifetimeValue(): float|int
     {
@@ -516,6 +568,7 @@ class Customer extends base
 
     /**
      * Add group-pricing details to the $this->data array
+     * @since ZC v1.5.8
      */
     protected function getPricingGroupAssociation(): void
     {
@@ -539,6 +592,7 @@ class Customer extends base
 
     /**
      * Update customer record in db with default address-book id
+     * @since ZC v1.5.8
      */
     protected function setDefaultAddressBookId(int $id): void
     {
@@ -551,6 +605,9 @@ class Customer extends base
         $this->data['customers_default_address_id'] = (int)$id;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function isBanned(?int $customer_id = null): bool
     {
         $banned_status = false;
@@ -568,6 +625,9 @@ class Customer extends base
         return $banned_status;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function banCustomer(): void
     {
         $proceed_with_ban = true;
@@ -587,6 +647,9 @@ class Customer extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setCustomerAuthorizationStatus(int $status): array
     {
         global $db;
@@ -601,6 +664,9 @@ class Customer extends base
         return $this->data;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function resetCustomerCart(): void
     {
         global $db;
@@ -610,6 +676,9 @@ class Customer extends base
         $this->forceLogout();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function forceLogout(): bool
     {
         global $db;
@@ -626,6 +695,9 @@ class Customer extends base
         return false;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getAddressBookEntries(?int $customer_id = null): object
     {
         global $db;
@@ -646,6 +718,9 @@ class Customer extends base
         return $db->Execute($sql);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getNumberOfAddressBookEntries(?int $customer_id = null): int
     {
         if (empty($customer_id)) {
@@ -658,6 +733,9 @@ class Customer extends base
         return count($this->getAddressBookEntries());
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getFormattedAddressBookList(?int $customer_id = null): array
     {
         global $db;
@@ -714,6 +792,9 @@ class Customer extends base
         return $addressArray;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getOrderHistory(int $max_number_to_return = 0, &$returned_history_split = null): array
     {
         $language = $_SESSION['languages_id'];
@@ -779,6 +860,7 @@ class Customer extends base
 
     /**
      * Used catalog-side in the My Account page(s)
+     * @since ZC v1.5.8
      */
     public function getNumberOfOrders(): int
     {
@@ -804,6 +886,9 @@ class Customer extends base
         return $result->fields['total'];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setPassword(string $new_password): void
     {
         global $db;
@@ -824,6 +909,9 @@ class Customer extends base
         $this->clearPasswordResetTokens($this->customer_id);
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function setPasswordUsingEmailAddress(string $new_password, string $email_address): void
     {
         global $db;
@@ -841,6 +929,7 @@ class Customer extends base
      *
      * @param bool $delete_reviews
      * @param bool $forget_only Instead of delete, simply obfuscate address/name data
+     * @since ZC v1.5.8
      */
     public function delete(bool $delete_reviews = false, bool $forget_only = false): void
     {
@@ -952,6 +1041,9 @@ class Customer extends base
         zen_record_admin_activity('Customer with customer ID ' . (int)$this->customer_id . ' deleted.', 'warning');
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function create(array $data): array
     {
         global $db;

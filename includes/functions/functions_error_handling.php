@@ -8,6 +8,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');
 }
 
+/**
+ * @since ZC v1.5.5
+ */
 function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
 {
     if (!(error_reporting() & $errno)) {
@@ -84,6 +87,9 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
     return true;    //-Indicate that we've handled this error-type.
 }
 
+/**
+ * @since ZC v1.5.6a
+ */
 function zen_fatal_error_handler()
 {
     $last_error = error_get_last();
@@ -118,6 +124,7 @@ function zen_fatal_error_handler()
  * PHP deprecations: /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx-deprecated.log
  * PHP warnings:     /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx-warning.log
  * PHP errors:       /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx-error.log
+ * @since ZC v2.0.0
  */
 function zen_set_error_logging_filename(): string
 {
@@ -135,6 +142,9 @@ function zen_set_error_logging_filename(): string
     return $debug_logfile_path;
 }
 
+/**
+ * @since ZC v2.0.0
+ */
 function zen_enable_error_logging(array $pages_to_debug = ['*'], $logging_level = E_ALL): void
 {
     global $current_page_base, $debug_logfile_path;

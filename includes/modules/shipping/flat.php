@@ -6,6 +6,9 @@
  * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
  */
 
+/**
+ * @since ZC v1.0.3
+ */
 class flat extends ZenShipping
 {
     function __construct()
@@ -32,6 +35,7 @@ class flat extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
@@ -70,6 +74,9 @@ class flat extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function quote($method = ''): array
     {
         global $order;
@@ -96,6 +103,9 @@ class flat extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check()
     {
         global $db;
@@ -106,6 +116,9 @@ class flat extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install(): void
     {
         global $db;
@@ -117,6 +130,9 @@ class flat extends ZenShipping
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_FLAT_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys(): array
     {
         return ['MODULE_SHIPPING_FLAT_STATUS', 'MODULE_SHIPPING_FLAT_COST', 'MODULE_SHIPPING_FLAT_TAX_CLASS', 'MODULE_SHIPPING_FLAT_TAX_BASIS', 'MODULE_SHIPPING_FLAT_ZONE', 'MODULE_SHIPPING_FLAT_SORT_ORDER'];
