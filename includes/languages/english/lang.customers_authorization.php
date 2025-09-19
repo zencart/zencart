@@ -1,8 +1,7 @@
 <?php
 $define = [
-    'NAVBAR_TITLE' => 'Account Authorization Pending',
     'HEADING_TITLE' => 'Account Authorization Pending ...',
-    'HEADING_TITLE_ACTIVATE' => 'Check your email',
+    'HEADING_TITLE_ACTIVATE' => 'Authorization Pending &mdash; Check your email',
 
     'CUSTOMERS_AUTHORIZATION_TEXT_INFORMATION' => 'Your account is being reviewed for authorization.',
     'CUSTOMERS_AUTHORIZATION_STATUS_TEXT' => 'To verify your authorization status ... click here:',
@@ -18,4 +17,8 @@ $define = [
     'TEXT_INFORMATION_RESEND' =>    //- %1$s (an anchor link to resend the token), %2$s (a link to the account_edit page)
         'Didn\'t receive an email? Verify that the email address above is correct. If it is (or if the link has expired), click %1$s to resend; otherwise, click %2$s to change your email address.',
 ];
+
+global $auth_token_info;
+$define['NAVBAR_TITLE'] = (($auth_token_info ?? false) === false) ? $define['HEADING_TITLE'] : $define['HEADING_TITLE_ACTIVATE'];
+
 return $define;

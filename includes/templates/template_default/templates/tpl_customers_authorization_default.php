@@ -12,7 +12,7 @@
  */
 ?>
 <div class="centerColumn" id="customerAuthDefault">
-    <h1 id="customerAuthDefaultHeading"><?= HEADING_TITLE ?></h1>
+    <h1 id="customerAuthDefaultHeading"><?= $customer_authorization_heading_title ?></h1>
 <?php
 if ($messageStack->size('account') > 0) {
     echo $messageStack->output('account');

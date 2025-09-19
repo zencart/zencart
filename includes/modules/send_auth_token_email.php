@@ -24,10 +24,28 @@ if (!zen_is_logged_in() || zen_in_guest_checkout()) {
 //
 $languageLoader->loadModuleLanguageFile('send_auth_token_email.php', '');
 
+// -----
+// If the customer (or account-activation token) isn't set, create
+// a new value.
+//
 $customer ??= new Customer();
-$token = $customer->createAuthToken();
+$token ??= $customer->createAuthToken();
+
+// -----
+// If the token-value is (bool)false, then either there's no customer
+// logged-in or the site hasn't enabled the account-activation feature; the
+// customer's sent back to the login page.
+//
 if ($token === false) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
+// -----
+// Finally, check to see that the token's still valid.  If not,
+// recreate it prior to sending the email.
+//
+if (Customer::getAuthTokenValid($token) === false) {
+    $token = $customer->createAuthToken();
 }
 
 $name = $customer->getData('customers_firstname') . ' ' . $customer->getData('customers_lastname');
