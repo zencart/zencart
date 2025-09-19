@@ -388,7 +388,7 @@ class Customer extends base
             return false;
         }
         $this->data['customers_authorization'] = (int)$check_customer->fields['customers_authorization'];
-        $_SESSION['customers_authorization'] = (int)$this->data['customers_authorization'];
+        $_SESSION['customers_authorization'] = $this->data['customers_authorization'];
 
         return $this->data;
     }
@@ -424,9 +424,10 @@ class Customer extends base
                     INNER JOIN " . TABLE_CUSTOMERS . " c
                         ON c.customers_id = cat.customers_id
               WHERE cat.token = :reset_token
-                AND cat.created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL $token_valid_minutes MINUTE)";
+                AND cat.created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL $token_valid_minutes MINUTE)
+              LIMIT 1";
         $sql = $db->bindVars($sql, ':reset_token', $reset_token, 'string');
-        $result = $db->Execute($sql);
+        $result = $db->ExecuteNoCache($sql);
 
         if ($result->EOF) {
             return false;

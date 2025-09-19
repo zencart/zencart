@@ -19,14 +19,16 @@ window.onload = function() {
         }
 
         const countdownInterval = setInterval(function () {
-            const minutes = Math.floor(timer / 60);
+            const minutes = Math.floor((timer % (60 * 60)) / 60);
             const seconds = timer % 60;
+            const hours = timer - seconds - (minutes * 60);
 
-            // Format minutes and seconds to always have two digits
+            // Format hours, minutes and seconds to always have two digits
+            const formattedHours = String(hours).padStart(2, '0');
             const formattedMinutes = String(minutes).padStart(2, '0');
             const formattedSeconds = String(seconds).padStart(2, '0');
 
-            display.textContent = `${formattedMinutes}:${formattedSeconds}`;
+            display.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 
             if (--timer < 0) {
                 clearInterval(countdownInterval);
@@ -35,7 +37,7 @@ window.onload = function() {
         }, 1000); // Update every 1 second
     }
 
-    // Start the 60-minute (3600 seconds) countdown
+    // Start countdown
     startCountdown(<?= $auth_token_time_remaining ?? 0 ?>, 'countdown');
 };
 </script>
