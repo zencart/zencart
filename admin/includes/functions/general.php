@@ -570,10 +570,23 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
 }
 
 /**
- * Alias function for Store configuration values in the Administration Tool
+ * Alias functions for Store configuration values in the Administration Tool
  * adapted from USPS-related contributions by Brad Waite and Fritz Clapp
  */
 function zen_cfg_select_multioption(array $choices_array, string $stored_value, string $config_key_name = ''): string
+{
+    $string = '';
+    $name = ($config_key_name) ? 'configuration[' . $config_key_name . '][]' : 'configuration_value';
+    $chosen_already = explode(', ', $stored_value);
+    foreach ($choices_array as $value) {
+        $ticked = in_array($value, $chosen_already, true);
+        $string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field($name, $value, $ticked, 'id="' . strtolower($value . '-' . $name) . '"') . $value . '</label></div>' . "\n";
+    }
+    $string .= zen_draw_hidden_field($name, '--none--');
+    return $string;
+}
+
+function zen_cfg_select_multioption_pairs(array $choices_array, string $stored_value, string $config_key_name = ''): string
 {
     $string = '';
     $name = (($config_key_name) ? 'configuration[' . $config_key_name . '][]' : 'configuration_value');
