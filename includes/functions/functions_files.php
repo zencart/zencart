@@ -40,15 +40,16 @@ function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Ma
 }
 
 /**
- * Get an array of filenames found in the specified directory, having the specified extension.
- * Includes full path of folders and filename. To get just filename, call basename() on each entry in returned result
+ * Get an iterator of filenames found in the specified directory, having the specified extension.
+ * Each result includes full path of folders and filename. To get just filename, call basename() on each entry in returned result.
  * Sorted alphabetically. Ignores subdirectories.
+ * Ref https://www.php.net/manual/en/class.globiterator.php for methods one can call on the returned object.
  *
  * @param string $directory_path
  * @param string $extension
- * @return array
+ * @return array|GlobIterator (to process with foreach)
  */
-function zen_get_files_in_directory(string $directory_path, string $extension = 'php'): array
+function zen_get_files_in_directory(string $directory_path, string $extension = 'php'): array|GlobIterator
 {
     if (false === zen_directory_is_in_application_dir($directory_path)) {
         return [];
@@ -63,7 +64,7 @@ function zen_get_files_in_directory(string $directory_path, string $extension = 
         $pattern = rtrim($pattern, '/') . '/*.' . trim($extension, './');
     }
 
-    return glob($pattern) ?? [];
+    return new GlobIterator($pattern, FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS);
 }
 
 /**
