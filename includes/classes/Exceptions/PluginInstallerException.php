@@ -7,6 +7,9 @@
 
 namespace Zencart\Exceptions;
 
+/**
+ * @since ZC v1.5.7
+ */
 class PluginInstallerException extends \Exception
 {
 

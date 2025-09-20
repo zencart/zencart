@@ -12,6 +12,7 @@
 /**
  * look up page_id and create link for ez_pages
  * to use this link add '\<a href="' . zen_ez_pages_link($pages_id) . '">\</a>';
+ * @since ZC v1.3.0
  */
   function zen_ez_pages_link($ez_pages_id, $ez_pages_chapter = 0, $ez_pages_is_ssl = true, $ez_pages_open_new_window = false, $ez_pages_return_full_url = false) {
     global $db;

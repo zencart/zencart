@@ -11,6 +11,7 @@
  * @param int $product_id
  * @param bool $specials_price_only
  * @return bool|string the price or false
+ * @since ZC v1.0.3
  */
 function zen_get_products_special_price($product_id, $specials_price_only = false)
 {
@@ -124,6 +125,7 @@ function zen_get_products_special_price($product_id, $specials_price_only = fals
  * Determine Display Price, considering specials/sales/taxes/free/call/etc
  * @param int $product_id
  * @return string HTML markup with spans around different segments of price texts
+ * @since ZC v1.1.0
  */
 function zen_get_products_display_price($product_id)
 {
@@ -444,6 +446,7 @@ function zen_get_products_display_price($product_id)
  * @param int $product_id
  * @param bool $force_retail_price
  * @return float|int
+ * @since ZC v1.1.0
  */
 function zen_get_products_base_price($product_id, bool $force_retail_price = false)
 {
@@ -508,6 +511,7 @@ function zen_get_products_base_price($product_id, bool $force_retail_price = fal
  * Forces the return of a product's retail price.
  * @param int $product_id
  * @return float|int
+ * @since ZC v2.0.0
  */
 function zen_get_products_retail_price($product_id)
 {
@@ -518,6 +522,7 @@ function zen_get_products_retail_price($product_id)
  * Lookup whether the product is marked as free
  * @param int $product_id
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_products_price_is_free($product_id)
 {
@@ -529,6 +534,7 @@ function zen_get_products_price_is_free($product_id)
  * Lookup whether the product is call-for-price
  * @param int $product_id
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_products_price_is_call($product_id)
 {
@@ -540,6 +546,7 @@ function zen_get_products_price_is_call($product_id)
  * Lookup whether the product is priced by attributes
  * @param int $product_id
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_products_price_is_priced_by_attributes($product_id)
 {
@@ -551,6 +558,7 @@ function zen_get_products_price_is_priced_by_attributes($product_id)
  * Lookup a product's minimum quantity
  * @param int $product_id
  * @return string
+ * @since ZC v1.1.0
  */
 function zen_get_products_quantity_order_min($product_id)
 {
@@ -562,6 +570,7 @@ function zen_get_products_quantity_order_min($product_id)
  * Lookup a product's minimum unit order
  * @param int $product_id
  * @return string
+ * @since ZC v1.1.0
  */
 function zen_get_products_quantity_order_units($product_id)
 {
@@ -573,6 +582,7 @@ function zen_get_products_quantity_order_units($product_id)
  * Lookup a product's maximum quantity
  * @param int $product_id
  * @return string
+ * @since ZC v1.1.0
  */
 function zen_get_products_quantity_order_max($product_id)
 {
@@ -584,6 +594,7 @@ function zen_get_products_quantity_order_max($product_id)
  * Lookup a product's quantity box status
  * @param int $product_id
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_products_qty_box_status($product_id)
 {
@@ -595,6 +606,7 @@ function zen_get_products_qty_box_status($product_id)
  * Lookup whether a product's settings allow for mix/match quantities
  * @param int $product_id
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_products_quantity_mixed($product_id)
 {
@@ -608,6 +620,7 @@ function zen_get_products_quantity_mixed($product_id)
  * @param bool $include_break include BR tag in markup
  * @param bool $message_is_for_shopping_cart
  * @return string
+ * @since ZC v1.1.0
  */
 function zen_get_products_quantity_min_units_display($product_id, $include_break = true, $message_is_for_shopping_cart = false)
 {
@@ -677,6 +690,7 @@ function zen_get_products_quantity_min_units_display($product_id, $include_break
  *
  * @param int $product_id
  * @return float|int
+ * @since ZC v1.1.0
  */
 function zen_get_buy_now_qty($product_id)
 {
@@ -724,6 +738,7 @@ function zen_get_buy_now_qty($product_id)
  * @param int|float $attributes_amount
  * @param int|float $check_qty
  * @return bool|float|int|mixed|string
+ * @since ZC v1.1.0
  */
 function zen_get_discount_calc($product_id, $attribute_id = 0, $attributes_amount = 0, $check_qty = 0)
 {
@@ -1013,6 +1028,7 @@ function zen_get_discount_calc($product_id, $attribute_id = 0, $attributes_amoun
  * @param int|bool $categories_id
  * @param string $return_value 'type'|'amount'
  * @return float|int
+ * @since ZC v1.1.0
  */
 function zen_get_products_sale_discount_type($product_id = false, $categories_id = false, $return_value = 'type')
 {
@@ -1130,6 +1146,7 @@ function zen_get_products_sale_discount_type($product_id = false, $categories_id
  * look up discount in sale makers - attributes only can have discounts if set as percentages
  * this gets the discount amount this does not determine when to apply the discount
  * @deprecated since v1.5.5 use zen_get_discount_calc()
+ * @since ZC v1.1.0
  */
 function zen_get_products_sale_discount($product_id = false, $categories_id = false, $display_type = false)
 {
@@ -1141,6 +1158,7 @@ function zen_get_products_sale_discount($product_id = false, $categories_id = fa
  * Specials and Tax Included
  * @param int $product_id
  * @return bool|float|string
+ * @since ZC v1.2.0d
  */
 function zen_get_products_actual_price($product_id)
 {
@@ -1171,6 +1189,7 @@ function zen_get_products_actual_price($product_id)
  * @param float $factor
  * @param float $offset
  * @return float|int
+ * @since ZC v1.2.0d
  */
 function zen_get_attributes_price_factor($price, $special, $factor, $offset)
 {
@@ -1189,6 +1208,7 @@ function zen_get_attributes_price_factor($price, $special, $factor, $offset)
  * @param string $string
  * @param int|float $qty
  * @return int|mixed
+ * @since ZC v1.2.0d
  */
 function zen_get_attributes_qty_prices_onetime($string, $qty)
 {
@@ -1216,6 +1236,7 @@ function zen_get_attributes_qty_prices_onetime($string, $qty)
  * @param int|float $check_for
  * @return mixed|string
  * @deprecated since 1.5.8 use zen_get_attributes_qty_prices_onetime()
+ * @since ZC v1.2.0d
  */
 function zen_get_attributes_quantity_price($check_what, $check_for)
 {
@@ -1234,6 +1255,7 @@ function zen_get_attributes_quantity_price($check_what, $check_for)
  * @param int $attributes_discounted
  * @param bool $include_products_price_in
  * @return bool|float|int|mixed|string
+ * @since ZC v1.2.0d
  */
 function zen_get_attributes_price_final($attribute_id, $qty = 1, $pre_selected = null, $include_onetime = false, $prod_priced_by_attr = false, $attributes_discounted = 0, $include_products_price_in = false)
 {
@@ -1300,6 +1322,7 @@ function zen_get_attributes_price_final($attribute_id, $qty = 1, $pre_selected =
  * @param int $qty
  * @param queryFactoryResult $pre_selected_onetime
  * @return float|int|mixed|string
+ * @since ZC v1.2.0d
  */
 function zen_get_attributes_price_final_onetime($attribute_id, $qty = 1, $pre_selected_onetime = null)
 {
@@ -1333,6 +1356,7 @@ function zen_get_attributes_price_final_onetime($attribute_id, $qty = 1, $pre_se
  * get attributes type
  * @param int $attribute_id
  * @return int|mixed
+ * @since ZC v1.2.0d
  */
 function zen_get_attributes_type($attribute_id)
 {
@@ -1350,6 +1374,7 @@ function zen_get_attributes_type($attribute_id)
  * @param string $string
  * @param int $free number of free words to allow
  * @return int
+ * @since ZC v1.2.0d
  */
 function zen_get_word_count($string, $free = 0)
 {
@@ -1371,6 +1396,7 @@ function zen_get_word_count($string, $free = 0)
  * @param int $free number of free words to allow
  * @param int|float $price per word
  * @return float
+ * @since ZC v1.2.0d
  */
 function zen_get_word_count_price($string, $free = 0, $price = 0)
 {
@@ -1387,6 +1413,7 @@ function zen_get_word_count_price($string, $free = 0, $price = 0)
  * @param string $string
  * @param int $free number of free letters to allow
  * @return int
+ * @since ZC v1.2.0d
  */
 function zen_get_letters_count($string, $free = 0)
 {
@@ -1411,6 +1438,7 @@ function zen_get_letters_count($string, $free = 0)
  * @param int $free number of free letters to allow
  * @param int|float $price price per letter
  * @return float
+ * @since ZC v1.2.0d
  */
 function zen_get_letters_count_price($string, $free = 0, $price = 0)
 {
@@ -1429,6 +1457,7 @@ function zen_get_letters_count_price($string, $free = 0, $price = 0)
  * @param int|float $check_qty Quantity to check against (eg: how many are in the cart)
  * @param int $check_amount
  * @return bool|float|string
+ * @since ZC v1.2.0d
  */
 function zen_get_products_discount_price_qty($product_id, $check_qty, $check_amount = 0)
 {
@@ -1518,6 +1547,7 @@ function zen_get_products_discount_price_qty($product_id, $check_qty, $check_amo
  * @param int $product_id
  * @param int|float $check_qty Quantity of product to check against (eg: that we have in the cart)
  * @return bool
+ * @since ZC v1.2.0d
  */
 function zen_get_discount_qty($product_id, $check_qty = 0)
 {
@@ -1539,6 +1569,7 @@ function zen_get_discount_qty($product_id, $check_qty = 0)
 /**
  * recalculate and set the products_price_sorter field for the specified $product_id
  * @param int $product_id
+ * @since ZC v1.2.0d
  */
 function zen_update_products_price_sorter($product_id)
 {
@@ -1560,6 +1591,7 @@ function zen_update_products_price_sorter($product_id)
  * salemaker categories array
  * @param string $categories_csv
  * @return array
+ * @since ZC v1.2.1d
  */
 function zen_parse_salemaker_categories($categories_csv)
 {
@@ -1574,6 +1606,7 @@ function zen_parse_salemaker_categories($categories_csv)
  * update salemaker product prices per category per product for the specified $salemaker_id
  * @param int $salemaker_id
  * @return bool
+ * @since ZC v1.2.1d
  */
 function zen_update_salemaker_product_prices($salemaker_id)
 {
@@ -1598,6 +1631,7 @@ function zen_update_salemaker_product_prices($salemaker_id)
  * @param int $category_id
  * @param float $price price range
  * @return array|bool
+ * @since ZC v1.5.8
  */
 function zen_get_sale_for_category_and_price($category_id, $price)
 {
@@ -1622,6 +1656,7 @@ function zen_get_sale_for_category_and_price($category_id, $price)
  *
  * @param int $prid
  * @return string
+ * @since ZC v2.0.0
  */
 function zen_get_product_retail_or_wholesale_price(int $prid): string
 {
@@ -1636,6 +1671,7 @@ function zen_get_product_retail_or_wholesale_price(int $prid): string
  * @param mixed $retail_price
  * @param string $wholesale_pricing_tier
  * @return string
+ * @since ZC v2.0.0
  */
 function zen_get_retail_or_wholesale_price($retail_price, string $wholesale_pricing_tier): string
 {

@@ -10,6 +10,7 @@
 
 /**
  * Return a customer greeting string based on login/guest condition
+ * @since ZC v1.0.3
  */
 function zen_customer_greeting(): string
 {
@@ -30,6 +31,7 @@ function zen_customer_greeting(): string
  * @param int|null $customer_id
  * @param bool $check_session unused legacy param
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_count_customer_orders(?int $customer_id = null, $check_session = true): int
 {
@@ -42,6 +44,7 @@ function zen_count_customer_orders(?int $customer_id = null, $check_session = tr
  * look up customer's default/primary address
  * @param int $customer_id
  * @return int|null
+ * @since ZC v1.3.8
  */
 function zen_get_customers_address_primary(int $customer_id): int
 {
@@ -53,6 +56,7 @@ function zen_get_customers_address_primary(int $customer_id): int
 /**
  * @param int|null $customer_id
  * @return array
+ * @since ZC v1.5.8
  */
 function zen_get_customer_address_book_entries(?int $customer_id = null): array
 {
@@ -63,6 +67,7 @@ function zen_get_customer_address_book_entries(?int $customer_id = null): array
 
 /**
  * @deprecated use zen_get_customer_address_book_entries()
+ * @since ZC v1.3.8
  */
 function zen_get_customers_address_book($customer_id) {
     return zen_get_customer_address_book_entries($customer_id);
@@ -73,6 +78,7 @@ function zen_get_customers_address_book($customer_id) {
  * @param bool $check_session unused legacy param
  * @return int
  * @deprecated use Customer::getFormattedAddressBookList or zen_get_customer_address_book_entries()
+ * @since ZC v1.0.3
  */
 function zen_count_customer_address_book_entries(?int $customer_id = null, $check_session = true): int
 {
@@ -83,6 +89,7 @@ function zen_count_customer_address_book_entries(?int $customer_id = null, $chec
  * Concatenate customer first+last names into one string
  * @param $customer_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_customers_name($customer_id): string
 {
@@ -100,6 +107,7 @@ function zen_customers_name($customer_id): string
  * @param string $email
  * @param int $customer_id_to_exclude pass this id to allow for changing the email address
  * @return bool
+ * @since ZC v1.5.8
  */
 function zen_check_email_address_not_already_used(string $email, int $customer_id_to_exclude = 0): bool
 {
@@ -122,6 +130,7 @@ function zen_check_email_address_not_already_used(string $email, int $customer_i
  * validate customer matches session
  * @param int $customer_id
  * @return bool
+ * @since ZC v1.3.6
  */
 function zen_get_customer_validate_session(int $customer_id): bool
 {
@@ -153,6 +162,7 @@ function zen_get_customer_validate_session(int $customer_id): bool
  * This function identifies whether (true) or not (false) the current customer session is
  * associated with a guest-checkout process.
  * @alias Customer::isInGuestCheckout()
+ * @since ZC v1.5.6
  */
 function zen_in_guest_checkout(): bool
 {
@@ -165,6 +175,7 @@ function zen_in_guest_checkout(): bool
 /**
  * This function identifies whether (true) or not (false) a customer is currently logged into the site.
  * @alias Customer::someoneIsLoggedIn()
+ * @since ZC v1.5.6
  */
 function zen_is_logged_in(): bool
 {
@@ -181,6 +192,7 @@ function zen_is_logged_in(): bool
  * @param string $password
  * @param string $email_address
  * @return bool
+ * @since ZC v1.5.7
  */
 function zen_validate_storefront_admin_login($password, $email_address): bool
 {
@@ -241,6 +253,9 @@ function zen_validate_storefront_admin_login($password, $email_address): bool
     return $admin_authorized;
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_update_customers_secret($customerId)
 {
     global $db;
@@ -254,6 +269,9 @@ function zen_update_customers_secret($customerId)
     return $secret;
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_create_hmac_uri($data, $secret)
 {
     $secret = hash('sha256', $secret . GLOBAL_AUTH_KEY);
@@ -275,6 +293,9 @@ function zen_create_hmac_uri($data, $secret)
     return http_build_query($params);
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_is_hmac_login()
 {
     if (!isset($_GET['main_page'], $_GET['hmac'], $_POST['timestamp']) || $_GET['main_page'] !== FILENAME_LOGIN) {
@@ -283,6 +304,9 @@ function zen_is_hmac_login()
     return true;
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_validate_hmac_login()
 {
     global $db, $zenSessionId;
@@ -318,6 +342,9 @@ function zen_validate_hmac_login()
     return hash_equals(hash_hmac('sha256', $hmacData, $secret), $hmacOriginal);
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_validate_hmac_timestamp()
 {
     $currentTime = time();
@@ -326,6 +353,9 @@ function zen_validate_hmac_timestamp()
 }
 
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_validate_hmac_admin_id($adminId)
 {
     global $db;
@@ -360,6 +390,9 @@ function zen_validate_hmac_admin_id($adminId)
     return false;
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_log_hmac_login($params)
 {
     $sql_data_array = array(
@@ -383,7 +416,11 @@ function zen_log_hmac_login($params)
 
 
 
-/** @deprecated  */
+/**
+ * @deprecated - use Customer object instead.
+ *
+ * @since Was originally added in ZC v1.3.9a
+ */
 function zen_user_has_gv_balance($c_id) {
     trigger_error('Call to deprecated function zen_user_has_gv_balance. Use Customer object instead', E_USER_DEPRECATED);
 

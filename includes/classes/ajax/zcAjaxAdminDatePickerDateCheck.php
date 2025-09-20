@@ -5,12 +5,14 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Dec 08 New in v2.0.0-alpha1 $
+ * @since ZC v2.0.0
  */
 class zcAjaxAdminDatePickerDateCheck extends base
 {
     /**
      * check.  Checks a 'datepicker' date for validity
      *
+     * @since ZC v2.0.0
      */
     public function check()
     {

@@ -9,11 +9,15 @@
 
 namespace Zencart;
 
+/**
+ * @since ZC v2.0.0
+ */
 class SessionHandler implements \SessionHandlerInterface
 {
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function close(): bool
     {
@@ -22,6 +26,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function destroy(string $id): bool
     {
@@ -34,6 +39,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function gc(int $max_lifetime): int|false
     {
@@ -46,6 +52,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function open(string $path, string $name): bool
     {
@@ -54,6 +61,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function read(string $id): string|false
     {
@@ -75,6 +83,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function write(string $id, string $data): bool
     {

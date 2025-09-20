@@ -13,6 +13,7 @@
  * @param int $sale_id
  * @param int $status 0|1
  * @return queryFactoryResult
+ * @since ZC v1.2.0d
  */
 function zen_set_salemaker_status($sale_id, $status)
 {
@@ -26,6 +27,7 @@ function zen_set_salemaker_status($sale_id, $status)
 
 /**
  * Auto expire salemaker sales
+ * @since ZC v1.2.0d
  */
 function zen_expire_salemaker()
 {
@@ -52,6 +54,7 @@ function zen_expire_salemaker()
 
 /**
  * Auto start salemaker sales
+ * @since ZC v1.2.0d
  */
 function zen_start_salemaker()
 {

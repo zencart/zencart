@@ -7,12 +7,13 @@
  * @version $Id: Steve 2024 Feb 13 Modified in v2.0.0-beta1 $
  */
 
-/*
+/**
  * Query a 'known' (i.e. by the attributes_id) attribute's details,
  * returning a db QueryFactory response.
  *
  * @param int $attributes_id
  * @return queryFactoryResult
+ * @since ZC v2.0.0
  */
 function zen_get_attribute_details_by_id(int $attributes_id)
 {
@@ -31,7 +32,7 @@ function zen_get_attribute_details_by_id(int $attributes_id)
     return $result;
 }
 
-/*
+/**
  * Query a specific attribute's details, based on the products_id, options_id and
  * options_values_id, returning a db QueryFactory response.
  *
@@ -39,6 +40,7 @@ function zen_get_attribute_details_by_id(int $attributes_id)
  * @param int $options_id
  * @param int $options_values_id
  * @return queryFactoryResult
+ * @since ZC v2.0.0
  */
 function zen_get_attribute_details(int $products_id, int $options_id, int $options_values_id)
 {
@@ -70,6 +72,7 @@ function zen_get_attribute_details(int $products_id, int $options_id, int $optio
  * @param int $product_id
  * @param bool|string $not_readonly
  * @return bool
+ * @since ZC v1.0.3
  */
 function zen_has_product_attributes($product_id, $not_readonly = true)
 {
@@ -121,6 +124,7 @@ function zen_has_product_attributes($product_id, $not_readonly = true)
  *
  * @param int $products_id
  * @return int
+ * @since ZC v1.5.7
  */
 function zen_requires_attribute_selection($products_id)
 {
@@ -189,6 +193,7 @@ function zen_requires_attribute_selection($products_id)
  * Check if option name is not expected to have an option value (ie. text field, or File upload field)
  * @param int|array $option_name_id_array
  * @return bool
+ * @since ZC v1.5.5
  */
 function zen_option_name_base_expects_no_values($option_name_id_array)
 {
@@ -235,6 +240,7 @@ function zen_option_name_base_expects_no_values($option_name_id_array)
  *  Check if product has attributes values
  * @param int $product_id
  * @return bool|string
+ * @since ZC v1.1.0
  */
 function zen_has_product_attributes_values($product_id)
 {
@@ -263,6 +269,7 @@ function zen_has_product_attributes_values($product_id)
  * does not validate download filename
  * @param int $product_id
  * @return bool
+ * @since ZC v1.3.0
  */
 function zen_has_product_attributes_downloads_status($product_id)
 {
@@ -287,6 +294,7 @@ function zen_has_product_attributes_downloads_status($product_id)
  * @param int $options_id
  * @param int $options_values_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_attributes_sort_order($products_id, $options_id, $options_values_id)
 {
@@ -294,7 +302,7 @@ function zen_get_attributes_sort_order($products_id, $options_id, $options_value
     return ($result->EOF) ? '0' : $result->fields['products_options_sort_order'];
 }
 
-/*
+/**
  * Query a specific option's details,
  * based on an options_id and an optional language_id,
  * returning a db QueryFactory response.
@@ -302,6 +310,7 @@ function zen_get_attributes_sort_order($products_id, $options_id, $options_value
  * @param int $options_id
  * @param int $language_id (optional)
  * @return queryFactoryResult
+ * @since ZC v2.0.0
  */
 function zen_get_option_details(int $options_id, int $language_id = 0)
 {
@@ -327,6 +336,7 @@ function zen_get_option_details(int $options_id, int $language_id = 0)
  * @param int $options_values_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_attributes_options_sort_order($products_id, $options_id, $options_values_id, $language_id = 0)
 {
@@ -345,6 +355,7 @@ function zen_get_attributes_options_sort_order($products_id, $options_id, $optio
  * @param string $option
  * @param string|mixed $value
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_attributes_valid($product_id, $option, $value)
 {
@@ -376,6 +387,7 @@ function zen_get_attributes_valid($product_id, $option, $value)
  * Return Options_Name from ID
  * @param int $options_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_options_name($options_id)
 {
@@ -391,6 +403,7 @@ function zen_options_name($options_id)
  * @param  int|string  $values_id
  * @param  int  $languages_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_values_name(int|string $values_id, int $languages_id = 0): string
 {
@@ -411,6 +424,7 @@ function zen_values_name(int|string $values_id, int $languages_id = 0): string
  * @param int $products_options_id
  * @param int $products_options_values_id
  * @return bool
+ * @since ZC v1.0.3
  */
 function zen_validate_options_to_options_value($products_options_id, $products_options_values_id)
 {
@@ -427,6 +441,7 @@ function zen_validate_options_to_options_value($products_options_id, $products_o
  * look-up Attributues Options Name products_options_values_to_products_options
  * @param int $option_values_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_products_options_name_from_value($option_values_id)
 {
@@ -452,6 +467,7 @@ function zen_get_products_options_name_from_value($option_values_id)
  * @param int $option_id
  * @param int $value_id
  * @return string
+ * @since ZC v1.5.7a
  */
 function zen_get_attributes_image(int $product_id, $option_id, $value_id)
 {
@@ -463,6 +479,7 @@ function zen_get_attributes_image(int $product_id, $option_id, $value_id)
  * @param int $products_id_from
  * @param int $products_id_to
  * @return bool
+ * @since ZC v1.0.3
  */
 function zen_copy_products_attributes($products_id_from, $products_id_to)
 {
@@ -647,6 +664,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
  * @param int $option_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_option_name_language($option_id, $language_id)
 {
@@ -659,6 +677,7 @@ function zen_get_option_name_language($option_id, $language_id)
  * @param int $option_id
  * @param int $language_id
  * @return string|mixed
+ * @since ZC v1.0.3
  */
 function zen_get_option_name_language_sort_order($option_id, $language_id)
 {
@@ -670,6 +689,7 @@ function zen_get_option_name_language_sort_order($option_id, $language_id)
 /**
  * Delete all attributes for a specified product
  * @param int $product_id
+ * @since ZC v1.0.3
  */
 function zen_delete_products_attributes($product_id)
 {
@@ -691,6 +711,7 @@ function zen_delete_products_attributes($product_id)
 /**
  * Set Product Attributes Sort Order to Products Option Value Sort Order for specified product
  * @param int $product_id
+ * @since ZC v1.0.3
  */
 function zen_update_attributes_products_option_values_sort_order($product_id)
 {
@@ -713,6 +734,7 @@ function zen_update_attributes_products_option_values_sort_order($product_id)
  * @param int $product_id
  * @param bool $check_if_valid
  * @return string
+ * @since ZC v1.1.0
  */
 function zen_has_product_attributes_downloads($product_id, $check_if_valid = false)
 {
@@ -749,6 +771,7 @@ function zen_has_product_attributes_downloads($product_id, $check_if_valid = fal
  * Is the option_id a File option-type?
  * @param int $option_id
  * @return bool
+ * @since ZC v1.5.7
  */
 function zen_is_option_file($option_id)
 {
@@ -767,6 +790,7 @@ function zen_is_option_file($option_id)
  * Check that the specified download filename exists on the filesystem (or is defined as a downloadable URL)
  * @param string $check_filename
  * @return bool
+ * @since ZC v1.2.1d
  */
 function zen_orders_products_downloads($check_filename)
 {
@@ -799,6 +823,7 @@ function zen_orders_products_downloads($check_filename)
 /**
  * Check if the specified download filename matches a handler for an external download service
  * If yes, it will be because the filename contains colons as delimiters ... service:filename:filesize
+ * @since ZC v1.5.6
  */
 function zen_get_download_handler($filename)
 {
@@ -812,9 +837,10 @@ function zen_get_download_handler($filename)
     return $file_parts[0];
 }
 
-/***
+/**
  * Do the misconfiguration check which Admin > Catalog > Downloads Manager
  * does to verify that downloads don't have invalid shipping settings.
+ * @since ZC v1.5.8
  */
 function zen_check_for_misconfigured_downloads() {
    global $db;

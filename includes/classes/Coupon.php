@@ -4,10 +4,14 @@ declare(strict_types=1);
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Oct 17 Modified in v2.1.0 $
+ * @since ZC v2.0.0
  */
 
 class Coupon extends base
 {
+    /**
+     * @since ZC v2.0.0
+     */
     public static function codeExists(string $code): bool
     {
         global $db;
@@ -20,6 +24,9 @@ class Coupon extends base
         return $db->Execute($sql)->RecordCount() > 0;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function disable(int|string $coupon_id): void
     {
         global $db;
@@ -29,6 +36,9 @@ class Coupon extends base
         $db->Execute($sql);
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function enable(int|string $coupon_id): void
     {
         global $db;
@@ -38,6 +48,9 @@ class Coupon extends base
         $db->Execute($sql);
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function deleteDuplicates(string $origin_prefix): array
     {
         global $db;
@@ -73,6 +86,9 @@ class Coupon extends base
         return $results;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function make_duplicates(int|string $original_id, int|string $new_code, int $quantity): bool
     {
         for ($i = 1; $i <= $quantity; $i++) {
@@ -172,6 +188,7 @@ class Coupon extends base
      * @param int $length - this is the desired length of the generated code; will be ignored if longer than length of db field
      * @param string $prefix - include a prefix string if you want to force the generated code to start with a specific string
      * @return string (new coupon code) (will be blank if the function failed)
+     * @since ZC v2.0.0
      */
     public static function generateRandomCouponCode(string $salt = "secret", $length = SECURITY_CODE_LENGTH, string $prefix = ''): string
     {
@@ -217,6 +234,9 @@ class Coupon extends base
         return '';
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function getAllCouponsByName(): array
     {
         global $db;

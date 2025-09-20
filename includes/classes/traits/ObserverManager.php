@@ -9,6 +9,9 @@ namespace Zencart\Traits;
 
 use Zencart\Events\EventDto;
 
+/**
+ * @since ZC v1.5.8
+ */
 trait ObserverManager
 {
     private static array $deprecatedNotifications = [
@@ -26,6 +29,7 @@ trait ObserverManager
      *
      * @param object $observer Reference to the observer class
      * @param array $eventIDArray Array of eventId's to observe
+     * @since ZC v1.5.8
      */
     public function attach(&$observer, array $eventIDArray): void
     {
@@ -48,6 +52,7 @@ trait ObserverManager
      *
      * @param object $observer
      * @param array $eventIDArray
+     * @since ZC v1.5.8
      */
     public function detach($observer, array $eventIDArray): void
     {
@@ -57,6 +62,9 @@ trait ObserverManager
         }
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function registerDeprecatedEvent(string $oldEventId, string $newEventId): void
     {
         if (array_key_exists($oldEventId, self::$deprecatedNotifications)) {

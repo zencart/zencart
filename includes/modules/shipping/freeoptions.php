@@ -5,6 +5,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
+ * @since ZC v1.3.0
  */
 class freeoptions extends ZenShipping
 {
@@ -32,6 +33,7 @@ class freeoptions extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     public function update_status()
     {
@@ -73,6 +75,9 @@ class freeoptions extends ZenShipping
     // This function checks to see if the order's total, weight or number-of-items qualifies for the
     // Free Options shipping method.
     //
+    /**
+     * @since ZC v1.5.8
+     */
     protected function checkForFreeOptions()
     {
         global $order;
@@ -163,6 +168,9 @@ class freeoptions extends ZenShipping
     // -----
     // Return the "Free Options" quote, as requested.
     //
+    /**
+     * @since ZC v1.3.0
+     */
     public function quote($method = ''): array
     {
         global $order;
@@ -194,6 +202,9 @@ class freeoptions extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.3.0
+     */
     public function check()
     {
         global $db;
@@ -204,6 +215,9 @@ class freeoptions extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function get_configuration_errors()
     {
         if (!zen_check_for_misconfigured_downloads()) {
@@ -211,6 +225,9 @@ class freeoptions extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.3.0
+     */
     public function install(): void
     {
         global $db;
@@ -239,11 +256,17 @@ See: freeshipper<br><br>Do you want to offer per freeoptions rate shipping?', '6
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Sort Order', 'MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/'];
     }
 
+    /**
+     * @since ZC v1.3.0
+     */
     public function keys(): array
     {
         return [

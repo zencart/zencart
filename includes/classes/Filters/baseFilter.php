@@ -7,8 +7,14 @@
 
 namespace Zencart\Filters;
 
+/**
+ * @since ZC v1.5.8
+ */
 class baseFilter
 {
+    /**
+     * @since ZC v1.5.8
+     */
     protected function makeSelect(array $options, string $default, array $parameters) : string
     {
         $parameters['autoJs'] = ($parameters['auto']) ? 'onChange="this.form.submit();"' : '';

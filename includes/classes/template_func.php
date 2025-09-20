@@ -14,15 +14,22 @@ if (!defined('IS_ADMIN_FLAG')) {
  * template_func Class.
  * This class is used to for template-override calculations
  *
+ * @since ZC v1.0.3
  */
 class template_func extends base
 {
+    /**
+     * @since ZC v1.0.3
+     */
     public function get_template_part(string $page_directory, string $template_part, string $file_extension = '.php'): array
     {
         $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
         return $pageLoader->getTemplatePart($page_directory, $template_part, $file_extension);
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function get_template_dir(string $template_code, string $current_template, string $current_page, string $template_dir): string
     {
         $pageLoader = Zencart\PageLoader\PageLoader::getInstance();

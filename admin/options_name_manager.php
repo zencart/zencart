@@ -399,6 +399,7 @@ foreach ($products_options_types_list as $id => $text) {
 /**
  * @param $opt_type
  * @return mixed
+ * @since ZC v1.1.0
  */
 function translate_type_to_name($opt_type)
 {

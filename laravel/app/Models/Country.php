@@ -9,6 +9,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v2.0.0
+ */
 class Country extends Eloquent
 {
     protected $table = TABLE_COUNTRIES;
@@ -16,6 +19,9 @@ class Country extends Eloquent
     public $timestamps = false;
     protected $guarded = [];
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function zones()
     {
         return $this->hasMany(Zone::class, 'zone_country_id', 'countries_id');

@@ -7,6 +7,9 @@
 
 namespace Zencart\PluginSupport;
 
+/**
+ * @since ZC v1.5.7
+ */
 class PluginErrorContainer
 {
 
@@ -31,16 +34,25 @@ class PluginErrorContainer
         $this->friendlyErrors = [];
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function hasLogErrors()
     {
         return (count($this->logErrors));
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function hasFriendlyErrors()
     {
         return (count($this->friendlyErrors));
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function addError($logSeverity, $logMessage, $useLogMessageForFriendly = false, $friendlyMessage = '')
     {
         if ($useLogMessageForFriendly) {
@@ -55,16 +67,25 @@ class PluginErrorContainer
         }
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function hasErrors()
     {
         return (count($this->logErrors + $this->friendlyErrors));
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getFriendlyErrors()
     {
         return $this->friendlyErrors;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getLogErrors()
     {
         return $this->logErrors;

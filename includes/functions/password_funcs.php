@@ -7,8 +7,11 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
-// //
-// This function validates a plain text password with an encrypted password
+
+/**
+ * This function validates a plain text password with an encrypted password
+ * @since ZC v1.0.3
+ */
 function zen_validate_password($plain, $encrypted, $userRef = NULL)
 {
   $zcPassword = zcPassword::getInstance(PHP_VERSION);
@@ -19,6 +22,7 @@ function zen_validate_password($plain, $encrypted, $userRef = NULL)
  * This function makes a new password from a plaintext password.
  * @param $plain
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_encrypt_password($plain)
 {
@@ -29,6 +33,7 @@ function zen_encrypt_password($plain)
  * this function makes a sha256 password from a plaintext password.
  * @param $plain
  * @return string
+ * @since ZC v1.5.3
  */
 function zen_encrypt_password_new($plain)
 {
@@ -40,7 +45,10 @@ function zen_encrypt_password_new($plain)
   $password = hash('sha256', $salt . $plain) . ':' . $salt;
   return $password;
 }
-// //
+
+/**
+ * @since ZC v1.0.3
+ */
 function zen_create_random_value($length, $type = 'mixed')
 {
   if (($type != 'mixed') && ($type != 'chars') && ($type != 'digits'))
@@ -81,6 +89,7 @@ function zen_create_random_value($length, $type = 'mixed')
  * @param int $size
  *          the size of random data to use while generating the hash.
  * @return string the randomized salt
+ * @since ZC v1.5.1
  */
 function zen_get_entropy($hash = 'sha1', $size = 32)
 {
@@ -164,6 +173,9 @@ function zen_get_entropy($hash = 'sha1', $size = 32)
 
   return hash($hash, $data);
 }
+/**
+ * @since ZC v1.5.1
+ */
 function zen_create_PADSS_password($length = 8)
 {
   $charsAlpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -184,6 +196,9 @@ function zen_create_PADSS_password($length = 8)
   }
   return $password;
 }
+/**
+ * @since ZC v1.5.1
+ */
 function zen_pwd_rand($min = 0, $max = 10)
 {
   static $seed;

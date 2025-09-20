@@ -7,6 +7,7 @@
 
 /**
  * Class AdminRequestSanitizer
+ * @since ZC v1.5.5
  */
 class AdminRequestSanitizer extends base
 {
@@ -59,6 +60,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @return AdminRequestSanitizer
+     * @since ZC v1.5.5a
      */
     public static function getInstance()
     {
@@ -89,6 +91,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param $sanitizerType
      * @param $sanitizerEntries
+     * @since ZC v1.5.5a
      */
     public function addSimpleSanitization($sanitizerType, $sanitizerEntries)
     {
@@ -100,6 +103,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $sanitizationEntries
+     * @since ZC v1.5.5a
      */
     public function addComplexSanitization($sanitizationEntries)
     {
@@ -110,6 +114,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $sanitizertypes
+     * @since ZC v1.5.5a
      */
     public function addSanitizerTypes($sanitizertypes)
     {
@@ -120,6 +125,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @return array
+     * @since ZC v1.5.5
      */
     public function getGetKeysAlreadySanitized()
     {
@@ -128,6 +134,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @return array
+     * @since ZC v1.5.5
      */
     public function getPostKeysAlreadySanitized()
     {
@@ -136,6 +143,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5a
      */
     public function setPostKeyAlreadySanitized($parameterName)
     {
@@ -144,6 +152,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5a
      */
     public function setGetKeyAlreadySanitized($parameterName)
     {
@@ -152,6 +161,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $debug
+     * @since ZC v1.5.5
      */
     public function setDebug($debug)
     {
@@ -160,6 +170,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @return bool
+     * @since ZC v1.5.5a
      */
     public function getDebug()
     {
@@ -168,6 +179,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $doStrictSanitize
+     * @since ZC v1.5.5a
      */
     public function setDoStrictSanitization($doStrictSanitize)
     {
@@ -176,6 +188,7 @@ class AdminRequestSanitizer extends base
 
     /**
      *
+     * @since ZC v1.5.5
      */
     public function runSanitizers()
     {
@@ -205,6 +218,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param $parameterName
      * @param $parameterDefinition
+     * @since ZC v1.5.5a
      */
     private function runSpecificSanitizer($parameterName, $parameterDefinition)
     {
@@ -219,6 +233,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param array $parameterDefinitions
      * @return bool
+     * @since ZC v1.5.5a
      */
     private function findSanitizerFromContext($parameterDefinitions)
     {
@@ -240,6 +255,7 @@ class AdminRequestSanitizer extends base
      * @param $parameterName
      * @param $parameterDefinitions
      * @return bool]
+     * @since ZC v1.5.5a
      */
     private function findSanitizerFromRequestMethod($parameterName, $parameterDefinitions)
     {
@@ -260,6 +276,7 @@ class AdminRequestSanitizer extends base
      * @param $parameterName
      * @param $parameterDefinition
      * @return bool
+     * @since ZC v1.5.5a
      */
     private function parameterExistsForMethod($parameterName, $parameterDefinition)
     {
@@ -280,6 +297,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param $requestParameter
      * @param $parameterDetail
+     * @since ZC v1.5.5a
      */
     private function addRequestParameter($requestParameter, $parameterDetail)
     {
@@ -295,6 +313,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $sanitizerName
+     * @since ZC v1.5.5
      */
     private function processBuiltIn($sanitizerName, $parameterName, $parameterDefinition)
     {
@@ -308,6 +327,7 @@ class AdminRequestSanitizer extends base
      * @param $sanitizerName
      * @param $parameterName
      * @param $parameterDefinition
+     * @since ZC v1.5.5
      */
     private function processCustom($sanitizerName, $parameterName, $parameterDefinition)
     {
@@ -318,6 +338,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5a
      */
     private function filterNullAction($parameterName)
     {
@@ -335,6 +356,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterSimpleAlphanumPlus($parameterName)
     {
@@ -354,6 +376,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterConvertInt($parameterName)
     {
@@ -373,6 +396,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterFileDirRegex($parameterName)
     {
@@ -390,6 +414,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterAlphanumDashUnderscore($parameterName)
     {
@@ -411,6 +436,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterWordsAndSymbolsRegex($parameterName)
     {
@@ -431,6 +457,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterProductDescRegex($parameterName)
     {
@@ -455,6 +482,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterMetaTags($parameterName)
     {
@@ -478,6 +506,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterSanitizeEmail($parameterName)
     {
@@ -498,6 +527,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5a
      */
     private function filterSanitizeEmailAudience($parameterName)
     {
@@ -513,6 +543,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterProductUrlRegex($parameterName)
     {
@@ -546,6 +577,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.6
      */
     private function filterFilePathOrUrlRegex($parameterName)
     {
@@ -577,6 +609,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterCurrencyValueRegex($parameterName)
     {
@@ -592,6 +625,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5a
      */
     private function filterFloatValueRegex($parameterName)
     {
@@ -608,6 +642,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param $parameterName
      * @param $parameterDefinition
+     * @since ZC v1.5.5a
      */
     private function filterMultiDimensional($parameterName, $parameterDefinition)
     {
@@ -696,6 +731,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param $parameterName
      * @param $parameterDefinition
+     * @since ZC v1.5.6
      */
     private function filterSimpleArray($parameterName, $parameterDefinition)
     {
@@ -768,6 +804,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $parameterName
+     * @since ZC v1.5.5
      */
     private function filterProductNameDeepRegex($parameterName)
     {
@@ -793,6 +830,7 @@ class AdminRequestSanitizer extends base
 
     /**
      *
+     * @since ZC v1.5.5
      */
     private function filterStrictSanitizeValues()
     {
@@ -811,6 +849,7 @@ class AdminRequestSanitizer extends base
      * @param $ignore
      * @param bool|false $inner
      * @return mixed
+     * @since ZC v1.5.5
      */
     private function traverseStrictSanitize(&$item, $ignore, $inner, $type)
     {
@@ -857,6 +896,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param $group
+     * @since ZC v1.5.5b
      */
     private function addParamsToIgnore($group)
     {
@@ -880,6 +920,7 @@ class AdminRequestSanitizer extends base
 
     /**
      *
+     * @since ZC v1.5.5
      */
     private function filterStrictSanitizeKeys()
     {
@@ -902,6 +943,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param $type
      * @param $key
+     * @since ZC v1.5.5b
      */
     private function addKeyAlreadySanitized($type, $key)
     {
@@ -915,6 +957,7 @@ class AdminRequestSanitizer extends base
 
     /**
      * @param array $errorMessages
+     * @since ZC v1.5.5
      */
     private function errorLog($errorMessages = array())
     {
@@ -934,6 +977,7 @@ class AdminRequestSanitizer extends base
     /**
      * @param string $parameterName      the sub-parameter (key) to be added to the $this->arrayname if $this->arrayname has already been defined as a non-empty string.
      * @return string                    the newly built arrayname to be assigned/evaluated as necessary.
+     * @since ZC v1.5.6
      */
     private function setCurrentArrayName($parameterName)
     {

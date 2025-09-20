@@ -10,6 +10,7 @@
 
 /**
  * product-specific meta tags
+ * @since ZC v1.5.8
  */
 function zen_get_product_metatag_fields($product_id, $language_id, $specific_field = null)
 {
@@ -29,6 +30,7 @@ function zen_get_product_metatag_fields($product_id, $language_id, $specific_fie
 
 /**
  * Category-specific metatags
+ * @since ZC v1.5.8
  */
 function zen_get_category_metatag_fields($category_id, $language_id, $specific_field = null)
 {

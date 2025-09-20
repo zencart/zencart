@@ -11,6 +11,7 @@
  * by streaming as a direct memory-feed from disk-to-browser, handled
  * completely by PHP. This can be a RAM drain. Redirect is better.
  *
+ * @since ZC v1.5.6
  */
 class zcObserverDownloadsViaStreaming extends base {
 
@@ -30,6 +31,7 @@ class zcObserverDownloadsViaStreaming extends base {
    * @param string $browser_filename (mutable)
    * @param string $source_directory (mutable)
    * @param integer $downloadFilesize (mutable)
+   * @since ZC v1.5.6
    */
   protected function updateNotifyDownloadReadyToStream(&$class, $eventID, $array, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize)
   {

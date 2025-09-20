@@ -10,6 +10,7 @@
 /**
  * Enter description here...
  *
+ * @since ZC v1.0.3
  */
 class ot_gv {
 
@@ -134,6 +135,7 @@ class ot_gv {
   /**
    * Enter description here...
    *
+   * @since ZC v1.0.3
    */
   function process() {
     global $order, $currencies;
@@ -161,12 +163,14 @@ class ot_gv {
   }
   /**
    * This is called to reset any GV values, effectively cancelling all GV's applied during current login session
+   * @since ZC v1.3.0
    */
   function clear_posts() {
     unset($_SESSION['cot_gv']);
   }
   /**
    * This just checks to see whether the currently-logged-in customer has any GV credits on their account
+   * @since ZC v1.0.3
    */
   function selection_test() {
     if ($this->user_has_gv_account($_SESSION['customer_id'])) {
@@ -179,6 +183,7 @@ class ot_gv {
    * Check for validity of redemption amounts and recalculate order totals to include proposed GV redemption deductions
    *
    * @TODO - Per order_total class, this function is not used. See process() instead.
+   * @since ZC v1.0.3
    */
   function pre_confirmation_check($order_total) {
     global $order, $currencies, $messageStack;
@@ -207,6 +212,7 @@ class ot_gv {
   }
   /**
    * if customer has a GV balance, then we display the input field to allow entry of desired GV redemption amount
+   * @since ZC v1.0.3
    */
   function use_credit_amount() {
     $output_string = '';
@@ -217,6 +223,7 @@ class ot_gv {
   }
   /**
    * queue or release newly-purchased GV's
+   * @since ZC v1.0.3
    */
   function update_credit_account($i) {
     global $db, $order, $insert_id;
@@ -264,6 +271,7 @@ class ot_gv {
 
     /**
     * check system to see if GVs should be made available or not. If true, then supply GV-selection fields on checkout pages
+     * @since ZC v1.0.3
     */
     function credit_selection()
     {
@@ -306,6 +314,7 @@ class ot_gv {
 
   /**
    * Verify that the customer has entered a valid redemption amount, and return the amount that can be applied to this order
+   * @since ZC v1.0.3
    */
   function apply_credit() {
     global $db, $order;
@@ -327,6 +336,7 @@ class ot_gv {
   }
   /**
    * Check to see if redemption code has been entered and redeem if valid
+   * @since ZC v1.0.3
    */
   function collect_posts() {
     global $db, $currencies, $messageStack;
@@ -389,6 +399,7 @@ class ot_gv {
   }
   /**
    * Calculate GV claim amount (GV amounts are always based on the STORE's default currency value)
+   * @since ZC v1.0.3
    */
   function calculate_credit($save_total_cost) {
     global $db, $order, $currencies;
@@ -403,6 +414,9 @@ class ot_gv {
     return zen_round($gv_payment_amount,2);
   }
 
+  /**
+   * @since ZC v1.3.8
+   */
   function calculate_deductions($order_total) {
     global $db, $order;
     $od_amount = array();
@@ -448,6 +462,7 @@ class ot_gv {
   /**
    * Check to see whether current customer has a GV balance available
    * Returns amount of GV balance on account
+   * @since ZC v1.0.3
    */
   function user_has_gv_account($c_id) {
     global $db;
@@ -459,6 +474,7 @@ class ot_gv {
   }
   /**
    * Recalculates base order-total amount for use in deduction calculations
+   * @since ZC v1.0.3
    */
   function get_order_total() {
     global $order;
@@ -487,6 +503,7 @@ class ot_gv {
    * Enter description here...
    *
    * @return unknown
+   * @since ZC v1.0.3
    */
   function check() {
     global $db;
@@ -514,6 +531,7 @@ class ot_gv {
    * Enter description here...
    *
    * @return unknown
+   * @since ZC v1.0.3
    */
   function keys() {
     return array('MODULE_ORDER_TOTAL_GV_STATUS', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', 'MODULE_ORDER_TOTAL_GV_QUEUE',
@@ -524,6 +542,7 @@ class ot_gv {
   /**
    * Enter description here...
    *
+   * @since ZC v1.0.3
    */
   function install() {
     global $db;
@@ -540,6 +559,9 @@ class ot_gv {
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Allow Gift Voucher Specials', 'MODULE_ORDER_TOTAL_GV_SPECIAL', 'false', 'Do you want to allow Gift Voucher to be placed on Special?', '6', '3','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
 
+  /**
+   * @since ZC v1.5.8
+   */
   function help() {
        return array('link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/');
   }
@@ -547,6 +569,7 @@ class ot_gv {
   /**
    * Enter description here...
    *
+   * @since ZC v1.0.3
    */
   function remove() {
     global $db;

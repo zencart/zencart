@@ -9,6 +9,7 @@
 
 /**
  * Class objectInfo
+ * @since ZC v1.0.3
  */
 #[AllowDynamicProperties]
 class objectInfo
@@ -23,6 +24,7 @@ class objectInfo
 
     /**
      * @param $object_array array
+     * @since ZC v1.0.3
      */
     public function objectInfo($object_array)
     {
@@ -36,6 +38,7 @@ class objectInfo
 
     /**
      * @param $object_array array
+     * @since ZC v1.5.5
      */
     public function updateObjectInfo($object_array)
     {
@@ -46,11 +49,17 @@ class objectInfo
         }
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     public function __isset($field)
     {
         return isset($this->$field);
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     public function __set($field, $value)
     {
         $this->$field = $value;
@@ -59,6 +68,7 @@ class objectInfo
     /**
      * @param $field
      * @return array|string
+     * @since ZC v1.5.6
      */
     public function __get($field)
     {

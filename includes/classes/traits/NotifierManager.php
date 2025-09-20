@@ -9,11 +9,15 @@ namespace Zencart\Traits;
 
 use Zencart\Events\EventDto;
 
+/**
+ * @since ZC v1.5.8
+ */
 trait NotifierManager
 {
     /**
      * Array of notifier aliases (where Notifier hook names have been renamed, such as for minor misspellings)
      * In your own application code, you may add to this list by calling $this->registerObserverAlias($old,$new)
+     * @since ZC v1.5.8
      */
     private array $observerAliases = [
         'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE',
@@ -45,6 +49,7 @@ trait NotifierManager
      *
      * NOTE: The $param1 is not received-by-reference, but params 2-9 are.
      * NOTE: The $param1 value CAN be an array, and is sometimes typecast to be an array, but can also safely be a string or int etc if the notifier sends such and the observer class expects same.
+     * @since ZC v1.5.8
      */
     public function notify(
         string $eventID,
@@ -114,6 +119,9 @@ trait NotifierManager
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9): void
     {
         if (!defined('NOTIFIER_TRACE') || empty(NOTIFIER_TRACE) || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
@@ -148,16 +156,25 @@ trait NotifierManager
         error_log($zcDate->output("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function eventIdHasAlias($eventId): bool
     {
         return array_key_exists($eventId, $this->observerAliases);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function substituteAlias($eventId): bool|int|string
     {
         return array_search($eventId, $this->observerAliases, true);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function registerObserverAlias(string $oldEventId, string $newEventId): void
     {
         if ($this->eventIdHasAlias($oldEventId)) {

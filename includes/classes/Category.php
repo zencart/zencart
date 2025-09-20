@@ -8,6 +8,7 @@ declare(strict_types=1);
  * based on Product
  * @var language $lng
  * @var queryFactory $db
+ * @since ZC v2.1.0
  */
 
 use Zencart\Traits\NotifierManager;
@@ -38,6 +39,9 @@ class Category
         }
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function forLanguage(?int $language_id): self
     {
         $this->data = $this->getDataForLanguage($language_id);
@@ -46,6 +50,9 @@ class Category
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function withDefaultLanguage(): self
     {
         $this->data = $this->getDataForLanguage();
@@ -54,11 +61,17 @@ class Category
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getData(): ?array
     {
         return $this->data;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function get(string $name)
     {
         return $this->data[$name] ?? $this->data['lang'][$this->languages[(int)$_SESSION['languages_id']]][$name] ?? null;
@@ -66,6 +79,7 @@ class Category
 
     /**
      * Same as getData(), but for specific language only
+     * @since ZC v2.1.0
      */
     public function getDataForLanguage(?int $language_id = null): ?array
     {
@@ -92,35 +106,56 @@ class Category
         return $data;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getId(): ?int
     {
         return $this->category_id;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function exists(): bool
     {
         return !empty($this->category_id) && !empty($this->data);
     }
+    /**
+     * @since ZC v2.1.0
+     */
     public function isValid(): bool
     {
         return !empty($this->data);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function status(): int
     {
         return (int)($this->data['categories_status'] ?? 0);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getInfoPage(): string
     {
         return $this->getTypeHandler() . '_info';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function __get(string $name)
     {
         return $this->get($name);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     protected function loadCategoryDetails(int $category_id, ?int $language_id = null): array
     {
         global $db;
@@ -141,6 +176,7 @@ class Category
 
         /**
          * Add $data['lang'][code] = [categories_name, categories_description, etc] for each language
+         * @since ZC v2.1.0
          */
         $sql = "SELECT *
                 FROM " . TABLE_CATEGORIES_DESCRIPTION . "

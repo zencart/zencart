@@ -9,6 +9,7 @@
 /**
  * Store-Pickup / Will-Call shipping method
  * with multiple location choices as radio-buttons
+ * @since ZC v1.1.0
  */
 class storepickup extends ZenShipping
 {
@@ -47,6 +48,7 @@ class storepickup extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.2
      */
     function update_status()
     {
@@ -96,6 +98,7 @@ class storepickup extends ZenShipping
      *
      * @param string $method
      * @return array
+     * @since ZC v1.1.0
      */
     function quote($method = ''): array
     {
@@ -153,6 +156,7 @@ class storepickup extends ZenShipping
      * Check to see whether module is installed
      *
      * @return boolean
+     * @since ZC v1.1.0
      */
     function check()
     {
@@ -170,6 +174,7 @@ class storepickup extends ZenShipping
     /**
      * Install the shipping module and its configuration settings
      *
+     * @since ZC v1.1.0
      */
     function install(): void
     {
@@ -187,6 +192,7 @@ class storepickup extends ZenShipping
      * Internal list of configuration keys used for configuration of the module
      *
      * @return array
+     * @since ZC v1.1.0
      */
     function keys(): array
     {

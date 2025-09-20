@@ -12,6 +12,7 @@
  * it can be used in procedural (non OOP) code to set up an observer
  * see the observer/notifier tutorial for more details.
  *
+ * @since ZC v1.3.0
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

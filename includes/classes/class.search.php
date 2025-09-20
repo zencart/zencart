@@ -16,6 +16,7 @@ use Zencart\Exceptions\SearchException;
  * Search Options for when searching the product catalogue.
  * Constructor attempts to initialise from $_GET query parameters, or
  * alternatively the fields may be set directly.
+ * @since ZC v2.0.0
  */
 class SearchOptions
 {
@@ -62,6 +63,7 @@ class SearchOptions
 
 /**
  * Helper class to perform searches of the product catalogue.
+ * @since ZC v2.0.0
  */
 class Search extends \base
 {
@@ -72,6 +74,7 @@ class Search extends \base
      * Return the current SearchOptions, if any.
      *
      * @return SearchOptions
+     * @since ZC v2.0.0
      */
     public function getSearchOptions(): SearchOptions
     {
@@ -83,6 +86,7 @@ class Search extends \base
      *
      * @param SearchOptions $searchOptions
      * @return void
+     * @since ZC v2.0.0
      */
     public function setSearchOptions(SearchOptions $searchOptions)
     {
@@ -95,6 +99,7 @@ class Search extends \base
      *
      * @param SearchOptions $searchOptions The options for the search.
      * @return string The built SQL.
+     * @since ZC v2.0.0
      */
     public function buildSearchSQL() {
         global $db, $messageStack, $currencies, $column_list;

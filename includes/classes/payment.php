@@ -19,6 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Payment Class.
  * This class interfaces with payment modules
  *
+ * @since ZC v1.0.3
  */
 class payment
 {
@@ -144,6 +145,9 @@ class payment
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function checkCreditCovered(): bool
     {
         global $credit_covers;
@@ -162,6 +166,9 @@ class payment
     // perform common determination of whether the currently-selected
     // module is present, enabled and includes the submitted method.
     //
+    /**
+     * @since ZC v2.1.0
+     */
     protected function isPaymentModuleMethodPresent(string $method): bool
     {
         if (empty($this->selected_module) || !is_array($this->modules) || !is_object($GLOBALS[$this->selected_module])) {
@@ -181,6 +188,7 @@ class payment
      * Modules should implement this method to inspect the current order address
      * for to determine if the module should remain enabled,
      * and set their own $this->enabled property accordingly.
+     * @since ZC v1.0.3
      */
     public function update_status()
     {
@@ -190,6 +198,9 @@ class payment
         return $GLOBALS[$this->selected_module]->update_status();
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function javascript_validation(): string
     {
         if (!is_array($this->modules) || empty($this->selection())) {
@@ -241,6 +252,9 @@ class payment
         return $js;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function selection(): array
     {
         if (!is_array($this->modules)) {
@@ -270,6 +284,9 @@ class payment
         return $selection_array;
     }
 
+    /**
+     * @since ZC v1.3.7
+     */
     public function in_special_checkout(): bool
     {
         if (!is_array($this->modules)) {
@@ -290,6 +307,9 @@ class payment
         return $result;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function pre_confirmation_check(): void
     {
         global $credit_covers, $payment_modules;
@@ -310,6 +330,9 @@ class payment
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function confirmation(): array
     {
         $default = ['title' => '', 'fields' => []];
@@ -326,6 +349,9 @@ class payment
         return array_merge($default, $confirmation);
     }
 
+    /**
+     * @since ZC v1.5.4
+     */
     public function process_button_ajax()
     {
          if ($this->isPaymentModuleMethodPresent('process_button_ajax') === false) {
@@ -334,6 +360,9 @@ class payment
         return $GLOBALS[$this->selected_module]->process_button_ajax();
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function process_button()
     {
         if ($this->isPaymentModuleMethodPresent('process_button') === false) {
@@ -342,6 +371,9 @@ class payment
         return $GLOBALS[$this->selected_module]->process_button();
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function before_process()
     {
         if ($this->isPaymentModuleMethodPresent('before_process') === false) {
@@ -350,6 +382,9 @@ class payment
         return $GLOBALS[$this->selected_module]->before_process();
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function after_process()
     {
         if ($this->isPaymentModuleMethodPresent('after_process') === false) {
@@ -358,6 +393,9 @@ class payment
         return $GLOBALS[$this->selected_module]->after_process();
     }
 
+    /**
+     * @since ZC v1.2.2d
+     */
     public function after_order_create($zf_order_id)
     {
         if ($this->isPaymentModuleMethodPresent('after_order_create') === false) {
@@ -366,6 +404,9 @@ class payment
         return $GLOBALS[$this->selected_module]->after_order_create($zf_order_id);
     }
 
+    /**
+     * @since ZC v1.2.2d
+     */
     public function admin_notification($zf_order_id)
     {
          if ($this->isPaymentModuleMethodPresent('admin_notification') === false) {
@@ -374,6 +415,9 @@ class payment
         return $GLOBALS[$this->selected_module]->admin_notification($zf_order_id);
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function get_error()
     {
         if ($this->isPaymentModuleMethodPresent('get_error') === false) {
@@ -382,6 +426,9 @@ class payment
         return $GLOBALS[$this->selected_module]->get_error();
     }
 
+    /**
+     * @since ZC v1.5.1
+     */
     public function get_checkout_confirm_form_replacement(): array
     {
         if ($this->isPaymentModuleMethodPresent('get_checkout_confirm_form_replacement') === false) {
@@ -390,6 +437,9 @@ class payment
         return $GLOBALS[$this->selected_module]->get_checkout_confirm_form_replacement();
     }
 
+    /**
+     * @since ZC v1.5.6c
+     */
     public function clear_payment()
     {
         if ($this->isPaymentModuleMethodPresent('clear_payment') === false) {

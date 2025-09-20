@@ -11,8 +11,8 @@
  * - DB class must be instantiated as $db (done normally by application_top)
  * - if any additional currency-update plugins are installed, those plugins' functions must be loaded (done normally by admin application_top)
  * NOTE: admin application_top cannot be loaded successfully without an admin login ID.
+ * @since ZC v1.5.5
  */
-
 function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
 {
     global $db, $messageStack, $zco_notifier;
@@ -93,6 +93,7 @@ function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
  * @param string $currencyCode requested
  * @param string $base currency code
  * @return int|float
+ * @since ZC v1.5.0
  */
 function quote_ecb_currency(string $currencyCode = '', string $base = DEFAULT_CURRENCY): float|int|string
 {
@@ -134,6 +135,7 @@ function quote_ecb_currency(string $currencyCode = '', string $base = DEFAULT_CU
  * @param string $currencyCode requested
  * @param string $base currency code
  * @return bool|float
+ * @since ZC v1.5.0
  */
 function quote_boc_currency(string $currencyCode = '', string $base = DEFAULT_CURRENCY): float|bool|int|string
 {
@@ -179,6 +181,9 @@ function quote_boc_currency(string $currencyCode = '', string $base = DEFAULT_CU
 }
 
 
+/**
+ * @since ZC v1.3.5
+ */
 function doCurlCurrencyRequest($method, $url, $vars = ''): string
 {
     return zenDoCurlRequest($url, $method, $vars);

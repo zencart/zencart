@@ -16,6 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * This class is used mainly by payment modules to simulate a browser session
  * when communicating back to another server to collect information
  *
+ * @since ZC v1.0.3
  */
   class httpClient extends base {
     var $url; // array containing server URL, similar to parseurl() returned array
@@ -43,6 +44,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * turn on proxy support
  * @param proxyHost proxy host address eg "proxy.mycorp.com"
  * @param proxyPort proxy port usually 80 or 8080
+ * @since ZC v1.0.3
  **/
     function setProxy($proxyHost, $proxyPort) {
       $this->useProxy = true;
@@ -56,6 +58,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @param version string the version number with one decimal: "0.9", "1.0", "1.1"
  * when using 1.1, you MUST set the mandatory headers "Host"
  * @return boolean false if the version number is bad, true if ok
+ * @since ZC v1.0.3
  **/
     function setProtocolVersion($version) {
       if ( ($version > 0) && ($version <= 1.1) ) {
@@ -71,6 +74,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Only "Basic" authentication scheme is supported yet
  * @param username string - identifier
  * @param password string - clear password
+ * @since ZC v1.0.3
  **/
     function setCredentials($username, $password) {
       $this->addHeader('Authorization', 'Basic ' . base64_encode($username . ':' . $password));
@@ -80,6 +84,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * define a set of HTTP headers to be sent to the server
  * header names are lowercased to avoid duplicated headers
  * @param headers hash array containing the headers as headerName => headerValue pairs
+ * @since ZC v1.0.3
  **/
     function setHeaders($headers) {
       if (is_array($headers)) {
@@ -94,6 +99,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * set a unique request header
  * @param headerName the header name
  * @param headerValue the header value, ( unencoded)
+ * @since ZC v1.0.3
  **/
     function addHeader($headerName, $headerValue) {
       $this->requestHeaders[$headerName] = $headerValue;
@@ -103,6 +109,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * removeHeader
  * unset a request header
  * @param headerName the header name
+ * @since ZC v1.0.3
  **/
     function removeHeader($headerName) {
       unset($this->requestHeaders[$headerName]);
@@ -114,6 +121,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @param host string server address (or IP)
  * @param port string server listening port - defaults to 80
  * @return boolean false is connection failed, true otherwise
+ * @since ZC v1.0.3
  **/
     function Connect($host, $port = '') {
       $this->url['scheme'] = 'http';
@@ -126,6 +134,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Disconnect
  * close the connection to the  server
+ * @since ZC v1.0.3
  **/
     function Disconnect() {
       if ($this->socket) fclose($this->socket);
@@ -136,6 +145,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * issue a HEAD request
  * @param uri string URI of the document
  * @return string response status code (200 if ok)
+ * @since ZC v1.0.3
  **/
     function Head($uri) {
       $this->responseHeaders = $this->responseBody = '';
@@ -154,6 +164,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * issue a GET http request
  * @param uri URI (path on server) or full URL of the document
  * @return string response status code (200 if ok)
+ * @since ZC v1.0.3
  **/
     function Get($url) {
       $this->responseHeaders = $this->responseBody = '';
@@ -173,6 +184,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @param uri string URI of the document
  * @param query_params array parameters to send in the form "parameter name" => value
  * @return string response status code (200 if ok)
+ * @since ZC v1.0.3
  **/
 // * $params = array( "login" => "tiger", "password" => "secret" );
 // * $http->post( "/login.php", $params );
@@ -210,6 +222,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @param filecontent the content of the file. binary content accepted
  * @return string response status code 201 (Created) if ok
  * @see RFC2518 "HTTP Extensions for Distributed Authoring WEBDAV"
+ * @since ZC v1.0.3
  **/
     function Put($uri, $filecontent) {
       $uri = $this->makeUri($uri);
@@ -227,6 +240,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * return the response headers
  * to be called after a Get() or Head() call
  * @return array headers received from server in the form headername => value
+ * @since ZC v1.0.3
  **/
     function getHeaders() {
       return $this->responseHeaders;
@@ -237,6 +251,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * return the response header "headername"
  * @param headername the name of the header
  * @return header value or NULL if no such header is defined
+ * @since ZC v1.0.3
  **/
     function getHeader($headername) {
       return $this->responseHeaders[$headername];
@@ -247,6 +262,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * return the response body
  * invoke it after a Get() call for instance, to retrieve the response
  * @return string body content
+ * @since ZC v1.0.3
  **/
     function getBody() {
       return $this->responseBody;
@@ -261,6 +277,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *  - 40x : client error ( bad url, document not found, etc...)
  *  - 50x : server error
  * @see RFC2616 "Hypertext Transfer Protocol -- HTTP/1.1"
+ * @since ZC v1.0.3
  **/
     function getStatus() {
       return $this->reply;
@@ -270,6 +287,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * getStatusMessage return the full response status, of the form "CODE Message"
  * eg. "404 Document not found"
  * @return string the message
+ * @since ZC v1.0.3
  **/
     function getStatusMessage() {
       return $this->replyString;
@@ -283,6 +301,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * b) the request headers if they are defined
  * c) the request body if defined
  * @return string the server repsonse status code
+ * @since ZC v1.0.3
  **/
     function sendCommand($command) {
       $this->responseHeaders = array();
@@ -329,6 +348,9 @@ if (!defined('IS_ADMIN_FLAG')) {
       }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function processReply() {
       $this->replyString = trim(fgets($this->socket, 1024));
 
@@ -348,6 +370,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * processHeader() reads header lines from socket until the line equals $lastLine
  * @return array of headers with header names as keys and header content as values
+ * @since ZC v1.0.3
  **/
     function processHeader($lastLine = "\r\n") {
       $headers = array();
@@ -374,6 +397,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * processBody() reads the body from the socket
  * the body is the "real" content of the reply
  * @return string body content
+ * @since ZC v1.0.3
  **/
     function processBody() {
       $data = '';
@@ -404,6 +428,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Calculate and return the URI to be sent ( proxy purpose )
  * @param the local URI
  * @return URI to be used in the HTTP request
+ * @since ZC v1.0.3
  **/
     function makeUri($uri) {
       $a = parse_url($uri);

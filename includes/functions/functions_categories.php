@@ -12,6 +12,7 @@
  * Generate a cPath string from current category conditions
  * @param int $current_category_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_path($current_category_id = null): string
 {
@@ -53,6 +54,7 @@ function zen_get_path($current_category_id = null): string
  * @param int $category_id
  * @param bool $include_inactive
  * @return int|mixed
+ * @since ZC v1.0.3
  */
 function zen_count_products_in_category($category_id, bool $include_inactive = false)
 {
@@ -92,6 +94,7 @@ function zen_count_products_in_category($category_id, bool $include_inactive = f
 
 /**
  * Return the count of distinct products in a category and its sub categories
+ * @since ZC v2.0.0
  */
 function zen_count_distinct_products_in_category($category_id, bool $include_inactive = false): int
 {
@@ -116,6 +119,7 @@ function zen_count_distinct_products_in_category($category_id, bool $include_ina
  * Return true if the category has subcategories
  * @param int $category_id
  * @return bool
+ * @since ZC v1.0.3
  */
 function zen_has_category_subcategories($category_id): bool
 {
@@ -136,6 +140,7 @@ function zen_has_category_subcategories($category_id): bool
  * @param string $indent
  * @param int $status_flag
  * @return array
+ * @since ZC v1.0.3
  */
 function zen_get_categories(array $categories_array = [], $parent_id = TOPMOST_CATEGORY_PARENT_ID, string $indent = '', $status_flag = null): array
 {
@@ -181,6 +186,7 @@ function zen_get_categories(array $categories_array = [], $parent_id = TOPMOST_C
  * Return all subcategory IDs
  * @param array $subcategories_array recursive
  * @param int $parent_id
+ * @since ZC v1.0.3
  */
 function zen_get_subcategories(array &$subcategories_array, $parent_id = TOPMOST_CATEGORY_PARENT_ID): void
 {
@@ -205,6 +211,7 @@ function zen_get_subcategories(array &$subcategories_array, $parent_id = TOPMOST
  * @param  array  $categories passed by reference
  * @param int $category_id
  * @return bool
+ * @since ZC v1.0.3
  */
 function zen_get_parent_categories(array &$categories, $category_id)
 {
@@ -230,6 +237,7 @@ function zen_get_parent_categories(array &$categories, $category_id)
  * Construct a category path to the product
  * @param int $product_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_product_path($product_id): string
 {
@@ -260,6 +268,7 @@ function zen_get_product_path($product_id): string
  * Parse and sanitize the cPath parameter values
  * @param string $cPath
  * @return array
+ * @since ZC v1.0.3
  */
 function zen_parse_category_path(string $cPath): array
 {
@@ -282,6 +291,7 @@ function zen_parse_category_path(string $cPath): array
  * @param int $product_id
  * @param int $cat_id
  * @return bool
+ * @since ZC v1.1.3
  */
 function zen_product_in_category($product_id, $cat_id): bool
 {
@@ -321,6 +331,7 @@ function zen_product_in_category($product_id, $cat_id): bool
  * @param int $cat_id
  * @param int $parent_cat_id
  * @return bool
+ * @since ZC v1.1.3
  */
 function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id): bool
 {
@@ -361,6 +372,7 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id): b
  * @param  null  $filter_by_option_name
  * @param  bool  $includeAttributes
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_draw_pulldown_products(string $field_name, string $parameters = '', $exclude = [], bool $show_id = false, $set_selected = 0, bool $show_model = false, bool $show_current_category = false, string $order_by = '', $filter_by_option_name = null, bool $includeAttributes = false): string
 {
@@ -404,6 +416,7 @@ function zen_draw_pulldown_products(string $field_name, string $parameters = '',
  * @param string $order_by model|name
  * @param int $filter_by_option_name -1|0|option_name_id
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_draw_pulldown_products_having_attributes(string $field_name, string $parameters = '', array $exclude = [], string $order_by = 'name', $filter_by_option_name = null): string
 {
@@ -428,6 +441,7 @@ function zen_draw_pulldown_products_having_attributes(string $field_name, string
  * @param  null  $filter_by_option_name
  * @param  bool  $includeAttributes
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_draw_pulldown_categories_having_products(string $field_name, string $parameters = '', array $exclude = [], bool $show_id = false, bool $show_parent = false, bool $show_full_path = false, $filter_by_option_name = null, bool $includeAttributes = false): string
 {
@@ -454,6 +468,7 @@ function zen_draw_pulldown_categories_having_products(string $field_name, string
  * @param bool $show_full_path
  * @param string|null $filter_by_option_name
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_draw_pulldown_categories_having_products_with_attributes(string $field_name, string $parameters = '', array $exclude = [], bool $show_full_path = false, $filter_by_option_name = null): string
 {
@@ -465,6 +480,7 @@ function zen_draw_pulldown_categories_having_products_with_attributes(string $fi
  * look up the product_type that a category has been restricted to
  * @param int|string $lookup
  * @return bool|mixed false if not restricted; product_type_id if restricted
+ * @since ZC v1.2.0d
  */
 function zen_get_product_types_to_category($lookup): mixed
 {
@@ -488,6 +504,7 @@ function zen_get_product_types_to_category($lookup): mixed
  * look up parent category's name
  * @param int $categories_id
  * @return string name of parent category, or blank if none
+ * @since ZC v1.2.5
  */
 function zen_get_categories_parent_name($categories_id): string
 {
@@ -514,6 +531,7 @@ function zen_get_categories_parent_name($categories_id): string
  * @param string $parent_category
  * @param string $display_limit
  * @return array|null
+ * @since ZC v1.3.0
  */
 function zen_get_categories_products_list($categories_id, bool $include_deactivated = false, bool $include_child = true, $parent_category = TOPMOST_CATEGORY_PARENT_ID, $display_limit = '')
 {
@@ -568,6 +586,7 @@ function zen_get_categories_products_list($categories_id, bool $include_deactiva
  * @param array $categories_array
  * @param int $index
  * @return array|mixed
+ * @since ZC v1.0.3
  */
 function zen_generate_category_path($id, string $from = 'category', array $categories_array = [], $index = 0): mixed
 {
@@ -628,6 +647,7 @@ function zen_generate_category_path($id, string $from = 'category', array $categ
  * @param int $category_id
  * @param string $from 'category'|'product'
  * @return string|string[]|null
+ * @since ZC v1.0.3
  */
 function zen_output_generated_category_path($category_id, string $from = 'category')
 {
@@ -660,6 +680,7 @@ function zen_output_generated_category_path($category_id, string $from = 'catego
  * @param $id
  * @param  string  $from
  * @return array|string|null
+ * @since ZC v1.0.3
  */
 function zen_get_generated_category_path_ids($id, string $from = 'category')
 {
@@ -682,6 +703,7 @@ function zen_get_generated_category_path_ids($id, string $from = 'category')
 /**
  * @param int $this_categories_id
  * @return string
+ * @since ZC v1.3.8
  */
 function zen_get_generated_category_path_rev($this_categories_id): string
 {
@@ -703,6 +725,7 @@ function zen_get_generated_category_path_rev($this_categories_id): string
  * @param bool $check_if_cat_has_prods add a '*' markup if category has products in it
  * @param bool $limit
  * @return array
+ * @since ZC v1.0.3
  */
 function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, string $spacing = '', $exclude = '', $category_tree_array = [], $include_itself = false, bool $check_if_cat_has_prods = false, bool $limit = false): array
 {
@@ -750,6 +773,7 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, string $
  * @param int $category_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_category_name($category_id, $language_id = null): string
 {
@@ -782,6 +806,7 @@ function zen_get_category_name($category_id, $language_id = null): string
  * @param int $category_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.2.0d
  */
 function zen_get_category_description($category_id, $language_id = null): string
 {
@@ -801,6 +826,7 @@ function zen_get_category_description($category_id, $language_id = null): string
  * Return category's image
  * @param $category_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_categories_image($category_id): string
 {
@@ -819,6 +845,7 @@ function zen_get_categories_image($category_id): string
 /**
  * @deprecated Alias of zen_get_category_name
  * @param int $category_id
+ * @since ZC v1.0.3
  */
 function zen_get_categories_name($category_id): string
 {
@@ -832,6 +859,7 @@ function zen_get_categories_name($category_id): string
  * Get the status of a category
  * @param  int  $categories_id
  * @return string
+ * @since ZC v1.2.0d
  */
 function zen_get_categories_status($categories_id): string
 {
@@ -850,6 +878,7 @@ function zen_get_categories_status($categories_id): string
  * @param int $target_category_id
  * @param bool $reset_master_category
  * @return bool
+ * @since ZC v1.5.7
  */
 function zen_validate_categories($ref_category_id, $target_category_id = 0, bool $reset_master_category = false): bool
 {
@@ -895,6 +924,7 @@ function zen_validate_categories($ref_category_id, $target_category_id = 0, bool
  * @param int $parent_id The ID of the parent category.
  * @param string $category_path_string The full path of the names of all the parent categories being included in the path for the (sub)categories info being generated.
  * @return void
+ * @since ZC v1.5.7
  */
 function zen_get_categories_info(int $parent_id = 0, string $category_path_string = ''): void
 {
@@ -934,6 +964,7 @@ function zen_get_categories_info(int $parent_id = 0, string $category_path_strin
  * @param array $category_product_tree_array The array of categories and products being generated. Passed in function parameters so that it can be appended to when used recursively.
  * @param string $type category or product: to determine the array structure
  * @return array
+ * @since ZC v1.5.7
  */
 function zen_get_target_categories_products($parent_id = 0, string $spacing = '', array $category_product_tree_array = [], string $type = 'category'): array
 {
@@ -989,6 +1020,7 @@ function zen_get_target_categories_products($parent_id = 0, string $spacing = ''
  * Recursive algorithm to restrict all sub_categories of a specified category to a specified product_type
  * @param int $category_id
  * @param int $product_type_id
+ * @since ZC v1.2.0d
  */
 function zen_restrict_sub_categories(int $category_id, int $product_type_id): void
 {
@@ -1018,6 +1050,7 @@ function zen_restrict_sub_categories(int $category_id, int $product_type_id): vo
  * Recursive algorithm to UNDO restriction from all sub_categories of a specified category for a specified product_type
  * @param int $category_id
  * @param int $product_type_id
+ * @since ZC v1.2.0d
  */
 function zen_remove_restrict_sub_categories($category_id, $product_type_id): void
 {
@@ -1038,6 +1071,7 @@ function zen_remove_restrict_sub_categories($category_id, $product_type_id): voi
  * Get an array of product types that the category is restricted to
  * @param int $category_id
  * @return array
+ * @since ZC v1.5.8
  */
 function zen_get_category_restricted_product_types($category_id): array
 {
@@ -1058,6 +1092,7 @@ function zen_get_category_restricted_product_types($category_id): array
 /**
  * @param int $category_id
  * @param int $status
+ * @since ZC v1.5.8
  */
 function zen_set_category_status($category_id, $status): void
 {
@@ -1071,6 +1106,7 @@ function zen_set_category_status($category_id, $status): void
 /**
  * @param int $category_id
  * @param string $image_name
+ * @since ZC v1.5.8
  */
 function zen_set_category_image($category_id, string $image_name = ''): void
 {
@@ -1087,6 +1123,7 @@ function zen_set_category_image($category_id, string $image_name = ''): void
  * @deprecated 2.1.0 use Category class object instead
  * Return any field from categories or categories_description table
  * Example: zen_categories_lookup('10', 'parent_id');
+ * @since ZC v1.3.8
  */
 function zen_categories_lookup($categories_id, $what_field = 'categories_name', $language = '') {
     trigger_error('Call to deprecated function zen_categories_lookup. Use Category class object instead', E_USER_DEPRECATED);
@@ -1109,6 +1146,7 @@ function zen_categories_lookup($categories_id, $what_field = 'categories_name', 
 
 /**
  * @param int $category_id
+ * @since ZC v1.0.3
  */
 function zen_remove_category($category_id): void
 {
@@ -1230,6 +1268,7 @@ function zen_remove_category($category_id): void
  * @param bool $include_child
  * @param bool $limit
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_products_in_category_count($category_id, bool $include_deactivated = false, bool $include_child = true, $limit = false): int
 {
@@ -1266,6 +1305,7 @@ function zen_products_in_category_count($category_id, bool $include_deactivated 
  * Count how many subcategories exist in a category
  * @param int $category_id
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_childs_in_category_count($category_id) {
     global $db;
@@ -1290,6 +1330,7 @@ function zen_childs_in_category_count($category_id) {
  * @return string
  * @deprecated Use zen_get_product_details()
  * @TODO - delete from core in v2.2.0 or later
+ * @since ZC v1.2.0d
  */
 function zen_get_categories_name_from_product($product_id) {
     trigger_error('Call to deprecated function zen_get_categories_name_from_product. Use zen_get_product_details() instead', E_USER_DEPRECATED);
@@ -1314,6 +1355,7 @@ function zen_get_categories_name_from_product($product_id) {
  * @TODO - is this even used?
  * @param int $category_id
  * @return array
+ * @since ZC v1.2.2d
  */
 function zen_count_products_in_cats($category_id): array
 {
@@ -1359,6 +1401,7 @@ function zen_count_products_in_cats($category_id): array
  * @param  bool  $include_inactive
  * @param  string  $counts_what  products|products_active
  * @return int|mixed|string
+ * @since ZC v1.2.0d
  */
 function zen_get_products_to_categories($category_id, bool $include_inactive = false, string $counts_what = 'products') {
     global $db;

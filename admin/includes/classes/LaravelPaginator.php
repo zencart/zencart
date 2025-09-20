@@ -14,6 +14,9 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+/**
+ * @since ZC v1.5.8
+ */
 class LaravelPaginator extends \splitPageResults
 {
 

@@ -13,6 +13,8 @@
   *     id: id of the filter to apply. (May be mnemonic value of int.)
   *     options: per http://php.net/manual/en/function.filter-var.php
   *   @return - NULL; failure results in redirection inline.
+  *
+  * @since ZC v1.5.6
   */ 
 function zen_validate_configuration_entry($variable, $check_string, $config_name = '')
 {

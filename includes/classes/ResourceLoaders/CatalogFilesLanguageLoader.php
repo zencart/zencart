@@ -9,8 +9,14 @@ namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
 
+/**
+ * @since ZC v1.5.8
+ */
 class CatalogFilesLanguageLoader extends FilesLanguageLoader
 {
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadInitialLanguageDefines($mainLoader)
     {
         $this->mainLoader = $mainLoader;
@@ -18,6 +24,9 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         $this->loadMainLanguageFiles();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadLanguageForView(): void
     {
         $directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir;
@@ -38,6 +47,9 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function loadMainLanguageFiles(): void
     {
         $extraFiles = [
@@ -59,6 +71,9 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function LoadLanguageExtraDefinitions(): void
     {
         $extraDefsDir = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions';

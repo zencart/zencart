@@ -3,6 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Sep 21 Modified in v2.1.0-beta1 $
+ * @since ZC v1.5.4
  */
 use Zencart\Traits\ObserverManager;
 
@@ -17,6 +18,9 @@ class zcObserverLogWriterDatabase
         $this->checkLogSchema();
     }
 
+    /**
+     * @since ZC v1.5.4
+     */
     public function updateNotifyAdminFireLogWriters(&$class, string $eventID, array $log_data): void
     {
         $this->initLogsTable();
@@ -55,6 +59,7 @@ class zcObserverLogWriterDatabase
     /**
      * PCI requires that if the log table is blank, that the logs be initialized
      * So this simply tests whether the table has any records, and if not, adds an initialization entry
+     * @since ZC v1.5.4
      */
     protected function initLogsTable(): void
     {
@@ -80,6 +85,9 @@ class zcObserverLogWriterDatabase
         }
     }
 
+    /**
+     * @since ZC v1.5.4
+     */
     protected function checkLogSchema(): void
     {
         // adds 'logmessage' field of type mediumtext
@@ -119,11 +127,17 @@ class zcObserverLogWriterDatabase
         zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
     }
 
+    /**
+     * @since ZC v1.5.4
+     */
     protected function preserveSpecialCharacters(string $string): string
     {
         return str_replace('\n', "\n", $string);
     }
 
+    /**
+     * @since ZC v1.5.4
+     */
     public function updateNotifyAdminFireLogWriterReset(): void
     {
         global $db;

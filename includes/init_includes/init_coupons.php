@@ -9,6 +9,7 @@
  * Try to match the HTTP_REFERER header against our coupon records.
  *
  * @return ?string the coupon_code if found, else null.
+ * @since ZC v2.0.0
  */
 function initCouponReferrerCheck(): ?string {
     global $db;
@@ -64,6 +65,7 @@ function initCouponReferrerCheck(): ?string {
  * Return a coupon code found in $_GET['coupon_code'], if any.
  *
  * @return ?string the coupon_code if found, else null.
+ * @since ZC v2.0.0
  */
 function initCouponRequestCheck() {
     if (empty($_GET['coupon_code'])) {
@@ -76,6 +78,7 @@ function initCouponRequestCheck() {
  * Look for any coupon_code, validate it and apply it.
  *
  * @return void
+ * @since ZC v2.0.0
  */
 function initCouponChecks() {
     global $languageLoader, $messageStack;

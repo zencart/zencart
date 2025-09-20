@@ -14,6 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * category_tree Class.
  * This class is used to generate the category tree used for the categories sidebox
  *
+ * @since ZC v1.2.0d
  */
 class category_tree extends base {
     
@@ -23,6 +24,7 @@ class category_tree extends base {
     private $box_categories_array = [];
     /**
      * String containing concatenated list of categories with separator. 
+     * @since ZC v1.2.0d
      */
     private $categories_string;
     /*
@@ -153,6 +155,9 @@ class category_tree extends base {
     return $this->zen_show_category($first_element, $row);
   }
 
+  /**
+   * @since ZC v1.2.0d
+   */
   function zen_show_category($counter,$ii) {
     global $cPath_array;
 

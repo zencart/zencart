@@ -9,8 +9,14 @@ namespace Zencart\LanguageLoader;
 
 use Zencart\LanguageLoader\LanguageLoader;
 
+/**
+ * @since ZC v1.5.8
+ */
 class LanguageLoaderFactory
 {
+    /**
+     * @since ZC v1.5.8
+     */
     public function make(string $context, array $installedPlugins, string $currentPage, string $templateDirectory, string $fallback = 'english'): \Zencart\LanguageLoader\LanguageLoader
     {
         $arraysLoader = $this->makeArraysLoader($context, $installedPlugins, $currentPage, $templateDirectory, $fallback);
@@ -19,6 +25,9 @@ class LanguageLoaderFactory
         return $mainLoader;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function makeArraysLoader(string $context, array $installedPlugins, string $currentPage, string $templateDirectory, string $fallback)
     {
         $className = 'Zencart\\LanguageLoader\\' . ucfirst(strtolower($context)) . 'ArraysLanguageLoader';
@@ -26,6 +35,9 @@ class LanguageLoaderFactory
         return $loader;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function makeFilesLoader(string $context, array $installedPlugins, string $currentPage, string $templateDirectory, string $fallback)
     {
         $className = 'Zencart\\LanguageLoader\\' . ucfirst(strtolower($context)) . 'FilesLanguageLoader';

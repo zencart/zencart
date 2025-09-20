@@ -34,7 +34,9 @@ if (IS_ADMIN_FLAG === true) {
 $zen_session_handler = new \Zencart\SessionHandler;
 session_set_save_handler($zen_session_handler, true);
 
-
+/**
+ * @since ZC v1.0.3
+ */
 function zen_session_start(): bool
 {
     global $SESS_LIFE;
@@ -53,6 +55,9 @@ function zen_session_start(): bool
     return $temp;
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_session_id($sessid = ''): bool|string
 {
     if (!empty($sessid)) {
@@ -67,6 +72,9 @@ function zen_session_id($sessid = ''): bool|string
     return session_id();
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_session_name($name = ''): bool|string
 {
     if (!empty($name)) {
@@ -79,16 +87,25 @@ function zen_session_name($name = ''): bool|string
     return session_name();
 }
 
+/**
+ * @since ZC v1.5.2
+ */
 function zen_session_write_close()
 {
     session_write_close();
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_session_destroy()
 {
     return session_destroy();
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_session_save_path($path = '')
 {
     if (!empty($path)) {
@@ -98,6 +115,9 @@ function zen_session_save_path($path = '')
     return session_save_path();
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_session_recreate(): void
 {
     global $http_domain, $https_domain;

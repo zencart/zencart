@@ -9,6 +9,7 @@
 
 /**
  * PayPal NVP (v124.0) and Payflow Pro (v4 HTTP API) implementation via cURL.
+ * @since ZC v1.3.7
  */
 if (!defined('PAYPAL_DEV_MODE')) define('PAYPAL_DEV_MODE', 'false');
 class paypal_curl extends base {
@@ -125,6 +126,7 @@ class paypal_curl extends base {
    *
    * The token returned to this function is passed to PayPal in
    * order to link their PayPal selections to their cart actions.
+   * @since ZC v1.3.7
    */
   function SetExpressCheckout($returnUrl, $cancelUrl, $options = array()) {
     $values = $options;
@@ -166,6 +168,7 @@ class paypal_curl extends base {
    * GetExpressCheckoutDetails
    *
    * When customer returns from PayPal site, this retrieves their payment/shipping data for use in Zen Cart
+   * @since ZC v1.3.7
    */
   function GetExpressCheckoutDetails($token, $optional = array()) {
     $values = array_merge($optional, array('TOKEN' => $token));
@@ -182,6 +185,7 @@ class paypal_curl extends base {
    * DoExpressCheckoutPayment
    *
    * Completes the sale using PayPal as payment choice
+   * @since ZC v1.3.7
    */
   function DoExpressCheckoutPayment($token, $payerId, $options = array()) {
     $values = array_merge($options, array('TOKEN'   => $token,
@@ -210,6 +214,7 @@ class paypal_curl extends base {
    * Requires Website Payments Pro or Payflow Pro as merchant gateway.
    *
    * PAYMENTREQUEST_0_PAYMENTACTION = Authorization (auth/capt) or Sale (final)
+   * @since ZC v1.3.7
    */
   function DoDirectPayment($cc, $cvv2 = '', $exp = '', $fname = null, $lname = null, $cc_type = '', $options = array(), $nvp = array() ) {
     $values = $options;
@@ -250,6 +255,7 @@ class paypal_curl extends base {
    * RefundTransaction
    *
    * Used to refund all or part of a given transaction
+   * @since ZC v1.3.7
    */
   function RefundTransaction($oID, $txnID, $amount = 'Full', $note = '', $curCode = 'USD') {
     if ($this->_mode == 'payflow') {
@@ -276,6 +282,7 @@ class paypal_curl extends base {
    * DoVoid
    *
    * Used to void a previously authorized transaction
+   * @since ZC v1.3.7
    */
   function DoVoid($txnID, $note = '') {
     if ($this->_mode == 'payflow') {
@@ -293,6 +300,7 @@ class paypal_curl extends base {
    * DoAuthorization
    *
    * Used to authorize part of a previously placed order which was initiated as authType of Order
+   * @since ZC v1.3.7
    */
   function DoAuthorization($txnID, $amount = 0, $currency = 'USD', $entity = 'Order') {
     $values['TRANSACTIONID'] = $txnID;
@@ -306,6 +314,7 @@ class paypal_curl extends base {
    * DoReauthorization
    *
    * Used to reauthorize a previously-authorized order which has expired
+   * @since ZC v1.3.7
    */
   function DoReauthorization($txnID, $amount = 0, $currency = 'USD') {
     $values['AUTHORIZATIONID'] = $txnID;
@@ -318,6 +327,7 @@ class paypal_curl extends base {
    * DoCapture
    *
    * Used to capture part or all of a previously placed order which was only authorized
+   * @since ZC v1.3.7
    */
   function DoCapture($txnID, $amount = 0, $currency = 'USD', $captureType = 'Complete', $invNum = '', $note = '') {
     if ($this->_mode == 'payflow') {
@@ -342,6 +352,7 @@ class paypal_curl extends base {
    * ManagePendingTransactionStatus
    *
    * Accept/Deny pending FMF transactions
+   * @since ZC v1.3.9a
    */
   function ManagePendingTransactionStatus($txnID, $action) {
     if (!in_array($action, array('Accept', 'Deny'))) return FALSE;
@@ -353,6 +364,7 @@ class paypal_curl extends base {
    * GetTransactionDetails
    *
    * Used to read data from PayPal for a given transaction
+   * @since ZC v1.3.7
    */
   function GetTransactionDetails($txnID) {
     if ($this->_mode == 'payflow') {
@@ -369,6 +381,7 @@ class paypal_curl extends base {
    * TransactionSearch
    *
    * Used to read data from PayPal for specified transaction criteria
+   * @since ZC v1.3.7.1
    */
   function TransactionSearch($startdate, $txnID = '', $email = '', $options = null) {
     if ($this->_mode == 'payflow') {
@@ -386,6 +399,7 @@ class paypal_curl extends base {
   }
   /**
    * Set a parameter as passed.
+   * @since ZC v1.3.7
    */
   function setParam($name, $value) {
     $name = '_' . $name;
@@ -394,6 +408,7 @@ class paypal_curl extends base {
 
   /**
    * Set CURL options.
+   * @since ZC v1.3.7
    */
   function setCurlOption($name, $value) {
     $this->_curlOptions[$name] = $value;
@@ -401,6 +416,7 @@ class paypal_curl extends base {
 
   /**
    * Send a request to endpoint.
+   * @since ZC v1.3.7
    */
   function _request($values, $operation, $requestId = null) {
     if ($this->_mode == 'NOTCONFIGURED') {
@@ -495,6 +511,7 @@ class paypal_curl extends base {
    * If any of the "cannot" conditions are violated the function
    * returns false, and the caller must abort and not proceed with
    * the transaction.
+   * @since ZC v1.3.7
    */
   function _buildNameValueList($pairs) {
     // Add the parameters that are always sent.
@@ -571,6 +588,7 @@ class paypal_curl extends base {
    * Take a name/value response string and parse it into an
    * associative array. Doesn't handle length tags in the response
    * as they should not be present.
+   * @since ZC v1.3.7
    */
   function _parseNameValueList($string) {
     $string = str_replace('&amp;', '|', $string ?? '');
@@ -594,6 +612,7 @@ class paypal_curl extends base {
    * @param string $operation  The operation called.
    * @param integer $elapsed   Microseconds taken.
    * @param object $response   The response.
+   * @since ZC v1.3.7
    */
   function _logTransaction($operation, $elapsed, $response, $errors) {
     $values = $this->_parseNameValueList($response);
@@ -637,6 +656,7 @@ class paypal_curl extends base {
    *
    * @param mixed $log  The log to sanitize.
    * @return string  The sanitized (and string-ified, if necessary) log.
+   * @since ZC v1.3.7
    */
   function _sanitizeLog($log, $allsensitive = false) {
     if (is_array($log)) {
@@ -663,6 +683,9 @@ class paypal_curl extends base {
     }
   }
 
+  /**
+   * @since ZC v1.3.7
+   */
   function log($message, $token = '') {
     static $tokenHash;
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
@@ -683,6 +706,7 @@ class paypal_curl extends base {
    * Check whether API credentials are supplied, or if is blank
    *
    * @return boolean
+   * @since ZC v1.3.9a
    */
   function checkHasApiCredentials()
   {
@@ -694,6 +718,7 @@ class paypal_curl extends base {
    * @access protected
    *
    * @return integer  Current time with microseconds.
+   * @since ZC v1.3.7
    */
   function _getMicroseconds() {
     list($ms, $s) = explode(' ', microtime());
@@ -708,6 +733,7 @@ class paypal_curl extends base {
    * @param integer $start  Start time including microseconds.
    *
    * @return integer  Number of microseconds elapsed since $start
+   * @since ZC v1.3.7
    */
   function _getElapsed($start) {
     return $this->_getMicroseconds() - $start;
@@ -717,6 +743,7 @@ class paypal_curl extends base {
  * Convert HTML comments to readable text
  * @param string $string
  * @return string
+ * @since ZC v1.3.9a
  */
 function zen_uncomment($string) {
   return str_replace(array('<!-- ', ' -->'), array('[', ']'), $string);
