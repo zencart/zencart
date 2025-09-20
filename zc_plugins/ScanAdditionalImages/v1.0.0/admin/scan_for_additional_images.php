@@ -11,9 +11,17 @@ require 'includes/application_top.php';
 $action = $_POST['action'] ?? '';
 
 if (!empty($action) && $action === 'scan') {
+    zen_set_time_limit(600); // Extend time limit to 10 minutes
+
     $counter = $inserted = 0;
 
-    $products_query = $db->Execute("SELECT products_id, products_image FROM " . TABLE_PRODUCTS . " WHERE products_image IS NOT NULL");
+    $products_query = $db->Execute(
+        "SELECT products_id, products_image
+        FROM " . TABLE_PRODUCTS . "
+        WHERE products_image IS NOT NULL
+        AND products_image != '" . zen_db_input(PRODUCTS_IMAGE_NO_IMAGE) . "'"
+    );
+
     foreach ($products_query as $product) {
         $products_id = (int)$product['products_id'];
         $products_image = $product['products_image'];
@@ -29,8 +37,7 @@ if (!empty($action) && $action === 'scan') {
         $image_dir = DIR_FS_CATALOG_IMAGES . $subdir;
 
         // Get base filename without extension
-        $image_filename = basename($products_image, $image_extension);
-        $image_base = $image_filename;
+        $image_base = basename($products_image, $image_extension);
 
         // Use '_' suffix unless legacy mode
         if (defined('ADDITIONAL_IMAGES_MODE') && ADDITIONAL_IMAGES_MODE !== 'legacy') {
@@ -52,26 +59,24 @@ if (!empty($action) && $action === 'scan') {
             }
         }
 
+        // This loop performs many filesystem stat operations, which may overload PHP's cache. So we clean it up here.
+        // https://www.php.net/manual/en/function.clearstatcache.php
+        clearstatcache();
+
         // Insert matches into products_additional_images table
         foreach ($matches as $sort_order => $additional_image) {
-            // Check if already exists
-            $exists_query = $db->Execute(
-                "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . $products_id . " AND additional_image = '" . zen_db_input($subdir . $additional_image) . "'"
+            // insert if new, ignoring if duplicate (unique index is set on products_id + additional_image)
+            $result = $db->Execute(
+                "INSERT IGNORE INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
+                VALUES (" . $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
             );
-            if ($exists_query->EOF) {
-                $db->Execute(
-                    "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
-                    VALUES (" . $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
-                );
-                $inserted++;
-            }
+            $inserted += mysqli_affected_rows($result->link);
         }
 
         $counter++;
     }
     if ($inserted === 0) {
         $messageStack->add_session(TEXT_ALL_SCANNED, 'info');
-        //$db->Execute("UPDATE " . TABLE_ADMIN_PAGES . " SET display_on_menu = 'N' WHERE page_key = 'toolsAidba'");
     } else {
         $messageStack->add_session($counter . TEXT_PRODUCTS_PROCESSED, 'success');
         $messageStack->add_session(TEXT_SCAN_COMPLETED, 'success');
