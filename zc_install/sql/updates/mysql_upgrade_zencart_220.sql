@@ -57,7 +57,7 @@ DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN',
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Length', 'PASSWORD_RESET_TOKEN_LENGTH', '24', 'Number of characters in a generated password-reset token. Default is 24. Allowed: 12-100, but it affects the URL length, so 12-30 is most ideal', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Valid For', 'PASSWORD_RESET_TOKEN_MINUTES_VALID', '60', 'How many minutes a password-reset token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href="https://www.tiny.cloud/auth/signup/" target="_blank">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now());
-UPDATE configuration SET configuration_description = 'CSS Buttons<br>Use CSS buttons instead of images (GIF/JPG)?<br>Button styles must be configured in the stylesheet if you enable this option.<br>Yes - Use CSS buttons<br>No - Use images buttons<br>Found - Use images if exist, else use CSS buttons', set_function = 'zen_cfg_select_option(array(\'No\', \'Yes\', \'Found\'), ' WHERE configuration_key = 'IMAGE_USE_CSS_BUTTONS';
+UPDATE configuration SET configuration_description = 'CSS Buttons<br>Use CSS buttons instead of images (GIF/JPG)?<br>Button styles must be configured in the stylesheet if you enable this option.<br>Yes - Use CSS buttons<br>No - Use images buttons<br>Found - Use images if exist, else use CSS buttons', set_function = 'zen_cfg_select_option(array(\'No\', \'Yes\', \'Found\'), ' WHERE configuration_key = 'IMAGE_USE_CSS_BUTTONS' LIMIT 1;
 
 DELETE FROM admin_pages WHERE page_key = 'pageRegistration';
 
@@ -114,9 +114,9 @@ CREATE TABLE IF NOT EXISTS products_additional_images (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY idx_pid_img_zen (products_id, additional_image)
 ) ENGINE=MyISAM;
-UPDATE configuration SET sort_order = 25 WHERE configuration_key = 'IMAGES_AUTO_ADDED';
-UPDATE configuration SET sort_order = 27 WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE';
-UPDATE configuration SET configuration_title = 'Additional Images filename matching pattern', configuration_description = 'In Filename-Matching mode, you can use an &quot;_&quot; suffix in two formats:<br>&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict' WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE';
+UPDATE configuration SET sort_order = 25 WHERE configuration_key = 'IMAGES_AUTO_ADDED' LIMIT 1;
+UPDATE configuration SET sort_order = 27 WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
+UPDATE configuration SET configuration_title = 'Additional Images filename matching pattern', configuration_description = 'In Filename-Matching mode, you can use an &quot;_&quot; suffix in two formats:<br>&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict' WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
