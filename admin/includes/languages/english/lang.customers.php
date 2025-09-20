@@ -44,6 +44,7 @@ $define = [
     'EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE' => 'Your password has been changed by the store administrator. Your new password is: ',
     'EMAIL_CUSTOMER_PWD_CHANGE_SUBJECT' => 'Account password reset',
     'EMAIL_CUSTOMER_PWD_CHANGE_MESSAGE_FOR_ADMIN' => 'You have reset the password for a customer: ' . "\n" . '%1$s' . "\n\n" . 'Administrator ID: %2$s',
+    'CUSTOMERS_AUTH_WAITING_FOR_ACTIVATION' => 'Waiting for activation',
     'CUSTOMERS_AUTHORIZATION' => 'Customers Authorization Status',
     'CUSTOMERS_AUTHORIZATION_0' => 'Approved',
     'CUSTOMERS_AUTHORIZATION_1' => 'Pending Approval - Must be Authorized to Browse',

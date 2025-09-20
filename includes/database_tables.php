@@ -44,6 +44,7 @@ define('TABLE_CURRENCIES', DB_PREFIX . 'currencies');
 define('TABLE_CUSTOMER_GROUPS', DB_PREFIX . 'customer_groups');
 define('TABLE_CUSTOMER_PASSWORD_RESET_TOKENS', DB_PREFIX . 'customer_password_reset_tokens');
 define('TABLE_CUSTOMERS', DB_PREFIX . 'customers');
+define('TABLE_CUSTOMERS_AUTH_TOKENS', DB_PREFIX . 'customers_auth_tokens');
 define('TABLE_CUSTOMERS_BASKET', DB_PREFIX . 'customers_basket');
 define('TABLE_CUSTOMERS_BASKET_ATTRIBUTES', DB_PREFIX . 'customers_basket_attributes');
 define('TABLE_CUSTOMERS_INFO', DB_PREFIX . 'customers_info');
