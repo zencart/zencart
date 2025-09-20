@@ -37,6 +37,14 @@ foreach ($installedPlugins as $plugin) {
 }
 $observers = array_merge($observersPlugins, $observersMain);
 
+// sort by filename so that observers are loaded in a predictable order
+$basenames = array_map('basename', $observers);
+array_multisort(
+    $basenames, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE,
+    $observers, SORT_ASC, SORT_NATURAL | SORT_FLAG_CASE
+);
+unset($basenames);
+
 // instantiate discovered observer classes
 foreach ($observers as $observer) {
     if (!file_exists($observer)) {
