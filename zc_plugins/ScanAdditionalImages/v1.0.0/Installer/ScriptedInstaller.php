@@ -6,14 +6,14 @@ class ScriptedInstaller extends ScriptedInstallBase
 {
     protected function executeInstall()
     {
-        zen_deregister_admin_pages(['toolsAidba']);
-        zen_register_admin_page('toolsAidba', 'BOX_TOOLS_CONVERT_AIDBA', 'FILENAME_AIDBA', '', 'tools', 'Y', 20);
+        zen_deregister_admin_pages(['toolsScanForImages']);
+        zen_register_admin_page('toolsScanForImages', 'BOX_TOOLS_SCAN_FOR_IMAGES', 'FILENAME_SCAN_FOR_ADDITIONAL_IMAGES', '', 'tools', 'Y', 20);
 
         // THE FOLLOWING SHOULD ALREADY BE PART OF CORE ZEN CART, SO THIS IS DUPLICATION
         $fields = [
             'configuration_title' => 'Additional Images Handling',
             'configuration_value' => 'Database',
-            'configuration_description' => 'Product Images can be handled in two ways: &quot;Database&quot; or &quot;Filename-Matching&quot;.<br> Use &quot;Database&quot; to allow additional images (any filename/filetype) to be added via the Admin Product Edit page.<br> Use &quot;Filename-Matching&quot; to autodetect additional images based on filename matching (legacy method) where we scan your images directory for files with names that <a href="https://docs.zen-cart.com/user/images/additional_images/" target="_blank">match the primary image filename plus suffixes</a>. This requires manually uploading images to your server via FTP or other methods, but avoids needing to assign images to products via the Admin page. <br> NOTE: a &quot;Sync Product Images To Database&quot; tool is available for installation via the Plugins module and then accessible via the Tools menu.<br> The converter creates database entries for all additional images that are currently being autodetected, subsequently allowing all image management from the Product Edit page. The converter does not modify the images, and can be run periodically to sync new images to the database as needed.',
+            'configuration_description' => 'Product Images can be handled in two ways: &quot;Database&quot; or &quot;Filename-Matching&quot;.<br> Use &quot;Database&quot; to allow additional images (any filename/filetype) to be added via the Admin Product Edit page.<br> Use &quot;Filename-Matching&quot; to autodetect additional images based on filename matching (legacy method) where we scan your images directory for files with names that <a href="https://docs.zen-cart.com/user/images/additional_images/" target="_blank">match the primary image filename plus suffixes</a>. This requires manually uploading images to your server via FTP or other methods, but avoids needing to assign images to products via the Admin page. <br> NOTE: a &quot;Scan Product Images To Database&quot; tool is available for installation via the Plugins module and then accessible via the Tools menu.<br>The scanner creates database entries for all additional images that match legacy naming conventions, subsequently allowing all image management from the Product Edit page. The scanner does not modify the images, and can be run periodically to sync new images to the database as needed.',
             'configuration_group_id' => 4,
             'sort_order' => 26,
             'set_function' => 'zen_cfg_select_option([\'Database\', \'Filename-Matching\'], ',
@@ -57,6 +57,9 @@ class ScriptedInstaller extends ScriptedInstallBase
 
     protected function executeUninstall()
     {
+        zen_deregister_admin_pages(['toolsScanForImages']);
+
+        // also clean up using old name for the tool
         zen_deregister_admin_pages(['toolsAidba']);
     }
 }
