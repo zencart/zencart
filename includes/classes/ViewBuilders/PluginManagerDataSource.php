@@ -14,6 +14,6 @@ class PluginManagerDataSource extends DataTableDataSource
 {
     protected function buildInitialQuery(): Builder
     {
-        return (new PluginControl())->query()->orderBy('name')->orderBy('unique_key');
+        return (new PluginControl())->query()->orderBy('status')->orderBy('name')->orderBy('unique_key');
     }
 }

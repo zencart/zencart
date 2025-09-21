@@ -32,11 +32,35 @@ use Zencart\Paginator\LaravelPaginator;
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
+        <?php
+            for($i = 0; $i < 3; $i++) {
+                $firstheader = 0;
+                $skip = 1;
+                foreach ($formatter->getTableData() as $tableData) {
+                    if ($tableData ["status"] ["original"] === $i) {
+                        $skip = 0;
+                        break;
+                    }
+                }
+                if ($skip === 0) {
+        ?>
             <table class="table table-hover">
                 <thead>
                 <tr class="dataTableHeadingRow">
-                    <?php foreach ($formatter->getTableHeaders() as $colHeader) { ?>
-                        <th class="<?php echo $colHeader['headerClass']; ?>"><?php echo $colHeader['title'];
+                    <?php $firstheader = 0;
+                        foreach ($formatter->getTableHeaders() as $colHeader) { ?>
+                        <th class="<?php echo $colHeader['headerClass']; ?>">
+                        <?php if ($firstheader === 0) {
+                            $tabletitle = match($i) {
+                                0 => TEXT_NOT_INSTALLED,
+                                1 => TEXT_INSTALLED_ENABLED,
+                                2 => TEXT_INSTALLED_DISABLED,
+                            };
+                            echo $tabletitle;
+                            $firstheader = 1;
+                            } else {
+                                echo $colHeader['title'];
+                            }
                             ?></th>
                     <?php } ?>
                     <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
@@ -44,24 +68,28 @@ use Zencart\Paginator\LaravelPaginator;
                 </thead>
                 <tbody>
                 <?php foreach ($formatter->getTableData() as $tableData) { ?>
-                    <?php if ($formatter->isRowSelected($tableData)) { ?>
+                    <?php if ($tableData ["status"] ["original"] === $i) {
+                              if ($formatter->isRowSelected($tableData)) { ?>
                         <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo $formatter->getSelectedRowLink(
                             $tableData); ?>'" role="button">
-                    <?php } else { ?>
+                        <?php } else { ?>
                         <tr class="dataTableRow" onclick="document.location.href='<?php echo
                         $formatter->getNotSelectedRowLink($tableData); ?>'"
                         role="button">
-                    <?php } ?>
-                    <?php foreach ($tableData as $column) { ?>
+                        <?php } ?>
+                        <?php foreach ($tableData as $column) { ?>
                         <td class="<?php echo $column['class']; ?>">
                             <?php echo $column['value']; ?>
                         </td>
-                    <?php } ?>
-                    <?php require(DIR_WS_TEMPLATES . 'partials/tableview_rowactions.php'); ?>
-                    </tr>
-                <?php } ?>
+                        <?php } ?>
+                        <?php require(DIR_WS_TEMPLATES . 'partials/tableview_rowactions.php'); ?>
+                        </tr>
+                    <?php }
+                } ?>
                 </tbody>
             </table>
+        <?php   }
+            } ?>
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">

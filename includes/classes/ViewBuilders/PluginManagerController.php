@@ -156,7 +156,7 @@ class PluginManagerController extends BaseController
         zen_redirect(
             zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink()
             )
         );
     }
@@ -210,7 +210,7 @@ class PluginManagerController extends BaseController
         zen_redirect(
             zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink()
             )
         );
     }
@@ -445,7 +445,7 @@ class PluginManagerController extends BaseController
         zen_redirect(
             zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink()
             )
         );
     }
@@ -480,6 +480,6 @@ class PluginManagerController extends BaseController
         $this->notify('NOTIFY_PLUGINMANAGER_DO_DISABLE', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version')]);
 
         $this->messageStack->add_session(TEXT_DISABLE_SUCCESS, 'success');
-        zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
+        zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink()));
     }
 }
