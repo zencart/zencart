@@ -28,7 +28,7 @@ class PluginManager
 
     public function getInstalledPlugins()
     {
-        $results = $this->pluginControl->where(['status' => 1])->orderBy('name')->orderBy('unique_key')->get();
+        $results = $this->pluginControl->where(['status' =>0])->orderBy('name')->orderBy('unique_key')->get();
         $pluginList = [];
         foreach ($results as $result) {
             $pluginList[$result['unique_key']] = $result;
@@ -229,7 +229,7 @@ class PluginManager
                     'name' => $plugin[$pluginVersion]['pluginName'],
                     'description' => $plugin[$pluginVersion]['pluginDescription'],
                     'type' => '',
-                    'status' => 0,
+                    'status' => 2,
                     'author' => $plugin[$pluginVersion]['pluginAuthor'],
                     'version' => '',
                     'zc_versions' => '',

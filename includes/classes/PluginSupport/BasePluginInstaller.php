@@ -30,7 +30,7 @@ class BasePluginInstaller
         if ($this->errorContainer->hasErrors()) {
             return false;
         }
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $version, 0);
         return true;
     }
 
@@ -38,7 +38,7 @@ class BasePluginInstaller
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
-        $this->setPluginVersionStatus($pluginKey, '', 0);
+        $this->setPluginVersionStatus($pluginKey, '', 2);
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeUninstallers($this->pluginDir);
         if ($this->errorContainer->hasErrors()) {
@@ -56,19 +56,19 @@ class BasePluginInstaller
         if ($this->errorContainer->hasErrors()) {
             return false;
         }
-        $this->setPluginVersionStatus($pluginKey, $oldVersion, 0);
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $oldVersion, 2);
+        $this->setPluginVersionStatus($pluginKey, $version, 0);
         return true;
     }
 
     public function processDisable($pluginKey, $version): void
     {
-        $this->setPluginVersionStatus($pluginKey, $version, 2);
+        $this->setPluginVersionStatus($pluginKey, $version, 1);
     }
 
     public function processEnable($pluginKey, $version): void
     {
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $version, 0);
     }
 
     protected function setPluginVersionStatus($pluginKey, $version, $status): void

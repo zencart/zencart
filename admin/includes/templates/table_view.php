@@ -52,9 +52,9 @@ use Zencart\Paginator\LaravelPaginator;
                         <th class="<?php echo $colHeader['headerClass']; ?>">
                         <?php if ($firstheader === 0) {
                             $tabletitle = match($i) {
-                                0 => TEXT_NOT_INSTALLED,
-                                1 => TEXT_INSTALLED_ENABLED,
-                                2 => TEXT_INSTALLED_DISABLED,
+                                0 => TEXT_INSTALLED_ENABLED,
+                                1 => TEXT_INSTALLED_DISABLED,
+                                2 => TEXT_NOT_INSTALLED,
                             };
                             echo $tabletitle;
                             $firstheader = 1;
