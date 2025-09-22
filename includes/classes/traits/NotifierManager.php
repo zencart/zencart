@@ -119,6 +119,9 @@ trait NotifierManager
         if (!defined('NOTIFIER_TRACE') || empty(NOTIFIER_TRACE) || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
             return;
         }
+        if (defined('NOTIFIER_TRACE_EVENTS') && is_array(NOTIFIER_TRACE_EVENTS) && !in_array($eventID, NOTIFIER_TRACE_EVENTS)) {
+            return;
+        }
         global $zcDate;
 
         $file = DIR_FS_LOGS . '/notifier_trace.log';
