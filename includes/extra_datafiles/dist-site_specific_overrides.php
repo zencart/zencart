@@ -107,3 +107,21 @@
 // This value is an integer and defaults to 9.
 //
 //$max_login_attempts = 9;
+
+// -----
+// The maximum number of times per session that an invalid account-activation
+// token can be submitted to the 'customers_authorization' page before
+// an HTTP 406 (unacceptable) return is issued.
+//
+// This value is an integer and defaults to 5.
+//
+//$max_auth_token_activation_attempts = 5;
+
+// -----
+// The maximum number of times per session that an account-activation
+// email can be sent (or re-sent) from the 'customers_authorization' page before
+// an HTTP 406 (unacceptable) return is issued.
+//
+// This value is an integer and defaults to 5.
+//
+//$max_auth_token_emails = 5;

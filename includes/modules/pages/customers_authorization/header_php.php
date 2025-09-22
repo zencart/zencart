@@ -18,9 +18,9 @@ if (!empty($_GET['reset_token'])) {
         // -----
         // Enable a site to control the number of failed auth-token requests.
         //
-        $max_auth_token_activation_attempts = (int)($max_auth_token_activation_attempts ?? 9);
+        $max_auth_token_activation_attempts = (int)($max_auth_token_activation_attempts ?? 5);
         if ($max_auth_token_activation_attempts < 2) {
-            $max_auth_token_activation_attempts = 9;
+            $max_auth_token_activation_attempts = 5;
         }
 
         $_SESSION['auth_token_activation_attempts'] ??= 0;
@@ -71,7 +71,18 @@ if (empty($customer_data['activation_required'])) {
     $auth_token_info = $customer->getAuthTokenInfo();
     $token = ($auth_token_info['token'] ?? null);
 
-    if ($token === null || ($_GET['action'] ?? '') === 'resend') {
+    if ($token === null || $resend_requested) {
+        $max_auth_token_emails = (int)($max_auth_token_emails ?? 5);
+        if ($max_auth_token_emails < 2) {
+            $max_auth_token_emails = 5;
+        }
+        $_SESSION['auth_token_emails_sent'] ??= 0;
+        $_SESSION['auth_token_emails_sent']++;
+        if ($_SESSION['auth_token_emails_sent'] > $max_auth_token_emails) {
+            header('HTTP/1.1 406 Not Acceptable');
+            zen_exit();
+        }
+
         require DIR_WS_MODULES . zen_get_module_directory(FILENAME_SEND_AUTH_TOKEN_EMAIL);
         $auth_token_info = $customer->getAuthTokenInfo();
     }
