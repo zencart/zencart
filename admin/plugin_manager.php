@@ -34,7 +34,7 @@ $installerFactory = new InstallerFactory($db, $pluginInstaller, $errorContainer)
 // define the table definition. Just using an array here, but could have used the fluent interface
 $tableDefinition = [
     'colKey' => 'unique_key',
-    'maxRowCount' => 20,
+    'maxRowCount' => 999,
     'defaultRowAction' => '',
     'columns' => [
         'name' => [

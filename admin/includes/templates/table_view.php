@@ -101,21 +101,3 @@ use Zencart\Paginator\LaravelPaginator;
             ?>
         </div>
     </div>
-    <div class="row">
-        <table class="table">
-            <tr>
-                <td><?php echo sprintf(TEXT_DISPLAY_NUMBER_OF_GENERIC, $formatter->getResultSet()->firstItem(), $formatter->getResultSet()->lastItem(), $formatter->getResultSet()->total()); ?></td>
-                <td class="text-right"> <?php echo (new LaravelPaginator($formatter->getResultSet()))->display_links($formatter->getResultSet()->total(), MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'] ?? 1); ?></td>
-            </tr>
-        </table>
-    </div>
-
-    <?php if ($formatter->hasButtonActions()) { ?>
-    <div class="row">
-        <?php foreach ($formatter->getButtonActions() as $buttonAction) { ?>
-            <a href="<?php echo zen_href_link($PHP_SELF, $buttonAction['hrefLink']); ?>">
-            <button class="btn <?php echo $buttonAction['buttonClass']; ?>" type="button"><?php echo $buttonAction['title']; ?></button>
-            </a>
-        <?php } ?>
-    </div>
-    <?php } ?>
