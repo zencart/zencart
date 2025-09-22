@@ -142,12 +142,17 @@ class zcAjaxScanAdditionalImages
 
             // Insert matches into products_additional_images table
             foreach ($matches as $sort_order => $additional_image) {
-                // Insert if new, ignoring if duplicate (unique index is set on products_id + additional_image)
-                $result = $db->Execute(
-                    "INSERT IGNORE INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
-                VALUES (" . $products_id . ", '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
+                // Check if already exists
+                $exists_query = $db->Execute(
+                    "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $products_id AND additional_image = '" . zen_db_input($subdir . $additional_image) . "'"
                 );
-                $inserted += mysqli_affected_rows($result->link);
+                if ($exists_query->EOF) {
+                    $result = $db->Execute(
+                        "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
+                        VALUES ($products_id, '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
+                    );
+                    $inserted += mysqli_affected_rows($result->link);
+                }
             }
 
             $counter++;
