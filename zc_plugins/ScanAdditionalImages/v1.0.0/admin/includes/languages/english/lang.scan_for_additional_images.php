@@ -48,7 +48,7 @@ Remember, to use these database-tracked images, your <strong>Admin-&gt;Configura
     'TEXT_STATUS_REMAINING' => 'Remaining: ',
 
     'TEXT_COMPLETED' => 'Completed all work (remaining = 0).',
-    'TEXT_NETWORK_ERROR' => 'Network error or request aborted. (HTTP Error)',
+    'TEXT_NETWORK_ERROR' => 'Network error, timeout, or request aborted. (HTTP Error). Try smaller batch sizes.',
     'TEXT_HTTP_ERROR' => 'HTTP Error ',
     'TEXT_CANCELLED' => 'Cancelled by user.',
 
