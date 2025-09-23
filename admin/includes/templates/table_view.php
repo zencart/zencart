@@ -33,7 +33,7 @@ use Zencart\Paginator\LaravelPaginator;
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
         <?php
-            for($i = 0; $i < 3; $i++) {
+            for ($i = 0; $i < 3; $i++) {
                 $firstheader = 0;
                 $skip = 1;
                 foreach ($formatter->getTableData() as $tableData) {
@@ -82,7 +82,7 @@ use Zencart\Paginator\LaravelPaginator;
                             <?php echo $column['value']; ?>
                         </td>
                         <?php } ?>
-                        <?php require(DIR_WS_TEMPLATES . 'partials/tableview_rowactions.php'); ?>
+                        <?php require DIR_WS_TEMPLATES . 'partials/tableview_rowactions.php'; ?>
                         </tr>
                     <?php }
                 } ?>
