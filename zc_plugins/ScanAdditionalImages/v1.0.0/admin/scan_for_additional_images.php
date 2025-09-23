@@ -43,6 +43,9 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
         }
         .stats .label { font-size: 0.9rem; color: #6c757d; }
         .stats .value { font-size: 1.25rem; font-weight: 600; margin: 5px 5px 0; }
+
+        .form-btn-align { margin-top: 18px; }
+        @media (max-width: 767px) { .form-btn-align { margin-top: 8px; } }
     </style>
 
     <script title="Total Products With Images">
@@ -98,16 +101,21 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
         <div class="card card-body" style="border:1px solid #e5e7eb;">
             <form class="form">
                 <div class="row">
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-sm-4 col-md-3">
                         <div class="form-group">
                             <label for="start_at" class="control-label"><?= TEXT_START_AT ?></label>
                             <input id="start_at" type="number" min="0" value="0" class="form-control" />
                         </div>
                     </div>
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-sm-4 col-md-3">
                         <div class="form-group">
                             <label for="batch_size" class="control-label"><?= TEXT_BATCH_SIZE ?></label>
                             <input id="batch_size" type="number" min="0" max="50" value="10" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-3">
+                        <div class="form-group form-btn-align">
+                            <button id="btnReset" type="button" class="btn btn-default btn-secondary"><?= IMAGE_RESET ?></button>
                         </div>
                     </div>
                 </div>
@@ -257,6 +265,10 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
             $('#btnStart').on('click', onStart);
             $('#btnCancel').on('click', function () {
                 cancelRequested = true;
+            });
+            $('#btnReset').on('click', function () {
+                $('#start_at').val(0);
+                $('#batch_size').val(10);
             });
         });
 
