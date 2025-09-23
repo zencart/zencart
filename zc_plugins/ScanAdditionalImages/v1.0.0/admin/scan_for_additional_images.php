@@ -267,6 +267,10 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
             start_at = clamp(Number.isFinite(start_at) ? start_at : 0, 0, Number.POSITIVE_INFINITY);
             batch_size = clamp(Number.isFinite(batch_size) ? batch_size : 10, 0, 50);
 
+            // Reflect clamped values back to inputs
+            $('#start_at').val(start_at);
+            $('#batch_size').val(batch_size);
+
             // Reset state/UI
             cancelRequested = false;
             setRunningState(true);
@@ -308,8 +312,8 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
 
                     let batchRecordsFound = Number.isFinite(+response.batchRecordsFound) ? +response.batchRecordsFound : 0;
                     let recordsProcessed = Number.isFinite(+response.recordsProcessed) ? +response.recordsProcessed : 0;
-                    let next_start = response.next_start;
-                    let next_batch = response.next_batch;
+                    let next_start = Number.isFinite(+response.next_start) ? +response.next_start : 0;
+                    let next_batch = Number.isFinite(+response.next_batch) ? +response.next_batch : 0;
                     let terminate = !!response.terminate;
                     let imagesInserted = Number.isFinite(+response.imagesInserted) ? +response.imagesInserted : 0;
                     let errorMessage = response.errorMessage;
@@ -360,6 +364,12 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
                         ', <?= TEXT_STATUS_REMAINING ?>' + remaining
                     );
 
+                    // Update inputs for next iteration, for easy resume in case of failure or timeout
+                    $('#start_at').val(next_start);
+                    if (remaining > 0 && next_batch > 0 && remaining !== next_batch) {
+                        $('#batch_size').val(next_batch);
+                    }
+
                     // Log any server warnings
                     if (errorMessage) {
                         appendLog('<?= TEXT_WARNING ?>' + escapeHtml(String(errorMessage)));
@@ -369,10 +379,15 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
                     if (remaining === 0) {
                         updateProgress(100);
                         appendLog('<?= TEXT_COMPLETED ?>');
+
+                        // reset to defaults
+                        // $('#start_at').val(0);
+                        // $('#batch_size').val(10);
+
                         break;
                     }
 
-                    // Loop using supplied server cursors for successive iterations
+                    // Use supplied server cursors for successive iterations
                     if (Number.isFinite(+next_start)) start_at = +next_start;
                     if (Number.isFinite(+next_batch)) batch_size = +next_batch;
 
