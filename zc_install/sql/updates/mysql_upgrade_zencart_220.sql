@@ -123,6 +123,7 @@ UPDATE plugin_control SET status = 9 WHERE status = 0;
 UPDATE plugin_control SET status = 0 WHERE status = 1;
 UPDATE plugin_control SET status = 1 WHERE status = 2;
 UPDATE plugin_control SET status = 2 WHERE status = 9;
+ALTER TABLE plugin_control MODIFY COLUMN status tinyint(1) NOT NULL default 2;
 
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
