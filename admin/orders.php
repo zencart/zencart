@@ -1603,7 +1603,7 @@ if ($show_orders_weights === true) {
                                                     LIMIT 1"
                                         );
 
-                                        if (!$orders_history_query->EOF && zen_not_null($orders_history_query->fields['comments'])) {
+                                        if (!$orders_history_query->EOF && !empty($orders_history_query->fields['comments'])) {
                                             $contents[] = ['text' => '<br>' . TABLE_HEADING_COMMENTS];
 
                                             // -----
