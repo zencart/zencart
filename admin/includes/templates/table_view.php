@@ -48,8 +48,17 @@ use Zencart\Paginator\LaravelPaginator;
                 <thead>
                 <tr class="dataTableHeadingRow">
                     <?php $firstheader = 0;
-                        foreach ($formatter->getTableHeaders() as $colHeader) { ?>
-                        <th class="<?php echo $colHeader['headerClass']; ?>">
+                        $colnumb = 0;
+                        foreach ($formatter->getTableHeaders() as $colHeader) {
+                        $colwidth = match(true) {
+                            $colnumb === 0 => '',
+                            $colnumb <= 1 => ' w-10',
+                            $colnumb <= 2 => ' w-15',
+                            $colnumb <= 3 => ' w-25',
+                            default => ' w-10',
+                        };
+                    ?>
+                        <th class="<?php echo $colHeader['headerClass'] . $colwidth; ?>">
                         <?php if ($firstheader === 0) {
                             $tabletitle = match($i) {
                                 0 => TEXT_INSTALLED_ENABLED,
@@ -62,8 +71,9 @@ use Zencart\Paginator\LaravelPaginator;
                                 echo $colHeader['title'];
                             }
                             ?></th>
-                    <?php } ?>
-                    <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
+                    <?php $colnumb += 1;
+                        } ?>
+                    <th class="dataTableHeadingContent w-5 text-right"><?php echo TABLE_HEADING_ACTION; ?></th>
                 </tr>
                 </thead>
                 <tbody>
