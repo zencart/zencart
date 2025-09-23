@@ -235,7 +235,7 @@ $iconMap = [
   'locked' => 'fa-lock',
   'unlocked' => 'fa-lock-open',
   'loading' => 'fa-gear fa-spin',
-  'clipboard' => 'fa-solid fa-clipboard-list',
+  'eye' => 'fa-eye',
 ];
 
 /**
