@@ -107,7 +107,7 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
                     <div class="col-md-3 col-sm-6">
                         <div class="form-group">
                             <label for="batch_size" class="control-label"><?= TEXT_BATCH_SIZE ?></label>
-                            <input id="batch_size" type="number" min="0" max="100" value="10" class="form-control" />
+                            <input id="batch_size" type="number" min="0" max="50" value="10" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -265,7 +265,7 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
             let batch_size = parseInt($('#batch_size').val(), 10);
 
             start_at = clamp(Number.isFinite(start_at) ? start_at : 0, 0, Number.POSITIVE_INFINITY);
-            batch_size = clamp(Number.isFinite(batch_size) ? batch_size : 10, 0, 100);
+            batch_size = clamp(Number.isFinite(batch_size) ? batch_size : 10, 0, 50);
 
             // Reset state/UI
             cancelRequested = false;
@@ -296,7 +296,7 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
                     let response = await zcJS.ajax({
                         url: '/ajax.php?act=ajaxScanAdditionalImages&method=doBatch',
                         data: payload,
-                        timeout: 60000,
+                        timeout: 200000,
                         cache: false,
                         headers: { "cache-control": "no-cache" },
                     });

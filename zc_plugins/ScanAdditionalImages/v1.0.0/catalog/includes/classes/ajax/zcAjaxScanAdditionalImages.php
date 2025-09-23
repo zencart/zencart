@@ -20,16 +20,14 @@ class zcAjaxScanAdditionalImages
         if (is_numeric($_POST['batch_size']) && (int)$_POST['batch_size'] >= 0) {
             $batch_size = (int)$_POST['batch_size'];
         }
-        // Limit batch processing (if over 100, reset to 10 for better progress-meter experience)
-        if ($batch_size > 100) {
+        // Limit batch processing (if over 50, reset to 10, because we want to avoid running longer than 60 seconds since servers may disconnect at that point).
+        if ($batch_size > 50) {
             $batch_size = 10;
         }
 
-        $time_limit = 600; // 10 minutes
-        if ($batch_size > 0) {
-            $time_limit = $batch_size * 10; // 10 seconds per product
-        }
-        zen_set_time_limit($time_limit);
+        // Since this is an ajax call, we want to keep things short. But we bump to over 3 minutes here because we're processing batches.
+        // Smaller batches are the better way instead of increasing time limits.
+        zen_set_time_limit(200);
 
         $sql = $this->buildQuery($start_at, $batch_size);
         $products_query = $db->Execute($sql);
