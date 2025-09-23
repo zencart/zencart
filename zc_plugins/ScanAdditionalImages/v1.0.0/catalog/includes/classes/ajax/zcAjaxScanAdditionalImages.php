@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 zen_define_default('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
 
@@ -108,6 +109,11 @@ class zcAjaxScanAdditionalImages
             $products_id = (int)$product['products_id'];
             $products_image = $product['products_image'];
 
+            // The query should have filtered these out already.
+            if (empty($products_image) || $products_image === PRODUCTS_IMAGE_NO_IMAGE) {
+                continue;
+            }
+
             // Get base filename without extension
             $image_extension = substr($products_image, strrpos($products_image, '.'));
             $image_base = basename($products_image, $image_extension);
@@ -170,6 +176,7 @@ class zcAjaxScanAdditionalImages
 
         $sql .= " FROM " . TABLE_PRODUCTS . "
                 WHERE products_image IS NOT NULL
+                AND products_image != ''
                 AND products_image != '" . zen_db_input(PRODUCTS_IMAGE_NO_IMAGE) . "'";
 
         if ($batch_size < 1) {
