@@ -106,7 +106,7 @@ $tableController->processRequest();
 <head>
 <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
       <style>
-          .w-25 {width: 25%}
+          .w-20 {width: 20%}
           .w-15 {width: 15%}
           .w-10 {width: 10%}
           .w-5 {width: 5%}

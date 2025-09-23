@@ -54,7 +54,7 @@ use Zencart\Paginator\LaravelPaginator;
                             $colnumb === 0 => '',
                             $colnumb <= 1 => ' w-10',
                             $colnumb <= 2 => ' w-15',
-                            $colnumb <= 3 => ' w-25',
+                            $colnumb <= 3 => ' w-20',
                             default => ' w-10',
                         };
                     ?>
