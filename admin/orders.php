@@ -1592,17 +1592,18 @@ if ($show_orders_weights === true) {
                                             $contents[] = ['align' => 'text-center', 'text' => $goto_gv];
                                         }
 
-                                        // indicate if comments exist
+                                        // -----
+                                        // Indicate if comments exist and retrieve the first comment only.
+                                        // (The first comment should only be the customer/admin's comment)
                                         $orders_history_query = $db->Execute(
                                                 "SELECT comments, updated_by
                                                      FROM " . TABLE_ORDERS_STATUS_HISTORY . "
                                                     WHERE orders_id = " . (int)$oInfo->orders_id . "
-                                                        AND comments != ''
                                                     ORDER BY date_added ASC
                                                     LIMIT 1"
                                         );
 
-                                        if (!$orders_history_query->EOF) {
+                                        if (!$orders_history_query->EOF && !empty($orders_history_query->fields['comments'])) {
                                             $contents[] = ['text' => '<br>' . TABLE_HEADING_COMMENTS];
 
                                             // -----
