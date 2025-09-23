@@ -36,7 +36,7 @@ class zcAjaxScanAdditionalImages
         if ($products_query->EOF) {
             return [
                 'batchRecordsFound' => 0,
-                'errorMessage' => TEXT_NOTHING_TO_PROCESS,
+                'errorMessage' => SYNC_TEXT_NOTHING_TO_PROCESS,
                 'imagesInserted' => 0,
                 'next_batch' => 0,
                 'next_start' => 0,
@@ -54,7 +54,7 @@ class zcAjaxScanAdditionalImages
         if (empty($batch_size)) {
             return [
                 'batchRecordsFound' => $batchRecordsFound,
-                'errorMessage' => TEXT_QUERY_ONLY,
+                'errorMessage' => SYNC_TEXT_QUERY_ONLY,
                 'imagesInserted' => 0,
                 'next_batch' => 10,
                 'next_start' => 1,

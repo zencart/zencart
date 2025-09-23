@@ -51,9 +51,6 @@ Remember, to use these database-tracked images, your <strong>Admin-&gt;Configura
     'TEXT_NETWORK_ERROR' => 'Network error, timeout, or request aborted. (HTTP Error). Try smaller batch sizes.',
     'TEXT_HTTP_ERROR' => 'HTTP Error ',
     'TEXT_CANCELLED' => 'Cancelled by user.',
-
-    'TEXT_NOTHING_TO_PROCESS' => 'No products (with images) to process with these batch selections.',
-    'TEXT_QUERY_ONLY' => 'Query only - no processing performed.',
 ];
 
 return $define;
