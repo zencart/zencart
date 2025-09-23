@@ -62,6 +62,7 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
     <h1><?= HEADING_TITLE ?></h1>
     <?= TEXT_MAIN ?><br>
     <br>
+    <p><?= TEXT_TIP_1 ?></p>
     <h3><?= TEXT_STEP_1 ?></h3>
     <p><?= TEXT_STEP_1_DETAIL ?></p>
     <h3><?= TEXT_STEP_2 ?></h3>
