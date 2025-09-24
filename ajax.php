@@ -38,7 +38,7 @@ require $zc_ajax_base_dir . 'includes/application_top.php';
 
 // deny ajax requests from spiders
 if (isset($spider_flag) && $spider_flag === true) {
-    ajaxAbort(410);
+    ajaxAbort(inDeveloperMode() ? 410 : 400);
 }
 
 header('Access-Control-Allow-Origin: *');
@@ -57,6 +57,10 @@ function ajaxAbort($status = 400, $msg = null)
     require $zc_ajax_base_dir . 'includes/application_bottom.php';
     exit();
 }
+function inDeveloperMode(): bool
+{
+    return (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true);
+}
 // --- end support functions ------------------
 
 $language_page_directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/';
@@ -71,13 +75,13 @@ if (!empty($file) && file_exists($file)) {
 } else {
     $fs->loadFilesFromPluginsDirectory($installedPlugins, 'catalog/' . $classPath, '~^' . $classFile . '$~');
     if (!class_exists($className)) {
-        ajaxAbort(422);
+        ajaxAbort(inDeveloperMode() ? 422 : 400);
     }
 }
 
 $class = new $className();
 if (!method_exists($class, $_GET['method'])) {
-    ajaxAbort(422, 'class method error');
+    ajaxAbort(inDeveloperMode() ? 422 : 400, 'class method error');
 }
 
 // Accepted request, so execute and return appropriate response:
