@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS customers_auth_tokens;
 CREATE TABLE customers_auth_tokens (
     customers_id int(11) NOT NULL,
     email_address varchar(96) NOT NULL,
-    token varchar(100) NOT NULL default '',
+    token varchar(100) NOT NULL DEFAULT '',
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (customers_id)
 );
@@ -59,8 +59,8 @@ ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
 ALTER TABLE orders MODIFY currency char(4) default NULL;
 ALTER TABLE plugin_control MODIFY `version` varchar(20);
 ALTER TABLE plugin_control_versions MODIFY `version` varchar(20);
-ALTER TABLE customers ADD COLUMN activation_required tinyint(1) NOT NULL default 0 AFTER customers_authorization;
-ALTER TABLE customers ADD COLUMN welcome_email_sent tinyint(1) default NULL AFTER activation_required;
+ALTER TABLE customers ADD COLUMN activation_required tinyint(1) NOT NULL DEFAULT 0 AFTER customers_authorization;
+ALTER TABLE customers ADD COLUMN welcome_email_sent tinyint(1) DEFAULT NULL AFTER activation_required;
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');

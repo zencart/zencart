@@ -633,8 +633,8 @@ CREATE TABLE customers (
   customers_group_pricing int(11) NOT NULL default '0',
   customers_email_format varchar(4) NOT NULL default 'TEXT',
   customers_authorization int(1) NOT NULL default '0',
-  activation_required tinyint(1) NOT NULL default 0,
-  welcome_email_sent tinyint(1) default NULL,
+  activation_required tinyint(1) NOT NULL DEFAULT 0,
+  welcome_email_sent tinyint(1) DEFAULT NULL,
   customers_referral varchar(32) NOT NULL default '',
   registration_ip varchar(45) NOT NULL default '',
   last_login_ip varchar(45) NOT NULL default '',
@@ -658,7 +658,7 @@ DROP TABLE IF EXISTS customers_auth_tokens;
 CREATE TABLE customers_auth_tokens (
     customers_id int(11) NOT NULL,
     email_address varchar(96) NOT NULL,
-    token varchar(100) NOT NULL default '',
+    token varchar(100) NOT NULL DEFAULT '',
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (customers_id)
 );
