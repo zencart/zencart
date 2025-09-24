@@ -216,6 +216,7 @@ $tableController->processRequest();
             ?>
         </div>
     </div>
+</div>
 <!-- body_eof //-->
 
 <!-- footer //-->
