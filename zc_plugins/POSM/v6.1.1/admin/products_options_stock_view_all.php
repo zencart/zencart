@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2015-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2015-2025 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 5.0.0
+// Last updated: POSM 6.1.1
 //
 require 'includes/application_top.php';
 $languages = zen_get_languages();
@@ -556,13 +556,6 @@ $(function() {
             data: {
                 model_num: modelNum,
                 pos_id: posID
-            },
-            cache: false,
-            headers: { "cache-control": "no-cache" },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (textStatus === 'timeout') {
-                    alert(ajaxTimeoutErrorMessage);
-                }
             },
         }).done(function(response) {
             if (response.isOk === false) {
