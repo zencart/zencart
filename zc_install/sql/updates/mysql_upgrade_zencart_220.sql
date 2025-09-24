@@ -37,6 +37,14 @@ TRUNCATE TABLE db_cache;
 
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
+DROP TABLE IF EXISTS customers_auth_tokens;
+CREATE TABLE customers_auth_tokens (
+    customers_id int(11) NOT NULL,
+    email_address varchar(96) NOT NULL,
+    token varchar(100) NOT NULL DEFAULT '',
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (customers_id)
+);
 DROP TABLE IF EXISTS customer_password_reset_tokens;
 CREATE TABLE customer_password_reset_tokens (
     customer_id int(11) NOT NULL default 0,
@@ -51,13 +59,20 @@ ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
 ALTER TABLE orders MODIFY currency char(4) default NULL;
 ALTER TABLE plugin_control MODIFY `version` varchar(20);
 ALTER TABLE plugin_control_versions MODIFY `version` varchar(20);
+ALTER TABLE customers ADD COLUMN activation_required tinyint(1) NOT NULL DEFAULT 0 AFTER customers_authorization;
+ALTER TABLE customers ADD COLUMN welcome_email_sent tinyint(1) DEFAULT NULL AFTER activation_required;
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Length', 'PASSWORD_RESET_TOKEN_LENGTH', '24', 'Number of characters in a generated password-reset token. Default is 24. Allowed: 12-100, but it affects the URL length, so 12-30 is most ideal', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Valid For', 'PASSWORD_RESET_TOKEN_MINUTES_VALID', '60', 'How many minutes a password-reset token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Length', 'PASSWORD_RESET_TOKEN_LENGTH', '24', 'Number of characters in a generated password-reset token. Default is 24. Allowed: 12-100, but it affects the URL length, so 12-30 is most ideal', 5, 52, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Valid For', 'PASSWORD_RESET_TOKEN_MINUTES_VALID', '60', 'How many minutes a password-reset token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 5, 53, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
+UPDATE configuration SET configuration_group_id = 5, sort_order = 52 WHERE configuration_key = 'PASSWORD_RESET_TOKEN_LENGTH' LIMIT 1;
+UPDATE configuration SET configuration_group_id = 5, sort_order = 53 WHERE configuration_key = 'PASSWORD_RESET_TOKEN_MINUTES_VALID' LIMIT 1;
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href="https://www.tiny.cloud/auth/signup/" target="_blank">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now());
 UPDATE configuration SET configuration_description = 'CSS Buttons<br>Use CSS buttons instead of images (GIF/JPG)?<br>Button styles must be configured in the stylesheet if you enable this option.<br>Yes - Use CSS buttons<br>No - Use images buttons<br>Found - Use images if exist, else use CSS buttons', set_function = 'zen_cfg_select_option(array(\'No\', \'Yes\', \'Found\'), ' WHERE configuration_key = 'IMAGE_USE_CSS_BUTTONS' LIMIT 1;
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, set_function) VALUES ('Account Activation Required?', 'CUSTOMERS_ACTIVATION_REQUIRED', 'false', 'Require customer-account activation? If set to <code>true</code>, an activation link is sent to the email address supplied by the customer. The customer must click on that link to activate their account.', 5, 60, NULL, now(), 'zen_cfg_select_option([\'true\', \'false\'], ');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Account Activation Token Length', 'CUSTOMERS_ACTIVATION_TOKEN_LENGTH', '24', 'Number of characters in a generated account-activation token. Default is 24. Allowed: 12-100, but it affects the URL length, so 10-30 is most ideal', 5, 61, NULL, now(), '{\"error\":\"TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Account Activation Token Valid For', 'CUSTOMERS_ACTIVATION_TOKEN_MINUTES_VALID', '60', 'How many minutes an account-activation token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 5, 62, NULL, now(), '{\"error\":\"TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
 
 DELETE FROM admin_pages WHERE page_key = 'pageRegistration';
 

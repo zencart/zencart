@@ -121,10 +121,14 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
         return '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . (int)$product_id, 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
     }
 
-// 0 = normal shopping
-// 1 = Login to shop
-// 2 = Can browse but no prices
+    // 0 = normal shopping
+    // 1 = Login to shop
+    // 2 = Can browse but no prices
     // verify display of prices
+    $auth_pending_link =
+        '<a href="' . zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL') . '" rel="noindex nofollow">' .
+            TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE .
+        '</a>';
     switch (true) {
         case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
             // customer must be logged in to browse
@@ -146,25 +150,22 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
             return $login_for_price;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && CUSTOMERS_APPROVAL_AUTHORIZATION != '3' && !zen_is_logged_in()):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '3' && !zen_is_logged_in()):
             // customer must be logged in to browse
-            $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
-            return $login_for_price;
+            return $auth_pending_link;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION == '3' && !zen_is_logged_in()):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION === '3' && !zen_is_logged_in()):
             // customer must be logged in and approved to add to cart
             $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' . TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
             return $login_for_price;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && (int)($_SESSION['customers_authorization'] ?? 0) > 0):
             // customer must be logged in to browse
-            $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
-            return $login_for_price;
+            return $auth_pending_link;
             break;
-        case (isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] >= 2):
+        case ((int)($_SESSION['customers_authorization'] ?? 0) >= 2):
             // customer is logged in and was changed to must be approved to buy
-            $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
-            return $login_for_price;
+            return $auth_pending_link;
             break;
         default:
             // proceed normally
