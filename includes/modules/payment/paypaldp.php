@@ -23,6 +23,7 @@ if (!defined('MODULE_PAYMENT_CARDINAL_CENTINEL_DEBUGGING')) define('MODULE_PAYME
 require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_curl.php');
 /**
  * the PayPal payment module for PayPal Payments Pro (Direct Payment API)
+ * @since ZC v1.3.8
  */
 class paypaldp extends base {
   /**
@@ -327,6 +328,7 @@ class paypaldp extends base {
   }
   /**
    *  Sets payment module status based on zone restrictions etc
+   * @since ZC v1.3.8
    */
   function update_status() {
     global $order, $db;
@@ -387,6 +389,7 @@ class paypaldp extends base {
   }
   /**
    *  Validate the credit card information via javascript (Number, Owner, and CVV Lengths)
+   * @since ZC v1.3.8
    */
   function javascript_validation() {
     return '  if (payment_value == "' . $this->code . '") {' . "\n" .
@@ -410,6 +413,7 @@ class paypaldp extends base {
   }
   /**
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
+   * @since ZC v1.3.8
    */
   function selection() {
     global $order, $zcDate;
@@ -501,6 +505,7 @@ class paypaldp extends base {
    * This is the credit card check done between checkout_payment and
    * checkout_confirmation (called from checkout_confirmation).
    * Evaluates the Credit Card Type for acceptance and the validity of the Credit Card Number & Expiration Date
+   * @since ZC v1.3.8
    */
   function pre_confirmation_check() {
     global $messageStack, $order;
@@ -668,6 +673,7 @@ class paypaldp extends base {
   }
   /**
    * Display Credit Card Information for review on the Checkout Confirmation Page
+   * @since ZC v1.3.8
    */
   function confirmation() {
     global $zcDate;
@@ -700,6 +706,7 @@ class paypaldp extends base {
   }
   /**
    * Prepare the hidden fields comprising the parameters for the Submit button on the checkout confirmation page
+   * @since ZC v1.3.8
    */
   function process_button() {
     global $order;
@@ -718,6 +725,9 @@ class paypaldp extends base {
     $process_button_string .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
     return $process_button_string;
   }
+  /**
+   * @since ZC v1.5.4
+   */
   function process_button_ajax() {
     $processButton = array('ccFields'=>array('wpp_cc_type'=>'paypalwpp_cc_type',
         'wpp_cc_expdate_month'=>'paypalwpp_cc_expires_month',
@@ -734,6 +744,7 @@ class paypaldp extends base {
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured
+   * @since ZC v1.3.8
    */
   function before_process() {
     global $order, $doPayPal, $messageStack;
@@ -1004,6 +1015,7 @@ class paypaldp extends base {
   }
   /**
    * When the order returns from the processor, this stores the results in order-status-history and logs data for subsequent use
+   * @since ZC v1.3.8
    */
   function after_process() {
     global $insert_id, $order;
@@ -1093,6 +1105,7 @@ class paypaldp extends base {
     *
     * @param int $zf_order_id
     * @return string
+   * @since ZC v1.3.8
     */
   function admin_notification($zf_order_id) {
     if (!defined('MODULE_PAYMENT_PAYPALDP_STATUS')) return '';
@@ -1113,6 +1126,7 @@ class paypaldp extends base {
   }
   /**
    * Used to read details of an existing transaction.  FOR FUTURE USE.
+   * @since ZC v1.3.8
    */
   function _GetTransactionDetails($oID) {
     if ($oID == '' || $oID < 1) return FALSE;
@@ -1149,6 +1163,7 @@ class paypaldp extends base {
   }
   /**
    * Used to read details of existing transactions.  FOR FUTURE USE.
+   * @since ZC v1.3.8
    */
   function _TransactionSearch($startDate = '', $oID = '', $criteria = '') {
     global $db, $messageStack, $doPayPal;
@@ -1176,6 +1191,7 @@ class paypaldp extends base {
   }
   /**
    * Evaluate installation status of this module. Returns true if the status key is found.
+   * @since ZC v1.3.8
    */
   function check() {
     global $db;
@@ -1190,6 +1206,7 @@ class paypaldp extends base {
   }
   /**
    * Installs all the configuration keys for this module
+   * @since ZC v1.3.8
    */
   function install() {
     global $db, $messageStack;
@@ -1227,10 +1244,16 @@ class paypaldp extends base {
     $this->notify('NOTIFY_PAYMENT_PAYPALDP_INSTALLED');
   }
 
+  /**
+   * @since ZC v1.5.8
+   */
   function help() {
        return array('link' => 'https://docs.zen-cart.com/user/payment/paypal/');
   }
 
+  /**
+   * @since ZC v1.3.8
+   */
   function keys() {
     $keys_list = array('MODULE_PAYMENT_PAYPALDP_STATUS', 'MODULE_PAYMENT_PAYPALDP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALDP_ZONE', 'MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALDP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALDP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALDP_CURRENCY', 'MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY', 'MODULE_PAYMENT_PAYPALDP_EC_RETURN_FMF_DETAILS', 'MODULE_PAYMENT_PAYPALDP_SERVER', 'MODULE_PAYMENT_PAYPALDP_DEBUGGING');
     if (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') && MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') {
@@ -1240,6 +1263,7 @@ class paypaldp extends base {
   }
   /**
    * De-install this module
+   * @since ZC v1.3.8
    */
   function remove() {
     global $db;
@@ -1248,6 +1272,7 @@ class paypaldp extends base {
   }
   /**
    * Check settings and conditions to determine whether we are in an Express Checkout phase or not
+   * @since ZC v1.3.8
    */
   function in_special_checkout() {
     if ((defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True') &&
@@ -1259,6 +1284,7 @@ class paypaldp extends base {
   }
   /**
    * Debug Logging support
+   * @since ZC v1.3.8
    */
   function zcLog($stage, $message) {
     static $tokenHash;
@@ -1277,6 +1303,7 @@ class paypaldp extends base {
   }
   /**
    * Debug Emailing support
+   * @since ZC v1.3.8
    */
   function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
     if (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log and Email') {
@@ -1287,6 +1314,7 @@ class paypaldp extends base {
   }
   /**
    * Initialize the PayPal/PayflowPro object for communication to the processing gateways
+   * @since ZC v1.3.8
    */
   function paypal_init() {
     $nvp = (MODULE_PAYMENT_PAYPALWPP_APIPASSWORD != '' && MODULE_PAYMENT_PAYPALWPP_APISIGNATURE != '') ? true : false;
@@ -1330,6 +1358,7 @@ class paypaldp extends base {
   }
   /**
    * Determine which PayPal URL to direct the customer's browser to when needed
+   * @since ZC v1.3.8
    */
   function getPayPalLoginServer() {
     if (MODULE_PAYMENT_PAYPALDP_SERVER == 'live') {
@@ -1344,6 +1373,7 @@ class paypaldp extends base {
   /**
    * Used to submit a refund for a given transaction.  FOR FUTURE USE.
    * @TODO: Add option to specify shipping/tax amounts for refund instead of just total. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_119/
+   * @since ZC v1.3.8
    */
   function _doRefund($oID, $amount = 'Full', $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -1400,6 +1430,7 @@ class paypaldp extends base {
   /**
    * Used to capture part or all of a given previously-authorized transaction.  FOR FUTURE USE.
    * (alt value for $captureType = 'NotComplete')
+   * @since ZC v1.3.8
    */
   function _doCapt($oID, $captureType = 'Complete', $amt = 0, $currency = 'USD', $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -1460,6 +1491,7 @@ class paypaldp extends base {
   }
   /**
    * Used to void a given previously-authorized transaction.  FOR FUTURE USE.
+   * @since ZC v1.3.8
    */
   function _doVoid($oID, $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -1501,6 +1533,7 @@ class paypaldp extends base {
 
   /**
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
+   * @since ZC v1.3.8
    */
   function selectCurrency($val = '') {
     $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB');
@@ -1522,6 +1555,7 @@ class paypaldp extends base {
   }
   /**
    * Calculate the amount based on acceptable currencies
+   * @since ZC v1.3.8
    */
   function calc_order_amount($amount, $paypalCurrency, $applyFormatting = false) {
     global $currencies;
@@ -1534,6 +1568,7 @@ class paypaldp extends base {
   }
   /**
    * Set the state field depending on what PayPal requires for that country.
+   * @since ZC v1.3.8
    */
   function setStateAndCountry(&$info) {
     global $db, $messageStack;
@@ -1569,6 +1604,7 @@ class paypaldp extends base {
   }
   /**
    * Prepare subtotal and line-item detail content to send to PayPal
+   * @since ZC v1.3.8
    */
   function getLineItemDetails($restrictedCurrency) {
     global $order, $currencies, $order_totals, $order_total_modules;
@@ -1897,6 +1933,7 @@ class paypaldp extends base {
   }
   /**
    * If the account was created only for temporary purposes to place the PayPal order, delete it.
+   * @since ZC v1.3.8
    */
   function ec_delete_user($cid) {
     global $db;
@@ -1910,6 +1947,7 @@ class paypaldp extends base {
   }
   /**
    * If the EC flow has to be interrupted for any reason, this does the appropriate cleanup and displays status/error messages.
+   * @since ZC v1.3.8
    */
   function terminateEC($error_msg = '', $kill_sess_vars = false, $goto_page = '') {
     global $messageStack, $order, $order_total_modules;
@@ -1946,6 +1984,7 @@ class paypaldp extends base {
   }
   /**
    * Error / exception handling
+   * @since ZC v1.3.8
    */
   function _errorHandler($response, $operation = '', $ignore_codes = '') {
     global $messageStack, $doPayPal;
@@ -1959,7 +1998,7 @@ class paypaldp extends base {
             }
         }
     }
-    /** Handle FMF Scenarios **/
+    /* Handle FMF Scenarios **/
     if (in_array($operation, ['DoExpressCheckoutPayment', 'DoDirectPayment']) && !empty($response['PAYMENTSTATUS']) && $response['PAYMENTSTATUS'] === 'Pending' && isset($response['L_ERRORCODE0']) && $response['L_ERRORCODE0'] == 11610) {
       $this->fmfResponse = urldecode($response['L_SHORTMESSAGE0']);
       $this->fmfErrors = array();
@@ -2135,6 +2174,9 @@ class paypaldp extends base {
     }
   }
 
+  /**
+   * @since v1.3.8
+   */
   function tableCheckup() {
     global $db, $sniffer;
     $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_PAYPAL, 'txn_id', 'varchar(20)', true) : -1;
@@ -2202,6 +2244,7 @@ class paypaldp extends base {
 
   /**
    * reset session vars related to 3D-Secure processing
+   * @since ZC v1.3.9a
    */
   function clear_3DSecure_session_vars($thorough = FALSE) {
     if ($thorough) {
@@ -2225,6 +2268,9 @@ class paypaldp extends base {
   }
 
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function determine3DSecureProtection($cardType, $ECI) {
     $resultStatus = "NOT PROTECTED";
     if (strcasecmp($cardType, "VISA") == 0){
@@ -2254,6 +2300,7 @@ class paypaldp extends base {
    *
    * @param array $lookup_data_array
    * @return array
+   * @since ZC v1.3.9a
    */
   function get3DSecureLookupResponse($lookup_data_array) {
     // Set some defaults
@@ -2382,6 +2429,7 @@ class paypaldp extends base {
    * 3D-Secure Authenticate
    * @param array $authenticate_data_array
    * @return array
+   * @since ZC v1.3.9a
    */
   function get3DSecureAuthenticateResponse($authenticate_data_array) {
     // Build the XML cmpi_authenticate message
@@ -2478,6 +2526,9 @@ class paypaldp extends base {
   // the function.
   /////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function send3DSecureHttp($url, $data, $debugData) {
       // verify that the URL uses a supported protocol.
     if ((strpos($url, "http://")=== 0) || (strpos($url, "https://")=== 0)) {
@@ -2548,6 +2599,9 @@ class paypaldp extends base {
   //
   // Escaped string converting all '&' to '&amp;' and all '<' to '&lt'. Return the escaped value.
   /////////////////////////////////////////////////////////////////////////////////////////////
+  /**
+   * @since ZC v1.3.9a
+   */
   function escapeXML($elementValue){
     $escapedValue = str_replace("&", "&amp;", trim($elementValue));
     $escapedValue = str_replace("<", "&lt;", $escapedValue);
@@ -2559,6 +2613,9 @@ class paypaldp extends base {
   //
   // Initialize an Error response to ensure that parsing will be handled properly.
   /////////////////////////////////////////////////////////////////////////////////////////////
+  /**
+   * @since ZC v1.3.9a
+   */
   function setErrorResponse($errorNo, $errorDesc) {
     $resultText  = "<CardinalMPI>";
     $resultText = $resultText."<ErrorNo>".($errorNo)."</ErrorNo>" ;
@@ -2567,6 +2624,9 @@ class paypaldp extends base {
     return $resultText;
   }
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function get_authentication_error() {
     $this->clear_3DSecure_session_vars();
     return CENTINEL_AUTHENTICATION_ERROR;
@@ -2577,6 +2637,9 @@ class paypaldp extends base {
   //   If curr is digits less than 3, will pad with leading zeros
   //   If we are unable to format curr, curr is returned unformatted.
   //   MAPs will return the appropriate error code.
+  /**
+   * @since ZC v1.3.9a
+   */
   function getISOCurrency($curr) {
     $out = "";
     if(is_int($curr) || ctype_digit((string)$curr)) {
@@ -2618,6 +2681,9 @@ class paypaldp extends base {
   //   based on the currency exponenet value
   //   amount - Double floating point
   //   curr - ISO4217 Currency code, 3char or 3digit
+  /**
+   * @since ZC v1.3.9a
+   */
   function formatRawAmount($amount, $curr) {
     $dblAmount = $amount + 0.0;
 
@@ -2666,6 +2732,9 @@ class paypaldp extends base {
     return $strRetVal;
   }
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function requiresLookup($info) {
     if (is_numeric($info)) {
       $cardType = $this->determineCardType($info);
@@ -2679,6 +2748,9 @@ class paypaldp extends base {
     }
   }
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function determineCardType($cardNumber) {
     $cardNumber = preg_replace('/[^0-9]/', '', $cardNumber);
     // NOTE: We check Solo before Maestro, and Maestro *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
@@ -2710,6 +2782,9 @@ class paypaldp extends base {
 
 
 
+/**
+ * @since ZC v1.3.9a
+ */
 class CardinalXMLParser{
 
   var $xml_parser;
@@ -2733,6 +2808,9 @@ class CardinalXMLParser{
   // Start Tag Element Handler
   /////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function startElement($parser, $name, $attrs='') {
     $this->elementName = $name;
   }
@@ -2743,6 +2821,9 @@ class CardinalXMLParser{
   // Element Data Handler
   /////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function elementData($parser, $data) {
     $this->elementValue .= $data;
   }
@@ -2753,6 +2834,9 @@ class CardinalXMLParser{
   // End Tag Element Handler
   /////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function endElement($parser, $name) {
     if (substr($this->elementValue, 0, 1) == "\n") $this->elementValue = substr($this->elementValue, 1);
     $this->deserializedResponse[$this->elementName]= $this->elementValue;
@@ -2767,6 +2851,9 @@ class CardinalXMLParser{
   // Once complete, then each element reference will be available using the getValue function.
   /////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function deserializeXml($responseString) {
     xml_set_object($this->xml_parser, $this);
     xml_parser_set_option($this->xml_parser,XML_OPTION_CASE_FOLDING,FALSE);

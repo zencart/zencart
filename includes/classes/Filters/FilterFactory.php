@@ -7,8 +7,14 @@
 
 namespace Zencart\Filters;
 
+/**
+ * @since ZC v1.5.8
+ */
 class FilterFactory
 {
+    /**
+     * @since ZC v1.5.8
+     */
     public function make(array $filterDefinition) : RequestFilter
     {
         $filterName = ucfirst($filterDefinition['type']) . 'Filter';

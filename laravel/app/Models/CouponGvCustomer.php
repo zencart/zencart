@@ -9,6 +9,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v2.0.0
+ */
 class CouponGvCustomer extends Eloquent
 {
     protected $table = TABLE_COUPON_GV_CUSTOMER;

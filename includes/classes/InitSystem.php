@@ -8,6 +8,9 @@
 
 namespace Zencart\InitSystem;
 
+/**
+ * @since ZC v1.5.7
+ */
 class InitSystem
 {
     private $installedPlugins;
@@ -32,6 +35,9 @@ class InitSystem
         $this->actionList = [];
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function loadAutoLoaders(): array
     {
         $coreLoaderList = $this->loadAutoLoadersFromSystem('core', DIR_WS_INCLUDES . 'auto_loaders');
@@ -40,11 +46,17 @@ class InitSystem
         return $mainLoaderList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function setDebug(bool $debug = false): void
     {
         $this->debug = $debug;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function processLoaderList(array $loaderList): array
     {
         ksort($loaderList);
@@ -61,6 +73,9 @@ class InitSystem
         return $this->actionList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processActionPointEntries(array $entries): void
     {
         foreach ($entries as $entry) {
@@ -72,6 +87,9 @@ class InitSystem
         }
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processActionPointEntry(array $entry): void
     {
         $autoTypeMethod = 'processAutoType' . ucfirst($entry['autoType']);
@@ -82,6 +100,9 @@ class InitSystem
         $this->$autoTypeMethod($entry);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processAutoTypeClass(array $entry): void
     {
         $filePath = DIR_FS_CATALOG . DIR_WS_CLASSES;
@@ -103,6 +124,7 @@ class InitSystem
     /**
      * @param $entry
      * @todo should deprecate session bound classes.
+     * @since ZC v1.5.7
      */
     protected function processAutoTypeClassInstantiate(array $entry): void
     {
@@ -121,6 +143,9 @@ class InitSystem
         return;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processAutoTypeObjectMethod(array $entry): void
     {
         $objectName = $entry['objectName'];
@@ -129,6 +154,9 @@ class InitSystem
         $this->actionList[] = ['type' => 'objectMethod', 'object' => $objectName, 'method' => $methodName];
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processAutoTypeRequire(array $entry): void
     {
         $filePath = $entry['loadFile'];
@@ -144,6 +172,9 @@ class InitSystem
         $this->debugList[] = 'loading require - ' . $filePath . ' - ' . $result;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processAutoTypeInclude(array $entry): void
     {
         $filePath = $entry['loadFile'];
@@ -159,6 +190,9 @@ class InitSystem
         $this->debugList[] = 'loading include - ' . $filePath . ' - ' . $result;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processAutoTypeInit_script(array $entry): void
     {
         $actualDir = DIR_WS_INCLUDES . 'init_includes/';
@@ -173,6 +207,9 @@ class InitSystem
 
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function loadAutoLoadersFromSystem(string $loaderType, string $rootDir, $plugin = []): array
     {
         $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($rootDir);
@@ -182,6 +219,9 @@ class InitSystem
         return $loaderList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function loadPluginAutoLoaders(string $loaderType): array
     {
         $pluginLoaderList = [];
@@ -194,6 +234,9 @@ class InitSystem
         return $pluginLoaderList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processForOverrides(string $loaderType, array $fileList, string $rootDir): array
     {
         $newFileList = [];
@@ -221,6 +264,9 @@ class InitSystem
         return $newFileList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function fileMatchesLoaderPrefix(string $file): bool
     {
         $fileParts = explode('.', $file);
@@ -230,11 +276,17 @@ class InitSystem
         return true;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function overrideFileExists(string $file, string $overrideDir): bool
     {
         return (file_exists($overrideDir . '/' . $file));
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getLoadersFromFilelist(array $fileList): array
     {
         $autoLoadConfig = [];
@@ -244,6 +296,9 @@ class InitSystem
         return $autoLoadConfig;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processLoaderListForType(string $type, array $loaderList, $plugin = []): array
     {
         $newList = [];
@@ -258,6 +313,9 @@ class InitSystem
         return $newList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function mergeAutoLoaders(array $coreLoaders, array $pluginLoaders): array
     {
         foreach ($pluginLoaders as $breakpoint => $pluginLoaderForBreakpoint) {
@@ -274,6 +332,9 @@ class InitSystem
         return $coreLoaders;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function addPluginLoaderToBreakPoint($breakpoint, array $coreLoaders, array $pluginLoaderForBreakpoint): array
     {
         foreach ($pluginLoaderForBreakpoint as $pluginLoader) {
@@ -282,6 +343,9 @@ class InitSystem
         return $coreLoaders;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function findPluginDirectory(string $filePath, string $pluginName): string
     {
         $relDir = $this->fileSystem->getRelativeDir($filePath);

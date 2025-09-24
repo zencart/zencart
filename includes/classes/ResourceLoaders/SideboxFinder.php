@@ -6,6 +6,9 @@
  */
 namespace Zencart\ResourceLoaders;
 
+/**
+ * @since ZC v1.5.8
+ */
 class SideboxFinder
 {
     private $filesystem;
@@ -15,6 +18,9 @@ class SideboxFinder
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function findFromFilesystem(array $installedPlugins, string $templateDir): array
     {
         $sideboxes = [];
@@ -38,6 +44,9 @@ class SideboxFinder
         return $sideboxes;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function sideboxPath($sideboxInfo, string $templateDir, bool $withFullPath = false): bool|string
     {
         if (!empty($sideboxInfo['plugin_details'])) {
@@ -56,6 +65,9 @@ class SideboxFinder
         return false;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function sideboxPathInPlugin($sideboxInfo): bool|string
     {
         $baseDir = DIR_FS_CATALOG . 'zc_plugins/' . $sideboxInfo['plugin_details'] . '/'  . 'catalog/includes/modules/sideboxes/';

@@ -13,6 +13,7 @@
    * @param int $banners_id
    * @param int $status
    * @return queryFactoryResult
+   * @since ZC v1.0.3
    */
   function zen_set_banner_status($banners_id, $status) {
     if ($status != 0 && $status != 1) return -1;
@@ -25,6 +26,7 @@
 
   /**
    * Activate any unactivated banners whose scheduled start date is set to a time before "now".
+   * @since ZC v1.0.3
    */
   function zen_activate_banners() {
     global $db;
@@ -46,6 +48,7 @@
 
 /**
  * Expire any banners whose expiry date has recently passed
+ * @since ZC v1.0.3
  */
   function zen_expire_banners() {
     global $db;
@@ -78,6 +81,7 @@
    * @param string $action
    * @param string $identifier
    * @return string
+   * @since ZC v1.0.3
    */
   function zen_display_banner($action = '', $identifier = '') {
     if ($identifier == '' || $action == '') return FALSE;
@@ -151,6 +155,7 @@
  * @param string $action
  * @param string $identifier
  * @return queryFactoryResult
+ * @since ZC v1.0.3
  */
   function zen_banner_exists($action = '', $identifier = '') {
     if ($identifier == '' || $action == '') return FALSE;
@@ -185,6 +190,7 @@
   /**
    * Update statistics for a given banner
    * @param int banner id
+   * @since ZC v1.0.3
    */
   function zen_update_banner_display_count($banner_id) {
     global $db;
@@ -204,6 +210,7 @@
 /**
  * Update banner click statistics
  * @param int $banner_id
+ * @since ZC v1.0.3
  */
   function zen_update_banner_click_count($banner_id) {
     global $db;
@@ -214,6 +221,7 @@
  * Build banner group SQL queries
  * @param string $selected_banners (colon-separated list of banner groups)
  * @return string SQL where clause
+ * @since ZC v1.2.0d
  */
   function zen_build_banners_group($selected_banners) {
     global $db;

@@ -6,8 +6,10 @@
  * @version $Id: lat9 2022 May 05 New in v1.5.8-alpha $
  */
 
-
-  function zen_get_banner_data_recent($banner_id, $days) {
+/**
+ * @since ZC v1.5.6
+ */
+function zen_get_banner_data_recent($banner_id, $days) {
     global $db;
     $set1 = $set2 = $stats = array();
 
@@ -27,9 +29,12 @@
     if (sizeof($set1) < 1) $set1 = $set2 = array(array(date('j'), 0));
 
     return array($set1, $set2, $stats);
-  }
+}
 
-  function zen_get_banner_data_yearly($banner_id) {
+/**
+ * @since ZC v1.5.6
+ */
+function zen_get_banner_data_yearly($banner_id) {
     global $db;
     $set1 = $set2 = array(array(0, 0));
     $years = array(0=>'');
@@ -49,9 +54,12 @@
     }
 
     return array($set1, $set2, $stats, $years);
-  }
+}
 
-  function zen_get_banner_data_monthly($banner_id, $year = '') {
+/**
+ * @since ZC v1.5.6
+ */
+function zen_get_banner_data_monthly($banner_id, $year = '') {
     global $db, $zcDate;
     if ((int)$year == 0) $year = date('Y');
     $set1 = $set2 = $stats = $months = array();
@@ -76,9 +84,12 @@
     }
 
     return array($set1, $set2, $stats, $months);
-  }
+}
 
-  function zen_get_banner_data_daily($banner_id, $year = '', $month = '') {
+/**
+ * @since ZC v1.5.6
+ */
+function zen_get_banner_data_daily($banner_id, $year = '', $month = '') {
     global $db;
     if ((int)$year == 0) $year = date('Y');
     if ((int)$month == 0) $month = date('n');
@@ -105,6 +116,4 @@
     }
 
     return array($set1, $set2, $stats);
-  }
-
-
+}

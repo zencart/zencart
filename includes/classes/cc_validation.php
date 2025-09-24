@@ -14,10 +14,14 @@ if (!defined('IS_ADMIN_FLAG')) {
  * cc_validation Class.
  * Class to validate credit card numbers etc
  *
+ * @since ZC v1.0.3
  */
 class cc_validation extends base {
   public $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
 
+  /**
+   * @since ZC v1.0.3
+   */
   function validate($number, $expiry_m, $expiry_y, $start_m = null, $start_y = null) {
     $this->cc_number = preg_replace('/[^0-9]/', '', $number);
     // NOTE: We check Solo before Maestro, and Maestro/Switch *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
@@ -89,6 +93,9 @@ class cc_validation extends base {
     return $this->is_valid();
   }
 
+  /**
+   * @since ZC v1.1.0
+   */
   function is_valid() {
     $cardNumber = strrev($this->cc_number);
     $numSum = 0;

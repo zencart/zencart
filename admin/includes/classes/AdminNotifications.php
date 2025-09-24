@@ -4,6 +4,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @since ZC v1.5.6
  */
 
 class AdminNotifications
@@ -27,6 +28,9 @@ class AdminNotifications
         }
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     public function getNotifications($target, $adminId)
     {
         if ($this->enabled === false) {
@@ -49,6 +53,9 @@ class AdminNotifications
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function getNotificationInfo()
     {
         if (empty($this->projectNotificationServer)){
@@ -72,6 +79,9 @@ class AdminNotifications
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationAvailable($name, $target, $notification, $savedState)
     {
         if ($notification['target'] !== $target) {
@@ -89,6 +99,9 @@ class AdminNotifications
         return true;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationDismissed($name, $savedState)
     {
         if (!isset($savedState[$name])) {
@@ -97,6 +110,9 @@ class AdminNotifications
         return $savedState[$name]['dismissed'];
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationInDate($notification, $currentDatetime)
     {
         if (!isset($notification['start-date']) && !isset($notification['end-date'])) {
@@ -111,6 +127,9 @@ class AdminNotifications
         return true;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationInCountry($notification)
     {
         if (!isset($notification['countries'])) {
@@ -123,6 +142,9 @@ class AdminNotifications
         return true;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected  function getStoreCountryIso3()
     {
         global $db;
@@ -133,6 +155,9 @@ class AdminNotifications
         return $iso3;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function getSavedState($adminId)
     {
         global $db;
@@ -147,11 +172,17 @@ class AdminNotifications
         return $savedState;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function getCurrentDate()
     {
         return new DateTime("now");
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function pruneSavedState($notificationList)
     {
         global $db;

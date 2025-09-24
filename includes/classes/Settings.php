@@ -4,6 +4,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Mar 07 New in v2.0.0-rc1 $
+ * @since ZC v2.0.0
  */
 
 abstract class Settings implements ArrayAccess, Countable
@@ -36,6 +37,7 @@ abstract class Settings implements ArrayAccess, Countable
      * @param array|null $settings_array
      * @param bool $overwrite
      * @return void
+     * @since ZC v2.0.0
      */
     public function setFromArray(?array $settings_array = null, bool $overwrite = false): void
     {
@@ -56,6 +58,7 @@ abstract class Settings implements ArrayAccess, Countable
     /**
      * Specify a PHP data type to be cast to when accessing a setting as a class property
      *
+     * @since ZC v2.0.0
      */
     public function setType(string $key, ?string $type = null): void
     {
@@ -70,6 +73,7 @@ abstract class Settings implements ArrayAccess, Countable
 
     /**
      * Cast a value to a desired type
+     * @since ZC v2.0.0
      */
     protected function returnCastValue(mixed $value, ?string $cast_to): mixed
     {
@@ -95,16 +99,25 @@ abstract class Settings implements ArrayAccess, Countable
         };
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     protected function globalConstantExists(string $constant_name): bool
     {
         return defined($constant_name);
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     protected function getGlobalConstant(string $constant_name): mixed
     {
         return defined($constant_name) ? constant($constant_name) : null;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function __isset($key)
     {
         return $this->offsetExists($key);
@@ -112,6 +125,7 @@ abstract class Settings implements ArrayAccess, Countable
 
     /**
      * @implements ArrayAccess
+     * @since ZC v2.0.0
      */
     public function offsetExists(mixed $offset): bool
     {
@@ -122,6 +136,9 @@ abstract class Settings implements ArrayAccess, Countable
         return isset($this->settings[$offset]);
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function __set($setting, $value)
     {
         $this->offsetSet($setting, $value);
@@ -129,6 +146,7 @@ abstract class Settings implements ArrayAccess, Countable
 
     /**
      * @implements ArrayAccess
+     * @since ZC v2.0.0
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
@@ -148,6 +166,9 @@ abstract class Settings implements ArrayAccess, Countable
         }
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function __unset(string $key)
     {
         $this->offsetUnset($key);
@@ -155,6 +176,7 @@ abstract class Settings implements ArrayAccess, Countable
 
     /**
      * @implements ArrayAccess
+     * @since ZC v2.0.0
      */
     public function offsetUnset(mixed $offset): void
     {
@@ -163,6 +185,9 @@ abstract class Settings implements ArrayAccess, Countable
         }
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function __get(string $key)
     {
         if (!$this->offsetExists($key)) {
@@ -178,6 +203,7 @@ abstract class Settings implements ArrayAccess, Countable
 
     /**
      * @implements ArrayAccess
+     * @since ZC v2.0.0
      */
     public function offsetGet(mixed $offset): mixed
     {
@@ -186,6 +212,7 @@ abstract class Settings implements ArrayAccess, Countable
 
     /**
      * @implements Countable
+     * @since ZC v2.0.0
      */
     public function count(): int
     {

@@ -7,8 +7,12 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
  */
-  class cod { 
 
+/**
+ * @since ZC v1.0.3
+ */
+class cod 
+{
     /**
      * $_check is used to check the configuration key set up
      * @var int
@@ -63,6 +67,9 @@
     }
 
 // class methods
+    /**
+     * @since ZC v1.0.3
+     */
     function update_status() {
       global $order, $db;
 
@@ -98,39 +105,66 @@
       }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function javascript_validation() {
       return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function selection() {
       return array('id' => $this->code,
                    'module' => $this->title);
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function pre_confirmation_check() {
       return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function confirmation() {
       return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function process_button() {
       return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function before_process() {
       return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function after_process() {
       return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function get_error() {
       return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check() {
       global $db;
       if (!isset($this->_check)) {
@@ -140,6 +174,9 @@
       return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install() {
       global $db, $messageStack;
       if (defined('MODULE_PAYMENT_COD_STATUS')) {
@@ -153,12 +190,19 @@
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_COD_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'zen_cfg_pull_down_order_statuses(', 'zen_get_order_status_name', now())");
    }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function remove() {
       global $db;
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys() {
       return array('MODULE_PAYMENT_COD_STATUS', 'MODULE_PAYMENT_COD_ZONE', 'MODULE_PAYMENT_COD_ORDER_STATUS_ID', 'MODULE_PAYMENT_COD_SORT_ORDER');
     }
-  }
+}
+

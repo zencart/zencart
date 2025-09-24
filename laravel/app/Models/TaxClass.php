@@ -8,6 +8,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v2.0.0
+ */
 class TaxClass extends Eloquent
 {
     protected $table = TABLE_TAX_CLASS;

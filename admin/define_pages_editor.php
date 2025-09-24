@@ -7,6 +7,9 @@
  */
 require('includes/application_top.php');
 
+/**
+ * @since ZC v1.2.0d
+ */
 function zen_display_files(): array
 {
     global $check_directory, $found, $configuration_key_lookup;

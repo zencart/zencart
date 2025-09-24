@@ -22,6 +22,9 @@
  
 ////
 // Return the artists URL in the needed language
+/**
+ * @since ZC v1.2.0d
+ */
   function zen_get_artists_url($artists_id, $language_id) {
     global $db;
     $artist = $db->Execute("select artists_url
@@ -33,6 +36,9 @@
   }
 ////
 // Return the Record Company URL in the needed language
+/**
+ * @since ZC v1.2.0d
+ */
   function zen_get_record_company_url($record_company_id, $language_id) {
     global $db;
     $record_company = $db->Execute("select record_company_url
@@ -45,6 +51,9 @@
 
 ////
 // Return the Music Genre URL in the needed language
+/**
+ * @since ZC v1.2.0d
+ */
   function zen_get_music_genre_url($music_genre_id, $language_id) {
     global $db;
     $music_genre = $db->Execute("select music_genre_url

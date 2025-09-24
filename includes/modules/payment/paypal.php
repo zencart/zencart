@@ -18,6 +18,7 @@ define('MODULE_PAYMENT_PAYPAL_TAX_OVERRIDE', 'true');
 /**
  * paypal.php payment module class for PayPal Payments Standard (IPN) method
  *
+ * @since ZC v1.0.3
  */
 class paypal extends base {
 
@@ -139,6 +140,7 @@ class paypal extends base {
   /**
    * calculate zone matches and flag settings to determine whether this module should display to customers or not
     *
+   * @since ZC v1.0.3
     */
   function update_status() {
     global $order, $db;
@@ -167,6 +169,7 @@ class paypal extends base {
    * (Number, Owner, and CVV Lengths)
    *
    * @return string
+   * @since ZC v1.0.3
     */
   function javascript_validation() {
     return false;
@@ -175,6 +178,7 @@ class paypal extends base {
    * Displays payment method name along with Credit Card Information Submission Fields (if any) on the Checkout Payment Page
    *
    * @return array
+   * @since ZC v1.0.3
     */
   function selection() {
     return array('id' => $this->code,
@@ -187,6 +191,7 @@ class paypal extends base {
    * Since paypal module is not collecting info, it simply skips this step.
    *
    * @return boolean
+   * @since ZC v1.0.3
    */
   function pre_confirmation_check() {
     return false;
@@ -196,6 +201,7 @@ class paypal extends base {
    * Since none is collected for paypal before forwarding to paypal site, this is skipped
    *
    * @return boolean
+   * @since ZC v1.0.3
     */
   function confirmation() {
     return false;
@@ -206,6 +212,7 @@ class paypal extends base {
    * (These are hidden fields on the checkout confirmation page)
    *
    * @return string
+   * @since ZC v1.0.3
     */
   function process_button() {
     global $db, $order, $currencies, $currency;
@@ -363,6 +370,7 @@ class paypal extends base {
   /**
    * Determine the language to use when redirecting to the PayPal site
    * Order of selection: locale for current language, current-language-code, delivery-country, billing-country, store-country
+   * @since ZC v1.3.9a
    */
   function getLanguageCode() {
     global $order, $locales;
@@ -395,6 +403,7 @@ class paypal extends base {
   }
   /**
    * Store transaction info to the order and process any results that come back from the payment gateway
+   * @since ZC v1.0.3
    */
   function before_process() {
     global $order_total_modules;
@@ -435,6 +444,7 @@ class paypal extends base {
     *
     * @param string $zf_domain
     * @return boolean
+   * @since ZC v1.2.2d
     */
   function check_referrer($zf_domain) {
     return true;
@@ -444,6 +454,7 @@ class paypal extends base {
     *
     * @param int $zf_order_id
     * @return string
+   * @since ZC v1.2.2d
     */
   function admin_notification($zf_order_id) {
     global $db;
@@ -458,6 +469,7 @@ class paypal extends base {
    * When the order returns from the processor, if PDT was successful, this stores the results in order-status-history and logs data for subsequent reference
    *
    * @return boolean
+   * @since ZC v1.0.3
     */
   function after_process() {
     global $insert_id, $order;
@@ -525,6 +537,7 @@ class paypal extends base {
    * Check to see whether module is installed
    *
    * @return boolean
+   * @since ZC v1.0.3
     */
   function check() {
     global $db;
@@ -546,6 +559,7 @@ class paypal extends base {
   /**
    * Install the payment module and its configuration settings
     *
+   * @since ZC v1.0.3
     */
   function install() {
     global $db, $messageStack;
@@ -582,6 +596,7 @@ class paypal extends base {
   /**
    * Remove the module and all its settings
     *
+   * @since ZC v1.0.3
     */
   function remove() {
     global $db;
@@ -592,6 +607,7 @@ class paypal extends base {
    * Internal list of configuration keys used for configuration of the module
    *
    * @return array
+   * @since ZC v1.0.3
     */
   function keys() {
     $keys_list = array(
@@ -621,6 +637,9 @@ class paypal extends base {
     return $keys_list;
   }
 
+  /**
+   * @since ZC v1.3.7.1
+   */
   function _getPDTresults($orderAmount, $my_currency, $pdtTX) {
     global $db;
     $ipnData  = ipn_postback('PDT', $pdtTX);
@@ -671,6 +690,9 @@ class paypal extends base {
   }
 
 
+  /**
+   * @since ZC v1.3.8
+   */
   function tableCheckup() {
     global $db, $sniffer;
     $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_PAYPAL, 'txn_id', 'varchar(20)', true) : -1;
@@ -721,6 +743,9 @@ class paypal extends base {
     }
   }
 
+  /**
+   * @since ZC v1.5.8
+   */
   function help() {
        return array('body' => '<a href="https://docs.zen-cart.com/user/payment/paypal/" target="_blank" rel="noreferrer noopener">' . TEXT_DOCS_HELP . '</a><br>' .  MODULES_PAYMENT_PAYPALSTD_NOT_RECOMMENDED . '<br>');
     }

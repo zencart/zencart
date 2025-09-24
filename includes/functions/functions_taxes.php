@@ -14,6 +14,7 @@
  * @param int $country_id
  * @param int $zone_id
  * @return float|int
+ * @since ZC v1.0.3
  */
 function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
 {
@@ -88,6 +89,7 @@ function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
  * @param int $country_id
  * @param int $zone_id
  * @return false|string
+ * @since ZC v1.0.3
  */
 function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
 {
@@ -154,6 +156,7 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
  * @param int $zone_id
  * @param array $tax_description
  * @return array (description => tax_rate)
+ * @since ZC v1.3.8
  */
 function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, $tax_description = [])
 {
@@ -241,6 +244,7 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
  * @param float|int $tax_percentage
  * @param bool $force
  * @return float|int
+ * @since ZC v1.0.3
  */
 function zen_add_tax($price, $tax_percentage = 0, $force = false)
 {
@@ -262,6 +266,7 @@ function zen_add_tax($price, $tax_percentage = 0, $force = false)
  * @param float|int $price
  * @param float|int $tax_percentage
  * @return float|int
+ * @since ZC v1.0.3
  */
 function zen_calculate_tax($price, $tax_percentage = 1)
 {
@@ -273,6 +278,7 @@ function zen_calculate_tax($price, $tax_percentage = 1)
  * @param float $value
  * @param int $padding
  * @return float|string
+ * @since ZC v1.0.3
  */
 function zen_display_tax_value($value, $padding = TAX_DECIMAL_PLACES)
 {
@@ -311,6 +317,7 @@ function zen_display_tax_value($value, $padding = TAX_DECIMAL_PLACES)
  * Get tax rate from tax description
  * @param string $tax_desc
  * @return float
+ * @since ZC v1.0.3
  */
 function zen_get_tax_rate_from_desc(string $tax_desc)
 {
@@ -340,6 +347,7 @@ function zen_get_tax_rate_from_desc(string $tax_desc)
 /**
  * @param int $tax_class_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_tax_class_title($tax_class_id = 0)
 {
@@ -356,6 +364,9 @@ function zen_get_tax_class_title($tax_class_id = 0)
     return $result->fields['tax_class_title'];
 }
 
+/**
+ * @since ZC v1.2.3d
+ */
 function zen_get_tax_locations($store_country = -1, $store_zone = -1)
 {
     global $db, $zco_notifier;
@@ -428,6 +439,7 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
  * @param int $country_id
  * @param int $zone_id
  * @return array|string
+ * @since ZC v1.3.9b
  */
 function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
 {
@@ -486,12 +498,16 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
 // @todo deprecate unless this is needed for different formatting
 /**
  * Returns the tax rate for a tax class
+ * @since ZC v1.0.3
  */
 function zen_get_tax_rate_value($class_id)
 {
     return zen_get_tax_rate($class_id);
 }
 
+/**
+ * @since ZC v2.2.0
+ */
 function zen_get_localized_tax_description(int $tax_rates_id, int $language_id = 0): string
 {
     global $db;

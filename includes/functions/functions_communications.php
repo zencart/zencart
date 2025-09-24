@@ -23,6 +23,7 @@ use http\Exception\BadQueryStringException;
  * @param array|null $extraCurlOptions curl setup overrides
  * @param bool $returnWithMetadata Default is to receive direct response; or set this to true to get an array containing response and headers for advanced parsing
  * @return string|array|false False on failure; string for normal response; array if advanced metaData requested
+ * @since ZC v2.2.0
  */
   function zenDoCurlRequest(string $url, string $method = 'GET', string|array|null $payload = null, bool $encodePayloadArraysAsJson = false, bool $decodeJsonResponses = false, ?array $extraCurlOptions = [], bool $returnWithMetadata = false): string|array|false
   {

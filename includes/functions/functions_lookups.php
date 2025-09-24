@@ -13,6 +13,7 @@
 /**
  * get the type_handler value for the specified product_type
  * @param int $product_type
+ * @since ZC v1.2.0d
  */
 function zen_get_handler_from_type($product_type): string
 {
@@ -35,6 +36,7 @@ function zen_get_handler_from_type($product_type): string
  * Get a list of product page names that identify buyable products.
  * This allows us to mark a page as containing a product which can
  * be allowed to add-to-cart or buy-now with various modules.
+ * @since ZC v2.2.0
  */
 function zen_get_buyable_product_type_handlers(): array
 {
@@ -50,6 +52,9 @@ function zen_get_buyable_product_type_handlers(): array
 
 /*
  * List manufacturers (returned in an array)
+ */
+/**
+ * @since ZC v1.0.3
  */
 function zen_get_manufacturers($manufacturers_array = [], $only_those_with_products = false)
 {
@@ -84,6 +89,9 @@ function zen_get_manufacturers($manufacturers_array = [], $only_those_with_produ
 ////
 // Return the manufacturers URL in the needed language
 // TABLES: manufacturers_info
+/**
+ * @since ZC v1.0.3
+ */
 function zen_get_manufacturer_url($manufacturer_id, $language_id)
 {
     global $db;
@@ -98,6 +106,7 @@ function zen_get_manufacturer_url($manufacturer_id, $language_id)
 
 /**
  *  configuration key value lookup
+ * @since ZC v1.1.0
  */
 function zen_get_configuration_key_value($lookup)
 {
@@ -113,6 +122,7 @@ function zen_get_configuration_key_value($lookup)
 /**
  * Product Types -- configuration key value lookup in TABLE_PRODUCT_TYPE_LAYOUT
  * Used to determine keys/flags used on a per-product-type basis for template-use, etc
+ * @since ZC v1.2.0d
  */
 function zen_get_configuration_key_value_layout($lookup, $type = 1)
 {
@@ -128,6 +138,9 @@ function zen_get_configuration_key_value_layout($lookup, $type = 1)
 /*
  * Get accepted credit cards
  * There needs to be a define on the accepted credit card in the language file credit_cards.php example: TEXT_CC_ENABLED_VISA
+ */
+/**
+ * @since ZC v1.2.0d
  */
 function zen_get_cc_enabled($text_image = 'TEXT_', $cc_seperate = ' ', $cc_make_columns = 0)
 {
@@ -168,6 +181,7 @@ function zen_get_cc_enabled($text_image = 'TEXT_', $cc_seperate = ' ', $cc_make_
 /**
  *  stop regular behavior based on customer/store settings
  *  Used to disable various activities if store is in an operating mode that should prevent those activities
+ * @since ZC v1.2.5
  */
 function zen_run_normal(): bool
 {
@@ -224,6 +238,7 @@ function zen_run_normal(): bool
  * 3. 'Customer Approval Status - Authorization Pending' is '1' (Must be Authorized to Browse) or '2' (May browse but no prices unless Authorized) and either
  *    a. A customer IS NOT logged in
  *    b. A customer IS logged in, but their authorization status is neither '0' (Approved) nor '3' (Pending Approval - May browse with prices but may not buy)
+ * @since ZC v1.2.5
  */
 function zen_check_show_prices(): bool
 {
@@ -246,6 +261,7 @@ function zen_check_show_prices(): bool
  * check to see if database stored GET terms are in the URL as $_GET parameters
  * This is used to determine which filters should be applied
  * @return bool
+ * @since ZC v1.2.0d
  */
 function zen_check_url_get_terms()
 {
@@ -265,6 +281,7 @@ function zen_check_url_get_terms()
 /**
  * Returns the status id number of an order-status, based on the name
  * @return int|false (false if not found)
+ * @since ZC v2.2.0
  */
 function zen_get_orders_status_id_from_name(string $status_name): int|false
 {
@@ -286,6 +303,7 @@ function zen_get_orders_status_id_from_name(string $status_name): int|false
  * @param int $order_status_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
 {
@@ -308,6 +326,7 @@ function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
  * @param int $order_status_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
 {
@@ -327,6 +346,9 @@ function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
 }
 
 
+/**
+ * @since ZC v2.1.0
+ */
 function zen_lookup_admin_menu_language_override(string $lookup_type, ?string $lookup_key, ?string $fallback): ?string
 {
     switch ($lookup_type) {

@@ -10,6 +10,9 @@ namespace Zencart\PageLoader;
 use Zencart\FileSystem\FileSystem as FileSystem;
 use Zencart\Traits\Singleton;
 
+/**
+ * @since ZC v1.5.7
+ */
 class PageLoader
 {
     use Singleton;
@@ -18,6 +21,9 @@ class PageLoader
     private string $mainPage;
     private FileSystem $fileSystem;
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function init(array $installedPlugins, string $mainPage, FileSystem $fileSystem): void
     {
         $this->installedPlugins = $installedPlugins;
@@ -30,6 +36,9 @@ class PageLoader
     // storefront's /includes/modules/pages or in an encapsulated plugin's
     // /catalog/includes/modules/pages directory.
     //
+    /**
+     * @since ZC v1.5.7
+     */
     public function findModulePageDirectory(string $context = 'catalog'): bool|string
     {
         if (is_dir(DIR_WS_MODULES . 'pages/' . $this->mainPage)) {
@@ -49,6 +58,9 @@ class PageLoader
     // This method locates **all** files matching a given pattern from the 'base'
     // module-page directory and any module-page directories found in zc_plugins.
     //
+    /**
+     * @since ZC v2.2.0
+     */
     public function listModulePagesFiles(string $nameStartsWith, string $fileExtension = '.php', string $context = 'catalog'): array
     {
         $module_page_dir = DIR_WS_MODULES . 'pages/' . $this->mainPage;
@@ -62,6 +74,9 @@ class PageLoader
         return $fileList;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getTemplatePart(string $pageDirectory, string $templatePart, string $fileExtension = '.php'): array
     {
         $directoryArray = $this->getTemplatePartFromDirectory(
@@ -85,6 +100,9 @@ class PageLoader
         return $directoryArray;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getTemplatePartFromDirectory(array $directoryArray, string $pageDirectory, string $templatePart, string $fileExtension): array
     {
         if ($dir = @dir($pageDirectory)) {
@@ -100,6 +118,9 @@ class PageLoader
         return $directoryArray;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function getTemplateDirectory(string $templateCode, string $currentTemplate, string $currentPage, string $templateDir): string
     {
         if ($currentTemplate === 'template_default') {
@@ -123,6 +144,9 @@ class PageLoader
         return $path;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getTemplatePluginDir(string $templateCode, string $templateDir, ?string $whichPlugin = ''): bool|string
     {
         foreach ($this->installedPlugins as $plugin) {
@@ -138,6 +162,9 @@ class PageLoader
         return false;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function getBodyCode(): string
     {
         if (file_exists(DIR_WS_MODULES . 'pages/' . $this->mainPage . '/main_template_vars.php')) {

@@ -5,10 +5,12 @@
  * @version $Id: lat9 2024 Sep 11 Modified in v2.1.0-beta1 $
  */
 
-
-////
-// Parse search string into individual objects
-function zen_parse_search_string($search_str = '', &$objects = []) {
+/**
+ * Parse search string into individual objects
+ * @since ZC v1.0.3
+ */
+function zen_parse_search_string($search_str = '', &$objects = [])
+{
     $search_str = trim(strtolower($search_str));
 
 // Break up $search_str on whitespace; quoted string will be reconstructed later
@@ -157,8 +159,11 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
     return false;
 }
 
-    function zen_build_keyword_where_clause($fields, $string, $startWithWhere = false)
-    {
+/**
+ * @since ZC v1.5.8
+ */
+function zen_build_keyword_where_clause($fields, $string, $startWithWhere = false)
+{
         global $db, $zco_notifier;
 
         $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
@@ -220,4 +225,4 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
             ' AND  () ',
         ];
         return str_replace($problemArray, ' ', $where_str);
-    }
+}

@@ -10,6 +10,9 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 class product_notification {
 
     /**
@@ -40,6 +43,9 @@ class product_notification {
     $this->content_html = $content_html;
   }
 
+  /**
+   * @since ZC v1.0.3
+   */
   function choose_audience() {
     global $db;
 
@@ -120,6 +126,9 @@ function selectAll(FormName, SelectBox) {
     return $choose_audience_string;
   }
 
+  /**
+   * @since ZC v1.0.3
+   */
   function confirm() {
     global $db;
 
@@ -204,6 +213,9 @@ function selectAll(FormName, SelectBox) {
     return $confirm_string;
   }
 
+  /**
+   * @since ZC v1.0.3
+   */
   function send($newsletter_id) {
     global $db;
 

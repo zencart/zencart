@@ -92,7 +92,9 @@
   Shipping Tables and Zone Countries.
 
 */
-
+/**
+ * @since ZC v1.0.3
+ */
 class zones extends ZenShipping
 {
     /**
@@ -153,6 +155,7 @@ class zones extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v2.1.0
      */
     function update_status()
     {
@@ -171,6 +174,9 @@ class zones extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function quote($method = ''): array
     {
         global $order, $shipping_weight, $shipping_num_boxes, $total_count;
@@ -323,6 +329,9 @@ class zones extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check()
     {
         global $db;
@@ -333,6 +342,9 @@ class zones extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install(): void
     {
         global $db;
@@ -356,11 +368,17 @@ class zones extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/zones/'];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys(): array
     {
         $keys = ['MODULE_SHIPPING_ZONES_STATUS', 'MODULE_SHIPPING_ZONES_METHOD', 'MODULE_SHIPPING_ZONES_TAX_CLASS', 'MODULE_SHIPPING_ZONES_TAX_BASIS', 'MODULE_SHIPPING_ZONES_SORT_ORDER', 'MODULE_SHIPPING_ZONES_SKIPPED'];

@@ -9,22 +9,34 @@ namespace Zencart\Events;
 
 use Zencart\Traits\Singleton;
 
+/**
+ * @since ZC v1.5.8
+ */
 class EventDto
 {
     use Singleton;
 
     private $observers = [];
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getObservers()
     {
         return $this->observers;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setObserver($eventHash, $eventParameters)
     {
         $this->observers[$eventHash] = $eventParameters;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function removeObserver($eventHash)
     {
         if (isset($this->observers[$eventHash])) {

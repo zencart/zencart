@@ -5,12 +5,16 @@
  * @copyright Copyright 2003-2023 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2023 Mar 14 Modified in v1.5.8a $
+ * @since ZC v1.5.4
  */
+
 use Zencart\LanguageLoader\LanguageLoaderFactory;
+
 class zcAjaxPayment extends base
 {
   /**
    * Test whether the selected payment module "does" the "CollectsCardDataOnsite" method
+   * @since ZC v1.5.4
    */
   public function doesCollectsCardDataOnsite()
   {
@@ -29,6 +33,7 @@ class zcAjaxPayment extends base
 
   /**
    * Build replacement confirmation page, which doesn't transmit sensitive CHD
+   * @since ZC v1.5.4
    */
   public function prepareConfirmation()
   {

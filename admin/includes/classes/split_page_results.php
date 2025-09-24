@@ -6,6 +6,9 @@
  * @version $Id: DrByte 2024 Mar 04 Modified in v2.0.0-rc1 $
  */
 
+/**
+ * @since ZC v1.0.3
+ */
 class splitPageResults
 {
     /**
@@ -208,6 +211,7 @@ class splitPageResults
      *
      * @param string $sql
      * @return int
+     * @since ZC v1.5.8
      */
 
     private function numberRows(string $sql) {
@@ -235,6 +239,7 @@ class splitPageResults
      * @param string $sql_query
      * @param string $criteria_field
      * @param string $criteria_value
+     * @since ZC v1.5.8
      */
     public function findPage(&$current_page_number, $max_rows_per_page, &$sql_query, $criteria_field, $criteria_value)
     {
@@ -292,6 +297,7 @@ class splitPageResults
      * @param string $parameters form URI parameters
      * @param string $page_name $_GET param for page number
      * @return string
+     * @since ZC v1.0.3
      */
     public function display_links($query_numrows, $max_rows_per_page, $max_page_links, $current_page_number, $parameters = '', $page_name = 'page')
     {
@@ -353,6 +359,7 @@ class splitPageResults
      * @param int $current_page_number
      * @param string $text_output
      * @return string
+     * @since ZC v1.0.3
      */
     public function display_count($query_numrows, $max_rows_per_page, $current_page_number, $text_output)
     {

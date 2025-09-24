@@ -7,8 +7,14 @@
  */
 namespace Zencart\LanguageLoader;
 
+/**
+ * @since ZC v1.5.8
+ */
 class AdminArraysLanguageLoader extends ArraysLanguageLoader
 {
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadInitialLanguageDefines($mainLoader): void
     {
         $this->mainLoader = $mainLoader;
@@ -17,6 +23,9 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
         $this->loadLanguageExtraDefinitions();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function loadLanguageForView(): void
     {
         $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, $this->currentPage);
@@ -30,6 +39,9 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function loadLanguageExtraDefinitions(): void
     {
         $defineList = $this->loadArraysFromDirectory(DIR_WS_LANGUAGES, $this->fallback, '/extra_definitions');
@@ -49,6 +61,9 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
         }
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     protected function loadBaseLanguageFiles()
     {
         // -----

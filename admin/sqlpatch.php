@@ -51,6 +51,9 @@ $linebreak = '
 
 // NOTE: this line break is intentional!!!!
 
+/**
+ * @since ZC v1.2.0d
+ */
 function executeSql($lines, $database, $table_prefix = '') {
   zen_set_time_limit(1200);
   global $db, $debug, $messageStack;
@@ -379,9 +382,11 @@ function executeSql($lines, $database, $table_prefix = '') {
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
 }
+// end function
 
-//end function
-
+/**
+ * @since ZC v1.2.5
+ */
 function zen_table_exists($tablename, $pre_install = false) {
   global $db;
   $tables = $db->Execute("SHOW TABLES LIKE '" . DB_PREFIX . $tablename . "'");
@@ -395,6 +400,9 @@ function zen_table_exists($tablename, $pre_install = false) {
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_database_privs($priv = '', $table = '', $show_privs = false) {
   // bypass until future version
   return true;
@@ -487,6 +495,9 @@ function zen_check_database_privs($priv = '', $table = '', $show_privs = false) 
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_drop_index_command($param) {
   if (!$checkprivs = zen_check_database_privs('INDEX')) {
     return sprintf(REASON_NO_PRIVILEGES, 'INDEX');
@@ -512,6 +523,9 @@ function zen_drop_index_command($param) {
   return sprintf(REASON_INDEX_DOESNT_EXIST_TO_DROP, $index, $param[4]);
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_create_index_command($param) {
   //this is only slightly different from the ALTER TABLE CREATE INDEX command
   if (!$checkprivs = zen_check_database_privs('INDEX')) {
@@ -543,6 +557,9 @@ function zen_create_index_command($param) {
    */
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_alter_command($param) {
   global $db;
   if (empty($param)) {
@@ -701,6 +718,9 @@ function zen_check_alter_command($param) {
   } //end switch
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_config_key($line) {
   global $db;
   $values = array();
@@ -720,6 +740,9 @@ function zen_check_config_key($line) {
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_product_type_layout_key($line) {
   global $db;
   $values = array();
@@ -733,6 +756,9 @@ function zen_check_product_type_layout_key($line) {
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
   global $db;
   zen_create_exceptions_table();
@@ -747,6 +773,9 @@ function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
   return $result;
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_purge_exceptions_table() {
   global $db;
   zen_create_exceptions_table();
@@ -754,6 +783,9 @@ function zen_purge_exceptions_table() {
   return $result;
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_create_exceptions_table() {
   global $db;
   if (!zen_table_exists(TABLE_UPGRADE_EXCEPTIONS)) {

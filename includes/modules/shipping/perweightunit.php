@@ -9,6 +9,7 @@
 /**
  * "Per Weight Unit" shipping module, allowing you to offer per-unit-rate shipping options
  *
+ * @since ZC v1.3.0
  */
 class perweightunit extends ZenShipping
 {
@@ -51,6 +52,7 @@ class perweightunit extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
@@ -97,6 +99,7 @@ class perweightunit extends ZenShipping
      *
      * @param string $method
      * @return array
+     * @since ZC v1.3.0
      */
     function quote($method = ''): array
     {
@@ -132,6 +135,7 @@ class perweightunit extends ZenShipping
      * Check to see whether module is installed
      *
      * @return boolean
+     * @since ZC v1.3.0
      */
     function check()
     {
@@ -146,6 +150,7 @@ class perweightunit extends ZenShipping
     /**
      * Install the shipping module and its configuration settings
      *
+     * @since ZC v1.3.0
      */
     function install(): void
     {
@@ -162,6 +167,9 @@ class perweightunit extends ZenShipping
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/per_item_shipping/'];
@@ -171,6 +179,7 @@ class perweightunit extends ZenShipping
      * Internal list of configuration keys used for configuration of the module
      *
      * @return array
+     * @since ZC v1.3.0
      */
     function keys(): array
     {

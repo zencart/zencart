@@ -10,6 +10,7 @@
 
 /**
  * QueryCache memoization cache for SELECT queries
+ * @since ZC v1.5.1
  */
 class QueryCache
 {
@@ -21,6 +22,7 @@ class QueryCache
      * @param string $query query string, used as a key
      * @param mysqli_result $valueToStore result from mysqli_query
      * @return bool
+     * @since ZC v1.5.1
      */
     public function cache(string $query, $valueToStore)
     {
@@ -35,6 +37,7 @@ class QueryCache
     /**
      * @param string $query
      * @return mixed
+     * @since ZC v1.5.1
      */
     public function getFromCache(string $query)
     {
@@ -46,6 +49,7 @@ class QueryCache
     /**
      * @param string $query used as a cache key
      * @return bool
+     * @since ZC v1.5.1
      */
     public function inCache(string $query)
     {
@@ -56,6 +60,7 @@ class QueryCache
      * ensure the query is a SELECT query
      * @param string $q
      * @return bool
+     * @since ZC v1.5.1
      */
     protected function isSelectStatement(string $q)
     {
@@ -66,6 +71,7 @@ class QueryCache
      * Remove query from cache. Pass ALL to reset entire cache
      * @param string $query
      * @return bool
+     * @since ZC v1.5.3
      */
     public function reset(string $query)
     {

@@ -9,10 +9,16 @@ namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
 
+/**
+ * @since ZC v1.5.8
+ */
 class FilesLanguageLoader extends BaseLanguageLoader
 {
     protected $mainLoader;
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
     {
         if ($this->mainLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath .  '/' . $this->templateDir)) {
@@ -22,6 +28,9 @@ class FilesLanguageLoader extends BaseLanguageLoader
         }
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function loadModuleLanguageFile(string $fileName, string $module_type): bool
     {
         $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'];
@@ -34,6 +43,9 @@ class FilesLanguageLoader extends BaseLanguageLoader
         return $this->loadFileDefineFile($rootPath . $extraPath . $fileName);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function loadFileDefineFile(string $defineFile): bool
     {
         $pathInfo = pathinfo(($defineFile));

@@ -11,6 +11,9 @@ use Zencart\Request\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Collection;
 
+/**
+ * @since ZC v1.5.8
+ */
 class SimpleDataFormatter
 {
     protected $request;
@@ -26,6 +29,9 @@ class SimpleDataFormatter
         $this->derivedItems = $derivedItems;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getTableHeaders(): Collection
     {
         $colHeaders = [];
@@ -37,6 +43,9 @@ class SimpleDataFormatter
         return collect($colHeaders);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getTableData()
     {
         $tableData = [];
@@ -53,6 +62,9 @@ class SimpleDataFormatter
         return collect($tableData);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function isRowSelected(array $tableRow): bool
     {
         $colKeyFromRequest = $this->request->input($this->tableDefinition->colKeyName());
@@ -67,6 +79,9 @@ class SimpleDataFormatter
         return false;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function currentRowFromRequest()
     {
         $colKeyFromRequest = $this->request->input($this->tableDefinition->colKeyName());
@@ -79,6 +94,9 @@ class SimpleDataFormatter
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getSelectedRowLink(array $tableRow): string
     {
         $pagerVar = $this->tableDefinition->getParameter('pagerVariable');
@@ -87,6 +105,9 @@ class SimpleDataFormatter
         return zen_href_link($this->request->input('cmd'), $params);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getNotSelectedRowLink(array $tableRow): string
     {
         $pagerVar = $this->tableDefinition->getParameter('pagerVariable');
@@ -96,16 +117,25 @@ class SimpleDataFormatter
 
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getResultSet()
     {
         return $this->resultSet;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function hasRowActions()
     {
         return $this->tableDefinition->hasRowActions();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getRowActions($tableRow)
     {
         $rowActions = $this->tableDefinition->getRowActions();
@@ -116,6 +146,9 @@ class SimpleDataFormatter
         return $processed;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function hasButtonActions()
     {
          $buttonActions = $this->getRawButtonActions();
@@ -125,6 +158,9 @@ class SimpleDataFormatter
          return (count($buttonActions) > 0);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getButtonActions()
     {
         $buttonActions = $this->getRawButtonActions();
@@ -136,6 +172,9 @@ class SimpleDataFormatter
         return $processed;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function getRawButtonActions()
     {
         $buttonActions = $this->tableDefinition->getButtonActions();
@@ -151,12 +190,18 @@ class SimpleDataFormatter
         return $processed;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processButtonActionLink($buttonAction)
     {
         $link = 'action=' . $buttonAction['action'];
         return $link;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function buttonPassesWhiteList($buttonAction)
     {
         $action = $this->request->input('action');
@@ -169,6 +214,9 @@ class SimpleDataFormatter
         return false;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function buttonPassesBlackList($buttonAction)
     {
         $action = $this->request->input('action');
@@ -181,6 +229,9 @@ class SimpleDataFormatter
         return true;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processRowAction($rowAction, $tableRow)
     {
         $processed = $rowAction;
@@ -189,6 +240,9 @@ class SimpleDataFormatter
         return $processed;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function buildRowActionLink($rowAction, $tableRow)
     {
         $pagerVar = $this->tableDefinition->getParameter('pagerVariable');
@@ -200,6 +254,9 @@ class SimpleDataFormatter
         return $link;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processRowActionTableRowLink($rowAction, $tableRow)
     {
         $link = '';
@@ -213,6 +270,9 @@ class SimpleDataFormatter
         return $link;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function getColHeaderMainClass($colDef)
     {
         $mainClass = "dataTableHeadingContent";

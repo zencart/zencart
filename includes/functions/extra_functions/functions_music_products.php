@@ -5,6 +5,9 @@
  * @version $Id: DrByte 2020 Aug 09 New in v1.5.8-alpha $
  */
 
+/**
+ * @since ZC v1.5.3
+ */
 function zen_update_music_artist_clicked($artistId, $languageId)
 {
     global $db;
@@ -14,6 +17,9 @@ function zen_update_music_artist_clicked($artistId, $languageId)
     $db->execute($sql);
 }
 
+/**
+ * @since ZC v1.5.3
+ */
 function zen_update_record_company_clicked($recordCompanyId, $languageId)
 {
     global $db;

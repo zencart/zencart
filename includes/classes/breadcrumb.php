@@ -20,6 +20,7 @@ if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUM
 
 /**
  * Handle page breadcrumbs
+ * @since ZC v1.0.3
  */
 class breadcrumb extends base
 {
@@ -30,16 +31,25 @@ class breadcrumb extends base
         $this->reset();
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function reset()
     {
         $this->_trail = [];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function add($title, $link = '')
     {
         $this->_trail[] = ['title' => $title, 'link' => $link];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function trail($separator = '&nbsp;&nbsp;', $prefix = '', $suffix = '')
     {
         $trail_string = '';
@@ -70,18 +80,27 @@ class breadcrumb extends base
         return $trail_string;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function last()
     {
         $trail_size = count($this->_trail);
         return $this->_trail[$trail_size - 1]['title'];
     }
 
+    /**
+     * @since ZC v1.5.7c
+     */
     function removeLast()
     {
         $trail_size = count($this->_trail);
         unset($this->_trail[$trail_size - 1]);
     }
 
+    /**
+     * @since ZC v1.5.7c
+     */
     function replaceLast($title = null, $link = null)
     {
         if ($title === null && $link === null) return $this->removeLast();
@@ -95,15 +114,24 @@ class breadcrumb extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     function isEmpty()
     {
         return empty($this->_trail);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     function count()
     {
         return count($this->_trail);
     }
+    /**
+     * @since ZC v1.5.8a
+     */
     function getTrail()
     {
        return $this->_trail;

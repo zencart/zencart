@@ -9,6 +9,9 @@
 require 'includes/application_top.php';
 
 if (!function_exists('makeUnixTimestampFromDate')) {
+    /**
+     * @since ZC v1.5.7
+     */
     function makeUnixTimestampFromDate($input, $format)
     {
         if (strtolower($format) == 'mm/dd/yyyy') {

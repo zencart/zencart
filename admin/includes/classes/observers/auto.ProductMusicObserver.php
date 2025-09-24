@@ -15,6 +15,7 @@ if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
  * a product by attaching to notifications that are pertinent to those
  * processes.
  *
+ * @since ZC v1.5.8
  */
 class zcObserverProductMusicObserver extends base
 {
@@ -41,6 +42,9 @@ class zcObserverProductMusicObserver extends base
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function update(&$class, $eventID, $p1, &$p2, &$p3, &$p4)
     {
         switch ($eventID) {
@@ -194,6 +198,9 @@ class zcObserverProductMusicObserver extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function isProductMusicProduct($products_id)
     {
         global $db;

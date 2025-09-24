@@ -14,6 +14,7 @@
  *
  * @param int $customer_id
  * @param int $gv_id
+ * @since ZC v1.0.3
  */
 function zen_gv_account_update(int $customer_id, int $gv_id)
 {
@@ -50,6 +51,7 @@ function zen_gv_account_update(int $customer_id, int $gv_id)
  *
  * @param int $customer_id
  * @return mixed|string
+ * @since ZC v1.1.0
  */
 function zen_user_has_gv_account(int $customer_id)
 {
@@ -68,6 +70,7 @@ function zen_user_has_gv_account(int $customer_id)
 
 /**
  * @deprecated v2.0.0; use Coupon::generateRandomCouponCode() instead.
+ * @since ZC v1.0.3
  */
 function zen_create_coupon_code(string $salt = "secret", $length = SECURITY_CODE_LENGTH, string $prefix = '')
 {
@@ -76,6 +79,7 @@ function zen_create_coupon_code(string $salt = "secret", $length = SECURITY_CODE
 
 /**
  * @deprecated v2.0.0 use CouponValidation::is_coupon_valid_for_sales
+ * @since ZC v1.5.6
  */
 function is_coupon_valid_for_sales($product_id, $coupon_id): bool
 {
@@ -84,6 +88,7 @@ function is_coupon_valid_for_sales($product_id, $coupon_id): bool
 
 /**
  * @deprecated v2.0.0 use CouponValidation::is_product_valid
+ * @since ZC v1.0.3
  */
 function is_product_valid($product_id, $coupon_id): bool
 {
@@ -92,6 +97,7 @@ function is_product_valid($product_id, $coupon_id): bool
 
 /**
  * @deprecated v2.0.0 use CouponValidation::validate_for_category
+ * @since ZC v1.3.0
  */
 function validate_for_category(int $product_id, int $coupon_id)
 {
@@ -100,6 +106,7 @@ function validate_for_category(int $product_id, int $coupon_id)
 
 /**
  * @deprecated v2.0.0 use CouponValidation::validate_for_product
+ * @since ZC v1.3.0
  */
 function validate_for_product(int $product_id, int $coupon_id)
 {

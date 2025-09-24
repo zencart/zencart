@@ -9,6 +9,9 @@ namespace Zencart\Request;
 
 use Zencart\Traits\Singleton;
 
+/**
+ * @since ZC v1.5.8
+ */
 class Request
 {
     use Singleton;
@@ -17,6 +20,7 @@ class Request
 
     /**
      * @return mixed|Request
+     * @since ZC v1.5.8
      */
     static function capture()
     {
@@ -29,6 +33,7 @@ class Request
      * @param $key
      * @param null $default
      * @return mixed|null
+     * @since ZC v1.5.8
      */
     public function input($key, $default = null)
     {
@@ -38,6 +43,7 @@ class Request
     /**
      * @param $key
      * @return bool
+     * @since ZC v1.5.8
      */
     public function has($key)
     {
