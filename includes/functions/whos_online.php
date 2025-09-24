@@ -10,7 +10,7 @@
 function zen_update_whos_online()
 {
     // exclude ajax pages from whos-online updates
-    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && (isset($_GET['act']) && $_GET['act'] !== '')) return;
+    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && !empty($_GET['act'])) return;
 
     global $db;
 
