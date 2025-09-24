@@ -2,14 +2,15 @@
 /**
  * sanitize the GET parameters
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
+ *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
  */
 
-use Zencart\PageLoader\PageLoader;
 use Zencart\FileSystem\FileSystem;
+use Zencart\PageLoader\PageLoader;
 use Zencart\Request\Request;
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -41,6 +42,8 @@ if (zen_is_hmac_login()) {
         $_POST['securityToken'] = $_SESSION['securityToken'];
     }
 }
+
+// POST calls require a valid securityToken to prevent CSRF attacks.
 
 if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $mainPage = $_GET['main_page'] ?? FILENAME_DEFAULT;
@@ -176,7 +179,7 @@ $saniGroup4 = [
     'tx',                               //- paypal/paypay_functions
     'type',                             //- Paypal
     'zenid',                            //- [a-z0-9]
-    $zenSessionId                       //- [a-z0-9]
+    $zenSessionId,                       //- [a-z0-9]
 ];
 foreach ($saniGroup4 as $key) {
     if (isset($_GET[$key])) {
@@ -194,14 +197,14 @@ $strictReplace = ['<', '>', "'"];
 $unStrictReplace = ['<', '>'];
 foreach ($_GET as $key => $value) {
     if (is_array($value)) {
-        foreach ($value as $key2 => $val2){
+        foreach ($value as $key2 => $val2) {
             if ($key2 === 'keyword') {
                 $_GET[$key][$key2] = str_replace($unStrictReplace, '', $val2);
                 if (isset($_REQUEST[$key][$key2])) {
                     $_REQUEST[$key][$key2] = str_replace($unStrictReplace, '', $val2);
                 }
             } elseif (is_array($val2)) {
-                foreach ($val2 as $key3 => $val3){
+                foreach ($val2 as $key3 => $val3) {
                     $_GET[$key][$key2][$key3] = str_replace($strictReplace, '', $val3);
                     if (isset($_REQUEST[$key][$key2][$key3])) {
                         $_REQUEST[$key][$key2][$key3] = str_replace($strictReplace, '', $val3);
