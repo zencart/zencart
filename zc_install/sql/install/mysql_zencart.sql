@@ -1557,7 +1557,7 @@ CREATE TABLE plugin_control (
   description text,
   type varchar(11) NOT NULL default 'free',
   managed tinyint(1) NOT NULL default 0,
-  status tinyint(1) NOT NULL default 2,
+  status tinyint(1) NOT NULL default 0,
   author varchar(64) NOT NULL,
   version varchar(20),
   zc_versions text NOT NULL,
