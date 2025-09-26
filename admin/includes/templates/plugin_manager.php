@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
         <?php
-            for ($i = 0; $i < 3; $i++) {
+            foreach ([1, 2, 0] as $i) {
                 $firstheader = 0;
                 $skip = 1;
                 foreach ($formatter->getTableData() as $tableData) {
@@ -44,9 +44,9 @@
                         <th class="<?php echo $colHeader['headerClass'] . $colwidth; ?>">
                         <?php if ($firstheader === 0) {
                             $tabletitle = match($i) {
-                                0 => TEXT_INSTALLED_ENABLED,
-                                1 => TEXT_INSTALLED_DISABLED,
-                                2 => TEXT_NOT_INSTALLED,
+                                0 => TEXT_NOT_INSTALLED,
+                                1 => TEXT_INSTALLED_ENABLED,
+                                2 => TEXT_INSTALLED_DISABLED,
                             };
                             echo $tabletitle;
                             $firstheader = 1;

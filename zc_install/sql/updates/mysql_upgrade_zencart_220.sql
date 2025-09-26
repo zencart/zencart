@@ -118,14 +118,6 @@ UPDATE configuration SET sort_order = 25 WHERE configuration_key = 'IMAGES_AUTO_
 UPDATE configuration SET sort_order = 27 WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 UPDATE configuration SET configuration_title = 'Additional Images filename matching pattern', configuration_description = 'In Filename-Matching mode, you can use an &quot;_&quot; suffix in two formats:<br>&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict' WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 
-#PROGRESS_FEEDBACK:!TEXT=Updating status value in table plugin_control...
-UPDATE plugin_control SET status = 9 WHERE status = 0;
-UPDATE plugin_control SET status = 0 WHERE status = 1;
-UPDATE plugin_control SET status = 1 WHERE status = 2;
-UPDATE plugin_control SET status = 2 WHERE status = 9;
-ALTER TABLE plugin_control MODIFY COLUMN status tinyint(1) NOT NULL default 2;
-
-
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
 #### VERSION UPDATE STATEMENTS
