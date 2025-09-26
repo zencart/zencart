@@ -14,6 +14,16 @@ class PluginManagerDataSource extends DataTableDataSource
 {
     protected function buildInitialQuery(): Builder
     {
-        return (new PluginControl())->query()->orderBy('name')->orderBy('unique_key');
+        $statusSort = [
+            1, // enabled
+            2, // disabled
+            0, // not installed
+        ];
+        return PluginControl::query()
+            ->orderByRaw(
+                "FIELD(status, " . implode(',', $statusSort) . ")"
+            )
+            ->orderBy('name')
+            ->orderBy('unique_key');
     }
 }

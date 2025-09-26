@@ -133,7 +133,6 @@ UPDATE configuration SET sort_order = 25 WHERE configuration_key = 'IMAGES_AUTO_
 UPDATE configuration SET sort_order = 27 WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 UPDATE configuration SET configuration_title = 'Additional Images filename matching pattern', configuration_description = 'In Filename-Matching mode, you can use an &quot;_&quot; suffix in two formats:<br>&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict' WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 
-
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
 #### VERSION UPDATE STATEMENTS
