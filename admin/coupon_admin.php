@@ -106,7 +106,7 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
     $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $item['customers_lastname'];
-    $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
+    $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html'] ?? '');
     $html_msg['COUPON_TEXT_TO_REDEEM'] = TEXT_TO_REDEEM;
     $html_msg['COUPON_TEXT_VOUCHER_IS'] = TEXT_VOUCHER_IS;
     $html_msg['COUPON_CODE'] = $coupon_result->fields['coupon_code'] . $html_coupon_help;
