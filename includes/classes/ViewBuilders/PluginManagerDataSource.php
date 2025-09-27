@@ -9,15 +9,16 @@ namespace Zencart\ViewBuilders;
 
 use App\Models\PluginControl;
 use Illuminate\Database\Eloquent\Builder;
+use Zencart\PluginSupport\PluginStatus;
 
 class PluginManagerDataSource extends DataTableDataSource
 {
     protected function buildInitialQuery(): Builder
     {
         $statusSort = [
-            1, // enabled
-            2, // disabled
-            0, // not installed
+            PluginStatus::ENABLED, // enabled
+            PluginStatus::DISABLED, // disabled
+            PluginStatus::NOT_INSTALLED, // not installed
         ];
         return PluginControl::query()
             ->orderByRaw(

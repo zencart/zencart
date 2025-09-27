@@ -12,6 +12,7 @@ use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\Installer;
 use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\PluginErrorContainer;
+use Zencart\PluginSupport\PluginStatus;
 use Zencart\PluginSupport\ScriptedInstallerFactory;
 use Zencart\PluginSupport\SqlPatchInstaller;
 use Zencart\ViewBuilders\DerivedItemsManager;
@@ -58,7 +59,11 @@ $tableDefinition = [
             'derivedItem' => [
                 'type' => 'local',
                 'method' => 'arrayReplace',
-                'params' => ['0' => zen_icon('status-red'), '1' => zen_icon('status-green'), '2' => zen_icon('status-yellow')],
+                'params' => [
+                    (string)PluginStatus::NOT_INSTALLED => zen_icon('status-red'),
+                    (string)PluginStatus::ENABLED => zen_icon('status-green'),
+                    (string)PluginStatus::DISABLED => zen_icon('status-yellow'),
+                ],
             ],
         ],
     ],
@@ -80,7 +85,12 @@ $filterDefinitions = [
         'source' => 'options',
         'selectName' => 'plugin_status',
         'auto' => true,
-        'options' => ['*' => TEXT_ALL_STATUSES, '0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED],
+        'options' => [
+            '*' => TEXT_ALL_STATUSES,
+            (string)PluginStatus::NOT_INSTALLED => TEXT_NOT_INSTALLED,
+            (string)PluginStatus::ENABLED => TEXT_INSTALLED_ENABLED,
+            (string)PluginStatus::DISABLED => TEXT_INSTALLED_DISABLED,
+        ],
     ],
 ];
 
