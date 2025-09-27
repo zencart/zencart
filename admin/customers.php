@@ -407,11 +407,21 @@ if ($action === 'edit' || $action === 'update') {
     <!-- header //-->
     <?php require DIR_WS_INCLUDES . 'header.php' ?>
     <!-- header_eof //-->
-
     <!-- body //-->
     <div class="container-fluid">
         <!-- body_text //-->
         <h1><?= HEADING_TITLE ?></h1>
+
+<?php
+    // Additional notification, allowing admin-observers to include additional legend icons
+    $extra_legends = '';
+    $zco_notifier->notify('NOTIFY_ADMIN_CUSTOMERS_MENU_LEGEND', [], $extra_legends);
+?>
+    <div class="row"><?= TEXT_LEGEND . ' '; ?>
+    <i class="fa-solid fa-square txt-status-on" title="<?= IMAGE_ICON_STATUS_ON ?>"></i>&nbsp;<?= IMAGE_ICON_STATUS_ON; ?>&nbsp; 
+    <i class="fa-solid fa-square text-warning" title="<?= CUSTOMERS_AUTH_WAITING_FOR_ACTIVATION ?>"></i>&nbsp;<?= CUSTOMERS_AUTH_WAITING_FOR_ACTIVATION; ?>&nbsp;
+    <i class="fa-solid fa-square txt-status-off" title="<?= IMAGE_ICON_STATUS_OFF ?>"></i>&nbsp;<?= IMAGE_ICON_STATUS_OFF; ?>&nbsp;
+    <?= $extra_legends; ?></div>
 <?php
 if ($action === 'edit' || $action === 'update') {
     $newsletter_array = [
