@@ -8,19 +8,18 @@
  * @var \Zencart\TableViewControllers\BaseController $tableController
  * @var string $PHP_SELF
  */
-
-
+use Zencart\PluginSupport\PluginStatus;
 ?>
 <div class="container-fluid">
     <h1><?php echo HEADING_TITLE; ?></h1>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 configurationColumnLeft">
         <?php
-            foreach ([1, 2, 0] as $i) {
+            foreach ([PluginStatus::ENABLED, PluginStatus::DISABLED, PluginStatus::NOT_INSTALLED] as $i) {
                 $firstheader = 0;
                 $skip = 1;
                 foreach ($formatter->getTableData() as $tableData) {
-                    if ($tableData ["status"] ["original"] === $i) {
+                    if ($tableData["status"]["original"] === $i) {
                         $skip = 0;
                         break;
                     }
@@ -44,9 +43,9 @@
                         <th class="<?php echo $colHeader['headerClass'] . $colwidth; ?>">
                         <?php if ($firstheader === 0) {
                             $tabletitle = match($i) {
-                                0 => TEXT_NOT_INSTALLED,
-                                1 => TEXT_INSTALLED_ENABLED,
-                                2 => TEXT_INSTALLED_DISABLED,
+                                PluginStatus::NOT_INSTALLED => TEXT_NOT_INSTALLED,
+                                PluginStatus::ENABLED => TEXT_INSTALLED_ENABLED,
+                                PluginStatus::DISABLED => TEXT_INSTALLED_DISABLED,
                             };
                             echo $tabletitle;
                             $firstheader = 1;
@@ -61,7 +60,7 @@
                 </thead>
                 <tbody>
                 <?php foreach ($formatter->getTableData() as $tableData) { ?>
-                    <?php if ($tableData ["status"] ["original"] === $i) {
+                    <?php if ($tableData["status"]["original"] === $i) {
                               if ($formatter->isRowSelected($tableData)) { ?>
                         <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo $formatter->getSelectedRowLink(
                             $tableData); ?>'" role="button">
