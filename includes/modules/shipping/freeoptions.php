@@ -46,7 +46,7 @@ class freeoptions extends ZenShipping
                 "SELECT zone_id
                    FROM " . TABLE_ZONES_TO_GEO_ZONES . "
                   WHERE geo_zone_id = " . (int)MODULE_SHIPPING_FREEOPTIONS_ZONE . "
-                    AND zone_country_id = " . $order->delivery['country']['id'] . "
+                    AND zone_country_id = " . (int)($order->delivery['country']['id'] ?? -1) . "
                   ORDER BY zone_id"
             );
             foreach ($check as $next_zone) {
