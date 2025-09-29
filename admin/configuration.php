@@ -210,7 +210,7 @@ echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'
 <?php
 foreach ($configuration as $item) {
     $fieldName = 'cfg_' . $item['configuration_id'];
-    $cfgValue = $item['configuration_value'];
+    $cfgValue = htmlspecialchars($item['configuration_value']);
 
     if (defined('CFGTITLE_' . $item['configuration_key'])) {
         $item['configuration_title'] = constant('CFGTITLE_' . $item['configuration_key']);
