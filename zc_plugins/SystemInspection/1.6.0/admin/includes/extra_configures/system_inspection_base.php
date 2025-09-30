@@ -319,6 +319,7 @@ define('OBSOLETE_PAYMENTS', [
 
 define('OBSOLETE_SHIPPING', [
     'ups.php',
+    'usps.php',
 ]);
 
 define('OBSOLETE_ORDER_TOTALS', [
@@ -330,6 +331,7 @@ define('REPLACEMENTS', [
     'firstdata_hco.php' => 'Stripe, Square Web Payments, PayPal RESTful',
     'payeezyjszc.php' => 'Stripe, Square Web Payments, PayPal RESTful',
     'ups.php' => 'UPS RESTful',
+    'usps.php' => 'USPS RESTful',
 ]);
 
 
