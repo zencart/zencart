@@ -156,10 +156,7 @@ class zones extends ZenShipping
      */
     function update_status()
     {
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
@@ -174,7 +171,7 @@ class zones extends ZenShipping
     function quote($method = ''): array
     {
         global $order, $shipping_weight, $shipping_num_boxes, $total_count;
-        $dest_country = $order->delivery['country']['iso_code_2'];
+        $dest_country = $order->delivery['country']['iso_code_2'] ?? 'xyzzy';
         $dest_zone = 0;
         $error = false;
         $shipping_method = '';
@@ -303,7 +300,7 @@ class zones extends ZenShipping
             ],
         ];
 
-        if ($this->tax_class > 0) {
+        if ($this->tax_class > 0 && isset($order->delivery['country'])) {
             $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         }
 
