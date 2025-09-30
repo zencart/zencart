@@ -657,7 +657,6 @@ function ipn_create_order_history_array($insert_id)
       $commErrNo = curl_errno($ch);
     }
     $commInfo = @curl_getinfo($ch);
-    curl_close($ch);
 
     $errors = ($commErrNo != 0 ? "CURL communication ERROR: (" . $commErrNo . ') ' . $commError : '');
     $response .= ($commErrNo != 0 ? '&CURL_ERRORS=' . urlencode('(' . $commErrNo . ') ' . $commError) : '') ;
@@ -686,7 +685,6 @@ function ipn_create_order_history_array($insert_id)
       $commError = curl_error($ch);
       $commErrNo = curl_errno($ch);
       $commInfo = @curl_getinfo($ch);
-      curl_close($ch);
       ipn_debug_email('CURL OPTS: ' . print_r($curlOpts, true));
       ipn_debug_email('CURL response: ' . $response);
       $errors = ($commErrNo != 0 ? "\n(" . $commErrNo . ') ' . $commError : '');

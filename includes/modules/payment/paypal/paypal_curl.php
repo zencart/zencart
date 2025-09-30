@@ -482,7 +482,6 @@ class paypal_curl extends base {
     }
 
     $commInfo = @curl_getinfo($ch);
-    curl_close($ch);
 
     $rawdata = "CURL raw data:\n" . $response . "CURL RESULTS: (" . $commErrNo . ') ' . $commError . "\n" . print_r($commInfo, true) . "\nEOF";
 

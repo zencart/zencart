@@ -39,7 +39,6 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $data = curl_exec($ch);
-        curl_close($ch);
         $json = json_decode($data, false);
         echo (stripos($json->rating, 'Okay') !== false ? $goodMessage : $errorMessage) . ' Rating: ' . $json->rating;
         echo "<br>\n";
@@ -243,7 +242,6 @@ function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', 
         $errnum = curl_errno($ch);
     }
     $commInfo = @curl_getinfo($ch);
-    curl_close($ch);
 
     // enclose URL in quotes so it doesn't get converted to a clickable link if posted on the forum
     if (isset($commInfo['url'])) {
