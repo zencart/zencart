@@ -307,8 +307,9 @@ class order extends base
                 $new_qty = rtrim($new_qty, '0');
             }
 
-            $new_qty = round($new_qty, $precision);
+            $new_qty = round(zen_str_to_numeric($new_qty), $precision);
 
+            // intentionally using loose == here as a logic test.
             if ($new_qty == (int)$new_qty) {
                 $new_qty = (int)$new_qty;
             }
