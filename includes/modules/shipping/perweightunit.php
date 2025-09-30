@@ -35,7 +35,9 @@ class perweightunit extends ZenShipping
 
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = ((MODULE_SHIPPING_PERWEIGHTUNIT_STATUS == 'True') ? true : false);
+            $this->enabled = (MODULE_SHIPPING_PERWEIGHTUNIT_STATUS === 'True');
+        } else {
+            $this->enabled = false;
         }
 
         if ($this->enabled) {
@@ -54,34 +56,11 @@ class perweightunit extends ZenShipping
      */
     function update_status()
     {
-        global $order, $db;
         if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if ((int)MODULE_SHIPPING_PERWEIGHTUNIT_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute(
-                "SELECT zone_id
-                   FROM " . TABLE_ZONES_TO_GEO_ZONES . "
-                  WHERE geo_zone_id = " . (int)MODULE_SHIPPING_PERWEIGHTUNIT_ZONE . "
-                    AND zone_country_id = " . (int)($order->delivery['country']['id'] ?? -1) . "
-                  ORDER BY zone_id"
-            );
-            foreach ($check as $next_zone) {
-                if ($next_zone['zone_id'] < 1) {
-                    $check_flag = true;
-                    break;
-                } elseif ($next_zone['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-            }
-
-            if ($check_flag === false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_PERWEIGHTUNIT_ZONE);
 
         if ($this->enabled) {
             // -----

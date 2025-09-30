@@ -118,6 +118,8 @@ class zones extends ZenShipping
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
             $this->enabled = ((MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
+        } else {
+            $this->enabled = false;
         }
 
         // CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
