@@ -180,7 +180,7 @@ foreach ($modules_found as $module_name => $module_file_dir) {
 
     require_once DIR_FS_CATALOG . $module_file_dir . $module_name;
     $class = pathinfo($module_name, PATHINFO_FILENAME);
-    if (!class_exists($class)) {
+    if (empty($class) || !class_exists($class)) {
         continue;
     }
 
@@ -203,10 +203,10 @@ foreach ($modules_found as $module_name => $module_file_dir) {
 uasort($modules_for_display, static fn($a, $b) => strnatcmp($a['grouping_sort'], $b['grouping_sort']));
 
 // set mInfo for sidebox display by matching against the selected URI param, or pick the first enabled module, or the first overall module
-$class = $modules_for_display[$_GET['module']]['class'] ?? array_first($modules_for_display)['class'];
+$class = $modules_for_display[$_GET['module'] ?? '']['class'] ?? array_first($modules_for_display)['class'];
 if (!empty($class) && !isset($mInfo)) {
-    $module = $modules_for_display[$_GET['module']]['module'] ?? array_first($modules_for_display)['module'];
-    $check = $modules_for_display[$_GET['module']]['status'] ?? array_first($modules_for_display)['status'];
+    $module = $modules_for_display[$_GET['module'] ?? '']['module'] ?? array_first($modules_for_display)['module'];
+    $check = $modules_for_display[$_GET['module'] ?? '']['status'] ?? array_first($modules_for_display)['status'];
     $module_info = [
         'code' => $module->code,
         'title' => $module->title,
