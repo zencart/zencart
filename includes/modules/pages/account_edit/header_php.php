@@ -10,7 +10,7 @@
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_EDIT');
 
-if (!zen_is_logged_in()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
     $_SESSION['navigation']->set_snapshot();
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
@@ -130,26 +130,21 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
             }
         }
 
-        $where_clause = 'customers_id = :customersID';
-        $where_clause = $db->bindVars($where_clause, ':customersID', $_SESSION['customer_id'], 'integer');
-        $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', $where_clause);
+        $customer = new Customer();
+        $email_address_changed = false;
+        if (CUSTOMERS_ACTIVATION_REQUIRED === 'true' && $customer->getData('customers_email_address') !== $email_address) {
+            $email_address_changed = true;
+            $sql_data_array[] = ['fieldName' => 'activation_required', 'value' => 1, 'type' => 'integer'];
+            $sql_data_array[] = ['fieldName' => 'customers_authorization', 'value' => Customer::AUTH_NO_PURCHASE, 'type' => 'integer'];
+        }
 
-        $sql =
-            "UPDATE " . TABLE_CUSTOMERS_INFO . "
-                SET customers_info_date_account_last_modified = now()
-              WHERE  customers_info_id = :customersID";
-        $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
+        $customer_data = $customer->update($sql_data_array);
 
-        $db->Execute($sql, 1);
-
-        $where_clause = 'customers_id = :customersID AND address_book_id = :customerDefaultAddressID';
-        $where_clause = $db->bindVars($where_clause, ':customersID', $_SESSION['customer_id'], 'integer');
-        $where_clause = $db->bindVars($where_clause, ':customerDefaultAddressID', $_SESSION['customer_default_address_id'], 'integer');
         $sql_data_array = [
             ['fieldName' => 'entry_firstname', 'value' => $firstname, 'type' => 'stringIgnoreNull'],
             ['fieldName' => 'entry_lastname', 'value' => $lastname, 'type' => 'string'],
         ];
-        $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', $where_clause);
+        $customer->updatePrimaryAddress($sql_data_array);
 
         $zco_notifier->notify('NOTIFY_HEADER_ACCOUNT_EDIT_UPDATES_COMPLETE');
 
@@ -157,8 +152,18 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
         $_SESSION['customer_first_name'] = $firstname;
         $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customers_email_address'] = $email_address;
+        $_SESSION['customers_authorization'] = (int)$customer_data['customers_authorization'];
 
         $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
+
+        if ($customer_data['activation_required']) {
+            $auth_token_info = $customer->getAuthTokenInfo();
+            $token_valid_minutes = Customer::getAuthTokenMinutesValid();
+            if ($auth_token_info === false || $auth_token_info['email_address'] !== $email_address || strtotime($auth_token_info['created_at']) + $token_valid_minutes > time()) {
+                require DIR_WS_MODULES . zen_get_module_directory(FILENAME_SEND_AUTH_TOKEN_EMAIL);
+            }
+            zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
+        }
 
         zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     }

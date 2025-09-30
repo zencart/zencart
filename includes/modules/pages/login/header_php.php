@@ -124,6 +124,11 @@ if (($_GET['action'] ?? '') === 'process') {
             }
             // end contents merge notice
 
+            if ($customer->getData('activation_required')) {
+                $_SESSION['navigation']->clear_snapshot();
+                zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
+            }
+
             if (count($_SESSION['navigation']->snapshot) > 0) {
                 //    $back = sizeof($_SESSION['navigation']->path)-2;
                 $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], [zen_session_name()]), $_SESSION['navigation']->snapshot['mode']);

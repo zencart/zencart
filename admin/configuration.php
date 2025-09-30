@@ -152,6 +152,11 @@ if ($gID === 7) {
     if (!zen_is_superuser()) {
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
     }
+} elseif ($gID === 5) {
+    if (zen_get_configuration_key_value('CUSTOMERS_ACTIVATION_REQUIRED') === 'true') {
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '3' WHERE configuration_key = 'CUSTOMERS_APPROVAL_AUTHORIZATION'", 1);
+        $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'customers_authorization' WHERE configuration_key = 'CUSTOMERS_AUTHORIZATION_FILENAME'", 1);
+    }
 }
 ?>
 <!doctype html>
@@ -205,7 +210,7 @@ echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'
 <?php
 foreach ($configuration as $item) {
     $fieldName = 'cfg_' . $item['configuration_id'];
-    $cfgValue = $item['configuration_value'];
+    $cfgValue = htmlspecialchars($item['configuration_value'], ENT_COMPAT, CHARSET, true);
 
     if (defined('CFGTITLE_' . $item['configuration_key'])) {
         $item['configuration_title'] = constant('CFGTITLE_' . $item['configuration_key']);

@@ -12,6 +12,7 @@ use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\Installer;
 use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\PluginErrorContainer;
+use Zencart\PluginSupport\PluginStatus;
 use Zencart\PluginSupport\ScriptedInstallerFactory;
 use Zencart\PluginSupport\SqlPatchInstaller;
 use Zencart\ViewBuilders\DerivedItemsManager;
@@ -34,7 +35,7 @@ $installerFactory = new InstallerFactory($db, $pluginInstaller, $errorContainer)
 // define the table definition. Just using an array here, but could have used the fluent interface
 $tableDefinition = [
     'colKey' => 'unique_key',
-    'maxRowCount' => 20,
+    'maxRowCount' => 999,
     'defaultRowAction' => '',
     'columns' => [
         'name' => [
@@ -58,7 +59,11 @@ $tableDefinition = [
             'derivedItem' => [
                 'type' => 'local',
                 'method' => 'arrayReplace',
-                'params' => ['0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED],
+                'params' => [
+                    (string)PluginStatus::NOT_INSTALLED => zen_icon('status-red'),
+                    (string)PluginStatus::ENABLED => zen_icon('status-green'),
+                    (string)PluginStatus::DISABLED => zen_icon('status-yellow'),
+                ],
             ],
         ],
     ],
@@ -80,7 +85,12 @@ $filterDefinitions = [
         'source' => 'options',
         'selectName' => 'plugin_status',
         'auto' => true,
-        'options' => ['*' => TEXT_ALL_STATUSES, '0' => TEXT_NOT_INSTALLED, '1' => TEXT_INSTALLED_ENABLED, '2' => TEXT_INSTALLED_DISABLED],
+        'options' => [
+            '*' => TEXT_ALL_STATUSES,
+            (string)PluginStatus::NOT_INSTALLED => TEXT_NOT_INSTALLED,
+            (string)PluginStatus::ENABLED => TEXT_INSTALLED_ENABLED,
+            (string)PluginStatus::DISABLED => TEXT_INSTALLED_DISABLED,
+        ],
     ],
 ];
 
@@ -105,6 +115,12 @@ $tableController->processRequest();
 <html <?= HTML_PARAMS ?>>
 <head>
 <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+      <style>
+          .w-20 {width: 20%}
+          .w-15 {width: 15%}
+          .w-10 {width: 10%}
+          .w-5 {width: 5%}
+      </style>
 </head>
 <body>
 <!-- header //-->
@@ -112,7 +128,7 @@ $tableController->processRequest();
 <!-- header_eof //-->
 
 <!-- body //-->
-<?php require 'includes/templates/table_view.php'; ?>
+<?php require 'includes/templates/plugin_manager.php'; ?>
 <!-- body_eof //-->
 
 <!-- footer //-->

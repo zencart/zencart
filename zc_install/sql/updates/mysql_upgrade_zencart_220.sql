@@ -37,6 +37,14 @@ TRUNCATE TABLE db_cache;
 
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
+DROP TABLE IF EXISTS customers_auth_tokens;
+CREATE TABLE customers_auth_tokens (
+    customers_id int(11) NOT NULL,
+    email_address varchar(96) NOT NULL,
+    token varchar(100) NOT NULL DEFAULT '',
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (customers_id)
+);
 DROP TABLE IF EXISTS customer_password_reset_tokens;
 CREATE TABLE customer_password_reset_tokens (
     customer_id int(11) NOT NULL default 0,
@@ -51,13 +59,20 @@ ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
 ALTER TABLE orders MODIFY currency char(4) default NULL;
 ALTER TABLE plugin_control MODIFY `version` varchar(20);
 ALTER TABLE plugin_control_versions MODIFY `version` varchar(20);
+ALTER TABLE customers ADD COLUMN activation_required tinyint(1) NOT NULL DEFAULT 0 AFTER customers_authorization;
+ALTER TABLE customers ADD COLUMN welcome_email_sent tinyint(1) DEFAULT NULL AFTER activation_required;
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Length', 'PASSWORD_RESET_TOKEN_LENGTH', '24', 'Number of characters in a generated password-reset token. Default is 24. Allowed: 12-100, but it affects the URL length, so 12-30 is most ideal', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Valid For', 'PASSWORD_RESET_TOKEN_MINUTES_VALID', '60', 'How many minutes a password-reset token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 1, 32, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Length', 'PASSWORD_RESET_TOKEN_LENGTH', '24', 'Number of characters in a generated password-reset token. Default is 24. Allowed: 12-100, but it affects the URL length, so 12-30 is most ideal', 5, 52, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Password Reset Token Valid For', 'PASSWORD_RESET_TOKEN_MINUTES_VALID', '60', 'How many minutes a password-reset token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 5, 53, NULL, now(), '{\"error\":\"TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
+UPDATE configuration SET configuration_group_id = 5, sort_order = 52 WHERE configuration_key = 'PASSWORD_RESET_TOKEN_LENGTH' LIMIT 1;
+UPDATE configuration SET configuration_group_id = 5, sort_order = 53 WHERE configuration_key = 'PASSWORD_RESET_TOKEN_MINUTES_VALID' LIMIT 1;
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('TinyMCE Editor API Key', 'TINYMCE_EDITOR_API_KEY', 'GPL', 'Basic editor features are free, in GPL mode.<br>Optionally enable premium editor features in the TinyMCE editor by providing your account API key and register your store website domain in your Tiny account.<br>Sign up at <a href="https://www.tiny.cloud/auth/signup/" target="_blank">www.tiny.cloud</a><br><br>Default value: <strong>GPL</strong> for free-unregistered mode with basic features.', 1, 111, now());
-UPDATE configuration SET configuration_description = 'CSS Buttons<br>Use CSS buttons instead of images (GIF/JPG)?<br>Button styles must be configured in the stylesheet if you enable this option.<br>Yes - Use CSS buttons<br>No - Use images buttons<br>Found - Use images if exist, else use CSS buttons', set_function = 'zen_cfg_select_option(array(\'No\', \'Yes\', \'Found\'), ' WHERE configuration_key = 'IMAGE_USE_CSS_BUTTONS';
+UPDATE configuration SET configuration_description = 'CSS Buttons<br>Use CSS buttons instead of images (GIF/JPG)?<br>Button styles must be configured in the stylesheet if you enable this option.<br>Yes - Use CSS buttons<br>No - Use images buttons<br>Found - Use images if exist, else use CSS buttons', set_function = 'zen_cfg_select_option(array(\'No\', \'Yes\', \'Found\'), ' WHERE configuration_key = 'IMAGE_USE_CSS_BUTTONS' LIMIT 1;
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, set_function) VALUES ('Account Activation Required?', 'CUSTOMERS_ACTIVATION_REQUIRED', 'false', 'Require customer-account activation? If set to <code>true</code>, an activation link is sent to the email address supplied by the customer. The customer must click on that link to activate their account.', 5, 60, NULL, now(), 'zen_cfg_select_option([\'true\', \'false\'], ');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Account Activation Token Length', 'CUSTOMERS_ACTIVATION_TOKEN_LENGTH', '24', 'Number of characters in a generated account-activation token. Default is 24. Allowed: 12-100, but it affects the URL length, so 10-30 is most ideal', 5, 61, NULL, now(), '{\"error\":\"TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Account Activation Token Valid For', 'CUSTOMERS_ACTIVATION_TOKEN_MINUTES_VALID', '60', 'How many minutes an account-activation token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 5, 62, NULL, now(), '{\"error\":\"TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
 
 DELETE FROM admin_pages WHERE page_key = 'pageRegistration';
 
@@ -105,7 +120,7 @@ EXECUTE stmt2;
 DEALLOCATE PREPARE stmt2;
 
 #PROGRESS_FEEDBACK:!TEXT=Creating new table products_additional_images...
-INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images Handling', 'ADDITIONAL_IMAGES_HANDLING', 'Filename-Matching', 'Product Images can be handled in two ways: &quot;Database&quot; or &quot;Filename-Matching&quot;.<br> Use &quot;Database&quot; to allow additional images (any filename/filetype) to be added via the Admin Product Edit page.<br> Use &quot;Filename-Matching&quot; to autodetect additional images based on filename matching (legacy method) where we scan your images directory for files with names that <a href="https://docs.zen-cart.com/user/images/additional_images/" target="_blank">match the primary image filename plus suffixes</a>. This requires manually uploading images to your server via FTP or other methods, but avoids needing to assign images to products via the Admin page. <br> NOTE: a &quot;Sync Product Images To Database&quot; tool is available for installation via the Plugins module and then accessible via the Tools menu.<br> The converter creates database entries for all additional images that are currently being autodetected, subsequently allowing all image management from the Product Edit page. The converter does not modify the images, and can be run periodically to sync new images to the database as needed.', '4', '26', 'zen_cfg_select_option([\'Database\', \'Filename-Matching\'], ', NOW());
+INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Additional Images Handling', 'ADDITIONAL_IMAGES_HANDLING', 'Filename-Matching', 'Product Images can be handled in two ways: &quot;Database&quot; or &quot;Filename-Matching&quot;.<br> Use &quot;Database&quot; to allow additional images (any filename/filetype) to be added via the Admin Product Edit page.<br> Use &quot;Filename-Matching&quot; to autodetect additional images based on filename matching (legacy method) where we scan your images directory for files with names that <a href="https://docs.zen-cart.com/user/images/additional_images/" target="_blank">match the primary image filename plus suffixes</a>. This requires manually uploading images to your server via FTP or other methods, but avoids needing to assign images to products via the Admin page. <br> NOTE: a &quot;Scan Product Images To Database&quot; tool is available for installation via the Plugins Manager, and then accessible via the Tools menu.<br>The scanner creates database entries for all additional images that match legacy naming conventions, subsequently allowing all image management from the Product Edit page. The scanner does not modify the images, and can be run periodically to sync new images to the database as needed.', '4', '26', 'zen_cfg_select_option([\'Database\', \'Filename-Matching\'], ', NOW());
 CREATE TABLE IF NOT EXISTS products_additional_images (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   products_id INT NOT NULL,
@@ -114,10 +129,9 @@ CREATE TABLE IF NOT EXISTS products_additional_images (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY idx_pid_img_zen (products_id, additional_image)
 ) ENGINE=MyISAM;
-UPDATE configuration SET sort_order = 25 WHERE configuration_key = 'IMAGES_AUTO_ADDED';
-UPDATE configuration SET sort_order = 27 WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE';
-UPDATE configuration SET configuration_title = 'Additional Images filename matching pattern', configuration_description = 'In Filename-Matching mode, you can use an &quot;_&quot; suffix in two formats:<br>&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict' WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE';
-
+UPDATE configuration SET sort_order = 25 WHERE configuration_key = 'IMAGES_AUTO_ADDED' LIMIT 1;
+UPDATE configuration SET sort_order = 27 WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
+UPDATE configuration SET configuration_title = 'Additional Images filename matching pattern', configuration_description = 'In Filename-Matching mode, you can use an &quot;_&quot; suffix in two formats:<br>&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict' WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 

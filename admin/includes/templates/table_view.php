@@ -91,3 +91,4 @@ use Zencart\Paginator\LaravelPaginator;
         <?php } ?>
     </div>
     <?php } ?>
+</div>

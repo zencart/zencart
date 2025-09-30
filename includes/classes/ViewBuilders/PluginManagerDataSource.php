@@ -9,6 +9,7 @@ namespace Zencart\ViewBuilders;
 
 use App\Models\PluginControl;
 use Illuminate\Database\Eloquent\Builder;
+use Zencart\PluginSupport\PluginStatus;
 
 /**
  * @since ZC v1.5.8
@@ -20,6 +21,16 @@ class PluginManagerDataSource extends DataTableDataSource
      */
     protected function buildInitialQuery(): Builder
     {
-        return (new PluginControl())->query()->orderBy('name')->orderBy('unique_key');
+        $statusSort = [
+            PluginStatus::ENABLED, // enabled
+            PluginStatus::DISABLED, // disabled
+            PluginStatus::NOT_INSTALLED, // not installed
+        ];
+        return PluginControl::query()
+            ->orderByRaw(
+                "FIELD(status, " . implode(',', $statusSort) . ")"
+            )
+            ->orderBy('name')
+            ->orderBy('unique_key');
     }
 }

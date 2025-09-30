@@ -10,6 +10,7 @@ namespace Zencart\ViewBuilders;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\InstallerFactory;
+use Zencart\PluginSupport\PluginStatus;
 
 /**
  * @since ZC v1.5.8
@@ -46,7 +47,7 @@ class PluginManagerController extends BaseController
             );
         }
 
-        if ($this->currentFieldValue('status') == 0) {
+        if ((int)$this->currentFieldValue('status') === PluginStatus::NOT_INSTALLED) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -73,7 +74,7 @@ class PluginManagerController extends BaseController
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UPGRADE_AVAILABLE . '</a>'
             );
         }
-        if ($this->currentFieldValue('status') == 1) {
+        if ((int)$this->currentFieldValue('status') === PluginStatus::ENABLED) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -86,8 +87,7 @@ class PluginManagerController extends BaseController
                     $this->pageLink() . '&' . $this->colKeylink() . '&action=uninstall'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
             );
-        }
-        if ($this->currentFieldValue('status')== 2) {
+        } elseif ((int)$this->currentFieldValue('status') === PluginStatus::DISABLED) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,

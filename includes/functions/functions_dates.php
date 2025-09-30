@@ -163,7 +163,7 @@ function zen_datetime_without_seconds (string $raw_datetime): string
  */
 function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
 {
-    if ($formatIn === null && defined('DATE_FORMAT_DATEPICKER_ADMIN')) $formatIn = DATE_FORMAT_DATEPICKER_ADMIN;
+    if ($formatIn === null && defined('DATE_FORMAT_DATE_PICKER')) $formatIn = DATE_FORMAT_DATE_PICKER;
     if ($date == 'null' || $date == '') return $date;
     $mpos = strpos($formatIn, 'm');
     $dpos = strpos($formatIn, 'd');

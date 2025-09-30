@@ -8,6 +8,7 @@
 namespace Zencart\PluginSupport;
 
 use queryFactory;
+use Zencart\PluginSupport\PluginStatus;
 
 /**
  * @since ZC v1.5.7
@@ -36,7 +37,7 @@ class BasePluginInstaller
         if ($this->errorContainer->hasErrors()) {
             return false;
         }
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
         return true;
     }
 
@@ -47,7 +48,7 @@ class BasePluginInstaller
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
-        $this->setPluginVersionStatus($pluginKey, '', 0);
+        $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeUninstallers($this->pluginDir);
         if ($this->errorContainer->hasErrors()) {
@@ -68,8 +69,8 @@ class BasePluginInstaller
         if ($this->errorContainer->hasErrors()) {
             return false;
         }
-        $this->setPluginVersionStatus($pluginKey, $oldVersion, 0);
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $oldVersion, PluginStatus::NOT_INSTALLED);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
         return true;
     }
 
@@ -78,7 +79,7 @@ class BasePluginInstaller
      */
     public function processDisable($pluginKey, $version): void
     {
-        $this->setPluginVersionStatus($pluginKey, $version, 2);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::DISABLED);
     }
 
     /**
@@ -86,7 +87,7 @@ class BasePluginInstaller
      */
     public function processEnable($pluginKey, $version): void
     {
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
     }
 
     /**

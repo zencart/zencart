@@ -174,7 +174,7 @@ function zen_get_module_directory($check_file, $dir_only = false)
     $zv_filename = $check_file;
     if (strpos($zv_filename, '.php') === false) $zv_filename .= '.php';
 
-    if (file_exists(DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
+    if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
         $template_dir_select = $template_dir . '/';
     } else {
         $template_dir_select = '';

@@ -191,8 +191,11 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         $rootPath = DIR_FS_CATALOG . DIR_WS_LANGUAGES;
         $arrayFileName = 'lang.' . $fileName;
 
-        $mainFile = $rootPath . $language . '/modules/' . $module_type . '/' . $templateDir . $arrayFileName;
-        $fallbackFile = $rootPath . $this->fallback . '/modules/' . $module_type . '/' . $templateDir . $arrayFileName;
+        if ($module_type !== '') {
+            $module_type .= '/';
+        }
+        $mainFile = $rootPath . $language . '/modules/' . $module_type . $templateDir . $arrayFileName;
+        $fallbackFile = $rootPath . $this->fallback . '/modules/' . $module_type . $templateDir . $arrayFileName;
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         return $defineList;
     }

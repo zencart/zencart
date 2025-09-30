@@ -1477,9 +1477,11 @@ class order extends base
         // -----
         // Send customer confirmation email unless observer overrides it.
         $send_customer_email = true;
-        $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', ['zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg], $email_order, $html_msg, $send_customer_email);
+        $customer_email_reply_to_name = '';
+        $customer_email_reply_to_address = '';
+        $this->notify('NOTIFY_ORDER_INVOICE_CONTENT_READY_TO_SEND', ['zf_insert_id' => $zf_insert_id, 'text_email' => $email_order, 'html_email' => $html_msg], $email_order, $html_msg, $send_customer_email, $customer_email_reply_to_name, $customer_email_reply_to_address);
         if ($send_customer_email === true) {
-            zen_mail($this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id, $email_order, STORE_NAME, EMAIL_FROM, $html_msg, 'checkout', $this->attachArray);
+            zen_mail($this->customer['firstname'] . ' ' . $this->customer['lastname'], $this->customer['email_address'], EMAIL_TEXT_SUBJECT . EMAIL_ORDER_NUMBER_SUBJECT . $zf_insert_id, $email_order, STORE_NAME, EMAIL_FROM, $html_msg, 'checkout', $this->attachArray, $customer_email_reply_to_name, $customer_email_reply_to_address);
         }
 
         // send additional emails

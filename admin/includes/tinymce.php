@@ -13,6 +13,9 @@
  * Ref: https://github.com/tinymce/tinymce-dist/tags
  * Ref: https://www.tiny.cloud/docs/tinymce/latest/upgrading/#upgrading-tinymce-self-hosted-manually
  * Ref: https://www.tiny.cloud/docs/tinymce/latest/ui-localization/
+ *
+ * @requires PHP 8.0+
+ * @since ZC v2.2.0
  */
 /*
  * TinyMCE can run in one of 4 modes:
@@ -34,11 +37,12 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+/** @see https://www.tiny.cloud/docs/tinymce/latest/changelog/ */
 $tinymceVersionSeries = 8; // should be single-digit int or string.
 $tinymceFallbackCDNversion = match((string)$tinymceVersionSeries) {
     '7' => '7.9.1',
-    '8' => '8.0.2',
-    default => '8.0.2',
+    '8' => '8.1.2',
+    default => '8.1.2',
 };
 
 /**
@@ -64,7 +68,10 @@ function zenGetLatestTinyMceReleaseTag(int|string $majorVersion = 0): string|fal
 
     // If a specific major version is requested, return most recent
     foreach ($tagInfo as $key => $tag) {
-        if (str_starts_with($tag['name'], (string)$majorVersion)) {
+        if (!is_string($tag['name'] ?? null)) {
+            continue;
+        }
+        if (str_starts_with($tag['name'] ?? 'Failed', (string)$majorVersion)) {
             return $tag['name'];
         }
     }
