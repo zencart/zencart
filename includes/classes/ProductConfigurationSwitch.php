@@ -6,6 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Aug 15 Modified in v1.5.8-alpha2 $
+ * @since ZC v1.5.8
  */
 
 class ProductConfigurationSwitch extends base
@@ -56,6 +57,9 @@ class ProductConfigurationSwitch extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getSwitch($field) 
     {
         $switch = strtoupper($this->prefix . $this->type_handler . $this->suffix . $this->field_prefix . $field . $this->field_suffix);
@@ -68,6 +72,9 @@ class ProductConfigurationSwitch extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getProductsType()
     {
        return $this->products_type;

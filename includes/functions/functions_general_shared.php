@@ -4,6 +4,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Oct 17 Modified in v2.1.0 $
+ * @since ZC v1.5.7
  */
 
 function zen_get_zcversion()
@@ -14,6 +15,7 @@ function zen_get_zcversion()
 /**
  * Set timeout for the current script.
  * @param int $limit seconds
+ * @since ZC v1.0.3
  */
 function zen_set_time_limit($limit)
 {
@@ -23,6 +25,7 @@ function zen_set_time_limit($limit)
 /**
  * @param string $ip
  * @return boolean
+ * @since ZC v1.5.7
  */
 function zen_is_whitelisted_admin_ip($ip = null)
 {
@@ -35,6 +38,9 @@ function zen_is_whitelisted_admin_ip($ip = null)
 
 ////
 // Wrapper function for round()
+/**
+ * @since ZC v1.0.3
+ */
 function zen_round($value, $precision)
 {
     $value = round($value * pow(10, $precision), 0);
@@ -45,6 +51,7 @@ function zen_round($value, $precision)
 
 /**
  * replacement for fmod to manage values < 1
+ * @since ZC v1.2.6d
  */
 function fmod_round($x, $y)
 {
@@ -63,6 +70,7 @@ function fmod_round($x, $y)
 /**
  * Cast an input to a desired type.
  * (Note: does not operate recursively on arrays)
+ * @since ZC v2.0.0
  */
 function zen_cast($input, ?string $cast_to): mixed
 {
@@ -80,6 +88,7 @@ function zen_cast($input, ?string $cast_to): mixed
  * Convert value to a float/int -- mainly used for sanitizing and returning non-empty strings or nulls
  * @param int|float|string $input
  * @return float|int
+ * @since ZC v1.5.6
  */
 function convertToFloat($input = 0): float|int
 {
@@ -101,6 +110,7 @@ function convertToFloat($input = 0): float|int
  * @param $key
  * @param null $default
  * @return mixed
+ * @since ZC v1.5.5
  */
 function issetorArray(array $array, $key, $default = null)
 {
@@ -116,6 +126,7 @@ function issetorArray(array $array, $key, $default = null)
  * @param string $field_name
  * @param string $extension String to denote the extension. The right-most "." is used as a fallback.
  * @return string
+ * @since ZC v1.5.6
  */
 function zen_limit_image_filename($filename, $table_name, $field_name, $extension = '.')
 {
@@ -139,6 +150,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
 /**
  * Get field type from database
+ * @since ZC v1.0.3
  */
 function zen_field_type(string $table_name, string $field_name): string
 {
@@ -150,6 +162,7 @@ function zen_field_type(string $table_name, string $field_name): string
 
 /**
  * Get field length from database
+ * @since ZC v1.0.3
  */
 function zen_field_length(string $table_name, string $field_name): int
 {
@@ -161,6 +174,7 @@ function zen_field_length(string $table_name, string $field_name): int
 /**
  * Generate HTML FORM attributes for size="foo" maxlength="bar" based on maximum size (default 50)
  * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ * @since ZC v1.0.3
  */
 function zen_set_field_length(string $table_name, string $field_name, $max = null, bool $override = false): string
 {
@@ -190,6 +204,7 @@ function zen_set_field_length(string $table_name, string $field_name, $max = nul
  *
  * @param mixed $exclude_array either a single or array of parameter names to be excluded from output
  * @return string url_encoded string of GET params
+ * @since ZC v1.0.3
  */
 function zen_get_all_get_params($exclude_array = array())
 {
@@ -229,6 +244,7 @@ function zen_get_all_get_params($exclude_array = array())
  * @param boolean $hidden generate hidden fields instead of regular input fields
  * @param string $parameters optional 'class="foo"' markup to include in non-hidden input fields
  * @return string HTML string of input fields
+ * @since ZC v1.5.2
  */
 function zen_post_all_get_params($exclude_array = array(), $hidden = true, $parameters = '')
 {
@@ -276,6 +292,7 @@ function zen_post_all_get_params($exclude_array = array(), $hidden = true, $para
  * @param $columnName2 string representing named column as second criteria
  * @param $order2      either SORT_ASC or SORT_DESC (default SORT_ASC)
  * @return array   Original array sorted as specified
+ * @since ZC v1.5.5
  */
 function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnName2 = '', $order2 = SORT_ASC)
 {
@@ -305,6 +322,7 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
  * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
  * @param $shipping_module
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_shipping_enabled(string $shipping_module): bool
 {
@@ -358,6 +376,7 @@ function zen_get_shipping_enabled(string $shipping_module): bool
  * @param $string
  * @return string|string[]
  * @deprecated
+ * @since ZC v1.0.3
  */
 function zen_convert_linefeeds($from, $to, $string)
 {
@@ -368,6 +387,7 @@ function zen_convert_linefeeds($from, $to, $string)
 
 /**
  * Return a random value
+ * @since ZC v1.0.3
  */
 function zen_rand(?int $min = null, ?int $max = null): int
 {
@@ -396,6 +416,9 @@ function zen_rand(?int $min = null, ?int $max = null): int
 
 
 // debug utility only
+/**
+ * @since ZC v1.5.1
+ */
 function utilDumpRequest($mode = 'p', $out = 'log')
 {
     if ($mode == 'p') {
@@ -422,6 +445,7 @@ function utilDumpRequest($mode = 'p', $out = 'log')
  * Blank (empty string) is treated as false.
  *
  * By default, will return null if the passed value is neither truthy/falsey (ie: 'red', or '2')
+ * @since ZC v2.1.0
  */
 function zen_to_boolean(mixed $value, bool $null_on_failure = true): bool|null
 {
@@ -435,6 +459,7 @@ function zen_to_boolean(mixed $value, bool $null_on_failure = true): bool|null
 /**
  * this function will need to be removed if
  * we ever revert to a full laravel install
+ * @since ZC v1.5.8
  */
 
 function request()
@@ -442,6 +467,9 @@ function request()
     return \Zencart\Request\Request::getInstance();
 }
 
+/**
+ * @since ZC v1.5.6
+ */
 function zen_updated_by_admin($admin_id = null): string
 {
     if (empty($admin_id) && empty($_SESSION['admin_id'])) {
@@ -458,6 +486,7 @@ function zen_updated_by_admin($admin_id = null): string
  * Lookup admin user name based on admin id
  * @param int $id
  * @return string
+ * @since ZC v1.5.0
  */
 function zen_get_admin_name($id = null)
 {
@@ -477,6 +506,7 @@ function zen_get_admin_name($id = null)
  * This function is typically called after installing or uninstalling a module, or when the module's configuration changes.
  *
  * @param string $module_type_filter Optionally limit the update to a specific module type (order_total, payment, shipping)
+ * @since ZC v2.2.0
  */
 function zen_update_modules_cache(string $module_type_filter = ''): void
 {
@@ -548,28 +578,43 @@ function zen_update_modules_cache(string $module_type_filter = ''): void
 
 // Compatibility
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_products($field_name, $parameters, $exclude, $show_id, $set_selected, $show_model, $show_current_category, $order_by, $filter_by_option_name);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_products_having_attributes($field_name, $parameters, $exclude, $order_by, $filter_by_option_name);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down_categories($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false) {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_categories_having_products($field_name, $parameters, $exclude, $show_id, $show_parent);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null){
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_categories_having_products_with_attributes($field_name, $parameters, $exclude, $show_full_path, $filter_by_option_name);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_get_orders_status()
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);

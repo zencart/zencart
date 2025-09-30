@@ -9,8 +9,14 @@ namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
 
+/**
+ * @since ZC v1.5.8
+ */
 class CatalogArraysLanguageLoader extends ArraysLanguageLoader
 {
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadInitialLanguageDefines($mainLoader): void
     {
         $this->mainLoader = $mainLoader;
@@ -18,6 +24,9 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $this->loadLanguageExtraDefinitions();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadLanguageForView(): void
     {
         // -----
@@ -77,6 +86,9 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $this->makeConstants($definesList);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     protected function loadCurrentPageBaseFile(): void
     {
         // -----
@@ -126,6 +138,9 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $this->makeConstants($defineList);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     protected function loadCurrentPageExtraFilesFromDir(string $directory): array
     {
         // -----
@@ -145,6 +160,9 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         return $defines;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function loadLanguageExtraDefinitions(): void
     {
         // -----
@@ -205,6 +223,9 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $this->addLanguageDefines(array_merge($defineList, $defineListTemplate));
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function loadMainLanguageFiles(): void
     {
         // -----

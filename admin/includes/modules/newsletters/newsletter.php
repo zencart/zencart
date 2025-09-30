@@ -10,6 +10,9 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 class newsletter {
 
     /**
@@ -48,6 +51,9 @@ class newsletter {
     $this->query_name = $queryname;
   }
 
+  /**
+   * @since ZC v1.0.3
+   */
   function choose_audience() {
     $choose_audience_string = zen_draw_form('audience', FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm', 'post', 'onsubmit="return check_form(audience);" class="form-horizontal"') . PHP_EOL;
     $choose_audience_string .= '<div class="form-group">' . PHP_EOL;
@@ -64,6 +70,9 @@ class newsletter {
     return $choose_audience_string;
   }
 
+  /**
+   * @since ZC v1.0.3
+   */
   function confirm() {
     global $db;
 
@@ -108,6 +117,9 @@ class newsletter {
     return $confirm_string;
   }
 
+  /**
+   * @since ZC v1.0.3
+   */
   function send($newsletter_id) {
     global $db;
     $audience_select = get_audience_sql_query($this->query_name, 'newsletters');

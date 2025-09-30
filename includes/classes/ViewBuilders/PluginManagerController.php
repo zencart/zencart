@@ -12,18 +12,27 @@ use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\PluginStatus;
 
+/**
+ * @since ZC v1.5.8
+ */
 class PluginManagerController extends BaseController
 {
 
     protected PluginManager $pluginManager;
     protected InstallerFactory $installerFactory;
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function init(PluginManager $pluginManager, InstallerFactory $installerFactory)
     {
         $this->pluginManager = $pluginManager;
         $this->installerFactory = $installerFactory;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processDefaultAction()
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
@@ -103,6 +112,9 @@ class PluginManagerController extends BaseController
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionInstall()
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
@@ -131,6 +143,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionDoInstall()
     {
         if (!$this->request->has('version')) {
@@ -161,6 +176,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionUninstall()
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
@@ -183,6 +201,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionDoUninstall()
     {
         if (!$this->request->has('version')) {
@@ -215,6 +236,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionUpgrade()
     {
         if (!$this->pluginManager->isUpgradeAvailable($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
@@ -243,6 +267,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionConfirmUpgrade()
     {
         $error = false;
@@ -284,6 +311,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionDoUpgrade()
     {
         $error = false;
@@ -322,6 +352,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionCleanUp()
     {
         $versions = $this->pluginManager->getPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'));
@@ -348,6 +381,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionConfirmCleanUp()
     {
         if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
@@ -379,6 +415,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionDoCleanup()
     {
         if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
@@ -407,6 +446,9 @@ class PluginManagerController extends BaseController
         zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink()));
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionEnable()
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
@@ -427,6 +469,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionDoEnable()
     {
         if (!$this->request->has('version')) {
@@ -450,6 +495,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionDisable()
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
@@ -470,6 +518,9 @@ class PluginManagerController extends BaseController
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processActionDoDisable()
     {
         if (!$this->request->has('version')) {

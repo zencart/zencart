@@ -9,6 +9,7 @@
  * Determine visitor's IP address, resolving any proxies where possible.
  *
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_ip_address() {
     $ip = '';
@@ -60,6 +61,7 @@ function zen_get_ip_address() {
 
 /**
  * Stop execution completely
+ * @since ZC v1.0.3
  */
 function zen_exit() {
     session_write_close();
@@ -72,6 +74,7 @@ function zen_exit() {
  * by checking whether the user-agent contains a particular pattern
  * @param string $lookup_pattern string to search for
  * @return false|string
+ * @since ZC v1.0.3
  */
 function zen_browser_detect($lookup_pattern) {
     if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;

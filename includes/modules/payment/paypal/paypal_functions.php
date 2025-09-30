@@ -14,6 +14,7 @@
 if (!function_exists('datetime_to_sql_format')) {
     /**
      * Used especially for converting PayPal-IPN dates to a standard format for db storage
+     * @since ZC v1.2.4
      */
     function datetime_to_sql_format(string $dateString, string $format = 'H:i:s M d, Y e'): string
     {
@@ -27,6 +28,7 @@ if (!function_exists('convertToLocalTimeZone')) {
     /** Used primarily to convert a time value from one timezone to another
      *  particularly when no timezone component is included in the time value.
      *  Mainly needed for converting 3rd party Zulu time values to local time
+     * @since ZC v2.0.0
      */
     function convertToLocalTimeZone(string $dateTime, string $fromTz = 'UTC', string $outputFormat = 'Y-m-d H:i:s'): string
     {
@@ -36,6 +38,9 @@ if (!function_exists('convertToLocalTimeZone')) {
     }
 }
 
+  /**
+   * @since ZC v1.3.0
+   */
   function ipn_debug_email($message, $email_address = '', $always_send = false, $subjecttext = 'IPN DEBUG message') {
     static $paypal_error_counter;
     static $paypal_instance_id;
@@ -51,6 +56,9 @@ if (!function_exists('convertToLocalTimeZone')) {
     return $logfile;
   }
 
+  /**
+   * @since ZC v1.3.0
+   */
   function ipn_get_stored_session($session_stuff) {
     global $db;
     if (!is_array($session_stuff) || !isset($session_stuff[1])) {
@@ -75,6 +83,7 @@ if (!function_exists('convertToLocalTimeZone')) {
   }
 /**
  * look up parent/original transaction record data and return matching order info if found, along with txn_type
+ * @since ZC v1.3.7
  */
   function ipn_lookup_transaction($postArray) {
     global $db;
@@ -169,6 +178,7 @@ if (!function_exists('convertToLocalTimeZone')) {
  * IPN Validation
  * - match email addresses
  * - ensure that "VERIFIED" has been returned (otherwise somebody is trying to spoof)
+ * @since ZC v1.3.0
  */
   function ipn_validate_transaction($info, $postArray, $mode='IPN') {
     if ($mode == 'IPN' && !preg_match("/VERIFIED/i", $info) && !preg_match("/SUCCESS/i", $info)) {
@@ -193,6 +203,9 @@ if (!function_exists('convertToLocalTimeZone')) {
   }
 
   // determine acceptable currencies
+  /**
+   * @since ZC v1.3.7.1
+   */
   function select_pp_currency() {
     if (!defined('MODULE_PAYMENT_PAYPAL_CURRENCY') || MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
       $my_currency = $_SESSION['currency'];
@@ -206,6 +219,9 @@ if (!function_exists('convertToLocalTimeZone')) {
     return $my_currency;
   }
 
+  /**
+   * @since ZC v1.3.0
+   */
   function valid_payment($amount, $currency, $mode = 'IPN') {
     global $currencies;
     $my_currency = select_pp_currency();
@@ -223,6 +239,7 @@ if (!function_exists('convertToLocalTimeZone')) {
  *  is this an existing transaction?
  *    (1) we find a matching record in the "paypal" table
  *    (2) we check for valid txn_types or payment_status such as Denied, Refunded, Partially-Refunded, Reversed, Voided, Expired
+ * @since ZC v1.3.7
  */
 function ipn_determine_txn_type($postArray, $txn_type = 'unknown')
 {
@@ -286,6 +303,7 @@ function ipn_determine_txn_type($postArray, $txn_type = 'unknown')
 
 /**
  * Create order record from IPN data
+ * @since ZC v1.3.0
  */
 function ipn_create_order_array($new_order_id, $txn_type)
 {
@@ -357,6 +375,7 @@ function ipn_create_order_array($new_order_id, $txn_type)
 
 /**
  * Create order-history record from IPN data
+ * @since ZC v1.3.0
  */
 function ipn_create_order_history_array($insert_id)
 {
@@ -373,6 +392,7 @@ function ipn_create_order_history_array($insert_id)
 
 /**
  * Create order-update from IPN data
+ * @since ZC v1.3.0
  */
   function ipn_create_order_update_array($txn_type) {
     $sql_data_array = array('payment_type' => $_POST['payment_type'],
@@ -416,6 +436,7 @@ function ipn_create_order_history_array($insert_id)
   }
 /**
  * Debug to file
+ * @since ZC v1.3.0
  */
   function ipn_fopen($filename) {
     $response = '';
@@ -426,6 +447,9 @@ function ipn_create_order_history_array($insert_id)
     }
     return $response;
   }
+  /**
+   * @since ZC v1.3.0
+   */
   function getRequestBodyContents(&$handle) {
     if ($handle) {
       $line = '';
@@ -438,6 +462,7 @@ function ipn_create_order_history_array($insert_id)
   }
 /**
  * Verify IPN by sending it back to PayPal for confirmation
+ * @since ZC v1.3.7
  */
   function ipn_postback($mode = 'IPN', $pdtTX = '') {
     $postdata = '';
@@ -513,6 +538,9 @@ function ipn_create_order_history_array($insert_id)
     return ($mode == 'PDT') ? array('status' => $result, 'info' => $info) : trim($result);
   }
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function doPayPalIPNFsockopenPostback($web, $postback, $postback_array, $ssl, $mode = 'IPN') {
     $header  = "POST " . $web['path'] . " HTTP/1.1\r\n";
     $header .= "Host: " . $web['host'] . "\r\n";
@@ -590,6 +618,9 @@ function ipn_create_order_history_array($insert_id)
     return ($mode == 'PDT') ? array('status' => $status, 'info' => $info) : $status;
   }
 
+  /**
+   * @since ZC v1.3.9a
+   */
   function doPayPalIPNCurlPostback($url, $vars, $varsArray, $mode = 'IPN') {
     ipn_debug_email('IPN INFO - POST VARS to be sent back (unsorted) for validation (using CURL): ' . "\n" . 'To: ' . $url['host'] . ':' . $url['port'] . "\n" . stripslashes(print_r($varsArray, true)));
     $curlOpts = array(CURLOPT_URL => 'https://' . $url['host'] . $url['path'],
@@ -682,6 +713,7 @@ function ipn_create_order_history_array($insert_id)
 
 /**
  * Write order-history update to ZC tables denoting the update supplied by the IPN
+ * @since ZC v1.3.7
  */
   function ipn_update_orders_status_and_history($ordersID, $new_status = 1, $txn_type = '') {
     global $db;
@@ -707,6 +739,7 @@ function ipn_create_order_history_array($insert_id)
 
   /**
    * Prepare subtotal and line-item detail content to send to PayPal
+   * @since ZC v1.3.8
    */
   function ipn_getLineItemDetails($restrictedCurrency) {
     global $order, $currencies, $order_totals, $order_total_modules;
@@ -1027,11 +1060,15 @@ function ipn_create_order_history_array($insert_id)
 
 /**
  * Debug logging
+ * @since ZC v1.3.8
  */
   function ipn_logging($stage, $message = '') {
     if (defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS != '')
     ipn_add_error_log($stage . ($message != '' ? ': ' . $message : ''));
   }
+  /**
+   * @since ZC v1.3.0
+   */
   function ipn_add_error_log($message, $paypal_instance_id = '') {
     if ($paypal_instance_id == '') $paypal_instance_id = date('mdYGi');
     $logfilename = 'includes/modules/payment/paypal/logs/ipn_' . $paypal_instance_id . '.log';

@@ -13,6 +13,9 @@
 
 namespace Zencart\QueryBuilder;
 
+/**
+ * @since ZC v1.5.7
+ */
 class QueryBuilder extends \base
 {
     /**
@@ -43,6 +46,9 @@ class QueryBuilder extends \base
             $this->initParts($listingQuery);
         }
     }
+    /**
+     * @since ZC v1.5.7
+     */
     public function initParts(array $listingQuery)
     {
         $this->notify('NOTIFY_QUERYBUILDER_INIT_START');
@@ -67,6 +73,7 @@ class QueryBuilder extends \base
     /**
      * process query
      *
+     * @since ZC v1.5.7
      */
     public function processQuery($listingQuery)
     {
@@ -90,6 +97,9 @@ class QueryBuilder extends \base
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSQUERY_END');
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function setFinalQuery($listingQuery)
     {
         $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_START');
@@ -105,6 +115,7 @@ class QueryBuilder extends \base
     /**
      * preprocess joins
      *
+     * @since ZC v1.5.7
      */
     protected function preProcessJoins()
     {
@@ -119,6 +130,7 @@ class QueryBuilder extends \base
     /**
      * process joins
      *
+     * @since ZC v1.5.7
      */
     protected function processJoins()
     {
@@ -141,6 +153,7 @@ class QueryBuilder extends \base
      * process join custom adds
      *
      * @param $joinTable
+     * @since ZC v1.5.7
      */
     protected function processJoinCustomAnd($joinTable)
     {
@@ -155,6 +168,7 @@ class QueryBuilder extends \base
      * process join add columns
      *
      * @param $joinTable
+     * @since ZC v1.5.7
      */
     protected function processJoinAddColumns($joinTable)
     {
@@ -173,6 +187,7 @@ class QueryBuilder extends \base
      * process join foreign keys
      *
      * @param $joinTable
+     * @since ZC v1.5.7
      */
     protected function processJoinFkeyField($joinTable)
     {
@@ -198,6 +213,7 @@ class QueryBuilder extends \base
 
     /**
      * process where clauses
+     * @since ZC v1.5.7
      */
     protected function processWhereClause()
     {
@@ -220,6 +236,7 @@ class QueryBuilder extends \base
      * process where clauses test
      *
      * @param $whereClause
+     * @since ZC v1.5.7
      */
     protected function processWhereClauseTest($whereClause)
     {
@@ -241,6 +258,7 @@ class QueryBuilder extends \base
 
     /**
      * process orderBy clauses
+     * @since ZC v1.5.7
      */
     protected function processOrderBys()
     {
@@ -264,6 +282,7 @@ class QueryBuilder extends \base
 
     /**
      * process orderBy clauses
+     * @since ZC v1.5.7
      */
     protected function processGroupBys()
     {
@@ -285,12 +304,18 @@ class QueryBuilder extends \base
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSGROUPBYS_END');
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processGroupByEntry($groupBy)
     {
         $this->query ['groupBy'] .= $groupBy . ", ";
         return false;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processOrderByEntry($orderBy)
     {
         if ($orderBy ['type'] == 'mysql') {
@@ -306,6 +331,7 @@ class QueryBuilder extends \base
 
     /**
      * process select list entries
+     * @since ZC v1.5.7
      */
     protected function processSelectList()
     {
@@ -322,6 +348,7 @@ class QueryBuilder extends \base
 
     /**
      * process bindVars clauses
+     * @since ZC v1.5.7
      */
     protected function processBindVars()
     {
@@ -342,6 +369,7 @@ class QueryBuilder extends \base
      * getter
      *
      * @return mixed
+     * @since ZC v1.5.7
      */
     public function getParts()
     {
@@ -352,6 +380,7 @@ class QueryBuilder extends \base
      * getter
      *
      * @return mixed
+     * @since ZC v1.5.7
      */
     public function getQuery()
     {
@@ -362,6 +391,7 @@ class QueryBuilder extends \base
      * setter
      *
      * @param $value
+     * @since ZC v1.5.7
      */
     public function setParts($value)
     {

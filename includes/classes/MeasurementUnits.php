@@ -3,12 +3,14 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @since ZC v2.0.0
  */
 
 class MeasurementUnits
 {
     /**
      * Convert weight from one unit to another
+     * @since ZC v2.0.0
      */
     public static function convertWeight(float|int $incoming, string $from_unit, string $to_unit, ?int $precision = null): float|int
     {
@@ -51,6 +53,7 @@ class MeasurementUnits
 
     /**
      * Convert lengths from one unit to another
+     * @since ZC v2.0.0
      */
     public static function convertLength(float|int $incoming, string $from_unit, string $to_unit, ?int $precision = null): float
     {

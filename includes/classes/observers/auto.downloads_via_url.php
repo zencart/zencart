@@ -10,6 +10,7 @@
  * as long as the URL doesn't require special authentications that the download customer would not
  * know the credentials for. Thus it could conveniently serve files from Dropbox and others.
  *
+ * @since ZC v1.5.6
  */
 class zcObserverDownloadsViaUrl extends base {
 
@@ -23,6 +24,7 @@ class zcObserverDownloadsViaUrl extends base {
    * @param string $eventID name of the observer event fired
    * @param array $array $download->fields data
    * @param array $data array passed by reference
+   * @since ZC v1.5.6
    */
   protected function updateNotifyModuleDownloadTemplateDetails(&$class, $eventID, $array, &$data)
   {
@@ -65,6 +67,7 @@ class zcObserverDownloadsViaUrl extends base {
    * @param string $eventID name of the observer event fired
    * @param string $filename filename to verify exists
    * @param string $handler  name of external service handler
+   * @since ZC v1.5.6
    */
   protected function updateNotifyTestDownloadableFileExists(&$class, $eventID, $filename, &$handler)
   {
@@ -85,6 +88,7 @@ class zcObserverDownloadsViaUrl extends base {
    * @param string $source_directory (mutable)
    * @param boolean $file_exists (mutable)
    * @param string $service (mutable)
+   * @since ZC v1.5.6
    */
   protected function updateNotifyCheckDownloadHandler(&$class, $eventID, $var, &$fields, &$origin_filename, &$browser_filename, &$source_directory, &$file_exists, &$service)
   {
@@ -115,6 +119,7 @@ class zcObserverDownloadsViaUrl extends base {
    * @param string $mime_type (mutable)
    * @param array $fields  array of data from db query feeding the download page
    * @param string $browser_extra_headers (mutable)
+   * @since ZC v1.5.6
    */
   protected function updateNotifyDownloadReadyToStart(&$class, $eventID, $ipaddress, &$service, &$origin_filename, &$browser_filename, &$source_directory, &$downloadFilesize, $mime_type, $fields, $browser_extra_headers)
   {
@@ -147,6 +152,7 @@ class zcObserverDownloadsViaUrl extends base {
    *
    * @param string $filename
    * @return boolean|array
+   * @since ZC v1.5.6
    */
   private function parseFileParts($filename)
   {
@@ -164,6 +170,7 @@ class zcObserverDownloadsViaUrl extends base {
    *
    * @param string $url
    * @return string $url
+   * @since ZC v1.5.6
    */
   private function buildRedirectUrl($url)
   {
@@ -176,6 +183,7 @@ class zcObserverDownloadsViaUrl extends base {
    *
    * @param string $filename
    * @return boolean Result of test
+   * @since ZC v1.5.6
    */
   private function testFileExists($filename)
   {

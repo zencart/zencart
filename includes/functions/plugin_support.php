@@ -8,6 +8,7 @@
  */
 /**
  * Functions to support plugin usage for plugins that DO NOT use the new zc_plugins folder added in v1.5.7
+ * @since ZC v1.5.3
  */
 
 /*

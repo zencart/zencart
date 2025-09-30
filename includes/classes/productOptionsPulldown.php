@@ -6,6 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott C Wilson 2022 Aug 15 Modified in v1.5.8-alpha2 $
+ * @since ZC v1.5.8
  */
 
     class productOptionsPulldown extends pulldown
@@ -26,6 +27,7 @@
 
         /**
          * @return mixed|void
+         * @since ZC v1.5.8
          */
         protected function setSQL()
         {
@@ -36,6 +38,7 @@
 
         /**
          * @return mixed|void
+         * @since ZC v1.5.8
          */
         protected function processSQL()
         {
@@ -59,6 +62,7 @@
          * @param $optionValue
          *
          * @return string
+         * @since ZC v1.5.8
          */
         private function optionText($optionValue)
         {

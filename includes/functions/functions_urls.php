@@ -7,11 +7,11 @@
  * @version $Id: Leonard 2024 Oct 02 Modified in v2.1.0 $
  */
 
-
 /**
  * Redirect to another page or site
  * @param $url
  * @param int $httpResponseCode
+ * @since ZC v1.0.3
  */
 function zen_redirect($url, $httpResponseCode = null)
 {
@@ -44,6 +44,7 @@ function zen_redirect($url, $httpResponseCode = null)
  * @param string $url
  * @param bool $for_redirect
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_cleanup_url_params($url, $for_redirect = false)
 {
@@ -64,6 +65,7 @@ function zen_cleanup_url_params($url, $for_redirect = false)
  *
  * @param string $url
  * @param int $httpResponseCode
+ * @since ZC v1.5.8
  */
 function zen_set_redirect_http_headers($url, $httpResponseCode = null)
 {
@@ -83,6 +85,7 @@ function zen_set_redirect_http_headers($url, $httpResponseCode = null)
  *
  * @param string $url
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_get_site_url_for_request($url)
 {
@@ -100,7 +103,11 @@ function zen_get_site_url_for_request($url)
 }
 
 
-function zen_get_top_level_domain(string $url) {
+/**
+ * @since ZC v1.0.3
+ */
+function zen_get_top_level_domain(string $url) 
+{
     if (strpos($url, '://')) {
         $url = parse_url($url);
         $url = $url['host'];
@@ -124,10 +131,10 @@ function zen_get_top_level_domain(string $url) {
     return false;
 }
 
-
 /**
-  * Generate A HREF link for an HTML-based "Back" button, determined from user's session browsing history
-  */
+ * Generate A HREF link for an HTML-based "Back" button, determined from user's session browsing history
+ * @since ZC v1.0.3
+ */
 function zen_back_link(bool $link_only = false, string $parameters = ''): string
 {
     if (count($_SESSION['navigation']->path) - 2 >= 0) {

@@ -3,6 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Oct 13 Modified in v2.1.0 $
+ * @since ZC v1.5.8a
  */
 
 class zcObserverSearchBox extends base
@@ -17,6 +18,9 @@ class zcObserverSearchBox extends base
         );
     }
 
+    /**
+     * @since ZC v1.5.8a
+     */
     public function update(&$class, $eventID, &$p1, &$p2, &$p3, &$p4)
     {
         switch ($eventID) {

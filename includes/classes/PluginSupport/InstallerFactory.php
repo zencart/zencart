@@ -10,12 +10,18 @@ namespace Zencart\PluginSupport;
 use queryFactory;
 use Zencart\Exceptions\PluginInstallerException;
 
+/**
+ * @since ZC v1.5.7
+ */
 class InstallerFactory
 {
     public function __construct(protected queryFactory $dbConn, protected Installer $pluginInstaller, protected PluginErrorContainer $errorContainer)
     {
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function make($plugin, $version)
     {
         $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin . '/';

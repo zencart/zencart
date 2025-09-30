@@ -14,6 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * currencies class
  *
+ * @since ZC v1.0.3
  */
 class currencies extends base
 {
@@ -50,6 +51,7 @@ class currencies extends base
      * @param string $currency_type
      * @param float $currency_value
      * @return string
+     * @since ZC v1.0.3
      */
     public function format($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = '')
     {
@@ -91,6 +93,7 @@ class currencies extends base
      * @param string $currency_type
      * @param float $currency_value
      * @return float
+     * @since ZC v1.3.9a
      */
     public function rateAdjusted($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = null)
     {
@@ -104,6 +107,9 @@ class currencies extends base
         return zen_round($number, $currency_info['decimal_places']);
     }
 
+    /**
+     * @since ZC v1.1.1
+     */
     public function value($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = null)
     {
         $currency_info = $this->getCurrencyInfo($currency_type);
@@ -122,6 +128,7 @@ class currencies extends base
      * @param $valueIn
      * @param string $currencyCode
      * @return string
+     * @since ZC v1.5.5
      */
     public function normalizeValue($valueIn, ?string $currencyCode = null)
     {
@@ -129,6 +136,9 @@ class currencies extends base
         return str_replace($currency_info['decimal_point'], '.', (string)$valueIn);
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function is_set($code)
     {
         return !empty($this->currencies[$code]);
@@ -138,6 +148,7 @@ class currencies extends base
      * Retrieve the exchange-rate of a specified currency
      * @param string $code currency code
      * @return float
+     * @since ZC v1.0.3
      */
     public function get_value($code)
     {
@@ -148,6 +159,7 @@ class currencies extends base
     /**
      * @param string $code currency code
      * @return int
+     * @since ZC v1.0.3
      */
     public function get_decimal_places($code)
     {
@@ -160,6 +172,7 @@ class currencies extends base
      * an unknown currency-code is auto-created.
      * @param void
      * @return void
+     * @since ZC v2.0.0
      */
     public function setDebugOn()
     {
@@ -170,6 +183,7 @@ class currencies extends base
      * Public function to disable the debug.
      * @param void
      * @return void
+     * @since ZC v2.0.0
      */
     public function setDebugOff()
     {
@@ -182,6 +196,7 @@ class currencies extends base
      *
      * @param string|null $currency_code The currency 'code' information to be returned.
      * @return array
+     * @since ZC v2.0.0
      */
     protected function getCurrencyInfo(?string $currency_code): array
     {
@@ -225,6 +240,7 @@ class currencies extends base
      * @param $product_tax
      * @param int $quantity
      * @return string
+     * @since ZC v1.0.3
      */
     public function display_price($product_price, $product_tax, $quantity = 1)
     {

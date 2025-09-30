@@ -18,11 +18,13 @@ if (!defined('IS_ADMIN_FLAG')) {
  * The most common use for this is for ensuring that the database structure matches the expected format for certain internal features that have upgraded or changed.
  * It is also used by plugins which add additional fields to the database, to check which changes are needed before making them.
  *
+ * @since ZC v1.2.0d
  */
 class sniffer
 {
     /**
      * Check to see if the requested table exists
+     * @since ZC v1.2.0d
      */
     public function table_exists(string $table_name): bool
     {
@@ -32,6 +34,9 @@ class sniffer
         return $result->RecordCount() > 0;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function get_table_collation(string $table_name): ?string
     {
         global $db;
@@ -42,6 +47,7 @@ class sniffer
 
     /**
      * Check whether the field exists in the table
+     * @since ZC v1.3.0
      */
     public function field_exists(string $table_name, string $field_name): bool
     {
@@ -56,6 +62,9 @@ class sniffer
         return false;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function get_field_collation(string $table_name, string $field_name): ?string
     {
         global $db;
@@ -72,6 +81,7 @@ class sniffer
     /**
      * Check whether a field is a specific type
      * and optionally return what type it is, if not matching what is being checked for.
+     * @since ZC v1.3.8
      */
     public function field_type(string $table_name, string $field_name, string $field_type, bool $return_found = false): bool|string
     {
@@ -99,6 +109,7 @@ class sniffer
      * @param string $key_name The key to check.
      * @param int $key_value The value that key_name must equal.
      * @return bool
+     * @since ZC v2.0.0
      */
     public function rowExists(string $table_name, string $key_name, int $key_value): bool
     {
@@ -120,6 +131,7 @@ class sniffer
      * @param array $key_names The array of keys to check.
      * @param array $key_values The array of values that key_names must equal.
      * @return bool
+     * @since ZC v2.0.0
      */
     public function rowExistsComposite(string $table_name, array $key_names, array $key_values): bool
     {
@@ -144,6 +156,9 @@ class sniffer
         return (int)$result->fields['count'] !== 0;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function indexExists(string $table_name, string $index_name): bool
     {
         global $db;

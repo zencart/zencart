@@ -14,6 +14,7 @@
 
 /**
  * Order Total class to handle discount coupons
+ * @since ZC v1.0.3
  */
 class ot_coupon extends base
 {
@@ -129,6 +130,7 @@ class ot_coupon extends base
      * Produces final deduction values,
      * updates $order amounts,
      * and generates the $this->output for showing discount information on checkout pages
+     * @since ZC v1.0.3
      */
     function process()
     {
@@ -181,6 +183,7 @@ class ot_coupon extends base
 
     /**
      * Reset any variables related to this module
+     * @since ZC v1.2.3d
      */
     function clear_posts()
     {
@@ -190,6 +193,7 @@ class ot_coupon extends base
 
     /**
      * Per order_total class, this function is not used. See process() instead.
+     * @since ZC v1.0.3
      */
     function pre_confirmation_check()
     {
@@ -200,6 +204,7 @@ class ot_coupon extends base
      * This function is not used by this module
      *
      * @return bool
+     * @since ZC v1.0.3
      */
     function selection_test()
     {
@@ -210,6 +215,7 @@ class ot_coupon extends base
      * Prepare input field data for coupon code redemption on checkout_payment page
      *
      * @return array
+     * @since ZC v1.0.3
      */
     function credit_selection()
     {
@@ -254,6 +260,7 @@ class ot_coupon extends base
      * @param int $coupon_id
      * @param string $coupon_code
      * @return string
+     * @since ZC v1.5.8
      */
     protected function generateCouponPopupLink($coupon_id, $coupon_code)
     {
@@ -273,6 +280,7 @@ class ot_coupon extends base
     /**
      * When on checkout_confirmation, process POSTed dc_redeem_code for validity or requested removal
      * Also displays messageStack error alerts, and performs redirects back to Payment page if invalid
+     * @since ZC v1.0.3
      */
     function collect_posts()
     {
@@ -321,6 +329,7 @@ class ot_coupon extends base
      * Used by external calls to validation when wanting to do something other than stuffing the errors onto the messageStack
      *
      * @return array
+     * @since ZC v1.5.8
      */
     function getValidationErrors()
     {
@@ -333,6 +342,7 @@ class ot_coupon extends base
      * @param int $limit max number of errors to push onto the messageStack. (Sometimes only want one instead of everything.)
      * @param string $stack messageStack location/array to populate with error messages
      * @param string $alertLevel what kind of alert should be generated. Default is 'caution'
+     * @since ZC v1.5.8
      */
     function setMessageStackValidationAlerts($limit = 0, $stack = 'redemptions', $alertLevel = 'caution')
     {
@@ -354,6 +364,7 @@ class ot_coupon extends base
      *
      * @param string $coupon_code
      * @return int|null|void
+     * @since ZC v1.5.8
      */
     function performValidations($coupon_code)
     {
@@ -435,6 +446,7 @@ class ot_coupon extends base
      * This function is not used by this module
      *
      * @return bool
+     * @since ZC v1.0.3
      */
     function use_credit_amount()
     {
@@ -446,6 +458,7 @@ class ot_coupon extends base
      *
      * @param $i
      * @return bool
+     * @since ZC v1.0.3
      */
     function update_credit_account($i)
     {
@@ -454,6 +467,7 @@ class ot_coupon extends base
 
     /**
      * Track coupon redemption
+     * @since ZC v1.0.3
      */
     function apply_credit()
     {
@@ -473,6 +487,7 @@ class ot_coupon extends base
      * Also sets $this->coupon_code
      *
      * @return array $od_amount
+     * @since ZC v1.0.3
      */
     function calculate_deductions()
     {
@@ -634,6 +649,7 @@ class ot_coupon extends base
      * Calculate eligible total amounts against which discounts will be applied
      *
      * @param int $coupon_id
+     * @since ZC v1.0.3
      */
     function get_order_total($coupon_id): array
     {
@@ -709,6 +725,7 @@ class ot_coupon extends base
      * Check install status
      *
      * @return bool
+     * @since ZC v1.0.3
      */
     function check()
     {
@@ -723,12 +740,16 @@ class ot_coupon extends base
 
     /**
      * @return array
+     * @since ZC v1.0.3
      */
     function keys()
     {
         return ['MODULE_ORDER_TOTAL_COUPON_STATUS', 'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', 'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', 'MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS'];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install()
     {
         global $db;
@@ -743,6 +764,7 @@ class ot_coupon extends base
     /**
      * Uninstall
      *
+     * @since ZC v1.0.3
      */
     function remove()
     {
@@ -758,6 +780,7 @@ class ot_coupon extends base
      * Redirects back to checkout_payment on success
      *
      * @param string $coupon_code
+     * @since ZC v1.5.8
      */
     public function remove_coupon_if_requested($coupon_code = '')
     {
@@ -781,12 +804,16 @@ class ot_coupon extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function isCodeEqualToRemoveCode($code) {
         return (strtoupper($code) == TEXT_COMMAND_TO_DELETE_CURRENT_COUPON_FROM_ORDER);
     }
 
     /**
      * Remove coupon from session/order and trigger notifier
+     * @since ZC v1.5.8
      */
     public function remove_coupon_from_current_session()
     {
@@ -798,6 +825,7 @@ class ot_coupon extends base
     /**
      * @param string $coupon_code
      * @return array
+     * @since ZC v1.5.8
      */
     protected function getCouponDetailsFromDb($coupon_code = '')
     {
@@ -820,6 +848,7 @@ class ot_coupon extends base
      *
      * @param int $coupon_id coupon_id from coupons table
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponProductRestrictions($coupon_id)
     {
@@ -849,6 +878,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponMaxOrdersLimit($coupon_details)
     {
@@ -874,6 +904,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponStartDate($coupon_details)
     {
@@ -891,6 +922,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponEndDate($coupon_details)
     {
@@ -906,6 +938,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponMinimumPurchaseAmount($coupon_details)
     {
@@ -945,6 +978,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponMaximumUses($coupon_details)
     {
@@ -970,6 +1004,7 @@ class ot_coupon extends base
      * @param array $coupon_details
      * @param int|null $customer_id
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponUsesPerCustomer($coupon_details, ?int $customer_id = null)
     {
@@ -1016,6 +1051,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details
      * @return bool|null
+     * @since ZC v1.5.8
      */
     protected function validateCouponUsesPerGuestCheckoutCustomer($coupon_details)
     {
@@ -1036,6 +1072,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details
      * @return bool
+     * @since ZC v1.5.8
      */
     protected function validateCouponForAddress($coupon_details)
     {
@@ -1084,6 +1121,9 @@ class ot_coupon extends base
 
         return false;
     }
+    /**
+     * @since ZC v1.5.8
+     */
     function help() {
        return array('link' => 'https://docs.zen-cart.com/user/order_total/coupons/');
     }

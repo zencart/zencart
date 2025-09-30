@@ -12,6 +12,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Get all template directories found in catalog folder structure
  *
  * @return array
+ * @since ZC v1.5.8
  */
 function zen_get_catalog_template_directories($include_template_default = false)
 {
@@ -52,6 +53,9 @@ function zen_get_catalog_template_directories($include_template_default = false)
     return $template_info;
 }
 
+/**
+ * @since ZC v1.5.8
+ */
 function zen_register_new_template($template_dir, $language_id)
 {
     // @TODO: add duplicate-detection and empty-submission detection
@@ -74,6 +78,7 @@ function zen_register_new_template($template_dir, $language_id)
 
 /**
  * @return array of language_name and language_id entries
+ * @since ZC v1.5.8
  */
 function zen_get_template_languages_not_registered()
 {
@@ -92,6 +97,7 @@ function zen_get_template_languages_not_registered()
 /**
  * @param int $id
  * @param string $template_dir
+ * @since ZC v1.5.8
  */
 function zen_update_template_name_for_id($id, $template_dir)
 {
@@ -107,6 +113,7 @@ function zen_update_template_name_for_id($id, $template_dir)
 /**
  * @param int $id
  * @return bool whether template existed before delete
+ * @since ZC v1.5.8
  */
 function zen_deregister_template_id($id)
 {

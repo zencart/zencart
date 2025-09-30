@@ -607,6 +607,9 @@ function translate_type_to_name($opt_type)
   return $products_options_types_list[$opt_type] ?? TEXT_NONE;
 }
 
+/**
+ * @since ZC v1.3.9a
+ */
 function zen_js_option_values_list($selectedName, $fieldName)
 {
   global $db, $show_value_numbers;

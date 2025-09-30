@@ -9,6 +9,9 @@ namespace Zencart\ResourceLoaders;
 
 use Zencart\FileSystem\FileSystem;
 
+/**
+ * @since ZC v2.1.0
+ */
 class ModuleFinder
 {
     private FileSystem $filesystem;
@@ -25,6 +28,9 @@ class ModuleFinder
     // Locate all modules of the type specified during the class construction,
     // noting that any duplication in zc_plugins **overrides** any base module!
     //
+    /**
+     * @since ZC v2.1.0
+     */
     public function findFromFilesystem(array $installedPlugins): array
     {
         $modules = [];

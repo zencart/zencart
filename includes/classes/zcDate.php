@@ -3,6 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Feb 29 Modified in v2.0.0-rc1 $
+ * @since ZC v1.5.8
  */
 class zcDate extends base
 {
@@ -54,6 +55,9 @@ class zcDate extends base
     // date_format reference: https://www.php.net/manual/en/datetime.format.php
     // intl format reference: https://unicode-org.github.io/icu/userguide/format_parse/datetime/#datetime-format-syntax
     //
+    /**
+     * @since ZC v1.5.8
+     */
     protected function initializeConversionArrays()
     {
         $strftime2date = [
@@ -135,11 +139,17 @@ class zcDate extends base
     // A couple of public functions to control whether or not the class' debug
     // processing is to be enabled or disabled.
     //
+    /**
+     * @since ZC v1.5.8
+     */
     public function enableDebug()
     {
         $this->debug = true;
         $this->debug('Debug enabled: ' . PHP_EOL . var_export($this, true));
     }
+    /**
+     * @since ZC v1.5.8
+     */
     public function disableDebug()
     {
         $this->debug = false;
@@ -151,6 +161,7 @@ class zcDate extends base
      * @param string|null $calendar_locale Optional calendar-related locale. eg: 'ja_JP@calendar=japanese'
      *
      * @return false|string
+     * @since ZC v1.5.8
      */
     public function output(string $format, int $timestamp = 0, ?string $calendar_locale = null)
     {
@@ -208,6 +219,9 @@ class zcDate extends base
         return $output;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function convertFormat(string $format, array $replacements)
     {
         return str_replace($replacements['from'], $replacements['to'], $format);
@@ -217,6 +231,7 @@ class zcDate extends base
      * @param string $date  The date to be validated, according to the same rules as strtotime.
      *
      * @return bool  Indicates whether/not the supplied date is valid
+     * @since ZC v2.0.0
      */
     public static function validateDate(string $date): bool
     {
@@ -225,6 +240,9 @@ class zcDate extends base
         return ($year !== false && $month !== false && $day !== false && (($warning_count + $error_count) === 0));
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function debug(string $message)
     {
         if ($this->debug === true) {

@@ -11,6 +11,7 @@
  * Returns an array with countries, suitable for pulldown
  * @param string $pre_populated_entry
  * @return array
+ * @since ZC v1.5.8
  */
 function zen_get_countries_for_admin_pulldown($pre_populated_entry = '')
 {
@@ -46,6 +47,7 @@ function zen_get_countries_for_admin_pulldown($pre_populated_entry = '')
  * @param bool $with_iso_codes whether to add the iso codes to the array
  * @param bool $activeOnly
  * @return array
+ * @since ZC v1.0.3
  */
 function zen_get_countries(int $country_id = 0, bool $with_iso_codes = false, bool $activeOnly = true)
 {
@@ -92,8 +94,9 @@ function zen_get_countries(int $country_id = 0, bool $with_iso_codes = false, bo
     return $countries_array;
 }
 
-/*
- *  Alias function to zen_get_countries()
+/**
+ * Alias function to zen_get_countries()
+ * @since ZC v1.0.3
  */
 function zen_get_country_name($country_id, $activeOnly = true)
 {
@@ -106,6 +109,7 @@ function zen_get_country_name($country_id, $activeOnly = true)
  * Alias function to zen_get_countries, which also returns country iso codes
  *
  * @param int $country_id If set limits to a single country
+ * @since ZC v1.0.3
  */
 function zen_get_countries_with_iso_codes($country_id, $activeOnly = TRUE)
 {
@@ -119,6 +123,7 @@ function zen_get_countries_with_iso_codes($country_id, $activeOnly = TRUE)
  *
  * @param int|string $country_id
  * @return array for pulldown
+ * @since ZC v1.0.3
  */
 function zen_get_country_zones(int|string $country_id): array
 {
@@ -145,6 +150,7 @@ function zen_get_country_zones(int|string $country_id): array
  * @param int $zone_id
  * @param string|null $default_zone
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_zone_name(int $country_id, int $zone_id, ?string $default_zone = '')
 {
@@ -169,6 +175,7 @@ function zen_get_zone_name(int $country_id, int $zone_id, ?string $default_zone 
  * @param int $zone_id
  * @param string|null $default_zone
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_zone_code(int $country_id, int $zone_id, ?string $default_zone = '')
 {
@@ -191,6 +198,7 @@ function zen_get_zone_code(int $country_id, int $zone_id, ?string $default_zone 
  *
  * @param int|string|null $country_id
  * @return array
+ * @since ZC v1.0.3
  */
 function zen_prepare_country_zones_pull_down(int|string|null $country_id = 0): array
 {
@@ -208,6 +216,7 @@ function zen_prepare_country_zones_pull_down(int|string|null $country_id = 0): a
 
 /**
  * Get array of address_format_ids, suitable for a dropdown
+ * @since ZC v1.0.3
  */
 function zen_get_address_formats(): array
 {
@@ -232,6 +241,7 @@ function zen_get_address_formats(): array
  * Returns the address_format_id for the given country_id
  * @param int|null $country_id
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_get_address_format_id(?int $country_id)
 {
@@ -256,6 +266,7 @@ function zen_get_address_format_id(?int $country_id)
  * @param string $boln begin-of-line prefix
  * @param string $eoln end-of-line suffix
  * @return mixed|string|string[]
+ * @since ZC v1.0.3
  */
 function zen_address_format($address_format_id = 1, $incoming = array(), $html = false, $boln = '', $eoln = "\n")
 {
@@ -360,6 +371,7 @@ function zen_address_format($address_format_id = 1, $incoming = array(), $html =
  * @param string $boln begin-of-line prefix
  * @param string $eoln end-of-line suffix
  * @return mixed|string|string[]
+ * @since ZC v1.0.3
  */
 function zen_address_label($customers_id, $address_id = 1, $html = false, $boln = '', $eoln = "\n")
 {

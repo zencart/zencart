@@ -6,7 +6,6 @@
  * @version $Id: Scott C Wilson 2024 Apr 16 Modified in v2.0.1 $
  */
 
-
 /**
  * @TODO - deprecate in favor of an HR or bordered/borderless DIV
  *
@@ -16,6 +15,7 @@
  * @param string $height
  * @param string $params
  * @return false|string
+ * @since ZC v1.0.3
  */
 function zen_info_image($image, $alt, $width = '', $height = '', $params = '')
 {
@@ -29,6 +29,9 @@ function zen_info_image($image, $alt, $width = '', $height = '', $params = '')
 }
 
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_tax_classes_pull_down($parameters, $selected = '')
 {
     global $db;
@@ -49,6 +52,9 @@ function zen_tax_classes_pull_down($parameters, $selected = '')
 }
 
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_geo_zones_pull_down($parameters, $selected = '')
 {
     global $db;
@@ -69,6 +75,9 @@ function zen_geo_zones_pull_down($parameters, $selected = '')
 }
 
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_get_geo_zone_name($geo_zone_id)
 {
     global $db;
@@ -87,12 +96,11 @@ function zen_get_geo_zone_name($geo_zone_id)
 
 /**
  * proxy into language class to get list of configured languages and their settings
+ * @since ZC v1.0.3
  */
 function zen_get_languages(): array
 {
-    /**
-     * @var language $lng
-     */
+    /** @var language $lng */
     global $lng;
     if ($lng === null) {
         $lng = new language();
@@ -100,7 +108,9 @@ function zen_get_languages(): array
     return array_values($lng->get_languages_by_code());
 }
 
-
+/**
+ * @since ZC v1.1.0
+ */
 function zen_cfg_select_coupon_id($coupon_id, $key = '')
 {
     $coupon_array = [];
@@ -121,17 +131,18 @@ function zen_cfg_select_coupon_id($coupon_id, $key = '')
     return zen_draw_pull_down_menu($name, $coupon_array, $coupon_id, 'class="form-control"');
 }
 
-
-////
-// Alias function for Store configuration values in the Administration Tool
+/**
+ * @since ZC v1.0.3
+ */
 function zen_cfg_pull_down_country_list($country_id, $key = '')
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     return zen_draw_pull_down_menu($name, zen_get_countries_for_admin_pulldown(), $country_id, 'class="form-control"');
 }
 
-
-////
+/**
+ * @since ZC v1.1.1
+ */
 function zen_cfg_pull_down_country_list_none($country_id, $key = '')
 {
     $country_array = zen_get_countries_for_admin_pulldown('None');
@@ -139,8 +150,9 @@ function zen_cfg_pull_down_country_list_none($country_id, $key = '')
     return zen_draw_pull_down_menu($name, $country_array, $country_id, 'class="form-control"');
 }
 
-
-////
+/**
+ * @since ZC v1.0.3
+ */
 function zen_cfg_pull_down_zone_list($zone_id, $key = '')
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
@@ -149,8 +161,11 @@ function zen_cfg_pull_down_zone_list($zone_id, $key = '')
     return zen_draw_pull_down_menu($name, array_merge($none, $zones), $zone_id, 'class="form-control"');
 }
 
-
-//// @TODO - is there a tax class query function already?
+/**
+ * @TODO - is there a tax class query function already?
+ *
+ * @since ZC v1.0.3
+ */
 function zen_cfg_pull_down_tax_classes($tax_class_id, $key = '')
 {
     global $db;
@@ -172,25 +187,29 @@ function zen_cfg_pull_down_tax_classes($tax_class_id, $key = '')
     return zen_draw_pull_down_menu($name, $tax_class_array, $tax_class_id, 'class="form-control"');
 }
 
-
-////
-// Function to read in text area in admin
+/**
+ * @since ZC v1.0.3
+ */
 function zen_cfg_textarea($text, $key = '')
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     return zen_draw_textarea_field($name, false, 60, 5, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="form-control"');
 }
 
-
-////
-// Function to read in text area in admin
+/**
+ * @since ZC v1.1.0
+ */
 function zen_cfg_textarea_small($text, $key = '')
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     return zen_draw_textarea_field($name, false, 35, 1, htmlspecialchars($text, ENT_COMPAT, CHARSET, FALSE), 'class="noEditor form-control" autofocus');
 }
 
-// @TODO - is there a zone lookup query already?
+/**
+ * @TODO - is there a zone lookup query already?
+ *
+ * @since ZC v1.0.3
+ */
 function zen_cfg_get_zone_name($zone_id)
 {
     global $db;
@@ -205,6 +224,9 @@ function zen_cfg_get_zone_name($zone_id)
     }
 }
 
+/**
+ * @since ZC v1.3.6
+ */
 function zen_cfg_pull_down_htmleditors($html_editor, $index = null)
 {
     global $editors_list;
@@ -217,6 +239,9 @@ function zen_cfg_pull_down_htmleditors($html_editor, $index = null)
     return zen_draw_pull_down_menu($name, $editors_pulldown, $html_editor, 'class="form-control"');
 }
 
+/**
+ * @since ZC v1.5.5
+ */
 function zen_cfg_pull_down_exchange_rate_sources($source, $key = '')
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
@@ -233,18 +258,25 @@ function zen_cfg_pull_down_exchange_rate_sources($source, $key = '')
     return zen_draw_pull_down_menu($name, $pulldown, $source);
 }
 
+/**
+ * @since ZC v1.3.7
+ */
 function zen_cfg_password_input($value, $key = '')
 {
     return zen_draw_password_field('configuration[' . $key . ']', $value, false, 'class="form-control"');
 }
 
+/**
+ * @since ZC v1.3.7
+ */
 function zen_cfg_password_display($value)
 {
     return str_repeat('*', min(strlen($value), 16));
 }
 
-////
-// Alias function for Store configuration values in the Administration Tool
+/**
+ * @since ZC v1.0.3
+ */
 function zen_cfg_select_option($select_array, $key_value, $key = '')
 {
     $string = '';
@@ -258,15 +290,18 @@ function zen_cfg_select_option($select_array, $key_value, $key = '')
     return $string;
 }
 
-
+/**
+ * @since ZC v1.2.0d
+ */
 function zen_cfg_select_drop_down($select_array, $key_value, $key = '')
 {
     $name = (zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
     return zen_draw_pull_down_menu($name, $select_array, (int)$key_value, 'class="form-control"');
 }
 
-////
-// Alias function for module configuration keys
+/**
+ * @since ZC v1.0.3
+ */
 function zen_mod_select_option($select_array, $key_name, $key_value)
 {
     $string = '';
@@ -278,8 +313,11 @@ function zen_mod_select_option($select_array, $key_name, $key_value)
     return $string;
 }
 
-////
-// Collect server information
+/**
+ * Collect server information
+ *
+ * @since ZC v1.0.3
+ */
 function zen_get_system_information($privacy = false): array
 {
     global $db;
@@ -373,16 +411,20 @@ function zen_get_system_information($privacy = false): array
 }
 
 /**
- *  @deprecated Moved to non-admin includes since v2.2.0 - Use $order->delete() instead.
- *  @param int $order_id Contains the order number of the order to be deleted.
- *  @param bool|string $restock Should the items within the order be restocked into inventory. (Old method used 'on', now can be set to true.)
- *  @return void
+ * @deprecated @v2.2.0 Moved to non-admin includes since v2.2.0 - Use $order->delete() instead.
+ * @param int $order_id Contains the order number of the order to be deleted.
+ * @param bool|string $restock Should the items within the order be restocked into inventory. (Old method used 'on', now can be set to true.)
+ * @return void
+ * @since ZC v1.0.3
 */
 function zen_remove_order($order_id, $restock = false) {
     $order = new order($order_id);
     $order->delete($restock);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_call_function($function, $parameter, $object = '')
 {
     if ($object === '') {
@@ -392,7 +434,11 @@ function zen_call_function($function, $parameter, $object = '')
     return call_user_func([$object, $function], $parameter);
 }
 
-//@todo - is there a function already for this query?
+/**
+ * @todo - is there a function already for this query?
+ *
+ * @since ZC v1.0.3
+ */
 function zen_get_zone_class_title($zone_class_id)
 {
     global $db;
@@ -407,7 +453,11 @@ function zen_get_zone_class_title($zone_class_id)
     return $classes->fields['geo_zone_name'];
 }
 
-//// @todo - is there a function already for this query? See the one above
+/**
+ * @todo - is there a function already for this query? See the one above
+ *
+ * @since ZC v1.0.3
+ */
 function zen_cfg_pull_down_zone_classes($zone_class_id, $key = '')
 {
     global $db;
@@ -429,8 +479,9 @@ function zen_cfg_pull_down_zone_classes($zone_class_id, $key = '')
     return zen_draw_pull_down_menu($name, $zone_class_array, $zone_class_id, 'class="form-control"');
 }
 
-
-////
+/**
+ * @since ZC v1.0.3
+ */
 function zen_cfg_pull_down_order_statuses($order_status_id, $key = '')
 {
     $name = ($key) ? 'configuration[' . $key . ']' : 'configuration_value';
@@ -440,6 +491,7 @@ function zen_cfg_pull_down_order_statuses($order_status_id, $key = '')
 /**
  * Return a pull-down menu of the available order-status values,
  * optionally prefixed by a "please choose" selection.
+ * @since ZC v1.5.7
  */
 function zen_draw_order_status_dropdown($field_name, $default_value, $first_selection = '', $parms = '')
 {
@@ -469,6 +521,7 @@ function zen_draw_order_status_dropdown($field_name, $default_value, $first_sele
  * Lookup Languages Icon by id or code
  * @param $lookup
  * @return bool|string
+ * @since ZC v1.0.3
  */
 function zen_get_language_icon($lookup)
 {
@@ -487,10 +540,12 @@ function zen_get_language_icon($lookup)
 
 
 /**
+ * lookup language directory name by id or code
+ * @todo move to lang class
+ *
  * @param $lookup
  * @return mixed|string
- * @todo move to lang class
- * lookup language directory name by id or code
+ * @since ZC v1.0.3
  */
 function zen_get_language_name($lookup)
 {
@@ -509,6 +564,9 @@ function zen_get_language_name($lookup)
 }
 
 
+/**
+ * @since ZC v1.5.5
+ */
 function zen_get_configuration_group_value($lookup)
 {
     // @todo could also do this as a dynamic scope
@@ -518,9 +576,10 @@ function zen_get_configuration_group_value($lookup)
 
 
 /**
+ * Sets the status of a product review
  * @TODO move to a class
  * @todo DRY
- * Sets the status of a product review
+ * @since ZC v1.2.0d
  */
 function zen_set_reviews_status($review_id, $status)
 {
@@ -546,6 +605,7 @@ function zen_set_reviews_status($review_id, $status)
  * @param int $product_id
  * @param bool $fullpath
  * @return array
+ * @since ZC v1.2.0d
  */
 function zen_get_master_categories_pulldown($product_id, $fullpath = false)
 {
@@ -572,6 +632,7 @@ function zen_get_master_categories_pulldown($product_id, $fullpath = false)
 /**
  * Alias functions for Store configuration values in the Administration Tool
  * adapted from USPS-related contributions by Brad Waite and Fritz Clapp
+ * @since ZC v1.2.0d
  */
 function zen_cfg_select_multioption(array $choices_array, string $stored_value, string $config_key_name = ''): string
 {
@@ -586,6 +647,9 @@ function zen_cfg_select_multioption(array $choices_array, string $stored_value, 
     return $string;
 }
 
+/**
+ * @since ZC v2.2.0
+ */
 function zen_cfg_select_multioption_pairs(array $choices_array, string $stored_value, string $config_key_name = ''): string
 {
     $string = '';
@@ -611,6 +675,7 @@ function zen_cfg_select_multioption_pairs(array $choices_array, string $stored_v
 
 /**
  * Function for configuration values that are read-only, e.g. a plugin's version number
+ * @since ZC v1.5.8
  */
 function zen_cfg_read_only($text, $key = '')
 {
@@ -620,7 +685,10 @@ function zen_cfg_read_only($text, $key = '')
     return $text . zen_draw_hidden_field($name, $text);
 }
 
-// @TODO can this be merged with another pulldown, not specific to coupon admin?
+/**
+ * @TODO can this be merged with another pulldown, not specific to coupon admin?
+ * @since ZC v1.3.6
+ */
 function zen_geo_zones_pull_down_coupon($parameters, $selected = '')
 {
     global $db;
@@ -648,6 +716,7 @@ function zen_geo_zones_pull_down_coupon($parameters, $selected = '')
 
 /**
  * get first customer comment record for an order (usually contains their special instructions)
+ * @since ZC v1.3.8
  */
 function zen_get_orders_comments($orders_id)
 {
@@ -669,6 +738,7 @@ function zen_get_orders_comments($orders_id)
  * @param int $pages_id
  * @param int $status 0|1
  * @param string $status_field
+ * @since ZC v1.3.0
  */
 function zen_set_ezpage_status(int $pages_id, int $status, string $status_field)
 {
@@ -685,6 +755,7 @@ function zen_set_ezpage_status(int $pages_id, int $status, string $status_field)
 /**
  * Retrieve a list of order-status names for a pulldown menu
  * @TODO Refactor code that is buiding this dropdown array inline, to use this function instead
+ * @since ZC v1.5.8
  */
 function zen_get_orders_status_pulldown_array()
 {
@@ -692,6 +763,9 @@ function zen_get_orders_status_pulldown_array()
     return $ordersStatus['orders_statuses'];
 }
 
+/**
+ * @since ZC v2.0.0
+ */
 function zen_getOrdersStatuses(bool $keyed = false): array
 {
     global $db;
@@ -714,6 +788,9 @@ function zen_getOrdersStatuses(bool $keyed = false): array
     return ['orders_statuses' => $orders_statuses, 'orders_status_array' => $orders_status_array,];
 }
 
+/**
+ * @since ZC v1.5.8
+ */
 function zen_get_customer_email_from_id($cid) {
    global $db;
    $query = $db->Execute("SELECT customers_email_address FROM " . TABLE_CUSTOMERS . " WHERE customers_id = " . (int)$cid);

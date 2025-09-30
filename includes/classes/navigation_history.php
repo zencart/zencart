@@ -14,6 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Navigation_history Class.
  * This class is used to manage navigation snapshots
  *
+ * @since ZC v1.0.3
  */
 class navigationHistory extends base
 {
@@ -26,6 +27,9 @@ class navigationHistory extends base
         $this->reset();
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function reset()
     {
         $this->path = [];
@@ -36,6 +40,9 @@ class navigationHistory extends base
     // Since the 'path' and 'snapshot' properties are public, make sure that their
     // values are set and an array, resetting if not.
     //
+    /**
+     * @since ZC v2.2.0
+     */
     protected function checkProperties(): void
     {
         if (!is_array($this->path ?? '') || !is_array($this->snapshot ?? '')) {
@@ -43,6 +50,9 @@ class navigationHistory extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function add_current_page()
     {
         // check whether there are pages which should be blacklisted against entering navigation history
@@ -104,6 +114,9 @@ class navigationHistory extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function remove_current_page()
     {
         $this->checkProperties();
@@ -114,6 +127,9 @@ class navigationHistory extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function set_snapshot($page = '')
     {
         global $request_type;
@@ -132,11 +148,17 @@ class navigationHistory extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function clear_snapshot()
     {
         $this->snapshot = [];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function set_path_as_snapshot($history = 0)
     {
         $this->checkProperties();
@@ -150,6 +172,9 @@ class navigationHistory extends base
         ];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function debug()
     {
         $this->checkProperties();
@@ -175,6 +200,9 @@ class navigationHistory extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function unserialize($broken)
     {
         foreach ($broken as $kv) {

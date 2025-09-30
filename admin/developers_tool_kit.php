@@ -28,6 +28,9 @@ $include_plugins = !empty($_POST['include_plugins']);
 $include_laravel = !empty($_POST['include_laravel']);
 $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
+/**
+ * @since ZC v1.2.0d
+ */
 function getDirList($dirName, $filetypes = 1) {
   global $directory_array, $sub_dir_files;
 
@@ -270,6 +273,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
  * @param string $highlight
  * @param boolean $case_sensitive
  * @return string
+ * @since ZC v1.5.5
  */
 function cleanup_dtk_output_text($input = '', $highlight = '', $case_sensitive = false) {
   if ($input == '')
@@ -302,6 +306,7 @@ function cleanup_dtk_output_text($input = '', $highlight = '', $case_sensitive =
  * @param string $number The number string to pad
  * @param int $n The number of padding characters to accommodate
  * @return string
+ * @since ZC v1.5.5
  */
 function number_pad_with_spaces($number, $n = 0) {
   return str_replace(' ', '&nbsp;', str_pad((int)$number, $n, ' ', STR_PAD_LEFT));

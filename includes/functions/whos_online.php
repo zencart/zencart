@@ -6,6 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
+ * @since ZC v1.0.3
  */
 function zen_update_whos_online()
 {
@@ -94,6 +95,9 @@ function zen_update_whos_online()
     }
 }
 
+/**
+ * @since ZC v1.3.0.2
+ */
 function whos_online_session_recreate($old_session, $new_session)
 {
     global $db;

@@ -9,6 +9,7 @@
 /**
  * Enter description here...
  *
+ * @since ZC v1.0.3
  */
 class table extends ZenShipping
 {
@@ -50,6 +51,7 @@ class table extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
@@ -96,6 +98,7 @@ class table extends ZenShipping
      *
      * @param string $method
      * @return unknown
+     * @since ZC v1.0.3
      */
     function quote($method = ''): array
     {
@@ -177,6 +180,7 @@ class table extends ZenShipping
      * Check to see whether module is installed
      *
      * @return unknown
+     * @since ZC v1.0.3
      */
     function check()
     {
@@ -191,6 +195,7 @@ class table extends ZenShipping
     /**
      * Install the shipping module and its configuration settings
      *
+     * @since ZC v1.0.3
      */
     function install(): void
     {
@@ -212,6 +217,7 @@ class table extends ZenShipping
      * Internal list of configuration keys used for configuration of the module
      *
      * @return unknown
+     * @since ZC v1.0.3
      */
     function keys(): array
     {
@@ -228,6 +234,9 @@ class table extends ZenShipping
         ];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/table/'];

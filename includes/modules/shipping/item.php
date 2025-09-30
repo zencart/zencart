@@ -6,6 +6,9 @@
  * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
  */
 
+/**
+ * @since ZC v1.0.3
+ */
 class item extends ZenShipping
 {
     function __construct()
@@ -32,6 +35,7 @@ class item extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
@@ -71,6 +75,9 @@ class item extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function quote($method = ''): array
     {
         global $order, $total_count;
@@ -100,6 +107,9 @@ class item extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check()
     {
         global $db;
@@ -110,6 +120,9 @@ class item extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install(): void
     {
         global $db;
@@ -123,6 +136,9 @@ class item extends ZenShipping
     }
 
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys(): array
     {
         return ['MODULE_SHIPPING_ITEM_STATUS', 'MODULE_SHIPPING_ITEM_COST', 'MODULE_SHIPPING_ITEM_HANDLING', 'MODULE_SHIPPING_ITEM_TAX_CLASS', 'MODULE_SHIPPING_ITEM_TAX_BASIS', 'MODULE_SHIPPING_ITEM_ZONE', 'MODULE_SHIPPING_ITEM_SORT_ORDER'];

@@ -7,6 +7,9 @@
  */
 namespace Zencart\LanguageLoader;
 
+/**
+ * @since ZC v1.5.7
+ */
 class LanguageLoader
 {
     private array $languageFilesLoaded;
@@ -21,27 +24,42 @@ class LanguageLoader
         $this->languageFilesLoaded = ['arrays' => [], 'legacy' => []];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadInitialLanguageDefines(): void
     {
         $this->arrayLoader->loadInitialLanguageDefines($this);
         $this->fileLoader->loadInitialLanguageDefines($this);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function finalizeLanguageDefines(): void
     {
         $this->arrayLoader->makeConstants($this->arrayLoader->getLanguageDefines());
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getLanguageFilesLoaded(): array
     {
         return $this->languageFilesLoaded;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function addLanguageFilesLoaded(string $type, string $defineFile): void
     {
         $this->languageFilesLoaded[$type][] = $defineFile;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadDefinesFromFile(string $baseDirectory, string $language, string $languageFile): bool
     {
         $this->arrayLoader->loadDefinesFromArrayFile($baseDirectory, $language, $languageFile);
@@ -49,6 +67,9 @@ class LanguageLoader
         return true;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadModuleDefinesFromFile(string $baseDirectory, string $language, string $module_type, string $languageFile): bool
     {
         $defs = $this->arrayLoader->loadModuleDefinesFromArrayFile(DIR_FS_CATALOG . 'includes/languages/', $language, $module_type, $languageFile);
@@ -61,6 +82,9 @@ class LanguageLoader
         return true;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function makeCatalogArrayConstants(string $fileName, string $extraDir = ''): void
     {
         $this->arrayLoader->makeCatalogArrayConstants($fileName, $extraDir);
@@ -72,6 +96,7 @@ class LanguageLoader
      *
      * @param string $currentPage
      * @return void
+     * @since ZC v1.5.8
      */
     public function setCurrentPage(string $currentPage): void
     {
@@ -79,18 +104,27 @@ class LanguageLoader
         $this->fileLoader->currentPage = $currentPage;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function loadLanguageForView(): void
     {
         $this->arrayLoader->loadLanguageForView();
         $this->fileLoader->loadLanguageForView();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function loadExtraLanguageFiles(string $rootPath, string $language, string $fileName, string $extraPath = ''): void
     {
         $this->arrayLoader->loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath);
         $this->fileLoader->loadExtraLanguageFiles($rootPath, $language, $fileName, $extraPath);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function hasLanguageFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): bool
     {
         if (is_file($rootPath . $language . $extraPath . '/' . $fileName)) {
@@ -102,6 +136,9 @@ class LanguageLoader
         return false;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function loadModuleLanguageFile(string $fileName, string $moduleType): bool
     {
         $this->arrayLoader->loadModuleLanguageFile($fileName, $moduleType);
@@ -122,6 +159,9 @@ class LanguageLoader
         return false;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function isFileAlreadyLoaded(string $defineFile): bool
     {
         $fileInfo = pathinfo($defineFile);

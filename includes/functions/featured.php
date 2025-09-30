@@ -15,6 +15,7 @@
  * @global object $db
  * @param int $featured_id
  * @param int $status
+ * @since ZC v1.2.0d
  */
 function zen_set_featured_status(int $featured_id, int $status)
 {
@@ -31,6 +32,7 @@ function zen_set_featured_status(int $featured_id, int $status)
  * Auto expire products on featured
  *
  * @global object $db
+ * @since ZC v1.2.0d
  */
 function zen_expire_featured()
 {
@@ -61,6 +63,7 @@ function zen_expire_featured()
  * Auto start products on featured
  *
  * @global object $db
+ * @since ZC v1.2.0d
  */
 function zen_start_featured()
 {
@@ -99,6 +102,9 @@ function zen_start_featured()
   }
 }
 
+/**
+ * @since ZC v2.1.0
+ */
 function zen_set_featured_category_status(int $category_id, int $status): void
 {
     global $db;

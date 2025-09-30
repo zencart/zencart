@@ -19,6 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * An sql paging class, that allows for sql result to be shown over a number of pages using simple navigation system
  * Overhaul scheduled for subsequent release
  *
+ * @since ZC v1.5.7
  */
 class Paginator extends \base {
     protected $cmd;
@@ -103,9 +104,11 @@ class Paginator extends \base {
 
   }
 
-  /* class functions */
-
-  // display split-page-number-links
+  /**
+   * display split-page-number-links
+   *
+   * @since ZC v1.5.7
+   */
   function display_links($max_page_links, $parameters = '', $outputAsUnorderedList = false, $navElementLabel = '') {
     global $request_type;
     if ($max_page_links == '') $max_page_links = 1;
@@ -195,7 +198,10 @@ class Paginator extends \base {
     return $display_links_string;
   }
 
-  // display number of total products found
+  /**
+   * display number of total products found
+   * @since ZC v1.5.7
+   */
   function display_count($text_output) {
     $to_num = ($this->number_of_rows_per_page * $this->current_page_number);
     if ($to_num > $this->number_of_rows) $to_num = $this->number_of_rows;
@@ -216,6 +222,9 @@ class Paginator extends \base {
     }
   }
 
+  /**
+   * @since ZC v1.5.7
+   */
   public function getSqlQuery()
   {
       return $this->sql_query;

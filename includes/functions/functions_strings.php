@@ -12,6 +12,7 @@
  * @param array|bool $translate contains a string to be translated, otherwise just quote is translated
  * @param bool $protected Do we run htmlspecialchars over the string
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_output_string(?string $string, array|bool $translate = false, bool $protected = false): string
 {
@@ -35,6 +36,7 @@ function zen_output_string(?string $string, array|bool $translate = false, bool 
  * Returns a string with quotes converted to html entities
  * so that they can be passed through from page to page
  * without mistakenly being converted to specialchars or go missing
+ * @since ZC v2.2.0
  */
 function zen_preserve_search_quotes(?string $search_string): string
 {
@@ -50,6 +52,7 @@ function zen_preserve_search_quotes(?string $search_string): string
  * and converts quotes to html entities
  *
  * @param string The string to be parsed
+ * @since ZC v1.0.3
  */
 function zen_output_string_protected($string)
 {
@@ -61,6 +64,7 @@ function zen_output_string_protected($string)
  * Returns a string with conversions for security.
  *
  * @param string The string to be parsed
+ * @since ZC v1.0.3
  */
 
 function zen_sanitize_string($string)
@@ -73,6 +77,7 @@ function zen_sanitize_string($string)
 /**
  * Checks whether a string/array is null/blank/empty or uppercase string 'NULL'
  * Differs from empty() in that it doesn't test for boolean false or '0' string/int
+ * @since ZC v1.0.3
  */
 function zen_not_null(Countable|array|string|null $value): bool
 {
@@ -92,6 +97,7 @@ function zen_not_null(Countable|array|string|null $value): bool
  * @param int The maximum length allowed
  * @param string The character to use at the end of the broken line
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_break_string($string, $len, $break_char = '-')
 {
@@ -124,6 +130,7 @@ function zen_break_string($string, $len, $break_char = '-')
  * @param int $len
  * @param string $more
  * @return array|false|mixed|string
+ * @since ZC v1.0.3
  */
 function zen_trunc_string($str = "", $len = 150, $more = 'true')
 {
@@ -162,6 +169,7 @@ function zen_trunc_string($str = "", $len = 150, $more = 'true')
  * @param string $paragraph
  * @param int $size
  * @return string
+ * @since ZC v1.3.0
  */
 function zen_truncate_paragraph($paragraph, $size = 100)
 {
@@ -185,6 +193,7 @@ function zen_truncate_paragraph($paragraph, $size = 100)
  * @param string $string
  * @param string $needle
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_word_count(string $string, string $needle)
 {
@@ -203,6 +212,7 @@ function zen_word_count(string $string, string $needle)
  * @param string $equals
  * @param string $separator
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_array_to_string($array, $exclude = '', $equals = '=', $separator = '&')
 {
@@ -231,6 +241,7 @@ function zen_array_to_string($array, $exclude = '', $equals = '=', $separator = 
  * useful for submitting cleaned-up data to payment gateways or other external services, esp if the data was copy+pasted from windows docs via windows browser to store in database
  *
  * @param string $string
+ * @since ZC v1.3.9a
  */
 function charsetConvertWinToUtf8($string)
 {
@@ -243,6 +254,7 @@ function charsetConvertWinToUtf8($string)
  * Convert supplied string to/from entities between charsets, to sanitize data from inputs, especially APIs and gateways
  * @param $string
  * @return string
+ * @since ZC v1.3.9a
  */
 function charsetClean($string)
 {
@@ -255,6 +267,7 @@ function charsetClean($string)
 
 /**
  * strip out accented characters to reasonable approximations of english equivalents
+ * @since ZC v1.3.7.1
  */
 function replace_accents($s)
 {
@@ -271,6 +284,7 @@ function replace_accents($s)
  * @param string $given_html
  * @param int $quote_style
  * @return string
+ * @since ZC v1.1.2
  */
 function zen_html_entity_decode($given_html, $quote_style = ENT_QUOTES)
 {
@@ -281,6 +295,7 @@ function zen_html_entity_decode($given_html, $quote_style = ENT_QUOTES)
 
 /**
  * Decode string encoded with htmlspecialchars()
+ * @since ZC v1.1.0
  */
 function zen_decode_specialchars($string)
 {
@@ -302,6 +317,7 @@ function zen_decode_specialchars($string)
  * @param string $encoding
  * @param bool $double_encode
  * @return array|string
+ * @since ZC v1.5.7
  */
 function htmlentities_recurse($mixed_value, $flags = ENT_QUOTES, $encoding = 'utf-8', $double_encode = true)
 {
@@ -322,7 +338,8 @@ function htmlentities_recurse($mixed_value, $flags = ENT_QUOTES, $encoding = 'ut
  * @param mixed $mixed_value
  * @return array|false|string
  *
- * Deprecated after Zen Cart 1.5.8a
+ * @deprecated after Zen Cart 1.5.8a
+ * @since ZC v1.5.5
  */
 function utf8_encode_recurse($mixed_value)
 {
@@ -335,6 +352,7 @@ function utf8_encode_recurse($mixed_value)
  * @param string $clean_it
  * @param string|array $extraTags
  * @return string
+ * @since ZC v1.2.0d
  */
 function zen_clean_html($clean_it, $extraTags = '')
 {
@@ -375,6 +393,7 @@ function zen_clean_html($clean_it, $extraTags = '')
 /**
  * @param string $url
  * @return string
+ * @since ZC v1.5.3
  */
 function fixup_url($url)
 {
@@ -393,7 +412,8 @@ function fixup_url($url)
  * @param string The string to be parsed
  * @param string The needle to find
  * @return string
- * @deprecated alias to strtr()
+ * @deprecated Use strtr() instead
+ * @since ZC v1.0.3
  */
 function zen_parse_input_field_data($data, $parse)
 {
@@ -401,7 +421,7 @@ function zen_parse_input_field_data($data, $parse)
     return strtr(trim($data), $parse);
 }
 
-/** @deprecated  */
+/** @deprecated  Just cast to int directly. */
 function zen_string_to_int($string) {
     trigger_error('Call to deprecated function zen_string_to_int. Use a closure instead', E_USER_DEPRECATED);
     return (int)$string;
@@ -414,6 +434,7 @@ function zen_string_to_int($string) {
  *
  * @param mixed $string
  * @return int|float
+ * @since ZC v2.0.0
  */
 function zen_str_to_numeric($string) {
     if (is_null($string)) {
@@ -448,6 +469,7 @@ function zen_str_to_numeric($string) {
  * @param string|null $lang_define_prefix Language define prefix to be prepended for lookup
  * @param string|null $fallback Value to return if failures occur
  * @return string
+ * @since ZC v2.0.0
  */
 function zen_get_translated_config_setting(string $config_key, ?string $lang_define_prefix = null, ?string $fallback = null): string
 {

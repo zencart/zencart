@@ -9,6 +9,7 @@
  *
  * Algorithms, digits, period etc. explained: https://github.com/google/google-authenticator/wiki/Key-Uri-Format
  *
+ * @since ZC v2.1.0
  */
 
 // handle autoloaders for 3rd party composer packages
@@ -61,6 +62,7 @@ class MultiFactorAuth
     /**
      * Create a new secret
      * @throws Exception
+     * @since ZC v2.1.0
      */
     public function createSecret(int $bits = 160): string
     {
@@ -75,6 +77,7 @@ class MultiFactorAuth
 
     /**
      * Calculate the code with given secret and point in time
+     * @since ZC v2.1.0
      */
     public function getCode(string $secret, ?int $time = null): string
     {
@@ -91,6 +94,7 @@ class MultiFactorAuth
 
     /**
      * Check if the code is correct. This will accept codes starting from ($discrepancy * $period) sec ago to ($discrepancy * period) sec from now
+     * @since ZC v2.1.0
      */
     public function verifyCode(string $secret, string $code, int $discrepancy = 1, ?int $time = null, ?int &$timeslice = 0): bool
     {
@@ -111,6 +115,7 @@ class MultiFactorAuth
 
     /**
      * Set the code length, should be >=6.
+     * @since ZC v2.1.0
      */
     public function setCodeLength(int $length): static
     {
@@ -119,16 +124,25 @@ class MultiFactorAuth
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getCodeLength(): int
     {
         return $this->codeLength;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     private function getTimeSlice(?int $time = null, int $offset = 0): int
     {
         return (int)floor($time / $this->period) + ($offset * $this->period);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     private function base32Decode(string $value): string
     {
         if ($value === '') {
@@ -157,6 +171,7 @@ class MultiFactorAuth
 
     /**
      * Builds a string to be encoded in a QR code
+     * @since ZC v2.1.0
      */
     protected function getQRText(string $domain, string $secret, string $accountname = ''): string
     {
@@ -187,6 +202,7 @@ class MultiFactorAuth
     /**
      * Get QR-Code URL for image from QRserver.com.
      * See https://goqr.me/api/doc/create-qr-code/
+     * @since ZC v2.1.0
      */
     public function getQrCodeQrServerUrl(string $data, int $size = 200): string
     {
@@ -204,6 +220,7 @@ class MultiFactorAuth
 
     /**
      * See http://qrickit.com/qrickit_apps/qrickit_api.php
+     * @since ZC v2.1.0
      */
     public function getQrCodeQRickitUrl(string $data, int $size = 200): string
     {
@@ -223,6 +240,7 @@ class MultiFactorAuth
      * See https://github.com/Bacon/BaconQrCode
      *
      * Using SVG mode because it is not dependent on Imagemagick (but is dependent on XMLWriter)
+     * @since ZC v2.1.0
      */
     public function getQrCodeBaconQrCode(string $data, int $size = 200): string
     {
@@ -235,6 +253,7 @@ class MultiFactorAuth
     /**
      * See https://github.com/tecnickcom/tc-lib-barcode
      * (To add this library, must create an autoloader.php for it to register with, and also include tc-lib-color)
+     * @since ZC v2.1.0
      */
     public function getQrCodeTCBarcode(string $data, int $size = 200): string
     {
@@ -258,6 +277,9 @@ class MultiFactorAuth
         //return $qrCode->getHtmlDiv(); // returns a DIV containing multiple small rectangles for QR code, safe to render as HTML; however, QR Code is not as well recognized by in-browser scanners
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getQrCode(string $domain, string $secret, string $accountname = '', int $size = 200): string
     {
         $data = $this->getQRText($domain, $secret, $accountname);

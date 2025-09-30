@@ -9,6 +9,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v1.5.8
+ */
 class PluginControl extends Eloquent
 {
     protected $table = TABLE_PLUGIN_CONTROL;
@@ -18,12 +21,18 @@ class PluginControl extends Eloquent
     public $timestamps = false;
     protected $guarded = [];
       
+    /**
+     * @since ZC v1.5.8
+     */
     public function getRelativePath()
     {
         $relativePath =  ($GLOBALS['request_type'] == 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG). 'zc_plugins/' . $this->unique_key . '/' . $this->version . '/';
         return $relativePath;
     }
     
+    /**
+     * @since ZC v1.5.8
+     */
     public function getAbsolutePath()
     {
         $absolutePath = DIR_FS_CATALOG . 'zc_plugins/' . $this->unique_key . '/' . $this->version . '/';

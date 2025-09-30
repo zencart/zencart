@@ -5,6 +5,7 @@
  * @author inspired from sales_report_graphs.php,v 0.01 2002/11/27 19:02:22 cwi Exp  Released under the GNU General Public License $
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2024 Jul 19 Modified in v2.1.0-alpha1 $
+ * @since ZC v1.5.6
  */
 
 class statsSalesReportGraph
@@ -290,11 +291,17 @@ class statsSalesReportGraph
     //
     // Returns a boolean indication as to whether the value is (true) or is not (false) valid.
     //
+    /**
+     * @since ZC v1.5.8
+     */
     protected function validDateInput($date): bool
     {
         return ((is_int($date) && $date >= 0) || (is_string($date) && ctype_digit($date)));
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function query(): void
     {
         global $db, $zcDate;

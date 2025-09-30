@@ -8,6 +8,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v1.5.8
+ */
 class ProjectVersion extends Eloquent
 {
     protected $table = TABLE_PROJECT_VERSION;

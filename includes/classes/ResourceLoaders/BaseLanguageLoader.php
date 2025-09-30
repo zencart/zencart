@@ -9,6 +9,9 @@ namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
 
+/**
+ * @since ZC v1.5.8
+ */
 class BaseLanguageLoader
 {
     protected string $fallback;
@@ -30,11 +33,17 @@ class BaseLanguageLoader
         $this->zcPluginsDir = DIR_FS_CATALOG . 'zc_plugins/';
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function getTemplateDir(): string
     {
         return $this->templateDir;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function getFallback(): string
     {
         return $this->fallback;

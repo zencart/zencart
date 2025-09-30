@@ -11,7 +11,9 @@
 
 //
 // @TODO turn into a class in later release...
-
+/**
+ * @since ZC v1.2.0d
+ */
   function get_audiences_list($query_category='email', $display_count='', $lookup_email_address ='') {
   // used to display drop-down list of available audiences in emailing modules:
   // ie: mail, gv_main, coupon_admin... and eventually newsletters too.
@@ -68,6 +70,9 @@
   return $audience_list;
   }
 
+  /**
+   * @since ZC v1.2.0d
+   */
   function get_audience_sql_query($selected_entry, $query_category='email') {
     // This is used to take the query_name selected in the drop-down menu or singular customer email address and
   // generate the SQL Select query to be used to build the list of email addresses to be sent to
@@ -98,6 +103,9 @@
   return array('query_name'=>$query_name, 'query_string'=>$query_string);
 }
 
+/**
+ * @since ZC v1.2.0d
+ */
 function parsed_query_string($read_string) {
   $good_string = '';
   // extract table names from sql strings, so that prefixes are supported.

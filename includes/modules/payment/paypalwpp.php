@@ -13,6 +13,7 @@
 require_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_curl.php');
 /**
  * the PayPal payment module with Express Checkout
+ * @since ZC v1.3.7
  */
 class paypalwpp extends base {
   /**
@@ -248,6 +249,7 @@ class paypalwpp extends base {
   }
   /**
    *  Sets payment module status based on zone restrictions etc
+   * @since ZC v1.3.7
    */
   function update_status() {
     global $order, $db;
@@ -302,16 +304,19 @@ class paypalwpp extends base {
   }
   /**
    *  Validate the credit card information via javascript (Number, Owner, and CVV Lengths)
+   * @since ZC v1.3.7
    */
   function javascript_validation() {
     return false;
   }
   /**
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
+   * @since ZC v1.3.7
    */
   function selection() {
     /**
      * since we are NOT processing via the gateway, we will only display MarkFlow payment option, and no CC fields
+     * @since ZC v1.3.7
      */
     return array('id' => $this->code,
                  'module' => '<img src="' . MODULE_PAYMENT_PAYPALEC_MARK_BUTTON_IMG . '" alt="' . MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT . '"><span style="font-size:11px; font-family: Arial, Verdana;"> ' . MODULE_PAYMENT_PAYPALWPP_MARK_BUTTON_TXT . '</span>');
@@ -322,6 +327,7 @@ class paypalwpp extends base {
   }
   /**
    * Display Payment Information for review on the Checkout Confirmation Page
+   * @since ZC v1.3.7
    */
   function confirmation() {
     $confirmation = array('title' => '', 'fields' => array());
@@ -329,6 +335,7 @@ class paypalwpp extends base {
   }
   /**
    * Prepare the hidden fields comprising the parameters for the Submit button on the checkout confirmation page
+   * @since ZC v1.3.7
    */
   function process_button() {
     // When hitting the checkout-confirm button, we are going into markflow mode
@@ -357,6 +364,7 @@ class paypalwpp extends base {
   }
   /**
    * Prepare and submit the final authorization to PayPal via the appropriate means as configured
+   * @since ZC v1.3.7
    */
   function before_process() {
     global $order, $doPayPal, $messageStack;
@@ -529,6 +537,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * When the order returns from the processor, this stores the results in order-status-history and logs data for subsequent use
+   * @since ZC v1.3.7
    */
   function after_process() {
     global $insert_id, $order;
@@ -608,6 +617,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     *
     * @param int $zf_order_id
     * @return string
+    * @since ZC v1.3.7
     */
   function admin_notification($zf_order_id) {
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS')) return '';
@@ -628,6 +638,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Used to read details of an existing transaction.  FOR FUTURE USE.
+   * @since ZC v1.3.7
    */
   function _GetTransactionDetails($oID, $last_txn = true) {
     if ($oID == '' || $oID < 1) return FALSE;
@@ -656,6 +667,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Used to read details of existing transactions.  FOR FUTURE USE.
+   * @since ZC v1.3.7.1
    */
   function _TransactionSearch($startDate = '', $oID = '', $criteria = '') {
     global $db, $messageStack, $doPayPal;
@@ -685,6 +697,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Evaluate installation status of this module. Returns true if the status key is found.
+   * @since ZC v1.3.7
    */
   function check() {
     global $db;
@@ -698,6 +711,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Installs all the configuration keys for this module
+   * @since ZC v1.3.7
    */
   function install() {
     global $db, $messageStack;
@@ -749,6 +763,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_INSTALLED');
   }
 
+  /**
+   * @since ZC v1.3.7
+   */
   function keys() {
     if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS')) {
       global $db;
@@ -776,6 +793,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * De-install this module
+   * @since ZC v1.3.7
    */
   function remove() {
     global $messageStack;
@@ -792,12 +810,16 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $this->notify('NOTIFY_PAYMENT_PAYPALWPP_UNINSTALLED');
   }
 
+  /**
+   * @since ZC v1.5.8
+   */
   function help() {
        return array('link' => 'https://docs.zen-cart.com/user/payment/paypal_express_checkout/');
   }
 
   /**
    * Check settings and conditions to determine whether we are in an Express Checkout phase or not
+   * @since ZC v1.3.7
    */
   function in_special_checkout() {
     if ((defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True') &&
@@ -810,6 +832,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Determine whether the shipping-edit button should be displayed or not
+   * @since ZC v1.3.7
    */
   function alterShippingEditButton() {
     return false;
@@ -819,6 +842,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Debug Logging support
+   * @since ZC v1.3.7
    */
   function zcLog($stage, $message) {
     static $tokenHash;
@@ -837,6 +861,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Debug Emailing support
+   * @since ZC v1.3.7
    */
   function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
     if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email') {
@@ -847,6 +872,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Initialize the PayPal/PayflowPro object for communication to the processing gateways
+   * @since ZC v1.3.7
    */
   function paypal_init() {
     if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || !defined('MODULE_PAYMENT_PAYPALWPP_SERVER')) {
@@ -904,6 +930,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Determine which PayPal URL to direct the customer's browser to when needed
+   * @since ZC v1.3.7
    */
   function getPayPalLoginServer() {
     if (MODULE_PAYMENT_PAYPALWPP_SERVER == 'live') {
@@ -918,6 +945,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Used to submit a refund for a given transaction.  FOR FUTURE USE.
    * @TODO: Add option to specify shipping/tax amounts for refund instead of just total. Ref: https://developer.paypal.com/docs/classic/release-notes/merchant/PayPal_Merchant_API_Release_Notes_119/
+   * @since ZC v1.3.7
    */
   function _doRefund($oID, $amount = 'Full', $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -977,6 +1005,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
   /**
    * Used to authorize part of a given previously-initiated transaction.  FOR FUTURE USE.
+   * @since ZC v1.3.7
    */
   function _doAuth($oID, $amt, $currency = 'USD') {
     global $db, $doPayPal, $messageStack;
@@ -1027,6 +1056,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Used to capture part or all of a given previously-authorized transaction.  FOR FUTURE USE.
    * (alt value for $captureType = 'NotComplete')
+   * @since ZC v1.3.7
    */
   function _doCapt($oID, $captureType = 'Complete', $amt = 0, $currency = 'USD', $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -1088,6 +1118,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Used to void a given previously-authorized transaction.  FOR FUTURE USE.
+   * @since ZC v1.3.7
    */
   function _doVoid($oID, $note = '') {
     global $db, $doPayPal, $messageStack;
@@ -1133,6 +1164,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     /**
      * Determine the language to use when redirecting to the PayPal site
      * Order of selection: locale for current language, current-language-code, delivery-country, billing-country, store-country
+     * @since ZC v1.3.7
      */
     public function getLanguageCode($mode = 'ec')
     {
@@ -1193,6 +1225,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
   /**
    * Set the currency code -- use defaults if active currency is not a currency accepted by PayPal
+   * @since ZC v1.3.7
    */
   function selectCurrency($val = '', $subset = 'EC') {
     $ec_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'TRY', 'RUB', 'INR');
@@ -1214,6 +1247,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Calculate the amount based on acceptable currencies
+   * @since ZC v1.3.7
    */
   function calc_order_amount($amount, $paypalCurrency, $applyFormatting = false) {
     global $currencies;
@@ -1228,6 +1262,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * Set the state field depending on what PayPal requires for that country.
    * The shipping address state or province is required if the address is in one of the following countries: Argentina, Brazil, Canada, China, Indonesia, India, Japan, Mexico, Thailand, USA
    * https://developer.paypal.com/docs/classic/api/state_codes/
+   * @since ZC v1.3.7
    */
   function setStateAndCountry(&$info) {
     global $db, $messageStack;
@@ -1263,6 +1298,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Prepare subtotal and line-item detail content to send to PayPal
+   * @since ZC v1.3.7
    */
   function getLineItemDetails($restrictedCurrency) {
     global $order, $currencies, $order_totals, $order_total_modules;
@@ -1599,6 +1635,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * This method sends the customer to PayPal's site
    * There, they will log in to their PayPal account, choose a funding source and shipping method
    * and then return to our store site with an EC token
+   * @since ZC v1.3.7
    */
   function ec_step1() {
     global $order, $order_totals, $db, $doPayPal;
@@ -1864,6 +1901,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      * This method is for step 2 of the express checkout option.  This
      * retrieves from PayPal the data set by step one and sets the Zen Cart
      * data accordingly depending on admin settings.
+     * @since ZC v1.3.7
      */
   function ec_step2() {
     // Visitor just came back from PayPal and so we collect all
@@ -1899,6 +1937,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     /**
      * Determine result of request for data -- if error occurred, the errorHandler will redirect accordingly
+     * @since ZC v2.2.0
      */
     $error = $this->_errorHandler($response, 'GetExpressCheckoutDetails');
 
@@ -2061,6 +2100,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // Note: For Zen Cart versions up to 2.1.0, this functionality was present at the beginning
     // of the ec_step2_finish method.
     //
+    /**
+     * @since v2.2.0
+     */
     public function notify_order_cart_address_overrides(&$order, string $e, $unused, array &$customer_address_override, array &$delivery_address_override, array &$billing_address_override): void
     {
         global $db;
@@ -2216,6 +2258,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
   /**
    * Complete the step2 phase by creating accounts if needed, linking data, placing order, etc.
+   * @since ZC v1.3.7
    */
   protected function ec_step2_finish(): void
   {
@@ -2503,6 +2546,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   /**
    * Determine the appropriate shipping method if applicable
    * By default, selects the lowest-cost quote
+   * @since ZC v1.3.7
    */
   function setShippingMethod() {
     global $total_count, $total_weight;
@@ -2525,6 +2569,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Get Override Address (uses sendto if set, otherwise uses customer's primary address)
+   * @since ZC v1.3.7
    */
   function getOverrideAddress() {
     global $db;
@@ -2631,6 +2676,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      * @param int $customer_id
      * @param array $address_question_arr
      * @return int|boolean
+     * @since ZC v1.3.7
      */
   function findMatchingAddressBookEntry($customer_id, $address_question_arr) {
     global $db;
@@ -2786,6 +2832,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
      * @param int $customer_id
      * @param array $address_question_arr
      * @return int
+     * @since ZC v1.3.7
      */
   function addAddressBookEntry($customer_id, $address_question_arr, $make_default = false) {
     global $db;
@@ -2918,6 +2965,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
   /**
    * If we created an account for the customer, this logs them in and notes that the record was created for PayPal EC purposes
+   * @since ZC v1.3.7
    */
   function user_login($email_address, $redirect = true) {
     global $db, $order, $messageStack;
@@ -3009,6 +3057,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * If the account was created only for temporary purposes to place the PayPal order, delete it.
+   * @since ZC v1.3.7
    */
   function ec_delete_user($cid) {
     global $db;
@@ -3035,6 +3084,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * If the EC flow has to be interrupted for any reason, this does the appropriate cleanup and displays status/error messages.
+   * @since ZC v1.3.7
    */
   function terminateEC($error_msg = '', $kill_sess_vars = false, $goto_page = '') {
     global $messageStack, $order, $order_total_modules;
@@ -3125,6 +3175,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   }
   /**
    * Error / exception handling
+   * @since ZC v1.3.7
    */
   function _errorHandler($response, $operation = '', $ignore_codes = '') {
     global $messageStack, $doPayPal;
@@ -3138,12 +3189,12 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             }
       }
     }
-    /** Handle unilateral **/
+    /* Handle unilateral **/
     if (!empty($response['RESULT']) && $response['RESULT'] == 'Unauthorized: Unilateral') {
       $errorText = $response['RESULT'] . MODULE_PAYMENT_PAYPALWPP_TEXT_UNILATERAL;
       $messageStack->add_session($errorText, 'error');
     }
-    /** Handle FMF Scenarios **/
+    /* Handle FMF Scenarios **/
       $response['L_ERRORCODE0'] = empty($response['L_ERRORCODE0']) ? 0 : $response['L_ERRORCODE0'];
       $response['L_LONGMESSAGE2'] = empty($response['L_LONGMESSAGE2']) ? '' : $response['L_LONGMESSAGE2'];
     if (in_array($operation, array('DoExpressCheckoutPayment', 'DoDirectPayment'))
@@ -3371,6 +3422,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     }
   }
 
+  /**
+   * @since v1.3.7.1
+   */
   function tableCheckup() {
     global $db, $sniffer;
     $fieldOkay1 = (method_exists($sniffer, 'field_type')) ? $sniffer->field_type(TABLE_PAYPAL, 'txn_id', 'varchar(20)', true) : -1;
@@ -3435,6 +3489,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * Convert HTML comments to readable text
    * @param string $string
    * @return string
+   * @since ZC v1.5.5
    */
   function uncomment($string) {
     return str_replace(array('<!-- ', ' -->'), array('[', ']'), $string);

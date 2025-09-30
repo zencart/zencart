@@ -8,6 +8,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * @since ZC v2.2.0
+ */
 class TaxRatesDescription extends Eloquent
 {
     protected $table = TABLE_TAX_RATES_DESCRIPTION;
@@ -15,6 +18,9 @@ class TaxRatesDescription extends Eloquent
     public $timestamps = false;
     protected $guarded = [];
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function rate()
     {
         return $this->hasOne(TaxRate::class, 'tax_rates_id', 'tax_rates_id');

@@ -10,6 +10,7 @@
 /**
  * Alias to $db->insert_ID() to get id of last inserted record
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_db_insert_id()
 {
@@ -21,6 +22,7 @@ function zen_db_insert_id()
  * Alias to $db->prepare_input() for sanitizing db inserts
  * @param string $string
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_db_input($string)
 {
@@ -32,6 +34,7 @@ function zen_db_input($string)
  * @deprecated use zen_output_string_protected() instead
  * @param string $string
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_db_output(string $string)
 {
@@ -48,6 +51,7 @@ function zen_db_output(string $string)
  * Rudimentary input sanitizer
  * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
  *
+ * @since ZC v1.0.3
  */
 function zen_db_prepare_input(array|string|int|float|null $input, bool $trimspace = true): array|string|int|float|null
 {
@@ -80,6 +84,7 @@ function zen_db_prepare_input(array|string|int|float|null $input, bool $trimspac
  * @param string $performType INSERT or UPDATE
  * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
  * @return queryFactoryResult
+ * @since ZC v1.0.3
  */
 function zen_db_perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = ''): queryFactoryResult
 {
@@ -138,6 +143,7 @@ function zen_db_perform(string $tableName, array $tableData, $performType = 'INS
  * @param int $keyId
  * @param int $languageId
  * @return queryFactoryResult
+ * @since ZC v1.5.3
  */
 function zen_db_perform_language(string $tableName, array $tableData, string $keyIdName, int $keyId, int $languageId)
 {
@@ -182,6 +188,7 @@ function zen_db_perform_language(string $tableName, array $tableData, string $ke
 
 /** @deprecated
  * Return a random row from a database query
+ * @since ZC v1.0.3
  */
 function zen_random_select($query) {
     trigger_error('Call to deprecated function zen_random_select. Use $db->ExecuteRandomMulti() instead', E_USER_DEPRECATED);

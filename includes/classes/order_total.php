@@ -16,6 +16,7 @@ use Zencart\Traits\NotifierManager;
  *
  * Handles all order-total processing functions
  *
+ * @since ZC v1.0.3
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -80,6 +81,9 @@ class order_total
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function process(): array
     {
         global $order;
@@ -116,6 +120,9 @@ class order_total
         return $order_total_array;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function output(bool $return_html = false): string
     {
         global $template, $current_page_base;
@@ -156,6 +163,9 @@ class order_total
     // for entering a Gift Voucher number. Note credit classes can decide whether this part is displayed depending on
     // E.g. a setting in the admin section.
     //
+    /**
+     * @since ZC v1.0.3
+     */
     public function credit_selection(): array
     {
         $selection_array = [];
@@ -179,6 +189,9 @@ class order_total
     // to the Gift Voucher account.
     // Another use would be to check if the product would give reward points and add these to the points/reward account.
     //
+    /**
+     * @since ZC v1.0.3
+     */
     public function update_credit_account($i): void
     {
         if ($this->module_order_total_installed === true) {
@@ -196,6 +209,9 @@ class order_total
     // entering redeem codes(Gift Vouchers/Discount Coupons). This function is used to validate these codes.
     // If they are valid then the necessary actions are taken, if not valid we are returned to checkout payment
     // with an error
+    /**
+     * @since ZC v1.0.3
+     */
     public function collect_posts(): void
     {
         if ($this->module_order_total_installed === true) {
@@ -217,6 +233,9 @@ class order_total
     // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
     // total, we don't want to go to paypal etc.
     //
+    /**
+     * @since ZC v1.0.3
+     */
     public function pre_confirmation_check(bool|string $returnOrderTotalOnly = false)
     {
         global $order, $credit_covers;
@@ -249,6 +268,9 @@ class order_total
     // the credit amount be applied aginst the order. If so some action is taken. E.g. for a Gift voucher the account
     // is reduced the order total amount.
     //
+    /**
+     * @since ZC v1.0.3
+     */
     public function apply_credit(): void
     {
         if ($this->module_order_total_installed === true) {
@@ -263,6 +285,9 @@ class order_total
 
     // Called in checkout process to clear session variables created by each credit class module.
     //
+    /**
+     * @since ZC v1.0.3
+     */
     public function clear_posts(): void
     {
         if ($this->module_order_total_installed === true) {
@@ -279,6 +304,9 @@ class order_total
     // credit will be applied against. This varies depending on whether the credit class applies
     // to shipping & tax
     //
+    /**
+     * @since ZC v1.0.3
+     */
     public function get_order_total_main($class, $order_total)
     {
         return $order_total;

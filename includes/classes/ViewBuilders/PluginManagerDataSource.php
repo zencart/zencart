@@ -11,8 +11,14 @@ use App\Models\PluginControl;
 use Illuminate\Database\Eloquent\Builder;
 use Zencart\PluginSupport\PluginStatus;
 
+/**
+ * @since ZC v1.5.8
+ */
 class PluginManagerDataSource extends DataTableDataSource
 {
+    /**
+     * @since ZC v1.5.8
+     */
     protected function buildInitialQuery(): Builder
     {
         $statusSort = [

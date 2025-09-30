@@ -7,6 +7,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Sep 26 Modified in v2.1.0-beta1 $
  */
+/**
+ * @since ZC v1.0.3
+ */
 class ot_loworderfee
 {
     /**
@@ -55,6 +58,9 @@ class ot_loworderfee
         if (null === $this->sort_order) return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function process()
     {
         global $order, $currencies;
@@ -137,6 +143,9 @@ class ot_loworderfee
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check()
     {
         global $db;
@@ -153,6 +162,9 @@ class ot_loworderfee
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys()
     {
         return [
@@ -168,6 +180,9 @@ class ot_loworderfee
         ];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install()
     {
         global $db;
@@ -190,12 +205,18 @@ class ot_loworderfee
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('No Low Order Fee on Gift Vouchers', 'MODULE_ORDER_TOTAL_LOWORDERFEE_GV', 'false', 'Do not charge Low Order Fee when cart is Gift Vouchers Only', '6', '9', 'zen_cfg_select_option([\'true\', \'false\'], ', now())");
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function remove()
     {
         global $db;
         $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function isEnabled(): bool
     {
         if (!defined('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS') || !defined('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE')) {
@@ -206,4 +227,5 @@ class ot_loworderfee
         }
         return true;
     }
-  }
+}
+
