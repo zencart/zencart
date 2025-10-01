@@ -13,12 +13,23 @@ namespace Zencart\Traits;
  */
 trait Singleton
 {
-    private static $instances = array();
-    protected function __construct() {}
+    private static array $instances = [];
+
+    protected function __construct() { }
+
     /**
      * @since ZC v1.5.7
      */
-    protected function __clone() {}
+    protected function __clone() { }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function __unserialize(array $data): void
+    {
+        throw new \BadMethodCallException("Cannot unserialize singleton");
+    }
+
     /**
      * @since ZC v1.5.7
      */
