@@ -47,8 +47,16 @@ $session_started = true;
 if (!isset($_SESSION ['securityToken'])) {
     $_SESSION ['securityToken'] = \bin2hex(\random_bytes(16));
 }
-if ((isset($_GET ['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+if ((isset($_GET['action']) || isset($_POST['action']) || isset($_GET['act'], $_GET['method'])) && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION ['securityToken'], $_POST ['securityToken']) || $_SESSION ['securityToken'] !== $_POST ['securityToken']) {
+            if (function_exists('ajaxAbort')) {
+                // -----
+                // "Tell" the zcJS.ajax function (in jscript_framework.php) that a
+                // session-mismatch has been found.  That function will then perform a
+                // redirect to the denied page.
+                //
+                ajaxAbort(418);
+            }
         zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
     }
 }

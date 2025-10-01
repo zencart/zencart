@@ -45,10 +45,18 @@ if (zen_is_hmac_login()) {
 
 // POST calls require a valid securityToken to prevent CSRF attacks.
 
-if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+if ((isset($_GET['action']) || isset($_POST['action']) || isset($_GET['act'], $_GET['method'])) && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $mainPage = $_GET['main_page'] ?? FILENAME_DEFAULT;
     if (!in_array($mainPage, $csrfBlackList)) {
-        if ((!isset($_SESSION ['securityToken']) || !isset($_POST ['securityToken'])) || ($_SESSION ['securityToken'] !== $_POST ['securityToken'])) {
+        if (!isset($_SESSION['securityToken'], $_POST['securityToken']) || $_SESSION['securityToken'] !== $_POST['securityToken']) {
+            if (function_exists('ajaxAbort')) {
+                // -----
+                // "Tell" the zcJS.ajax function (in jscript_framework.php) that a
+                // session-timeout's been found.  That function will then perform a
+                // redirect to the time_out page.
+                //
+                ajaxAbort(418);
+            }
             zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', $request_type));
         }
     }
