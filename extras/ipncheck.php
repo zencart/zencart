@@ -221,7 +221,6 @@ function doPayPalIPNCurlPostback($web, $vars, $verboseMode = false, $headerMode 
         $commErrNo = curl_errno($ch);
     }
     //$commInfo = @curl_getinfo($ch);
-    curl_close($ch);
     //die("\n\n".'data:'.$response);
 
     if ($verboseMode) {

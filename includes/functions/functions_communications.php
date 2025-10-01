@@ -89,8 +89,6 @@ use http\Exception\BadQueryStringException;
       $info = curl_getinfo($ch);
       $httpCode = curl_getinfo($ch, $proxy ? CURLINFO_HTTP_CONNECTCODE : CURLINFO_RESPONSE_CODE);
 
-      curl_close($ch);
-
       if (!empty($error)) {
           // only give messageStack responses on admin-side
           if (IS_ADMIN_FLAG === true) {

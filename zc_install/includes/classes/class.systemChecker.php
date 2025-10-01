@@ -539,7 +539,6 @@ class systemChecker
         $err = curl_errno($ch);
         $errmsg = curl_error($ch);
         $header = curl_getinfo($ch);
-        curl_close($ch);
 
         if ($header === false) {
             $header = [];
@@ -660,7 +659,6 @@ class systemChecker
         $commInfo = @curl_getinfo($ch);
 // error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" . print_r($commInfo, TRUE));
 // error_log('CURL Response: ' . $result);
-        curl_close($ch);
 
         return $errnum === 0 && trim($result) === 'PASS';
     }

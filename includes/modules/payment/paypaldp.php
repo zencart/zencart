@@ -2548,9 +2548,6 @@ class paypaldp extends base {
       $succeeded  = curl_errno($ch) == 0 ? true : false;
       $error = curl_errno($ch) . '-' . curl_error($ch);
 
-      // close cURL resource, and free up system resources
-      curl_close($ch);
-
       // If Communication was not successful set error result
       if (!$succeeded) {
         $this->zcLog('Cardinal Send 1', '[' . zen_session_id() . '] Cardinal Centinel - ' . CENTINEL_ERROR_CODE_8030_DESC);
