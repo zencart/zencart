@@ -74,6 +74,8 @@ INSERT IGNORE INTO configuration (configuration_title, configuration_key, config
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Account Activation Token Length', 'CUSTOMERS_ACTIVATION_TOKEN_LENGTH', '24', 'Number of characters in a generated account-activation token. Default is 24. Allowed: 12-100, but it affects the URL length, so 10-30 is most ideal', 5, 61, NULL, now(), '{\"error\":\"TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_LENGTH\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":12, \"max_range\":100}}}');
 INSERT IGNORE INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added, val_function) VALUES ('Account Activation Token Valid For', 'CUSTOMERS_ACTIVATION_TOKEN_MINUTES_VALID', '60', 'How many minutes an account-activation token is valid for. Default: 60 minutes (1 hour). Allowed: 1-1440. Best is 60-120 minutes.', 5, 62, NULL, now(), '{\"error\":\"TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_VALID_MINUTES\",\"id\":\"FILTER_VALIDATE_INT\",\"options\":{\"options\":{\"min_range\":1, \"max_range\":1440}}}');
 
+DELETE FROM configuration WHERE configuration_key = 'SESSION_CHECK_SSL_SESSION_ID';
+
 DELETE FROM admin_pages WHERE page_key = 'pageRegistration';
 
 #PROGRESS_FEEDBACK:!TEXT=Creating new table tax_rates_description...
