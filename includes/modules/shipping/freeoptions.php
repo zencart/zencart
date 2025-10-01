@@ -26,6 +26,8 @@ class freeoptions extends ZenShipping
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
             $this->enabled = ((MODULE_SHIPPING_FREEOPTIONS_STATUS == 'True') ? true : false);
+        } else {
+            $this->enabled = false;
         }
 
         $this->update_status();
@@ -37,31 +39,11 @@ class freeoptions extends ZenShipping
      */
     public function update_status()
     {
-        global $order, $db;
         if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if ((int)MODULE_SHIPPING_FREEOPTIONS_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute(
-                "SELECT zone_id
-                   FROM " . TABLE_ZONES_TO_GEO_ZONES . "
-                  WHERE geo_zone_id = " . (int)MODULE_SHIPPING_FREEOPTIONS_ZONE . "
-                    AND zone_country_id = " . $order->delivery['country']['id'] . "
-                  ORDER BY zone_id"
-            );
-            foreach ($check as $next_zone) {
-                if ($next_zone['zone_id'] < 1 || $next_zone['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-            }
-
-            if ($check_flag === false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_FREEOPTIONS_ZONE);
 
         // -----
         // If still enabled, check to see if any "Free Options" should be presented to the customer.

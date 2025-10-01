@@ -42,7 +42,7 @@ class storepickup extends ZenShipping
         $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
         $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
         $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
-        $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS == 'True');
+        $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS === 'True');
         $this->update_status();
     }
 
@@ -52,35 +52,11 @@ class storepickup extends ZenShipping
      */
     function update_status()
     {
-        global $order, $db;
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if (isset($order->delivery) && (int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
-                             where geo_zone_id = '" . MODULE_SHIPPING_STOREPICKUP_ZONE . "'
-                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
-                             order by zone_id");
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1) {
-                    $check_flag = true;
-                    break;
-                } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
-            }
-
-            if ($check_flag == false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_STOREPICKUP_ZONE);
 
         // other status checks?
         if ($this->enabled) {

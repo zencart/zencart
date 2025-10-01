@@ -15,7 +15,7 @@ class freeshipper extends ZenShipping
         $this->code = 'freeshipper';
         $this->title = MODULE_SHIPPING_FREESHIPPER_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_FREESHIPPER_TEXT_DESCRIPTION;
-        $this->sort_order = defined('MODULE_SHIPPING_FREESHIPPER_SORT_ORDER') ? MODULE_SHIPPING_FREESHIPPER_SORT_ORDER : null;
+        $this->sort_order = defined('MODULE_SHIPPING_FREESHIPPER_SORT_ORDER') ? (int)MODULE_SHIPPING_FREESHIPPER_SORT_ORDER : null;
         if (null === $this->sort_order) {
             return false;
         }
@@ -24,9 +24,10 @@ class freeshipper extends ZenShipping
         $this->tax_class = MODULE_SHIPPING_FREESHIPPER_TAX_CLASS;
 
         // enable only when entire cart is free shipping
-//      if ($_SESSION['cart']->in_cart_check('product_is_always_free_shipping','1') == $_SESSION['cart']->count_contents()) {
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = ((MODULE_SHIPPING_FREESHIPPER_STATUS == 'True') ? true : false);
+            $this->enabled = (MODULE_SHIPPING_FREESHIPPER_STATUS === 'True');
+        } else {
+            $this->enabled = false;
         }
 
         $this->update_status();
@@ -38,32 +39,11 @@ class freeshipper extends ZenShipping
      */
     function update_status()
     {
-        global $order, $db;
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if ((int)MODULE_SHIPPING_FREESHIPPER_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FREESHIPPER_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1) {
-                    $check_flag = true;
-                    break;
-                } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
-            }
-
-            if ($check_flag == false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_FREESHIPPER_ZONE);
 
         if ($this->enabled) {
             // -----

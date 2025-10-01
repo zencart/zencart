@@ -15,42 +15,42 @@ abstract class ZenShipping extends base
      *
      * @var string
      */
-    public $code;
+    public string $code;
     /**
      * $description is a soft name for this shipping method
      * @var string
      */
-    public $description;
+    public string $description;
     /**
      * $enabled determines whether this module shows or not... during checkout.
      * @var boolean
      */
-    public $enabled;
+    public bool $enabled;
     /**
      * $debug is an array containing debug information
      * @var array
      */
-    public $debug = [];
+    public array $debug = [];
     /**
      * $icon is the file name containing the Shipping method icon
      * @var string
      */
-    public $icon;
+    public string $icon;
     /**
      * $quotes is an array containing all the quote information for this shipping module
      * @var array
      */
-    public $quotes;
+    public array $quotes;
     /**
      * $sort_order is the order priority of this shipping module when displayed
-     * @var int
+     * @var int|null
      */
     public $sort_order;
     /**
      * $tax_basis is used to indicate if tax is based on shipping, billing or store address.
      * @var string
      */
-    public $tax_basis;
+    public string $tax_basis;
     /**
      * $tax_class is the  Tax class to be applied to the shipping cost
      * @var string
@@ -61,7 +61,7 @@ abstract class ZenShipping extends base
      * @var string
      * @since ZC v2.1.0
      */
-    public $title;
+    public string $title;
 
     abstract public function quote($method = ''): array;
 
@@ -89,4 +89,35 @@ abstract class ZenShipping extends base
         );
     }
 
+    /**
+     * Disable the module if a shipping-zone has been defined and the
+     * order isn't to be delivered to that zone.
+     */
+    protected function checkEnabledForZone(string $zone_id): void
+    {
+        global $db, $order;
+        if ((int)$zone_id > 0) {
+            $check_flag = false;
+            $check = $db->Execute(
+                "SELECT zone_id
+                   FROM " . TABLE_ZONES_TO_GEO_ZONES . "
+                  WHERE geo_zone_id = " . (int)$zone_id . "
+                    AND zone_country_id = " . (int)($order->delivery['country']['id'] ?? -1) . "
+                  ORDER BY zone_id"
+            );
+            foreach ($check as $next_zone) {
+                if ($next_zone['zone_id'] < 1) {
+                    $check_flag = true;
+                    break;
+                } elseif ($next_zone['zone_id'] == $order->delivery['zone_id']) {
+                    $check_flag = true;
+                    break;
+                }
+            }
+
+            if ($check_flag === false) {
+                $this->enabled = false;
+            }
+        }
+    }
 }
