@@ -130,20 +130,6 @@ if (!isset($_SESSION['customers_host_address'])) {
 }
 
 /**
- * verify the ssl_session_id if the feature is enabled
- */
-if ($request_type === 'SSL' && SESSION_CHECK_SSL_SESSION_ID === 'True' && ENABLE_SSL === 'true' && $session_started === true && !empty($_SERVER['SSL_SESSION_ID'])) {
-    $ssl_session_id = $_SERVER['SSL_SESSION_ID'];
-    if (empty($_SESSION['SSL_SESSION_ID'])) {
-        $_SESSION['SSL_SESSION_ID'] = $ssl_session_id;
-    }
-    if ($_SESSION['SSL_SESSION_ID'] !== $ssl_session_id) {
-        zen_session_destroy();
-        zen_redirect(zen_href_link(FILENAME_SSL_CHECK));
-    }
-}
-
-/**
  * verify the browser user agent if the feature is enabled
  */
 if (SESSION_CHECK_USER_AGENT === 'True') {
