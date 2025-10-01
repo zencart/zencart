@@ -18,9 +18,9 @@ $zco_notifier->notify('NOTIFY_MODULE_START_META_TAGS', $current_page_base, $meta
 
 // Add tertiary section to site tagline
 if (mb_strlen(SITE_TAGLINE) > 1) {
-    define('TAGLINE', TERTIARY_SECTION . SITE_TAGLINE);
+    zen_define_default('TAGLINE', TERTIARY_SECTION . SITE_TAGLINE);
 } else {
-    define('TAGLINE', '');
+    zen_define_default('TAGLINE', '');
 }
 
 $review_on = '';
@@ -41,7 +41,7 @@ foreach ($keywords_metatags as $next_keyword) {
 }
 $zco_notifier->notify('NOTIFY_MODULE_META_TAGS_BUILDKEYWORDS', CUSTOM_KEYWORDS, $keywords_string_metatags);
 
-define('KEYWORDS', str_replace('"', '', zen_clean_html($keywords_string_metatags) . CUSTOM_KEYWORDS));
+zen_define_default('KEYWORDS', str_replace('"', '', zen_clean_html($keywords_string_metatags) . CUSTOM_KEYWORDS));
 
 // if per-page metatags overrides have been defined, use those, otherwise use usual defaults:
 if ($metatag_page_name !== 'index') {
