@@ -458,7 +458,7 @@
             $mail->addCustomHeader('Auto-Submitted: auto-generated');
 
             $oldVars = [];
-            $tmpVars = ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', $mail->Mailer === 'smtp' ? null : 'SERVER_NAME'];
+            $tmpVars = ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', $mail->Mailer === 'smtp' ? 'a-placeholder-key-that-wont-exist' : 'SERVER_NAME'];
             foreach ($tmpVars as $key) {
                 if (isset($_SERVER[$key])) {
                     $oldVars[$key] = $_SERVER[$key];
