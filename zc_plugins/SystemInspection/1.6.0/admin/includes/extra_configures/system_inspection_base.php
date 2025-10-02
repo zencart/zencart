@@ -318,7 +318,9 @@ define('OBSOLETE_PAYMENTS', [
 ]);
 
 define('OBSOLETE_SHIPPING', [
+    'fedex.php',
     'ups.php',
+    'upsxml.php',
     'usps.php',
 ]);
 
@@ -330,8 +332,13 @@ define('REPLACEMENTS', [
     'linkpoint_api.php' => 'Stripe, Square Web Payments, PayPal RESTful',
     'firstdata_hco.php' => 'Stripe, Square Web Payments, PayPal RESTful',
     'payeezyjszc.php' => 'Stripe, Square Web Payments, PayPal RESTful',
-    'ups.php' => 'UPS RESTful',
-    'usps.php' => 'USPS RESTful',
+    'paypal.php' => 'PayPal RESTful',
+    'paypalwpp.php' => 'PayPal RESTful',
+    'paypaldp.php' => 'PayPal RESTful',
+    'ups.php' => 'UPS Shipping (RESTful w/ OAuth authentication)',
+    'upsxml.php' => 'UPS Shipping (RESTful w/ OAuth authentication)',
+    'usps.php' => 'USPS Shipping RESTful',
+    'fedex.php' => 'FedEx Shipping REST',
 ]);
 
 
