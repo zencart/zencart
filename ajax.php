@@ -9,10 +9,40 @@
  */
 
 // Abort if the request was not an AJAX call
-if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'], $_SERVER['REMOTE_ADDR']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
+if (!isset($_SERVER['HTTP_X_REQUESTED_WITH'], $_SERVER['REMOTE_ADDR']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
     http_response_code(400); // "Bad Request"
     exit();
 }
+
+// -----
+// Since this request can also be initiated from the admin-side's ajax.php,
+// ensure that we're bringing in the correct 'base' processing for the
+// rest of the initialization.
+//
+if (empty($zc_ajax_base_dir)) {
+    $zc_ajax_base_dir = '';
+}
+
+// If request type is OPTIONS, send the CORS preflight headers and exit
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    if (isset($_SERVER['HTTP_ORIGIN'])) {
+        if (file_exists($zc_ajax_base_dir . 'includes/local/configure.php')) {
+            include $zc_ajax_base_dir . 'includes/local/configure.php';
+        } else {
+            require $zc_ajax_base_dir . 'includes/configure.php';
+        }
+        if (defined('HTTP_SERVER')) {
+            header('Access-Control-Allow-Origin: ' . HTTP_SERVER);
+            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+            header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+            header('Access-Control-Max-Age: 300');
+        }
+    }
+    http_response_code(204); // "No Content"
+    exit();
+}
+
+require $zc_ajax_base_dir . 'includes/application_top.php';
 
 // -----
 // Ensure that the two required $_GET variables are (a) set and (b) reflect a valid PHP
@@ -26,25 +56,10 @@ if (!isset($_GET['act'], $_GET['method']) || $_GET['act'] === '_' || !preg_match
     ajaxAbort(403);
 }
 
-// -----
-// Since this request can also be initiated from the admin-side's ajax.php, need
-// to ensure that we're bringing in the correct 'base' processing for the
-// rest of the initialization.
-//
-if (empty($zc_ajax_base_dir)) {
-    $zc_ajax_base_dir = '';
-}
-require $zc_ajax_base_dir . 'includes/application_top.php';
-
 // deny ajax requests from spiders
 if (isset($spider_flag) && $spider_flag === true) {
     ajaxAbort(inDeveloperMode() ? 410 : 400);
 }
-
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET');
-header("Access-Control-Allow-Headers: X-Requested-With");
-
 
 // --- begin support functions ------------------
 function ajaxAbort($status = 400, $msg = null)
