@@ -92,6 +92,7 @@ abstract class ZenShipping extends base
     /**
      * Disable the module if a shipping-zone has been defined and the
      * order isn't to be delivered to that zone.
+     * @since ZC v2.2.0
      */
     protected function checkEnabledForZone(string $zone_id): void
     {

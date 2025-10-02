@@ -377,6 +377,9 @@ class Customer extends base
         $db->Execute($sql);
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public static function setWelcomeEmailSent(int $customers_id): void
     {
         global $db;
@@ -391,6 +394,7 @@ class Customer extends base
 
     /**
      * Clears any existing account-authorization tokens for the current customer.
+     * @since ZC v2.2.0
      */
     protected static function clearAuthTokens(int $customers_id): void
     {
@@ -403,6 +407,9 @@ class Customer extends base
         $db->Execute($sql);
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public static function getAuthTokenMinutesValid(): int
     {
         $token_valid_minutes = (int)CUSTOMERS_ACTIVATION_TOKEN_MINUTES_VALID;
@@ -412,6 +419,9 @@ class Customer extends base
         return $token_valid_minutes;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function refreshCustomerAuthorization(): false|array
     {
         if (empty($this->customer_id)) {
@@ -436,6 +446,9 @@ class Customer extends base
         return $this->data;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function getAuthTokenInfo(): array|false
     {
         if (empty($this->data) || $this->data['activation_required'] === 0) {
@@ -455,6 +468,9 @@ class Customer extends base
         return ($result->EOF) ? false : $result->fields;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public static function getAuthTokenValid(string $reset_token): array|false
     {
         global $db;
@@ -478,6 +494,9 @@ class Customer extends base
         return $result->fields;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function createAuthToken(): string|false
     {
         if (empty($this->data) || CUSTOMERS_ACTIVATION_REQUIRED === 'false') {
@@ -613,6 +632,9 @@ class Customer extends base
         return true;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     protected function loadBaseCustomerInfo(int $customer_id): bool
     {
         global $db;
@@ -649,6 +671,9 @@ class Customer extends base
         return true;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     protected function convertDataToInts(): void
     {
         // treat these as integers even though they (may have) come from the db as strings
@@ -861,6 +886,9 @@ class Customer extends base
         return ($customer->EOF) ? [] : $customer->fields;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function resetCustomerCart(): void
     {
         global $db;
@@ -1341,6 +1369,9 @@ class Customer extends base
         return $this->data;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function update(array $sql_data_array): array
     {
         global $db;
@@ -1359,11 +1390,17 @@ class Customer extends base
         return $this->data;
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function updatePrimaryAddress(array $sql_data_array): void
     {
         $this->updateAddress($sql_data_array, (int)$this->data['customers_default_address_id']);
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
     public function updateAddress(array $sql_data_array, int $address_book_id): void
     {
         global $db;
