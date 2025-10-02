@@ -310,11 +310,10 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
                     let payload = { start_at: start_at, batch_size: batch_size };
 
                     let response = await zcJS.ajax({
-                        url: '<?= HTTP_SERVER . DIR_WS_ADMIN ?>/ajax.php?act=ajaxScanAdditionalImages&method=doBatch',
+                        url: 'ajax.php?act=ajaxScanAdditionalImages&method=doBatch',
                         data: payload,
                         timeout: 200000,
                         cache: false,
-                        headers: { "cache-control": "no-cache" },
                     });
 
                     if (!response || typeof response !== 'object') {
