@@ -85,6 +85,6 @@ if (!method_exists($class, $_GET['method'])) {
 }
 
 // Accepted request, so execute and return appropriate response:
-$result = call_user_func([$class, $_GET['method']]);
+$result = $class->{$_GET['method']}();
 echo json_encode($result);
 require $zc_ajax_base_dir . 'includes/application_bottom.php';
