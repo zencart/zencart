@@ -7,7 +7,7 @@
 ?>
 <script title="zcJS.ajax">
 if (typeof zcJS == "undefined" || !zcJS) {
-    window.zcJS = { name: 'zcJS', version: '0.1.0.1' };
+    window.zcJS = { name: 'zcJS', version: '0.1.1.1' };
 }
 
 zcJS.ajax = function (options) {
