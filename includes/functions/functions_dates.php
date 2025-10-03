@@ -272,7 +272,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
         return false;
     }
 
-    if (!settype($year, 'integer') || !settype($month, 'integer') || !settype($day, 'integer')) {
+    if (!settype($year, 'int') || !settype($month, 'int') || !settype($day, 'int')) {
         return false;
     }
 

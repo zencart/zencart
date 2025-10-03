@@ -32,7 +32,7 @@ function zen_validate_configuration_entry($variable, $check_string, $config_name
             case (strpos($data['error'], 'TEXT_MIN_ADMIN') === 0):
                 $error_msg = TEXT_MIN_GENERAL_ADMIN;
                 break;
-            case (strpos($data['error'], 'TEXT_MAX_ADMIN') === 0);
+            case (strpos($data['error'], 'TEXT_MAX_ADMIN') === 0):
                 $error_msg = TEXT_MAX_GENERAL_ADMIN;
                 break;
             default:
