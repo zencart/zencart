@@ -189,6 +189,7 @@ define('BUILT_IN_TABLES', [
     'coupon_referrers',
     'currencies',
     'customers',
+    'customers_auth_tokens',
     'customers_basket',
     'customers_basket_attributes',
     'customers_info',
@@ -228,7 +229,6 @@ define('BUILT_IN_TABLES', [
     'paypal_payment_status',
     'paypal_payment_status_history',
     'paypal_session',
-    'paypal_webhooks',
     'plugin_control',
     'plugin_control_versions',
     'plugin_groups',
@@ -340,5 +340,3 @@ define('REPLACEMENTS', [
     'usps.php' => 'USPS Shipping RESTful',
     'fedex.php' => 'FedEx Shipping REST',
 ]);
-
-
