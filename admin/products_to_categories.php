@@ -47,7 +47,6 @@ if ($products_filter > 0) {
     }
 }
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $languages = zen_get_languages();

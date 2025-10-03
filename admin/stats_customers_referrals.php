@@ -7,7 +7,6 @@
  */
 require('includes/application_top.php');
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $_GET['start_date'] = (!isset($_GET['start_date']) ? date("m-d-Y", (time())) : $_GET['start_date']);

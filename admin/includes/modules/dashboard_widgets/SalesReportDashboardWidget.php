@@ -28,8 +28,7 @@ for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
     }
 }
 
-require_once(DIR_WS_CLASSES . 'currencies.php');
-$currencies = new currencies();
+$currencies ??= new currencies();
 ?>
   <div class="panel panel-default reportBox">
     <div class="panel-heading header"><?= TEXT_MONTHLY_SALES_TITLE ?><a href="<?= zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS) ?>"><?= TEXT_CLICK_FOR_COMPLETE_DETAILS ?></a></div>

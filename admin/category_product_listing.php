@@ -7,7 +7,6 @@
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (isset($_POST['products_id'])) {

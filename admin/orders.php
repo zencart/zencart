@@ -25,7 +25,6 @@ $includeAttributesInProductDetailRows = $includeAttributesInProductDetailRows ??
 $show_product_tax = $show_product_tax ?? true;
 $show_zone_info = $show_zone_info ?? true;
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 if (isset($_GET['download_reset_on'])) {

@@ -26,8 +26,7 @@ $sql = "SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.c
             ORDER BY orders_id DESC";
 $orders = $db->Execute($sql, (int)$maxRows, true, 1800);
 
-require_once(DIR_WS_CLASSES . 'currencies.php');
-$currencies = new currencies();
+$currencies ??= new currencies();
 
 ?>
 <div class="panel panel-default reportBox">

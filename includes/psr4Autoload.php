@@ -39,7 +39,6 @@ if (defined('DIR_FS_ADMIN')) {
 //
 } else {
     $psr4Autoloader->setClassFile('breadcrumb', DIR_FS_CATALOG . DIR_WS_CLASSES . 'breadcrumb.php');
-    $psr4Autoloader->setClassFile('currencies', DIR_FS_CATALOG . DIR_WS_CLASSES . 'currencies.php');
     $psr4Autoloader->setClassFile('messageStack', DIR_FS_CATALOG . DIR_WS_CLASSES . 'message_stack.php');
     $psr4Autoloader->setClassFile('navigationHistory', DIR_FS_CATALOG . DIR_WS_CLASSES . 'navigation_history.php');
     $psr4Autoloader->setClassFile('template_func', DIR_FS_CATALOG . DIR_WS_CLASSES . 'template_func.php');
@@ -53,6 +52,7 @@ if (defined('DIR_FS_ADMIN')) {
 $psr4Autoloader->setClassFile('category_tree', DIR_FS_CATALOG . DIR_WS_CLASSES . 'category_tree.php');
 $psr4Autoloader->setClassFile('Coupon', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Coupon.php');
 $psr4Autoloader->setClassFile('CouponValidation', DIR_FS_CATALOG . DIR_WS_CLASSES . 'CouponValidation.php');
+$psr4Autoloader->setClassFile('currencies', DIR_FS_CATALOG . DIR_WS_CLASSES . 'currencies.php');
 $psr4Autoloader->setClassFile('Customer', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Customer.php');
 $psr4Autoloader->setClassFile('language', DIR_FS_CATALOG . DIR_WS_CLASSES . 'language.php');
 $psr4Autoloader->setClassFile('MeasurementUnits', DIR_FS_CATALOG . DIR_WS_CLASSES . 'MeasurementUnits.php');

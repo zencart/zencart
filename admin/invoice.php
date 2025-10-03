@@ -15,8 +15,6 @@ $show_product_tax = $show_product_tax ?? true;
 
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 
-
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $oID = zen_db_prepare_input($_GET['oID']);

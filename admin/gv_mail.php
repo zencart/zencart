@@ -7,7 +7,6 @@
  */
 require 'includes/application_top.php';
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (!empty($_GET['action']) && $_GET['action'] == 'set_editor') {

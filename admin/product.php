@@ -9,7 +9,6 @@ require 'includes/application_top.php';
 
 $action = $_GET['action'] ?? '';
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 $product_type = (int)($_POST['product_type'] ?? $_GET['products_type'] ?? 1);

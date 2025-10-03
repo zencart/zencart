@@ -10,7 +10,6 @@ define('AUTOCHECK', 'False');
 
 require 'includes/application_top.php';
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 $specials_condition_array = [

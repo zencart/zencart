@@ -9,7 +9,6 @@ require 'includes/application_top.php';
 
 //if (!defined('SALES_REPORT_GRAPHS_FILTER_DEFAULT')) define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
 
-require(DIR_WS_CLASSES . 'currencies.php');
 require DIR_WS_CLASSES . 'stats_sales_report_graph.php';
 $currencies = new currencies();
 

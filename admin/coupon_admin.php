@@ -7,7 +7,6 @@
  * @version $Id: Scott Wilson 2024 Jul 24 Modified in v2.1.0-alpha1 $
  */
 require 'includes/application_top.php';
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 $languages = zen_get_languages();
 if (!isset($_GET['action'])) {
