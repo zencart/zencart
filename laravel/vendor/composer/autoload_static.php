@@ -213,10 +213,10 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/collections',
-            1 => __DIR__ . '/..' . '/illuminate/conditionable',
-            2 => __DIR__ . '/..' . '/illuminate/macroable',
-            3 => __DIR__ . '/..' . '/illuminate/support',
+            0 => __DIR__ . '/..' . '/illuminate/support',
+            1 => __DIR__ . '/..' . '/illuminate/collections',
+            2 => __DIR__ . '/..' . '/illuminate/conditionable',
+            3 => __DIR__ . '/..' . '/illuminate/macroable',
         ),
         'Illuminate\\Session\\' => 
         array (
@@ -323,6 +323,7 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'App\\Models\\ProjectVersion' => __DIR__ . '/../..' . '/app/Models/ProjectVersion.php',
         'App\\Models\\TaxClass' => __DIR__ . '/../..' . '/app/Models/TaxClass.php',
         'App\\Models\\TaxRate' => __DIR__ . '/../..' . '/app/Models/TaxRate.php',
+        'App\\Models\\TaxRatesDescription' => __DIR__ . '/../..' . '/app/Models/TaxRatesDescription.php',
         'App\\Models\\Zone' => __DIR__ . '/../..' . '/app/Models/Zone.php',
         'App\\Models\\ZonesToGeoZone' => __DIR__ . '/../..' . '/app/Models/ZonesToGeoZone.php',
         'App\\Services\\MigrationsRunner' => __DIR__ . '/../..' . '/app/Services/MigrationsRunner.php',
@@ -1784,6 +1785,7 @@ class ComposerStaticInitf04a661e6efe116d07a3be75375dae33
         'Symfony\\Component\\VarDumper\\Cloner\\Cursor' => __DIR__ . '/..' . '/symfony/var-dumper/Cloner/Cursor.php',
         'Symfony\\Component\\VarDumper\\Cloner\\Data' => __DIR__ . '/..' . '/symfony/var-dumper/Cloner/Data.php',
         'Symfony\\Component\\VarDumper\\Cloner\\DumperInterface' => __DIR__ . '/..' . '/symfony/var-dumper/Cloner/DumperInterface.php',
+        'Symfony\\Component\\VarDumper\\Cloner\\Internal\\NoDefault' => __DIR__ . '/..' . '/symfony/var-dumper/Cloner/Internal/NoDefault.php',
         'Symfony\\Component\\VarDumper\\Cloner\\Stub' => __DIR__ . '/..' . '/symfony/var-dumper/Cloner/Stub.php',
         'Symfony\\Component\\VarDumper\\Cloner\\VarCloner' => __DIR__ . '/..' . '/symfony/var-dumper/Cloner/VarCloner.php',
         'Symfony\\Component\\VarDumper\\Command\\Descriptor\\CliDescriptor' => __DIR__ . '/..' . '/symfony/var-dumper/Command/Descriptor/CliDescriptor.php',
