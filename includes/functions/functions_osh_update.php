@@ -146,7 +146,13 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id;
                 $html_msg['EMAIL_TEXT_INVOICE_URL']  = '<a href="' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, "order_id=$orders_id", 'SSL') .'">' . str_replace(':', '', OSH_EMAIL_TEXT_INVOICE_URL) . '</a>';
                 $html_msg['EMAIL_TEXT_DATE_ORDERED'] = OSH_EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($osh_info->fields['date_purchased']);
-                $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($email_message);
+
+                // -----
+                // If the email-message has no 'basic' HTML tags, convert any new-lines
+                // in the message into HTML5 <br> tags; otherwise, leave the message as-is.
+                //
+                $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $email_message) ? nl2br($email_message, false) : $email_message);
+
                 $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace("\n", '', $status_text);
                 $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace("\n", '', $status_value_text);
                 $html_msg['EMAIL_TEXT_NEW_STATUS'] = $new_orders_status_name;
