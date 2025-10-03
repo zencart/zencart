@@ -8,10 +8,7 @@
  * @var notifier $zco_notifier
  */
 
-if (empty($currencies)) {
-    require_once DIR_WS_CLASSES . 'currencies.php';
-    $currencies = new currencies();
-}
+$currencies ??= new currencies();
 
 $widgets = [];
 $widgets[] = ['column' => 1, 'sort' => 10, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/BaseStatisticsDashboardWidget.php'];

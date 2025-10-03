@@ -9,7 +9,6 @@ require 'includes/application_top.php';
 $languages = zen_get_languages();
 
 //required for display of products price in Global Tools selection
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 // check for damaged database, caused by users indiscriminately deleting table data

@@ -16,7 +16,6 @@ if ($chk_option_values->RecordCount() < 1) {
   zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
 }
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 if (!isset($_GET['action'])) {

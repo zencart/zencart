@@ -14,7 +14,6 @@ if ($chk_products->RecordCount() < 1) {
   zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
 }
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 $products_filter = (isset($_GET['products_filter']) ? (int)$_GET['products_filter'] : 0);

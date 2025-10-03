@@ -7,8 +7,6 @@
  * structurally identical to specials.php, modifications should be replicated
  */
 require 'includes/application_top.php';
-
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 $action = $_GET['action'] ?? '';

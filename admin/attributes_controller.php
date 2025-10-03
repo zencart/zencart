@@ -56,7 +56,6 @@ for ($i = 0, $n = count($languages); $i < $n; $i++) {
   }
 }
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $action = $_GET['action'] ?? '';

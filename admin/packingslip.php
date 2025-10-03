@@ -16,7 +16,6 @@ $attr_img_width = $attr_img_width ?? '25';
 
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $oID = (int)$_GET['oID'];

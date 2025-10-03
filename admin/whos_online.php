@@ -10,7 +10,6 @@ $defaultRefreshInterval = 0;
 
 require 'includes/application_top.php';
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (!isset($_SESSION['wo_exclude_admins'])) {

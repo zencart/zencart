@@ -7,8 +7,7 @@
  */
 
   require 'includes/application_top.php';
-  require DIR_FS_CATALOG . 'includes/extra_configures/log_files.php'; 
-  require DIR_WS_CLASSES . 'currencies.php';
+  require DIR_FS_CATALOG . 'includes/extra_configures/log_files.php';
   $currencies = new currencies();
 
   $languages = zen_get_languages();
