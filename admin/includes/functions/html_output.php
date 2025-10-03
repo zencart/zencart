@@ -56,8 +56,8 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
     $link = preg_replace('/(&amp;|&){2,}|&amp;/', '&', $link);
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( ($add_session_id == true) && ($session_started == true) ) {
-        if (defined('SID') && constant('SID') != '') {
+    if ($add_session_id && $session_started) {
+        if (PHP_VERSION_ID < 80401 && defined('SID') && !empty(constant('SID'))) {
             $link .= $separator . zen_output_string(constant('SID'));
         }
     }
@@ -605,12 +605,15 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
  * Hide form elements
  * @since ZC v1.0.3
  */
-function zen_hide_session_id() {
+function zen_hide_session_id(): string
+{
     global $session_started;
 
-    if ( ($session_started == true) && defined('SID') && !empty(SID) ) {
+    if (PHP_VERSION_ID < 80401 && $session_started && defined('SID') && !empty(constant('SID')) ) {
       return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
+
+    return '';
 }
 
 /**

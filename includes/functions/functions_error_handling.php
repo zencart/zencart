@@ -34,10 +34,6 @@ function zen_debug_error_handler($errno, $errstr, $errfile, $errline)
             $this_log_suffix = '.log';
             break;
         case E_DEPRECATED:
-            //@TODO: Remove this after we remove the use of the SID constant from html_output etc
-            if (str_contains($errstr, 'Constant SID is deprecated')) {
-                return true;
-            }
         case E_USER_DEPRECATED:
             $error_type = 'Deprecated';
             $this_log_suffix = '-deprecated.log';
