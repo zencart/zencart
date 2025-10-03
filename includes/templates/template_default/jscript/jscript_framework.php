@@ -7,11 +7,11 @@
 ?>
 <script title="zcJS.ajax">
 if (typeof zcJS == "undefined" || !zcJS) {
-    window.zcJS = { name: 'zcJS', version: '0.1.1.1' };
+    window.zcJS = {name: 'zcJS', version: '0.1.2.2'};
 }
 
 zcJS.ajax = function (options) {
-    options.url = options.url.replace("&amp;", unescape("&amp;"));
+    options.url = options.url.replace("&amp;", "&");
 <?php
     // -----
     // The 'options.data' supplied by the caller can be:
@@ -58,16 +58,16 @@ zcJS.ajax = function (options) {
             options.data = obj;
         }
     }
-    var deferred = jQuery.Deferred(function (d) {
-        var defaults = {
-            cache: false,
-            type: 'POST',
-            traditional: true,
-            dataType: 'json',
-            timeout: 5000,
-            data: jQuery.extend(true, {}, options.data, {securityToken: '<?= $_SESSION['securityToken'] ?>'}),
-        },
-        settings = jQuery.extend(true, {}, defaults, options);
+    const deferred = jQuery.Deferred(function(d) {
+        const defaults = {
+                cache: false,
+                type: 'POST',
+                traditional: true,
+                dataType: 'json',
+                timeout: 5000,
+                data: jQuery.extend(true, {}, options.data, {securityToken: '<?= $_SESSION['securityToken'] ?>'}),
+            },
+            settings = jQuery.extend(true, {}, defaults, options);
         if (typeof(console.log) == 'function') {
             console.log(JSON.stringify(settings));
         }
@@ -75,7 +75,7 @@ zcJS.ajax = function (options) {
         d.done(settings.success);
         d.fail(settings.error);
         d.done(settings.complete);
-        var jqXHRSettings = jQuery.extend(true, {}, settings, {
+        const jqXHRSettings = jQuery.extend(true, {}, settings, {
             success: function (response, textStatus, jqXHR) {
                 d.resolve(response, textStatus, jqXHR);
             },
@@ -91,13 +91,13 @@ zcJS.ajax = function (options) {
         });
         jQuery.ajax(jqXHRSettings);
     }).fail(function(jqXHR, textStatus, errorThrown) {
-        var response = jqXHR.getResponseHeader('status');
-        var responseHtml = jqXHR.responseText;
-        var contentType = jqXHR.getResponseHeader('content-type');
+        const response = jqXHR.getResponseHeader('status');
+        const responseHtml = jqXHR.responseText;
+        const contentType = jqXHR.getResponseHeader('content-type');
         switch (response) {
             case '403 Forbidden':
-                var jsonResponse = JSON.parse(jqXHR.responseText);
-                var errorType = jsonResponse.errorType;
+                const jsonResponse = JSON.parse(jqXHR.responseText);
+                const errorType = jsonResponse?.errorType ?? 'UNKNOWN';
                 switch (errorType) {
                     case 'ADMIN_BLOCK_WARNING':
                         break;
@@ -106,7 +106,7 @@ zcJS.ajax = function (options) {
                     case 'SECURITY_TOKEN':
                         break;
                     default:
-                        alert('An Internal Error of type '+errorType+' was received while processing an ajax call. The action you requested could not be completed.');
+                        alert('An Internal Error of type ' + errorType + ' was received while processing an ajax call. The action you requested could not be completed.');
                         break;
                 }
                 break;
@@ -125,23 +125,23 @@ zcJS.ajax = function (options) {
         }
     });
 
-    var promise = deferred.promise();
-    return promise;
+    return deferred.promise();
 };
-zcJS.timer = function (options) {
-    var defaults = {
-        interval: 10000,
-        startEvent: null,
-        intervalEvent: null,
-        stopEvent: null
-    },
-    settings = jQuery.extend(true, {}, defaults, options);
 
-    var enabled = new Boolean(false);
-    var timerId = 0;
-    var mySelf;
+zcJS.timer = function (options) {
+    const defaults = {
+            interval: 10000,
+            startEvent: null,
+            intervalEvent: null,
+            stopEvent: null
+        },
+        settings = jQuery.extend(true, {}, defaults, options);
+
+    let enabled = false;
+    let timerId = 0;
+    let mySelf;
     this.Start = function() {
-        this.enabled = new Boolean(true);
+        this.enabled = true;
 
         mySelf = this;
         mySelf.settings = settings;
@@ -160,7 +160,7 @@ zcJS.timer = function (options) {
         }
     };
     this.Stop = function() {
-        mySelf.enabled = new Boolean(false);
+        mySelf.enabled = false;
         clearInterval(mySelf.timerId);
         if (mySelf.settings.stopEvent) {
             mySelf.settings.stopEvent(mySelf);
