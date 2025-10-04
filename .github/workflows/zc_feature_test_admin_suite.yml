@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ['8.0', '8.3']
+        php-version: ['8.0', '8.3', '8.5']
 
     services:
       mysql:
@@ -34,6 +34,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           ini-values: log_errors=On
+          tools: composer, phpunit
 
       - name: Install Apache2
         run: sudo apt-get update && sudo apt-get install apache2 -y
@@ -60,10 +61,15 @@ jobs:
         if: matrix.php-version == '8.0'
         run: |
           rm composer.lock
-          composer require symfony/polyfill-php81
 
       - name: Install Composer Dependencies
         run: composer install --no-progress --no-interaction
+
+      - name: Patch composer files for PHP 8.4 compatibility
+        if: matrix.php-version >= '8.4'
+        run: |
+            composer update
+            sh not_for_release/testFramework/copyVendorFiles.sh
 
       - name: Set Apache2 Environment Variables
         run: |
