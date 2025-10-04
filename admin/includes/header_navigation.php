@@ -38,7 +38,7 @@ $menuTitles = zen_get_menu_titles();
           }
           foreach ($upperMenuArray as $upperMenu) {
           ?>
-          <li class="upperMenuItems"><a href="<?= $upperMenu['a'] ?>"<?= ($upperMenu['params'] ?? ' class="headerLink"') ?>><?= $upperMenu['title'] ?></a></li>
+          <li class="upperMenuItems"><a href="<?= $upperMenu['a'] ?>" <?= ($upperMenu['params'] ?? 'class="headerLink"') ?>><?= $upperMenu['title'] ?></a></li>
           <?php
           }
           ?>
