@@ -2,6 +2,7 @@
 
 namespace Tests\FeatureStore\TaxCalculationsSEK\TestStoreTaxCalculationsNoShippingTax;
 
+use Symfony\Component\DomCrawler\Crawler;
 use Tests\Support\zcFeatureTestCaseStore;
 
 class BasicTaxStoreNoShippingSEKTest extends zcFeatureTestCaseStore
@@ -41,22 +42,25 @@ class BasicTaxStoreNoShippingSEKTest extends zcFeatureTestCaseStore
         ]);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Payment Information', (string)$response->getContent() );
-        $this->browser->submitForm('Continue', [
-        ]);
-        $this->assertStringContainsString('12,2483', (string)$response->getContent() );
-        $this->assertStringContainsString('0,4375', (string)$response->getContent() );
-        $this->assertStringContainsString('0,8574', (string)$response->getContent() );
-        $this->assertStringContainsString('SEK13,5431SEK', (string)$response->getContent() );
+
+        $crawler = new Crawler((string)$response->getContent());
+        $this->assertStringContainsString('12,2483', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString('0,4375', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString('0,8574', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString('SEK13,5431SEK', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->browser->submitForm('Continue', []);
         $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
-        $this->assertStringContainsString('12,2483', (string)$response->getContent() );
-        $this->assertStringContainsString('0,4375', (string)$response->getContent() );
-        $this->assertStringContainsString('0,8574', (string)$response->getContent() );
-        $this->assertStringContainsString('SEK13,5431SEK', (string)$response->getContent() );
+        $crawler = new Crawler((string)$response->getContent());
+        $this->assertStringContainsString('Order Confirmation', $crawler->filter('#checkoutConfirmDefaultHeading')->text());
+        $this->assertStringContainsString('12,2483', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString('0,4375', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString('0,8574', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString('SEK13,5431SEK', $crawler->filter('#orderTotals')->text());
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Your Order Number is:', (string)$response->getContent() );
+        $crawler = new Crawler((string)$response->getContent());
+        $this->assertStringContainsString('Your Order Number is:', $crawler->filter('#checkoutSuccessOrderNumber')->text());
     }
 
     /**
@@ -81,20 +85,22 @@ class BasicTaxStoreNoShippingSEKTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', [
         ]);
         $response = $this->browser->getResponse();
+        $crawler = new Crawler((string)$response->getContent());
         $this->assertStringContainsString('Payment Information', (string)$response->getContent() );
-        $this->browser->submitForm('Continue', [
-        ]);
-        $this->assertStringContainsString('12,2483', (string)$response->getContent() );
-        $this->assertStringContainsString('0,4375', (string)$response->getContent() );
-        $this->assertStringContainsString('SEK12,6858SEK', (string)$response->getContent() );
+        $this->assertStringContainsString('12,2483', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString('0,4375', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString('SEK12,6858SEK', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->browser->submitForm('Continue', []);
         $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Order Confirmation', (string)$response->getContent() );
-        $this->assertStringContainsString('12,2483', (string)$response->getContent() );
-        $this->assertStringContainsString('0,4375', (string)$response->getContent() );
-        $this->assertStringContainsString('SEK12,6858SEK', (string)$response->getContent() );
+        $crawler = new Crawler((string)$response->getContent());
+        $this->assertStringContainsString('Order Confirmation', $crawler->filter('#checkoutConfirmDefaultHeading')->text());
+        $this->assertStringContainsString('12,2483', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString('0,4375', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString('SEK12,6858SEK', $crawler->filter('#orderTotals')->text());
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Your Order Number is:', (string)$response->getContent() );
+        $crawler = new Crawler((string)$response->getContent());
+        $this->assertStringContainsString('Your Order Number is:', $crawler->filter('#checkoutSuccessOrderNumber')->text());
     }
 }
