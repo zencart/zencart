@@ -20,7 +20,7 @@ if (PRODUCT_LIST_ALPHA_SORTER === 'true') {
     echo $form;
 
     /* Redisplay all $_GET variables, except currency */
-    echo zen_post_all_get_params('currency');
+    echo zen_post_all_get_params(['currency']);
 
     require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA_SORTER));
 

@@ -17,7 +17,7 @@ if ($show_currencies === true && isset($currencies) && is_object($currencies)) {
         $currencies_array[] = ['id' => $key, 'text' => $value['title']];
     }
 
-    $hidden_get_variables = zen_post_all_get_params('currency');
+    $hidden_get_variables = zen_post_all_get_params(['currency']);
 
     require $template->get_template_dir('tpl_currencies.php', DIR_WS_TEMPLATE, $current_page_base, 'sideboxes') . '/tpl_currencies.php';
 
