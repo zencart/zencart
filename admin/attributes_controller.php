@@ -226,8 +226,6 @@ if (!empty($action)) {
           $price_prefix = (int)$_POST['price_prefix'];
           $price_prefix = ($price_prefix == 1 ? '+' : ($price_prefix == 2 ? '-' : ''));
 
-          $products_options_sort_order = (int)$_POST['products_options_sort_order'];
-
 // modified options sort order to use default if not otherwise set
           if (zen_not_null($_POST['products_options_sort_order'])) {
             $products_options_sort_order = (int)$_POST['products_options_sort_order'];
