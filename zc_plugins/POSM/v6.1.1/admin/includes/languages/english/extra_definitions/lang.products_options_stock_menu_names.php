@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Product Options Stock" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2014-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2014-2025 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 6.1.0
+// Last updated: POSM 6.1.1
 //
 $define = [
     'BOX_REPORTS_PRODUCTS_OPTIONS_STOCK' => 'Sales by Product Options',
@@ -63,9 +63,15 @@ $define = [
     'ERROR_INVALID_OPTION_COMBINATION' => 'The option-combination that you chose is not currently available; please re-enter.',
 
     // -----
-    // Used by  incudes/javascript/attributes_controller_posm.php.
+    // Used by includes/javascript/attributes_controller_posm.php.
     //
     'POSM_JS_CAUTION_OPTION_REMOVAL' => 'CAUTION!\n\nThis product\\\'s attributes are managed by the Products Options Stock Manager.\n\nIf you Confirm this option\\\'s deletion, **all** managed-options will be removed and the product\\\'s quantity will be set to 0.',
     'POSM_JS_CAUTION_ATTRIBUTE_REMOVAL' => 'CAUTION!\n\nThis product\\\'s attributes are managed by the Products Options Stock Manager.\n\nIf you Confirm this attribute\\\'s deletion, %u managed-option(s) will be removed and the product\\\'s quantity will be updated accordingly.',
+
+    // -----
+    // Used by includes/javascript/product_posm.php.
+    //
+    'POSM_BUTTON_MANAGE_STOCK' => 'Manage Stock',
+    'POSM_TEXT_PRODUCTS_QTY_CLICK' => 'Click to manage this product\\\'s options\\\' stock:',
 ];
 return $define;
