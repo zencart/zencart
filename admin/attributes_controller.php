@@ -123,74 +123,82 @@ if ($products_filter === 0 && !empty($current_category_id)) {
 require DIR_WS_MODULES . FILENAME_PREV_NEXT;
 
 if ($action !== '') {
+    // -----
+    // Setting a common-use update value for the various 'set_flag_*' actions.
+    //
+    // If the associated $_GET value is set to '0', the flag is enabled (1); if
+    // set to any other value (or not present), the flag is disabled (0).
+    //
+    $set_flag_value = (int)(($_GET['flag'] ?? '1') === '0');
+
     switch ($action) {
 /////////////////////////////////////////
 //// BOF OF FLAGS
         case 'set_flag_attributes_display_only':
             $db->Execute(
                 "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                    SET attributes_display_only = " . ($_GET['flag'] === '0' ? '1' : '0') . "
+                    SET attributes_display_only = " . $set_flag_value . "
                   WHERE products_id = " . (int)$_GET['products_filter'] . "
                     AND products_attributes_id = " . (int)$_GET['attributes_id']
             );
-            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action'])));
+            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action', 'flag'])));
             break;
 
         case 'set_flag_product_attribute_is_free':
             $db->Execute(
                 "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                    SET product_attribute_is_free = " . ($_GET['flag'] === '0' ? '1' : '0') . "
+                    SET product_attribute_is_free = " . $set_flag_value . "
                   WHERE products_id = " . (int)$_GET['products_filter'] . "
                     AND products_attributes_id = " . (int)$_GET['attributes_id']
             );
-            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action'])));
+            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action', 'flag'])));
             break;
 
         case 'set_flag_attributes_default':
             $db->Execute(
                 "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                    SET attributes_default = " . ($_GET['flag'] === '0' ? '1' : '0') . "
+                    SET attributes_default = " . $set_flag_value . "
                   WHERE products_id = " . (int)$_GET['products_filter'] . "
                     AND products_attributes_id = " . (int)$_GET['attributes_id']
             );
-            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action'])));
+            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action', 'flag'])));
             break;
 
         case 'set_flag_attributes_discounted':
             $db->Execute(
                 "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                    SET attributes_discounted = " . ($_GET['flag'] === '0' ? '1' : '0') . "
+                    SET attributes_discounted = " . $set_flag_value . "
                   WHERE products_id = " . (int)$_GET['products_filter'] . "
                     AND products_attributes_id = " . (int)$_GET['attributes_id']
             );
 
             // reset products_price_sorter for searches etc.
             zen_update_products_price_sorter($_GET['products_filter']);
-            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action'])));
+            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action', 'flag'])));
             break;
 
         case 'set_flag_attributes_price_base_included':
             $db->Execute(
                 "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                    SET attributes_price_base_included = " . ($_GET['flag'] === '0' ? '1' : '0') . "
+                    SET attributes_price_base_included = " . $set_flag_value . "
                   WHERE products_id = " . (int)$_GET['products_filter'] . "
                     AND products_attributes_id = " . (int)$_GET['attributes_id']
             );
 
             // reset products_price_sorter for searches etc.
             zen_update_products_price_sorter($_GET['products_filter']);
-            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action'])));
+            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action', 'flag'])));
             break;
 
         case 'set_flag_attributes_required':
             $db->Execute(
                 "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                    SET attributes_required = " . ($_GET['flag'] === '0' ? '1' : '0') . "
+                    SET attributes_required = " . $set_flag_value . "
                   WHERE products_id = " . (int)$_GET['products_filter'] . "
                     AND products_attributes_id = " . (int)$_GET['attributes_id']
             );
 
-            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action'])));
+            zen_redirect(zen_href_link(FILENAME_ATTRIBUTES_CONTROLLER, zen_get_all_get_params(['action', 'flag'])));
             break;
 
 //// EOF OF FLAGS
@@ -260,7 +268,7 @@ if ($action !== '') {
                     $value_price_w = $_POST['value_price_w'] ?? '0';  //- Not present if wholesale pricing isn't enabled for the site
                     $value_price_w = ($value_price_w === '') ? '0' : $value_price_w;    //- Convert an empty entry into '0'
                     $price_prefix = (int)$_POST['price_prefix'];
-                    $price_prefix = ($price_prefix == 1 ? '+' : ($price_prefix == 2 ? '-' : ''));
+                    $price_prefix = ($price_prefix === 1 ? '+' : ($price_prefix === 2 ? '-' : ''));
 
                     // modified options sort order to use default if not otherwise set
                     if (!empty($_POST['products_options_sort_order'])) {
