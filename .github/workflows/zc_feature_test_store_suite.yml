@@ -63,7 +63,9 @@ jobs:
           rm composer.lock
 
       - name: Install Composer Dependencies
-        run: composer install --no-progress --no-interaction --no-ansi --no-scripts
+        run: |
+          php not_for_release/testFramework/fp_diagnostic.php
+          composer install --no-progress --no-interaction --no-ansi --no-scripts
 
       - name: Patch composer files for PHP 8.4 compatibility
         if: matrix.php-version >= '8.4'
