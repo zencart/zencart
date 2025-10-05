@@ -1257,7 +1257,7 @@ if (count($products_select) === 0) {
             <tr class="hoverRow<?= $additional_class ?>">
 <?php
         foreach ($product_options as $option_id => $option_name) {
-            $option_value_name = zen_values_name($info_array['options'][$option_id]);
+            $option_value_name = zen_values_name($info_array['options'][$option_id] ?? -1);
             if ($option_value_name === '') {
                 $option_value_name = '<b>* UNKNOWN VALUE *</b>';
             }
