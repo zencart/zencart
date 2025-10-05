@@ -13,6 +13,8 @@ jobs:
       matrix:
         php-version: ['8.0', '8.3', '8.5']
 
+    continue-on-error: ${{ matrix.php-version == '8.5' }}
+
     services:
       mysql:
         image: mysql:5.7
