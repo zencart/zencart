@@ -8,9 +8,23 @@
  * @version $Id: lat9 2022 May 05 Modified in v1.5.8-alpha $
  * @private
  */
-if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+
+/**
+ * This module is used to count the number of visitors to the site.
+ * And should only increment for customer-initiated traffic, and only once per session.
+ * Therefore it excludes ajax calls and webhooks, etc. And doesn't get called from admin.
+ */
+if ($loaderPrefix !== 'config'
+    || !class_exists('zcDate')
+    || !empty($spider_flag)
+    || !defined('IS_ADMIN_FLAG')
+    || function_exists('ajaxAbort')
+    || defined('IS_AJAX_REQUEST')
+    || defined('IS_WEBHOOK_REQUEST')
+) {
+    return;
 }
+
 if (isset($_SESSION['session_counter']) && $_SESSION['session_counter'] == true) {
   $session_counter = 0;
 } else {
