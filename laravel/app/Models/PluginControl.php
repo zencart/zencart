@@ -20,7 +20,12 @@ class PluginControl extends Eloquent
     public $incrementing = false;
     public $timestamps = false;
     protected $guarded = [];
-      
+    protected $casts = [
+        'status' => 'integer',
+        'managed' => 'boolean',
+        'zc_contrib_id' => 'integer',
+    ];
+
     /**
      * @since ZC v1.5.8
      */
