@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+const IS_AJAX_REQUEST = true;
 require $zc_ajax_base_dir . 'includes/application_top.php';
 
 // -----
