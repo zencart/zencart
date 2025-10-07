@@ -28,11 +28,6 @@ $sql = $db->bindVars($sql, ':products_id', $_GET['products_id'], 'integer');
 $sql = $db->bindVars($sql, ':language_id', $_SESSION['languages_id'], 'integer');
 $pr_attr = $db->Execute($sql);
 
-if ($pr_attr->fields['total'] < 1) {
-    return;
-}
-
-// Only process the rest of this file if attributes are defined for this product
 
 $prod_id = $_GET['products_id'];
 $number_of_uploads = 0;
@@ -45,6 +40,12 @@ $options_comment = [];
 $options_comment_position = [];
 $options_attributes_image = [];
 $attributeDetailsArrayForJson = [];
+
+    if ($pr_attr->fields['total'] < 1) {
+        return;
+    }
+
+// Only process the rest of this file if attributes are defined for this product
 
 $discount_type = zen_get_products_sale_discount_type((int)$_GET['products_id']);
 $discount_amount = zen_get_discount_calc((int)$_GET['products_id']);
