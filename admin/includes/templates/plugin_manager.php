@@ -63,11 +63,10 @@ use Zencart\PluginSupport\PluginStatus;
                     <?php if ($tableData["status"]["original"] === $i) {
                               if ($formatter->isRowSelected($tableData)) { ?>
                         <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?php echo $formatter->getSelectedRowLink(
-                            $tableData); ?>'" role="button">
+                            $tableData); ?>'">
                         <?php } else { ?>
                         <tr class="dataTableRow" onclick="document.location.href='<?php echo
-                        $formatter->getNotSelectedRowLink($tableData); ?>'"
-                        role="button">
+                        $formatter->getNotSelectedRowLink($tableData); ?>'">
                         <?php } ?>
                         <?php foreach ($tableData as $column) { ?>
                         <td class="<?php echo $column['class']; ?>">
