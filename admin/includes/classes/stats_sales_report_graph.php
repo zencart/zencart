@@ -20,23 +20,22 @@ class statsSalesReportGraph
     /** @var int Number of years to look backward in yearly mode */
     const LOOKBACK_YEARS = 10;
 
-    protected
-        $mode = self::MONTHLY_VIEW,
-        $globalStartDate,
-        $startDate,
-        $endDate,
-        $startDates = [],
-        $endDates = [];
-    public
-        $info = [],
-        $previous = '',
-        $next = '',
-        $filter = '',
-        $filter_link,
-        $filter_sql = '',
-        $status_available = [],
-        $status_available_size = 0,
-        $size = 0;
+    protected int $mode = self::MONTHLY_VIEW;
+    protected int|false $globalStartDate;
+    protected int|false $startDate;
+    protected int|false $endDate;
+    protected array $startDates = [];
+    protected array $endDates = [];
+
+    public array $info = [];
+    public string $previous = '';
+    public string $next = '';
+    public string $filter = '';
+    public string $filter_link;
+    public string $filter_sql = '';
+    public array $status_available = [];
+    public int $status_available_size = 0;
+    public $size = 0;
 
     /**
      * statsSalesReportGraph constructor.
@@ -45,11 +44,11 @@ class statsSalesReportGraph
      * if set then both have to be valid startDate and endDate
      *
      * @param int $mode number indicating report format
-     * @param string $startDate unix timestamp
-     * @param string $endDate unix timestamp
+     * @param int|string $startDate, a UNIX timestamp (either as an integer or string)
+     * @param int|string $endDate, a UNIX timestamp (either as an integer or a string)
      * @param string $filter filter string
      */
-    public function __construct($mode, $startDate = '', $endDate = '', $filter = '')
+    public function __construct(int $mode, int|string $startDate = '', int|string $endDate = '', string $filter = '')
     {
         global $db;
 
@@ -196,7 +195,7 @@ class statsSalesReportGraph
                 break;
         }
 
-        if (in_array((int)$this->mode, [self::HOURLY_VIEW, self::DAILY_VIEW, self::WEEKLY_VIEW], false)) {
+        if (in_array($this->mode, [self::HOURLY_VIEW, self::DAILY_VIEW, self::WEEKLY_VIEW], true)) {
             // set previous to start - diff
             $tmpDiff = $this->endDate - $this->startDate;
             if ($this->size == 0) {
@@ -205,7 +204,7 @@ class statsSalesReportGraph
                 $tmpUnit = $tmpDiff / $this->size;
             }
 
-            switch($this->mode) {
+            switch ($this->mode) {
                 case self::HOURLY_VIEW:
                     $tmp1 =  24 * 60 * 60;
                     break;
@@ -238,19 +237,19 @@ class statsSalesReportGraph
                     $this->next = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
                 }
             }
-        } elseif ((int)$this->mode == self::MONTHLY_VIEW) {
+        } elseif ($this->mode === self::MONTHLY_VIEW) {
             // compute previous link if data is there
             $year = date('Y', $this->startDate) - 1;
-            $tmpStart = mktime(0,0,0,1,1,$year);
-            $tmpEnd = mktime(0,0,0,12,1,$year);
+            $tmpStart = mktime(0, 0, 0, 1, 1, $year);
+            $tmpEnd = mktime(0, 0, 0, 12, 1, $year);
             if (date('Y', $tmpStart) >= date('Y', $this->globalStartDate)) {
                $this->previous = "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
             }
 
             // compute next link if data is there
             $year = date('Y', $this->startDate) + 1;
-            $tmpStart = mktime(0,0,0,1,1,$year);
-            $tmpEnd = mktime(0,0,0,12,1,$year);
+            $tmpStart = mktime(0, 0, 0, 1, 1, $year);
+            $tmpEnd = mktime(0, 0, 0, 12, 1, $year);
             if (date('Y', $tmpEnd) <= date('Y')) {
                $this->next= "report=" . $this->mode . "&startDate=" . $tmpStart . "&endDate=" . $tmpEnd;
             }
@@ -315,7 +314,14 @@ class statsSalesReportGraph
             $tmp_query .= " AND (" . $this->filter_sql . ")";
         }
         for ($i = 0; $i < $this->size; $i++) {
-            $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false, true, 1800);
+            $report = $db->Execute(
+                $tmp_query .
+                    " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "'" .
+                    " AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'",
+                false,
+                true,
+                1800
+            );
             $this->info[$i]['sum'] = $report->fields['value'] ?? 0;
             $this->info[$i]['avg'] = $report->fields['avg'] ?? 0;
             $this->info[$i]['count'] = $report->fields['count'];
@@ -341,8 +347,15 @@ class statsSalesReportGraph
         }
         $tmp_query =  "SELECT SUM(ot.value) AS shipping FROM " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS . " o WHERE ot.orders_id = o.orders_id AND ot.class = 'ot_shipping'";
         for ($i = 0; $i < $this->size; $i++) {
-            $report = $db->Execute($tmp_query . " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "' AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'", false,true, 1800);
-            $this->info[$i]['shipping'] = (isset($report->fields['shipping'])) ? $report->fields['shipping'] : 0;
+            $report = $db->Execute(
+                $tmp_query .
+                    " AND o.date_purchased >= '" . zen_db_input(date("Y-m-d\TH:i:s", $this->startDates[$i])) . "'" .
+                    " AND o.date_purchased < '" . zen_db_input(date("Y-m-d\TH:i:s", $this->endDates[$i])) . "'",
+                false,
+                true,
+                1800
+            );
+            $this->info[$i]['shipping'] = $report->fields['shipping'] ?? 0;
         }
     }
 }
