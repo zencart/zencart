@@ -69,7 +69,15 @@ class zcAjaxSelect2Lookups extends base
         $search_query = '';
         if ($lookup !== '') {
             $q = $db->prepare_input($lookup);
-            $search_query = "  AND (pd.products_name LIKE '%$q%' OR p.products_model LIKE '%$q%' OR p.products_id LIKE '%$q%' OR p.products_price LIKE '%$q%' ) ";
+            $keyword_search_fields = [
+                'pd.products_name',
+                'p.products_model',
+                'p.products_mpn',
+                'pd.products_description',
+                'p.products_id',
+                'p.products_price',
+            ];
+            $search_query = zen_build_keyword_where_clause($keyword_search_fields, $q);
         }
 
         $query = $db->bindVars($query, ':languageID', (int)$_SESSION['languages_id'], 'integer');
