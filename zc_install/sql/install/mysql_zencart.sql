@@ -1507,62 +1507,6 @@ CREATE TABLE paypal_session (
 # --------------------------------------------------------
 
 #
-# Table structure for table 'paypal_testing'
-#
-
-DROP TABLE IF EXISTS paypal_testing;
-CREATE TABLE paypal_testing (
-  paypal_ipn_id int(11) unsigned NOT NULL auto_increment,
-  order_id int(11) unsigned NOT NULL default '0',
-  custom varchar(255) NOT NULL default '',
-  txn_type varchar(40) NOT NULL default '',
-  module_name varchar(40) NOT NULL default '',
-  module_mode varchar(40) NOT NULL default '',
-  reason_code varchar(40) default NULL,
-  payment_type varchar(40) NOT NULL default '',
-  payment_status varchar(32) NOT NULL default '',
-  pending_reason varchar(32) default NULL,
-  invoice varchar(128) default NULL,
-  mc_currency char(3) NOT NULL default '',
-  first_name varchar(32) NOT NULL default '',
-  last_name varchar(32) NOT NULL default '',
-  payer_business_name varchar(128) default NULL,
-  address_name varchar(64) default NULL,
-  address_street varchar(254) default NULL,
-  address_city varchar(120) default NULL,
-  address_state varchar(120) default NULL,
-  address_zip varchar(64) default NULL,
-  address_country varchar(64) default NULL,
-  address_status varchar(11) default NULL,
-  payer_email varchar(128) NOT NULL default '',
-  payer_id varchar(32) NOT NULL default '',
-  payer_status varchar(10) NOT NULL default '',
-  payment_date datetime NOT NULL default '0001-01-01 00:00:00',
-  business varchar(128) NOT NULL default '',
-  receiver_email varchar(128) NOT NULL default '',
-  receiver_id varchar(32) NOT NULL default '',
-  txn_id varchar(20) NOT NULL default '',
-  parent_txn_id varchar(20) default NULL,
-  num_cart_items tinyint(4) unsigned NOT NULL default '1',
-  mc_gross decimal(7,2) NOT NULL default '0.00',
-  mc_fee decimal(7,2) NOT NULL default '0.00',
-  payment_gross decimal(7,2) default NULL,
-  payment_fee decimal(7,2) default NULL,
-  settle_amount decimal(7,2) default NULL,
-  settle_currency char(3) default NULL,
-  exchange_rate decimal(4,2) default NULL,
-  notify_version decimal(2,1) NOT NULL default '0.0',
-  verify_sign varchar(128) NOT NULL default '',
-  last_modified datetime NOT NULL default '0001-01-01 00:00:00',
-  date_added datetime NOT NULL default '0001-01-01 00:00:00',
-  memo text,
-  PRIMARY KEY  (paypal_ipn_id,txn_id),
-  KEY idx_order_id_zen (order_id)
-) ENGINE=MyISAM;
-
-# --------------------------------------------------------
-
-#
 # Table structure for table 'plugin_control'
 #
 
