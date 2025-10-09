@@ -31,15 +31,15 @@ if ($products_image !== '' && !empty($flag_show_product_info_additional_images))
         $images_array = array_map(static fn($f) => $f['image_filename'], $images_array);
     } else {
         // prepare image name
+        $products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
         $products_image_base = str_replace($products_image_extension, '', $products_image);
 
-        $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
-        if ($products_image_directory !== '') {
-            $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
-        } else {
+        $products_image_directory = dirname($products_image);
+        if (in_array($products_image_directory, ['.', '/', '..', ''], true)) {
             $products_image_directory = DIR_WS_IMAGES;
+        } else  {
+            $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
         }
-        $products_image_extension = substr($products_image, strrpos($products_image, '.'));
 
         // if in a subdirectory
         if (strrpos($products_image, '/')) {
