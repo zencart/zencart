@@ -37,6 +37,7 @@ TRUNCATE TABLE db_cache;
 
 
 #PROGRESS_FEEDBACK:!TEXT=Updating table structures!
+DROP TABLE IF EXISTS paypal_testing;
 DROP TABLE IF EXISTS customers_auth_tokens;
 CREATE TABLE customers_auth_tokens (
     customers_id int(11) NOT NULL,
