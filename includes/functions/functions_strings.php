@@ -77,9 +77,12 @@ function zen_sanitize_string($string)
 /**
  * Checks whether a string/array is null/blank/empty or uppercase string 'NULL'
  * Differs from empty() in that it doesn't test for boolean false or '0' string/int
+ *
+ * @param string|array|Countable|null|int|float|bool $value
+ *
  * @since ZC v1.0.3
  */
-function zen_not_null(Countable|array|string|null $value): bool
+function zen_not_null(mixed $value): bool
 {
     if (null === $value) {
         return false;
@@ -87,7 +90,11 @@ function zen_not_null(Countable|array|string|null $value): bool
     if (is_countable($value)) {
         return count($value) > 0;
     }
-    return trim($value) !== '' && $value !== 'NULL';
+    if (is_string($value)) {
+        return trim($value) !== '' && $value !== 'NULL';
+    }
+    // anything else (int, float, bool, object, resource, etc) is treated as not null
+    return true;
 }
 
 /**
