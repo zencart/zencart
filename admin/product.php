@@ -97,6 +97,7 @@ require DIR_WS_INCLUDES . 'admin_html_head.php';
 if ($action !== 'new_product_meta_tags' && $editor_handler !== '') {
     require $editor_handler;
 }
+echo   '<link rel="stylesheet" href="' . DIR_WS_INCLUDES . 'css/jquery.datetimepicker.min.css">';
 ?>
   </head>
   <body>
@@ -121,9 +122,24 @@ if ($action === 'new_product_meta_tags') {
     <!-- body_eof //-->
     <!-- script for datepicker -->
     <script>
+    var logic = function( currentDateTime ){
+      // 'this' is jquery object datetimepicker
+      if( currentDateTime.getDate()== new Date().getDate() ){
+        this.setOptions({
+          minTime: 0
+        });
+      }else
+        this.setOptions({
+          minTime:'00:00'
+        });
+    };
       $(function () {
-        $('input[name="products_date_available"]').datepicker({
-            minDate: 1
+        $('input[name="products_date_available"]').datetimepicker({
+            format:'<?= zen_datetimepicker_format_fordate(); ?>',
+            minDate: 0,
+            step:10,
+            onChangeDateTime:logic,
+            onShow:logic
         });
       })
     </script>
