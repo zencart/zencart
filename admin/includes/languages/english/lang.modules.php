@@ -22,6 +22,7 @@ $define = [
     'TEXT_WARNING_SSL_INSTALL' => 'ALERT: <a href="https://docs.zen-cart.com/user/installing/enable_ssl/" rel="noopener" target="_blank">For security reasons, Installation of this module is disabled until your Admin is configured for SSL</a>.',
     'TEXT_POSITIVE_INT' => '%s must be an integer greater than or equal to 0',
     'TEXT_POSITIVE_FLOAT' => '%s must be a decimal greater than or equal to 0',
+    'TEXT_ERROR_MODULE_ALREADY_INSTALLED' => '%s module already installed!',
 ];
 
 return $define;

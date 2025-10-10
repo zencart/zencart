@@ -180,7 +180,7 @@ class cod
     function install() {
       global $db, $messageStack;
       if (defined('MODULE_PAYMENT_COD_STATUS')) {
-        $messageStack->add_session('COD module already installed.', 'error');
+        $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
         zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=cod', 'NONSSL'));
         return 'failed';
       }

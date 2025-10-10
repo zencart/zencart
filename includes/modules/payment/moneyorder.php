@@ -219,7 +219,7 @@ class moneyorder extends base
         {
             global $db, $messageStack;
             if (defined('MODULE_PAYMENT_MONEYORDER_STATUS')) {
-                $messageStack->add_session('MoneyOrder module already installed.', 'error');
+                $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
                 zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=moneyorder', 'NONSSL'));
                 return 'failed';
             }
