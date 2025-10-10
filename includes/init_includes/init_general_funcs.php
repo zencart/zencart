@@ -1,6 +1,6 @@
 <?php
 /**
- * load the system wide functions
+ * Load the system-wide functions
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -29,6 +29,7 @@ require DIR_WS_FUNCTIONS . 'functions_customers.php';
 require DIR_WS_FUNCTIONS . 'functions_customer_groups.php';
 require DIR_WS_FUNCTIONS . 'functions_lookups.php';
 require DIR_WS_FUNCTIONS . 'functions_urls.php';
+require DIR_WS_FUNCTIONS . 'functions_product_images.php';
 require DIR_WS_FUNCTIONS . 'functions_communications.php';
 require DIR_WS_FUNCTIONS . 'html_output.php';
 require DIR_WS_FUNCTIONS . 'functions_email.php';
