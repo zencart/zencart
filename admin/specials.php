@@ -255,6 +255,8 @@ if (!empty($action)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+      <link title="Select2CSS" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" integrity="sha384-OXVF05DQEe311p6ohU11NwlnX08FzMCsyoXzGOaL+83dKAb3qS17yZJxESl8YrJQ" crossorigin="anonymous" rel="stylesheet">
+      <script title="Select2JS" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" integrity="sha384-d3UHjPdzJkZuk5H3qKYMLRyWLAQBJbby2yr2Q58hXXtAGF8RSNO9jpLDlKKPv5v3" crossorigin="anonymous"></script>
   </head>
   <body>
     <!-- header //-->
@@ -392,7 +394,15 @@ if (!empty($action)) {
             <div class="form-group">
               <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true); ?>
+                <?php
+                if (isset($_POST['keywords'])) {
+                    echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
+
+                } else {
+                    // draw Select2 pulldown (activated below via jQuery)
+                    echo zen_draw_pull_down_menu('products_id', [], '', 'required class="form-control" id="productLookup"', true);
+                }
+                ?>
               </div>
             </div>
           <?php } ?>
@@ -698,6 +708,23 @@ if (!empty($action)) {
         });
         $('input[name="expires_date"]').datepicker({
             minDate: 1
+        });
+        $("#productLookup").select2({
+          minimumInputLength: 2, // require minimum number of characters to be typed before searching
+          selectOnClose: true,
+          ajax: {
+              url: 'ajax.php?act=ajaxSelect2Lookups&method=getProductsForSpecials',
+              delay: 250, // debounce/wait 250 milliseconds before triggering the request
+              dataType: 'json',
+              method: 'POST',
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page || 1,
+                        securityToken: '<?= $_SESSION['securityToken'] ?>'
+                    };
+                }
+          }
         });
       })
     </script>
