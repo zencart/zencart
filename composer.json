@@ -39,6 +39,7 @@
         "symfony/maker-bundle": "^1.49",
         "symfony/mime": "^6.0",
         "symfony/phpunit-bridge": "^7.0",
+        "symfony/polyfill-php81": "^1.31.0",
         "symfony/test-pack": "^1.1"
     },
     "autoload": {

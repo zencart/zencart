@@ -43,7 +43,7 @@ class BasicTaxShippingBillingWithShippingSEKTest extends zcFeatureTestCaseStore
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Payment Information', (string)$response->getContent() );
         $crawler = new Crawler((string)$response->getContent());
-        $this->assertStringContainsString('12,2483', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString(\PHP_VERSION_ID < 80400 ? '12,2483' : '12,2482', $crawler->filter('#checkoutOrderTotals')->text());
         $this->assertStringContainsString('0,4375', $crawler->filter('#checkoutOrderTotals')->text());
         $this->assertStringContainsString('0,8880', $crawler->filter('#checkoutOrderTotals')->text());
         $this->assertStringContainsString('SEK13,5738SEK', $crawler->filter('#checkoutOrderTotals')->text());
@@ -51,7 +51,7 @@ class BasicTaxShippingBillingWithShippingSEKTest extends zcFeatureTestCaseStore
         $response = $this->browser->getResponse();
         $crawler = new Crawler((string)$response->getContent());
         $this->assertStringContainsString('Order Confirmation', $crawler->filter('#checkoutConfirmDefaultHeading')->text());
-        $this->assertStringContainsString('12,2483', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString(\PHP_VERSION_ID < 80400 ? '12,2483' : '12,2482', $crawler->filter('#orderTotals')->text());
         $this->assertStringContainsString('0,4375', $crawler->filter('#orderTotals')->text());
         $this->assertStringContainsString('0,8880', $crawler->filter('#orderTotals')->text());
         $this->assertStringContainsString('SEK13,5738SEK', $crawler->filter('#orderTotals')->text());
@@ -85,16 +85,16 @@ class BasicTaxShippingBillingWithShippingSEKTest extends zcFeatureTestCaseStore
         $response = $this->browser->getResponse();
         $crawler = new Crawler((string)$response->getContent());
         $this->assertStringContainsString('Payment Information', (string)$response->getContent() );
-        $this->assertStringContainsString('12,2483', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString(\PHP_VERSION_ID < 80400 ? '12,2483' : '12,2482', $crawler->filter('#checkoutOrderTotals')->text());
         $this->assertStringContainsString('0,4375', $crawler->filter('#checkoutOrderTotals')->text());
-        $this->assertStringContainsString('SEK12,6858SEK', $crawler->filter('#checkoutOrderTotals')->text());
+        $this->assertStringContainsString(\PHP_VERSION_ID < 80400 ? 'SEK12,6858SEK' : 'SEK12,6857SEK', $crawler->filter('#checkoutOrderTotals')->text());
         $this->browser->submitForm('Continue', []);
         $response = $this->browser->getResponse();
         $crawler = new Crawler((string)$response->getContent());
         $this->assertStringContainsString('Order Confirmation', $crawler->filter('#checkoutConfirmDefaultHeading')->text());
-        $this->assertStringContainsString('12,2483', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString(\PHP_VERSION_ID < 80400 ? '12,2483' : '12,2482', $crawler->filter('#orderTotals')->text());
         $this->assertStringContainsString('0,4375', $crawler->filter('#orderTotals')->text());
-        $this->assertStringContainsString('SEK12,6858SEK', $crawler->filter('#orderTotals')->text());
+        $this->assertStringContainsString(\PHP_VERSION_ID < 80400 ? 'SEK12,6858SEK' : 'SEK12,6857SEK', $crawler->filter('#orderTotals')->text());
         $this->browser->submitForm('btn_submit_x', [
         ]);
         $response = $this->browser->getResponse();
