@@ -19,15 +19,13 @@ class CatalogImagesTest extends zcUnitTestCase
         $products_image = 'example.jpg';
         zen_define_default('IMAGES_AUTO_ADDED', 0);
 
-        // Need to load the additional_images module to get the zen_get_image_lookup_parts function
-        defined('DIR_FS_CATALOG_MODULES') || define('DIR_FS_CATALOG_MODULES', DIR_FS_CATALOG . 'includes/modules/');
-        require_once DIR_FS_CATALOG_MODULES . 'additional_images.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_product_images.php';
     }
 
     /**
      * @dataProvider imagesProvider
      */
-    public function testImagesFound($image, $for_glob, $underscore_to_nonsubdirs, $expected): void
+    public function testImagesFound(string $image, bool $for_glob, bool $underscore_to_nonsubdirs, array $expected): void
     {
         $this->assertEquals($expected, zen_get_image_lookup_filename_components($image, $for_glob, $underscore_to_nonsubdirs));
     }
