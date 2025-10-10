@@ -295,7 +295,6 @@ define('BUILT_IN_SHIPPINGS', [
 
 define('OPTIONAL_TABLES', [
     'linkpoint_api',
-    'paypal_testing',
 ]);
 
 define('BUILT_IN_PAYMENTS', [
