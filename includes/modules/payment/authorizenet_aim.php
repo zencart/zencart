@@ -565,7 +565,7 @@ class authorizenet_aim extends base {
   function install() {
     global $db, $messageStack;
     if (defined('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS')) {
-      $messageStack->add_session('Authorize.net (AIM) module already installed.', 'error');
+      $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=authorizenet_aim', 'NONSSL'));
       return 'failed';
     }
