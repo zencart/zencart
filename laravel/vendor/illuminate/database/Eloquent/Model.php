@@ -2393,4 +2393,36 @@ abstract class Model implements Arrayable, ArrayAccess, CanBeEscapedWhenCastToSt
 
         $this->initializeTraits();
     }
+    /**
+     * Prepare the object for serialization.
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
+        $this->mergeAttributesFromCachedCasts();
+
+        $this->classCastCache = [];
+        $this->attributeCastCache = [];
+
+        return get_object_vars($this);
+    }
+
+    /**
+     * When a model is being unserialized, check if it needs to be booted.
+     *
+     * @return void
+     */
+    public function __unserialize($data)
+    {
+        foreach ($data as $property => $value) {
+            if (property_exists($this, $property)) {
+                $this->{$property} = $value;
+            }
+        }
+
+        $this->bootIfNotBooted();
+
+        $this->initializeTraits();
+    }
 }
