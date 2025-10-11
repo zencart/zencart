@@ -130,43 +130,43 @@ function zen_break_string($string, $len, $break_char = '-')
     return $output;
 }
 
-
 /**
  * Truncate a string at length specified, optionally adding a "more" suffix
- * @param string $str
- * @param int $len
- * @param string $more
- * @return array|false|mixed|string
+ * @param  string  $str
+ * @param  int|string  $len
+ * @param  string  $more
+ * @return array|string
  * @since ZC v1.0.3
  */
-function zen_trunc_string($str = "", $len = 150, $more = 'true')
+function zen_trunc_string(string $str = '', int|string $len = 150, string $more = 'true'): array|string
 {
     if (is_null($str) === true) {
         return '';
     }
-    if ($str == "") return $str;
-    if (is_array($str)) return $str;
-    $str = trim($str);
     $len = (int)$len;
+    if ($str === '') return $str;
+    $str = trim($str);
     if ($len == 0) return '';
-    // if it's les than the size given, then return it
+    // if it's less than the size given, then return it
     if (mb_strlen($str) <= $len) return $str;
     // else get that size of text
     $str = mb_substr($str, 0, $len);
-    // backtrack to the end of a word
-    if ($str != "") {
-        // check to see if there are any spaces left
-        if (!substr_count($str, " ")) {
-            if ($more == 'true') $str .= "...";
+
+    if ($str !== '') {
+        // check for no spaces at all
+        if (!substr_count($str, ' ')) {
+            if ($more === 'true') $str .= '...';
             return $str;
         }
-        // backtrack
-        while (mb_strlen($str) && ($str[mb_strlen($str) - 1] != " ")) {
+        // remove final chars (of a partial word) back to the preceding space
+        while (mb_strlen($str) && ($str[mb_strlen($str) - 1] != ' ')) {
             $str = mb_substr($str, 0, -1);
         }
+        //remove the final space
         $str = mb_substr($str, 0, -1);
-        if ($more == 'true') $str .= "...";
-        if ($more != 'true' and $more != 'false') $str .= $more;
+
+        if ($more === 'true') $str .= '...';
+        if ($more !== 'true' && $more !== 'false') $str .= $more;
     }
     return $str;
 }

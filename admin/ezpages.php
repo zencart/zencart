@@ -839,7 +839,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                             $contents[] = ['text' => TEXT_ALT_URL . (empty($ezInfo->alt_url) ? '&nbsp;' . TEXT_NONE : '<br>' . $ezInfo->alt_url)];
                             $contents[] = ['text' => TEXT_ALT_URL_EXTERNAL . (empty($ezInfo->alt_url_external) ? '&nbsp;' . TEXT_NONE : '<br>' . $ezInfo->alt_url_external)];
                             $ez_content = strip_tags($ezInfo->pages_html_text);
-                            $ez_sub_content = zen_trunc_string($ez_content, MAX_PREVIEW);
+                            $ez_sub_content = zen_trunc_string($ez_content, (int)MAX_PREVIEW);
                             $contents[] = ['text' => TEXT_PAGES_HTML_TEXT . '<br>' . $ez_sub_content];
 
                             $contents[] = [
