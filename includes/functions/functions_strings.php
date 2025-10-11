@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -131,42 +133,53 @@ function zen_break_string($string, $len, $break_char = '-')
 }
 
 /**
- * Truncate a string at length specified, optionally adding a "more" suffix
- * @param  string  $str
+ * Truncate a string to the specified length, optionally using a custom "more" suffix
+ * @param  ?string  $str
  * @param  int|string  $len
  * @param  string  $more
- * @return array|string
+ * @return string
  * @since ZC v1.0.3
  */
-function zen_trunc_string(string $str = '', int|string $len = 150, string $more = 'true'): array|string
+function zen_trunc_string(?string $str = '', int|string $len = 150, string $more = '...'): string
 {
-    if (is_null($str) === true) {
+    if (empty($str)) {
         return '';
     }
+
     $len = (int)$len;
-    if ($str === '') return $str;
+    if ($len == 0) {
+        return '';
+    }
+
     $str = trim($str);
-    if ($len == 0) return '';
-    // if it's less than the size given, then return it
-    if (mb_strlen($str) <= $len) return $str;
-    // else get that size of text
+    // if text is less than the limit
+    if (mb_strlen($str) <= $len) {
+        return $str;
+    }
+
+    // get limited text block
     $str = mb_substr($str, 0, $len);
 
     if ($str !== '') {
         // check for no spaces at all
         if (!substr_count($str, ' ')) {
-            if ($more === 'true') $str .= '...';
+            if ($more === 'true') {
+                $str .= '...';
+            }
             return $str;
         }
-        // remove final chars (of a partial word) back to the preceding space
-        while (mb_strlen($str) && ($str[mb_strlen($str) - 1] != ' ')) {
-            $str = mb_substr($str, 0, -1);
-        }
-        //remove the final space
-        $str = mb_substr($str, 0, -1);
 
-        if ($more === 'true') $str .= '...';
-        if ($more !== 'true' && $more !== 'false') $str .= $more;
+        // remove final chars (of a partial word) and the preceding space
+        $str = preg_replace('/(\s\w+$)|(\s+$)/u', '', $str);
+
+        // backwards compatibility
+        // loose comparisons
+        if ($more == 'true') {
+            $str .= '...';
+        }
+        if ($more !== 'true' && $more !== 'false') {
+            $str .= $more;
+        }
     }
     return $str;
 }

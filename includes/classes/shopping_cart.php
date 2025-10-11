@@ -328,7 +328,7 @@ class shoppingCart extends base
                             // Validate max-length of TEXT attribute
                             $check = $db->Execute("SELECT products_options_length FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option . " LIMIT 1");
                             if (!$check->EOF) {
-                                if (strlen($attr_value) > $check->fields['products_options_length']) {
+                                if (strlen($attr_value) > (int)$check->fields['products_options_length']) {
                                     $attr_value = zen_trunc_string($attr_value, (int)$check->fields['products_options_length'], '');
                                 }
                                 $this->contents[$uprid]['attributes_values'][$option] = $attr_value;
