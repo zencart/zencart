@@ -12,12 +12,12 @@ require DIR_WS_MODULES . zen_get_module_directory(FILENAME_MAIN_PRODUCT_IMAGE);
 <!-- Modal HTML -->
 <div id="imageModalPrimary" class="imgmodal">
     <div class="imgmodal-content">
-        <span onclick="closeModal('imageModalPrimary')">
+        <div onclick="closeModal('imageModalPrimary')">
         <?php echo zen_image($products_image_large, $products_name, '', '', 'class="centered-image"'); ?>
         <div class="imgmodal-close"><i class="fa-solid fa-circle-xmark"></i></div>
         <div class="center"><?php echo $products_name; ?></div>
 <!--        <div class="imgLink center">--><?php //echo TEXT_CLOSE_WINDOW_IMAGE; ?><!--</div>-->
-        </span>
+        </div>
     </div>
 </div>
 <div id="productMainImage" class="centeredContent back">
