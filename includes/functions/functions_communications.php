@@ -25,7 +25,7 @@ use http\Exception\BadQueryStringException;
  * @return string|array|false False on failure; string for normal response; array if advanced metaData requested
  * @since ZC v2.2.0
  */
-  function zenDoCurlRequest(string $url, string $method = 'GET', string|array|null $payload = null, bool $encodePayloadArraysAsJson = false, bool $decodeJsonResponses = false, ?array $extraCurlOptions = [], bool $returnWithMetadata = false): string|array|false
+  function zenDoCurlRequest(string $url, string $method = 'GET', string|array|null $payload = null, bool $encodePayloadArraysAsJson = false, bool $decodeJsonResponses = false, ?array $extraCurlOptions = [], bool $returnWithMetadata = false, array $params = []): string|array|false
   {
       $base_UA_host = defined('HTTP_CATALOG_SERVER') ? HTTP_CATALOG_SERVER : HTTP_SERVER;
       $referrer = $base_UA_host . DIR_WS_CATALOG;
@@ -68,6 +68,16 @@ use http\Exception\BadQueryStringException;
       }
 
       curl_setopt_array($ch, array_replace($curlDefaultOptions, $extraCurlOptions ?? []));
+
+      if (!empty($params)) {
+          $parameters = '?';
+          foreach ($params as $key => $value) {
+              $parameters .= $key . '=' . $value . '&';
+          }
+          $parameters = trim($parameters, '&');
+          $url = $url . $parameters;
+      }
+
       curl_setopt($ch, CURLOPT_URL, $url);
 
       if (!empty($payload) && strtoupper($method) === 'POST') {
