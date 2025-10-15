@@ -251,8 +251,16 @@
             // Create a new mail object with the phpmailer class
             $mail = new PHPMailer();
             $mail->XMailer = 'Self-Hosted Zen Cart merchant';
+
             $lang_code = strtolower(($_SESSION['languages_code'] === '' ? 'en' : $_SESSION['languages_code']));
-            $mail->SetLanguage($lang_code);
+            if (is_callable([get_class($mail), 'setLanguage'])) {
+                // Static method (PHPMailer v7+)
+                $mail::setLanguage($lang_code);
+            } else {
+                // Instance method (PHPMailer v6 and older)
+                $mail->setLanguage($lang_code);
+            }
+
             $mail->CharSet = (defined('CHARSET')) ? CHARSET : 'iso-8859-1';
             if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD !== '') {
                 $mail->Encoding = EMAIL_ENCODING_METHOD;
