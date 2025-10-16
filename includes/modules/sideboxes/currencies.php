@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 05 Modified in v1.5.8-alpha $
+ * @version $Id: Modified in v2.2.0 $
  */
 
 // test if box should display; it's not displayed on checkout-related pages
@@ -13,7 +13,7 @@ $show_currencies = (strpos($current_page, 'checkout') !== 0);
 
 if ($show_currencies === true && isset($currencies) && is_object($currencies)) {
     $currencies_array = [];
-    foreach ($currencies->currencies as $key => $value) {
+    foreach ($currencies->getAllCurrencies() as $key => $value) {
         $currencies_array[] = ['id' => $key, 'text' => $value['title']];
     }
 

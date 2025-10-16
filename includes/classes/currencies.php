@@ -18,7 +18,11 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class currencies extends base
 {
-    public $currencies = [];
+    /**
+     * This property is public only for backward compatibility
+     * @var array $currencies Array of currencies and their properties
+     */
+    public array $currencies = [];
 
     protected bool $debug = false;
 
@@ -242,5 +246,16 @@ class currencies extends base
     public function display_price(mixed $product_price, mixed $product_tax, mixed $quantity = 1): string
     {
         return $this->format(zen_add_tax($product_price, $product_tax) * $quantity);
+    }
+
+    /**
+     * Return the array of currencies.
+     * Used to retrieve all currencies without accessing the property directly.
+     *
+     * @since ZC v2.2.0
+     */
+    public function getAllCurrencies(): array
+    {
+        return $this->currencies;
     }
 }
