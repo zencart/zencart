@@ -37,16 +37,19 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     // only display addresses if more than 1
     if ($addresses->RecordCount() > 1) {
 ?>
-    <label class="inputLabel" for="seAddressPulldown"><?= CART_SHIPPING_METHOD_ADDRESS ?></label>
+    <div class="se-address-container">
+    <label for="seAddressPulldown"><?= CART_SHIPPING_METHOD_ADDRESS ?></label>
     <?= zen_draw_pull_down_menu('address_id', $addresses_array, $selected_address, 'onchange="return shipincart_submit();" id="seAddressPulldown"') ?>
 <?php
     }
 ?>
-    <div class="bold back" id="seShipTo"><?= CART_SHIPPING_METHOD_TO ?></div>
-    <address class="back">
+    <div class="se-address">
+    <div class="bold" id="seShipTo"><?= CART_SHIPPING_METHOD_TO ?></div>
+    <address>
         <?= zen_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br>') ?>
     </address>
-    <br class="clearBoth">
+    </div>
+    </div>
 <?php
 } elseif ($_SESSION['cart']->get_content_type() !== 'virtual') {
     $flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true');
