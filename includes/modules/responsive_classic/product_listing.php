@@ -214,7 +214,7 @@ if ($num_products_count > 0) {
             $listing_product_name = $record['products_name'] ?? '';
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
-                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'] ?? '')), PRODUCT_LIST_DESCRIPTION);
+                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'] ?? '')), (int)PRODUCT_LIST_DESCRIPTION);
                 $lc_text .= '<div class="listingDescription">' . $listing_description . '</div>';
             }
             $listing_model = $record['products_model'] ?? '';
@@ -445,4 +445,3 @@ if ($how_many > 0 && PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit &
     // bof: multiple products
     echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_DEFAULT, zen_get_all_get_params(['action']) . 'action=multiple_products_add_product', $request_type), 'post', 'enctype="multipart/form-data"');
 }
-
