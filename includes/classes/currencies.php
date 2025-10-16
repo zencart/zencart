@@ -20,7 +20,7 @@ class currencies extends base
 {
     public $currencies = [];
 
-    protected $debug = false;
+    protected bool $debug = false;
 
     public function __construct()
     {
@@ -85,8 +85,7 @@ class currencies extends base
     }
 
     /**
-     * Convert amount based on currency values
-     * Or at least round it to the relevant decimal places
+     * Convert amount based on currency values and round it to the relevant decimal places
      *
      * @param float $number
      * @param bool $calculate_using_exchange_rate
@@ -108,6 +107,8 @@ class currencies extends base
     }
 
     /**
+     * Convert amount based on currency rate without applying formatting
+     *
      * @since ZC v1.1.1
      */
     public function value($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = null)
@@ -137,65 +138,61 @@ class currencies extends base
     }
 
     /**
+     * Check if a currency code exists
      * @since ZC v1.0.3
      */
-    public function is_set($code)
+    public function is_set(string $code): bool
     {
         return !empty($this->currencies[$code]);
     }
 
     /**
      * Retrieve the exchange-rate of a specified currency
-     * @param string $code currency code
-     * @return float
+     *
      * @since ZC v1.0.3
      */
-    public function get_value($code)
+    public function get_value(string $currency_code): float
     {
-        $currency_info = $this->getCurrencyInfo($code);
+        $currency_info = $this->getCurrencyInfo($currency_code);
         return $currency_info['value'];
     }
 
     /**
-     * @param string $code currency code
-     * @return int
+     * Retrieve the number of decimal places for a specified currency
+     *
      * @since ZC v1.0.3
      */
-    public function get_decimal_places($code)
+    public function get_decimal_places(string $currency_code): int
     {
-        $currency_info = $this->getCurrencyInfo($code);
+        $currency_info = $this->getCurrencyInfo($currency_code);
         return $currency_info['decimal_places'];
     }
 
     /**
      * Public function to enable the debug, so that a PHP Notify log is created if
      * an unknown currency-code is auto-created.
-     * @param void
-     * @return void
+     *
      * @since ZC v2.0.0
      */
-    public function setDebugOn()
+    public function setDebugOn(): void
     {
         $this->debug = true;
     }
 
     /**
      * Public function to disable the debug.
-     * @param void
-     * @return void
+     *
      * @since ZC v2.0.0
      */
-    public function setDebugOff()
+    public function setDebugOff(): void
     {
         $this->debug = false;
     }
 
     /**
-     * Protected function that returns an array of 'currency' settings for the specified
-     * currency_code.
+     * Protected function that returns an array of 'currency' settings
+     * for the specified currency_code.
      *
-     * @param string|null $currency_code The currency 'code' information to be returned.
-     * @return array
      * @since ZC v2.0.0
      */
     protected function getCurrencyInfo(?string $currency_code): array
@@ -236,13 +233,13 @@ class currencies extends base
 
     /**
      * Calculate amount based on $quantity, and format it according to current currency
-     * @param $product_price
-     * @param $product_tax
-     * @param int $quantity
+     * @param numeric $product_price
+     * @param numeric $product_tax
+     * @param int|float $quantity
      * @return string
      * @since ZC v1.0.3
      */
-    public function display_price($product_price, $product_tax, $quantity = 1)
+    public function display_price(mixed $product_price, mixed $product_tax, mixed $quantity = 1): string
     {
         return $this->format(zen_add_tax($product_price, $product_tax) * $quantity);
     }
