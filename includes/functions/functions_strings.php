@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -126,7 +124,8 @@ function zen_break_string($string, $len, $break_char = '-')
 }
 
 /**
- * Truncate a string to the specified length, optionally using a custom "more" suffix
+ * Truncate a string to the specified length, optionally using a custom "more" suffix.
+ * Note: the $more parameter still supports providing string 'true' to mean appending "...".
  *
  * @param  ?string  $str
  * @param  int|string  $len
@@ -350,11 +349,16 @@ function htmlentities_recurse($mixed_value, $flags = ENT_QUOTES, $encoding = 'ut
 }
 
 /**
+ * Recursively apply utf8_encode on the passed string or array.
+ * But was only relevant when not passing UTF8 data. It was used in ajax context.
+ * Now that UTF8 is standard, this function is deprecated and does nothing.
+ *
  * @param mixed $mixed_value
  * @return array|false|string
  *
  * @deprecated after Zen Cart 1.5.8a
  * @since ZC v1.5.5
+ * @deleting in ZC v3.0.0
  */
 function utf8_encode_recurse($mixed_value)
 {
@@ -406,13 +410,15 @@ function zen_clean_html($clean_it, $extraTags = '')
 }
 
 /**
- * @param  string  $url
- * @return string
+ * Ensure a URL is prefixed with a valid scheme (http/https) or is protocol-relative (//).
+ * If null, returns empty string.
  * @since ZC v1.5.3
  */
-function fixup_url($url)
+function fixup_url(?string $url): string
 {
-    global $request_type;
+    if (empty($url)) {
+        return '';
+    }
     if (!preg_match('#^https?://#', $url)) {
         $url = '//' . $url;
     }
@@ -420,13 +426,16 @@ function fixup_url($url)
 }
 
 /**
+ * Alias to strtr().
  * Parse the data used in html tags to ensure the tags will not break.
  * Basically just an extension to the php strtr function
- * @param  string  $data  The string to be parsed
+ *
+ * @param string  $data  The string to be parsed
  * @param string  $parse  The needle to find
  * @return string
- * @deprecated Use strtr() instead
+ * @deprecated in v1.5.8: Use strtr() instead
  * @since ZC v1.0.3
+ * @deleting in ZC v3.0.0
  */
 function zen_parse_input_field_data($data, $parse)
 {
@@ -434,7 +443,12 @@ function zen_parse_input_field_data($data, $parse)
     return strtr(trim($data), $parse);
 }
 
-/** @deprecated  Just cast to int directly. */
+/**
+ * Convert a string to an integer
+ * @since ZC v1.0.3
+ * @deprecated in v1.5.8: Just cast to int directly.
+ * @deleting in ZC v3.0.0
+ */
 function zen_string_to_int($string) {
     trigger_error('Call to deprecated function zen_string_to_int. Use a closure instead', E_USER_DEPRECATED);
     return (int)$string;
@@ -449,7 +463,8 @@ function zen_string_to_int($string) {
  * @return int|float
  * @since ZC v2.0.0
  */
-function zen_str_to_numeric($string) {
+function zen_str_to_numeric(mixed $string): float|int
+{
     if (is_null($string)) {
         return 0;
     }
@@ -459,10 +474,10 @@ function zen_str_to_numeric($string) {
     if (is_bool($string)) {
         return (int)$string;
     }
-    if (! is_string($string)) {
+    if (!is_string($string)) {
         throw new TypeError('Value is not a string.');
     }
-    if (! is_numeric($string)) {
+    if (!is_numeric($string)) {
         throw new TypeError('Value is not a numeric string.');
     }
     if (strpos($string, '.') === false) {
