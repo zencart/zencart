@@ -8,6 +8,8 @@
 
 class zcAjaxSelect2Lookups extends base
 {
+    protected bool $stripTags = false;
+
     /**
      * @since ZC v2.2.0
      */
@@ -15,6 +17,10 @@ class zcAjaxSelect2Lookups extends base
     {
         if (!isset($_POST['q'])) {
             return false;
+        }
+
+        if (isset($_POST['strip_tags']) && $_POST['strip_tags'] === 'true') {
+            $this->stripTags = true;
         }
 
         $results = $this->lookup_products_select2($_POST['q'], ['specials']);
@@ -34,8 +40,10 @@ class zcAjaxSelect2Lookups extends base
     {
         global $currencies, $db;
 
-        if (!is_object($currencies) && !class_exists('currencies')) {
-            require DIR_WS_CLASSES . 'currencies.php';
+        if (!is_object($currencies)) {
+            if (!class_exists('currencies')) {
+                require DIR_WS_CLASSES . 'currencies.php';
+            }
             $currencies = new currencies();
         }
 
@@ -93,7 +101,7 @@ class zcAjaxSelect2Lookups extends base
 
             $records[] = [
                 'id' => (string)$result['products_id'],
-                'text' => $result['products_name'] .
+                'text' => ($this->stripTags ? strip_tags($result['products_name']) : $result['products_name']) .
                     ' (' . $currencies->format($display_price) . ')' .
                     ($show_model ? ' [' . $result['products_model'] . '] ' : '') .
                     ($show_id ? ' - ID# ' . $result['products_id'] : '')
