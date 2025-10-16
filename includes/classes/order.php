@@ -518,7 +518,7 @@ class order extends base
         $this->info = [
             'order_status' => DEFAULT_ORDERS_STATUS_ID,
             'currency' => $_SESSION['currency'],
-            'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
+            'currency_value' => $currencies->get_value($_SESSION['currency']),
             'payment_method' => (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) ? $GLOBALS[$paymentModule]->title : '',
             'payment_module_code' => (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) ? $GLOBALS[$paymentModule]->code : '',
             'coupon_code' => $coupon_code->fields['coupon_code'] ?? '',

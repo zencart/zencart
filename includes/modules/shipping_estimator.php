@@ -149,7 +149,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         $order->info = [
             'total' => $_SESSION['cart']->show_total(), // TAX ????
             'currency' => $currency ?? DEFAULT_CURRENCY,
-            'currency_value' => isset($currency, $currencies->currencies[$currency]['value']) ? $currencies->currencies[$currency]['value'] : 1
+            'currency_value' => $currencies->is_set($currency ?? DEFAULT_CURRENCY) ? $currencies->get_value($currency ?? DEFAULT_CURRENCY) : 1,
         ];
     }
     // weight and count needed for shipping !
