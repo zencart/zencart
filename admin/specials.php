@@ -255,6 +255,9 @@ if (!empty($action)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+      <link data-title="Select2CSS" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" integrity="sha384-OXVF05DQEe311p6ohU11NwlnX08FzMCsyoXzGOaL+83dKAb3qS17yZJxESl8YrJQ" crossorigin="anonymous" rel="stylesheet">
+      <link data-title="BS3SelectCSS" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-theme@0.1.0-beta.10/dist/select2-bootstrap.min.css" integrity="sha384-gmcw+R0EXbFmHe5f/e/UutiOrxubA/LkUzBVH0Y7uvP+IqhUSNFp7HZKD6ztR12u" crossorigin="anonymous" rel="stylesheet">
+      <script title="Select2JS" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" integrity="sha384-d3UHjPdzJkZuk5H3qKYMLRyWLAQBJbby2yr2Q58hXXtAGF8RSNO9jpLDlKKPv5v3" crossorigin="anonymous"></script>
   </head>
   <body>
     <!-- header //-->
@@ -390,9 +393,17 @@ if (!empty($action)) {
             </div>
           <?php } else { ?>
             <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
+              <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, isset($_POST['keywords']) ? 'products_id' : 'productLookup', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true); ?>
+                <?php
+                if (isset($_POST['keywords'])) {
+                    echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
+
+                } else {
+                    // draw Select2 pulldown (activated below via jQuery)
+                    echo zen_draw_pull_down_menu('products_id', [], '', 'required id="productLookup" class="form-control" style="width: 100%"');
+                }
+                ?>
               </div>
             </div>
           <?php } ?>
@@ -690,16 +701,45 @@ if (!empty($action)) {
     <!-- footer //-->
     <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->
-    <!-- script for datepicker -->
+    <!-- script init -->
     <script>
-      $(function () {
-        $('input[name="specials_date_available"]').datepicker({
-            minDate: 0
-        });
-        $('input[name="expires_date"]').datepicker({
-            minDate: 1
-        });
-      })
+        $(function() {
+            $('input[name="specials_date_available"]').datepicker({
+                minDate: 0
+            });
+            $('input[name="expires_date"]').datepicker({
+                minDate: 1
+            });
+
+            const ALLOW_HTML = false; // For product names, false strips html tags, true allows html, but might affect layout.
+            // Function to escape html special characters, except for <strong> tags, and replaces <br> tags with spaces
+            const esc = s => String(s)
+                .replace(/<br\s*\/?>/gi, ' ')
+                .replace(/[&<>"']/g, c =>
+                    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])
+                );
+            $("#productLookup").select2({
+                theme: "bootstrap", // bootstrap-5 for 5
+                minimumInputLength: 2, // only start searching when 2 or more characters have been typed
+                selectOnClose: true,
+                ajax: {
+                    url: 'ajax.php?act=ajaxSelect2Lookups&method=getProductsForSpecials',
+                    delay: 250, // debounce/wait 250 milliseconds before triggering the request
+                    dataType: 'json',
+                    method: 'POST',
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page || 1,
+                            strip_tags: !ALLOW_HTML,
+                            securityToken: '<?= $_SESSION['securityToken'] ?>'
+                        };
+                    }
+                },
+                templateResult: d => d.text,
+                escapeMarkup: m => (ALLOW_HTML ? m : esc(m))
+            });
+        })
     </script>
   </body>
 </html>
