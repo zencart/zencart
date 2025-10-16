@@ -1,15 +1,15 @@
 <?php
 
-declare(strict_types=1);
+
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2024 Sep 17 Modified in v2.1.0-beta1 $
  */
 
-
 /**
  * Returns a string with conversions for security.
+ *
  * @param ?string $string The string to be parsed
  * @param array|bool $translate contains a string to be translated, otherwise just quote is translated
  * @param bool $protected Do we run htmlspecialchars over the string
@@ -30,7 +30,6 @@ function zen_output_string(?string $string, array|bool $translate = false, bool 
     if ($translate === false) {
         return strtr($string, ['"' => '&quot;']);
     }
-
     return strtr($string, $translate);
 }
 
@@ -43,7 +42,6 @@ function zen_output_string(?string $string, array|bool $translate = false, bool 
 function zen_preserve_search_quotes(?string $search_string): string
 {
     return urlencode($search_string);
-    //return zen_output_string($string, ['"' => '%22', "'", '%21'], false);
 }
 
 /**
@@ -61,27 +59,23 @@ function zen_output_string_protected($string)
     return zen_output_string($string, false, true);
 }
 
-
 /**
  * Returns a string with conversions for security.
  *
- * @param string The string to be parsed
+ * @param  string  $string  The string to be parsed
  * @since ZC v1.0.3
  */
-
 function zen_sanitize_string($string)
 {
     $string = preg_replace('/ +/', ' ', $string);
     return preg_replace("/[<>]/", '_', $string);
 }
 
-
 /**
  * Checks whether a string/array is null/blank/empty or uppercase string 'NULL'
  * Differs from empty() in that it doesn't test for boolean false or '0' string/int
  *
  * @param string|array|Countable|null|int|float|bool $value
- *
  * @since ZC v1.0.3
  */
 function zen_not_null(mixed $value): bool
@@ -102,9 +96,9 @@ function zen_not_null(mixed $value): bool
 /**
  * Break a word in a string if it is longer than a specified length ($len)
  *
- * @param string The string to be broken up
- * @param int The maximum length allowed
- * @param string The character to use at the end of the broken line
+ * @param  string  $string  The string to be broken up
+ * @param  int  $len  The maximum length allowed
+ * @param  string  $break_char  The character to use at the end of the broken line
  * @return string
  * @since ZC v1.0.3
  */
@@ -128,12 +122,12 @@ function zen_break_string($string, $len, $break_char = '-')
         }
         $output .= $char;
     }
-
     return $output;
 }
 
 /**
  * Truncate a string to the specified length, optionally using a custom "more" suffix
+ *
  * @param  ?string  $str
  * @param  int|string  $len
  * @param  string  $more
@@ -186,8 +180,9 @@ function zen_trunc_string(?string $str = '', int|string $len = 150, string $more
 
 /**
  * Truncate a paragraph after $size words
- * @param string $paragraph
- * @param int $size
+ *
+ * @param  string  $paragraph
+ * @param  int  $size
  * @return string
  * @since ZC v1.3.0
  */
@@ -207,9 +202,9 @@ function zen_truncate_paragraph($paragraph, $size = 100)
     return $zv_paragraph;
 }
 
-
 /**
  * Get the number of times a word/character is present in a string
+ *
  * @param string $string
  * @param string $needle
  * @return int
@@ -218,19 +213,18 @@ function zen_truncate_paragraph($paragraph, $size = 100)
 function zen_word_count(string $string, string $needle)
 {
     $temp_array = preg_split('/' . $needle . '/', $string);
-
     return count($temp_array);
 }
-
 
 /**
  * Collapse an array into a string
  * A sort of pseudo-serialize function
  * Used mainly by the Navigation class to store historical info
- * @param array $array
- * @param array|string $exclude
- * @param string $equals
- * @param string $separator
+ *
+ * @param  array  $array
+ * @param  array|string  $exclude
+ * @param  string  $equals
+ * @param  string  $separator
  * @return string
  * @since ZC v1.0.3
  */
@@ -250,17 +244,15 @@ function zen_array_to_string($array, $exclude = '', $equals = '=', $separator = 
         $remove_chars = strlen($separator);
         $get_string = substr($get_string, 0, -$remove_chars);
     }
-
     return $get_string;
 }
-
-
 
 /**
  * convert supplied string to UTF-8, dropping any symbols which cannot be translated easily
  * useful for submitting cleaned-up data to payment gateways or other external services, esp if the data was copy+pasted from windows docs via windows browser to store in database
  *
- * @param string $string
+ * @param  string  $string
+ * @return string
  * @since ZC v1.3.9a
  */
 function charsetConvertWinToUtf8($string)
@@ -272,6 +264,7 @@ function charsetConvertWinToUtf8($string)
 
 /**
  * Convert supplied string to/from entities between charsets, to sanitize data from inputs, especially APIs and gateways
+ *
  * @param $string
  * @return string
  * @since ZC v1.3.9a
@@ -287,6 +280,7 @@ function charsetClean($string)
 
 /**
  * strip out accented characters to reasonable approximations of english equivalents
+ *
  * @since ZC v1.3.7.1
  */
 function replace_accents($s)
@@ -301,8 +295,8 @@ function replace_accents($s)
 }
 
 /**
- * @param string $given_html
- * @param int $quote_style
+ * @param  string  $given_html
+ * @param  int  $quote_style
  * @return string
  * @since ZC v1.1.2
  */
@@ -315,6 +309,7 @@ function zen_html_entity_decode($given_html, $quote_style = ENT_QUOTES)
 
 /**
  * Decode string encoded with htmlspecialchars()
+ *
  * @since ZC v1.1.0
  */
 function zen_decode_specialchars($string)
@@ -332,10 +327,10 @@ function zen_decode_specialchars($string)
  * Recursively apply htmlentities on the passed string
  * Useful for preparing json output and ajax responses
  *
- * @param string|array $mixed_value
- * @param int $flags
- * @param string $encoding
- * @param bool $double_encode
+ * @param  array|string  $mixed_value
+ * @param  int  $flags
+ * @param  string  $encoding
+ * @param  bool  $double_encode
  * @return array|string
  * @since ZC v1.5.7
  */
@@ -369,8 +364,9 @@ function utf8_encode_recurse($mixed_value)
 
 /**
  * Remove common HTML from text for display as paragraph
- * @param string $clean_it
- * @param string|array $extraTags
+ *
+ * @param  string  $clean_it
+ * @param  array|string  $extraTags
  * @return string
  * @since ZC v1.2.0d
  */
@@ -409,28 +405,25 @@ function zen_clean_html($clean_it, $extraTags = '')
     return $clean_it;
 }
 
-
 /**
- * @param string $url
+ * @param  string  $url
  * @return string
  * @since ZC v1.5.3
  */
 function fixup_url($url)
 {
     global $request_type;
-
     if (!preg_match('#^https?://#', $url)) {
         $url = '//' . $url;
     }
     return $url;
 }
 
-
 /**
  * Parse the data used in html tags to ensure the tags will not break.
  * Basically just an extension to the php strtr function
- * @param string The string to be parsed
- * @param string The needle to find
+ * @param  string  $data  The string to be parsed
+ * @param string  $parse  The needle to find
  * @return string
  * @deprecated Use strtr() instead
  * @since ZC v1.0.3
@@ -475,7 +468,6 @@ function zen_str_to_numeric($string) {
     if (strpos($string, '.') === false) {
         return (int)$string;
     }
-
     return (float)$string;
 }
 
@@ -505,6 +497,5 @@ function zen_get_translated_config_setting(string $config_key, ?string $lang_def
     if (defined($lookup)) {
         return constant($lookup);
     }
-
     return $fallback ?? $value;
 }
