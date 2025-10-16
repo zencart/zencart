@@ -50,14 +50,15 @@ class currencies extends base
 
     /**
      * Format the specified number according to the specified currency's rules
-     * @param float $number
+     *
+     * @param numeric $number
      * @param bool $calculate_using_exchange_rate
-     * @param string $currency_type
-     * @param float $currency_value
+     * @param string $currency_code
+     * @param numeric $currency_value
      * @return string
      * @since ZC v1.0.3
      */
-    public function format($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = '')
+    public function format(mixed $number, bool $calculate_using_exchange_rate = true, string $currency_code = '', mixed $currency_value = ''): string
     {
         if (IS_ADMIN_FLAG === false && DOWN_FOR_MAINTENANCE === 'true' && DOWN_FOR_MAINTENANCE_PRICES_OFF === 'true' && !zen_is_whitelisted_admin_ip()) {
             return '';
@@ -67,11 +68,11 @@ class currencies extends base
             $number = 0;
         }
 
-        $currency_info = $this->getCurrencyInfo($currency_type);
+        $currency_info = $this->getCurrencyInfo($currency_code);
 
         $formatted_string = $currency_info['symbol_left'] .
             number_format(
-                $this->rateAdjusted($number, $calculate_using_exchange_rate, $currency_type, $currency_value),
+                $this->rateAdjusted($number, $calculate_using_exchange_rate, $currency_code, $currency_value),
                 $currency_info['decimal_places'],
                 $currency_info['decimal_point'],
                 $currency_info['thousands_point']
@@ -80,7 +81,7 @@ class currencies extends base
         if ($calculate_using_exchange_rate === true) {
             // Special Case: if the selected currency is in the european euro-conversion and the default currency is euro,
             // then the currency will displayed in both the national currency and euro currency
-            if (DEFAULT_CURRENCY === 'EUR' && in_array($currency_type, ['DEM', 'BEF', 'LUF', 'ESP', 'FRF', 'IEP', 'ITL', 'NLG', 'ATS', 'PTE', 'FIM', 'GRD'])) {
+            if (DEFAULT_CURRENCY === 'EUR' && in_array($currency_code, ['DEM', 'BEF', 'LUF', 'ESP', 'FRF', 'IEP', 'ITL', 'NLG', 'ATS', 'PTE', 'FIM', 'GRD'])) {
                 $formatted_string .= ' <small>[' . $this->format($number, true, 'EUR') . ']</small>';
             }
         }
@@ -91,16 +92,16 @@ class currencies extends base
     /**
      * Convert amount based on currency values and round it to the relevant decimal places
      *
-     * @param float $number
+     * @param numeric $number
      * @param bool $calculate_using_exchange_rate
-     * @param string $currency_type
-     * @param float $currency_value
-     * @return float
+     * @param string $currency_code
+     * @param numeric|null $currency_value
+     * @return float|int
      * @since ZC v1.3.9a
      */
-    public function rateAdjusted($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = null)
+    public function rateAdjusted(mixed $number, bool $calculate_using_exchange_rate = true, string $currency_code = '', mixed $currency_value = null): float|int
     {
-        $currency_info = $this->getCurrencyInfo($currency_type);
+        $currency_info = $this->getCurrencyInfo($currency_code);
 
         if ($calculate_using_exchange_rate === true) {
             $rate = !empty($currency_value) ? $currency_value : $currency_info['value'];
@@ -113,14 +114,20 @@ class currencies extends base
     /**
      * Convert amount based on currency rate without applying formatting
      *
+     * @param numeric $number
+     * @param bool $calculate_using_exchange_rate
+     * @param string $currency_code
+     * @param numeric|null $currency_value
+     * @return float|int
+     *
      * @since ZC v1.1.1
      */
-    public function value($number, $calculate_using_exchange_rate = true, $currency_type = '', $currency_value = null)
+    public function value(mixed $number, bool $calculate_using_exchange_rate = true, string $currency_code = '', mixed $currency_value = null): float|int
     {
-        $currency_info = $this->getCurrencyInfo($currency_type);
+        $currency_info = $this->getCurrencyInfo($currency_code);
 
         if ($calculate_using_exchange_rate === true) {
-            $multiplier = ($currency_type === DEFAULT_CURRENCY) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $currency_info['value'];
+            $multiplier = ($currency_code === DEFAULT_CURRENCY) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $currency_info['value'];
             $rate = !empty($currency_value) ? $currency_value : $multiplier;
             $number = $number * $rate;
         }
@@ -130,12 +137,13 @@ class currencies extends base
 
     /**
      * Normalize "decimal" placeholder to actually use "."
-     * @param $valueIn
-     * @param string $currencyCode
+     *
+     * @param numeric $valueIn
+     * @param string|null $currencyCode
      * @return string
      * @since ZC v1.5.5
      */
-    public function normalizeValue($valueIn, ?string $currencyCode = null)
+    public function normalizeValue(mixed $valueIn, ?string $currencyCode = null): string
     {
         $currency_info = $this->getCurrencyInfo($currencyCode);
         return str_replace($currency_info['decimal_point'], '.', (string)$valueIn);
