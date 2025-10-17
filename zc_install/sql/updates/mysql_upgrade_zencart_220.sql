@@ -136,6 +136,15 @@ UPDATE configuration SET sort_order = 25 WHERE configuration_key = 'IMAGES_AUTO_
 UPDATE configuration SET sort_order = 27 WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 UPDATE configuration SET configuration_title = 'Additional Images filename matching pattern', configuration_description = 'In Filename-Matching mode, you can use an &quot;_&quot; suffix in two formats:<br>&quot;strict&quot; = always use &quot;_&quot; suffix<br>&quot;legacy&quot; = only use &quot;_&quot; suffix in subdirectories<br>(Before v210 legacy was the default)<br>Default = strict' WHERE configuration_key = 'ADDITIONAL_IMAGES_MODE' LIMIT 1;
 
+#PROGRESS_FEEDBACK:!TEXT=Updating banner records...
+UPDATE banners SET banners_html_text = CONCAT(
+    '<script>(function (d) {\r\n var me = d.currentScript || (function(){var s=d.getElementsByTagName("script");return s[s.length-1];})();\r\n var rd = Math.floor(Date.now()/60000) + "-" + Math.floor(Math.random()*1000);\r\n var s = d.createElement("script");\r\n s.src = "//pan.zen-cart.com/display/group/',
+    SUBSTRING(banners_html_text, LOCATE('pan.zen-cart.com/display/group/', banners_html_text) + CHAR_LENGTH('pan.zen-cart.com/display/group/'),
+        IF(SUBSTRING(banners_html_text, LOCATE('pan.zen-cart.com/display/group/', banners_html_text) + CHAR_LENGTH('pan.zen-cart.com/display/group/'), 2) REGEXP '^[0-9]{2}', 2, 1)
+    ), '/?rd=" + encodeURIComponent(rd);\r\n s.async = true;\r\n me.parentNode.insertBefore(s, me.nextSibling);\r\n })(document);\r\n</script>'
+) WHERE banners_html_text LIKE '%pan.zen-cart.com/display/group/%';
+
+
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
 #### VERSION UPDATE STATEMENTS
