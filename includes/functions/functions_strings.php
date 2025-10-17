@@ -140,7 +140,7 @@ function zen_trunc_string(?string $str = '', int|string $len = 150, string $more
     }
 
     $len = (int)$len;
-    if ($len == 0) {
+    if ($len <= 0) {
         return '';
     }
 
@@ -153,28 +153,25 @@ function zen_trunc_string(?string $str = '', int|string $len = 150, string $more
     // get limited text block
     $str = mb_substr($str, 0, $len);
 
-    if ($str !== '') {
-        // check for no spaces at all
-        if (!substr_count($str, ' ')) {
-            if ($more === 'true') {
-                $str .= '...';
-            }
-            return $str;
-        }
-
-        // remove final chars (of a partial word) and the preceding space
-        $str = preg_replace('/(\s\w+$)|(\s+$)/u', '', $str);
-
-        // backwards compatibility
-        // loose comparisons
-        if ($more == 'true') {
-            $str .= '...';
-        }
-        if ($more !== 'true' && $more !== 'false') {
-            $str .= $more;
-        }
+    if ($str === '') {
+        return $str;
     }
-    return $str;
+
+    if ($more === 'true') { // backward compatibility for older versions and plugins
+        $more = '...';
+    }
+    if ($more === 'false') { // this was never officially supported, but added for clarity in case.
+        $more = '';
+    }
+
+    // check for no spaces at all
+    if (!substr_count($str, ' ')) {
+        return $str . $more;
+    }
+
+    // remove final chars (of a partial word) and the preceding space
+    $str = preg_replace('/(\s\w+$)|(\s+$)/u', '', $str);
+    return $str . $more;
 }
 
 /**
