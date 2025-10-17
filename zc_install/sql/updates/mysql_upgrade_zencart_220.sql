@@ -58,8 +58,8 @@ ALTER TABLE products_options MODIFY products_options_name varchar(191) NOT NULL 
 ALTER TABLE products_options_values MODIFY products_options_values_name varchar(191) NOT NULL default '';
 ALTER TABLE currencies MODIFY code char(4) NOT NULL default '';
 ALTER TABLE orders MODIFY currency char(4) default NULL;
-ALTER TABLE plugin_control MODIFY `version` varchar(20);
-ALTER TABLE plugin_control_versions MODIFY `version` varchar(20);
+ALTER TABLE plugin_control MODIFY version varchar(20);
+ALTER TABLE plugin_control_versions MODIFY version varchar(20);
 ALTER TABLE customers ADD COLUMN activation_required tinyint(1) NOT NULL DEFAULT 0 AFTER customers_authorization;
 ALTER TABLE customers ADD COLUMN welcome_email_sent tinyint(1) DEFAULT NULL AFTER activation_required;
 
