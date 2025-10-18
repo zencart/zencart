@@ -29,7 +29,7 @@ class MultiFactorAuth
     private static string $_base32dict = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=';
 
     /** @var array<string> */
-    private static array $_base32;
+    private static array $_base32 = [];
 
     /** @var array<string, int> */
     private static array $_base32lookup = [];
@@ -93,10 +93,11 @@ class MultiFactorAuth
     }
 
     /**
-     * Check if the code is correct. This will accept codes starting from ($discrepancy * $period) sec ago to ($discrepancy * period) sec from now
+     * Check if the code is correct.
+     * This will accept codes starting from ($discrepancy * $period) sec ago to ($discrepancy * period) sec from now
      * @since ZC v2.1.0
      */
-    public function verifyCode(string $secret, string $code, int $discrepancy = 1, ?int $time = null, ?int &$timeslice = 0): bool
+    public function verifyCode(string $secret, string $code, int $discrepancy = 1, ?int $time = null, ?int &$timeslice = null): bool
     {
         $timeslice = 0;
 
@@ -137,6 +138,7 @@ class MultiFactorAuth
      */
     private function getTimeSlice(?int $time = null, int $offset = 0): int
     {
+        $time = $time ?? time();
         return (int)floor($time / $this->period) + ($offset * $this->period);
     }
 
