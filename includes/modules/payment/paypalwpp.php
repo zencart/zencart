@@ -526,7 +526,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->transactiontype = $response[$this->infoPrefix . 'TRANSACTIONTYPE'];
       $this->payment_time = urldecode($response[$this->infoPrefix . 'ORDERTIME']);
       $this->feeamt = empty($response[$this->infoPrefix . 'FEEAMT']) ? 0 : urldecode($response[$this->infoPrefix . 'FEEAMT']);
-      $this->taxamt = urldecode($response[$this->infoPrefix . 'TAXAMT']);
+      $this->taxamt = urldecode($response[$this->infoPrefix . 'TAXAMT'] ?? '');
       $this->pendingreason = $response[$this->infoPrefix . 'PENDINGREASON'];
       $this->reasoncode = $response[$this->infoPrefix . 'REASONCODE'];
       $this->numitems = count($order->products);
