@@ -5,7 +5,7 @@ namespace BaconQrCode\Renderer\Path;
 
 final class Line implements OperationInterface
 {
-    public function __construct(private readonly float $x, private readonly float $y)
+    public function __construct(private float $x, private float $y)
     {
     }
 

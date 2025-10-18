@@ -8,9 +8,9 @@ use BaconQrCode\Renderer\Color\ColorInterface;
 final class Gradient
 {
     public function __construct(
-        private readonly ColorInterface $startColor,
-        private readonly ColorInterface $endColor,
-        private readonly GradientType   $type
+        private ColorInterface $startColor,
+        private ColorInterface $endColor,
+        private GradientType   $type
     ) {
     }
 

@@ -23,7 +23,7 @@ final class Edge
 
     private int $maxY = -1;
 
-    public function __construct(private readonly bool $positive)
+    public function __construct(private bool $positive)
     {
     }
 

@@ -17,8 +17,8 @@ final class BlockPair
      * @param SplFixedArray<int> $errorCorrectionBytes Error correction bytes in the block.
      */
     public function __construct(
-        private readonly SplFixedArray $dataBytes,
-        private readonly SplFixedArray $errorCorrectionBytes
+        private SplFixedArray $dataBytes,
+        private SplFixedArray $errorCorrectionBytes
     ) {
     }
 

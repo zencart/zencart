@@ -11,7 +11,7 @@ namespace BaconQrCode\Common;
  */
 final class EcBlock
 {
-    public function __construct(private readonly int $count, private readonly int $dataCodewords)
+    public function __construct(private int $count, private int $dataCodewords)
     {
     }
 

@@ -15,10 +15,10 @@ final class EllipticArc implements OperationInterface
         float                  $xRadius,
         float                  $yRadius,
         float                  $xAxisAngle,
-        private readonly bool  $largeArc,
-        private readonly bool  $sweep,
-        private readonly float $x,
-        private readonly float $y
+        private bool  $largeArc,
+        private bool  $sweep,
+        private float $x,
+        private float $y
     ) {
         $this->xRadius = abs($xRadius);
         $this->yRadius = abs($yRadius);

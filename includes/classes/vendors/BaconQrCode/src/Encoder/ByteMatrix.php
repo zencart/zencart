@@ -18,7 +18,7 @@ final class ByteMatrix
      */
     private SplFixedArray $bytes;
 
-    public function __construct(private readonly int $width, private readonly int $height)
+    public function __construct(private int $width, private int $height)
     {
         $this->bytes = new SplFixedArray($height);
 

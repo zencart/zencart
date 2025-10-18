@@ -10,7 +10,7 @@ use BaconQrCode\Renderer\Path\Path;
  */
 final class CompositeEye implements EyeInterface
 {
-    public function __construct(private readonly EyeInterface $externalEye, private readonly EyeInterface $internalEye)
+    public function __construct(private EyeInterface $externalEye, private EyeInterface $internalEye)
     {
     }
 

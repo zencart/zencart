@@ -28,9 +28,9 @@ final class QrCode
     private ByteMatrix $matrix;
 
     public function __construct(
-        private readonly Mode                 $mode,
-        private readonly ErrorCorrectionLevel $errorCorrectionLevel,
-        private readonly Version              $version,
+        private Mode                 $mode,
+        private ErrorCorrectionLevel $errorCorrectionLevel,
+        private Version              $version,
         int                                   $maskPattern,
         ByteMatrix                            $matrix
     ) {

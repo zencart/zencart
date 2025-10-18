@@ -6,12 +6,12 @@ namespace BaconQrCode\Renderer\Path;
 final class Curve implements OperationInterface
 {
     public function __construct(
-        private readonly float $x1,
-        private readonly float $y1,
-        private readonly float $x2,
-        private readonly float $y2,
-        private readonly float $x3,
-        private readonly float $y3
+        private float $x1,
+        private float $y1,
+        private float $x2,
+        private float $y2,
+        private float $x3,
+        private float $y3
     ) {
     }
 

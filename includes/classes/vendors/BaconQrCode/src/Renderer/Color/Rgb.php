@@ -12,7 +12,7 @@ final class Rgb implements ColorInterface
      * @param int $green the green amount of the color, 0 to 255
      * @param int $blue the blue amount of the color, 0 to 255
      */
-    public function __construct(private readonly int $red, private readonly int $green, private readonly int $blue)
+    public function __construct(private int $red, private int $green, private int $blue)
     {
         if ($red < 0 || $red > 255) {
             throw new Exception\InvalidArgumentException('Red must be between 0 and 255');
