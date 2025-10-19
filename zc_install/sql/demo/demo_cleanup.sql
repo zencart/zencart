@@ -23,6 +23,7 @@ TRUNCATE TABLE music_genre;
 TRUNCATE TABLE product_music_extra; 
 TRUNCATE TABLE product_types_to_category; 
 TRUNCATE TABLE products; 
+TRUNCATE TABLE products_additional_images; 
 TRUNCATE TABLE products_attributes; 
 TRUNCATE TABLE products_attributes_download; 
 TRUNCATE TABLE products_description; 
