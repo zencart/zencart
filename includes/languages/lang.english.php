@@ -531,6 +531,7 @@ $define = [
     'WARNING_NO_FILE_UPLOADED' => 'Warning:  no file uploaded.',
     'WARNING_PRODUCT_QUANTITY_ADJUSTED' => 'Quantity has been adjusted to what is in stock. ',
     'WARNING_SHOPPING_CART_COMBINED' => 'NOTICE: For your convenience, your current shopping cart has been combined with your shopping cart from your last visit. Please review your shopping cart before checking out.',
+    'WHOLESALE_CUSTOMER_SHOPPING' => 'Prices are displayed with your wholesale discount.',
 ];
 
 // Definitions that require references to other definitions
