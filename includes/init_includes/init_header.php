@@ -82,3 +82,7 @@ if (zen_is_logged_in() && !in_array($_GET['main_page'], [FILENAME_ADDRESS_BOOK_P
         }
     }
 }
+
+if (Customer::isWholesaleCustomer()) {
+    $messageStack->add('header', WHOLESALE_CUSTOMER_SHOPPING, 'success');
+}
