@@ -378,14 +378,21 @@ if (!empty($action)) {
               <p><?= TEXT_BANNERS_NEW_GROUP ?></p><?= zen_draw_input_field('new_banners_group', '', 'class="form-control" id="new_banners_group"', count($groups_array) === 0) ?>
             </div>
           </div>
-
+<?php
+// To avoid overflow of long directory names, especially on smaller screens.
+$abbrev_dir_name = DIR_FS_CATALOG_IMAGES;
+// If DIR_FS_CATALOG_IMAGES is longer than 45 characters, abbreviate it using first 10 chars + '...' + last 32 chars
+if (mb_strlen($abbrev_dir_name) > 45) {
+    $abbrev_dir_name = mb_substr($abbrev_dir_name, 0, 10) . '...' . mb_substr($abbrev_dir_name, -32);
+}
+?>
           <div style="border: 1px solid grey; padding: 10px;">
             <div class="form-group row mt-2">
                 <div class="col-sm-offset-3 col-sm-9"><?= TEXT_BANNERS_IMAGE_LOCAL ?></div>
                 <?= zen_draw_label(TEXT_BANNERS_CURRENT_IMAGE, 'banners_image_local', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
                     <div class="input-group">
-                        <span class="input-group-addon"><?= DIR_FS_CATALOG_IMAGES ?></span>
+                        <span class="input-group-addon"><?= $abbrev_dir_name ?></span>
                         <?= zen_draw_input_field('banners_image_local', ($bInfo->banners_image ?? ''), zen_set_field_length(TABLE_BANNERS, 'banners_image') . 'id="banners_image_local" class="form-control"') ?>
                     </div>
                 </div>
@@ -399,7 +406,7 @@ if (!empty($action)) {
             <div class="form-group row mt-2">
                 <?= zen_draw_label(TEXT_BANNERS_IMAGE_TARGET, 'banners_image_target', 'class="col-sm-3 control-label"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <div class="input-group"><span class="input-group-addon"><?= DIR_FS_CATALOG_IMAGES ?></span>
+                    <div class="input-group"><span class="input-group-addon"><?= $abbrev_dir_name ?></span>
                         <?= zen_draw_input_field('banners_image_target', 'banners/', 'class="form-control" id="banners_image_target"') ?>
                     </div>
                     <div>
