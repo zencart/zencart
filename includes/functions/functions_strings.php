@@ -34,7 +34,7 @@ function zen_output_string(?string $string, array|bool $translate = false, bool 
 /**
  * Returns a string with quotes converted to html entities
  * so that they can be passed through from page to page
- * without mistakenly being converted to specialchars or go missing
+ * without mistakenly being converted to specialchars or go "missing"
  * @since ZC v2.2.0
  */
 function zen_preserve_search_quotes(?string $search_string): string
@@ -49,10 +49,10 @@ function zen_preserve_search_quotes(?string $search_string): string
  * with parameters that run htmlspecialchars over the string
  * and converts quotes to html entities
  *
- * @param string The string to be parsed
+ * @param  string  $string  The string to be parsed
  * @since ZC v1.0.3
  */
-function zen_output_string_protected($string)
+function zen_output_string_protected(string $string): string
 {
     return zen_output_string($string, false, true);
 }
@@ -63,7 +63,7 @@ function zen_output_string_protected($string)
  * @param  string  $string  The string to be parsed
  * @since ZC v1.0.3
  */
-function zen_sanitize_string($string)
+function zen_sanitize_string(string $string): string|null
 {
     $string = preg_replace('/ +/', ' ', $string);
     return preg_replace("/[<>]/", '_', $string);
@@ -96,11 +96,11 @@ function zen_not_null(mixed $value): bool
  *
  * @param  string  $string  The string to be broken up
  * @param  int  $len  The maximum length allowed
- * @param  string  $break_char  The character to use at the end of the broken line
+ * @param  ?string  $break_char  The character to use at the end of the broken line
  * @return string
  * @since ZC v1.0.3
  */
-function zen_break_string($string, $len, $break_char = '-')
+function zen_break_string(?string $string, int $len, string $break_char = '-'): string
 {
     if (is_null($string) === true) {
         return '';
@@ -206,7 +206,7 @@ function zen_truncate_paragraph($paragraph, $size = 100)
  * @return int
  * @since ZC v1.0.3
  */
-function zen_word_count(string $string, string $needle)
+function zen_word_count(string $string, string $needle): int
 {
     $temp_array = preg_split('/' . $needle . '/', $string);
     return count($temp_array);
@@ -224,7 +224,7 @@ function zen_word_count(string $string, string $needle)
  * @return string
  * @since ZC v1.0.3
  */
-function zen_array_to_string($array, $exclude = '', $equals = '=', $separator = '&')
+function zen_array_to_string(array $array, array|string $exclude = '', string $equals = '=', string $separator = '&'): string
 {
     if (!is_array($exclude)) $exclude = [];
     if (!is_array($array)) $array = [];
@@ -251,7 +251,7 @@ function zen_array_to_string($array, $exclude = '', $equals = '=', $separator = 
  * @return string
  * @since ZC v1.3.9a
  */
-function charsetConvertWinToUtf8($string)
+function charsetConvertWinToUtf8(string $string): string
 {
     if (function_exists('iconv')) $string = iconv("Windows-1252", "ISO-8859-1//IGNORE", $string);
     $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
@@ -265,7 +265,7 @@ function charsetConvertWinToUtf8($string)
  * @return string
  * @since ZC v1.3.9a
  */
-function charsetClean($string)
+function charsetClean($string): string
 {
     if (preg_replace('/[^a-z0-9]/', '', strtolower(CHARSET)) == 'utf8') return $string;
     if (function_exists('iconv')) $string = iconv("Windows-1252", CHARSET . "//IGNORE", $string);
@@ -275,11 +275,11 @@ function charsetClean($string)
 }
 
 /**
- * strip out accented characters to reasonable approximations of english equivalents
+ * Strip out accented characters to reasonable approximations of english equivalents
  *
  * @since ZC v1.3.7.1
  */
-function replace_accents($s)
+function replace_accents($s): string
 {
     $skipPreg = (defined('OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES') && OVERRIDE_REPLACE_ACCENTS_WITH_HTMLENTITIES == 'TRUE');
     $s = htmlentities($s, ENT_COMPAT, CHARSET);
@@ -296,7 +296,7 @@ function replace_accents($s)
  * @return string
  * @since ZC v1.1.2
  */
-function zen_html_entity_decode($given_html, $quote_style = ENT_QUOTES)
+function zen_html_entity_decode(string $given_html, int $quote_style = ENT_QUOTES): string
 {
     $trans_table = array_flip(get_html_translation_table(HTML_SPECIALCHARS, $quote_style));
     $trans_table['&#39;'] = "'";
@@ -308,14 +308,13 @@ function zen_html_entity_decode($given_html, $quote_style = ENT_QUOTES)
  *
  * @since ZC v1.1.0
  */
-function zen_decode_specialchars($string)
+function zen_decode_specialchars(array|string $string): array|string
 {
     $string = str_replace('&gt;', '>', $string);
     $string = str_replace('&lt;', '<', $string);
     $string = str_replace('&#039;', "'", $string);
     $string = str_replace('&quot;', "\"", $string);
     $string = str_replace('&amp;', '&', $string);
-
     return $string;
 }
 
@@ -330,14 +329,14 @@ function zen_decode_specialchars($string)
  * @return array|string
  * @since ZC v1.5.7
  */
-function htmlentities_recurse($mixed_value, $flags = ENT_QUOTES, $encoding = 'utf-8', $double_encode = true)
+function htmlentities_recurse(array|string $mixed_value, int $flags = ENT_QUOTES, string $encoding = 'utf-8', bool $double_encode = true): array|string
 {
-    $result = array();
+    $result = [];
     if (!is_array($mixed_value)) {
-        return htmlentities((string)$mixed_value, $flags, $encoding, $double_encode);
+        return htmlentities($mixed_value, $flags, $encoding, $double_encode);
     }
     if (is_array($mixed_value)) {
-        $result = array();
+        $result = [];
         foreach ($mixed_value as $key => $value) {
             $result[$key] = htmlentities_recurse($value, $flags, $encoding, $double_encode);
         }
@@ -371,7 +370,7 @@ function utf8_encode_recurse($mixed_value)
  * @return string
  * @since ZC v1.2.0d
  */
-function zen_clean_html($clean_it, $extraTags = '')
+function zen_clean_html(string $clean_it, array|string $extraTags = ''): string
 {
     if (!is_array($extraTags)) $extraTags = [$extraTags];
 
@@ -434,7 +433,7 @@ function fixup_url(?string $url): string
  * @since ZC v1.0.3
  * @deleting in ZC v3.0.0
  */
-function zen_parse_input_field_data($data, $parse)
+function zen_parse_input_field_data(string $data, $parse): string
 {
     trigger_error('Call to deprecated function zen_parse_input_field_data. Use strtr() instead', E_USER_DEPRECATED);
     return strtr(trim($data), $parse);
@@ -477,7 +476,7 @@ function zen_str_to_numeric(mixed $string): float|int
     if (!is_numeric($string)) {
         throw new TypeError('Value is not a numeric string.');
     }
-    if (strpos($string, '.') === false) {
+    if (!str_contains($string, '.')) {
         return (int)$string;
     }
     return (float)$string;
