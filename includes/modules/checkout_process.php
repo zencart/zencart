@@ -27,9 +27,7 @@ if (!zen_is_logged_in()) {
 
 // BEGIN CC SLAM PREVENTION
 $slamming_threshold = 3;
-if (!isset($_SESSION['payment_attempt'])) {
-    $_SESSION['payment_attempt'] = 0;
-}
+$_SESSION['payment_attempt'] ??= 0;
 $_SESSION['payment_attempt']++;
 $zco_notifier->notify('NOTIFY_CHECKOUT_SLAMMING_ALERT', $_SESSION['payment_attempt'], $slamming_threshold);
 if ($_SESSION['payment_attempt'] > $slamming_threshold) {
@@ -40,9 +38,7 @@ if ($_SESSION['payment_attempt'] > $slamming_threshold) {
 }
 // END CC SLAM PREVENTION
 
-if (!isset($credit_covers)) {
-    $credit_covers = false;
-}
+$credit_covers ??= false;
 
 // load selected payment module
 require DIR_WS_CLASSES . 'payment.php';
@@ -56,7 +52,7 @@ require DIR_WS_CLASSES . 'shipping.php';
 $shipping_modules = new shipping($_SESSION['shipping']);
 
 // prevent 0-entry orders from being generated/spoofed
-if (count($order->products) < 1) {
+if (count($order->products) === 0) {
     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
 }
 
@@ -68,8 +64,7 @@ if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
         $payment_modules->clear_payment();
         $order_total_modules->clear_posts();
-        unset($_SESSION['payment']);
-        unset($_SESSION['shipping']);
+        unset($_SESSION['payment'], $_SESSION['shipping']);
 
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
@@ -123,21 +118,33 @@ $order->send_order_email($insert_id);
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL', $insert_id, $order);
 
 // clear slamming protection since payment was accepted
-if (isset($_SESSION['payment_attempt'])) {
-    unset($_SESSION['payment_attempt']);
-}
+unset($_SESSION['payment_attempt']);
 
 /**
  * Calculate order amount for display purposes on checkout-success page as well as adword campaigns etc
  * Takes the product subtotal and subtracts all credits from it
  */
-$oshipping = $otax = $ototal = $order_subtotal = $credits_applied = 0;
-for ($i = 0, $n = sizeof($order_totals); $i < $n; $i++) {
-    if ($order_totals[$i]['code'] === 'ot_subtotal') $order_subtotal = $order_totals[$i]['value'];
-    if (!empty(${$order_totals[$i]['code']}->credit_class)) $credits_applied += $order_totals[$i]['value'];
-    if ($order_totals[$i]['code'] === 'ot_total') $ototal = $order_totals[$i]['value'];
-    if ($order_totals[$i]['code'] === 'ot_tax') $otax = $order_totals[$i]['value'];
-    if ($order_totals[$i]['code'] === 'ot_shipping') $oshipping = $order_totals[$i]['value'];
+$oshipping = 0;
+$otax = 0;
+$ototal = 0;
+$order_subtotal = 0;
+$credits_applied = 0;
+for ($i = 0, $n = count($order_totals); $i < $n; $i++) {
+    if ($order_totals[$i]['code'] === 'ot_subtotal') {
+        $order_subtotal = $order_totals[$i]['value'];
+    }
+    if (!empty(${$order_totals[$i]['code']}->credit_class)) {
+        $credits_applied += $order_totals[$i]['value'];
+    }
+    if ($order_totals[$i]['code'] === 'ot_total') {
+        $ototal = $order_totals[$i]['value'];
+    }
+    if ($order_totals[$i]['code'] === 'ot_tax') {
+        $otax = $order_totals[$i]['value'];
+    }
+    if ($order_totals[$i]['code'] === 'ot_shipping') {
+        $oshipping = $order_totals[$i]['value'];
+    }
 }
 $commissionable_order = ($order_subtotal - $credits_applied);
 $commissionable_order_formatted = $currencies->format($commissionable_order);
@@ -163,4 +170,3 @@ foreach ($order->products as $key => $val) {
 $_SESSION['order_summary']['products_ordered_ids'] = implode('|', array_keys($products_array));
 $_SESSION['order_summary']['products_ordered_models'] = implode('|', array_values($products_array));
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_HANDLE_AFFILIATES');
-
