@@ -70,10 +70,12 @@
        <td class="cartQuantity">
 <?php
   if ($product['flagShowFixedQuantity']) {
-    echo $product['showFixedQuantityAmount'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
+    echo $product['showFixedQuantityAmount'];
   } else {
-    echo $product['quantityField'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
+    echo $product['quantityField'];
   }
+  echo !empty($product['flagStockCheck']) ? '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br>' : '';
+  echo !empty($product['showMinUnits']) ? $product['showMinUnits'] . '<br>' : '';
 ?>
        </td>
        <td class="cartQuantityUpdate">
@@ -86,7 +88,12 @@
 ?>
        </td>
        <td class="cartProductDisplay">
-<a href="<?php echo $product['linkProductsName']; ?>"><span class="cartImage back"><?php echo $product['productsImage']; ?></span><span class="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
+           <a href="<?= $product['linkProductsName'] ?>">
+               <span class="cartImage back"><?= $product['productsImage'] ?></span>
+               <span class="cartProdTitle"><?= $product['productsName'] .
+                   (!empty($product['flagStockCheck']) ? '<span class="alert bold">' . $product['flagStockCheck'] . '</span>' : '') ?>
+    </span>
+           </a>
 <br class="clearBoth">
 
 
