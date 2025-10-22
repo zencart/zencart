@@ -219,7 +219,7 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         echo '<br>';
         echo gethostname();
         echo ' - ' . date_default_timezone_get(); //what is the PHP timezone set to?
-        $loc = setlocale(LC_TIME, 0);
+        $loc = setlocale(LC_TIME, '0');
         if ($loc !== FALSE) echo ' - ' . $loc; //what is the locale in use?
         ?>
     </div>
