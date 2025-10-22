@@ -144,7 +144,7 @@ UPDATE banners SET banners_html_text = CONCAT(
     ), '/?rd=" + encodeURIComponent(rd);\r\n s.async = true;\r\n me.parentNode.insertBefore(s, me.nextSibling);\r\n })(document);\r\n</script>'
 ) WHERE banners_html_text LIKE '%pan.zen-cart.com/display/group/%';
 
-#PROGRESS_FEEDBACK:!TEXT=Creating new table products_additional_images...
+#PROGRESS_FEEDBACK:!TEXT=Updating Product Listing settings description...
 UPDATE configuration SET configuration_description = 'Do you want to display the Product Image?<br>0 - Not displayed.<br>n - Displayed, with the number n defining the display order relative to similar options on the product listing page.' WHERE configuration_key = 'PRODUCT_LIST_IMAGE' LIMIT 1;
 UPDATE configuration SET configuration_description = 'Do you want to display the Product Manufacturer Name?<br>0 - Not displayed.<br>n - Displayed, with the number n defining the display order relative to similar options on the product listing page.' WHERE configuration_key = 'PRODUCT_LIST_MANUFACTURER' LIMIT 1;
 UPDATE configuration SET configuration_description = 'Do you want to display the Product Model?<br>0 - Not displayed.<br>n - Displayed, with the number n defining the display order relative to similar options on the product listing page.' WHERE configuration_key = 'PRODUCT_LIST_MODEL' LIMIT 1;
