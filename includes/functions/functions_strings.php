@@ -52,7 +52,7 @@ function zen_preserve_search_quotes(?string $search_string): string
  * @param  string  $string  The string to be parsed
  * @since ZC v1.0.3
  */
-function zen_output_string_protected(string $string): string
+function zen_output_string_protected(?string $string): string
 {
     return zen_output_string($string, false, true);
 }
