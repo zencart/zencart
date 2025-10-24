@@ -95,6 +95,12 @@ if (!empty($action)) {
         }
       }
 
+      // -----
+      // Give a watching observer the opportunity to add/update additional information for
+      // the current manufacturer.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_INSERT_UPDATE_COMPLETE', ['action' => $action, 'manufacturers_id' => (int)$manufacturers_id]);
+
       zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturers_id));
       break;
     case 'deleteconfirm':
