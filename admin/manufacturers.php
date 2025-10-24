@@ -137,6 +137,12 @@ if (!empty($action)) {
                       WHERE manufacturers_id = " . (int)$manufacturers_id);
       }
 
+      // -----
+      // Give a watching observer the opportunity to cleanup additional information for
+      // the removal of the current manufacturer.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_DELETECONFIRM', ['manufacturers_id' => (int)$manufacturers_id]);
+
       zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '')));
       break;
 
