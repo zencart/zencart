@@ -858,7 +858,7 @@ class Customer extends base
     }
 
     /**
-     * Unconditionally authorizes the specified customer, returning an array containing 
+     * Unconditionally authorizes the specified customer, returning an array containing
      * the customer's current information, if that customer is present in the database.
      *
      * @since ZC v1.5.8
