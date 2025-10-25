@@ -63,6 +63,50 @@ if ((isset($_GET['action']) || isset($_POST['action']) || isset($_GET['act'], $_
 }
 
 // -----
+// The following array of GET variable keys might show up in mixed case, which can affect canonical URLs.
+// Here we check to see if they exist in their proper form, and if not then we check whether they exist
+// in mixed-case format. If they do, we unset the mixed-case form, and copy its value to the proper form
+// before continuing with sanitization.
+$caseSensitiveKeysToMap = [
+    // listed in alphabetical order for ease of maintenance
+    'artists_id',
+    'categories_id',
+    'chapter',
+    'cID',
+    'cPath',
+    'faq_item',
+    'id',
+    'manufacturers_id',
+    'music_genre_id',
+    'page',
+    'pID',
+    'pid',
+    'product_id',
+    'products_id',
+    'products_image_large_additional',
+    'record_company_id',
+    'reviews_id',
+    'search_in_description',
+    'typefilter',
+];
+foreach ($caseSensitiveKeysToMap as $key) {
+    if (!isset($_GET[$key])) {
+        foreach ($_GET as $mixedKey => $value) {
+            if (strtolower($mixedKey) === strtolower($key)) {
+                $_GET[$key] = $value;
+                unset($_GET[$mixedKey]);
+                if (isset($_REQUEST[$mixedKey])) {
+                    unset($_REQUEST[$mixedKey]);
+                    $_REQUEST[$key] = $value;
+                }
+                break;
+            }
+        }
+    }
+}
+unset($mixedKey);
+
+// -----
 // Check products_id values (and variants) as a uprid.  That's either an integer
 // value or a uprid (dddd:xxxx), where xxxx is the 32-hexadecimal character md5 hash of the currently-selected
 // attributes.
