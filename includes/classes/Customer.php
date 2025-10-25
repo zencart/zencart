@@ -920,7 +920,7 @@ class Customer extends base
     /**
      * @since ZC v1.5.8
      */
-    public function getAddressBookEntries(?int $customer_id = null): object
+    public function getAddressBookEntries(?int $customer_id = null): queryFactoryResult|array
     {
         global $db;
 
