@@ -59,7 +59,11 @@ if (!defined('BRANDS_IMAGE_HEIGHT')) {
     define('BRANDS_IMAGE_HEIGHT', IMAGE_PRODUCT_LISTING_HEIGHT);
 }
 if (!defined('BRANDS_MAX_COLUMNS')) {
-    define('BRANDS_MAX_COLUMNS', PRODUCT_LISTING_COLUMNS_PER_ROW);
+    $product_listing_columns_per_row = (int)PRODUCT_LISTING_COLUMNS_PER_ROW;
+    if ($product_listing_columns_per_row < 1) {
+        $product_listing_columns_per_row = 1;
+    }
+    define('BRANDS_MAX_COLUMNS', $product_listing_columns_per_row);
 }
 
 // This should be last line of the script:
