@@ -89,7 +89,7 @@ class zcDate extends base
             // First, save the current locale; it's set by the main language file's (presumed) call to the
             // setlocale function.
             //
-            $this->locale = setlocale(LC_TIME, 0);
+            $this->locale = setlocale(LC_TIME, '0');
 
             // -----
             // Using the current locale, retrieve the locale-specific 'short' date and time
@@ -189,7 +189,7 @@ class zcDate extends base
             // If the locale has changes (as it might between the class construction and
             // this method, re-initialize the conversion arrays for the current locale.
             //
-            if ($this->locale !== setlocale(LC_TIME, 0)) {
+            if ($this->locale !== setlocale(LC_TIME, '0')) {
                 $this->initializeConversionArrays();
             }
 
