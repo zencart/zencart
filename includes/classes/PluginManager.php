@@ -244,7 +244,7 @@ class PluginManager
     public function getPluginsFromDb()
     {
         $pluginList = [];
-        $results = $this->pluginControl->all();
+        $results = $this->pluginControl::all();
         foreach ($results as $result) {
             $pluginList[$result['unique_key']] = $result;
         }
