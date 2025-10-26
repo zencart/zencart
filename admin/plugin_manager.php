@@ -24,7 +24,7 @@ use Zencart\ViewBuilders\SimpleDataFormatter;
 /* @var queryFactory $db */
 /* @var messageStack $messageStack */
 
-require('includes/application_top.php');
+require 'includes/application_top.php';
 $pluginManager->inspectAndUpdate();
 
 // These next few classes are only needed by the plugin manager
