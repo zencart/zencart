@@ -73,8 +73,10 @@ function plugin_version_check_for_updates($plugin_file_id = 0, $version_string_t
     }
     // check whether present ZC version is compatible with the latest available plugin version
     if (!defined('PLUGIN_VERSION_CHECK_MATCHING_OVERRIDE') || empty(PLUGIN_VERSION_CHECK_MATCHING_OVERRIDE)) {
-        $zc_version = preg_replace('/[^0-9.]/', '', zen_get_zcversion());
-        if ($strict_zc_version_compare) $zc_version = zen_get_zcversion();
+        $zc_version = zen_get_zcversion();
+        if (!$strict_zc_version_compare) {
+            $zc_version = preg_replace('/[^0-9.]/', '', $zc_version);
+        }
         //$zcVersionCompare = $data[0]['zcversions_csv'] ?? $data[0]['zcversions'];
         if (!in_array('v' . $zc_version, $data[0]['zcversions'], false)) {
             $new_version_available = false;
