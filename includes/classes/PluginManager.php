@@ -55,8 +55,8 @@ class PluginManager
         if (!array_key_exists($pluginName, $installedPlugins)) {
             return null;
         }
-        $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $pluginName . '/' . $installedPlugins[$pluginName]['version'] . '/';
-        return $filePath;
+
+        return DIR_FS_CATALOG . 'zc_plugins/' . $pluginName . '/' . $installedPlugins[$pluginName]['version'] . '/';
     }
 
     /**
@@ -82,7 +82,9 @@ class PluginManager
         $versions = $this->getPluginVersions($uniqueKey);
         $versionList = [];
         foreach ($versions as $version) {
-            if (version_compare($version['version'], $currentVersion, '<=')) continue;
+            if (version_compare($version['version'], $currentVersion, '<=')) {
+                continue;
+            }
             $versionList[$version['version']] = $version['version'];
         }
         return $versionList;
@@ -96,6 +98,7 @@ class PluginManager
         $isAvailable = plugin_version_check_for_updates($pluginId, $currentVersion);
         return $isAvailable;
     }
+
     /**
      * @since ZC v1.5.7
      */
@@ -107,7 +110,7 @@ class PluginManager
         $pluginsById = [];
 
         $ids_csv = '';
-        foreach($plugins as $plugin) {
+        foreach ($plugins as $plugin) {
             $pluginsById[$plugin['zc_contrib_id']] = $plugin;
             $ids_csv .= (int)trim($plugin['zc_contrib_id']) . ',';
         }
@@ -131,7 +134,7 @@ class PluginManager
 
         $present_zc_version = 'v' . preg_replace('/[^0-9.]/', '', zen_get_zcversion());
 
-        foreach($results as $result) {
+        foreach ($results as $result) {
             $unique_key = $pluginsById[$result['id']]['unique_key'];
 
             if (version_compare($pluginsById[$result['id']]['version'], $result['latest_plugin_version'], '<')) {
@@ -162,7 +165,7 @@ class PluginManager
 
         if (null === $data || isset($data['error'])) {
             if (LOG_PLUGIN_VERSIONCHECK_FAILURES) {
-                error_log('CURL error checking plugin versions (in batch): ' . print_r(!empty($data)? $data : 'null', true));
+                error_log('CURL error checking plugin versions (in batch): ' . print_r(!empty($data) ? $data : 'null', true));
             }
             return false;
         }
@@ -186,8 +189,7 @@ class PluginManager
      */
     protected function getPluginVersions($uniqueKey)
     {
-        $result = $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
-        return $result;
+        return $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
     }
 
     /**
@@ -226,7 +228,7 @@ class PluginManager
                 continue;
             }
             if (!file_exists($fileinfo->getPathname() . '/manifest.php')) {
-                continue; //@todo consider throwing exception/triger_error here
+                continue; //@todo consider throwing exception/trigger_error here
             }
             $manifest = require $fileinfo->getPathname() . '/manifest.php';
             $versionList[$fileinfo->getFilename()] = $manifest;
@@ -281,7 +283,7 @@ class PluginManager
                     'version' => '',
                     'zc_versions' => '',
                     'infs' => 1,
-                    'zc_contrib_id' => $plugin[$pluginVersion]['pluginId']
+                    'zc_contrib_id' => $plugin[$pluginVersion]['pluginId'],
                 ];
 
         }
@@ -306,7 +308,7 @@ class PluginManager
     {
         $currentPlugin = $pluginsFromFilesystem[$uniqueKey];
         foreach ($currentPlugin as $version => $versionInfo) {
-            if ($version == 'versions') {
+            if ($version === 'versions') {
                 continue;
             }
             $versionInsertValues[] = [
@@ -314,7 +316,7 @@ class PluginManager
                 'author' => $versionInfo['pluginAuthor'],
                 'version' => $version,
                 'zc_versions' => json_encode($versionInfo['zcVersions']),
-                'infs' => 1
+                'infs' => 1,
             ];
         }
         return $versionInsertValues;
