@@ -95,6 +95,9 @@ class PluginManager
      */
     public function isNewDownloadAvailable($pluginId, $currentVersion)
     {
+        if (empty($pluginId)) {
+            return false;
+        }
         $isAvailable = plugin_version_check_for_updates($pluginId, $currentVersion);
         return $isAvailable;
     }
