@@ -398,6 +398,9 @@ class PluginManager
             $pluginconstantspath = $pluginpath . '/admin/includes/languages/' . $_SESSION['language'] . '/extra_definitions/lang.menu.php'; // The language constant file 'lang.menu.php' must be in this folder
             if (is_file($pluginconstantspath)) {
                 $pluginsconstants = require_once $pluginconstantspath; // Load language override constants definitions
+                if (!is_array($pluginsconstants) || empty($pluginsconstants)) {
+                    return;
+                }
                 $pluginnameconstant = 'ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $pluginuniquekey;
                 $plugindescriptionconstant = 'ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $pluginuniquekey;
                 if (!defined($pluginnameconstant) && array_key_exists($pluginnameconstant, $pluginsconstants)) {
