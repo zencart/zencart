@@ -59,11 +59,11 @@ class VersionServer
     }
 
     /**
-     * @param int|string $ids An integer or a comma-separated string of integers denoting the plugin ID from the ZC plugin library
+     * @param int|string|null $ids An integer or a comma-separated string of integers denoting the plugin ID from the ZC plugin library
      * @return bool|false|string json string
      * @since ZC v1.5.5f
      */
-    public function getPluginVersion($ids): bool|string
+    public function getPluginVersion(mixed $ids): bool|string
     {
         if (empty($ids)) {
             return false;
