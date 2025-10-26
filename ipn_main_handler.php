@@ -451,7 +451,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 $_SESSION['order_summary']['shipping'] = $oshipping ?? 0;
                 $products_array = [];
                 foreach ($order->products as $key => $val) {
-                    $products_array[urlencode($val['id'])] = urlencode($val['model']);
+                    $products_array[urlencode((string)$val['id'])] = urlencode($val['model']);
                 }
                 $_SESSION['order_summary']['products_ordered_ids'] = implode('|', array_keys($products_array));
                 $_SESSION['order_summary']['products_ordered_models'] = implode('|', array_values($products_array));
