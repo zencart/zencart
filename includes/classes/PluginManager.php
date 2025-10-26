@@ -8,6 +8,8 @@
 
 namespace Zencart\PluginManager;
 
+use App\Models\PluginControl;
+use App\Models\PluginControlVersion;
 use Zencart\PluginSupport\PluginStatus;
 
 /**
@@ -15,14 +17,8 @@ use Zencart\PluginSupport\PluginStatus;
  */
 class PluginManager
 {
-    private
-        $pluginControl,
-        $pluginControlVersion;
-
-    public function __construct($pluginControl, $pluginControlVersion)
+    public function __construct(private PluginControl $pluginControl, private PluginControlVersion $pluginControlVersion)
     {
-        $this->pluginControl = $pluginControl;
-        $this->pluginControlVersion = $pluginControlVersion;
     }
 
     /**
