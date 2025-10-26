@@ -55,7 +55,17 @@ class SimpleDataFormatter
         foreach ($this->resultSet as $result) {
             foreach ($fields as $field) {
                 $value = $this->derivedItems->process($result, $field, $columns[$field]);
-                $columnData[$field] = ['value' => $value, 'class' => '', 'original' => $result->$field];
+
+                $class = '';
+                // if column class is set as a closure, call it and pass in the value from $result->field; else assume it is a string
+                $classDef = $columns[$field]['class'] ?? null;
+                if ($classDef instanceof \Closure || is_callable($classDef)) {
+                    $class = $classDef($result->$field);
+                } elseif (is_string($classDef)) {
+                    $class = $classDef;
+                }
+
+                $columnData[$field] = ['value' => $value, 'class' => $class, 'original' => $result->$field];
             }
             $tableData[] = $columnData;
         }

@@ -44,6 +44,7 @@ $tableDefinition = [
                 'type' => 'local',
                 'method' => 'getLanguageTranslationForName',
             ],
+            'class' => '',
         ],
         'version' => ['title' => TABLE_HEADING_VERSION_INSTALLED],
         'filespace' => [
@@ -52,6 +53,7 @@ $tableDefinition = [
                 'type' => 'local',
                 'method' => 'getPluginFileSize',
             ],
+            'class' => '',
         ],
         'unique_key' => ['title' => TABLE_HEADING_KEY],
         'status' => [
@@ -65,6 +67,13 @@ $tableDefinition = [
                     (string)PluginStatus::DISABLED => zen_icon('status-yellow'),
                 ],
             ],
+            'class' => static function($value) {
+                return match ($value) {
+                    PluginStatus::ENABLED => 'status-enabled',
+                    PluginStatus::DISABLED => 'status-disabled',
+                    default => 'status-not-installed',
+                };
+            }
         ],
     ],
 ];

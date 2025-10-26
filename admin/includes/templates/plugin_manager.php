@@ -75,7 +75,7 @@ use Zencart\PluginSupport\PluginStatus;
                                     <?php
                                 }
                                 foreach ($tableData as $column) { ?>
-                                    <td class="<?= $column['class'] ?>"><?= $column['value'] ?></td>
+                                    <td <?= empty($column['class']) ? '' : 'class="' . $column['class'] . '"' ?>><?= $column['value'] ?></td>
                                     <?php
                                 }
                                 require DIR_WS_TEMPLATES . 'partials/tableview_rowactions.php'; ?>
