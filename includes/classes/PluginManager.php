@@ -268,8 +268,10 @@ class PluginManager
      */
     protected function updatePluginControl($pluginsFromFilesystem)
     {
-        $this->pluginControl->query()->update(['infs' => 0]);
-        $this->pluginControlVersion->query()->update(['infs' => 0]);
+        // Mark all existing plugins as not found on filesystem
+        $this->pluginControl::query()->update(['infs' => 0]);
+        $this->pluginControlVersion::query()->update(['infs' => 0]);
+
         $insertValues = [];
         $versionInsertValues = [];
         foreach ($pluginsFromFilesystem as $uniqueKey => $plugin) {
@@ -288,18 +290,19 @@ class PluginManager
                     'infs' => 1,
                     'zc_contrib_id' => $plugin[$pluginVersion]['pluginId'],
                 ];
-
         }
-        $this->pluginControl->upsert(
+        // Insert new, and update existing, plugins
+        $this->pluginControl::query()->upsert(
             $insertValues,
             ['id'],
             ['name', 'description', 'infs', 'author', 'zc_contrib_id']
         );
-        $this->pluginControlVersion->upsert(
+        $this->pluginControlVersion::query()->upsert(
             $versionInsertValues,
             ['id'],
             ['infs' => 1]
         );
+        // Remove any plugins no longer found on filesystem
         $this->pluginControl->where(['infs' => 0])->delete();
         $this->pluginControlVersion->where(['infs' => 0])->delete();
     }
