@@ -10,6 +10,7 @@ namespace Zencart\PluginManager;
 
 use App\Models\PluginControl;
 use App\Models\PluginControlVersion;
+use Illuminate\Database\Eloquent\Collection;
 use Zencart\PluginSupport\PluginStatus;
 
 /**
@@ -24,7 +25,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function inspectAndUpdate()
+    public function inspectAndUpdate(): void
     {
         $pluginsFromFilesystem = $this->getPluginsFromFileSystem();
         $this->updateDbPlugins($pluginsFromFilesystem);
@@ -33,7 +34,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getInstalledPlugins()
+    public function getInstalledPlugins(): array
     {
         $results = $this->pluginControl->where(['status' => PluginStatus::ENABLED])->orderBy('name')->orderBy('unique_key')->get();
         $pluginList = [];
@@ -46,7 +47,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getPluginVersionDirectory($pluginName, $installedPlugins)
+    public function getPluginVersionDirectory(string $pluginName, array $installedPlugins): ?string
     {
         if (!array_key_exists($pluginName, $installedPlugins)) {
             return null;
@@ -58,7 +59,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function isUpgradeAvailable($uniqueKey, $currentVersion)
+    public function isUpgradeAvailable(string $uniqueKey, string $currentVersion): bool|int|null
     {
         if (empty($currentVersion)) {
             return false;
@@ -70,7 +71,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getVersionsForUpgrade($uniqueKey, $currentVersion)
+    public function getVersionsForUpgrade(string $uniqueKey, string $currentVersion): array
     {
         if (empty($currentVersion)) {
             return [];
@@ -89,7 +90,7 @@ class PluginManager
     /**
      * @since ZC v2.0.0
      */
-    public function isNewDownloadAvailable($pluginId, $currentVersion)
+    public function isNewDownloadAvailable(int|string|null $pluginId, string $currentVersion): bool|array
     {
         if (empty($pluginId)) {
             return false;
@@ -101,7 +102,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getPluginsAfterCheckingForNewVersionsOnline()
+    public function getPluginsAfterCheckingForNewVersionsOnline(): bool|array
     {
         $plugins = $this->getPluginsFromDb();
 
@@ -153,7 +154,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    protected function getLatestPluginVersionsOnline($plugin_ids_csv = 0)
+    protected function getLatestPluginVersionsOnline(string $plugin_ids_csv = '0'): array|false
     {
         if (empty(trim($plugin_ids_csv, ','))) {
             return false;
@@ -186,7 +187,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    protected function getPluginVersions($uniqueKey)
+    protected function getPluginVersions(string $uniqueKey): Collection
     {
         return $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
     }
@@ -194,7 +195,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    protected function getPluginsFromFileSystem()
+    protected function getPluginsFromFileSystem(): array
     {
         $pluginDir = DIR_FS_CATALOG . 'zc_plugins';
         $pluginList = [];
@@ -218,7 +219,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    protected function getPluginVersionDirectories($parent)
+    protected function getPluginVersionDirectories(\DirectoryIterator $parent): array
     {
         $versionList = [];
         $dir = new \DirectoryIterator($parent->getPathName());
@@ -241,7 +242,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getPluginsFromDb()
+    public function getPluginsFromDb(): array
     {
         $pluginList = [];
         $results = $this->pluginControl::all();
@@ -254,7 +255,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    protected function updateDbPlugins($pluginsFromFilesystem)
+    protected function updateDbPlugins(array $pluginsFromFilesystem): void
     {
         $this->updatePluginControl($pluginsFromFilesystem);
     }
@@ -262,7 +263,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    protected function updatePluginControl($pluginsFromFilesystem)
+    protected function updatePluginControl(array $pluginsFromFilesystem): void
     {
         // Mark all existing plugins as not found on filesystem
         $this->pluginControl::query()->update(['infs' => 0]);
@@ -306,7 +307,7 @@ class PluginManager
     /**
      * @since ZC v1.5.8
      */
-    protected function processUpdatePluginControlVersions($uniqueKey, $pluginsFromFilesystem, $versionInsertValues)
+    protected function processUpdatePluginControlVersions(string $uniqueKey, array $pluginsFromFilesystem, array $versionInsertValues): array
     {
         $currentPlugin = $pluginsFromFilesystem[$uniqueKey];
         foreach ($currentPlugin as $version => $versionInfo) {
@@ -327,7 +328,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    protected function mergeInVersionInfo($pluginList, $uniqueKey, $versionInfo)
+    protected function mergeInVersionInfo(array $pluginList, string $uniqueKey, array $versionInfo): array
     {
         $versionList = [];
         foreach ($versionInfo as $version => $detail) {
@@ -343,7 +344,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getPluginVersionsForPlugin($uniqueKey)
+    public function getPluginVersionsForPlugin(string $uniqueKey): array
     {
         $results = $this->pluginControlVersion->where(['unique_key' => $uniqueKey])->get();
         $versions = [];
@@ -358,7 +359,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getPluginVersionsToClean($uniqueKey, $version)
+    public function getPluginVersionsToClean(string $uniqueKey, string $version): array
     {
         $versions = $this->getPluginVersionsForPlugin($uniqueKey);
         unset($versions[$version]);
@@ -368,7 +369,7 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function hasPluginVersionsToClean($uniqueKey, $version)
+    public function hasPluginVersionsToClean($uniqueKey, $version): ?int
     {
         return count($this->getPluginVersionsToClean($uniqueKey, $version));
     }
@@ -376,7 +377,7 @@ class PluginManager
     /**
      * @since ZC v1.5.8
      */
-    public function getPluginControl()
+    public function getPluginControl(): PluginControl
     {
         return $this->pluginControl;
     }
