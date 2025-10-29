@@ -194,12 +194,12 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             break;
         case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
             global $template;
-            $image = BUTTON_IMAGE_SOLD_OUT; 
-            $alt = BUTTON_SOLD_OUT_ALT; 
+            $image = BUTTON_IMAGE_SOLD_OUT;
+            $alt = BUTTON_SOLD_OUT_ALT;
             if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || strtolower(IMAGE_USE_CSS_BUTTONS) === 'found') {
                 $return_button = zen_image_button($image, $alt);
             } else {
-                $return_button = '<span class="text-center">' . zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', '') . '</span>'; 
+                $return_button = '<span class="text-center">' . zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', '') . '</span>';
             }
             $zco_notifier->notify('NOTIFY_ZEN_SOLD_OUT_IMAGE', array_merge($button_check->fields, ['products_id' => (int)$product_id]), $return_button);
 
