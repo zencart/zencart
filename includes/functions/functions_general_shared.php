@@ -198,35 +198,47 @@ function zen_set_field_length(string $table_name, string $field_name, $max = nul
 
 
 /**
- * Return all HTTP GET variables, except those passed as a parameter
+ * Return all HTTP GET variables as URL param string, excluding those specified.
+ * This is used to retain only relevant GET variables when building links, and not pass on things that related to prior actions that led to the current page.
+ * Some params are always excluded, for cleanup and security reasons.
  *
- * The return is a urlencoded string
+ * The return is a url-encoded string
  *
- * @param mixed $exclude_array either a single or array of parameter names to be excluded from output
+ * @param array|string $exclude_array array of parameter names (or single param name string) to be excluded from output
  * @return string url_encoded string of GET params
  * @since ZC v1.0.3
  */
-function zen_get_all_get_params($exclude_array = array())
+function zen_get_all_get_params(array|string $exclude_array = []): string
 {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array('main_page', 'error', 'x', 'y', 'cmd'));
+    if (is_string($exclude_array)) {
+        $exclude_array = [$exclude_array];
+    } else {
+        $exclude_array = [];
+    }
+    $exclude_array = array_merge($exclude_array, ['main_page', 'error', 'x', 'y', 'cmd']);
     if (function_exists('zen_session_name')) {
         $exclude_array[] = zen_session_name();
     }
     $get_url = '';
-    if (is_array($_GET) && (count($_GET) > 0)) {
-        foreach ($_GET as $key => $value) {
-            if (!in_array($key, $exclude_array)) {
-                if (!is_array($value)) {
-                    if (!empty($value)) {
-                        $get_url .= rawurlencode(stripslashes((string)$key)) . '=' . rawurlencode(stripslashes((string)$value)) . '&';
+    if (!is_array($_GET) || empty($_GET)) {
+        return $get_url;
+    }
+
+    foreach ($_GET as $key => $value) {
+        if (!in_array($key, $exclude_array, true)) {
+            if (!is_array($value)) {
+                if (!empty($value)) {
+                    $get_url .= rawurlencode(stripslashes((string)$key)) . '=' . rawurlencode(stripslashes((string)$value)) . '&';
+                }
+            } else {
+                if (IS_ADMIN_FLAG) {
+                    continue;
+                } // admin (and maybe catalog?) doesn't support passing arrays by GET, so skipping any arrays here
+                foreach (array_filter($value) as $arr) {
+                    if (is_array($arr)) {
+                        continue;
                     }
-                } else {
-                    if (IS_ADMIN_FLAG) continue; // admin (and maybe catalog?) doesn't support passing arrays by GET, so skipping any arrays here
-                    foreach (array_filter($value) as $arr) {
-                        if (is_array($arr)) continue;
-                        $get_url .= rawurlencode(stripslashes((string)$key)) . '[]=' . rawurlencode(stripslashes((string)$arr)) . '&';
-                    }
+                    $get_url .= rawurlencode(stripslashes((string)$key)) . '[]=' . rawurlencode(stripslashes((string)$arr)) . '&';
                 }
             }
         }
@@ -240,23 +252,27 @@ function zen_get_all_get_params($exclude_array = array())
 
 /**
  * Return all GET params as (usually hidden) POST params
+ * Analogous to zen_get_all_get_params, but returns HTML input fields for a form, instead of URL param string.
+ *
  * @param array $exclude_array GET keys to exclude from generated output
  * @param boolean $hidden generate hidden fields instead of regular input fields
  * @param string $parameters optional 'class="foo"' markup to include in non-hidden input fields
  * @return string HTML string of input fields
  * @since ZC v1.5.2
  */
-function zen_post_all_get_params($exclude_array = array(), $hidden = true, $parameters = '')
+function zen_post_all_get_params($exclude_array = [], $hidden = true, $parameters = '')
 {
-    if (!is_array($exclude_array)) $exclude_array = array((string)$exclude_array);
-    $exclude_array = array_merge($exclude_array, array('error', 'x', 'y'));
+    if (!is_array($exclude_array)) {
+        $exclude_array = [(string)$exclude_array];
+    }
+    $exclude_array = array_merge($exclude_array, ['error', 'x', 'y']);
     if (function_exists('zen_session_name')) {
         $exclude_array[] = zen_session_name();
     }
     $fields = '';
     if (is_array($_GET) && (count($_GET) > 0)) {
         foreach ($_GET as $key => $value) {
-            if (!in_array($key, $exclude_array)) {
+            if (!in_array($key, $exclude_array, true)) {
                 if (!is_array($value)) {
                     if (!empty($value)) {
                         if ($hidden) {
@@ -267,7 +283,9 @@ function zen_post_all_get_params($exclude_array = array(), $hidden = true, $para
                     }
                 } else {
                     foreach (array_filter($value) as $arr) {
-                        if (is_array($arr)) continue;
+                        if (is_array($arr)) {
+                            continue;
+                        }
                         if ($hidden) {
                             $fields .= zen_draw_hidden_field($key . '[]', $arr);
                         } else {

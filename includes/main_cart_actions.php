@@ -9,7 +9,11 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Oct 17 Modified in v2.1.0 $
+ * @since ZC v1.3.0
+ *
+ * @var shoppingCart $_SESSION['cart']
  */
+
 use Zencart\FileSystem\FileSystem;
 
 if (!defined('IS_ADMIN_FLAG')) {

@@ -69,12 +69,12 @@ function zen_get_attribute_details(int $products_id, int $options_id, int $optio
  *
  * (On catalog-side, this is often used to determine if attributes must be selected to add to cart)
  *
- * @param int $product_id
+ * @param numeric $product_id
  * @param bool|string $not_readonly
  * @return bool
  * @since ZC v1.0.3
  */
-function zen_has_product_attributes($product_id, $not_readonly = true)
+function zen_has_product_attributes(mixed $product_id, bool $not_readonly = true): bool
 {
     global $db, $zco_notifier;
 

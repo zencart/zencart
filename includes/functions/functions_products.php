@@ -612,11 +612,11 @@ function zen_get_products_description($product_id, $language_id = null): string
 
 /**
  * look up the product type from product_id and return an info page name (for template/page handling)
- * @param int $product_id
+ * @param numeric $product_id
  * @return string
  * @since ZC v1.2.0d
  */
-function zen_get_info_page($product_id): string
+function zen_get_info_page(mixed $product_id): string
 {
     return (new Product((int)$product_id))->getInfoPage();
 }
