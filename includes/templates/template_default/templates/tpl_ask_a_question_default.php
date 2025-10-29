@@ -7,7 +7,7 @@
 ?>
 <div class="centerColumn" id="askAQuestion">
 
-<?php echo zen_draw_form('ask_a_question', zen_href_link(FILENAME_ASK_A_QUESTION, 'action=send&pid=' . (int)$_GET['pid'], 'SSL')); ?>
+<?php echo zen_draw_form('ask_a_question', zen_href_link(FILENAME_ASK_A_QUESTION, 'action=send&pID=' . (int)$pid, 'SSL')); ?>
 
 <?php if (CONTACT_US_STORE_NAME_ADDRESS== '1') { ?>
 <address><?php echo nl2br(STORE_NAME_ADDRESS); ?></address>
@@ -27,7 +27,7 @@
   } else {
 ?>
 
-<?php echo '<a href="' . zen_href_link(zen_get_info_page((int)$_GET['pid']), 'products_id=' . (int)$_GET['pid'], 'SSL') . '">' . zen_image(DIR_WS_IMAGES . $product_details['products_image'], $product_details['products_name'], IMAGE_PRODUCT_LISTING_WIDTH, IMAGE_PRODUCT_LISTING_HEIGHT) . '</a>'; ?>
+<?php echo '<a href="' . zen_href_link(zen_get_info_page((int)$pid), 'products_id=' . (int)$pid, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . $product_details['products_image'], $product_details['products_name'], IMAGE_PRODUCT_LISTING_WIDTH, IMAGE_PRODUCT_LISTING_HEIGHT) . '</a>'; ?>
 
 <div id="contactUsNoticeContent" class="content">
 <?php

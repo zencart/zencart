@@ -123,7 +123,7 @@ if (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM =
             zen_image_submit(BUTTON_IMAGE_IN_CART, BUTTON_IN_CART_ALT);
     } else {
         // show the quantity box
-        $the_button = 
+        $the_button =
             PRODUCTS_ORDER_QTY_TEXT .
             '<input type="text" name="cart_quantity" value="' . $products_get_buy_now_qty . '" maxlength="6" size="4" aria-label="' . ARIA_QTY_ADD_TO_CART . '">' .
             '<br>' .
@@ -170,7 +170,7 @@ if ($flag_show_ask_a_question) {
 <!-- bof Ask a Question -->
     <br>
     <span id="productQuestions" class="biggerText">
-        <b><a href="<?= zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') ?>">
+        <b><a href="<?= zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . $_GET['products_id'], 'SSL') ?>">
             <?= ASK_A_QUESTION ?>
         </a></b>
     </span>

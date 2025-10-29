@@ -112,7 +112,7 @@ if ($flag_show_ask_a_question) {
 <!-- bof Ask a Question -->
             <br>
             <span id="productQuestions">
-                <?= '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT, ' id="askAQuestionButton"') . '</a>' ?>
+                <?= '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . $_GET['products_id'], 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ASK_A_QUESTION, BUTTON_ASK_A_QUESTION_ALT, ' id="askAQuestionButton"') . '</a>' ?>
             </span>
             <br class="clearBoth">
             <br>
@@ -178,7 +178,7 @@ if ($products_discount_type != 0) {
 if (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == '') {
   // do nothing
 } else {
-    
+
     $display_qty = (($flag_show_product_info_in_cart_qty == 1 && $_SESSION['cart']->in_cart($_GET['products_id'])) ? '<p>' . PRODUCTS_ORDER_QTY_TEXT_IN_CART . $_SESSION['cart']->get_quantity($_GET['products_id']) . '</p>' : '');
     if ($products_qty_box_status == 0 || $products_quantity_order_max == 1) {
         // hide the quantity box and default to 1

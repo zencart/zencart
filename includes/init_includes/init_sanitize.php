@@ -80,7 +80,6 @@ $caseSensitiveKeysToMap = [
     'music_genre_id',
     'page',
     'pID',
-    'pid',
     'product_id',
     'products_id',
     'products_image_large_additional',
@@ -118,8 +117,8 @@ unset($mixedKey);
 $saniGroup1 = [
     'products_id',  //- 'Normal', multi-use
     'product_id',   //- shopping_cart, when removing a product from the cart
-    'pid',          //- order_history sidebox and ask_a_question page
-    'pID',          //- main/additional images' pop-ups
+    'pID',          //- main/additional images' pop-up pages, order_history sidebox, and ask_a_question page
+    'pid',          //- prior to v2.2.0: order_history sidebox, ask_a_question page
 ];
 foreach ($saniGroup1 as $key) {
     if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?$/', (string)$_GET[$key])) {
