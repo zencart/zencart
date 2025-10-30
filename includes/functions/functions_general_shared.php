@@ -212,8 +212,6 @@ function zen_get_all_get_params(array|string $exclude_array = []): string
 {
     if (is_string($exclude_array)) {
         $exclude_array = [$exclude_array];
-    } else {
-        $exclude_array = [];
     }
     $exclude_array = array_merge($exclude_array, ['main_page', 'error', 'x', 'y', 'cmd']);
     if (function_exists('zen_session_name')) {
@@ -254,16 +252,16 @@ function zen_get_all_get_params(array|string $exclude_array = []): string
  * Return all GET params as (usually hidden) POST params
  * Analogous to zen_get_all_get_params, but returns HTML input fields for a form, instead of URL param string.
  *
- * @param array $exclude_array GET keys to exclude from generated output
+ * @param array|string $exclude_array GET keys to exclude from generated output
  * @param boolean $hidden generate hidden fields instead of regular input fields
  * @param string $parameters optional 'class="foo"' markup to include in non-hidden input fields
  * @return string HTML string of input fields
  * @since ZC v1.5.2
  */
-function zen_post_all_get_params($exclude_array = [], $hidden = true, $parameters = '')
+function zen_post_all_get_params(array|string $exclude_array = [], bool $hidden = true, string $parameters = ''): string
 {
-    if (!is_array($exclude_array)) {
-        $exclude_array = [(string)$exclude_array];
+    if (is_string($exclude_array)) {
+        $exclude_array = [$exclude_array];
     }
     $exclude_array = array_merge($exclude_array, ['error', 'x', 'y']);
     if (function_exists('zen_session_name')) {
