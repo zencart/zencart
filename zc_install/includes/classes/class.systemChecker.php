@@ -898,6 +898,6 @@ class systemChecker
             $version = substr($version, 0, strripos($version, '-MariaDB'));
             $checkVersion = $parameters['mariaDBVersion'];
         }
-        return version_compare($version, $checkVersion) >= 0;
+        return version_compare($version, $checkVersion, '>=');
     }
 }
