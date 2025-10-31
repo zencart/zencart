@@ -7,8 +7,8 @@
  */
 require('includes/application_top.php');
 
-    use Zencart\FileSystem\FileSystem;
-    use Zencart\ResourceLoaders\ModuleFinder;
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\ModuleFinder;
 
 // unset variable which is sometimes tainted by bad plugins like magneticOne tools
 if (isset($module)) {
@@ -627,16 +627,17 @@ if (!empty($action) && $order_exists === true) {
                         <table class="table" id="addressDelivery">
                             <tr>
                                 <td><strong><?= ENTRY_SHIPPING_ADDRESS ?></strong><br>
-                                        <?php if (!empty($order->delivery)) { ?>
-                                        <button type="button" class="btn btn-xs btn-default mt-3" title="<?= TEXT_COPY ?>" onclick="copyToClipboard('delivery', this)"><?= TEXT_COPY ?></button>
-                                        <?php } ?>
+                                    <?php if (!empty($order->delivery)) { ?>
+                                    <button type="button" class="btn btn-xs btn-default mt-3" title="<?= TEXT_COPY ?>" onclick="copyToClipboard('delivery', this)"><?= TEXT_COPY ?></button>
+                                    <?php } ?>
                                 </td>
-                                <td><?= (empty($order->delivery) ? TEXT_NONE : zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>')) ?></td>
+                                <td><?= empty($order->delivery) ? TEXT_NONE : zen_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>') ?></td>
                             </tr>
 <?php if (!empty($order->delivery)) { ?>
                             <tr>
                                 <td>&nbsp;</td>
-                                <td class="noprint"><a href="https://maps.google.com/maps/search/?api=1&amp;query=<?= urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']) ?>" rel="noreferrer" target="map">
+                                <td class="noprint">
+                                     <a href="https://maps.google.com/maps/search/?api=1&amp;query=<?= urlencode($order->delivery['street_address'] . ',' . $order->delivery['city'] . ',' . $order->delivery['state'] . ',' . $order->delivery['postcode']) ?>" rel="noreferrer" target="map">
                                         <i class="fa-regular fa-map">&nbsp;</i> <u><?= TEXT_MAP_SHIPPING_ADDRESS ?></u>
                                     </a>
                                 </td>
@@ -1076,7 +1077,7 @@ if ($show_orders_weights === true) {
                                                 }
 ?>
                                         </td>
-                                        <td class="text-center hidden-xs"><?= (!empty($item['updated_by']) ? $item['updated_by'] : '&nbsp;') ?></td>
+                                        <td class="text-center hidden-xs"><?= !empty($item['updated_by']) ? $item['updated_by'] : '&nbsp;' ?></td>
                                     </tr>
                                     <?php
                                 }
@@ -1149,7 +1150,7 @@ if ($show_orders_weights === true) {
                                 $parms = (isset($extra_status['label']['parms'])) ? (' ' . $extra_status['label']['parms']) : '';
 ?>
                         <div class="form-group">
-                                <div class="col-sm-3 control-label<?= $addl_class; ?>"<?= $parms ?>><?= $extra_status['label']['text'] ?></div>
+                                <div class="col-sm-3 control-label<?= $addl_class ?>"<?= $parms ?>><?= $extra_status['label']['text'] ?></div>
                                 <div class="col-sm-9"><?= $extra_status['input'] ?></div>
                         </div>
 <?php
@@ -1482,7 +1483,7 @@ if ($show_orders_weights === true) {
             foreach ($extra_data as $data_info) {
                     $align = (isset($data_info['align'])) ? (' text-' . $data_info['align']) : '';
 ?>
-                                <td class="dataTableContent<?= $align; ?>"><?php echo $data_info['text'] ?></td>
+                                <td class="dataTableContent<?= $align ?>"><?php echo $data_info['text'] ?></td>
 <?php
             }
     }
