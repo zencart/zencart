@@ -187,8 +187,8 @@ class BelongsTo extends Relation
         foreach ($models as $model) {
             $attribute = $this->getDictionaryKey($model->{$foreign});
 
-            if (isset($dictionary[$attribute])) {
-                $model->setRelation($relation, $dictionary[$attribute]);
+            if (isset($dictionary[$attribute ?? ''])) {
+                $model->setRelation($relation, $dictionary[$attribute ?? '']);
             }
         }
 

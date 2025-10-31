@@ -130,10 +130,10 @@ abstract class Settings implements ArrayAccess, Countable
     public function offsetExists(mixed $offset): bool
     {
         if ($this->includeConstants) {
-            return isset($this->settings[$offset]) || $this->globalConstantExists($offset);
+            return array_key_exists($offset ?? '', $this->settings) || $this->globalConstantExists($offset);
         }
 
-        return isset($this->settings[$offset]);
+        return array_key_exists($offset ?? '', $this->settings);
     }
 
     /**
