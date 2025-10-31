@@ -15,7 +15,7 @@ foreach ($customer_orders as $row) {
   $content .= '
 <li>
 <a href="' . zen_href_link(zen_get_info_page($row['id']), 'products_id=' . $row['id']) . '">' . $row['name'] . '</a>
-<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $row['id']) . '"><i class="fa-solid fa-cart-arrow-down"></i></a>
+<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(['action']) . 'action=cust_order&pID=' . $row['id']) . '"><i class="fa-solid fa-cart-arrow-down"></i></a>
 </li>
 ';
 

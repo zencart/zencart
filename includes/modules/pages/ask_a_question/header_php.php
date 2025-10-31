@@ -9,7 +9,7 @@
  */
 $zco_notifier->notify('NOTIFY_HEADER_START_ASK_A_QUESTION');
 
-$pid = (isset($_GET['pid'])) ? (int)$_GET['pid'] : false;
+$pid = $_GET['pID'] ?? $_GET['pid'] ?? $_GET['products_id'] ?? $_GET['product_id'] ?? false;
 
 // -----
 // Redirect to the site's main page if no pid parameter supplied.
@@ -17,6 +17,7 @@ $pid = (isset($_GET['pid'])) ? (int)$_GET['pid'] : false;
 if ($pid === false) {
     zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
+$pid = (int)$pid;
 
 // -----
 // Check to see if the "Show Ask a Question" button is enabled for the product's
@@ -29,13 +30,13 @@ $show_info_page_ask_a_question = 'SHOW_' . strtoupper($info_page) . '_ASK_A_QUES
 $bypass_redirect = false;
 $zco_notifier->notify('NOTIFY_ASK_A_QUESTION_ALLOW_BYPASS_REDIRECT', ['products_id' => $pid, ], $bypass_redirect);
 if ($bypass_redirect === false && $call_for_price === false && (!defined($show_info_page_ask_a_question) || constant($show_info_page_ask_a_question) === '0')) {
-    zen_redirect(zen_href_link($info_page, 'products_id=' . $_GET['pid']));
+    zen_redirect(zen_href_link($info_page, 'products_id=' . $pid));
 }
 
 $sql = "SELECT pd.products_name, p.products_image, p.products_model
         FROM " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd
         WHERE p.products_id = pd.products_id
-        AND p.products_id = " . (int)$_GET['pid'] . "
+        AND p.products_id = " . (int)$pid . "
         AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
         AND p.products_status = 1
         LIMIT 1";
@@ -139,7 +140,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
                 $text_message .= OFFICE_LOGIN_PHONE . "\t" . $telephone . "\n";
             }
             $text_message .= TEXT_PRODUCT_NAME . "\t" . $product_details['products_name'] . "\n" .
-            zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) .
+            zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$pid) .
             "\n";
             $text_message .= "\n" .
             '------------------------------------------------------' . "\n\n" .
@@ -147,14 +148,14 @@ if (isset($_GET['action']) && ($_GET['action'] == 'send')) {
             '------------------------------------------------------' . "\n\n" .
             $extra_info['TEXT'];
             // Prepare HTML-portion of message
-            $html_msg['EMAIL_MESSAGE_HTML'] = '<b>' . TEXT_PRODUCT_NAME . '</b> <a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['pid']) . '">' . $product_details['products_name'] . '</a><br>' . strip_tags($_POST['enquiry']);
+            $html_msg['EMAIL_MESSAGE_HTML'] = '<b>' . TEXT_PRODUCT_NAME . '</b> <a href="' . zen_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$pid) . '">' . $product_details['products_name'] . '</a><br>' . strip_tags($_POST['enquiry']);
             $html_msg['CONTACT_US_OFFICE_FROM'] = OFFICE_FROM . ' ' . $name . '<br>' . OFFICE_EMAIL . ' ' . $email_address .
                 (!empty($telephone) ? '<br>' . OFFICE_LOGIN_PHONE . ' ' . $telephone : '');
             $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
             // Send message
             zen_mail($send_to_name, $send_to_email, $email_subject, $text_message, $name, $email_address, $html_msg,'ask_a_question');
         }
-        zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, 'action=success&pid=' . (int)$_GET['pid'], 'SSL'));
+        zen_redirect(zen_href_link(FILENAME_ASK_A_QUESTION, 'action=success&pID=' . (int)$pid, 'SSL'));
     } else {
         $error = true;
         if (empty($name)) {

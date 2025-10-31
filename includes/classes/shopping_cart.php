@@ -2362,11 +2362,12 @@ class shoppingCart extends base
             $messageStack->add_session('header', 'FUNCTION ' . __FUNCTION__, 'caution');
         }
 
-        if (zen_is_logged_in() && isset($_GET['pid'])) {
-            if (zen_has_product_attributes($_GET['pid'])) {
-                zen_redirect(zen_href_link(zen_get_info_page($_GET['pid']), 'products_id=' . $_GET['pid']));
+        $pid = $_GET['pID'] ?? $_GET['pid'] ?? $_GET['products_id'] ?? $_GET['product_id'] ?? false;
+        if ($pid !== false && zen_is_logged_in()) {
+            if (zen_has_product_attributes($pid)) {
+                zen_redirect(zen_href_link(zen_get_info_page($pid), 'products_id=' . $pid));
             } else {
-                $this->add_cart($_GET['pid'], $this->get_quantity($_GET['pid']) + 1);
+                $this->add_cart($pid, $this->get_quantity($pid) + 1);
             }
         }
         // display message if all is good and not on shopping_cart page

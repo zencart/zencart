@@ -7,6 +7,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Nov 11 Modified in v2.0.0-alpha1 $
  */
+// set $pid before the notifier starts
+$pid = $_GET['pID'] ?? $_GET['pid'] ?? $_GET['products_id'] ?? $_GET['product_id'] ?? 0;
+
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_POPUP_IMAGES_ADDITIONAL');
 
@@ -20,7 +23,7 @@
                             and p.products_id = :productsID
                             and pd.language_id = :languagesID ";
 
-  $products_values_query = $db->bindVars($products_values_query, ':productsID', $_GET['pID'] ?? 0, 'integer');
+  $products_values_query = $db->bindVars($products_values_query, ':productsID', $pid, 'integer');
   $products_values_query = $db->bindVars($products_values_query, ':languagesID', $_SESSION['languages_id'], 'integer');
 
   $products_values = $db->Execute($products_values_query);

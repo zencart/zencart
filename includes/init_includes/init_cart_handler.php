@@ -19,7 +19,7 @@ if (isset($_GET['action'])) {
   }
   if (DISPLAY_CART == 'true') {
     $goto =  FILENAME_SHOPPING_CART;
-    $parameters = array('action', 'cPath', 'products_id', 'pid', 'main_page');
+    $parameters = array('action', 'cPath', 'products_id', 'pID', 'pid', 'main_page');
   } else {
     $chk_handler = zen_get_info_page(isset($_GET['products_id']) ? $_GET['products_id'] : 0);
     $goto = $_GET['main_page'];
@@ -31,9 +31,9 @@ if (isset($_GET['action'])) {
         $parameters = array('action', 'products_id');
       }
     } elseif ($_GET['main_page'] == $chk_handler) {
-      $parameters = array('action', 'pid', 'main_page');
+      $parameters = array('action', 'pID', 'pid', 'main_page');
     } else {
-      $parameters = array('action', 'pid', 'main_page', 'products_id');
+      $parameters = array('action', 'pID', 'pid', 'main_page', 'products_id');
     }
   }
   /**
