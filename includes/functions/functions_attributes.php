@@ -74,7 +74,7 @@ function zen_get_attribute_details(int $products_id, int $options_id, int $optio
  * @return bool
  * @since ZC v1.0.3
  */
-function zen_has_product_attributes(mixed $product_id, bool $not_readonly = true): bool
+function zen_has_product_attributes(mixed $product_id, bool|string $not_readonly = true): bool
 {
     global $db, $zco_notifier;
 
