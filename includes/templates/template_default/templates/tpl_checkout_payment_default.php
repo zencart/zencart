@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=checkout_payment.
  * Displays the allowed payment modules, for selection by customer.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Oct 05 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2025 Sep 13 Modified in v2.2.0 $
  */
 
 echo $payment_modules->javascript_validation(); ?>

@@ -13,10 +13,9 @@
 /**
  * sfYamlInline implements a YAML parser/dumper for the YAML inline syntax.
  *
- * @package    symfony
  * @subpackage yaml
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version $Id: Author: DrByte  Thu Oct 1 15:30:47 2015 -0400 New in v1.5.5 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  * @codeCoverageIgnore
  */
 class sfYamlInline

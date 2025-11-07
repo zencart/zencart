@@ -2,11 +2,11 @@
 /**
  * paypalwpp_admin_notification.php admin display component
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Jul 03 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2025 Aug 13 Modified in v2.2.0 $
  */
 if (!defined('TEXT_MAXIMUM_CHARACTERS_ALLOWED')) {
     define('TEXT_MAXIMUM_CHARACTERS_ALLOWED', ' chars allowed');

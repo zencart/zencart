@@ -2,10 +2,10 @@
 /**
  * Side Box Template
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Nick Fenwick 2023 Jul 04 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 29 Modified in v2.2.0 $
  */
 $content = "";
 $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class="sideBoxContent">' . "\n";

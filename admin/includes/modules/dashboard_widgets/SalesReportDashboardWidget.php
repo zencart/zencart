@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2020 Jun 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_STATS_SALES_REPORT_GRAPHS, '')) return;

@@ -6,10 +6,10 @@
  * Displays greetings, welcome text (define-page content), and various centerboxes depending on switch settings in Admin
  * Centerboxes are called as necessary
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Aug 24 Modified in v2.1.0-alpha2 $
+ * @version $Id: simon1066 2025 Jan 13 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="indexDefault">

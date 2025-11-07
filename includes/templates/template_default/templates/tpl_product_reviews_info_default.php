@@ -2,10 +2,10 @@
 /**
  * Page Template
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: John Thompson 2022 Jul 30 Modified in v1.5.8-alpha2 $
+ * @version $Id: piloujp 2025 May 27 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="reviewsInfoDefault">

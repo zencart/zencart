@@ -6,7 +6,7 @@
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte New in v2.2.0 $
+ * @version $Id: DrByte 2025 Sep 19 New in v2.2.0 $
  *
  * Ref: https://www.tiny.cloud/docs/tinymce/latest/bootstrap-zip/
  * Ref: https://www.jsdelivr.com/package/npm/tinymce

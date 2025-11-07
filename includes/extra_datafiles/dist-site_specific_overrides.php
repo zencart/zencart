@@ -9,9 +9,9 @@
  * and make your edits there.  Otherwise, your overrides might get "lost" on a future Zen Cart upgrade.  The 'base' Zen Cart definitions
  * for most of these variables are set by /includes/init_includes/init_common_elements.php.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Aug 26 Modified in v2.1.0-alpha2 $
+ * @version $Id: lat9 2025 Sep 24 Modified in v2.2.0 $
  */
 // -----
 // Identify whether the link to the 'accessibility' page is included in the "Information" sidebox.

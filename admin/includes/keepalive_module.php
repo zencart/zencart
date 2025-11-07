@@ -3,9 +3,9 @@
  * Admin session timeout warning alerter
  * Prompts to extend login session after 2/3 of the allowed session time has expired without mouse activity or form submission.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Oct 16 Modified in v2.1.0 $
+ * @version $Id: torvista 2025 Mar 16 Modified in v2.2.0 $
  */
 
 if (!defined('TEXT_TIMEOUT_WARNING')) define('TEXT_TIMEOUT_WARNING', '**WARNING**');

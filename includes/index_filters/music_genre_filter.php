@@ -6,11 +6,11 @@
  * index filter for the music product type
  * show the products of a specified music_genre
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @todo Need to add/fine-tune ability to override or insert entry-points on a per-product-type basis
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: lat9 2025 Apr 29 Modified in v2.2.0 $
  */
 /**
  * @var queryFactory $db

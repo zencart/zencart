@@ -2,10 +2,10 @@
 /**
  * This file is inserted at the start of the body tag, just above the header menu, and loads most of the admin javascript components
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Aug 18 Modified in v2.1.0-alpha2 $
+ * @version $Id: DrByte 2025 Mar 19 Modified in v2.2.0 $
  */
 ?>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

@@ -6,7 +6,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_password_reset_default.php $
+ * @version $Id: DrByte 2025 Jan 15 New in v2.2.0 $
  *
  *  NOTE: changes made to this file should also be made in tpl_account_password_default.php where relevant
  */

@@ -6,9 +6,9 @@
  * However, using the PHP error logging facility we can store all PHP errors to a file, and then review separately.
  * Zen Cart's debug details are stored at: /logs/myDEBUG-yyyymmdd-hhiiss-xxxxx.log
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Aug 27 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2025 May 07 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     exit('Invalid Access');

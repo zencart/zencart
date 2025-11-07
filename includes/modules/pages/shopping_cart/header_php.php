@@ -2,10 +2,10 @@
 /**
  * shopping_cart header_php.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Apr 16 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Aug 30 Modified in v2.2.0 $
  */
 
 // This should be first line of the script:

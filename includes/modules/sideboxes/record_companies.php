@@ -2,10 +2,10 @@
 /**
  * record_companies sidebox - displays list of record companies for customer to filter products on
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 05 Modified in v1.5.8-alpha $
+ * @version $Id: piloujp 2025 May 16 Modified in v2.2.0 $
  */
 $record_company = $db->Execute(
     "SELECT record_company_id, record_company_name
