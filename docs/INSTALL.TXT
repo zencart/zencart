@@ -23,4 +23,4 @@ Zen Cart has a built-in automatic installation system. However, to use this, you
 
 For more detailed installation instructions, please see the Implementation Guide and the online documentation. 
 
-( (c)Copyright 2003-2024, Zen Cart(R). All rights reserved.)
+( (c)Copyright 2003-2025, Zen Cart(R). All rights reserved.)
