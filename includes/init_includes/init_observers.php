@@ -14,9 +14,9 @@
  * This fires at AutoLoader point 175, so all previously-processed system dependencies are in place.
  * If you need an observer class to fire at a much earlier point so it fires before other system processes, you'll need to add your own auto_loaders/config.yyyyy.php file with relevant rules to load those observers.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Sep 22 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2025 Sep 19 Modified in v2.2.0 $
  */
 
 use Zencart\FileSystem\FileSystem;

@@ -2,10 +2,10 @@
 /**
  *  product_info main_template_vars.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Sep 17 Modified in v2.1.0-beta1 $
+ * @version $Id: lat9 2025 Jun 21 Modified in v2.2.0 $
  */
 /*
  * Extracts and constructs the data to be used in the product-type template tpl_TYPEHANDLER_info_display.php

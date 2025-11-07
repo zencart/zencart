@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 sept 25 Modified in v2.2.0-alpha $
+ * @version $Id: DrByte 2025 Oct 25 New in v2.2.0 $
  *
  * @var \Zencart\ViewBuilders\SimpleDataFormatter $formatter
  * @var \Zencart\TableViewControllers\BaseController $tableController

@@ -2,7 +2,7 @@
 /**
  * polyfills to accommodate older/newer PHP versions, adapted from https://github.com/symfony/polyfill/
  * @copyright Portions (c) 2015-present Fabien Potencier <fabien@symfony.com>
- * @version $Id: DrByte 2025 August  Modified in v2.2.0-beta1 $
+ * @version $Id: DrByte 2025 Sep 19 Modified in v2.2.0 $
  * @since ZC v1.5.7c
  */
 

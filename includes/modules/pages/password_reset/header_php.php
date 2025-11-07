@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: header_php.php  $
+ * @version $Id: piloujp 2025 Jun 30 New in v2.2.0 $
  *
  * @var queryFactory $db
  * @var messageStack $messageStack

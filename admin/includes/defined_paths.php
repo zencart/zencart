@@ -4,11 +4,10 @@
  ***       It should NOT be necessary to edit anything here. Anything requiring overrides can be done in override files or in configure.php directly. ***
  * -- ADMIN version --
  *
- * @package initSystem
- * @copyright Copyright 2003-2018 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All Wed Nov 15 10:59:33 2017 +0100 Modified in v1.5.6 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  * @since ZC v1.5.3
  */
 function zen_parse_url($url, $element = 'array')

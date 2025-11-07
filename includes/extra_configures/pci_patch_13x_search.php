@@ -2,10 +2,9 @@
 /**
  * PCI Patch for v1.3.x -- to aid in avoiding false-positives thrown by PCI scans
  *
- * @package initSystem
- * @copyright Copyright 2003-2009 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pci_patch_13x_search.php 14869 2009-11-19 22:24:38Z drbyte $
+ * @version $Id: Scott Wilson 2025 May 24 Modified in v2.2.0 $
  */
 /**
  *

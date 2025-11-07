@@ -2,10 +2,10 @@
 /**
  * Header code file for the customer's Account-Edit page
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2024 Mar 12 Modified in v2.0.0-rc2 $
+ * @version $Id: lat9 2025 Sep 24 Modified in v2.2.0 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_ACCOUNT_EDIT');

@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Sep 08 Modified in v2.1.0-beta1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  *
  * @var language $lng
  * @var queryFactory $db

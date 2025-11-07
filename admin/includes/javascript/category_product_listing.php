@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Apr 10 Modified in v2.0.1 $
+ * @version $Id: lat9 2025 Oct 07 New in v2.2.0 $
  */
 if (($_GET['action'] ?? '') !== 'delete_product') {
     return;
