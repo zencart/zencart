@@ -180,7 +180,7 @@ if ($gID === 7) {
 <!-- header_eof //-->
 
 <!-- body //-->
-<div class="container-fluid">
+<div class="container">
     <h1><?= $cfg_group->fields['configuration_group_title'] ?></h1>
 <?php
 $query =
@@ -241,7 +241,7 @@ foreach ($configuration as $item) {
             echo '<input type="hidden" name="orig_' . $fieldName . '" value="' . htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, true) . '">';
             ?>
         </div>
-        <div class="col-md-5"><?= $item['configuration_description'] ?></div>
+        <div class="col-md-5 bg-info p-3"><?= $item['configuration_description'] ?></div>
     </div>
     <hr>
 <?php
