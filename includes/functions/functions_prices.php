@@ -410,7 +410,6 @@ function zen_get_products_display_price($product_id)
         [
             'product_is_free' => $product_check->fields['product_is_free'],
             'product_is_call' => $product_check->fields['product_is_call'],
-            'product_id' => $product_id,
         ],
         $tags_handled,
         $free_tag,
