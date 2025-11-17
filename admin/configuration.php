@@ -172,6 +172,16 @@ if ($gID === 7) {
             bottom: 15px;
             right: 15px;
         }
+    	.form-horizontal hr {
+			margin: 0;
+			border: 0;
+			border-top: 1px solid #949494;
+} 
+@media (max-width: 767px) {        
+        .form-control {
+            margin-bottom: .5rem; 
+        }
+}
     </style>
 </head>
 <body>
@@ -202,10 +212,10 @@ if ($default_sort) {
 $configuration = $db->Execute($query);
 echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&action=saveall', 'post', 'class="form-horizontal"');
 ?>
-    <div class="row font-weight-bold">
+    <div class="row font-weight-bold bg-primary py-3">
         <div class="col-md-3"><?= TABLE_HEADING_CONFIGURATION_TITLE ?></div>
-        <div class="col-md-4"><?= TABLE_HEADING_CONFIGURATION_VALUE ?></div>
-        <div class="col-md-5"></div>
+        <div class="col-md-3"><?= TABLE_HEADING_CONFIGURATION_VALUE ?></div>
+        <div class="col-md-6"></div>
     </div>
 <?php
 foreach ($configuration as $item) {
@@ -229,7 +239,7 @@ foreach ($configuration as $item) {
             }
             ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <?php
             if (!empty($item['set_function'])) {
                 $set_function = $item['set_function'] . '\'' . $cfgValue . '\', \'' . $fieldName . '\')';
@@ -241,7 +251,7 @@ foreach ($configuration as $item) {
             echo '<input type="hidden" name="orig_' . $fieldName . '" value="' . htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, true) . '">';
             ?>
         </div>
-        <div class="col-md-5"><?= $item['configuration_description'] ?></div>
+        <div class="col-md-6 bg-info p-3"><?= $item['configuration_description'] ?></div>
     </div>
     <hr>
 <?php
