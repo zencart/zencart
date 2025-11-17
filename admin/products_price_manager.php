@@ -102,7 +102,7 @@ if (!empty($action)) {
         $master_categories_id = $_POST['master_categories_id'];
       }
 // Set date to null if empty or in the past
-      $products_date_available = zen_prepare_date($_POST['products_date_available'], 'null');
+      $products_date_available = zen_prepare_date($_POST['products_date_available'], 'null', true);
 // Set dates empty equivelent '0001-01-01' if empty or in the past
       $specials_date_available = zen_prepare_date($_POST['specials_date_available'] ?? '', '0001-01-01');
       $specials_expires_date = zen_prepare_date($_POST['specials_expires_date'] ?? '', '0001-01-01');
@@ -134,6 +134,16 @@ if (!empty($action)) {
               WHERE products_id = " . (int)$products_filter;
 
       $db->Execute($sql);
+
+      // create an SQL event if availabilty date is today
+        if (defined('ENABLE_DISABLED_UPCOMING_PRODUCT') && ENABLE_DISABLED_UPCOMING_PRODUCT == 'Automatic') {
+            if (strtotime($products_date_available) > time() && strtotime($products_date_available) < strtotime('tomorrow')) {
+                $releaseTime = substr($products_date_available, 11, 5);
+            } else {
+                $releaseTime = '';
+            }
+            zen_set_disabled_upcoming_status((int)$products_filter, 1, $releaseTime);
+        }
 
       if ($_POST['specials_id'] != '') {
 
@@ -229,6 +239,7 @@ if (!empty($action)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+    <?= '<link rel="stylesheet" href="' . DIR_WS_INCLUDES . 'css/jquery.datetimepicker.min.css">' ?>
   </head>
   <body>
     <!-- header //-->
@@ -387,7 +398,7 @@ if (!empty($action)) {
         $pInfo = new objectInfo($productParameters);
         $products = $db->Execute("SELECT p.products_id, p.products_model,
                                          p.products_price, p.products_tax_class_id,
-                                         DATE_FORMAT(p.products_date_available, '" . zen_datepicker_format_forsql() . "') AS products_date_available,
+                                         DATE_FORMAT(p.products_date_available, '" . zen_datetimepicker_format_forsql() . "') AS products_date_available,
                                          p.products_quantity_order_min, products_quantity_order_units, p.products_quantity_order_max,
                                          p.product_is_free, p.product_is_call, p.products_quantity_mixed, p.products_priced_by_attribute, p.products_status,
                                          p.products_discount_type, p.products_discount_type_from, p.products_price_sorter,
@@ -1084,9 +1095,24 @@ if (!empty($action)) {
               <?php if ($action == 'edit' || $action == 'edit_update') { ?>
                 <!-- script for datepicker -->
                 <script>
+                  var logic = function( currentDateTime ){
+                    // 'this' is jquery object datetimepicker
+                    if( currentDateTime.getDate()== new Date().getDate() ){
+                      this.setOptions({
+                        minTime: 0
+                      });
+                    }else
+                      this.setOptions({
+                        minTime:'00:00'
+                    });
+                  };
                   $(function () {
-                    $('#products_date_available').datepicker({
-                        minDate: 1
+                    $('#products_date_available').datetimepicker({
+                        format: '<?= zen_datetimepicker_format_fordate(); ?>',
+                        minDate: 0,
+                        step:10,
+                        onChangeDateTime:logic,
+                        onShow:logic
                     });
                     $('#specials_date_available').datepicker({
                         minDate: 0
