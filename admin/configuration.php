@@ -175,7 +175,7 @@ if ($gID === 7) {
     	.form-horizontal hr {
 			margin: 0;
 			border: 0;
-			border-top: 1px solid #bfbfbf;
+			border-top: 1px solid #949494;
 } 
 @media (max-width: 767px) {        
         .form-control {
