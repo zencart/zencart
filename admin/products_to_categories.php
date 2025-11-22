@@ -35,18 +35,6 @@ if ($result->RecordCount() < 1) {
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING));
 }
 
-// Verify that product has a master_categories_id
-if ($products_filter > 0) {
-    $source_product_details = zen_get_products_model($products_filter)
-        . ' - "'
-        . zen_get_products_name($products_filter, (int)$_SESSION['languages_id'])
-        . '" (#' . $products_filter . ')'; // format used for various messageStack
-
-    if (zen_get_products_category_id($products_filter) < 1) {
-        $messageStack->add(ERROR_DEFINE_PRODUCTS_MASTER_CATEGORIES_ID, 'error');
-    }
-}
-
 $currencies = new currencies();
 
 $languages = zen_get_languages();
@@ -74,6 +62,18 @@ if ($products_filter === 0 && !empty($current_category_id)) {
     $new_product_query = $db->Execute("SELECT ptc.products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc WHERE ptc.categories_id = " . $current_category_id . " LIMIT 1");
     $products_filter = (!$new_product_query->EOF) ? $new_product_query->fields['products_id'] : '';// Empty if category has no products/has subcategories
     $_GET['products_filter'] = $products_filter;
+}
+
+// Verify that product has a master_categories_id
+if ($products_filter > 0) {
+    $source_product_details = zen_get_products_model($products_filter)
+        . ' - "'
+        . zen_get_products_name($products_filter, (int)$_SESSION['languages_id'])
+        . '" (#' . $products_filter . ')'; // format used for various messageStack
+
+    if (zen_get_products_category_id($products_filter) < 1) {
+        $messageStack->add(ERROR_DEFINE_PRODUCTS_MASTER_CATEGORIES_ID, 'error');
+    }
 }
 
 require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
