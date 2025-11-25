@@ -17,6 +17,7 @@ $_GET['products_filter'] = $products_filter;
 $current_category_id = (int)($_POST['current_category_id'] ?? $_GET['current_category_id'] ?? 0);
 $_GET['current_category_id'] = $current_category_id; // for any redirects
 
+// Persist checkboxes from multiple forms and redirects via $_SESSION
 if (isset($_POST['form'])) {
     switch (true) {
 
@@ -66,10 +67,11 @@ if ($products_filter === 0 && !empty($current_category_id)) {
 
 // Verify that product has a master_categories_id
 if ($products_filter > 0) {
+    // message format used in various outputs
     $source_product_details = zen_get_products_model($products_filter)
         . ' - "'
         . zen_get_products_name($products_filter, (int)$_SESSION['languages_id'])
-        . '" (#' . $products_filter . ')'; // format used for various messageStack
+        . '" (#' . $products_filter . ')';
 
     if (zen_get_products_category_id($products_filter) < 1) {
         $messageStack->add(ERROR_DEFINE_PRODUCTS_MASTER_CATEGORIES_ID, 'error');
@@ -87,8 +89,8 @@ if (!empty($action)) {
 
         // Global Tools: Copy Linked categories from this product to another
         case 'copy_linked_categories_to_another_product':
-            $copy_categories_type = !empty($_POST['type']) && $_POST['type'] !== 'replace' ? 'add' : 'replace';
-            $target_product_id = (int)$_POST['target_product_id'];
+            $copy_categories_type = (empty($_POST['type']) || $_POST['type'] === 'add') ? 'add' : 'replace';
+            $target_product_id = empty($_POST['target_product_id']) ? 0 : (int)$_POST['target_product_id'];
 
             if ($target_product_id === 0) {
                 $messageStack->add(WARNING_COPY_LINKED_CATEGORIES_NO_TARGET, 'error');
@@ -738,10 +740,10 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
     <div class="row"><?= zen_draw_separator('pixel_black.gif', '100%', '2') ?></div>
 
     <!-- Global Tools -->
-    <div class="col-lg-12">
+    <div id="globalTools" class="col-lg-12">
         <h2><?= HEADER_CATEGORIES_GLOBAL_TOOLS ?></h2>
         <!-- Copy linked categories from one product to another -->
-        <div class="row dataTableHeadingRow">
+        <div id="copyLinkedCategories" class="row dataTableHeadingRow">
             <h3><?= TEXT_HEADING_COPY_LINKED_CATEGORIES ?></h3>
             <div class="form-group-row">
                 <?= sprintf(TEXT_INFO_COPY_LINKED_CATEGORIES, ($products_filter > 0 ? ':<p><strong>' . $source_product_details . '</strong></p>' : ' ')); ?>
@@ -769,12 +771,10 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
                             <?= zen_draw_pull_down_menu('target_product_id', $category_product_tree_array, '', 'id="target_product_id"') ?>
                         </div>
                         <div class="col-lg-2">
-                            <button type="submit" class="btn btn-primary" name="type"
-                                    value="add"><?= BUTTON_COPY_LINKED_CATEGORIES_ADD ?></button>
+                            <button type="submit" class="btn btn-primary" name="type" value="add"><?= BUTTON_COPY_LINKED_CATEGORIES_ADD ?></button>
                         </div>
                         <div class="col-lg-2">
-                            <button type="submit" class="btn btn-danger" name="type"
-                                    value="replace"><?= BUTTON_COPY_LINKED_CATEGORIES_REPLACE ?></button>
+                            <button type="submit" class="btn btn-danger" name="type" value="replace"><?= BUTTON_COPY_LINKED_CATEGORIES_REPLACE ?></button>
                         </div>
                     </div>
                 <?php 
@@ -787,7 +787,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
         <div><?= TEXT_PRODUCTS_ID_NOT_REQUIRED ?></div>
 
         <!-- Copy all products from one category to another as linked products -->
-        <div class="row dataTableHeadingRow">
+        <div id="copyLinkedProducts" class="row dataTableHeadingRow">
             <?= zen_draw_form('linked_copy', FILENAME_PRODUCTS_TO_CATEGORIES,
                 'action=copy_products_as_linked' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post',
                 'class="form-horizontal"') ?>
@@ -816,7 +816,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
         <!-- Copy all products from one category to another as linked products eof -->
 
         <!-- Remove products from one category that are linked to another category -->
-        <div class="row dataTableHeadingRow">
+        <div id="removeLinkedProducts" class="row dataTableHeadingRow">
             <?= zen_draw_form('linked_remove', FILENAME_PRODUCTS_TO_CATEGORIES,
                 'action=remove_linked_products' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post',
                 'class="form-horizontal"') ?>
@@ -844,7 +844,7 @@ if ($target_subcategory_count > $max_input_vars) { //warning when in excess of P
         <!-- Remove products from one category that are linked to another category eof -->
 
         <!-- Reset master_categories_id for all products in the selected category -->
-        <div class="row dataTableHeadingRow">
+        <div id="resetMasterCategoryIds" class="row dataTableHeadingRow">
             <?= zen_draw_form('master_reset', FILENAME_PRODUCTS_TO_CATEGORIES,
                 'action=reset_products_category_as_master' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post',
                 'class="form-horizontal"') ?>
