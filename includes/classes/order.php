@@ -25,7 +25,7 @@ class order extends base
      */
     public $attachArray = [];
     /**
-     * $bestSellersUpdate is a flag used in Notifier to prevent updating of the best sellers details.
+     * $bestSellersUpdate is a flag used in Notifier to prevent updating of the bestsellers details.
      * @var boolean
      */
     public $bestSellersUpdate;
@@ -105,7 +105,7 @@ class order extends base
      */
     public $queryReturnFlag;
     /**
-     * $send_low_stock_emails is a flag to indicate if a low stock email should be send. It may be modified by a notifier
+     * $send_low_stock_emails is a flag to indicate if a low stock email should be sent. It may be modified by a notifier
      * @var boolean
      */
     public $send_low_stock_emails;
@@ -539,6 +539,7 @@ class order extends base
             'tax_groups' => [],
             'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
+            'language_code' => $_SESSION['languages_code'],
             'is_wholesale' => (int)Customer::isWholesaleCustomer(),
         ];
 
@@ -1355,7 +1356,7 @@ class order extends base
             zen_mail('', SEND_EXTRA_LOW_STOCK_EMAILS_TO, EMAIL_TEXT_SUBJECT_LOWSTOCK, $email_low_stock, STORE_OWNER, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => nl2br($email_low_stock)], 'low_stock');
         }
 
-        // lets start with the email confirmation
+        // let's start with the email confirmation
         // make an array to store the html version
         $html_msg = [];
 
