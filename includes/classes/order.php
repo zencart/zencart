@@ -511,7 +511,7 @@ class order extends base
             if (!empty($_SESSION['shipping']['id']) && strpos((string)$_SESSION['shipping']['id'], '_')) {
                 $shipping_module_code = $_SESSION['shipping']['id'];
             } else {
-                trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']), E_USER_NOTICE);
+                trigger_error('Malformed value for session-based shipping module; customer will need to re-select: ' . json_encode($_SESSION['shipping']));
                 unset($_SESSION['shipping']);
             }
         }
@@ -1430,7 +1430,7 @@ class order extends base
         if ($this->content_type != 'virtual' && !$storepickup) {
             $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                 EMAIL_SEPARATOR . "\n" .
-                zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], false, '', "\n") . "\n";
+                zen_address_label($_SESSION['customer_id'], $_SESSION['sendto']) . "\n";
         }
         if (!empty($this->customer['telephone'])) {
             $email_order .= EMAIL_TEXT_TELEPHONE . $this->customer['telephone'] . "\n\n";
@@ -1439,7 +1439,7 @@ class order extends base
         //addresses area: Billing
         $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
             EMAIL_SEPARATOR . "\n" .
-            zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], false, '', "\n") . "\n\n";
+            zen_address_label($_SESSION['customer_id'], $_SESSION['billto']) . "\n\n";
         $html_msg['ADDRESS_BILLING_TITLE'] = EMAIL_TEXT_BILLING_ADDRESS;
         $html_msg['ADDRESS_BILLING_DETAIL'] = zen_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, '', "<br>");
 
