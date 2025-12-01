@@ -387,6 +387,7 @@ class order extends base
         if (IS_ADMIN_FLAG === true) {
             $this->notify('ORDER_QUERY_ADMIN_COMPLETE', ['orders_id' => $this->orderId]);
         }
+        return true;
     }
 
     function getStatusHistory($order_id, $language_id = null)
@@ -537,7 +538,7 @@ class order extends base
             'tax' => 0,
             'total' => 0,
             'tax_groups' => [],
-            'comments' => (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''),
+            'comments' => ($_SESSION['comments'] ?? ''),
             'ip_address' => $_SESSION['customers_ip_address'] . ' - ' . $_SERVER['REMOTE_ADDR'],
             'language_code' => $_SESSION['languages_code'],
             'is_wholesale' => (int)Customer::isWholesaleCustomer(),
@@ -800,7 +801,7 @@ class order extends base
         }
 
         // Handle store-pickup scenario
-        if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup') == TRUE) {
+        if (STORE_PRODUCT_TAX_BASIS == 'Shipping' && isset($_SESSION['shipping']['id']) && stristr($_SESSION['shipping']['id'], 'storepickup')) {
             $taxRates = zen_get_multiple_tax_rates($products[$loop]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
             $this->products[$index]['tax'] = zen_get_tax_rate($products[$loop]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
             $this->products[$index]['tax_description'] = zen_get_tax_description($products[$loop]['tax_class_id'], STORE_COUNTRY, STORE_ZONE);
@@ -903,7 +904,7 @@ class order extends base
         if (isset($this->info['cc_number']) && strlen($this->info['cc_number']) > 10) {
             $cEnd = substr($this->info['cc_number'], -4);
             $cOffset = strlen($this->info['cc_number']) - 4;
-            $cStart = substr($this->info['cc_number'], 0, ($cOffset > 4 ? 4 : (int)$cOffset));
+            $cStart = substr($this->info['cc_number'], 0, min($cOffset, 4));
             $this->info['cc_number'] = str_pad($cStart, 6, 'X') . $cEnd;
         }
 
@@ -943,10 +944,10 @@ class order extends base
             'shipping_method' => $this->info['shipping_method'],
             'shipping_module_code' => (strpos($this->info['shipping_module_code'], '_') > 0 ? substr($this->info['shipping_module_code'], 0, strpos($this->info['shipping_module_code'], '_')) : $this->info['shipping_module_code']),
             'coupon_code' => $this->info['coupon_code'],
-            'cc_type' => isset($this->info['cc_type']) ? $this->info['cc_type'] : '',
-            'cc_owner' => isset($this->info['cc_owner']) ? $this->info['cc_owner'] : '',
-            'cc_number' => isset($this->info['cc_number']) ? $this->info['cc_number'] : '',
-            'cc_expires' => isset($this->info['cc_expires']) ? $this->info['cc_expires'] : '',
+            'cc_type' => $this->info['cc_type'] ?? '',
+            'cc_owner' => $this->info['cc_owner'] ?? '',
+            'cc_number' => $this->info['cc_number'] ?? '',
+            'cc_expires' => $this->info['cc_expires'] ?? '',
             'date_purchased' => 'now()',
             'orders_status' => $this->info['order_status'],
             'order_total' => $this->info['total'],
@@ -1018,7 +1019,7 @@ class order extends base
     function delete(bool|string $restock = false)
     {
         global $db;
-        $this->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', array(), $this->orderId, $restock);
+        $this->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', [], $this->orderId, $restock);
         if ($restock || $restock == 'on') {
             $order_products = $db->Execute("select products_id, products_quantity
                                 from " . TABLE_ORDERS_PRODUCTS . "
@@ -1417,7 +1418,7 @@ class order extends base
         $html_msg['HEADING_ADDRESS_INFORMATION'] = HEADING_ADDRESS_INFORMATION;
         $html_msg['ADDRESS_DELIVERY_TITLE'] = EMAIL_TEXT_DELIVERY_ADDRESS;
 
-        $storepickup = (strpos($this->info['shipping_module_code'], "storepickup") !== false);
+        $storepickup = (str_contains($this->info['shipping_module_code'], "storepickup"));
         if ($this->content_type != 'virtual' && !$storepickup) {
             $html_msg['ADDRESS_DELIVERY_DETAIL'] = zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, '', "<br>");
         } else {
