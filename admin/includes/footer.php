@@ -25,3 +25,22 @@
 </footer>
 <?php
 $zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
+?>
+
+<?php
+// Check for new version, and send output to placeholder in admin header
+require DIR_WS_INCLUDES . 'versioncheck.php';
+if ($new_version) { ?>
+<script>
+    jQuery(function($){
+      let newVersion = <?php echo json_encode($new_version); ?>;
+      let versionInfo = <?php echo json_encode('(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'); ?>;
+      let outputHtml = newVersion + '<br>' + versionInfo;
+
+      let $target = $('#versionCheckAlert');
+      if ($target.length) {
+        $target.html(outputHtml);
+      }
+    });
+</script>
+<?php } ?>
