@@ -5,21 +5,23 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: pRose on charmes 2023 Jan 09 Modified in v1.5.8a $
  */
-$version_check_index=true;
+$version_check_index = true;
 require('includes/application_top.php');
 
 $languages = zen_get_languages();
-$languages_array = array();
+$languages_array = [];
 $languages_selected = DEFAULT_LANGUAGE;
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-    $languages_array[] = array('id' => $languages[$i]['code'],
-                               'text' => $languages[$i]['name']);
-    if ($languages[$i]['directory'] == $_SESSION['language']) {
+for ($i = 0, $n = count($languages); $i < $n; $i++) {
+    $languages_array[] = [
+        'id' => $languages[$i]['code'],
+        'text' => $languages[$i]['name'],
+    ];
+    if ($languages[$i]['directory'] === $_SESSION['language']) {
         $languages_selected = $languages[$i]['code'];
     }
 }
 
-if (STORE_NAME == '' || STORE_OWNER =='' || STORE_OWNER_EMAIL_ADDRESS =='' || STORE_NAME_ADDRESS =='') {
+if (STORE_NAME === '' || STORE_OWNER === '' || STORE_OWNER_EMAIL_ADDRESS === '' || STORE_NAME_ADDRESS === '') {
     require('index_setup_wizard.php');
 } else {
     require('index_dashboard.php');
@@ -40,6 +42,6 @@ if (STORE_NAME == '' || STORE_OWNER =='' || STORE_OWNER_EMAIL_ADDRESS =='' || ST
 <?php
 $zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
 ?>
-    </body>
-    </html>
+</body>
+</html>
 <?php require('includes/application_bottom.php');
