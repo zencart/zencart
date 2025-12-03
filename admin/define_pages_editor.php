@@ -8,6 +8,15 @@
 require('includes/application_top.php');
 
 /**
+ * To treat certain pages as raw-html-only (no rich-text editor, ever, on those pages), enter those page names here
+ * @array $no_html_editor_on_these_pages - Array of page-name strings. Eg: ['define_main_page.php','define_shopping_cart.php']
+ */
+$no_html_editor_on_these_pages = [
+    // 'define_main_page.php',
+    // 'define_shopping_cart.php'
+];
+
+/**
  * @since ZC v1.2.0d
  */
 function zen_display_files(): array
@@ -163,11 +172,16 @@ if (!$lng_exists) {
               $messageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
               echo $messageStack->output();
             }
+
+            $editorCSSClass = 'editorHook';
+            if (in_array($_GET['filename'] ?? '-', $no_html_editor_on_these_pages, true)) {
+                $editorCSSClass = 'noEditor';
+            }
             ?>
             <div class="row"><strong><?php echo TEXT_INFO_CAUTION . '<br><br>' . TEXT_INFO_EDITING . '<br>' . $file . '<br>'; ?></strong></div>
             <div class="row">
                 <?php echo zen_draw_form('language', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save'); ?>
-              <div class="col-sm-6"><?php echo zen_draw_textarea_field('file_contents', 'soft', '', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' class="editorHook form-control"'); ?>
+              <div class="col-sm-6"><?php echo zen_draw_textarea_field('file_contents', 'soft', '', '30', htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, TRUE), (($file_writeable) ? '' : 'readonly') . ' class="' . $editorCSSClass . ' form-control"'); ?>
               </div>
               <div class="col-sm-6">&nbsp;</div>
               <div class="col-sm-12"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
