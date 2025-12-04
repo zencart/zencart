@@ -18,8 +18,6 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
  */
 require_once DIR_WS_INCLUDES . 'javascript_loader.php';
 
-$version_check_requested = (isset($_GET['vcheck']) && $_GET['vcheck'] != '') ? true : false;
-
 // Show Languages Dropdown for convenience only if main filename and directory exists
 if (empty($action)) {
     $languages_array = [];
@@ -82,77 +80,6 @@ if ($messageStack->size > 0) {
     <?php
 }
 
-// check version with zen-cart server
-// ignore version-check if INI file setting has been set
-$version_from_ini = '';
-$version_ini_sysinfo = '';
-$version_ini_index_sysinfo = '';
-if (!isset($version_check_sysinfo)) $version_check_sysinfo = false;
-if (!isset($version_check_index)) $version_check_index = false;
-
-$skip_file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
-if (file_exists($skip_file) && $lines = @file($skip_file)) {
-    foreach ($lines as $line) {
-        if (substr(trim($line), 0, 14) == 'version_check=') $version_from_ini = substr(trim(strtolower(str_replace('version_check=', '', $line))), 0, 3);
-        if (substr(trim($line), 0, 41) == 'display_update_link_only_on_sysinfo_page=') $version_ini_sysinfo = trim(strtolower(str_replace('display_update_link_only_on_sysinfo_page=', '', $line)));
-        if (substr(trim($line), 0, 46) == 'display_update_link_on_index_and_sysinfo_page=') $version_ini_index_sysinfo = trim(strtolower(str_replace('display_update_link_only_on_sysinfo_page=', '', $line)));
-    }
-}
-
-$doVersionCheck = false;
-$versionCheckError = false;
-
-// ignore version check if not enabled or if not on main page or sysinfo page
-if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($version_check_sysinfo == true || $version_check_index == true) && $zv_db_patch_ok == true) || $version_check_requested == true) {
-    $doVersionCheck = true;
-    $versionServer = new VersionServer();
-    $newinfo = $versionServer->getProjectVersion();
-    $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
-    if (empty($newinfo) || isset($newinfo['error'])) {
-        $isCurrent = true;
-        $versionCheckError = true;
-    } else {
-        $isCurrent = $versionServer->isProjectCurrent($newinfo);
-    }
-
-    $hasPatches = 0;
-
-    if (!$isCurrent) {
-        $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' :: ' . $newinfo['versionDetail'];
-    }
-    if ($isCurrent) {
-        $hasPatches = $versionServer->hasProjectPatches($newinfo);
-    }
-
-    if ($isCurrent && $hasPatches && $new_version == TEXT_VERSION_CHECK_CURRENT) {
-        $new_version = '';
-    }
-
-    if ($isCurrent && $hasPatches != 2 && $hasPatches) {
-        $new_version .= (($new_version != '') ? '<br>' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($newinfo['versionPatch1']) . '] :: ' . $newinfo['versionPatchDetail'] . '</span>';
-    }
-
-    if ($isCurrent && $hasPatches > 1) {
-        $new_version .= (($new_version != '') ? '<br>' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($newinfo['versionPatch2']) . '] :: ' . $newinfo['versionPatchDetail'] . '</span>';
-    }
-
-    // display download link
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) $new_version .= '<br><a href="' . $newinfo['versionDownloadURI'] . '" rel="noopener" target="_blank"><input type="button" class="btn btn-success" value="' . TEXT_VERSION_CHECK_DOWNLOAD . '"/></a>';
-}
-
-if (!$doVersionCheck || $versionCheckError) {
-    $new_version = '';
-    if ($versionCheckError) {
-        $new_version = ERROR_CONTACTING_PROJECT_VERSION_SERVER . '<br>';
-    }
-    // display the "check for updated version" button.  The button link should be the current page and all params
-    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck')), 'SSL');
-    $url .= (strpos($url, '?') !== false ? '&amp;' : '?') . 'vcheck=yes';
-    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) $new_version .= '<a href="' . $url . '" role="button" class="btn btn-link">' . TEXT_VERSION_CHECK_BUTTON . '</a>';
-}
-/////////////////
-
-
 // check GV release queue and alert store owner
 if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN == 'true') {
     $new_gv_queue = $db->Execute("SELECT * FROM " . TABLE_COUPON_GV_QUEUE . " WHERE release_flag='N'");
@@ -169,19 +96,14 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         <?php echo '<a href="' . zen_href_link(FILENAME_DEFAULT) . '">' . zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT) . '</a>'; ?>
     </div>
 
-    <div class="hidden-xs col-sm-3 col-sm-push-6 noprint adminHeaderAlerts">
-        <?php if ($new_version) { ?>
-            <?php echo $new_version; ?><br>
-            <?php echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'; ?>
-        <?php } ?>
-    </div>
+    <div class="hidden-xs col-sm-3 col-sm-push-6 noprint adminHeaderAlerts" id="versionCheckAlert"></div>
 
-    <div class="hidden-sm hidden-md hidden-lg col-xs-4 noprint adminHeaderAlerts">
+    <div class="hidden-sm hidden-md hidden-lg col-xs-4 noprint adminHeaderAlerts" id="mobileQuickNavButtons">
         <a class="btn btn-primary" role="button" href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"><?php echo BOX_CUSTOMERS_ORDERS; ?></a>
     </div>
 
     <div class="clearfix visible-xs-block"></div>
-    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
+    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts" id="ActivityLogAlert">
         <?php
         if (isset($_SESSION['reset_admin_activity_log']) && ($_SESSION['reset_admin_activity_log'] == true && (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) {
         ?>
@@ -191,7 +113,7 @@ if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_G
         ?>
     </div>
 
-    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts">
+    <div class="col-xs-6 col-sm-3 col-sm-pull-3 noprint adminHeaderAlerts" id="gvQueueAlert">
         <?php if (!empty($new_gv_queue_cnt)) echo $goto_gv . '<br>' . sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt); ?>
     </div>
 

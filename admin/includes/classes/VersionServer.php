@@ -48,14 +48,20 @@ class VersionServer
         curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Core Version Check ' . HTTP_SERVER);
+
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $errno = curl_errno($ch);
-        if ($errno > 0) {
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($errno > 0 || $response === false || $http_code > 299) {
             return json_decode($this->formatCurlError($errno, $error), true);
         }
-        return json_decode($response, true);
+
+        return json_decode($response, true) ?? [];
     }
 
     /**
@@ -68,9 +74,12 @@ class VersionServer
         if (empty($ids)) {
             return false;
         }
+
+        $ids = (string)$ids;
         $keylist = implode(',', array_map(static fn($value) => (int)trim($value), explode(',', $ids)));
+
         $type = '[' . (int)$ids . ']';
-        if (strpos($ids, ',') > 0) {
+        if (str_contains($ids, ',')) {
             $type = '[Batch]';
         }
 
@@ -84,11 +93,15 @@ class VersionServer
         curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check ' . $type . ' ' . HTTP_SERVER);
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $errno = curl_errno($ch);
-        if ($errno > 0) {
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($errno > 0 || $response === false || $http_code > 299) {
             return $this->formatCurlError($errno, $error);
         }
         return $response;
@@ -179,7 +192,7 @@ class VersionServer
         global $db;
         $result = $db->Execute('SELECT countries_iso_code_3 FROM ' . TABLE_COUNTRIES . ' WHERE countries_id = ' . (int)STORE_COUNTRY);
         if ($result->RecordCount()) {
-            return $result->fields['countries_iso_code_3'];
+            return $result->fields['countries_iso_code_3'] ?? '';
         }
 
         return '';
