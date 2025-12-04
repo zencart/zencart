@@ -12,12 +12,13 @@ use http\Exception\BadQueryStringException;
 
 /**
  * Make connection to $url and get a response back.
- * For GET requests only the $url is needed.
+ * For GET requests only the $url is needed. $payload is optional.
  * For POST requests, $url, $method, and $payload are needed.
+ * To read the HTTP Response Code, set $returnWithMetadata to true and read from the returned array.
  *
- * @param string $url URL to be connected to.
+ * @param string $url URL to be connected to. May optionally pass GET params in the URL itself.
  * @param string $method GET or POST
- * @param string|array|null $payload POST data
+ * @param string|array|null $payload POST data; if provided in a GET request, it will be appended to the URL above as query string
  * @param bool $encodePayloadArraysAsJson submit POST as JSON
  * @param bool $decodeJsonResponses decode response to JSON
  * @param array|null $extraCurlOptions curl setup overrides
@@ -64,6 +65,11 @@ function zenDoCurlRequest(
         }
     }
 
+    if (!empty($payload) && strtoupper($method) === 'GET') {
+        $url .= (str_contains($url, '?') ? '&' : '?') . $payload;
+        $payload = null; // clear payload now that we've appended it to the URL
+    }
+
     $ch = curl_init();
     if (empty($ch)) {
         if (IS_ADMIN_FLAG === true) {
@@ -107,7 +113,7 @@ function zenDoCurlRequest(
             }
         }
         // log the error, and return false
-        trigger_error("CURL communication error: $error\n\n" . print_r($info, true), E_USER_WARNING);
+        trigger_error("CURL communication error: $error; HTTP Response Code: $httpCode.\n\n" . print_r($info, true), E_USER_WARNING);
         return false;
     }
 
