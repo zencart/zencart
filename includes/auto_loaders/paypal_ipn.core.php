@@ -111,7 +111,20 @@ $autoLoadConfig[70][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_sessions.php',
 ];
-$autoLoadConfig[71][] = [
+
+/**
+ * Breakpoint 75 (not 95)
+ *
+ * require('includes/init_includes/init_languages.php');
+ * Note: loading here after session started, but before PayPal IPN session handling (which may use language defines if it needs to send email)
+ */
+$autoLoadConfig[75][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_languages.php',
+];
+
+// Loads just before shoppingCart is instantiated
+$autoLoadConfig[79][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_paypal_ipn_sessions.php',
 ];
@@ -140,15 +153,6 @@ $autoLoadConfig[90][] = [
     'autoType' => 'classInstantiate',
     'className' => 'currencies',
     'objectName' => 'currencies',
-];
-/**
- * Breakpoint 95
- *
- * require('includes/init_includes/init_languages.php');
- */
-$autoLoadConfig[95][] = [
-    'autoType' => 'init_script',
-    'loadFile' => 'init_languages.php',
 ];
 /**
  * Breakpoint 100.
