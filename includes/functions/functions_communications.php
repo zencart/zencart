@@ -120,9 +120,9 @@ function zenDoCurlRequest(
     // json decode if requested and if possible
     if ($response !== false && $decodeJsonResponses && str_contains($info['content_type'], 'application/json')) {
         $rawResponse = $response;
-        $jsonResponse = json_decode($response);
-        return $returnWithMetadata ? compact($jsonResponse, $httpCode, $info, $error, $rawResponse) : $jsonResponse;
+        $jsonResponse = json_decode($response, true);
+        return $returnWithMetadata ? compact('jsonResponse', 'httpCode', 'info', 'error', 'rawResponse') : $jsonResponse;
     }
 
-    return $returnWithMetadata ? compact($response, $httpCode, $info, $error) : $response;
+    return $returnWithMetadata ? compact('response', 'httpCode', 'info', 'error') : $response;
 }
