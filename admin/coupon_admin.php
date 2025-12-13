@@ -552,7 +552,7 @@ switch ($_GET['action']) {
               <table class="table">
                 <tr>
                   <td><?= $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $_GET['reports_page'], TEXT_DISPLAY_NUMBER_OF_COUPONS) ?></td>
-                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['reports_page'], 'action=voucherreport&cid=' . $cInfo->coupon_id, 'reports_page') ?></td>
+                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['reports_page'], 'action=voucherreport&cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']), 'reports_page') ?></td>
                 </tr>
                 <tr>
                   <td class="text-right" colspan="2"><a href="<?= zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $cc_previous_cid . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a></td>
@@ -567,14 +567,19 @@ switch ($_GET['action']) {
                                            FROM " . TABLE_COUPONS_DESCRIPTION . "
                                            WHERE coupon_id = " . (int)$_GET['cid'] . "
                                            AND language_id = " . (int)$_SESSION['languages_id']);
-              $count_customers = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . "
+              if (empty($cInfo)) {
+                  $couponCustomerCount = 0;
+              } else {
+                  $count_customers = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . "
                                                WHERE coupon_id = " . (int)$_GET['cid'] . "
                                                AND customer_id = " . (int)$cInfo->customer_id);
+                  $couponCustomerCount = $count_customers->RecordCount();
+              }
 
               $heading[] = ['text' => '<h4>[' . $_GET['cid'] . ']' . COUPON_NAME . ' ' . $coupon_desc->fields['coupon_name'] . '</h4>'];
               $contents[] = ['text' => '<b>' . TEXT_REDEMPTIONS . '</b>'];
               $contents[] = ['text' => TEXT_REDEMPTIONS_TOTAL . ' = ' . $cc_query_numrows];
-              $contents[] = ['text' => TEXT_REDEMPTIONS_CUSTOMER . ' = ' . $count_customers->RecordCount()];
+              $contents[] = ['text' => TEXT_REDEMPTIONS_CUSTOMER . ' = ' . $couponCustomerCount];
 
               $box = new box();
               echo $box->infoBox($heading, $contents);
