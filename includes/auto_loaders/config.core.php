@@ -158,6 +158,17 @@ $autoLoadConfig[70][] = [
     'loadFile' => 'init_sessions.php',
 ];
 /**
+ * Breakpoint 75.
+ *
+ * require 'includes/init_includes/init_languages.php';
+ *
+ */
+$autoLoadConfig[75][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_languages.php',
+];
+
+/**
  * Breakpoint 80.
  *
  * if (!$_SESSION['cart']) $_SESSION['cart'] = new shoppingCart();
@@ -188,16 +199,6 @@ $autoLoadConfig[90][] = [
     'autoType' => 'classInstantiate',
     'className' => 'currencies',
     'objectName' => 'currencies',
-];
-/**
- * Breakpoint 95.
- *
- * require 'includes/init_includes/init_languages.php';
- *
- */
-$autoLoadConfig[95][] = [
-    'autoType' => 'init_script',
-    'loadFile' => 'init_languages.php',
 ];
 /**
  * Breakpoint 96.

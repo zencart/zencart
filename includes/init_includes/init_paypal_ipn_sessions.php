@@ -11,6 +11,8 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 
+// NOTE: Depends on language subsystem being initialized already
+
 /**
  * Begin processing. Add notice to log if logging enabled.
  */
