@@ -149,7 +149,6 @@ return [
 'TEXT_ERROR_CONFIGURE_REQUIRES_UPDATE' => 'Your configure.php file is an old version and requires updating before we can continue.',
 'TEXT_ERROR_HTACCESS_SUPPORT' => 'Support for ".htaccess" files is not enabled or is not operating correctly.<br>[ <i><strong>NOTE:</strong> If you are using Nginx, continue to the <u>END</u> of this Installation Wizard for information on resolving this issue.<i> ]',
 'TEXT_ERROR_SESSION_SUPPORT' => 'Problems with session support',
-'TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID' => 'ini setting session.use_trans_sid is enabled',
 'TEXT_ERROR_SESSION_SUPPORT_AUTO_START' => 'ini setting session.auto_start is enabled',
 'TEXT_ERROR_DB_CONNECTION' => 'Problems with Database Connection',
 'TEXT_ERROR_DB_CONNECTION_DEFAULT' => 'Possible problems with database connection',
