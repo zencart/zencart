@@ -23,27 +23,27 @@ class order extends base
      * $attachArray is an array of file names to be attached to the email
      * @var array
      */
-    public $attachArray = [];
+    public array $attachArray = [];
     /**
      * $bestSellersUpdate is a flag used in Notifier to prevent updating of the bestsellers details.
-     * @var boolean
+     * @var bool
      */
-    public $bestSellersUpdate;
+    public bool $bestSellersUpdate;
     /**
      * $billing is an array containing the billing details for the order
      * @var array
      */
-    public $billing = [];
+    public array $billing = [];
     /**
      * $content_type is the overall content type of order
      * @var string "mixed","physical","virtual"
      */
-    public $content_type;
+    public string $content_type = '';
     /**
      * $customer is an array containing information about the customer for the order
      * @var array
      */
-    public $customer = [];
+    public array $customer = [];
     /**
      * $delivery is an array containing delivery details for the order
      * @var array
@@ -51,96 +51,96 @@ class order extends base
     public $delivery = [];
     /**
      * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing
-     * @var boolean
+     * @var bool
      */
-    public $doStockDecrement;
+    public bool $doStockDecrement;
     /**
      * $extra_header_text is a string containing header text to be added to email
      * @var string
      */
-    public $extra_header_text;
+    public string $extra_header_text;
     /**
      * $email_low_stock is the contents of the email to be sent if stock is low
      * @var string
      */
-    public $email_low_stock;
+    public string $email_low_stock;
     /**
      * $email_order_message is a string containing the store order message
      * @var string
      */
-    public $email_order_message;
+    public string $email_order_message;
     /**
      * $info is an array containing general information about the order
      * @var array
      */
-    public $info = [];
+    public array $info = [];
     /**
      * $orderId is the order identifier.
-     * @var int
+     * @var int|null
      */
-    protected $orderId = null;
+    protected ?int $orderId = null;
     /**
      * $products is an array containing details of the products for the order
      * @var array
      */
-    public $products = [];
+    public array $products = [];
     /**
      * $products_ordered a plain text string containing the details of products order for email
      * @var string
      */
-    public $products_ordered;
+    public string $products_ordered;
     /**
      * $products_ordered_attributes is a string containing the products attributes
      * @var string
      */
-    public $products_ordered_attributes;
+    public string $products_ordered_attributes;
     /**
      * $products_ordered_html is an HTML formatted string containing details of the products ordered for email
      * @var string
      */
-    public $products_ordered_html;
+    public string $products_ordered_html;
     /**
      * $queryReturnFlag is a flag used in a notifier to prevent default processing of order query.
-     * @var boolean
+     * @var bool|null
      */
-    public $queryReturnFlag;
+    public ?bool $queryReturnFlag;
     /**
      * $send_low_stock_emails is a flag to indicate if a low stock email should be sent. It may be modified by a notifier
-     * @var boolean
+     * @var bool
      */
-    public $send_low_stock_emails;
+    public bool $send_low_stock_emails;
     /**
      * $statuses is an array containing the status history information for the order
      * @var array
      */
-    public $statuses = [];
+    public array $statuses = [];
     /**
      * $total_cost is the total cost of the order
      * @var float
      */
-    public $total_cost;
+    public float $total_cost;
     /**
      * $total_tax is the total amount of tax for the order
      * @var float
      */
-    public $total_tax;
+    public float $total_tax;
     /**
      * $total_weight is the total weight of the order
      * @var float
      */
-    public $total_weight;
+    public float $total_weight;
     /**
      * $totals is an array of order total information
      * @var array
      */
-    public $totals = [];
+    public array $totals = [];
     /**
      * $use_external_tax_handler_only is a flag used by notifier to prevent default tax calculation.
-     * @var boolean
+     * @var bool
      */
-    public $use_external_tax_handler_only;
+    public bool $use_external_tax_handler_only;
 
-    function __construct($order_id = null)
+    public function __construct($order_id = null)
     {
         $this->info = [];
         $this->totals = [];
@@ -159,7 +159,7 @@ class order extends base
     /**
      * @since ZC v1.5.7
      */
-    public function getOrderId()
+    public function getOrderId(): ?int
     {
         return $this->orderId;
     }
@@ -167,7 +167,7 @@ class order extends base
     /**
      * @since ZC v1.0.3
      */
-    function query($order_id)
+    public function query($order_id)
     {
         global $db;
 
@@ -345,7 +345,7 @@ class order extends base
                                  FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
                                  WHERE orders_id = " . (int)$this->orderId . "
                                  AND orders_products_id = " . (int)$orders_products->fields['orders_products_id'] . "
-                                 ORDER BY orders_products_attributes_id ASC";
+                                 ORDER BY orders_products_attributes_id";
 
             $attributes = $db->Execute($attributes_query);
             if ($attributes->RecordCount()) {
@@ -389,7 +389,7 @@ class order extends base
         }
     }
 
-    function getStatusHistory($order_id, $language_id = null)
+    protected function getStatusHistory($order_id, $language_id = null): array
     {
         global $db;
 
@@ -406,7 +406,7 @@ class order extends base
 
         $customer_notified_clause = (IS_ADMIN_FLAG === true) ? '' : ' AND osh.customer_notified >= 0';
         $sql = "SELECT os.orders_status_name, osh.*
-                FROM   " . TABLE_ORDERS_STATUS . " os
+                FROM " . TABLE_ORDERS_STATUS . " os
                 LEFT JOIN " . TABLE_ORDERS_STATUS_HISTORY . " osh USING (orders_status_id)
                 WHERE osh.orders_id = :ordersID
                 AND os.language_id = :languageID
@@ -427,7 +427,7 @@ class order extends base
     /**
      * @since ZC v1.5.8
      */
-    protected function getCountryInfo(string $country)
+    protected function getCountryInfo(string $country): array
     {
         global $db;
         $sql = "SELECT countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, status
@@ -477,7 +477,7 @@ class order extends base
     /**
      * @since ZC v1.0.3
      */
-    function cart()
+    public function cart(): void
     {
         global $db, $currencies, $customer;
 
@@ -743,7 +743,7 @@ class order extends base
     /**
      * @since ZC v1.5.7
      */
-    function determineTaxAddressZones($billToAddressId, $shipToAddressId)
+    protected function determineTaxAddressZones($billToAddressId, $shipToAddressId): array
     {
         global $db;
 
@@ -791,7 +791,7 @@ class order extends base
      * Determine tax RATES for product
      * @since ZC v1.5.7
      */
-    function setTaxRatesForProduct($products, $loop, $index, $taxCountryId, $taxZoneId)
+    protected function setTaxRatesForProduct($products, $loop, $index, $taxCountryId, $taxZoneId)
     {
         $taxRates = null;
         $this->notify('NOTIFY_ORDER_CART_EXTERNAL_TAX_RATE_LOOKUP', STORE_PRODUCT_TAX_BASIS, $products, $loop, $index, $taxCountryId, $taxZoneId, $taxRates);
@@ -821,7 +821,7 @@ class order extends base
      * and running-sub-total array for the final tax calculations.
      * @since ZC v1.5.7
      */
-    protected function calculateTaxForProduct($index, $taxRates)
+    protected function calculateTaxForProduct($index, $taxRates): void
     {
         global $currencies;
 
@@ -862,7 +862,7 @@ class order extends base
      * calculate the *overall* product-related tax to be applied to the order
      * @since ZC v2.0.0
      */
-    protected function calculateProductsTaxForOrder()
+    protected function calculateProductsTaxForOrder(): void
     {
         global $currencies;
 
@@ -874,11 +874,11 @@ class order extends base
     }
 
     /**
-     * @param array $zf_ot_modules OrderTotalModules array from during checkout_process. Used to lookup OT prices to store into order
-     * @return int|string
+     * @param  array  $zf_ot_modules  OrderTotalModules array from checkout_process. Used to lookup OT prices to store into order
+     * @return int|null
      * @since ZC v1.2.2d
      */
-    function create($zf_ot_modules)
+    public function create(array $zf_ot_modules): int|null
     {
         global $db;
 
@@ -1015,7 +1015,7 @@ class order extends base
      * @return void
      * @since ZC v2.2.0
      */
-    function delete(bool|string $restock = false)
+    public function delete(bool|string $restock = false): void
     {
         global $db;
         $this->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', [], $this->orderId, $restock);
@@ -1058,7 +1058,7 @@ class order extends base
      * @param bool $zf_mode Deprecated/unused since 1.5.0
      * @since ZC v1.2.2d
      */
-    function create_add_products($zf_insert_id = null, $zf_mode = false)
+    public function create_add_products($zf_insert_id = null, bool $zf_mode = false): void
     {
         global $db, $currencies, $order_total_modules, $order_totals;
 
@@ -1341,7 +1341,7 @@ class order extends base
      * @param int|null $zf_insert_id OrderNumber for display - unused/deprecated since 1.5.7.
      * @since ZC v1.2.2d
      */
-    function send_order_email($zf_insert_id = null)
+    public function send_order_email(?int $zf_insert_id = null): void
     {
         global $currencies, $order_totals, $zcDate;
 
