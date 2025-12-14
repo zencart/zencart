@@ -110,10 +110,12 @@ class ot_group_pricing {
       if ($this->calculate_tax == "Standard") $order->info['total'] -= $tax;
       if ($order->info['total'] < 0) $order->info['total'] = 0;
       $order->info['tax'] = $order->info['tax'] - $tax;
-      $this->output[] = array('title' => $this->title . ':',
-      'text' => '-' . $currencies->format($od_amount['total'], true, $order->info['currency'], $order->info['currency_value']),
-      'value' => $od_amount['total']);
-
+        $this->output[] = [
+            'title' => $this->title . ':',
+            // &#8209; is a non-break-hyphen so displays with number
+            'text' => '&#8209;' . $currencies->format($od_amount['total'], true, $order->info['currency'], $order->info['currency_value']),
+            'value' => $od_amount['total'],
+        ];
     }
   }
   /**

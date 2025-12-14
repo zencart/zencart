@@ -175,7 +175,8 @@ class ot_coupon extends base
 
             $this->output[] = [
                 'title' => $this->title . ': ' . $this->coupon_code . ' :',
-                'text' => '-' . $currencies->format($od_amount['total']),
+                // &#8209; is a non-break-hyphen so displays with number
+                'text' => '&#8209;' . $currencies->format($od_amount['total']),
                 'value' => $od_amount['total']
             ];
         }
