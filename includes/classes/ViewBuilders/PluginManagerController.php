@@ -35,6 +35,10 @@ class PluginManagerController extends BaseController
      */
     protected function processDefaultAction()
     {
+        if ($this->currentFieldValue('unique_key') === null) {
+            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER));
+        }
+
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         if ($this->currentFieldValue('status') == 1) {
             $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->currentFieldValue('version')) . '<br>');
