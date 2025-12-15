@@ -117,6 +117,9 @@ class BaseController
     public function currentFieldValue($field)
     {
         $currentRow = $this->formatter->currentRowFromRequest();
+        if (is_null($currentRow)) {
+            return null;
+        }
         return $currentRow->$field;
     }
 
