@@ -170,12 +170,6 @@ systemChecks:
       checkIniGet1:
         method: checkIniGet
         parameters:
-          inigetName: session.use_trans_sid
-          expectedValue: FALSE
-        localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPORT_USE_TRANS_SID . PHP_EOL; ?>
-      checkIniGet2:
-        method: checkIniGet
-        parameters:
           inigetName: session.auto_start
           expectedValue: FALSE
         localErrorText: <?php echo TEXT_ERROR_SESSION_SUPPORT_AUTO_START . PHP_EOL; ?>
