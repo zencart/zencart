@@ -145,18 +145,18 @@ class order extends base
     /**
      * @since ZC v1.0.3
      */
-    public function query($order_id)
+    public function query($order_id): void
     {
         global $db;
 
         $this->queryReturnFlag = null;
         $this->notify('NOTIFY_ORDER_BEFORE_QUERY', [], $order_id);
-        if ($this->queryReturnFlag === true) return false;
+        if ($this->queryReturnFlag === true) return;
 
         $order_query = "SELECT * FROM " . TABLE_ORDERS . " where orders_id = " . (int)$order_id;
         $order = $db->Execute($order_query);
 
-        if ($order->EOF) return false;
+        if ($order->EOF) return;
 
         $this->orderId = $order_id = (int)$order_id;
 
