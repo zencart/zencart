@@ -801,8 +801,6 @@ class order extends base
      */
     protected function calculateTaxForProduct($index, $taxRates): void
     {
-        global $currencies;
-
         $product_tax_rate = $this->products[$index]['tax'];
         $product_final_price = $this->products[$index]['final_price'];
         $product_qty = $this->products[$index]['qty'];
@@ -842,8 +840,6 @@ class order extends base
      */
     protected function calculateProductsTaxForOrder(): void
     {
-        global $currencies;
-
         foreach ($this->info['tax_subtotals'] as $tax_description => $tax_info) {
             $tax_to_add = zen_calculate_tax($tax_info['subtotal'], $tax_info['tax_rate']);
             $this->info['tax'] += $tax_to_add;
@@ -1321,7 +1317,7 @@ class order extends base
      */
     public function send_order_email(?int $zf_insert_id = null): void
     {
-        global $currencies, $order_totals, $zcDate;
+        global $order_totals, $zcDate;
 
         if ($zf_insert_id === null) $zf_insert_id = $this->orderId;
 
