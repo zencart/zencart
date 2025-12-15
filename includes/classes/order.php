@@ -21,17 +21,14 @@ class order extends base
 
     /**
      * $attachArray is an array of file names to be attached to the email
-     * @var array
      */
     public array $attachArray = [];
     /**
      * $bestSellersUpdate is a flag used in Notifier to prevent updating of the bestsellers details.
-     * @var bool
      */
     public bool $bestSellersUpdate;
     /**
      * $billing is an array containing the billing details for the order
-     * @var array
      */
     public array $billing = [];
     /**
@@ -41,7 +38,6 @@ class order extends base
     public string $content_type = '';
     /**
      * $customer is an array containing information about the customer for the order
-     * @var array
      */
     public array $customer = [];
     /**
@@ -51,92 +47,74 @@ class order extends base
     public $delivery = [];
     /**
      * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing
-     * @var bool
      */
     public bool $doStockDecrement;
     /**
      * $extra_header_text is a string containing header text to be added to email
-     * @var string
      */
     public string $extra_header_text;
     /**
      * $email_low_stock is the contents of the email to be sent if stock is low
-     * @var string
      */
     public string $email_low_stock;
     /**
      * $email_order_message is a string containing the store order message
-     * @var string
      */
     public string $email_order_message;
     /**
      * $info is an array containing general information about the order
-     * @var array
      */
     public array $info = [];
     /**
      * $orderId is the order identifier.
-     * @var int|null
      */
     protected ?int $orderId = null;
     /**
      * $products is an array containing details of the products for the order
-     * @var array
      */
     public array $products = [];
     /**
      * $products_ordered a plain text string containing the details of products order for email
-     * @var string
      */
     public string $products_ordered;
     /**
      * $products_ordered_attributes is a string containing the products attributes
-     * @var string
      */
     public string $products_ordered_attributes;
     /**
      * $products_ordered_html is an HTML formatted string containing details of the products ordered for email
-     * @var string
      */
     public string $products_ordered_html;
     /**
      * $queryReturnFlag is a flag used in a notifier to prevent default processing of order query.
-     * @var bool|null
      */
     public ?bool $queryReturnFlag;
     /**
      * $send_low_stock_emails is a flag to indicate if a low stock email should be sent. It may be modified by a notifier
-     * @var bool
      */
     public bool $send_low_stock_emails;
     /**
      * $statuses is an array containing the status history information for the order
-     * @var array
      */
     public array $statuses = [];
     /**
      * $total_cost is the total cost of the order
-     * @var float
      */
     public float $total_cost;
     /**
      * $total_tax is the total amount of tax for the order
-     * @var float
      */
     public float $total_tax;
     /**
      * $total_weight is the total weight of the order
-     * @var float
      */
     public float $total_weight;
     /**
      * $totals is an array of order total information
-     * @var array
      */
     public array $totals = [];
     /**
      * $use_external_tax_handler_only is a flag used by notifier to prevent default tax calculation.
-     * @var bool
      */
     public bool $use_external_tax_handler_only;
 
