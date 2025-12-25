@@ -23,7 +23,7 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', []);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('39.99', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.00', (string)$response->getContent());
+        $this->assertStringContainsString('&#8209;$4.00', (string)$response->getContent());
         $this->assertStringContainsString('2.52', (string)$response->getContent());
         $this->assertStringContainsString('41.01', (string)$response->getContent());
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
@@ -46,8 +46,8 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', ['dc_redeem_code' => 'test10percent']);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('39.99', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.00', (string)$response->getContent());
-        $this->assertStringContainsString('-$3.60', (string)$response->getContent());
+        $this->assertStringContainsString('&#8209;$4.00', (string)$response->getContent());
+        $this->assertStringContainsString('&#8209;$3.60', (string)$response->getContent());
         $this->assertStringContainsString('2.27', (string)$response->getContent());
         $this->assertStringContainsString('37.16', (string)$response->getContent());
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
@@ -70,7 +70,7 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', []);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('42.79', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.28', (string)$response->getContent());
+        $this->assertStringContainsString('&#8209;$4.28', (string)$response->getContent());
         $this->assertStringContainsString('2.52', (string)$response->getContent());
         $this->assertStringContainsString('41.01', (string)$response->getContent());
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
@@ -95,7 +95,7 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', []);
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('42.79', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.28', (string)$response->getContent());
+        $this->assertStringContainsString('&#8209;$4.28', (string)$response->getContent());
         $this->assertStringContainsString('2.77', (string)$response->getContent());
         $this->assertStringContainsString('41.26', (string)$response->getContent());
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
@@ -123,7 +123,7 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('42.79', (string)$response->getContent());
         $this->assertStringContainsString('2.75', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.28', (string)$response->getContent());
+        $this->assertStringContainsString('&#8209;$4.28', (string)$response->getContent());
         $this->assertStringContainsString('2.52', (string)$response->getContent());
         $this->assertStringContainsString('0.25', (string)$response->getContent());
         $this->assertStringContainsString('41.26', (string)$response->getContent());
