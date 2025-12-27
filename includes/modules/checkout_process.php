@@ -8,7 +8,7 @@
  * @version $Id: DrByte 2025 Oct 25 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEGIN');
 
@@ -38,6 +38,11 @@ if ($_SESSION['payment_attempt'] > $slamming_threshold) {
 }
 // END CC SLAM PREVENTION
 
+// Redirect to home page on attempt to create order without shipping and payment
+if (!isset($_SESSION['shipping'], $_SESSION['payment'])) {
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+}
+
 $credit_covers ??= false;
 
 // load selected payment module
@@ -46,6 +51,14 @@ $payment_modules = new payment($_SESSION['payment']);
 
 require DIR_WS_CLASSES . 'order.php';
 $order = new order;
+
+// -----
+// If no billing-address is present, this is a spoofed order.  Redirect
+// back to the home page; it counts as a payment attempt.
+//
+if (empty($order->billing)) {
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+}
 
 // load the selected shipping module
 require DIR_WS_CLASSES . 'shipping.php';
