@@ -114,5 +114,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2025, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2026, Zen Cart&reg;. All rights reserved.*
 
