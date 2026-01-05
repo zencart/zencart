@@ -259,6 +259,7 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT . " WHERE template_language = " . (int)$lID);
 
       // if we just deleted our currently-selected language, need to switch to default lang:
       $getlang = '';
