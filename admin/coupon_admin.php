@@ -708,7 +708,7 @@ switch ($_GET['action']) {
               </tr>
               <tr>
                 <td class="main"><?= COUPON_ORDER_LIMIT ?></td>
-                <td><?= zen_output_string_protected($_POST['coupon_order_limit']) ?></td>
+                <td><?= (int)$_POST['coupon_order_limit'] ?></td>
               </tr>
               <?php
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
