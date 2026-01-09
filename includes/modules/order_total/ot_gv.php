@@ -155,9 +155,12 @@ class ot_gv {
         if ($order->info['total'] < 0) $order->info['total'] = 0;
         $order->info['tax'] = $order->info['tax'] - $od_amount['tax'];
         // prepare order-total output for display and storing to invoice
-        $this->output[] = array('title' => $this->title . ':',
-                                'text' => '-' . $currencies->format($od_amount['total']),
-                                'value' => $od_amount['total']);
+          $this->output[] = [
+              'title' => $this->title . ':',
+              // &#8209; is a non-break-hyphen so displays with number
+              'text' => '&#8209;' . $currencies->format($od_amount['total']),
+              'value' => $od_amount['total'],
+          ];
       }
     }
   }
