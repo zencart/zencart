@@ -80,6 +80,12 @@ $zco_notifier->notify('NOTIFY_ADMIN_DASHBOARD_ZONES', null, $zones);
 
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 
+<?php
+$notifications = new AdminNotifications();
+$availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
+require_once(DIR_WS_MODULES . 'notificationsDisplay.php');
+?>
+
 <div class="container-fluid dashboard-wrapper">
 
     <div class="row">
