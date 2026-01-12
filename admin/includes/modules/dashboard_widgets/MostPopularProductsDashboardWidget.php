@@ -14,7 +14,7 @@ $sql = "SELECT p.products_id, pd.products_name, p.products_image, p.products_mod
         JOIN " . TABLE_PRODUCTS . " p ON op.products_id = p.products_id
         JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
         WHERE o.date_purchased >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-        GROUP BY p.products_id
+        GROUP BY p.products_id, pd.products_name, p.products_image, p.products_model
         ORDER BY total_sold DESC
         LIMIT 5";
 
