@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2025 May 16 Modified in v2.2.0 $
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
  */
 /**
  * Header code file for product reviews "write" page
@@ -49,6 +49,7 @@ $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $rating = (int)$_POST['rating'];
   $review_text = zen_clean_html($_POST['review_text']);
+  $review_title = zen_clean_html($_POST['review_title']);
   $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   $zco_notifier->notify('NOTIFY_REVIEWS_WRITE_CAPTCHA_CHECK');
 
@@ -87,12 +88,13 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
       $zco_notifier->notify('NOTIFY_REVIEW_INSERTED_DURING_WRITE_REVIEW');
 
-      $sql = "INSERT INTO " . TABLE_REVIEWS_DESCRIPTION . " (reviews_id, languages_id, reviews_text)
+      $sql = "INSERT INTO " . TABLE_REVIEWS_DESCRIPTION . " (reviews_id, languages_id, reviews_text, reviews_title)
               VALUES (:insertID, :languagesID, :reviewText)";
 
       $sql = $db->bindVars($sql, ':insertID', $insert_id, 'integer');
       $sql = $db->bindVars($sql, ':languagesID', $_SESSION['languages_id'], 'integer');
       $sql = $db->bindVars($sql, ':reviewText', $review_text, 'string');
+      $sql = $db->bindVars($sql, ':reviewsTitle', $review_title, 'string');
       $db->Execute($sql);
 
       $email_text = '';
@@ -126,6 +128,7 @@ $products_price = zen_get_products_display_price($product_info->fields['products
 $products_name = $product_info->fields['products_name'];
 $rating = $rating ?? '';
 $review_text = $review_text ?? '';
+$review_title = $review_title ?? '';
 $products_model = '';
 if ($product_info->fields['products_model'] != '') {
   $products_model = '<br><span class="smallText">[' . $product_info->fields['products_model'] . ']</span>';

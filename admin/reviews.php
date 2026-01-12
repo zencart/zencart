@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2025 May 27 Modified in v2.2.0 $
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
  */
 require 'includes/application_top.php';
 
@@ -50,6 +50,7 @@ if (!empty($action)) {
       $reviews_id = zen_db_prepare_input($_GET['rID']);
       $reviews_rating = (int)$_POST['reviews_rating'];
       $reviews_text = zen_db_prepare_input($_POST['reviews_text']);
+      $reviews_title = zen_db_prepare_input($_POST['reviews_title']);
 
       $db->Execute("UPDATE " . TABLE_REVIEWS . "
                     SET reviews_rating = " . (int)$reviews_rating . ",
@@ -57,7 +58,8 @@ if (!empty($action)) {
                     WHERE reviews_id = " . (int)$reviews_id);
 
       $db->Execute("UPDATE " . TABLE_REVIEWS_DESCRIPTION . "
-                    SET reviews_text = '" . zen_db_input($reviews_text) . "'
+                    SET reviews_text = '" . zen_db_input($reviews_text) . "',
+                        reviews_title = '" . zen_db_input($reviews_title) . "'
                     WHERE reviews_id = " . (int)$reviews_id);
 
       zen_redirect(zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID']));
@@ -97,10 +99,10 @@ if (!empty($action)) {
         } else {
           $rID = (int)$_GET['rID'];
 
-          $reviews = $db->Execute("SELECT r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating
-                                   FROM " . TABLE_REVIEWS . " r LEFT OUTER JOIN 
+          $reviews = $db->Execute("SELECT r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, rd.reviews_title, r.reviews_rating
+                                   FROM " . TABLE_REVIEWS . " r LEFT OUTER JOIN
                                         " . TABLE_REVIEWS_DESCRIPTION . " rd
-                                   ON (r.reviews_id = rd.reviews_id) WHERE r.reviews_id = " . (int)$rID); 
+                                   ON (r.reviews_id = rd.reviews_id) WHERE r.reviews_id = " . (int)$rID);
 
           $products = $db->Execute("SELECT p.products_image, pd.products_name
                                     FROM " . TABLE_PRODUCTS . " p
@@ -144,6 +146,12 @@ if (!empty($action)) {
             </div>
           </div>
           <div class="form-group">
+                <?php echo zen_draw_label(ENTRY_REVIEW_TITLE, 'reviews_title', 'class="control-label col-sm-3"'); ?>
+                <div class="col-sm-9 col-md-6">
+                    <?php echo zen_draw_input_field('reviews_title', (!empty($rInfo->reviews_title) ? htmlspecialchars(stripslashes($rInfo->reviews_title), ENT_COMPAT, CHARSET, TRUE) : ''), 'class="form-control" id="reviews_title"'); ?>
+                </div>
+            </div>
+            <div class="form-group">
             <?php echo zen_draw_label(ENTRY_REVIEW, 'reviews_text', 'class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
               <?php echo zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text ?? ''), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="reviews_text"'); ?>
@@ -202,6 +210,14 @@ if (!empty($action)) {
                 <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo zen_date_short($rInfo->date_added); ?></span>
               </div>
             </div>
+            <div class="form-group">
+              <div class="col-sm-3">
+                      <p class="control-label"><?php echo ENTRY_REVIEW_TITLE; ?></p>
+                  </div>
+                  <div class="col-sm-9 col-md-6">
+                      <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo zen_output_string_protected($rInfo->reviews_title); ?></span>
+                  </div>
+              </div>
             <div class="form-group">
               <div class="col-sm-3">
                 <p class="control-label"><?php echo ENTRY_REVIEW; ?></p>
@@ -294,7 +310,7 @@ if (!empty($action)) {
                 $order_by = " ORDER BY r.status, r.date_added DESC";
 
                 $reviews_query_raw = "SELECT r.reviews_id, r.products_id, r.customers_name, r.reviews_rating, r.date_added, r.status, r.last_modified, r.reviews_read,
-                                             rd.languages_id, rd.reviews_text,
+                                             rd.languages_id, rd.reviews_text, rd.reviews_title,
                                              pd.products_name,
                                              p.products_model, p.products_image,
                                              length(rd.reviews_text) AS reviews_text_size,
@@ -403,6 +419,7 @@ if (!empty($action)) {
                     $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified));
                   }
                   $contents[] = array('text' => zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
+                    $contents[] = array('text' => ENTRY_REVIEW_TITLE . '<br>' . zen_output_string_protected($rInfo->reviews_title));
                   $contents[] = array('text' => ENTRY_REVIEW . '<br>' . zen_output_string_protected($rInfo->reviews_text));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' .
