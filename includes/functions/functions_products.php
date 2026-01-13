@@ -270,6 +270,10 @@ function zen_set_product_master_categories_id($product_id, $category_id): void
 }
 
 /**
+ * Returns all the category IDs that contain the product.
+ * Use the $exclude parameter with the product master_categories_id
+ * to return only the linked categories.
+ *
  * @param int $product_id
  * @param array $exclude
  * @return array of categories_id
