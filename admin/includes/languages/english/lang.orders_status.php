@@ -3,8 +3,8 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
-*/
+ * @version $Id: ZenExpert 2026 Jan 14 Modified in v2.2.0-alpha1 $
+ */
 
 $define = [
     'HEADING_TITLE' => 'Orders Status',
@@ -20,6 +20,10 @@ $define = [
     'ERROR_REMOVE_DEFAULT_ORDER_STATUS' => 'Error: The default order status can not be removed. Please set another order status as default, and try again.',
     'ERROR_STATUS_USED_IN_ORDERS' => 'Error: This order status is currently used in orders.',
     'ERROR_STATUS_USED_IN_HISTORY' => 'Error: This order status is currently used in the order status history.',
+    'TEXT_INFO_HEADING_COLOR_CODE' => 'Color Code',
+    'TEXT_INFO_COLOR_BOX_PLACEHOLDER' => 'Leave empty for default or no label',
+    'TEXT_INFO_COLOR_CODE' => 'Type hex or click box',
+    'TEXT_INFO_COLOR_CODE_WARNING' => '<strong>Warning:</strong> text inside the label will be white, so avoid light colors!',
 ];
 
 return $define;

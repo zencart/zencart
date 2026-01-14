@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: ZenExpert 2026 Jan 14 Modified in v2.2.0-alpha1 $
  */
 require('includes/application_top.php');
 
@@ -23,6 +23,7 @@ if (!empty($action)) {
 
         $sql_data_array = array(
             'orders_status_name' => zen_db_prepare_input($orders_status_name_array[$language_id]),
+            'orders_status_color_code' => zen_db_prepare_input($_POST['orders_status_color_code']),
             'sort_order' => (int)$_POST['sort_order'],
         );
 
@@ -145,10 +146,16 @@ if (!empty($action)) {
                   }
                   echo '                    <td class="dataTableContent">' . $status['orders_status_id'] . '</td>';
 
+                        $color = $status['orders_status_color_code'];
+                        if (!empty($color)) {
+                            $status_display = '<span class="label" style="background-color:' . $color . '; border-color:' . $color . '; color:#fff; font-size: 100%;">' . $status['orders_status_name'] . '</span>';
+                        } else {
+                            $status_display = $status['orders_status_name'];
+                        }
                   if (DEFAULT_ORDERS_STATUS_ID == $status['orders_status_id']) {
-                    echo '                <td class="dataTableContent"><strong>' . $status['orders_status_name'] . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
+                            echo '                <td class="dataTableContent">' . $status_display . ' <strong>(' . TEXT_DEFAULT . ')</strong></td>' . "\n";
                   } else {
-                    echo '                <td class="dataTableContent">' . $status['orders_status_name'] . '</td>' . "\n";
+                            echo '                <td class="dataTableContent">' . $status_display . '</td>' . "\n";
                   }
                   echo '                    <td class="dataTableContent">' . $status['sort_order'] . '</td>';
                   ?>
@@ -171,6 +178,24 @@ if (!empty($action)) {
             $heading = array();
             $contents = array();
 
+                // Helper to get picker val (fallback to black)
+                function getPickerVal($val) {
+                    return (empty($val)) ? '#000000' : $val;
+                }
+                $colorSyncScript = '
+            <script>
+            $(document).ready(function(){
+                $("#cp-picker").on("input change", function(){
+                    $("#cp-hex").val(this.value);
+                });
+                $("#cp-hex").on("input keyup", function(){
+                    var val = this.value;
+                    if(val.length === 7 && val.charAt(0) === "#") {
+                         $("#cp-picker").val(val);
+                    }
+                });
+            });
+            </script>';
             switch ($action) {
               case 'new':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_ORDERS_STATUS . '</h4>');
@@ -184,6 +209,14 @@ if (!empty($action)) {
                 }
 
                 $contents[] = array('text' => '<br>' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
+                        $contents[] = array('text' => '<br><strong>' . TEXT_INFO_HEADING_COLOR_CODE . '</strong><br>' .
+                            '<div class="input-group">' .
+                            zen_draw_input_field('orders_status_color_code', '', 'class="form-control" id="cp-hex" placeholder="' . TEXT_INFO_COLOR_BOX_PLACEHOLDER . '"') .
+                            '<span class="input-group-addon" style="padding:0; border:none; width:40px; background:none;">' .
+                            '<input type="color" id="cp-picker" value="#000000" style="height:34px; width:100%; padding:0; border:none; cursor:pointer;">' .
+                            '</span>' .
+                            '</div>' .
+                            '<small class="text-muted">' . TEXT_INFO_COLOR_CODE .'</small><br>' . TEXT_INFO_COLOR_CODE_WARNING . $colorSyncScript);
                 $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', '0', 'class="form-control"'));
                 $contents[] = array('align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_INSERT . '</button> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
@@ -200,6 +233,16 @@ if (!empty($action)) {
                 }
 
                 $contents[] = array('text' => '<br>' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
+                        $textVal = $oInfo->orders_status_color_code;
+                        $pickerVal = getPickerVal($oInfo->orders_status_color_code);
+                        $contents[] = array('text' => '<br>' . TEXT_INFO_HEADING_COLOR_CODE . '<br>' .
+                            '<div class="input-group">' .
+                            zen_draw_input_field('orders_status_color_code', $textVal, 'class="form-control" id="cp-hex" placeholder="' . TEXT_INFO_COLOR_BOX_PLACEHOLDER . '"') .
+                            '<span class="input-group-addon" style="padding:0; border:none; width:40px; background:none;">' .
+                            '<input type="color" id="cp-picker" value="' . $pickerVal . '" style="height:34px; width:100%; padding:0; border:none; cursor:pointer;">' .
+                            '</span>' .
+                            '</div>' .
+                            '<small class="text-muted">' . TEXT_INFO_COLOR_CODE .'</small><br>' . TEXT_INFO_COLOR_CODE_WARNING . $colorSyncScript);
                 if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) {
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 }

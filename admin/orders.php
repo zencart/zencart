@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Oct 31 Modified in v2.2.0 $
+ * @version $Id: ZenExpert 2026 Jan 14 Modified in v2.1.0 $
  */
 require('includes/application_top.php');
 
@@ -1370,6 +1370,14 @@ if ($show_orders_weights === true) {
 //        $orders_query_numrows = '';
                                     $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_ORDERS, $orders_query_raw, $orders_query_numrows);
                                     $orders = $db->Execute($orders_query_raw);
+                                      // prepare status colors array
+                                      $status_colors = [];
+                                      $status_color_query = $db->Execute("SELECT orders_status_id, orders_status_color_code
+                                                        FROM " . TABLE_ORDERS_STATUS . "
+                                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
+                                      foreach ($status_color_query as $status) {
+                                          $status_colors[$status['orders_status_id']] = $status['orders_status_color_code'];
+                                      }
                                     while (!$orders->EOF) {
                                         if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders->fields['orders_id']))) && !isset($oInfo)) {
                                             $oInfo = new objectInfo($orders->fields);
@@ -1452,7 +1460,20 @@ if ($show_orders_weights === true) {
                                 </td>
 <?php } ?>
                                 <td class="dataTableContent text-center"><?= zen_datetime_short($orders->fields['date_purchased']) ?></td>
-                                <td class="dataTableContent text-right"><?= !empty($orders->fields['orders_status_name']) ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS ?></td>
+                                <td class="dataTableContent text-right">
+                                    <?php
+                                    $current_status_id = $orders->fields['orders_status'];
+                                    $status_name = !empty($orders->fields['orders_status_name']) ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS;
+                                    $status_color = isset($status_colors[$current_status_id]) ? $status_colors[$current_status_id] : '';
+                                    if (!empty($status_color)) {
+                                        // render colored badge
+                                        echo '<span class="label" style="background-color:' . $status_color . '; border-color:' . $status_color . '; color:#fff; font-size: 100%;">' . $status_name . '</span>';
+                                    } else {
+                                        // fallback to standard text if no color set
+                                        echo $status_name;
+                                    }
+                                    ?>
+                                </td>
                                 <?php
                                      $order_comments = zen_output_string_protected(zen_get_orders_comments($orders->fields['orders_id']));
                                      if (!empty($order_comments)) {
