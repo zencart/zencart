@@ -210,10 +210,10 @@ if (!empty($action)) {
 
                 $contents[] = array('text' => '<br>' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
                         $contents[] = array('text' => '<br><strong>' . TEXT_INFO_HEADING_COLOR_CODE . '</strong><br>' .
-                            '<div class="input-group">' .
+                            '<div class="input-group status-color-code-input">' .
                             zen_draw_input_field('orders_status_color_code', '', 'class="form-control" id="cp-hex" placeholder="' . TEXT_INFO_COLOR_BOX_PLACEHOLDER . '"') .
-                            '<span class="input-group-addon" style="padding:0; border:none; width:40px; background:none;">' .
-                            '<input type="color" id="cp-picker" value="#000000" style="height:34px; width:100%; padding:0; border:none; cursor:pointer;">' .
+                            '<span class="input-group-addon">' .
+                            '<input type="color" id="cp-picker" value="#000000">' .
                             '</span>' .
                             '</div>' .
                             '<small class="text-muted">' . TEXT_INFO_COLOR_CODE .'</small><br>' . TEXT_INFO_COLOR_CODE_WARNING . $colorSyncScript);

@@ -42,6 +42,7 @@ $show_including_tax = (DISPLAY_PRICE_WITH_TAX === 'true');
 // prepare order-status look-up list
 $ordersStatus = zen_getOrdersStatuses();
 $orders_status_array = $ordersStatus['orders_status_array'];
+$status_colors = $ordersStatus['orders_status_colors'] ?? [];
 
 $action = ($_GET['action'] ?? '');
 $order_exists = false;
@@ -1370,14 +1371,7 @@ if ($show_orders_weights === true) {
 //        $orders_query_numrows = '';
                                     $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_ORDERS, $orders_query_raw, $orders_query_numrows);
                                     $orders = $db->Execute($orders_query_raw);
-                                      // prepare status colors array
-                                      $status_colors = [];
-                                      $status_color_query = $db->Execute("SELECT orders_status_id, orders_status_color_code
-                                                        FROM " . TABLE_ORDERS_STATUS . "
-                                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
-                                      foreach ($status_color_query as $status) {
-                                          $status_colors[$status['orders_status_id']] = $status['orders_status_color_code'];
-                                      }
+
                                     while (!$orders->EOF) {
                                         if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders->fields['orders_id']))) && !isset($oInfo)) {
                                             $oInfo = new objectInfo($orders->fields);
@@ -1465,11 +1459,10 @@ if ($show_orders_weights === true) {
                                     $current_status_id = $orders->fields['orders_status'];
                                     $status_name = !empty($orders->fields['orders_status_name']) ? $orders->fields['orders_status_name'] : TEXT_INVALID_ORDER_STATUS;
                                     $status_color = isset($status_colors[$current_status_id]) ? $status_colors[$current_status_id] : '';
+
                                     if (!empty($status_color)) {
-                                        // render colored badge
-                                        echo '<span class="label" style="background-color:' . $status_color . '; border-color:' . $status_color . '; color:#fff; font-size: 100%;">' . $status_name . '</span>';
+                                        echo '<span class="label status-color-code" style="background-color:' . $status_color . '; border-color:' . $status_color . ';">' . $status_name . '</span>';
                                     } else {
-                                        // fallback to standard text if no color set
                                         echo $status_name;
                                     }
                                     ?>

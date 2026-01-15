@@ -1227,3 +1227,14 @@ tbody>tr>td.align-bottom {
     min-height: 250px;
     max-height: 650px;
 }
+
+/* Status Color Picker */
+.status-color-code {
+    color:#fff; font-size: 100%;
+}
+.status-color-code-input .input-group-addon {
+    padding:0; border:none; width:40px; background:none;
+}
+.status-color-code-input #cp-picker {
+    height:34px; width:100%; padding:0; border:none; cursor:pointer;
+}
