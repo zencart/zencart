@@ -108,7 +108,7 @@ if (!empty($action) && $order_exists === true) {
         $order = new order($oID);
         $module = false;
         global $installedPlugins;
-        $moduleFinder = new ModuleFinder('payment', new Filesystem());
+        $moduleFinder = new ModuleFinder('payment', new FileSystem());
         $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
         $payment = ($order->info['payment_module_code'] ?? 'nothing') . '.php';
         if (array_key_exists($payment, $modules_found) && file_exists(DIR_FS_CATALOG . $modules_found[$payment] . $payment)) {
@@ -458,7 +458,7 @@ if (!empty($action) && $order_exists === true) {
                                 <?php
                                 echo zen_draw_form('search_orders_products', FILENAME_ORDERS, '', 'get', '', true);
                                 echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL_ORDERS_PRODUCTS, 'searchProduct', 'class="sr-only"');
-                                $placeholder = zen_output_string_protected(isset($_GET['search_orders_products']) && !empty($_GET['search_orders_products']) ? $_GET['search_orders_products'] : HEADING_TITLE_SEARCH_PRODUCTS);
+                                $placeholder = zen_output_string_protected(!empty($_GET['search_orders_products']) ? $_GET['search_orders_products'] : HEADING_TITLE_SEARCH_PRODUCTS);
                                 ?>
                             <div class="input-group">
                                     <?php
@@ -545,7 +545,7 @@ if (!empty($action) && $order_exists === true) {
                 $result = $db->Execute("SELECT orders_id
                                                                     FROM " . TABLE_ORDERS . "
                                                                     WHERE orders_id > " . (int)$oID . "
-                                                                    ORDER BY orders_id ASC
+                                                                    ORDER BY orders_id
                                                                     LIMIT 1");
                 if ($result->RecordCount()) {
                     $next_button = '<a role="button" class="btn btn-default" href="' . zen_href_link(FILENAME_ORDERS, 'oID=' . $result->fields['orders_id'] . '&action=edit') . '">' . $result->fields['orders_id'] . ' &raquo;</a>';
@@ -741,7 +741,7 @@ if (is_array($address_footer_suffix)) {
     // orders_products::products_weight.    If the order's weight is stored as null, don't
     // display the weights!
     //
-    $show_orders_weights = ($order->info['order_weight'] !== null && ((bool)($show_orders_weights ?? true)));
+    $show_orders_weights = $order->info['order_weight'] !== null && ($show_orders_weights ?? true);
 ?>
                         </table>
                     </div>
@@ -809,7 +809,7 @@ if (is_array($address_footer_suffix)) {
                             if (!empty($order->info['cc_number'])) {
                                             require DIR_FS_CATALOG . DIR_WS_CLASSES . 'cc_validation.php';
                                             $cc_valid = new cc_validation();
-                                            $cc_needs_mask = $cc_valid->validate($order->info['cc_number'], date('m'), date('y')+1);
+                                            $cc_needs_mask = $cc_valid->validate($order->info['cc_number'], date('m'), (int)date('y')+1);
                                     ?>
                             <tr>
                                 <td class="main"><?= ENTRY_CREDIT_CARD_NUMBER ?></td>
@@ -1351,7 +1351,7 @@ if ($show_orders_weights === true) {
                                                     'op.products_id',
                                             ];
                                             $search = zen_build_keyword_where_clause($keyword_search_fields, trim($keywords), true);
-                                        if (substr(strtoupper($_GET['search_orders_products']), 0, 3) === 'ID:') {
+                                        if (str_starts_with(strtoupper($_GET['search_orders_products']), 'ID:')) {
                                             $keywords = trim(substr($_GET['search_orders_products'], 3));
                                             $search .= " OR op.products_id ='" . (int)$keywords . "'";
                                         }
@@ -1428,16 +1428,14 @@ if ($show_orders_weights === true) {
                                     $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_ORDERS, $orders_query_raw, $orders_query_numrows);
                                     $orders = $db->Execute($orders_query_raw);
                                     while (!$orders->EOF) {
-                                        if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders->fields['orders_id']))) && !isset($oInfo)) {
+                                        if ((!isset($_GET['oID']) || $_GET['oID'] == $orders->fields['orders_id']) && !isset($oInfo)) {
                                             $oInfo = new objectInfo($orders->fields);
                                         }
-
-                                        if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
-                                            echo '<tr id="defaultSelected" class="dataTableRowSelected order-listing-row" data-oid="' . $orders->fields['orders_id'] . '" data-current="current">' . "\n";
-                                        } else {
-                                            echo '<tr class="dataTableRow order-listing-row" data-oid="' . $orders->fields['orders_id'] . '">' . "\n";
-                                        }
-
+                                        ?>
+                                        <tr data-oid="<?= $orders->fields['orders_id'] ?>" <?= (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)
+                                            ? 'class="order-listing-row dataTableRowSelected" id="defaultSelected" data-current="current"'
+                                            : 'class="order-listing-row dataTableRow"') ?>>
+                                        <?php
                                         $show_difference = '';
                                         if (!empty($orders->fields['delivery_name']) && (strtoupper($orders->fields['delivery_name']) !== strtoupper($orders->fields['billing_name']))) {
                                             $show_difference = zen_icon('status-red', TEXT_BILLING_SHIPPING_MISMATCH) . '&nbsp;';
@@ -1465,7 +1463,7 @@ if ($show_orders_weights === true) {
                                                         if ($includeAttributesInProductDetailRows) {
                                                                 $sql = "SELECT products_options, products_options_values
                                                                         FROM " .    TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                                                                        WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id ASC";
+                                                                        WHERE orders_products_id = " . (int)$product['orders_products_id'] . " ORDER BY orders_products_attributes_id";
                                                                 $productAttributes = $db->Execute($sql, false, true, 1800);
                                                                 foreach ($productAttributes as $attr) {
                                                                     if (!empty($attr['products_options'])) {
@@ -1557,7 +1555,7 @@ if ($show_orders_weights === true) {
                                         if (isset($oInfo) && is_object($oInfo) && ($orders->fields['orders_id'] == $oInfo->orders_id)) {
                                             echo zen_icon('caret-right', '', '2x', true);
                                         } else {
-                                            echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID']) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
+                                            echo '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['oID']) . 'oID=' . $orders->fields['orders_id'], 'NONSSL') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true) . '</a>';
                                         }
                                         ?>&nbsp;</td>
                                 </tr>
@@ -1579,10 +1577,8 @@ if ($show_orders_weights === true) {
                                             <td class="text-right" colspan="2">
                                             <?php
                                                     echo '<a href="' . zen_href_link(FILENAME_ORDERS, '', 'NONSSL') . '" class="btn btn-default" role="button">' . IMAGE_RESET . '</a>';
-                                                    if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
                                                             $keywords = zen_db_input(zen_db_prepare_input($_GET['search']));
                                                             echo '<br>' . TEXT_INFO_SEARCH_DETAIL_FILTER . $keywords;
-                                                    }
                                             ?>
                                             </td>
                                     </tr>
@@ -1617,7 +1613,7 @@ if ($show_orders_weights === true) {
                                         // each contents array is drawn in a div, so this form block must be a single array element.
                                         $contents[] = ['text' =>
                                                 zen_draw_form('statusUpdateForm', FILENAME_ORDERS, zen_get_all_get_params(['action','language']) . 'action=update_order' . (!isset($_GET['oID']) ? '&oID=' . $oInfo->orders_id : '') . '&language=' . $oInfo->language_code, 'post', '', true) . // form action uses the order language to change the session language on the update. On initial page load (from another page), $_GET['oID'] is not set, hence clause in form action
-                                                '<fieldset style="border:solid thin slategray;padding:5px"><legend style="width:inherit;">&nbsp;' . IMAGE_UPDATE . '&nbsp;</legend>' .
+                                                '<fieldset style="border:solid thin slategray;padding:5px;"><legend style="width:inherit;">&nbsp;' . IMAGE_UPDATE . '&nbsp;</legend>' .
                                                 ($oInfo->language_code !== $_SESSION['languages_code'] ? zen_draw_hidden_field('admin_language', $_SESSION['languages_code']) : '') . // if the order language is different to the current admin language, record the admin language, to restore it in the redirect after the status update email has been sent
                                                 zen_draw_label(IMAGE_SEND_EMAIL, 'notify', 'class="control-label"') .
                                                 zen_draw_checkbox_field('notify', '1', $notify_email, '', 'class="checkbox-inline" id="notify"') . "<br>\n" .
@@ -1653,7 +1649,7 @@ if ($show_orders_weights === true) {
                                                 "SELECT comments, updated_by
                                                      FROM " . TABLE_ORDERS_STATUS_HISTORY . "
                                                     WHERE orders_id = " . (int)$oInfo->orders_id . "
-                                                    ORDER BY date_added ASC
+                                                    ORDER BY date_added
                                                     LIMIT 1"
                                         );
 
