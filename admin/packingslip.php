@@ -20,6 +20,11 @@ $currencies = new currencies();
 
 $oID = (int)$_GET['oID'];
 
+// bof Super Orders batch mode support
+$super_order_data = [];
+$zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_PRE_INITIALIZATION', $oID, $super_order_data);
+// eof Super Orders batch mode support
+
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
 ?>
@@ -177,6 +182,13 @@ if (empty($order->info)) {
         </thead>
         <tbody>
             <?php
+            // -----
+            // Notifier to load parent/child order data for split orders
+            // Observers can detect split orders and load related order information for display
+            //
+            $split_order_data = ['parent_order' => null, 'child_orders' => []];
+            $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_LOAD_PARENT_ORDER', $oID, $split_order_data);
+
             /*
              * Notifier to allow packing slip to be sorted to required order
              *
@@ -273,6 +285,15 @@ if (empty($order->info)) {
           ?>
         </tbody>
       </table>
+      <?php
+      // -----
+      // Notifier to allow split order display of related order products
+      // Observers can inject parent/child order product rows or entire product section
+      //
+      $split_products_html = '';
+      $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_SPLIT_PRODUCTS', $split_order_data, $split_products_html);
+      echo $split_products_html;
+      ?>
       <?php if (ORDER_COMMENTS_PACKING_SLIP > 0) { ?>
         <table class="table table-condensed">
           <thead>

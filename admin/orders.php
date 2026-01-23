@@ -381,6 +381,20 @@ if (!empty($action) && $order_exists === true) {
     <head>
         <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
         <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
+        <?php
+        // -----
+        // Give an observer the chance to inject additional <head> resources on the admin orders page.
+        //
+        // Notes:
+        // - The observer should append <link>, <style>, or <script> tags to the $extra_head variable.
+        // - This notifier fires during the <head> section, so resources will be loaded before page render.
+        // - Available for use by Super Orders, plugins, or other modules.
+        //
+        $extra_head = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_HEAD', [], $extra_head);
+        echo $extra_head;
+        ?>
+
         <script>
             function couponpopupWindow(url) {
                     window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menu bar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
@@ -474,6 +488,19 @@ if (!empty($action) && $order_exists === true) {
                         </div>
                     </div>
                 </div>
+                <?php
+                // -----
+                // Give an observer the chance to inject additional content or buttons into the orders listing view.
+                //
+                // Notes:
+                // - The 'oID' value is (bool)false since this is the listing view, not order edit.
+                // - The observer should append HTML content to the $extra_listing_content variable.
+                // - This is typically used for action buttons or filtering controls.
+                //
+                $extra_listing_content = '';
+                $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LISTING_BUTTONS', false, $extra_listing_content);
+                echo $extra_listing_content;
+                ?>
                 <!-- search -->
             <?php }
             if ($action === 'edit' && $order_exists) {
@@ -811,6 +838,17 @@ if (is_array($address_footer_suffix)) {
                     </div>
                     <br>
                     <?php
+                }
+                ?>
+                <?php
+                // -----
+                // Notifier to inject split order UI elements into the order edit view.
+                // Observers should append HTML to $super_orders_split_order for display.
+                //
+                $super_orders_split_order = '';
+                $zco_notifier->notify('NOTIFY_ADMIN_ORDER_SPLIT_ORDER', $oID, $super_orders_split_order);
+                if (!empty($super_orders_split_order)) {
+                    echo $super_orders_split_order;
                 }
                 ?>
 

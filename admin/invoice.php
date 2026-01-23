@@ -21,6 +21,12 @@ $oID = zen_db_prepare_input($_GET['oID']);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
+
+// bof Super Orders batch mode support
+$super_order_data = ['order_currency' => $order->info['currency'] ?? ''];
+$render_html_head = true;
+$zco_notifier->notify('NOTIFY_ADMIN_INVOICE_PRE_INITIALIZATION', $oID, $super_order_data, $render_html_head);
+// eof Super Orders batch mode support
 ?>
 <!doctype html>
 <html <?= HTML_PARAMS ?>>
@@ -412,8 +418,17 @@ if (empty($order->info)) {
           <?php
         }
         ?>
-      </table>
-      <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
+        <?php
+        // bof Super Orders custom totals
+        $custom_totals_html = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_TOTALS_CUSTOM', $oID, $custom_totals_html);
+        if (!empty($custom_totals_html)) {
+            echo $custom_totals_html;
+        }
+        // eof Super Orders custom totals
+        ?>
+        </table>
+        <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
         <table class="table table-condensed" style="width:100%;">
           <thead>
             <tr>
