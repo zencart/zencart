@@ -53,7 +53,7 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $this->browser->submitForm('Continue', []);
         $this->browser->submitForm('Continue', ['cot_gv' => 100.00, 'payment' => '']);
         $response = $this->browser->getResponse();
-        $this->assertStringContainsString('-$45.29', (string)$response->getContent() );
+        $this->assertStringContainsString('&#8209;$45.29', (string)$response->getContent() );
     }
 
     /**

@@ -142,7 +142,7 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->assertStringContainsString('2.50', $lookup_section); // shipping item
         $this->assertStringContainsString('3.05', $lookup_section); // Tax
         $this->assertStringContainsString('5.00', $lookup_section); // low order fee
-        $this->assertStringContainsString('-$50.54', $lookup_section); // gv used
+        $this->assertStringContainsString('&#8209;$50.54', $lookup_section); // gv used
         $this->assertStringContainsString('0.00', $lookup_section); // balance
         $this->switchLowOrderFee('off');
         $this->switchItemShippingTax('off');
@@ -171,7 +171,7 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->assertStringContainsString('2.75', $lookup_section);
         $this->assertStringContainsString('3.05', $lookup_section);
         $this->assertStringContainsString('5.00', $lookup_section);
-        $this->assertStringContainsString('-$50.54', $lookup_section);
+        $this->assertStringContainsString('&#8209;$50.54', $lookup_section);
         $this->assertStringContainsString('0.00', $lookup_section);
         $this->switchLowOrderFee('off');
         $this->switchItemShippingTax('off');
@@ -198,7 +198,7 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
         $this->assertStringContainsString('39.99', $lookup_section);
         $this->assertStringContainsString('2.50', $lookup_section);
-        $this->assertStringContainsString('-$4.00', $lookup_section);
+        $this->assertStringContainsString('&#8209;$4.00', $lookup_section);
         $this->assertStringContainsString('2.52', $lookup_section);
         $this->assertStringContainsString('5.00', $lookup_section);
         $this->assertStringContainsString('46.01', $lookup_section);
@@ -225,7 +225,7 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
         $this->assertStringContainsString('39.99', $lookup_section);
         $this->assertStringContainsString('2.50', $lookup_section);
-        $this->assertStringContainsString('-$4.00', $lookup_section);
+        $this->assertStringContainsString('&#8209;$4.00', $lookup_section);
         $this->assertStringContainsString('2.52', $lookup_section);
         $this->assertStringContainsString('5.00', $lookup_section);
         $this->assertStringContainsString('46.01', $lookup_section);
@@ -258,10 +258,10 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
         $this->assertStringContainsString('39.99', $lookup_section);
         $this->assertStringContainsString('2.50', $lookup_section);
-        $this->assertStringContainsString('-$4.00', $lookup_section);
+        $this->assertStringContainsString('&#8209;$4.00', $lookup_section);
         $this->assertStringContainsString('2.52', $lookup_section);
         $this->assertStringContainsString('5.00', $lookup_section);
-        $this->assertStringContainsString('-$46.01', $lookup_section);
+        $this->assertStringContainsString('&#8209;$46.01', $lookup_section);
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchLowOrderFee('off');
     }
