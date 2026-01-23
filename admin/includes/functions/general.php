@@ -764,16 +764,18 @@ function zen_get_orders_status_pulldown_array()
 }
 
 /**
- * @since ZC v2.0.0
+ * @since ZC v2.2.0
  */
 function zen_getOrdersStatuses(bool $keyed = false): array
 {
     global $db;
     $orders_statuses = [];
     $orders_status_array = [];
-    $orders_status_query = $db->Execute('SELECT orders_status_id, orders_status_name FROM ' . TABLE_ORDERS_STATUS . '
+    $orders_status_colors = [];
+    $orders_status_query = $db->Execute('SELECT orders_status_id, orders_status_name, orders_status_color_code FROM ' . TABLE_ORDERS_STATUS . '
                                  WHERE language_id = ' . (int)$_SESSION['languages_id'] . ' ORDER BY sort_order, orders_status_id');
     foreach ($orders_status_query as $next_status) {
+        $orders_status_colors[$next_status['orders_status_id']] = $next_status['orders_status_color_code'];
         if (!$keyed) {
             $orders_statuses[] = [
                 'id' => $next_status['orders_status_id'],
@@ -785,7 +787,7 @@ function zen_getOrdersStatuses(bool $keyed = false): array
             $orders_status_array[$next_status['orders_status_id']] = $next_status['orders_status_name'];
         }
     }
-    return ['orders_statuses' => $orders_statuses, 'orders_status_array' => $orders_status_array,];
+    return ['orders_statuses' => $orders_statuses, 'orders_status_array' => $orders_status_array, 'orders_status_colors' => $orders_status_colors,];
 }
 
 /**
