@@ -21,6 +21,23 @@ $oID = zen_db_prepare_input($_GET['oID']);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
+
+// -----
+//
+// Give observers an opportunity to participate in invoice pre-initialization.
+//
+// Observers may:
+// - Inspect the order ID
+// - Populate or augment the $invoice_context array with invoice-related data
+// - Control whether the HTML head/body structure should be rendered
+//
+// Observer note:
+// - Use the provided references to add or modify data
+// - Be mindful that multiple observers may act on this notifier
+//
+$invoice_context = ['order_currency' => $order->info['currency'] ?? ''];
+$render_html_head = true;
+$zco_notifier->notify('NOTIFY_ADMIN_INVOICE_PRE_INITIALIZATION', $oID, $invoice_context, $render_html_head);
 ?>
 <!doctype html>
 <html <?= HTML_PARAMS ?>>
@@ -412,8 +429,26 @@ if (empty($order->info)) {
           <?php
         }
         ?>
-      </table>
-      <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
+        <?php
+        // -----
+        //
+        // Give observers an opportunity to inject additional invoice totals rows.
+        //
+        // Observers may append HTML output (e.g. additional totals or summary rows)
+        // to be displayed within the invoice totals section.
+        //
+        // Observer note:
+        // - Append to the provided string rather than overwriting where possible
+        // - Multiple observers may contribute output
+        //
+        $extra_totals_html = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_TOTALS_CUSTOM', $oID, $extra_totals_html);
+        if (!empty($extra_totals_html)) {
+          echo $extra_totals_html;
+        }
+        ?>
+        </table>
+        <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
         <table class="table table-condensed" style="width:100%;">
           <thead>
             <tr>

@@ -381,6 +381,24 @@ if (!empty($action) && $order_exists === true) {
     <head>
         <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
         <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
+        <?php
+        // -----
+        //
+        // Give observers an opportunity to inject additional resources into the
+        // <head> section of the admin orders page.
+        //
+        // Observers may append <link>, <style>, or <script> tags to the $extra_head
+        // variable to load page-specific resources.
+        //
+        // Observer note:
+        // - Append content rather than overwrite existing output
+        // - Multiple observers may contribute resources
+        //
+        $extra_head = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_HEAD', [], $extra_head);
+        echo $extra_head;
+        ?>
+
         <script>
             function couponpopupWindow(url) {
                     window.open(url, 'popupWindow', 'toolbar=no,location=no,directories=no,status=no,menu bar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
@@ -474,6 +492,26 @@ if (!empty($action) && $order_exists === true) {
                         </div>
                     </div>
                 </div>
+                <?php
+                // -----
+                //
+                // Give observers an opportunity to inject additional content into the
+                // admin orders listing view.
+                //
+                // The $oID parameter is passed as (bool)false, since this notifier fires
+                // in the listing context rather than for a specific order.
+                //
+                // Observers may append HTML output (e.g. action controls or informational
+                // elements) to the $extra_listing_content variable for display.
+                //
+                // Observer note:
+                // - Append content rather than overwrite existing output
+                // - Multiple observers may contribute content
+                //
+                $extra_listing_content = '';
+                $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LISTING_BUTTONS', false, $extra_listing_content);
+                echo $extra_listing_content;
+                ?>
                 <!-- search -->
             <?php }
             if ($action === 'edit' && $order_exists) {
@@ -811,6 +849,25 @@ if (is_array($address_footer_suffix)) {
                     </div>
                     <br>
                     <?php
+                }
+                ?>
+                <?php
+                // -----
+                //
+                // Give observers an opportunity to inject additional UI elements into the
+                // admin order edit view.
+                //
+                // Observers may append HTML output (e.g. buttons, informational blocks,
+                // or action controls) to the $extra_order_actions variable for display.
+                //
+                // Observer note:
+                // - Append content rather than overwrite existing output
+                // - Multiple observers may contribute content
+                //
+                $extra_order_actions = '';
+                $zco_notifier->notify('NOTIFY_ADMIN_ORDER_SPLIT_ORDER', $oID, $extra_order_actions);
+                if (!empty($extra_order_actions)) {
+                    echo $extra_order_actions;
                 }
                 ?>
 
