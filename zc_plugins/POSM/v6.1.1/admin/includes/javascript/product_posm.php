@@ -15,7 +15,7 @@ $posm_quantity_html =
     '<div class="form-group">' .
         zen_draw_label(POSM_TEXT_PRODUCTS_QTY_CLICK, 'products_price', 'class="col-sm-3 control-label"') .
         '<div class="col-sm-9 col-md-6">' .
-            '<a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK, 'pID=' . $_GET['pID']) . '" class="btn btn-primary" role="button">' .
+            '<a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK, 'pID=' . $_GET['pID']) . '&category_id=' . $current_category_id . '" class="btn btn-primary" role="button">' .
                 POSM_BUTTON_MANAGE_STOCK .
             '</a>' .
             zen_draw_hidden_field('products_quantity', zen_get_products_stock($_GET['pID'])) .
