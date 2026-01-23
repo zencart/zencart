@@ -383,12 +383,16 @@ if (!empty($action) && $order_exists === true) {
         <link rel="stylesheet" media="print" href="includes/css/stylesheet_print.css">
         <?php
         // -----
-        // Give an observer the chance to inject additional <head> resources on the admin orders page.
         //
-        // Notes:
-        // - The observer should append <link>, <style>, or <script> tags to the $extra_head variable.
-        // - This notifier fires during the <head> section, so resources will be loaded before page render.
-        // - Available for use by Super Orders, plugins, or other modules.
+        // Give observers an opportunity to inject additional resources into the
+        // <head> section of the admin orders page.
+        //
+        // Observers may append <link>, <style>, or <script> tags to the $extra_head
+        // variable to load page-specific resources.
+        //
+        // Observer note:
+        // - Append content rather than overwrite existing output
+        // - Multiple observers may contribute resources
         //
         $extra_head = '';
         $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_HEAD', [], $extra_head);
@@ -490,12 +494,19 @@ if (!empty($action) && $order_exists === true) {
                 </div>
                 <?php
                 // -----
-                // Give an observer the chance to inject additional content or buttons into the orders listing view.
                 //
-                // Notes:
-                // - The 'oID' value is (bool)false since this is the listing view, not order edit.
-                // - The observer should append HTML content to the $extra_listing_content variable.
-                // - This is typically used for action buttons or filtering controls.
+                // Give observers an opportunity to inject additional content into the
+                // admin orders listing view.
+                //
+                // The $oID parameter is passed as (bool)false, since this notifier fires
+                // in the listing context rather than for a specific order.
+                //
+                // Observers may append HTML output (e.g. action controls or informational
+                // elements) to the $extra_listing_content variable for display.
+                //
+                // Observer note:
+                // - Append content rather than overwrite existing output
+                // - Multiple observers may contribute content
                 //
                 $extra_listing_content = '';
                 $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LISTING_BUTTONS', false, $extra_listing_content);
@@ -842,13 +853,21 @@ if (is_array($address_footer_suffix)) {
                 ?>
                 <?php
                 // -----
-                // Notifier to inject split order UI elements into the order edit view.
-                // Observers should append HTML to $super_orders_split_order for display.
                 //
-                $super_orders_split_order = '';
-                $zco_notifier->notify('NOTIFY_ADMIN_ORDER_SPLIT_ORDER', $oID, $super_orders_split_order);
-                if (!empty($super_orders_split_order)) {
-                    echo $super_orders_split_order;
+                // Give observers an opportunity to inject additional UI elements into the
+                // admin order edit view.
+                //
+                // Observers may append HTML output (e.g. buttons, informational blocks,
+                // or action controls) to the $extra_order_actions variable for display.
+                //
+                // Observer note:
+                // - Append content rather than overwrite existing output
+                // - Multiple observers may contribute content
+                //
+                $extra_order_actions = '';
+                $zco_notifier->notify('NOTIFY_ADMIN_ORDER_SPLIT_ORDER', $oID, $extra_order_actions);
+                if (!empty($extra_order_actions)) {
+                    echo $extra_order_actions;
                 }
                 ?>
 

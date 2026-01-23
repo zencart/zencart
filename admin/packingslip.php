@@ -20,10 +20,20 @@ $currencies = new currencies();
 
 $oID = (int)$_GET['oID'];
 
-// bof Super Orders batch mode support
-$super_order_data = [];
-$zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_PRE_INITIALIZATION', $oID, $super_order_data);
-// eof Super Orders batch mode support
+// -----
+//
+// Give observers an opportunity to participate in packingslip pre-initialization.
+//
+// Observers may inspect the order ID and populate or augment the
+// $packingslip_context array with packingslip-related data needed later
+// during rendering or processing.
+//
+// Observer note:
+// - Use the provided reference to add or modify data
+// - Multiple observers may act on this notifier
+//
+$packingslip_context = [];
+$zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_PRE_INITIALIZATION', $oID, $packingslip_context);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
@@ -183,8 +193,16 @@ if (empty($order->info)) {
         <tbody>
             <?php
             // -----
-            // Notifier to load parent/child order data for split orders
-            // Observers can detect split orders and load related order information for display
+            //
+            // Give observers an opportunity to load and provide related order data
+            // for orders that participate in a parent/child (split) relationship.
+            //
+            // Observers may populate or augment the $split_order_data array with
+            // parent and/or child order information for later use during rendering.
+            //
+            // Observer note:
+            // - Use the provided reference to add or modify data
+            // - Multiple observers may act on this notifier
             //
             $split_order_data = ['parent_order' => null, 'child_orders' => []];
             $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_LOAD_PARENT_ORDER', $oID, $split_order_data);
@@ -287,12 +305,21 @@ if (empty($order->info)) {
       </table>
       <?php
       // -----
-      // Notifier to allow split order display of related order products
-      // Observers can inject parent/child order product rows or entire product section
       //
-      $split_products_html = '';
-      $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_SPLIT_PRODUCTS', $split_order_data, $split_products_html);
-      echo $split_products_html;
+      // Give observers an opportunity to inject additional product-related output
+      // associated with parent/child (split) order relationships.
+      //
+      // Observers may append HTML output (e.g. related or excluded product rows)
+      // to the $extra_products_html variable for display.
+      //
+      // Observer note:
+      // - Append content rather than overwrite existing output
+      // - Multiple observers may contribute content
+      //
+      $extra_products_html = '';
+      $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_SPLIT_PRODUCTS', $split_order_data, $extra_products_html);
+      echo $extra_products_html;
+
       ?>
       <?php if (ORDER_COMMENTS_PACKING_SLIP > 0) { ?>
         <table class="table table-condensed">
