@@ -33,7 +33,7 @@ if ($selected_template !== $template_dir) {
 $include_single_column_settings = $available_templates[$selected_template]['uses_single_column_layout_settings'];
 $uses_mobile_sidebox_settings = $available_templates[$selected_template]['uses_mobile_sidebox_settings'];
 
-$sideboxFinder = new SideboxFinder(new Filesystem());
+$sideboxFinder = new SideboxFinder(new FileSystem());
 $sideboxes = $sideboxFinder->findFromFilesystem($installedPlugins, $selected_template);
 
 $model = new LayoutBox();
@@ -818,7 +818,7 @@ if ($show_single_column === true) {
         <div class="text-center py-2">
             <button class="btn btn-primary btn-save d-none"><?= BUTTON_SAVE_CHANGES ?></button>
         </div>
-        
+
         <?= zen_draw_form('saveForm', FILENAME_LAYOUT_CONTROLLER, 'action=save', 'post') .
             zen_draw_hidden_field('left_active', 'placeholder', 'id="left-active"') .
             zen_draw_hidden_field('right_active', 'placeholder', 'id="right-active"') .

@@ -37,7 +37,7 @@ class payment
     public string $form_action_url;
     /**
      * $modules array of payment module names
-     * @var array 
+     * @var array
      */
     public array $modules;
     /**
@@ -71,7 +71,7 @@ class payment
         // and for those provided by zc_plugins.  Note that any module provided by a
         // zc_plugin overrides the processing present in any 'base' file.
         //
-        $moduleFinder = new ModuleFinder('payment', new Filesystem());
+        $moduleFinder = new ModuleFinder('payment', new FileSystem());
         $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
         $include_modules = [];
