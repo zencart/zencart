@@ -1,77 +1,158 @@
 <?php
-
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
+ * @version Modern Dynamic Dashboard 2026
+ * @author ZenExpert - https://zenexpert.com
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_STATS_SALES_REPORT_GRAPHS, '')) return;
 
-// to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
-// return;
+// prepare data (last 30 days)
 
-//  Build the sales stats
-$report = 4;
-require_once DIR_WS_CLASSES . 'stats_sales_report_graph.php';
-$endDate = mktime(0, 0, 0, (int)date('m'), (int)date('d'), (int)date('Y'));
-//$startDate = mktime() - (365 + 182) * 3600 * 24;
-$startDate = time() - (365 * 2) * 3600 * 24;
+$days_to_show = 30;
+$sales_data = [];
+$orders_data = [];
+$labels = [];
+$today = time();
 
-//$startDate = mktime() - (365)*3600*24;
-$report = new statsSalesReportGraph($report, $startDate, $endDate);
-for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
-    $month = $zcDate->output(DATE_FORMAT_SHORT_NO_DAY, $report->info[$i]['startDates']);
-    $salesData .= "['$month'," . round($report->info[$i]['sum'], $currencies->get_decimal_places(DEFAULT_CURRENCY)) . "]";
-    if ($i < $report->size - 1) {
-        $salesData .= ",";
-    }
+// initialize the arrays with 0 for the last 30 days
+for ($i = $days_to_show - 1; $i >= 0; $i--) {
+    $timestamp = strtotime("-$i days", $today);
+    $date_key = date('Y-m-d', $timestamp);
+
+    $sales_data[$date_key] = 0;
+    $orders_data[$date_key] = 0;
+
+    // Label format: "Jan 15"
+    $labels[$date_key] = date('M j', $timestamp);
 }
 
-$currencies ??= new currencies();
+// SQL: get daily sales totals AND order counts
+$sql = "SELECT date(o.date_purchased) as sale_date,
+               SUM(ot.value) as total_sales,
+               COUNT(DISTINCT o.orders_id) as total_orders
+        FROM " . TABLE_ORDERS . " o
+        LEFT JOIN " . TABLE_ORDERS_TOTAL . " ot ON (o.orders_id = ot.orders_id)
+        WHERE ot.class = 'ot_total'
+        AND o.date_purchased >= DATE_SUB(NOW(), INTERVAL " . (int)$days_to_show . " DAY)
+        GROUP BY sale_date";
+
+$result = $db->Execute($sql);
+
+while (!$result->EOF) {
+    $day = $result->fields['sale_date'];
+
+    // map data if date falls within range
+    if (isset($sales_data[$day])) {
+        $sales_data[$day] = (float)$result->fields['total_sales'];
+        $orders_data[$day] = (int)$result->fields['total_orders'];
+    }
+    $result->MoveNext();
+}
+
+// prepare JSON for JS
+$js_labels      = json_encode(array_values($labels));
+$js_sales_data  = json_encode(array_values($sales_data));
+$js_orders_data = json_encode(array_values($orders_data));
+
 ?>
-  <div class="panel panel-default reportBox">
-    <div class="panel-heading header"><?= TEXT_MONTHLY_SALES_TITLE ?><a href="<?= zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS) ?>"><?= TEXT_CLICK_FOR_COMPLETE_DETAILS ?></a></div>
-    <div class="panel-body">
-      <div id="salesgraph"></div>
-    </div>
-  </div>
 
-<script title="build_sales_graph">
-  var data;
-  var chart;
-  // Load the Visualization API and the piechart package.
-  google.charts.load('current', {packages: ['corechart']});
-  // Set a callback to run when the Google Visualization API is loaded.
-  google.charts.setOnLoadCallback(drawSalesGraph);
+<div style="position: relative; height: 350px; width: 100%;">
+    <canvas id="dashboardSalesChart"></canvas>
+</div>
 
-  function drawSalesGraph() {
-      data = new google.visualization.DataTable();
-      data.addColumn('string', '<?= DASHBOARD_MONTH ?>');
-      data.addColumn('number', '<?= DASHBOARD_SALES ?>');
-      data.addRows(<?= "[" . $salesData . "]" ?>);
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById('dashboardSalesChart').getContext('2d');
 
-      var options = {
-          trendlines: {
-              0: {
-//              type: 'linear',
-//              pointSize: 20,
-//              opacity: 0.6,
-//              pointsVisible: true,
-//              showR2: true,
-//              visibleInLegend: true
-              }
-          }, // Draw a trendline for data series 0.
-          vAxis: {title: '<?= DEFAULT_CURRENCY ?>'},
-          width: '100%',
-          height: '100%',
-          backgroundColor: {fill: "#f7f6ef"},
-          legend: {position: 'top'},
-          colors: ['dodgerblue']
-      };
+        var gradientSales = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientSales.addColorStop(0, 'rgba(54, 162, 235, 0.5)');
+        gradientSales.addColorStop(1, 'rgba(54, 162, 235, 0.0)');
 
-      chart = new google.visualization.ColumnChart(document.getElementById('salesgraph'));
-      chart.draw(data, options);
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: <?php echo $js_labels; ?>,
+                datasets: [
+                    {
+                        label: '<?php echo BOX_SALES_LABEL_REVENUE; ?>',
+                        data: <?php echo $js_sales_data; ?>,
+                        borderColor: '#337ab7', // Blue
+                        backgroundColor: gradientSales,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#337ab7',
+                        pointRadius: 3,
+                        fill: true,
+                        tension: 0.3,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '<?php echo BOX_SALES_LABEL_ORDERS; ?>',
+                        data: <?php echo $js_orders_data; ?>,
+                        borderColor: '#d9534f',
+                        backgroundColor: 'rgba(217, 83, 79, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointBackgroundColor: '#d9534f',
+                        pointBorderColor: '#fff',
+                        pointRadius: 4,
+                        fill: false,
+                        tension: 0.1,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                var value = context.parsed.y;
 
-  }
+                                if (label === '<?php echo BOX_SALES_LABEL_REVENUE; ?>') {
+                                    return label + ': ' + new Intl.NumberFormat('<?php echo BOX_SALES_GRAPH_NUMBER_FORMAT; ?>', { style: 'currency', currency: '<?php echo DEFAULT_CURRENCY; ?>' }).format(value);
+                                } else {
+                                    return label + ': ' + value;
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: false, text: '<?php echo BOX_SALES_LABEL_REVENUE; ?>' },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: false, text: '<?php echo BOX_SALES_LABEL_ORDERS; ?>' },
+                        grid: { display: false },
+                        min: 0,
+                        suggestedMax: 10
+                    }
+                }
+            }
+        });
+    });
 </script>
