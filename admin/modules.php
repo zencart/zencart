@@ -48,7 +48,7 @@ switch ($set) {
         break;
 }
 
-$moduleFinder = new ModuleFinder($module_type, new Filesystem());
+$moduleFinder = new ModuleFinder($module_type, new FileSystem());
 $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
 $notificationType = $module_type . (($_GET['module']) ? '-' . $_GET['module'] : '') ;

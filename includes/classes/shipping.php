@@ -70,7 +70,7 @@ class shipping
         // and for those provided by zc_plugins.  Note that any module provided by a
         // zc_plugin overrides the processing present in any 'base' file.
         //
-        $moduleFinder = new ModuleFinder('shipping', new Filesystem());
+        $moduleFinder = new ModuleFinder('shipping', new FileSystem());
         $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
         $modules_to_quote = [];
