@@ -42,7 +42,9 @@ function zen_rand(?int $min = null, ?int $max = null): int
     static $seeded;
 
     if (!isset($seeded)) {
-        mt_srand((int)(microtime(true) * 1000000));
+        if (function_exists('mt_srand')) {
+            mt_srand((int)(microtime(true) * 1000000));
+        }
         $seeded = true;
     }
 
