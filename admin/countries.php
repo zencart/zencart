@@ -62,7 +62,7 @@ if (!empty($action)) {
       $countries_iso_code_2 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_2']));
       $countries_iso_code_3 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_3']));
       $address_format_id = zen_db_prepare_input($_POST['address_format_id']);
-      $status = $_POST['status'] == 'on' ? 1 : 0;
+      $status = ($_POST['status'] ?? '') === 'on' ? 1 : 0;
 
       $db->Execute("INSERT INTO " . TABLE_COUNTRIES . " (countries_name, countries_iso_code_2, countries_iso_code_3, status, address_format_id)
                     VALUES ('" . zen_db_input($countries_name) . "',
@@ -79,7 +79,7 @@ if (!empty($action)) {
       $countries_iso_code_2 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_2']));
       $countries_iso_code_3 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_3']));
       $address_format_id = zen_db_prepare_input($_POST['address_format_id']);
-      $status = $_POST['status'] == 'on' ? 1 : 0;
+      $status = ($_POST['status'] ?? '') === 'on' ? 1 : 0;
 
       $db->Execute("UPDATE " . TABLE_COUNTRIES . "
                     SET countries_name = '" . zen_db_input($countries_name) . "',
