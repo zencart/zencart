@@ -764,7 +764,7 @@ function zen_get_orders_status_pulldown_array()
 }
 
 /**
- * @since ZC v2.2.0
+ * @since ZC v2.0.0
  */
 function zen_getOrdersStatuses(bool $keyed = false): array
 {

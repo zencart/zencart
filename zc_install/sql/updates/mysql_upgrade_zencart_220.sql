@@ -62,6 +62,7 @@ ALTER TABLE plugin_control MODIFY version varchar(20);
 ALTER TABLE plugin_control_versions MODIFY version varchar(20);
 ALTER TABLE customers ADD COLUMN activation_required tinyint(1) NOT NULL DEFAULT 0 AFTER customers_authorization;
 ALTER TABLE customers ADD COLUMN welcome_email_sent tinyint(1) DEFAULT NULL AFTER activation_required;
+ALTER TABLE orders_status ADD orders_status_color_code VARCHAR(7) NULL DEFAULT NULL AFTER orders_status_name;
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...
 DELETE FROM configuration WHERE configuration_key IN ('REPORT_ALL_ERRORS_ADMIN', 'REPORT_ALL_ERRORS_STORE', 'REPORT_ALL_ERRORS_NOTICE_BACKTRACE');
