@@ -122,7 +122,75 @@ if (!$contaminated) {
         }
     }
 }
+
+/**
+ * reject suspicious non-ASCII characters
+ * allows standard printable ASCII but flags common exploit symbols
+ */
+if (!empty($_SERVER['QUERY_STRING'])) {
+
+    // check for the specific '¤' (%C2%A4) or characters outside standard range
+    // allow basic printable ASCII but specifically target high-bit "junk"
+    if (preg_match('/[\x00-\x1F\x7F-\xFF]/', $_SERVER['QUERY_STRING'])) {
+        $contaminated = true;
+    }
+
+    // cap query string length (prevents buffer overflow/fuzzing)
+    if (strlen($_SERVER['QUERY_STRING']) > 256) {
+        $contaminated = true;
+    }
+}
+
+/**
+ * reject parameter pollution (any repeated keys)
+ * scans the raw query string for any key appearing more than twice.
+ */
+if (!empty($_SERVER['QUERY_STRING'])) {
+    // break the query string into individual "key=value" pairs
+    $pairs = explode('&', $_SERVER['QUERY_STRING']);
+    $keys = [];
+
+    foreach ($pairs as $pair) {
+        // get just the part before the "="
+        $parts = explode('=', $pair, 2);
+
+        // skip if the pair is empty (e.g., &&) or the key is missing
+        if (empty($parts[0])) continue;
+
+        $key = strtolower($parts[0]);
+        $keys[] = $key;
+    }
+
+    // count occurrences of each key
+    $counts = array_count_values($keys);
+    foreach ($counts as $name => $count) {
+        // allow one duplication (possibly accidental), more than 2 is not accidental
+        if ($count > 2) {
+            $contaminated = true;
+            break;
+        }
+    }
+}
+
+/**
+ * reject crawler 'BUY NOW' attempts
+ * crawlers should never be adding items to the cart.
+ */
+if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
+    $isCrawlerUA = (
+        empty($_SERVER['HTTP_USER_AGENT']) ||
+        preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', $_SERVER['HTTP_USER_AGENT'])
+    );
+
+    $hasInternalReferer = (!empty($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === $_SERVER['HTTP_HOST']);
+
+    if ($isCrawlerUA || !$hasInternalReferer) {
+        $contaminated = true;
+    }
+}
+
 unset($paramsToCheck, $paramsToAvoid, $key);
+
 if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
