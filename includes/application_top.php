@@ -155,7 +155,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         $parts = explode('=', $pair, 2);
 
         // skip if the pair is empty (e.g., &&) or the key is missing
-        if (empty($parts[0])) continue;
+        if (empty($parts[0])) {
+            continue;
+        }
 
         $key = strtolower($parts[0]);
         $keys[] = $key;
