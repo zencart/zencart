@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2025 Sep 30 Modified in v2.2.0 $
+ * @version $Id: zenexpert 2026 Feb 17 Modified in v2.2.0 $/
  */
 require 'includes/application_top.php';
 
@@ -176,10 +176,10 @@ if ($gID === 7) {
 			margin: 0;
 			border: 0;
 			border-top: 1px solid #949494;
-} 
-@media (max-width: 767px) {        
+}
+@media (max-width: 767px) {
         .form-control {
-            margin-bottom: .5rem; 
+            margin-bottom: .5rem;
         }
 }
     </style>
@@ -242,8 +242,19 @@ foreach ($configuration as $item) {
         <div class="col-md-3">
             <?php
             if (!empty($item['set_function'])) {
-                $set_function = $item['set_function'] . '\'' . $cfgValue . '\', \'' . $fieldName . '\')';
+                // use addslashes() instead of $cfgValue directly here.
+                $safe_value = addslashes($item['configuration_value']);
+                $set_function = $item['set_function'] . '\'' . $safe_value . '\', \'' . $fieldName . '\')';
+
                 eval('$inputField = ' . $set_function . ';');
+
+                // backward compatibility
+                // if a plugin ignores the new $fieldName parameter and hardcodes 'configuration_value', dynamically rewrite the name and id attributes
+                if (strpos($inputField, 'configuration_value') !== false) {
+                    $inputField = preg_replace('/name=[\'"]configuration_value(\[\])?[\'"]/', 'name="' . $fieldName . '$1"', $inputField);
+                    $inputField = preg_replace('/id=[\'"]configuration_value[\'"]/', 'id="' . $fieldName . '"', $inputField);
+                }
+
                 echo $inputField;
             } else {
                 echo '<input type="text" name="' . $fieldName . '" value="' . htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, true) . '" class="form-control">';
