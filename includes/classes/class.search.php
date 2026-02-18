@@ -101,7 +101,8 @@ class Search extends \base
      * @return string The built SQL.
      * @since ZC v2.0.0
      */
-    public function buildSearchSQL() {
+    public function buildSearchSQL()
+    {
         global $db, $messageStack, $currencies, $column_list;
 
         if (empty($this->searchOptions)) {
@@ -235,7 +236,7 @@ class Search extends \base
             p.products_price, p.products_tax_class_id, p.products_price_sorter,
             p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
 
-        if ((DISPLAY_PRICE_WITH_TAX == 'true') && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
+        if (DISPLAY_PRICE_WITH_TAX === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
             $select_str .= ", SUM(tr.tax_rate) AS tax_rate ";
         }
 
@@ -246,14 +247,14 @@ class Search extends \base
                     LEFT JOIN " . TABLE_MANUFACTURERS . " m
                     USING(manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c )";
 
-        if (ADVANCED_SEARCH_INCLUDE_METATAGS == 'true') {
+        if (ADVANCED_SEARCH_INCLUDE_METATAGS === 'true') {
             $from_str .=
                 " LEFT JOIN " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " mtpd
                     ON (mtpd.products_id= p2c.products_id AND mtpd.language_id = :languagesID)";
             $from_str = $db->bindVars($from_str, ':languagesID', $_SESSION['languages_id'], 'integer');
         }
 
-        if ((DISPLAY_PRICE_WITH_TAX == 'true') && !empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto)) {
+        if (DISPLAY_PRICE_WITH_TAX === 'true' && !empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto)) {
             if (empty($_SESSION['customer_country_id'])) {
                 $_SESSION['customer_country_id'] = STORE_COUNTRY;
                 $_SESSION['customer_zone_id'] = STORE_ZONE;
@@ -327,7 +328,7 @@ class Search extends \base
                 'm.manufacturers_name',
             ];
 
-            if (ADVANCED_SEARCH_INCLUDE_METATAGS == 'true') {
+            if (ADVANCED_SEARCH_INCLUDE_METATAGS === 'true') {
                 $keyword_search_fields[] = 'mtpd.metatags_keywords';
                 $keyword_search_fields[] = 'mtpd.metatags_description';
             }
@@ -342,7 +343,7 @@ class Search extends \base
         }
         $where_str .= ')';
         if (!empty($this->searchOptions->alpha_filter_id)) {
-            $alpha_sort = " and (pd.products_name LIKE '" . chr($this->searchOptions->alpha_filter_id) . "%') ";
+            $alpha_sort = " AND (pd.products_name LIKE '" . chr($this->searchOptions->alpha_filter_id) . "%') ";
             $where_str .= $alpha_sort;
         } else {
             $alpha_sort = '';
@@ -355,7 +356,7 @@ class Search extends \base
         }
 
         if (!empty($this->searchOptions->dto)) {
-            $where_str .= " and p.products_date_added <= :dateAdded";
+            $where_str .= " AND p.products_date_added <= :dateAdded";
             $where_str = $db->bindVars($where_str, ':dateAdded', zen_date_raw($this->searchOptions->dto), 'date');
         }
 
@@ -370,26 +371,25 @@ class Search extends \base
             }
         }
 
-        if (DISPLAY_PRICE_WITH_TAX == 'true') {
+        if (DISPLAY_PRICE_WITH_TAX === 'true') {
             if (!empty($this->searchOptions->pfrom)) {
-                $where_str .= " AND (p.products_price_sorter * IF(gz.geo_zone_id IS null, 1, 1 + (tr.tax_rate / 100)) >= :price)";
+                $where_str .= " AND (p.products_price_sorter * IF(gz.geo_zone_id IS NULL, 1, 1 + (tr.tax_rate / 100)) >= :price)";
                 $where_str = $db->bindVars($where_str, ':price', $this->searchOptions->pfrom, 'float');
             }
             if (!empty($this->searchOptions->pto)) {
-                $where_str .= " AND (p.products_price_sorter * IF(gz.geo_zone_id IS null, 1, 1 + (tr.tax_rate / 100)) <= :price)";
+                $where_str .= " AND (p.products_price_sorter * IF(gz.geo_zone_id IS NULL, 1, 1 + (tr.tax_rate / 100)) <= :price)";
                 $where_str = $db->bindVars($where_str, ':price', $this->searchOptions->pto, 'float');
             }
         } else {
             if (!empty($this->searchOptions->pfrom)) {
-                $where_str .= " and (p.products_price_sorter >= :price)";
+                $where_str .= " AND (p.products_price_sorter >= :price)";
                 $where_str = $db->bindVars($where_str, ':price', $this->searchOptions->pfrom, 'float');
             }
             if (!empty($this->searchOptions->pto)) {
-                $where_str .= " and (p.products_price_sorter <= :price)";
+                $where_str .= " AND (p.products_price_sorter <= :price)";
                 $where_str = $db->bindVars($where_str, ':price', $this->searchOptions->pto, 'float');
             }
         }
-
 
         $order_str = '';
 
@@ -397,19 +397,19 @@ class Search extends \base
         $this->notify('NOTIFY_SEARCH_WHERE_STRING', $this->searchOptions->keywords, $where_str, $keyword_search_fields);
 
 
-        if ((DISPLAY_PRICE_WITH_TAX == 'true') && (!empty($this->searchOptions->pfrom)) || !empty($this->searchOptions->pto)) {
+        if (DISPLAY_PRICE_WITH_TAX === 'true' && !empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto)) {
             $where_str .= " group by p.products_id, tr.tax_priority";
         }
 
         // set the default sort order setting from the Admin when not defined by customer
-        if (empty($this->searchOptions->sort) and PRODUCT_LISTING_DEFAULT_SORT_ORDER != '') {
+        if (empty($this->searchOptions->sort) && PRODUCT_LISTING_DEFAULT_SORT_ORDER != '') {
             $this->searchOptions->sort = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
         }
         if (empty($this->searchOptions->sort) ||
-            (!preg_match('/[1-8][ad]/', $this->searchOptions->sort)) ||
-            (substr($this->searchOptions->sort, 0, 1) > count($column_list))) {
-            for ($col = 0, $n = sizeof($column_list); $col < $n; $col++) {
-                if ($column_list[$col] == 'PRODUCT_LIST_NAME') {
+            !preg_match('/[1-8][ad]/', $this->searchOptions->sort) ||
+            substr($this->searchOptions->sort, 0, 1) > count($column_list)) {
+            for ($col = 0, $n = count($column_list); $col < $n; $col++) {
+                if ($column_list[$col] === 'PRODUCT_LIST_NAME') {
                     $this->searchOptions->sort = $col + 1 . 'a';
                     $order_str .= ' ORDER BY pd.products_name';
                     break;
@@ -417,7 +417,7 @@ class Search extends \base
                     // sort by products_sort_order when PRODUCT_LISTING_DEFAULT_SORT_ORDER ia left blank
                     // for reverse, descending order use:
                     //       $listing_sql .= " order by p.products_sort_order desc, pd.products_name";
-                    $order_str .= " order by p.products_sort_order, pd.products_name";
+                    $order_str .= " ORDER BY p.products_sort_order, pd.products_name";
                     break;
                 }
             }
@@ -428,29 +428,29 @@ class Search extends \base
         } else {
             $sort_col = substr($this->searchOptions->sort, 0, 1);
             $sort_order = substr($this->searchOptions->sort, -1);
-            $order_str = ' order by ';
+            $order_str = ' ORDER BY ';
             switch ($column_list[$sort_col - 1]) {
                 case 'PRODUCT_LIST_MODEL':
-                    $order_str .= "p.products_model " . ($sort_order == 'd' ? "desc" : "") . ", pd.products_name";
+                    $order_str .= "p.products_model " . ($sort_order === 'd' ? "DESC" : "") . ", pd.products_name";
                     break;
                 case 'PRODUCT_LIST_NAME':
-                    $order_str .= "pd.products_name " . ($sort_order == 'd' ? "desc" : "");
+                    $order_str .= "pd.products_name " . ($sort_order === 'd' ? "DESC" : "");
                     break;
                 case 'PRODUCT_LIST_MANUFACTURER':
-                    $order_str .= "m.manufacturers_name " . ($sort_order == 'd' ? "desc" : "") . ", pd.products_name";
+                    $order_str .= "m.manufacturers_name " . ($sort_order === 'd' ? "DESC" : "") . ", pd.products_name";
                     break;
                 case 'PRODUCT_LIST_QUANTITY':
-                    $order_str .= "p.products_quantity " . ($sort_order == 'd' ? "desc" : "") . ", pd.products_name";
+                    $order_str .= "p.products_quantity " . ($sort_order === 'd' ? "DESC" : "") . ", pd.products_name";
                     break;
                 case 'PRODUCT_LIST_IMAGE':
                     $order_str .= "pd.products_name";
                     break;
                 case 'PRODUCT_LIST_WEIGHT':
-                    $order_str .= "p.products_weight " . ($sort_order == 'd' ? "desc" : "") . ", pd.products_name";
+                    $order_str .= "p.products_weight " . ($sort_order === 'd' ? "DESC" : "") . ", pd.products_name";
                     break;
                 case 'PRODUCT_LIST_PRICE':
-                    //        $order_str .= "final_price " . ($sort_order == 'd' ? "desc" : "") . ", pd.products_name";
-                    $order_str .= "p.products_price_sorter " . ($sort_order == 'd' ? "desc" : "") . ", pd.products_name";
+                    //        $order_str .= "final_price " . ($sort_order === 'd' ? "DESC" : "") . ", pd.products_name";
+                    $order_str .= "p.products_price_sorter " . ($sort_order === 'd' ? "DESC" : "") . ", pd.products_name";
                     break;
             }
         }
