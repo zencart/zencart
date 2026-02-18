@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: piloujp 2025 May 27 Modified in v2.2.0 $
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
  */
 ?>
 <div class="centerColumn" id="reviewsInfoDefault">
@@ -49,7 +49,12 @@
 
 <h3 class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $review_info->fields['reviews_rating'] . '.gif', sprintf(TEXT_OF_5_STARS, $review_info->fields['reviews_rating'])), sprintf(TEXT_OF_5_STARS, $review_info->fields['reviews_rating']); ?></h3>
 
-<div id="reviewsInfoDefaultMainContent" class="content"><?php echo nl2br(zen_output_string_protected(stripslashes($review_info->fields['reviews_text']))); ?></div>
+<div id="reviewsInfoDefaultMainContent" class="content">
+    <?php if(!empty($review_info->fields['reviews_title'])) { ?>
+        <h6><?php echo $review_info->fields['reviews_title']; ?></h6>
+    <?php } ?>
+    <?php echo nl2br(zen_output_string_protected(stripslashes($review_info->fields['reviews_text']))); ?>
+</div>
 <div id="reviewsInfoDefaultDate" class="bold"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($review_info->fields['date_added'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($review_info->fields['customers_name'])); ?></div>
 
 </div>

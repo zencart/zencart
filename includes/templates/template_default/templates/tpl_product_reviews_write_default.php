@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Oct 05 Modified in v2.0.0-alpha1 $
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
  */
 ?>
 <div class="centerColumn" id="reviewsWrite">
@@ -60,6 +60,10 @@
 <?php echo zen_draw_radio_field('rating', '5', ($rating === 5), 'id="rating-5"'); ?>
 <?php echo '<label class="" for="rating-5">' . zen_image($template->get_template_dir(OTHER_IMAGE_REVIEWS_RATING_STARS_FIVE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . OTHER_IMAGE_REVIEWS_RATING_STARS_FIVE, OTHER_REVIEWS_RATING_STARS_FIVE_ALT) . '</label>'; ?>
 </div>
+
+    <label id="inputAreaReviews" for="review-title"><?php echo TEXT_REVIEW_TITLE; ?></label>
+    <?php echo zen_draw_input_field('review_title', $review_title, 'id="review-title"'); ?>
+    <br>
 
 <label id="textAreaReviews" for="review-text"><?php echo SUB_TITLE_REVIEW; ?></label>
 <?php echo zen_draw_textarea_field('review_text', 60, 5, $review_text, 'id="review-text"'); ?>

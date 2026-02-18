@@ -3,8 +3,8 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 09 New in v1.5.8-alpha $
-*/
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
+ */
 
 $define = [
     'HEADING_TITLE' => 'Reviews',
@@ -35,6 +35,7 @@ $define = [
     'TEXT_PENDING_APPROVAL' => 'Pending Approval',
     'TEXT_APPROVED' => 'Approved',
     'HEADING_TITLE_STATUS' => 'Status',
+    'ENTRY_REVIEW_TITLE' => 'Review Title:',
 ];
 
 return $define;

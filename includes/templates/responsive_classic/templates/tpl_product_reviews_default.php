@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2025 Oct 16 Modified in v2.2.0 $
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
  */
 ?>
 <div class="centerColumn" id="reviewsDefault">
@@ -70,7 +70,12 @@
 <div class="reviews-right">
 <div class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $reviews['reviewsRating'] . '.png', sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating'])), sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating']); ?></div>
 
-<div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), (int)MAX_PREVIEW); ?></div>
+<div class="productReviewsDefaultProductMainContent content">
+    <?php if(!empty($reviews['reviewsTitle'])) { ?>
+        <h6><?php echo $reviews['reviewsTitle']; ?></h6>
+    <?php } ?>
+    <?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), (int)MAX_PREVIEW); ?>
+</div>
 
 <div class="productReviewsDefaultReviewer"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($reviews['dateAdded'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($reviews['customersName'])); ?></div>
 </div>
