@@ -19,7 +19,7 @@ Zen Cart&reg; v2.2.0-dev
 Compatibility
 -------------
 Zen Cart v2.2.0 is designed for:
- * PHP 8.0 to PHP 8.4
+ * PHP 8.2 to PHP 8.4
  * MySQL 5.7.8+ or MariaDB 10.2.7+
  * Apache 2.4
  

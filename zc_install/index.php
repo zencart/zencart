@@ -6,8 +6,8 @@
  * @version $Id: DrByte 2024 Feb 19 Modified in v2.0.0-beta1 $
  */
 
-if (PHP_VERSION_ID < 80002) {
-    die('Sorry, requires minimum PHP 8.0.2');
+if (PHP_VERSION_ID < 80200) {
+    die('Sorry, requires minimum PHP 8.2 (current version: ' . PHP_VERSION . ')');
 }
 
 define('IS_ADMIN_FLAG', false);

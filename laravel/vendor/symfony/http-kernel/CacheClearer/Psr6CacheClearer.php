@@ -39,7 +39,7 @@ class Psr6CacheClearer implements CacheClearerInterface
     public function getPool(string $name): CacheItemPoolInterface
     {
         if (!$this->hasPool($name)) {
-            throw new \InvalidArgumentException(sprintf('Cache pool not found: "%s".', $name));
+            throw new \InvalidArgumentException(\sprintf('Cache pool not found: "%s".', $name));
         }
 
         return $this->pools[$name];
@@ -51,14 +51,14 @@ class Psr6CacheClearer implements CacheClearerInterface
     public function clearPool(string $name): bool
     {
         if (!isset($this->pools[$name])) {
-            throw new \InvalidArgumentException(sprintf('Cache pool not found: "%s".', $name));
+            throw new \InvalidArgumentException(\sprintf('Cache pool not found: "%s".', $name));
         }
 
         return $this->pools[$name]->clear();
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function clear(string $cacheDir)
     {

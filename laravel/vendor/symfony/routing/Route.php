@@ -27,7 +27,7 @@ class Route implements \Serializable
     private array $requirements = [];
     private array $options = [];
     private string $condition = '';
-    private $compiled = null;
+    private ?CompiledRoute $compiled = null;
 
     /**
      * Constructor.
@@ -35,16 +35,16 @@ class Route implements \Serializable
      * Available options:
      *
      *  * compiler_class: A class name able to compile this route instance (RouteCompiler by default)
-     *  * utf8:           Whether UTF-8 matching is enforced ot not
+     *  * utf8:           Whether UTF-8 matching is enforced or not
      *
-     * @param string          $path         The path pattern to match
-     * @param array           $defaults     An array of default parameter values
-     * @param array           $requirements An array of requirements for parameters (regexes)
-     * @param array           $options      An array of options
-     * @param string|null     $host         The host pattern to match
-     * @param string|string[] $schemes      A required URI scheme or an array of restricted schemes
-     * @param string|string[] $methods      A required HTTP method or an array of restricted methods
-     * @param string|null     $condition    A condition that should evaluate to true for the route to match
+     * @param string                    $path         The path pattern to match
+     * @param array                     $defaults     An array of default parameter values
+     * @param array<string|\Stringable> $requirements An array of requirements for parameters (regexes)
+     * @param array                     $options      An array of options
+     * @param string|null               $host         The host pattern to match
+     * @param string|string[]           $schemes      A required URI scheme or an array of restricted schemes
+     * @param string|string[]           $methods      A required HTTP method or an array of restricted methods
+     * @param string|null               $condition    A condition that should evaluate to true for the route to match
      */
     public function __construct(string $path, array $defaults = [], array $requirements = [], array $options = [], ?string $host = '', string|array $schemes = [], string|array $methods = [], ?string $condition = '')
     {
@@ -102,7 +102,7 @@ class Route implements \Serializable
     /**
      * @internal
      */
-    final public function unserialize(string $serialized)
+    final public function unserialize(string $serialized): void
     {
         $this->__unserialize(unserialize($serialized));
     }
@@ -216,7 +216,7 @@ class Route implements \Serializable
     public function setOptions(array $options): static
     {
         $this->options = [
-            'compiler_class' => 'Symfony\\Component\\Routing\\RouteCompiler',
+            'compiler_class' => RouteCompiler::class,
         ];
 
         return $this->addOptions($options);
@@ -416,7 +416,7 @@ class Route implements \Serializable
             return $pattern;
         }
 
-        return preg_replace_callback('#\{(!?)(\w++)(<.*?>)?(\?[^\}]*+)?\}#', function ($m) {
+        return preg_replace_callback('#\{(!?)([\w\x80-\xFF]++)(<.*?>)?(\?[^\}]*+)?\}#', function ($m) {
             if (isset($m[4][0])) {
                 $this->setDefault($m[2], '?' !== $m[4] ? substr($m[4], 1) : null);
             }
@@ -428,12 +428,12 @@ class Route implements \Serializable
         }, $pattern);
     }
 
-    private function sanitizeRequirement(string $key, string $regex)
+    private function sanitizeRequirement(string $key, string $regex): string
     {
         if ('' !== $regex) {
             if ('^' === $regex[0]) {
                 $regex = substr($regex, 1);
-            } elseif (0 === strpos($regex, '\\A')) {
+            } elseif (str_starts_with($regex, '\\A')) {
                 $regex = substr($regex, 2);
             }
         }
@@ -445,7 +445,7 @@ class Route implements \Serializable
         }
 
         if ('' === $regex) {
-            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" cannot be empty.', $key));
+            throw new \InvalidArgumentException(\sprintf('Routing requirement for "%s" cannot be empty.', $key));
         }
 
         return $regex;

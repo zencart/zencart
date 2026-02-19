@@ -101,14 +101,37 @@ class DatabaseManager implements ConnectionResolverInterface
                 $this->makeConnection($database), $type
             );
 
-            if ($this->app->bound('events')) {
-                $this->app['events']->dispatch(
-                    new ConnectionEstablished($this->connections[$name])
-                );
-            }
+            $this->dispatchConnectionEstablishedEvent($this->connections[$name]);
         }
 
         return $this->connections[$name];
+    }
+
+    /**
+     * Get a database connection instance from the given configuration.
+     *
+     * @param  string  $name
+     * @param  array  $config
+     * @param  bool  $force
+     * @return \Illuminate\Database\ConnectionInterface
+     */
+    public function connectUsing(string $name, array $config, bool $force = false)
+    {
+        if ($force) {
+            $this->purge($name);
+        }
+
+        if (isset($this->connections[$name])) {
+            throw new RuntimeException("Cannot establish connection [$name] because another connection with that name already exists.");
+        }
+
+        $connection = $this->configure(
+            $this->factory->make($config, $name), null
+        );
+
+        $this->dispatchConnectionEstablishedEvent($connection);
+
+        return tap($connection, fn ($connection) => $this->connections[$name] = $connection);
     }
 
     /**
@@ -210,6 +233,23 @@ class DatabaseManager implements ConnectionResolverInterface
     }
 
     /**
+     * Dispatch the ConnectionEstablished event if the event dispatcher is available.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return void
+     */
+    protected function dispatchConnectionEstablishedEvent(Connection $connection)
+    {
+        if (! $this->app->bound('events')) {
+            return;
+        }
+
+        $this->app['events']->dispatch(
+            new ConnectionEstablished($connection)
+        );
+    }
+
+    /**
      * Prepare the read / write mode for database connection instance.
      *
      * @param  \Illuminate\Database\Connection  $connection
@@ -252,7 +292,7 @@ class DatabaseManager implements ConnectionResolverInterface
      * @param  string  $type
      * @return void
      *
-     * @throws \Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\Exception
      * @throws \RuntimeException
      */
     public function registerDoctrineType(string $class, string $name, string $type): void

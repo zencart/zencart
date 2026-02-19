@@ -30,11 +30,7 @@ trait CompiledUrlMatcherTrait
     private array $staticRoutes = [];
     private array $regexpList = [];
     private array $dynamicRoutes = [];
-
-    /**
-     * @var callable|null
-     */
-    private $checkCondition;
+    private ?\Closure $checkCondition;
 
     public function match(string $pathinfo): array
     {
@@ -46,7 +42,7 @@ trait CompiledUrlMatcherTrait
             throw new MethodNotAllowedException(array_keys($allow));
         }
         if (!$this instanceof RedirectableUrlMatcherInterface) {
-            throw new ResourceNotFoundException(sprintf('No routes found for "%s".', $pathinfo));
+            throw new ResourceNotFoundException(\sprintf('No routes found for "%s".', $pathinfo));
         }
         if (!\in_array($this->context->getMethod(), ['HEAD', 'GET'], true)) {
             // no-op
@@ -61,7 +57,7 @@ trait CompiledUrlMatcherTrait
             } finally {
                 $this->context->setScheme($scheme);
             }
-        } elseif ('/' !== $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/') {
+        } elseif ('' !== $trimmedPathinfo = rtrim($pathinfo, '/')) {
             $pathinfo = $trimmedPathinfo === $pathinfo ? $pathinfo.'/' : $trimmedPathinfo;
             if ($ret = $this->doMatch($pathinfo, $allow, $allowSchemes)) {
                 return $this->redirect($pathinfo, $ret['_route']) + $ret;
@@ -71,14 +67,14 @@ trait CompiledUrlMatcherTrait
             }
         }
 
-        throw new ResourceNotFoundException(sprintf('No routes found for "%s".', $pathinfo));
+        throw new ResourceNotFoundException(\sprintf('No routes found for "%s".', $pathinfo));
     }
 
     private function doMatch(string $pathinfo, array &$allow = [], array &$allowSchemes = []): array
     {
         $allow = $allowSchemes = [];
-        $pathinfo = rawurldecode($pathinfo) ?: '/';
-        $trimmedPathinfo = rtrim($pathinfo, '/') ?: '/';
+        $pathinfo = '' === ($pathinfo = rawurldecode($pathinfo)) ? '/' : $pathinfo;
+        $trimmedPathinfo = '' === ($trimmedPathinfo = rtrim($pathinfo, '/')) ? '/' : $trimmedPathinfo;
         $context = $this->context;
         $requestMethod = $canonicalMethod = $context->getMethod();
 
@@ -92,10 +88,6 @@ trait CompiledUrlMatcherTrait
         $supportsRedirections = 'GET' === $canonicalMethod && $this instanceof RedirectableUrlMatcherInterface;
 
         foreach ($this->staticRoutes[$trimmedPathinfo] ?? [] as [$ret, $requiredHost, $requiredMethods, $requiredSchemes, $hasTrailingSlash, , $condition]) {
-            if ($condition && !($this->checkCondition)($condition, $context, 0 < $condition ? $request ?? $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
-                continue;
-            }
-
             if ($requiredHost) {
                 if ('{' !== $requiredHost[0] ? $requiredHost !== $host : !preg_match($requiredHost, $host, $hostMatches)) {
                     continue;
@@ -104,6 +96,10 @@ trait CompiledUrlMatcherTrait
                     $hostMatches['_route'] = $ret['_route'];
                     $ret = $this->mergeDefaults($hostMatches, $ret);
                 }
+            }
+
+            if ($condition && !($this->checkCondition)($condition, $context, 0 < $condition ? $request ??= $this->request ?: $this->createRequest($pathinfo) : null, $ret)) {
+                continue;
             }
 
             if ('/' !== $pathinfo && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
@@ -132,13 +128,8 @@ trait CompiledUrlMatcherTrait
         foreach ($this->regexpList as $offset => $regex) {
             while (preg_match($regex, $matchedPathinfo, $matches)) {
                 foreach ($this->dynamicRoutes[$m = (int) $matches['MARK']] as [$ret, $vars, $requiredMethods, $requiredSchemes, $hasTrailingSlash, $hasTrailingVar, $condition]) {
-                    if (null !== $condition) {
-                        if (0 === $condition) { // marks the last route in the regexp
-                            continue 3;
-                        }
-                        if (!($this->checkCondition)($condition, $context, 0 < $condition ? $request ?? $request = $this->request ?: $this->createRequest($pathinfo) : null)) {
-                            continue;
-                        }
+                    if (0 === $condition) { // marks the last route in the regexp
+                        continue 3;
                     }
 
                     $hasTrailingVar = $trimmedPathinfo !== $pathinfo && $hasTrailingVar;
@@ -151,17 +142,21 @@ trait CompiledUrlMatcherTrait
                         }
                     }
 
+                    foreach ($vars as $i => $v) {
+                        if (isset($matches[1 + $i])) {
+                            $ret[$v] = $matches[1 + $i];
+                        }
+                    }
+
+                    if ($condition && !($this->checkCondition)($condition, $context, 0 < $condition ? $request ??= $this->request ?: $this->createRequest($pathinfo) : null, $ret)) {
+                        continue;
+                    }
+
                     if ('/' !== $pathinfo && !$hasTrailingVar && $hasTrailingSlash === ($trimmedPathinfo === $pathinfo)) {
                         if ($supportsRedirections && (!$requiredMethods || isset($requiredMethods['GET']))) {
                             return $allow = $allowSchemes = [];
                         }
                         continue;
-                    }
-
-                    foreach ($vars as $i => $v) {
-                        if (isset($matches[1 + $i])) {
-                            $ret[$v] = $matches[1 + $i];
-                        }
                     }
 
                     if ($requiredSchemes && !isset($requiredSchemes[$context->getScheme()])) {

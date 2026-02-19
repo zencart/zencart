@@ -25,18 +25,13 @@ final class ResponseHeaderSame extends Constraint
         $this->expectedValue = $expectedValue;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toString(): string
     {
-        return sprintf('has header "%s" with value "%s"', $this->headerName, $this->expectedValue);
+        return \sprintf('has header "%s" with value "%s"', $this->headerName, $this->expectedValue);
     }
 
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function matches($response): bool
     {
@@ -45,8 +40,6 @@ final class ResponseHeaderSame extends Constraint
 
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($response): string
     {
