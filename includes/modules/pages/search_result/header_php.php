@@ -23,11 +23,11 @@ if (!defined('ADVANCED_SEARCH_INCLUDE_METATAGS')) {
     define('ADVANCED_SEARCH_INCLUDE_METATAGS', 'true');
 }
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // set the product filters according to selected product type
 $typefilter = $_GET['typefilter'] ?? 'default';
-require(zen_get_index_filters_directory($typefilter . '_filter.php'));
+require zen_get_index_filters_directory($typefilter . '_filter.php');
 
 $error = false;
 $missing_one_input = false;
@@ -37,6 +37,8 @@ $keywords = $_GET['keyword'] ?? '';
 $price_check_error = false;
 
 try {
+    require DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER);
+
     // Perform the search using the provided parameters.
     $searchOptions = new SearchOptions();
 
@@ -47,6 +49,12 @@ try {
     $result = new \splitPageResults($listing_sql, MAX_DISPLAY_PRODUCTS_LISTING, 'p.products_id', 'page');
     $zco_notifier->notify('NOTIFY_SEARCH_RESULTS', $listing_sql, $keywords, $result);
 
+    // -----
+    // Saving for use by the page's jscript_main.php, since the $result
+    // variable is used by many sideboxes, too.
+    //
+    $search_result_number_of_rows = (int)$result->number_of_rows;
+
     // Expose changed search options in $_GET for product listing page.
     $_GET['sort'] = $searchOptions->sort;
 
@@ -55,7 +63,10 @@ try {
         $message = TEXT_NO_PRODUCTS;
         $zco_notifier->notify('NOTIFY_SEARCH_NO_RESULTS_MESSAGE', $result, $search, $message);
         $messageStack->add_session('search', $message, 'caution');
-        zen_redirect(zen_href_link(FILENAME_SEARCH, zen_get_all_get_params('action')));
+
+        if (empty($_GET['alpha_filter_id'])) {
+            zen_redirect(zen_href_link(FILENAME_SEARCH, zen_get_all_get_params('action')));
+        }
     }
     // if only one product found in search results, go directly to the product page, instead of displaying a link to just one item:
     if ((int)$result->number_of_rows === 1 && SKIP_SINGLE_PRODUCT_CATEGORIES === 'True') {
