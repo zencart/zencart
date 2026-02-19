@@ -7,8 +7,7 @@
 
 namespace Zencart\ViewBuilders;
 
-use App\Models\PluginControl;
-use Illuminate\Database\Eloquent\Builder;
+use Zencart\DbRepositories\PluginControlRepository;
 use Zencart\PluginSupport\PluginStatus;
 
 /**
@@ -19,18 +18,33 @@ class PluginManagerDataSource extends DataTableDataSource
     /**
      * @since ZC v1.5.8
      */
-    protected function buildInitialQuery(): Builder
+    protected function buildInitialQuery(): array
     {
+        global $db;
         $statusSort = [
             PluginStatus::ENABLED, // enabled
             PluginStatus::DISABLED, // disabled
             PluginStatus::NOT_INSTALLED, // not installed
         ];
-        return PluginControl::query()
-            ->orderByRaw(
-                "FIELD(status, " . implode(',', $statusSort) . ")"
-            )
-            ->orderBy('name')
-            ->orderBy('unique_key');
+
+        $rows = (new PluginControlRepository($db))->getAll();
+        $statusOrder = array_flip($statusSort);
+
+        usort($rows, function (array $a, array $b) use ($statusOrder): int {
+            $statusA = $statusOrder[(int)($a['status'] ?? PluginStatus::NOT_INSTALLED)] ?? 999;
+            $statusB = $statusOrder[(int)($b['status'] ?? PluginStatus::NOT_INSTALLED)] ?? 999;
+            if ($statusA !== $statusB) {
+                return $statusA <=> $statusB;
+            }
+
+            $nameCmp = strcasecmp((string)($a['name'] ?? ''), (string)($b['name'] ?? ''));
+            if ($nameCmp !== 0) {
+                return $nameCmp;
+            }
+
+            return strcasecmp((string)($a['unique_key'] ?? ''), (string)($b['unique_key'] ?? ''));
+        });
+
+        return $rows;
     }
 }

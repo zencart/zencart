@@ -10,17 +10,15 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-use App\Models\LayoutBox;
+use Zencart\DbRepositories\LayoutBoxRepository;
 use Zencart\ResourceLoaders\SideboxFinder;
 use Zencart\FileSystem\FileSystem;
 
 $column_box_default='tpl_box_default_right.php';
 // Check if there are boxes for the column
-$sideboxes = LayoutBox::where('layout_box_location', 1)
-                      ->where('layout_box_status', 1)
-                      ->where('layout_template', $template_dir)
-                      ->orderBy('layout_box_sort_order')
-                      ->limit(100)->get();
+global $db;
+$layoutBoxRepository = new LayoutBoxRepository($db);
+$sideboxes = $layoutBoxRepository->getActiveForLocation(1, $template_dir, 100);
 
 $column_width = (int)BOX_WIDTH_RIGHT;
 foreach ($sideboxes as $sidebox) {

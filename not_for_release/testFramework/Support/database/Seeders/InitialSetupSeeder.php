@@ -2,13 +2,13 @@
 
 namespace Seeders;
 
-use App\Models\Currency;
-use App\Models\TaxClass;
-use App\Models\TaxRate;
-use App\Models\TaxRatesDescription;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Tests\Models\Currency;
+use Tests\Models\TaxClass;
+use Tests\Models\TaxRate;
+use Tests\Models\TaxRatesDescription;
 
 class InitialSetupSeeder extends Seeder
 {
@@ -45,15 +45,15 @@ class InitialSetupSeeder extends Seeder
                 ),
         ));
         // disable sending emails by  default
-        $email = \App\Models\Configuration::where('configuration_key', 'SEND_EMAILS')->first();
+        $email = \Tests\Models\Configuration::where('configuration_key', 'SEND_EMAILS')->first();
         $email->configuration_value = 'false';
         $email->save();
         // set a valid email from address
-        $lof = \App\Models\Configuration::where('configuration_key', 'MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS')->first();
+        $lof = \Tests\Models\Configuration::where('configuration_key', 'MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS')->first();
         $lof->configuration_value = 'false';
         $lof->save();
         // set SSLPWSTATUSCHECK to avoid redirect on admin login
-        $statusCheck = \App\Models\Configuration::where('configuration_key', 'SSLPWSTATUSCHECK')->first();
+        $statusCheck = \Tests\Models\Configuration::where('configuration_key', 'SSLPWSTATUSCHECK')->first();
         $e = (str_starts_with(HTTP_SERVER, 'https')) ? '1' : '0';
         $statusCheck->configuration_value = "$e:$e";
         $statusCheck->save();
@@ -90,22 +90,22 @@ class InitialSetupSeeder extends Seeder
         $taxRateDesc->save();
         // see if we need to set a custom smtp server - e.g. for mailpit
         if (isset($mainConfigs['use-server']) && $mainConfigs['use-mailserver'] ) {
-            $email = \App\Models\Configuration::where('configuration_key', 'SEND_EMAILS')->first();
+            $email = \Tests\Models\Configuration::where('configuration_key', 'SEND_EMAILS')->first();
             $email->configuration_value = 'true';
             $email->save();
-            $email = \App\Models\Configuration::where('configuration_key', 'EMAIL_TRANSPORT')->first();
+            $email = \Tests\Models\Configuration::where('configuration_key', 'EMAIL_TRANSPORT')->first();
             $email->configuration_value = 'smtp';
             $email->save();
-            $email = \App\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_MAIL_SERVER')->first();
+            $email = \Tests\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_MAIL_SERVER')->first();
             $email->configuration_value = $mainConfigs['mailserver-host'] ?? 'localhost';
             $email->save();
-            $email = \App\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_MAIL_SERVER_PORT')->first();
+            $email = \Tests\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_MAIL_SERVER_PORT')->first();
             $email->configuration_value = $mainConfigs['mailserver-port'] ?? '8025';
             $email->save();
-            $email = \App\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_MAILBOX')->first();
+            $email = \Tests\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_MAILBOX')->first();
             $email->configuration_value = $mainConfigs['mailserver-user'] ?? 'ddev';
             $email->save();
-            $email = \App\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_PASSWORD')->first();
+            $email = \Tests\Models\Configuration::where('configuration_key', 'EMAIL_SMTPAUTH_PASSWORD')->first();
             $email->configuration_value = $mainConfigs['mailserver-password'] ?? 'mailpit';
             $email->save();
         }

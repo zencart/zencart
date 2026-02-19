@@ -473,8 +473,7 @@ function zen_to_boolean(mixed $value, bool $null_on_failure = true): bool|null
 }
 
 /**
- * this function will need to be removed if
- * we ever revert to a full laravel install
+ * compatibility wrapper for request helper
  * @since ZC v1.5.8
  */
 
@@ -636,4 +635,3 @@ function zen_get_orders_status()
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_get_orders_status_pulldown_array();
 }
-

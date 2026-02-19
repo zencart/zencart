@@ -2,9 +2,9 @@
 
 namespace Tests\Support\Traits;
 
-use App\Models\Coupon;
-use App\Models\CouponDescription;
 use Illuminate\Support\Carbon;
+use Tests\Models\Coupon;
+use Tests\Models\CouponDescription;
 
 trait DiscountCouponConcerns
 {

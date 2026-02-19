@@ -26,13 +26,13 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 $observersMain = (new FileSystem)->listFilesFromDirectory(DIR_WS_CLASSES . 'observers/', '~(^(auto\.|Auto[A-Z]).*\.php$)~');
-$observersMain = collect($observersMain)->map(fn($item, $key) => DIR_WS_CLASSES . 'observers/' . $item)->toArray();
+$observersMain = array_map(static fn($item) => DIR_WS_CLASSES . 'observers/' . $item, $observersMain);
 $context = IS_ADMIN_FLAG ? 'admin' : 'catalog';
 $observersPlugins = [];
 foreach ($installedPlugins as $plugin) {
     $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_CLASSES . 'observers/';
     $observersPlugin = (new FileSystem)->listFilesFromDirectory($path, '~(^(auto\.|Auto[A-Z]).*\.php$)~');
-    $observersPlugin = collect($observersPlugin)->map(fn($item, $key) => $path . $item)->toArray();
+    $observersPlugin = array_map(static fn($item) => $path . $item, $observersPlugin);
     $observersPlugins = array_merge($observersPlugins, $observersPlugin);
 }
 $observers = array_merge($observersPlugins, $observersMain);

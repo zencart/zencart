@@ -2,12 +2,9 @@
 
 namespace Tests\Support\Traits;
 
-use App\Models\PluginControl;
-use App\Models\PluginControlVersion;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\HttpClient;
 
 
 trait GeneralConcerns
@@ -77,7 +74,7 @@ trait GeneralConcerns
     }
 
 
-    protected function browserAdminLogin() 
+    protected function browserAdminLogin()
     {
         $this->runCustomSeeder('StoreWizardSeeder');
         $this->browser->request('GET', HTTP_SERVER . '/admin');
