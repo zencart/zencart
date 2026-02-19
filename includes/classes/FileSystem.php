@@ -7,12 +7,10 @@
  */
 namespace Zencart\FileSystem;
 
-use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
-
 /**
  * @since ZC v1.5.7
  */
-class FileSystem extends IlluminateFilesystem
+class FileSystem
 {
     /**
      * @since ZC v1.5.7
@@ -235,5 +233,36 @@ class FileSystem extends IlluminateFilesystem
             return str_replace('\\', '/', realpath($path));
         }
         return realpath($path);
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function deleteDirectory(string $directory): bool
+    {
+        if (!is_dir($directory)) {
+            return false;
+        }
+
+        $items = scandir($directory);
+        if ($items === false) {
+            return false;
+        }
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $path = $directory . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($path)) {
+                $this->deleteDirectory($path);
+                continue;
+            }
+
+            @unlink($path);
+        }
+
+        return @rmdir($directory);
     }
 }

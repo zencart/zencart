@@ -569,9 +569,12 @@ function zen_get_language_name($lookup)
  */
 function zen_get_configuration_group_value($lookup)
 {
-    // @todo could also do this as a dynamic scope
-    $r = \App\Models\ConfigurationGroup::select('configuration_group_title')->where('configuration_group_id', '=', $lookup)->first();
-    return $r['configuration_group_title'] ?? (int)$lookup;
+    global $db;
+    $r = $db->Execute(
+        "SELECT configuration_group_title FROM " . TABLE_CONFIGURATION_GROUP .
+        " WHERE configuration_group_id = " . (int)$lookup . " LIMIT 1"
+    );
+    return $r->EOF ? (int)$lookup : $r->fields['configuration_group_title'];
 }
 
 

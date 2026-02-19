@@ -26,10 +26,6 @@
         "ext-curl": "*",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.7",
-        "illuminate/console": "^9.52",
-        "illuminate/database": "^9.52",
-        "illuminate/events": "^9.52",
-        "kitloong/laravel-migrations-generator": "^6.10",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.6",
         "sempro/phpunit-pretty-print": "^1.4",
@@ -50,7 +46,6 @@
         "classmap": ["not_for_release/testFramework"],
         "psr-4": {
             "Tests\\": "not_for_release/testFramework/",
-            "App\\": "laravel/app/",
             "Seeders\\": "not_for_release/testFramework/Support/database/Seeders/",
             "Migrations\\": "not_for_release/testFramework/Support/database/migrations/"
 

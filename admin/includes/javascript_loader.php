@@ -73,8 +73,16 @@ foreach ($directory_array as $key => $value) {
 }
 
 foreach ($installedPlugins as $plugin) {
-    $relativeDir = $plugin->getRelativePath();
-    $absoluteDir = $plugin->getAbsolutePath();
+    if (is_object($plugin) && method_exists($plugin, 'getRelativePath') && method_exists($plugin, 'getAbsolutePath')) {
+        $relativeDir = $plugin->getRelativePath();
+        $absoluteDir = $plugin->getAbsolutePath();
+    } else {
+        $pluginKey = $plugin['unique_key'] ?? '';
+        $pluginVersion = $plugin['version'] ?? '';
+        $relativeDir = ($GLOBALS['request_type'] === 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG)
+            . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+        $absoluteDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+    }
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/javascript/', '/^global_jscript/', '.php');
     foreach ($directory_array as $key => $value) {
         require $absoluteDir . 'admin/includes/javascript/' . $value;

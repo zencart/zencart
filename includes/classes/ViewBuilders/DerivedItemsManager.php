@@ -8,7 +8,6 @@
 namespace Zencart\ViewBuilders;
 
 use Zencart\FileSystem\FileSystem;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * @since ZC v1.5.8
@@ -18,7 +17,7 @@ class DerivedItemsManager
     /**
      * @since ZC v1.5.8
      */
-    public function process(Model $tableRow, string $colName, array $columnInfo) : string
+    public function process($tableRow, string $colName, array $columnInfo): string
     {
         if (!isset($columnInfo['derivedItem'])) {
             return $tableRow[$colName];
@@ -30,7 +29,7 @@ class DerivedItemsManager
     /**
      * @since ZC v1.5.8
      */
-    protected function processDerivedItem(Model $tableRow, string $colName, array $columnInfo) : string
+    protected function processDerivedItem($tableRow, string $colName, array $columnInfo): string
     {
         $type = $columnInfo['derivedItem']['type'];
         switch ($type) {
@@ -48,7 +47,7 @@ class DerivedItemsManager
     /**
      * @since ZC v1.5.8
      */
-    protected function booleanReplace(Model $tableRow, string $colName, array $columnInfo) : string
+    protected function booleanReplace($tableRow, string $colName, array $columnInfo): string
     {
         $params = $columnInfo['derivedItem']['params'];
         $listValue = $tableRow[$colName];
@@ -60,7 +59,7 @@ class DerivedItemsManager
     /**
      * @since ZC v1.5.8
      */
-    protected function arrayReplace(Model $tableRow, string $colName, array $columnInfo) : string
+    protected function arrayReplace($tableRow, string $colName, array $columnInfo): string
     {
         $params = $columnInfo['derivedItem']['params'];
         $listValue = $tableRow[$colName];
@@ -71,7 +70,7 @@ class DerivedItemsManager
     /**
      * @since ZC v1.5.8
      */
-    protected function getPluginFileSize(Model $tableRow, string $colName, array $columnInfo) : string
+    protected function getPluginFileSize($tableRow, string $colName, array $columnInfo): string
     {
         $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $tableRow['unique_key'] . '/';
         $fs = new FileSystem;
@@ -82,7 +81,7 @@ class DerivedItemsManager
     /**
      * @since ZC v2.1.0
      */
-    protected function getLanguageTranslationForName(Model $tableRow, string $colName, array $columnInfo) : string
+    protected function getLanguageTranslationForName($tableRow, string $colName, array $columnInfo): string
     {
         return zen_lookup_admin_menu_language_override('plugin_name', $tableRow['unique_key'], $tableRow['name']);
     }

@@ -356,7 +356,7 @@ function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters 
     // legacy support
     // remove .gif etc suffix if any
     $text = preg_replace('/\.(png|gif|jpe?g|webp)$/', '', $text);
-    $text = str_replace('_', ' ', Illuminate\Support\Str::title($text));
+    $text = str_replace('_', ' ', ucwords((string)$text));
 
     $classes = '';
     // optionally force something like 'btn' into the current template's buttons by defining a constant for the template:

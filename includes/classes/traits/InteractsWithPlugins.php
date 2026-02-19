@@ -7,8 +7,8 @@
 
 namespace Zencart\Traits;
 
-use App\Models\PluginControl;
-use App\Models\PluginControlVersion;
+use Zencart\DbRepositories\PluginControlRepository;
+use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\PageLoader\PageLoader;
 use Zencart\PluginManager\PluginManager;
 
@@ -55,7 +55,8 @@ trait InteractsWithPlugins
         $this->zcPluginPath = str_replace('//', '/', DIR_FS_CATALOG . '/zc_plugins/' . $this->zcPluginDirName . '/' . $this->zcPluginVersionDir . '/');
         $this->isAZcPlugin = \file_exists($this->zcPluginPath . 'manifest.php');
 
-        $plugin_manager = new PluginManager(new PluginControl(), new PluginControlVersion());
+        global $db;
+        $plugin_manager = new PluginManager(new PluginControlRepository($db), new PluginControlVersionRepository($db));
         $this->pluginManagerInstalledVersionDirectory = $plugin_manager->getPluginVersionDirectory($this->zcPluginDirName, $plugin_manager->getInstalledPlugins());
 
         $installedPluginPath = rtrim(str_replace(DIR_FS_CATALOG, '', $this->pluginManagerInstalledVersionDirectory), '/');

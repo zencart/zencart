@@ -238,8 +238,5 @@ modified_files.txt
 # ddev
 .ddev
 
-# laravel
-laravel/.env
-
 # ensure test plugin is not checked in
 zc_plugins/zenTestPlugin
