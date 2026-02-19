@@ -5,7 +5,7 @@
  * Loaded automatically by index.php?main_page=search_result.
  * Displays results of search
  *
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2025 Oct 03 Modified in v2.2.0 $
@@ -36,8 +36,8 @@ if ($do_filter_list || PRODUCT_LIST_ALPHA_SORTER === 'true') {
         unset($_GET['sort']);
     }
 
-    /* Redisplay all $_GET variables, except currency */
-    echo zen_post_all_get_params(['currency']);
+    /* Redisplay all $_GET variables, except currency and page */
+    echo zen_post_all_get_params(['currency', 'page']);
     require DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA_SORTER);
 
     echo '</form>';
