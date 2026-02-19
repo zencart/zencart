@@ -27,7 +27,7 @@ class TrimmedBufferOutput extends Output
     public function __construct(int $maxLength, ?int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = false, ?OutputFormatterInterface $formatter = null)
     {
         if ($maxLength <= 0) {
-            throw new InvalidArgumentException(sprintf('"%s()" expects a strictly positive maxLength. Got %d.', __METHOD__, $maxLength));
+            throw new InvalidArgumentException(\sprintf('"%s()" expects a strictly positive maxLength. Got %d.', __METHOD__, $maxLength));
         }
 
         parent::__construct($verbosity, $decorated, $formatter);
@@ -46,7 +46,7 @@ class TrimmedBufferOutput extends Output
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     protected function doWrite(string $message, bool $newline)
     {

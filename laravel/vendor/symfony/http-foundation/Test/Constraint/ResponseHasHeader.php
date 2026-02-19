@@ -23,18 +23,13 @@ final class ResponseHasHeader extends Constraint
         $this->headerName = $headerName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toString(): string
     {
-        return sprintf('has header "%s"', $this->headerName);
+        return \sprintf('has header "%s"', $this->headerName);
     }
 
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function matches($response): bool
     {
@@ -43,8 +38,6 @@ final class ResponseHasHeader extends Constraint
 
     /**
      * @param Response $response
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($response): string
     {

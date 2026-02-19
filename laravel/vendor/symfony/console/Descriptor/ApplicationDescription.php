@@ -24,7 +24,7 @@ class ApplicationDescription
 {
     public const GLOBAL_NAMESPACE = '_global';
 
-    private $application;
+    private Application $application;
     private ?string $namespace;
     private bool $showHidden;
     private array $namespaces;
@@ -73,13 +73,13 @@ class ApplicationDescription
     public function getCommand(string $name): Command
     {
         if (!isset($this->commands[$name]) && !isset($this->aliases[$name])) {
-            throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
+            throw new CommandNotFoundException(\sprintf('Command "%s" does not exist.', $name));
         }
 
         return $this->commands[$name] ?? $this->aliases[$name];
     }
 
-    private function inspectApplication()
+    private function inspectApplication(): void
     {
         $this->commands = [];
         $this->namespaces = [];

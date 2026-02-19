@@ -34,22 +34,31 @@ class UnicodeString extends AbstractUnicodeString
 {
     public function __construct(string $string = '')
     {
-        $this->string = normalizer_is_normalized($string) ? $string : normalizer_normalize($string);
+        if ('' === $string || normalizer_is_normalized($this->string = $string)) {
+            return;
+        }
 
-        if (false === $this->string) {
+        if (false === $string = normalizer_normalize($string)) {
             throw new InvalidArgumentException('Invalid UTF-8 string.');
         }
+
+        $this->string = $string;
     }
 
     public function append(string ...$suffix): static
     {
         $str = clone $this;
         $str->string = $this->string.(1 >= \count($suffix) ? ($suffix[0] ?? '') : implode('', $suffix));
-        normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
 
-        if (false === $str->string) {
+        if (normalizer_is_normalized($str->string)) {
+            return $str;
+        }
+
+        if (false === $string = normalizer_normalize($str->string)) {
             throw new InvalidArgumentException('Invalid UTF-8 string.');
         }
+
+        $str->string = $string;
 
         return $str;
     }
@@ -97,11 +106,15 @@ class UnicodeString extends AbstractUnicodeString
             return false;
         }
 
-        if ($this->ignoreCase) {
-            return 0 === mb_stripos(grapheme_extract($this->string, \strlen($suffix), \GRAPHEME_EXTR_MAXBYTES, \strlen($this->string) - \strlen($suffix)), $suffix, 0, 'UTF-8');
+        if (false === $grapheme = grapheme_extract($this->string, \strlen($suffix), \GRAPHEME_EXTR_MAXBYTES, \strlen($this->string) - \strlen($suffix))) {
+            $grapheme = '';
         }
 
-        return $suffix === grapheme_extract($this->string, \strlen($suffix), \GRAPHEME_EXTR_MAXBYTES, \strlen($this->string) - \strlen($suffix));
+        if ($this->ignoreCase) {
+            return 0 === mb_stripos($grapheme, $suffix, 0, 'UTF-8');
+        }
+
+        return $suffix === $grapheme;
     }
 
     public function equalsTo(string|iterable|AbstractString $string): bool
@@ -139,7 +152,7 @@ class UnicodeString extends AbstractUnicodeString
 
         try {
             $i = $this->ignoreCase ? grapheme_stripos($this->string, $needle, $offset) : grapheme_strpos($this->string, $needle, $offset);
-        } catch (\ValueError $e) {
+        } catch (\ValueError) {
             return null;
         }
 
@@ -209,11 +222,16 @@ class UnicodeString extends AbstractUnicodeString
     {
         $str = clone $this;
         $str->string = (1 >= \count($prefix) ? ($prefix[0] ?? '') : implode('', $prefix)).$this->string;
-        normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
 
-        if (false === $str->string) {
+        if (normalizer_is_normalized($str->string)) {
+            return $str;
+        }
+
+        if (false === $string = normalizer_normalize($str->string)) {
             throw new InvalidArgumentException('Invalid UTF-8 string.');
         }
+
+        $str->string = $string;
 
         return $str;
     }
@@ -235,11 +253,16 @@ class UnicodeString extends AbstractUnicodeString
             }
 
             $str->string = $result.$tail;
-            normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
 
-            if (false === $str->string) {
+            if (normalizer_is_normalized($str->string)) {
+                return $str;
+            }
+
+            if (false === $string = normalizer_normalize($str->string)) {
                 throw new InvalidArgumentException('Invalid UTF-8 string.');
             }
+
+            $str->string = $string;
         }
 
         return $str;
@@ -267,20 +290,25 @@ class UnicodeString extends AbstractUnicodeString
         $str = clone $this;
 
         $start = $start ? \strlen(grapheme_substr($this->string, 0, $start)) : 0;
-        $length = $length ? \strlen(grapheme_substr($this->string, $start, $length ?? 2147483647)) : $length;
+        $length = $length ? \strlen(grapheme_substr($this->string, $start, $length)) : $length;
         $str->string = substr_replace($this->string, $replacement, $start, $length ?? 2147483647);
-        normalizer_is_normalized($str->string) ?: $str->string = normalizer_normalize($str->string);
 
-        if (false === $str->string) {
+        if (normalizer_is_normalized($str->string)) {
+            return $str;
+        }
+
+        if (false === $string = normalizer_normalize($str->string)) {
             throw new InvalidArgumentException('Invalid UTF-8 string.');
         }
+
+        $str->string = $string;
 
         return $str;
     }
 
     public function split(string $delimiter, ?int $limit = null, ?int $flags = null): array
     {
-        if (1 > $limit = $limit ?? 2147483647) {
+        if (1 > $limit ??= 2147483647) {
             throw new InvalidArgumentException('Split limit must be a positive integer.');
         }
 
@@ -331,15 +359,101 @@ class UnicodeString extends AbstractUnicodeString
             return false;
         }
 
-        if ($this->ignoreCase) {
-            return 0 === mb_stripos(grapheme_extract($this->string, \strlen($prefix), \GRAPHEME_EXTR_MAXBYTES), $prefix, 0, 'UTF-8');
+        if (false === $grapheme = grapheme_extract($this->string, \strlen($prefix), \GRAPHEME_EXTR_MAXBYTES)) {
+            $grapheme = '';
         }
 
-        return $prefix === grapheme_extract($this->string, \strlen($prefix), \GRAPHEME_EXTR_MAXBYTES);
+        if ($this->ignoreCase) {
+            return 0 === mb_stripos($grapheme, $prefix, 0, 'UTF-8');
+        }
+
+        return $prefix === $grapheme;
     }
 
-    public function __wakeup()
+    public function trimPrefix($prefix): static
     {
+        if (\is_array($prefix) || $prefix instanceof \Traversable) {
+            return parent::trimPrefix($prefix);
+        }
+
+        if ($prefix instanceof AbstractString) {
+            $prefix = $prefix->string;
+        } else {
+            $prefix = (string) $prefix;
+        }
+
+        if (!normalizer_is_normalized($prefix, \Normalizer::NFC)) {
+            $prefix = normalizer_normalize($prefix, \Normalizer::NFC);
+        }
+
+        return parent::trimPrefix($prefix);
+    }
+
+    public function trimSuffix($suffix): static
+    {
+        if (\is_array($suffix) || $suffix instanceof \Traversable) {
+            return parent::trimSuffix($suffix);
+        }
+
+        if ($suffix instanceof AbstractString) {
+            $suffix = $suffix->string;
+        } else {
+            $suffix = (string) $suffix;
+        }
+
+        if (!normalizer_is_normalized($suffix, \Normalizer::NFC)) {
+            $suffix = normalizer_normalize($suffix, \Normalizer::NFC);
+        }
+
+        return parent::trimSuffix($suffix);
+    }
+
+    public function __unserialize(array $data): void
+    {
+        if ($wakeup = self::class !== (new \ReflectionMethod($this, '__wakeup'))->class && self::class === (new \ReflectionMethod($this, '__unserialize'))->class) {
+            trigger_deprecation('symfony/string', '7.4', 'Implementing "%s::__wakeup()" is deprecated, use "__unserialize()" instead.', get_debug_type($this));
+        }
+
+        try {
+            if (\in_array(array_keys($data), [['string'], ["\0*\0string"]], true)) {
+                $this->string = $data['string'] ?? $data["\0*\0string"];
+
+                if ($wakeup) {
+                    $this->__wakeup();
+                }
+
+                return;
+            }
+
+            trigger_deprecation('symfony/string', '7.4', 'Passing more than just key "string" to "%s::__unserialize()" is deprecated, populate properties in "%s::__unserialize()" instead.', self::class, get_debug_type($this));
+
+            \Closure::bind(function ($data) use ($wakeup) {
+                foreach ($data as $key => $value) {
+                    $this->{("\0" === $key[0] ?? '') ? substr($key, 1 + strrpos($key, "\0")) : $key} = $value;
+                }
+
+                if ($wakeup) {
+                    $this->__wakeup();
+                }
+            }, $this, static::class)($data);
+        } finally {
+            if (!$wakeup) {
+                if (!\is_string($this->string)) {
+                    throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
+                }
+
+                normalizer_is_normalized($this->string) ?: $this->string = normalizer_normalize($this->string);
+            }
+        }
+    }
+
+    /**
+     * @deprecated since Symfony 7.4, will be replaced by `__unserialize()` in 8.0
+     */
+    public function __wakeup(): void
+    {
+        trigger_deprecation('symfony/string', '7.4', 'Calling "%s::__wakeup()" is deprecated, use "__unserialize()" instead.', get_debug_type($this));
+
         if (!\is_string($this->string)) {
             throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
         }

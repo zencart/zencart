@@ -24,31 +24,24 @@ final class EmailHtmlBodyContains extends Constraint
         $this->expectedText = $expectedText;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toString(): string
     {
-        return sprintf('contains "%s"', $this->expectedText);
+        return \sprintf('contains "%s"', $this->expectedText);
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param RawMessage $message
      */
     protected function matches($message): bool
     {
-        if (RawMessage::class === \get_class($message) || Message::class === \get_class($message)) {
+        if (RawMessage::class === $message::class || Message::class === $message::class) {
             throw new \LogicException('Unable to test a message HTML body on a RawMessage or Message instance.');
         }
 
-        return false !== mb_strpos($message->getHtmlBody(), $this->expectedText);
+        return str_contains($message->getHtmlBody(), $this->expectedText);
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @param RawMessage $message
      */
     protected function failureDescription($message): string

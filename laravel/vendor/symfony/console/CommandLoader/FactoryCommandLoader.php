@@ -31,21 +31,15 @@ class FactoryCommandLoader implements CommandLoaderInterface
         $this->factories = $factories;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has(string $name): bool
     {
         return isset($this->factories[$name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get(string $name): Command
     {
         if (!isset($this->factories[$name])) {
-            throw new CommandNotFoundException(sprintf('Command "%s" does not exist.', $name));
+            throw new CommandNotFoundException(\sprintf('Command "%s" does not exist.', $name));
         }
 
         $factory = $this->factories[$name];
@@ -53,9 +47,6 @@ class FactoryCommandLoader implements CommandLoaderInterface
         return $factory();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNames(): array
     {
         return array_keys($this->factories);

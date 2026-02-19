@@ -19,9 +19,6 @@ use Symfony\Component\ErrorHandler\Error\UndefinedFunctionError;
  */
 class UndefinedFunctionErrorEnhancer implements ErrorEnhancerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function enhance(\Throwable $error): ?\Throwable
     {
         if ($error instanceof FatalError) {
@@ -50,10 +47,10 @@ class UndefinedFunctionErrorEnhancer implements ErrorEnhancerInterface
         if (false !== $namespaceSeparatorIndex = strrpos($fullyQualifiedFunctionName, '\\')) {
             $functionName = substr($fullyQualifiedFunctionName, $namespaceSeparatorIndex + 1);
             $namespacePrefix = substr($fullyQualifiedFunctionName, 0, $namespaceSeparatorIndex);
-            $message = sprintf('Attempted to call function "%s" from namespace "%s".', $functionName, $namespacePrefix);
+            $message = \sprintf('Attempted to call undefined function "%s" from namespace "%s".', $functionName, $namespacePrefix);
         } else {
             $functionName = $fullyQualifiedFunctionName;
-            $message = sprintf('Attempted to call function "%s" from the global namespace.', $functionName);
+            $message = \sprintf('Attempted to call undefined function "%s" from the global namespace.', $functionName);
         }
 
         $candidates = [];

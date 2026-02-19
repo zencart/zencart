@@ -71,7 +71,7 @@ if ((defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) || (defined('STRICT_E
  * This is intended to run before any dependencies are required
  * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
  */
-if (PHP_VERSION_ID < 80002) {
+if (PHP_VERSION_ID < 80200) {
     // redirect to catalog to display the PHP version compatibility message
     chdir(realpath(__DIR__ . '/../'));
     require 'includes/application_top.php';

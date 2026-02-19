@@ -74,7 +74,7 @@ class UploadedFile extends File
      * Returns the original file name.
      *
      * It is extracted from the request from which the file has been uploaded.
-     * Then it should not be considered as a safe value.
+     * This should not be considered as a safe value to use for a file name on your servers.
      */
     public function getClientOriginalName(): string
     {
@@ -85,7 +85,7 @@ class UploadedFile extends File
      * Returns the original file extension.
      *
      * It is extracted from the original file name that was uploaded.
-     * Then it should not be considered as a safe value.
+     * This should not be considered as a safe value to use for a file name on your servers.
      */
     public function getClientOriginalExtension(): string
     {
@@ -174,7 +174,7 @@ class UploadedFile extends File
                 restore_error_handler();
             }
             if (!$moved) {
-                throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s).', $this->getPathname(), $target, strip_tags($error)));
+                throw new FileException(\sprintf('Could not move the file "%s" to "%s" (%s).', $this->getPathname(), $target, strip_tags($error)));
             }
 
             @chmod($target, 0666 & ~umask());
@@ -264,6 +264,6 @@ class UploadedFile extends File
         $maxFilesize = \UPLOAD_ERR_INI_SIZE === $errorCode ? self::getMaxFilesize() / 1024 : 0;
         $message = $errors[$errorCode] ?? 'The file "%s" was not uploaded due to an unknown error.';
 
-        return sprintf($message, $this->getClientOriginalName(), $maxFilesize);
+        return \sprintf($message, $this->getClientOriginalName(), $maxFilesize);
     }
 }

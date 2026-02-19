@@ -11,9 +11,9 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ['8.0', '8.3', '8.5']
+        php-version: ['8.2', '8.3', '8.5']
 
-    continue-on-error: ${{ matrix.php-version == '8.5' }}
+    continue-on-error: ${{ matrix.php-version == '8.6' }}
 
     services:
       mysql:
@@ -58,11 +58,6 @@ jobs:
 
       - name: Enable PHP Modules
         run: sudo apt-get install libapache2-mod-php${{ matrix.php-version }} && sudo a2enmod php${{ matrix.php-version }}
-
-      - name: Backward Compatibility
-        if: matrix.php-version == '8.0'
-        run: |
-          rm composer.lock
 
       - name: Install Composer Dependencies
         run: |

@@ -28,6 +28,7 @@ use Symfony\Component\Console\Exception\RuntimeException;
 abstract class Input implements InputInterface, StreamableInputInterface
 {
     protected $definition;
+    /** @var resource */
     protected $stream;
     protected $options = [];
     protected $arguments = [];
@@ -44,7 +45,7 @@ abstract class Input implements InputInterface, StreamableInputInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function bind(InputDefinition $definition)
     {
@@ -57,93 +58,75 @@ abstract class Input implements InputInterface, StreamableInputInterface
 
     /**
      * Processes command line arguments.
+     *
+     * @return void
      */
     abstract protected function parse();
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function validate()
     {
         $definition = $this->definition;
         $givenArguments = $this->arguments;
 
-        $missingArguments = array_filter(array_keys($definition->getArguments()), function ($argument) use ($definition, $givenArguments) {
-            return !\array_key_exists($argument, $givenArguments) && $definition->getArgument($argument)->isRequired();
-        });
+        $missingArguments = array_filter(array_keys($definition->getArguments()), fn ($argument) => !\array_key_exists($argument, $givenArguments) && $definition->getArgument($argument)->isRequired());
 
         if (\count($missingArguments) > 0) {
-            throw new RuntimeException(sprintf('Not enough arguments (missing: "%s").', implode(', ', $missingArguments)));
+            throw new RuntimeException(\sprintf('Not enough arguments (missing: "%s").', implode(', ', $missingArguments)));
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isInteractive(): bool
     {
         return $this->interactive;
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function setInteractive(bool $interactive)
     {
         $this->interactive = $interactive;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getArguments(): array
     {
         return array_merge($this->definition->getArgumentDefaults(), $this->arguments);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getArgument(string $name): mixed
     {
         if (!$this->definition->hasArgument($name)) {
-            throw new InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
+            throw new InvalidArgumentException(\sprintf('The "%s" argument does not exist.', $name));
         }
 
         return $this->arguments[$name] ?? $this->definition->getArgument($name)->getDefault();
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function setArgument(string $name, mixed $value)
     {
         if (!$this->definition->hasArgument($name)) {
-            throw new InvalidArgumentException(sprintf('The "%s" argument does not exist.', $name));
+            throw new InvalidArgumentException(\sprintf('The "%s" argument does not exist.', $name));
         }
 
         $this->arguments[$name] = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasArgument(string $name): bool
     {
         return $this->definition->hasArgument($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOptions(): array
     {
         return array_merge($this->definition->getOptionDefaults(), $this->options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getOption(string $name): mixed
     {
         if ($this->definition->hasNegation($name)) {
@@ -155,14 +138,14 @@ abstract class Input implements InputInterface, StreamableInputInterface
         }
 
         if (!$this->definition->hasOption($name)) {
-            throw new InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
+            throw new InvalidArgumentException(\sprintf('The "%s" option does not exist.', $name));
         }
 
         return \array_key_exists($name, $this->options) ? $this->options[$name] : $this->definition->getOption($name)->getDefault();
     }
 
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function setOption(string $name, mixed $value)
     {
@@ -171,15 +154,12 @@ abstract class Input implements InputInterface, StreamableInputInterface
 
             return;
         } elseif (!$this->definition->hasOption($name)) {
-            throw new InvalidArgumentException(sprintf('The "%s" option does not exist.', $name));
+            throw new InvalidArgumentException(\sprintf('The "%s" option does not exist.', $name));
         }
 
         $this->options[$name] = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasOption(string $name): bool
     {
         return $this->definition->hasOption($name) || $this->definition->hasNegation($name);
@@ -194,7 +174,9 @@ abstract class Input implements InputInterface, StreamableInputInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param resource $stream
+     *
+     * @return void
      */
     public function setStream($stream)
     {
@@ -202,7 +184,7 @@ abstract class Input implements InputInterface, StreamableInputInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return resource
      */
     public function getStream()
     {

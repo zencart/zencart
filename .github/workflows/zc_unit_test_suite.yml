@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ['8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
-    continue-on-error: ${{ matrix.php-version == '8.5' }}
+        php-version: ['8.2', '8.3', '8.4', '8.5']
+    continue-on-error: ${{ matrix.php-version == '8.6' }}
     name: PHP ${{ matrix.php-version }} Unit Tests
     steps:
       - name: Checkout
@@ -23,12 +23,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           tools: composer, phpunit
-
-      - name: Backward Compatibility
-        if: matrix.php-version == '8.0'
-        run: |
-          rm composer.lock
-          composer require symfony/polyfill-php81
 
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts

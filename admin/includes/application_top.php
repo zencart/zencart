@@ -6,8 +6,8 @@
  * @version $Id: lat9 2024 Jul 15 Modified in v2.1.0-alpha1 $
  */
 
-if (PHP_VERSION_ID < 80002) {
-    die('Sorry, this version of Zen Cart requires PHP 8.0.2 or greater. <a href="https://www.zen-cart.com/requirements" rel="noopener" target="_blank">Please refer to our website</a> for the PHP versions supported.');
+if (PHP_VERSION_ID < 80200) {
+    die('Sorry, this version of Zen Cart requires PHP 8.2 or greater. <a href="https://www.zen-cart.com/requirements" rel="noopener" target="_blank">Please refer to our website</a> for the PHP versions supported.');
 }
 
 /**

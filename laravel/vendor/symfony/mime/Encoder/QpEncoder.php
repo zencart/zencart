@@ -106,8 +106,6 @@ class QpEncoder implements EncoderInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * Takes an unencoded string and produces a QP encoded string from it.
      *
      * QP encoded strings have a maximum line length of 76 characters.
@@ -184,12 +182,11 @@ class QpEncoder implements EncoderInterface
     private function standardize(string $string): string
     {
         $string = str_replace(["\t=0D=0A", ' =0D=0A', '=0D=0A'], ["=09\r\n", "=20\r\n", "\r\n"], $string);
-        switch ($end = \ord(substr($string, -1))) {
-            case 0x09:
-            case 0x20:
-                $string = substr_replace($string, self::QP_MAP[$end], -1);
-        }
 
-        return $string;
+        return match ($end = ($string[-1] ?? '')) {
+            "\x09",
+            "\x20" => substr_replace($string, self::QP_MAP[\ord($end)], -1),
+            default => $string,
+        };
     }
 }

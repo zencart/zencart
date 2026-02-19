@@ -26,22 +26,17 @@ final class EmailAttachmentCount extends Constraint
         $this->transport = $transport;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function toString(): string
     {
-        return sprintf('has sent "%d" attachment(s)', $this->expectedValue);
+        return \sprintf('has sent "%d" attachment(s)', $this->expectedValue);
     }
 
     /**
      * @param RawMessage $message
-     *
-     * {@inheritdoc}
      */
     protected function matches($message): bool
     {
-        if (RawMessage::class === \get_class($message) || Message::class === \get_class($message)) {
+        if (RawMessage::class === $message::class || Message::class === $message::class) {
             throw new \LogicException('Unable to test a message attachment on a RawMessage or Message instance.');
         }
 
@@ -50,8 +45,6 @@ final class EmailAttachmentCount extends Constraint
 
     /**
      * @param RawMessage $message
-     *
-     * {@inheritdoc}
      */
     protected function failureDescription($message): string
     {
