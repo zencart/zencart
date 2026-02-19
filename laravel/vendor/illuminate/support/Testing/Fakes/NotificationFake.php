@@ -6,6 +6,7 @@ use Closure;
 use Exception;
 use Illuminate\Contracts\Notifications\Dispatcher as NotificationDispatcher;
 use Illuminate\Contracts\Notifications\Factory as NotificationFactory;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Collection;
@@ -14,7 +15,7 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Traits\ReflectsClosures;
 use PHPUnit\Framework\Assert as PHPUnit;
 
-class NotificationFake implements NotificationDispatcher, NotificationFactory
+class NotificationFake implements Fake, NotificationDispatcher, NotificationFactory
 {
     use Macroable, ReflectsClosures;
 
@@ -31,6 +32,13 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
      * @var string|null
      */
     public $locale;
+
+    /**
+     * Indicates if notifications should be serialized and restored when pushed to the queue.
+     *
+     * @var bool
+     */
+    protected $serializeAndRestore = false;
 
     /**
      * Assert if a notification was sent on-demand based on a truth-test callback.
@@ -222,20 +230,6 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
     }
 
     /**
-     * Assert the total amount of times a notification was sent.
-     *
-     * @param  int  $expectedCount
-     * @param  string  $notification
-     * @return void
-     *
-     * @deprecated Use the assertSentTimes method instead
-     */
-    public function assertTimesSent($expectedCount, $notification)
-    {
-        $this->assertSentTimes($notification, $expectedCount);
-    }
-
-    /**
      * Get all of the notifications matching a truth-test callback.
      *
      * @param  mixed  $notifiable
@@ -320,14 +314,16 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
                     $notifiableChannels,
                     fn ($channel) => $notification->shouldSend($notifiable, $channel) !== false
                 );
+            }
 
-                if (empty($notifiableChannels)) {
-                    continue;
-                }
+            if (empty($notifiableChannels)) {
+                continue;
             }
 
             $this->notifications[get_class($notifiable)][$notifiable->getKey()][get_class($notification)][] = [
-                'notification' => $notification,
+                'notification' => $this->serializeAndRestore && $notification instanceof ShouldQueue
+                    ? $this->serializeAndRestoreNotification($notification)
+                    : $notification,
                 'channels' => $notifiableChannels,
                 'notifiable' => $notifiable,
                 'locale' => $notification->locale ?? $this->locale ?? value(function () use ($notifiable) {
@@ -361,6 +357,30 @@ class NotificationFake implements NotificationDispatcher, NotificationFactory
         $this->locale = $locale;
 
         return $this;
+    }
+
+    /**
+     * Specify if notification should be serialized and restored when being "pushed" to the queue.
+     *
+     * @param  bool  $serializeAndRestore
+     * @return $this
+     */
+    public function serializeAndRestore(bool $serializeAndRestore = true)
+    {
+        $this->serializeAndRestore = $serializeAndRestore;
+
+        return $this;
+    }
+
+    /**
+     * Serialize and unserialize the notification to simulate the queueing process.
+     *
+     * @param  mixed  $notification
+     * @return mixed
+     */
+    protected function serializeAndRestoreNotification($notification)
+    {
+        return unserialize(serialize($notification));
     }
 
     /**

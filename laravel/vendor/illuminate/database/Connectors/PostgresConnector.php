@@ -38,19 +38,12 @@ class PostgresConnector extends Connector implements ConnectorInterface
 
         $this->configureIsolationLevel($connection, $config);
 
-        $this->configureEncoding($connection, $config);
-
         // Next, we will check to see if a timezone has been specified in this config
         // and if it has we will issue a statement to modify the timezone with the
         // database. Setting this DB timezone is an optional configuration item.
         $this->configureTimezone($connection, $config);
 
         $this->configureSearchPath($connection, $config);
-
-        // Postgres allows an application_name to be set by the user and this name is
-        // used to when monitoring the application with pg_stat_activity. So we'll
-        // determine if the option has been specified and run a statement if so.
-        $this->configureApplicationName($connection, $config);
 
         $this->configureSynchronousCommit($connection, $config);
 
@@ -69,22 +62,6 @@ class PostgresConnector extends Connector implements ConnectorInterface
         if (isset($config['isolation_level'])) {
             $connection->prepare("set session characteristics as transaction isolation level {$config['isolation_level']}")->execute();
         }
-    }
-
-    /**
-     * Set the connection character set and collation.
-     *
-     * @param  \PDO  $connection
-     * @param  array  $config
-     * @return void
-     */
-    protected function configureEncoding($connection, $config)
-    {
-        if (! isset($config['charset'])) {
-            return;
-        }
-
-        $connection->prepare("set names '{$config['charset']}'")->execute();
     }
 
     /**
@@ -133,22 +110,6 @@ class PostgresConnector extends Connector implements ConnectorInterface
     }
 
     /**
-     * Set the application name on the connection.
-     *
-     * @param  \PDO  $connection
-     * @param  array  $config
-     * @return void
-     */
-    protected function configureApplicationName($connection, $config)
-    {
-        if (isset($config['application_name'])) {
-            $applicationName = $config['application_name'];
-
-            $connection->prepare("set application_name to '$applicationName'")->execute();
-        }
-    }
-
-    /**
      * Create a DSN string from a configuration.
      *
      * @param  array  $config
@@ -167,14 +128,26 @@ class PostgresConnector extends Connector implements ConnectorInterface
         // name than the database used for "information_schema" queries. This is
         // typically the case if using "pgbouncer" type software when pooling.
         $database = $connect_via_database ?? $database;
+        $port = $connect_via_port ?? $port ?? null;
 
         $dsn = "pgsql:{$host}dbname='{$database}'";
 
         // If a port was specified, we will add it to this Postgres DSN connections
         // format. Once we have done that we are ready to return this connection
         // string back out for usage, as this has been fully constructed here.
-        if (isset($config['port'])) {
+        if (! is_null($port)) {
             $dsn .= ";port={$port}";
+        }
+
+        if (isset($charset)) {
+            $dsn .= ";client_encoding='{$charset}'";
+        }
+
+        // Postgres allows an application_name to be set by the user and this name is
+        // used to when monitoring the application with pg_stat_activity. So we'll
+        // determine if the option has been specified and run a statement if so.
+        if (isset($application_name)) {
+            $dsn .= ";application_name='".str_replace("'", "\'", $application_name)."'";
         }
 
         return $this->addSslOptions($dsn, $config);

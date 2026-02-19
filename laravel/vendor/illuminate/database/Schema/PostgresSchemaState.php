@@ -17,8 +17,11 @@ class PostgresSchemaState extends SchemaState
     {
         $commands = collect([
             $this->baseDumpCommand().' --schema-only > '.$path,
-            $this->baseDumpCommand().' -t '.$this->migrationTable.' --data-only >> '.$path,
         ]);
+
+        if ($this->hasMigrationTable()) {
+            $commands->push($this->baseDumpCommand().' -t '.$this->migrationTable.' --data-only >> '.$path);
+        }
 
         $commands->map(function ($command, $path) {
             $this->makeProcess($command)->mustRun($this->output, array_merge($this->baseVariables($this->connection->getConfig()), [
@@ -70,7 +73,7 @@ class PostgresSchemaState extends SchemaState
 
         return [
             'LARAVEL_LOAD_HOST' => is_array($config['host']) ? $config['host'][0] : $config['host'],
-            'LARAVEL_LOAD_PORT' => $config['port'],
+            'LARAVEL_LOAD_PORT' => $config['port'] ?? '',
             'LARAVEL_LOAD_USER' => $config['username'],
             'PGPASSWORD' => $config['password'],
             'LARAVEL_LOAD_DATABASE' => $config['database'],

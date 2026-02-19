@@ -13,4 +13,6 @@ fi
 cd vendor
 cp -Rf illuminate ../../vendor
 cp -Rf symfony ../../vendor
-cp -Rf nunomaduro ../../vendor
+if [ -d "nunomaduro" ]; then
+    cp -Rf nunomaduro ../../vendor
+fi

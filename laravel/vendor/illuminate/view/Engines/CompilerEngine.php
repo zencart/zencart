@@ -3,8 +3,10 @@
 namespace Illuminate\View\Engines;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\View\Compilers\CompilerInterface;
 use Illuminate\View\ViewException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class CompilerEngine extends PhpEngine
@@ -37,7 +39,7 @@ class CompilerEngine extends PhpEngine
      * @param  \Illuminate\Filesystem\Filesystem|null  $files
      * @return void
      */
-    public function __construct(CompilerInterface $compiler, Filesystem $files = null)
+    public function __construct(CompilerInterface $compiler, ?Filesystem $files = null)
     {
         parent::__construct($files ?: new Filesystem);
 
@@ -100,6 +102,10 @@ class CompilerEngine extends PhpEngine
      */
     protected function handleViewException(Throwable $e, $obLevel)
     {
+        if ($e instanceof HttpException || $e instanceof HttpResponseException) {
+            parent::handleViewException($e, $obLevel);
+        }
+
         $e = new ViewException($this->getMessage($e), 0, 1, $e->getFile(), $e->getLine(), $e);
 
         parent::handleViewException($e, $obLevel);

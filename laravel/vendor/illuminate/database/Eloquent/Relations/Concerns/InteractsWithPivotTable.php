@@ -2,6 +2,7 @@
 
 namespace Illuminate\Database\Eloquent\Relations\Concerns;
 
+use BackedEnum;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -152,6 +153,10 @@ trait InteractsWithPivotTable
         return collect($records)->mapWithKeys(function ($attributes, $id) {
             if (! is_array($attributes)) {
                 [$id, $attributes] = [$attributes, []];
+            }
+
+            if ($id instanceof BackedEnum) {
+                $id = $id->value;
             }
 
             return [$id => $attributes];
@@ -396,7 +401,7 @@ trait InteractsWithPivotTable
         if ($this->using) {
             $pivotModel = new $this->using;
 
-            $fresh = $fresh->format($pivotModel->getDateFormat());
+            $fresh = $pivotModel->fromDateTime($fresh);
         }
 
         if (! $exists && $this->hasPivotColumn($this->createdAt())) {
@@ -510,6 +515,8 @@ trait InteractsWithPivotTable
      */
     public function newPivot(array $attributes = [], $exists = false)
     {
+        $attributes = array_merge(array_column($this->pivotValues, 'value', 'column'), $attributes);
+
         $pivot = $this->related->newPivot(
             $this->parent, $attributes, $this->table, $exists, $this->using
         );
