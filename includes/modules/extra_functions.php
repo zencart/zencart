@@ -14,17 +14,17 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 $extraFuncsMain = (new FileSystem)->listFilesFromDirectoryAlphaSorted(DIR_WS_FUNCTIONS . 'extra_functions/', '~^[^\._].*\.php$~i');
-$extraFuncsMain = collect($extraFuncsMain)->map(function ($item, $key) {
+$extraFuncsMain = array_map(static function ($item) {
     return DIR_WS_FUNCTIONS . 'extra_functions/' . $item;
-})->toArray();
+}, $extraFuncsMain);
 $context = IS_ADMIN_FLAG ? 'admin' : 'catalog';
 $extraFuncsPlugins = [];
 foreach ($installedPlugins as $plugin) {
     $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_FUNCTIONS . 'extra_functions/';
     $efPluginFile = (new FileSystem)->listFilesFromDirectoryAlphaSorted($path, '~^[^\._].*\.php$~i');
-    $efPluginFile = collect($efPluginFile)->map(function ($item, $key) use ($path) {
+    $efPluginFile = array_map(static function ($item) use ($path) {
         return $path . $item;
-    })->toArray();
+    }, $efPluginFile);
     $extraFuncsPlugins = array_merge($extraFuncsPlugins, $efPluginFile);
 }
 $extraFuncsFiles = array_merge($extraFuncsPlugins, $extraFuncsMain);

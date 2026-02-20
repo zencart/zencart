@@ -7,7 +7,6 @@
 
 namespace Zencart\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
 /**
@@ -45,7 +44,7 @@ class FilterManager
     /**
      * @since ZC v1.5.8
      */
-    public function processRequest(Request $request, Builder $query) : Builder
+    public function processRequest(Request $request, $query)
     {
         if (!$this->hasFilters()) {
             return $query;

@@ -2,8 +2,8 @@
 
 namespace Tests\Support\Traits;
 
-use App\Models\CouponGvCustomer;
-use App\Models\Customer;
+use Tests\Models\CouponGvCustomer;
+use Tests\Models\Customer;
 use Tests\Support\helpers\ProfileManager;
 
 trait CustomerAccountConcerns

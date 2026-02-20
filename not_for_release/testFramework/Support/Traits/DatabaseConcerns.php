@@ -2,11 +2,10 @@
 
 namespace Tests\Support\Traits;
 
-use App\Services\MigrationsRunner;
-use App\Services\SeederRunner;
 use Doctrine\DBAL\Configuration;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use InitialSeeders\DatabaseSeeder;
+use Tests\Services\SeederRunner;
 
 trait DatabaseConcerns
 {

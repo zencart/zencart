@@ -7,7 +7,6 @@
 
 namespace Zencart\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
 /**
@@ -43,13 +42,24 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
     /**
      * @since ZC v1.5.8
      */
-    public function processRequest(Request $request, Builder $query) : Builder
+    public function processRequest(Request $request, $query)
     {
         $this->default = $request->input($this->filterDefinition['selectName'], '*');
         if ((string)$this->default == '*') {
             return $query;
         }
-        $query = $query->where($this->filterDefinition['field'], $this->default);
+
+        if (is_array($query)) {
+            return array_values(array_filter($query, function ($row) {
+                $field = $this->filterDefinition['field'];
+                return (string)($row[$field] ?? '') === (string)$this->default;
+            }));
+        }
+
+        if (is_object($query) && method_exists($query, 'where')) {
+            return $query->where($this->filterDefinition['field'], $this->default);
+        }
+
         return $query;
     }
 

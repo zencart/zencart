@@ -7,7 +7,6 @@
 
 namespace Zencart\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
 /**
@@ -22,7 +21,7 @@ interface RequestFilter
     /**
      * @since ZC v1.5.8
      */
-    public function processRequest(Request $request, Builder $query);
+    public function processRequest(Request $request, $query);
     /**
      * @since ZC v1.5.8
      */

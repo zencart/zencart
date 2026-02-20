@@ -56,8 +56,16 @@ $zen_admin_html_head_loaded = true;
 $page_base_name = basename($PHP_SELF, '.php');
 
 foreach ($installedPlugins as $plugin) {
-    $relativeDir = $plugin->getRelativePath();
-    $absoluteDir = $plugin->getAbsolutePath();
+    if (is_object($plugin) && method_exists($plugin, 'getRelativePath') && method_exists($plugin, 'getAbsolutePath')) {
+        $relativeDir = $plugin->getRelativePath();
+        $absoluteDir = $plugin->getAbsolutePath();
+    } else {
+        $pluginKey = $plugin['unique_key'] ?? '';
+        $pluginVersion = $plugin['version'] ?? '';
+        $relativeDir = ($GLOBALS['request_type'] === 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG)
+            . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+        $absoluteDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+    }
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^global_stylesheet/', '.css');
     foreach ($directory_array as $key => $value) {
 ?>

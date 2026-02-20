@@ -2,8 +2,8 @@
 
 namespace Tests\Support\Traits;
 
-use App\Models\Configuration;
-use App\Models\TaxClass;
+use Tests\Models\Configuration;
+use Tests\Models\TaxClass;
 
 trait ConfigurationSettingsConcerns
 {

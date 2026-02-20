@@ -103,7 +103,10 @@ class TableViewDefinition
      */
     public function getHeaders()
     {
-        $headers = collect($this->definition['columns'])->pluck('title');
+        $headers = [];
+        foreach ($this->definition['columns'] as $column) {
+            $headers[] = $column['title'] ?? '';
+        }
         return $headers;
     }
 

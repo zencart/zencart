@@ -7,7 +7,6 @@
 namespace Tests\FeatureAdmin\PluginTests;
 
 use Tests\Support\zcFeatureTestCaseAdmin;
-use App\Models\PluginControl;
 
 
 class BasicPluginInstallTest extends zcFeatureTestCaseAdmin

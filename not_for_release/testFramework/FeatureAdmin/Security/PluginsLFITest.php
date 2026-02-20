@@ -6,8 +6,8 @@
 
 namespace Tests\FeatureAdmin\Security;
 
-use App\Models\PluginControl;
 use Symfony\Component\Panther\Client;
+use Tests\Models\PluginControl;
 use Tests\Support\zcFeatureTestCaseAdmin;
 
 class PluginsLFITest extends zcFeatureTestCaseAdmin

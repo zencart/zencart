@@ -2,7 +2,7 @@
 
 namespace Tests\FeatureStore\CreateAccount;
 
-use App\Models\Customer;
+use Tests\Models\Customer;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcFeatureTestCaseStore;
 

@@ -6,8 +6,8 @@
  * @version $Id: lat9 2024 Aug 19 Modified in v2.1.0-alpha2 $
  */
 use Zencart\FileSystem\FileSystem;
+use Zencart\DbRepositories\LayoutBoxRepository;
 use Zencart\ResourceLoaders\SideboxFinder;
-use App\Models\LayoutBox;
 
 require 'includes/application_top.php';
 
@@ -36,13 +36,11 @@ $uses_mobile_sidebox_settings = $available_templates[$selected_template]['uses_m
 $sideboxFinder = new SideboxFinder(new FileSystem());
 $sideboxes = $sideboxFinder->findFromFilesystem($installedPlugins, $selected_template);
 
-$model = new LayoutBox();
+global $db;
+$model = new LayoutBoxRepository($db);
 $new_boxes = [];
 foreach ($sideboxes as $sideboxFile => $plugin) {
-    $result = $model
-        ->where('layout_template', $selected_template)
-        ->where('layout_box_name', $sideboxFile)
-        ->first();
+    $result = $model->findFirstByTemplateAndBoxName($selected_template, $sideboxFile);
     if ($result) {
         continue;
     }
@@ -56,7 +54,7 @@ foreach ($sideboxes as $sideboxFile => $plugin) {
         'layout_box_status_single' => 0,
         'plugin_details' => $plugin,
     ];
-    $new_boxes[$model->query()->insertGetId($insertValues)] = $sideboxFile;
+    $new_boxes[$model->insert($insertValues)] = $sideboxFile;
 }
 
 $action = $_GET['action'] ?? '';
@@ -136,7 +134,7 @@ switch ($action) {
         }
 
         foreach ($layout_update as $box_id => $values) {
-            $model->where('layout_id', $box_id)->update($values);
+            $model->updateByLayoutId((int)$box_id, $values);
         }
 
         $messageStack->add_session(SUCCESS_BOX_UPDATED, 'success');
@@ -149,10 +147,7 @@ switch ($action) {
             $boxes_names = explode(',', str_replace(' ', '', zen_db_prepare_input($_POST['delete_boxes_names'])));
             if (count($boxes_to_remove) === count($boxes_names)) {
                 foreach ($boxes_to_remove as $index => $box_id) {
-                   $model
-                    ->where('layout_id', (int)$box_id)
-                    ->where('layout_box_name', $boxes_names[$index])
-                    ->delete();
+                    $model->deleteByLayoutIdAndName((int)$box_id, $boxes_names[$index]);
                 }
                 $messageStack->add_session(SUCCESS_BOX_DELETED . zen_output_string_protected($_POST['delete_boxes_names']), 'success');
             }
@@ -179,7 +174,7 @@ switch ($action) {
         }
         $tto = strip_tags($_POST['tto']);
 
-        $reset_boxes = $model->where('layout_template', $tfrom)->get();
+        $reset_boxes = $model->getByTemplate($tfrom);
         foreach ($reset_boxes as $reset_box) {
             // This DOES include the single-column values, regardless of $include_single_column_settings value
             $updateValues = [
@@ -189,10 +184,7 @@ switch ($action) {
                 'layout_box_sort_order_single' => $reset_box['layout_box_sort_order_single'],
                 'layout_box_status_single' => $reset_box['layout_box_status_single'],
             ];
-            $model
-                ->where('layout_box_name', $reset_box['layout_box_name'])
-                ->where('layout_template', $tto)
-                ->update($updateValues);
+            $model->updateByTemplateAndBoxName($tto, $reset_box['layout_box_name'], $updateValues);
         }
         $messageStack->add_session(sprintf(SUCCESS_BOX_RESET, $tto, $tfrom), 'success');
         zen_redirect(zen_href_link(FILENAME_LAYOUT_CONTROLLER));
@@ -251,15 +243,7 @@ if (count($new_boxes) !== 0) {
 <?php
 }
 
-$layoutBoxes = $model
-    ->where('layout_template', $selected_template)
-    ->where('layout_box_name', 'not like', '%ezpages_bar')
-    ->where('layout_box_name', 'not like', '%\_header.php')
-    ->where('layout_box_name', 'not like', '%\_footer.php')
-    ->orderBy('layout_box_sort_order')
-    ->orderBy('layout_box_sort_order_single')
-    ->orderBy('layout_box_name')
-    ->get();
+$layoutBoxes = $model->getNonHeaderFooterByTemplate($selected_template);
 $left_active = [];
 $right_active = [];
 $left_right_inactive = [];
@@ -288,12 +272,7 @@ foreach ($layoutBoxes as $layoutBox) {
 }
 
 if ($include_single_column_settings === true) {
-    $layoutBoxes = $model
-        ->where('layout_template', $selected_template)
-        ->where('layout_box_name', 'like', '%\_header.php')
-        ->orderBy('layout_box_sort_order_single')
-        ->orderBy('layout_box_name')
-        ->get();
+    $layoutBoxes = $model->getByTemplateAndNameLike($selected_template, '%\_header.php');
     $header_active = [];
     $header_inactive = [];
     foreach ($layoutBoxes as $layoutBox) {
@@ -311,12 +290,7 @@ if ($include_single_column_settings === true) {
     }
     $header_boxes_present = (count($layoutBoxes) !== 0);
 
-    $layoutBoxes = $model
-        ->where('layout_template', $selected_template)
-        ->where('layout_box_name', 'like', '%\_footer.php')
-        ->orderBy('layout_box_sort_order_single')
-        ->orderBy('layout_box_name')
-        ->get();
+    $layoutBoxes = $model->getByTemplateAndNameLike($selected_template, '%\_footer.php');
     $footer_active = [];
     $footer_inactive = [];
     foreach ($layoutBoxes as $layoutBox) {

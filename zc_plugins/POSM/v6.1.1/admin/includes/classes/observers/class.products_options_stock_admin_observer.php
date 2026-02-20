@@ -5,8 +5,8 @@
 //
 // Last Updated:  POSM v6.1.0
 //
-use App\Models\PluginControl;
-use App\Models\PluginControlVersion;
+use Zencart\DbRepositories\PluginControlRepository;
+use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\PluginManager\PluginManager;
 
 if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
@@ -37,7 +37,8 @@ class products_options_stock_observer extends base
         // Determine this zc_plugin's installed directory for use by other of the
         // plugin's modules.
         //
-        $plugin_manager = new PluginManager(new PluginControl(), new PluginControlVersion());
+        global $db;
+        $plugin_manager = new PluginManager(new PluginControlRepository($db), new PluginControlVersionRepository($db));
         $this->zcPluginDir = $plugin_manager->getPluginVersionDirectory('POSM', $plugin_manager->getInstalledPlugins());
 
         // -----
