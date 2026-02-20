@@ -12,7 +12,7 @@ use BaconQrCode\Renderer\Path\Path;
  */
 final class ModuleEye implements EyeInterface
 {
-    public function __construct(private ModuleInterface $module)
+    public function __construct(private readonly ModuleInterface $module)
     {
     }
 

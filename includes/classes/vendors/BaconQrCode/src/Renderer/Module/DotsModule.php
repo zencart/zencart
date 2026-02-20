@@ -16,7 +16,7 @@ final class DotsModule implements ModuleInterface
     public const MEDIUM = .8;
     public const SMALL = .6;
 
-    public function __construct(private float $size)
+    public function __construct(private readonly float $size)
     {
         if ($size <= 0 || $size > 1) {
             throw new InvalidArgumentException('Size must between 0 (exclusive) and 1 (inclusive)');

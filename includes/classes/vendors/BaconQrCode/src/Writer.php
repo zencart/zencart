@@ -17,7 +17,7 @@ final class Writer
     /**
      * Creates a new writer with a specific renderer.
      */
-    public function __construct(private RendererInterface $renderer)
+    public function __construct(private readonly RendererInterface $renderer)
     {
     }
 

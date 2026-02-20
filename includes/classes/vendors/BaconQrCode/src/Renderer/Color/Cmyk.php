@@ -14,10 +14,10 @@ final class Cmyk implements ColorInterface
      * @param int $black the black amount, 0 to 100
      */
     public function __construct(
-        private int $cyan,
-        private int $magenta,
-        private int $yellow,
-        private int $black
+        private readonly int $cyan,
+        private readonly int $magenta,
+        private readonly int $yellow,
+        private readonly int $black
     ) {
         if ($cyan < 0 || $cyan > 100) {
             throw new Exception\InvalidArgumentException('Cyan must be between 0 and 100');

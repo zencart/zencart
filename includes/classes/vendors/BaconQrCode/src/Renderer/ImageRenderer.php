@@ -14,8 +14,8 @@ use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 final class ImageRenderer implements RendererInterface
 {
     public function __construct(
-        private RendererStyle         $rendererStyle,
-        private ImageBackEndInterface $imageBackEnd
+        private readonly RendererStyle         $rendererStyle,
+        private readonly ImageBackEndInterface $imageBackEnd
     ) {
     }
 

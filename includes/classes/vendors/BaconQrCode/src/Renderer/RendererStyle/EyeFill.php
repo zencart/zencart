@@ -11,8 +11,8 @@ final class EyeFill
     private static ?EyeFill $inherit = null;
 
     public function __construct(
-        private ?ColorInterface $externalColor,
-        private ?ColorInterface $internalColor
+        private readonly ?ColorInterface $externalColor,
+        private readonly ?ColorInterface $internalColor
     ) {
     }
 

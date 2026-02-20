@@ -12,12 +12,12 @@ final class Fill
     private static ?Fill $default = null;
 
     private function __construct(
-        private ColorInterface  $backgroundColor,
-        private ?ColorInterface $foregroundColor,
-        private ?Gradient       $foregroundGradient,
-        private EyeFill         $topLeftEyeFill,
-        private EyeFill         $topRightEyeFill,
-        private EyeFill $bottomLeftEyeFill
+        private readonly ColorInterface  $backgroundColor,
+        private readonly ?ColorInterface $foregroundColor,
+        private readonly ?Gradient       $foregroundGradient,
+        private readonly EyeFill         $topLeftEyeFill,
+        private readonly EyeFill         $topRightEyeFill,
+        private readonly EyeFill $bottomLeftEyeFill
     ) {
     }
 
