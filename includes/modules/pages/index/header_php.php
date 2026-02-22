@@ -2,7 +2,7 @@
 /**
  * index header_php.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Feb 11 Modified in v2.0.0-beta1 $
@@ -127,8 +127,10 @@ $typefilter = $_GET['typefilter'] ?? 'default';
 require zen_get_index_filters_directory($typefilter . '_filter.php');
 unset($and, $sql_joins, $order_by);
 
-// query the database based on the selected filters
+// query the database based on the selected filters and set the 'no products'
+// flag for use by the page's jscript_main.php.
 $listing = $db->Execute($listing_sql);
+$index_listing_has_products = ($category_depth === 'products' && $listing->RecordCount() > 0);
 
 // UNCOMMENT THE FOLLOWING LINE if you want to skip Search Engine indexing if the category has no products:
 //if ($category_depth == 'products' && $listing->RecordCount() == 0) $robotsNoIndex = true;

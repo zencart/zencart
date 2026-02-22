@@ -2,7 +2,7 @@
 /**
  * listing_display_order module to display sorter dropdown
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
@@ -25,7 +25,6 @@ if (empty($disp_order_default)) {
     }
 }
 if (empty($_GET['disp_order'])) {
-    $_GET['disp_order'] = $disp_order_default;
     $disp_order = $disp_order_default;
     $disp_order_default_set = true;
 } else {
@@ -60,7 +59,6 @@ switch ($disp_order) {
         break;
     case 0:
         // reset
-        $_GET['disp_order'] = $disp_order_default;
         $disp_order = $disp_order_default;
         // no break here.
     default:

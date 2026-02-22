@@ -15,7 +15,7 @@ if ($disp_order === 0) {
 
 echo zen_draw_form('sorter_form', zen_href_link($_GET['main_page']), 'get');
 foreach($_GET as $key => $value) {
-    if (in_array($key, ['main_page', 'cPath', 'manufacturers_id', 'filter_id', 'alpha_filter_id', 'music_genre_id', 'record_company_id', 'keyword', 'search_in_description'])) {
+    if (in_array($key, ['main_page', 'cPath', 'manufacturers_id', 'filter_id', 'alpha_filter_id', 'music_genre_id', 'record_company_id'])) {
         echo zen_draw_hidden_field($key, $value);
     }
     
