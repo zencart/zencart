@@ -26,10 +26,10 @@ class ConfigurationRepository
             'SELECT configuration_key, configuration_value, configuration_group_id FROM ' . TABLE_CONFIGURATION
         );
 
-        while (!$configs->EOF) {
-            $key = strtoupper((string)$configs->fields['configuration_key']);
-            $value = $configs->fields['configuration_value'];
-            $groupId = (int)$configs->fields['configuration_group_id'];
+        foreach ($configs as $config) {
+            $key = strtoupper((string)$config['configuration_key']);
+            $value = $config['configuration_value'];
+            $groupId = (int)$config['configuration_group_id'];
 
             $convertToInt = false;
             if (in_array($key, $this->configAsIntArray, true)) {
@@ -45,8 +45,6 @@ class ConfigurationRepository
             if (!defined($key)) {
                 define($key, $value);
             }
-
-            $configs->MoveNext();
         }
     }
 

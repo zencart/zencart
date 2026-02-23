@@ -22,9 +22,8 @@ class PluginControlVersionRepository
         );
 
         $versions = [];
-        while (!$results->EOF) {
-            $versions[] = $results->fields;
-            $results->MoveNext();
+        foreach ($results as $result) {
+            $versions[] = $result;
         }
 
         return $versions;

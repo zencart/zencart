@@ -128,9 +128,8 @@ class LayoutBoxRepository
     {
         $result = $this->db->Execute($sql);
         $rows = [];
-        while (!$result->EOF) {
-            $rows[] = $result->fields;
-            $result->MoveNext();
+        foreach ($result as $row) {
+            $rows[] = $row;
         }
         return $rows;
     }

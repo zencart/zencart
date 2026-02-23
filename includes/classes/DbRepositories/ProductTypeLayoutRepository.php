@@ -23,12 +23,11 @@ class ProductTypeLayoutRepository
             'SELECT configuration_key, configuration_value FROM ' . TABLE_PRODUCT_TYPE_LAYOUT
         );
 
-        while (!$configs->EOF) {
-            $key = strtoupper((string)$configs->fields['configuration_key']);
+        foreach ($configs as $config) {
+            $key = strtoupper((string)$config['configuration_key']);
             if (!defined($key)) {
-                define($key, $configs->fields['configuration_value']);
+                define($key, $config['configuration_value']);
             }
-            $configs->MoveNext();
         }
     }
 }

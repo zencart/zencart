@@ -23,10 +23,9 @@ class PluginControlRepository
         );
 
         $pluginList = [];
-        while (!$results->EOF) {
-            $row = $this->normalizeRow($results->fields);
+        foreach ($results as $result) {
+            $row = $this->normalizeRow($result);
             $pluginList[$row['unique_key']] = $row;
-            $results->MoveNext();
         }
 
         return $pluginList;
@@ -39,10 +38,9 @@ class PluginControlRepository
         );
 
         $pluginList = [];
-        while (!$results->EOF) {
-            $row = $this->normalizeRow($results->fields);
+        foreach ($results as $result) {
+            $row = $this->normalizeRow($result);
             $pluginList[$row['unique_key']] = $row;
-            $results->MoveNext();
         }
 
         return $pluginList;
