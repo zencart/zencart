@@ -18,15 +18,26 @@ if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     return;
 }
 $user = $_SERVER['USER'] ?? $_SERVER['MY_USER'] ?? 'runner';
+if (isset($_SERVER['IS_DDEV_PROJECT']) || getenv('IS_DDEV_PROJECT')) {
+    $user = 'ddev';
+}
 $prefix = (IS_ADMIN_FLAG === true) ? '..' : '.';
 $context = (IS_ADMIN_FLAG === true) ? 'admin' : 'store';
-$config = $prefix . '/not_for_release/testFramework/Support/configs/' . $user . '.' . $context . '.configure.php';
-if (!file_exists($config)) {
-  die($config . ' does not exist');
+$basePath = $prefix . '/not_for_release/testFramework/Support/configs/';
+$candidates = [$user, 'ddev', 'runner'];
+$config = null;
+foreach (array_unique($candidates) as $candidate) {
+    $candidateFile = $basePath . $candidate . '.' . $context . '.configure.php';
+    if (file_exists($candidateFile)) {
+        $config = $candidateFile;
+        break;
+    }
+}
+if ($config === null) {
+  die($basePath . $user . '.' . $context . '.configure.php does not exist');
 }
 if (!defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE')) {
     define('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', '');
 }
 require($config);
-
 
