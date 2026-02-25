@@ -2,28 +2,15 @@
 
 namespace Tests\Support\Traits;
 
-use Doctrine\DBAL\Configuration;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use InitialSeeders\DatabaseSeeder;
 use Tests\Services\SeederRunner;
+use Tests\Support\Database\TestDb;
 
 trait DatabaseConcerns
 {
     public static function databaseSetup(): void
     {
-        $capsule = new Capsule;
-        $capsule->addConnection([
-            'driver'    => DB_TYPE,
-            'host'      => DB_SERVER,
-            'database'  => DB_DATABASE,
-            'username'  => DB_SERVER_USERNAME,
-            'password'  => DB_SERVER_PASSWORD,
-            'charset'   => DB_CHARSET,
-            // do not pass prefix; this is included in the table definition
-        ]);
-
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
+        TestDb::resetConnection();
+        TestDb::pdo();
         if (!defined('DIR_FS_ROOT')) {
             define('DIR_FS_ROOT', ROOTCWD);
         }
@@ -74,6 +61,7 @@ trait DatabaseConcerns
         $dbInstaller = new \zcDatabaseInstaller($options);
         $conn = $dbInstaller->getConnection();
         $error = $dbInstaller->parseSqlFile($file, $extendedOptions);
+        TestDb::resetConnection();
         $runner = new SeederRunner();
         $runner->run('InitialSetupSeeder', $mainConfigs);
     }

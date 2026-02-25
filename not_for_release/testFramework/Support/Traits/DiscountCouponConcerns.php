@@ -2,9 +2,7 @@
 
 namespace Tests\Support\Traits;
 
-use Illuminate\Support\Carbon;
-use Tests\Models\Coupon;
-use Tests\Models\CouponDescription;
+use Tests\Support\Database\TestDb;
 
 trait DiscountCouponConcerns
 {
@@ -33,13 +31,13 @@ trait DiscountCouponConcerns
             return;
         }
         $profile = $this->couponProfiles[$profileName];
-        $coupon = new Coupon($profile['coupon']);
-        $coupon->coupon_start_date = Carbon::now()->subDays(5);
-        $coupon->coupon_expire_date = Carbon::now()->addDays(5);
+        $coupon = $profile['coupon'];
+        $coupon['coupon_start_date'] = date('Y-m-d H:i:s', strtotime('-5 days'));
+        $coupon['coupon_expire_date'] = date('Y-m-d H:i:s', strtotime('+5 days'));
+        $couponId = TestDb::insert('coupons', $coupon);
 
-        $coupon->save();
-        $couponDescription = new CouponDescription($profile['coupon_description']);
-        $couponDescription->coupon_id = $coupon->coupon_id;
-        $couponDescription->save();
+        $couponDescription = $profile['coupon_description'];
+        $couponDescription['coupon_id'] = $couponId;
+        TestDb::insert('coupons_description', $couponDescription);
     }
 }

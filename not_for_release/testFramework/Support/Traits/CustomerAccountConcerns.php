@@ -2,8 +2,7 @@
 
 namespace Tests\Support\Traits;
 
-use Tests\Models\CouponGvCustomer;
-use Tests\Models\Customer;
+use Tests\Support\Database\TestDb;
 use Tests\Support\helpers\ProfileManager;
 
 trait CustomerAccountConcerns
@@ -13,8 +12,7 @@ trait CustomerAccountConcerns
     public function createCustomerAccountOrLogin($profileName)
     {
         $profile = ProfileManager::getProfile($profileName);
-        $customer = Customer::where('customers_email_address', $profile['email_address'])->first();
-        if ($customer) {
+        if ($this->getCustomerIdFromEmail($profile['email_address']) !== null) {
             $this->loginCustomer($profileName);
             return $profile;
         }
@@ -52,40 +50,64 @@ trait CustomerAccountConcerns
     public function getCouponBalanceCustomer($customerEmail)
     {
         $customerId = $this->getCustomerIdFromEmail($customerEmail);
-        $gv = CouponGvCustomer::where('customer_id', $customerId)->first();
-        if (!$gv) {
+        if ($customerId === null) {
             return 0;
         }
-        return $gv['amount'];
+        $amount = TestDb::selectValue(
+            'SELECT amount FROM coupon_gv_customer WHERE customer_id = :customer_id LIMIT 1',
+            [':customer_id' => $customerId]
+        );
+
+        return $amount === null ? 0 : (float) $amount;
     }
 
     public function getCustomerIdFromEmail($customerEmail)
     {
-        $customer = Customer::where('customers_email_address', $customerEmail)->first();
-        return $customer['customers_id'];
+        $customerId = TestDb::selectValue(
+            'SELECT customers_id FROM customers WHERE customers_email_address = :email LIMIT 1',
+            [':email' => $customerEmail]
+        );
+
+        return $customerId === null ? null : (int) $customerId;
     }
 
     public function addGiftVoucherBalance($customerEmail, $value)
     {
         $customerId = $this->getCustomerIdFromEmail($customerEmail);
-        $gv = CouponGvCustomer::where('customer_id', $customerId)->first();
-        if (!$gv) {
-            CouponGvCustomer::query()->create(['customer_id' => $customerId, 'amount' => $value]);
+        if ($customerId === null) {
+            return;
+        }
+
+        $exists = TestDb::selectValue(
+            'SELECT customer_id FROM coupon_gv_customer WHERE customer_id = :customer_id LIMIT 1',
+            [':customer_id' => $customerId]
+        );
+
+        if ($exists === null) {
+            TestDb::insert('coupon_gv_customer', ['customer_id' => $customerId, 'amount' => $value]);
         } else {
-            $gv->amount = $value;
-            $gv->save();
+            TestDb::update(
+                'coupon_gv_customer',
+                ['amount' => $value],
+                'customer_id = :customer_id',
+                [':customer_id' => $customerId]
+            );
         }
     }
 
     public function setCustomerGroupDiscount($customerEmail, $value)
     {
         $customerId = $this->getCustomerIdFromEmail($customerEmail);
-        $gp = Customer::where('customers_id', $customerId)->first();
-        if (!$gp) {
+        if ($customerId === null) {
             return;
         }
-        $gp->customers_group_pricing = $value;
-        $gp->save();
+
+        TestDb::update(
+            'customers',
+            ['customers_group_pricing' => $value],
+            'customers_id = :customer_id',
+            [':customer_id' => $customerId]
+        );
     }
     public function updateGVBalance($profile)
     {

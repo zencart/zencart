@@ -2,8 +2,6 @@
 
 namespace Tests\Services;
 
-use Illuminate\Support\Str;
-
 /**
  * @since ZC v2.0.0
  */
@@ -21,10 +19,17 @@ class MigrationsRunner
         $files = glob($this->migrationDir . '*_migration.php');
         foreach ($files as $migration)
         {
-            $className = 'Migrations\\Create' . ucfirst(Str::camel(str_replace(['.php', 'migration'], '', basename($migration)))) . 'Table';
+            $className = 'Migrations\\Create' . ucfirst(self::camel(str_replace(['.php', 'migration'], '', basename($migration)))) . 'Table';
             $class =  new $className;
             $class->down();
             $class->up();
         }
+    }
+
+    private static function camel(string $value): string
+    {
+        $value = preg_replace('/[^a-zA-Z0-9]+/', ' ', $value);
+        $value = ucwords(strtolower(trim($value)));
+        return str_replace(' ', '', $value);
     }
 }

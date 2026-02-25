@@ -2,11 +2,9 @@
 
 namespace Seeders;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Carbon;
+use Tests\Support\Database\TestDb;
 
-class CouponTableSeeder extends Seeder
+class CouponTableSeeder
 {
 
     /**
@@ -16,37 +14,28 @@ class CouponTableSeeder extends Seeder
      */
     public function run()
     {
-        Capsule::table('coupons')->truncate();
-        Capsule::table('coupons_description')->truncate();
+        TestDb::truncate('coupons');
+        TestDb::truncate('coupons_description');
 
-        Capsule::table('coupons')->insert(array(
-            0 =>
-                array(
-                    'coupon_type' => 'G',
-                    'coupon_code' => 'VALID10',
-                    'coupon_amount' => 10,
-                    'uses_per_user' => 1,
-                    'coupon_start_date' => Carbon::now(),
-                    'coupon_expire_date' => Carbon::now()->addDays(5),
-                ),
-        ));
+        $couponId = TestDb::insert('coupons', [
+            'coupon_type' => 'G',
+            'coupon_code' => 'VALID10',
+            'coupon_amount' => 10,
+            'uses_per_user' => 1,
+            'coupon_start_date' => date('Y-m-d H:i:s'),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+5 days')),
+        ]);
 
-        Capsule::table('coupons_description')->insert(array(
-            0 =>
-                array(
-                    'coupon_id' => 1,
-                    'language_id' => 1,
-                    'coupon_name' => 'VALID10',
-                    'coupon_description' => 'VALID10',
-                ),
-        ));
+        TestDb::insert('coupons_description', [
+            'coupon_id' => $couponId,
+            'language_id' => 1,
+            'coupon_name' => 'VALID10',
+            'coupon_description' => 'VALID10',
+        ]);
 
-        Capsule::table('coupon_email_track')->insert(array(
-            0 =>
-                array(
-                    'unique_id' => 1,
-                    'coupon_id' => 1,
-                ),
-        ));
+        TestDb::insert('coupon_email_track', [
+            'unique_id' => 1,
+            'coupon_id' => $couponId,
+        ]);
     }
 }

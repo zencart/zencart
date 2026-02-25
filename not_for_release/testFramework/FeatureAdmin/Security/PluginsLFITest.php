@@ -6,8 +6,7 @@
 
 namespace Tests\FeatureAdmin\Security;
 
-use Symfony\Component\Panther\Client;
-use Tests\Models\PluginControl;
+use Tests\Support\Database\TestDb;
 use Tests\Support\zcFeatureTestCaseAdmin;
 
 class PluginsLFITest extends zcFeatureTestCaseAdmin
@@ -31,7 +30,12 @@ class PluginsLFITest extends zcFeatureTestCaseAdmin
         // need to hit the plugin manager end point to get the scanned modules into the database, if not already there.
         $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=plugin_manager');
         // set the display logs to be installed
-        $pm = PluginControl::where('name', 'Display Logs')->update(['status' => 1, 'version' => 'v3.0.3']);
+        TestDb::update(
+            'plugin_control',
+            ['status' => 1, 'version' => 'v3.0.3'],
+            'name = :name',
+            [':name' => 'Display Logs']
+        );
         $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=display_logs');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
