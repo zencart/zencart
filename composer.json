@@ -26,7 +26,6 @@
         "ext-curl": "*",
         "ext-json": "*",
         "guzzlehttp/guzzle": "^7.7",
-        "illuminate/database": "^10.0",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.6",
         "sempro/phpunit-pretty-print": "^1.4",
