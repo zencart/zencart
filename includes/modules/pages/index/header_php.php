@@ -130,7 +130,7 @@ unset($and, $sql_joins, $order_by);
 // query the database based on the selected filters and set the 'no products'
 // flag for use by the page's jscript_main.php.
 $listing = $db->Execute($listing_sql);
-$index_listing_has_products = ($category_depth === 'products' && $listing->RecordCount() > 0);
+$index_listing_has_products = ($category_depth === 'products' || $do_filter_list === true) && $listing->RecordCount() > 0;
 
 // UNCOMMENT THE FOLLOWING LINE if you want to skip Search Engine indexing if the category has no products:
 //if ($category_depth == 'products' && $listing->RecordCount() == 0) $robotsNoIndex = true;
