@@ -192,6 +192,33 @@ systemChecks:
     mainErrorText: <?php echo TEXT_ERROR_DB_CONNECTION_DEFAULT .PHP_EOL; ?>
     methods:
       checkDBConnection:
+  connectionDbPrefixCheck:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorText: <?php echo TEXT_ERROR_DB_PREFIX_MISMATCH_HEADING .PHP_EOL; ?>
+    methods:
+      checkDBPrefix:
+  databaseCharsetLatin1Check:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorTextHelpId: helpIdDatabaseCollationCheck
+    mainErrorText: <?php echo TEXT_ERROR_DB_COLLATION .PHP_EOL; ?>
+    methods:
+      checkDbCharsetLatin1:
+  databaseCharsetShortUtf8Check:
+    runLevel: always
+    errorLevel: WARN
+    mainErrorTextHelpId: helpIdDatabaseCollationCheck
+    mainErrorText: <?php echo TEXT_ERROR_DB_COLLATION .PHP_EOL; ?>
+    methods:
+      checkDbCharsetUtf8Short:
+  databaseCollationCheck:
+    runLevel: always
+    errorLevel: FAIL
+    mainErrorTextHelpId: helpIdDatabaseCollationCheck
+    mainErrorText: <?php echo TEXT_ERROR_DB_COLLATION .PHP_EOL; ?>
+    methods:
+      checkDbCollation:
   checkMysqlVersion:
     runLevel: always
     errorLevel: FAIL
