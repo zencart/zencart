@@ -336,7 +336,7 @@ if (!is_writable(DIR_FS_CATALOG_IMAGES)) {
             <a href="<?= zen_catalog_href_link('index', zen_get_path($current_category_id)) ?>" rel="noopener" target="_blank" title="<?= BOX_HEADING_CATALOG ?>"><?= zen_icon('popup', BOX_HEADING_CATALOG, '') ?></a>
             <?= HEADING_TITLE ?>&nbsp;-&nbsp;<?= zen_output_generated_category_path($current_category_id) ?>
             <?php if ($current_category_id != 0) { ?>
-            <a href="<?= zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $current_category_id . '&action=edit_category') ?>" class="" role="button"><?= zen_icon('edit', IMAGE_EDIT_CATEGORY, '') ?></a> 
+            <a href="<?= zen_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $current_category_id . '&action=edit_category') ?>" class="" role="button"><?= zen_icon('edit', IMAGE_EDIT_CATEGORY, '') ?></a>
             <?php } ?>
         </h1>
         <?php if ($action === '') { ?>
@@ -1253,7 +1253,7 @@ if (!is_writable(DIR_FS_CATALOG_IMAGES)) {
                     $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_ATTRIBUTE_FEATURES . $pInfo->products_id . '</h4>'];
                     $contents = ['form' => zen_draw_form('products', FILENAME_CATEGORY_PRODUCT_LISTING, 'action=update_attributes_copy_to_category&cPath=' . $cPath . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'post', 'class="form-horizontal"') . zen_draw_hidden_field('products_id', $pInfo->products_id) . zen_draw_hidden_field('categories_update_id', $_GET['categories_update_id']) . zen_draw_hidden_field('copy_attributes', $_GET['copy_attributes'] ?? '')];
                     $contents[] = ['text' => zen_draw_label(TEXT_COPY_ATTRIBUTES_CONDITIONS, 'copy_attributes', 'class="control-label"') . '<div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_delete', true) . TEXT_COPY_ATTRIBUTES_DELETE . '</label></div><div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_update') . TEXT_COPY_ATTRIBUTES_UPDATE . '</label></div><div class="radio"><label>' . zen_draw_radio_field('copy_attributes', 'copy_attributes_ignore') . TEXT_COPY_ATTRIBUTES_IGNORE . '</label></div>'];
-                    $contents[] = ['text' => zen_draw_pulldown_categories_having_products('categories_update_id', 'class="form-control"', '', true)];
+                    $contents[] = ['text' => zen_draw_pulldown_categories_having_products('categories_update_id', 'class="form-control"', [], true)];
                     $contents[] = ['align' => 'center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_COPY_TO . '</button> <a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                     break;
             }
