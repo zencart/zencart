@@ -96,7 +96,7 @@ function zen_get_banner_data_daily($banner_id, $year = '', $month = '') {
 
     $set1 = $set2 = array();
 
-    $days = (date('t', mktime(0,0,0,$month))+1);
+    $days = (int)date('t', mktime(0,0,0,$month)) + 1;
     for ($i=1; $i<$days; $i++) {
       $set1[] = $set2[] = $stats[] = array($i, 0);
     }
