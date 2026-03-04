@@ -229,7 +229,7 @@ if (!empty($action)) {
 
                 $orders_status_inputs_string = '';
                 for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                  $orders_status_inputs_string .= '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_draw_input_field('orders_status_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"');
+                  $orders_status_inputs_string .= '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_draw_input_field('orders_status_name[' . $languages[$i]['id'] . ']', htmlspecialchars(zen_get_orders_status_name((int)$oInfo->orders_status_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="form-control"');
                 }
 
                 $contents[] = array('text' => '<br>' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
@@ -268,7 +268,7 @@ if (!empty($action)) {
                   $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>');
 
                   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                    $contents[] = array('text' => zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']));
+                    $contents[] = array('text' => zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . zen_get_orders_status_name((int)$oInfo->orders_status_id, $languages[$i]['id']));
                   }
                 }
                 break;
