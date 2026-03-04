@@ -270,7 +270,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_THOUSANDS_POINT . ' ' . $cInfo->thousands_point];
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places];
                         $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_LAST_UPDATED . ': ' . zen_datetime_short($cInfo->last_updated)];
-                        $contents[] = ['text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8)];
+                        $contents[] = ['text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format((float)$cInfo->value, 8)];
                         $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code)];
                     }
                     break;
