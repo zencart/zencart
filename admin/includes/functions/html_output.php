@@ -672,7 +672,7 @@ function zen_draw_date_selector(string $fieldname_prefix, ?int $default_date_tim
     }
     $date_selector .= '</select>';
     $date_selector .= '<select name="'. $fieldname_prefix .'_year">';
-    for ($i = date('Y') - 5, $j = date('Y') + 11; $i < $j; $i++) {
+    for ($i = (int)date('Y') - 5, $j = (int)date('Y') + 11; $i < $j; $i++) {
         $date_selector .= '<option value="' . $i . '"';
         if ($i==$year) $date_selector .= ' selected';
         $date_selector .= '>' . $i . '</option>';
