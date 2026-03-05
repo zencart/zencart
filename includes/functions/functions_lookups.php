@@ -300,12 +300,12 @@ function zen_get_orders_status_id_from_name(string $status_name): int|false
 
 /**
  * Returns the "name" associated with the specified orders_status_id.
- * @param int $order_status_id
+ * @param numeric $order_status_id
  * @param int $language_id
  * @return string
  * @since ZC v1.0.3
  */
-function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
+function zen_get_orders_status_name(int|string $order_status_id, int $language_id = 0): string
 {
     global $db;
     if (empty($language_id)) $language_id = $_SESSION['languages_id'];
@@ -323,12 +323,12 @@ function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
 /**
  * Used by Admin configuration dropdown selectors
  * @TODO collapse with zen_get_orders_status_name()
- * @param int $order_status_id
+ * @param numeric $order_status_id
  * @param int $language_id
  * @return string
  * @since ZC v1.0.3
  */
-function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
+function zen_get_order_status_name(int|string $order_status_id, int $language_id = 0): string
 {
     global $db;
 
