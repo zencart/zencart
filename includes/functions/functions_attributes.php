@@ -710,7 +710,7 @@ function zen_delete_products_attributes($product_id)
 
 /**
  * Set Product Attributes Sort Order to Products Option Value Sort Order for specified product
- * @param int $product_id
+ * @param numeric $product_id
  * @since ZC v1.0.3
  */
 function zen_update_attributes_products_option_values_sort_order($product_id)
