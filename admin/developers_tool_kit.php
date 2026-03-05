@@ -301,13 +301,13 @@ function cleanup_dtk_output_text($input = '', $highlight = '', $case_sensitive =
 /**
  * Left-pad input "number" string with spaces
  *
- * @param string $number The number string to pad
- * @param int $n The number of padding characters to accommodate
- * @return string
+ * @param string|int $number The numeric string to pad
+ * @param int $n The number of padding characters to enforce
  * @since ZC v1.5.5
  */
-function number_pad_with_spaces($number, $n = 0) {
-  return str_replace(' ', '&nbsp;', str_pad((int)$number, $n, ' ', STR_PAD_LEFT));
+function number_pad_with_spaces(string|int $number, int $n = 0): string
+{
+  return str_replace(' ', '&nbsp;', str_pad((string)(int)$number, $n, ' ', STR_PAD_LEFT));
 }
 
 /* ==================================================================== */
