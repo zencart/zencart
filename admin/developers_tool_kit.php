@@ -847,20 +847,6 @@ if ($found == false) {
       } else {
         ?>
 
-        <?php
-// disabled and here for an example
-        if (false) {
-          ?>
-          <!-- bof: update all products price sorter -->
-          <table >
-            <tr>
-              <td class="main text-left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-              <td class="main text-right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '" class="btn btn-primary" role="button">' . IMAGE_UPDATE . '</a>'; ?></td>
-            </tr>
-          </table>
-          <!-- eof: update all products price sorter -->
-        <?php } ?>
-
         <!-- bof: Locate a configuration constant -->
         <div class="row">
           <div class="col-sm-12"><?php echo TEXT_CONFIGURATION_CONSTANT; ?></div>
