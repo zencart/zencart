@@ -45,7 +45,7 @@ $zen_admin_html_head_loaded = true;
 <?php } else { ?>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" integrity="sha384-b+3kCkBF7JElwswpAsmVFMmrPhoYrpI5w68/JyidGsEYjaPuo0WDeg5Hx6YXxZqs sha512-L32Q3WXcM2mi71hgvd56WcD4l1bF1zaqjPgDiW6AJ73zZevJZ+M/GHK6N5Rv72Wm+i+p02eINkWCq4s+uDDWAg==" crossorigin="anonymous">
 <?php } ?>
-    <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/jAlert.css">
+    <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/jAlert.min.css">
     <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/menu.css">
     <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/stylesheet.css">
 <?php if (file_exists($value = DIR_WS_INCLUDES . 'css/' . basename($PHP_SELF, '.php') . '.css')) { ?>
