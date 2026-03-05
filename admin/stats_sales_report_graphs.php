@@ -254,7 +254,7 @@ for ($i = 0; $i < $report->size; $i++) {
                               echo $zcDate->output(DATE_FORMAT_SHORT, $report->info[$i]['startDates']);
                               break;
                           case statsSalesReportGraph::WEEKLY_VIEW:
-                              echo $zcDate->output(DATE_FORMAT_SHORT, $report->info[$i]['startDates']) . " - " . $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, date('m', $report->info[$i]['endDates']), date('d', $report->info[$i]['endDates']) - 1, date('Y', $report->info[$i]['endDates'])));
+                              echo $zcDate->output(DATE_FORMAT_SHORT, $report->info[$i]['startDates']) . " - " . $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, (int)date('m', $report->info[$i]['endDates']), date('d', $report->info[$i]['endDates']) - 1, (int)date('Y', $report->info[$i]['endDates'])));
                               break;
                           case statsSalesReportGraph::MONTHLY_VIEW:
                               echo $zcDate->output(DATE_FORMAT_SHORT_NO_DAY, $report->info[$i]['startDates']);
