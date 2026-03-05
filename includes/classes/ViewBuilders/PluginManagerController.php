@@ -55,7 +55,7 @@ class PluginManagerController extends BaseController
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=install'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=install'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_INSTALL . '</a>'
             );
         }
@@ -74,7 +74,7 @@ class PluginManagerController extends BaseController
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=upgrade'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=upgrade'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UPGRADE_AVAILABLE . '</a>'
             );
         }
@@ -82,26 +82,26 @@ class PluginManagerController extends BaseController
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=disable'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=disable'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_DISABLE . '</a>'
             );
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=uninstall'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=uninstall'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
             );
         } elseif ((int)$this->currentFieldValue('status') === PluginStatus::DISABLED) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=enable'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=enable'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_ENABLE . '</a>'
             );
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=uninstall'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=uninstall'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
             );
         }
@@ -110,7 +110,7 @@ class PluginManagerController extends BaseController
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=cleanup'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=cleanup'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_CLEANUP . '</a>'
             );
         }
@@ -123,7 +123,7 @@ class PluginManagerController extends BaseController
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(
-            zen_draw_form('plugininstall', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink() . '&action=doInstall', 'post', 'class="form-horizontal"')
+            zen_draw_form('plugininstall', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeyLink() . '&action=doInstall', 'post', 'class="form-horizontal"')
         );
         $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . zen_lookup_admin_menu_language_override('plugin_description', $this->currentFieldValue('unique_key'), $this->currentFieldValue('description')));
         $versions = $this->pluginManager->getPluginVersionsForPlugin($this->currentFieldValue('unique_key'));
@@ -142,7 +142,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-primary">'
             . TEXT_INSTALL . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -156,7 +156,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
@@ -167,7 +167,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
@@ -175,7 +175,7 @@ class PluginManagerController extends BaseController
         zen_redirect(
             zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             )
         );
     }
@@ -190,7 +190,7 @@ class PluginManagerController extends BaseController
             zen_draw_form(
                 'pluginuninstall',
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink() . '&action=doUninstall',
+                $this->pageLink() . '&' . $this->colKeyLink() . '&action=doUninstall',
                 'post',
                 'class="form-horizontal"'
             ) . zen_draw_hidden_field('version', $this->currentFieldValue('version'))
@@ -200,7 +200,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-danger">'
             . TEXT_UNINSTALL . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -214,7 +214,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
@@ -225,7 +225,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
@@ -235,7 +235,7 @@ class PluginManagerController extends BaseController
         zen_redirect(
             zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             )
         );
     }
@@ -249,13 +249,13 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
         $versions = $this->pluginManager->getVersionsForUpgrade($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'));
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
-        $this->setBoxForm(zen_draw_form('pluginupgrade', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink() . '&action=confirmUpgrade', 'post', 'class="form-horizontal"'));
+        $this->setBoxForm(zen_draw_form('pluginupgrade', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeyLink() . '&action=confirmUpgrade', 'post', 'class="form-horizontal"'));
         $this->setBoxContent('<br>' . TEXT_INFO_UPGRADE . '<br>');
         $firstKey = key($versions);
         foreach ($versions as $version) {
@@ -266,7 +266,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-primary">'
             . TEXT_UPGRADE . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -291,7 +291,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
@@ -299,7 +299,7 @@ class PluginManagerController extends BaseController
         $this->setBoxForm(zen_draw_form(
                 'pluginupgrade',
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink() . '&action=doUpgrade',
+                $this->pageLink() . '&' . $this->colKeyLink() . '&action=doUpgrade',
                 'post',
                 'class="form-horizontal"'
             ) . zen_draw_hidden_field('version', $this->request->input('version')));
@@ -310,7 +310,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-primary">'
             . TEXT_UPGRADE . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -332,7 +332,7 @@ class PluginManagerController extends BaseController
             $error = true;
         }
         if ($error) {
-            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
+            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeyLink()));
         }
         $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $upgraded = $installer->processUpgrade($this->currentFieldValue('unique_key'), $this->request->input('version'), $this->currentFieldValue('version'));
@@ -341,7 +341,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
@@ -351,7 +351,7 @@ class PluginManagerController extends BaseController
         zen_redirect(
             zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             )
         );
     }
@@ -367,7 +367,7 @@ class PluginManagerController extends BaseController
             zen_draw_form(
                 'pluginupgrade',
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink() . '&action=confirmCleanUp',
+                $this->pageLink() . '&' . $this->colKeyLink() . '&action=confirmCleanUp',
                 'post',
                 'class="form-horizontal"'
             )
@@ -380,7 +380,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-danger">'
             . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -394,7 +394,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=cleanup'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=cleanup'
                 )
             );
         }
@@ -402,7 +402,7 @@ class PluginManagerController extends BaseController
         $this->setBoxForm(zen_draw_form(
             'pluginupgrade',
             FILENAME_PLUGIN_MANAGER,
-            $this->pageLink() . '&' . $this->colKeylink() . '&action=doCleanUp',
+            $this->pageLink() . '&' . $this->colKeyLink() . '&action=doCleanUp',
             'post',
             'class="form-horizontal"'
         ));
@@ -414,7 +414,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-danger">'
             . TEXT_CONFIRM . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -428,14 +428,14 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink() . '&action=cleanup'
+                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=cleanup'
                 )
             );
         }
         $error = "";
         foreach ($this->request->input('version') as $version) {
             $path = DIR_FS_CATALOG . 'zc_plugins/' . $this->currentFieldValue('unique_key') . '/' . $version;
-            (new FileSystem)->deleteDirectory($path);
+            (new FileSystem())->deleteDirectory($path);
             if (is_dir($path)) {
                 $error .= " :" . $path;
             }
@@ -459,7 +459,7 @@ class PluginManagerController extends BaseController
         $this->setBoxForm(zen_draw_form(
                 'pluginuninstall',
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink() . '&action=doEnable',
+                $this->pageLink() . '&' . $this->colKeyLink() . '&action=doEnable',
                 'post',
                 'class="form-horizontal"'
             ) . zen_draw_hidden_field('version', $this->currentFieldValue('version')));
@@ -468,7 +468,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-primary">'
             . TEXT_ENABLE . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -482,7 +482,7 @@ class PluginManagerController extends BaseController
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeylink()
+                    $this->pageLink() . '&' . $this->colKeyLink()
                 )
             );
         }
@@ -494,7 +494,7 @@ class PluginManagerController extends BaseController
         zen_redirect(
             zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             )
         );
     }
@@ -508,7 +508,7 @@ class PluginManagerController extends BaseController
         $this->setBoxForm(zen_draw_form(
                 'pluginuninstall',
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink() . '&action=doDisable',
+                $this->pageLink() . '&' . $this->colKeyLink() . '&action=doDisable',
                 'post',
                 'class="form-horizontal"'
             ) . zen_draw_hidden_field('version', $this->currentFieldValue('version')));
@@ -517,7 +517,7 @@ class PluginManagerController extends BaseController
             '<br><button type="submit" class="btn btn-danger">'
             . TEXT_DISABLE . '</button> <a href="' . zen_href_link(
                 FILENAME_PLUGIN_MANAGER,
-                $this->pageLink() . '&' . $this->colKeylink()
+                $this->pageLink() . '&' . $this->colKeyLink()
             ) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
         );
     }
@@ -528,13 +528,13 @@ class PluginManagerController extends BaseController
     protected function processActionDoDisable()
     {
         if (!$this->request->has('version')) {
-            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
+            zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeyLink()));
         }
         $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $installer->processDisable($this->currentFieldValue('unique_key'), $this->request->input('version'));
         $this->notify('NOTIFY_PLUGINMANAGER_DO_DISABLE', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version')]);
 
         $this->messageStack->add_session(TEXT_DISABLE_SUCCESS, 'success');
-        zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeylink()));
+        zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeyLink()));
     }
 }
