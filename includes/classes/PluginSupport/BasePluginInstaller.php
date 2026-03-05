@@ -30,6 +30,9 @@ class BasePluginInstaller
      */
     public function processInstall($pluginKey, $version): bool
     {
+        if (empty($pluginKey) || empty($version)) {
+            return false;
+        }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
@@ -46,6 +49,9 @@ class BasePluginInstaller
      */
     public function processUninstall($pluginKey, $version): bool
     {
+        if (empty($pluginKey) || empty($version)) {
+            return false;
+        }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
         $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
@@ -62,6 +68,9 @@ class BasePluginInstaller
      */
     public function processUpgrade($pluginKey, $version, $oldVersion): bool
     {
+        if (empty($pluginKey) || empty($version) || empty($oldVersion)) {
+            return false;
+        }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
@@ -95,6 +104,9 @@ class BasePluginInstaller
      */
     protected function setPluginVersionStatus($pluginKey, $version, $status): void
     {
+        if (empty($pluginKey)) {
+            return;
+        }
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL . " SET status = :status:, version = :version: WHERE unique_key = :uniqueKey:";
         $sql = $this->dbConn->bindVars($sql, ':status:', $status, 'integer');
         $sql = $this->dbConn->bindVars($sql, ':uniqueKey:', $pluginKey, 'string');

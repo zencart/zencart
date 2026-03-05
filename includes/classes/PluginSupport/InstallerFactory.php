@@ -24,6 +24,9 @@ class InstallerFactory
      */
     public function make($plugin, $version)
     {
+        if (empty($plugin) || empty($version)) {
+            throw new PluginInstallerException('PLUGIN KEY AND VERSION REQUIRED');
+        }
         $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin . '/';
         $versionDir = $pluginDir . $version . '/';
 

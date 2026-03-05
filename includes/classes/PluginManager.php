@@ -56,9 +56,9 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function isUpgradeAvailable(string $uniqueKey, string $currentVersion): bool|int|null
+    public function isUpgradeAvailable(string $uniqueKey, ?string $currentVersion): bool|int|null
     {
-        if (empty($currentVersion)) {
+        if (empty($currentVersion) || empty($uniqueKey)) {
             return false;
         }
         $versionList = $this->getVersionsForUpgrade($uniqueKey, $currentVersion);
@@ -68,9 +68,9 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function getVersionsForUpgrade(string $uniqueKey, string $currentVersion): array
+    public function getVersionsForUpgrade(string $uniqueKey, ?string $currentVersion): array
     {
-        if (empty($currentVersion)) {
+        if (empty($currentVersion) || empty($uniqueKey)) {
             return [];
         }
         $versions = $this->getPluginVersions($uniqueKey);
@@ -87,9 +87,9 @@ class PluginManager
     /**
      * @since ZC v2.0.0
      */
-    public function isNewDownloadAvailable(int|string|null $pluginId, string $currentVersion): bool|array
+    public function isNewDownloadAvailable(int|string|null $pluginId, ?string $currentVersion): bool|array
     {
-        if (empty($pluginId)) {
+        if (empty($pluginId) || empty($currentVersion)) {
             return false;
         }
         $isAvailable = plugin_version_check_for_updates($pluginId, $currentVersion);
@@ -330,6 +330,9 @@ class PluginManager
      */
     public function getPluginVersionsForPlugin(string $uniqueKey): array
     {
+        if (empty($uniqueKey)) {
+            return [];
+        }
         $results = $this->pluginControlVersion->getByUniqueKey($uniqueKey);
         $versions = [];
         foreach ($results as $result) {
@@ -353,8 +356,11 @@ class PluginManager
     /**
      * @since ZC v1.5.7
      */
-    public function hasPluginVersionsToClean($uniqueKey, $version): ?int
+    public function hasPluginVersionsToClean(?string $uniqueKey, ?string $version): int
     {
+        if (empty($version) || empty($uniqueKey)) {
+            return 0;
+        }
         return count($this->getPluginVersionsToClean($uniqueKey, $version));
     }
 

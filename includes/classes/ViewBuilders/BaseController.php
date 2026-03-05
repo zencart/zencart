@@ -17,28 +17,20 @@ class BaseController
 {
     use NotifierManager;
 
-    protected $request;
-    protected $messageStack;
-    protected $tableDefinition;
-    protected $infoBox = [];
-    protected $formatter;
+    protected array $infoBox = [];
 
-    public function __construct(Request $request, $messageStack, TableViewDefinition $tableDefinition, $formatter)
+    public function __construct(protected Request $request, protected $messageStack, protected TableViewDefinition $tableDefinition, protected $formatter)
     {
-        $this->request = $request;
-        $this->messageStack = $messageStack;
-        $this->tableDefinition = $tableDefinition;
         $this->infoBox = ['header' => [], 'content' => []];
-        $this->formatter = $formatter;
     }
 
     /**
      * @since ZC v1.5.8
      */
-    public function processRequest()
+    public function processRequest(): void
     {
         $action = $this->getAction();
-        $method = ($action == '') ? 'processDefaultAction' : 'processAction' . ucfirst($action);
+        $method = ($action === '') ? 'processDefaultAction' : 'processAction' . ucfirst($action);
         if (method_exists($this, $method)) {
             $this->$method();
         }
@@ -57,7 +49,7 @@ class BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function setBoxHeader(string $content, array $params = [])
+    public function setBoxHeader(string $content, array $params = []): void
     {
         $this->infoBox['header'][] = ['text' => $content, 'params' => $params];
     }
@@ -65,7 +57,7 @@ class BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function setBoxForm(string $content)
+    public function setBoxForm(string $content): void
     {
         $this->infoBox['content']['form'] = $content;
     }
@@ -73,7 +65,7 @@ class BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function getBoxHeader()
+    public function getBoxHeader(): mixed
     {
         return $this->infoBox['header'];
     }
@@ -81,7 +73,7 @@ class BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function setBoxContent(string $content, array $params = [])
+    public function setBoxContent(string $content, array $params = []): void
     {
         $this->infoBox['content'][] = ['text' => $content, 'params' => $params];
     }
@@ -89,7 +81,7 @@ class BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function getBoxContent()
+    public function getBoxContent(): array
     {
         return $this->infoBox['content'];
     }
@@ -114,7 +106,7 @@ class BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function currentFieldValue($field)
+    public function currentFieldValue($field): string|array|int|float|null
     {
         $currentRow = $this->formatter->currentRowFromRequest();
         if (is_null($currentRow)) {
@@ -126,7 +118,7 @@ class BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function outputMessageList($errorList, $errorType)
+    public function outputMessageList($errorList, $errorType): void
     {
         if (!count($errorList)) {
             return;

@@ -24,7 +24,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    public function init(PluginManager $pluginManager, InstallerFactory $installerFactory)
+    public function init(PluginManager $pluginManager, InstallerFactory $installerFactory): void
     {
         $this->pluginManager = $pluginManager;
         $this->installerFactory = $installerFactory;
@@ -33,7 +33,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processDefaultAction()
+    protected function processDefaultAction(): void
     {
         if ($this->currentFieldValue('unique_key') === null) {
             zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER));
@@ -105,7 +105,7 @@ class PluginManagerController extends BaseController
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
             );
         }
-        if ($this->pluginManager->hasPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version')) && !empty($this->currentFieldValue('version'))) {
+        if ($this->pluginManager->hasPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
             $this->setBoxContent('<br>' . TEXT_INFO_CLEANUP);
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
@@ -119,7 +119,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionInstall()
+    protected function processActionInstall(): void
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(
@@ -150,7 +150,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionDoInstall()
+    protected function processActionDoInstall(): void
     {
         if (!$this->request->has('version')) {
             zen_redirect(
@@ -183,7 +183,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionUninstall()
+    protected function processActionUninstall(): void
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(
@@ -208,7 +208,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionDoUninstall()
+    protected function processActionDoUninstall(): void
     {
         if (!$this->request->has('version')) {
             zen_redirect(
@@ -243,7 +243,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionUpgrade()
+    protected function processActionUpgrade(): void
     {
         if (!$this->pluginManager->isUpgradeAvailable($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
             zen_redirect(
@@ -274,7 +274,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionConfirmUpgrade()
+    protected function processActionConfirmUpgrade(): void
     {
         $error = false;
         $versions = $this->pluginManager->getVersionsForUpgrade($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'));
@@ -318,7 +318,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionDoUpgrade()
+    protected function processActionDoUpgrade(): void
     {
         $error = false;
         $versions = $this->pluginManager->getVersionsForUpgrade($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'));
@@ -359,7 +359,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionCleanUp()
+    protected function processActionCleanUp(): void
     {
         $versions = $this->pluginManager->getPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'));
         $this->setBoxHeader('<h4>' . zen_output_string_protected(zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name'))) . '</h4>');
@@ -388,7 +388,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionConfirmCleanUp()
+    protected function processActionConfirmCleanUp(): void
     {
         if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
             zen_redirect(
@@ -422,7 +422,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionDoCleanup()
+    protected function processActionDoCleanup(): void
     {
         if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
             zen_redirect(
@@ -453,7 +453,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionEnable()
+    protected function processActionEnable(): void
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(zen_draw_form(
@@ -476,7 +476,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionDoEnable()
+    protected function processActionDoEnable(): void
     {
         if (!$this->request->has('version')) {
             zen_redirect(
@@ -502,7 +502,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionDisable()
+    protected function processActionDisable(): void
     {
         $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(zen_draw_form(
@@ -525,7 +525,7 @@ class PluginManagerController extends BaseController
     /**
      * @since ZC v1.5.8
      */
-    protected function processActionDoDisable()
+    protected function processActionDoDisable(): void
     {
         if (!$this->request->has('version')) {
             zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeyLink()));
