@@ -159,7 +159,7 @@ if (isset($order)) {
 <?php
     }
 
-    if ($display_products === true) {
+    if ($display_payment === true) {
 ?>
         <div id="myAccountPaymentInfo" class="floatingBox forward">
             <h4><?= HEADING_PAYMENT_METHOD ?></h4>
