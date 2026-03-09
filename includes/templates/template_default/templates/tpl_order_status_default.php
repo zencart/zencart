@@ -19,7 +19,7 @@ if ($messageStack->size('order_status') > 0) {
     echo $messageStack->output('order_status');
 }
 
-if (isset($order)) { 
+if (isset($order)) {
 ?>
     <fieldset>
         <h2 id="orderHistoryDetailedOrder"><?= SUB_HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, $_POST['order_id']) ?></h2>
@@ -104,7 +104,7 @@ if (isset($order)) {
     if (DOWNLOAD_ENABLED === 'true') {
         require $template->get_template_dir('tpl_modules_downloads.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_modules_downloads.php';
     }
-    
+
     // -----
     // Display the order's status information.
     //
@@ -149,7 +149,7 @@ if (isset($order)) {
 ?>
             <h4><?= HEADING_SHIPPING_METHOD ?></h4>
             <div><?= $order->info['shipping_method'] ?></div>
-<?php 
+<?php
         } else { // temporary just remove these 4 lines ?>
             <div>WARNING: Missing Shipping Information</div>
 <?php
@@ -180,16 +180,17 @@ echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, 'action=
         <p><?= TEXT_LOOKUP_INSTRUCTIONS ?></p>
 
         <label class="inputLabel"><?= ENTRY_ORDER_NUMBER ?></label>
-        <?= zen_draw_input_field('order_id', $orderID, 'size="10" id="order_id" required', 'number') ?> 
+        <?= zen_draw_input_field('order_id', $orderID, 'id="order_id" required', 'number') ?>
         <br>
 
         <label class="inputLabel"><?= ENTRY_EMAIL ?></label>
-        <?= zen_draw_input_field('query_email_address', $query_email_address, 'size="35" id="query_email_address" required', 'email') ?> 
+        <?= zen_draw_input_field('query_email_address', $query_email_address, 'size="35" id="query_email_address" required', 'email') ?>
         <br>
 
         <?= zen_draw_input_field($spam_input_name, '', ' size="40" id="CUAS" style="visibility:hidden; display:none;" autocomplete="off"') ?>
         <?= $extra_validation_html ?>
 
         <div class="buttonRow forward"><?= zen_image_submit(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT) ?></div>
-    </fieldset></form>
+    </fieldset>
+    <?= '</form>' ?>
 </div>
