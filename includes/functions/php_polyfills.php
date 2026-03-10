@@ -14,6 +14,12 @@
  * - /includes/extra_configures/php_polyfills.php
  */
 
+/**
+ * MbString polyfill
+ */
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/polyfill-mbstring/Mbstring.php';
+require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/polyfill-mbstring/bootstrap80.php';
+
 /* LICENSE
  *
  * Copyright (c) 2015-present Fabien Potencier
