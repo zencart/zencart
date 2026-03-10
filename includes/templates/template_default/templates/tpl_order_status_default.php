@@ -179,11 +179,11 @@ echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, 'action=
         <legend><?= HEADING_TITLE ?></legend>
         <p><?= TEXT_LOOKUP_INSTRUCTIONS ?></p>
 
-        <label class="inputLabel"><?= ENTRY_ORDER_NUMBER ?></label>
+        <label class="inputLabel" for="order_id"><?= ENTRY_ORDER_NUMBER ?></label>
         <?= zen_draw_input_field('order_id', $orderID, 'id="order_id" required', 'number') ?>
         <br>
 
-        <label class="inputLabel"><?= ENTRY_EMAIL ?></label>
+        <label class="inputLabel" for="query_email_address"><?= ENTRY_EMAIL ?></label>
         <?= zen_draw_input_field('query_email_address', $query_email_address, 'size="35" id="query_email_address" required', 'email') ?>
         <br>
 
