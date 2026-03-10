@@ -262,7 +262,7 @@ class Search extends \base
             $from_str = $db->bindVars($from_str, ':languagesID', $_SESSION['languages_id'], 'integer');
         }
 
-        if (DISPLAY_PRICE_WITH_TAX === 'true' && !empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto)) {
+        if (DISPLAY_PRICE_WITH_TAX === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
             if (empty($_SESSION['customer_country_id'])) {
                 $_SESSION['customer_country_id'] = STORE_COUNTRY;
                 $_SESSION['customer_zone_id'] = STORE_ZONE;
