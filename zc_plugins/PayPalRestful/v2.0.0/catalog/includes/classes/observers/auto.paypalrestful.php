@@ -7,17 +7,18 @@
  * to determine an order's overall value and what amounts each order-total
  * module has added/subtracted to the order's overall value.
  *
- * Last updated: v1.3.1
+ * Last updated: v2.0.0
  */
 
 use PayPalRestful\Api\Data\CountryCodes;
 use PayPalRestful\Api\PayPalRestfulApi;
 use PayPalRestful\Zc2Pp\Amount;
-
-require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/pprAutoload.php';
+use Zencart\Traits\InteractsWithPlugins;
 
 class zcObserverPaypalrestful extends base
 {
+    use InteractsWithPlugins;
+
     protected $lastOrderValues = [];
     protected $orderTotalChanges = [];
     protected $freeShippingCoupon = false;
@@ -25,6 +26,17 @@ class zcObserverPaypalrestful extends base
 
     public function __construct()
     {
+        // -----
+        // Determine the payment-module's file-system location within the
+        // site's zc_plugins sub-directory and use that location to:
+        //
+        // 1. Identify the full file-system name of the 'base' payment module.
+        // 2. Load the payment-module's class auto-loader.
+        //
+        $this->detectZcPluginDetails(__DIR__);
+        define('FILENAME_PAYPALR_MODULE', $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypalr.php');
+        require_once $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/pprAutoload.php';
+
         // -----
         // If loaded via ppr_webhook.php, ensure that the $spider_flag is set so
         // that application_top.php doesn't try to load the counter.php module which,
@@ -469,7 +481,7 @@ class zcObserverPaypalrestful extends base
     let paypalMessageableStyles = <?= !empty($messageStyles) ? json_encode($messageStyles) : '{}' ?>;
     let $messagableObjects = <?= json_encode($messagableObjects) ?>;
     let paypalPayLaterCurrency = '<?= $_SESSION['currency'] ?>';
-    <?= file_get_contents(DIR_WS_MODULES . 'payment/paypal/PayPalRestful/jquery.paypalr.jssdk_messages.js'); ?>
+    <?= file_get_contents($this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/PayPalRestful/jquery.paypalr.jssdk_messages.js') ?>
 </script>
 <?php
         return;

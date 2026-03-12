@@ -116,7 +116,7 @@ class WebhookResponder
         ];
 
         // Load the PayPal RESTful API class and get the credentials, so we can make the postback using the current access token
-        require DIR_WS_MODULES . 'payment/paypalr.php';
+        require FILENAME_PAYPALR_MODULE;
         list($client_id, $secret) = \paypalr::getEnvironmentInfo();
         $ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
 

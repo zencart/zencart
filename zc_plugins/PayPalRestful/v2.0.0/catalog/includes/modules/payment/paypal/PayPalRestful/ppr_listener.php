@@ -7,7 +7,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id:  $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 require 'includes/application_top.php';
 
@@ -20,8 +20,6 @@ if (!defined('MODULE_PAYMENT_PAYPALR_STATUS') || MODULE_PAYMENT_PAYPALR_STATUS =
     require DIR_WS_INCLUDES . 'application_bottom.php';
     die();
 }
-
-require DIR_WS_MODULES . 'payment/paypal/pprAutoload.php';
 
 use PayPalRestful\Api\PayPalRestfulApi;
 use PayPalRestful\Common\Logger;
@@ -83,7 +81,7 @@ if (!isset($_SESSION['PayPalRestful']['Order']['PayerAction'])) {
 // customer's PayPal Wallet selection or the customer has completed
 // a 3DS verification for a credit-card payment.
 //
-require DIR_WS_MODULES . 'payment/paypalr.php';
+require FILENAME_PAYPALR_MODULE;
 list($client_id, $secret) = paypalr::getEnvironmentInfo();
 
 $ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);

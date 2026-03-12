@@ -6,13 +6,8 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  *
- * Last updated: v1.3.1
+ * Last updated: v2.0.0
  */
-/**
- * Load the support class' auto-loader.
- */
-require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/pprAutoload.php';
-
 use PayPalRestful\Admin\AdminMain;
 use PayPalRestful\Admin\DoAuthorization;
 use PayPalRestful\Admin\DoCapture;
@@ -27,13 +22,16 @@ use PayPalRestful\Common\Logger;
 use PayPalRestful\Zc2Pp\Amount;
 use PayPalRestful\Zc2Pp\ConfirmPayPalPaymentChoiceRequest;
 use PayPalRestful\Zc2Pp\CreatePayPalOrderRequest;
+use Zencart\Traits\InteractsWithPlugins;
 
 /**
  * The PayPal payment module using PayPal's RESTful API (v2)
  */
-class paypalr extends base
+class paypalr extends \base
 {
-    const CURRENT_VERSION = '1.3.1';
+    use InteractsWithPlugins;
+
+    const CURRENT_VERSION = '2.0.0-beta1';
 
     const REDIRECT_LISTENER = HTTP_SERVER . DIR_WS_CATALOG . 'ppr_listener.php';
 
@@ -197,6 +195,9 @@ class paypalr extends base
             $this->title = MODULE_PAYMENT_PAYPALR_TEXT_TITLE_ADMIN . (($curl_installed === true) ? '' : $this->alertMsg(MODULE_PAYMENT_PAYPALR_ERROR_NO_CURL));
             $this->description = sprintf(MODULE_PAYMENT_PAYPALR_TEXT_ADMIN_DESCRIPTION, self::CURRENT_VERSION);
         }
+
+        $this->detectZcPluginDetails(__DIR__);
+        require_once $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/pprAutoload.php';
 
         $this->sort_order = defined('MODULE_PAYMENT_PAYPALR_SORT_ORDER') ? ((int)MODULE_PAYMENT_PAYPALR_SORT_ORDER) : null;
         if (null === $this->sort_order) {
@@ -787,7 +788,9 @@ class paypalr extends base
                     [
                         'title' => '<b>' . MODULE_PAYMENT_PAYPALR_TEXT_PLEASE_NOTE . '</b>',
                         'field' =>
-                            '<script>' . file_get_contents(DIR_WS_MODULES . 'payment/paypal/PayPalRestful/jquery.paypalr.disable.js') . '</script>' .
+                            '<script>' .
+                                file_get_contents($this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/PayPalRestful/jquery.paypalr.disable.js') .
+                            '</script>' .
                             '<small>' . MODULE_PAYMENT_PAYPALR_UNSUPPORTED_SHIPPING_COUNTRY . '</small>',
                         ],
                 ];
@@ -851,7 +854,7 @@ class paypalr extends base
         $css_file = ($is_bootstrap_template === true) ? 'paypalr_bootstrap.css' : 'paypalr.css';
         $css_file_name = $template->get_template_dir("^$css_file", DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $css_file;
         if (!file_exists($css_file_name)) {
-            $css_file_name = DIR_WS_MODULES . 'payment/paypal/PayPalRestful/' . $css_file;
+            $css_file_name = $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/PayPalRestful/' . $css_file;
         }
 
         // -----
@@ -886,7 +889,9 @@ class paypalr extends base
                 [
                     'title' => '<span class="ppr-choice-label">' . MODULE_PAYMENT_PALPALR_CHOOSE_CARD . '</span>' ,
                     'field' =>
-                        '<script>' . file_get_contents(DIR_WS_MODULES . 'payment/paypal/PayPalRestful/jquery.paypalr.checkout.js') . '</script>' .
+                        '<script>' .
+                            file_get_contents($this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/PayPalRestful/jquery.paypalr.checkout.js') .
+                        '</script>' .
                         '<div id="ppr-choice-card" class="ppr-button-choice">' .
                             zen_draw_radio_field('ppr_type', 'card', $card_selected, 'id="ppr-card" class="ppr-choice"') .
                             '<label for="ppr-card" class="ppr-choice-label">' .
@@ -957,7 +962,7 @@ class paypalr extends base
     protected function buildCardsAccepted(): string
     {
         $cards_accepted = '';
-        $card_image_directory = DIR_WS_MODULES . 'payment/paypal/PayPalRestful/images/';
+        $card_image_directory = $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/PayPalRestful/images/';
         foreach ($this->cardImages as $card_name => $card_image) {
             $cards_accepted .= '<img src="' . $card_image_directory . $card_image . '" alt="' . $card_name . '" title="' . $card_name . '"> ';
         }
@@ -2265,7 +2270,7 @@ class paypalr extends base
         //
         $root_files = ['ppr_listener.php', 'ppr_webhook.php'];
         foreach ($root_files as $next_file) {
-            $source_file = DIR_FS_CATALOG . DIR_WS_MODULES . "payment/paypal/PayPalRestful/$next_file";
+            $source_file = $this->pluginManagerInstalledVersionDirectory . "catalog/includes/modules/payment/paypal/PayPalRestful/$next_file";
             $target_file = DIR_FS_CATALOG . $next_file;
 
             $file_contents = file_get_contents($source_file);

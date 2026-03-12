@@ -6,7 +6,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte June 2025 $
  *
- * Last updated: v1.2.0
+ * Last updated: v2.0.0
  *
  * This webhook handler must listen on HTTPS port 443.
  * For webhook message deliveries to be successful, the handler must respond with an HTTP 2xx success status every time a webhook is posted.
@@ -28,7 +28,6 @@
 $loaderPrefix = 'webhook';
 require 'includes/application_top.php';
 $current_page_base = 'ppr_webhook';
-require DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/pprAutoload.php';
 
 // call the controller class, which will dispatch as needed, if validation passes
 $controller = new PayPalRestful\Webhooks\WebhookController();

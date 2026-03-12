@@ -31,7 +31,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         // file.
         //
         $files_to_check = [
-            'includes/classes/observers' => [
+            'includes/classes/observers/' => [
                 'auto.PaypalRestAdmin.php',
             ],
         ];

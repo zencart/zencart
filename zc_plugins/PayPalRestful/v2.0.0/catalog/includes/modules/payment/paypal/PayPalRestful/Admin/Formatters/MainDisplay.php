@@ -7,15 +7,18 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Aug 2025 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 namespace PayPalRestful\Admin\Formatters;
 
 use PayPalRestful\Common\Helpers;
 use PayPalRestful\Zc2Pp\Amount;
+use Zencart\Traits\InteractsWithPlugins;
 
 class MainDisplay
 {
+    use InteractsWithPlugins;
+
     protected $mainDisplay = '';
 
     protected $settledFunds = [
@@ -59,13 +62,15 @@ class MainDisplay
 
     public function __construct(array $paypal_db_txns)
     {
+        $this->detectZcPluginDetails(__DIR__);
+
         $this->paypalDbTxns = $paypal_db_txns;
 
         $this->currencyCode = $paypal_db_txns[0]['mc_currency'];
         $this->amount = new Amount($this->currencyCode);
 
         $this->mainDisplay =
-            '<style>' . file_get_contents(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'modules/payment/paypal/PayPalRestful/paypalr.admin.css') . '</style>' .
+            '<style>' . file_get_contents($this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/PayPalRestful/paypalr.admin.css') . '</style>' .
             $this->buildTxnTable() .
             $this->buildPaymentsTable();
 

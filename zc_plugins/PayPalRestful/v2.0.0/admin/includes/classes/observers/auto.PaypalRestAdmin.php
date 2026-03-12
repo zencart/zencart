@@ -3,21 +3,23 @@
  * Part of the paypalr (PayPal Restful Api) payment module.
  * Admin handles package tracking updates.
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 
 use PayPalRestful\Api\Data\CountryCodes;
 use PayPalRestful\Api\PayPalRestfulApi;
 use PayPalRestful\Zc2Pp\Amount;
+use Zencart\Traits\InteractsWithPlugins;
 
-require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/pprAutoload.php';
-
-class zcObserverPaypalRestAdmin extends base
+class zcObserverPaypalRestAdmin extends \base
 {
-    protected $adminBeforeInsertDone = false;
+    use InteractsWithPlugins;
 
     public function __construct()
     {
+        $this->detectZcPluginDetails(__DIR__);
+        require_once $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/pprAutoload.php';
+
         // -----
         // If the paypalr payment-module isn't installed or isn't configured to be enabled,
         // then nothing further to do here.
@@ -30,19 +32,6 @@ class zcObserverPaypalRestAdmin extends base
             return;
         }
         $this->attach($this, ['ZEN_UPDATE_ORDERS_HISTORY_AFTER_INSERT']);
-        if (zen_get_zcversion() < 2.2) {
-            $this->attach($this, ['ZEN_UPDATE_ORDERS_HISTORY_BEFORE_INSERT']);
-        }
-    }
-
-    /**
-     * @param array $data [int orders_id, int orders_status_id, date_added, int customer_notified, comments, updated_by]
-     */
-    public function updateZenUpdateOrdersHistoryBeforeInsert(&$class, $eventID, $null, array $data)
-    {
-        $this->updateZenUpdateOrdersHistoryAfterInsert($class, $eventID, 0, $data);
-        $this->detach($this, ['ZEN_UPDATE_ORDERS_HISTORY_BEFORE_INSERT']);
-        $this->adminBeforeInsertDone = true;
     }
 
     /**
@@ -50,10 +39,6 @@ class zcObserverPaypalRestAdmin extends base
      */
     public function updateZenUpdateOrdersHistoryAfterInsert(&$class, $eventID, int $osh_id, array $data)
     {
-        if ($this->adminBeforeInsertDone) {
-            // avoid double-processing when attached to an older version's ZEN_UPDATE_ORDERS_HISTORY_BEFORE_INSERT
-            return;
-        }
         // Parse POST for tracking IDs. Depends on Ty Package Tracking installed.
         $track_ids = [];
         for ($i = 1; $i <= 5; $i++) {
@@ -80,7 +65,7 @@ class zcObserverPaypalRestAdmin extends base
             return;
         }
 
-        require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypalr.php';
+        require_once $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypalr.php';
         list($client_id, $secret) = \paypalr::getEnvironmentInfo();
         $ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
 
@@ -95,13 +80,5 @@ class zcObserverPaypalRestAdmin extends base
 
         // De-register, to prevent multiple insertions in this cycle.
         $this->detach($this, ['ZEN_UPDATE_ORDERS_HISTORY_AFTER_INSERT']);
-    }
-}
-
-if (!function_exists('zen_get_zcversion')) {
-    /** @since ZC v1.5.7 */
-    function zen_get_zcversion()
-    {
-        return PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
     }
 }
