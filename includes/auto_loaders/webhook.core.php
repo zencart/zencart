@@ -1,11 +1,12 @@
 <?php
 /**
  * autoloader array for webhooks
+ * Used by PayPal RESTful module, but designed to support other incoming webhook listener classes as well.
  *
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- *
- * Last updated: v1.2.2
+ * @version $Id:  New in v2.2.0 $
+ * @since ZC v2.2.0
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
