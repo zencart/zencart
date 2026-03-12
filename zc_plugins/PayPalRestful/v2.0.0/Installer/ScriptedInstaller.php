@@ -67,9 +67,6 @@ class ScriptedInstaller extends ScriptedInstallBase
                 'ppr_webhook.php',
                 'ppr_webhook_main.php',
             ],
-            'includes/auto_loaders/' => [
-                'webhook.core.php',
-            ],
             'includes/classes/observers/' => [
                 'auto.paypalrestful.php',
             ],
