@@ -962,7 +962,7 @@ class paypalr extends \base
     protected function buildCardsAccepted(): string
     {
         $cards_accepted = '';
-        $card_image_directory = $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/PayPalRestful/images/';
+        $card_image_directory = $this->zcPluginCatalogPath . 'includes/modules/payment/paypal/PayPalRestful/images/';
         foreach ($this->cardImages as $card_name => $card_image) {
             $cards_accepted .= '<img src="' . $card_image_directory . $card_image . '" alt="' . $card_name . '" title="' . $card_name . '"> ';
         }
