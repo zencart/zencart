@@ -34,7 +34,7 @@ class BasePluginInstaller
             return false;
         }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->loadInstallerLanguageFile('main.php');
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeInstallers($this->pluginDir);
         if ($this->errorContainer->hasErrors()) {
@@ -53,7 +53,7 @@ class BasePluginInstaller
             return false;
         }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->loadInstallerLanguageFile('main.php');
         $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeUninstallers($this->pluginDir);
@@ -72,7 +72,7 @@ class BasePluginInstaller
             return false;
         }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->loadInstallerLanguageFile('main.php');
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
         $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
         if ($this->errorContainer->hasErrors()) {
@@ -111,7 +111,7 @@ class BasePluginInstaller
         $sql = $this->dbConn->bindVars($sql, ':status:', $status, 'integer');
         $sql = $this->dbConn->bindVars($sql, ':uniqueKey:', $pluginKey, 'string');
         $sql = $this->dbConn->bindVars($sql, ':version:', $version, 'string');
-        $this->dbConn->execute($sql);
+        $this->dbConn->Execute($sql);
     }
 
     /**
