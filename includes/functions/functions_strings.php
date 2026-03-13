@@ -224,10 +224,11 @@ function zen_word_count(string $string, string $needle): int
  * @return string
  * @since ZC v1.0.3
  */
-function zen_array_to_string(array $array, array|string $exclude = '', string $equals = '=', string $separator = '&'): string
+function zen_array_to_string(array $array, array|string $exclude = [], string $equals = '=', string $separator = '&'): string
 {
-    if (!is_array($exclude)) $exclude = [];
-    if (!is_array($array)) $array = [];
+    if (is_string($exclude)) {
+        $exclude = [$exclude];
+    }
 
     $get_string = '';
     unset($array['x'], $array['y']);
