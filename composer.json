@@ -20,11 +20,22 @@
         "source": "https://zen-cart.com/getit",
         "docs": "https://docs.zen-cart.com"
     },
-    "_comment": "compatible with PHP 8.2-8.4",
-    "require-dev": {
+    "_comment": "compatible with PHP 8.2-8.5",
+    "require": {
         "php": "^8.2",
         "ext-curl": "*",
+        "ext-ctype": "*",
+        "ext-fileinfo": "*",
+        "ext-filter": "*",
+        "ext-gd": "*",
+        "ext-hash": "*",
+        "ext-iconv": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pcre": "*"
+    },
+    "require-dev": {
         "guzzlehttp/guzzle": "^7.7",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.6",
