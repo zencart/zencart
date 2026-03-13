@@ -5,6 +5,14 @@ class ScriptedInstaller extends ScriptedInstallBase
 {
     protected function executeInstall()
     {
+        // -----
+        // Disallow installation on versions of Zen Cart prior to v2.2.0.
+        //
+        if (version_compare(zen_get_zcversion(), '2.1.0', '<=')) {
+            $this->errorContainer->addError(0, ERROR_UNSUPPORTED_ZC_VERSION, false, ERROR_UNSUPPORTED_ZC_VERSION);
+            return false;
+        }
+
         if ($this->purgeOldFiles() === false) {
             return false;
         }
