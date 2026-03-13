@@ -234,8 +234,8 @@ function zen_array_to_string(array $array, array|string $exclude = '', string $e
     if (count($array) > 0) {
         foreach ($array as $key => $value) {
             if (!in_array($key, $exclude)) {
-                if(is_array($value)) {
-                    foreach($value as $k => $v) {
+                if (is_array($value)) {
+                    foreach ($value as $k => $v) {
                         $get_string .= $key . "[$k]" . $equals . $v . $separator;
                     }
                 } else {
