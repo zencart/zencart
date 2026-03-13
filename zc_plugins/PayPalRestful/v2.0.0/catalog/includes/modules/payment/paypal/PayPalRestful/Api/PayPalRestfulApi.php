@@ -564,7 +564,7 @@ class PayPalRestfulApi extends ErrorInfo
         $response = $this->curlPatch("v1/notifications/webhooks/$webhook_id", [$parameters]);
     }
 
-    public function webhookVerifyByPostback(array $parameters): bool
+    public function webhookVerifyByPostback(array $parameters): bool|null
     {
         $this->log->write("==> Start webhookVerifyByPostback", true);
         $response = $this->curlPost('v1/notifications/verify-webhook-signature', $parameters);
