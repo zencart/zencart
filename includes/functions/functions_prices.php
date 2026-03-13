@@ -696,6 +696,10 @@ function zen_get_products_quantity_min_units_display($product_id, $include_break
 function zen_get_buy_now_qty($product_id)
 {
     $result = zen_get_product_details($product_id);
+    if (!$result->isValid()) {
+        return 1; // default buy-now quantity if product not found
+    }
+
     $check_min = $result->fields['products_quantity_order_min'] ?? 0;
     $check_units = $result->fields['products_quantity_order_units'] ?? 1;
     $buy_now_qty = 1;
