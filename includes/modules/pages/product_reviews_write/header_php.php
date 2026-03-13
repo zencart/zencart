@@ -83,7 +83,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
 
       $db->Execute($sql);
 
-      $insert_id = $db->Insert_ID();
+      $insert_id = $db->insert_ID();
 
       $zco_notifier->notify('NOTIFY_REVIEW_INSERTED_DURING_WRITE_REVIEW');
 

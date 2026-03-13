@@ -26,7 +26,7 @@ if (!empty($action)) {
                       VALUES ('" . zen_db_input($name) . "', '" . zen_db_input($code) . "',
                               '" . zen_db_input($image) . "', '" . zen_db_input($directory) . "',
                               '" . zen_db_input($sort_order) . "')");
-        $insert_id = $db->Insert_ID();
+        $insert_id = $db->insert_ID();
 
         zen_record_admin_activity('Language [' . $code . '] added', 'info');
 

@@ -123,7 +123,7 @@ if ($_GET['action'] == 'process') {
       $gv_query = $db->bindVars($gv_query, ':amount', $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY), 'currency');
       $gv = $db->Execute($gv_query);
 
-      $insert_id = $db->Insert_ID();
+      $insert_id = $db->insert_ID();
 
       $gv_query="INSERT INTO " . TABLE_COUPON_EMAIL_TRACK . "(coupon_id, customer_id_sent, sent_firstname, sent_lastname, emailed_to, date_sent)
                  VALUES (:insertID, :customersID, :firstname, :lastname, :email, now())";

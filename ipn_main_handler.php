@@ -381,7 +381,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 ipn_debug_email('Breakpoint: 5b - PP table OID: ' . print_r($sql_data_array, true));
                 zen_db_perform(TABLE_PAYPAL, $sql_data_array);
                 ipn_debug_email('Breakpoint: 5c - PP table OID saved');
-                $pp_hist_id = $db->Insert_ID();
+                $pp_hist_id = $db->insert_ID();
                 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_PAYMENT_MODULES_AFTER_ORDER_CREATE');
                 ipn_debug_email('Breakpoint: 5d - PP hist ID: ' . $pp_hist_id);
                 $sql_data_array = ipn_create_order_history_array($pp_hist_id);
@@ -488,7 +488,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
             if ($txn_type === 'parent') {
                 $sql_data_array = ipn_create_order_array($ordersID, $txn_type);
                 zen_db_perform(TABLE_PAYPAL, $sql_data_array);
-                $paypalipnID = $db->Insert_ID();
+                $paypalipnID = $db->insert_ID();
             } else {
                 $sql_data_array = ipn_create_order_update_array($txn_type);
                 zen_db_perform(TABLE_PAYPAL, $sql_data_array, 'update', "txn_id='" . ($txn_type === 'cleared-authorization' ? $_POST['parent_txn_id'] : $_POST['txn_id']) . "'");
@@ -581,4 +581,3 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
             break;
     }
 }
-

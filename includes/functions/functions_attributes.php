@@ -583,7 +583,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
             );
             $messageStack->add_session(sprintf(TEXT_ATTRIBUTE_COPY_INSERTING, (int)$copy_from['products_attributes_id'], $products_id_from, $products_id_to), 'success');
 
-            $new_products_attributes_id = $db->Insert_ID();
+            $new_products_attributes_id = $db->insert_ID();
 
             // Notify that an attribute has been added for the product.
             $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADD', ['pID' => $products_id_to, 'fields' => $copy_from]);
@@ -603,7 +603,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
                                 " . (int)$result['products_attributes_maxdays'] . ",
                                 " . (int)$result['products_attributes_maxcount'] . ")");
 
-                    $new_attribute_id = $db->Insert_ID();
+                    $new_attribute_id = $db->insert_ID();
                     $zco_notifier->notify('ZEN_COPY_PRODUCTS_ATTRIBUTES_ADDED_DOWNLOAD', $products_id_to, $new_products_attributes_id, $new_attribute_id);
                 }
             }
