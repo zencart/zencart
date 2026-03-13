@@ -696,8 +696,8 @@ function zen_get_products_quantity_min_units_display($product_id, $include_break
 function zen_get_buy_now_qty($product_id)
 {
     $result = zen_get_product_details($product_id);
-    $check_min = $result->fields['products_quantity_order_min'];
-    $check_units = $result->fields['products_quantity_order_units'];
+    $check_min = $result->fields['products_quantity_order_min'] ?? 0;
+    $check_units = $result->fields['products_quantity_order_units'] ?? 1;
     $buy_now_qty = 1;
 
     $mixed_products_in_cart = $_SESSION['cart']->in_cart_mixed($product_id);
