@@ -31,7 +31,7 @@ if (!empty($saction)) {
                             '" . (int)$zID . "',
                             now())");
 
-      $new_subzone_id = $db->Insert_ID();
+      $new_subzone_id = $db->insert_ID();
 
 //        zen_redirect(zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $new_subzone_id));
       zen_redirect(zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list' . '&sID=' . $new_subzone_id));
@@ -76,7 +76,7 @@ if (!empty($action)) {
                             '" . zen_db_input($geo_zone_description) . "',
                             now())");
 
-      $new_zone_id = $db->Insert_ID();
+      $new_zone_id = $db->insert_ID();
       zen_redirect(zen_href_link(FILENAME_GEO_ZONES, 'zID=' . $new_zone_id));
       break;
     case 'save_zone':

@@ -2068,7 +2068,7 @@ class shoppingCart extends base
                                     } else {
                                         $db->Execute("INSERT INTO " . TABLE_FILES_UPLOADED . " (sesskey, files_uploaded_name) VALUES ('" . zen_session_id() . "', '" . zen_db_input($products_options_file->filename) . "')");
                                     }
-                                    $insert_id = $db->Insert_ID();
+                                    $insert_id = $db->insert_ID();
                                     $real_ids[$text_prefix] = $insert_id . ". " . $products_options_file->filename;
                                     $products_options_file->set_filename($insert_id . $products_image_extension);
                                     if (!($products_options_file->save())) {

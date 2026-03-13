@@ -1990,7 +1990,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // get the payer_id from the customer's info as returned from PayPal
     $_SESSION['paypal_ec_payer_id'] = ($response['PAYERID'] ?? '--none--');
     $this->notify('NOTIFY_PAYPAL_EXPRESS_CHECKOUT_PAYERID_DETERMINED', $response['PAYERID']);
-    
+
     // prepare the information to pass to the ec_step2_finish() function, which does the account creation, address build, etc
     $step2_payerinfo = [
         'payer_id' => $response['PAYERID'],
@@ -2051,7 +2051,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // of the payment module.
         //
         $_SESSION['paypal_ec_payer_info'] = array_merge($step2_payerinfo, $step2_shipto);
-    
+
         // -----
         // Watch for the order's address-creation notification. That event will be used
         // to populate the customer/billing/delivery addresses with the information that
@@ -2403,7 +2403,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         $result = zen_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
         // grab the customer_id (last insert id)
-        $customer_id = $db->Insert_ID();
+        $customer_id = $db->insert_ID();
 
         // set the Guest customer ID -- for PWA purposes
         $_SESSION['customer_guest_id'] = $customer_id;
@@ -2437,7 +2437,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         zen_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
         // grab the address_id (last insert id)
-        $address_id = $db->Insert_ID();
+        $address_id = $db->insert_ID();
 
         $this->notify('NOTIFY_PAYPALEXPRESS_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array(), $address_id, $sql_data_array);
 
@@ -2938,7 +2938,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $sql_data_array[] = array('fieldName'=>'customers_id', 'value'=>$customer_id, 'type'=>'integer');
     $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-    $new_address_book_id = $db->Insert_ID();
+    $new_address_book_id = $db->insert_ID();
 
     $this->notify('NOTIFY_HEADER_ADDRESS_BOOK_ADD_ENTRY_DONE', 'paypal express checkout', $new_address_book_id, $sql_data_array, $make_default);
 

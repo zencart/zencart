@@ -221,7 +221,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
       $sql_data_array[] = array('fieldName'=>'customers_id', 'value'=>$_SESSION['customer_id'], 'type'=>'integer');
       $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-      $new_address_book_id = $db->Insert_ID();
+      $new_address_book_id = $db->insert_ID();
       $zco_notifier->notify('NOTIFY_MODULE_ADDRESS_BOOK_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $new_address_book_id), $sql_data_array));
 
 

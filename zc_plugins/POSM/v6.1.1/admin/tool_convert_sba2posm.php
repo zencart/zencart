@@ -88,7 +88,7 @@ if ($convert === true) {
                      VALUES
                         ($products_id, " . $stock_details['qty'] . ", '" . generate_pos_option_hash ($products_id, $stock_details['options']) . "', '" . $stock_details['model'] . "', now() )"
                 );
-                $pos_id = $db->Insert_ID();
+                $pos_id = $db->insert_ID();
                 foreach ($stock_details['options'] as $options_id => $options_values_id) {
                     $db->Execute(
                         "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_STOCK_ATTRIBUTES . "
@@ -208,7 +208,7 @@ if (!$sniffer->table_exists(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK)) {
             }
 ?>
             <td>
-<?php 
+<?php
             echo (count($stock_details['options']) !== 0 && $count_all_options === count($stock_details['options'])) ? TEXT_OK : sprintf(TEXT_MISSING_OPTIONS, $stock_details['attributes_id']);
             foreach ($stock_details['errors'] as $current_error) {
                 echo '<br>' . $current_error;

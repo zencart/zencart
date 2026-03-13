@@ -852,7 +852,7 @@ function zen_create_profile(array $profileData): string
     $sql = "INSERT INTO " . TABLE_ADMIN_PROFILES . " SET profile_name = :name:";
     $sql = $db->bindVars($sql, ':name:', $name, 'stringIgnoreNull');
     $db->Execute($sql);
-    $profileId = $db->Insert_ID();
+    $profileId = $db->insert_ID();
     if (is_numeric($profileId)) {
         // suceeded in creating the profile so result returned was the profile ID
         zen_insert_pages_into_profile($profileId, $profileData['p']);

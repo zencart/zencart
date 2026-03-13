@@ -25,7 +25,7 @@ if (!empty($action)) {
                             '" . zen_db_input($tax_rate) . "',
                             '" . zen_db_input($tax_priority) . "',
                             now())");
-      $new_taxrate_id = $db->Insert_ID();
+      $new_taxrate_id = $db->insert_ID();
 
       for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $tax_description_array = $_POST['tax_description'];

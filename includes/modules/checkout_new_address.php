@@ -170,7 +170,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'submit')) {
                 }
             }
             $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
-            $address_book_id = $db->Insert_ID();
+            $address_book_id = $db->insert_ID();
             $zco_notifier->notify('NOTIFY_MODULE_CHECKOUT_ADDED_ADDRESS_BOOK_RECORD', array_merge(['address_id' => $address_book_id], $sql_data_array));
             switch($addressType) {
                 case 'billto':
