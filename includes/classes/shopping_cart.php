@@ -2721,7 +2721,7 @@ class shoppingCart extends base
             $products_id = $_POST['products_id'][$i];
             $prs_id = zen_get_prid($products_id);
             $current_qty = $this->get_quantity($products_id); // $products[$i]['quantity']
-            if (!is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
+            if (!isset($_POST['cart_quantity'][$i]) || !is_numeric($_POST['cart_quantity'][$i]) || $_POST['cart_quantity'][$i] < 0) {
                 $_POST['cart_quantity'][$i] = $current_qty; // Default response behavior in cart.
             }
             // Ensure array key exists before use in assignment.
