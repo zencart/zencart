@@ -12,4 +12,4 @@ namespace Zencart\Exceptions;
  */
 class SearchException extends \Exception
 {
-};
+}
