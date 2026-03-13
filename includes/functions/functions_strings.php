@@ -49,7 +49,8 @@ function zen_preserve_search_quotes(?string $search_string): string
  * with parameters that run htmlspecialchars over the string
  * and converts quotes to html entities
  *
- * @param  string  $string  The string to be parsed
+ * @param  string|null  $string  $string  The string to be parsed
+ * @return string
  * @since ZC v1.0.3
  */
 function zen_output_string_protected(?string $string): string
@@ -94,9 +95,9 @@ function zen_not_null(mixed $value): bool
 /**
  * Break a word in a string if it is longer than a specified length ($len)
  *
- * @param  string  $string  The string to be broken up
+ * @param  string|null  $string  The string to be broken up
  * @param  int  $len  The maximum length allowed
- * @param  ?string  $break_char  The character to use at the end of the broken line
+ * @param  string  $break_char  The character to use at the end of the broken line
  * @return string
  * @since ZC v1.0.3
  */
