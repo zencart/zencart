@@ -6,7 +6,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Nov 16 Modified in v2.0.0 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 namespace PayPalRestful\Zc2Pp;
 
@@ -14,16 +14,16 @@ use PayPalRestful\Common\Logger;
 
 class Amount
 {
-    protected $amount = [
+    protected array $amount = [
         'currency_code' => '',
         'value' => '',
     ];
-    protected static $defaultCurrencyCode = [
+    protected static array $defaultCurrencyCode = [
         'value' => '',
         'no_decimals' => false,
         'in_country_only' => false,
     ];
-    protected static $supportedCurrencyCodes = [
+    protected static array $supportedCurrencyCodes = [
         'AUD' => [],    //- Australian dollar
         'BRL' => [],    //- Brazilian real
         'CAD' => [],    //- Canadian dollar
@@ -54,7 +54,7 @@ class Amount
     /**
      * Debug interface, shared with the PayPalRestfulApi class.
      */
-    protected $log; //- An instance of the Logger class, logs debug tracing information.
+    protected Logger $log; //- An instance of the Logger class, logs debug tracing information.
 
     // -----
     // An alias for setDefaultCurrency.
@@ -88,7 +88,7 @@ class Amount
         return (isset(self::$supportedCurrencyCodes[$currency_code]['no_decimals'])) ? 0 : 2;
     }
 
-    public function setDefaultCurrency(string $currency_code)
+    public function setDefaultCurrency(string $currency_code): void
     {
         if (in_array($currency_code, $this->getSupportedCurrencyCodes())) {
             $default_currency = $currency_code;

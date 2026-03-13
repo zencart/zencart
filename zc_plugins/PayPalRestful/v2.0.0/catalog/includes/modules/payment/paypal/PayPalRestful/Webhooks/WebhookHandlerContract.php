@@ -7,7 +7,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte June 2025 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 
 namespace PayPalRestful\Webhooks;
@@ -17,16 +17,16 @@ use PayPalRestful\Common\Logger;
 
 abstract class WebhookHandlerContract
 {
-    protected $eventsHandled = [];
+    protected array $eventsHandled = [];
 
-    protected $webhook;
-    protected $data;
-    protected $eventType;
+    protected WebhookObject $webhook;
+    protected array $data;
+    protected string $eventType;
 
-    protected $log;
+    protected Logger $log;
 
-    protected $ppr;
-    protected $paymentModule;
+    protected PayPalRestfulApi $ppr;
+    protected string $paymentModule;
 
     public function __construct(WebhookObject $webhook)
     {
@@ -42,7 +42,7 @@ abstract class WebhookHandlerContract
     /**
      * Instantiate paypalr payment module, including its language string dependencies.
      */
-    protected function loadCorePaymentModuleAndLanguageStrings()
+    protected function loadCorePaymentModuleAndLanguageStrings(): void
     {
         require DIR_WS_CLASSES . 'payment.php';
         $payment_modules = new \payment ('paypalr');

@@ -18,25 +18,25 @@ use PayPalRestful\Common\Logger;
 
 class GetPayPalOrderTransactions
 {
-    protected $moduleName;
+    protected string $moduleName;
 
-    protected $moduleVersion;
+    protected string $moduleVersion;
 
-    protected $oID;
+    protected int $oID;
 
-    protected $ppr;
+    protected PayPalRestfulApi $ppr;
 
-    protected $log;
+    protected Logger $log;
 
-    protected $databaseTxns = [];
+    protected array $databaseTxns = [];
 
-    protected $messages;
+    protected Messages|NullMessages $messages;
 
-    protected $paymentType;
+    protected string $paymentType;
 
-    protected $paypalTransactions = [];
+    protected array $paypalTransactions = [];
 
-    protected $externalTxnAdded = false;
+    protected bool $externalTxnAdded = false;
 
     public function __construct(string $module_name, string $module_version, int $oID, PayPalRestfulApi $ppr)
     {
@@ -106,7 +106,7 @@ class GetPayPalOrderTransactions
         return $this->messages->output();
     }
 
-    protected function getPayPalDatabaseTransactionsForOrder()
+    protected function getPayPalDatabaseTransactionsForOrder(): void
     {
         global $db;
 
@@ -165,7 +165,7 @@ class GetPayPalOrderTransactions
         $this->databaseTxns = $db_txns;
     }
 
-    protected function getPayPalUpdates()
+    protected function getPayPalUpdates(): void
     {
         // -----
         // If no database transactions were found for the current order, nothing
@@ -223,7 +223,7 @@ class GetPayPalOrderTransactions
         }
     }
 
-    protected function updateAuthorizations(array $authorizations)
+    protected function updateAuthorizations(array $authorizations): void
     {
         foreach ($authorizations as $next_authorization) {
             $authorization_txn_id = $next_authorization['id'];
@@ -238,7 +238,7 @@ class GetPayPalOrderTransactions
         }
     }
 
-    protected function updateCaptures(array $captures, array $authorizations)
+    protected function updateCaptures(array $captures, array $authorizations): void
     {
         foreach ($captures as $next_capture) {
             $capture_txn_id = $next_capture['id'];
@@ -257,7 +257,7 @@ class GetPayPalOrderTransactions
         }
     }
 
-    protected function updateRefunds(array $refunds, array $captures)
+    protected function updateRefunds(array $refunds, array $captures): void
     {
         foreach ($refunds as $next_refund) {
             $refund_txn_id = $next_refund['id'];
@@ -371,7 +371,7 @@ class GetPayPalOrderTransactions
         return $parent_txn_id;
     }
 
-    public function updateParentTxnDateAndStatus(array $paypal_response)
+    public function updateParentTxnDateAndStatus(array $paypal_response): void
     {
         $parent_txn_id = $paypal_response['id'];
         $sql_data_array = [
@@ -399,7 +399,7 @@ class GetPayPalOrderTransactions
         ];
     }
 
-    public function updateMainTransaction(array $paypal_response)
+    public function updateMainTransaction(array $paypal_response): void
     {
         global $db;
 

@@ -9,7 +9,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte June 2025 $
  *
- * Last updated: v1.2.2/v1.3.0
+ * Last updated: v2.0.0
  */
 
 namespace PayPalRestful\Webhooks;
@@ -18,9 +18,9 @@ use PayPalRestful\Common\Logger;
 
 class WebhookController
 {
-    protected $ppr_logger;
+    protected Logger $ppr_logger;
 
-    public function __invoke()
+    public function __invoke(): bool|null
     {
         defined('TABLE_PAYPAL_WEBHOOKS') or define('TABLE_PAYPAL_WEBHOOKS', DB_PREFIX . 'paypal_webhooks');
 
@@ -117,7 +117,7 @@ class WebhookController
     /**
      * Save webhook records to database for subsequent querying
      */
-    protected function saveToDatabase(string $user_agent, string $request_method, string $request_body, $request_headers)
+    protected function saveToDatabase(string $user_agent, string $request_method, string $request_body, array $request_headers): void
     {
         $json_body = json_decode($request_body, true);
 
@@ -140,7 +140,7 @@ class WebhookController
     /**
      * Ensure database table exists
      */
-    protected function createDatabaseTable()
+    protected function createDatabaseTable(): void
     {
         global $db;
         $db->Execute(

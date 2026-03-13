@@ -9,7 +9,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte June 2025 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 
 namespace PayPalRestful\Webhooks;
@@ -18,10 +18,10 @@ use PayPalRestful\Api\PayPalRestfulApi;
 
 class WebhookResponder
 {
-    protected $shouldRespond = false;
+    protected bool $shouldRespond = false;
 
-    protected $webhook_listener_subscribe_id = null;
-    protected $webhook;
+    protected null|string $webhook_listener_subscribe_id = null;
+    protected WebhookObject $webhook;
 
     public function __construct(WebhookObject $webhook)
     {
@@ -77,7 +77,7 @@ class WebhookResponder
     /**
      * @return bool|null  returns null if we cannot do CRC check, so fails over to PostBack approach
      */
-    protected function doCrcCheck()
+    protected function doCrcCheck(): bool
     {
         $headers = array_change_key_case($this->webhook->getHeaders(), CASE_UPPER);
 
@@ -102,7 +102,7 @@ class WebhookResponder
     /**
      * @return bool|null  returns null if unable to use CURL or if the access token is invalid.
      */
-    protected function verifyByPostback()
+    protected function verifyByPostback(): null|bool
     {
         $headers = array_change_key_case($this->webhook->getHeaders(), CASE_UPPER);
         $params_array = [
@@ -135,7 +135,7 @@ class WebhookResponder
     /**
      * This method is only used by the Postback verification method
      */
-    protected function setWebhookSubscribeId()
+    protected function setWebhookSubscribeId(): void
     {
         if (defined('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS')) {
             $this->webhook_listener_subscribe_id = MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS;
@@ -148,7 +148,7 @@ class WebhookResponder
      * @param string $url
      * @return bool|string
      */
-    protected function read_url($url)
+    protected function read_url(string $url): string|bool
     {
         // Try file_get_contents first
         if (ini_get('allow_url_fopen')) {
@@ -168,5 +168,4 @@ class WebhookResponder
         ]);
         return curl_exec($ch);
     }
-
 }

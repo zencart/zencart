@@ -6,7 +6,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte June 2025 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 
 namespace PayPalRestful\Webhooks\Events;
@@ -16,11 +16,11 @@ use PayPalRestful\Webhooks\WebhookHandlerContract;
 
 class PaymentCaptureDeclined extends WebhookHandlerContract
 {
-    protected $eventsHandled = [
+    protected array $eventsHandled = [
         'PAYMENT.CAPTURE.DECLINED',
     ];
 
-    public function action()
+    public function action(): void
     {
         // A payment capture is declined.
         // https://developer.paypal.com/docs/api/payments/v2/#authorizations_capture - with response `status` of `declined`

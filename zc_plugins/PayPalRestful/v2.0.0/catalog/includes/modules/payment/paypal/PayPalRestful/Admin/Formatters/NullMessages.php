@@ -14,10 +14,10 @@ namespace PayPalRestful\Admin\Formatters;
 
 class NullMessages
 {
-    public $messages = [];
-    public $errors = [];
-    public $size = 0;
-    private $formats = [];
+    public array $messages = [];
+    public array $errors = [];
+    public int $size = 0;
+    private array $formats = [];
 
 
     public function __construct()
@@ -25,48 +25,47 @@ class NullMessages
         // Do nothing. This is a null-object class.
     }
 
-    public function add($class = '', $message = '', $type = 'error')
+    public function add($class = '', $message = '', $type = 'error'): void
     {
     }
 
-    public function add_session($class = '', $message = '', $type = 'error')
+    public function add_session($class = '', $message = '', $type = 'error'): void
     {
     }
 
-    public function add_from_session()
+    public function add_from_session(): void
     {
     }
 
-    public function size($key)
+    public function size($key): int
     {
         return 0;
     }
 
-    public function clear()
+    public function clear(): void
     {
     }
 
-    public function reset()
+    public function reset(): void
     {
     }
 
-    public function output($class = '')
+    public function output($class = ''): string
     {
         return '';
     }
 
-    public function getMessages()
+    public function getMessages(): array
     {
         return [];
     }
 
-    public function setMessageFormatting($formattingArray = [])
+    public function setMessageFormatting($formattingArray = []): void
     {
     }
 
-    public function getDefaultFormats()
+    public function getDefaultFormats(): array
     {
         return [];
     }
 }
-

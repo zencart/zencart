@@ -19,26 +19,26 @@ class MainDisplay
 {
     use InteractsWithPlugins;
 
-    protected $mainDisplay = '';
+    protected string $mainDisplay = '';
 
-    protected $settledFunds = [
+    protected array $settledFunds = [
         'currency' => '',
         'value' => 0,
         'fee' => 0,
         'exchange_rate' => 0,
     ];
 
-    protected $modals = '';
+    protected string $modals = '';
 
-    protected $amount;
+    protected Amount $amount;
 
-    protected $currencyCode;
+    protected string $currencyCode;
 
     protected $paypalDbTxns;
 
-    protected $jQueryLoadRequired = false;
+    protected bool $jQueryLoadRequired = false;
 
-    protected static $txnTableFields = [
+    protected static array $txnTableFields = [
         ['name' => MODULE_PAYMENT_PAYPALR_TXN_TYPE, 'field' => 'txn_type', 'align' => 'center'],
         ['name' => MODULE_PAYMENT_PAYPALR_TXN_PARENT_TXN_ID, 'field' => 'txn_id', 'align' => 'center'],
         ['name' => MODULE_PAYMENT_PAYPALR_DATE_CREATED, 'field' => 'date_added', 'align' => 'center'],
@@ -49,7 +49,7 @@ class MainDisplay
         ['name' => MODULE_PAYMENT_PAYPALR_PAYMENT_FEE, 'field' => 'payment_fee', 'align' => 'right', 'is_amount' => true],
     ];
 
-    protected static $paymentTableFields = [
+    protected static array $paymentTableFields = [
         ['name' => MODULE_PAYMENT_PAYPALR_TXN_TYPE, 'field' => 'txn_type', 'align' => 'center'],
         ['name' => MODULE_PAYMENT_PAYPALR_TXN_ID, 'field' => 'txn_id', 'align' => 'center'],
         ['name' => MODULE_PAYMENT_PAYPALR_DATE_CREATED, 'field' => 'date_added', 'align' => 'center'],

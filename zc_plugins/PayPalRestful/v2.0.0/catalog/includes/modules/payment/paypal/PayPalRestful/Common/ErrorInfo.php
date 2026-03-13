@@ -6,7 +6,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Nov 16 Modified in v2.0.0 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 namespace PayPalRestful\Common;
 
@@ -15,7 +15,7 @@ class ErrorInfo
     /**
      * Error information, when a CURL or RESTful error occurs.
      */
-    protected $errorInfo;
+    protected array $errorInfo;
 
     public function __construct()
     {
@@ -27,12 +27,12 @@ class ErrorInfo
         return $this->errorInfo;
     }
 
-    public function copyErrorInfo(array $error_info)
+    public function copyErrorInfo(array $error_info): void
     {
         $this->errorInfo = $error_info;
     }
 
-    protected function setErrorInfo(int $errNum, string $errMsg, int $curlErrno = 0, $response = [])
+    protected function setErrorInfo(int $errNum, string $errMsg, int $curlErrno = 0, $response = []): void
     {
         $name = $response['name'] ?? 'n/a';
         $message = $response['message'] ?? 'n/a';
@@ -41,7 +41,7 @@ class ErrorInfo
         $this->errorInfo = compact('errNum', 'errMsg', 'curlErrno', 'name', 'message', 'details', 'debug_id');
     }
 
-    protected function resetErrorInfo()
+    protected function resetErrorInfo(): void
     {
         $this->errorInfo = [
             'errMsg' => '',

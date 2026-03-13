@@ -7,19 +7,19 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte June 2025 $
  *
- * Last updated: v1.2.0
+ * Last updated: v2.0.0
  */
 
 namespace PayPalRestful\Webhooks;
 
 class WebhookObject
 {
-    protected $jsonBody = [];
-    protected $method; // request method
-    protected $headers; // request headers
-    protected $rawBody = ''; // request body, unaltered
-    protected $userAgent = ''; // request User Agent
-    protected $metadata = []; // optional misc meta info
+    protected array $jsonBody = [];
+    protected string $method; // request method
+    protected array $headers; // request headers
+    protected string $rawBody = ''; // request body, unaltered
+    protected string $userAgent = ''; // request User Agent
+    protected array $metadata = []; // optional misc meta info
 
     public function __construct(string $method, array $headers, string $rawBody = '', string $userAgent = '', array $metadata = [])
     {
@@ -86,7 +86,7 @@ class WebhookObject
     /**
      * @param array $metadata
      */
-    public function setMetadata(array $metadata)
+    public function setMetadata(array $metadata): void
     {
         $this->metadata = $metadata;
     }
@@ -96,7 +96,7 @@ class WebhookObject
      *
      * @param array $metadata
      */
-    public function addMetadata(array $metadata)
+    public function addMetadata(array $metadata): void
     {
         $this->metadata += $metadata;
     }

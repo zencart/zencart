@@ -15,14 +15,14 @@ use PayPalRestful\Api\PayPalRestfulApi;
 use PayPalRestful\Zc2Pp\Amount;
 use Zencart\Traits\InteractsWithPlugins;
 
-class zcObserverPaypalrestful extends base
+class zcObserverPaypalrestful extends \base
 {
     use InteractsWithPlugins;
 
-    protected $lastOrderValues = [];
-    protected $orderTotalChanges = [];
-    protected $freeShippingCoupon = false;
-    protected $headerAssetsSent = false;
+    protected array $lastOrderValues = [];
+    protected array $orderTotalChanges = [];
+    protected bool $freeShippingCoupon = false;
+    protected bool $headerAssetsSent = false;
 
     public function __construct()
     {
@@ -103,11 +103,11 @@ class zcObserverPaypalrestful extends base
     // -----
     // Notification 'update' handlers for the notifications from order-totals' pre_confirmation_check method.
     //
-    public function updateNotifyOrderTotalPreConfirmationCheckStarts(&$class, $eventID, array $starting_order_info)
+    public function updateNotifyOrderTotalPreConfirmationCheckStarts(&$class, $eventID, array $starting_order_info): void
     {
         $this->setLastOrderValues($starting_order_info['order_info']);
     }
-    public function updateNotifyOrderTotalPreConfirmationCheckNext(&$class, $eventID, array $ot_updates)
+    public function updateNotifyOrderTotalPreConfirmationCheckNext(&$class, $eventID, array $ot_updates): void
     {
         $this->setOrderTotalUpdate($ot_updates);
     }
@@ -115,11 +115,11 @@ class zcObserverPaypalrestful extends base
     // -----
     // Notification 'update' handlers for the notifications from order-totals' process method.
     //
-    public function updateNotifyOrderTotalProcessStarts(&$class, $eventID, array $starting_order_info)
+    public function updateNotifyOrderTotalProcessStarts(&$class, $eventID, array $starting_order_info): void
     {
         $this->setLastOrderValues($starting_order_info['order_info']);
     }
-    public function updateNotifyOrderTotalProcessNext(&$class, $eventID, array $ot_updates)
+    public function updateNotifyOrderTotalProcessNext(&$class, $eventID, array $ot_updates): void
     {
         $this->setOrderTotalUpdate($ot_updates);
     }
@@ -128,13 +128,13 @@ class zcObserverPaypalrestful extends base
     // Notification 'update' handler for ot_coupon, letting us know if the associated
     // coupon provides free shipping.
     //
-    public function updateNotifyOtCouponCalcsFinished(&$class, $eventID, array $parameters)
+    public function updateNotifyOtCouponCalcsFinished(&$class, $eventID, array $parameters): void
     {
         $coupon_type = $parameters['coupon']['coupon_type'];
         $this->freeShippingCoupon = in_array($coupon_type, ['S', 'E', 'O']);
     }
 
-    public function updateNotifyHtmlHeadEnd(&$class, $eventID, $current_page_base)
+    public function updateNotifyHtmlHeadEnd(&$class, $eventID, string $current_page_base): void
     {
         // This is a fallback for older versions, to ensure we only output the header JS once.
         if ($this->headerAssetsSent) {
@@ -142,11 +142,11 @@ class zcObserverPaypalrestful extends base
         }
         $this->headerAssetsSent = $this->outputJsSdkHeaderAssets($current_page_base);
     }
-    public function updateNotifyHtmlHeadJsBegin(&$class, $eventID, $current_page_base)
+    public function updateNotifyHtmlHeadJsBegin(&$class, $eventID, string $current_page_base): void
     {
         $this->headerAssetsSent = $this->outputJsSdkHeaderAssets($current_page_base);
     }
-    public function updateNotifyFooterEnd(&$class, $eventID, $current_page_base)
+    public function updateNotifyFooterEnd(&$class, $eventID, string $current_page_base): void
     {
         if ($this->headerAssetsSent === false) {
             return;
@@ -157,7 +157,7 @@ class zcObserverPaypalrestful extends base
     // -----
     // Set the last order-values seen, based on the associated 'start' notification.
     //
-    protected function setLastOrderValues(array $order_info)
+    protected function setLastOrderValues(array $order_info): void
     {
         $this->lastOrderValues = [
             'total' => $order_info['total'],
@@ -182,7 +182,7 @@ class zcObserverPaypalrestful extends base
     // Note: Fuzzy comparisons are used on values throughout this method, since we're dealing
     // with floating-point values.
     //
-    protected function setOrderTotalUpdate(array $ot_updates)
+    protected function setOrderTotalUpdate(array $ot_updates): void
     {
         $updated_order = $ot_updates['order_info'];
 
@@ -272,7 +272,7 @@ class zcObserverPaypalrestful extends base
 
     /** Internal methods **/
 
-    protected function outputJsSdkHeaderAssets($current_page)
+    protected function outputJsSdkHeaderAssets(string $current_page): bool
     {
         global $current_page_base, $order, $paypalSandboxBuyerCountryCodeOverride, $paypalSandboxLocaleOverride;
         if (empty($current_page)) {
@@ -331,7 +331,7 @@ class zcObserverPaypalrestful extends base
     // Outputs the javascript support for the PayPal PayLater messaging
     // into the page's footer.
     //
-    protected function outputJsFooter($current_page_base)
+    protected function outputJsFooter(string $current_page_base): void
     {
         $containingElement = null;
         $priceSelector = null;
@@ -541,30 +541,3 @@ class zcObserverPaypalrestful extends base
         }
     }
 }
-
-
-
-
-
-/*****************************/
-// Backward Compatibility for prior to ZC v2.2.0
-if (!function_exists('zen_get_buyable_product_type_handlers')) {
-    /**
-     * Get a list of product page names that identify buyable products.
-     * This allows us to mark a page as containing a product which can
-     * be allowed to add-to-cart or buy-now with various modules.
-     * @since ZC v2.2.0
-     */
-    function zen_get_buyable_product_type_handlers(): array
-    {
-        global $db;
-        $sql = "SELECT type_handler from " . TABLE_PRODUCT_TYPES . " WHERE allow_add_to_cart = 'Y'";
-        $results = $db->Execute($sql);
-        $retVal = [];
-        foreach ($results as $result) {
-            $retVal[] = $result['type_handler'] . '_info';
-        }
-        return $retVal;
-    }
-}
-/*****************************/

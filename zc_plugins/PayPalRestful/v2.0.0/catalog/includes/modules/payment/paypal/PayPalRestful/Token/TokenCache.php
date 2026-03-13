@@ -6,7 +6,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Nov 16 Modified in v2.0.0 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 
 namespace PayPalRestful\Token;
@@ -25,14 +25,14 @@ class TokenCache
     // Variable that holds the selected cryptographic algorithm and its IV length.
     // Set during construction.
     //
-    private $encryptionAlgorithm;
-    private $encryptionAlgoIvLen;
-    private $clientSecret;
+    private string $encryptionAlgorithm;
+    private int $encryptionAlgoIvLen;
+    private string $clientSecret;
 
     // -----
     // Contains an instance of the common Logger class.
     //
-    protected $log;
+    protected Logger $log;
 
     public function __construct(string $client_secret)
     {
@@ -68,7 +68,7 @@ class TokenCache
         return $saved_token;
     }
 
-    public function save(string $access_token, int $seconds_to_expiration)
+    public function save(string $access_token, int $seconds_to_expiration): void
     {
         $this->log->write("\nTokenCache::save, saving access-token; valid for $seconds_to_expiration seconds.\n");
         $iv = openssl_random_pseudo_bytes($this->encryptionAlgoIvLen);
@@ -78,7 +78,7 @@ class TokenCache
         ];
     }
 
-    public function clear()
+    public function clear(): void
     {
         $this->log->write("\nTokenCache::clear, clearing cached token.\n");
         unset($_SESSION['PayPalRestful']['TokenCache']);

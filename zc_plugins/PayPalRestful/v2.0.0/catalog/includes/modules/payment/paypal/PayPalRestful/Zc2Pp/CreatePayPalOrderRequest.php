@@ -6,7 +6,7 @@
  * @copyright Copyright 2023-2026 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  *
- * Last updated: v1.3.1
+ * Last updated: v2.0.0
  */
 namespace PayPalRestful\Zc2Pp;
 
@@ -25,29 +25,29 @@ class CreatePayPalOrderRequest extends ErrorInfo
     /**
      * Debug interface, shared with the PayPalRestfulApi class.
      */
-    protected $log; //- An instance of the Logger class, logs debug tracing information.
+    protected Logger $log; //- An instance of the Logger class, logs debug tracing information.
 
     /**
      * Local "Amount" class; it's got the to-be-used currency for the PayPal order
      * stashed in a static variable!
      */
-    protected $amount;
+    protected Amount $amount;
 
     /**
      * The currency-code in which the PayPal order is to be 'built'.
      */
-    protected $paypalCurrencyCode;
+    protected string $paypalCurrencyCode;
 
     /**
      * The request to be submitted to a v2/orders/create PayPal endpoint.
      */
-    protected $request;
+    protected array $request;
 
     /**
      * The items' pricing 'breakdown' elements, gathered by getItems
      * and subsequently used by getOrderTotals.
      */
-    protected $itemBreakdown = [
+    protected array $itemBreakdown = [
         'item_onetime_charges' => 0.0,
         'item_total' => 0,
         'item_tax_total' => 0,
@@ -60,7 +60,7 @@ class CreatePayPalOrderRequest extends ErrorInfo
      * Set by getOrderAmountAndBreakdown and used by buildLevel2Level3Data for
      * the level-3 data.
      */
-    protected $overallDiscount = 0.0;
+    protected float $overallDiscount = 0.0;
 
     // -----
     // Constructor.  "Converts" a Zen Cart order into an PayPal /orders/create object.
@@ -160,7 +160,7 @@ class CreatePayPalOrderRequest extends ErrorInfo
 
         $this->log->write("\nCreatePayPalOrderRequest::__construct($ppr_type, ...) finished, request:\n" . Logger::logJSON($this->request, true, true));
     }
-    protected function validateOrderAmounts()
+    protected function validateOrderAmounts(): void
     {
         $purchase_amount = $this->request['purchase_units'][0]['amount'];
         $summed_amount = 0;
@@ -184,7 +184,7 @@ class CreatePayPalOrderRequest extends ErrorInfo
     // -----
     // Retrieve the generated request.
     //
-    public function get()
+    public function get(): array
     {
         return $this->request;
     }

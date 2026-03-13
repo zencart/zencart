@@ -40,28 +40,28 @@ class paypalr extends \base
      *
      * @var string
      */
-    public $code;
+    public string $code;
 
     /**
      * displayed module title
      *
      * @var string
      */
-    public $title;
+    public string $title;
 
     /**
      * displayed module description
      *
      * @var string
      */
-    public $description = '';
+    public string $description = '';
 
     /**
      * module status - set based on various config and zone criteria
      *
      * @var boolean
      */
-    public $enabled;
+    public bool $enabled;
 
     /**
      * Installation 'check' flag
@@ -75,42 +75,42 @@ class paypalr extends \base
      *
      * @var int
      */
-    public $zone;
+    public int $zone;
 
     /**
      * debugging flags
      *
      * @var boolean
      */
-    protected $emailAlerts;
+    protected bool $emailAlerts;
 
     /**
      * sort order of display
      *
      * @var int/null
      */
-    public $sort_order = 0;
+    public int|null $sort_order;
 
     /**
      * order status setting for completed orders
      *
     * @var int
      */
-    public $order_status;
+    public int $order_status;
 
     /**
      * URLs used during checkout if this is the selected payment method
      *
      * @var string
      */
-    public $form_action_url;
+    public string $form_action_url;
 
     /**
      * The credit-card portion of this payment-module *does* collect card-data
      * on-site. If credit-card payments are to be offered, the module's
      * initialization will change this to (bool)true.
      */
-    public $collectsCardDataOnsite = false;
+    public bool $collectsCardDataOnsite = false;
 
     /**
      * The orders::orders_id for a just-created order, supplied during
@@ -121,43 +121,43 @@ class paypalr extends \base
     /**
      * Debug interface, shared with the PayPalRestfulApi class.
      */
-    protected $log; //- An instance of the Logger class, logs debug tracing information.
+    protected Logger $log; //- An instance of the Logger class, logs debug tracing information.
 
     /**
      * An array to maintain error information returned by various PayPalRestfulApi methods.
      */
-    protected $errorInfo; //- An instance of the ErrorInfo class, logs debug tracing information.
+    protected ErrorInfo $errorInfo; //- An instance of the ErrorInfo class, logs debug tracing information.
 
     /**
      * An instance of the PayPalRestfulApi class.
      */
-    protected $ppr;
+    protected PayPalRestfulApi $ppr;
 
     /**
      * An array (set by before_process) containing the captured/authorized order's
      * PayPal response information, for use by after_order_create to populate the
      * paypal table's record once the associated order's ID is known.
      */
-    protected $orderInfo = [];
+    protected array $orderInfo = [];
 
     /**
      * An array (set by validateCardInformation) containing the card-related information
      * to be sent to PayPal for a 'card' transaction.
      */
-    private $ccInfo = [];
+    private array $ccInfo = [];
 
     /**
      * Indicates whether/not credit-card payments are to be accepted during storefront
      * processing and, if so, an array that maps a credit-card's name to its associated
      * image.
      */
-    protected $cardsAccepted = false;
-    protected $cardImages = [];
+    protected bool $cardsAccepted = false;
+    protected array $cardImages = [];
 
     /**
      * Indicates whether/not an otherwise approved payment is pending review.
      */
-    protected $paymentIsPending = false;
+    protected bool $paymentIsPending = false;
 
     /**
      * Indicates whether/not we're on the One-Page-Checkout confirmation page.  Possibly
@@ -167,16 +167,16 @@ class paypalr extends \base
      * It'll be needed if this payment method is configured by OPC to 'not need' confirmation
      * so that we can fake out the before/after session-check.
      */
-    protected $onOpcConfirmationPage = false;
-    protected $paypalRestfulSessionOnEntry = [];
+    protected bool $onOpcConfirmationPage = false;
+    protected array $paypalRestfulSessionOnEntry = [];
 
     /**
      * A couple of flags (used by the 'selection' method) which are set by the
      * class-constuctor to indicate whether/not the storefront's currently active billing/shipping
      * addresses are associated with countries not supported by PayPal.
      */
-    protected $billingCountryIsSupported = true;
-    protected $shippingCountryIsSupported = true;
+    protected bool $billingCountryIsSupported = true;
+    protected bool $shippingCountryIsSupported = true;
 
     /**
      * class constructor
@@ -388,13 +388,13 @@ class paypalr extends \base
     // This method just replaces the 'after-hash' value of $_SESSION['PayPalRestful'] with the 'before-hash'
     // value; there's nothing in that element that affects the ability for the customer to 'pay now'.
     //
-    public function updateNotifyOpcObserverSessionFixups(&$class, $eventID, $empty_string, &$session_data)
+    public function updateNotifyOpcObserverSessionFixups(&$class, $eventID, $empty_string, &$session_data): void
     {
         $session_data['PayPalRestful'] = $this->paypalRestfulSessionOnEntry;
         $this->paypalRestfulSessionOnEntry = [];
     }
 
-    protected function alertMsg(string $msg)
+    protected function alertMsg(string $msg): string
     {
         return '<b class="text-danger">' . $msg . '</b>';
     }
@@ -403,7 +403,7 @@ class paypalr extends \base
     // This method, called during admin processing, gives the payment module the opportunity
     // to make version-to-version configuration fix-ups.
     //
-    protected function tableCheckup()
+    protected function tableCheckup(): void
     {
         // -----
         // Remove any PayPal RESTful storefront logs that were created for v1.0.3 (202408).
@@ -616,7 +616,7 @@ class paypalr extends \base
         //
         return true;
     }
-    protected function setConfigurationDisabled(string $error_message)
+    protected function setConfigurationDisabled(string $error_message): void
     {
         global $db, $messageStack;
 
@@ -641,7 +641,7 @@ class paypalr extends \base
     /**
      *  Sets payment module status based on zone restrictions etc
      */
-    public function update_status()
+    public function update_status(): void
     {
         global $order;
 
@@ -701,7 +701,7 @@ class paypalr extends \base
         }
     }
 
-    protected function resetOrder()
+    protected function resetOrder(): void
     {
         unset($_SESSION['PayPalRestful']['Order'], $_SESSION['PayPalRestful']['ppr_type']);
     }
@@ -974,7 +974,7 @@ class paypalr extends \base
     // here IFF this payment module was selected during the "payment" phase!
     // --------------------------------------------
 
-    public function pre_confirmation_check()
+    public function pre_confirmation_check(): void
     {
         $this->log->write("pre_confirmation_check starts ...\n", true, 'before');
 
@@ -1297,7 +1297,7 @@ class paypalr extends \base
      *
      * Issued by the page's template-rendering.
      */
-    public function confirmation()
+    public function confirmation(): array
     {
         if ($_SESSION['PayPalRestful']['Order']['payment_source'] !== 'card') {
             return [
@@ -1325,7 +1325,7 @@ class paypalr extends \base
      *
      * These values, for a credit-card, are subsequently passed to the 'process' phase of the checkout process.
      */
-    public function process_button()
+    public function process_button(): false|string
     {
         if ($_SESSION['PayPalRestful']['Order']['payment_source'] !== 'card') {
             return false;
@@ -1342,7 +1342,7 @@ class paypalr extends \base
         }
         return $hidden_fields;
     }
-    public function process_button_ajax()
+    public function process_button_ajax(): false|array
     {
         if ($_SESSION['PayPalRestful']['Order']['payment_source'] !== 'card') {
             return false;
@@ -1369,7 +1369,7 @@ class paypalr extends \base
      *
      * For now, the shipping address entered during the Zen Cart checkout process *cannot* be changed.
      */
-    public function alterShippingEditButton()
+    public function alterShippingEditButton(): bool
     {
         return false;
     }
@@ -1383,7 +1383,7 @@ class paypalr extends \base
      * in the cart's contents are detected, given a payment module the
      * opportunity to reset any related variables.
      */
-    public function clear_payments()
+    public function clear_payments(): void
     {
         $this->resetOrder();
     }
@@ -1394,7 +1394,7 @@ class paypalr extends \base
      *
      * Note: Any failure here bumps the checkout_process page's slamming_count.
      */
-    public function before_process()
+    public function before_process(): void
     {
         global $order;
 
@@ -1808,7 +1808,7 @@ class paypalr extends \base
         return $response_message;
     }
 
-    protected function setMessageAndRedirect(string $error_message, string $redirect_page, bool $log_only = false)
+    protected function setMessageAndRedirect(string $error_message, string $redirect_page, bool $log_only = false): void
     {
         if ($log_only === false) {
             global $messageStack;
@@ -1836,8 +1836,9 @@ class paypalr extends \base
      * the after_order_create method's processing, just in case some email issue arises,
      * so that the information's written.
      */
-    public function after_order_create($orders_id)
+    public function after_order_create(int|string $orders_id): void
     {
+        $orders_id = (int)$orders_id;
         $this->orderInfo['orders_id'] = $orders_id;
 
         $purchase_unit = $this->orderInfo['purchase_units'][0];
@@ -1989,7 +1990,7 @@ class paypalr extends \base
      * associated transaction ID, payment method, timestamp, status, amount,
      * and payment-source, buyer email and addresses, if not blank.
      */
-    public function after_process()
+    public function after_process(): void
     {
         $_SESSION['PayPalRestful']['CompletedOrders']++;
 
@@ -2038,7 +2039,7 @@ class paypalr extends \base
       * @param int $zf_order_id
       * @return string
       */
-    public function admin_notification($zf_order_id)
+    public function admin_notification(int $zf_order_id): string
     {
         $zf_order_id = (int)$zf_order_id;
         $admin_main = new AdminMain($this->code, self::CURRENT_VERSION, $zf_order_id, $this->ppr);
@@ -2051,7 +2052,7 @@ class paypalr extends \base
         return $admin_main->get();
     }
 
-    public function help()
+    public function help(): array
     {
         return [
             'link' => 'https://github.com/lat9/paypalr/wiki'
@@ -2061,7 +2062,7 @@ class paypalr extends \base
     /**
      * Used to submit a refund for a given payment-capture for an order.
      */
-    public function _doRefund($oID)
+    public function _doRefund($oID): void
     {
         $do_refund = new DoRefund((int)$oID, $this->ppr, $this->code, self::CURRENT_VERSION);
     }
@@ -2070,7 +2071,7 @@ class paypalr extends \base
      * Used to re-authorize a previously-created transaction, possibly changing the
      * authorized value.
      */
-    public function _doAuth($oID, $order_amt, $currency = 'USD')
+    public function _doAuth($oID, $order_amt, $currency = 'USD'): void
     {
         $do_auth = new DoAuthorization((int)$oID, $this->ppr, $this->code, self::CURRENT_VERSION);
     }
@@ -2079,7 +2080,7 @@ class paypalr extends \base
      * Used to capture part or all of a given previously-authorized transaction.  A capture is
      * performed against the most recent authorization (or re-authorization).
      */
-    public function _doCapt($oID, $captureType = 'Complete', $order_amt = 0, $order_currency = 'USD')
+    public function _doCapt($oID, $captureType = 'Complete', $order_amt = 0, $order_currency = 'USD'): void
     {
         $do_capt = new DoCapture((int)$oID, $this->ppr, $this->code, self::CURRENT_VERSION);
     }
@@ -2091,7 +2092,7 @@ class paypalr extends \base
      * history and any request to retrieve the order's PayPal status will result
      * a RESOURCE_NOT_FOUND (404) error!
      */
-    public function _doVoid($oID)
+    public function _doVoid($oID): void
     {
         $do_void = new DoVoid((int)$oID, $this->ppr, $this->code, self::CURRENT_VERSION);
     }
@@ -2118,7 +2119,7 @@ class paypalr extends \base
     /**
      * Installs all the configuration keys for this module
      */
-    public function install()
+    public function install(): void
     {
         global $db, $sniffer;
 
@@ -2328,7 +2329,7 @@ class paypalr extends \base
     /**
      * Uninstall this module
      */
-    public function remove()
+    public function remove(): void
     {
         global $db;
 
@@ -2356,7 +2357,7 @@ class paypalr extends \base
      * Send email to store-owner, if configured.
      *
      */
-    public function sendAlertEmail(string $subject_detail, string $message, bool $force_send = false)
+    public function sendAlertEmail(string $subject_detail, string $message, bool $force_send = false): void
     {
         if ($this->emailAlerts === true || $force_send === true) {
             zen_mail(
@@ -2375,264 +2376,5 @@ class paypalr extends \base
     public function getCurrentVersion(): string
     {
         return self::CURRENT_VERSION;
-    }
-}
-
-if (!function_exists('zen_in_guest_checkout')) {
-    /** @since ZC v1.5.6 */
-    function zen_in_guest_checkout(): bool
-    {
-        global $zco_notifier;
-        $in_guest_checkout = false;
-        $zco_notifier->notify('NOTIFY_ZEN_IN_GUEST_CHECKOUT', null, $in_guest_checkout);
-        return (bool)$in_guest_checkout;
-    }
-}
-
-if (!function_exists('zen_cfg_select_multioption_pairs')) {
-    /** @since ZC v2.2.0 */
-    function zen_cfg_select_multioption_pairs(array $choices_array, string $stored_value, string $config_key_name = ''): string
-    {
-        $string = '';
-        $name = (($config_key_name) ? 'configuration[' . $config_key_name . '][]' : 'configuration_value');
-        $chosen_already = explode(", ", $stored_value);
-        foreach ($choices_array as $value) {
-            // Account for cases where an = sign is used to allow key->value pairs where the value is friendly display text
-            $beforeEquals = strstr($value, '=', true);
-            // this entry's checkbox should be pre-selected if the key matches
-            $ticked = (in_array($value, $chosen_already, true) || in_array($beforeEquals, $chosen_already, true));
-            // determine the value to show (the part after the =; if no =, just the whole string)
-            $display_value = strpos($value, '=') !== false ? explode('=', $value, 2)[1] : $value;
-            $string .= '<div class="checkbox"><label>' . zen_draw_checkbox_field($name, $value, $ticked, 'id="' . strtolower($value . '-' . $name) . '"') . $display_value . '</label></div>' . "\n";
-        }
-        $string .= zen_draw_hidden_field($name, '--none--');
-        return $string;
-    }
-}
-
-if (IS_ADMIN_FLAG === true && isset($sniffer)) {
-    // only check db on Admin side
-    if (is_object($sniffer) && $sniffer->field_exists(TABLE_ORDERS_STATUS_HISTORY, 'updated_by') === false) {
-        $db->Execute("ALTER TABLE " . TABLE_ORDERS_STATUS_HISTORY . " ADD updated_by VARCHAR(45) NOT NULL DEFAULT ''");
-    }
-}
-
-if (!function_exists('zen_updated_by_admin')) {
-    /** @since ZC v1.5.6 */
-    function zen_updated_by_admin($admin_id = null)
-    {
-        if (empty($admin_id) && empty($_SESSION['admin_id'])) {
-            return '';
-        }
-        if (empty($admin_id)) {
-            $admin_id = $_SESSION['admin_id'];
-        }
-        $name = zen_get_admin_name($admin_id);
-        return ($name ?? 'Unknown Name') . " [$admin_id]";
-    }
-}
-
-if (!function_exists('zen_get_orders_status_name')) {
-    function zen_get_orders_status_name($orders_status_id, $language_id = '')
-    {
-        global $db;
-
-        if (!$language_id) {
-            $language_id = $_SESSION['languages_id'];
-        }
-        $orders_status = $db->Execute("select orders_status_name
-                                       from " . TABLE_ORDERS_STATUS . "
-                                       where orders_status_id = '" . (int)$orders_status_id . "'
-                                       and language_id = '" . (int)$language_id . "' LIMIT 1");
-        if ($orders_status->EOF) {
-            return '';
-        }
-        return $orders_status->fields['orders_status_name'];
-    }
-}
-
-if (!function_exists('zen_catalog_href_link') && function_exists('zen_href_link')) {
-    function zen_catalog_href_link ($page = '', $parameters = '', $connection = 'NONSSL')
-    {
-        return zen_href_link($page, $parameters, $connection, false);
-    }
-}
-
-if (!function_exists('zen_update_orders_history')) {
-    function zen_update_orders_history($orders_id, $message = '', $updated_by = null, $orders_new_status = -1, $notify_customer = -1, $email_include_message = true, $email_subject = '', $send_extra_emails_to = '', $filename = ''): int
-    {
-        global $osh_sql, $osh_additional_comments;
-
-        // -----
-        // Initialize return value to indicate no change and sanitize various inputs.
-        //
-        $osh_id = -1;
-        $orders_id = (int)$orders_id;
-        $message = (string)$message;
-        $email_subject = (string)$email_subject;
-        $send_extra_emails_to = (string)$send_extra_emails_to;
-    
-        $sql = "SELECT customers_name, customers_email_address, orders_status, date_purchased
-               FROM " . TABLE_ORDERS . "
-              WHERE orders_id = $orders_id
-              LIMIT 1";
-        
-        global $db;
-        if (method_exists($db, 'ExecuteNoCache')) {
-            $osh_info = $db->ExecuteNoCache($sql);
-        } else {
-            $osh_info = $db->Execute($sql);
-        }
-        if ($osh_info->EOF) {
-            $osh_id = -2;
-        } else {
-            // -----
-            // Determine the message to be included in any email(s) sent.  If an observer supplies an additional
-            // message, that text is appended to the message supplied on the function's call.
-            //
-            $message = stripslashes($message);
-            $email_message = '';
-            if ($email_include_message === true) {
-                $email_message = $message;
-                if (empty($osh_additional_comments)) {
-                    $osh_additional_comments = '';
-                }
-                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_PRE_EMAIL', ['message' => $message], $osh_additional_comments);
-                if (!empty($osh_additional_comments)) {
-                    if (!empty($email_message)) {
-                        $email_message .= "\n\n";
-                    }
-                    $email_message .= (string)$osh_additional_comments;
-                }
-                if (!empty($email_message)) {
-                    $email_message = OSH_EMAIL_TEXT_COMMENTS_UPDATE . $email_message . "\n\n";
-                }
-            }
-    
-            $orders_current_status = $osh_info->fields['orders_status'];
-            $orders_new_status = (int)$orders_new_status;
-            if (($orders_new_status != -1 && $orders_current_status != $orders_new_status) || !empty($email_message)) {
-                if ($orders_new_status == -1) {
-                    $orders_new_status = $orders_current_status;
-                }
-                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_STATUS_VALUES', ['orders_id' => $orders_id, 'new' => $orders_new_status, 'old' => $orders_current_status]);
-    
-                $GLOBALS['db']->Execute(
-                    "UPDATE " . TABLE_ORDERS . "
-                        SET orders_status = $orders_new_status,
-                            last_modified = now()
-                      WHERE orders_id = $orders_id
-                      LIMIT 1"
-                );
-    
-                // PayPal Trans ID, if any
-                $paypalLookup = $GLOBALS['db']->Execute(
-                    "SELECT *
-                     FROM " . TABLE_PAYPAL . "
-                     WHERE order_id = $orders_id
-                     ORDER BY last_modified DESC, date_added DESC, parent_txn_id DESC, paypal_ipn_id DESC"
-                );
-                $paypal = $paypalLookup->EOF ? [] : $paypalLookup->fields;
-    
-                $notify_customer = ($notify_customer == 1 || $notify_customer == -1 || $notify_customer == -2) ? $notify_customer : 0;
-    
-                if ($notify_customer == 1 || $notify_customer == -2) {
-                    $new_orders_status_name = zen_get_orders_status_name($orders_new_status);
-                    if ($new_orders_status_name === '') {
-                        $new_orders_status_name = 'N/A';
-                    }
-    
-                    if ($orders_new_status != $orders_current_status) {
-                        $status_text = OSH_EMAIL_TEXT_STATUS_UPDATED;
-                        $status_value_text = sprintf(OSH_EMAIL_TEXT_STATUS_CHANGE, zen_get_orders_status_name($orders_current_status), $new_orders_status_name);
-                    } else {
-                        $status_text = OSH_EMAIL_TEXT_STATUS_NO_CHANGE;
-                        $status_value_text = sprintf(OSH_EMAIL_TEXT_STATUS_LABEL, $new_orders_status_name);
-                    }
-    
-                    //send emails
-                    $email_text =
-                        EMAIL_SALUTATION . ' ' . $osh_info->fields['customers_name'] . ', ' . "\n\n" .
-                        STORE_NAME . ' ' . OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id . "\n\n" .
-                        OSH_EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, "order_id=$orders_id", 'SSL') . "\n\n" .
-                        OSH_EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($osh_info->fields['date_purchased']) . "\n\n" .
-                        strip_tags($email_message) .
-                        $status_text . $status_value_text .
-                        OSH_EMAIL_TEXT_STATUS_PLEASE_REPLY;
-
-                    // Add in store specific order message
-                    $email_order_message = defined('EMAIL_ORDER_UPDATE_MESSAGE') ? constant('EMAIL_ORDER_UPDATE_MESSAGE') : '';
-                    $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_SET_ORDER_UPDATE_MESSAGE', $orders_id, $email_order_message);
-                    if (!empty($email_order_message)) {
-                     $email_text .= "\n\n" . $email_order_message . "\n\n";
-                    }
-                    $html_msg['EMAIL_ORDER_UPDATE_MESSAGE'] = $email_order_message;
-
-                    $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
-                    $html_msg['EMAIL_CUSTOMERS_NAME']    = $osh_info->fields['customers_name'];
-                    $html_msg['EMAIL_TEXT_ORDER_NUMBER'] = OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id;
-                    $html_msg['EMAIL_TEXT_INVOICE_URL']  = '<a href="' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, "order_id=$orders_id", 'SSL') .'">' . str_replace(':', '', OSH_EMAIL_TEXT_INVOICE_URL) . '</a>';
-                    $html_msg['EMAIL_TEXT_DATE_ORDERED'] = OSH_EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($osh_info->fields['date_purchased']);
-                    $html_msg['EMAIL_TEXT_STATUS_COMMENTS'] = nl2br($email_message);
-                    $html_msg['EMAIL_TEXT_STATUS_UPDATED'] = str_replace("\n", '', $status_text);
-                    $html_msg['EMAIL_TEXT_STATUS_LABEL'] = str_replace("\n", '', $status_value_text);
-                    $html_msg['EMAIL_TEXT_NEW_STATUS'] = $new_orders_status_name;
-                    $html_msg['EMAIL_TEXT_STATUS_PLEASE_REPLY'] = str_replace("\n", '', OSH_EMAIL_TEXT_STATUS_PLEASE_REPLY);
-                    $html_msg['EMAIL_PAYPAL_TRANSID'] = '';
-
-                    if (empty($email_subject)) {
-                        $email_subject = OSH_EMAIL_TEXT_SUBJECT . ' #' . $orders_id;
-                    }
-
-                    $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_BEFORE_SENDING_CUSTOMER_EMAIL', $orders_id, $email_subject, $email_text, $html_msg, $notify_customer);
-
-                    if ($notify_customer == 1) {
-                        zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status', $filename);
-                    }
-
-                    if (!empty($paypal['txn_id'])) {
-                        $email_text .= "\n\n" . ' PayPal Trans ID: ' . $paypal['txn_id'];
-                        $html_msg['EMAIL_PAYPAL_TRANSID'] = $paypal['txn_id'];
-                    }
-
-                    //send extra emails
-                    if (empty($send_extra_emails_to) && (int)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS === 1) {
-                        $send_extra_emails_to = (string)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO;
-                    }
-                    if (!empty($send_extra_emails_to)) {
-                        zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra', $filename);
-                    }
-                }
-
-                if (empty($updated_by)) {
-                    if (IS_ADMIN_FLAG === true && isset($_SESSION['admin_id'])) {
-                        $updated_by = zen_updated_by_admin();
-                    } else if (isset($_SESSION['emp_admin_id'])) {
-                       $updated_by = zen_updated_by_admin($_SESSION['emp_admin_id']);
-                    } elseif (IS_ADMIN_FLAG === false && isset($_SESSION['customer_id'])) {
-                        $updated_by = '';
-                    } else {
-                        $updated_by = 'N/A';
-                    }
-                }
-
-                $osh_sql = [
-                    'orders_id' => $orders_id,
-                    'orders_status_id' => $orders_new_status,
-                    'date_added' => 'now()',
-                    'customer_notified' => $notify_customer,
-                    'comments' => $message,
-                    'updated_by' => $updated_by
-                ];
-
-                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_BEFORE_INSERT', [], $osh_sql);
-    
-                zen_db_perform (TABLE_ORDERS_STATUS_HISTORY, $osh_sql);
-                $osh_id = $GLOBALS['db']->Insert_ID();
-
-                $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_AFTER_INSERT', $osh_id, $osh_sql, $paypalLookup);
-            }
-        }
-        return $osh_id;
     }
 }

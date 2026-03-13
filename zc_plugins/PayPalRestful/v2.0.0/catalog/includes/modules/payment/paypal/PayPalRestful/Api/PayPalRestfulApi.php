@@ -12,7 +12,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Nov 16 Modified in v2.0.0 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 namespace PayPalRestful\Api;
 
@@ -65,7 +65,7 @@ class PayPalRestfulApi extends ErrorInfo
     /**
      * Webhook actions we intend to listen for notifications regarding.
      */
-    protected $webhooksToRegister = [
+    protected array $webhooksToRegister = [
         'CHECKOUT.PAYMENT-APPROVAL.REVERSED',
         'PAYMENT.AUTHORIZATION.VOIDED',
         'PAYMENT.CAPTURE.COMPLETED',
@@ -80,36 +80,36 @@ class PayPalRestfulApi extends ErrorInfo
      *
      * @log Logger object, logs debug tracing information.
      */
-    protected $log;
+    protected Logger $log;
 
     /**
      * Variables associated with interface logging;
      *
      * @token TokenCache object, caches any access-token retrieved from PayPal.
      */
-    protected $tokenCache;
+    protected TokenCache $tokenCache;
 
     /**
      * Sandbox or production? Set during class construction.
      */
-    protected $endpoint;
+    protected string $endpoint;
 
     /**
      * OAuth client id and secret, set during class construction.
      */
-    private $clientId;
-    private $clientSecret;
+    private string $clientId;
+    private string $clientSecret;
 
     /**
      * The CURL channel, initialized during construction.
      */
-    protected $ch = false;
+    protected \CurlHandle|false $ch = false;
 
     /**
      * Options for cURL. Defaults to preferred (constant) options.  Used by
      * the curlGet and curlPost methods.
      */
-    protected $curlOptions = [
+    protected array $curlOptions = [
         CURLOPT_CONNECTTIMEOUT => 10,
         CURLOPT_FOLLOWLOCATION => false,
         CURLOPT_FORBID_REUSE => true,
@@ -125,20 +125,20 @@ class PayPalRestfulApi extends ErrorInfo
      * (the default).  See https://developer.paypal.com/api/rest/requests/#http-request-headers
      * for additional information.
      */
-    protected $paypalRequestId = '';
+    protected string $paypalRequestId = '';
 
     /**
      * Contains an (optional) "Mock Response" to be included in the HTTP
      * header's PayPal-Mock-Response value, enabling testing to be performed
      * for error responses; see the above link for additional information.
      */
-    protected $paypalMockResponse = '';
+    protected string $paypalMockResponse = '';
 
     /**
      * A binary flag that indicates whether/not the caller wants to keep the 'links' returned
      * by the various PayPal responses.
      */
-    protected $keepTxnLinks = false;
+    protected bool $keepTxnLinks = false;
 
     // -----
     // Class constructor, saves endpoint (live vs. sandbox), clientId and clientSecret
@@ -161,42 +161,24 @@ class PayPalRestfulApi extends ErrorInfo
         $this->tokenCache = new TokenCache($client_secret);
     }
 
-    // ----
-    // Class destructor, close the CURL channel if the channel's open (i.e. not false).  Also an 'alias' for the
-    // public 'close' method.
-    //
-    public function __destruct()
-    {
-        $this->close();
-    }
-    public function close()
-    {
-        if ($this->ch !== false) {
-            if (PHP_VERSION_ID < 80000) {
-                curl_close($this->ch);
-            }
-            $this->ch = false;
-        }
-    }
-
-    public function setPayPalRequestId(string $request_id)
+    public function setPayPalRequestId(string $request_id): void
     {
         $this->paypalRequestId = $request_id;
     }
 
-    public function setPayPalMockResponse(string $mock_response)
+    public function setPayPalMockResponse(string $mock_response): void
     {
         $this->paypalMockResponse = $mock_response;
     }
 
-    public function setKeepTxnLinks(bool $keep_links)
+    public function setKeepTxnLinks(bool $keep_links): void
     {
         $this->keepTxnLinks = $keep_links;
     }
 
     // ===== Start Token-required Methods =====
 
-    public function createOrder(array $order_request)
+    public function createOrder(array $order_request): false|array
     {
         $this->log->write('==> Start createOrder', true);
         $response = $this->curlPost('v2/checkout/orders', $order_request);
@@ -204,7 +186,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function getOrderStatus(string $paypal_id)
+    public function getOrderStatus(string $paypal_id): false|array
     {
         $this->log->write('==> Start getOrderStatus', true);
         $response = $this->curlGet("v2/checkout/orders/$paypal_id");
@@ -212,7 +194,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function confirmPaymentSource(string $paypal_id, array $payment_source)
+    public function confirmPaymentSource(string $paypal_id, array $payment_source): false|array
     {
         $this->log->write('==> Start confirmPaymentSource', true);
         $paypal_options = [
@@ -223,7 +205,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function captureOrder(string $paypal_id)
+    public function captureOrder(string $paypal_id): false|array
     {
         $this->log->write('==> Start captureOrder', true);
         $response = $this->curlPost("v2/checkout/orders/$paypal_id/capture");
@@ -231,7 +213,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function authorizeOrder(string $paypal_id)
+    public function authorizeOrder(string $paypal_id): false|array
     {
         $this->log->write('==> Start authorizeOrder', true);
         $response = $this->curlPost("v2/checkout/orders/$paypal_id/authorize");
@@ -239,7 +221,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function getAuthorizationStatus(string $paypal_auth_id)
+    public function getAuthorizationStatus(string $paypal_auth_id): false|array
     {
         $this->log->write('==> Start getAuthorizationStatus', true);
         $response = $this->curlGet("v2/payments/authorizations/$paypal_auth_id");
@@ -247,7 +229,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function capturePaymentRemaining(string $paypal_auth_id, string $invoice_id, string $payer_note, bool $final_capture)
+    public function capturePaymentRemaining(string $paypal_auth_id, string $invoice_id, string $payer_note, bool $final_capture): false|array
     {
         $this->log->write("==> Start capturePaymentRemaining($paypal_auth_id, $invoice_id, $payer_note, $final_capture)", true);
         $parameters = [
@@ -260,7 +242,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function capturePaymentAmount(string $paypal_auth_id, string $currency_code, string $value, string $invoice_id, string $payer_note, bool $final_capture)
+    public function capturePaymentAmount(string $paypal_auth_id, string $currency_code, string $value, string $invoice_id, string $payer_note, bool $final_capture): false|array
     {
         $this->log->write("==> Start capturePaymentAmount($paypal_auth_id, $currency_code, $value, $invoice_id, $payer_note, $final_capture)", true);
         $parameters = [
@@ -277,7 +259,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function getCaptureStatus(string $paypal_capture_id)
+    public function getCaptureStatus(string $paypal_capture_id): false|array
     {
         $this->log->write('==> Start getCaptureStatus', true);
         $response = $this->curlGet("v2/payments/captures/$paypal_capture_id");
@@ -285,7 +267,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function reAuthorizePayment(string $paypal_auth_id, string $currency_code, string $value)
+    public function reAuthorizePayment(string $paypal_auth_id, string $currency_code, string $value): false|array
     {
         $this->log->write("==> Start reAuthorizePayment($paypal_auth_id, $currency_code, $value)", true);
         $amount = [
@@ -299,7 +281,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function voidPayment(string $paypal_auth_id)
+    public function voidPayment(string $paypal_auth_id): false|array
     {
         $this->log->write("==> Start voidPayment($paypal_auth_id)", true);
         $response = $this->curlPost("v2/payments/authorizations/$paypal_auth_id/void");
@@ -307,7 +289,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function getTransactionStatus(string $paypal_id)
+    public function getTransactionStatus(string $paypal_id): false|array
     {
         $this->log->write("==> Start getTransactionStatus ($paypal_id)", true);
         $parameters = [
@@ -319,15 +301,15 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function refundCaptureFull(string $paypal_capture_id, string $invoice_id, string $payer_note)
+    public function refundCaptureFull(string $paypal_capture_id, string $invoice_id, string $payer_note): false|array
     {
         return $this->refundCapture($paypal_capture_id, $invoice_id, $payer_note);
     }
-    public function refundCapturePartial(string $paypal_capture_id, string $currency_code, string $value, string $invoice_id, string $payer_note)
+    public function refundCapturePartial(string $paypal_capture_id, string $currency_code, string $value, string $invoice_id, string $payer_note): false|array
     {
         return $this->refundCapture($paypal_capture_id, $invoice_id, $payer_note, compact('currency_code', 'value'));
     }
-    protected function refundCapture(string $paypal_capture_id, string $invoice_id, string $payer_note, array $amount = [])
+    protected function refundCapture(string $paypal_capture_id, string $invoice_id, string $payer_note, array $amount = []): false|array
     {
         $this->log->write("==> Start refundCapture($paypal_capture_id, $invoice_id, $payer_note, ...)\n" . Logger::logJSON($amount), true);
         $parameters = [
@@ -342,7 +324,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $response;
     }
 
-    public function getRefundStatus($paypal_refund_id)
+    public function getRefundStatus(string $paypal_refund_id): false|array
     {
         $this->log->write('==> Start getRefundStatus', true);
         $response = $this->curlGet("v2/payments/refunds/$paypal_refund_id");
@@ -360,13 +342,8 @@ class PayPalRestfulApi extends ErrorInfo
      * @param bool $email_buyer Whether PayPal should email tracking info to the buyer
      * @return false|array
      */
-    public function updatePackageTracking(
-        string $paypal_txnid,
-        string $tracking_number,
-        string $carrier_code,
-        string $action = 'ADD',
-        bool $email_buyer = false
-    ) {
+    public function updatePackageTracking(string $paypal_txnid, string $tracking_number, string $carrier_code, string $action = 'ADD', bool $email_buyer = false): false|array
+    {
         $this->log->write("==> Start updatePackageTracking($paypal_txnid, " . Logger::logJSON($tracking_number) . ", $carrier_code, $action ...)\n", true);
 
         if (empty($tracking_number)) {
@@ -459,7 +436,7 @@ class PayPalRestfulApi extends ErrorInfo
     /**
      * Submit API call to register the webhooks we are able to listen for
      */
-    public function subscribeWebhook()
+    public function subscribeWebhook(): void
     {
         if (empty($this->webhooksToRegister)) {
             return;
@@ -531,7 +508,7 @@ class PayPalRestfulApi extends ErrorInfo
     /**
      * Ensure the webhooks we want to listen for are all registered
      */
-    public function registerAndUpdateSubscribedWebhooks()
+    public function registerAndUpdateSubscribedWebhooks(): void
     {
         $webhook_id = defined('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS') ? MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS : '';
 
@@ -587,7 +564,7 @@ class PayPalRestfulApi extends ErrorInfo
         $response = $this->curlPatch("v1/notifications/webhooks/$webhook_id", [$parameters]);
     }
 
-    public function webhookVerifyByPostback($parameters)
+    public function webhookVerifyByPostback(array $parameters): bool
     {
         $this->log->write("==> Start webhookVerifyByPostback", true);
         $response = $this->curlPost('v1/notifications/verify-webhook-signature', $parameters);
@@ -602,7 +579,7 @@ class PayPalRestfulApi extends ErrorInfo
     /**
      * When uninstalling this module, we should cleanup the webhook subscription record, so PayPal stops sending notifications.
      */
-    public function unsubscribeWebhooks()
+    public function unsubscribeWebhooks(): void
     {
         $this->log->write("==> Start deleteWebhook Registration", true);
         $url = HTTP_SERVER . DIR_WS_CATALOG . 'ppr_webhook.php';
@@ -755,7 +732,7 @@ class PayPalRestfulApi extends ErrorInfo
     // - On success, an associative array containing the PayPal response.
     // - On failure, returns false.  The details of the failure can be interrogated via the getErrorInfo method.
     //
-    protected function curlPost(string $option, array $options_array = [], array $additional_curl_options = [], bool $token_required = true)
+    protected function curlPost(string $option, array $options_array = [], array $additional_curl_options = [], bool $token_required = true): false|array
     {
         if ($this->ch === false) {
             $this->ch = curl_init();
@@ -814,7 +791,7 @@ class PayPalRestfulApi extends ErrorInfo
     // - On success, an associative array containing the PayPal response.
     // - On failure, returns false.  The details of the failure can be interrogated via the getErrorInfo method.
     //
-    protected function curlGet($option, $options_array = [])
+    protected function curlGet(string $option, array $options_array = []): false|array
     {
         if ($this->ch === false) {
             $this->ch = curl_init();
@@ -853,7 +830,7 @@ class PayPalRestfulApi extends ErrorInfo
     // - On failure, returns false.  The details of the failure can be interrogated via the getErrorInfo method.
     //
     //
-    protected function curlPatch($option, $options_array = [])
+    protected function curlPatch(string $option, array $options_array = []): false|array
     {
         if ($this->ch === false) {
             $this->ch = curl_init();
@@ -892,7 +869,7 @@ class PayPalRestfulApi extends ErrorInfo
     // - On failure, returns false.  The details of the failure can be interrogated via the getErrorInfo method.
     //
     //
-    protected function curlDelete($option, $options_array = [])
+    protected function curlDelete(string $option, array $options_array = []): false|array
     {
         if ($this->ch === false) {
             $this->ch = curl_init();
@@ -917,7 +894,7 @@ class PayPalRestfulApi extends ErrorInfo
         return $this->issueRequest('curlDelete', $option, $curl_options);
     }
 
-    protected function issueRequest(string $request_type, string $option, array $curl_options)
+    protected function issueRequest(string $request_type, string $option, array $curl_options): false|array
     {
         // -----
         // Issue the CURL request.
@@ -945,7 +922,7 @@ class PayPalRestfulApi extends ErrorInfo
     // returns an error.  Set the internal variables to capture the error information
     // and log (if enabled) to the PayPal logfile.
     //
-    protected function handleCurlError(string $method, string $option, array $curl_options)
+    protected function handleCurlError(string $method, string $option, array $curl_options): void
     {
         $this->setErrorInfo(self::ERR_CURL_ERROR, curl_error($this->ch), curl_errno($this->ch));
         curl_reset($this->ch);
@@ -961,7 +938,7 @@ class PayPalRestfulApi extends ErrorInfo
     // Returns false if an error is detected, otherwise an associative array containing
     // the PayPal response.
     //
-    protected function handleResponse(string $method, string $option, array $curl_options, $response)
+    protected function handleResponse(string $method, string $option, array $curl_options, $response): false|array
     {
         // -----
         // Decode the PayPal response into an associative array, retrieve the httpCode associated

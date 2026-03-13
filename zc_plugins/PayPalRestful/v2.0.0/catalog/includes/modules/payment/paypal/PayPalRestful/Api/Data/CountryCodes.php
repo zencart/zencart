@@ -6,7 +6,7 @@
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2023 Nov 16 Modified in v2.0.0 $
  *
- * Last updated: v1.3.0
+ * Last updated: v2.0.0
  */
 namespace PayPalRestful\Api\Data;
 
@@ -19,7 +19,7 @@ namespace PayPalRestful\Api\Data;
 //
 class CountryCodes
 {
-    protected static $countryCodes = [
+    protected static array $countryCodes = [
         'AF',  //- Afghanistan
         'AX',  //- Aland Islands
         'AL',  //- Albania

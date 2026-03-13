@@ -20,8 +20,8 @@ class Logger
      * @debugLogFile string
      * @debug bool
      */
-    protected static $debug = false;
-    protected static $debugLogFile;
+    protected static bool $debug = false;
+    protected static string $debugLogFile;
 
     // -----
     // Class constructor.
@@ -53,11 +53,11 @@ class Logger
         self::$debugLogFile = DIR_FS_LOGS . '/paypalr-' . $logfile_suffix . '-' . date('Ymd') . '.log';
     }
 
-    public function enableDebug()
+    public function enableDebug(): void
     {
         self::$debug = true;
     }
-    public function disableDebug()
+    public function disableDebug(): void
     {
         self::$debug = false;
     }
@@ -106,7 +106,7 @@ class Logger
         return ($use_var_export === true) ? var_export($data, true) : json_encode($data, JSON_PRETTY_PRINT);
     }
 
-    public function write(string $message, bool $include_timestamp = false, string $include_separator = '')
+    public function write(string $message, bool $include_timestamp = false, string $include_separator = ''): void
     {
         global $current_page_base;
 
