@@ -150,7 +150,7 @@ class AdminNotifications
         global $db;
 
         $sql = "SELECT countries_iso_code_3 from " . TABLE_COUNTRIES . " WHERE countries_id = " . STORE_COUNTRY;
-        $r = $db->execute($sql);
+        $r = $db->Execute($sql);
         $iso3 = $r->fields['countries_iso_code_3'];
         return $iso3;
     }
@@ -165,7 +165,7 @@ class AdminNotifications
         $savedState = [];
         $sql = "SELECT * FROM " . TABLE_ADMIN_NOTIFICATIONS . " WHERE admin_id = :adminId:";
         $sql = $db->bindVars($sql, ':adminId:', $adminId, 'integer');
-        $results = $db->execute($sql);
+        $results = $db->Execute($sql);
         foreach ($results as $result) {
             $savedState[$result['notification_key']]['dismissed'] = $result['dismissed'];
         }
@@ -191,6 +191,6 @@ class AdminNotifications
         $keys = implode(',', $keys);
         $sql = "DELETE FROM " . TABLE_ADMIN_NOTIFICATIONS . " WHERE notification_key NOT IN (:keys:)";
         $sql = $db->bindVars($sql, ':keys:', $keys, 'inConstructString');
-        $db->execute($sql);
+        $db->Execute($sql);
     }
 }

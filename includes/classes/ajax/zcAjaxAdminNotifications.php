@@ -23,12 +23,12 @@ class zcAjaxAdminNotifications extends base
             ));
         }
 
-        $sql = "INSERT INTO " . TABLE_ADMIN_NOTIFICATIONS . "(notification_key, admin_id, dismissed) VALUE (:nKey:,:adminId:, 1) 
+        $sql = "INSERT INTO " . TABLE_ADMIN_NOTIFICATIONS . "(notification_key, admin_id, dismissed) VALUE (:nKey:,:adminId:, 1)
                ON DUPLICATE KEY UPDATE notification_key = :nKey:, admin_id = :adminId:, dismissed = 1";
 
         $sql = $db->bindVars($sql, ':adminId:', $_POST['admin_id'], 'integer');
         $sql = $db->bindVars($sql, ':nKey:', $_POST['key'], 'string');
-        $result = $db->execute($sql);
+        $result = $db->Execute($sql);
 
         return (array(
             'data' => $result

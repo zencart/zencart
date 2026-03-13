@@ -14,7 +14,7 @@ class SqlPatchInstaller
 {
 
     /**
-     * $dbConn is a database object 
+     * $dbConn is a database object
      * @var object
      */
     protected $dbConn;
@@ -24,7 +24,7 @@ class SqlPatchInstaller
      */
     protected $errorContainer;
     /**
-     * $sqlFunctionMap is a list of acceptable SQL 
+     * $sqlFunctionMap is a list of acceptable SQL
      * @var array
      */
     protected $sqlFunctionMap = [
@@ -73,7 +73,7 @@ class SqlPatchInstaller
         $this->dbConn->dieOnErrors = false;
         foreach ($paramLines as $line) {
             $sql = implode(' ', $line) . ';';
-            $this->dbConn->execute($sql);
+            $this->dbConn->Execute($sql);
             if ($this->dbConn->error_number !== 0) {
                 $this->errorContainer->addError(0, ERROR_SQL_PATCH . $this->dbConn->error_text . '<br>' . $sql, true);
                 break;
@@ -118,7 +118,7 @@ class SqlPatchInstaller
          * if empty the line could not be correctly parsed
          */
         if (empty($newParams)) {
-             $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);            
+             $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);
         }
         return $newParams;
     }
@@ -166,7 +166,7 @@ class SqlPatchInstaller
         }
         return $params;
     }
-    
+
     /**
      * @since ZC v1.5.8
      */
@@ -179,7 +179,7 @@ class SqlPatchInstaller
         $params[$fromKey + 1] = DB_PREFIX . $params[$fromKey + 1];
         return $params;
     }
-    
+
     /**
      * @since ZC v1.5.8
      */
