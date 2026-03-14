@@ -582,7 +582,7 @@ class paypalr extends \base
         //
         // Determine which (live vs. sandbox) credentials are in use.
         //
-        list($client_id, $secret) = self::getEnvironmentInfo();
+        [$client_id, $secret] = self::getEnvironmentInfo();
 
         // -----
         // Ensure that the current environment's credentials are set and, if so,
