@@ -34,7 +34,7 @@ class MainDisplay
 
     protected string $currencyCode;
 
-    protected $paypalDbTxns;
+    protected array $paypalDbTxns;
 
     protected bool $jQueryLoadRequired = false;
 
@@ -251,11 +251,11 @@ class MainDisplay
                     break;
 
                 case 'AUTHORIZE':
-                    list($action_buttons, $modals) = $this->createAuthButtonsAndModals($txn_index, $main_txn_id, $days_to_settle);
+                    [$action_buttons, $modals] = $this->createAuthButtonsAndModals($txn_index, $main_txn_id, $days_to_settle);
                     break;
 
                 case 'CAPTURE':
-                    list($action_buttons, $modals) = $this->createCaptureButtonsAndModals($txn_index);
+                    [$action_buttons, $modals] = $this->createCaptureButtonsAndModals($txn_index);
                     break;
 
                 case 'REFUND':
