@@ -74,7 +74,7 @@ class CatalogFilesLanguageLoader extends FilesLanguageLoader
     /**
      * @since ZC v1.5.8
      */
-    protected function LoadLanguageExtraDefinitions(): void
+    protected function loadLanguageExtraDefinitions(): void
     {
         $extraDefsDir = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions';
         $extraDefsDirTpl = $extraDefsDir . '/' . $this->templateDir;
