@@ -29,38 +29,38 @@ class PayPalRestfulApi extends ErrorInfo
     // -----
     // Constants used to set the class variable errorInfo['errNum'].
     //
-    const ERR_NO_ERROR      = 0;    //-No error occurred, initial value
+    public const ERR_NO_ERROR      = 0;    //-No error occurred, initial value
 
-    const ERR_NO_CHANNEL    = -1;   //-Set if the curl_init fails; no other requests are honored
-    const ERR_CURL_ERROR    = -2;   //-Set if the curl_exec fails.  The curlErrno variable contains the curl_errno and errMsg contains curl_error
+    public const ERR_NO_CHANNEL    = -1;   //-Set if the curl_init fails; no other requests are honored
+    public const ERR_CURL_ERROR    = -2;   //-Set if the curl_exec fails.  The curlErrno variable contains the curl_errno and errMsg contains curl_error
 
     // -----
     // Constants that define the test and production endpoints for the API requests.
     //
-    const ENDPOINT_SANDBOX = 'https://api-m.sandbox.paypal.com/';
-    const ENDPOINT_PRODUCTION = 'https://api-m.paypal.com/';
+    public const ENDPOINT_SANDBOX = 'https://api-m.sandbox.paypal.com/';
+    public const ENDPOINT_PRODUCTION = 'https://api-m.paypal.com/';
 
     // -----
     // PayPal constants associated with an order/payment's current 'status'. Also
     // used for the paypal::payment_status field.
     //
-    const STATUS_APPROVED = 'APPROVED';
-    const STATUS_CAPTURED = 'CAPTURED';
-    const STATUS_COMPLETED = 'COMPLETED';
-    const STATUS_CREATED = 'CREATED';
-    const STATUS_DENIED = 'DENIED';
-    const STATUS_FAILED = 'FAILED';
-    const STATUS_PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED';
+    public const STATUS_APPROVED = 'APPROVED';
+    public const STATUS_CAPTURED = 'CAPTURED';
+    public const STATUS_COMPLETED = 'COMPLETED';
+    public const STATUS_CREATED = 'CREATED';
+    public const STATUS_DENIED = 'DENIED';
+    public const STATUS_FAILED = 'FAILED';
+    public const STATUS_PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED';
 
     //- The order requires an action from the payer (e.g. 3DS authentication or PayPal confirmation).
     //    Redirect the payer to the "rel":"payer-action" HATEOAS link returned as part of the response
     //    prior to authorizing or capturing the order.
-    const STATUS_PAYER_ACTION_REQUIRED = 'PAYER_ACTION_REQUIRED';
+    public const STATUS_PAYER_ACTION_REQUIRED = 'PAYER_ACTION_REQUIRED';
 
-    const STATUS_PENDING = 'PENDING';
-    const STATUS_REFUNDED = 'REFUNDED';
-    const STATUS_SAVED = 'SAVED';
-    const STATUS_VOIDED = 'VOIDED';
+    public const STATUS_PENDING = 'PENDING';
+    public const STATUS_REFUNDED = 'REFUNDED';
+    public const STATUS_SAVED = 'SAVED';
+    public const STATUS_VOIDED = 'VOIDED';
 
     /**
      * Webhook actions we intend to listen for notifications regarding.
