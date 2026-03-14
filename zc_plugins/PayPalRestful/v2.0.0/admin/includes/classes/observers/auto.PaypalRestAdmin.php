@@ -66,7 +66,7 @@ class zcObserverPaypalRestAdmin extends \base
         }
 
         require_once $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypalr.php';
-        list($client_id, $secret) = \paypalr::getEnvironmentInfo();
+        [$client_id, $secret] = \paypalr::getEnvironmentInfo();
         $ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
 
         foreach ($track_ids as $i => $tracking_number) {
