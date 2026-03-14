@@ -18,7 +18,7 @@ class AdminFilesLanguageLoader extends FilesLanguageLoader
     /**
      * @since ZC v1.5.8
      */
-    public function loadInitialLanguageDefines($mainLoader)
+    public function loadInitialLanguageDefines($mainLoader): void
     {
         $this->mainLoader = $mainLoader;
         $this->loadLanguageExtraDefinitions();
@@ -37,7 +37,7 @@ class AdminFilesLanguageLoader extends FilesLanguageLoader
     /**
      * @since ZC v1.5.8
      */
-    protected function loadLanguageExtraDefinitions()
+    protected function loadLanguageExtraDefinitions(): void
     {
         $dirPath = DIR_WS_LANGUAGES . $_SESSION['language'] . '/extra_definitions';
         $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($dirPath, '~^(?!lang\.).*\.php$~i');
