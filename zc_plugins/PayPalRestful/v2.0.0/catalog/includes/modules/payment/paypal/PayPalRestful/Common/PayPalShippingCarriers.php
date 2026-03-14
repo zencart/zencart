@@ -24,7 +24,7 @@ class PayPalShippingCarriers
             if (empty($line)) {
                 continue;
             }
-            list($name, $code, $country) = explode(',', trim($line));
+            [$name, $code, $country] = explode(',', trim($line));
             if ($code === 'OTHER') {
                 continue;
             }
@@ -35,7 +35,7 @@ class PayPalShippingCarriers
         return false;
     }
 
-    public static function findBestMatch(string $carrier_name, string $country_iso_3 = ''): string
+    public static function findBestMatch(string $carrier_name, string $country_iso_3 = ''): ?string
     {
         $carrier_name = \strtoupper($carrier_name);
         if ($carrier_name === 'OTHER') {
@@ -70,7 +70,7 @@ class PayPalShippingCarriers
             }
         }
 
-        return 'OTHER'; // This supports PHP 7.0; for PHP 8 prefer to return null and change return type to ?string
+        return null;
     }
 
     /**
@@ -88,7 +88,7 @@ class PayPalShippingCarriers
             if (empty($line)) {
                 continue;
             }
-            list($name, $code, $country) = explode(',', trim($line));
+            [$name, $code, $country] = explode(',', trim($line));
             if ($code === 'OTHER') {
                 continue;
             }
