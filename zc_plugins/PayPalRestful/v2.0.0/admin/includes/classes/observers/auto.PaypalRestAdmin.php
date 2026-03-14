@@ -10,10 +10,12 @@ use PayPalRestful\Api\Data\CountryCodes;
 use PayPalRestful\Api\PayPalRestfulApi;
 use PayPalRestful\Zc2Pp\Amount;
 use Zencart\Traits\InteractsWithPlugins;
+use Zencart\Traits\ObserverManager;
 
-class zcObserverPaypalRestAdmin extends \base
+class zcObserverPaypalRestAdmin
 {
     use InteractsWithPlugins;
+    use ObserverManager;
 
     public function __construct()
     {
