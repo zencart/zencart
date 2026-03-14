@@ -16,10 +16,10 @@ use PayPalRestful\Common\Logger;
 class TokenCache
 {
     // -----
-    // Constants used to encrypt the session-based copy of the access-token.  Used by
-    // the getSavedToken/saveToken methods.
+    // Constants used to encrypt the session-based copy of the access-token.  
+    // Used by the getSavedToken/saveToken methods.
     //
-    const ENCRYPT_ALGO = 'AES-256-CBC';
+    private const ENCRYPT_ALGO = 'AES-256-CBC';
 
     // -----
     // Variable that holds the selected cryptographic algorithm and its IV length.
