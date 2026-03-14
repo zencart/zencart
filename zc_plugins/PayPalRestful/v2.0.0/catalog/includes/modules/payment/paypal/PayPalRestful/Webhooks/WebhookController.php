@@ -110,7 +110,7 @@ class WebhookController
     protected function strToStudly(string $value, array $dividers = ['.', '-', '_']): string
     {
         $words = explode(' ', str_replace($dividers, ' ', strtolower($value)));
-        $studlyWords = array_map(static function ($word) { return mb_strtoupper(mb_substr($word, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($word, 1, null, 'UTF-8'); }, $words);
+        $studlyWords = array_map(static fn($word) => mb_strtoupper(mb_substr($word, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($word, 1, null, 'UTF-8'), $words);
         return implode($studlyWords);
     }
 
