@@ -26,7 +26,7 @@ abstract class WebhookHandlerContract
     protected Logger $log;
 
     protected PayPalRestfulApi $ppr;
-    protected string $paymentModule;
+    protected $paymentModule; // TODO: we can probably declare this as an instance of \paypalr
 
     public function __construct(WebhookObject $webhook)
     {
@@ -37,7 +37,7 @@ abstract class WebhookHandlerContract
         $this->log = new Logger();
     }
 
-    abstract public function action();
+    abstract public function action(): void;
 
     /**
      * Instantiate paypalr payment module, including its language string dependencies.
@@ -59,7 +59,7 @@ abstract class WebhookHandlerContract
             return true;
         }
 
-        list($client_id, $secret) = \paypalr::getEnvironmentInfo();
+        [$client_id, $secret] = \paypalr::getEnvironmentInfo();
         if ($client_id !== '' && $secret !== '') {
             $this->ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
             return true;
