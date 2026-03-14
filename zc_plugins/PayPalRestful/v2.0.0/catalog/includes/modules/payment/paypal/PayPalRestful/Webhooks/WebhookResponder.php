@@ -21,12 +21,9 @@ class WebhookResponder
     protected bool $shouldRespond = false;
 
     protected null|string $webhook_listener_subscribe_id = null;
-    protected WebhookObject $webhook;
 
-    public function __construct(WebhookObject $webhook)
+    public function __construct(protected WebhookObject $webhook)
     {
-        $this->webhook = $webhook;
-
         $this->setWebhookSubscribeId();
     }
 
@@ -49,7 +46,7 @@ class WebhookResponder
         return $this->shouldRespond;
     }
 
-    public function verify()
+    public function verify(): null|bool
     {
         if ($this->shouldRespond !== true) {
             return null;
