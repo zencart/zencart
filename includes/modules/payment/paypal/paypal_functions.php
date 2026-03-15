@@ -70,7 +70,7 @@ if (!function_exists('convertToLocalTimeZone')) {
             WHERE session_id = :sessionID";
     $sql = $db->bindVars($sql, ':sessionID', $session_stuff[1], 'string');
     $stored_session = $db->Execute($sql);
-    if ($stored_session->recordCount() < 1) {
+    if ($stored_session->RecordCount() < 1) {
       global $isECtransaction, $isDPtransaction;
       if (isset($_POST['payment_type']) && $_POST['payment_type'] == 'instant' && $isDPtransaction && ((isset($_POST['auth_status']) && $_POST['auth_status'] == 'Completed') || $_POST['payment_status'] == 'Completed')) {
         $session_stuff[1] = '(EC/DP transaction)';
@@ -1078,4 +1078,3 @@ function ipn_create_order_history_array($insert_id)
     }
     return $logfilename;
   }
-

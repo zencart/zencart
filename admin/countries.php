@@ -98,7 +98,7 @@ if (!empty($action)) {
               WHERE entry_country_id = " . (int)$countries_id . "
               LIMIT 1";
       $result = $db->Execute($sql);
-      if ($result->recordCount() == 0) {
+      if ($result->RecordCount() == 0) {
         $db->Execute("DELETE FROM " . TABLE_COUNTRIES . "
                       WHERE countries_id = " . (int)$countries_id);
         zen_record_admin_activity('Country deleted: ' . $countries_id, 'warning');

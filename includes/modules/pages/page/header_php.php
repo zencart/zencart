@@ -60,7 +60,7 @@ $pages_order_query = "SELECT e.*,ec.*
                       ORDER BY e.toc_sort_order, ec.pages_title";
 
 $pages_order_query = $db->bindVars($pages_order_query, ':chapterID', $chapter_id, 'integer');
-$pages_ordering = $db->execute($pages_order_query);
+$pages_ordering = $db->Execute($pages_order_query);
 
 foreach ($pages_ordering as $page_order) {
     $vert_links[] = $page_order['pages_id'];

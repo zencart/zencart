@@ -37,8 +37,8 @@ $counter = $db->Execute($counter_query);
 $sql = "INSERT IGNORE INTO " . TABLE_COUNTER_HISTORY . " (startdate, counter, session_counter) values ('" . $date_now . "', '1', '1')";
 $db->Execute($sql);
 $sql = "SELECT * FROM "  . TABLE_COUNTER_HISTORY . " WHERE startdate = '" .  $date_now . "' AND counter = 1 AND session_counter = 1 LIMIT 1";
-$result = $db->execute($sql);
-if ($result->recordCount() <=0 || $counter->RecordCount() > 0 )
+$result = $db->Execute($sql);
+if ($result->RecordCount() <=0 || $counter->RecordCount() > 0 )
 {
   $counter_startdate = $counter->fields['startdate'];
   $counter_now = ($counter->fields['counter'] + 1);
