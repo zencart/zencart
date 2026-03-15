@@ -51,7 +51,7 @@ if (!in_array($op, $valid_operations, true)) {
 //
 if ($op === 'cancel' || $op === '3ds_cancel') {
     unset($_SESSION['PayPalRestful']['Order']['PayerAction']);
-    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT), '', 'SSL');
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 
 if ($op === 'return' && (!isset($_GET['token'], $_SESSION['PayPalRestful']['Order']['id']) || $_GET['token'] !== $_SESSION['PayPalRestful']['Order']['id'])) {
