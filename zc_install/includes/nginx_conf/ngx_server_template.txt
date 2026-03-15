@@ -62,7 +62,7 @@
 	# Zen Cart Root Folder
 	#############################################################################################	
 	## Allow all requests to specific PHP files directly under the Zen Cart ROOT folder
-	location ~ %%store_folder%%/(ajax|index|page_not_found|ipn_main_handler)\.php$ {
+	location ~ %%store_folder%%/(ajax|index|page_not_found|ipn_main_handler|ppr_listener|ppr_webhook)\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
