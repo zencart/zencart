@@ -197,7 +197,6 @@ class paypalr extends \base
         }
 
         $this->detectZcPluginDetails(__DIR__);
-        require_once $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypal/pprAutoload.php';
 
         $this->sort_order = defined('MODULE_PAYMENT_PAYPALR_SORT_ORDER') ? ((int)MODULE_PAYMENT_PAYPALR_SORT_ORDER) : null;
         if (null === $this->sort_order) {
