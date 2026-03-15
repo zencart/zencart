@@ -73,7 +73,7 @@ if ($op === 'return' && (!isset($_GET['token'], $_SESSION['PayPalRestful']['Orde
 //
 if (!isset($_SESSION['PayPalRestful']['Order']['PayerAction'])) {
     $logger->write('ppr_listener, redirecting to checkout_payment; no PayerAction variables.', true, 'after');
-    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT), '', 'SSL');
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 
 // -----
@@ -82,7 +82,7 @@ if (!isset($_SESSION['PayPalRestful']['Order']['PayerAction'])) {
 // a 3DS verification for a credit-card payment.
 //
 require FILENAME_PAYPALR_MODULE;
-list($client_id, $secret) = paypalr::getEnvironmentInfo();
+[$client_id, $secret] = paypalr::getEnvironmentInfo();
 
 $ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
 $ppr->setKeepTxnLinks(true);
@@ -185,7 +185,7 @@ $logger->write("Order's status set to {$order_status['status']}; posting back to
 }
     </style>
     <div id="lds-wrapper"><div class="lds-ring"><div></div><div></div><div></div><div></div></div></div>
-    <form action="<?php echo zen_href_link($redirect_page); ?>" name="transfer_form" method="post">
+    <form action="<?= zen_href_link($redirect_page) ?>" name="transfer_form" method="post">
 <?php
 foreach ($_SESSION['PayPalRestful']['Order']['PayerAction']['savedPosts'] as $key => $value) {
     if (is_string($value)) {
