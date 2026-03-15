@@ -1,92 +1,153 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Oct 25 Modified in v2.0.0-alpha1 $
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @version Modern Dynamic Dashboard 2026
+ * @author ZenExpert - https://zenexpert.com
  */
 
-// to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
-// return;
-
-$maxRows = 15;
-
-$i = 0;
-$visit_history = [];
-//  Get the visitor history data
-$visits_query = "SELECT startdate, counter, session_counter FROM " . TABLE_COUNTER_HISTORY . " ORDER BY startdate DESC";
-$visits = $db->Execute($visits_query, (int)$maxRows, true, 1800);
-$counterData = '';
-foreach ($visits as $data) {
-    // table
-    $countdate = $data['startdate'];
-    $visit_date = $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, (int)substr($countdate, 4, 2), (int)substr($countdate, -2), (int)substr($countdate, 0, 4)));
-    $visit_history[] = ['date' => $visit_date, 'sessions' => $data['session_counter'], 'count' => $data['counter']];
-    // graph
-    if ($i > 0) {
-        $counterData = ',' . $counterData;
-    }
-    $date = $zcDate->output('%a %d', mktime(0, 0, 0, (int)substr($data['startdate'], 4, 2), (int)substr($data['startdate'], -2)));
-    $counterData = "['$date'," . $data['session_counter'] . "," . $data['counter'] . "]" . $counterData;
-    $i++;
+// safety check
+if (defined('TABLE_COUNTER_HISTORY')) {
+    $stats_enabled = true;
+} else {
+    return; // counter module not installed
 }
+
+$maxRows = 30; // show last 30 days
+
+// prepare data arrays
+$dates = [];
+$sessions = [];
+$hits = [];
+
+// get history
+$visits_query = "SELECT startdate, counter, session_counter
+                 FROM " . TABLE_COUNTER_HISTORY . "
+                 ORDER BY startdate DESC
+                 LIMIT " . (int)$maxRows;
+$visits = $db->Execute($visits_query);
+
+// process data (note: SQL returns DESC, we need ASC for the chart, so we fetch then reverse)
+$temp_data = [];
+while (!$visits->EOF) {
+    $raw_date = $visits->fields['startdate'];
+    // convert YYYYMMDD to "M j" (e.g., Jan 15)
+    $formatted_date = date('M j', mktime(0, 0, 0, substr($raw_date, 4, 2), substr($raw_date, 6, 2), substr($raw_date, 0, 4)));
+
+    $temp_data[] = [
+        'label' => $formatted_date,
+        'sessions' => (int)$visits->fields['session_counter'],
+        'hits' => (int)$visits->fields['counter']
+    ];
+    $visits->MoveNext();
+}
+
+// reverse array to show oldest -> newest
+$temp_data = array_reverse($temp_data);
+
+// separate into arrays for JS
+foreach ($temp_data as $row) {
+    $dates[] = $row['label'];
+    $sessions[] = $row['sessions'];
+    $hits[] = $row['hits'];
+}
+
+$js_dates = json_encode($dates);
+$js_sessions = json_encode($sessions);
+$js_hits = json_encode($hits);
 ?>
-  <div class="panel panel-default reportBox">
-    <div class="panel-heading header"><?php echo sprintf(TEXT_COUNTER_HISTORY_TITLE, (int)$maxRows); ?></div>
-    <?php if (count($visit_history)) { ?>
-      <div class="panel-body">
-        <div id="trafficgraph"></div>
-      </div>
-      <table class="table table-striped table-condensed">
-        <tr>
-          <td class="indented"><?php echo DASHBOARD_DAY; ?></td>
-          <td class="text-right indented"> <?php echo DASHBOARD_SESSIONS; ?> - <?php echo DASHBOARD_TOTAL; ?></td>
-        </tr>
-        <?php
-        // table
-        foreach ($visit_history as $row) {
-          ?>
-          <tr>
-            <td class="indented"><?php echo $row['date']; ?></td>
-            <td class="text-right indented"> <?php echo $row['sessions']; ?> - <?php echo $row['count']; ?></td>
-          </tr>
-        <?php } ?>
-      </table>
-    <?php } else { ?>
-      <div class="row">
-        <p><?php echo TEXT_NONE; ?></p>
-      </div>
-    <?php } ?>
-  </div>
 
+    <div class="col-md-6 col-sm-12">
+        <div class="panel widget-wrapper">
+            <div class="panel-heading">
+                <i class="fa fa-users"></i> <?php echo BOX_TRAFFIC_HEADING; ?> <small class="text-muted"><?php echo sprintf(BOX_TRAFFIC_SUBHEADING, $maxRows); ?></small>
+            </div>
+            <div class="panel-body">
+                <?php if (count($dates) > 0) { ?>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                <?php } else { ?>
+                    <div class="text-center text-muted" style="padding: 40px;">
+                        <i class="fa fa-bar-chart fa-3x"></i><br><br>
+                        <?php echo BOX_TRAFFIC_NO_DATA; ?>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
 
-<script title="build_traffic_graph">
-  var data;
-  var chart;
-  // Load the Visualization API and the piechart package.
-  google.charts.load('current', {packages: ['corechart']});
-  // Set a callback to run when the Google Visualization API is loaded.
-  google.charts.setOnLoadCallback(drawTrafficChart);
+<?php if (count($dates) > 0) { ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctxTraffic = document.getElementById('trafficChart').getContext('2d');
 
-  // Callback that creates and populates a data table,
-  // instantiates the pie chart, passes in the data and draws it.
-  function drawTrafficChart() {
-
-      data = new google.visualization.arrayToDataTable([['<?php echo DASHBOARD_DAY; ?>', '<?php echo DASHBOARD_SESSIONS; ?>', '<?php echo DASHBOARD_TOTAL; ?>'],
-<?php echo $counterData; ?>]);
-
-      var options = {
-          width: '100%',
-          height: '100%',
-          backgroundColor: {fill: "#f7f6ef"},
-          legend: {position: 'top'},
-          colors: ['dodgerblue', 'navy'],
-//        trendlines: { 1: {        type: 'exponential',
-//        visibleInLegend: true,} }    // Draw a trendline for data series 0.
-      };
-      // Instantiate and draw our chart, passing in some options.
-      chart = new google.visualization.ColumnChart(document.getElementById('trafficgraph'));
-      //    google.visualization.events.addListener(chart, 'select', selectHandler);
-      chart.draw(data, options);
-
-  }
-</script>
+            var trafficChart = new Chart(ctxTraffic, {
+                type: 'bar',
+                data: {
+                    labels: <?php echo $js_dates; ?>,
+                    datasets: [
+                        {
+                            label: '<?php echo BOX_TRAFFIC_SESSIONS; ?>',
+                            data: <?php echo $js_sessions; ?>,
+                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: '<?php echo BOX_TRAFFIC_HITS; ?>',
+                            type: 'line',
+                            data: <?php echo $js_hits; ?>,
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            backgroundColor: 'rgba(255, 159, 64, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 2,
+                            tension: 0.3,
+                            fill: false,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { maxTicksLimit: 10 }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: '<?php echo BOX_TRAFFIC_SESSIONS; ?>' },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: '<?php echo BOX_TRAFFIC_HITS; ?>' },
+                            grid: { display: false },
+                            suggestedMin: 0
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+<?php } ?>
