@@ -31,6 +31,27 @@ class PluginManagerController extends BaseController
     }
 
     /**
+     * @since ZC v2.2.0
+     */
+    protected function getManifest(string $unique_key, string $version): null|array
+    {
+        $manifest_file = DIR_FS_CATALOG . "zc_plugins/$unique_key/$version/manifest.php";
+        if (!file_exists($manifest_file)) {
+            return null;
+        }
+        return require $manifest_file;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    protected function removesUnencapsulatedVersion(string $unique_key, string $version): bool
+    {
+        $manifest = $this->getManifest($unique_key, $version);
+        return !empty($manifest['removesUnencapsulatedVersion']);
+    }
+
+    /**
      * @since ZC v1.5.8
      */
     protected function processDefaultAction(): void
@@ -121,23 +142,43 @@ class PluginManagerController extends BaseController
      */
     protected function processActionInstall(): void
     {
-        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
+        $unique_key = $this->currentFieldValue('unique_key');
+
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $unique_key, $this->currentFieldValue('name')) . '</h4>');
         $this->setBoxForm(
             zen_draw_form('plugininstall', FILENAME_PLUGIN_MANAGER, $this->pageLink() . '&' . $this->colKeyLink() . '&action=doInstall', 'post', 'class="form-horizontal"')
         );
-        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . zen_lookup_admin_menu_language_override('plugin_description', $this->currentFieldValue('unique_key'), $this->currentFieldValue('description')));
-        $versions = $this->pluginManager->getPluginVersionsForPlugin($this->currentFieldValue('unique_key'));
+        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . zen_lookup_admin_menu_language_override('plugin_description', $unique_key, $this->currentFieldValue('description')));
+        $versions = $this->pluginManager->getPluginVersionsForPlugin($unique_key);
         $hasMultiple = (count($versions) > 1);
         $firstKey = key($versions);
+        $removes_unencapsulated = false;
         if ($hasMultiple) {
             foreach ($versions as $version) {
                 $checked = ($version['version'] == $firstKey);
-                $this->setBoxContent('<br><label class="radio-inline">' . zen_draw_radio_field('version', $version['version'], $checked) . $version['version']);
+                $removes_footnote = '';
+                if ($this->removesUnencapsulatedVersion($unique_key, $version['version']) === true) {
+                    $removes_unencapsulated = true;
+                    $removes_footnote = '<b><sup class="text-danger">1</sup></b>';
+                }
+                $this->setBoxContent('<br><label class="radio-inline">' . zen_draw_radio_field('version', $version['version'], $checked) . $version['version'] . $removes_footnote);
             }
         }
         if (!$hasMultiple) {
             $this->setBoxContent(zen_draw_hidden_field('version', $firstKey));
+            $removes_unencapsulated = $this->removesUnencapsulatedVersion($unique_key, $firstKey);
         }
+
+        if ($removes_unencapsulated === true) {
+            $removes_footnote = ($hasMultiple === true) ? '<sup>1</sup>' : '';
+            $this->setBoxContent(
+                '<span class="text-danger">' .
+                    $removes_footnote .
+                    WARNING_NONENCAPSULATED_REMOVAL .
+                '</span>'
+            );
+        }
+
         $this->setBoxContent(
             '<br><button type="submit" class="btn btn-primary">'
             . TEXT_INSTALL . '</button> <a href="' . zen_href_link(

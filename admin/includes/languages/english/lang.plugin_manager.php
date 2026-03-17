@@ -50,6 +50,7 @@ $define = [
     'ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP' => 'Check your SQL statement. A SQL function map cannot be found for : ',
     'ERROR_INVALID_SYNTAX' => 'The table cannot be identified as syntax is invalid in: ',
     'ERROR_SQL_PATCH' => 'Error while processing SQL install. ',
+    'WARNING_NONENCAPSULATED_REMOVAL' => '<b>Note:</b> Installing this plugin will result in files provided by a non-encapsulated version (if present) being <b>permanently</b> removed!',
 ];
 
 return $define;
