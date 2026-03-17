@@ -866,7 +866,7 @@ if (!is_writable(DIR_FS_CATALOG_IMAGES)) {
                                     $order_by = " ORDER BY p.products_status, pd.products_name";
                                     break;
                             case (9):
-                                    $order_by = " ORDER BY p.products_status DESC, pd. products_name";
+                                    $order_by = " ORDER BY p.products_status DESC, pd.products_name";
                                     break;
                             case (10):
                                     $order_by = " ORDER BY p.products_id";
