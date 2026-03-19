@@ -180,8 +180,13 @@ class paypalr extends \base
 
     /**
      * class constructor
+     *
+     * Note: The $uninstalling parameter is set to (bool)true during the
+     * encapsulated plugin's un-install action, enabling various functions
+     * to be bypassed if the payment module has been installed via the
+     * admin's Modules :: Payment processing.
      */
-    public function __construct()
+    public function __construct(bool $uninstalling = false)
     {
         global $order, $messageStack, $loaderPrefix;
 
@@ -191,7 +196,7 @@ class paypalr extends \base
 
         if (IS_ADMIN_FLAG === false) {
             $this->title = MODULE_PAYMENT_PAYPALR_TEXT_TITLE;
-        } else {
+        } elseif ($uninstalling === false) {
             $this->title = MODULE_PAYMENT_PAYPALR_TEXT_TITLE_ADMIN . (($curl_installed === true) ? '' : $this->alertMsg(MODULE_PAYMENT_PAYPALR_ERROR_NO_CURL));
             $this->description = sprintf(MODULE_PAYMENT_PAYPALR_TEXT_ADMIN_DESCRIPTION, self::CURRENT_VERSION);
         }
@@ -230,26 +235,28 @@ class paypalr extends \base
         $this->zone = (int)MODULE_PAYMENT_PAYPALR_ZONE;
 
         if (IS_ADMIN_FLAG === true) {
-            if (MODULE_PAYMENT_PAYPALR_STATUS === 'Retired') {
-                $this->title .= ' <strong>(Retired)</strong>';
-            }
-            if (MODULE_PAYMENT_PAYPALR_SERVER === 'sandbox') {
-                $this->title .= $this->alertMsg(' (sandbox active)');
-            }
-            if ($debug === true) {
-                $this->title .= ' <strong>(Debug)</strong>';
-            }
-            $this->tableCheckup();
+            if ($uninstalling === false) {
+                if (MODULE_PAYMENT_PAYPALR_STATUS === 'Retired') {
+                    $this->title .= ' <strong>(Retired)</strong>';
+                }
+                if (MODULE_PAYMENT_PAYPALR_SERVER === 'sandbox') {
+                    $this->title .= $this->alertMsg(' (sandbox active)');
+                }
+                if ($debug === true) {
+                    $this->title .= ' <strong>(Debug)</strong>';
+                }
+                $this->tableCheckup();
 
-            // -----
-            // Make sure that the root-directory files copied during install/upgrade are
-            // actually present.  If not, the payment module is auto-disabled.
-            //
-            // Starting with v1.3.1, the payment module **always** checks that
-            // its root-directory listeners/handlers have been copied from within the module's
-            // storefront includes directory.
-            //
-            $this->enabled = $this->manageRootDirectoryFiles();
+                // -----
+                // Make sure that the root-directory files copied during install/upgrade are
+                // actually present.  If not, the payment module is auto-disabled.
+                //
+                // Starting with v1.3.1, the payment module **always** checks that
+                // its root-directory listeners/handlers have been copied from within the module's
+                // storefront includes directory.
+                //
+                $this->enabled = $this->manageRootDirectoryFiles();
+            }
         } elseif ($this->enabled === true) {
             // -----
             // Ensure that the payment-module's observer-class is loaded (auto.paypalrestful.php).  That
@@ -300,13 +307,13 @@ class paypalr extends \base
         // If the configuration's invalid (admin/storefront)
         // or if we're processing for the admin or a webhook, all finished here!
         //
-        $this->enabled = ($this->enabled === true && $this->validateConfiguration($curl_installed));
+        $this->enabled = ($this->enabled === true && $this->validateConfiguration($curl_installed, $uninstalling));
 
-        if ($this->enabled && IS_ADMIN_FLAG === true) {
+        if ($this->enabled && IS_ADMIN_FLAG === true && $uninstalling === false) {
             // register/update known webhooks
             $this->ppr->registerAndUpdateSubscribedWebhooks();
         }
-        if ($this->enabled === false || IS_ADMIN_FLAG === true || $loaderPrefix === 'webhook') {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true || $loaderPrefix === 'webhook' || $uninstalling === true) {
             return;
         }
 
@@ -565,14 +572,16 @@ class paypalr extends \base
     //
     // - The payment module is auto-disabled if any configuration issues are found.
     //
-    protected function validateConfiguration(bool $curl_installed): bool
+    protected function validateConfiguration(bool $curl_installed, bool $uninstalling): bool
     {
         // -----
         // No CURL, no payment module!  The PayPalRestApi class requires
         // CURL to 'do its business'.
         //
         if ($curl_installed === false) {
-            $this->setConfigurationDisabled(MODULE_PAYMENT_PAYPALR_ERROR_NO_CURL);
+            if ($uninstalling === false) {
+                $this->setConfigurationDisabled(MODULE_PAYMENT_PAYPALR_ERROR_NO_CURL);
+            }
             return false;
         }
 
@@ -589,7 +598,7 @@ class paypalr extends \base
         //
         $error_message = '';
         if ($client_id === '' || $secret === '') {
-            $error_message = sprintf(MODULE_PAYMENT_PAYPALR_ERROR_CREDS_NEEDED, MODULE_PAYMENT_PAYPALR_SERVER);
+            $error_message = ($uninstalling === false) ? sprintf(MODULE_PAYMENT_PAYPALR_ERROR_CREDS_NEEDED, MODULE_PAYMENT_PAYPALR_SERVER) : 'no-client';
         } else {
             $this->ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
 
@@ -597,7 +606,7 @@ class paypalr extends \base
             $use_saved_credentials = (IS_ADMIN_FLAG === false || $current_page === FILENAME_MODULES);
             $this->log->write("validateCredentials: Checking ($use_saved_credentials).", true, 'before');
             if ($this->ppr->validatePayPalCredentials($use_saved_credentials) === false) {
-                $error_message = sprintf(MODULE_PAYMENT_PAYPALR_ERROR_INVALID_CREDS, MODULE_PAYMENT_PAYPALR_SERVER);
+                $error_message = ($uninstalling === false) ? sprintf(MODULE_PAYMENT_PAYPALR_ERROR_INVALID_CREDS, MODULE_PAYMENT_PAYPALR_SERVER) : 'invalid-creds';
             }
             $this->log->write('', false, 'after');
         }
@@ -606,7 +615,9 @@ class paypalr extends \base
         // Any credential errors detected, the payment module's auto-disabled.
         //
         if ($error_message !== '') {
-            $this->setConfigurationDisabled($error_message);
+            if ($uninstalling === false) {
+                $this->setConfigurationDisabled($error_message);
+            }
             return false;
         }
 

@@ -29,6 +29,17 @@ class ScriptedInstaller extends ScriptedInstallBase
 
     protected function executeUninstall()
     {
+        // -----
+        // If the payment module has been "Installed" via Modules :: Payment, need to run its
+        // 'remove' method to (er) remove the configuration settings as well as the root-directory
+        // files.
+        //
+        if (defined('MODULE_PAYMENT_PAYPALR_STATUS')) {
+            require_once $this->pluginDir . '/catalog/includes/modules/payment/paypalr.php';
+            $paypalr = new paypalr(true);   //- Let the payment module know it's loading to do an uninstall action
+            $paypalr->remove();
+        }
+
         parent::executeUninstall();
     }
 
