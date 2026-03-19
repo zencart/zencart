@@ -36,7 +36,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         //
         if (defined('MODULE_PAYMENT_PAYPALR_STATUS')) {
             require_once $this->pluginDir . '/catalog/includes/modules/payment/paypalr.php';
-            $paypalr = new paypalr(true);   //- Let the payment module know it's loading to do an uninstall action
+            $paypalr = new paypalr(uninstalling: true);   //- Let the payment module know it's loading to do an uninstall action
             $paypalr->remove();
         }
 
