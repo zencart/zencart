@@ -1,8 +1,8 @@
-
 .headerBar {
     background-color: #333;
     color: #fff;
 }
+
 .headerBar select {
     color: #333;
     background-color: #fff;
@@ -28,7 +28,7 @@
     color: #333;
 }
 
-.upperMenu{
+.upperMenu {
     display: none;
 }
 
@@ -36,38 +36,207 @@
     ul.nav li.dropdown:hover > ul.dropdown-menu {
         display: block;
     }
-    .upperMenu{
+
+    .upperMenu {
         display: block;
     }
-    .upperMenuItems{
+
+    .upperMenuItems {
         display: none !important;
     }
 }
+
 .navbar-default {
     background-color: #d7d6cc;
 }
-.navbar-nav li>a.dropdown-toggle {
+
+.navbar-nav li > a.dropdown-toggle {
     font-size: 1.2em;
     color: #333;
 }
 
 /* for help button placement */
 .navbar {
-  margin-bottom: 8px;
+    margin-bottom: 8px;
 }
+
 .btn-help {
-  margin-right: 4px;
-  margin-bottom: 8px;
-  background-color: #337ab7; 
-  color: white; 
+    margin-right: 4px;
+    margin-bottom: 8px;
+    background-color: #337ab7;
+    color: white;
 }
 
 @media (min-width: 768px) {
-    .navbar-nav>li>a {
+    .navbar-nav > li > a {
         padding-top: 5px;
         padding-bottom: 5px;
     }
+
     .navbar {
         min-height: 30px;
     }
+}
+
+.navbar-inverse.top-tier {
+    background-color: #2c3e50;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    min-height: 50px;
+}
+
+.navbar-inverse.top-tier .navbar-brand {
+    color: #ecf0f1;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.navbar-inverse.top-tier .navbar-nav > li > a {
+    color: #bdc3c7;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.navbar-inverse.top-tier .navbar-nav > li > a:hover {
+    color: #fff;
+    background-color: #34495e;
+}
+
+.navbar-inverse.top-tier .dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    padding: 0;
+}
+
+.navbar-inverse.top-tier .dropdown-menu > li > a {
+    color: #333;
+    padding: 8px 20px;
+}
+
+.navbar-inverse.top-tier .dropdown-menu > li > a:hover {
+    background-color: #f5f5f5;
+    color: #262626;
+}
+
+.navbar-default.main-tier {
+    background-color: #fff;
+    border: none;
+    border-bottom: 1px solid #dce4ec;
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-default.main-tier .navbar-nav > li > a {
+    color: #555;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 15px 15px;
+}
+
+.navbar-default.main-tier .navbar-nav > li > a:hover, .navbar-default.main-tier .navbar-nav > li.open > a {
+    background-color: #f9f9f9;
+    color: #337ab7;
+}
+
+.badge-notify {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #e74c3c;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.version-dropdown-content {
+    width: 320px;
+    padding: 15px;
+    color: #333;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.version-dropdown-footer {
+    background: #f9f9f9;
+    border-top: 1px solid #eee;
+    padding: 10px;
+    text-align: center;
+    font-size: 11px;
+    color: #777;
+}
+
+.header-search input {
+    background: #34495e;
+    border: none;
+    color: #fff;
+    border-radius: 30px;
+    padding-left: 15px;
+    margin-top: 8px;
+    width: 250px;
+    transition: 0.3s;
+}
+
+.header-search input:focus {
+    background: #46627f;
+    width: 300px;
+    outline: none;
+}
+
+.header-search input::placeholder {
+    color: #95a5a6;
+}
+
+.user-avatar {
+    width: 20px;
+    height: 20px;
+    background: #95a5a6;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.info-label {
+    color: #999;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-top: 5px;
+    display: block;
+}
+
+.info-val {
+    font-size: 12px;
+    color: #555;
+    font-family: monospace;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover {
+    background-color: #34495e;
+    color: #ecf0f1;
+}
+
+.text-muted {
+    font-size: 10px;
+    opacity: 0.6;
+    display: block;
+    line-height: 1;
+}
+
+.navbar-header button i {
+    color: #fff;
+}
+
+.nav .dropdown-menu h5 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+li.header-info-menu {
+    padding: 5px 20px;
+    background-color: #fcfcfc;
 }

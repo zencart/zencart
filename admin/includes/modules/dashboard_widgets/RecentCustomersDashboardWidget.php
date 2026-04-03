@@ -5,7 +5,9 @@
  * @version $Id: Scott C Wilson 2021 Jan 13 Modified in v1.5.8-alpha $
  */
 
-if (!zen_is_superuser() && !check_page(FILENAME_CUSTOMERS, '')) return;
+if (!zen_is_superuser() && !check_page(FILENAME_CUSTOMERS, '')) {
+    return;
+}
 
 // to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
 // return;
@@ -24,7 +26,7 @@ $customers = $db->Execute($sql, (int)$maxRows, true, 1800);
 ?>
 
 <div class="panel panel-default reportBox">
-    <div class="panel-heading header"><?php echo BOX_ENTRY_NEW_CUSTOMERS; ?> </div>
+    <div class="panel-heading header"><?= BOX_ENTRY_NEW_CUSTOMERS ?> </div>
     <table class="table table-striped table-condensed">
     <?php
         foreach ($customers as $customer) {
@@ -33,11 +35,11 @@ $customers = $db->Execute($sql, (int)$maxRows, true, 1800);
           ?>
         <tr>
           <td>
-            <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customer['customers_email_address'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink">
-                <?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?>
+            <a href="<?= zen_href_link(FILENAME_CUSTOMERS, 'search=' . $customer['customers_email_address'] . '&origin=' . FILENAME_DEFAULT) ?>" class="contentlink">
+                <?= $customer['customers_firstname'] . ' ' . $customer['customers_lastname'] ?>
             </a>
           </td>
-          <td class="text-right"><?php echo zen_date_short($customer['customers_info_date_account_created']); ?></td>
+          <td class="text-right"><?= zen_date_short($customer['customers_info_date_account_created']) ?></td>
         </tr>
     <?php
       }

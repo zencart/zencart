@@ -1,0 +1,211 @@
+.dashboard-wrapper {
+    background-color: #ecf0f5;
+    padding: 20px 15px;
+}
+
+.dashboard-wrapper a, .dashboard-wrapper .label {
+    font-size: 12px;
+}
+
+.widget-wrapper {
+    margin-bottom: 25px;
+    background: #fff;
+    border-radius: 3px;
+    border-top: 3px solid #d2d6de;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.widget-wrapper.no-padding .panel-body {
+    padding: 0;
+}
+
+.widget-wrapper .panel-heading {
+    color: #444;
+    background-color: #fff;
+    border-bottom: 1px solid #f4f4f4;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.widget-wrapper .panel-heading i {
+    margin-right: 8px;
+    color: #666;
+}
+
+.widget-wrapper:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transition: 0.2s;
+}
+
+/* Sortable Styles */
+.sortable-list {
+    min-height: 100px;
+    padding: 0;
+    margin: 0;
+}
+
+.widget-li {
+    list-style: none;
+    margin-bottom: 0;
+}
+
+/* dragging visuals */
+.ui-sortable-placeholder {
+    border: 2px dashed #ccc;
+    background: rgba(0, 0, 0, 0.02);
+    visibility: visible !important;
+    border-radius: 4px;
+    margin-bottom: 25px;
+}
+
+.ui-sortable-helper {
+    opacity: 0.9;
+    transform: scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* placeholder height for small widgets */
+#zone-sidebar .ui-sortable-placeholder,
+#zone-bottom .ui-sortable-placeholder {
+    height: 150px;
+}
+
+.panel-heading {
+    cursor: move;
+}
+
+.kpi-card {
+    border-radius: 3px;
+    color: #fff;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.kpi-card .inner {
+    padding: 15px;
+}
+
+.kpi-card h3 {
+    font-size: 34px;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+
+.kpi-card p {
+    font-size: 14px;
+    margin: 0;
+    opacity: 0.9;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.kpi-card .icon {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 65px;
+    color: rgba(0, 0, 0, 0.10);
+    transition: 0.3s;
+}
+
+.kpi-card:hover .icon {
+    font-size: 75px;
+    color: rgba(0, 0, 0, 0.15);
+}
+
+.kpi-card-footer {
+    display: block;
+    padding: 6px 0;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.1);
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.kpi-card-footer:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    text-decoration: none;
+}
+
+.bg-aqua {
+    background-color: #00c0ef !important;
+}
+
+.bg-green {
+    background-color: #00a65a !important;
+}
+
+.bg-yellow {
+    background-color: #f39c12 !important;
+}
+
+.bg-red {
+    background-color: #dd4b39 !important;
+}
+
+.panel .link-text {
+    color:#555; font-weight:600;
+}
+.text-muted {
+    font-size: 10px; display:block; line-height:1;
+}
+i.text-muted {
+    display: inline; margin-right: 5px; width: 15px;
+}
+.base-counter-badge {
+    background:#eee; color:#555; font-weight:normal; font-size: 11px;
+}
+.panel-footer {
+    background: #fff; padding: 10px;
+}
+.label-inactive-text {
+    color:#999;
+}
+.most-popular-fallback-image {
+    width:40px; height:40px; background:#f4f4f4; line-height:40px; text-align:center; border-radius:3px; color:#ccc;
+}
+.most-popular-main-image {
+    width: 40px; height: 40px; object-fit: cover; border-radius: 3px; border: 1px solid #ddd;
+}
+.most-popular-item {
+    border-left: none; border-right: none;
+}
+.most-popular-item .media-heading h5 {
+    font-size: 13px; line-height: 1.4; margin-bottom: 2px;
+}
+.most-popular-item .media-heading a {
+    color: #444;
+}
+.most-popular-item .badge.bg-green {
+    background-color: #00a65a; font-weight: normal; font-size: 12px;
+}
+.order-status-label {
+    min-width: 25px; display: inline-block;
+}
+.status-pills a {
+    text-decoration:none; margin: 0 2px;
+}
+.status-pills label {
+    padding: 4px 8px; font-weight: normal; font-size: 100%;
+}
+.recent-orders td {
+    vertical-align: middle !important;
+}
+.sales-report-widget {
+    position: relative; height: 350px; width: 100%;
+}
+.traffic-widget-chart {
+    position: relative; height: 300px; width: 100%;
+}
+.whos-online-widget .list-group-item-heading {
+    margin-top:0; margin-bottom:8px; font-weight:600; color:#555;
+}
+.whos-online-widget .users-row {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px;
+}

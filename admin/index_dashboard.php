@@ -1,102 +1,244 @@
 <?php
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
- * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
- *
- * @var notifier $zco_notifier
+ * @version Modern Dynamic Dashboard 2026
+ * @author ZenExpert - https://zenexpert.com
  */
 
 $currencies ??= new currencies();
 
+// make sure Dashboard Layout Config exists
+if (!defined('DASHBOARD_WIDGETS_CONFIG')) {
+    $db->Execute("INSERT IGNORE INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Dashboard Layout Config', 'DASHBOARD_WIDGETS_CONFIG', '', 'JSON data for dashboard layout', 6, 0, NOW());");
+}
+
+// pre-fetch key metrics for KPI cards
+// we keep these hardcoded as they are specific to the header design
+$orders_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_ORDERS . " WHERE date_purchased > CURDATE()");
+$revenue_today = $db->Execute("SELECT SUM(value) AS total FROM " . TABLE_ORDERS_TOTAL . " ot LEFT JOIN " . TABLE_ORDERS . " o ON o.orders_id = ot.orders_id where o.date_purchased > CURDATE() AND ot.class = 'ot_total'");
+$customers_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_date_account_created > CURDATE()");
+$reviews_pending = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_REVIEWS . " WHERE status = 0");
+
+// zone definitions
+// each zone is an array of widget file paths to include
+// layout zones:
+// - main:    The big column on the left (9/12 width)
+// - sidebar: The narrow column on the right (3/12 width)
+// - bottom:  Full width row at the bottom (12/12 width)
+$default_zones = [
+    'main' => [
+        'SalesReportDashboardWidget.php',
+        'RecentOrdersDashboardWidget.php',
+    ],
+    'sidebar' => [
+        'OrderStatusDashboardWidget.php',
+        'MostPopularProductsDashboardWidget.php',
+        'WhosOnlineDashboardWidget.php',
+    ],
+    'bottom' => [
+        'TrafficDashboardWidget.php',
+        'SpecialsDashboardWidget.php',
+        'BaseStatisticsDashboardWidget.php',
+    ],
+];
+
+// check database for saved layout
+$saved_config = defined('DASHBOARD_WIDGETS_CONFIG') ? DASHBOARD_WIDGETS_CONFIG : '';
+$zones = json_decode($saved_config, true);
+
+// if DB config is empty or invalid, use default
+if (!is_array($zones) || empty($zones)) {
+    $zones = $default_zones;
+}
+
+// render a zone
+function render_zone($zone_name, $widgets_array)
+{
+    /** Globals needed inside widgets */
+    global $db, $currencies, $show_status_pills, $target_status_ids, $sniffer, $zco_notifier, $messageStack, $recentOrdersMaxRows, $target_status_ids, $show_status_pills, $zcDate;
+
+    // Define the accepted base path for widgets to prevent LFI vulnerabilities
+    $acceptedPath = realPath(DIR_FS_CATALOG);
+
+    $zone_name = zen_output_string_protected($zone_name);
+
+    echo '<ul id="zone-' . $zone_name . '" class="sortable-list list-unstyled row" style="min-height: 200px; padding-bottom: 50px;">';
+
+    foreach ($widgets_array as $widget_file) {
+        $path = '';
+
+        // check if this is an Encapsulated Plugin (absolute path provided)
+        if (file_exists($widget_file)) {
+            $path = $widget_file;
+        } // treat as Core Widget (relative filename provided)
+        else {
+            $path = DIR_WS_MODULES . 'dashboard_widgets/' . $widget_file;
+        }
+
+        // Path validation (catch invalid path errors) and security LFI check (prevent loading files from outside)
+        $realPath = realpath($path);
+        if ($realPath === false || !str_starts_with($realPath, $acceptedPath) || !file_exists($path)) {
+            continue; // skip this widget if path is invalid, insecure, or file doesn't exist
+        }
+
+        $widget_name = basename($path);
+        $col_class = 'col-md-12';
+
+        if ($zone_name === 'bottom') {
+            if ($widget_name === 'TrafficDashboardWidget.php') {
+                $col_class = 'col-xs-12 col-md-6'; // traffic gets half width
+            } else {
+                $col_class = 'col-xs-12 col-md-3'; // others get quarter width
+            }
+        }
+
+        // data-markers for JS
+        $data_attr = 'data-id="' . $widget_name . '"';
+        $li_class = $col_class . ' widget-li';
+
+        // Traffic widget - prevent it moving to sidebar
+        if ($widget_name === 'TrafficDashboardWidget.php') {
+            $li_class .= ' locked-bottom';
+        }
+
+        echo '<li class="' . $li_class . '" ' . $data_attr . '>';
+        include $path;
+        echo '</li>';
+    }
+    echo '</ul>';
+}
+
+// Notifier for plugins to inject their own widgets into zones
+$zco_notifier->notify('NOTIFY_ADMIN_DASHBOARD_ZONES', null, $zones);
+
+// legacy widgets support
 $widgets = [];
-$widgets[] = ['column' => 1, 'sort' => 10, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/BaseStatisticsDashboardWidget.php'];
-$widgets[] = ['column' => 1, 'sort' => 15, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/SpecialsDashboardWidget.php'];
-$widgets[] = ['column' => 1, 'sort' => 20, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/OrderStatusDashboardWidget.php'];
-$widgets[] = ['column' => 2, 'sort' => 10, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/RecentCustomersDashboardWidget.php'];
-$widgets[] = ['column' => 2, 'sort' => 15, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/WhosOnlineDashboardWidget.php'];
-$widgets[] = ['column' => 2, 'sort' => 20, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/TrafficDashboardWidget.php'];
-$widgets[] = ['column' => 3, 'sort' => 10, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/RecentOrdersDashboardWidget.php'];
-$widgets[] = ['column' => 3, 'sort' => 15, 'visible' => true, 'path' => DIR_WS_MODULES . 'dashboard_widgets/SalesReportDashboardWidget.php'];
 
 $zco_notifier->notify('NOTIFY_ADMIN_DASHBOARD_WIDGETS', null, $widgets);
 
-// Prepare for sorting: ensure each has its dependent columns, so multisort doesn't complain about inconsistent array sizes
-foreach ($widgets as $key => $widget) {
-    if (!isset($widget['sort'])) {
-        $widgets[$key]['sort'] = 999;
+foreach ($widgets as $widget) {
+    if (!isset($widget['path'])) {
+        continue;
     }
-    if (!isset($widget['column'])) {
-        $widgets[$key]['column'] = 0; // 0-unspecified, will be ignored
+
+    $file_path = $widget['path'];
+    $file_name = basename($file_path);
+    $found_in_zones = false;
+
+    // check existing zones to see if this widget is already there
+    foreach ($zones as $z_name => &$z_files) {
+        if (!is_array($z_files)) {
+            continue;
+        }
+
+        foreach ($z_files as $key => &$z_file) {
+            if (basename($z_file) === $file_name) {
+                $found_in_zones = true;
+
+                // If the DB has just the filename, but the plugin gives us a full path,
+                // update the zone entry to use the full path.
+                if ($z_file !== $file_path) {
+                    $z_file = $file_path;
+                }
+                break 2;
+            }
+        }
+    }
+
+    // if not found in zones, inject it
+    if (!$found_in_zones) {
+        // legacy column 3 -> sidebar zone
+        if (isset($widget['column']) && $widget['column'] == 3) {
+            if (!isset($zones['sidebar'])) {
+                $zones['sidebar'] = [];
+            }
+            array_unshift($zones['sidebar'], $file_path);
+        } else {
+            // legacy column 1 or 2 -> main zone
+            if (!isset($zones['main'])) {
+                $zones['main'] = [];
+            }
+            $zones['main'][] = $file_path;
+        }
     }
 }
-
-// Sort in advance so the template can simply loop over each column without re-sorting.
-array_multisort(array_column($widgets, 'column'), SORT_ASC, array_column($widgets, 'sort'), SORT_ASC, $widgets);
-
-// Path validation (catch invalid path errors) and security LFI check (prevent loading files from outside)
-$acceptedPath = realPath(DIR_FS_CATALOG);
-foreach ($widgets as $key => $widget) {
-    $realPath = realpath($widget['path']);
-    if ($realPath === false || !str_starts_with($realPath, $acceptedPath) || !file_exists($widget['path'])) {
-        unset($widgets[$key]); // Skip if it's not under the intended directory or doesn't exist
-    }
-}
-
-
 ?>
+
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
-  <head>
+<head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-    <!--Load the AJAX API FOR GOOGLE GRAPHS -->
-    <script src="https://www.gstatic.com/charts/loader.js" title="google_graphs_api"></script>
-    <style>
-      /* #coltwo div.row span.left { float: left; text-align: left; width: 50%; white-space: nowrap; }*/
-      #colthree div.row span.left { float: left; text-align: left; width: 50%; white-space: nowrap; }
-      #div.row span.center { margin-right: 30px; }
-      .indented { padding-left: 5%; margin-right: 5%;}
-      div.first { float: left; width: 90px; }
-      div.col { float: left; width: 18%; }
-    </style>
-  </head>
-  <body class="indexDashboard">
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="indexDashboard">
 
-    <?php
-    $notifications = new AdminNotifications();
-    $availableNotifications = $notifications->getNotifications('index', $_SESSION['admin_id']);
-    require_once(DIR_WS_MODULES . 'notificationsDisplay.php');
-    ?>
+<?php require DIR_WS_INCLUDES . 'header.php'; ?>
 
-    <div id="colone" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-    <?php
-    foreach ($widgets as $widget) {
-        if ($widget['column'] === 1 && !empty($widget['visible'])) {
-            include $widget['path'];
-        }
-    }
-    ?>
-    </div>
-    <div id="coltwo" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-    <?php
-    foreach ($widgets as $widget) {
-        if ($widget['column'] === 2 && !empty($widget['visible'])) {
-            include $widget['path'];
-        }
-    }
-    ?>
-    </div>
-    <div id="colthree" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-    <?php
-    foreach ($widgets as $widget) {
-        if ($widget['column'] === 3 && !empty($widget['visible'])) {
-            include $widget['path'];
-        }
-    }
-    ?>
+<div class="container-fluid dashboard-wrapper">
+
+    <div class="row">
+        <div class="col-xs-6 col-lg-3">
+            <div class="kpi-card bg-aqua">
+                <div class="inner">
+                    <h3><?php echo $orders_today->fields['count']; ?></h3>
+                    <p><?php echo BOX_KPI_ORDERS_TODAY; ?></p>
+                </div>
+                <div class="icon"><i class="fa fa-shopping-cart"></i></div>
+                <a href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"
+                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-xs-6 col-lg-3">
+            <div class="kpi-card bg-green">
+                <div class="inner">
+                    <h3><?php echo $currencies->format($revenue_today->fields['total']); ?></h3>
+                    <p><?php echo BOX_KPI_REVENUE_TODAY; ?></p>
+                </div>
+                <div class="icon"><i class="fa fa-dollar"></i></div>
+                <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS); ?>"
+                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-xs-6 col-lg-3">
+            <div class="kpi-card bg-yellow">
+                <div class="inner">
+                    <h3><?php echo $customers_today->fields['count']; ?></h3>
+                    <p><?php echo BOX_KPI_CUSTOMERS_TODAY; ?></p>
+                </div>
+                <div class="icon"><i class="fa fa-user-plus"></i></div>
+                <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS); ?>"
+                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <div class="col-xs-6 col-lg-3">
+            <div class="kpi-card bg-red">
+                <div class="inner">
+                    <h3><?php echo $reviews_pending->fields['count']; ?></h3>
+                    <p><?php echo BOX_KPI_REVIEWS_PENDING; ?></p>
+                </div>
+                <div class="icon"><i class="fa fa-comments"></i></div>
+                <a href="<?php echo zen_href_link(FILENAME_REVIEWS, 'status=1'); ?>"
+                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-9">
+            <?php render_zone('main', $zones['main']); ?>
+        </div>
+
+        <div class="col-md-3">
+            <?php render_zone('sidebar', $zones['sidebar']); ?>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <?php render_zone('bottom', $zones['bottom']); ?>
+        </div>
+    </div>
+
+</div>

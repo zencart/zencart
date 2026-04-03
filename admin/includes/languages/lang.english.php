@@ -3,8 +3,8 @@
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-* @version $Id: lat9 2026 Feb 28 Modified in v2.2.1 $
-*/
+ * @version $Id: ZenExpert 2026 Jan 14 Modified in v2.2.0-alpha1 $
+ */
 
 @setlocale(LC_TIME, ['en_US', 'en_US.utf8', 'en', 'English_United States.1252']);
 
@@ -255,6 +255,19 @@ $define = [
     'HEADER_TITLE_SUPPORT_SITE' => 'Support',
     'HEADER_TITLE_TOP' => 'Home',
     'HEADER_TITLE_VERSION' => 'Version',
+    'HEADER_TITLE_VERSION_SYSTEM_CHECK' => 'System Check',
+    'HEADER_TITLE_VERSION_UP_TO_DATE' => 'Your system is up to date.',
+    'HEADER_TOGGLE_NAVIGATION' => 'Toggle navigation',
+    'HEADER_TITLE_MENU' => 'Menu',
+    'HEADER_TITLE_MENU_ERROR' => 'Menu empty, or settings error.',
+    'HEADER_TEXT_ADMIN' => 'Admin',
+    'HEADER_TEXT_SEARCH_ORDERS' => 'Search Orders...',
+    'HEADER_TEXT_LANGUAGES' => 'Languages',
+    'HEADER_TEXT_IP_ADDRESS' => 'IP Address',
+    'HEADER_TEXT_HOSTNAME' => 'Hostname',
+    'HEADER_TEXT_TIMEZONE' => 'Timezone',
+    'HEADER_TEXT_SECURITY_WARNING' => 'Warning: Admin Activity Log action required!',
+    'HEADER_TITLE_QUICK_ACTIONS' => 'Quick Actions',
     'HEADING_TITLE_VAL' => 'Option Values',
     'HEADING_TITLE_SEARCH_DETAIL' => 'Search: ',
     'HEADING_TITLE_SEARCH_DETAIL_REPORTS' => 'Search for Product IDs (Delimited by commas)',
