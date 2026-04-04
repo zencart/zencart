@@ -12,7 +12,7 @@ $admin_name = $admin_pass = $message = "";
 $errors = array();
 $error = $expired = false;
 if (isset($_POST['action']) && $_POST['action'] != '') {
-  if ((!isset($_SESSION['securityToken']) || !isset($_POST['securityToken'])) || ($_SESSION['securityToken'] !== $_POST['securityToken'])) {
+  if (!zen_request_has_valid_csrf_token()) {
     $error = true;
     $message = ERROR_SECURITY_ERROR;
     zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_ADMIN_LOGIN_WITHOUT_CSRF_TOKEN, 'warning');

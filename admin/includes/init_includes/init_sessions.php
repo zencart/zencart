@@ -48,7 +48,7 @@ if (!isset($_SESSION ['securityToken'])) {
     $_SESSION ['securityToken'] = \bin2hex(\random_bytes(16));
 }
 if ((isset($_GET['action']) || isset($_POST['action']) || isset($_GET['act'], $_GET['method'])) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($_SESSION ['securityToken'], $_POST ['securityToken']) || $_SESSION ['securityToken'] !== $_POST ['securityToken']) {
+    if (!zen_request_has_valid_csrf_token()) {
             if (function_exists('ajaxAbort')) {
                 // -----
                 // "Tell" the zcJS.ajax function (in jscript_framework.php) that a

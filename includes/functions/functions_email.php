@@ -662,7 +662,10 @@
             $block['EMAIL_LOGO_FILE'] = $domain . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
         }
         if (empty($block['EMAIL_LOGO_ALT_TEXT'])) {
-            $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
+            $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TEXT;
+        }
+        if (empty($block['EMAIL_LOGO_ALT_TITLE_TEXT'])) {
+            $block['EMAIL_LOGO_ALT_TITLE_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
         }
         if (empty($block['EMAIL_LOGO_WIDTH'])) {
             $block['EMAIL_LOGO_WIDTH'] = EMAIL_LOGO_WIDTH;

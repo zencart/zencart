@@ -203,6 +203,7 @@ class queryFactory extends base
 
     /**
      * Escape SQL query value for binding
+     * Alias for mysqli_real_escape_string()
      *
      * @param string|null|mixed $string
      * @return string
@@ -214,7 +215,7 @@ class queryFactory extends base
     }
 
     /**
-     * Alias to prepare_input()
+     * Alias to prepare_input(), which calls mysqli_real_escape_string()
      * @param string|null|mixed $string
      * @return string
      * @see $this->prepare_input()

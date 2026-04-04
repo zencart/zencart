@@ -26,12 +26,12 @@ class zcAjaxAdminDashboardWidgetArrange extends base
         }
 
         $raw = file_get_contents('php://input');
-        if (str_contains($raw, '&securityToken=')) { // token already validated if we get this far
-            // if data is sent as form-urlencoded, extract the layout parameter
-            parse_str($raw, $parsed);
-            $data = $parsed['layout'] ?? '';
-        }
+        $raw = preg_replace('/&securityToken=[0-9A-Fa-f]+/', '', $raw);
+        parse_str($raw, $parsed);
+        $data = $parsed['layout'] ?? '';
         $layout = json_decode($data, true);
+        $jserr = json_last_error();
+        $jsmsg = json_last_error_msg();
 
         if (empty($layout)) {
             return $this->response('error', 'No layout data received. ' . $jserr . ' ' . $jsmsg, true);
@@ -63,7 +63,7 @@ class zcAjaxAdminDashboardWidgetArrange extends base
 
         $json_data = json_encode($clean_layout);
 
-        if ($json_data === '{"main":[],"sidebar":[],"bottom":[]}') {
+        if ($json_data === json_encode($allowed_zones)) {
             return $this->response('problem', 'layout not parsed.', true);
         }
 

@@ -55,4 +55,31 @@ class AdminSimpleLoginTest extends zcInProcessFeatureTestCaseAdmin
         $response->assertSee('Admin Home');
     }
 
+    public function testAdminLoginAcceptsHeaderOnlyCsrfToken(): void
+    {
+        $page = $this->visitAdminHome()
+            ->assertOk()
+            ->assertSee('Admin Login');
+
+        $formData = $page->formDefaults('loginForm');
+        $securityToken = $formData['securityToken'] ?? null;
+
+        $this->assertNotNull($securityToken);
+        unset($formData['securityToken']);
+
+        $response = $this->postAdmin(
+            $page->formAction('loginForm') ?? '/admin/index.php',
+            array_merge($formData, [
+                'admin_name' => 'Admin',
+                'admin_pass' => 'password',
+            ]),
+            ['HTTP_X_CSRF_TOKEN' => $securityToken]
+        );
+
+        $response = $response->isRedirect() ? $this->followAdminRedirect($response) : $response;
+        $response->assertOk();
+
+        $response->assertSee('Initial Setup Wizard');
+    }
+
 }

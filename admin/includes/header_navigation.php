@@ -23,7 +23,7 @@ $adminMenu  = zen_get_admin_menu_for_user();
             <ul class="nav navbar-nav">
 
                 <?php
-                // DEBUG: if menu is empty, show a warning
+                // if menu is empty, show a warning
                 if (empty($adminMenu)) {
                     echo '<li><a href="#" style="color:red;">' . HEADER_TITLE_MENU_ERROR . '</a></li>';
                 }

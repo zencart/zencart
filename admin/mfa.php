@@ -41,7 +41,7 @@ if (empty($_SESSION['mfa']) || str_starts_with($_POST['action'] ?? '', 'setup') 
 
 if (!empty($_POST['action'])) {
     // CSRF
-    if (!isset($_SESSION['securityToken'], $_POST['securityToken']) || ($_SESSION['securityToken'] !== $_POST['securityToken'])) {
+    if (!zen_request_has_valid_csrf_token()) {
         $error = true;
         $message = ERROR_SECURITY_ERROR;
         zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_MFA_LOGIN_WITHOUT_CSRF_TOKEN, 'warning');

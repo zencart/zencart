@@ -24,7 +24,7 @@ if (isset($_POST['action']) && in_array($_POST['action'], ['update', 'reset'])) 
 }
 
 // validate form input as not expired and not spoofed
-if ($action != '' && isset($_POST['action']) && $_POST['action'] != '' && $_POST['securityToken'] != $_SESSION['securityToken']) {
+if ($action != '' && isset($_POST['action']) && $_POST['action'] != '' && !zen_request_has_valid_csrf_token()) {
     $messageStack->add_session(ERROR_TOKEN_EXPIRED_PLEASE_RESUBMIT, 'error');
     zen_redirect(zen_href_link(FILENAME_ADMIN_ACCOUNT));
 }

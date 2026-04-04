@@ -59,4 +59,35 @@ class AskAQuestionInProcessTest extends zcInProcessFeatureTestCaseStore
             ->assertSee('Matrox G400 32MB');
     }
 
+    public function testGuestCanSubmitAskAQuestionFormWithHeaderOnlyCsrfToken(): void
+    {
+        $page = $this->getSsl('/index.php?main_page=ask_a_question&pID=2')
+            ->assertOk()
+            ->assertSee('Matrox G400 32MB');
+
+        $formData = $page->formDefaults('ask_a_question');
+        $securityToken = $formData['securityToken'] ?? null;
+
+        $this->assertNotNull($securityToken);
+        unset($formData['securityToken']);
+
+        $response = $this->postSsl(
+            '/index.php?main_page=ask_a_question&action=send&pID=2',
+            array_merge($formData, [
+                'contactname' => 'Curious Shopper',
+                'email' => 'curious-header@example.com',
+                'telephone' => '5551234567',
+                'enquiry' => 'Could you tell me whether this graphics card works well for a basic retro gaming setup?',
+            ]),
+            ['HTTP_X_CSRF_TOKEN' => $securityToken]
+        );
+
+        $response->assertRedirect('main_page=ask_a_question');
+
+        $this->followRedirect($response)
+            ->assertOk()
+            ->assertSee('Your message has been successfully sent.')
+            ->assertSee('Matrox G400 32MB');
+    }
+
 }

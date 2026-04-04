@@ -117,6 +117,48 @@ function issetorArray(array $array, $key, $default = null)
     return isset($array[$key]) ? $array[$key] : $default;
 }
 
+/**
+ * Returns the CSRF token supplied for the current request, preferring the request header.
+ *
+ * If both the request header and POST field are present but don't match, `null` is returned
+ * so callers fail closed rather than silently choosing one source.
+ */
+function zen_get_csrf_token_from_request(): ?string
+{
+    $headerToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+    $postToken = $_POST['securityToken'] ?? null;
+
+    $hasHeaderToken = is_string($headerToken) && $headerToken !== '';
+    $hasPostToken = is_string($postToken) && $postToken !== '';
+
+    if ($hasHeaderToken) {
+        if ($hasPostToken && !hash_equals($headerToken, $postToken)) {
+            return null;
+        }
+
+        return $headerToken;
+    }
+
+    return $hasPostToken ? $postToken : null;
+}
+
+/**
+ * Validates the current request's CSRF token against the session token.
+ */
+function zen_request_has_valid_csrf_token(): bool
+{
+    if (!isset($_SESSION['securityToken']) || !is_string($_SESSION['securityToken']) || $_SESSION['securityToken'] === '') {
+        return false;
+    }
+
+    $requestToken = zen_get_csrf_token_from_request();
+    if (!is_string($requestToken) || $requestToken === '') {
+        return false;
+    }
+
+    return hash_equals($_SESSION['securityToken'], $requestToken);
+}
+
 
 /**
  * Get a shortened filename to fit within the db field constraints
