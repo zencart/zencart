@@ -10,27 +10,28 @@ if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) {
     return;
 }
 
+global $currencies, $recentOrdersMaxRows, $show_status_pills, $recentOrdersWidgetOrderStatusIDs;
 // to disable this module for everyone, uncomment the following "return" statement so the rest of this file is ignored
 // return;
 
 // Configure settings
-// To override the $includeAttributesInPopoverRows or $recentOrdersMaxRows
+// To override the $includeAttributesInPopoverRows or $recentOrdersMaxRows or $recentOrdersWidgetOrderStatusIDs or $show_status_pills
 // values, see
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 $includeAttributesInPopoverRows = $includeAttributesInPopoverRows ?? true;
 $maxRows = $recentOrdersMaxRows ?? 10; // default to 10 for a cleaner dashboard
-
 // define orders statuses to show in top bar
 $show_status_pills = $show_status_pills ?? true;
-if (!isset($target_status_ids)) {
-    $target_status_ids = [1, 2]; // pending and processing
+if (!isset($recentOrdersWidgetOrderStatusIDs) || !is_array($recentOrdersWidgetOrderStatusIDs)) {
+    $recentOrdersWidgetOrderStatusIDs = [1, 2]; // pending and processing
 }
-$currencies ??= new currencies();
+//========================
 
 // prepare data
+$currencies ??= new currencies();
 
-// only keep valid integers
-$target_status_ids = array_filter($target_status_ids, static fn($id) => is_int($id) || ctype_digit($id));
+// Cleanup and keep only valid integers
+$recentOrdersWidgetOrderStatusIDs = array_filter($recentOrdersWidgetOrderStatusIDs, static fn($id) => is_int($id) || ctype_digit($id));
 
 $sql = "SELECT o.orders_id, o.customers_name, o.customers_id, o.date_purchased,
                o.currency, o.currency_value, o.orders_status,
@@ -44,8 +45,8 @@ $orders = $db->Execute($sql, (int)$maxRows, true, 1800);
 
 // get status metadata (name, color)
     $status_meta = [];
-    if (!empty($target_status_ids)) {
-        $ids_str = implode(',', $target_status_ids);
+    if (!empty($recentOrdersWidgetOrderStatusIDs)) {
+        $ids_str = implode(',', $recentOrdersWidgetOrderStatusIDs);
         $sql_meta = "SELECT orders_status_id, orders_status_name, orders_status_color_code
                  FROM " . TABLE_ORDERS_STATUS . "
                  WHERE language_id = " . (int)$_SESSION['languages_id'] . "
@@ -65,11 +66,11 @@ $orders = $db->Execute($sql, (int)$maxRows, true, 1800);
 if ($show_status_pills) {
     $status_counts = [];
     // pre-fill with 0 to ensure badges show even if count is 0
-    foreach ($target_status_ids as $tid) {
+    foreach ($recentOrdersWidgetOrderStatusIDs as $tid) {
         $status_counts[$tid] = 0;
     }
-    if (!empty($target_status_ids)) {
-        $ids_str = implode(',', $target_status_ids);
+    if (!empty($recentOrdersWidgetOrderStatusIDs)) {
+        $ids_str = implode(',', $recentOrdersWidgetOrderStatusIDs);
         $sql_stats = "SELECT orders_status, count(*) as total
                       FROM " . TABLE_ORDERS . "
                       WHERE orders_status IN (" . $ids_str . ")
@@ -91,7 +92,7 @@ if ($show_status_pills) {
             <div class="col-xs-12 col-md-8 mb-2 text-center status-pills">
                 <?php
                 if($show_status_pills) {
-                foreach ($target_status_ids as $sID) {
+                foreach ($recentOrdersWidgetOrderStatusIDs as $sID) {
                     $count = $status_counts[$sID];
                     $name  = isset($status_meta[$sID]) ? $status_meta[$sID]['name'] : zen_get_orders_status_name($sID);
                     $customColor = isset($status_meta[$sID]) ? $status_meta[$sID]['color'] : null;

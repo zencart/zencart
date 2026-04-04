@@ -56,7 +56,7 @@ if (!is_array($zones) || empty($zones)) {
 function render_zone($zone_name, $widgets_array)
 {
     /** Globals needed inside widgets */
-    global $db, $currencies, $show_status_pills, $target_status_ids, $sniffer, $zco_notifier, $messageStack, $recentOrdersMaxRows, $target_status_ids, $show_status_pills, $zcDate;
+    global $db, $zco_notifier, $messageStack;
 
     // Define the accepted base path for widgets to prevent LFI vulnerabilities
     $acceptedPath = realPath(DIR_FS_CATALOG);
@@ -109,13 +109,11 @@ function render_zone($zone_name, $widgets_array)
     echo '</ul>';
 }
 
-// Notifier for plugins to inject their own widgets into zones
-$zco_notifier->notify('NOTIFY_ADMIN_DASHBOARD_ZONES', null, $zones);
-
 // legacy widgets support
 $widgets = [];
 
-$zco_notifier->notify('NOTIFY_ADMIN_DASHBOARD_WIDGETS', null, $widgets);
+// Notifier for plugins to inject their own widgets into zones
+$zco_notifier->notify('NOTIFY_ADMIN_DASHBOARD_WIDGETS', null, $widgets, $zones);
 
 foreach ($widgets as $widget) {
     if (!isset($widget['path'])) {

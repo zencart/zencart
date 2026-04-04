@@ -40,7 +40,7 @@ $top_products = $db->Execute($sql, 5, true, 1800);
                     // fallback placeholder if no image found
                     $thumb = '<div class="most-popular-fallback-image"><i class="fa fa-image"></i></div>';
                 } else {
-                    $thumb = zen_image($img, $name, IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="most-popular-main-image object-fit-contain"');
+                    $thumb = zen_image(DIR_WS_CATALOG_IMAGES . $img, $name, IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="most-popular-main-image object-fit-contain"');
                 }
                 ?>
                 <li class="list-group-item most-popular-item">
