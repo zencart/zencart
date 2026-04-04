@@ -1,13 +1,13 @@
 <?php
 /**
  * index.php -- This is the main controller file for the Zen Cart installer
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 19 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2026 Feb 19 Modified in v2.2.1 $
  */
 
-if (PHP_VERSION_ID < 80002) {
-    die('Sorry, requires minimum PHP 8.0.2');
+if (PHP_VERSION_ID < 80300) {
+    die('Sorry, requires minimum PHP 8.3 (current version: ' . PHP_VERSION . ')');
 }
 
 define('IS_ADMIN_FLAG', false);

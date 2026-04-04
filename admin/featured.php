@@ -1,18 +1,16 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  * structurally identical to specials.php, modifications should be replicated
  */
 require 'includes/application_top.php';
-
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
-$currentPage = (isset($_GET['page']) && $_GET['page'] != '' ? (int)$_GET['page'] : 0);
+$action = $_GET['action'] ?? '';
+$currentPage = (int)($_GET['page'] ?? 0);
 
 if (!empty($action)) {
   // -----
@@ -35,8 +33,8 @@ if (!empty($action)) {
 
         $error = false;
         $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
-        if ($featured_date_available_raw === '') {
-            $featured_date_available = '0001-01-01';
+        if (empty($featured_date_available_raw)) {
+            $featured_date_available = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -55,8 +53,8 @@ if (!empty($action)) {
         }
 
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-        if ($expires_date_raw === '') {
-            $expires_date = '0001-01-01';
+        if (empty($expires_date_raw)) {
+            $expires_date = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -80,7 +78,7 @@ if (!empty($action)) {
         }
 
         $db->Execute("INSERT INTO " . TABLE_FEATURED . " (products_id, featured_date_added, expires_date, status, featured_date_available)
-                      VALUES (" . (int)$products_id . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($featured_date_available) . "')");
+                      VALUES (" . (int)$products_id . ", now(), '" . zen_db_input(!empty($expires_date) ? $expires_date : '0001-01-01') . "', 1, '" . zen_db_input(!empty($featured_date_available) ? $featured_date_available : '0001-01-01') . "')");
 
         $new_featured = $db->Execute("SELECT featured_id
                                       FROM " . TABLE_FEATURED . "
@@ -97,8 +95,8 @@ if (!empty($action)) {
         $error = false;
 
         $featured_date_available_raw = zen_db_prepare_input($_POST['featured_date_available']);
-        if ($featured_date_available_raw === '') {
-            $featured_date_available = '0001-01-01';
+        if (empty($featured_date_available_raw)) {
+            $featured_date_available = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($featured_date_available_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -117,8 +115,8 @@ if (!empty($action)) {
         }
 
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-        if ($expires_date_raw === '') {
-            $expires_date = '0001-01-01';
+        if (empty($expires_date_raw)) {
+            $expires_date = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -143,8 +141,8 @@ if (!empty($action)) {
 
         $db->Execute("UPDATE " . TABLE_FEATURED . "
                     SET featured_last_modified = now(),
-                        expires_date = '" . zen_db_input($expires_date) . "',
-                        featured_date_available = '" . zen_db_input($featured_date_available) . "'
+                        expires_date = '" . zen_db_input(!empty($expires_date) ? $expires_date : '0001-01-01') . "',
+                        featured_date_available = '" . zen_db_input(!empty($featured_date_available) ? $featured_date_available : '0001-01-01') . "'
                     WHERE featured_id = " . (int)$featured_id);
 
         zen_redirect(zen_href_link(FILENAME_FEATURED, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'fID=' . (int)$featured_id));
@@ -213,7 +211,8 @@ if (!empty($action)) {
           $form_action = 'update';
 
           $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute,
-                                          f.expires_date, f.featured_date_available
+                                          DATE_FORMAT(f.expires_date, '" .  zen_datepicker_format_forsql() . "') AS expires_date,
+                                          DATE_FORMAT(f.featured_date_available, '" .  zen_datepicker_format_forsql() . "') AS featured_date_available
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd,
                                         " . TABLE_FEATURED . " f
@@ -223,6 +222,14 @@ if (!empty($action)) {
                                    AND f.featured_id = " . (int)$_GET['fID']);
 
           $fInfo = new objectInfo($product->fields);
+          
+          if ($fInfo->featured_date_available === '0001-01-01' || $fInfo->featured_date_available === '01-01-0001') {
+              $fInfo->featured_date_available = '';
+          }
+
+          if ($fInfo->expires_date === '0001-01-01' || $fInfo->expires_date === '01-01-0001') {
+              $fInfo->expires_date = '';
+          }
 
           if ($fInfo->products_priced_by_attribute === '1') {
             $fInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
@@ -315,7 +322,7 @@ if (!empty($action)) {
                 <span class="input-group-addon datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
-                <?php echo zen_draw_input_field('featured_date_available', (($fInfo->featured_date_available == '0001-01-01') ? '' : $fInfo->featured_date_available), 'class="form-control" id="featured_date_available"'); ?>
+                <?php echo zen_draw_input_field('featured_date_available', $fInfo->featured_date_available, 'class="form-control" id="featured_date_available"'); ?>
               </div>
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_ACTIVE_DATE; ?></span></span>
             </div>
@@ -327,7 +334,7 @@ if (!empty($action)) {
                 <span class="input-group-addon datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
-                <?php echo zen_draw_input_field('expires_date', (($fInfo->expires_date == '0001-01-01') ? '' : $fInfo->expires_date), 'class="form-control" id="expires_date"'); ?>
+                <?php echo zen_draw_input_field('expires_date', $fInfo->expires_date, 'class="form-control" id="expires_date"'); ?>
               </div>
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_EXPIRES_DATE; ?></span></span>
             </div>

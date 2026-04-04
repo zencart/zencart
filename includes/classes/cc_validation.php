@@ -2,10 +2,10 @@
 /**
  * cc_validation Class.
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -14,10 +14,14 @@ if (!defined('IS_ADMIN_FLAG')) {
  * cc_validation Class.
  * Class to validate credit card numbers etc
  *
+ * @since ZC v1.0.3
  */
 class cc_validation extends base {
   public $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
 
+  /**
+   * @since ZC v1.0.3
+   */
   function validate($number, $expiry_m, $expiry_y, $start_m = null, $start_y = null) {
     $this->cc_number = preg_replace('/[^0-9]/', '', $number);
     // NOTE: We check Solo before Maestro, and Maestro/Switch *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
@@ -89,6 +93,9 @@ class cc_validation extends base {
     return $this->is_valid();
   }
 
+  /**
+   * @since ZC v1.1.0
+   */
   function is_valid() {
     $cardNumber = strrev($this->cc_number);
     $numSum = 0;

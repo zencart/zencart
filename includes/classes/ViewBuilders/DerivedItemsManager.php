@@ -1,18 +1,23 @@
 <?php declare(strict_types=1);
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Jul 19 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 
 namespace Zencart\ViewBuilders;
 
 use Zencart\FileSystem\FileSystem;
-use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @since ZC v1.5.8
+ */
 class DerivedItemsManager
 {
-    public function process(Model $tableRow, string $colName, array $columnInfo) : string
+    /**
+     * @since ZC v1.5.8
+     */
+    public function process($tableRow, string $colName, array $columnInfo): string
     {
         if (!isset($columnInfo['derivedItem'])) {
             return $tableRow[$colName];
@@ -21,7 +26,10 @@ class DerivedItemsManager
         return $colData;
     }
 
-    protected function processDerivedItem(Model $tableRow, string $colName, array $columnInfo) : string
+    /**
+     * @since ZC v1.5.8
+     */
+    protected function processDerivedItem($tableRow, string $colName, array $columnInfo): string
     {
         $type = $columnInfo['derivedItem']['type'];
         switch ($type) {
@@ -36,7 +44,10 @@ class DerivedItemsManager
         }
     }
 
-    protected function booleanReplace(Model $tableRow, string $colName, array $columnInfo) : string
+    /**
+     * @since ZC v1.5.8
+     */
+    protected function booleanReplace($tableRow, string $colName, array $columnInfo): string
     {
         $params = $columnInfo['derivedItem']['params'];
         $listValue = $tableRow[$colName];
@@ -45,7 +56,10 @@ class DerivedItemsManager
         return $result;
     }
 
-    protected function arrayReplace(Model $tableRow, string $colName, array $columnInfo) : string
+    /**
+     * @since ZC v1.5.8
+     */
+    protected function arrayReplace($tableRow, string $colName, array $columnInfo): string
     {
         $params = $columnInfo['derivedItem']['params'];
         $listValue = $tableRow[$colName];
@@ -53,11 +67,22 @@ class DerivedItemsManager
         return $result;
     }
 
-    protected function getPluginFileSize(Model $tableRow, string $colName, array $columnInfo) : string
+    /**
+     * @since ZC v1.5.8
+     */
+    protected function getPluginFileSize($tableRow, string $colName, array $columnInfo): string
     {
         $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $tableRow['unique_key'] . '/';
         $fs = new FileSystem;
         $dirSize = $fs->getDirectorySize($filePath);
         return $dirSize;
+    }
+
+    /**
+     * @since ZC v2.1.0
+     */
+    protected function getLanguageTranslationForName($tableRow, string $colName, array $columnInfo): string
+    {
+        return zen_lookup_admin_menu_language_override('plugin_name', $tableRow['unique_key'], $tableRow['name']);
     }
 }

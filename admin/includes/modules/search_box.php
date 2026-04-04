@@ -1,16 +1,23 @@
 <?php
+
 /*
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Jul 10 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2024 Aug 18 Modified in v2.1.0-alpha2 $
  */
+// -----
+// The search-box's input defaults to 'autofocus' unless the including
+// script has indicated that it doesn't want the search-field to have
+// that attribute.
+//
+$autofocus_search = empty($no_searchbox_autofocus) ? ' autofocus="autofocus"' : '';
 ?>
-<?php echo zen_draw_form('searchForm', basename($PHP_SELF, '.php'), '', 'get', 'class="form-horizontal"', true); ?>
+<?= zen_draw_form('searchForm', basename($PHP_SELF, '.php'), '', 'get', 'class="form-horizontal"', true); ?>
 <div class="form-group">
-  <?php echo zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"'); ?>
+  <?= zen_draw_label(HEADING_TITLE_SEARCH_DETAIL, 'search', 'class="control-label col-sm-3"') ?>
   <div class="col-sm-9">
     <div class="input-group">
-      <?php echo zen_draw_input_field('search', '', 'class="form-control" id="search"', false, 'search'); ?>
+      <?= zen_draw_input_field('search', '', 'class="form-control" id="search"' . $autofocus_search, false, 'search') ?>
       <span class="input-group-btn">
         <button type="submit" class="btn btn-info"><i class="fa-solid fa-magnifying-glass fa-lg"></i></button>
       </span>
@@ -23,13 +30,13 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
   ?>
   <div class="form-group">
     <div class="col-sm-3">
-      <p class="control-label"><?php echo TEXT_INFO_SEARCH_DETAIL_FILTER; ?></p>
+      <p class="control-label"><?= TEXT_INFO_SEARCH_DETAIL_FILTER ?></p>
     </div>
     <div class="col-sm-9">
       <div class="input-group">
-        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?php echo zen_output_string_protected($keywords); ?></span>
+        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= zen_output_string_protected($keywords) ?></span>
         <span class="input-group-btn">
-          <a href="<?php echo zen_href_link(basename($PHP_SELF, '.php')); ?>" class="btn btn-default" role="button" title="<?php echo IMAGE_RESET; ?>"><i class="fa-solid fa-xmark fa-lg"></i></a>
+          <a href="<?= zen_href_link(basename($PHP_SELF, '.php')) ?>" class="btn btn-default" role="button" title="<?= IMAGE_RESET ?>"><i class="fa-solid fa-xmark fa-lg"></i></a>
         </span>
       </div>
     </div>
@@ -57,5 +64,4 @@ if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
 $extra_form_group = '';
 $zco_notifier->notify('NOTIFY_ADMIN_SEARCH_BOX_FORM_GROUP', '', $extra_form_group);
 echo $extra_form_group;
-?>
-<?php echo '</form>'; ?>
+echo '</form>';

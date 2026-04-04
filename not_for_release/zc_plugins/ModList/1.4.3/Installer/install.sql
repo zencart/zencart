@@ -1,1 +1,0 @@
-INSERT IGNORE INTO admin_pages (page_key, language_key, main_page, page_params, menu_key, display_on_menu, sort_order) VALUES ('mod_list', 'BOX_TOOLS_MOD_LIST', 'FILENAME_MOD_LIST', '', 'tools', 'Y', 999); 

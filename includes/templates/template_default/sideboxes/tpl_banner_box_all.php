@@ -2,10 +2,10 @@
 /**
  * Side Box Template
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: Scott Wilson 2024 Sep 30 Modified in v2.2.0 $
  */
   $content = '';
 
@@ -13,10 +13,6 @@
   $new_banner_search = zen_build_banners_group(SHOW_BANNERS_GROUP_SET_ALL);
 
   $my_banner_filter = '';
-  // filter for display secure pages
-  if ($request_type == 'SSL') {
-    $my_banner_filter = " and banners_on_ssl=1 ";
-  }
 
   $sql = "select banners_id from " . TABLE_BANNERS . " where status = 1 " . $new_banner_search . $my_banner_filter . " order by banners_sort_order";
   $banners_all = $db->Execute($sql);

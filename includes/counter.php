@@ -2,15 +2,29 @@
 /**
  * counter.php
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 May 05 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Oct 06 Modified in v2.2.0 $
  * @private
  */
-if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+
+/**
+ * This module is used to count the number of visitors to the site.
+ * And should only increment for customer-initiated traffic, and only once per session.
+ * Therefore it excludes ajax calls and webhooks, etc. And doesn't get called from admin.
+ */
+if ($loaderPrefix !== 'config'
+    || !class_exists('zcDate')
+    || !empty($spider_flag)
+    || !defined('IS_ADMIN_FLAG')
+    || function_exists('ajaxAbort')
+    || defined('IS_AJAX_REQUEST')
+    || defined('IS_WEBHOOK_REQUEST')
+) {
+    return;
 }
+
 if (isset($_SESSION['session_counter']) && $_SESSION['session_counter'] == true) {
   $session_counter = 0;
 } else {
@@ -23,8 +37,8 @@ $counter = $db->Execute($counter_query);
 $sql = "INSERT IGNORE INTO " . TABLE_COUNTER_HISTORY . " (startdate, counter, session_counter) values ('" . $date_now . "', '1', '1')";
 $db->Execute($sql);
 $sql = "SELECT * FROM "  . TABLE_COUNTER_HISTORY . " WHERE startdate = '" .  $date_now . "' AND counter = 1 AND session_counter = 1 LIMIT 1";
-$result = $db->execute($sql);
-if ($result->recordCount() <=0 || $counter->RecordCount() > 0 )
+$result = $db->Execute($sql);
+if ($result->RecordCount() <=0 || $counter->RecordCount() > 0 )
 {
   $counter_startdate = $counter->fields['startdate'];
   $counter_now = ($counter->fields['counter'] + 1);

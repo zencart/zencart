@@ -1,8 +1,8 @@
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Feb 11 New in v2.0.0-beta1 $
+ * @version $Id: DrByte 2026 Mar 05 Modified in v2.2.1 $
  */
 
 /*
@@ -16,8 +16,8 @@
 @import url("fontawesome/css/solid.min.css");
 @import url("fontawesome/css/regular.min.css");
 @import url("fontawesome/css/v4-shims.min.css");
-@import url("https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css");
+@import url("https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css");
 /*@import url("css/jquery-ui.css");*/
-@import url("css/jAlert.css");
+@import url("css/jAlert.min.css");
 @import url("menu.css");
 @import url("css/stylesheet.css");

@@ -2,10 +2,13 @@
 /**
  * ot_shipping order-total module
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Aug 18 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ */
+/**
+ * @since ZC v1.0.3
  */
 class ot_shipping extends base
 {
@@ -53,6 +56,9 @@ class ot_shipping extends base
         $this->output = [];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function process()
     {
         global $order, $currencies;
@@ -158,6 +164,9 @@ class ot_shipping extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function check()
     {
         global $db;
@@ -168,6 +177,9 @@ class ot_shipping extends base
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function keys()
     {
         return [
@@ -179,6 +191,9 @@ class ot_shipping extends base
         ];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function install()
     {
         global $db;
@@ -189,6 +204,9 @@ class ot_shipping extends base
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Provide Free Shipping For Orders Made', 'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION', 'national', 'Provide free shipping for orders sent to the set destination.', 6, 5, 'zen_cfg_select_option([\'national\', \'international\', \'both\'], ', now())");
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     public function remove()
     {
         global $db;

@@ -6,25 +6,29 @@
 
 namespace Tests\FeatureAdmin\AdminEndpoints;
 
-use Symfony\Component\Panther\Client;
-use Tests\Support\zcFeatureTestCaseAdmin;
+use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-class AdminSeederTest extends zcFeatureTestCaseAdmin
+/**
+ * @group parallel-candidate
+ */
+class AdminSeederTest extends zcInProcessFeatureTestCaseAdmin
 {
+    protected $runTestInSeparateProcess = true;
+    protected $preserveGlobalState = false;
+
     public function testSetupWizardSeeder()
     {
         $this->runCustomSeeder('StoreWizardSeeder');
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
-        $this->browser->submitForm('Submit', [
+
+        $this->visitAdminHome()
+            ->assertOk()
+            ->assertSee('Admin Login');
+
+        $response = $this->submitAdminLogin([
             'admin_name' => 'Admin',
             'admin_pass' => 'password',
-        ]);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Admin Home', (string)$response->getContent() );
+        ])->assertOk();
+
+        $response->assertSee('Admin Home');
     }
 }

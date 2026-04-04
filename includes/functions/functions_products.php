@@ -3,9 +3,9 @@
  * Functions related to products
  * Note: Several product-related lookup functions are located in functions_lookups.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Apr 16 Modified in v2.0.1 $
+ * @version $Id: DrByte 2026 Jan 14 Modified in v2.2.1 $
  */
 
 /**
@@ -14,31 +14,28 @@
  * @param int $product_id
  * @param int $language_id (optional)
  * @return Product
+ * @since ZC v1.5.7
  */
 function zen_get_product_details($product_id, $language_id = null): Product
 {
     return (new Product((int)$product_id))->forLanguage((int)$language_id);
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 function zen_product_set_header_response(int|string $product_id, ?Product $product_info = null): void
 {
     global $zco_notifier, $breadcrumb, $robotsNoIndex;
 
-    // make sure we got a dbResponse
-    if ($product_info === null || !isset($product_info->EOF)) {
+    // make sure we got a Product-class instance and it's for the current product
+    if ($product_info === null || get_class($product_info) !== 'Product' || $product_info->getID() !== (int)$product_id) {
         $product_info = new Product((int)$product_id);
     }
-
-    // make sure it's for the current product
-    if (!isset($product_info->fields['products_id'], $product_info->fields['products_status']) || (int)$product_info->fields['products_id'] !== (int)$product_id) {
-        $product_info = new Product((int)$product_id);
-    }
-
-    $product = $product_info->getData();
 
     $response_code = 200;
 
-    $product_not_found = empty($product);
+    $product_not_found = !$product_info->exists() || !empty($product_info->get('description_record_missing'));
     $should_throw_404 = $product_not_found;
 
     if ($should_throw_404 === true) {
@@ -47,7 +44,7 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 
     global $product_status;
 
-    $product_status = (int)($product_not_found === false && $product['products_status'] !== '0') ? $product['products_status'] : 0;
+    $product_status = ($product_not_found === true) ? 0 : $product_info->status();
     if ($product_status === 0) {
         $response_code = 410;
     }
@@ -91,6 +88,7 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
 /**
  * @param int $products_id
  * @param int $status
+ * @since ZC v1.5.7
  */
 function zen_set_disabled_upcoming_status($products_id, $status): void
 {
@@ -105,17 +103,23 @@ function zen_set_disabled_upcoming_status($products_id, $status): void
 
 /**
  * Enable all disabled products whose date_available is prior to the specified date
- * @param int $datetime optional timestamp
+ *
+ * @param int|null $activationDateTime optional timestamp
+ * @param bool $useMidnight true=all products for the day; false=exact timestamp
+ * @param bool $outputMessagesToCommandLine will output a status report, useful in command-line/cron mode
+ * @since ZC v1.5.7
  */
-function zen_enable_disabled_upcoming($datetime = null): void
+function zen_enable_disabled_upcoming(?int $activationDateTime = null, bool $useMidnight = true, bool $outputMessagesToCommandLine = false): void
 {
     global $db;
 
-    if (empty($datetime)) {
-        $datetime = time();
+    if (empty($activationDateTime)) {
+        $activationDateTime = time();
     }
 
-    $zc_disabled_upcoming_date = date('Ymd', $datetime);
+    $formatSpecificityString = $useMidnight ? 'Ymd' : 'YmdHis';
+
+    $zc_disabled_upcoming_date = date($formatSpecificityString, $activationDateTime);
 
     $sql = "SELECT products_id
             FROM " . TABLE_PRODUCTS . "
@@ -126,14 +130,25 @@ function zen_enable_disabled_upcoming($datetime = null): void
             ";
 
     $results = $db->Execute($sql);
+    $count = $results->count();
 
+    if ($outputMessagesToCommandLine) {
+        echo "$count eligible products found.";
+    }
     foreach ($results as $result) {
+        if ($outputMessagesToCommandLine) {
+            echo "\nEnabling product ID: " . $result['products_id'];
+        }
         zen_set_disabled_upcoming_status($result['products_id'], 1);
+    }
+    if ($outputMessagesToCommandLine) {
+        echo "\n--\n$count product activation queries submitted.\n";
     }
 }
 
 /**
  * build date range for "upcoming products" query
+ * @since ZC v1.3.5
  */
 function zen_get_upcoming_date_range(): string
 {
@@ -151,6 +166,7 @@ function zen_get_upcoming_date_range(): string
  * build date range for "new products" query
  * @param int $time_limit
  * @return string
+ * @since ZC v1.3.5
  */
 function zen_get_new_date_range($time_limit = false): string
 {
@@ -187,6 +203,7 @@ function zen_get_new_date_range($time_limit = false): string
  * Return a product's category (master_categories_id)
  * @param int $product_id
  * @return int|string
+ * @since ZC v1.0.3
  */
 function zen_get_products_category_id($product_id): int|string
 {
@@ -196,6 +213,7 @@ function zen_get_products_category_id($product_id): int|string
 /**
  * Reset master_categories_id for all products linked to the specified $category_id
  * @param int $category_id
+ * @since ZC v1.5.8
  */
 function zen_reset_products_category_as_master($category_id): void
 {
@@ -211,6 +229,9 @@ function zen_reset_products_category_as_master($category_id): void
     }
 }
 
+/**
+ * @since ZC v1.5.8
+ */
 function zen_reset_all_products_master_categories_id(): void
 {
     global $db;
@@ -234,6 +255,7 @@ function zen_reset_all_products_master_categories_id(): void
  * Also updates cache of lowest sale price based on the category change
  * @param int $product_id
  * @param int $category_id
+ * @since ZC v1.5.8
  */
 function zen_set_product_master_categories_id($product_id, $category_id): void
 {
@@ -248,9 +270,14 @@ function zen_set_product_master_categories_id($product_id, $category_id): void
 }
 
 /**
+ * Returns all the category IDs that the product is assigned to, including its master_categories_id.
+ *
+ * To get only the linked categories (without its primary/master), pass the product's master_categories_id to the $exclude array parameter.
+ *
  * @param int $product_id
  * @param array $exclude
  * @return array of categories_id
+ * @since ZC v1.5.8
  */
 function zen_get_linked_categories_for_product($product_id, $exclude = []): array
 {
@@ -276,6 +303,7 @@ function zen_get_linked_categories_for_product($product_id, $exclude = []): arra
  * @param int $category_id
  * @param bool $first_only if true, return only the first result (string)
  * @return array|integer Array of products_id, or if $first-only true, a single products_id/0 if record not found
+ * @since ZC v1.5.8
  */
 function zen_get_linked_products_for_category($category_id, bool $first_only = false): int|array
 {
@@ -303,6 +331,7 @@ function zen_get_linked_products_for_category($category_id, bool $first_only = f
 /**
  * @param int $product_id
  * @param int $category_id
+ * @since ZC v1.5.8
  */
 function zen_link_product_to_category($product_id, $category_id): void
 {
@@ -315,6 +344,7 @@ function zen_link_product_to_category($product_id, $category_id): void
 /**
  * @param int $product_id
  * @param int $category_id
+ * @since ZC v1.5.8
  */
 function zen_unlink_product_from_category($product_id, $category_id): void
 {
@@ -330,6 +360,7 @@ function zen_unlink_product_from_category($product_id, $category_id): void
  * Reset by removing all links-to-other-categories for this product, other than its master_categories_id
  * @param int $product_id
  * @param int $master_category_id
+ * @since ZC v1.5.8
  */
 function zen_unlink_product_from_all_linked_categories($product_id, $master_category_id = null): void
 {
@@ -353,6 +384,7 @@ function zen_unlink_product_from_all_linked_categories($product_id, $master_cate
  * @param int|string $prid
  * @param array|string $params
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_uprid(int|string $prid, array|string $params): string
 {
@@ -385,7 +417,7 @@ function zen_get_uprid(int|string $prid, array|string $params): string
         }
     }
 
-    $md_uprid = md5($uprid);
+    $md_uprid = hash('md5', $uprid);
     return $prid . ':' . $md_uprid;
 }
 
@@ -394,6 +426,7 @@ function zen_get_uprid(int|string $prid, array|string $params): string
  * Alternate: simply (int) the product id
  * @param string|int $uprid ie: '11:abcdef12345'
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_get_prid(string|int $uprid): int
 {
@@ -405,6 +438,7 @@ function zen_get_prid(string|int $uprid): int
 /**
  * @param int|string $product_id (while a hashed string is accepted, only the (int) portion is used)
  * Check if product_id exists in database
+ * @since ZC v1.0.3
  */
 function zen_products_id_valid(int|string $product_id): bool
 {
@@ -416,16 +450,18 @@ function zen_products_id_valid(int|string $product_id): bool
  *
  * @param int $product_id The product id of the product who's name we want
  * @param int $language_id The language id to use. Defaults to current language
+ * @since ZC v1.0.3
  */
 function zen_get_products_name($product_id, $language_id = null): string
 {
-    $product = (new Product((int)$product_id))->getDataForLanguage($language_id);
+    $product = (new Product((int)$product_id))->getDataForLanguage((int)$language_id);
     return $product['products_name'] ?? '';
 }
 
 /**
  * lookup attributes model
  * @param int $product_id
+ * @since ZC v1.0.3
  */
 function zen_get_products_model($product_id): string
 {
@@ -435,6 +471,7 @@ function zen_get_products_model($product_id): string
 /**
  * Get the status of a product
  * @param int $product_id
+ * @since ZC v1.2.0d
  */
 function zen_get_products_status($product_id): int
 {
@@ -446,6 +483,7 @@ function zen_get_products_status($product_id): int
  * @TODO - check to see whether 'true'/'false' string responses can be changed to boolean
  *
  * @param int $product_id
+ * @since ZC v1.2.0d
  */
 function zen_get_product_is_linked($product_id, $show_count = 'false')
 {
@@ -459,6 +497,7 @@ function zen_get_product_is_linked($product_id, $show_count = 'false')
  * Return a product's stock-on-hand
  *
  * @param int $products_id The product id of the product whose stock we want
+ * @since ZC v1.0.3
  */
 function zen_get_products_stock($products_id): int|float
 {
@@ -486,6 +525,7 @@ function zen_get_products_stock($products_id): int|float
  *
  * @param int $products_id The product id of the product whose stock is to be checked
  * @param int $products_quantity Quantity to compare against
+ * @since ZC v1.0.3
  */
 function zen_check_stock($products_id, $products_quantity): string
 {
@@ -514,6 +554,7 @@ function zen_check_stock($products_id, $products_quantity): string
  * Return a product's manufacturer's name, from ID
  * @param int $product_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_products_manufacturers_name($product_id): string
 {
@@ -524,6 +565,7 @@ function zen_get_products_manufacturers_name($product_id): string
  * Return a product's manufacturer's image, from Prod ID
  * @param int $product_id
  * @return string
+ * @since ZC v1.2.1d
  */
 function zen_get_products_manufacturers_image($product_id): string
 {
@@ -534,20 +576,22 @@ function zen_get_products_manufacturers_image($product_id): string
  * Return a product's manufacturer's id
  * @param int $product_id
  * @return int
+ * @since ZC v1.3.6
  */
 function zen_get_products_manufacturers_id($product_id): int
 {
-    return (new Product((int)$product_id))->get('manufacturers_id') ?? 0;
+    return (int)(new Product((int)$product_id))->get('manufacturers_id') ?? 0;
 }
 
 /**
  * @param int $product_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_products_url($product_id, $language_id): string
 {
-    $product = (new Product((int)$product_id))->getDataForLanguage($language_id);
+    $product = (new Product((int)$product_id))->getDataForLanguage((int)$language_id);
     return $product['products_url'] ?? '';
 }
 
@@ -556,13 +600,14 @@ function zen_get_products_url($product_id, $language_id): string
  * @param int $product_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_products_description($product_id, $language_id = null): string
 {
     global $zco_notifier;
 
     $product = new Product((int)$product_id);
-    $data = $product->getDataForLanguage($language_id);
+    $data = $product->getDataForLanguage((int)$language_id);
 
     //Allow an observer to modify the description
     $zco_notifier->notify('NOTIFY_GET_PRODUCTS_DESCRIPTION', $product_id, $data);
@@ -571,10 +616,11 @@ function zen_get_products_description($product_id, $language_id = null): string
 
 /**
  * look up the product type from product_id and return an info page name (for template/page handling)
- * @param int $product_id
+ * @param numeric $product_id
  * @return string
+ * @since ZC v1.2.0d
  */
-function zen_get_info_page($product_id): string
+function zen_get_info_page(mixed $product_id): string
 {
     return (new Product((int)$product_id))->getInfoPage();
 }
@@ -582,12 +628,12 @@ function zen_get_info_page($product_id): string
 /**
  * get products_type for specified $product_id
  * @param int $product_id
- * @return int|string
+ * @return int
+ * @since ZC v1.2.0d
  */
-function zen_get_products_type($product_id): int|string
+function zen_get_products_type($product_id): int
 {
-    // NOTE: Empty string return is used by the admin/product.php to identify a product that doesn't exist in the database!
-    return (new Product((int)$product_id))->get('products_type') ?? '';
+    return (int)(new Product((int)$product_id))->get('products_type') ?? 1;
 }
 
 /**
@@ -596,6 +642,7 @@ function zen_get_products_type($product_id): int|string
  * @param int $width
  * @param int $height
  * @return string
+ * @since ZC v1.2.0d
  */
 function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height = SMALL_IMAGE_HEIGHT): string
 {
@@ -614,6 +661,7 @@ function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height
  * look up whether a product is virtual
  * @param int $product_id
  * @return bool
+ * @since ZC v1.2.0d
  */
 function zen_get_products_virtual($product_id): bool
 {
@@ -624,6 +672,7 @@ function zen_get_products_virtual($product_id): bool
  * Look up whether the given product ID is allowed to be added to cart, according to product-type switches set in Admin
  * @param int|string $product_id  (while a hashed string is accepted, only the (int) portion is used)
  * @return string Y|N
+ * @since ZC v1.2.0d
  */
 function zen_get_products_allow_add_to_cart($product_id): string
 {
@@ -638,6 +687,7 @@ function zen_get_products_allow_add_to_cart($product_id): string
  * SHOW_PRODUCT_INFO_METATAGS_PRODUCTS_NAME_STATUS
  * the value of the configuration_key is then returned
  * NOTE: keys are looked up first in the product_type_layout table and if not found looked up in the configuration table.
+ * @since ZC v1.2.0d
  */
 function zen_get_show_product_switch($lookup, $field, $prefix = 'SHOW_', $suffix = '_INFO', $field_prefix = '_', $field_suffix = ''): string
 {
@@ -660,6 +710,7 @@ function zen_get_show_product_switch($lookup, $field, $prefix = 'SHOW_', $suffix
 
 /**
  * return switch name
+ * @since ZC v1.3.0
  */
 function zen_get_show_product_switch_name($lookup, $field, $prefix = 'SHOW_', $suffix = '_INFO', $field_prefix = '_', $field_suffix = ''): string
 {
@@ -671,6 +722,7 @@ function zen_get_show_product_switch_name($lookup, $field, $prefix = 'SHOW_', $s
 /**
  * Look up whether a product is always free shipping
  * @param int $product_id
+ * @since ZC v1.2.0d
  */
 function zen_get_product_is_always_free_shipping($product_id): bool
 {
@@ -685,6 +737,7 @@ function zen_get_product_is_always_free_shipping($product_id): bool
  * @param int $language ID
  *
  * @deprecated use Product class ->get($what_field) instead
+ * @since ZC v1.3.0
  */
 function zen_products_lookup($product_id, $what_field = 'products_name', $language = null): mixed
 {
@@ -700,6 +753,7 @@ function zen_products_lookup($product_id, $what_field = 'products_name', $langua
  * Lookup and return product's master_categories_id
  * @param int $product_id
  * @return mixed|int
+ * @since ZC v1.2.5
  */
 function zen_get_parent_category_id($product_id): int|string
 {
@@ -711,6 +765,7 @@ function zen_get_parent_category_id($product_id): int|string
  * check if products has quantity-discounts defined
  * @param int $product_id
  * @return string
+ * @since ZC v1.2.1d
  */
 function zen_has_product_discounts($product_id)
 {
@@ -728,6 +783,7 @@ function zen_has_product_discounts($product_id)
  *
  * @param int $product_id
  * @return boolean
+ * @since ZC v2.0.0
  */
 function zen_has_product_specials(int $product_id): bool
 {
@@ -742,6 +798,7 @@ function zen_has_product_specials(int $product_id): bool
  *
  * @param int $product_id
  * @param int $status
+ * @since ZC v1.0.3
  */
 function zen_set_product_status($product_id, $status): void
 {
@@ -759,6 +816,7 @@ function zen_set_product_status($product_id, $status): void
  * @TODO - can the ptc string 'true' be changed to boolean?
  * @param int $product_id
  * @param string $ptc
+ * @since ZC v1.0.3
  */
 function zen_remove_product($product_id, $ptc = 'true'): void
 {
@@ -803,6 +861,30 @@ function zen_remove_product($product_id, $ptc = 'true'): void
             }
         }
     }
+
+    // remove additional images
+    if (ADDITIONAL_IMAGES_HANDLING === 'Database') {
+        // Get all additional images for this product
+        $images_query = $db->Execute("SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id");
+        foreach ($images_query as $image) {
+            $image_name = $image['additional_image'];
+
+            // Check if this image is used by any other product
+            $check_query = $db->Execute(
+                "SELECT COUNT(*) AS total FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE additional_image = '" . zen_db_input($image_name) . "' AND products_id != $product_id"
+            );
+
+            // If not used elsewhere, delete the file
+            if ($check_query->fields['total'] == 0 && !empty($image_name)) {
+                $file_path = DIR_FS_CATALOG_IMAGES . $image_name;
+                if (file_exists($file_path)) {
+                    @unlink($file_path);
+                }
+            }
+        }
+    }
+    // Now delete the database records for additional images
+    $db->Execute("DELETE FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id");
 
     $db->Execute("DELETE FROM " . TABLE_SPECIALS . " WHERE products_id = $product_id");
 
@@ -852,6 +934,7 @@ function zen_remove_product($product_id, $ptc = 'true'): void
  * Remove downloads (if any) from specified product
  *
  * @param int $product_id
+ * @since ZC v1.0.3
  */
 function zen_products_attributes_download_delete($product_id): void
 {
@@ -870,6 +953,7 @@ function zen_products_attributes_download_delete($product_id): void
  * @param int $copy_from Source products_id
  * @param int $copy_to   Target products_id
  * @return bool Indicates whether there was a special on $copy_from or not.
+ * @since ZC v2.0.0
  */
 function zen_copy_specials_to_product(int $copy_from, int $copy_to): bool
 {
@@ -904,6 +988,7 @@ function zen_copy_specials_to_product(int $copy_from, int $copy_to): bool
  * @param int $copy_from
  * @param int $copy_to
  * @return false on failure
+ * @since ZC v1.2.1d
  */
 function zen_copy_discounts_to_product($copy_from, $copy_to): bool
 {
@@ -942,6 +1027,9 @@ function zen_copy_discounts_to_product($copy_from, $copy_to): bool
     return true;
 }
 
+/**
+ * @since ZC v1.5.8a
+ */
 function zen_products_sort_order($includeOrderBy = true): string
 {
     switch (PRODUCT_INFO_PREVIOUS_NEXT_SORT) {

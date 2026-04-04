@@ -2,10 +2,10 @@
 /**
  * functions_taxes
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
@@ -14,6 +14,7 @@
  * @param int $country_id
  * @param int $zone_id
  * @return float|int
+ * @since ZC v1.0.3
  */
 function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
 {
@@ -88,6 +89,7 @@ function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
  * @param int $country_id
  * @param int $zone_id
  * @return false|string
+ * @since ZC v1.0.3
  */
 function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
 {
@@ -118,8 +120,9 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
         }
     }
 
-    $tax_query = "SELECT tax_description
-                  FROM " . TABLE_TAX_RATES . " tr
+    $tax_query = "SELECT trd.tax_description
+                  FROM " . TABLE_TAX_RATES_DESCRIPTION . " trd
+                  LEFT JOIN " . TABLE_TAX_RATES . " tr ON (trd.tax_rates_id = tr.tax_rates_id)
                   LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za ON (tr.tax_zone_id = za.geo_zone_id)
                   LEFT JOIN " . TABLE_GEO_ZONES . " tz ON (tz.geo_zone_id = tr.tax_zone_id)
                   WHERE (za.zone_country_id IS null OR za.zone_country_id = 0
@@ -128,6 +131,7 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
                         OR za.zone_id = 0
                         OR za.zone_id = " . (int)$zone_id . ")
                   AND tr.tax_class_id = " . (int)$class_id . "
+                  AND trd.language_id = " . (int)$_SESSION['languages_id'] . "
                   ORDER BY tr.tax_priority";
 
     $tax = $db->Execute($tax_query);
@@ -152,6 +156,7 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
  * @param int $zone_id
  * @param array $tax_description
  * @return array (description => tax_rate)
+ * @since ZC v1.3.8
  */
 function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, $tax_description = [])
 {
@@ -173,6 +178,11 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
     if (is_array($rates_array)) {
         return $rates_array;
     }
+    if (Customer::isTaxExempt() === true) {
+        return [
+            TAX_EXEMPT_DESCRIPTION => 0,
+        ];
+    }
 
     $rates_array = [];
 
@@ -186,16 +196,18 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
         }
     }
 
-    $tax_query = "SELECT tax_description, tax_rate, tax_priority
-                  FROM " . TABLE_TAX_RATES . " tr
+    $tax_query = "SELECT trd.tax_description, tr.tax_rate, tr.tax_priority
+                  FROM " . TABLE_TAX_RATES_DESCRIPTION . " trd
+                  LEFT JOIN " . TABLE_TAX_RATES . " tr ON (trd.tax_rates_id = tr.tax_rates_id)
                   LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za ON (tr.tax_zone_id = za.geo_zone_id)
                   LEFT JOIN " . TABLE_GEO_ZONES . " tz ON (tz.geo_zone_id = tr.tax_zone_id)
                   WHERE (za.zone_country_id IS null OR za.zone_country_id = 0
-                    OR za.zone_country_id = " . (int)$country_id . ")
+                        OR za.zone_country_id = " . (int)$country_id . ")
                   AND (za.zone_id IS null
-                    OR za.zone_id = 0
-                    OR za.zone_id = " . (int)$zone_id . ")
+                        OR za.zone_id = 0
+                        OR za.zone_id = " . (int)$zone_id . ")
                   AND tr.tax_class_id = " . (int)$class_id . "
+                  AND trd.language_id = " . (int)$_SESSION['languages_id'] . "
                   ORDER BY tr.tax_priority";
     $results = $db->Execute($tax_query);
 
@@ -232,6 +244,7 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
  * @param float|int $tax_percentage
  * @param bool $force
  * @return float|int
+ * @since ZC v1.0.3
  */
 function zen_add_tax($price, $tax_percentage = 0, $force = false)
 {
@@ -253,6 +266,7 @@ function zen_add_tax($price, $tax_percentage = 0, $force = false)
  * @param float|int $price
  * @param float|int $tax_percentage
  * @return float|int
+ * @since ZC v1.0.3
  */
 function zen_calculate_tax($price, $tax_percentage = 1)
 {
@@ -264,6 +278,7 @@ function zen_calculate_tax($price, $tax_percentage = 1)
  * @param float $value
  * @param int $padding
  * @return float|string
+ * @since ZC v1.0.3
  */
 function zen_display_tax_value($value, $padding = TAX_DECIMAL_PLACES)
 {
@@ -302,6 +317,7 @@ function zen_display_tax_value($value, $padding = TAX_DECIMAL_PLACES)
  * Get tax rate from tax description
  * @param string $tax_desc
  * @return float
+ * @since ZC v1.0.3
  */
 function zen_get_tax_rate_from_desc(string $tax_desc)
 {
@@ -311,8 +327,10 @@ function zen_get_tax_rate_from_desc(string $tax_desc)
     $tax_descriptions = explode(' + ', $tax_desc);
     foreach ($tax_descriptions as $tax_description) {
         $sql = "SELECT tax_rate
-                FROM " . TABLE_TAX_RATES . "
-                WHERE tax_description = :taxDescLookup";
+                FROM " . TABLE_TAX_RATES . " tr
+                LEFT JOIN " . TABLE_TAX_RATES_DESCRIPTION . " trd ON (trd.tax_rates_id = tr.tax_rates_id)
+                WHERE tax_description = :taxDescLookup
+                AND trd.language_id = " . (int)$_SESSION['languages_id'];
         $sql = $db->bindVars($sql, ':taxDescLookup', $tax_description, 'string');
 
         $result = $db->Execute($sql);
@@ -329,6 +347,7 @@ function zen_get_tax_rate_from_desc(string $tax_desc)
 /**
  * @param int $tax_class_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_tax_class_title($tax_class_id = 0)
 {
@@ -345,6 +364,9 @@ function zen_get_tax_class_title($tax_class_id = 0)
     return $result->fields['tax_class_title'];
 }
 
+/**
+ * @since ZC v1.2.3d
+ */
 function zen_get_tax_locations($store_country = -1, $store_zone = -1)
 {
     global $db, $zco_notifier;
@@ -417,6 +439,7 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
  * @param int $country_id
  * @param int $zone_id
  * @return array|string
+ * @since ZC v1.3.9b
  */
 function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
 {
@@ -435,6 +458,11 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
     if (is_array($tax_descriptions)) {
         return $tax_descriptions;
     }
+    if (Customer::isTaxExempt() === true) {
+        return [
+            TAX_EXEMPT_DESCRIPTION => 0,
+        ];
+    }
 
     if ($country_id == -1 && $zone_id == -1) {
         if (zen_is_logged_in()) {
@@ -446,8 +474,9 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
         }
     }
 
-    $sql = "SELECT tr.*
-            FROM " . TABLE_TAX_RATES . " tr
+    $sql = "SELECT trd.tax_description
+            FROM " . TABLE_TAX_RATES_DESCRIPTION . " trd
+            LEFT JOIN " . TABLE_TAX_RATES . " tr ON (trd.tax_rates_id = tr.tax_rates_id)
             LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za ON (tr.tax_zone_id = za.geo_zone_id)
             LEFT JOIN " . TABLE_GEO_ZONES . " tz ON (tz.geo_zone_id = tr.tax_zone_id)
             WHERE (za.zone_country_id IS null
@@ -455,7 +484,8 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
               OR za.zone_country_id = " . (int)$country_id . ")
             AND (za.zone_id IS null
               OR za.zone_id = 0
-              OR za.zone_id = " . (int)$zone_id . ")";
+              OR za.zone_id = " . (int)$zone_id . ")
+            AND trd.language_id = " . $_SESSION['languages_id'];
     $results = $db->Execute($sql);
     $taxDescriptions = [];
     foreach ($results as $result) {
@@ -468,8 +498,31 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
 // @todo deprecate unless this is needed for different formatting
 /**
  * Returns the tax rate for a tax class
+ * @since ZC v1.0.3
  */
 function zen_get_tax_rate_value($class_id)
 {
     return zen_get_tax_rate($class_id);
+}
+
+/**
+ * @since ZC v2.2.0
+ */
+function zen_get_localized_tax_description(int $tax_rates_id, int $language_id = 0): string
+{
+    global $db;
+
+    if ($language_id === 0) {
+        $language_id = $_SESSION['languages_id'];
+    }
+    $tax_query = "SELECT tax_description
+                  FROM " . TABLE_TAX_RATES_DESCRIPTION . "
+                  WHERE tax_rates_id = " . $tax_rates_id . "
+                  AND language_id = " . $language_id . ";";
+    $tax_desc = $db->Execute($tax_query);
+
+    if ($tax_desc->RecordCount() > 0) {
+        return $tax_desc->fields['tax_description'];
+    }
+    return TEXT_UNKNOWN_TAX_RATE;
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Jul 23 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  *
  * Designed for ZC >= v1.5.4
  *
@@ -13,12 +13,13 @@
  *  NOTICE = storeowner should pay attention to these, as they show login attempts and potential entry of malicious script tags by rogue employees
  *  WARNING = CRUD activities related to adding/editing/removing admin users and payment modules
  *  Higher levels go beyond the scope of this implementation at this time
+ * @since ZC v1.5.4
  */
 
 class zcObserverLogEventListener extends base {
 
     private $notifier;
-    
+
   /**
    * using integer values implemented by monolog API
    */
@@ -45,21 +46,27 @@ class zcObserverLogEventListener extends base {
           600 => 'EMERGENCY',
   );
 
-  public function __construct(notifier $zco_notifier = null) {
+  public function __construct(?notifier $zco_notifier = null) {
     if (!$zco_notifier) $zco_notifier = new notifier;
     $this->notifier = $zco_notifier;
     $this->notifier->attach($this, array('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', 'NOTIFY_ADMIN_ACTIVITY_LOG_RESET'));
   }
 
+  /**
+   * @since ZC v1.5.4
+   */
   public function updateNotifyAdminActivityLogEvent(&$class, $eventID, $message_to_log = '', $requested_severity = '')
   {
     $log_data = self::prepareLogdata($message_to_log, $requested_severity);
     /**
      * Now tell all log-writers to fire, using the curated data
-    */
+     */
     $this->notifier->notify('NOTIFY_ADMIN_FIRE_LOG_WRITERS', $log_data);
   }
 
+  /**
+   * @since ZC v1.5.4
+   */
   static function prepareLogdata($message_to_log = '', $requested_severity = '')
   {
     global $PHP_SELF;
@@ -150,6 +157,7 @@ class zcObserverLogEventListener extends base {
 
   /**
    * Filter out things which ought not to be recorded in logs, such as actual pass words
+   * @since ZC v1.5.4
    */
   static function filterArrayElements($data)
   {
@@ -161,6 +169,7 @@ class zcObserverLogEventListener extends base {
 
   /**
    * Look for any risky kinds of incoming POST data which might be flagged under PCI safety rules
+   * @since ZC v1.5.4
    */
   static function parseForMaliciousContent($string)
   {
@@ -172,23 +181,26 @@ class zcObserverLogEventListener extends base {
     }
   }
 
+  /**
+   * @since ZC v1.5.4
+   */
   public function updateNotifyAdminActivityLogReset()
   {
     $this->notifier->notify('NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET');
   }
 
 }
-// end of class
 
 
 
 /**
  * helper function
- * (violates PSR-0 putting it in this file, but in a true PSR-0 situation this helper wouldn't even be necessary, so putting it here since it suits context)
- * (so, in case it's not obvious, this IS supposed to be a global function, and NOT contained inside the class above)
+ * @since ZC v1.5.4
  */
-function zen_record_admin_activity($message, $severity)
-{
-  global $zco_notifier;
-  $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', $message, $severity);
+if (!function_exists('zen_record_admin_activity')) {
+  function zen_record_admin_activity($message, $severity)
+  {
+    global $zco_notifier;
+    $zco_notifier->notify('NOTIFY_ADMIN_ACTIVITY_LOG_EVENT', $message, $severity);
+  }
 }

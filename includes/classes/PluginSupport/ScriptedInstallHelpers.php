@@ -1,15 +1,20 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 May 13 New in v2.0.1 $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  *
  */
 
 namespace Zencart\PluginSupport;
 
+use Zencart\DbRepositories\LayoutBoxRepository;
 use queryFactory;
+use queryFactoryResult;
 
+/**
+ * @since ZC v2.0.1
+ */
 trait ScriptedInstallHelpers
 {
     protected queryFactory $dbConn;
@@ -17,11 +22,12 @@ trait ScriptedInstallHelpers
     /**
      * Get details of current configuration record entry, false if not found.
      * Optional: when $only_check_existence is true, will simply return true/false.
+     * @since ZC v2.0.1
      */
-    public function getConfigurationKeyDetails(string $key_name, bool $only_check_existence = false): array|bool
+    protected function getConfigurationKeyDetails(string $key_name, bool $only_check_existence = false): array|bool
     {
-        $sql = "SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . zen_db_input($key_name) . "'";
-        $result = $this->dbConn->Execute($sql, 1);
+        $sql = "SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $this->dbConn->prepare_input($key_name) . "'";
+        $result = $this->executeInstallerSelectQuery($sql, 1);
 
         // false if not found, or if existence-check fails
         if ($only_check_existence || $result->EOF) {
@@ -31,10 +37,13 @@ trait ScriptedInstallHelpers
         return $result->fields;
     }
 
-    public function addConfigurationKey(string $key_name, array $properties): int
+    /**
+     * @since ZC v2.0.1
+     */
+    protected function addConfigurationKey(string $key_name, array $properties): int
     {
         $exists = $this->getConfigurationKeyDetails($key_name, true);
-        if ($exists) {
+        if ($exists !== false) {
             return 0;
         }
 
@@ -53,25 +62,33 @@ trait ScriptedInstallHelpers
         ];
 
         $sql_data_array = [];
-        $sql_data_array['configuration_key'] = $key_name;
+        $sql_data_array[] = ['fieldName' => 'configuration_key', 'value' => $key_name, 'type' => 'string'];
         foreach ($fields as $field) {
             if (isset($properties[$field])) {
-                $sql_data_array[$field] = $properties[$field];
+                $type = 'string';
+                if (in_array($field, ['configuration_group_id', 'sort_order'])) {
+                    $type = 'integer';
+                }
+                $sql_data_array[] = ['fieldName' => $field, 'value' => $properties[$field], 'type' => $type];
             }
         }
-        $sql_data_array['date_added'] = 'now()';
 
-        zen_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        $sql_data_array[] = ['fieldName' => 'date_added', 'value' => 'NOW()', 'type' => 'passthru'];
+
+        $this->executeInstallerDbPerform(TABLE_CONFIGURATION, $sql_data_array);
 
         $insert_id = $this->dbConn->insert_ID();
 
-        $sql_data_array['configuration_key_id'] = $insert_id;
-        zen_record_admin_activity('Deleted admin pages for page keys: ' . print_r($sql_data_array, true), 'warning');
+        $sql_data_array[] = ['fieldName' => 'configuration_key_id', 'value' => $insert_id, 'type' => 'integer'];
+        zen_record_admin_activity('Added configuration record: ' . print_r($sql_data_array, true), 'warning');
 
         return $insert_id;
     }
 
-    public function updateConfigurationKey(string $key_name, array $properties): int
+    /**
+     * @since ZC v2.0.1
+     */
+    protected function updateConfigurationKey(string $key_name, array $properties): int
     {
         $fields = [
             'configuration_title',
@@ -89,63 +106,123 @@ trait ScriptedInstallHelpers
         $sql_data_array = [];
         foreach ($fields as $field) {
             if (isset($properties[$field])) {
-                $sql_data_array[$field] = $properties[$field];
+                $type = 'string';
+                if (in_array($field, ['configuration_group_id', 'sort_order'])) {
+                    $type = 'integer';
+                }
+                $sql_data_array[] = ['fieldName' => $field, 'value' => $properties[$field], 'type' => $type];
             }
         }
-        $sql_data_array['last_modified'] = 'now()';
+        $sql_data_array[] = ['fieldName' => 'last_modified', 'value' => 'now()', 'type' => 'passthru'];
 
-        zen_db_perform(TABLE_CONFIGURATION, $sql_data_array, 'UPDATE', "configuration_key = '" . zen_db_input($key_name) . "'");
+        $this->executeInstallerDbPerform(TABLE_CONFIGURATION, $sql_data_array, 'UPDATE', "configuration_key = '" . $this->dbConn->prepare_input($key_name) . "'");
         $rows = $this->dbConn->affectedRows();
 
-        $sql_data_array['configuration_key'] = $key_name;
+        $sql_data_array[] = ['fieldName' => 'configuration_key', 'value' => $key_name, 'type' => 'string'];
         zen_record_admin_activity('Updated configuration record: ' . print_r($sql_data_array, true), 'warning');
 
         return $rows;
     }
 
-    public function deleteConfigurationKeys(array $key_names): int
+    /**
+     * @since ZC v2.0.1
+     */
+    protected function deleteConfigurationKeys(array $key_names): int
     {
         if (empty($key_names)) {
             return 0;
         }
-        $keys_list = implode("','", array_map(fn ($val) => zen_db_input($val), $key_names));
+
+        $db = $this->dbConn;
+        $keys_list = implode("','", array_map(static fn($val) => $db->prepare_input($val), $key_names));
+
         $sql = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . $keys_list . "')";
-        $this->dbConn->Execute($sql);
+        $this->executeInstallerSelectQuery($sql);
 
         $rows = $this->dbConn->affectedRows();
 
-        zen_record_admin_activity('Deleted configuration record(s): ' . $keys_list, 'warning');
+        zen_record_admin_activity('Deleted configuration record(s): ' . $keys_list . ", $rows rows affected.", 'warning');
 
         return $rows;
     }
 
-    public function addConfigurationGroup(string $group_title, array $properties): int
+    /**
+     * @since ZC v2.1.0
+     */
+    protected function getOrCreateConfigGroupId(string $config_group_title, string $config_group_description, ?int $sort_order = 1): int
     {
+        $config_group_title = $this->dbConn->prepare_input($config_group_title);
+        $config_group_description = $this->dbConn->prepare_input($config_group_description);
+        $sort_order = (int)($sort_order ?? 0);
+
+        $sql =
+            "SELECT configuration_group_id
+               FROM " . TABLE_CONFIGURATION_GROUP . "
+              WHERE configuration_group_title = '$config_group_title'
+              LIMIT 1";
+        $check = $this->executeInstallerSelectQuery($sql);
+        if (!$check->EOF) {
+            return (int)$check->fields['configuration_group_id'];
+        }
+
+        $sql =
+            "INSERT INTO " . TABLE_CONFIGURATION_GROUP . "
+                (configuration_group_title, configuration_group_description, sort_order, visible)
+             VALUES
+                ('$config_group_title', '$config_group_description', $sort_order, 1)";
+        $this->executeInstallerSql($sql);
+
+        $sql = "SELECT configuration_group_id FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_title = '$config_group_title' LIMIT 1";
+        $result = $this->executeInstallerSelectQuery($sql);
+        $cgi = (int)$result->fields['configuration_group_id'];
+
+        if (empty($sort_order)) {
+            $sql = "UPDATE " . TABLE_CONFIGURATION_GROUP . " SET sort_order = $cgi WHERE configuration_group_id = $cgi LIMIT 1";
+            $this->executeInstallerSql($sql);
+        }
+
+        return $cgi;
+    }
+
+    /**
+     * @since ZC v2.0.1
+     */
+    protected function addConfigurationGroup(array $properties): int
+    {
+        $exists = $this->getConfigurationKeyDetails($this->dbConn->prepare_input($properties['configuration_group_title']));
+        if ($exists !== false) {
+            return (int)$exists['configuration_group_id'];
+        }
+
         $fields = [
             'configuration_group_title', // varchar(64)
             'configuration_group_description', // varchar(255)
-            'sort_order', // int(5)
+            'sort_order', // int (will be made to match auto-increment id if not specified)
             'visible', // 0/1 default '1'
         ];
 
         $sql_data_array = [];
         foreach ($fields as $field) {
             if (isset($properties[$field])) {
-                $sql_data_array[$field] = $properties[$field];
+                $type = 'string';
+                if (in_array($field, ['sort_order', 'visible'])) {
+                    $type = 'integer';
+                }
+                $sql_data_array[] = ['fieldName' => $field, 'value' => $properties[$field], 'type' => $type];
             }
         }
 
-        zen_db_perform(TABLE_CONFIGURATION_GROUP, $sql_data_array);
-
+        $this->executeInstallerDbPerform(TABLE_CONFIGURATION_GROUP, $sql_data_array);
         $insert_id = $this->dbConn->insert_ID();
 
         // update array for subsequent logging
-        $sql_data_array['configuration_group_id'] = $insert_id;
+        $sql_data_array[] = ['fieldName' => 'configuration_group_id', 'value' => $insert_id, 'type' => 'integer'];
 
-        if (empty($sql_data_array['sort_order'])) {
-            // manually set sort order if none provided:
-            zen_db_perform(TABLE_CONFIGURATION_GROUP, ['sort_order' => $insert_id], 'update', ' WHERE configuration_group_id = ' . $insert_id);
-            $sql_data_array['sort_order'] = $insert_id;
+        // manually set sort order if none was provided:
+        if (empty($properties['sort_order'])) {
+            $sql = "UPDATE " . TABLE_CONFIGURATION_GROUP . " SET sort_order = $insert_id WHERE configuration_group_id = $insert_id LIMIT 1";
+            $this->executeInstallerSql($sql);
+            $sql_data_array[] = ['fieldName' => 'sort_order', 'value' => $insert_id, 'type' => 'integer'];
         }
 
         zen_record_admin_activity('Configuration Group added: ' . print_r($sql_data_array, true), 'warning');
@@ -153,7 +230,10 @@ trait ScriptedInstallHelpers
         return $insert_id;
     }
 
-    public function updateConfigurationGroup(int $group_id, array $properties): int
+    /**
+     * @since ZC v2.0.1
+     */
+    protected function updateConfigurationGroup(int $group_id, array $properties): int
     {
         $fields = [
             'configuration_group_title', // varchar(64) NOT NULL default ''
@@ -165,46 +245,68 @@ trait ScriptedInstallHelpers
         $sql_data_array = [];
         foreach ($fields as $field) {
             if (isset($properties[$field])) {
-                $sql_data_array[$field] = $properties[$field];
+                $type = 'string';
+                if (in_array($field, ['sort_order', 'visible'])) {
+                    $type = 'integer';
+                }
+                $sql_data_array[] = ['fieldName' => $field, 'value' => $properties[$field], 'type' => $type];
             }
         }
 
-        zen_db_perform(TABLE_CONFIGURATION_GROUP, $sql_data_array, 'UPDATE', "configuration_group_id = " . (int)$group_id);
-
+        $this->executeInstallerDbPerform(TABLE_CONFIGURATION_GROUP, $sql_data_array, 'UPDATE', "configuration_group_id = " . (int)$group_id);
         $rows = $this->dbConn->affectedRows();
 
-        $sql_data_array['configuration_group_id'] = $group_id;
-        zen_record_admin_activity('Updated configuration group: ' . print_r($sql_data_array, true), 'warning');
-
-        return $rows;
-
-    }
-
-    public function deleteConfigurationGroup(int $group_id): int
-    {
-        $sql = "DELETE FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_id = " . (int)$group_id;
-
-        $this->dbConn->Execute($sql);
-
-        $rows = $this->dbConn->affectedRows();
-
-        zen_record_admin_activity('Deleted configuration group ID: ' . (int)$group_id, 'warning');
+        $sql_data_array[] = ['fieldName' => 'configuration_group_id', 'value' => $group_id, 'type' => 'integer'];
+        zen_record_admin_activity('Updated configuration group: ' . print_r($sql_data_array, true) . ", $rows rows affected.", 'warning');
 
         return $rows;
     }
 
-    public function getConfigurationGroupDetails(int|string $group, bool $only_check_existence = false): array|bool
+    /**
+     * @since ZC v2.0.1
+     */
+    protected function deleteConfigurationGroup(int|string $group, bool $cascadeDeleteKeysToo = false): int
     {
+        $rows = 0;
 
         $sql = "SELECT * FROM " . TABLE_CONFIGURATION_GROUP;
-
         if (is_numeric($group)) {
             $sql .= " WHERE configuration_group_id = " . (int)$group;
         } else {
-            $sql .= " WHERE configuration_group_name = '" . \zen_db_input($group) . "'";
+            $sql .= " WHERE configuration_group_title = '" . $this->dbConn->prepare_input($group) . "'";
+        }
+        $result = $this->executeInstallerSelectQuery($sql);
+
+        $cgi = (int)($result->fields['configuration_group_id'] ?? 0);
+
+        if ($cascadeDeleteKeysToo) {
+            $sql = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_group_id = $cgi";
+            $this->executeInstallerSql($sql);
+            $rows += $this->dbConn->affectedRows();
         }
 
-        $result = $this->dbConn->Execute($sql);
+        $sql = "DELETE FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_id = " . (int)$cgi;
+        $this->executeInstallerSql($sql);
+        $rows += $this->dbConn->affectedRows();
+
+        zen_record_admin_activity("Deleted configuration group ID: '$group'; $rows rows affected.", 'warning');
+
+        return $rows;
+    }
+
+    /**
+     * @since ZC v2.0.1
+     */
+    protected function getConfigurationGroupDetails(int|string $group, bool $only_check_existence = false): array|bool
+    {
+        $sql = "SELECT * FROM " . TABLE_CONFIGURATION_GROUP;
+        if (is_numeric($group)) {
+            $sql .= " WHERE configuration_group_id = " . (int)$group;
+        } else {
+            $sql .= " WHERE configuration_group_title = '" . $this->dbConn->prepare_input($group) . "'";
+        }
+
+        $result = $this->executeInstallerSelectQuery($sql);
 
         // false if not found, or if existence-check fails
         if ($only_check_existence || $result->EOF) {
@@ -214,21 +316,81 @@ trait ScriptedInstallHelpers
         return $result->fields;
     }
 
-
-
-    // @TODO - WORK IN PROGRESS...
-    public function getSelfDetails(): array
+    /**
+     * @since ZC v2.1.0
+     */
+    protected function executeInstallerSelectQuery(string $sql, ?int $limit = null): bool|queryFactoryResult
     {
-        global $installedPlugins;
-        foreach ($installedPlugins as $plugin) {
-            $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
-            $namespaceCatalog = 'Zencart\\Plugins\\Catalog\\' . ucfirst($plugin['unique_key']);
-            $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
+        $this->dbConn->dieOnErrors = false;
+        $result = $this->dbConn->Execute($sql, $limit);
+
+        if ($this->dbConn->error_number !== 0) {
+            $this->errorContainer->addError(0, $this->dbConn->error_text, true, PLUGIN_INSTALL_SQL_FAILURE);
+            return false;
         }
 
-        // installed or not
-        // currently installed version
-        // manifest.php contents
+        $this->dbConn->dieOnErrors = true;
+        return $result;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
+    protected function executeInstallerDbPerform(string $table, array $sql_data_array, $performType = 'INSERT', string $whereCondition = '', $debug = false): bool
+    {
+        $this->dbConn->dieOnErrors = false;
+        $this->dbConn->perform($table, $sql_data_array, $performType, $whereCondition, $debug);
+
+        if ($this->dbConn->error_number !== 0) {
+            $this->errorContainer->addError(0, $this->dbConn->error_text, true, PLUGIN_INSTALL_SQL_FAILURE);
+            return false;
+        }
+        $this->dbConn->dieOnErrors = true;
+        return true;
+    }
+
+    // -----
+    // This method provides the means to update various database fields
+    // that are managed by core Zen Cart processes on the update of an encapsulated
+    // plugin.
+    //
+    /**
+     * @since ZC v2.2.0
+     */
+    private function updateZenCoreDbFields(string $oldVersion): void
+    {
+        // -----
+        // Update any layout_boxes table entries that reference the current
+        // plugin, ensuring that the 'plugin_details' field contains the updated
+        // plugin version number.
+        //
+        $layoutBoxRepository = new LayoutBoxRepository($this->dbConn);
+        $layoutBoxRepository->updatePluginDetailsByPrefix($this->pluginKey, $this->version);
+    }
+
+    // -----
+    // This method provides the means to update various database fields
+    // that are managed by core Zen Cart processes on the uninstall of an encapsulated
+    // plugin.
+    //
+    /**
+     * @since ZC v2.2.0
+     */
+    private function uninstallZenCoreDbFields(): void
+    {
+        // -----
+        // Remove any entries in the layout_boxes table that reference this now
+        // uninstalled plugin.
+        //
+        $layoutBoxRepository = new LayoutBoxRepository($this->dbConn);
+        $layoutBoxRepository->deleteByPluginDetailsPrefix($this->pluginKey);
+
+        // -----
+        // If a plugin includes order_total, payment or shipping modules, any
+        // modules that are currently "installed" must be removed from the
+        // respective configuration setting (set by the admin's Modules processing)
+        // or various PHP errors/warnings could occur.
+        //
+        zen_update_modules_cache();
+    }
 }

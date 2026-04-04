@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Dec 10 Modified in v2.0.0-alpha1 $
+ * @version $Id: piloujp 2025 Jun 07 Modified in v2.2.0 $
 */
 
 $define = [
@@ -13,8 +13,8 @@ $define = [
     'TEXT_PRODUCT_INFO' => 'Product Info:',
     'TEXT_PRODUCTS_PRICE_INFO' => 'Product Price Info:',
     'TEXT_PRICE' => 'Price',
-    'TEXT_PRICE_NET' => 'Price (Net)',
-    'TEXT_PRICE_GROSS' => 'Price (Gross)',
+    'TEXT_PRICE_EXCL' => 'Price (Excl.)',
+    'TEXT_PRICE_INCL' => 'Price (Incl.)',
     'TEXT_PRODUCT_AVAILABLE_DATE' => 'Available Date:',
     'TEXT_PRODUCTS_STATUS' => 'Products Status:',
     'TEXT_PRODUCT_IS_FREE' => 'Product is Free:',
@@ -40,8 +40,8 @@ $define = [
     'TEXT_FEATURED_CONFIRM_DELETE' => 'Please confirm that you want to delete the Featured status associated with this product',
     'TEXT_SPECIALS_PRODUCT' => 'Product:',
     'TEXT_SPECIALS_SPECIAL_PRICE' => 'Special Price:',
-    'TEXT_SPECIALS_SPECIAL_PRICE_NET' => 'Special Price: (Net)',
-    'TEXT_SPECIALS_SPECIAL_PRICE_GROSS' => 'Special Price: (Gross)',
+    'TEXT_SPECIALS_SPECIAL_PRICE_EXCL' => 'Special Price: (Excl.)',
+    'TEXT_SPECIALS_SPECIAL_PRICE_INCL' => 'Special Price: (Incl.)',
     'TEXT_SPECIALS_EXPIRES_DATE' => 'Expiry Date:',
     'TEXT_SPECIALS_AVAILABLE_DATE' => 'Available Date:',
     'TEXT_SPECIALS_PRICE_TIP' => '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>',
@@ -81,8 +81,8 @@ $define = [
     'DISCOUNT_TYPE_FROM_DROPDOWN_1' => 'Special',
     'TEXT_UPDATE_COMMIT' => 'Update and Commit all changes from current screen display',
     'TEXT_PRODUCTS_TAX_CLASS' => 'Tax Class:',
-    'TEXT_INFO_MASTER_CATEGORIES_ID_WARNING' => '<strong>Warning:</strong> The Product Master Category ID# %s does not match Current Category ID# %s and Product is Not Linked!',
-    'TEXT_INFO_MASTER_CATEGORIES_ID_UPDATE_TO_CURRENT' => 'Update Master Categories ID# %s to match Current Category ID# %s',
+    'TEXT_INFO_MASTER_CATEGORIES_ID_WARNING' => '<strong>Warning:</strong> The Product Master Category ID# %1$s does not match Current Category ID# %2$s and Product is Not Linked!',
+    'TEXT_INFO_MASTER_CATEGORIES_ID_UPDATE_TO_CURRENT' => 'Update Master Categories ID# %1$s to match Current Category ID# %2$s',
     'PRODUCT_WARNING_UPDATE' => 'Please make any changes then press Update to save',
     'PRODUCT_UPDATE_SUCCESS' => 'Successful Update of Product Changes!',
     'PRODUCT_WARNING_UPDATE_CANCEL' => 'Changes were Cancelled and not saved ...',

@@ -2,18 +2,22 @@
 /**
  * Zen Cart Database Session Handler
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 07 New in v2.0.0-rc1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 namespace Zencart;
 
+/**
+ * @since ZC v2.0.0
+ */
 class SessionHandler implements \SessionHandlerInterface
 {
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function close(): bool
     {
@@ -22,6 +26,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function destroy(string $id): bool
     {
@@ -34,6 +39,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function gc(int $max_lifetime): int|false
     {
@@ -46,6 +52,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function open(string $path, string $name): bool
     {
@@ -54,6 +61,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function read(string $id): string|false
     {
@@ -75,6 +83,7 @@ class SessionHandler implements \SessionHandlerInterface
 
     /**
      * @inheritDoc
+     * @since ZC v2.0.0
      */
     public function write(string $id, string $data): bool
     {

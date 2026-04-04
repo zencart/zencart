@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 May 21 Modified in v2.1.0-alpha1 $
  */
 
 // This should be first line of the script:
@@ -227,7 +227,7 @@ if ($current_categories_name == '' && isset($_GET['music_genre_id'])) {
                            WHERE music_genre_id = " . (int)$_GET['music_genre_id'] . " LIMIT 1");
   if (!$result->EOF) $current_categories_name = $result->fields['music_genre_name'];
 }
-$zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body, $current_categories_name);
+$zco_notifier->notify('NOTIFY_HEADER_INDEX_MAIN_TEMPLATE_VARS_PAGE_BODY', NULL, $tpl_page_body, $current_categories_name, $current_categories_description);
 
 require($template->get_template_dir($tpl_page_body, DIR_WS_TEMPLATE, $current_page_base,'templates'). '/' . $tpl_page_body);
 

@@ -2,52 +2,37 @@
 /**
  * template_func Class.
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
+
 /**
  * template_func Class.
  * This class is used to for template-override calculations
  *
+ * @since ZC v1.0.3
  */
-class template_func extends base {
-
-        private $info = [];
-        
-  function __construct($template_dir = 'default') {
-    $this->info = [];
-  }
-
-  function get_template_part($page_directory, $template_part, $file_extension = '.php') {
-      $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
-      $directory_array = $pageLoader->getTemplatePart($page_directory, $template_part, $file_extension);
-      return $directory_array;
-  }
-
-  function get_template_dir($template_code, $current_template, $current_page, $template_dir, $debug=false) {
-      $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
-
-      $path = $pageLoader->getTemplateDirectory($template_code, $current_template, $current_page, $template_dir);
-
-      return $path;
-  }
-
-  function file_exists($file_dir, $file_pattern, $debug=false) {
-    $file_found = false;
-    $file_pattern = '/'.str_replace("/", "\/", $file_pattern).'$/';
-    if ($mydir = @dir($file_dir)) {
-      while ($file = $mydir->read()) {
-        if (preg_match($file_pattern, $file)) {
-          $file_found = true;
-          break;
-        }
-      }
-      $mydir->close();
+class template_func extends base
+{
+    /**
+     * @since ZC v1.0.3
+     */
+    public function get_template_part(string $page_directory, string $template_part, string $file_extension = '.php'): array
+    {
+        $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
+        return $pageLoader->getTemplatePart($page_directory, $template_part, $file_extension);
     }
-    return $file_found;
-  }
+
+    /**
+     * @since ZC v1.0.3
+     */
+    public function get_template_dir(string $template_code, string $current_template, string $current_page, string $template_dir): string
+    {
+        $pageLoader = Zencart\PageLoader\PageLoader::getInstance();
+        return $pageLoader->getTemplateDirectory($template_code, $current_template, $current_page, $template_dir);
+    }
 }

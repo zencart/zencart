@@ -2,12 +2,15 @@
 /**
  * ot_total order-total module
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
-  class ot_total {
+/**
+ * @since ZC v1.0.3
+ */
+class ot_total {
 
     /**
      * $_check is used to check the configuration key set up
@@ -50,6 +53,9 @@
       $this->output = array();
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function process() {
       global $order, $currencies;
       $this->output[] = array('title' => $this->title . ':',
@@ -57,6 +63,9 @@
                               'value' => $order->info['total']);
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check() {
       global $db;
       if (!isset($this->_check)) {
@@ -67,22 +76,31 @@
       return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys() {
       return array('MODULE_ORDER_TOTAL_TOTAL_STATUS', 'MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER');
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install() {
       global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('This module is installed', 'MODULE_ORDER_TOTAL_TOTAL_STATUS', 'true', '', '6', '1','zen_cfg_select_option(array(\'true\'), ', now())");
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER', '999', 'Sort order of display.', '6', '2', now())");
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function remove() {
       global $db, $messageStack;
-      if (!isset($_GET['override']) && $_GET['override'] != '1') {
-        $messageStack->add('header', ERROR_MODULE_REMOVAL_PROHIBITED . $this->code);
+      if (empty($_GET['override'])) {
+        $messageStack->add_session(ERROR_MODULE_REMOVAL_PROHIBITED . $this->code);
         return false;
       }
       $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
-  }
+}

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Aug 01 New in v1.5.8-alpha2 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
     die('Illegal Access');
@@ -15,6 +15,7 @@ if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
  * a product by attaching to notifications that are pertinent to those
  * processes.
  *
+ * @since ZC v1.5.8
  */
 class zcObserverProductMusicObserver extends base
 {
@@ -41,6 +42,9 @@ class zcObserverProductMusicObserver extends base
         );
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function update(&$class, $eventID, $p1, &$p2, &$p3, &$p4)
     {
         switch ($eventID) {
@@ -194,6 +198,9 @@ class zcObserverProductMusicObserver extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function isProductMusicProduct($products_id)
     {
         global $db;

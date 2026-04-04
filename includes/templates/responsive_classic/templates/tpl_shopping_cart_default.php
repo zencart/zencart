@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=shopping_cart.
  * Displays shopping-cart contents
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2023 Sep 07 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2025 Oct 19 Modified in v2.2.0 $
  */
 ?>
 <?php
@@ -81,9 +81,9 @@
   } else {
     echo $product['quantityField'];
   }
-?><br>
-        <span class="alert bold"><?php echo $product['flagStockCheck'];?></span><br>
-        <br><?php echo $product['showMinUnits']; ?>
+  echo !empty($product['flagStockCheck']) ? '<span class="alert bold">' . $product['flagStockCheck'] . '</span><br>' : '';
+  echo !empty($product['showMinUnits']) ? $product['showMinUnits'] . '<br>' : '';
+  ?>
        </td>
 
        <td class="cartQuantityUpdate"><?php echo $product['buttonUpdate']; ?></td>
@@ -93,7 +93,12 @@
 
        <td class="cartProductDisplay">
 
-<a href="<?php echo $product['linkProductsName']; ?>"><span class="cartImage back"><?php echo $product['productsImage']; ?></span><span class="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
+<a href="<?= $product['linkProductsName'] ?>">
+    <span class="cartImage back"><?= $product['productsImage'] ?></span>
+    <span class="cartProdTitle"><?= $product['productsName'] .
+        (!empty($product['flagStockCheck']) ? '<span class="alert bold">' . $product['flagStockCheck'] . '</span>' : '') ?>
+    </span>
+</a>
 <br class="clearBoth">
 <?php
   echo $product['attributeHiddenField'];
@@ -122,9 +127,9 @@
        <td class="cartQuantity">
 <?php
   if ($product['flagShowFixedQuantity']) {
-    echo $product['showFixedQuantityAmount'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
+    echo $product['showFixedQuantityAmount'] . '<br>' . (!empty($product['flagStockCheck']) ? '<span class="alert bold">' . $product['flagStockCheck'] . '</span><br>' : '') . '<br>' . $product['showMinUnits'];
   } else {
-    echo $product['quantityField'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
+    echo $product['quantityField'] . '<br>' . (!empty($product['flagStockCheck']) ? '<span class="alert bold">' . $product['flagStockCheck'] . '</span><br>' : '') . '<br>' . $product['showMinUnits'];
   }
 ?>
        </td>

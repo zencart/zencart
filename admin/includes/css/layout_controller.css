@@ -1,0 +1,43 @@
+#lbc-container {
+    font-size: 13px;
+}
+.ui-sortable-placeholder {
+    visibility: visible!important;
+    border: 1px solid #31708f;
+}
+#lbc-main ul > li:hover {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+li.lbc-item {
+    padding: 5px 10px;
+}
+.border-dark {
+    border-color: #343a40;
+}
+i.fa-angle-up:hover,
+i.fa-angle-down:hover,
+i.fa-xmark:hover,
+.panel-collapse:hover {
+    cursor: pointer;
+}
+.panel-heading {
+    font-weight: bold;
+}
+.lbc-box:last-child {
+    margin-bottom: inherit;
+}
+.lbc-box:first-child {
+    margin-top: inherit;
+}
+.panel-body {
+    padding: 10px;
+}
+.panel ul {
+    min-height: 38px;   /* Needed to move into 'empty' unordered list */
+}
+.popover-title,
+.popover-content {
+    text-align: center;
+}

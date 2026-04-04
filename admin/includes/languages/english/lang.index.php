@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -25,8 +25,8 @@ $define = [
     'TEXT_COUNTER_HISTORY_TITLE' => 'Visitor History - Last %s days',
     'TEXT_MONTHLY_SALES_TITLE' => 'Monthly Sales (excludes shipping)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
     'TEXT_CLICK_FOR_COMPLETE_DETAILS' => 'Click here for complete details...',
-    'TEXT_SALES_TODAY' => 'Sales <strong>Today</strong> (%s) &nbsp;<strong>$%s</strong>',
-    'TEXT_SALES_YESTERDAY' => '<strong>Yesterday</strong> (%s) &nbsp;<strong>$%s</strong>',
+    'TEXT_SALES_TODAY' => 'Sales <strong>Today</strong> (%1$s) &nbsp;<strong>$%2$s</strong>',
+    'TEXT_SALES_YESTERDAY' => '<strong>Yesterday</strong> (%1$s) &nbsp;<strong>$%2$s</strong>',
     'BOX_ENTRY_CUSTOMERS' => 'Customers:',
     'BOX_ENTRY_NEWSLETTERS' => 'Newsletter subscribers:',
     'BOX_ENTRY_PRODUCTS' => 'Products:',

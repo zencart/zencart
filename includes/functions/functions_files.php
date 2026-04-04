@@ -2,9 +2,9 @@
 /**
  * File functions
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2023 Sep 07 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 29 Modified in v2.2.0 $
  */
 
 
@@ -16,6 +16,7 @@
  * @param string $default_text
  * @return array (id/text pairs)
  *
+ * @since ZC v1.5.5
  */
 function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Main Directory')
 {
@@ -47,6 +48,7 @@ function zen_build_subdirectories_array($parent_folder = '', $default_text = 'Ma
  * @param string $directory_path
  * @param string $extension
  * @return array
+ * @since ZC v2.0.0
  */
 function zen_get_files_in_directory(string $directory_path, string $extension = 'php'): array
 {
@@ -68,6 +70,7 @@ function zen_get_files_in_directory(string $directory_path, string $extension = 
 
 /**
  * security check: ensure requested directory relates to this application
+ * @since ZC v2.0.0
  */
 function zen_directory_is_in_application_dir(string $dir_to_check): bool
 {
@@ -98,6 +101,7 @@ function zen_directory_is_in_application_dir(string $dir_to_check): bool
  * @param string $check_file
  * @param bool $dir_only
  * @return string
+ * @since ZC v1.2.0d
  */
 function zen_get_file_directory($check_directory, $check_file, $dir_only = false)
 {
@@ -119,6 +123,9 @@ function zen_get_file_directory($check_directory, $check_file, $dir_only = false
     return $zv_directory . $zv_filename;
 }
 
+/**
+ * @since ZC v1.5.8
+ */
 function zen_include_language_file($file, $folder, $page)
 {
     global $messageStack, $languageLoader;
@@ -158,6 +165,7 @@ function zen_include_language_file($file, $folder, $page)
  * @param string $check_file
  * @param bool $dir_only
  * @return string
+ * @since ZC v1.2.0d
  */
 function zen_get_module_directory($check_file, $dir_only = false)
 {
@@ -166,7 +174,7 @@ function zen_get_module_directory($check_file, $dir_only = false)
     $zv_filename = $check_file;
     if (strpos($zv_filename, '.php') === false) $zv_filename .= '.php';
 
-    if (file_exists(DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
+    if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
         $template_dir_select = $template_dir . '/';
     } else {
         $template_dir_select = '';
@@ -182,6 +190,7 @@ function zen_get_module_directory($check_file, $dir_only = false)
 /**
  * @param string $check_file
  * @return string
+ * @since ZC v1.5.7
  */
 function zen_get_module_sidebox_directory($check_file)
 {
@@ -201,13 +210,12 @@ function zen_get_module_sidebox_directory($check_file)
 
 /**
  * Find module directory for admin product-type modules
+ * @since ZC v2.0.0
  */
 function zen_get_admin_module_from_directory(int $product_type, string $filename_to_check, bool $dir_only = false): string
 {
-    global $zc_products;
-
     $dir = DIR_WS_MODULES;
-    $product_type_foldername = $zc_products->get_handler($product_type);
+    $product_type_foldername = zen_get_handler_from_type($product_type);
     if (file_exists(DIR_WS_MODULES . $product_type_foldername . '/' . $filename_to_check)) {
         $dir = DIR_WS_MODULES . $product_type_foldername . '/';
     }
@@ -228,6 +236,7 @@ function zen_get_admin_module_from_directory(int $product_type, string $filename
  * @param $check_file
  * @param bool $dir_only
  * @return false|mixed|string
+ * @since ZC v1.3.0
  */
 function zen_get_index_filters_directory($check_file, $dir_only = false)
 {
@@ -246,7 +255,8 @@ function zen_get_index_filters_directory($check_file, $dir_only = false)
     return DIR_WS_INCLUDES . 'index_filters/' . 'default_filter.php';
 }
 
-/** @deprecated not used anywhere in core code */
+
+/** @deprecated not used anywhere in core code  (was in v1.0.0 but never used) */
 function zen_get_file_permissions($mode)
 {
 // determine type
@@ -297,6 +307,7 @@ function zen_get_file_permissions($mode)
  * @TODO - and give it a more meaningful name at the same time
  *
  * @param string $source
+ * @since ZC v1.0.3
  */
 function zen_remove($source)
 {
@@ -341,6 +352,7 @@ function zen_remove($source)
  *
  * @return boolean
  * @var string
+ * @since ZC v1.3.9a
  */
 function set_unwritable($filepath)
 {
@@ -356,6 +368,7 @@ function set_unwritable($filepath)
  * @param string $filepath
  * @param bool $make_unwritable
  * @return boolean
+ * @since ZC v1.3.8
  */
 function is__writeable($filepath, $make_unwritable = true)
 {
@@ -378,6 +391,7 @@ function is__writeable($filepath, $make_unwritable = true)
  * @TODO - refactor where this is used, to find a better way of displaying whatever is needed
  * @param string $filename
  * @return string
+ * @since ZC v1.5.7
  */
 function zen_get_uploaded_file(string $filename)
 {
@@ -401,6 +415,7 @@ function zen_get_uploaded_file(string $filename)
  * @return array|int
  *
  * inspired by log checking suggestion from Steve Sherratt (torvista)
+ * @since ZC v1.5.5
  */
 function get_logs_data($maxToList = 'count')
 {
@@ -440,5 +455,3 @@ function get_logs_data($maxToList = 'count')
     $logs = zen_sort_array($logs, 'unixtime', SORT_DESC);
     return $logs;
 }
-
-

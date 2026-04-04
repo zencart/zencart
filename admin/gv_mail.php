@@ -1,13 +1,12 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 13 Modified in v2.2.1 $
  */
 require 'includes/application_top.php';
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (!empty($_GET['action']) && $_GET['action'] == 'set_editor') {
@@ -58,7 +57,7 @@ if ($action != '') {
         if (!empty($_POST['email_to_name'])) {
           $mail_sent_to_names = explode(' ', zen_db_prepare_input($_POST['email_to_name']), 2);
           $customers_firstname = $mail_sent_to_names[0];
-          $customers_lastname = (!empty($mail_sent_to_names[1]) ? $mail_sent_to_names[1] : ''); 
+          $customers_lastname = (!empty($mail_sent_to_names[1]) ? $mail_sent_to_names[1] : '');
         } else {
           $customers_firstname = '';
           $customers_lastname = TEXT_CUSTOMER;
@@ -83,7 +82,7 @@ if ($action != '') {
         $insert_query = $db->Execute("INSERT INTO " . TABLE_COUPONS . " (coupon_code, coupon_type, coupon_amount, date_created)
                                       VALUES ('" . zen_db_input($id1) . "', 'G', '" . zen_db_input($_POST['amount']) . "', now())");
 
-        $insert_id = $db->Insert_ID();
+        $insert_id = $db->insert_ID();
 
         $db->Execute("INSERT INTO " . TABLE_COUPON_EMAIL_TRACK . " (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent)
                       VALUES (" . (int)$insert_id . ", 0, 'Admin', '" . zen_db_input($row['customers_email_address']) . "', now() )");

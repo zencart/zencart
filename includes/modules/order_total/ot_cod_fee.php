@@ -2,15 +2,16 @@
 /**
  * ot_cod_fee order-total module
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright (c) 2002 Thomas Plänkers http://www.oscommerce.at
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 /**
  * COD-FEE Order Totals Module
  *
+ * @since ZC v1.2.0d
  */
 
   class ot_cod_fee {
@@ -62,6 +63,9 @@
       $this->output = array();
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     function process() {
       global $order, $currencies, $cod_cost, $cod_country, $shipping;
 
@@ -70,8 +74,9 @@
         $cod_country = false;
 
         //check if payment method is cod. If yes, check if cod is possible.
-
+        
         if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'cod') {
+          $cod_zones = []; 
           //process installed shipping modules
           if (substr_count($_SESSION['shipping']['id'], 'flat') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FLAT));
           if (substr_count($_SESSION['shipping']['id'], 'free') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FREE));
@@ -115,11 +120,12 @@
           $order->info['total'] += $cod_cost;
           if ($tax > 0) {
             $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
-            $order->info['tax'] += zen_calculate_tax($cod_cost, $tax);
-            $order->info['tax_groups'][$tax_description] += zen_calculate_tax($cod_cost, $tax);
-            $order->info['total'] += zen_calculate_tax($cod_cost, $tax);
+            $tax_amount = zen_calculate_tax($cod_cost, $tax);
+            $order->info['tax'] += $tax_amount; 
+            $order->info['tax_groups'][$tax_description] += $tax_amount; 
+            $order->info['total'] += $tax_amount; 
             if (DISPLAY_PRICE_WITH_TAX == 'true') {
-              $cod_cost += zen_calculate_tax($cod_cost, $tax);
+              $cod_cost += $tax_amount; 
             }
           }
 
@@ -136,6 +142,9 @@
       }
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     function check() {
       global $db;
       if (!isset($this->_check)) {
@@ -146,10 +155,16 @@
       return $this->_check;
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     function keys() {
       return array('MODULE_ORDER_TOTAL_COD_STATUS', 'MODULE_ORDER_TOTAL_COD_SORT_ORDER', 'MODULE_ORDER_TOTAL_COD_FEE_FLAT', 'MODULE_ORDER_TOTAL_COD_FEE_FREE', 'MODULE_ORDER_TOTAL_COD_FEE_FREESHIPPER', 'MODULE_ORDER_TOTAL_COD_FEE_FREEOPTIONS', 'MODULE_ORDER_TOTAL_COD_FEE_PERWEIGHTUNIT', 'MODULE_ORDER_TOTAL_COD_FEE_ITEM', 'MODULE_ORDER_TOTAL_COD_FEE_TABLE', 'MODULE_ORDER_TOTAL_COD_FEE_UPS', 'MODULE_ORDER_TOTAL_COD_FEE_USPS', 'MODULE_ORDER_TOTAL_COD_FEE_ZONES', 'MODULE_ORDER_TOTAL_COD_FEE_AP', 'MODULE_ORDER_TOTAL_COD_FEE_DP', 'MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE', 'MODULE_ORDER_TOTAL_COD_FEE_FEDEX', 'MODULE_ORDER_TOTAL_COD_TAX_CLASS');
     }
 
+    /**
+     * @since ZC v1.2.0d
+     */
     function install() {
       global $db;
       $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Display COD', 'MODULE_ORDER_TOTAL_COD_STATUS', 'true', 'Do you want this module to display?', '6', '1','zen_cfg_select_option(array(\'true\', \'false\'), ', now())");
@@ -172,6 +187,9 @@
     }
 
 
+    /**
+     * @since ZC v1.2.0d
+     */
     function remove() {
       global $db;
       $keys = '';

@@ -2,10 +2,10 @@
 /**
  * dist-configure.php - SAMPLE FILE!
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021 Jan 23 Modified in v1.5.8-alpha $
+ * @version $Id: Scott Wilson 2025 Apr 27 Modified in v2.2.0 $
  * @private
  */
 
@@ -65,7 +65,7 @@ define('DIR_FS_CATALOG', '/var/www/vhost/accountname/public_html/store/');
  */
 define('DB_TYPE', 'mysql'); // always 'mysql'
 define('DB_PREFIX', ''); // prefix for database table names -- preferred to be left empty
-define('DB_CHARSET', 'utf8'); // 'utf8' or 'latin1' are most common
+define('DB_CHARSET', 'utf8mb4'); 
 define('DB_SERVER', 'localhost');  // address of your db server
 define('DB_SERVER_USERNAME', '');
 define('DB_SERVER_PASSWORD', '');

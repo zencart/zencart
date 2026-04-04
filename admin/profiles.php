@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: Scott Wilson 2024 Nov 23 Modified in v2.2.0 $
  */
 require('includes/application_top.php');
 
@@ -93,7 +93,7 @@ switch ($action) {
     <script>
       function checkAll(form, header, value) {
           for (var i = 0; i < form.elements.length; i++) {
-              if (form.elements[i].className == header) {
+              if (form.elements[i].classList.contains(header)) {
                   form.elements[i].checked = value;
               }
           }

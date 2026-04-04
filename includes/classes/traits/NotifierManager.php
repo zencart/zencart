@@ -1,22 +1,27 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 May 05 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 29 Modified in v2.2.0 $
  */
 
 namespace Zencart\Traits;
 
 use Zencart\Events\EventDto;
 
+/**
+ * @since ZC v1.5.8
+ */
 trait NotifierManager
 {
     /**
-     * @var array of aliases
+     * Array of notifier aliases (where Notifier hook names have been renamed, such as for minor misspellings)
+     * In your own application code, you may add to this list by calling $this->registerObserverAlias($old,$new)
+     * @since ZC v1.5.8
      */
     private array $observerAliases = [
-        // this one is an alias to accommodate an old misspelling:
         'NOTIFIY_ORDER_CART_SUBTOTAL_CALCULATE' => 'NOTIFY_ORDER_CART_SUBTOTAL_CALCULATE',
+        'NOTIFY_ADMIN_INVOIVE_HEADERS_AFTER_TAX' => 'NOTIFY_ADMIN_INVOICE_HEADERS_AFTER_TAX',
     ];
 
     public function getRegisteredObservers(): array
@@ -44,6 +49,7 @@ trait NotifierManager
      *
      * NOTE: The $param1 is not received-by-reference, but params 2-9 are.
      * NOTE: The $param1 value CAN be an array, and is sometimes typecast to be an array, but can also safely be a string or int etc if the notifier sends such and the observer class expects same.
+     * @since ZC v1.5.8
      */
     public function notify(
         string $eventID,
@@ -120,6 +126,7 @@ trait NotifierManager
      * @param mixed|array|null $param1 $param1
      * @param mixed ...$params
      * @return void
+     * @since ZC v3.0.0
      */
     function insertContent(string $eventID, $param1 = [], &...$params)
     {
@@ -169,6 +176,7 @@ trait NotifierManager
      * @param array $classList Any classes to be added to the wrapper e.g. [ 'warning' ]
      * @param string $params Any other params to be inserted into the <div> e.g. "id='foobar'"
      * @return bool true if output was generated, else false (usually an error)
+     * @since ZC v3.0.0
      */
     protected function outputDefinePage (string $define_page_name, array $classList = [], string $params = null): bool {
         $define_page = zen_get_define_page_content($define_page_name);
@@ -190,9 +198,15 @@ trait NotifierManager
         return true;
     }
 
+    /*
+     * @since ZC v1.5.8
+     */
     protected function logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9): void
     {
         if (!defined('NOTIFIER_TRACE') || empty(NOTIFIER_TRACE) || NOTIFIER_TRACE === 'false' || NOTIFIER_TRACE === 'Off') {
+            return;
+        }
+        if (defined('NOTIFIER_TRACE_EVENTS') && is_array(NOTIFIER_TRACE_EVENTS) && !in_array($eventID, NOTIFIER_TRACE_EVENTS)) {
             return;
         }
         global $zcDate;
@@ -224,16 +238,25 @@ trait NotifierManager
         error_log($zcDate->output("%Y-%m-%d %H:%M:%S") . ' [main_page=' . $main_page . '] ' . $eventID . $output . "\n", 3, $file);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function eventIdHasAlias($eventId): bool
     {
         return array_key_exists($eventId, $this->observerAliases);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function substituteAlias($eventId): bool|int|string
     {
         return array_search($eventId, $this->observerAliases, true);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function registerObserverAlias(string $oldEventId, string $newEventId): void
     {
         if ($this->eventIdHasAlias($oldEventId)) {

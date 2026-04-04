@@ -1,15 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Jul 10 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 require 'includes/application_top.php';
 $languages = zen_get_languages();
 
 //required for display of products price in Global Tools selection
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 // check for damaged database, caused by users indiscriminately deleting table data
@@ -399,6 +398,7 @@ foreach ($products_options_types_list as $id => $text) {
 /**
  * @param $opt_type
  * @return mixed
+ * @since ZC v1.1.0
  */
 function translate_type_to_name($opt_type)
 {

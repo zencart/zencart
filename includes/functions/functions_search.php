@@ -1,14 +1,16 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Jul 28 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
-
-////
-// Parse search string into individual objects
-function zen_parse_search_string($search_str = '', &$objects = []) {
+/**
+ * Parse search string into individual objects
+ * @since ZC v1.0.3
+ */
+function zen_parse_search_string($search_str = '', &$objects = [])
+{
     $search_str = trim(strtolower($search_str));
 
 // Break up $search_str on whitespace; quoted string will be reconstructed later
@@ -134,7 +136,7 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
             $temp[] = ADVANCED_SEARCH_DEFAULT_OPERATOR;
         }
     }
-    $temp[] = $objects[$i];
+    $temp[] = $objects[$i] ?? [];
     $objects = $temp;
 
     $keyword_count = 0;
@@ -157,12 +159,16 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
     return false;
 }
 
-    function zen_build_keyword_where_clause($fields, $string, $startWithWhere = false)
-    {
+/**
+ * @since ZC v1.5.8
+ */
+function zen_build_keyword_where_clause($fields, $string, $startWithWhere = false)
+{
         global $db, $zco_notifier;
 
         $zco_notifier->notify('NOTIFY_BUILD_KEYWORD_SEARCH', '', $fields, $string);
         $where_str = '';
+        $validWhere = false;
         if (zen_parse_search_string(stripslashes($string), $search_keywords)) {
             $where_str = " AND (";
             if ($startWithWhere) {
@@ -190,11 +196,13 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
                                     $first_field = false;
                                     $sql_add .= $sql_or;
                                     $sql_add .= " :field_name = :numeric_keyword";
+                                    $validWhere = true;
                                 }
                             } else {
                                 $first_field = false;
                                 $sql_add .= $sql_or;
                                 $sql_add .= " :field_name LIKE '%:keyword%'";
+                                $validWhere = true;
                             }
                             $sql_add = $db->bindVars($sql_add, ':field_name', $field_name, 'noquotestring');
                         }
@@ -209,8 +217,12 @@ function zen_parse_search_string($search_str = '', &$objects = []) {
             }
             $where_str .= " )";
         }
-        if (substr($where_str, -7) === '( ()  )') {
+        if (substr($where_str, -7) === '( ()  )' || !$validWhere) {
             return ' ';
         }
-        return $where_str;
-    }
+        $problemArray = [
+            ' ()  AND ',
+            ' AND  () ',
+        ];
+        return str_replace($problemArray, ' ', $where_str);
+}

@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jun 19 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
  
   /**
@@ -13,6 +13,8 @@
   *     id: id of the filter to apply. (May be mnemonic value of int.)
   *     options: per http://php.net/manual/en/function.filter-var.php
   *   @return - NULL; failure results in redirection inline.
+  *
+  * @since ZC v1.5.6
   */ 
 function zen_validate_configuration_entry($variable, $check_string, $config_name = '')
 {
@@ -30,7 +32,7 @@ function zen_validate_configuration_entry($variable, $check_string, $config_name
             case (strpos($data['error'], 'TEXT_MIN_ADMIN') === 0):
                 $error_msg = TEXT_MIN_GENERAL_ADMIN;
                 break;
-            case (strpos($data['error'], 'TEXT_MAX_ADMIN') === 0);
+            case (strpos($data['error'], 'TEXT_MAX_ADMIN') === 0):
                 $error_msg = TEXT_MAX_GENERAL_ADMIN;
                 break;
             default:

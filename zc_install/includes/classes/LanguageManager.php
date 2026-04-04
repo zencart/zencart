@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 11 Modified in v2.1.0-alpha2 $
  */
 
 class LanguageManager
@@ -24,7 +24,7 @@ class LanguageManager
         $infoFiles = $this->listFilesFromDirectory(DIR_FS_INSTALL . $this->langPath, '~^lng_info.*\.php$~i');
         $this->languagesInstalled = [];
         foreach ($infoFiles as $infoFile) {
-            $infoData = require(DIR_FS_INSTALL . $this->langPath . $infoFile);
+            $infoData = require DIR_FS_INSTALL . $this->langPath . $infoFile;
             $this->languagesInstalled = array_merge($this->languagesInstalled, $infoData);
         }
         return $this->languagesInstalled;
@@ -61,7 +61,7 @@ class LanguageManager
         $defineList = [];
         $fp = DIR_FS_INSTALL . $this->langPath . $lng . '/' . $file . '.php';
         if (file_exists($fp)) {
-            $defineList = require($fp);
+            $defineList = require $fp;
         }
         return $defineList;
     }

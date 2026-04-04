@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2023 Jul 01 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2026 Mar 17 Modified in v2.2.1 $
 */
 
 $define = [
@@ -19,7 +19,7 @@ $define = [
     'TEXT_CLEANUP' => 'Clean Up',
     'TEXT_UPGRADE' => 'Upgrade',
     'TEXT_CONFIRM' => 'Confirm',
-    'TEXT_INFO_DESCRIPTION' => 'Plugin Description:',
+    'TEXT_INFO_DESCRIPTION' => '<strong>Plugin Description:</strong>',
     'TEXT_INFO_CLEANUP' => 'Remove unwanted plugin version directories',
     'TEXT_INFO_SELECT_CLEAN' => 'Select versions you want to remove',
     'TEXT_INSTALLED_ENABLED' => 'Installed (Enabled)',
@@ -34,8 +34,10 @@ $define = [
     'TEXT_CLEANUP_SUCCESS' => 'Directories successfully removed',
     'TEXT_CLEANUP_ERROR' => 'Please check file permissions. Some Directories not removed',
     'TEXT_UPGRADE_AVAILABLE' => 'Upgrade Available',
-    'TEXT_VERSION_INSTALLED' => 'Version Installed: %s',
-    'TEXT_NEW_PLUGIN_DOWNLOAD_AVAILABLE' => 'A new version %s is available to download from the <a target="_blank" href="https://www.zen-cart.com/downloads.php?do=file&id=%s">support forum</a>',
+    'TEXT_VERSION_INSTALLED' => '<strong>Version Installed:</strong> %s',
+    'TEXT_PLUGIN_AUTHOR' => '<strong>Author:</strong> %s',
+    'TEXT_PLUGIN_DOWNLOAD_PAGE' => '<a target="_blank" rel="noreferrer" href="https://www.zen-cart.com/downloads.php?do=file&id=%s">Plugin Download Page</a>',
+    'TEXT_NEW_PLUGIN_DOWNLOAD_AVAILABLE' => 'A new version %1$s is available to download from the <a target="_blank" rel="noreferrer" href="https://www.zen-cart.com/downloads.php?do=file&id=%2$s">support forum</a>',
     'TEXT_CONFIRM_UNINSTALL' => 'Are you sure you want to uninstall this plugin?',
     'TEXT_CONFIRM_UPGRADE' => 'Are you sure you want to upgrade this plugin?',
     'TEXT_CONFIRM_DISABLE' => 'Are you sure you want to disable this plugin?',
@@ -45,9 +47,15 @@ $define = [
     'TEXT_INFO_UPGRADE_WARNING' => '',
     'TEXT_INFO_CONFIRM_CLEAN' => 'Confirm version directories to clean/remove',
     'TEXT_LABEL_STATUS' => 'Status: ',
-    'ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP' => 'Check your sql statement. A sql function map cannot be found for : ',
+
+    'ERROR_CANT_REMOVE_DIR' => 'Unable to remove  directory: %s',
     'ERROR_INVALID_SYNTAX' => 'The table cannot be identified as syntax is invalid in: ',
+    'ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP' => 'Check your SQL statement. A SQL function map cannot be found for : ',
+    'ERROR_REMOVE_FILES_CANT_DELETE' => 'Unable to remove file: %s',
+    'ERROR_REMOVE_FILES_CONTEXT' => 'Invalid context supplied (%s), it must be either "catalog" or "admin".',
     'ERROR_SQL_PATCH' => 'Error while processing SQL install. ',
+
+    'WARNING_NONENCAPSULATED_REMOVAL' => '<b>Note:</b> Installing this plugin will result in files provided by a non-encapsulated version (if present) being <b>permanently</b> removed!',
 ];
 
 return $define;

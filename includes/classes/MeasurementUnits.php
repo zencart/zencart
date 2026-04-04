@@ -1,24 +1,24 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @since ZC v2.0.0
  */
-
-use TypeError;
 
 class MeasurementUnits
 {
     /**
      * Convert weight from one unit to another
+     * @since ZC v2.0.0
      */
     public static function convertWeight(float|int $incoming, string $from_unit, string $to_unit, ?int $precision = null): float|int
     {
         if (!in_array($from_unit, ['lbs', 'kgs', 'oz', 'g'])) {
-            throw new TypeError('Invalid weight unit for $from_unit: ' . $from_unit);
+            throw new \TypeError('Invalid weight unit for $from_unit: ' . $from_unit);
         }
         if (!in_array($to_unit, ['lbs', 'kgs', 'oz', 'g'])) {
-            throw new TypeError('Invalid weight unit for $to_unit: ' . $to_unit);
+            throw new \TypeError('Invalid weight unit for $to_unit: ' . $to_unit);
         }
 
         $ratio = [];
@@ -53,14 +53,15 @@ class MeasurementUnits
 
     /**
      * Convert lengths from one unit to another
+     * @since ZC v2.0.0
      */
     public static function convertLength(float|int $incoming, string $from_unit, string $to_unit, ?int $precision = null): float
     {
         if (!in_array($from_unit, ['in', 'cm'])) {
-            throw new TypeError('Invalid length unit for $from_unit: ' . $from_unit);
+            throw new \TypeError('Invalid length unit for $from_unit: ' . $from_unit);
         }
         if (!in_array($to_unit, ['in', 'cm'])) {
-            throw new TypeError('Invalid length unit for $to_unit: ' . $to_unit);
+            throw new \TypeError('Invalid length unit for $to_unit: ' . $to_unit);
         }
 
         $ratio = [];

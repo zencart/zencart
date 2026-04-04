@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: mc12345678 2023 Jul 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2025 Jan 25 Modified in v2.2.0 $
  */
 require('includes/application_top.php');
 
@@ -108,7 +108,7 @@ switch ($action) {
         }
         break;
     case 'update': // update existing user's details in database. Post data is prep'd for db in the first function call
-        $errors = zen_update_user($_POST['name'], $_POST['email'], $_POST['id'], $_POST['profile']);
+        $errors = zen_update_user($_POST['name'], $_POST['email'], $_POST['id'], $_POST['profile'] ?? 0);
         if (count($errors) > 0) {
             foreach ($errors as $error) {
                 $messageStack->add($error, 'error');

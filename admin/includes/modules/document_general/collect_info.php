@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 23 Modified in v2.0.0-beta1 $
+ * @version $Id: lat9 2025 Oct 05 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -15,7 +15,9 @@ $parameters = [
   'products_id' => '',
   'products_quantity' => '0',
   'products_model' => '',
+  'products_mpn' => '',
   'products_image' => '',
+  'additional_images' => [],
   'products_price' => '0.0000',
   'products_price_w' => '0',
   'products_virtual' => 0,
@@ -52,11 +54,9 @@ if (isset($_GET['pID']) && empty($_POST)) {
   $product = $db->Execute("SELECT pd.products_name, pd.products_description, pd.products_url,
                                   p.*,
                                   date_format(p.products_date_available, '" .  zen_datepicker_format_forsql() . "') as products_date_available
-                           FROM " . TABLE_PRODUCTS . " p,
-                                " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                           WHERE p.products_id = " . (int)$_GET['pID'] . "
-                           AND p.products_id = pd.products_id
-                           AND pd.language_id = " . (int)$_SESSION['languages_id']);
+                           FROM " . TABLE_PRODUCTS . " p
+                           LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (p.products_id = pd.products_id AND pd.language_id = " . (int)$_SESSION['languages_id'] . ")
+                           WHERE p.products_id = " . (int)$_GET['pID']);
 
   $pInfo->updateObjectInfo($product->fields);
   $pInfo->product_type = $pInfo->products_type;
@@ -71,6 +71,16 @@ if (isset($_GET['pID']) && empty($_POST)) {
   $products_name = $_POST['products_name'] ?? '';
   $products_description = $_POST['products_description'] ?? '';
   $products_url = $_POST['products_url'] ?? '';
+}
+
+// additional images
+$additional_images_query = $db->Execute("SELECT id, additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . (int)($_GET['pID'] ?? 0) . " ORDER BY sort_order");
+$additional_images = [];
+foreach ($additional_images_query as $additional_image) {
+    $additional_images[] = [
+        'id' => $additional_image['id'],
+        'additional_image' => $additional_image['additional_image']
+    ];
 }
 
 $category_lookup = $db->Execute("SELECT *
@@ -108,15 +118,15 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
 ?>
 <div class="container-fluid">
     <?php
-    echo zen_draw_form('new_product', FILENAME_PRODUCT, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . $_POST['search'] : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
+    echo zen_draw_form('new_product', FILENAME_PRODUCT, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
     if (isset($product_type)) {
       echo zen_draw_hidden_field('product_type', $product_type);
     }
     ?>
   <h3 class="col-sm-11"><?php echo sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)); ?></h3>
-  <div class="col-sm-1"><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></div>
+  <div class="col-sm-1"><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT, 'class="object-fit-contain"'); ?></div>
     <div class="floatButton text-right">
-      <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . $_GET['search'] : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . $_POST['search'] : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+      <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
     </div>
   <div class="form-group">
       <?php
@@ -207,7 +217,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
           <span class="input-group-addon">
               <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
           </span>
-          <?php echo zen_draw_input_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : zen_get_products_name($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name') . ' class="form-control"'); ?>
+          <?php echo zen_draw_input_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : zen_get_products_name($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name') . ' class="form-control"', true); ?>
         </div>
         <br>
         <?php
@@ -265,14 +275,15 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       ?>
     </div>
   </div>
-  <div class="form-group">
+    <hr>
 
+<div class="well product-images-area">
     <h2><?php echo TEXT_DOCUMENT_IMAGE; ?></h2>
     <?php
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <?php echo zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name)); ?>
+                <?php echo zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), MEDIUM_IMAGE_WIDTH); ?>
                 <br>
                 <?php echo $pInfo->products_image; ?>
             </div>
@@ -290,12 +301,12 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         <?php echo zen_draw_label(TEXT_EDIT_PRODUCTS_IMAGE, 'products_image', 'class="col-sm-3 control-label"'); ?>
         <div class="col-sm-9 col-md-9 col-lg-6">
             <?php echo zen_draw_file_field('products_image', '', 'class="form-control" id="products_image"'); ?>
-            <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image); ?>
+            <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image ?? ''); ?>
         </div>
     </div>
     <?php
     $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
-    $default_directory = substr($pInfo->products_image, 0, strpos($pInfo->products_image, '/') + 1);
+    $default_directory = substr($pInfo->products_image ?? '', 0, strpos($pInfo->products_image ?? '', '/') + 1);
     ?>
     <div class="form-group">
         <?php echo zen_draw_label(TEXT_DOCUMENT_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
@@ -304,18 +315,156 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
         </div>
     </div>
     <div class="form-group">
+        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="col-sm-3 control-label"'); ?>
+        <div class="col-sm-9 col-md-9 col-lg-6">
+            <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
+        </div>
+    </div>
+    <?php if (ADDITIONAL_IMAGES_HANDLING === 'Database') { ?>
+        <h3><?= TEXT_PRODUCTS_ADDITIONAL_IMAGES ?></h3>
+        <?php if (!empty($additional_images)) { ?>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9 col-md-6">
+                    <?php foreach ($additional_images as $img) { ?>
+                        <div class="col-sm-3 col-md-3 col-lg-3">
+                            <?= zen_info_image($img['additional_image'], (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), '', '', 'class="img-responsive"') ?>
+                            <br>
+                            <?= $img['additional_image'] ?><br>
+                            <?= zen_draw_hidden_field('previous_additional_images[' . $img['id'] . ']', $img['additional_image'], 'data-img-id="' . $img['id'] . '"') ?>
+                            <label>
+                                <?= zen_draw_checkbox_field('additional_image_delete[' . $img['id'] . ']', '1', false); ?> <?= TEXT_DELETE_IMAGE ?>
+                            </label>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+
+        <?php } ?>
+        <div class="form-group">
+            <?= zen_draw_label(TEXT_PRODUCTS_ADDITIONAL_IMAGES_ADD, 'additional_images', 'class="col-sm-3 control-label"') ?>
+            <div class="col-sm-9 col-md-9 col-lg-6">
+                <div id="additional-images-dropzone" class="dropzone" style="border:2px dashed #ccc; padding:20px; text-align:center;">
+                    <p><?= TEXT_BUTTON_DRAG_DROP_ADDITIONAL_IMAGE ?></p>
+                    <input type="file" name="additional_images[]" class="form-control" multiple style="display:none;" id="additional-images-input" />
+                    <div id="additional-images-preview" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
+                </div>
+                <button type="button" class="btn btn-info mt-2" id="addl_images_button" onclick="document.getElementById('additional-images-input').click();"><?= TEXT_BUTTON_ADD_ADDITIONAL_IMAGE ?></button>
+            </div>
+        </div>
+        <script>
+            const dropzone = document.getElementById('additional-images-dropzone');
+            const input = document.getElementById('additional-images-input');
+            const preview = document.getElementById('additional-images-preview');
+            const addl_images_button = document.getElementById('addl_images_button');
+            let files = [];
+
+            dropzone.addEventListener('click', () => input.click());
+
+            dropzone.addEventListener('dragover', e => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#007bff';
+            });
+
+            dropzone.addEventListener('mouseover', e => {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '#007bff';
+                dropzone.style.color = '#fff';
+                dropzone.style.cursor = 'pointer';
+                addl_images_button.style.backgroundColor = '#007bff';
+                addl_images_button.style.color = '#fff';
+                addl_images_button.style.borderColor = '#269adc';
+            });
+
+            dropzone.addEventListener('mouseout', e => {
+                e.preventDefault();
+                dropzone.style.backgroundColor = '';
+                dropzone.style.color = '';
+                dropzone.style.cursor = '';
+                addl_images_button.style.backgroundColor = '';
+                addl_images_button.style.color = '';
+                addl_images_button.style.borderColor = '';
+            });
+
+            dropzone.addEventListener('dragleave', e => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#ccc';
+            });
+
+            dropzone.addEventListener('drop', e => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#ccc';
+                handleFiles(e.dataTransfer.files);
+            });
+
+            input.addEventListener('change', e => {
+                handleFiles(e.target.files);
+            });
+
+            function handleFiles(selectedFiles) {
+                for (let file of selectedFiles) {
+                    if (!file.type.startsWith('image/')) continue;
+                    files.push(file);
+                    showPreview(file);
+                }
+                updateInputFiles();
+            }
+
+            function showPreview(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.width = '100px';
+                    div.style.height = '100px';
+                    div.style.display = 'inline-block';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    img.style.border = '1px solid #ddd';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.style.position = 'absolute';
+                    removeBtn.style.top = '2px';
+                    removeBtn.style.right = '2px';
+                    removeBtn.style.background = '#fff';
+                    removeBtn.style.border = 'none';
+                    removeBtn.style.cursor = 'pointer';
+                    removeBtn.style.fontSize = '18px';
+                    removeBtn.onclick = function(event) {
+                        event.stopPropagation(); // Prevent dropzone click event
+                        files = files.filter(f => f !== file);
+                        div.remove();
+                        updateInputFiles();
+                    };
+
+                    div.appendChild(img);
+                    div.appendChild(removeBtn);
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function updateInputFiles() {
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                input.files = dataTransfer.files;
+            }
+        </script>
+    <?php } ?>
+
+    <div class="form-group">
         <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_OVERWRITE; ?></p>
         <div class="col-sm-9 col-md-9 col-lg-6">
             <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
             <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
         </div>
     </div>
-    <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="col-sm-3 control-label"'); ?>
-        <div class="col-sm-9 col-md-9 col-lg-6">
-            <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
-        </div>
-    </div>
+</div>
     <hr>
   <div class="form-group">
     <p class="col-sm-3 control-label"><?php echo TEXT_DOCUMENT_URL; ?><span class="help-block"><?php echo TEXT_DOCUMENT_URL_WITHOUT_HTTP; ?></span></p>
@@ -342,8 +491,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     </div>
     <?php
     echo zen_draw_hidden_field('products_date_added', (zen_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
-    echo ((isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', $_GET['search']) : '');
-    echo ((isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', $_POST['search']) : '');
+    echo ((isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', zen_preserve_search_quotes($_GET['search'])) : '');
+    echo ((isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', zen_preserve_search_quotes($_POST['search'])) : '');
     ?>
   </div>
   <?php echo '</form>'; ?>

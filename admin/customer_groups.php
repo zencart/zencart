@@ -96,6 +96,7 @@ if (!empty($action)) {
                     }
                 }
 
+                $groups_query_numrows = $groups_query_numrows ?? 0;
                 $groups_split = new splitPageResults($_GET['page'], $max_records_per_page, $sql, $groups_query_numrows);
                 $groups = $db->Execute($sql);
 

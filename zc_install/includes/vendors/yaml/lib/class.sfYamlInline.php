@@ -13,10 +13,9 @@
 /**
  * sfYamlInline implements a YAML parser/dumper for the YAML inline syntax.
  *
- * @package    symfony
  * @subpackage yaml
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version $Id: Author: DrByte  Thu Oct 1 15:30:47 2015 -0400 New in v1.5.5 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  * @codeCoverageIgnore
  */
 class sfYamlInline
@@ -136,7 +135,7 @@ class sfYamlInline
     if (
       (1 == count($keys) && '0' == $keys[0])
       ||
-      (count($keys) > 1 && array_reduce($keys, create_function('$v,$w', 'return (integer) $v + $w;'), 0) == count($keys) * (count($keys) - 1) / 2))
+      (count($keys) > 1 && array_reduce($keys, function($v, $w) { return (int) $v + $w; }, 0) == count($keys) * (count($keys) - 1) / 2))
     {
       $output = array();
       foreach ($value as $val)

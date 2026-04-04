@@ -2,14 +2,15 @@
 /**
  * sanitize the GET parameters
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ *
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 29 Modified in v2.2.0 $
  */
 
-use Zencart\PageLoader\PageLoader;
 use Zencart\FileSystem\FileSystem;
+use Zencart\PageLoader\PageLoader;
 use Zencart\Request\Request;
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -20,9 +21,9 @@ $zco_notifier->notify('NOTIFY_INIT_SANITIZE_STARTS');
 
 foreach ($_GET as $varname => $varvalue) {
     if (is_array($varvalue)) {
-        $site_array_override = false;
-        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $site_array_override);
-        if ($site_array_override === false) {
+        $get_var_override = false;
+        $zco_notifier->notify('NOTIFY_INIT_SANITIZE_GET_VAR_CHECK', ['name' => $varname, 'value' => $varvalue,], $get_var_override);
+        if ($get_var_override === false) {
             zen_redirect(zen_href_link(FILENAME_DEFAULT));
         }
     }
@@ -31,7 +32,7 @@ foreach ($_GET as $varname => $varvalue) {
 $csrfBlackListLocal = [];
 $csrfBlackList = (isset($csrfBlackListCustom)) ? array_merge($csrfBlackListLocal, $csrfBlackListCustom) : $csrfBlackListLocal;
 if (!isset($_SESSION ['securityToken'])) {
-    $_SESSION ['securityToken'] = md5(uniqid(rand(), true));
+    $_SESSION ['securityToken'] = \bin2hex(\random_bytes(16));
 }
 
 if (zen_is_hmac_login()) {
@@ -42,32 +43,86 @@ if (zen_is_hmac_login()) {
     }
 }
 
-if ((isset($_GET['action']) || isset($_POST['action'])) && $_SERVER['REQUEST_METHOD'] == 'POST') {
-    $mainPage = isset($_GET['main_page']) ? $_GET['main_page'] : FILENAME_DEFAULT;
+// POST calls require a valid securityToken to prevent CSRF attacks.
+
+if ((isset($_GET['action']) || isset($_POST['action']) || isset($_GET['act'], $_GET['method'])) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+    $mainPage = $_GET['main_page'] ?? FILENAME_DEFAULT;
     if (!in_array($mainPage, $csrfBlackList)) {
-        if ((!isset($_SESSION ['securityToken']) || !isset($_POST ['securityToken'])) || ($_SESSION ['securityToken'] !== $_POST ['securityToken'])) {
-            zen_redirect(zen_href_link( FILENAME_TIME_OUT, '', $request_type ));
+        if (!zen_request_has_valid_csrf_token()) {
+            if (function_exists('ajaxAbort')) {
+                // -----
+                // "Tell" the zcJS.ajax function (in jscript_framework.php) that a
+                // session-timeout's been found.  That function will then perform a
+                // redirect to the time_out page.
+                //
+                ajaxAbort(418);
+            }
+            zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', $request_type));
         }
     }
 }
+
+// -----
+// The following array of GET variable keys might show up in mixed case, which can affect canonical URLs.
+// Here we check to see if they exist in their proper form, and if not then we check whether they exist
+// in mixed-case format. If they do, we unset the mixed-case form, and copy its value to the proper form
+// before continuing with sanitization.
+$caseSensitiveKeysToMap = [
+    // listed in alphabetical order for ease of maintenance
+    'artists_id',
+    'categories_id',
+    'chapter',
+    'cID',
+    'cPath',
+    'faq_item',
+    'id',
+    'manufacturers_id',
+    'music_genre_id',
+    'page',
+    'pID',
+    'product_id',
+    'products_id',
+    'products_image_large_additional',
+    'record_company_id',
+    'reviews_id',
+    'search_in_description',
+    'typefilter',
+];
+foreach ($caseSensitiveKeysToMap as $key) {
+    if (!isset($_GET[$key])) {
+        foreach ($_GET as $mixedKey => $value) {
+            if (strtolower($mixedKey) === strtolower($key)) {
+                $_GET[$key] = $value;
+                unset($_GET[$mixedKey]);
+                if (isset($_REQUEST[$mixedKey])) {
+                    unset($_REQUEST[$mixedKey]);
+                    $_REQUEST[$key] = $value;
+                }
+                break;
+            }
+        }
+    }
+}
+unset($mixedKey);
 
 // -----
 // Check products_id values (and variants) as a uprid.  That's either an integer
 // value or a uprid (dddd:xxxx), where xxxx is the 32-hexadecimal character md5 hash of the currently-selected
 // attributes.
 //
+// Noting that if an id-value is found to be invalid, there's no sense
+// in taking up further resources on the server; simply redirect to
+// the home page.
+//
 $saniGroup1 = [
     'products_id',  //- 'Normal', multi-use
     'product_id',   //- shopping_cart, when removing a product from the cart
-    'pid',          //- order_history sidebox and ask_a_question page
-    'pID',          //- main/additional images' pop-ups
+    'pID',          //- main/additional images' pop-up pages, order_history sidebox, and ask_a_question page
+    'pid',          //- prior to v2.2.0: order_history sidebox, ask_a_question page
 ];
 foreach ($saniGroup1 as $key) {
-    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?/', (string)$_GET[$key])) {
-        $_GET[$key] = '';
-        if (isset($_REQUEST[$key])) {
-            $_REQUEST[$key] = '';
-        }
+    if (isset($_GET[$key]) && !preg_match('/^\d+(:[0-9a-f]{32})?$/', (string)$_GET[$key])) {
+        zen_redirect(zen_href_link(FILENAME_DEFAULT));
     }
 }
 
@@ -175,7 +230,7 @@ $saniGroup4 = [
     'tx',                               //- paypal/paypay_functions
     'type',                             //- Paypal
     'zenid',                            //- [a-z0-9]
-    $zenSessionId                       //- [a-z0-9]
+    $zenSessionId,                       //- [a-z0-9]
 ];
 foreach ($saniGroup4 as $key) {
     if (isset($_GET[$key])) {
@@ -193,14 +248,14 @@ $strictReplace = ['<', '>', "'"];
 $unStrictReplace = ['<', '>'];
 foreach ($_GET as $key => $value) {
     if (is_array($value)) {
-        foreach ($value as $key2 => $val2){
+        foreach ($value as $key2 => $val2) {
             if ($key2 === 'keyword') {
                 $_GET[$key][$key2] = str_replace($unStrictReplace, '', $val2);
                 if (isset($_REQUEST[$key][$key2])) {
                     $_REQUEST[$key][$key2] = str_replace($unStrictReplace, '', $val2);
                 }
             } elseif (is_array($val2)) {
-                foreach ($val2 as $key3 => $val3){
+                foreach ($val2 as $key3 => $val3) {
                     $_GET[$key][$key2][$key3] = str_replace($strictReplace, '', $val3);
                     if (isset($_REQUEST[$key][$key2][$key3])) {
                         $_REQUEST[$key][$key2][$key3] = str_replace($strictReplace, '', $val3);

@@ -1,12 +1,13 @@
 <?php
 /**
  * configurationValidation.php
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Copyright 2019 mc12345678 @ mc12345678.com
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jun 19 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  *
+ * @since ZC v1.5.7
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -22,6 +23,7 @@ class configurationValidation extends base
      *
      * @param string $val
      * @return bool
+     * @since ZC v1.5.8
      */
     static public function sanitizeEmailNullOK(string $val)
     {
@@ -48,6 +50,7 @@ class configurationValidation extends base
      * @param string $val
      * @param bool $single_email_only
      * @return bool
+     * @since ZC v1.5.7
      */
     static public function sanitizeEmail(string $val, bool $single_email_only = true)
     {
@@ -124,6 +127,7 @@ class configurationValidation extends base
      *  Usage setting val_function  for the configuration key to something similar
      *    to the below will call on this code to support storage of the boolean related value.
      *    val_function = '{"error":"TEXT_BOOLEAN_VALIDATE","id":"FILTER_CALLBACK","options":{"options":["configurationValidation","sanitizeBoolean"]}}'
+     * @since ZC v1.5.7
      **/
     static public function sanitizeBoolean(string $val)
     {

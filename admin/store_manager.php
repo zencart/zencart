@@ -1,14 +1,13 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 
   require 'includes/application_top.php';
-  require DIR_FS_CATALOG . 'includes/extra_configures/log_files.php'; 
-  require DIR_WS_CLASSES . 'currencies.php';
+  require DIR_FS_CATALOG . 'includes/extra_configures/log_files.php';
   $currencies = new currencies();
 
   $languages = zen_get_languages();

@@ -3,9 +3,9 @@
  * Admin session timeout warning alerter
  * Prompts to extend login session after 2/3 of the allowed session time has expired without mouse activity or form submission.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Apr 10 Modified in v2.0.1 $
+ * @version $Id: DrByte 2026 Mar 05 Modified in v2.2.1 $
  */
 
 if (!defined('TEXT_TIMEOUT_WARNING')) define('TEXT_TIMEOUT_WARNING', '**WARNING**');
@@ -19,6 +19,10 @@ if (!defined('TEXT_TIMEOUT_TIMED_OUT_TITLE')) define('TEXT_TIMEOUT_TIMED_OUT_TIT
 if (!defined('TEXT_TIMEOUT_LOGIN_AGAIN')) define('TEXT_TIMEOUT_LOGIN_AGAIN', 'Login Again');
 if (!defined('TEXT_TIMEOUT_TIMED_OUT_MESSAGE')) define('TEXT_TIMEOUT_TIMED_OUT_MESSAGE', 'Your session has timed out. You were inactive, so we logged you out automatically.');
 
+if (in_array(($PHP_SELF ?? ''), ['login.php', 'login', 'password_forgotten.php', 'password_forgotten'], true)) {
+    return;
+}
+
 $camefrom = 'index.php?cmd=' . basename($PHP_SELF, '.php') . (empty($params = zen_get_all_get_params()) ? '' : '&' . trim($params, '&'));
 $mouseDebounce = 120;
 
@@ -30,7 +34,7 @@ if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
 //$timeoutAfter = 15;
 //$mouseDebounce = 10;
 ?>
-<style>
+<style id="jAlert-css">
 .jAlert {font-size: 1.5rem;}
 .ja_btn {font-size: 1.5rem; padding: 15px !important;}
 </style>
@@ -56,6 +60,7 @@ jQuery(function(){
             'title': '<?php echo addslashes(TEXT_TIMEOUT_ARE_YOU_STILL_THERE); ?>',
             'content': '<b><?php echo addslashes(TEXT_TIMEOUT_WILL_LOGOUT_SOON); ?> <?php echo addslashes(TEXT_TIMEOUT_TIME_REMAINING); ?> <span class="jTimeout_Countdown">' + seconds + '</span> <?php echo addslashes(TEXT_TIMEOUT_SECONDS); ?></b>',
             'theme': 'red',
+            'noPadContent': false, // Explicitly enable padding
             'closeBtn': false,
             'onOpen': function (alert) {
                 timeout.startPriorCountdown(alert.find('.jTimeout_Countdown'));
@@ -90,6 +95,7 @@ jQuery(function(){
             'title': '<?php echo addslashes(TEXT_TIMEOUT_TIMED_OUT_TITLE); ?>',
             'content': '<b><?php echo addslashes(TEXT_TIMEOUT_TIMED_OUT_MESSAGE); ?></b>',
             'theme': 'red',
+            'noPadContent': false, // Explicitly enable padding
             'btns': {
                 'text': '<?php echo addslashes(TEXT_TIMEOUT_LOGIN_AGAIN); ?>',
                 'href': timeout.options.loginUrl,

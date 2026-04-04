@@ -2,10 +2,10 @@
 /**
  * salemaker functions
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: jarndt 2023 Jun 03 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
@@ -13,6 +13,7 @@
  * @param int $sale_id
  * @param int $status 0|1
  * @return queryFactoryResult
+ * @since ZC v1.2.0d
  */
 function zen_set_salemaker_status($sale_id, $status)
 {
@@ -26,6 +27,7 @@ function zen_set_salemaker_status($sale_id, $status)
 
 /**
  * Auto expire salemaker sales
+ * @since ZC v1.2.0d
  */
 function zen_expire_salemaker()
 {
@@ -52,6 +54,7 @@ function zen_expire_salemaker()
 
 /**
  * Auto start salemaker sales
+ * @since ZC v1.2.0d
  */
 function zen_start_salemaker()
 {

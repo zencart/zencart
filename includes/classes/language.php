@@ -3,10 +3,10 @@
 /**
  * language Class.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 11 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -15,6 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 /**
  * Track configured languages and currently-selected language for customer session
  *
+ * @since ZC v1.0.3
  */
 class language extends base
 {
@@ -27,7 +28,7 @@ class language extends base
      * @deprecated
      * Legacy array of language codes.
      * Core ZC before v2.0 depended on this array's "keys" in html_header.php for generating alt-lang hrefs.
-     * After v2.0 it calls get_languages()
+     * After v2.0 it calls zen_get_languages()
      */
     public array $catalog_languages = [];
 
@@ -57,6 +58,7 @@ class language extends base
 
     /**
      * Query database for registered languages
+     * @since ZC v2.0.0
      */
     protected function build_list_of_configured_languages(): void
     {
@@ -96,6 +98,7 @@ class language extends base
      * Retrieve languages, for multilang iteration
      * Array keys are language code, and values are configuration details (id/name/image/code/directory)
      * Note: Admin function zen_get_languages() is a proxy to this function.
+     * @since ZC v2.0.0
      */
     public function get_languages_by_code(): array
     {
@@ -106,6 +109,7 @@ class language extends base
      * Retrieve languages, for multilang iteration
      * Array keys are languages_id from db, and values are configuration details (id/name/image/code/directory)
      * Note: Admin function zen_get_languages() is a proxy to this function.
+     * @since ZC v2.0.0
      */
     public function get_languages_by_id(): array
     {
@@ -117,6 +121,7 @@ class language extends base
      * ie: [1 => 'en', 2 => 'fr']
      *
      * Legacy note: Before v2.0, html_header.php formerly queried $this->catalog_languages as a public property but only used the key.
+     * @since ZC v2.0.0
      */
     public function get_language_list(): array
     {
@@ -130,6 +135,7 @@ class language extends base
     /**
      * Set $this->language to array of specified language code
      * Used by template and language loading mechanisms
+     * @since ZC v1.0.3
      */
     public function set_language(string $language): void
     {
@@ -142,6 +148,7 @@ class language extends base
 
     /**
      * Parse browser headers for supported languages, and set our instance accordingly, if we support it.
+     * @since ZC v1.0.3
      */
     public function get_browser_language(): void
     {

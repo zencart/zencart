@@ -1,31 +1,40 @@
 <?php
+
 namespace Tests\FeatureStore\GroupDiscounts;
 
 use Tests\Support\helpers\ProfileManager;
-use Tests\Support\zcFeatureTestCaseStore;
+use Tests\Support\Traits\CustomerAccountConcerns;
+use Tests\Support\Traits\DiscountCouponConcerns;
+use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-class GroupDiscountTest extends zcFeatureTestCaseStore
+/**
+ * @group parallel-candidate
+ */
+class GroupDiscountTest extends zcInProcessFeatureTestCaseStore
 {
+    use CustomerAccountConcerns;
+    use DiscountCouponConcerns;
+
+    protected $runTestInSeparateProcess = true;
+    protected $preserveGlobalState = false;
+
     /**
      * @test
      * scenario GD 1
      */
-    public function testGroupDiscountsSimple()
+    public function testGroupDiscountsSimple(): void
     {
-
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', []);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('39.99', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.00', (string)$response->getContent());
-        $this->assertStringContainsString('2.52', (string)$response->getContent());
-        $this->assertStringContainsString('41.01', (string)$response->getContent());
+
+        $response = $this->runGroupDiscountCheckout();
+
+        $response->assertSee('39.99');
+        $response->assertSee('&#8209;$4.00');
+        $response->assertSee('2.52');
+        $response->assertSee('41.01');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
     }
 
@@ -33,23 +42,21 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
      * @test
      * scenario GD 2
      */
-    public function testGroupDiscountsWithDiscountCoupon()
+    public function testGroupDiscountsWithDiscountCoupon(): void
     {
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
         $this->createCoupon('test10percent');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['dc_redeem_code' => 'test10percent']);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('39.99', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.00', (string)$response->getContent());
-        $this->assertStringContainsString('-$3.60', (string)$response->getContent());
-        $this->assertStringContainsString('2.27', (string)$response->getContent());
-        $this->assertStringContainsString('37.16', (string)$response->getContent());
+
+        $response = $this->runGroupDiscountCheckout(['dc_redeem_code' => 'test10percent']);
+
+        $response->assertSee('39.99');
+        $response->assertSee('&#8209;$4.00');
+        $response->assertSee('&#8209;$3.60');
+        $response->assertSee('2.27');
+        $response->assertSee('37.16');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
     }
 
@@ -57,22 +64,20 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
      * @test
      * scenario GD 3
      */
-    public function testGroupDiscountsSimpleTaxInclusive()
+    public function testGroupDiscountsSimpleTaxInclusive(): void
     {
         $this->switchToTaxInclusive();
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', []);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('42.79', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.28', (string)$response->getContent());
-        $this->assertStringContainsString('2.52', (string)$response->getContent());
-        $this->assertStringContainsString('41.01', (string)$response->getContent());
+
+        $response = $this->runGroupDiscountCheckout();
+
+        $response->assertSee('42.79');
+        $response->assertSee('&#8209;$4.28');
+        $response->assertSee('2.52');
+        $response->assertSee('41.01');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchToTaxNonInclusive();
     }
@@ -81,23 +86,21 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
      * @test
      * scenario GD 4
      */
-    public function testGroupDiscountsSimpleTaxInclusiveShippingTax()
+    public function testGroupDiscountsSimpleTaxInclusiveShippingTax(): void
     {
         $this->switchToTaxInclusive();
         $this->switchItemShippingTax('on');
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', []);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('42.79', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.28', (string)$response->getContent());
-        $this->assertStringContainsString('2.77', (string)$response->getContent());
-        $this->assertStringContainsString('41.26', (string)$response->getContent());
+
+        $response = $this->runGroupDiscountCheckout();
+
+        $response->assertSee('42.79');
+        $response->assertSee('&#8209;$4.28');
+        $response->assertSee('2.77');
+        $response->assertSee('41.26');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchItemShippingTax('off');
         $this->switchToTaxNonInclusive();
@@ -107,7 +110,7 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
      * @test
      * scenario GD 5
      */
-    public function testGroupDiscountsSimpleTaxInclusiveShippingTaxSplitMode()
+    public function testGroupDiscountsSimpleTaxInclusiveShippingTaxSplitMode(): void
     {
         $this->switchToTaxInclusive();
         $this->switchItemShippingTax('on');
@@ -115,21 +118,38 @@ class GroupDiscountTest extends zcFeatureTestCaseStore
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', []);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('42.79', (string)$response->getContent());
-        $this->assertStringContainsString('2.75', (string)$response->getContent());
-        $this->assertStringContainsString('-$4.28', (string)$response->getContent());
-        $this->assertStringContainsString('2.52', (string)$response->getContent());
-        $this->assertStringContainsString('0.25', (string)$response->getContent());
-        $this->assertStringContainsString('41.26', (string)$response->getContent());
+
+        $response = $this->runGroupDiscountCheckout();
+
+        $response->assertSee('42.79');
+        $response->assertSee('2.75');
+        $response->assertSee('&#8209;$4.28');
+        $response->assertSee('2.52');
+        $response->assertSee('0.25');
+        $response->assertSee('41.26');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchSplitTaxMode('off');
         $this->switchItemShippingTax('off');
         $this->switchToTaxNonInclusive();
+    }
+
+    private function runGroupDiscountCheckout(array $paymentData = [])
+    {
+        $this->emptyCart();
+
+        $cartResponse = $this->addProductToCart(3, '1_9')
+            ->assertRedirect('main_page=shopping_cart');
+
+        $this->followRedirect($cartResponse)
+            ->assertOk()
+            ->assertSee('Your Shopping Cart Contents');
+
+        $this->continueCheckoutShipping()
+            ->assertOk()
+            ->assertSee('Payment Information');
+
+        return $this->continueCheckoutPayment($paymentData)
+            ->assertOk();
     }
 }

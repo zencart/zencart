@@ -2,8 +2,7 @@
 
 namespace Tests\Support\Traits;
 
-use App\Models\Configuration;
-use App\Models\TaxClass;
+use Tests\Support\Database\TestDb;
 
 trait ConfigurationSettingsConcerns
 {
@@ -12,14 +11,20 @@ trait ConfigurationSettingsConcerns
 
     public function setConfiguration($configKey, $configValue)
     {
-        $config = Configuration::where('configuration_key', $configKey)->first();
-        $config->configuration_value = $configValue;
-        $config->save();
+        TestDb::update(
+            'configuration',
+            ['configuration_value' => $configValue],
+            'configuration_key = :config_key',
+            [':config_key' => $configKey]
+        );
     }
 
     public function getConfigurationSetting($configKey)
     {
-        return (string)Configuration::select('configuration_value')->where('configuration_key', $configKey)->first();
+        return (string) TestDb::selectValue(
+            'SELECT configuration_value FROM configuration WHERE configuration_key = :config_key LIMIT 1',
+            [':config_key' => $configKey]
+        );
     }
 
     public function switchToTaxInclusive()
@@ -33,8 +38,11 @@ trait ConfigurationSettingsConcerns
 
     public function switchItemShippingTax($mode = 'on')
     {
-        $taxClass = TaxClass::where('tax_class_title', 'Taxable Shipping')->first();
-        $this->setConfiguration('MODULE_SHIPPING_ITEM_TAX_CLASS', $mode == 'on' ? $taxClass->tax_class_id : '0');
+        $taxClassId = (string) TestDb::selectValue(
+            'SELECT tax_class_id FROM tax_class WHERE tax_class_title = :title LIMIT 1',
+            [':title' => 'Taxable Shipping']
+        );
+        $this->setConfiguration('MODULE_SHIPPING_ITEM_TAX_CLASS', $mode == 'on' ? $taxClassId : '0');
     }
 
     public function switchFlatShippingTax($mode = 'on')

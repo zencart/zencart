@@ -6,6 +6,8 @@
  * File Built by Zen Cart Installer on Sun May 21 2023 07:48:07
  */
 
+require_once __DIR__ . '/runtime_config.php';
+
 /*************** NOTE: This file is VERY similar to, but DIFFERENT from the "admin" version of configure.php. ***********/
 /***************       The 2 files should be kept separate and not used to overwrite each other.              ***********/
 
@@ -14,12 +16,12 @@
  * If you have SSL, enter the correct https address in BOTH the HTTP_SERVER and HTTPS_SERVER settings, instead of just an http address.
  */
 define('HTTP_SERVER', 'http://127.0.0.1');
-define('HTTPS_SERVER', 'http://127.0.0.1');
+define('HTTPS_SERVER', 'https://127.0.0.1');
 
 /**
  * If you have https enabled on your website, set this to 'true'
  */
-define('ENABLE_SSL', 'false');
+define('ENABLE_SSL', 'true');
 
 /**
  * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
@@ -33,7 +35,7 @@ define('DIR_WS_HTTPS_CATALOG', '/');
  * This is the complete physical path to your store's files.  eg: /var/www/vhost/accountname/public_html/store/
  * Should have a closing / on it.
  */
-define('DIR_FS_CATALOG', '/home/runner/work/zencart/zencart/');
+define('DIR_FS_CATALOG', zc_test_config_catalog_path());
 
 /**
  * The following settings define your database connection.
@@ -45,7 +47,8 @@ define('DB_CHARSET', 'utf8mb4'); // 'utf8mb4' or older 'utf8' / 'latin1' are mos
 define('DB_SERVER', '127.0.0.1');  // address of your db server
 define('DB_SERVER_USERNAME', 'root');
 define('DB_SERVER_PASSWORD', 'root');
-define('DB_DATABASE', 'db');
+define('DB_DATABASE', zc_test_config_database_name('db'));
+define('DIR_FS_LOGS', zc_test_config_log_directory(DIR_FS_CATALOG));
 
 /**
  * This is an advanced setting to determine whether you want to cache SQL queries.

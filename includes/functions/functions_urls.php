@@ -2,25 +2,41 @@
 /**
  * URL functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Aug 09 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
-
 
 /**
  * Redirect to another page or site
  * @param $url
  * @param int $httpResponseCode
+ * @since ZC v1.0.3
  */
 function zen_redirect($url, $httpResponseCode = null)
 {
+    // -----
+    // Enable an observer to override the redirect.  For instance, an AJAX
+    // add-to-cart handler wouldn't want the shopping_cart class to do its
+    // page-redirect since the AJAX handler is dealing with that.
+    //
+    $request_handled = false;
+    global $zco_notifier;
+    $zco_notifier->notify('NOTIFY_ZEN_REDIRECT', ['url' => $url, 'httpResponseCode' => $httpResponseCode], $request_handled);
+    if ($request_handled === true) {
+        return;
+    }
+
     // @TODO - rework admin so this exclusion isn't necessary
     if (IS_ADMIN_FLAG !== true) {
         $url = zen_get_site_url_for_request($url);
     }
 
     $url = zen_cleanup_url_params($url, $for_redirect = true);
+
+    if (defined('ZENCART_INPROCESS_REDIRECT_CAPTURE') && ZENCART_INPROCESS_REDIRECT_CAPTURE === true) {
+        throw new \Tests\Support\InProcess\InProcessRedirectException($url, empty($httpResponseCode) ? 302 : (int) $httpResponseCode);
+    }
 
     zen_set_redirect_http_headers($url, $httpResponseCode);
 
@@ -32,6 +48,7 @@ function zen_redirect($url, $httpResponseCode = null)
  * @param string $url
  * @param bool $for_redirect
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_cleanup_url_params($url, $for_redirect = false)
 {
@@ -52,6 +69,7 @@ function zen_cleanup_url_params($url, $for_redirect = false)
  *
  * @param string $url
  * @param int $httpResponseCode
+ * @since ZC v1.5.8
  */
 function zen_set_redirect_http_headers($url, $httpResponseCode = null)
 {
@@ -71,6 +89,7 @@ function zen_set_redirect_http_headers($url, $httpResponseCode = null)
  *
  * @param string $url
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_get_site_url_for_request($url)
 {
@@ -88,7 +107,11 @@ function zen_get_site_url_for_request($url)
 }
 
 
-function zen_get_top_level_domain(string $url) {
+/**
+ * @since ZC v1.0.3
+ */
+function zen_get_top_level_domain(string $url) 
+{
     if (strpos($url, '://')) {
         $url = parse_url($url);
         $url = $url['host'];
@@ -112,9 +135,11 @@ function zen_get_top_level_domain(string $url) {
     return false;
 }
 
-
-// Set back button
-function zen_back_link($link_only = false)
+/**
+ * Generate A HREF link for an HTML-based "Back" button, determined from user's session browsing history
+ * @since ZC v1.0.3
+ */
+function zen_back_link(bool $link_only = false, string $parameters = ''): string
 {
     if (count($_SESSION['navigation']->path) - 2 >= 0) {
         $back = count($_SESSION['navigation']->path) - 2;
@@ -129,9 +154,9 @@ function zen_back_link($link_only = false)
         $_SESSION['navigation'] = new navigationHistory;
     }
 
-    if ($link_only == true) {
+    if ($link_only) {
         return $link;
     } else {
-        return '<a href="' . $link . '">';
+        return '<a href="' . $link . '"' . $parameters . '>';
     }
 }

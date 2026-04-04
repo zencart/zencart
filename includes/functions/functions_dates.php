@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 
 // Normally this zen_date_raw function will ONLY be defined here.
@@ -18,6 +18,7 @@ if (!function_exists('zen_date_raw')) {
      * @param string $date
      * @param bool $reverse
      * @return string
+     * @since ZC v1.0.3
      */
     function zen_date_raw($date, $reverse = false) {
         // sometimes zen_date_short is called with a zero-date value which returns false, which is then passed to $date here, so this just reformats to avoid confusion.
@@ -25,7 +26,7 @@ if (!function_exists('zen_date_raw')) {
             $date = DateTime::createFromFormat('!m/d/Y', '01/01/0001')->format(DATE_FORMAT);
         }
 
-		$date = preg_replace('/\D+/', '', $date);		
+		$date = preg_replace('/\D+/', '', $date);
 		$date_format = str_replace(['/', '-'], '', DATE_FORMAT);
 
         if ($date_format === 'dmY') {
@@ -55,6 +56,7 @@ if (!function_exists('zen_date_raw')) {
  * @param string $date
  * @param string $format (optional) needs to be a valid short date format for DateTimeImmutableObject using / or - or nothing as separators
  * @return bool
+ * @since ZC v2.0.0
  */
 function zen_valid_date(string $date, string $format = DATE_FORMAT): bool
 {
@@ -74,6 +76,7 @@ function zen_valid_date(string $date, string $format = DATE_FORMAT): bool
  *
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string
+ * @since ZC v1.0.3
  */
 function zen_date_long($raw_date)
 {
@@ -93,10 +96,10 @@ function zen_date_long($raw_date)
 
 /**
  * Output a raw date string in the selected locale date format
- * NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
  *
  * @param string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
  * @return bool|false|string|string[]|null
+ * @since ZC v1.0.3
  */
 function zen_date_short($raw_date)
 {
@@ -113,6 +116,9 @@ function zen_date_short($raw_date)
 }
 
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_datetime_short($raw_datetime)
 {
     if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
@@ -129,14 +135,35 @@ function zen_datetime_short($raw_datetime)
 }
 
 /**
+ * Return locale-formatted date and time without seconds (ie. 2024/10/01 9:54)
+ * @since ZC v2.1.0
+ */
+function zen_datetime_without_seconds (string $raw_datetime): string
+{
+    if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') return false;
+
+    $year = (int)substr($raw_datetime, 0, 4);
+    $month = (int)substr($raw_datetime, 5, 2);
+    $day = (int)substr($raw_datetime, 8, 2);
+    $hour = (int)substr($raw_datetime, 11, 2);
+    $minute = (int)substr($raw_datetime, 14, 2);
+
+    zen_define_default('DATE_TIME_FORMAT_WITHOUT_SECONDS', '%m/%d/%Y %H:%M');
+
+    global $zcDate;
+    return $zcDate->output(DATE_TIME_FORMAT_WITHOUT_SECONDS, mktime($hour, $minute, 0, $month, $day, $year));
+}
+
+/**
  * @param $date
  * @param string $formatOut
  * @param $formatIn
  * @return string
+ * @since ZC v1.5.2
  */
 function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
 {
-    if ($formatIn === null && defined('DATE_FORMAT_DATEPICKER_ADMIN')) $formatIn = DATE_FORMAT_DATEPICKER_ADMIN;
+    if ($formatIn === null && defined('DATE_FORMAT_DATE_PICKER')) $formatIn = DATE_FORMAT_DATE_PICKER;
     if ($date == 'null' || $date == '') return $date;
     $mpos = strpos($formatIn, 'm');
     $dpos = strpos($formatIn, 'd');
@@ -164,6 +191,7 @@ function zen_format_date_raw($date, $formatOut = 'mysql', $formatIn = null)
  * @param string $format_string
  * @param array $date_array updated by reference
  * @return bool and also updates $date_array by reference
+ * @since ZC v1.0.3
  */
 function zen_checkdate($date_to_check, $format_string, &$date_array)
 {
@@ -244,7 +272,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
         return false;
     }
 
-    if (!settype($year, 'integer') || !settype($month, 'integer') || !settype($day, 'integer')) {
+    if (!settype($year, 'int') || !settype($month, 'int') || !settype($day, 'int')) {
         return false;
     }
 
@@ -273,6 +301,7 @@ function zen_checkdate($date_to_check, $format_string, &$date_array)
  * Check if year is a leap year
  * @param int $year
  * @return bool
+ * @since ZC v1.0.3
  */
 function zen_is_leap_year($year)
 {
@@ -291,6 +320,7 @@ function zen_is_leap_year($year)
  * @param string $date1
  * @param string $date2
  * @return int
+ * @since ZC v1.3.9a
  */
 function zen_date_diff($date1, $date2)
 {
@@ -349,6 +379,7 @@ function zen_date_diff($date1, $date2)
  * $end2 raw_datetime, raw_date or effectively blank (if $start2 is array, the value here is replaced, otherwise this datetime is considered eternally effective)
  * $future_only boolean or string of 'past': values should be true, false, or 'past'
  * returns a boolean true/false.  In error case of array provided without proper keys true returned and warning log also generated
+ * @since ZC v1.5.6
  */
 function zen_datetime_overlap($start1, $start2, $end1 = null, $end2 = null, $future_only = true)
 {
@@ -442,6 +473,9 @@ function zen_datetime_overlap($start1, $start2, $end1 = null, $end2 = null, $fut
 }
 
 
+/**
+ * @since ZC v1.3.0
+ */
 function zen_count_days($start_date, $end_date, $lookup = 'm')
 {
     if ($lookup == 'd') {

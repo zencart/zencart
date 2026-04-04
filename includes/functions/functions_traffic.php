@@ -1,14 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Nov 22 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
  * Determine visitor's IP address, resolving any proxies where possible.
  *
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_ip_address() {
     $ip = '';
@@ -60,6 +61,7 @@ function zen_get_ip_address() {
 
 /**
  * Stop execution completely
+ * @since ZC v1.0.3
  */
 function zen_exit() {
     session_write_close();
@@ -72,6 +74,7 @@ function zen_exit() {
  * by checking whether the user-agent contains a particular pattern
  * @param string $lookup_pattern string to search for
  * @return false|string
+ * @since ZC v1.0.3
  */
 function zen_browser_detect($lookup_pattern) {
     if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;

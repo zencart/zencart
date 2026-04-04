@@ -2,39 +2,26 @@
 
 namespace Tests\Support\Traits;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\HttpClient\HttpClient;
+use Tests\Support\TestConfigResolver;
+use Tests\Support\TestFrameworkFilesystem;
+
 
 trait GeneralConcerns
 {
-    protected HttpBrowser $browser;
+    private ?TestFrameworkFilesystem $testFrameworkFilesystem = null;
 
     public static function detectUser()
     {
-        if (isset($_SERVER['IS_DDEV_PROJECT'])) {
-            return 'ddev';
-        }
-        $user = $_SERVER['USER'] ?? $_SERVER['MY_USER'];
-
-        return $user;
+        return TestConfigResolver::detectUser();
     }
 
     public static function loadConfigureFile($context)
     {
-        if (defined('HTTP_SERVER')) {
+        if ($context !== 'main' && defined('HTTP_SERVER') && defined('DB_TYPE')) {
             return;
         }
-        $user = self::detectUser();
-        echo 'This user = ' . $user . PHP_EOL;
-        $basePath = $configFile = TESTCWD . 'Support/configs/';
-        $configFile =  $basePath . $user . '.' . $context . '.configure.php';
-        if (!file_exists($configFile)) {
-            die('could not find config file ' .$configFile);
-        }
-        echo $configFile . PHP_EOL;
-        $file = require($configFile);
-        return $file;
+
+        return TestConfigResolver::loadConfig($context, TESTCWD . 'Support/configs/');
     }
 
 
@@ -42,11 +29,6 @@ trait GeneralConcerns
     {
         self::databaseSetup(); //setup Capsule
         self::runDatabaseLoader($mainConfigs);
-    }
-
-    public function createHttpBrowser()
-    {
-        $this->browser = new HttpBrowser(HttpClient::create());
     }
 
     public static function locateElementInPageSource(string $element_lookup_text, string $page_source, int $length = 1500): string
@@ -72,4 +54,42 @@ trait GeneralConcerns
         return $URI;
     }
 
+
+    protected function browserAdminLogin()
+    {
+        $this->runCustomSeeder('StoreWizardSeeder');
+        if (!method_exists($this, 'submitAdminLogin')) {
+            throw new \LogicException('Admin login helper requires submitAdminLogin support.');
+        }
+
+        $response = $this->submitAdminLogin([
+            'admin_name' => 'Admin',
+            'admin_pass' => 'password',
+        ]);
+
+        if (is_object($response) && method_exists($response, 'assertOk')) {
+            $response->assertOk();
+        }
+    }
+
+    // PLUGIN STUFF
+
+    protected function installPluginToFilesystem(string $pluginName, string $version): void
+    {
+        $this->filesystemHelper()->installPlugin($pluginName, DIR_FS_CATALOG, ROOTCWD);
+    }
+
+    protected function removePlugin(string $pluginName, string $version): void
+    {
+        $this->filesystemHelper()->removePlugin($pluginName, $version, DIR_FS_CATALOG);
+    }
+
+    protected function filesystemHelper(): TestFrameworkFilesystem
+    {
+        if (!$this->testFrameworkFilesystem instanceof TestFrameworkFilesystem) {
+            $this->testFrameworkFilesystem = new TestFrameworkFilesystem();
+        }
+
+        return $this->testFrameworkFilesystem;
+    }
 }

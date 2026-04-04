@@ -1,15 +1,12 @@
 <?php
 /*
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 require 'includes/application_top.php';
-
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
-
 $languages = zen_get_languages();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -62,8 +59,6 @@ if (!empty($action)) {
             <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>
           </div>
           <?php echo TEXT_WARNING_PRODUCT_MISCONFIGURED_SHORT; ?>
-        </div>
-        <div class="col-sm-6">
           <div class="fa-stack fa-fw">
             <i class="fa-solid fa-circle fa-stack-1x txt-red"></i>
             <i class="fa-regular fa-circle fa-stack-1x txt-black"></i>

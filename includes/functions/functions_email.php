@@ -4,10 +4,10 @@
      * Processes all outbound email from Zen Cart
      * Hooks into phpMailer class for actual email encoding and sending
      *
-     * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
      * @copyright Portions Copyright 2003 osCommerce
      * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-     * @version $Id: Scott C Wilson 2024 Apr 25 Modified in v2.0.1 $
+     * @version $Id: piloujp 2026 Mar 19 Modified in v2.2.1 $
      */
 
     use PHPMailer\PHPMailer\PHPMailer;
@@ -53,6 +53,7 @@
      * @param array $attachments_list Array of attachment names/mime-types to be included  (this portion still in testing, and not fully reliable)
      * @param string $email_reply_to_name Name of the "reply-to" header (defaults to store name if not specified, except for contact-us and order-confirmation)
      * @param string $email_reply_to_address Email address for reply-to header (defaults to store email address if not specified, except for contact-us and order-confirmation)
+     * @since ZC v1.0.3
      **/
     function zen_mail($to_name, $to_address, $email_subject, $email_text, $from_email_name, $from_email_address, $block = [], $module = 'default', $attachments_list = '', $email_reply_to_name = '', $email_reply_to_address = '')
     {
@@ -64,9 +65,6 @@
         if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATUS === 'false') {
             return false;
         }  // disable email sending when in developer mode
-        if (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS !== '') {
-            $to_address = DEVELOPER_OVERRIDE_EMAIL_ADDRESS;
-        }
 
         // ignore sending emails for any of the following pages
         // (The EMAIL_MODULES_TO_SKIP constant can be defined in a new file in the "extra_configures" folder)
@@ -176,9 +174,7 @@
 
             // bof: body of the email clean-up
             // clean up &amp; and && from email text
-            $email_text = preg_replace('/(&amp;)+/', '&amp;', $email_text);
-            $email_text = preg_replace('/(&amp;)+/', '&', $email_text);
-            $email_text = preg_replace('/&{2,}/', '&', $email_text);
+            $email_text = preg_replace('/((&amp;)|&)+/', '&', $email_text);
 
             // clean up currencies for text emails
             if (defined('CURRENCIES_TRANSLATIONS') && !empty(CURRENCIES_TRANSLATIONS)) {
@@ -205,6 +201,8 @@
             $email_text = preg_replace('/(&gt;)+/', '>', $email_text);
             // prevent null characters
             $email_text = preg_replace('/\0+/', ' ', $email_text);
+            // Convert &nbsp; to a single space
+            $email_text = str_replace('&nbsp;', ' ', $email_text);
 
             // fix slashes
             $text = stripslashes($email_text);
@@ -251,8 +249,16 @@
             // Create a new mail object with the phpmailer class
             $mail = new PHPMailer();
             $mail->XMailer = 'Self-Hosted Zen Cart merchant';
+
             $lang_code = strtolower(($_SESSION['languages_code'] === '' ? 'en' : $_SESSION['languages_code']));
-            $mail->SetLanguage($lang_code);
+            if (is_callable([get_class($mail), 'setLanguage'])) {
+                // Static method (PHPMailer v7+)
+                $mail::setLanguage($lang_code);
+            } else {
+                // Instance method (PHPMailer v6 and older)
+                $mail->setLanguage($lang_code);
+            }
+
             $mail->CharSet = (defined('CHARSET')) ? CHARSET : 'iso-8859-1';
             if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD !== '') {
                 $mail->Encoding = EMAIL_ENCODING_METHOD;
@@ -353,6 +359,11 @@
                 $mail->Sender = EMAIL_FROM;
             }
 
+            // if a Reply-To override is configured, use that
+            if (defined('EMAIL_REPLY_TO_OVERRIDE') && zen_validate_email(EMAIL_REPLY_TO_OVERRIDE)) {
+                $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : EMAIL_REPLY_TO_OVERRIDE;
+            }
+
             // set the reply-to address.  If none set yet, then use Store's default email name/address.
             // If sending from checkout or contact-us, use the supplied info
             $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_address : EMAIL_FROM);
@@ -363,6 +374,15 @@
             // if mailserver requires that all outgoing mail must go "from" an email address matching domain on server, set it to store address
             if (EMAIL_SEND_MUST_BE_STORE === 'Yes') {
                 $mail->From = EMAIL_FROM;
+            }
+            // override to developer email address if set
+            if (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS !== '') {
+                $to_email_address = DEVELOPER_OVERRIDE_EMAIL_ADDRESS;
+                // ensure the address is valid, to prevent unnecessary delivery failures
+                if (!zen_validate_email($to_email_address)) {
+                    error_log(sprintf(EMAIL_SEND_FAILED . ' (devEmail failed validation)', $to_name, $to_email_address, $email_subject));
+                    continue;
+                }
             }
 
             $mail->addAddress($to_email_address, $to_name);
@@ -444,7 +464,7 @@
             $mail->addCustomHeader('Auto-Submitted: auto-generated');
 
             $oldVars = [];
-            $tmpVars = ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', $mail->Mailer === 'smtp' ? null : 'SERVER_NAME'];
+            $tmpVars = ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'PHP_SELF', $mail->Mailer === 'smtp' ? 'a-placeholder-key-that-wont-exist' : 'SERVER_NAME'];
             foreach ($tmpVars as $key) {
                 if (isset($_SERVER[$key])) {
                     $oldVars[$key] = $_SERVER[$key];
@@ -538,6 +558,7 @@
      * @param string $email_html
      * @param array $email_text
      * @param string $module
+     * @since ZC v1.2.0d
      **/
     function zen_mail_archive_write($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $email_text, $module, $error_msgs)
     {
@@ -574,6 +595,7 @@
      * However, the following email types are marketing-related or first-time-interaction with recipient, so should probably have disclaimers
      * @param string $email_module_name
      * @return bool
+     * @since ZC v1.5.7
      */
     function zen_is_non_transactional_email($email_module_name)
     {
@@ -595,6 +617,7 @@
      * select email template based on 'module' (supplied as param to function)
      * selectively go thru each template tag and substitute appropriate text
      * finally, build full html content as "return" output from class
+     * @since ZC v1.2.0d
      **/
     function zen_build_html_email_from_template($module = 'default', $content = '')
     {
@@ -639,7 +662,10 @@
             $block['EMAIL_LOGO_FILE'] = $domain . DIR_WS_CATALOG . 'email/' . EMAIL_LOGO_FILENAME;
         }
         if (empty($block['EMAIL_LOGO_ALT_TEXT'])) {
-            $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
+            $block['EMAIL_LOGO_ALT_TEXT'] = EMAIL_LOGO_ALT_TEXT;
+        }
+        if (empty($block['EMAIL_LOGO_ALT_TITLE_TEXT'])) {
+            $block['EMAIL_LOGO_ALT_TITLE_TEXT'] = EMAIL_LOGO_ALT_TITLE_TEXT;
         }
         if (empty($block['EMAIL_LOGO_WIDTH'])) {
             $block['EMAIL_LOGO_WIDTH'] = EMAIL_LOGO_WIDTH;
@@ -782,6 +808,7 @@
     /**
      * Function to build array of additional email content collected and sent on admin-copies of emails:
      *
+     * @since ZC v1.2.0d
      */
     function email_collect_extra_info($from, $email_from, $login, $login_email, $login_phone = '', $login_fax = '', $moreinfo = [])
     {
@@ -853,6 +880,7 @@
      *
      * @param string $email address to validate
      * @return boolean
+     * @since ZC v1.0.3
      **/
     function zen_validate_email($email)
     {
@@ -914,6 +942,7 @@
      *
      * @param string $email_html
      * return string
+     * @since ZC v1.3.9a
      */
     function processEmbeddedImages($email_html, &$mail)
     {
@@ -963,6 +992,7 @@
      *
      * @param string $customers_id
      * return string
+     * @since ZC v1.5.5
      */
     function zen_get_email_from_customers_id($customers_id)
     {
@@ -976,6 +1006,9 @@
         return $customers_values->fields['customers_email_address'];
     }
 
+    /**
+     * @since ZC v1.5.6b
+     */
     function zen_db_prepare_input_html_safe($string)
     {
         if (is_string($string)) {

@@ -7,9 +7,9 @@
  *   i=1 -- in conjunction with [d] or [r], will show the detailed curlinfo certificate data from the host being connected to. Helpful for advanced debugging.
  *
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 15 Modified in v2.0.0-rc2 $
+ * @version $Id: DrByte 2025 Sep 30 Modified in v2.2.0 $
  */
 
 // no caching
@@ -39,7 +39,6 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $data = curl_exec($ch);
-        curl_close($ch);
         $json = json_decode($data, false);
         echo (stripos($json->rating, 'Okay') !== false ? $goodMessage : $errorMessage) . ' Rating: ' . $json->rating;
         echo "<br>\n";
@@ -68,6 +67,9 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     echo 'Connecting to USPS Test/Staging/Sandbox Server ...<br>';
     doCurlTest('https://stg-secure.shippingapis.com/ShippingApi.dll');
 
+    echo 'Connecting to USPS REST API Server ...<br>';
+    doCurlTest('https://apis.usps.com');
+
     echo 'Connecting to UPS (onlinetools.ups.com) ...<br>';
     doCurlTest('https://onlinetools.ups.com/api/rating/v1/Shop');
     //doCurlTest('https://onlinetools.ups.com/ups.app/xml/Rate');
@@ -76,7 +78,10 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     doCurlTest('https://wwwcie.ups.com/api/rating/v1/Shop');
     //doCurlTest('https://wwwcie.ups.com/ups.app/xml/Rate');
 
-    echo 'Connecting to FedEx (port 80)...<br>';
+    echo 'Connecting to FedEx API ...<br>';
+    doCurlTest('https://apis.fedex.com/');
+
+    echo 'Connecting to FedEx (old port 80)...<br>';
     dofsockTest('fedex.com', 80);
 
     echo 'Connecting to Canada Post SellOnline HTTP/S ...<br>';
@@ -101,11 +106,17 @@ $goodMessage = '<span style="color:green;font-weight:bold">GOOD: </span>';
     //dofsockTest('ipnpb.sandbox.paypal.com', 443);
     //doCurlTest('https://ipnpb.sandbox.paypal.com');
 
-    echo 'Connecting to PayPal Express/Pro Server ...<br>';
+    echo 'Connecting to PayPal Express/Pro NVP Server ...<br>';
     doCurlTest('https://api-3t.paypal.com/nvp');
 
-    echo 'Connecting to PayPal Express/Pro Sandbox ...<br>';
+    echo 'Connecting to PayPal Express/Pro NVP Sandbox ...<br>';
     doCurlTest('https://api-3t.sandbox.paypal.com/nvp');
+
+    echo 'Connecting to PayPal REST Live Endpoint...<br>';
+    doCurlTest('https://api-m.paypal.com');
+
+    echo 'Connecting to PayPal REST Sandbox ...<br>';
+    doCurlTest('https://api-m.sandbox.paypal.com');
 
     echo 'Connecting to PayPal Payflowpro Server ...<br>';
     doCurlTest('https://payflowpro.paypal.com/transaction');
@@ -231,7 +242,6 @@ function doCurlTest($url = 'http://s3.amazonaws.com/zencart-curltest/endpoint', 
         $errnum = curl_errno($ch);
     }
     $commInfo = @curl_getinfo($ch);
-    curl_close($ch);
 
     // enclose URL in quotes so it doesn't get converted to a clickable link if posted on the forum
     if (isset($commInfo['url'])) {

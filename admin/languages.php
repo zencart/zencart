@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 13 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -26,7 +26,7 @@ if (!empty($action)) {
                       VALUES ('" . zen_db_input($name) . "', '" . zen_db_input($code) . "',
                               '" . zen_db_input($image) . "', '" . zen_db_input($directory) . "',
                               '" . zen_db_input($sort_order) . "')");
-        $insert_id = $db->Insert_ID();
+        $insert_id = $db->insert_ID();
 
         zen_record_admin_activity('Language [' . $code . '] added', 'info');
 
@@ -139,15 +139,28 @@ if (!empty($action)) {
         }
 
 // create additional orders_status records
-        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name
+        $orders_status = $db->Execute("SELECT orders_status_id, orders_status_name, sort_order
                                        FROM " . TABLE_ORDERS_STATUS . "
                                        WHERE language_id = " . (int)$_SESSION['languages_id']);
 
         foreach ($orders_status as $status) {
-          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name)
-                        VALUES ('" . (int)$status['orders_status_id'] . "',
-                                '" . (int)$insert_id . "',
-                                '" . zen_db_input($status['orders_status_name']) . "')");
+          $db->Execute("INSERT INTO " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, sort_order)
+                        VALUES (" . $status['orders_status_id'] . ",
+                                " . (int)$insert_id . ",
+                                '" . zen_db_input($status['orders_status_name']) . "',
+                                " . $status['sort_order'] . ")");
+        }
+
+        // create additional tax_rates_description records
+        $tax_rates_description = $db->Execute("SELECT tax_rates_id, tax_description
+                                       FROM " . TABLE_TAX_RATES_DESCRIPTION . "
+                                       WHERE language_id = " . (int)$_SESSION['languages_id']);
+
+        foreach ($tax_rates_description as $rates_description) {
+          $db->Execute("INSERT INTO " . TABLE_TAX_RATES_DESCRIPTION . " (tax_rates_id, language_id, tax_description)
+                        VALUES (" . $rates_description['tax_rates_id'] . ",
+                                " . (int)$insert_id . ",
+                                '" . zen_db_input($rates_description['tax_description']) . "')");
         }
 
         // create additional coupons_description records
@@ -223,11 +236,11 @@ if (!empty($action)) {
       break;
     case 'deleteconfirm':
       $lID = zen_db_prepare_input($_POST['lID']);
-      $lng = $db->Execute("SELECT languages_id
+      $result = $db->Execute("SELECT languages_id
                            FROM " . TABLE_LANGUAGES . "
                            WHERE code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
 
-      if ($lng->fields['languages_id'] == $lID) {
+      if ($result->fields['languages_id'] == $lID) {
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
                       SET configuration_value = ''
                       WHERE configuration_key = 'DEFAULT_LANGUAGE'");
@@ -240,30 +253,31 @@ if (!empty($action)) {
       $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_MANUFACTURERS_INFO . " WHERE languages_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_TAX_RATES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_METATAGS_CATEGORIES_DESCRIPTION . " WHERE language_id = " . (int)$lID);
       $db->Execute("DELETE FROM " . TABLE_EZPAGES_CONTENT . " WHERE languages_id = " . (int)$lID);
+      $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT . " WHERE template_language = " . (int)$lID);
 
       // if we just deleted our currently-selected language, need to switch to default lang:
-      $lng = $db->Execute("SELECT languages_id
-                           FROM " . TABLE_LANGUAGES . "
-                           WHERE code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'");
-      if ((int)$_SESSION['languages_id'] == (int)$_POST['lID'])
-        $_SESSION['languages_id'] = $lng->fields['languages_id'];
+      $getlang = '';
+      if ((int)$_SESSION['languages_id'] === (int)$_POST['lID']) {
+          $getlang = '&language=' . DEFAULT_LANGUAGE;
+      }
 
       $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
 
-      zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
+      zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . $getlang));
       break;
     case 'delete':
       $lID = zen_db_prepare_input($_GET['lID']);
-      $lng = $db->Execute("SELECT code
+      $result = $db->Execute("SELECT code
                            FROM " . TABLE_LANGUAGES . "
                            WHERE languages_id = " . (int)$lID);
       $remove_language = true;
-      if ($lng->fields['code'] == DEFAULT_LANGUAGE) {
+      if ($result->fields['code'] == DEFAULT_LANGUAGE) {
         $remove_language = false;
         $messageStack->add(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
       }

@@ -1,33 +1,51 @@
 <?php
 /**
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 23 Modified in v1.5.8-alpha2 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
-
 namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
 
+/**
+ * @since ZC v1.5.8
+ */
 class BaseLanguageLoader
 {
-    protected 
-        $fallback,
-        $fileSystem,
-        $languageDefines = [],
-        $pluginList,
-        $templateDir;
-    public
-        $currentPage;
+    protected string $fallback;
+    protected \Zencart\FileSystem\FileSystem $fileSystem;
+    protected array $languageDefines = [];
+    protected array $pluginList;
+    protected string $templateDir;
+    protected string $zcPluginsDir;
 
-    public function __construct($pluginList, $currentPage, $templateDir, $fallback = 'english')
+    public string $currentPage;
+
+    public function __construct(array $pluginList, string $currentPage, string $templateDir, string $fallback = 'english')
     {
         $this->pluginList = $pluginList;
-        $this->languageDefines = [];
         $this->currentPage = $currentPage;
         $this->fallback = $fallback;
-        $this->fileSystem = new FileSystem;
+        $this->fileSystem = new FileSystem();
         $this->templateDir = $templateDir;
+        $this->zcPluginsDir = DIR_FS_CATALOG . 'zc_plugins/';
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function getTemplateDir(): string
+    {
+        return $this->templateDir;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function getFallback(): string
+    {
+        return $this->fallback;
     }
 }

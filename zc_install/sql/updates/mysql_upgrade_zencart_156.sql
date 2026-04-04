@@ -2,10 +2,10 @@
 # * This SQL script upgrades the core Zen Cart database structure from v1.5.5 to v1.5.6
 # *
 # * @access private
-# * @copyright Copyright 2003-2023 Zen Cart Development Team
+# * @copyright Copyright 2003-2024 Zen Cart Development Team
 # * @copyright Portions Copyright 2003 osCommerce
 # * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: Scott C Wilson 2022 Oct 20 Modified in v1.5.8a $
+# * @version $Id: DrByte 2024 Aug 27 Modified in v2.1.0-alpha2 $
 #
 
 ############ IMPORTANT INSTRUCTIONS ###############
@@ -196,7 +196,7 @@ FROM ezpages e
 LEFT JOIN languages l ON 1;
 
 # This was moved to the 1.5.8 upgrade; DROP did not work in 1.5.6/1.5.7
-# for databases with prefixes 
+# for databases with prefixes
 # Note that these should have been done on separate lines
 # ALTER TABLE ezpages DROP languages_id, DROP pages_title, DROP pages_html_text;
 
@@ -211,6 +211,7 @@ ALTER TABLE configuration MODIFY configuration_key varchar(180) NOT NULL default
 ALTER TABLE product_type_layout MODIFY configuration_key varchar(180) NOT NULL default '';
 ALTER TABLE whos_online DROP KEY idx_last_page_url_zen;
 ALTER TABLE whos_online ADD KEY idx_last_page_url_zen (last_page_url(191));
+ALTER TABLE media_manager MODIFY last_modified datetime NOT NULL default '0001-01-01 00:00:00', MODIFY date_added datetime NOT NULL default '0001-01-01 00:00:00';
 ALTER TABLE media_manager DROP KEY idx_media_name_zen;
 ALTER TABLE media_manager ADD KEY idx_media_name_zen (media_name(191));
 # truncate was done earlier in this file already, but if copy/pasting for some reason, do the truncate below, to cleanup the table

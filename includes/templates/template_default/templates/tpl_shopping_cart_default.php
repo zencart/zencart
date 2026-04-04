@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=shopping_cart.
  * Displays shopping-cart contents
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Steve 2023 Sep 07 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 22 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="shoppingCartDefault">
@@ -70,10 +70,12 @@
        <td class="cartQuantity">
 <?php
   if ($product['flagShowFixedQuantity']) {
-    echo $product['showFixedQuantityAmount'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
+    echo $product['showFixedQuantityAmount'];
   } else {
-    echo $product['quantityField'] . '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br><br>' . $product['showMinUnits'];
+    echo $product['quantityField'];
   }
+  echo !empty($product['flagStockCheck']) ? '<br><span class="alert bold">' . $product['flagStockCheck'] . '</span><br>' : '';
+  echo !empty($product['showMinUnits']) ? $product['showMinUnits'] . '<br>' : '';
 ?>
        </td>
        <td class="cartQuantityUpdate">
@@ -86,7 +88,12 @@
 ?>
        </td>
        <td class="cartProductDisplay">
-<a href="<?php echo $product['linkProductsName']; ?>"><span class="cartImage back"><?php echo $product['productsImage']; ?></span><span class="cartProdTitle"><?php echo $product['productsName'] . '<span class="alert bold">' . $product['flagStockCheck'] . '</span>'; ?></span></a>
+           <a href="<?= $product['linkProductsName'] ?>">
+               <span class="cartImage back"><?= $product['productsImage'] ?></span>
+               <span class="cartProdTitle"><?= $product['productsName'] .
+                   (!empty($product['flagStockCheck']) ? '<span class="alert bold">' . $product['flagStockCheck'] . '</span>' : '') ?>
+    </span>
+           </a>
 <br class="clearBoth">
 
 

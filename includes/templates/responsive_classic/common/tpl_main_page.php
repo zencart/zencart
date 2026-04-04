@@ -31,10 +31,10 @@
  *  $flag_disable_right = true;
  * }
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 29 Modified in v1.5.8-alpha $
+ * @version $Id: Scott Wilson 2024 Sep 30 Modified in v2.2.0 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -91,7 +91,10 @@ $left_column_file = 'column_left.php';
 $right_column_file = 'column_right.php';
 $body_id = ($this_is_home_page) ? 'indexHome' : str_replace('_', '', $_GET['main_page']);
 ?>
-<body id="<?php echo $body_id . 'Body'; ?>"<?php if($zv_onload !='') echo ' onload="'.$zv_onload.'"'; ?>>
+<body id="<?php echo $body_id . 'Body'; ?>"<?php if($zv_onload !='') echo ' onload="'.$zv_onload.'"'; ?> class="<?= 'tpl_' . $template_dir ?>">
+<?php /* add any start-of-body-section code via an observer class */
+$zco_notifier->notify('NOTIFY_PAGE_BODY_BEGIN', $current_page);
+?>
 
 <?php
  if ( $detect->isMobile() && !$detect->isTablet() || $_SESSION['layoutType'] == 'mobile' ) {

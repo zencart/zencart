@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 23 New in v2.0.0-beta1 $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -19,7 +19,7 @@ $define = [
     'TEXT_DELETE_REFERRER' => 'Delete Referrer',
     'TEXT_REFERRER_DOMAIN' => 'Referrer Domain: ',
     'TEXT_NO_REFERRERS_FOUND' => 'No referrers found. Click INSERT to add one.',
-    'TEXT_DISPLAY_NUMBER_OF_REFERRERS' => 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> referrers)',
+    'TEXT_DISPLAY_NUMBER_OF_REFERRERS' => 'Displaying <strong>%1$d</strong> to <strong>%2$d</strong> (of <strong>%3$d</strong> referrers)',
     'ERROR_REFERRER_DOMAIN_UNIQUE_REQUIRED' => 'ERROR: Referrer domain is required and must be unique.',
     'ERROR_REFERRER_DOMAIN_ALREADY_EXISTS' => 'ERROR: Referrer domain already exists. Cannot add duplicate domains.',
     'ERROR_COUPON_SELECTION_REQUIRED' => 'ERROR: Must select a coupon to assign to the referrer domain.',

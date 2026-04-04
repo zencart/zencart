@@ -1,14 +1,17 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2021 Jan 29 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 namespace Zencart\Request;
 
 use Zencart\Traits\Singleton;
 
+/**
+ * @since ZC v1.5.8
+ */
 class Request
 {
     use Singleton;
@@ -17,6 +20,7 @@ class Request
 
     /**
      * @return mixed|Request
+     * @since ZC v1.5.8
      */
     static function capture()
     {
@@ -29,6 +33,7 @@ class Request
      * @param $key
      * @param null $default
      * @return mixed|null
+     * @since ZC v1.5.8
      */
     public function input($key, $default = null)
     {
@@ -38,6 +43,7 @@ class Request
     /**
      * @param $key
      * @return bool
+     * @since ZC v1.5.8
      */
     public function has($key)
     {

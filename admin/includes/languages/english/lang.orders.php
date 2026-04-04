@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Feb 08 Modified in v2.0.0-beta1 $
+ * @version $Id: brittainmark 2024 Jun 01 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -58,7 +58,6 @@ $define = [
     'EMAIL_TEXT_STATUS_UPDATED' => 'Your order has been updated to the following status:' . "\n",
     'EMAIL_TEXT_STATUS_LABEL' => '<strong>New status:</strong> %s' . "\n\n",
     'EMAIL_TEXT_STATUS_PLEASE_REPLY' => 'Please reply to this email if you have any questions.' . "\n",
-    'ERROR_ORDER_DOES_NOT_EXIST' => 'Error: Order does not exist.',
     'SUCCESS_ORDER_UPDATED' => 'Success: Order has been successfully updated.',
     'WARNING_ORDER_NOT_UPDATED' => 'Warning: Nothing to change. The order was not updated.',
     'TEXT_INFO_ATTRIBUTE_FREE' => '&nbsp;-&nbsp;<span class="alert">FREE</span>',

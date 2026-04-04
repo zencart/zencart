@@ -2,9 +2,9 @@
 /**
  * File contains just the zcPassword class
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2020 Jul 11 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 /**
  * class zcPassword
@@ -13,6 +13,7 @@
  *
  * Updates admin/customer tables on successful login
  *
+ * @since ZC v1.5.3
  */
 class zcPassword extends base
 {
@@ -25,6 +26,7 @@ class zcPassword extends base
    * enforce singleton
    *
    * @param string $phpVersion
+   * @since ZC v1.5.3
    */
   public static function getInstance($phpVersion)
   {
@@ -51,6 +53,7 @@ class zcPassword extends base
    *
    * @param string $encryptedPassword
    * @return string
+   * @since ZC v1.5.3
    */
   function detectPasswordType($encryptedPassword)
   {
@@ -71,6 +74,7 @@ class zcPassword extends base
    * @param string $plain
    * @param string $encrypted
    * @return boolean
+   * @since ZC v1.5.3
    */
   public function validatePassword($plain, $encrypted)
   {
@@ -88,6 +92,7 @@ class zcPassword extends base
    * @param string $plain
    * @param string $encrypted
    * @return boolean
+   * @since ZC v1.5.3
    */
   public function validatePasswordOldMd5($plain, $encrypted)
   {
@@ -95,7 +100,7 @@ class zcPassword extends base
       $stack = explode(':', $encrypted);
       if (sizeof($stack) != 2)
         return false;
-      if (md5($stack [1] . $plain) == $stack [0]) {
+      if (hash('md5', $stack [1] . $plain) == $stack [0]) {
         return true;
       }
     }
@@ -107,6 +112,7 @@ class zcPassword extends base
    * @param string $plain
    * @param string $encrypted
    * @return boolean
+   * @since ZC v1.5.3
    */
   public function validatePasswordCompatSha256($plain, $encrypted)
   {
@@ -120,56 +126,14 @@ class zcPassword extends base
     }
     return false;
   }
-  /**
-   * Update a logged in Customer password.
-   * e.g. when customer wants to change password
-   *
-   * @param string $plain
-   * @param integer $customerId
-   * @return string
-   */
-  public function updateLoggedInCustomerPassword($plain, $customerId)
-  {
-    $this->confirmDbSchema('customer');
-    global $db;
-    $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
-    $sql = "UPDATE " . TABLE_CUSTOMERS . "
-              SET customers_password = :password:
-              WHERE customers_id = :customersId:";
 
-    $sql = $db->bindVars($sql, ':customersId:', $_SESSION ['customer_id'], 'integer');
-    $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
-    $db->Execute($sql);
-    return $updatedPassword;
-  }
-  /**
-   * Update a not logged in Customer password.
-   * e.g. login/timeout
-   *
-   * @param string $plain
-   * @param string $emailAddress
-   * @return string
-   */
-  public function updateNotLoggedInCustomerPassword($plain, $emailAddress)
-  {
-    $this->confirmDbSchema('customer');
-    global $db;
-    $updatedPassword = password_hash($plain, PASSWORD_DEFAULT);
-    $sql = "UPDATE " . TABLE_CUSTOMERS . "
-              SET customers_password = :password:
-              WHERE customers_email_address = :emailAddress:";
-
-    $sql = $db->bindVars($sql, ':emailAddress:', $emailAddress, 'string');
-    $sql = $db->bindVars($sql, ':password:', $updatedPassword, 'string');
-    $db->Execute($sql);
-    return $updatedPassword;
-  }
   /**
    * Update a not logged in Admin password.
    *
    * @param string $plain
    * @param string $admin
    * @return string
+   * @since ZC v1.5.3
    */
   public function updateNotLoggedInAdminPassword($plain, $admin)
   {
@@ -188,6 +152,7 @@ class zcPassword extends base
   /**
    * Ensure db schema has been updated to support the required password lengths
    * @param string $mode
+   * @since ZC v1.5.3
    */
   public function confirmDbSchema($mode = '') {
     global $db;

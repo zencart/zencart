@@ -2,14 +2,15 @@
 /**
  * database functions and aliases into the $db queryFactory class
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
  * Alias to $db->insert_ID() to get id of last inserted record
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_db_insert_id()
 {
@@ -21,6 +22,7 @@ function zen_db_insert_id()
  * Alias to $db->prepare_input() for sanitizing db inserts
  * @param string $string
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_db_input($string)
 {
@@ -32,6 +34,7 @@ function zen_db_input($string)
  * @deprecated use zen_output_string_protected() instead
  * @param string $string
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_db_output(string $string)
 {
@@ -48,32 +51,28 @@ function zen_db_output(string $string)
  * Rudimentary input sanitizer
  * NOTE: SHOULD NOT BE USED FOR DB QUERIES!!!  Use $db->prepare_input() or zen_db_input() instead
  *
- * @param string|null $string
- * @param bool $trimspace
- * @return array|string
+ * @since ZC v1.0.3
  */
-function zen_db_prepare_input($string, bool $trimspace = true)
+function zen_db_prepare_input(array|string|int|float|null $input, bool $trimspace = true): array|string|int|float|null
 {
+    if (!IS_ADMIN_FLAG && is_string($input)) {
+        $input = zen_sanitize_string($input);
+    }
+    if (is_string($input)) {
+        if ($trimspace === true) {
+            return trim(stripslashes($input));
+        }
+        return stripslashes($input);
+    }
 
-    if (!IS_ADMIN_FLAG && is_string($string)) {
-        $string = zen_sanitize_string($string);
-    }
-    if (is_string($string)) {
-        if ($trimspace == true) {
-            return trim(stripslashes($string));
-        } else {
-            return stripslashes($string);
+    if (is_array($input)) {
+        foreach ($input as $key => $value) {
+            $input[$key] = zen_db_prepare_input($value);
         }
-    } elseif (is_array($string)) {
-        foreach ($string as $key => $value) {
-            $string[$key] = zen_db_prepare_input($value);
-        }
-        return $string;
-    } else {
-        return $string;
     }
+
+    return $input;
 }
-
 
 /**
  * Performs an INSERT or UPDATE based on a supplied array of field data.
@@ -85,6 +84,7 @@ function zen_db_prepare_input($string, bool $trimspace = true)
  * @param string $performType INSERT or UPDATE
  * @param string $whereCondition condition for UPDATE (exclude the word "WHERE")
  * @return queryFactoryResult
+ * @since ZC v1.0.3
  */
 function zen_db_perform(string $tableName, array $tableData, $performType = 'INSERT', string $whereCondition = ''): queryFactoryResult
 {
@@ -143,6 +143,7 @@ function zen_db_perform(string $tableName, array $tableData, $performType = 'INS
  * @param int $keyId
  * @param int $languageId
  * @return queryFactoryResult
+ * @since ZC v1.5.3
  */
 function zen_db_perform_language(string $tableName, array $tableData, string $keyIdName, int $keyId, int $languageId)
 {
@@ -187,6 +188,7 @@ function zen_db_perform_language(string $tableName, array $tableData, string $ke
 
 /** @deprecated
  * Return a random row from a database query
+ * @since ZC v1.0.3
  */
 function zen_random_select($query) {
     trigger_error('Call to deprecated function zen_random_select. Use $db->ExecuteRandomMulti() instead', E_USER_DEPRECATED);

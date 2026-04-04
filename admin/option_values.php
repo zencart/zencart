@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 22 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2026 Mar 17 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 
@@ -16,7 +16,6 @@ if ($chk_option_values->RecordCount() < 1) {
   zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
 }
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 if (!isset($_GET['action'])) {
@@ -72,7 +71,7 @@ switch ($_GET['action']) {
                                              WHERE ptoc.categories_id = " . (int)$_POST['categories_update_id'] . "
                                              AND pa.products_id = ptoc.products_id");
     foreach ($all_products_attributes as $products_attribute) {
-      zen_update_attributes_products_option_values_sort_order($products_attribute);
+      zen_update_attributes_products_option_values_sort_order($products_attribute['products_id']);
     }
     $messageStack->add_session(SUCCESS_CATEGORIES_UPDATE_SORT . (int)$_POST['categories_update_id'] . ' ' . zen_get_category_name($_POST['categories_update_id'], $_SESSION['languages_id']), 'success');
     $action = '';

@@ -3,9 +3,9 @@ declare(strict_types=1);
 /**
  * MFA functions for Multi-Factor Authentication
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id:  New in v2.1.0 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 require_once DIR_FS_ADMIN . DIR_WS_CLASSES . 'MultiFactorAuth.php';
 
@@ -15,6 +15,8 @@ require_once DIR_FS_ADMIN . DIR_WS_CLASSES . 'MultiFactorAuth.php';
 zen_define_default('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', 'zen_mfa_handler');
 
 /**
+ * Broker for MFA activity.
+ *
  * Checks whether MFA is enabled for the store.
  * Checks whether the current user has MFA configured, or is exempt from it.
  * Checks whether setup is required.
@@ -22,6 +24,7 @@ zen_define_default('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', 'zen_mfa_handle
  *
  * @param array $admin_info receives four values: admin_id, email, admin_name, mfa array
  * @return bool
+ * @since ZC v2.1.0
  */
 function zen_mfa_handler(array $admin_info = []): bool
 {
@@ -51,7 +54,7 @@ function zen_mfa_handler(array $admin_info = []): bool
         return zen_mfa_by_totp($admin_info);
     }
 
-    // MFA is required but user has not selected a method yet
+    // MFA is required but user has not selected a method yet or hasn't verified first issued code yet
     $_SESSION['mfa']['setup_required'] = true;
 
     return true;
@@ -80,6 +83,7 @@ function zen_mfa_handler(array $admin_info = []): bool
 
 /**
  * Prepare to do OTP MFA validation
+ * @since ZC v2.1.0
  */
 function zen_mfa_by_totp(array $admin_info = []): bool
 {
@@ -87,18 +91,17 @@ function zen_mfa_by_totp(array $admin_info = []): bool
         $_SESSION['mfa'] = [];
     }
 
+    $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER) . ' - Zen Cart';
+    $domain = defined('MFA_DESCRIPTIVE_NAME') && !empty(MFA_DESCRIPTIVE_NAME) ? MFA_DESCRIPTIVE_NAME : $domain;
+
     $ga = new MultiFactorAuth();
 
     $user_mfa_data = json_decode($admin_info['mfa'] ?? '', true, 2);
     $secret = !empty($user_mfa_data['secret']) ? $user_mfa_data['secret'] : $ga->createSecret();
     if (empty($user_mfa_data['secret'])) {
         $_SESSION['mfa']['secret_not_yet_persisted'] = true;
-        $domain = str_replace(['http'.'://', 'https://'], '', HTTP_SERVER);
-
-        $qrCode = $ga->getQrCodeQrServerUrl($domain, $secret);
-//        $qrCode = $ga->getQrCodeQRicketUrl($domain, $secret)
-
-        $_SESSION['mfa']['qrcode'] = sprintf('<img class="text-center" src="%s"/>', $qrCode);
+        $qrCode = $ga->getQrCode($domain, $secret, $admin_info['admin_name'] ?? '', 200);
+        $_SESSION['mfa']['qrcode'] = $qrCode;
     }
 
     // set system to expect MFA confirmation, so that login won't progress past getting this confirmation
@@ -115,6 +118,7 @@ function zen_mfa_by_totp(array $admin_info = []): bool
 
 /**
  * Prepare to do MFA validation via email
+ * @since ZC v2.1.0
  */
 function zen_mfa_by_email(array $admin_info = []): bool
 {
@@ -148,6 +152,6 @@ function zen_mfa_by_email(array $admin_info = []): bool
     // send email
     $email_response = zen_mail($admin_info['admin_name'], $admin_info['email'], TEXT_MFA_EMAIL_SUBJECT, $text_msg, STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
 
-    // The email response must be a blank string (it will be false on abort, or error message string on failure)
+    // zen_mail()'s response must be a blank string (it will be false on abort, or error message string on failure)
     return $email_response === '';
 }

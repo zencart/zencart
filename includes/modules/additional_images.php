@@ -5,10 +5,10 @@
  *
  * Prepares list of additional product images to be displayed in template
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 31 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2025 Oct 10 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -24,67 +24,13 @@ $images_array = [];
 
 // do not check for additional images when turned off
 if ($products_image !== '' && !empty($flag_show_product_info_additional_images)) {
-    // prepare image name
-    $products_image_extension = substr($products_image, strrpos($products_image, '.'));
-    $products_image_base = str_replace($products_image_extension, '', $products_image);
 
-    // if in a subdirectory
-    if (strrpos($products_image, '/')) {
-        $products_image_match = substr($products_image, strrpos($products_image, '/') + 1);
-        //echo 'TEST 1: I match ' . $products_image_match . ' - ' . $file . ' -  base ' . $products_image_base . '<br>';
-        $products_image_match = str_replace($products_image_extension, '', $products_image_match) . '_';
-        $products_image_base = $products_image_match;
-    }
-
-    $products_image_directory = str_replace($products_image, '', substr($products_image, strrpos($products_image, '/')));
-    if ($products_image_directory !== '') {
-        $products_image_directory = DIR_WS_IMAGES . str_replace($products_image_directory, '', $products_image) . "/";
-    } else {
+    if (ADDITIONAL_IMAGES_HANDLING === 'Database') {
         $products_image_directory = DIR_WS_IMAGES;
-    }
-
-    // Check for additional matching images
-    $file_extension = $products_image_extension;
-    $products_image_match_array = [];
-    if ($dir = @dir($products_image_directory)) {
-        while ($file = $dir->read()) {
-            if (!is_dir($products_image_directory . $file)) {
-                // -----
-                // Some additional-image-display plugins (like Fual Slimbox) have some additional checks to see
-                // if the file is "valid"; this notifier "accommodates" that processing, providing these parameters:
-                //
-                // $p1 ... (r/o) ... An array containing the variables identifying the current image.
-                // $p2 ... (r/w) ... A boolean indicator, set to true by any observer to note that the image is "acceptable".
-                //
-                $current_image_match = false;
-                $GLOBALS['zco_notifier']->notify(
-                    'NOTIFY_MODULES_ADDITIONAL_IMAGES_FILE_MATCH',
-                    [
-                        'file' => $file,
-                        'file_extension' => $file_extension,
-                        'products_image' => $products_image,
-                        'products_image_base' => $products_image_base,
-                    ],
-                    $current_image_match
-                );
-                if ($current_image_match || substr($file, strrpos($file, '.')) === $file_extension) {
-                    if ($current_image_match || preg_match('/' . preg_quote($products_image_base, '/') . '/i', $file) === 1) {
-                        if ($current_image_match || $file !== $products_image) {
-                            if ($products_image_base . str_replace($products_image_base, '', $file) === $file) {
-                                //  echo 'I AM A MATCH ' . $file . '<br>';
-                                $images_array[] = $file;
-                            } else {
-                                //  echo 'I AM NOT A MATCH ' . $file . '<br>';
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (count($images_array)) {
-            sort($images_array);
-        }
-        $dir->close();
+        $images_array = (new Product((int)$_GET['products_id']))->get('additional_images') ?? [];
+        $images_array = array_map(static fn($f) => $f['image_filename'], $images_array);
+    } else {
+        ['imgs' => $images_array, 'dir' => $products_image_directory] = zen_lookup_additional_images_from_filesystem($products_image);
     }
 }
 
@@ -109,6 +55,7 @@ if ($num_images > 0) {
 
     for ($i = 0, $n = $num_images; $i < $n; $i++) {
         $file = $images_array[$i];
+        $products_image_extension = substr($file, strrpos($file, '.'));
         $products_image_large = str_replace(DIR_WS_IMAGES, DIR_WS_IMAGES . 'large/', $products_image_directory) . str_replace($products_image_extension, '', $file) . IMAGE_SUFFIX_LARGE . $products_image_extension;
 
         // -----

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 04 Modified in v2.0.0-rc1 $
+ * @version $Id: piloujp 2026 Feb 07 Modified in v2.2.1 $
  */
 require 'includes/application_top.php';
 
@@ -62,7 +62,7 @@ if (!empty($action)) {
       $countries_iso_code_2 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_2']));
       $countries_iso_code_3 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_3']));
       $address_format_id = zen_db_prepare_input($_POST['address_format_id']);
-      $status = $_POST['status'] == 'on' ? 1 : 0;
+      $status = ($_POST['status'] ?? '') === 'on' ? 1 : 0;
 
       $db->Execute("INSERT INTO " . TABLE_COUNTRIES . " (countries_name, countries_iso_code_2, countries_iso_code_3, status, address_format_id)
                     VALUES ('" . zen_db_input($countries_name) . "',
@@ -79,7 +79,7 @@ if (!empty($action)) {
       $countries_iso_code_2 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_2']));
       $countries_iso_code_3 = strtoupper(zen_db_prepare_input($_POST['countries_iso_code_3']));
       $address_format_id = zen_db_prepare_input($_POST['address_format_id']);
-      $status = $_POST['status'] == 'on' ? 1 : 0;
+      $status = ($_POST['status'] ?? '') === 'on' ? 1 : 0;
 
       $db->Execute("UPDATE " . TABLE_COUNTRIES . "
                     SET countries_name = '" . zen_db_input($countries_name) . "',
@@ -98,7 +98,7 @@ if (!empty($action)) {
               WHERE entry_country_id = " . (int)$countries_id . "
               LIMIT 1";
       $result = $db->Execute($sql);
-      if ($result->recordCount() == 0) {
+      if ($result->RecordCount() == 0) {
         $db->Execute("DELETE FROM " . TABLE_COUNTRIES . "
                       WHERE countries_id = " . (int)$countries_id);
         zen_record_admin_activity('Country deleted: ' . $countries_id, 'warning');
@@ -154,6 +154,7 @@ if (!empty($action)) {
               $countries_query_raw = "SELECT countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id, status
                                       FROM " . TABLE_COUNTRIES . "
                                       ORDER BY countries_name";
+              $countries_query_numrows = $countries_query_numrows ?? 0;
               $countries_split = new splitPageResults($currentPage, MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
               $countries = $db->Execute($countries_query_raw);
               foreach ($countries as $country) {

@@ -5,10 +5,10 @@
  * Loaded automatically by index.php?main_page=checkout_success.
  * Displays confirmation details after order has been successfully processed.
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2025 Feb 16 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="checkoutSuccess">
@@ -85,7 +85,7 @@ require($template->get_template_dir('tpl_account_history_info_default.php',DIR_W
 ?>
 <fieldset id="csNotifications">
 <legend><?php echo TEXT_NOTIFY_PRODUCTS; ?></legend>
-<?php echo zen_draw_form('order', zen_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')); ?>
+<?php echo zen_draw_form('order', zen_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, 'action=notify', 'SSL')); ?>
 
 <?php foreach ($notificationsArray as $notifications) { ?>
 <?php echo zen_draw_checkbox_field('notify[]', $notifications['products_id'], true, 'id="notify-' . $notifications['counter'] . '"') ;?>

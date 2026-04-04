@@ -2,10 +2,13 @@
 /**
  * ot_total order-total module
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ */
+/**
+ * @since ZC v1.0.3
  */
 class ot_loworderfee
 {
@@ -55,6 +58,9 @@ class ot_loworderfee
         if (null === $this->sort_order) return false;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function process()
     {
         global $order, $currencies;
@@ -111,20 +117,21 @@ class ot_loworderfee
                 $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $tax_address['country_id'], $tax_address['zone_id']);
 
                 // calculate from flat fee or percentage
-                if (substr(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, -1) === '%') {
-                    $low_order_fee = $order->info['subtotal'] * MODULE_ORDER_TOTAL_LOWORDERFEE_FEE / 100;
+                if (str_ends_with(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, '%')) {
+                    $low_order_fee = $order->info['subtotal'] * rtrim(MODULE_ORDER_TOTAL_LOWORDERFEE_FEE, '%') / 100;
                 } else {
                     $low_order_fee = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
                 }
 
-                $order->info['tax'] += zen_calculate_tax($low_order_fee, $tax);
+                $tax_amount = zen_calculate_tax($low_order_fee, $tax);
+                $order->info['tax'] += $tax_amount; 
                 if (!isset($order->info['tax_groups'][$tax_description])) {
                     $order->info['tax_groups'][$tax_description] = 0;
                 }
-                $order->info['tax_groups'][$tax_description] += zen_calculate_tax($low_order_fee, $tax);
-                $order->info['total'] += $low_order_fee + zen_calculate_tax($low_order_fee, $tax);
+                $order->info['tax_groups'][$tax_description] += $tax_amount; 
+                $order->info['total'] += $low_order_fee + $tax_amount; 
                 if (DISPLAY_PRICE_WITH_TAX === 'true') {
-                    $low_order_fee += zen_calculate_tax($low_order_fee, $tax);
+                    $low_order_fee += $tax_amount; 
                 }
 
                 $this->output[] = [
@@ -136,6 +143,9 @@ class ot_loworderfee
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check()
     {
         global $db;
@@ -152,6 +162,9 @@ class ot_loworderfee
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys()
     {
         return [
@@ -167,6 +180,9 @@ class ot_loworderfee
         ];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install()
     {
         global $db;
@@ -189,12 +205,18 @@ class ot_loworderfee
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('No Low Order Fee on Gift Vouchers', 'MODULE_ORDER_TOTAL_LOWORDERFEE_GV', 'false', 'Do not charge Low Order Fee when cart is Gift Vouchers Only', '6', '9', 'zen_cfg_select_option([\'true\', \'false\'], ', now())");
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function remove()
     {
         global $db;
         $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public function isEnabled(): bool
     {
         if (!defined('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS') || !defined('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE')) {
@@ -205,4 +227,5 @@ class ot_loworderfee
         }
         return true;
     }
-  }
+}
+

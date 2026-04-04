@@ -2,10 +2,10 @@
 
 namespace Seeders;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Database\Seeder;
+use Tests\Services\Contracts\TestSeederInterface;
+use Tests\Support\Database\TestDb;
 
-class StoreWizardSeeder extends Seeder
+class StoreWizardSeeder implements TestSeederInterface
 {
 
     /**
@@ -13,9 +13,19 @@ class StoreWizardSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(array $parameters = []): void
     {
-        Capsule::table('configuration')->where('configuration_key', 'STORE_NAME')->update(['configuration_value' => 'Zencart Store Name']);
-        Capsule::table('configuration')->where('configuration_key', 'STORE_OWNER')->update(['configuration_value' => 'Zencart Store Owner']);
+        TestDb::update(
+            'configuration',
+            ['configuration_value' => 'Zencart Store Name'],
+            'configuration_key = :config_key',
+            [':config_key' => 'STORE_NAME']
+        );
+        TestDb::update(
+            'configuration',
+            ['configuration_value' => 'Zencart Store Owner'],
+            'configuration_key = :config_key',
+            [':config_key' => 'STORE_OWNER']
+        );
     }
 }

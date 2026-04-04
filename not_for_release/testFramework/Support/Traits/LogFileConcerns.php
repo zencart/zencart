@@ -2,12 +2,12 @@
 
 namespace Tests\Support\Traits;
 
+use Tests\Support\TestFrameworkFilesystem;
+
 trait LogFileConcerns
 {
-
-    public function logFilesExists()
+    public function logFilesExists(): array
     {
-        $result = glob(DIR_FS_CATALOG . 'logs/myDEBUG*');
-        return $result;
+        return (new TestFrameworkFilesystem())->listDebugLogFiles(DIR_FS_CATALOG);
     }
 }

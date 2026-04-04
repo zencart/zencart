@@ -3,18 +3,19 @@
 /*
  * featured-products functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zen4All 2020 Sep 01 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
  * Set the status of a featured product
- * 
+ *
  * @global object $db
  * @param int $featured_id
  * @param int $status
+ * @since ZC v1.2.0d
  */
 function zen_set_featured_status(int $featured_id, int $status)
 {
@@ -29,8 +30,9 @@ function zen_set_featured_status(int $featured_id, int $status)
 
 /**
  * Auto expire products on featured
- * 
+ *
  * @global object $db
+ * @since ZC v1.2.0d
  */
 function zen_expire_featured()
 {
@@ -59,8 +61,9 @@ function zen_expire_featured()
 
 /**
  * Auto start products on featured
- * 
+ *
  * @global object $db
+ * @since ZC v1.2.0d
  */
 function zen_start_featured()
 {
@@ -97,4 +100,18 @@ function zen_start_featured()
       zen_set_featured_status((int)$featured['featured_id'], 0);
     }
   }
+}
+
+/**
+ * @since ZC v2.1.0
+ */
+function zen_set_featured_category_status(int $category_id, int $status): void
+{
+    global $db;
+    $sql = "UPDATE " . TABLE_FEATURED_CATEGORIES . "
+          SET status = " . (int)$status . ",
+              date_status_change = now()
+          WHERE featured_categories_id = " . (int)$category_id;
+
+    $db->Execute($sql);
 }

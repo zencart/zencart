@@ -1,8 +1,9 @@
 <?php
+
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2020 Jun 17 Modified in v1.5.7 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_STATS_SALES_REPORT_GRAPHS, '')) return;
@@ -13,25 +14,24 @@ if (!zen_is_superuser() && !check_page(FILENAME_STATS_SALES_REPORT_GRAPHS, '')) 
 //  Build the sales stats
 $report = 4;
 require_once DIR_WS_CLASSES . 'stats_sales_report_graph.php';
-$endDate = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+$endDate = mktime(0, 0, 0, (int)date('m'), (int)date('d'), (int)date('Y'));
 //$startDate = mktime() - (365 + 182) * 3600 * 24;
 $startDate = time() - (365 * 2) * 3600 * 24;
 
 //$startDate = mktime() - (365)*3600*24;
 $report = new statsSalesReportGraph($report, $startDate, $endDate);
 for ($i = 0, $salesData = ''; $i < $report->size; $i++) {
-    $month = $report->info[$i]['text'];
-    $salesData .= "['$month'," . round($report->info[$i]['sum'], 2) . "]";
+    $month = $zcDate->output(DATE_FORMAT_SHORT_NO_DAY, $report->info[$i]['startDates']);
+    $salesData .= "['$month'," . round($report->info[$i]['sum'], $currencies->get_decimal_places(DEFAULT_CURRENCY)) . "]";
     if ($i < $report->size - 1) {
         $salesData .= ",";
     }
 }
 
-require_once(DIR_WS_CLASSES . 'currencies.php');
-$currencies = new currencies();
+$currencies ??= new currencies();
 ?>
   <div class="panel panel-default reportBox">
-    <div class="panel-heading header"><?php echo TEXT_MONTHLY_SALES_TITLE; ?><a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS); ?>"><?php echo TEXT_CLICK_FOR_COMPLETE_DETAILS; ?></a></div>
+    <div class="panel-heading header"><?= TEXT_MONTHLY_SALES_TITLE ?><a href="<?= zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS) ?>"><?= TEXT_CLICK_FOR_COMPLETE_DETAILS ?></a></div>
     <div class="panel-body">
       <div id="salesgraph"></div>
     </div>
@@ -47,9 +47,9 @@ $currencies = new currencies();
 
   function drawSalesGraph() {
       data = new google.visualization.DataTable();
-      data.addColumn('string', '<?php echo DASHBOARD_MONTH; ?>');
-      data.addColumn('number', '<?php echo DASHBOARD_SALES; ?>');
-      data.addRows(<?php echo "[" . $salesData . "]"; ?>);
+      data.addColumn('string', '<?= DASHBOARD_MONTH ?>');
+      data.addColumn('number', '<?= DASHBOARD_SALES ?>');
+      data.addRows(<?= "[" . $salesData . "]" ?>);
 
       var options = {
           trendlines: {
@@ -62,7 +62,7 @@ $currencies = new currencies();
 //              visibleInLegend: true
               }
           }, // Draw a trendline for data series 0.
-          vAxis: {title: '<?php echo DEFAULT_CURRENCY; ?>'},
+          vAxis: {title: '<?= DEFAULT_CURRENCY ?>'},
           width: '100%',
           height: '100%',
           backgroundColor: {fill: "#f7f6ef"},

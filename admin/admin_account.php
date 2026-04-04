@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 24 Modified in v2.1.0-alpha1 $
  */
 require('includes/application_top.php');
 
@@ -24,7 +24,7 @@ if (isset($_POST['action']) && in_array($_POST['action'], ['update', 'reset'])) 
 }
 
 // validate form input as not expired and not spoofed
-if ($action != '' && isset($_POST['action']) && $_POST['action'] != '' && $_POST['securityToken'] != $_SESSION['securityToken']) {
+if ($action != '' && isset($_POST['action']) && $_POST['action'] != '' && !zen_request_has_valid_csrf_token()) {
     $messageStack->add_session(ERROR_TOKEN_EXPIRED_PLEASE_RESUBMIT, 'error');
     zen_redirect(zen_href_link(FILENAME_ADMIN_ACCOUNT));
 }

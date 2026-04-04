@@ -2,21 +2,21 @@
 /**
  * This file is inserted at the start of the body tag, just above the header menu, and loads most of the admin javascript components
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 ?>
-<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script title="jQuery check">window.jQuery || document.write('<script src="includes/javascript/jquery.min.js"><\/script>');</script>
 
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js" integrity="sha256-Fb0zP4jE3JHqu+IBB9YktLcSjI1Zc6J2b6gTjB0LpoM=" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 <!--<script src="includes/javascript/bootstrap.min.js"></script>-->
 
 <script src="includes/javascript/jquery-ui-i18n.min.js"></script>
-<script>
+<script title="jQuery plugin initializations">
 // init datepicker defaults with localization
   jQuery(function () {
     jQuery.datepicker.setDefaults(jQuery.extend({}, jQuery.datepicker.regional["<?php echo $_SESSION['languages_code'] == 'en' ? '' : $_SESSION['languages_code']; ?>"], {
@@ -73,8 +73,16 @@ foreach ($directory_array as $key => $value) {
 }
 
 foreach ($installedPlugins as $plugin) {
-    $relativeDir = $plugin->getRelativePath();
-    $absoluteDir = $plugin->getAbsolutePath();
+    if (is_object($plugin) && method_exists($plugin, 'getRelativePath') && method_exists($plugin, 'getAbsolutePath')) {
+        $relativeDir = $plugin->getRelativePath();
+        $absoluteDir = $plugin->getAbsolutePath();
+    } else {
+        $pluginKey = $plugin['unique_key'] ?? '';
+        $pluginVersion = $plugin['version'] ?? '';
+        $relativeDir = ($GLOBALS['request_type'] === 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG)
+            . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+        $absoluteDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+    }
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/javascript/', '/^global_jscript/', '.php');
     foreach ($directory_array as $key => $value) {
         require $absoluteDir . 'admin/includes/javascript/' . $value;

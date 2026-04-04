@@ -2,7 +2,7 @@
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 17 Modified in v2.1.0-alpha2 $
  */
 
 $otherConfigErrors = false;
@@ -25,8 +25,8 @@ if (isset($_POST['adminDir'])) {
 }
 $systemChecker = new systemChecker($selectedAdminDir);
 if (isset($_POST['updateConfigure'])) {
-    require_once(DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php');
-    require_once(DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
+    require_once DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php';
+    require_once DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php';
     if (!isset($_POST['btnsubmit']) || $_POST['btnsubmit'] !== TEXT_REFRESH) {
         $configFile = DIR_FS_ROOT . 'includes/configure.php';
         $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
@@ -49,6 +49,7 @@ if (isset($_POST['updateConfigure'])) {
         $storeConfigureFileWriter = new zcConfigureFileWriter($configureInputs);
     }
 }
+$configFilePresent = $systemChecker->configFileExists();
 $dbVersion = $systemChecker->findCurrentDbVersion();
 $currentDbVersion = EXPECTED_DATABASE_VERSION_MAJOR . '.' . EXPECTED_DATABASE_VERSION_MINOR;
 $isCurrentDb = $dbVersion === $currentDbVersion;

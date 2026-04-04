@@ -7,11 +7,11 @@
  * - Handles Free Shipping for orders over $total as defined in the Admin
  * - Shows Free Shipping on Virtual products
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * portions Copyright (c) 2003 Edwin Bekaert (edwin@ednique.com)
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Dec 08 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 16 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -149,7 +149,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         $order->info = [
             'total' => $_SESSION['cart']->show_total(), // TAX ????
             'currency' => $currency ?? DEFAULT_CURRENCY,
-            'currency_value' => isset($currency, $currencies->currencies[$currency]['value']) ? $currencies->currencies[$currency]['value'] : 1
+            'currency_value' => $currencies->is_set($currency ?? DEFAULT_CURRENCY) ? $currencies->get_value($currency ?? DEFAULT_CURRENCY) : 1,
         ];
     }
     // weight and count needed for shipping !
@@ -213,7 +213,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                     $selected_quote[0] = $value;
                     if (!empty($method)) {
                         foreach ($selected_quote[0]['methods'] as $qkey => $qval) {
-                            if ($qval['id'] == $method) {
+                            if (($qval['id'] ?? '') == $method) {
                                 $selected_quote[0]['methods'] = [$qval];
                                 continue 2;
                             }

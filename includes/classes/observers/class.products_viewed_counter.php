@@ -1,10 +1,11 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 28 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  *
  * Designed for v1.5.7
+ * @since ZC v1.5.1
  */
 
 class products_viewed_counter extends base
@@ -20,6 +21,9 @@ class products_viewed_counter extends base
         $this->attach($this, array('NOTIFY_PRODUCT_VIEWS_HIT_INCREMENTOR'));
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     function updateNotifyProductViewsHitIncrementor(&$class, $eventID, $product_id)
     {
         global $db;
@@ -31,6 +35,9 @@ class products_viewed_counter extends base
         $db->Execute($sql);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function should_be_excluded()
     {
         global $spider_flag;

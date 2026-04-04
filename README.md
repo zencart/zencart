@@ -1,4 +1,4 @@
-![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Unit%20Tests/badge.svg?branch=master)
+[![Zen Cart Unit Tests](https://github.com/zencart/zencart/actions/workflows/zc_unit_test_suite.yml/badge.svg)](https://github.com/zencart/zencart/actions/workflows/zc_unit_test_suite.yml)
 
 
 Zen Cart&reg; - The Art of E-Commerce
@@ -6,22 +6,26 @@ Zen Cart&reg; - The Art of E-Commerce
 
 Zen Cart&reg; was the first Open Source e-Commerce web application to be fully PA-DSS Certified.
 
-Zen Cart v2.0.0 is the latest major update to the project.  It contains bugfixes and updates for PHP8 applied on top of the PA-DSS Certified version v1.5.4.
+Zen Cart v2.2.1 is the latest major update to the project.  It contains bugfixes and updates for PHP8 applied on top of the PA-DSS Certified version v1.5.4.
 
 Zen Cart is free and open source software, with free community-driven support available 24/7 on the Zen Cart&reg; Support Site forums at [zen-cart.com/forum](https://www.zen-cart.com/forum.php)
 
 --------------------
 
 
-Zen Cart&reg; v2.1.0-dev
+Zen Cart&reg; v3.0.0-dev
 ---------------------
+
+YOU ARE CURRENTLY VIEWING CODE FOR THE UNRELEASED IN-DEVELOPMENT "NEXT VERSION", which will be tagged as 3.0
+
+> If you want an officially-released version, see the [Releases](https://github.com/zencart/zencart/releases) page, or go to the `2.2` branch.
 
 Compatibility
 -------------
-Zen Cart v2.1.0 is designed for:
- * PHP 8.0 to PHP 8.4
+Zen Cart v3.0.0 is being designed for:
+ * PHP 8.3 to PHP 8.5
  * MySQL 5.7.8+ or MariaDB 10.2.7+
- * Apache 2.2 and 2.4
+ * Apache 2.4
  
 Refer to [compatibility requirements](https://docs.zen-cart.com/user/first_steps/server_requirements/) for additional details.
 
@@ -94,13 +98,6 @@ We take security very seriously.
 
 If you have discovered a critical security bug in Zen Cart, please email security [at] zen-cart [.] com with the details of the problem and how to trigger it.  Issues will be responded to in a timely manner.
 
-
-Follow Us
----------
-For news and updates about Zen Cart&reg;, follow us on [Twitter](http://twitter.com/zencart) and [Facebook](http://facebook.com/zencart)
-
-Sign up for our free [Newsletter](http://eepurl.com/bafnNj)
-
 Subscribe to [Critical News Updates And Release Announcements](https://www.zen-cart.com/subscription.php?do=addsubscription&f=2)
 
 &nbsp;  
@@ -114,5 +111,5 @@ Subscribe to [Critical News Updates And Release Announcements](https://www.zen-c
 
 &nbsp;  
 
-*&copy;Copyright 2003-2024, Zen Cart&reg;. All rights reserved.*
+*&copy;Copyright 2003-2026, Zen Cart&reg;. All rights reserved.*
 

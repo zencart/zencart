@@ -43,7 +43,7 @@ require('includes/application_top.php');
         </thead>
         <tbody>
             <?php
-            $products_query_raw = "SELECT p.products_id, pd.products_name, p.products_quantity, p.products_type
+            $products_query_raw = "SELECT p.products_id, pd.products_name, p.products_quantity
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                    WHERE p.products_id = pd.products_id
@@ -51,10 +51,13 @@ require('includes/application_top.php');
                                    ORDER BY p.products_quantity, pd.products_name";
             $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $products_query_raw, $products_query_numrows);
             $products = $db->Execute($products_query_raw);
-            foreach ($products as $product) {
-// only show low stock on products that can be added to the cart
-              if ($zc_products->get_allow_add_to_cart($product['products_id']) == 'Y') {
-                $type_handler = $zc_products->get_admin_handler($product['products_type']);
+
+            foreach ($products as $productRecord) {
+                $productData = (new Product((int)$productRecord['products_id']))->withDefaultLanguage();
+                $product = $productData->getData();
+
+              // only show low stock on products that can be added to the cart
+              if ($productData->allowsAddToCart()) {
                 $cPath = zen_get_product_path($product['products_id']);
                 ?>
               <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product['products_type'] . '&cPath=' . $cPath . '&pID=' . $product['products_id'] . '&action=new_product'); ?>'">

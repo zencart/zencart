@@ -1,9 +1,10 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 07 Modified in v2.0.0-rc1 $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
+ * @since ZC v1.5.7
  */
 
 function zen_get_zcversion()
@@ -14,6 +15,7 @@ function zen_get_zcversion()
 /**
  * Set timeout for the current script.
  * @param int $limit seconds
+ * @since ZC v1.0.3
  */
 function zen_set_time_limit($limit)
 {
@@ -23,6 +25,7 @@ function zen_set_time_limit($limit)
 /**
  * @param string $ip
  * @return boolean
+ * @since ZC v1.5.7
  */
 function zen_is_whitelisted_admin_ip($ip = null)
 {
@@ -35,6 +38,9 @@ function zen_is_whitelisted_admin_ip($ip = null)
 
 ////
 // Wrapper function for round()
+/**
+ * @since ZC v1.0.3
+ */
 function zen_round($value, $precision)
 {
     $value = round($value * pow(10, $precision), 0);
@@ -45,6 +51,7 @@ function zen_round($value, $precision)
 
 /**
  * replacement for fmod to manage values < 1
+ * @since ZC v1.2.6d
  */
 function fmod_round($x, $y)
 {
@@ -63,6 +70,7 @@ function fmod_round($x, $y)
 /**
  * Cast an input to a desired type.
  * (Note: does not operate recursively on arrays)
+ * @since ZC v2.0.0
  */
 function zen_cast($input, ?string $cast_to): mixed
 {
@@ -80,6 +88,7 @@ function zen_cast($input, ?string $cast_to): mixed
  * Convert value to a float/int -- mainly used for sanitizing and returning non-empty strings or nulls
  * @param int|float|string $input
  * @return float|int
+ * @since ZC v1.5.6
  */
 function convertToFloat($input = 0): float|int
 {
@@ -101,10 +110,53 @@ function convertToFloat($input = 0): float|int
  * @param $key
  * @param null $default
  * @return mixed
+ * @since ZC v1.5.5
  */
 function issetorArray(array $array, $key, $default = null)
 {
     return isset($array[$key]) ? $array[$key] : $default;
+}
+
+/**
+ * Returns the CSRF token supplied for the current request, preferring the request header.
+ *
+ * If both the request header and POST field are present but don't match, `null` is returned
+ * so callers fail closed rather than silently choosing one source.
+ */
+function zen_get_csrf_token_from_request(): ?string
+{
+    $headerToken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+    $postToken = $_POST['securityToken'] ?? null;
+
+    $hasHeaderToken = is_string($headerToken) && $headerToken !== '';
+    $hasPostToken = is_string($postToken) && $postToken !== '';
+
+    if ($hasHeaderToken) {
+        if ($hasPostToken && !hash_equals($headerToken, $postToken)) {
+            return null;
+        }
+
+        return $headerToken;
+    }
+
+    return $hasPostToken ? $postToken : null;
+}
+
+/**
+ * Validates the current request's CSRF token against the session token.
+ */
+function zen_request_has_valid_csrf_token(): bool
+{
+    if (!isset($_SESSION['securityToken']) || !is_string($_SESSION['securityToken']) || $_SESSION['securityToken'] === '') {
+        return false;
+    }
+
+    $requestToken = zen_get_csrf_token_from_request();
+    if (!is_string($requestToken) || $requestToken === '') {
+        return false;
+    }
+
+    return hash_equals($_SESSION['securityToken'], $requestToken);
 }
 
 
@@ -116,6 +168,7 @@ function issetorArray(array $array, $key, $default = null)
  * @param string $field_name
  * @param string $extension String to denote the extension. The right-most "." is used as a fallback.
  * @return string
+ * @since ZC v1.5.6
  */
 function zen_limit_image_filename($filename, $table_name, $field_name, $extension = '.')
 {
@@ -139,6 +192,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 
 /**
  * Get field type from database
+ * @since ZC v1.0.3
  */
 function zen_field_type(string $table_name, string $field_name): string
 {
@@ -150,6 +204,7 @@ function zen_field_type(string $table_name, string $field_name): string
 
 /**
  * Get field length from database
+ * @since ZC v1.0.3
  */
 function zen_field_length(string $table_name, string $field_name): int
 {
@@ -161,6 +216,7 @@ function zen_field_length(string $table_name, string $field_name): int
 /**
  * Generate HTML FORM attributes for size="foo" maxlength="bar" based on maximum size (default 50)
  * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
+ * @since ZC v1.0.3
  */
 function zen_set_field_length(string $table_name, string $field_name, $max = null, bool $override = false): string
 {
@@ -184,34 +240,45 @@ function zen_set_field_length(string $table_name, string $field_name, $max = nul
 
 
 /**
- * Return all HTTP GET variables, except those passed as a parameter
+ * Return all HTTP GET variables as URL param string, excluding those specified.
+ * This is used to retain only relevant GET variables when building links, and not pass on things that related to prior actions that led to the current page.
+ * Some params are always excluded, for cleanup and security reasons.
  *
- * The return is a urlencoded string
+ * The return is a url-encoded string
  *
- * @param mixed $exclude_array either a single or array of parameter names to be excluded from output
+ * @param array|string $exclude_array array of parameter names (or single param name string) to be excluded from output
  * @return string url_encoded string of GET params
+ * @since ZC v1.0.3
  */
-function zen_get_all_get_params($exclude_array = array())
+function zen_get_all_get_params(array|string $exclude_array = []): string
 {
-    if (!is_array($exclude_array)) $exclude_array = array();
-    $exclude_array = array_merge($exclude_array, array('main_page', 'error', 'x', 'y', 'cmd'));
+    if (is_string($exclude_array)) {
+        $exclude_array = [$exclude_array];
+    }
+    $exclude_array = array_merge($exclude_array, ['main_page', 'error', 'x', 'y', 'cmd']);
     if (function_exists('zen_session_name')) {
         $exclude_array[] = zen_session_name();
     }
     $get_url = '';
-    if (is_array($_GET) && (count($_GET) > 0)) {
-        foreach ($_GET as $key => $value) {
-            if (!in_array($key, $exclude_array)) {
-                if (!is_array($value)) {
-                    if (!empty($value)) {
-                        $get_url .= rawurlencode(stripslashes((string)$key)) . '=' . rawurlencode(stripslashes((string)$value)) . '&';
+    if (!is_array($_GET) || empty($_GET)) {
+        return $get_url;
+    }
+
+    foreach ($_GET as $key => $value) {
+        if (!in_array($key, $exclude_array, true)) {
+            if (!is_array($value)) {
+                if (!empty($value)) {
+                    $get_url .= rawurlencode(stripslashes((string)$key)) . '=' . rawurlencode(stripslashes((string)$value)) . '&';
+                }
+            } else {
+                if (IS_ADMIN_FLAG) {
+                    continue;
+                } // admin (and maybe catalog?) doesn't support passing arrays by GET, so skipping any arrays here
+                foreach (array_filter($value) as $arr) {
+                    if (is_array($arr)) {
+                        continue;
                     }
-                } else {
-                    if (IS_ADMIN_FLAG) continue; // admin (and maybe catalog?) doesn't support passing arrays by GET, so skipping any arrays here
-                    foreach (array_filter($value) as $arr) {
-                        if (is_array($arr)) continue;
-                        $get_url .= rawurlencode(stripslashes((string)$key)) . '[]=' . rawurlencode(stripslashes((string)$arr)) . '&';
-                    }
+                    $get_url .= rawurlencode(stripslashes((string)$key)) . '[]=' . rawurlencode(stripslashes((string)$arr)) . '&';
                 }
             }
         }
@@ -225,22 +292,27 @@ function zen_get_all_get_params($exclude_array = array())
 
 /**
  * Return all GET params as (usually hidden) POST params
- * @param array $exclude_array GET keys to exclude from generated output
+ * Analogous to zen_get_all_get_params, but returns HTML input fields for a form, instead of URL param string.
+ *
+ * @param array|string $exclude_array GET keys to exclude from generated output
  * @param boolean $hidden generate hidden fields instead of regular input fields
  * @param string $parameters optional 'class="foo"' markup to include in non-hidden input fields
  * @return string HTML string of input fields
+ * @since ZC v1.5.2
  */
-function zen_post_all_get_params($exclude_array = array(), $hidden = true, $parameters = '')
+function zen_post_all_get_params(array|string $exclude_array = [], bool $hidden = true, string $parameters = ''): string
 {
-    if (!is_array($exclude_array)) $exclude_array = array((string)$exclude_array);
-    $exclude_array = array_merge($exclude_array, array('error', 'x', 'y'));
+    if (is_string($exclude_array)) {
+        $exclude_array = [$exclude_array];
+    }
+    $exclude_array = array_merge($exclude_array, ['error', 'x', 'y']);
     if (function_exists('zen_session_name')) {
         $exclude_array[] = zen_session_name();
     }
     $fields = '';
     if (is_array($_GET) && (count($_GET) > 0)) {
         foreach ($_GET as $key => $value) {
-            if (!in_array($key, $exclude_array)) {
+            if (!in_array($key, $exclude_array, true)) {
                 if (!is_array($value)) {
                     if (!empty($value)) {
                         if ($hidden) {
@@ -251,7 +323,9 @@ function zen_post_all_get_params($exclude_array = array(), $hidden = true, $para
                     }
                 } else {
                     foreach (array_filter($value) as $arr) {
-                        if (is_array($arr)) continue;
+                        if (is_array($arr)) {
+                            continue;
+                        }
                         if ($hidden) {
                             $fields .= zen_draw_hidden_field($key . '[]', $arr);
                         } else {
@@ -276,6 +350,7 @@ function zen_post_all_get_params($exclude_array = array(), $hidden = true, $para
  * @param $columnName2 string representing named column as second criteria
  * @param $order2      either SORT_ASC or SORT_DESC (default SORT_ASC)
  * @return array   Original array sorted as specified
+ * @since ZC v1.5.5
  */
 function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnName2 = '', $order2 = SORT_ASC)
 {
@@ -305,14 +380,12 @@ function zen_sort_array($data, $columnName1 = '', $order1 = SORT_ASC, $columnNam
  * check to see if free shipping rules allow the specified shipping module to be enabled or to disable it in lieu of being free
  * @param $shipping_module
  * @return bool
+ * @since ZC v1.1.0
  */
 function zen_get_shipping_enabled(string $shipping_module): bool
 {
-    global $PHP_SELF;
-
-    // for admin always true
-    if (IS_ADMIN_FLAG && strstr($PHP_SELF, FILENAME_MODULES)) {
-        return true;
+    if (!isset($_SESSION['cart'])) {
+        return true; // if no cart, then no shipping module is needed
     }
 
     $check_cart_free = $_SESSION['cart']->in_cart_check('product_is_always_free_shipping', '1');
@@ -361,6 +434,7 @@ function zen_get_shipping_enabled(string $shipping_module): bool
  * @param $string
  * @return string|string[]
  * @deprecated
+ * @since ZC v1.0.3
  */
 function zen_convert_linefeeds($from, $to, $string)
 {
@@ -371,8 +445,9 @@ function zen_convert_linefeeds($from, $to, $string)
 
 /**
  * Return a random value
+ * @since ZC v1.0.3
  */
-function zen_rand($min = null, $max = null)
+function zen_rand(?int $min = null, ?int $max = null): int
 {
     static $seeded;
 
@@ -389,16 +464,19 @@ function zen_rand($min = null, $max = null)
     if (isset($min) && isset($max)) {
         if ($min >= $max) {
             return $min;
-        } else {
-            return mt_rand($min, $max);
         }
-    } else {
-        return mt_rand();
+
+        return random_int($min, $max);
     }
+
+    return mt_rand();
 }
 
 
 // debug utility only
+/**
+ * @since ZC v1.5.1
+ */
 function utilDumpRequest($mode = 'p', $out = 'log')
 {
     if ($mode == 'p') {
@@ -419,8 +497,26 @@ function utilDumpRequest($mode = 'p', $out = 'log')
 }
 
 /**
- * this function will need to be removed if
- * we ever revert to a full laravel install
+ * Convert a truthy/falsey string to boolean.
+ * Recognizes words like Yes, No, Off, On, True/False (both string and native types); and is not case-sensitive
+ * Also recognizes numbers both as strings and integers ('0', '1') as booleans
+ * Blank (empty string) is treated as false.
+ *
+ * By default, will return null if the passed value is neither truthy/falsey (ie: 'red', or '2')
+ * @since ZC v2.1.0
+ */
+function zen_to_boolean(mixed $value, bool $null_on_failure = true): bool|null
+{
+    if ($null_on_failure) {
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    }
+
+    return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+}
+
+/**
+ * compatibility wrapper for request helper
+ * @since ZC v1.5.8
  */
 
 function request()
@@ -428,6 +524,9 @@ function request()
     return \Zencart\Request\Request::getInstance();
 }
 
+/**
+ * @since ZC v1.5.6
+ */
 function zen_updated_by_admin($admin_id = null): string
 {
     if (empty($admin_id) && empty($_SESSION['admin_id'])) {
@@ -444,6 +543,7 @@ function zen_updated_by_admin($admin_id = null): string
  * Lookup admin user name based on admin id
  * @param int $id
  * @return string
+ * @since ZC v1.5.0
  */
 function zen_get_admin_name($id = null)
 {
@@ -455,33 +555,125 @@ function zen_get_admin_name($id = null)
     return $result->RecordCount() ? $result->fields['admin_name'] : null;
 }
 
+/**
+ * The list of installed modules is cached in the database.
+ * This function updates the cache for the specified module type, or all module types if no filter is provided.
+ * The cached list is used by the base shipping/payment/order_total classes to limit which modules get instantiated during checkout.
+ *
+ * This function is typically called after installing or uninstalling a module, or when the module's configuration changes.
+ *
+ * @param string $module_type_filter Optionally limit the update to a specific module type (order_total, payment, shipping)
+ * @since ZC v2.2.0
+ */
+function zen_update_modules_cache(string $module_type_filter = ''): void
+{
+    global $db, $languageLoader, $installedPlugins;
+
+    $module_types = [
+        'order_total' => 'MODULE_ORDER_TOTAL_INSTALLED',
+        'payment' => 'MODULE_PAYMENT_INSTALLED',
+        'shipping' => 'MODULE_SHIPPING_INSTALLED',
+    ];
+    // if a filter has been supplied, limit the array to just that element.
+    $module_types = isset($module_types[$module_type_filter]) ? [$module_type_filter => $module_types[$module_type_filter]] : $module_types;
+
+    foreach ($module_types as $module_type => $configuration_key) {
+        $moduleFinder = new Zencart\ResourceLoaders\ModuleFinder($module_type, new Zencart\FileSystem\FileSystem());
+        $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
+
+        $temp_for_sort = [];
+
+        foreach ($modules_found as $module_name => $module_file_dir) {
+            if (!$languageLoader->loadModuleLanguageFile($module_name, $module_type)) {
+                continue;
+            }
+
+            require_once DIR_FS_CATALOG . $module_file_dir . $module_name;
+            $class = pathinfo($module_name, PATHINFO_FILENAME);
+            if (!class_exists($class)) {
+                continue;
+            }
+
+            $module = new $class();
+            if ($module->check() > 0) {
+                // determine cached key sort orders (using up to 6 digits, then filename) to add to list of installed modules
+                $sort = str_pad((string)(int)($module->sort_order ?? 0), 6, '0', STR_PAD_LEFT);
+                $temp_for_sort[$module_name] = $sort . $module_name;
+                asort($temp_for_sort);
+            }
+        }
+        $installed_modules = array_flip($temp_for_sort);
+
+        // Save updated cached list of installed modules
+        ksort($installed_modules);
+        $installed_modules_list = zen_db_input(implode(';', $installed_modules));
+        $check = $db->Execute(
+            "SELECT configuration_value
+               FROM " . TABLE_CONFIGURATION . "
+              WHERE configuration_key = '" . zen_db_input($configuration_key) . "'
+              LIMIT 1"
+        );
+        if (!$check->EOF) {
+            if (empty($check->fields['configuration_value']) || $check->fields['configuration_value'] !== implode(';', $installed_modules)) {
+                $db->Execute(
+                    "UPDATE " . TABLE_CONFIGURATION . "
+                    SET configuration_value = '" . $installed_modules_list . "', last_modified = now()
+                  WHERE configuration_key = '" . zen_db_input($configuration_key) . "'
+                  LIMIT 1"
+                );
+            }
+        } else {
+            $db->Execute(
+                "INSERT INTO " . TABLE_CONFIGURATION . "
+               (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added)
+                  VALUES
+                ('Installed Modules', '" . zen_db_input($configuration_key) . "', '" . $installed_modules_list . "', 'This is automatically updated. No need to edit.', 6, 0, now())"
+            );
+        }
+    }
+}
+
 // Compatibility
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_products($field_name, $parameters, $exclude, $show_id, $set_selected, $show_model, $show_current_category, $order_by, $filter_by_option_name);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_products_having_attributes($field_name, $parameters, $exclude, $order_by, $filter_by_option_name);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down_categories($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false) {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_categories_having_products($field_name, $parameters, $exclude, $show_id, $show_parent);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null){
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_draw_pulldown_categories_having_products_with_attributes($field_name, $parameters, $exclude, $show_full_path, $filter_by_option_name);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_get_orders_status()
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_get_orders_status_pulldown_array();
 }
-

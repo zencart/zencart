@@ -2,10 +2,10 @@
 /**
  * Page Template
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: John Thompson 2022 Jul 30 Modified in v1.5.8-alpha2 $
+ * @version $Id: torvista 2025 Oct 16 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="reviewsDefault">
@@ -65,7 +65,7 @@
 
 <div class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $reviews['reviewsRating'] . '.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating'])), sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating']); ?></div>
 
-<div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), MAX_PREVIEW); ?></div>
+<div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), (int)MAX_PREVIEW); ?></div>
 
 
 <br class="clearBoth">

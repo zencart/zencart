@@ -1,15 +1,17 @@
 <?php declare(strict_types=1);
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 
 namespace Zencart\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
+/**
+ * @since ZC v1.5.8
+ */
 class FilterManager
 {
 
@@ -23,6 +25,9 @@ class FilterManager
         $this->filterFactory = $filterFactory;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function build() : void
     {
         $this->filters = [];
@@ -36,7 +41,10 @@ class FilterManager
         }
     }
 
-    public function processRequest(Request $request, Builder $query) : Builder
+    /**
+     * @since ZC v1.5.8
+     */
+    public function processRequest(Request $request, $query)
     {
         if (!$this->hasFilters()) {
             return $query;
@@ -47,6 +55,9 @@ class FilterManager
         return $query;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function hasFilters() : bool
     {
         if (!count($this->filterDefinitions)) {
@@ -55,6 +66,9 @@ class FilterManager
         return true;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getFilters() : array
     {
         return $this->filters;

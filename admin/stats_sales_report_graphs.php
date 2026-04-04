@@ -1,15 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @author inspired from sales_report_graphs.php,v 0.01 2002/11/27 19:02:22 cwi Exp  Released under the GNU General Public License $
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 04 Modified in v2.2.1 $
  */
 require 'includes/application_top.php';
 
 //if (!defined('SALES_REPORT_GRAPHS_FILTER_DEFAULT')) define('SALES_REPORT_GRAPHS_FILTER_DEFAULT', '00000000110000000000');
 
-require(DIR_WS_CLASSES . 'currencies.php');
 require DIR_WS_CLASSES . 'stats_sales_report_graph.php';
 $currencies = new currencies();
 
@@ -105,34 +104,41 @@ if (strlen($sales_report_filter) == 0) {
 <?php } ?>
           data.addRows([
 <?php
+$chartHeader = '';
 for ($i = 0; $i < $report->size; $i++) {
 
   // column name
   echo "           ['";
 
-  if ($sales_report_view == statsSalesReportGraph::YEARLY_VIEW && $report->size > 5) {
-    echo substr($report->info[$i]['text'], 0, 1);
-  } elseif ($sales_report_view == statsSalesReportGraph::MONTHLY_VIEW) {
-    echo substr($report->info[$i]['text'], 0, 3);
-  } elseif ($sales_report_view == statsSalesReportGraph::WEEKLY_VIEW) {
-    echo substr($report->info[$i]['text'], 0, 5);
-  } elseif ($sales_report_view == statsSalesReportGraph::HOURLY_VIEW) {
-    echo ltrim(substr($report->info[$i]['text'], 0, 2), '0');
-  } elseif ($report->size > 5) {
-    echo substr($report->info[$i]['text'], 3, 2);
-  } else {
-    echo substr($report->info[$i]['text'], 0, 5);
+  switch ($sales_report_view) {
+      case statsSalesReportGraph::YEARLY_VIEW:
+          echo $zcDate->output('%Y', $report->info[$i]['startDates']);
+          break;
+      case statsSalesReportGraph::MONTHLY_VIEW:
+          echo $zcDate->output('%b', $report->info[$i]['startDates']);
+          $chartHeader = ($chartHeader === '' && $i === 0) ? ' ' . $zcDate->output('%Y', $report->info[$i]['startDates']) : $chartHeader;
+          break;
+      case statsSalesReportGraph::WEEKLY_VIEW:
+          echo $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['startDates']) . '\n' . $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['endDates'] - 1);
+          break;
+      case statsSalesReportGraph::DAILY_VIEW:
+          echo $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $report->info[$i]['startDates']);
+          break;
+      case statsSalesReportGraph::HOURLY_VIEW:
+          echo $zcDate->output('%k', $report->info[$i]['startDates']);
+          $chartHeader = ($chartHeader === '' && $i === 0) ? ' ' . $zcDate->output(DATE_FORMAT_SHORT, $report->info[$i]['startDates']) : $chartHeader;
+          break;
   }
 
   echo "', ";
 
   if ($j == 0) {
   // first value
-  echo round($report->info[$i]['sum'], 2);
+  echo round($report->info[$i]['sum'], $currencies->get_decimal_places(DEFAULT_CURRENCY));
   } else {
     // second value
     if ($sales_report_view < statsSalesReportGraph::YEARLY_VIEW) {
-      echo round($report->info[$i]['avg'], 2);
+      echo round($report->info[$i]['avg'], $currencies->get_decimal_places(DEFAULT_CURRENCY));
     }
   }
   echo ']';
@@ -146,7 +152,7 @@ for ($i = 0; $i < $report->size; $i++) {
 
           // Set chart options
           var options = {
-              'title': '<?php echo $report_desc; ?>',
+              'title': '<?php echo $report_desc . $chartHeader; ?>',
               'legend': 'bottom',
               'is3D': false,
               'width': 600,
@@ -173,7 +179,7 @@ for ($i = 0; $i < $report->size; $i++) {
     <!-- header_eof //-->
     <!-- body //-->
     <div class="container-fluid">
-      <h1><?php echo $report_desc . ' ' . HEADING_TITLE; ?></h1>
+      <h1><?php echo HEADING_TITLE; ?></h1>
       <!-- body_text //-->
       <table class="table">
         <tr>
@@ -192,7 +198,27 @@ for ($i = 0; $i < $report->size; $i++) {
           <table class="table table-striped table-hover">
             <thead>
               <tr class="dataTableHeadingRow">
-                <th class="dataTableHeadingContent"></th>
+                <?php
+                $reportTextTitle = '';
+                Switch ($sales_report_view) {
+                    case statsSalesReportGraph::YEARLY_VIEW:
+                        $reportTextTitle = REPORT_TEXT_YEARLY_TITLE;
+                        break;
+                    case statsSalesReportGraph::MONTHLY_VIEW:
+                        $reportTextTitle = REPORT_TEXT_MONTHLY_TITLE;
+                        break;
+                    case statsSalesReportGraph::WEEKLY_VIEW:
+                        $reportTextTitle = REPORT_TEXT_WEEKLY_TITLE;
+                        break;
+                    case statsSalesReportGraph::DAILY_VIEW:
+                        $reportTextTitle = REPORT_TEXT_DAILY_TITLE;
+                        break;
+                    case statsSalesReportGraph::HOURLY_VIEW:
+                        $reportTextTitle = REPORT_TEXT_HOURLY_TITLE;
+                        break;
+                }
+                ?>
+                <th class="dataTableHeadingContent"><?php echo $reportTextTitle ?></th>
                 <th class="dataTableHeadingContent text-center"><?php echo REPORT_TEXT_ORDERS; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo REPORT_TEXT_CONVERSION_PER_ORDER; ?></th>
                 <th class="dataTableHeadingContent text-right"><?php echo REPORT_TEXT_CONVERSION; ?></th>
@@ -220,7 +246,23 @@ for ($i = 0; $i < $report->size; $i++) {
                       if (strlen($report->info[$i]['link']) > 0) {
                         echo '<a href="' . zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS, $report->info[$i]['link']) . '">';
                       }
-                      echo $report->info[$i]['text'];
+                      switch ($sales_report_view) {
+                          case statsSalesReportGraph::HOURLY_VIEW:
+                              echo $zcDate->output('%H', $report->info[$i]['startDates']) . ' - ' . $zcDate->output('%H', $report->info[$i]['endDates']) . (($i === 0) ? ' ' . $zcDate->output(DATE_FORMAT_SHORT, $report->info[$i]['startDates']) : '');
+                              break;
+                          case statsSalesReportGraph::DAILY_VIEW:
+                              echo $zcDate->output(DATE_FORMAT_SHORT, $report->info[$i]['startDates']);
+                              break;
+                          case statsSalesReportGraph::WEEKLY_VIEW:
+                              echo $zcDate->output(DATE_FORMAT_SHORT, $report->info[$i]['startDates']) . " - " . $zcDate->output(DATE_FORMAT_SHORT, mktime(0, 0, 0, (int)date('m', $report->info[$i]['endDates']), date('d', $report->info[$i]['endDates']) - 1, (int)date('Y', $report->info[$i]['endDates'])));
+                              break;
+                          case statsSalesReportGraph::MONTHLY_VIEW:
+                              echo $zcDate->output(DATE_FORMAT_SHORT_NO_DAY, $report->info[$i]['startDates']);
+                              break;
+                          case statsSalesReportGraph::YEARLY_VIEW:
+                              echo $zcDate->output('%Y', $report->info[$i]['startDates']);
+                              break;
+                      }
                       if (strlen($report->info[$i]['link']) > 0) {
                         echo '</a>';
                       }
@@ -241,7 +283,7 @@ for ($i = 0; $i < $report->size; $i++) {
                 <?php
               }
               ?>
-            <tbody>
+            </tbody>
             <tfoot>
                 <?php
                 if (strlen($report->previous . " " . $report->next) > 1) {
@@ -292,7 +334,7 @@ for ($i = 0; $i < $report->size; $i++) {
             <td class="dataTableContent text-right"><?php echo FILTER_VALUE ?></td>
           </tr>
           <?php
-          if (($sales_report_filter) == 0) {
+          if (empty($sales_report_filter)) {
             for ($i = 0; $i < $report->status_available_size; $i++) {
               $sales_report_filter .= "0";
             }
@@ -300,7 +342,7 @@ for ($i = 0; $i < $report->size; $i++) {
           for ($i = 0; $i < $report->status_available_size; $i++) {
             ?>
             <tr>
-              <td class="dataTableContent text-left"><?php echo $report->status_available[$i]['text'] ?></a></td>
+              <td class="dataTableContent text-left"><?php echo $report->status_available[$i]['text'] ?></td>
               <?php
               if (substr($sales_report_filter, $i, 1) == "0") {
                 $tmp = substr($sales_report_filter, 0, $i) . "1" . substr($sales_report_filter, $i + 1, $report->status_available_size - ($i + 1));

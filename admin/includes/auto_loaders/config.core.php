@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: lat9 2024 Jun 18 Modified in v2.1.0-alpha1 $
  */
 if (!defined('USE_PCONNECT')) {
     define('USE_PCONNECT', 'false');
@@ -36,12 +36,8 @@ $autoLoadConfig[0][] = [
     'autoType' => 'require',
     'loadFile' => DIR_FS_CATALOG . DIR_WS_INCLUDES . 'version.php',
 ];
-//  $autoLoadConfig[0][] = array('autoType'=>'class',
-//                               'loadFile'=>'class.base.php');
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'class.notifier.php',
-];
+
+//- notifier class loaded via psr4Autoload.php
 $autoLoadConfig[0][] = [
     'autoType' => 'classInstantiate',
     'className' => 'notifier',
@@ -49,88 +45,14 @@ $autoLoadConfig[0][] = [
 ];
 $autoLoadConfig[0][] = [
     'autoType' => 'class',
-    'loadFile' => 'sniffer.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'shopping_cart.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'products.php',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'table_block.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'box.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'message_stack.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'object_info.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
     'loadFile' => 'class.phpmailer.php',
 ];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'upload.php',
-    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'class.zcPassword.php',
-];
+
+//- zcPassword class loaded via psr4Autoload.php
 $autoLoadConfig[0][] = [
     'autoType' => 'classInstantiate',
     'className' => 'zcPassword',
     'objectName' => 'zcPassword',
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'VersionServer.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'configurationValidation.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'WhosOnline.php',
-    'classPath' => DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'Customer.php',
-    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'zcDate.php',
-    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'Coupon.php',
-    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
-];
-$autoLoadConfig[0][] = [
-    'autoType' => 'class',
-    'loadFile' => 'CouponValidation.php',
-    'classPath' => DIR_FS_CATALOG . DIR_WS_CLASSES,
 ];
 /**
  * Breakpoint 5.
@@ -138,6 +60,7 @@ $autoLoadConfig[0][] = [
  * $zcDate = new zcDate();
  *
  */
+//- zcDate class loaded via psr4Autoload.php
 $autoLoadConfig[5][] = [
     'autoType' => 'classInstantiate',
     'className' => 'zcDate',
@@ -198,6 +121,8 @@ $autoLoadConfig[30][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_gzip.php',
 ];
+
+//- sniffer class loaded via psr4Autoload.php
 $autoLoadConfig[30][] = [
     'autoType' => 'classInstantiate',
     'className' => 'sniffer',
@@ -209,6 +134,7 @@ $autoLoadConfig[30][] = [
  * $messageStack = new messageStack();
  *
  */
+//- messageStack class loaded via psr4Autoload.php
 $autoLoadConfig[32][] = [
     'autoType' => 'classInstantiate',
     'className' => 'messageStack',
@@ -309,15 +235,18 @@ $autoLoadConfig[80][] = [
 /**
  * Breakpoint 90.
  *
- * $zc_products = new products();
+ * $zc_products = new products(); // deprecated v2.1.0
  * require DIR_WS_FUNCTIONS . 'datepicker.php';
  *
  */
+// zc_products deprecated v2.1.0; use Product class instead.
+//- products class loaded via psr4Autoload.php
 $autoLoadConfig[90][] = [
     'autoType' => 'classInstantiate',
     'className' => 'products',
     'objectName' => 'zc_products',
 ];
+
 $autoLoadConfig[90][] = [
     'autoType' => 'require',
     'loadFile' => DIR_WS_FUNCTIONS . 'datepicker.php',
@@ -395,6 +324,7 @@ $autoLoadConfig[170][] = [
  * require DIR_FS_CATALOG . 'includes/init_includes/init_observers.php';
  *
  */
+//- configurationValidation class loaded via psr4Autoload.php
 $autoLoadConfig[175][] = [
     'autoType' => 'classInstantiate',
     'className' => 'configurationValidation',

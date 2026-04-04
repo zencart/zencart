@@ -1,11 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 04 Modified in v2.0.0-rc1 $
+ * @version $Id: DrByte 2025 Jan 23 Modified in v2.2.0 $
  */
 
+/**
+ * @since ZC v1.0.3
+ */
 class splitPageResults
 {
     /**
@@ -208,6 +211,7 @@ class splitPageResults
      *
      * @param string $sql
      * @return int
+     * @since ZC v1.5.8
      */
 
     private function numberRows(string $sql) {
@@ -235,6 +239,7 @@ class splitPageResults
      * @param string $sql_query
      * @param string $criteria_field
      * @param string $criteria_value
+     * @since ZC v1.5.8
      */
     public function findPage(&$current_page_number, $max_rows_per_page, &$sql_query, $criteria_field, $criteria_value)
     {
@@ -292,6 +297,7 @@ class splitPageResults
      * @param string $parameters form URI parameters
      * @param string $page_name $_GET param for page number
      * @return string
+     * @since ZC v1.0.3
      */
     public function display_links($query_numrows, $max_rows_per_page, $max_page_links, $current_page_number, $parameters = '', $page_name = 'page')
     {
@@ -336,7 +342,9 @@ class splitPageResults
                     }
                 }
 
-                if (defined('SID') && !empty(SID)) $display_links .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
+                if (PHP_VERSION_ID < 80401 && defined('SID') && !empty(constant('SID'))) {
+                    $display_links .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
+                }
 
                 $display_links .= '</form>';
             }
@@ -353,6 +361,7 @@ class splitPageResults
      * @param int $current_page_number
      * @param string $text_output
      * @return string
+     * @since ZC v1.0.3
      */
     public function display_count($query_numrows, $max_rows_per_page, $current_page_number, $text_output)
     {

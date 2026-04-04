@@ -2,10 +2,10 @@
 /**
  * create the breadcrumb trail
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Aug 03 Modified in v2.0.0-alpha1 $
+ * @version $Id: pRose on charmes 2025 May 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -70,14 +70,8 @@ foreach ($get_terms as $next_get_term) {
  * add the products name to the breadcrumb trail
  */
 if (isset($_GET['products_id'])) {
-    $productname_query =
-        "SELECT products_name
-           FROM " . TABLE_PRODUCTS_DESCRIPTION . "
-          WHERE products_id = " . (int)$_GET['products_id'] . "
-            AND language_id = " . (int)$_SESSION['languages_id'];
-    $productname = $db->Execute($productname_query, 1);
-
-    if (!$productname->EOF) {
-        $breadcrumb->add($productname->fields['products_name'], zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
+    $productname = zen_get_products_name($_GET['products_id']);
+    if (!empty($productname)) {
+        $breadcrumb->add($productname, zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
     }
 }

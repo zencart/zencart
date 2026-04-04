@@ -1,12 +1,12 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Feb 18 Modified in v1.5.8-alpha $
+ * @version $Id: torvista 2025 Mar 16 Modified in v2.2.0 $
  */
 ?>
 
-<script>
+<script title="responsive_framework">
 
 (function($) {
 $(document).ready(function() {
@@ -32,30 +32,32 @@ $('.rightBoxContainer').css('width', '');
 $('#mainWrapper').css('margin', 'auto');
 $('.centerColumn').css('clear', 'both');
 
-$('#documentcategories').css({'display': 'none', 'visibility': 'hidden'  });
-$('#categories').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#whatsnew').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#manufacturers').css({'display': 'none', 'visibility': 'hidden'  });
-$('#reviews').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#featured').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#information').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#moreinformation').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#bannerbox').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#ezpages').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#recordcompanies').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#musicgenres').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#bannerboxall').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#search').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#bannerbox2').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#bannerboxall').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#bestsellers').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#specials').css({'display': 'none', 'visibility': 'hidden'  });
-$('#whosonline').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#orderhistory').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#manufacturerinfo').css({ 'display': 'none', 'visibility': 'hidden' });
-$('#productnotifications').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#brands').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#categories').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#currencies').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#documentcategories').css({'display': 'none', 'visibility': 'hidden'  });
+$('#ezpages').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#featured').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#featuredcategories').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#information').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#languages').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#manufacturerinfo').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#manufacturers').css({'display': 'none', 'visibility': 'hidden'  });
+$('#moreinformation').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#musicgenres').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#orderhistory').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#productnotifications').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#recordcompanies').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#reviews').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#search').css({ 'display': 'none', 'visibility': 'hidden' });
 $('#shoppingcart').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#specials').css({'display': 'none', 'visibility': 'hidden'  });
+$('#whatsnew').css({ 'display': 'none', 'visibility': 'hidden' });
+$('#whosonline').css({ 'display': 'none', 'visibility': 'hidden' });
 
 
 $('input#email-address').clone().attr('type','email').insertAfter('input#email-address').prev().remove();
@@ -79,23 +81,31 @@ $('.rightBoxContainer').css('width', '');
 $('#mainWrapper').css('margin', 'auto');
 $('.centerColumn').css('clear', 'both');
 
-$('#documentcategories').css({  });
-$('#categories').css({  });
-$('#whatsnew').css({  });
-$('#manufacturers').css({  });
-$('#reviews').css({  });
-$('#featured').css({  });
-$('#information').css({  });
-$('#moreinformation').css({  });
 $('#bannerbox').css({  });
-$('#ezpages').css({  });
-$('#recordcompanies').css({  });
-$('#musicgenres').css({  });
-$('#bannerboxall').css({  });
-$('#search').css({  });
 $('#bannerbox2').css({  });
+$('#bannerboxall').css({  });
 $('#bestsellers').css({  });
+$('#brands').css({  });
+$('#categories').css({  });
+$('#currencies').css({  });
+$('#documentcategories').css({  });
+$('#ezpages').css({  });
+$('#featured').css({  });
+$('#featuredcategories').css({  });
+$('#information').css({  });
+$('#languages').css({  });
+$('#manufacturerinfo').css({  });
+$('#manufacturers').css({  });
+$('#moreinformation').css({  });
+$('#musicgenres').css({  });
+$('#orderhistory').css({  });
+$('#productnotifications').css({  });
+$('#recordcompanies').css({  });
+$('#reviews').css({  });
+$('#search').css({  });
+$('#shoppingcart').css({  });
 $('#specials').css({  });
+$('#whatsnew').css({  });
 $('#whosonline').css({  });
 
 

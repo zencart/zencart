@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 19 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 
-use App\Models\PluginControl;
-use App\Models\PluginControlVersion;
+use Zencart\DbRepositories\PluginControlRepository;
+use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PageLoader\PageLoader;
@@ -43,7 +43,7 @@ date_default_timezone_set(date_default_timezone_get());
  * Check for a valid system locale, and override if invalid or set to 'C' which means 'unconfigured'
  * It will be overridden later via language-selection operations anyway, but a valid default must be set for zcDate class methods to work
  */
-$detected_locale = setlocale(LC_TIME, 0);
+$detected_locale = setlocale(LC_TIME, '0');
 if ($detected_locale === false || $detected_locale === 'C') {
     setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
 }
@@ -71,7 +71,7 @@ if ((defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) || (defined('STRICT_E
  * This is intended to run before any dependencies are required
  * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
  */
-if (PHP_VERSION_ID < 80002) {
+if (PHP_VERSION_ID < 80300) {
     // redirect to catalog to display the PHP version compatibility message
     chdir(realpath(__DIR__ . '/../'));
     require 'includes/application_top.php';
@@ -124,8 +124,10 @@ if (file_exists('includes/defined_paths.php')) {
     die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
     exit;
 }
+
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
+
 /**
  * ignore version-check if INI file setting has been set
  */
@@ -159,7 +161,6 @@ zen_define_default('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
  * psr-4 autoloading
  */
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
-require DIR_FS_CATALOG . 'laravel/vendor/autoload.php';
 $psr4Autoloader = new \Aura\Autoload\Loader;
 $psr4Autoloader->register();
 require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
@@ -168,25 +169,26 @@ require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
 require 'includes/classes/AdminRequestSanitizer.php';
 require 'includes/init_includes/init_file_db_names.php';
 require 'includes/init_includes/init_database.php';
-require (DIR_FS_CATALOG . 'includes/application_laravel.php');
 
-$pluginManager = new PluginManager(new PluginControl, new PluginControlVersion);
+$pluginManager = new PluginManager(new PluginControlRepository($db), new PluginControlVersionRepository($db));
 $installedPlugins = $pluginManager->getInstalledPlugins();
-$pluginManager = new PluginManager(new App\Models\PluginControl, new App\Models\PluginControlVersion);
+
 $pageLoader = PageLoader::getInstance();
 $pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem);
 
 $fs = new FileSystem;
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^database_tables\.php$~i');
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^filenames\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/functions/extra_functions', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
     $namespaceCatalog = 'Zencart\\Plugins\\Catalog\\' . ucfirst($plugin['unique_key']);
     $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/';
-    $filePathAdmin = $filePath . 'classes/admin';
-    $filePathCatalog = $filePath . 'classes/';
+    $filePathAdmin = $filePath . 'admin/includes/classes/';
+    $filePathCatalog = $filePath . 'catalog/includes/classes/';
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
 }

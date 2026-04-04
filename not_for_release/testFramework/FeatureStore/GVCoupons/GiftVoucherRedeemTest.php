@@ -3,25 +3,19 @@
 namespace Tests\FeatureStore\GVCoupons;
 
 use Tests\Support\Traits\CustomerAccountConcerns;
-use Tests\Support\zcFeatureTestCaseStore;
+use Tests\Support\Traits\LogFileConcerns;
+use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
+/**
+ * @group parallel-candidate
+ */
+class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;
+    use LogFileConcerns;
 
-    /**
-     * @test
-     * scenario GV 1
-     */
-    public function testGvRedeemGuestNoGVNum(): void
-    {
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=gv_redeem');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('To redeem a Gift Voucher you must create an account.', (string)$response->getContent() );
-        $res = $this->logFilesExists();
-        $this->assertCount(0, $res);
-    }
+    protected $runTestInSeparateProcess = true;
+    protected $preserveGlobalState = false;
 
     /**
      * @test
@@ -30,11 +24,12 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
     public function testGvRedeemFixedCustomer(): void
     {
         self::runCustomSeeder('CouponTableSeeder');
-        $profile = $this->createCustomerAccountOrLogin('florida-basic1');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=gv_redeem&gv_no=VALID10');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('Congratulations, you have redeemed a Gift Certificate worth $10.00.', (string)$response->getContent() );
+        $this->createCustomerAccountOrLogin('florida-basic1');
+
+        $response = $this->visitGiftVoucherRedeem('VALID10')
+            ->assertOk()
+            ->assertSee('Congratulations, you have redeemed a Gift Certificate worth $10.00.');
+
         $res = $this->logFilesExists();
         $this->assertCount(0, $res);
     }
@@ -47,13 +42,11 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
     {
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['cot_gv' => 100.00, 'payment' => '']);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('-$45.29', (string)$response->getContent() );
+
+        $response = $this->runGiftVoucherCheckout(['cot_gv' => '100.00', 'payment' => ''])
+            ->assertOk();
+
+        $response->assertSee('&#8209;$45.29');
     }
 
     /**
@@ -64,14 +57,10 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
     {
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['cot_gv' => 45.28, 'payment' => '']);
-        $response = (string)$this->browser->getResponse()->getContent();
-        // TODO: It's possible this might be "found" merely because it's part of a JS error string in the HTML, not because it's properly rendered by the test actions...
-        $this->assertStringContainsString('Please select a payment method for your order', $response);
+
+        $this->runGiftVoucherCheckout(['cot_gv' => '45.28', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
     }
 
     /**
@@ -83,14 +72,10 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $this->switchFlatShippingTax('on');
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['cot_gv' => 45.28, 'payment' => '']);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response, 4000);
-        $this->assertStringContainsString('Please select a payment method for your order', $lookup_section);
+
+        $this->runGiftVoucherCheckout(['cot_gv' => '45.28', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
         $this->switchFlatShippingTax('off');
     }
 
@@ -103,14 +88,12 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $this->setConfiguration('DEFAULT_CURRENCY', 'SEK');
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['cot_gv' => '1,5', 'payment' => '']);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="checkoutOrderTotals"', $response);
-        $this->assertStringContainsString('SEK6,4259', $lookup_section);
+
+        $response = $this->runGiftVoucherCheckout(['cot_gv' => '1,5', 'payment' => ''])
+            ->assertOk();
+
+        $lookupSection = self::locateElementInPageSource('id="checkoutOrderTotals"', $response->content);
+        $this->assertStringContainsString('SEK6,4259', $lookupSection);
         $this->setConfiguration('DEFAULT_CURRENCY', 'USD');
     }
 
@@ -123,12 +106,35 @@ class GiftVoucherRedeemTest extends zcFeatureTestCaseStore
         $this->setConfiguration('DEFAULT_CURRENCY', 'SEK');
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=gv_send');
-        $this->browser->submitForm('Send Now', ['to_name' => 'Tom Bombadil', 'email' => 'foo@example.com', 'amount' => '20,50', 'message' => 'This is a test message']);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Send Gift Certificate Confirmation', (string)$response->getContent() );
-        $this->assertStringContainsString('SEK20,50', (string)$response->getContent() );
-        $this->browser->submitForm('Send Gift Certificate', []);
+
+        $confirmation = $this->submitGiftVoucherSendForm([
+            'to_name' => 'Tom Bombadil',
+            'email' => 'foo@example.com',
+            'amount' => '20,50',
+            'message' => 'This is a test message',
+        ])->assertOk()
+            ->assertSee('Send Gift Certificate Confirmation')
+            ->assertSee('SEK20,50');
+
+        $this->confirmGiftVoucherSend($confirmation)->assertOk();
         $this->setConfiguration('DEFAULT_CURRENCY', 'USD');
+    }
+
+    private function runGiftVoucherCheckout(array $paymentData)
+    {
+        $this->emptyCart();
+
+        $cartResponse = $this->addProductToCart(3, '1_9')
+            ->assertRedirect('main_page=shopping_cart');
+
+        $this->followRedirect($cartResponse)
+            ->assertOk()
+            ->assertSee('Your Shopping Cart Contents');
+
+        $this->continueCheckoutShipping()
+            ->assertOk()
+            ->assertSee('Payment Information');
+
+        return $this->continueCheckoutPayment($paymentData);
     }
 }

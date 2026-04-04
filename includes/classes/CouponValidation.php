@@ -1,8 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 May 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @since ZC v2.0.0
  */
 
 class CouponValidation
@@ -10,11 +11,12 @@ class CouponValidation
 
     /**
      * Check whether the product is valid for the specified coupon, according to model/category/product restrictions assigned to the coupon
+     * @since ZC v2.0.0
      */
     public static function is_product_valid(int $product_id, int $coupon_id): bool
     {
         global $db;
-        global $zco_notifier; 
+        global $zco_notifier;
 
         $product_id = (int)$product_id;
 
@@ -33,12 +35,12 @@ class CouponValidation
             return false;
         }
 
-        $product_can_use_coupon = true; 
-        $zco_notifier->notify('NOTIFY_COUPON_ADDITIONAL_CHECKS', $product->fields, $coupon_id, $product_can_use_coupon); 
+        $product_can_use_coupon = true;
+        $zco_notifier->notify('NOTIFY_COUPON_ADDITIONAL_CHECKS', $product->fields, $coupon_id, $product_can_use_coupon);
         if ($product_can_use_coupon === false) {
             return false;
         }
-        
+
         // modified to manage restrictions better - leave commented for now
         if ($coupons->RecordCount() === 0) {
             return true;
@@ -105,6 +107,7 @@ class CouponValidation
 
     /**
      * Check whether the product is assigned to a category which is allowed for the coupon ID
+     * @since ZC v2.0.0
      */
     public static function validate_for_category(int $product_id, int $coupon_id): bool|string
     {
@@ -140,6 +143,7 @@ class CouponValidation
 
     /**
      * is coupon valid for specials and sales
+     * @since ZC v2.0.0
      */
     public static function is_coupon_valid_for_sales(int $product_id, int $coupon_id): bool
     {
@@ -173,6 +177,7 @@ class CouponValidation
 
     /**
      * Check whether coupon ID is valid for the specified product
+     * @since ZC v2.0.0
      */
     public static function validate_for_product(int $product_id, int $coupon_id): bool|string
     {
@@ -201,6 +206,7 @@ class CouponValidation
      * @param string $referrer The domain to check e.g. 'abc.com'
      * @param int $exclude_coupon_id Optional coupon_id to exclude/ignore (ie: "self" record)
      * @return ?array
+     * @since ZC v2.0.0
      */
     public static function referrer_already_assigned(string $referrer, ?int $exclude_coupon_id = null): ?array
     {

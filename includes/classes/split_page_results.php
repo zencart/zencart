@@ -2,10 +2,10 @@
 /**
  * split_page_results Class.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Apr 12 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
@@ -49,13 +49,29 @@ class splitPageResults extends base {
      */
     public $sql_query;
 
+    private bool $legacyArgumentMode = false;
+
   /* class constructor */
   function __construct($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
     global $db;
     $max_rows = ($max_rows == '' || $max_rows == 0) ? 20 : $max_rows;
 
+    $legacyPageNumber = null;
+    if ($this->isLegacyConstructorCall($query, $count_key)) {
+      $this->legacyArgumentMode = true;
+      $legacyPageNumber = $query;
+      $query = is_string($count_key) ? $count_key : '';
+      $count_key = is_string($debug) && $debug !== '' ? $debug : '*';
+      $page_holder = 'page';
+      $debug = is_bool($countQuery) ? $countQuery : ((int)$countQuery === 1);
+      $countQuery = '';
+    }
+
+    $query = (string)$query;
     $this->sql_query = preg_replace("/\n\r|\r\n|\n|\r/", " ", $query);
-    if ($countQuery != "") $countQuery = preg_replace("/\n\r|\r\n|\n|\r/", " ", $countQuery);
+    if ($countQuery != "") {
+      $countQuery = preg_replace("/\n\r|\r\n|\n|\r/", " ", (string)$countQuery);
+    }
     $this->countQuery = ($countQuery != "") ? $countQuery : $this->sql_query;
     $this->page_name = $page_holder;
 
@@ -66,7 +82,9 @@ class splitPageResults extends base {
       echo 'sql_query=' . $this->sql_query . '<br><br>';
       echo 'count_query=' . $this->countQuery . '<br><br>';
     }
-    if (isset($_GET[$page_holder])) {
+    if ($legacyPageNumber !== null && $legacyPageNumber !== '' && is_numeric($legacyPageNumber)) {
+      $page = $legacyPageNumber;
+    } elseif (isset($_GET[$page_holder])) {
       $page = $_GET[$page_holder];
     } elseif (isset($_POST[$page_holder])) {
       $page = $_POST[$page_holder];
@@ -93,12 +111,12 @@ class splitPageResults extends base {
     $pos_order_by = strrpos($query_lower, ' order by', $pos_from);
     if (($pos_order_by < $pos_to) && ($pos_order_by != false)) $pos_to = $pos_order_by;
 
-    if (strpos($query_lower, 'distinct') || strpos($query_lower, 'group by')) {
-      $count_string = 'distinct ' . zen_db_input($count_key);
+    if (strpos($query_lower, 'distinct') !== false || strpos($query_lower, 'group by') !== false || strpos($query_lower, ' having') !== false) {
+      $count_query = 'select count(*) as total from (' . substr($this->countQuery, 0, ($pos_order_by !== false ? $pos_order_by : strlen($this->countQuery))) . ') split_count';
     } else {
       $count_string = zen_db_input($count_key);
+      $count_query = "select count(" . $count_string . ") as total " . substr($this->countQuery, $pos_from, ($pos_to - $pos_from));
     }
-    $count_query = "select count(" . $count_string . ") as total " . substr($this->countQuery, $pos_from, ($pos_to - $pos_from));
     if ($debug) {
       echo 'count_query=' . $count_query . '<br><br>';
     }
@@ -126,6 +144,22 @@ class splitPageResults extends base {
   // display split-page-number-links
   function display_links($max_page_links, $parameters = '', $outputAsUnorderedList = false, $navElementLabel = '') {
     global $request_type;
+    $args = func_get_args();
+
+    if ($this->legacyArgumentMode && count($args) >= 3) {
+      $max_page_links = $args[2] ?? 1;
+      $parameters = $args[4] ?? '';
+      $outputAsUnorderedList = false;
+      $navElementLabel = '';
+
+      if (!empty($args[5]) && is_string($args[5])) {
+        $this->page_name = $args[5];
+      }
+      if (isset($args[3]) && is_numeric($args[3]) && (int)$args[3] > 0) {
+        $this->current_page_number = (int)$args[3];
+      }
+    }
+
     if ($max_page_links == '') $max_page_links = 1;
 
     if ($this->number_of_pages <= 1) return;
@@ -215,6 +249,14 @@ class splitPageResults extends base {
 
   // display number of total products found
   function display_count($text_output) {
+    $args = func_get_args();
+    if ($this->legacyArgumentMode && count($args) >= 4) {
+      $text_output = $args[3];
+      if (isset($args[2]) && is_numeric($args[2]) && (int)$args[2] > 0) {
+        $this->current_page_number = (int)$args[2];
+      }
+    }
+
     $to_num = ($this->number_of_rows_per_page * $this->current_page_number);
     if ($to_num > $this->number_of_rows) $to_num = $this->number_of_rows;
 
@@ -234,8 +276,31 @@ class splitPageResults extends base {
     }
   }
 
+  /**
+   * @since ZC v1.5.7
+   */
   public function getSqlQuery()
   {
       return $this->sql_query;
+  }
+
+  private function isLegacyConstructorCall($query, $count_key): bool
+  {
+      if (!is_string($count_key)) {
+          return false;
+      }
+
+      $trimmedCountKey = ltrim($count_key);
+      if ($trimmedCountKey === '' || stripos($trimmedCountKey, 'select') !== 0) {
+          return false;
+      }
+
+      if (!is_scalar($query) && $query !== null) {
+          return false;
+      }
+
+      $queryString = ltrim((string)$query);
+
+      return $queryString === '' || stripos($queryString, 'select') !== 0;
   }
 }

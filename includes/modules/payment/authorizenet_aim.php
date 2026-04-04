@@ -2,14 +2,15 @@
 /**
  * authorize.net AIM payment method class
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Apr 26 Modified in v2.0.0-alpha1 $
+ * @version $Id: piloujp 2025 Oct 10 Modified in v2.2.0 $
  */
 /**
  * Authorize.net Payment Module (AIM version)
  * Ref: https://www.authorize.net/content/dam/authorize/documents/AIM_guide.pdf
+ * @since ZC v1.2.0d
  */
 class authorizenet_aim extends base {
   /**
@@ -85,7 +86,7 @@ class authorizenet_aim extends base {
    * @var string the currency enabled in this gateway's merchant account
    */
   private $gateway_currency;
-  
+
     private $_check;
     public $auth_code;
     protected $avs_response;
@@ -151,6 +152,7 @@ class authorizenet_aim extends base {
   /**
    * calculate zone matches and flag settings to determine whether this module should display to customers or not
    *
+   * @since ZC v1.2.0d
    */
   function update_status() {
     global $order, $db;
@@ -188,6 +190,7 @@ class authorizenet_aim extends base {
    * (Number, Owner, and CVV Lengths)
    *
    * @return string
+   * @since ZC v1.2.0d
    */
   function javascript_validation() {
     $js = '  if (payment_value == "' . $this->code . '") {' . "\n" .
@@ -218,6 +221,7 @@ class authorizenet_aim extends base {
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
    *
    * @return array
+   * @since ZC v1.2.0d
    */
   function selection() {
     global $order, $zcDate;
@@ -253,6 +257,7 @@ class authorizenet_aim extends base {
   /**
    * Evaluates the Credit Card Type for acceptance and the validity of the Credit Card Number & Expiration Date
    *
+   * @since ZC v1.2.0d
    */
   function pre_confirmation_check() {
     global $messageStack;
@@ -290,6 +295,7 @@ class authorizenet_aim extends base {
    * Display Credit Card Information on the Checkout Confirmation Page
    *
    * @return array
+   * @since ZC v1.2.0d
    */
   function confirmation() {
     global $zcDate;
@@ -309,6 +315,7 @@ class authorizenet_aim extends base {
    * (These are hidden fields on the checkout confirmation page)
    *
    * @return string
+   * @since ZC v1.2.0d
    */
   function process_button() {
     $process_button_string = zen_draw_hidden_field('cc_owner', $_POST['authorizenet_aim_cc_owner']) .
@@ -322,12 +329,16 @@ class authorizenet_aim extends base {
 
     return $process_button_string;
   }
+  /**
+   * @since ZC v1.5.4
+   */
   function process_button_ajax() {
     $processButton = array('ccFields'=>array('cc_number'=>'authorizenet_aim_cc_number', 'cc_owner'=>'authorizenet_aim_cc_owner', 'cc_cvv'=>'authorizenet_aim_cc_cvv', 'cc_expires'=>array('name'=>'concatExpiresFields', 'args'=>"['authorizenet_aim_cc_expires_month','authorizenet_aim_cc_expires_year']"), 'cc_expires_month'=>'authorizenet_aim_cc_expires_month', 'cc_expires_year'=>'authorizenet_aim_cc_expires_year', 'cc_type' => $this->cc_card_type), 'extraFields'=>array(zen_session_name()=>zen_session_id()));
         return $processButton;
   }
   /**
    * Store the CC info to the order and process any results that come back from the payment gateway
+   * @since ZC v1.2.0d
    */
   function before_process() {
     global $response, $db, $order, $messageStack;
@@ -355,7 +366,7 @@ class authorizenet_aim extends base {
 
     // Calculate the next expected order id (adapted from code written by Eric Stamper - 01/30/2004 Released under GPL)
     $last_order_id = $db->Execute("SELECT orders_id FROM " . TABLE_ORDERS . " ORDER BY orders_id desc LIMIT 1");
-    $new_order_id = $last_order_id->fields['orders_id'];
+    $new_order_id = $last_order_id->fields['orders_id'] ?? 0;
     $new_order_id = ($new_order_id + 1);
 
     // add randomized suffix to order id to produce uniqueness ... since it's unwise to submit the same order-number twice to authorize.net
@@ -437,10 +448,10 @@ class authorizenet_aim extends base {
     $response = $this->_sendRequest($submit_data);
     $this->notify('NOTIFY_PAYMENT_AUTHNET_POSTSUBMIT_HOOK', $this->code, $response);
     $response_code = $response[0];
-    $response_text = $response[3];
-    $this->auth_code = $response[4];
-    $this->transaction_id = $response[6];
-    $this->avs_response= $response[5];
+    $response_text = $response[3] ?? '';
+    $this->auth_code = $response[4] ?? '';
+    $this->transaction_id = $response[6] ?? '';
+    $this->avs_response= $response[5] ?? '';
     $this->ccv_response= ($response[38] ?? '');
     $response_msg_to_customer = $response_text . ($this->commError == '' ? '' : ' Communications Error - Please notify webmaster.');
 
@@ -495,6 +506,7 @@ class authorizenet_aim extends base {
    * Post-process activities. Updates the order-status history data with the auth code from the transaction.
    *
    * @return boolean
+   * @since ZC v1.2.0d
    */
   function after_process() {
     global $insert_id, $order, $currencies;
@@ -512,6 +524,7 @@ class authorizenet_aim extends base {
     *
     * @param int $zf_order_id
     * @return string
+   * @since ZC v1.3.9a
     */
   function admin_notification($zf_order_id) {
     $output = '';
@@ -522,6 +535,7 @@ class authorizenet_aim extends base {
    * Used to display error message details
    *
    * @return array
+   * @since ZC v1.2.0d
    */
   function get_error() {
     $error = array('title' => MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_ERROR,
@@ -532,6 +546,7 @@ class authorizenet_aim extends base {
    * Check to see whether module is installed
    *
    * @return boolean
+   * @since ZC v1.2.0d
    */
   function check() {
     global $db;
@@ -545,11 +560,12 @@ class authorizenet_aim extends base {
   /**
    * Install the payment module and its configuration settings
    *
+   * @since ZC v1.2.0d
    */
   function install() {
     global $db, $messageStack;
     if (defined('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS')) {
-      $messageStack->add_session('Authorize.net (AIM) module already installed.', 'error');
+      $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=authorizenet_aim', 'NONSSL'));
       return 'failed';
     }
@@ -574,6 +590,7 @@ class authorizenet_aim extends base {
   /**
    * Remove the module and all its settings
    *
+   * @since ZC v1.2.0d
    */
   function remove() {
     global $db;
@@ -583,6 +600,7 @@ class authorizenet_aim extends base {
    * Internal list of configuration keys used for configuration of the module
    *
    * @return array
+   * @since ZC v1.2.0d
    */
   function keys() {
     if (defined('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS')) {
@@ -598,6 +616,7 @@ class authorizenet_aim extends base {
   }
   /**
    * Send communication request
+   * @since ZC v1.3.8
    */
   function _sendRequest($submit_data) {
     global $request_type;
@@ -692,7 +711,6 @@ class authorizenet_aim extends base {
     }
 
     $this->commInfo = @curl_getinfo($ch);
-    curl_close ($ch);
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_AIM_DEBUGGING == 'echo') {
@@ -711,6 +729,7 @@ class authorizenet_aim extends base {
   }
   /**
    * Used to do any debug logging / tracking / storage as required.
+   * @since ZC v1.3.8
    */
   function _debugActions($response, $order_time= '', $sessID = '') {
     global $db;
@@ -723,7 +742,7 @@ class authorizenet_aim extends base {
       $errorMessage = date('M-d-Y h:i:s') .
                       "\n=================================\n\n" .
                       ($this->commError !='' ? 'Comm results: ' . $this->commErrNo . ' ' . $this->commError . "\n\n" : '') .
-                      'Response Code: ' . ($response[0] ?? "Unknown") . ".\nResponse Text: " . $response[3] . "\n\n" .
+                      'Response Code: ' . ($response[0] ?? "Unknown") . ".\nResponse Text: " . ($response[3] ?? '') . "\n\n" .
                       'Sending to Authorizenet: ' . print_r($this->reportable_submit_data, true) . "\n\n" .
                       'Results Received back from Authorizenet: ' . print_r($resp_output, true) . "\n\n" .
                       'CURL communication info: ' . print_r($this->commInfo, true) . "\n";
@@ -747,7 +766,7 @@ class authorizenet_aim extends base {
     // This can be used for testing or for implementation in other applications
     // This can be turned on and off if the Admin Section
     $response_order_id = ($response[7] ?? '');
-    if (MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA == 'True'){
+    if (MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA == 'True' && !empty($response_order_id)){
       $db_response_text = ($response[3] ?? "Unknown") . ($this->commError !='' ? ' - Comm results: ' . $this->commErrNo . ' ' . $this->commError : '');
       $db_response_text .= ($response[0] == 2 && $response[2] == 4) ? ' NOTICE: Card should be picked up - possibly stolen ' : '';
       $db_response_text .= ($response[0] == 3 && $response[2] == 11) ? ' DUPLICATE TRANSACTION ATTEMPT ' : '';
@@ -755,7 +774,7 @@ class authorizenet_aim extends base {
       // Insert the data into the database
       $sql = "INSERT INTO " . TABLE_AUTHORIZENET . "  (id, customer_id, order_id, response_code, response_text, authorization_type, transaction_id, sent, received, time, session_id) VALUES (NULL, :custID, :orderID, :respCode, :respText, :authType, :transID, :sentData, :recvData, :orderTime, :sessID )";
       $sql = $db->bindVars($sql, ':custID', ($_SESSION['customer_id'] ?? '-1'), 'integer');
-      $sql = $db->bindVars($sql, ':orderID', preg_replace('/[^0-9]/', '', $response[7]), 'integer');
+      $sql = $db->bindVars($sql, ':orderID', preg_replace('/[^0-9]/', '', $response_order_id), 'integer');
       $sql = $db->bindVars($sql, ':respCode', $response[0], 'integer');
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', ($response[11] ?? ''), 'string');
@@ -773,6 +792,7 @@ class authorizenet_aim extends base {
   }
   /**
    * Check and fix table structure if appropriate
+   * @since ZC v1.3.9a
    */
   function tableCheckup() {
     global $db, $sniffer;
@@ -783,6 +803,7 @@ class authorizenet_aim extends base {
   }
    /**
      * Used to submit a refund for a given transaction.
+    * @since ZC v1.3.8
      */
     public function _doRefund($oID, $amount = 0)
     {
@@ -848,6 +869,7 @@ class authorizenet_aim extends base {
 
     /**
      * Used to capture part or all of a given previously-authorized transaction.
+     * @since ZC v1.3.8
      */
     public function _doCapt($oID, $amt = 0, $currency = 'USD')
     {
@@ -923,6 +945,7 @@ class authorizenet_aim extends base {
 
     /**
      * Used to void a given previously-authorized transaction.
+     * @since ZC v1.3.8
      */
     public function _doVoid($oID, $note = '')
     {

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Dec 01 Modified in v2.2.1 $
  */
 
 // check and display zen cart version and history version in footer
@@ -25,3 +25,22 @@
 </footer>
 <?php
 $zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
+?>
+
+<?php
+// Check for new version, and send output to placeholder in admin header
+require DIR_WS_INCLUDES . 'versioncheck.php';
+if ($new_version) { ?>
+<script>
+    jQuery(function($){
+      let newVersion = <?php echo json_encode($new_version); ?>;
+      let versionInfo = <?php echo json_encode('(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'); ?>;
+      let outputHtml = newVersion + '<br>' + versionInfo;
+
+      let $target = $('#versionCheckAlert');
+      if ($target.length) {
+        $target.html(outputHtml);
+      }
+    });
+</script>
+<?php } ?>

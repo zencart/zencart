@@ -2,11 +2,11 @@
 /**
  * paypalwpp_admin_notification.php admin display component
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @copyright Portions Copyright 2004 DevosC.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Jul 03 Modified in v1.5.8-alpha $
+ * @version $Id: lat9 2025 Aug 13 Modified in v2.2.0 $
  */
 if (!defined('TEXT_MAXIMUM_CHARACTERS_ALLOWED')) {
     define('TEXT_MAXIMUM_CHARACTERS_ALLOWED', ' chars allowed');
@@ -230,10 +230,10 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
-    if (isset($response['TRANSACTIONID'])) { 
+    if (isset($response['TRANSACTIONID'])) {
        $outputPayPal .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&amp;id=' . urldecode($response['TRANSACTIONID']) . '" rel="noopener" target="_blank">' . urldecode($response['TRANSACTIONID']) . '</a>' ."\n";
     } else {
-       $outputPayPal .= 'n/a'; 
+       $outputPayPal .= 'n/a';
     }
     $outputPayPal .= '</td></tr>'."\n";
 
@@ -282,21 +282,21 @@ if (!empty($response['RESPMSG'])) {
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PENDING_REASON."\n";
-    $outputPayPal .= '</td><td>'."\n"; 
-    if (isset($response['PENDINGREASON'])) { 
+    $outputPayPal .= '</td><td>'."\n";
+    if (isset($response['PENDINGREASON'])) {
        $outputPayPal .= urldecode($response['PENDINGREASON']) . (empty($response['REASONCODE']) || $response['REASONCODE'] == 'None' ? '' : urldecode($response['PENDINGREASON'])) ."\n";
     } else {
-       $outputPayPal .= 'n/a'; 
+       $outputPayPal .= 'n/a';
     }
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_INVOICE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    if (!empty($ipn->fields['invoice'])) { 
+    if (!empty($ipn->fields['invoice'])) {
        $outputPayPal .= urldecode($ipn->fields['invoice']) . (urldecode($ipn->fields['invoice']) != urldecode($response['INVNUM'] ?? '') ? '<br>' . urldecode($response['INVNUM'] ?? '') : '') ."\n";
     } else {
-       $outputPayPal .= 'n/a'; 
+       $outputPayPal .= 'n/a';
     }
     $outputPayPal .= '</td></tr>'."\n";
 
@@ -313,13 +313,13 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CURRENCY."\n";
     $outputPayPal .= '</td><td>'."\n";
-    if (!empty($ipn->fields['mc_currency']) && !empty($response['CURRENCYCODE'])) { 
+    if (!empty($ipn->fields['mc_currency']) && !empty($response['CURRENCYCODE'])) {
        $outputPayPal .= $ipn->fields['mc_currency'] ."\n";
        if ($ipn->fields['mc_currency'] !== urldecode($response['CURRENCYCODE'])) {
            $outputPayPal .= ' ' . urldecode($response['CURRENCYCODE']);
        }
     } else {
-           $outputPayPal .= 'n/a'; 
+           $outputPayPal .= 'n/a';
     }
     $outputPayPal .= "\n";
     $outputPayPal .= '</td></tr>'."\n";
@@ -359,18 +359,19 @@ if (method_exists($this, '_doRefund')) {
     if (!isset($response['RESPMSG'])) {
         // full refund (only for PayPal transactions, not Payflow)
         $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_FULL;
-        $outputRefund .= '<br><input type="submit" name="fullrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '">' . ' ' . MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_FULL_CONFIRM_CHECK . zen_draw_checkbox_field('reffullconfirm', '', false) . '<br>';
+        $outputRefund .= '<br>' . MODULE_PAYMENT_PAYPALWPP_TEXT_REFUND_FULL_CONFIRM_CHECK . zen_draw_checkbox_field('reffullconfirm', '', false, '', 'id="reffullconfirm"') . ' <input type="submit" id="fullrefund" name="fullrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_FULL . '">';
+        $outputRefund .= '<script>$("#reffullconfirm").change(function () {$("#fullrefund").prop("disabled", !this.checked);}).change()</script>';
         $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_TEXT_FULL_OR;
     } else {
         $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PAYFLOW_TEXT;
     }
     //partial refund - input field
-    $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PARTIAL_TEXT . ' ' . zen_draw_input_field('refamt', 'enter amount', 'size="8"');
+    $outputRefund .= MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_PARTIAL_TEXT . ' ' . zen_draw_input_field('refamt', '', 'size="8"');
     $outputRefund .= '<input type="submit" name="partialrefund" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_BUTTON_TEXT_PARTIAL . '"><br>';
     //comment field
     $counterParams = 'onkeydown="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);" onkeyup="characterCount(this.form[\'refnote\'],this.form.remainingRefund,255);"';
     $outputRefund .= '<br>' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_TEXT_COMMENTS;
-    $outputRefund .= '<div style="text-align:right;margin-top:-1.2em"><input disabled="disabled" type="text" name="remainingRefund" size="1" maxlength="3" value="255"> ' . TEXT_MAXIMUM_CHARACTERS_ALLOWED . '</div>';
+    $outputRefund .= '<div style="text-align:right;margin-top:-1.2em"><input disabled="disabled" type="text" name="remainingRefund" size="2" maxlength="3" value="255"> ' . TEXT_MAXIMUM_CHARACTERS_ALLOWED . '</div>';
     $outputRefund .= zen_draw_textarea_field('refnote', 'soft', '50', '3', MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_DEFAULT_MESSAGE, $counterParams);
     //message text
     $outputRefund .= '<br>' . MODULE_PAYMENT_PAYPAL_ENTRY_REFUND_SUFFIX;
@@ -414,8 +415,9 @@ if (method_exists($this, '_doVoid')) {
     $outputVoid .= '<tr style="background-color: #eeeeee;border: solid thin black;">'."\n";
     $outputVoid .= '<td>' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_TITLE . '<br>'. "\n";
     $outputVoid .= zen_draw_form('ppvoid', FILENAME_ORDERS, zen_get_all_get_params(['action']) . 'action=doVoid', 'post', '', true) . zen_hide_session_id();
-    $outputVoid .= MODULE_PAYMENT_PAYPAL_ENTRY_VOID . '<br>' . zen_draw_input_field('voidauthid', 'enter auth ID', 'size="8"');
-    $outputVoid .= '<input type="submit" name="ordervoid" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '">' . ' ' . MODULE_PAYMENT_PAYPALWPP_TEXT_VOID_CONFIRM_CHECK . zen_draw_checkbox_field('voidconfirm', '', false);
+    $outputVoid .= MODULE_PAYMENT_PAYPAL_ENTRY_VOID . '<br>' . zen_draw_input_field('voidauthid', '', 'size="16"');
+    $outputVoid .= MODULE_PAYMENT_PAYPALWPP_TEXT_VOID_CONFIRM_CHECK . zen_draw_checkbox_field('voidconfirm', '', false, '', 'id="voidconfirm"') . ' ' . '<input type="submit" id="ordervoid" name="ordervoid" value="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '" title="' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_BUTTON_TEXT_FULL . '">';
+    $outputVoid .= '<script>$("#voidconfirm").change(function () {$("#ordervoid").prop("disabled", !this.checked);}).change()</script>';
     //comment field
     $outputVoid .= '<br>' . MODULE_PAYMENT_PAYPAL_ENTRY_VOID_TEXT_COMMENTS . '<br>' . zen_draw_textarea_field('voidnote', 'soft', '50', '3', MODULE_PAYMENT_PAYPAL_ENTRY_VOID_DEFAULT_MESSAGE);
     //message text
@@ -466,12 +468,14 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
         $output .= $outputStartBlock; //start second table
 
         $transaction_type_authorization = (isset($response['TRANSACTION_TYPE']) && $response['TRANSACTION_TYPE'] == 'Authorization');
-        $transactiontype_payment = (isset($response['TRANSACTION_TYPE']) && in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']));
+        $transactiontype_payment = (isset($response['TRANSACTIONTYPE']) && in_array($response['TRANSACTIONTYPE'], ['cart', 'expresscheckout', 'webaccept']));
         if ($transaction_type_authorization || ($transactiontype_payment && $response['PAYMENTTYPE'] == 'instant' && $response['PENDINGREASON'] == 'authorization') || $authcapt_on) {
             if (method_exists($this, '_doRefund') && ($response['PAYMENTTYPE'] != 'instant' || $module == 'paypaldp')) {
                 $output .= $outputRefund;
             }
-            if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') {
+            zen_define_default('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', '');
+            zen_define_default('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE', '');
+            if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE === 'Auth Only' || MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE === 'Auth Only') {
                 if (method_exists($this, '_doAuth')) {
                     $output .= $outputAuth;
                 }

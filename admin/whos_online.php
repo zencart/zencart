@@ -1,16 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Dec 18 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 // Default refresh interval (0=off).  NOTE: Using automated refresh may put you in breach of PCI Compliance
 $defaultRefreshInterval = 0;
 
 require 'includes/application_top.php';
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 if (!isset($_SESSION['wo_exclude_admins'])) {
@@ -293,8 +292,7 @@ $listingURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['q', '
             if ($cart !== null) {
                 $contents[] = ['text' => $whos_online[$selectedSession]['full_name'] . ' - ' . ($cart['customer_ip'] ?? $cart['customer_hostname']) . ' (' . $cart['language_code']  . ')<br>' .
                     $selectedSession];
-
-                foreach ($cart['products'] as $product) {
+                foreach ($cart['products'] ?? [] as $product) {
                   $contents[] = ['text' => $product['quantity'] . ' x '
                          . ' <a href="' . zen_catalog_href_link(zen_get_info_page($product['id']), 'cPath=' . zen_get_product_path($product['id']) . '&products_id=' . $product['id'] . '&language=' . $cart['language_code']) . '" target="_blank" rel="noreferrer noopener">'
                          . $product['name']

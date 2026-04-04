@@ -2,15 +2,16 @@
 /**
  * whos_online functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 24 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 29 Modified in v2.2.0 $
+ * @since ZC v1.0.3
  */
 function zen_update_whos_online()
 {
     // exclude ajax pages from whos-online updates
-    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && $_GET['act'] != '') return;
+    if (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME']) && !empty($_GET['act'])) return;
 
     global $db;
 
@@ -31,7 +32,8 @@ function zen_update_whos_online()
 
     $wo_session_id = zen_session_id();
     $wo_ip_address = substr(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown', 0, 45);
-    $wo_user_agent = substr(zen_db_prepare_input(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 0, 254);
+    $wo_user_agent = preg_replace('/\W+/u', '~', $_SERVER['HTTP_USER_AGENT'] ?? '');
+    $wo_user_agent = mb_substr(zen_db_prepare_input($wo_user_agent), 0, 254);
 
     $_SERVER['QUERY_STRING'] = (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'] != '') ? $_SERVER['QUERY_STRING'] : zen_get_all_get_params();
     if (isset($_SERVER['REQUEST_URI'])) {
@@ -93,6 +95,9 @@ function zen_update_whos_online()
     }
 }
 
+/**
+ * @since ZC v1.3.0.2
+ */
 function whos_online_session_recreate($old_session, $new_session)
 {
     global $db;

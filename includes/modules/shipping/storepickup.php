@@ -1,14 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
+ * @version $Id: lat9 2025 Oct 01 Modified in v2.2.0 $
  */
 
 /**
  * Store-Pickup / Will-Call shipping method
  * with multiple location choices as radio-buttons
+ * @since ZC v1.1.0
  */
 class storepickup extends ZenShipping
 {
@@ -41,44 +42,21 @@ class storepickup extends ZenShipping
         $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
         $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
         $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
-        $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS == 'True');
+        $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS === 'True');
         $this->update_status();
     }
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.2
      */
     function update_status()
     {
-        global $order, $db;
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if (isset($order->delivery) && (int)MODULE_SHIPPING_STOREPICKUP_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
-                             where geo_zone_id = '" . MODULE_SHIPPING_STOREPICKUP_ZONE . "'
-                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
-                             order by zone_id");
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1) {
-                    $check_flag = true;
-                    break;
-                } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
-            }
-
-            if ($check_flag == false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_STOREPICKUP_ZONE);
 
         // other status checks?
         if ($this->enabled) {
@@ -96,6 +74,7 @@ class storepickup extends ZenShipping
      *
      * @param string $method
      * @return array
+     * @since ZC v1.1.0
      */
     function quote($method = ''): array
     {
@@ -153,6 +132,7 @@ class storepickup extends ZenShipping
      * Check to see whether module is installed
      *
      * @return boolean
+     * @since ZC v1.1.0
      */
     function check()
     {
@@ -170,6 +150,7 @@ class storepickup extends ZenShipping
     /**
      * Install the shipping module and its configuration settings
      *
+     * @since ZC v1.1.0
      */
     function install(): void
     {
@@ -187,6 +168,7 @@ class storepickup extends ZenShipping
      * Internal list of configuration keys used for configuration of the module
      *
      * @return array
+     * @since ZC v1.1.0
      */
     function keys(): array
     {

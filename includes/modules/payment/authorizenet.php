@@ -2,14 +2,15 @@
 /**
  * authorize.net SIM payment method class
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: piloujp 2025 Oct 10 Modified in v2.2.0 $
  */
 /**
  * authorize.net SIM payment method class
  * Ref: https://www.authorize.net/content/dam/authorize/documents/SIM_guide.pdf
+ * @since ZC v1.0.3
  */
 class authorizenet extends base {
   /**
@@ -136,6 +137,7 @@ class authorizenet extends base {
 
   /**
    * Calculate zone matches and flag settings to determine whether this module should display to customers or not
+   * @since ZC v1.0.3
    */
   function update_status() {
     global $order, $db;
@@ -169,6 +171,7 @@ class authorizenet extends base {
    * (Number, Owner Lengths)
    *
    * @return string
+   * @since ZC v1.0.3
    */
   function javascript_validation() {
     if ($this->gateway_mode == 'offsite') return '';
@@ -199,6 +202,7 @@ class authorizenet extends base {
    * Display Credit Card Information Submission Fields on the Checkout Payment Page
    *
    * @return array
+   * @since ZC v1.0.3
    */
   function selection() {
     global $order, $zcDate;
@@ -240,6 +244,7 @@ class authorizenet extends base {
   /**
    * Evaluates the Credit Card Type for acceptance and the validity of the Credit Card Number & Expiration Date
    *
+   * @since ZC v1.0.3
    */
   function pre_confirmation_check() {
     global $messageStack;
@@ -278,6 +283,7 @@ class authorizenet extends base {
    * Display Credit Card Information on the Checkout Confirmation Page
    *
    * @return array
+   * @since ZC v1.0.3
    */
   function confirmation() {
     global $zcDate;
@@ -300,11 +306,12 @@ class authorizenet extends base {
    * (These are hidden fields on the checkout confirmation page)
    *
    * @return string
+   * @since ZC v1.0.3
    */
   function process_button() {
     global $order;
 
-    $sequence = rand(1, 1000);
+    $sequence = random_int(1, 1000);
     $submit_data_core = array(
       'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
       'x_amount' => round($order->info['total'], 2),
@@ -417,6 +424,7 @@ class authorizenet extends base {
   /**
    * Store the CC info to the order and process any results that come back from the payment gateway
    *
+   * @since ZC v1.0.3
    */
   function before_process() {
     global $messageStack, $order;
@@ -461,6 +469,7 @@ class authorizenet extends base {
    * Post-processing activities
    *
    * @return boolean
+   * @since ZC v1.0.3
    */
   function after_process() {
     global $insert_id, $order, $currencies;
@@ -478,6 +487,7 @@ class authorizenet extends base {
    * Check to see whether module is installed
    *
    * @return boolean
+   * @since ZC v1.0.3
    */
   function check() {
     global $db;
@@ -491,11 +501,12 @@ class authorizenet extends base {
   /**
    * Install the payment module and its configuration settings
    *
+   * @since ZC v1.0.3
    */
   function install() {
     global $db, $messageStack;
     if (defined('MODULE_PAYMENT_AUTHORIZENET_STATUS')) {
-      $messageStack->add_session('Authorize.net (SIM) module already installed.', 'error');
+      $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=authorizenet', 'SSL'));
       return 'failed';
     }
@@ -519,6 +530,7 @@ class authorizenet extends base {
   /**
    * Remove the module and all its settings
    *
+   * @since ZC v1.0.3
    */
   function remove() {
     global $db;
@@ -528,6 +540,7 @@ class authorizenet extends base {
    * Internal list of configuration keys used for configuration of the module
    *
    * @return array
+   * @since ZC v1.0.3
    */
   function keys() {
     if (defined('MODULE_PAYMENT_AUTHORIZENET_STATUS')) {
@@ -549,6 +562,7 @@ class authorizenet extends base {
   /**
    * Check configuration settings to determine whether hashing is configured and which hashing mode to use
    * @return string|bool
+   * @since ZC v1.5.6b
    */
   function hashingMode() {
     if (MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY !== '*Get from Authorizenet Account*' && trim(MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY) !== '') {
@@ -564,6 +578,7 @@ class authorizenet extends base {
    * @param string $sequence
    * @param string $currency
    * @return array
+   * @since ZC v1.5.6b
    */
   function getHmacFingerprintFields($amount, $sequence, $currency = '') {
     $timestamp = time();
@@ -579,6 +594,7 @@ class authorizenet extends base {
    * Get hash for response comparison
    * @param $data
    * @return string
+   * @since ZC v1.5.6b
    */
   function getHashForResponseData($data) {
     $dataArray = array(
@@ -619,6 +635,7 @@ class authorizenet extends base {
 
   /**
    * Used to do any debug logging / tracking / storage as required.
+   * @since ZC v1.3.8
    */
   function _debugActions($response, $mode, $order_time= '', $sessID = '') {
     global $db, $messageStack, $insert_id;
@@ -678,6 +695,7 @@ class authorizenet extends base {
   }
   /**
    * Check and fix table structure if appropriate
+   * @since ZC v1.3.9a
    */
   function tableCheckup() {
     global $db, $sniffer;
@@ -689,6 +707,9 @@ class authorizenet extends base {
 }
 
 if(!function_exists('hash_equals')) {
+    /**
+     * @since ZC v1.5.6b
+     */
     function hash_equals($str1, $str2) {
         if (strlen($str1) != strlen($str2)) {
             return false;

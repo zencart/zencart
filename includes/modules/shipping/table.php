@@ -1,18 +1,18 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
+ * @version $Id: lat9 2025 Oct 01 Modified in v2.2.0 $
  */
 
 /**
  * Enter description here...
  *
+ * @since ZC v1.0.3
  */
 class table extends ZenShipping
 {
-
     /**
      * constructor
      *
@@ -35,7 +35,9 @@ class table extends ZenShipping
         $this->tax_basis = MODULE_SHIPPING_TABLE_TAX_BASIS;
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = (MODULE_SHIPPING_TABLE_STATUS == 'True');
+            $this->enabled = (MODULE_SHIPPING_TABLE_STATUS === 'True');
+        } else {
+            $this->enabled = false;
         }
 
         if ($this->enabled) {
@@ -51,38 +53,15 @@ class table extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
-        global $order, $db;
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if ((int)MODULE_SHIPPING_TABLE_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
-                             where geo_zone_id = '" . MODULE_SHIPPING_TABLE_ZONE . "'
-                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
-                             order by zone_id");
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1) {
-                    $check_flag = true;
-                    break;
-                } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
-            }
-
-            if ($check_flag == false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_TABLE_ZONE);
 
         if ($this->enabled) {
             // -----
@@ -97,6 +76,7 @@ class table extends ZenShipping
      *
      * @param string $method
      * @return unknown
+     * @since ZC v1.0.3
      */
     function quote($method = ''): array
     {
@@ -104,10 +84,10 @@ class table extends ZenShipping
 
         // shipping adjustment
         switch (MODULE_SHIPPING_TABLE_MODE) {
-            case ('price'):
+            case 'price':
                 $order_total = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
                 break;
-            case ('weight'):
+            case 'weight':
                 $order_total = $shipping_weight;
                 break;
             case ('item'):
@@ -118,12 +98,12 @@ class table extends ZenShipping
         $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
 
         $table_cost = preg_split("/[:,]/", MODULE_SHIPPING_TABLE_COST);
-        $size = sizeof($table_cost);
+        $size = count($table_cost);
         $shipping = 0;
         for ($i = 0, $n = $size; $i < $n; $i += 2) {
             if (round($order_total, 9) <= $table_cost[$i]) {
-                if (strstr($table_cost[$i + 1], '%')) {
-                    $shipping = ($table_cost[$i + 1] / 100) * $order_total_amount;
+                if (str_ends_with($table_cost[$i + 1], '%')) {
+                    $shipping = (rtrim($table_cost[$i + 1], '%') / 100) * $order_total_amount;
                 } else {
                     $shipping = $table_cost[$i + 1];
                 }
@@ -132,17 +112,17 @@ class table extends ZenShipping
         }
 
         $show_box_weight = '';
-        if (MODULE_SHIPPING_TABLE_MODE == 'weight') {
+        if (MODULE_SHIPPING_TABLE_MODE === 'weight') {
             $shipping = $shipping * $shipping_num_boxes;
             // show boxes if weight
             switch (SHIPPING_BOX_WEIGHT_DISPLAY) {
-                case (0):
+                case 0:
                     $show_box_weight = '';
                     break;
-                case (1):
+                case 1:
                     $show_box_weight = ' (' . $shipping_num_boxes . ' ' . TEXT_SHIPPING_BOXES . ')';
                     break;
-                case (2):
+                case 2:
                     $show_box_weight = ' (' . number_format($shipping_weight * $shipping_num_boxes, 2) . TEXT_SHIPPING_WEIGHT . ')';
                     break;
                 default:
@@ -158,7 +138,7 @@ class table extends ZenShipping
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_TABLE_TEXT_WAY,
-                    'cost' => $shipping + (MODULE_SHIPPING_TABLE_HANDLING_METHOD == 'Box' ? MODULE_SHIPPING_TABLE_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_TABLE_HANDLING),
+                    'cost' => $shipping + (MODULE_SHIPPING_TABLE_HANDLING_METHOD === 'Box' ? MODULE_SHIPPING_TABLE_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_TABLE_HANDLING),
                 ],
             ],
         ];
@@ -178,6 +158,7 @@ class table extends ZenShipping
      * Check to see whether module is installed
      *
      * @return unknown
+     * @since ZC v1.0.3
      */
     function check()
     {
@@ -192,6 +173,7 @@ class table extends ZenShipping
     /**
      * Install the shipping module and its configuration settings
      *
+     * @since ZC v1.0.3
      */
     function install(): void
     {
@@ -213,12 +195,26 @@ class table extends ZenShipping
      * Internal list of configuration keys used for configuration of the module
      *
      * @return unknown
+     * @since ZC v1.0.3
      */
     function keys(): array
     {
-        return ['MODULE_SHIPPING_TABLE_STATUS', 'MODULE_SHIPPING_TABLE_COST', 'MODULE_SHIPPING_TABLE_MODE', 'MODULE_SHIPPING_TABLE_HANDLING', 'MODULE_SHIPPING_TABLE_HANDLING_METHOD', 'MODULE_SHIPPING_TABLE_TAX_CLASS', 'MODULE_SHIPPING_TABLE_TAX_BASIS', 'MODULE_SHIPPING_TABLE_ZONE', 'MODULE_SHIPPING_TABLE_SORT_ORDER'];
+        return [
+            'MODULE_SHIPPING_TABLE_STATUS',
+            'MODULE_SHIPPING_TABLE_COST',
+            'MODULE_SHIPPING_TABLE_MODE',
+            'MODULE_SHIPPING_TABLE_HANDLING',
+            'MODULE_SHIPPING_TABLE_HANDLING_METHOD',
+            'MODULE_SHIPPING_TABLE_TAX_CLASS',
+            'MODULE_SHIPPING_TABLE_TAX_BASIS',
+            'MODULE_SHIPPING_TABLE_ZONE',
+            'MODULE_SHIPPING_TABLE_SORT_ORDER',
+        ];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/table/'];

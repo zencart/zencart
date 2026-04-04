@@ -2,12 +2,13 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte  New in 2.1.0 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  *
  * @var language $lng
  * @var queryFactory $db
+ * @since ZC v2.1.0
  */
 
 use Zencart\Traits\NotifierManager;
@@ -16,7 +17,8 @@ class Product
 {
     use NotifierManager;
 
-    protected array $data;
+    protected static ?int $product_id;
+    protected static array $data;
     protected array $languages;
 
     /** @deprecated use ->get('property') or ->getData()  */
@@ -25,110 +27,163 @@ class Product
     /** @deprecated use !exists()  */
     public bool $EOF = true;
 
-    public function __construct(protected ?int $product_id = null)
+    public function __construct(?int $product_id = null)
     {
         $this->initLanguages();
 
-        if ($this->product_id !== null) {
-            $this->data = $this->loadProductDetails($this->product_id);
-
-            // set some backward compatibility properties
-            $this->fields = $this->data;
-            $this->EOF = empty($this->data);
+        if ($product_id !== null) {
+            if (empty(self::$data) || $product_id !== self::$product_id) {
+                self::$product_id = $product_id;
+                self::$data = $this->loadProductDetails($product_id);
+            }
         }
+
+        // set some backward compatibility properties
+        $this->fields = self::$data ?? [];
+        $this->EOF = empty(self::$data);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function forLanguage(?int $language_id): self
     {
-        $this->data = $this->getDataForLanguage($language_id);
-        $this->fields = $this->data;
+        self::$data = $this->getDataForLanguage($language_id);
+        $this->fields = self::$data;
+        unset($this->fields['lang']);
 
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function withDefaultLanguage(): self
     {
-        $this->data = $this->getDataForLanguage();
-        $this->fields = $this->data;
+        self::$data = $this->getDataForLanguage();
+        $this->fields = self::$data;
+        unset($this->fields['lang']);
 
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getData(): ?array
     {
-        return $this->data;
+        return self::$data;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function get(string $name)
     {
-        return $this->data[$name] ?? $this->data['lang'][$this->languages[(int)$_SESSION['languages_id']]][$name] ?? null;
+        return self::$data[$name] ?? self::$data['lang'][$this->languages[(int)$_SESSION['languages_id']]][$name] ?? null;
     }
 
     /**
      * Same as getData(), but for specific language only
+     * @since ZC v2.1.0
      */
     public function getDataForLanguage(?int $language_id = null): ?array
     {
-        if (empty($language_id)) {
+        if (empty($language_id)) { // empty allows for 0 which might occur if null is pre-casted to int before passing to this function
             $language_id = (int)$_SESSION['languages_id'];
         }
-        $data = $this->data;
+        $data = self::$data;
+
+        // -----
+        // If this request is for a product being created, it might not yet have
+        // its language elements (e.g. products_name) stored.  In this case, simply
+        // return the product's base information.
+        //
+        if (!isset($data['lang'])) {
+            return $data;
+        }
 
         // strip all languages except specified one, and merge into parent array instead of sub-array
-        foreach($data['lang'][$this->languages[$language_id]] as $key => $value) {
+        foreach ($data['lang'][$this->languages[$language_id]] as $key => $value) {
             $data[$key] = $value;
         }
-        unset($data['lang']);
 
         return $data;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getId(): ?int
     {
-        return $this->product_id;
+        return self::$product_id;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function exists(): bool
     {
-        return !empty($this->product_id);
+        return !empty(self::$product_id) && !empty(self::$data);
     }
+    /**
+     * @since ZC v2.1.0
+     */
     public function isValid(): bool
     {
-        return !empty($this->data);
+        return !empty(self::$data);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isLinked(): bool
     {
-        return ($this->data['linked_categories_count'] ?? 0) > 0;
+        return (self::$data['linked_categories_count'] ?? 0) > 0;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isVirtual(): bool
     {
-        return ($this->data['products_virtual'] ?? 0) === '1';
+        return (self::$data['products_virtual'] ?? 0) === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isAlwaysFreeShipping(): bool
     {
-        return ($this->data['product_is_always_free_shipping'] ?? '') === '1';
+        return (self::$data['product_is_always_free_shipping'] ?? '') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function status(): int
     {
-        return (int)($this->data['products_status'] ?? 0);
+        return (int)(self::$data['products_status'] ?? 0);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function isGiftVoucher(): bool
     {
-        return str_starts_with($this->data['products_model'] ?? '', 'GIFT');
+        return str_starts_with(self::$data['products_model'] ?? '', 'GIFT');
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function allowsAddToCart(): bool
     {
-        if (empty($this->data)) {
+        if (empty(self::$data)) {
             return false;
         }
 
-        $allow_add_to_cart = ($this->data['allow_add_to_cart'] ?? 'N') !== 'N';
+        $allow_add_to_cart = (self::$data['allow_add_to_cart'] ?? 'N') !== 'N';
 
         if ($allow_add_to_cart && $this->isGiftVoucher()) {
             // if GV feature disabled, can't allow GV's to be added to cart
@@ -137,73 +192,103 @@ class Product
             }
         }
 
-        $this->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', $this->product_id, $allow_add_to_cart, $this->data);
+        $this->notify('NOTIFY_GET_PRODUCT_ALLOW_ADD_TO_CART', self::$product_id, $allow_add_to_cart, self::$data);
 
         // test for boolean and for 'Y', since observer might try to return 'Y'
         return in_array($allow_add_to_cart, [true, 'Y'], true);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getProductQuantity(): int|float
     {
-        $quantity = $this->data['products_quantity'] ?? '0';
-        $this->notify('NOTIFY_GET_PRODUCT_QUANTITY', $this->product_id, $quantity);
+        $quantity = self::$data['products_quantity'] ?? '0';
+        $this->notify('NOTIFY_GET_PRODUCT_QUANTITY', self::$product_id, $quantity);
         return zen_str_to_numeric((string)$quantity);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getTypeHandler(): string
     {
-        return ($this->data['type_handler'] ?? 'product');
+        return (self::$data['type_handler'] ?? 'product');
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getInfoPage(): string
     {
         return $this->getTypeHandler() . '_info';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function hasPriceQuantityDiscounts(): bool
     {
-        if (empty($this->data)) {
+        if (empty(self::$data)) {
             return false;
         }
 
         global $db;
-        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)$this->product_id;
+        $sql = "SELECT products_id FROM " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " WHERE products_id=" . (int)self::$product_id;
         $results = $db->Execute($sql, 1);
         return !$results->EOF;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function hasPriceSpecials()
     {
-        if (empty($this->data)) {
+        if (empty(self::$data)) {
             return false;
         }
 
         global $db;
-        $sql = "SELECT products_id FROM " . TABLE_SPECIALS . " WHERE products_id=" . (int)$this->product_id;
+        $sql = "SELECT products_id FROM " . TABLE_SPECIALS . " WHERE products_id=" . (int)self::$product_id;
         $results = $db->Execute($sql, 1);
         return !$results->EOF;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function priceIsByAttribute(): bool
     {
-        return ($this->data['products_priced_by_attribute'] ?? '0') === '1';
+        return (self::$data['products_priced_by_attribute'] ?? '0') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function priceIsFree(): bool
     {
-        return ($this->data['product_is_free'] ?? '0') === '1';
+        return (self::$data['product_is_free'] ?? '0') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function priceIsCall(): bool
     {
-        return ($this->data['product_is_call'] ?? '0') === '1';
+        return (self::$data['product_is_call'] ?? '0') === '1';
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function __get(string $name)
     {
         return $this->get($name);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     protected function loadProductDetails(int $product_id, ?int $language_id = null): array
     {
         global $db;
@@ -216,7 +301,9 @@ class Product
         $product = $db->Execute($sql, 1, true, 900);
 
         if ($product->EOF) {
-            return [];
+            $data_override = [];
+            $this->notify('NOTIFY_GET_PRODUCT_OBJECT_DETAILS_NOT_FOUND', ['product_id' => $product_id, 'language_id' => $language_id], $data_override);
+            return $data_override;
         }
 
         $data = $product->fields;
@@ -227,6 +314,7 @@ class Product
 
         /**
          * Add $data['lang'][code] = [products_name, products_description, etc] for each language
+         * @since ZC v2.1.0
          */
         $sql = "SELECT pd.*
                 FROM " . TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -237,13 +325,40 @@ class Product
             unset($result['products_id']);
             $data['lang'][$this->languages[$result['language_id']]] = $result;
         }
+        if (IS_ADMIN_FLAG === false && !isset($data['lang'][$_SESSION['languages_code']])) {
+            $data['lang'][$_SESSION['languages_code']] = [
+                'language_id' => $_SESSION['languages_id'],
+                'products_name' => '',
+                'products_description' => '',
+                'products_url' => null,
+                'products_viewed' => 0,
+                'description_record_missing' => true,
+            ];
+            $this->notify('NOTIFY_PRODUCT_DETAILS_NO_DESCRIPTION', (int)$product_id, $data);
+        }
+
+        // additional product images
+        $data['additional_images'] = [];
+        $sql = "SELECT id, sort_order, additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id ORDER BY sort_order";
+        $results = $db->Execute($sql);
+        foreach ($results as $additional_image) {
+            $data['additional_images'][] = [
+                'id' => (int)$additional_image['id'],
+                'image_filename' => $additional_image['additional_image'],
+                'sort_order' => (int)$additional_image['sort_order'],
+            ];
+        }
 
         // count linked categories
         $sql = "SELECT categories_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " ptc WHERE products_id=" . (int)$product_id;
         $results = $db->Execute($sql, null, true, 900);
         $data['linked_categories_count'] = $results->RecordCount();
         $data['linked_categories'] = [];
-        foreach($results as $result) {
+        foreach ($results as $result) {
+            if ($result['categories_id'] === $data['master_categories_id']) {
+                $data['linked_categories_count']--;
+                continue;
+            }
             $data['linked_categories'][] = $result['categories_id'];
         }
 
@@ -254,10 +369,8 @@ class Product
         $categories[] = $data['master_categories_id'];
         $data['cPath'] = implode('_', $categories);
 
-
         //Allow an observer to modify details
         $this->notify('NOTIFY_GET_PRODUCT_OBJECT_DETAILS', $product_id, $data);
-
         return $data;
     }
 

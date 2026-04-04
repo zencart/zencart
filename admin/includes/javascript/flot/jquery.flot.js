@@ -1,4 +1,4 @@
-/* Javascript plotting library for jQuery, version 0.8.3.
+/* Javascript plotting library for jQuery, version 0.8.3.-patched
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
 Licensed under the MIT license.
@@ -2712,7 +2712,7 @@ Licensed under the MIT license.
         function insertLegend() {
 
             if (options.legend.container != null) {
-                $(options.legend.container).html("");
+                $(document).find(options.legend.container).html("");
             } else {
                 placeholder.find(".legend").remove();
             }
@@ -2769,10 +2769,24 @@ Licensed under the MIT license.
                     rowStarted = true;
                 }
 
-                fragments.push(
-                    '<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
-                    '<td class="legendLabel">' + entry.label + '</td>'
-                );
+                var colorBox = document.createElement('td');
+                colorBox.className = 'legendColorBox';
+                var colorDiv = document.createElement('div');
+                colorDiv.style.border = '1px solid ' + options.legend.labelBoxBorderColor;
+                colorDiv.style.padding = '1px';
+                var innerColorDiv = document.createElement('div');
+                innerColorDiv.style.width = '4px';
+                innerColorDiv.style.height = '0';
+                innerColorDiv.style.border = '5px solid ' + entry.color;
+                innerColorDiv.style.overflow = 'hidden';
+                colorDiv.appendChild(innerColorDiv);
+                colorBox.appendChild(colorDiv);
+
+                var labelBox = document.createElement('td');
+                labelBox.className = 'legendLabel';
+                labelBox.textContent = entry.label;
+
+                fragments.push(colorBox.outerHTML + labelBox.outerHTML);
             }
 
             if (rowStarted)
@@ -2781,7 +2795,7 @@ Licensed under the MIT license.
             if (fragments.length == 0)
                 return;
 
-            var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
+            var table = '<table style="font-size:smaller;color:' + sanitizeColor(options.grid.color) + '">' + fragments.join("") + '</table>';
             if (options.legend.container != null)
                 $(options.legend.container).html(table);
             else {
@@ -2791,21 +2805,21 @@ Licensed under the MIT license.
                 if (m[0] == null)
                     m = [m, m];
                 if (p.charAt(0) == "n")
-                    pos += 'top:' + (m[1] + plotOffset.top) + 'px;';
+                    pos += 'top:' + Number(m[1] + plotOffset.top) + 'px;';
                 else if (p.charAt(0) == "s")
-                    pos += 'bottom:' + (m[1] + plotOffset.bottom) + 'px;';
+                    pos += 'bottom:' + Number(m[1] + plotOffset.bottom) + 'px;';
                 if (p.charAt(1) == "e")
-                    pos += 'right:' + (m[0] + plotOffset.right) + 'px;';
+                    pos += 'right:' + Number(m[0] + plotOffset.right) + 'px;';
                 else if (p.charAt(1) == "w")
-                    pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
+                    pos += 'left:' + Number(m[0] + plotOffset.left) + 'px;';
                 var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
                 if (options.legend.backgroundOpacity != 0.0) {
                     // put in the transparent background
                     // separately to avoid blended labels and
                     // label boxes
-                    var c = options.legend.backgroundColor;
+                    var c = sanitizeColor(options.legend.backgroundColor);
                     if (c == null) {
-                        c = options.grid.backgroundColor;
+                        c = sanitizeColor(options.grid.backgroundColor);
                         if (c && typeof c == "string")
                             c = $.color.parse(c);
                         else
@@ -3163,6 +3177,12 @@ Licensed under the MIT license.
     // round to nearby lower multiple of base
     function floorInBase(n, base) {
         return base * Math.floor(n / base);
+    }
+
+    function sanitizeColor(color) {
+        // Simple regex to validate hex color codes
+        var isValidColor = /^#[0-9A-F]{6}$/i.test(color);
+        return isValidColor ? color : null;
     }
 
 })(jQuery);

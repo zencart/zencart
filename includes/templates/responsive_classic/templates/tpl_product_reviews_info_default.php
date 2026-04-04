@@ -2,17 +2,17 @@
 /**
  * Page Template
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: John Thompson 2022 Jul 30 Modified in v1.5.8-alpha2 $
+ * @version $Id: piloujp 2025 May 27 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="reviewsInfoDefault">
 
 <?php
   if (!empty($products_image)) {
-   	/**
+    /**
      * require the image display code
      */
 ?>
@@ -50,7 +50,7 @@
 <div class="reviews-wrapper clearBoth">
 <h3 class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $review_info->fields['reviews_rating'] . '.png', sprintf(TEXT_OF_5_STARS, $review_info->fields['reviews_rating'])), sprintf(TEXT_OF_5_STARS, $review_info->fields['reviews_rating']); ?></h3>
 
-<div id="reviewsInfoDefaultMainContent" class="content"><?php echo zen_break_string(nl2br(zen_output_string_protected(stripslashes($review_info->fields['reviews_text']))), 60); ?></div>
+<div id="reviewsInfoDefaultMainContent" class="content"><?php echo nl2br(zen_output_string_protected(stripslashes($review_info->fields['reviews_text']))); ?></div>
 <div id="reviewsInfoDefaultDate"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($review_info->fields['date_added'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($review_info->fields['customers_name'])); ?></div>
 
 </div>

@@ -1,11 +1,12 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: brittainmark 2022 Aug 27 Modified in v1.5.8-alpha2 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  *
  * Designed for ZC >= v1.5.4
  *
+ * @since ZC v1.5.4
  */
 
 class zcObserverLogWriterTextfile extends base {
@@ -13,7 +14,7 @@ class zcObserverLogWriterTextfile extends base {
   private $destinationLogFilename = '';
   private $notifier;
 
-  public function __construct(notifier $zco_notifier = null) {
+  public function __construct(?notifier $zco_notifier = null) {
     if (!$zco_notifier) $zco_notifier = new notifier;
     $this->notifier = $zco_notifier;
     $this->notifier->attach($this, array('NOTIFY_ADMIN_FIRE_LOG_WRITERS', 'NOTIFY_ADMIN_FIRE_LOG_WRITER_RESET'));
@@ -22,6 +23,7 @@ class zcObserverLogWriterTextfile extends base {
 
   /**
    * Set the folderpath on the filesystem where the data will be logged
+   * @since ZC v1.5.4
    */
   public function setLogFilename($filepath = '')
   {
@@ -30,6 +32,9 @@ class zcObserverLogWriterTextfile extends base {
     $this->destinationLogFilename = $filepath;
   }
 
+  /**
+   * @since ZC v1.5.4
+   */
   public function updateNotifyAdminFireLogWriters(&$class, $eventID, $log_data)
   {
     $this->initLogFile();
@@ -47,6 +52,7 @@ class zcObserverLogWriterTextfile extends base {
    * PCI requires that if the log is blank, that the logs be initialized
    * So this tests whether the logging file exists, creates it if necessary, and
    * then if the file is empty initializes it
+   * @since ZC v1.5.4
    */
   public function initLogFile()
   {
@@ -65,6 +71,7 @@ class zcObserverLogWriterTextfile extends base {
     {
       /**
        * builds a json-encoded array here, for consistency with normal logging
+       * @since ZC v1.5.4
        */
       $admin_id = (isset($_SESSION['admin_id'])) ? $_SESSION['admin_id'] : 0;
       $data = array('access_date' => date('M-d-Y H:i:s'),

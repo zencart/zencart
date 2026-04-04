@@ -2,9 +2,9 @@
 /**
  * functions_customer_groups
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2021 Apr 26 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
@@ -12,6 +12,7 @@
  * @param int $group_id
  * @param bool $ignore_cache
  * @return bool
+ * @since ZC v1.5.8
  */
 function zen_customer_belongs_to_group($customer_id, $group_id, $ignore_cache = false)
 {
@@ -32,6 +33,7 @@ function zen_customer_belongs_to_group($customer_id, $group_id, $ignore_cache = 
 /**
  * @param int $customer_id
  * @return array
+ * @since ZC v1.5.8
  */
 function zen_groups_customer_belongs_to($customer_id)
 {
@@ -58,6 +60,7 @@ function zen_groups_customer_belongs_to($customer_id)
  * @param int $customer_id
  * @param array $groups
  * @return bool
+ * @since ZC v1.5.8
  */
 function zen_sync_customer_group_assignments($customer_id, $groups)
 {
@@ -82,6 +85,7 @@ function zen_sync_customer_group_assignments($customer_id, $groups)
  * @param int $customer_id
  * @param int $group_id
  * @return bool
+ * @since ZC v1.5.8
  */
 function zen_assign_customer_to_group($customer_id, $group_id)
 {
@@ -102,6 +106,7 @@ function zen_assign_customer_to_group($customer_id, $group_id)
  * @param int $customer_id
  * @param int $group_id
  * @return bool
+ * @since ZC v1.5.8
  */
 function zen_remove_customer_from_group($customer_id, $group_id)
 {
@@ -113,6 +118,7 @@ function zen_remove_customer_from_group($customer_id, $group_id)
 /**
  * @param int $group_id
  * @return int
+ * @since ZC v1.5.8
  */
 function zen_count_customers_in_group($group_id)
 {
@@ -132,6 +138,7 @@ function zen_count_customers_in_group($group_id)
 /**
  * @param int $group_id
  * @return string
+ * @since ZC v1.5.8
  */
 function zen_get_customer_group_name($group_id)
 {
@@ -152,6 +159,7 @@ function zen_get_customer_group_name($group_id)
  * @param int $group_id
  * @param string $key
  * @return string html pulldown menu
+ * @since ZC v1.5.8
  */
 function zen_cfg_select_customer_group($group_id, $key = '', $name = '', $include_zero = true, $multiple = false)
 {
@@ -176,6 +184,7 @@ function zen_cfg_select_customer_group($group_id, $key = '', $name = '', $includ
 
 /**
  * @return array
+ * @since ZC v1.5.8
  */
 function zen_get_all_customer_groups()
 {
@@ -198,6 +207,7 @@ function zen_get_all_customer_groups()
  * @param string $group_name
  * @param string $group_comment
  * @return int|string
+ * @since ZC v1.5.8
  */
 function zen_create_customer_group($group_name, $group_comment)
 {
@@ -218,6 +228,7 @@ function zen_create_customer_group($group_name, $group_comment)
  * @param int $group_id
  * @param array $data
  * @return bool|string
+ * @since ZC v1.5.8
  */
 function zen_update_customer_group($group_id, $data)
 {
@@ -243,6 +254,7 @@ function zen_update_customer_group($group_id, $data)
  * @param int $group_id
  * @param bool $also_unassign_customers
  * @return bool|string
+ * @since ZC v1.5.8
  */
 function zen_delete_customer_group($group_id, $also_unassign_customers = true)
 {
@@ -260,3 +272,36 @@ function zen_delete_customer_group($group_id, $also_unassign_customers = true)
     return true;
 }
 
+/**
+  * @param string $group_name The name of the group to be retrieved (ie. the value from the group_name column of the DB)
+ * @since ZC v2.2.0
+  */
+function zen_get_customer_group_comment(string $group_name): string
+{
+    global $db;
+
+    $sql = "SELECT group_comment FROM " .
+            TABLE_CUSTOMER_GROUPS . "
+            WHERE group_name = :group_name:";
+    $sql = $db->bindVars($sql, ':group_name:', $group_name, 'stringIgnoreNull');
+
+    $results = $db->Execute($sql, 1);
+
+    return $results->fields['group_comment'] ?? '';
+}
+
+/**
+ * @param string $group_name The name of the group to be found
+ * @return int Will return the ID number or -1 if not found.
+ * @since ZC v2.2.0
+ */
+function zen_get_customer_group_id_from_name(string $group_name): int
+{
+    global $db;
+
+    $sql = "SELECT group_id FROM " . TABLE_CUSTOMER_GROUPS . " WHERE group_name = :group_name:";
+    $sql = $db->bindVars($sql, ':group_name:', $group_name, 'stringIgnoreNull');
+
+    $result = (int)($db->Execute($sql, 1)->fields['group_id'] ?? -1);
+    return $result; // Don't assign 0, that's the "Everyone" default, -1 should NEVER match
+}

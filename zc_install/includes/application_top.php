@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Oct 22 Modified in v2.2.0 $
  */
 
 @ini_set('arg_separator.output', '&');
@@ -12,7 +12,7 @@
 /*
  * Check for a valid system locale, and override if invalid or set to 'C' which means 'unconfigured'
  */
-$detected_locale = setlocale(LC_TIME, 0);
+$detected_locale = setlocale(LC_TIME, '0');
 if ($detected_locale === false || $detected_locale === 'C') {
     setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
 }
@@ -44,7 +44,7 @@ if (isset($argc) && $argc > 0) {
 }
 if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
     for ($i = 1; $i < $_SERVER["argc"]; $i++) {
-        list($key, $val) = explode('=', $_SERVER["argv"][$i]);
+        [$key, $val] = explode('=', $_SERVER["argv"][$i]);
         $_GET[$key] = $_REQUEST[$key] = $val;
         if ($key === 'cli') $controller = 'cli';
         if ($key === 'v' || $key === 'verbose') $debug_logging = 'screen';
@@ -91,7 +91,7 @@ if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
  * set the level of error reporting
  */
 if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
-//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 error_reporting(E_ALL);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
 @ini_set('log_errors', 1);
@@ -148,11 +148,12 @@ zen_sanitize_request();
  */
 $request_type = ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) ||
     (isset($_SERVER['HTTP_X_FORWARDED_BY']) && stripos($_SERVER['HTTP_X_FORWARDED_BY'], 'SSL') !== false) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (stripos($_SERVER['HTTP_X_FORWARDED_HOST'], 'SSL') !== false) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (stripos($_SERVER['HTTP_X_FORWARDED_HOST'], 'SSL') !== false)) ||
     (isset($_SERVER['SCRIPT_URI']) && stripos($_SERVER['SCRIPT_URI'], 'https:') === 0) ||
     (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) == 'on')) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https'))) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https')) ||
     (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] != '') ||
+    (isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] == '443') ||
     (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
 
 /*
@@ -172,10 +173,15 @@ require DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYaml.php';
 require DIR_FS_INSTALL . 'includes/classes/class.zcRegistry.php';
 require DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlParser.php';
 require DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlInline.php';
+require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
+require DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php';
 
 if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
 $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);
-if ($current_page == '' || !file_exists('includes/modules/pages/' . $current_page)) $_GET['main_page'] = $current_page = 'index';
+if (empty($current_page) || !file_exists('includes/modules/pages/' . $current_page)) {
+    $_GET['main_page'] = $current_page = 'index';
+}
+$is_home_page = $current_page === 'index';
 $page_directory = 'includes/modules/pages/' . $current_page;
 
 $languagesInstalled = $languageManager->getLanguagesInstalled();

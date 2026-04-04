@@ -9,9 +9,9 @@
  * and make your edits there.  Otherwise, your overrides might get "lost" on a future Zen Cart upgrade.  The 'base' Zen Cart definitions
  * for most of these variables are set by /includes/init_includes/init_common_elements.php.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Mar 01 Modified in v2.0.0-rc1 $
+ * @version $Id: lat9 2025 Sep 24 Modified in v2.2.0 $
  */
 // -----
 // Identify whether the link to the 'accessibility' page is included in the "Information" sidebox.
@@ -91,3 +91,37 @@
 // false ... Do not show the column headings; this is the default.
 //
 //$show_table_header_row = false;
+
+// -----
+// Identify whether the link to the 'order_status' page is included in the "Information" sidebox.
+// 
+// true .... Display the link; this is the default.
+// false ... Do not show the link.
+//
+//$show_order_status_sidebox_link = true;
+
+// -----
+// Indicate the maximum number of times in a session an error during either a
+// login or forgotten-password attempt can fail.
+//
+// This value is an integer and defaults to 9.
+//
+//$max_login_attempts = 9;
+
+// -----
+// The maximum number of times per session that an invalid account-activation
+// token can be submitted to the 'customers_authorization' page before
+// an HTTP 406 (unacceptable) return is issued.
+//
+// This value is an integer and defaults to 5.
+//
+//$max_auth_token_activation_attempts = 5;
+
+// -----
+// The maximum number of times per session that an account-activation
+// email can be sent (or re-sent) from the 'customers_authorization' page before
+// an HTTP 406 (unacceptable) return is issued.
+//
+// This value is an integer and defaults to 5.
+//
+//$max_auth_token_emails = 5;

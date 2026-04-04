@@ -2,10 +2,10 @@
 /**
  * Load in any user functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 07 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 use Zencart\FileSystem\FileSystem;
 
@@ -14,17 +14,17 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 $extraFuncsMain = (new FileSystem)->listFilesFromDirectoryAlphaSorted(DIR_WS_FUNCTIONS . 'extra_functions/', '~^[^\._].*\.php$~i');
-$extraFuncsMain = collect($extraFuncsMain)->map(function ($item, $key) {
+$extraFuncsMain = array_map(static function ($item) {
     return DIR_WS_FUNCTIONS . 'extra_functions/' . $item;
-})->toArray();
-$context = (new FileSystem)->isAdminDir(__DIR__) ? 'admin' : 'catalog';
+}, $extraFuncsMain);
+$context = IS_ADMIN_FLAG ? 'admin' : 'catalog';
 $extraFuncsPlugins = [];
 foreach ($installedPlugins as $plugin) {
     $path = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/' . $context . '/' . DIR_WS_FUNCTIONS . 'extra_functions/';
     $efPluginFile = (new FileSystem)->listFilesFromDirectoryAlphaSorted($path, '~^[^\._].*\.php$~i');
-    $efPluginFile = collect($efPluginFile)->map(function ($item, $key) use ($path) {
+    $efPluginFile = array_map(static function ($item) use ($path) {
         return $path . $item;
-    })->toArray();
+    }, $efPluginFile);
     $extraFuncsPlugins = array_merge($extraFuncsPlugins, $efPluginFile);
 }
 $extraFuncsFiles = array_merge($extraFuncsPlugins, $extraFuncsMain);

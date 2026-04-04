@@ -1,11 +1,23 @@
 <?php
+
 namespace Tests\FeatureStore\LowOrderFees;
 
 use Tests\Support\helpers\ProfileManager;
-use Tests\Support\zcFeatureTestCaseStore;
+use Tests\Support\Traits\CustomerAccountConcerns;
+use Tests\Support\Traits\LowOrderFeeConcerns;
+use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-class LowOrderFeeTest extends zcFeatureTestCaseStore
+/**
+ * @group parallel-candidate
+ */
+class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
 {
+    use CustomerAccountConcerns;
+    use LowOrderFeeConcerns;
+
+    protected $runTestInSeparateProcess = true;
+    protected $preserveGlobalState = false;
+
     /**
      * @test
      * scenario LOF 1
@@ -14,20 +26,15 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
     {
         $this->switchLowOrderFee('on');
         $this->createCustomerAccountOrLogin('florida-basic1');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('39.99', (string)$response->getContent() );
-        $this->browser->submitForm('Continue', []);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section); //sub-total
-        $this->assertStringContainsString('2.50', $lookup_section); // shipping
-        $this->assertStringContainsString('2.80', $lookup_section); // tax
-        $this->assertStringContainsString('5.00', $lookup_section);// low order fee
-        $this->assertStringContainsString('50.29', $lookup_section); // total
+
+        $response = $this->runLowOrderFeeCheckout();
+
+        $response->assertSee('39.99');
+        $response->assertSee('2.50');
+        $response->assertSee('2.80');
+        $response->assertSee('5.00');
+        $response->assertSee('50.29');
+
         $this->switchLowOrderFee('off');
     }
 
@@ -41,22 +48,22 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section); //sub-total
-        $this->assertStringContainsString('2.50', $lookup_section); // shipping
-        $this->assertStringContainsString('2.80', $lookup_section); // tax
-        $this->assertStringContainsString('5.00', $lookup_section);// low order fee
-        $this->assertStringContainsString('50.29', $lookup_section); // total
-        $this->browser->submitForm('Continue', ['cot_gv' => '45.28', 'payment' => '']);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Please select a payment method for your order', (string)$response->getContent() );
+
+        $response = $this->runLowOrderFeeCheckout();
+
+        $response->assertSee('39.99');
+        $response->assertSee('2.50');
+        $response->assertSee('2.80');
+        $response->assertSee('5.00');
+        $response->assertSee('50.29');
+
+        $this->continueCheckoutPayment(['cot_gv' => '45.28', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
+
         $this->switchLowOrderFee('off');
     }
+
     /**
      * @test
      * scenario LOF 3
@@ -67,23 +74,22 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section); //sub-total
-        $this->assertStringContainsString('2.50', $lookup_section); // shipping
-        $this->assertStringContainsString('2.80', $lookup_section); // tax
-        $this->assertStringContainsString('5.00', $lookup_section);// low order fee
-        $this->assertStringContainsString('50.29', $lookup_section); // total
-        $this->browser->submitForm('Continue', ['cot_gv' => '45.29', 'payment' => '']);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Please select a payment method for your order', (string)$response->getContent() );
+
+        $response = $this->runLowOrderFeeCheckout();
+
+        $response->assertSee('39.99');
+        $response->assertSee('2.50');
+        $response->assertSee('2.80');
+        $response->assertSee('5.00');
+        $response->assertSee('50.29');
+
+        $this->continueCheckoutPayment(['cot_gv' => '45.29', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
+
         $this->switchLowOrderFee('off');
     }
+
     /**
      * @test
      * scenario LOF 4
@@ -95,20 +101,19 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section); //sub-total
-        $this->assertStringContainsString('2.50', $lookup_section); // shipping
-        $this->assertStringContainsString('3.05', $lookup_section); // tax
-        $this->assertStringContainsString('5.00', $lookup_section);// low order fee
-        $this->assertStringContainsString('50.54', $lookup_section); // total
-        $this->browser->submitForm('Continue', ['cot_gv' => '45.76', 'payment' => '']);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Please select a payment method for your order', (string)$response->getContent() );
+
+        $response = $this->runLowOrderFeeCheckout();
+
+        $response->assertSee('39.99');
+        $response->assertSee('2.50');
+        $response->assertSee('3.05');
+        $response->assertSee('5.00');
+        $response->assertSee('50.54');
+
+        $this->continueCheckoutPayment(['cot_gv' => '45.76', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
+
         $this->switchLowOrderFee('off');
         $this->switchItemShippingTax('off');
     }
@@ -124,26 +129,26 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section); //sub-total
-        $this->assertStringContainsString('2.50', $lookup_section); // shipping
-        $this->assertStringContainsString('3.05', $lookup_section); // tax
-        $this->assertStringContainsString('5.00', $lookup_section);// low order fee
-        $this->assertStringContainsString('50.54', $lookup_section); // total
-        $this->browser->submitForm('Continue', ['cot_gv' => '50.54', 'payment' => '']);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section); //sub-total
-        $this->assertStringContainsString('2.50', $lookup_section); // shipping item
-        $this->assertStringContainsString('3.05', $lookup_section); // Tax
-        $this->assertStringContainsString('5.00', $lookup_section); // low order fee
-        $this->assertStringContainsString('-$50.54', $lookup_section); // gv used
-        $this->assertStringContainsString('0.00', $lookup_section); // balance
+
+        $response = $this->runLowOrderFeeCheckout();
+
+        $response->assertSee('39.99');
+        $response->assertSee('2.50');
+        $response->assertSee('3.05');
+        $response->assertSee('5.00');
+        $response->assertSee('50.54');
+
+        $confirmation = $this->continueCheckoutPayment(['cot_gv' => '50.54', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Order Confirmation');
+
+        $confirmation->assertSee('39.99');
+        $confirmation->assertSee('2.50');
+        $confirmation->assertSee('3.05');
+        $confirmation->assertSee('5.00');
+        $confirmation->assertSee('&#8209;$50.54');
+        $confirmation->assertSee('0.00');
+
         $this->switchLowOrderFee('off');
         $this->switchItemShippingTax('off');
     }
@@ -160,19 +165,16 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $profile = ProfileManager::getProfile('florida-basic1');
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['cot_gv' => '50.54', 'payment' => '']);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('42.79', $lookup_section);
-        $this->assertStringContainsString('2.75', $lookup_section);
-        $this->assertStringContainsString('3.05', $lookup_section);
-        $this->assertStringContainsString('5.00', $lookup_section);
-        $this->assertStringContainsString('-$50.54', $lookup_section);
-        $this->assertStringContainsString('0.00', $lookup_section);
+
+        $confirmation = $this->runLowOrderFeeCheckout(['cot_gv' => '50.54', 'payment' => '']);
+
+        $confirmation->assertSee('42.79');
+        $confirmation->assertSee('2.75');
+        $confirmation->assertSee('3.05');
+        $confirmation->assertSee('5.00');
+        $confirmation->assertSee('&#8209;$50.54');
+        $confirmation->assertSee('0.00');
+
         $this->switchLowOrderFee('off');
         $this->switchItemShippingTax('off');
         $this->switchToTaxNonInclusive();
@@ -189,19 +191,17 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $this->browser->submitForm('Continue', ['payment' => '']);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section);
-        $this->assertStringContainsString('2.50', $lookup_section);
-        $this->assertStringContainsString('-$4.00', $lookup_section);
-        $this->assertStringContainsString('2.52', $lookup_section);
-        $this->assertStringContainsString('5.00', $lookup_section);
-        $this->assertStringContainsString('46.01', $lookup_section);
+
+        $confirmation = $this->runLowOrderFeeCheckout(['payment' => ''])
+            ->assertOk();
+
+        $confirmation->assertSee('39.99');
+        $confirmation->assertSee('2.50');
+        $confirmation->assertSee('&#8209;$4.00');
+        $confirmation->assertSee('2.52');
+        $confirmation->assertSee('5.00');
+        $confirmation->assertSee('46.01');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchLowOrderFee('off');
     }
@@ -217,21 +217,20 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section);
-        $this->assertStringContainsString('2.50', $lookup_section);
-        $this->assertStringContainsString('-$4.00', $lookup_section);
-        $this->assertStringContainsString('2.52', $lookup_section);
-        $this->assertStringContainsString('5.00', $lookup_section);
-        $this->assertStringContainsString('46.01', $lookup_section);
-        $this->browser->submitForm('Continue', ['cot_gv' => 39.99, 'payment' => '']);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Please select a payment method for your order', (string)$response->getContent() );
+
+        $response = $this->runLowOrderFeeCheckout();
+
+        $response->assertSee('39.99');
+        $response->assertSee('2.50');
+        $response->assertSee('&#8209;$4.00');
+        $response->assertSee('2.52');
+        $response->assertSee('5.00');
+        $response->assertSee('46.01');
+
+        $this->continueCheckoutPayment(['cot_gv' => '39.99', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchLowOrderFee('off');
     }
@@ -247,22 +246,45 @@ class LowOrderFeeTest extends zcFeatureTestCaseStore
         $this->createCustomerAccountOrLogin('florida-basic1');
         $this->updateGVBalance($profile);
         $this->setCustomerGroupDiscount($profile['email_address'], 1);
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=shopping_cart&action=empty_cart');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=product_info&cPath=1_9&products_id=3&action=buy_now');
-        $this->browser->request('GET', HTTP_SERVER  . '/index.php?main_page=checkout_shipping');
-        $this->browser->submitForm('Continue', []);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('39.99', (string)$response->getContent() );
-        $this->browser->submitForm('Continue', ['cot_gv' => 46.01, 'payment' => '']);
-        $response = (string)$this->browser->getResponse()->getContent();
-        $lookup_section = self::locateElementInPageSource('id="orderTotals"', $response);
-        $this->assertStringContainsString('39.99', $lookup_section);
-        $this->assertStringContainsString('2.50', $lookup_section);
-        $this->assertStringContainsString('-$4.00', $lookup_section);
-        $this->assertStringContainsString('2.52', $lookup_section);
-        $this->assertStringContainsString('5.00', $lookup_section);
-        $this->assertStringContainsString('-$46.01', $lookup_section);
+
+        $paymentPage = $this->runLowOrderFeeCheckout();
+        $paymentPage->assertSee('39.99');
+
+        $confirmation = $this->continueCheckoutPayment(['cot_gv' => '46.01', 'payment' => ''])
+            ->assertOk();
+
+        $confirmation->assertSee('39.99');
+        $confirmation->assertSee('2.50');
+        $confirmation->assertSee('&#8209;$4.00');
+        $confirmation->assertSee('2.52');
+        $confirmation->assertSee('5.00');
+        $confirmation->assertSee('&#8209;$46.01');
+
         $this->setCustomerGroupDiscount($profile['email_address'], 0);
         $this->switchLowOrderFee('off');
+    }
+
+    private function runLowOrderFeeCheckout(array $paymentData = [])
+    {
+        $this->emptyCart();
+
+        $cartResponse = $this->addProductToCart(3, '1_9')
+            ->assertRedirect('main_page=shopping_cart');
+
+        $this->followRedirect($cartResponse)
+            ->assertOk()
+            ->assertSee('Your Shopping Cart Contents');
+
+        $this->continueCheckoutShipping()
+            ->assertOk()
+            ->assertSee('Payment Information');
+
+        if ($paymentData !== []) {
+            return $this->continueCheckoutPayment($paymentData)->assertOk();
+        }
+
+        return $this->visitCheckoutPayment()
+            ->assertOk()
+            ->assertSee('Payment Information');
     }
 }

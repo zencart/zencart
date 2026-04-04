@@ -2,10 +2,10 @@
 /**
  * checkout_success header_php.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Aug 03 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2025 Feb 16 Modified in v2.2.0 $
  */
 
 // This should be first line of the script:
@@ -19,24 +19,6 @@ if (!zen_is_logged_in()) {
 $customer = new Customer;
 
 if (!isset($_GET['action']) || $_GET['action'] !== 'confirm') {
-    $notify_string = '';
-    if (isset($_GET['action']) && $_GET['action'] === 'update') {
-        $notify_string = 'action=notify&';
-        $notify = $_POST['notify'] ?? null;
-
-        if (is_array($notify)) {
-            for ($i = 0, $n = count($notify); $i < $n; $i++) {
-                $notify_string .= 'notify[]=' . $notify[$i] . '&';
-            }
-            $notify_string = rtrim($notify_string, '&');
-        }
-        if ($notify_string === 'action=notify&') {
-            zen_redirect(zen_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
-        } else {
-            zen_redirect(zen_href_link(FILENAME_DEFAULT, $notify_string));
-        }
-    }
-
     require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
     $breadcrumb->add(NAVBAR_TITLE_1);
     $breadcrumb->add(NAVBAR_TITLE_2);

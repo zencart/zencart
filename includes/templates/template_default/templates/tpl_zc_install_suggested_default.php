@@ -7,14 +7,14 @@
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: mc12345678 2023 Jul 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott C Wilson 2024 Jun 03 Modified in v2.1.0-alpha1 $
  */
 $relPath = (file_exists('includes/templates/template_default/images/logo.gif')) ? '' : '../';
 $instPath = (file_exists('zc_install/index.php')) ? 'zc_install/index.php' : (file_exists('../zc_install/index.php') ? '../zc_install/index.php' : '');
 $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists('../docs/index.html') ? '../docs/index.html' : '');
 ?>
 <!DOCTYPE html>
-<html <?php echo defined('HTML_PARAMS') ? HTML_PARAMS : '';?>>
+<html dir="ltr" lang="en">
   <head>
     <title>System Setup Required</title>
     <meta content="utf-8">

@@ -1,14 +1,17 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Zcwilt 2020 Jul 01 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 namespace Zencart\Traits;
 
 use Zencart\Events\EventDto;
 
+/**
+ * @since ZC v1.5.8
+ */
 trait ObserverManager
 {
     private static array $deprecatedNotifications = [
@@ -26,6 +29,7 @@ trait ObserverManager
      *
      * @param object $observer Reference to the observer class
      * @param array $eventIDArray Array of eventId's to observe
+     * @since ZC v1.5.8
      */
     public function attach(&$observer, array $eventIDArray): void
     {
@@ -38,7 +42,7 @@ trait ObserverManager
             }
 
             // handle attach
-            $nameHash = md5(get_class($observer) . $eventID);
+            $nameHash = hash('md5', get_class($observer) . $eventID);
             EventDto::getInstance()->setObserver($nameHash, ['obs' => &$observer, 'eventID' => $eventID]);
         }
     }
@@ -48,15 +52,19 @@ trait ObserverManager
      *
      * @param object $observer
      * @param array $eventIDArray
+     * @since ZC v1.5.8
      */
     public function detach($observer, array $eventIDArray): void
     {
         foreach ($eventIDArray as $eventID) {
-            $nameHash = md5(get_class($observer) . $eventID);
+            $nameHash = hash('md5', get_class($observer) . $eventID);
             EventDto::getInstance()->removeObserver($nameHash);
         }
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function registerDeprecatedEvent(string $oldEventId, string $newEventId): void
     {
         if (array_key_exists($oldEventId, self::$deprecatedNotifications)) {

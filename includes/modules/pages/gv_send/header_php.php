@@ -5,10 +5,10 @@
  * Used to allow customer to send GV to their friends/family by way of email.
  * They can send up to the amount of GV accumlated in their account by way of purchased GV's or GV's sent to them.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 13 Modified in v2.2.1 $
  */
 
 // This should be first line of the script:
@@ -123,7 +123,7 @@ if ($_GET['action'] == 'process') {
       $gv_query = $db->bindVars($gv_query, ':amount', $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY), 'currency');
       $gv = $db->Execute($gv_query);
 
-      $insert_id = $db->Insert_ID();
+      $insert_id = $db->insert_ID();
 
       $gv_query="INSERT INTO " . TABLE_COUPON_EMAIL_TRACK . "(coupon_id, customer_id_sent, sent_firstname, sent_lastname, emailed_to, date_sent)
                  VALUES (:insertID, :customersID, :firstname, :lastname, :email, now())";

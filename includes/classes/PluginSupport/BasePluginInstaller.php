@@ -1,60 +1,61 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Marco Ponchia 2022 Dec 16 Modified in v1.5.8a $
+ * @version $Id: torvista 2026 Mar 13 Modified in v2.2.1 $
  */
 
 namespace Zencart\PluginSupport;
 
+use queryFactory;
+use Zencart\PluginSupport\PluginStatus;
+
+/**
+ * @since ZC v1.5.7
+ */
 class BasePluginInstaller
 {
-
-    /**
-     * $dbConn is a database object
-     * @var object
-     */
-    protected $dbConn;
-    /**
-     * $errorContainer is a PluginErrorContainer object
-     * @var object
-     */
-    protected $errorContainer;
-    /**
-     * $errorContainer is a pluginInstaller object
-     * @var object
-     */
-    protected $pluginInstaller;
     /**
      * $pluginDir is the directory where the plugin is located
      * @var string
      */
-    protected $pluginDir;
+    protected string $pluginDir;
 
-    public function __construct($dbConn, $pluginInstaller, $errorContainer)
+    public function __construct(protected queryFactory $dbConn, protected Installer $pluginInstaller, protected PluginErrorContainer $errorContainer)
     {
-        $this->dbConn = $dbConn;
-        $this->pluginInstaller = $pluginInstaller;
-        $this->errorContainer = $errorContainer;
     }
 
-    public function processInstall($pluginKey, $version)
+    /**
+     * @since ZC v1.5.7
+     */
+    public function processInstall($pluginKey, $version): bool
     {
+        if (empty($pluginKey) || empty($version)) {
+            return false;
+        }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->loadInstallerLanguageFile('main.php');
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeInstallers($this->pluginDir);
         if ($this->errorContainer->hasErrors()) {
             return false;
         }
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
         return true;
     }
 
-    public function processUninstall($pluginKey, $version)
+    /**
+     * @since ZC v1.5.7
+     */
+    public function processUninstall($pluginKey, $version): bool
     {
+        if (empty($pluginKey) || empty($version)) {
+            return false;
+        }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
-        $this->setPluginVersionStatus($pluginKey, '', 0);
+        $this->loadInstallerLanguageFile('main.php');
+        $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
         $this->pluginInstaller->executeUninstallers($this->pluginDir);
         if ($this->errorContainer->hasErrors()) {
             return false;
@@ -62,39 +63,62 @@ class BasePluginInstaller
         return true;
     }
 
-    public function processUpgrade($pluginKey, $version, $oldVersion)
+    /**
+     * @since ZC v1.5.8
+     */
+    public function processUpgrade($pluginKey, $version, $oldVersion): bool
     {
+        if (empty($pluginKey) || empty($version) || empty($oldVersion)) {
+            return false;
+        }
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php', $this->pluginDir);
+        $this->loadInstallerLanguageFile('main.php');
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
         $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
         if ($this->errorContainer->hasErrors()) {
             return false;
         }
-        $this->setPluginVersionStatus($pluginKey, $oldVersion, 0);
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $oldVersion, PluginStatus::NOT_INSTALLED);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
         return true;
     }
 
-    public function processDisable($pluginKey, $version)
+    /**
+     * @since ZC v1.5.7
+     */
+    public function processDisable($pluginKey, $version): void
     {
-        $this->setPluginVersionStatus($pluginKey, $version, 2);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::DISABLED);
     }
 
-    public function processEnable($pluginKey, $version)
+    /**
+     * @since ZC v1.5.7
+     */
+    public function processEnable($pluginKey, $version): void
     {
-        $this->setPluginVersionStatus($pluginKey, $version, 1);
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
     }
 
-    protected function setPluginVersionStatus($pluginKey, $version, $status)
+    /**
+     * @since ZC v1.5.7
+     */
+    protected function setPluginVersionStatus($pluginKey, $version, $status): void
     {
+        if (empty($pluginKey)) {
+            return;
+        }
         $sql = "UPDATE " . TABLE_PLUGIN_CONTROL . " SET status = :status:, version = :version: WHERE unique_key = :uniqueKey:";
         $sql = $this->dbConn->bindVars($sql, ':status:', $status, 'integer');
         $sql = $this->dbConn->bindVars($sql, ':uniqueKey:', $pluginKey, 'string');
         $sql = $this->dbConn->bindVars($sql, ':version:', $version, 'string');
-        $this->dbConn->execute($sql);
+        $this->dbConn->Execute($sql);
     }
 
-    protected function loadInstallerLanguageFile($file)
+    /**
+     * Loads the "main.php" language file. This handles "defines" for language-strings. It does NOT handle language-arrays.
+     * @since ZC v1.5.7
+     */
+    protected function loadInstallerLanguageFile(string $file): void
     {
         $lng = $_SESSION['language'];
         $filename = $this->pluginDir . '/Installer/languages/' . $lng . '/' . $file;
@@ -113,7 +137,10 @@ class BasePluginInstaller
         }
     }
 
-    public function getErrorContainer()
+    /**
+     * @since ZC v1.5.8a
+     */
+    public function getErrorContainer(): PluginErrorContainer
     {
         return $this->errorContainer;
     }

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 17 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2025 Sep 16 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -14,11 +14,11 @@ if (isset($_GET['pID'])) {
 }
 
 $redirect_page = (isset($_GET['page'])) ? '&page=' . $_GET['page'] : '';
-$redirect_search = (isset($_POST['search'])) ? '&search=' . $_POST['search'] : '';
+$redirect_search = (isset($_POST['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '';
 
 if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
     $action = 'new_product';
-} elseif (($_POST['products_model'] ?? '') . implode('', $_POST['products_url'] ?? '') . implode('', $_POST['products_name'] ?? '') . implode('', $_POST['products_description'] ?? '') === '') {
+} elseif (($_POST['products_model'] ?? '') . implode('', $_POST['products_url'] ?? []) . implode('', $_POST['products_name'] ?? []) . implode('', $_POST['products_description'] ?? []) === '') {
     $messageStack->add_session(ERROR_NO_DATA_TO_SAVE, 'error');
     zen_redirect(zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . '&pID=' . $products_id . $redirect_page . $redirect_search));
 } else {
@@ -33,7 +33,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
     }
     $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
-    if (!empty($products_id)) { 
+    if (!empty($products_id)) {
         $zco_notifier->notify('NOTIFY_MODULES_UPDATE_PRODUCT_START', ['action' => $action, 'products_id' => $products_id]);
     }
 
@@ -44,6 +44,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
         'products_quantity' => convertToFloat($_POST['products_quantity']),
         'products_type' => (int)$_POST['product_type'],
         'products_model' => zen_db_prepare_input($_POST['products_model']),
+        'products_mpn' => zen_db_prepare_input($_POST['products_mpn'] ?? ''),
         'products_price' => convertToFloat($_POST['products_price']),
         'products_price_w' => zen_db_prepare_input($products_price_w),
         'products_date_available' => $products_date_available,
@@ -54,7 +55,7 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
         'products_height' => convertToFloat($_POST['products_height']),
         'product_ships_in_own_box' => (int)($_POST['product_ships_in_own_box'] ?? 0),
 
-        'products_status' => (int)$_POST['products_status'],
+        'products_status' => ($products_date_available === 'null') ? (int)$_POST['products_status'] : 0,
         'products_virtual' => (int)$_POST['products_virtual'],
         'products_tax_class_id' => (int)$_POST['products_tax_class_id'],
         'manufacturers_id' => (int)$_POST['manufacturers_id'],
@@ -121,9 +122,77 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
         ///////////////////////////////////////////////////////
         //// INSERT PRODUCT-TYPE-SPECIFIC *UPDATES* HERE //////
 
+        $zco_notifier->notify('NOTIFY_ADMIN_UPDATE_PRODUCT_UPDATE', $products_id, $sql_data_array);
 
         ////    *END OF PRODUCT-TYPE-SPECIFIC UPDATES* ////////
         ///////////////////////////////////////////////////////
+    }
+
+    // Process additional images if any
+    $additional_images = $_POST['additional_images'] ?? [];
+
+    if (!empty($additional_images) && is_array($additional_images)) {
+        // get sort order for existing additional images
+        $next_sort_order = 0;
+        $existing_sort = $db->Execute(
+            "SELECT MAX(sort_order) AS max_sort_order
+               FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+              WHERE products_id = " . (int)$products_id
+        );
+        if ($existing_sort->RecordCount() > 0 && $existing_sort->fields['max_sort_order'] !== null) {
+            $next_sort_order = (int)$existing_sort->fields['max_sort_order'] + 1;
+        }
+
+        // Insert each additional image
+        foreach ($additional_images as $sort_order => $img) {
+            if (!empty($img)) {
+                $db->Execute(
+                    "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
+                 VALUES (" . (int)$products_id . ", '" . zen_db_input($img) . "', " . (int)$next_sort_order . ")"
+                );
+            }
+            $next_sort_order++;
+        }
+    }
+    // delete any additional images marked for removal
+    if (isset($_POST['additional_image_delete']) && is_array($_POST['additional_image_delete'])) {
+        foreach ($_POST['additional_image_delete'] as $img_id) {
+            $img_id = (int)$img_id;
+            if ($img_id > 0) {
+                // get image filename before deleting record
+                $img_to_delete = $db->Execute(
+                    "SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                   WHERE id = " . $img_id . "
+                     AND products_id = " . (int)$products_id
+                );
+                $img_name = $img_to_delete->fields['additional_image'];
+
+                // check if not used by another product
+                $img_to_delete = $db->Execute(
+                    "SELECT id FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                   WHERE additional_image = (SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE id = " . $img_id . ")
+                     AND products_id <> " . (int)$products_id
+                );
+
+                // delete file if not used by another product
+                if ($img_to_delete->RecordCount() < 1) {
+                    $img_file = DIR_FS_CATALOG_IMAGES . $img_name;
+                    if (file_exists($img_file)) {
+                        @unlink($img_file);
+                    }
+                } else {
+                    // another product is using this image
+                    $messageStack->add_session(TEXT_IMAGE_USED_BY_OTHER_PRODUCTS, 'warning');
+                }
+
+                // delete record for this product
+                $db->Execute(
+                    "DELETE FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                   WHERE products_id = " . (int)$products_id . "
+                     AND id = " . $img_id
+                );
+            }
+        }
     }
 
     $languages = zen_get_languages();
@@ -136,7 +205,12 @@ if (isset($_POST['edit']) && $_POST['edit'] === 'edit') {
           'products_url' => zen_db_prepare_input($_POST['products_url'][$language_id])
         ];
 
-        if ($action === 'insert_product') {
+        // For database consistency, check whether a record exists for this language already; if not, we will create it even if we're in update mode
+        $sql = "SELECT count(products_id) AS found FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE products_id = " . (int)$products_id . " AND language_id = " . (int)$language_id;
+        $result = $db->Execute($sql, 1);
+        $record_exists = !empty($result->fields['found']);
+
+        if ($action === 'insert_product' || !$record_exists) {
             $insert_sql_data = [
                 'products_id' => (int)$products_id,
                 'language_id' => (int)$language_id,

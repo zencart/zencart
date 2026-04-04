@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Feb 14 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -83,7 +83,7 @@ $define = [
     'TEXT_DELETE_ALL_OPTIONS_FROM_PRODUCT' => 'Delete all options from product',
     'TEXT_COPY_ALL_OPTIONS_TO_PRODUCT' => 'Copy options to another product',
     'TEXT_COPY_ALL_OPTIONS_TO_CATEGORY' => 'Copy options to a whole category',
-    'TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES' => 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> attributes)',
+    'TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> attributes)',
 ];
 
 return $define;

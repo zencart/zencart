@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: proseLA 2023 Aug 19 Modified in v2.0.0-alpha1 $
+ * @version $Id: JSWebSteve 2026 Jan 23 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 
@@ -16,33 +16,53 @@ $attr_img_width = $attr_img_width ?? '25';
 
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $oID = (int)$_GET['oID'];
 
+// -----
+//
+// Give observers an opportunity to participate in packingslip pre-initialization.
+//
+// Observers may inspect the order ID and populate or augment the
+// $packingslip_context array with packingslip-related data needed later
+// during rendering or processing.
+//
+// Observer note:
+// - Use the provided reference to add or modify data
+// - Multiple observers may act on this notifier
+//
+$packingslip_context = [];
+$zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_PRE_INITIALIZATION', $oID, $packingslip_context);
+
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
-
-// prepare order-status pulldown list
-$ordersStatus = zen_getOrdersStatuses();
-$orders_statuses = $ordersStatus['orders_statuses'];
-$orders_status_array = $ordersStatus['orders_status_array'];
-
-$show_customer = false;
-if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
-  $show_customer = true;
-}
-if (isset($order->delivery['street_address']) && $order->billing['street_address'] != $order->delivery['street_address']) {
-  $show_customer = true;
-}
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
   </head>
   <body>
+<?php
+if (empty($order->info)) {
+?>
+      <p class="text-danger text-center"><?= ERROR_ORDER_DOES_NOT_EXIST . $oID ?></p>
+<?php
+} else {
+// prepare order-status pulldown list
+    $ordersStatus = zen_getOrdersStatuses();
+    $orders_statuses = $ordersStatus['orders_statuses'];
+    $orders_status_array = $ordersStatus['orders_status_array'];
+
+    $show_customer = false;
+    if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
+      $show_customer = true;
+    }
+    if (isset($order->delivery['street_address']) && $order->billing['street_address'] != $order->delivery['street_address']) {
+      $show_customer = true;
+    }
+?>
     <div class="container">
       <!-- body_text //-->
       <table class="table">
@@ -86,11 +106,17 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
               <tr>
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
               </tr>
+<?php
+    if (!empty($order->customer['telephone'])) {
+?>
               <tr>
                 <td class="main">
                     <?php echo ENTRY_TELEPHONE_NUMBER . ' ' . $order->customer['telephone']; ?>
                 </td>
               </tr>
+<?php
+    }
+?>
               <tr>
                 <td class="main"><?php echo '<a href="mailto:' . $order->customer['email_address'] . '">' . $order->customer['email_address'] . '</a>'; ?></td>
               </tr>
@@ -166,6 +192,21 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
         </thead>
         <tbody>
             <?php
+            // -----
+            //
+            // Give observers an opportunity to load and provide related order data
+            // for orders that participate in a parent/child (split) relationship.
+            //
+            // Observers may populate or augment the $split_order_data array with
+            // parent and/or child order information for later use during rendering.
+            //
+            // Observer note:
+            // - Use the provided reference to add or modify data
+            // - Multiple observers may act on this notifier
+            //
+            $split_order_data = ['parent_order' => null, 'child_orders' => []];
+            $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_LOAD_PARENT_ORDER', $oID, $split_order_data);
+
             /*
              * Notifier to allow packing slip to be sorted to required order
              *
@@ -262,6 +303,24 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
           ?>
         </tbody>
       </table>
+      <?php
+      // -----
+      //
+      // Give observers an opportunity to inject additional product-related output
+      // associated with parent/child (split) order relationships.
+      //
+      // Observers may append HTML output (e.g. related or excluded product rows)
+      // to the $extra_products_html variable for display.
+      //
+      // Observer note:
+      // - Append content rather than overwrite existing output
+      // - Multiple observers may contribute content
+      //
+      $extra_products_html = '';
+      $zco_notifier->notify('NOTIFY_ADMIN_PACKINGSLIP_SPLIT_PRODUCTS', $split_order_data, $extra_products_html);
+      echo $extra_products_html;
+
+      ?>
       <?php if (ORDER_COMMENTS_PACKING_SLIP > 0) { ?>
         <table class="table table-condensed">
           <thead>
@@ -286,7 +345,7 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
                   ?>
                 <tr>
                   <td class="text-center"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
-                  <td><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
+                  <td><?php echo $orders_status_array[$order_history['orders_status_id']] ?? ''; ?></td>
                   <td class="text-left">
                   <?php
                   if (empty($order_history['comments'])) {
@@ -330,7 +389,10 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
           }
       ?>
     </div>
-
+      
+<?php
+}
+?>
     <!-- body_text_eof //-->
   </body>
 </html>

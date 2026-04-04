@@ -2,10 +2,10 @@
 /**
  * Page Template
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 27 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2025 Oct 03 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="allProductsDefault">
@@ -20,7 +20,7 @@ if (PRODUCT_LIST_ALPHA_SORTER === 'true') {
     echo $form;
 
     /* Redisplay all $_GET variables, except currency */
-    echo zen_post_all_get_params('currency');
+    echo zen_post_all_get_params(['currency']);
 
     require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING_ALPHA_SORTER));
 

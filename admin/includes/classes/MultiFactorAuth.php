@@ -1,37 +1,58 @@
 <?php
 
 /**
- * Standalone PHP Class for handling Google Authenticator 2-factor authentication.
+ * Handle Multi-Factor authentication via TOTP
+ * Compatible with most Authenticator apps and in-browser support.
  *
  * Based on / inspired by: https://github.com/RobThree/TwoFactorAuth
  * Based on / inspired by: https://github.com/PHPGangsta/GoogleAuthenticator
  *
  * Algorithms, digits, period etc. explained: https://github.com/google/google-authenticator/wiki/Key-Uri-Format
  *
+ * @since ZC v2.1.0
  */
+
+// handle autoloaders for 3rd party composer packages
+foreach ([
+    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/DaspridEnum/autoload.php', // required by BaconQrCode
+    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/BaconQrCode/autoload.php', // required by BaconQrCode
+//    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-color/autoload.php', // required by TCBarcode
+//    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-barcode/autoload.php', // required by TCBarcode
+] as $file) {
+    if (file_exists($file)) {
+        include $file;
+    }
+}
 
 class MultiFactorAuth
 {
     private static string $_base32dict = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=';
 
     /** @var array<string> */
-    private static array $_base32;
+    private static array $_base32 = [];
 
     /** @var array<string, int> */
     private static array $_base32lookup = [];
 
     public function __construct(
-        private int    $codeLength = 6,
-        private int    $period = 30,
-        private string $algorithm = 'sha1',
+        private int     $codeLength = 6,
+        private int     $period = 30,
+        private string  $algorithm = 'sha1', // 'sha256', 'sha512'
         private ?string $issuer = null,
+        private array   $qrProviderOrder = ['local', 'BaconQrCode', 'QrServerUrl', 'QRickitUrl'], // 'TCBarcode'
+        private bool    $prependIssuer = true,
+        private string  $encoding = 'utf-8',
     ) {
         if ($this->codeLength <= 0) {
-            throw new ValueError('codeLength must be int > 0');
+            throw new ValueError('codeLength must be int > 0, usually 6, 7, or 8');
         }
 
         if ($this->period <= 0) {
-            throw new ValueError('Period must be int > 0');
+            throw new ValueError('Period (seconds) must be int > 0, normally 30, optionally 15 or 60');
+        }
+
+        if ($this->issuer !== null) {
+            $this->issuer = str_replace(':', '_', $this->issuer);
         }
 
         self::$_base32 = str_split(self::$_base32dict);
@@ -41,6 +62,7 @@ class MultiFactorAuth
     /**
      * Create a new secret
      * @throws Exception
+     * @since ZC v2.1.0
      */
     public function createSecret(int $bits = 160): string
     {
@@ -55,6 +77,7 @@ class MultiFactorAuth
 
     /**
      * Calculate the code with given secret and point in time
+     * @since ZC v2.1.0
      */
     public function getCode(string $secret, ?int $time = null): string
     {
@@ -70,9 +93,11 @@ class MultiFactorAuth
     }
 
     /**
-     * Check if the code is correct. This will accept codes starting from ($discrepancy * $period) sec ago to ($discrepancy * period) sec from now
+     * Check if the code is correct.
+     * This will accept codes starting from ($discrepancy * $period) sec ago to ($discrepancy * period) sec from now
+     * @since ZC v2.1.0
      */
-    public function verifyCode(string $secret, string $code, int $discrepancy = 1, ?int $time = null, ?int &$timeslice = 0): bool
+    public function verifyCode(string $secret, string $code, int $discrepancy = 1, ?int $time = null, ?int &$timeslice = null): bool
     {
         $timeslice = 0;
 
@@ -91,6 +116,7 @@ class MultiFactorAuth
 
     /**
      * Set the code length, should be >=6.
+     * @since ZC v2.1.0
      */
     public function setCodeLength(int $length): static
     {
@@ -99,16 +125,26 @@ class MultiFactorAuth
         return $this;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     public function getCodeLength(): int
     {
         return $this->codeLength;
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     private function getTimeSlice(?int $time = null, int $offset = 0): int
     {
+        $time = $time ?? time();
         return (int)floor($time / $this->period) + ($offset * $this->period);
     }
 
+    /**
+     * @since ZC v2.1.0
+     */
     private function base32Decode(string $value): string
     {
         if ($value === '') {
@@ -137,12 +173,29 @@ class MultiFactorAuth
 
     /**
      * Builds a string to be encoded in a QR code
+     * @since ZC v2.1.0
      */
-    public function getQRText(string $label, string $secret): string
+    protected function getQRText(string $domain, string $secret, string $accountname = ''): string
     {
+        if ($domain !== '') {
+            $domain = str_replace(':', '_', $domain);
+        }
+
+        $issuer = $this->issuer ?? $domain;
+
+        if ($accountname !== '') {
+            $accountname = str_replace(':', '_', $accountname);
+        }
+
+        $label = $accountname;
+
+        if ($this->prependIssuer && !empty($issuer)) {
+            $label = $issuer . ':' . $label;
+        }
+
         return 'otpauth://totp/' . rawurlencode($label)
             . '?secret=' . rawurlencode($secret)
-            . '&issuer=' . rawurlencode((string)$this->issuer)
+            . '&issuer=' . rawurlencode($issuer)
             . '&period=' . $this->period
             . '&algorithm=' . rawurlencode(strtoupper($this->algorithm))
             . '&digits=' . $this->codeLength;
@@ -151,8 +204,9 @@ class MultiFactorAuth
     /**
      * Get QR-Code URL for image from QRserver.com.
      * See https://goqr.me/api/doc/create-qr-code/
+     * @since ZC v2.1.0
      */
-    public function getQrCodeQrServerUrl(string $domain, string $secretkey, int $size = 200): string
+    public function getQrCodeQrServerUrl(string $data, int $size = 200): string
     {
         $queryParameters = [
             'size' => $size . 'x' . $size,
@@ -160,7 +214,7 @@ class MultiFactorAuth
             'margin' => 4,
             'qzone' => 1,
             'format' => 'png', // 'svg'
-            'data' => $this->getQRText($domain, $secretkey),
+            'data' => $data,
         ];
 
         return 'https://api.qrserver.com/v1/create-qr-code/?' . http_build_query($queryParameters);
@@ -168,8 +222,9 @@ class MultiFactorAuth
 
     /**
      * See http://qrickit.com/qrickit_apps/qrickit_api.php
+     * @since ZC v2.1.0
      */
-    public function getQrCodeQRicketUrl(string $domain, string $secretkey, int $size = 200): string
+    public function getQrCodeQRickitUrl(string $data, int $size = 200): string
     {
         $queryParameters = [
             'qrsize' => $size,
@@ -177,10 +232,93 @@ class MultiFactorAuth
             'bgdcolor' => 'ffffff',
             'fgdcolor' => '000000',
             't' => 'p', // png
-            'd' => $this->getQRText($domain, $secretkey),
+            'd' => $data,
         ];
 
         return 'https://qrickit.com/api/qr?' . http_build_query($queryParameters);
     }
 
+    /**
+     * See https://github.com/Bacon/BaconQrCode
+     *
+     * Using SVG mode because it is not dependent on Imagemagick (but is dependent on XMLWriter)
+     * @since ZC v2.1.0
+     */
+    public function getQrCodeBaconQrCode(string $data, int $size = 200): string
+    {
+        $renderer = new BaconQrCode\Renderer\ImageRenderer((new BaconQrCode\Renderer\RendererStyle\RendererStyle($size))->withSize($size), new BaconQrCode\Renderer\Image\SvgImageBackEnd());
+        $writer = new BaconQrCode\Writer($renderer);
+
+        return $writer->writeString($data, $this->encoding ?? 'utf-8');
+    }
+
+    /**
+     * See https://github.com/tecnickcom/tc-lib-barcode
+     * (To add this library, must create an autoloader.php for it to register with, and also include tc-lib-color)
+     * @since ZC v2.1.0
+     */
+    public function getQrCodeTCBarcode(string $data, int $size = 200): string
+    {
+        $barcode = new \Com\Tecnick\Barcode\Barcode();
+
+        $qrCode = $barcode->getBarcodeObj(
+            'QRCODE,L',
+            $data, // data string to encode
+            $size,
+            $size,
+            'black',  // foreground color
+            [2,2,2,2] // padding (use absolute or negative values as multiplication factors)
+        )->setBackgroundColor('white'); // background color
+
+        if (function_exists('imagecreate')) {
+            return 'data:image/png;base64,' . base64_encode($qrCode->getPngData(true));
+        }
+
+        return $qrCode->getSvgCode(); // returns SVG as SVG markup, safe to render directly as HTML
+
+        //return $qrCode->getHtmlDiv(); // returns a DIV containing multiple small rectangles for QR code, safe to render as HTML; however, QR Code is not as well recognized by in-browser scanners
+    }
+
+    /**
+     * @since ZC v2.1.0
+     */
+    public function getQrCode(string $domain, string $secret, string $accountname = '', int $size = 200): string
+    {
+        $data = $this->getQRText($domain, $secret, $accountname);
+
+        $qr = '';
+        foreach ($this->qrProviderOrder as $provider) {
+            if ($provider === 'local' || $provider === 'BaconQrCode') {
+                if (class_exists('\BaconQrCode\Encoder\QrCode')) {
+                    $qr = $this->getQrCodeBaconQrCode($data, $size);
+                }
+                if (!empty($qr)) {
+                    return $qr;
+                }
+            }
+
+            if ($provider === 'local' || $provider === 'TCBarcode') {
+                if (class_exists('\Com\Tecnick\Barcode\Barcode')) {
+                    $qr = $this->getQrCodeTCBarcode($data, $size);
+                }
+                if (!empty($qr)) {
+                    return $qr;
+                }
+            }
+
+            if ($provider === 'QrServerUrl') {
+                $qr = $this->getQrCodeQRserverUrl($data, $size);
+            }
+
+            if ($provider === 'QRickitUrl') {
+                $qr = $this->getQrCodeQRickitUrl($data, $size);
+            }
+
+            if (!empty($qr)) {
+                return $qr;
+            }
+        }
+
+        return $qr;
+    }
 }

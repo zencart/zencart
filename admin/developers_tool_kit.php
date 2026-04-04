@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: proseLA 2023 Oct 24 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2026 Mar 05 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 
@@ -25,9 +25,11 @@ $configuration_key_lookup = $_POST['configuration_key'] ?? '';
 $default_context_lines = (int)($_POST['context_lines'] ?? $default_context_lines);
 $case_sensitive = !empty($_POST['case_sensitive']);
 $include_plugins = !empty($_POST['include_plugins']);
-$include_laravel = !empty($_POST['include_laravel']);
 $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
+/**
+ * @since ZC v1.2.0d
+ */
 function getDirList($dirName, $filetypes = 1) {
   global $directory_array, $sub_dir_files;
 
@@ -61,34 +63,34 @@ function getDirList($dirName, $filetypes = 1) {
 function zen_display_files($include_root = false, $filetypesincluded = 1) {
   global $check_directory, $found, $configuration_key_lookup, $outCount, $output;
   global $db;
-  $max_context_lines_before = $max_context_lines_after = abs((int)$_POST['context_lines']);
+  $max_context_lines_before = $max_context_lines_after = abs((int)($_POST['context_lines'] ?? 0));
 
-  $directory_array = array();
+  $directory_array = [];
   for ($i = 0, $n = count($check_directory); $i < $n; $i++) {
 
     $dir_check = $check_directory[$i];
 
     switch ($filetypesincluded) {
       case(1):
-        $file_extensions = array('.php');
+        $file_extensions = ['.php'];
         break;
       case(2):
-        $file_extensions = array('.php', '.css');
+        $file_extensions = ['.php', '.css'];
         break;
       case(3):
-        $file_extensions = array('.css');
+        $file_extensions = ['.css'];
         break;
       case(4):
-        $file_extensions = array('.html', '.txt');
+        $file_extensions = ['.html', '.txt'];
         break;
       case(5):
-        $file_extensions = array('.js');
+        $file_extensions = ['.js'];
         break;
       case(6):
-        $file_extensions = array('.*');
+        $file_extensions = ['.*'];
         break;
       default:
-        $file_extensions = array('.php', '.css');
+        $file_extensions = ['.php', '.css'];
         break;
     }
 
@@ -112,7 +114,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
 
   if ($include_root == true) {
     $original_array = $directory_array;
-    $root_array = array();
+    $root_array = [];
 // if not html/txt
     if ($filetypesincluded != 3 && $filetypesincluded != 4 && $filetypesincluded != 5) {
       $root_array[] = DIR_FS_CATALOG . 'ajax.php';
@@ -136,13 +138,13 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     $sql = "SELECT *
             FROM " . TABLE_CONFIGURATION . "
             WHERE configuration_key = :zcconfigkey:";
-    $sql = $db->BindVars($sql, ':zcconfigkey:', strtoupper($configuration_key_lookup), 'string');
+    $sql = $db->bindVars($sql, ':zcconfigkey:', strtoupper($configuration_key_lookup), 'string');
     $check_configure = $db->Execute($sql);
     if ($check_configure->RecordCount() < 1) {
       $sql = "SELECT *
               FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
               WHERE configuration_key = :zcconfigkey:";
-      $sql = $db->BindVars($sql, ':zcconfigkey:', strtoupper($configuration_key_lookup), 'string');
+      $sql = $db->bindVars($sql, ':zcconfigkey:', strtoupper($configuration_key_lookup), 'string');
       $check_configure = $db->Execute($sql);
     }
     if ($check_configure->RecordCount() >= 1) {
@@ -165,7 +167,6 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
   $cnt_found = 0;
   $case_sensitive = !empty($_POST['case_sensitive']);
   $include_plugins = !empty($_POST['include_plugins']);
-  $include_laravel = !empty($_POST['include_laravel']);
   for ($i = 0, $n = count($directory_array); $i < $n; $i++) {
     // build file content of matching lines
     $file_cnt++;
@@ -268,8 +269,9 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
  *
  * @param string $input
  * @param string $highlight
- * @param boolean $case_sensitive
+ * @param  bool  $case_sensitive
  * @return string
+ * @since ZC v1.5.5
  */
 function cleanup_dtk_output_text($input = '', $highlight = '', $case_sensitive = false) {
   if ($input == '')
@@ -299,12 +301,13 @@ function cleanup_dtk_output_text($input = '', $highlight = '', $case_sensitive =
 /**
  * Left-pad input "number" string with spaces
  *
- * @param string $number The number string to pad
- * @param int $n The number of padding characters to accommodate
- * @return string
+ * @param string|int $number The numeric string to pad
+ * @param int $n The number of padding characters to enforce
+ * @since ZC v1.5.5
  */
-function number_pad_with_spaces($number, $n = 0) {
-  return str_replace(' ', '&nbsp;', str_pad((int)$number, $n, ' ', STR_PAD_LEFT));
+function number_pad_with_spaces(string|int $number, int $n = 0): string
+{
+  return str_replace(' ', '&nbsp;', str_pad((string)(int)$number, $n, ' ', STR_PAD_LEFT));
 }
 
 /* ==================================================================== */
@@ -357,8 +360,8 @@ switch ($action) {
     $sql = $db->bindVars($sql, ':cfgAndClause:', $cfgAndClause, 'passthru');
     $sql = $db->bindVars($sql, ':ptypeAndClause:', $ptypeAndClause, 'passthru');
     $sql = $db->bindVars($sql, ':typeRestriction:', ' and t.type_id=1 ', 'passthru');
-    $sql = $db->BindVars($sql, ':cfgKeySearch:', $cfgKeySearch, 'passthru');
-    $sql = $db->BindVars($sql, ':zcconfigkey:', str_replace('_', '\_', strtoupper($search)), 'noquotestring');
+    $sql = $db->bindVars($sql, ':cfgKeySearch:', $cfgKeySearch, 'passthru');
+    $sql = $db->bindVars($sql, ':zcconfigkey:', str_replace('_', '\_', strtoupper($search)), 'noquotestring');
     $sql = $db->bindVars($sql, ':search:', $search, 'noquotestring');
     if (isset($_GET['s']) && $_GET['s'] == 'k')
       $sql .= ' ORDER BY configuration_key';
@@ -388,21 +391,21 @@ switch ($action) {
     $sql = "SELECT *, (CASE WHEN use_function = 'zen_cfg_password_display' THEN '********' ELSE configuration_value END) AS configuration_value
             FROM " . TABLE_CONFIGURATION . "
             WHERE configuration_key = :zcconfigkey:";
-    $sql = $db->BindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
+    $sql = $db->bindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
     $check_configure = $db->Execute($sql);
     if ($check_configure->RecordCount() < 1) {
       $sql = "SELECT * FROM " . TABLE_PRODUCT_TYPE_LAYOUT . " WHERE configuration_key = :zcconfigkey:";
-      $sql = $db->BindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
+      $sql = $db->bindVars($sql, ':zcconfigkey:', $_POST['configuration_key'], 'string');
       $check_configure = $db->Execute($sql);
       if ($check_configure->RecordCount() < 1) {
         // build filenames to search
         switch ($zv_files_group) {
           case (0): // none
-            $check_directory = array();
+            $check_directory = [];
             $filename_listing = '';
             break;
           case (1): // all english.php files
-            $check_directory = array();
+            $check_directory = [];
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES;
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/';
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $template_dir . '/' . $_SESSION['language'] . '/';
@@ -418,20 +421,20 @@ switch ($action) {
             $check_directory[] = DIR_FS_ADMIN . DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/';
             break;
           case (2): // all catalog /language/*.php
-            $check_directory = array();
+            $check_directory = [];
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES;
             break;
           case (3): // all catalog /language/english/*.php
-            $check_directory = array();
+            $check_directory = [];
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/';
             break;
           case (4): // all admin /language/*.php
-            $check_directory = array();
+            $check_directory = [];
             $check_directory[] = DIR_FS_ADMIN . DIR_WS_LANGUAGES;
             break;
           case (5): // all admin /language/english/*.php
             // set directories and files names
-            $check_directory = array();
+            $check_directory = [];
             $check_directory[] = DIR_FS_ADMIN . DIR_WS_LANGUAGES . $_SESSION['language'] . '/';
             break;
         } // eof: switch
@@ -464,22 +467,22 @@ switch ($action) {
     switch ($zv_files_group) {
       case (0): // none
         $filename_listing = '';
-        $check_directory = array();
+        $check_directory = [];
         break;
       case (1): // all admin/catalog function files
-        $check_directory = array();
+        $check_directory = [];
         $check_directory[] = DIR_FS_CATALOG . DIR_WS_FUNCTIONS;
         $check_directory[] = DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'extra_functions/';
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_FUNCTIONS;
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'extra_functions/';
         break;
       case (2): // all catalog function files
-        $check_directory = array();
+        $check_directory = [];
         $check_directory[] = DIR_FS_CATALOG . DIR_WS_FUNCTIONS;
         $check_directory[] = DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'extra_functions/';
         break;
       case (3): // all admin function files
-        $check_directory = array();
+        $check_directory = [];
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_FUNCTIONS;
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'extra_functions/';
         break;
@@ -503,13 +506,13 @@ switch ($action) {
     switch ($zv_files_group) {
       case (0): // none
         $filename_listing = '';
-        $check_directory = array();
+        $check_directory = [];
         break;
       case (1): // all admin/catalog classes files
-        $check_directory = array();
+        $check_directory = [];
         $filename_listing = '';
 
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
         for ($i = 0, $n = count($sub_dir_files); $i < $n; $i++) {
           $check_directory[] = $sub_dir_files[$i] . '/';
@@ -517,15 +520,15 @@ switch ($action) {
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
         break;
       case (2): // all catalog classes files
-        $check_directory = array();
-        $sub_dir_files = array();
+        $check_directory = [];
+        $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG . DIR_WS_CLASSES, 1);
         for ($i = 0, $n = count($sub_dir_files); $i < $n; $i++) {
           $check_directory[] = $sub_dir_files[$i] . '/';
         }
         break;
       case (3): // all admin class files
-        $check_directory = array();
+        $check_directory = [];
         $check_directory[] = DIR_FS_ADMIN . DIR_WS_CLASSES;
         break;
     } // eof: switch
@@ -547,11 +550,11 @@ switch ($action) {
     // build filenames to search
     switch ($zv_files_group) {
       case (0): // none
-        $check_directory = array();
+        $check_directory = [];
         $filename_listing = '';
         break;
       case (1): // all template files
-        $check_directory = array();
+        $check_directory = [];
         $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/templates' . '/';
         $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/sideboxes' . '/';
         $check_directory[] = DIR_FS_CATALOG_MODULES;
@@ -563,7 +566,7 @@ switch ($action) {
         $check_directory[] = DIR_FS_CATALOG_MODULES . $template_dir . '/';
         $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
 
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG_MODULES . 'pages');
         $check_dir = $sub_dir_files;
         for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
@@ -572,21 +575,21 @@ switch ($action) {
 
         break;
       case (2): // all /templates files
-        $check_directory = array();
+        $check_directory = [];
         $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/templates' . '/';
         $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/templates' . '/';
         break;
       case (3): // all sideboxes files
-        $check_directory = array();
+        $check_directory = [];
         $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/sideboxes' . '/';
         $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/';
         $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
         $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/sideboxes' . '/';
         break;
       case (4): // all /pages files
-        $check_directory = array();
+        $check_directory = [];
         //$check_directory[] = DIR_FS_CATALOG_MODULES . 'pages/';
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG_MODULES . 'pages');
 
         $check_dir = array_merge($check_directory, $sub_dir_files);
@@ -618,45 +621,38 @@ switch ($action) {
 //echo 'Who am I template ' . $template_dir . ' sess lang ' . $_SESSION['language'];
     switch ($zv_files_group) {
       case (0): // none
-        $check_directory = array();
+        $check_directory = [];
         $filename_listing = '';
         break;
       case (1): // all
         $zv_check_root = true;
         $filename_listing = '';
 
-        $check_directory = array();
+        $check_directory = [];
 
 // get includes
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG . DIR_WS_INCLUDES, $zv_filestype_group);
         $sub_dir_files_catalog = $sub_dir_files;
 
 // get email
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_EMAIL_TEMPLATES, $zv_filestype_group);
         $sub_dir_files_email = $sub_dir_files;
 
 // get admin
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
 
 // get zc_plugins
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         if ($include_plugins) {
           getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         }
         $sub_dir_files_plugins = $sub_dir_files;
 
-// get laravel
-        $sub_dir_files = array();
-        if ($include_plugins) {
-          getDirList(DIR_FS_CATALOG . '/laravel', $zv_filestype_group);
-        }
-        $sub_dir_files_laravel = $sub_dir_files;
-
-        $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin, $sub_dir_files_plugins, $sub_dir_files_laravel);
+        $check_dir = array_merge($sub_dir_files_catalog, $sub_dir_files_email, $sub_dir_files_admin, $sub_dir_files_plugins);
         for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
@@ -666,14 +662,14 @@ switch ($action) {
         $zv_check_root = true;
         $filename_listing = '';
 
-        $check_directory = array();
+        $check_directory = [];
 
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG . DIR_WS_INCLUDES, $zv_filestype_group);
         $sub_dir_files_catalog = $sub_dir_files;
 
 // get email
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_EMAIL_TEMPLATES, $zv_filestype_group);
         $sub_dir_files_email = $sub_dir_files;
 
@@ -690,27 +686,20 @@ switch ($action) {
         $zv_check_root = false;
         $filename_listing = '';
 
-        $check_directory = array();
+        $check_directory = [];
 
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_ADMIN, $zv_filestype_group);
         $sub_dir_files_admin = $sub_dir_files;
 
 // get zc_plugins
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         if ($include_plugins) {
           getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         }
         $sub_dir_files_plugins = $sub_dir_files;
 
-// get laravel
-        $sub_dir_files = array();
-        if ($include_plugins) {
-          getDirList(DIR_FS_CATALOG . '/laravel', $zv_filestype_group);
-        }
-        $sub_dir_files_laravel = $sub_dir_files;
-
-        $check_dir = array_merge($sub_dir_files_admin, $sub_dir_files_plugins, $sub_dir_files_laravel);
+        $check_dir = array_merge($sub_dir_files_admin, $sub_dir_files_plugins);
         for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
           $check_directory[] = $check_dir[$i] . '/';
         }
@@ -720,9 +709,9 @@ switch ($action) {
         $zv_check_root = false;
         $filename_listing = '';
 
-        $check_directory = array();
+        $check_directory = [];
 
-        $sub_dir_files = array();
+        $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG . '/zc_plugins', $zv_filestype_group);
         $check_dir = $sub_dir_files;
         for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
@@ -730,19 +719,6 @@ switch ($action) {
         }
         break;
 
-      case (5): // laravel
-        $zv_check_root = false;
-        $filename_listing = '';
-
-        $check_directory = array();
-
-        $sub_dir_files = array();
-        getDirList(DIR_FS_CATALOG . '/laravel', $zv_filestype_group);
-        $check_dir = $sub_dir_files;
-        for ($i = 0, $n = count($check_dir); $i < $n; $i++) {
-          $check_directory[] = $check_dir[$i] . '/';
-        }
-        break;
     }
 
     $result = zen_display_files($zv_check_root, $zv_filestype_group);
@@ -836,11 +812,11 @@ if ($found == false) {
                   echo '<a href="' . zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $check_configure_group->fields['configuration_group_id'] . '&cID=' . $check_configure->fields['configuration_id']) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>';
                 } else {
                   $page = '';
-                  if (strstr($check_configure->fields['configuration_key'], 'MODULE_SHIPPING'))
+                  if (str_contains($check_configure->fields['configuration_key'], 'MODULE_SHIPPING'))
                     $page .= 'shipping';
-                  if (strstr($check_configure->fields['configuration_key'], 'MODULE_PAYMENT'))
+                  if (str_contains($check_configure->fields['configuration_key'], 'MODULE_PAYMENT'))
                     $page .= 'payment';
-                  if (strstr($check_configure->fields['configuration_key'], 'MODULE_ORDER_TOTAL'))
+                  if (str_contains($check_configure->fields['configuration_key'], 'MODULE_ORDER_TOTAL'))
                     $page .= 'ordertotal';
 
                   if ($show_products_type_layout == true) {
@@ -871,20 +847,6 @@ if ($found == false) {
       } else {
         ?>
 
-        <?php
-// disabled and here for an example
-        if (false) {
-          ?>
-          <!-- bof: update all products price sorter -->
-          <table >
-            <tr>
-              <td class="main text-left" valign="top"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-              <td class="main text-right" valign="middle"><?php echo '<a href="' . zen_href_link(FILENAME_DEVELOPERS_TOOL_KIT, 'action=update_all_products_price_sorter') . '" class="btn btn-primary" role="button">' . IMAGE_UPDATE . '</a>'; ?></td>
-            </tr>
-          </table>
-          <!-- eof: update all products price sorter -->
-        <?php } ?>
-
         <!-- bof: Locate a configuration constant -->
         <div class="row">
           <div class="col-sm-12"><?php echo TEXT_CONFIGURATION_CONSTANT; ?></div>
@@ -899,14 +861,14 @@ if ($found == false) {
         </div>
         <div class="form-group">
             <?php
-            $za_lookup = array(
-              array('id' => '0', 'text' => TEXT_LOOKUP_NONE),
-              array('id' => '1', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_LANGUAGE),
-              array('id' => '2', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_CATALOG),
-              array('id' => '3', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_CATALOG_TEMPLATE),
-              array('id' => '4', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ADMIN),
-              array('id' => '5', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ADMIN_LANGUAGE)
-            );
+            $za_lookup = [
+              ['id' => '0', 'text' => TEXT_LOOKUP_NONE],
+              ['id' => '1', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_LANGUAGE],
+              ['id' => '2', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_CATALOG],
+              ['id' => '3', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_CATALOG_TEMPLATE],
+              ['id' => '4', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ADMIN],
+              ['id' => '5', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ADMIN_LANGUAGE]
+            ];
 //                                              array('id' => '6', 'text' => TEXT_LANGUAGE_LOOKUP_CURRENT_ALL)
             ?>
             <?php echo zen_draw_label(TEXT_LANGUAGE_LOOKUPS, 'zv_files_lc', 'class="control-label col-sm-3"'); ?>
@@ -973,7 +935,7 @@ if ($found == false) {
                       $section = 'Product Types';
                       $editlink = zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $keySearchResult['configuration_group_id'] . '&cID=' . $keySearchResult['configuration_id'] . '&action=layout_edit');
                       $viewlink = zen_href_link(FILENAME_PRODUCT_TYPES, 'ptID=' . $keySearchResult['configuration_group_id'] . '&cID=' . $keySearchResult['configuration_id'] . '&action=layout');
-                    } else if ($keySearchResult['src'] == 'conf') {
+                    } elseif ($keySearchResult['src'] == 'conf') {
                       $section = 'Configuration';
                       $editlink = zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResult['configuration_group_id'] . '&cID=' . $keySearchResult['configuration_id'] . '&action=edit');
                       $viewlink = zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $keySearchResult['configuration_group_id'] . '&cID=' . $keySearchResult['configuration_id']);
@@ -1022,11 +984,11 @@ if ($found == false) {
         </div>
         <div class="form-group">
             <?php
-            $za_lookup = array(
-              array('id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT),
-              array('id' => '2', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_CATALOG),
-              array('id' => '3', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_ADMIN)
-            );
+            $za_lookup = [
+              ['id' => '1', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT],
+              ['id' => '2', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_CATALOG],
+              ['id' => '3', 'text' => TEXT_FUNCTION_LOOKUP_CURRENT_ADMIN]
+            ];
             ?>
             <?php echo zen_draw_label(TEXT_FUNCTION_LOOKUPS, 'zv_files_lf', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_function' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_lf" class="form-control"'); ?></div>
@@ -1050,11 +1012,11 @@ if ($found == false) {
         </div>
         <div class="form-group">
             <?php
-            $za_lookup = array(
-              array('id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT),
-              array('id' => '2', 'text' => TEXT_CLASS_LOOKUP_CURRENT_CATALOG),
-              array('id' => '3', 'text' => TEXT_CLASS_LOOKUP_CURRENT_ADMIN)
-            );
+            $za_lookup = [
+              ['id' => '1', 'text' => TEXT_CLASS_LOOKUP_CURRENT],
+              ['id' => '2', 'text' => TEXT_CLASS_LOOKUP_CURRENT_CATALOG],
+              ['id' => '3', 'text' => TEXT_CLASS_LOOKUP_CURRENT_ADMIN]
+            ];
             ?>
             <?php echo zen_draw_label(TEXT_CLASS_LOOKUPS, 'zv_files_lcl', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_class' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_lcl" class="form-control"'); ?></div>
@@ -1078,12 +1040,12 @@ if ($found == false) {
         </div>
         <div class="form-group">
             <?php
-            $za_lookup = array(
-              array('id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT),
-              array('id' => '2', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_TEMPLATES),
-              array('id' => '3', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_SIDEBOXES),
-              array('id' => '4', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_PAGES)
-            );
+            $za_lookup = [
+              ['id' => '1', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT],
+              ['id' => '2', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_TEMPLATES],
+              ['id' => '3', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_SIDEBOXES],
+              ['id' => '4', 'text' => TEXT_TEMPLATE_LOOKUP_CURRENT_PAGES]
+            ];
             ?>
             <?php echo zen_draw_label(TEXT_TEMPLATE_LOOKUPS, 'zv_files_ltf', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_template' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_ltf" class="form-control"'); ?></div>
@@ -1107,13 +1069,12 @@ if ($found == false) {
         </div>
         <div class="form-group">
             <?php
-            $za_lookup = array(
-              array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT),
-              array('id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG),
-              array('id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN),
-              array('id' => '4', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_PLUGINS),
-              array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_LARAVEL),
-            );
+            $za_lookup = [
+              ['id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT],
+              ['id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_CATALOG],
+              ['id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_ADMIN],
+              ['id' => '4', 'text' => TEXT_ALL_FILES_LOOKUP_CURRENT_PLUGINS],
+            ];
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILES_LOOKUPS, 'zv_files_af', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_files', $za_lookup, (isset($action) && $action == 'locate_all_files' ? (int)$_POST['zv_files'] : '1'), 'id="zv_files_af" class="form-control"'); ?></div>
@@ -1127,23 +1088,15 @@ if ($found == false) {
           </div>
         </div>
         <div class="form-group">
-            <?php echo zen_draw_label(TEXT_INCLUDE_LARAVEL, 'include_laravel', 'class="control-label col-sm-3"'); ?>
-          <div class="col-sm-9 col-md-6">
-            <div class="checkbox">
-              <label for="include_laravel"><?php echo zen_draw_checkbox_field('include_laravel', true, $include_laravel, '', 'id="include_laravel" aria-label="include_laravel"'); ?></label>
-            </div>
-          </div>
-        </div>
-        <div class="form-group">
             <?php
-            $za_lookup_filetype = array(
-              array('id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_PHP),
-              array('id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_PHPCSS),
-              array('id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CSS),
-              array('id' => '4', 'text' => TEXT_ALL_FILES_LOOKUP_HTMLTXT),
-              array('id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_JS),
-              array('id' => '6', 'text' => TEXT_ALL_FILES_LOOKUP_ALL_TYPES),
-            );
+            $za_lookup_filetype = [
+              ['id' => '1', 'text' => TEXT_ALL_FILES_LOOKUP_PHP],
+              ['id' => '2', 'text' => TEXT_ALL_FILES_LOOKUP_PHPCSS],
+              ['id' => '3', 'text' => TEXT_ALL_FILES_LOOKUP_CSS],
+              ['id' => '4', 'text' => TEXT_ALL_FILES_LOOKUP_HTMLTXT],
+              ['id' => '5', 'text' => TEXT_ALL_FILES_LOOKUP_JS],
+              ['id' => '6', 'text' => TEXT_ALL_FILES_LOOKUP_ALL_TYPES],
+            ];
             ?>
             <?php echo zen_draw_label(TEXT_ALL_FILESTYPE_LOOKUPS, 'zv_filestype', 'class="control-label col-sm-3"'); ?>
           <div class="col-sm-9 col-md-6"><?php echo zen_draw_pull_down_menu('zv_filestype', $za_lookup_filetype, (!empty($_POST['zv_filestype']) ? $_POST['zv_filestype'] : '1'), 'id="zv_filestype" class="form-control"'); ?></div>

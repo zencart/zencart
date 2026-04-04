@@ -1,13 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2024 Feb 19 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
     /**
      *
+     * @since ZC v1.5.8
      */
     class productPulldown extends pulldown
     {
@@ -54,6 +55,7 @@
          * @param array $fieldnameArray
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function setSort(array $fieldnameArray)
         {
@@ -76,6 +78,7 @@
          * @param int $category_id
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function setCategory(int $category_id)
         {
@@ -88,6 +91,7 @@
          * @param bool $status
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function showModel(bool $status)
         {
@@ -99,6 +103,7 @@
          * @param bool $status
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function showPrice(bool $status)
         {
@@ -110,6 +115,7 @@
          * @param bool $status
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function onlyActive(bool $status)
         {
@@ -123,6 +129,7 @@
 
         /**
          * @return mixed|void
+         * @since ZC v1.5.8
          */
         protected function setSQL()
         {
@@ -137,6 +144,7 @@
 
         /**
          * @return mixed|void
+         * @since ZC v1.5.8
          */
         protected function processSQL()
         {

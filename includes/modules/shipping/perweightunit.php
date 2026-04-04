@@ -1,14 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
+ * @version $Id: lat9 2025 Oct 01 Modified in v2.2.0 $
  */
 
 /**
  * "Per Weight Unit" shipping module, allowing you to offer per-unit-rate shipping options
  *
+ * @since ZC v1.3.0
  */
 class perweightunit extends ZenShipping
 {
@@ -35,7 +36,9 @@ class perweightunit extends ZenShipping
 
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = ((MODULE_SHIPPING_PERWEIGHTUNIT_STATUS == 'True') ? true : false);
+            $this->enabled = (MODULE_SHIPPING_PERWEIGHTUNIT_STATUS === 'True');
+        } else {
+            $this->enabled = false;
         }
 
         if ($this->enabled) {
@@ -51,38 +54,15 @@ class perweightunit extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
-        global $order, $db;
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if ((int)MODULE_SHIPPING_PERWEIGHTUNIT_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . "
-                             where geo_zone_id = '" . MODULE_SHIPPING_PERWEIGHTUNIT_ZONE . "'
-                             and zone_country_id = '" . (int)$order->delivery['country']['id'] . "'
-                             order by zone_id");
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1) {
-                    $check_flag = true;
-                    break;
-                } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
-            }
-
-            if ($check_flag == false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_PERWEIGHTUNIT_ZONE);
 
         if ($this->enabled) {
             // -----
@@ -97,6 +77,7 @@ class perweightunit extends ZenShipping
      *
      * @param string $method
      * @return array
+     * @since ZC v1.3.0
      */
     function quote($method = ''): array
     {
@@ -132,6 +113,7 @@ class perweightunit extends ZenShipping
      * Check to see whether module is installed
      *
      * @return boolean
+     * @since ZC v1.3.0
      */
     function check()
     {
@@ -146,12 +128,13 @@ class perweightunit extends ZenShipping
     /**
      * Install the shipping module and its configuration settings
      *
+     * @since ZC v1.3.0
      */
     function install(): void
     {
         global $db;
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Per Weight Unit Shipping', 'MODULE_SHIPPING_PERWEIGHTUNIT_STATUS', 'True', 'Do you want to offer per unit rate shipping?<br><br>Product Quantity * Units (products_weight) * Cost per Unit', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Cost per Unit', 'MODULE_SHIPPING_PERWEIGHTUNIT_COST', '1', 'NOTE: When using this Shipping Module be sure to check the Tare settings in the Shipping/Packaging and set the Largest Weight high enough to handle the price, such as 5000.00 and the adjust the settings on Small and Large packages which will add to the price as well.<br><br>The shipping cost will be used to determine shipping charges based on: Product Quantity * Units (products_weight) * Cost per Unit - in an order that uses this shipping method.', '6', '0', now())");
+        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Cost per Unit', 'MODULE_SHIPPING_PERWEIGHTUNIT_COST', '1', 'NOTE: When using this Shipping Module be sure to check the Tare settings in the Shipping/Packaging and set the Largest Weight high enough to handle the price, such as 5000.00 and then adjust the settings on Small and Large packages which will add to the price as well.<br><br>The shipping cost will be used to determine shipping charges based on: Product Quantity * Units (products_weight) * Cost per Unit - in an order that uses this shipping method.', '6', '0', now())");
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Handling Fee', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING', '0', 'Handling fee for this shipping method.', '6', '0', now())");
 
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
@@ -162,6 +145,9 @@ class perweightunit extends ZenShipping
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/per_item_shipping/'];
@@ -171,6 +157,7 @@ class perweightunit extends ZenShipping
      * Internal list of configuration keys used for configuration of the module
      *
      * @return array
+     * @since ZC v1.3.0
      */
     function keys(): array
     {

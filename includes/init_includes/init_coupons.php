@@ -1,14 +1,15 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Apr 10 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
  * Try to match the HTTP_REFERER header against our coupon records.
  *
  * @return ?string the coupon_code if found, else null.
+ * @since ZC v2.0.0
  */
 function initCouponReferrerCheck(): ?string {
     global $db;
@@ -64,6 +65,7 @@ function initCouponReferrerCheck(): ?string {
  * Return a coupon code found in $_GET['coupon_code'], if any.
  *
  * @return ?string the coupon_code if found, else null.
+ * @since ZC v2.0.0
  */
 function initCouponRequestCheck() {
     if (empty($_GET['coupon_code'])) {
@@ -76,6 +78,7 @@ function initCouponRequestCheck() {
  * Look for any coupon_code, validate it and apply it.
  *
  * @return void
+ * @since ZC v2.0.0
  */
 function initCouponChecks() {
     global $languageLoader, $messageStack;

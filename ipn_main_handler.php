@@ -3,10 +3,10 @@
 /**
  * ipn_main_handler.php callback handler for PayPal IPN notifications
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 13 Modified in v2.0.0-rc2 $
+ * @version $Id: torvista 2026 Mar 13 Modified in v2.2.1 $
  *
  * @var $currencies currencies
  * @var $db queryFactoryResult|queryFactory
@@ -265,7 +265,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
     $txn_type = ipn_determine_txn_type($_POST, $txn_type);
     ipn_debug_email('Breakpoint: 5 - Transaction type (txn_type) = ' . $txn_type . '   [parentLookup=' . $parentLookup . ']');
 
-    if ($_POST['payment_type'] === 'instant' && $isDPtransaction && ((isset($_POST['auth_status']) && $_POST['auth_status'] === 'Completed') || $_POST['payment_status'] === 'Completed')) {
+    if (!empty($_POST['payment_type']) && $_POST['payment_type'] === 'instant' && $isDPtransaction && ((isset($_POST['auth_status']) && $_POST['auth_status'] === 'Completed') || $_POST['payment_status'] === 'Completed')) {
         ipn_debug_email('IPN NOTICE :: DP/Website Payments Pro notice -- IPN Ignored');
         die();
     }
@@ -381,7 +381,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 ipn_debug_email('Breakpoint: 5b - PP table OID: ' . print_r($sql_data_array, true));
                 zen_db_perform(TABLE_PAYPAL, $sql_data_array);
                 ipn_debug_email('Breakpoint: 5c - PP table OID saved');
-                $pp_hist_id = $db->Insert_ID();
+                $pp_hist_id = $db->insert_ID();
                 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_PAYMENT_MODULES_AFTER_ORDER_CREATE');
                 ipn_debug_email('Breakpoint: 5d - PP hist ID: ' . $pp_hist_id);
                 $sql_data_array = ipn_create_order_history_array($pp_hist_id);
@@ -409,7 +409,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 ipn_debug_email('Breakpoint: 5L - adding products');
                 $_SESSION['order_number_created'] = $insert_id;
                 $GLOBALS[$_SESSION['payment']]->transaction_id = $_POST['txn_id'];
-                $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE_ADD_PRODUCTS');
+                $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_CREATE_ADD_PRODUCTS', $insert_id, $order);
                 $order->send_order_email($insert_id);
                 ipn_debug_email('Breakpoint: 5m - emailing customer');
                 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_SEND_ORDER_EMAIL');
@@ -451,7 +451,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 $_SESSION['order_summary']['shipping'] = $oshipping ?? 0;
                 $products_array = [];
                 foreach ($order->products as $key => $val) {
-                    $products_array[urlencode($val['id'])] = urlencode($val['model']);
+                    $products_array[urlencode((string)$val['id'])] = urlencode($val['model']);
                 }
                 $_SESSION['order_summary']['products_ordered_ids'] = implode('|', array_keys($products_array));
                 $_SESSION['order_summary']['products_ordered_models'] = implode('|', array_values($products_array));
@@ -488,7 +488,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
             if ($txn_type === 'parent') {
                 $sql_data_array = ipn_create_order_array($ordersID, $txn_type);
                 zen_db_perform(TABLE_PAYPAL, $sql_data_array);
-                $paypalipnID = $db->Insert_ID();
+                $paypalipnID = $db->insert_ID();
             } else {
                 $sql_data_array = ipn_create_order_update_array($txn_type);
                 zen_db_perform(TABLE_PAYPAL, $sql_data_array, 'update', "txn_id='" . ($txn_type === 'cleared-authorization' ? $_POST['parent_txn_id'] : $_POST['txn_id']) . "'");
@@ -581,4 +581,3 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
             break;
     }
 }
-

@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 17 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = $_GET['action'] ?? '';
 
 if (!empty($action)) {
     switch ($action) {
@@ -85,7 +85,7 @@ if (!empty($action)) {
                     $media_types = $db->Execute($media_type_query_raw);
                     $mType_parameter = '';
                     foreach ($media_types as $media_type) {
-                        if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $media_type['type_id']))) && !isset($mInfo) && (substr($action, 0, 3) != 'new')) {
+                        if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $media_type['type_id']))) && !isset($mInfo) && (!str_starts_with($action, 'new'))) {
                             $mInfo = new objectInfo($media_type);
                             $mType_parameter = '&mID=' . $mInfo->type_id;
                         }
@@ -101,7 +101,7 @@ if (!empty($action)) {
                         <td class="dataTableContent text-right">
                             <?php
                             if (isset($mInfo) && is_object($mInfo) && ($media_type['type_id'] == $mInfo->type_id)) {
-                                echo zen_icon('caret-right', '', '2x', true);;
+                                echo zen_icon('caret-right', '', '2x', true);
                             } else {
                                 echo '<a href="' . zen_href_link(FILENAME_MEDIA_TYPES, zen_get_all_get_params(['mID']) . 'mID=' . $media_type['type_id']) . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>';
                             }
@@ -157,7 +157,7 @@ if (!empty($action)) {
                 }
 
                 if (!empty($heading) && !empty($contents)) {
-                    $box = new box;
+                    $box = new box();
                     echo $box->infoBox($heading, $contents);
                 }
                 ?>

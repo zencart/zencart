@@ -1,11 +1,14 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
+ * @version $Id: lat9 2025 Oct 01 Modified in v2.2.0 $
  */
 
+/**
+ * @since ZC v1.0.3
+ */
 class flat extends ZenShipping
 {
     function __construct()
@@ -25,6 +28,8 @@ class flat extends ZenShipping
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
             $this->enabled = (MODULE_SHIPPING_FLAT_STATUS == 'True');
+        } else {
+            $this->enabled = false;
         }
 
         $this->update_status();
@@ -32,35 +37,15 @@ class flat extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     function update_status()
     {
-        global $order, $db;
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if ((int)MODULE_SHIPPING_FLAT_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-            while (!$check->EOF) {
-                if ($check->fields['zone_id'] < 1) {
-                    $check_flag = true;
-                    break;
-                } elseif ($check->fields['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-                $check->MoveNext();
-            }
-
-            if ($check_flag == false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_FLAT_ZONE);
 
         if ($this->enabled) {
             // -----
@@ -70,6 +55,9 @@ class flat extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function quote($method = ''): array
     {
         global $order;
@@ -96,6 +84,9 @@ class flat extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check()
     {
         global $db;
@@ -106,6 +97,9 @@ class flat extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install(): void
     {
         global $db;
@@ -117,6 +111,9 @@ class flat extends ZenShipping
         $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_FLAT_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys(): array
     {
         return ['MODULE_SHIPPING_FLAT_STATUS', 'MODULE_SHIPPING_FLAT_COST', 'MODULE_SHIPPING_FLAT_TAX_CLASS', 'MODULE_SHIPPING_FLAT_TAX_BASIS', 'MODULE_SHIPPING_FLAT_ZONE', 'MODULE_SHIPPING_FLAT_SORT_ORDER'];

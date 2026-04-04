@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 05 New in v1.5.8-alpha $
+ * @version $Id: torvista 2025 Mar 16 Modified in v2.2.0 $
  */
 
 // -----
@@ -17,7 +17,7 @@
 //       the 'select' tag itself must include the 'required' attribute.
 //
 ?>
-<script>
+<script title="sidebox_select">
 jQuery(document).ready(function() {
 <?php
     // -----
@@ -45,11 +45,11 @@ jQuery(document).ready(function() {
                 if (jQuery(this).is(':selected')) {
                     isSelected = ' selected="selected"';
                 }
-                theOptions += '<option value="'+jQuery(this).val()+'"'+isSelected+'>'+jQuery(this).text()+'</option>';
+                theOptions += '<option value="'+jQuery(this).val()+'"'+isSelected+'>'+jQuery(this).text()+'<\/option>';
             }
         });
         if (optGroup === true) {
-            theOptions += '</optgroup>';
+            theOptions += '<\/optgroup>';
         }
         jQuery(this).empty().append(theOptions);
         jQuery('optgroup', this).css({'font-style':'normal'});

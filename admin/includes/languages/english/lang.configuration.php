@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
+ * @version $Id: lat9 2025 Sep 24 Modified in v2.2.0 $
 */
 
 $define = [
@@ -61,6 +61,7 @@ $define = [
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_FEATURED_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_FEATURED_PRODUCTS_LENGTH' => 'Value must be an integer.',
+    'TEXT_MAX_ADMIN_RANDOM_SELECT_FEATURED_CATEGORIES_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_RANDOM_SELECT_FEATURED_PRODUCTS_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SPECIAL_PRODUCTS_INDEX_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_SHOW_NEW_PRODUCTS_LIMIT_LENGTH' => 'Value must be an integer.',
@@ -70,6 +71,10 @@ $define = [
     'TEXT_MAX_ADMIN_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_ADMIN_DISPLAY_SEARCH_RESULTS_EZPAGE_LENGTH' => 'Value must be an integer.',
     'TEXT_MAX_PREVIEW' => 'Value must be an integer.',
+    'TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_LENGTH' => 'Value must be an integer between 12-100.',
+    'TEXT_HINT_CUSTOMERS_ACTIVATION_TOKEN_VALID_MINUTES' => 'Value must be an integer between 1-1440.',
+    'TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH' => 'Value must be an integer between 12-100.',
+    'TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES' => 'Value must be an integer between 1-1440.',
 ];
 
 return $define;

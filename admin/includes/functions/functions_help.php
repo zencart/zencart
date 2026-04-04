@@ -1,10 +1,13 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Mar 10 Modified in v2.0.0-rc2 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
+/**
+ * @since ZC v1.5.7
+ */
 function page_has_help()
 {
     global $PHP_SELF;
@@ -107,6 +110,7 @@ function page_has_help()
         FILENAME_REVIEWS => 'https://docs.zen-cart.com/user/admin_pages/catalog/reviews/',
         FILENAME_SPECIALS => 'https://docs.zen-cart.com/user/admin_pages/catalog/specials/',
         FILENAME_FEATURED => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured/',
+        FILENAME_FEATURED_CATEGORIES => 'https://docs.zen-cart.com/user/admin_pages/catalog/featured_categories/',
         FILENAME_SALEMAKER => 'https://docs.zen-cart.com/user/admin_pages/catalog/salemaker/',
         FILENAME_PRODUCTS_EXPECTED => 'https://docs.zen-cart.com/user/admin_pages/catalog/products_expected/',
         FILENAME_PRODUCT => 'https://docs.zen-cart.com/user/products/product_management_admin/', 
@@ -155,7 +159,6 @@ function page_has_help()
         FILENAME_PROFILES => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_profiles/',
         FILENAME_USERS => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_users/',
         FILENAME_ADMIN_ACCOUNT => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_account/',
-        FILENAME_ADMIN_PAGE_REGISTRATION => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_page_registration/',
         FILENAME_ADMIN_ACTIVITY => 'https://docs.zen-cart.com/user/admin_pages/admins/admin_activity_logs/',
         FILENAME_RECORD_ARTISTS => 'https://docs.zen-cart.com/user/admin_pages/extras/record_artists/',
         FILENAME_RECORD_COMPANY => 'https://docs.zen-cart.com/user/admin_pages/extras/record_companies/',

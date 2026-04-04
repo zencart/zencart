@@ -3,30 +3,58 @@
  * functions_lookups.php
  * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Sep 24 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2026 Mar 04 Modified in v2.2.1 $
  */
 
 
 /**
  * get the type_handler value for the specified product_type
  * @param int $product_type
+ * @since ZC v1.2.0d
  */
-function zen_get_handler_from_type($product_type)
+function zen_get_handler_from_type($product_type): string
 {
     global $db;
 
-    $sql = "select type_handler from " . TABLE_PRODUCT_TYPES . " where type_id = " . (int)$product_type;
+    // this is a fallback safety to protect against damaged (inaccessible) data caused by incorrect code in custom product types
+    if ((int)$product_type === 0) {
+        $product_type = 1;
+    }
+
+    $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$product_type;
     $handler = $db->Execute($sql);
-    if ($handler->EOF) return 'ERROR: Invalid type_handler. Your product_type settings are wrong, incomplete, or damaged.';
+    if ($handler->EOF) {
+        throw new ValueError('ERROR: Invalid type_handler. Your product_type settings are wrong, incomplete, or damaged.');
+    }
     return $handler->fields['type_handler'];
 }
 
+/**
+ * Get a list of product page names that identify buyable products.
+ * This allows us to mark a page as containing a product which can
+ * be allowed to add-to-cart or buy-now with various modules.
+ * @since ZC v2.2.0
+ */
+function zen_get_buyable_product_type_handlers(): array
+{
+    global $db;
+    $sql = "SELECT type_handler from " . TABLE_PRODUCT_TYPES . " WHERE allow_add_to_cart = 'Y'";
+    $results = $db->Execute($sql);
+    $retVal = [];
+    foreach ($results as $result) {
+        $retVal[] = $result['type_handler'] . '_info';
+    }
+    return $retVal;
+}
 
 /*
  * List manufacturers (returned in an array)
+ */
+/**
+ * @since ZC v1.0.3
  */
 function zen_get_manufacturers($manufacturers_array = [], $only_those_with_products = false)
 {
@@ -61,6 +89,9 @@ function zen_get_manufacturers($manufacturers_array = [], $only_those_with_produ
 ////
 // Return the manufacturers URL in the needed language
 // TABLES: manufacturers_info
+/**
+ * @since ZC v1.0.3
+ */
 function zen_get_manufacturer_url($manufacturer_id, $language_id)
 {
     global $db;
@@ -75,6 +106,7 @@ function zen_get_manufacturer_url($manufacturer_id, $language_id)
 
 /**
  *  configuration key value lookup
+ * @since ZC v1.1.0
  */
 function zen_get_configuration_key_value($lookup)
 {
@@ -90,6 +122,7 @@ function zen_get_configuration_key_value($lookup)
 /**
  * Product Types -- configuration key value lookup in TABLE_PRODUCT_TYPE_LAYOUT
  * Used to determine keys/flags used on a per-product-type basis for template-use, etc
+ * @since ZC v1.2.0d
  */
 function zen_get_configuration_key_value_layout($lookup, $type = 1)
 {
@@ -105,6 +138,9 @@ function zen_get_configuration_key_value_layout($lookup, $type = 1)
 /*
  * Get accepted credit cards
  * There needs to be a define on the accepted credit card in the language file credit_cards.php example: TEXT_CC_ENABLED_VISA
+ */
+/**
+ * @since ZC v1.2.0d
  */
 function zen_get_cc_enabled($text_image = 'TEXT_', $cc_seperate = ' ', $cc_make_columns = 0)
 {
@@ -145,6 +181,7 @@ function zen_get_cc_enabled($text_image = 'TEXT_', $cc_seperate = ' ', $cc_make_
 /**
  *  stop regular behavior based on customer/store settings
  *  Used to disable various activities if store is in an operating mode that should prevent those activities
+ * @since ZC v1.2.5
  */
 function zen_run_normal(): bool
 {
@@ -201,6 +238,7 @@ function zen_run_normal(): bool
  * 3. 'Customer Approval Status - Authorization Pending' is '1' (Must be Authorized to Browse) or '2' (May browse but no prices unless Authorized) and either
  *    a. A customer IS NOT logged in
  *    b. A customer IS logged in, but their authorization status is neither '0' (Approved) nor '3' (Pending Approval - May browse with prices but may not buy)
+ * @since ZC v1.2.5
  */
 function zen_check_show_prices(): bool
 {
@@ -223,6 +261,7 @@ function zen_check_show_prices(): bool
  * check to see if database stored GET terms are in the URL as $_GET parameters
  * This is used to determine which filters should be applied
  * @return bool
+ * @since ZC v1.2.0d
  */
 function zen_check_url_get_terms()
 {
@@ -240,12 +279,33 @@ function zen_check_url_get_terms()
 
 
 /**
+ * Returns the status id number of an order-status, based on the name
+ * @return int|false (false if not found)
+ * @since ZC v2.2.0
+ */
+function zen_get_orders_status_id_from_name(string $status_name): int|false
+{
+    global $db;
+    if (empty($status_name)) {
+        return false;
+    }
+
+    $sql = "SELECT orders_status_id
+            FROM " . TABLE_ORDERS_STATUS . "
+            WHERE LOWER(orders_status_name) = '" . zen_db_input(strtolower($status_name)) . "'";
+    $result = $db->Execute($sql, 1);
+
+    return $result->EOF ? false : $result->fields['orders_status_id'];
+}
+
+/**
  * Returns the "name" associated with the specified orders_status_id.
- * @param int $order_status_id
+ * @param numeric $order_status_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
-function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
+function zen_get_orders_status_name(int|string $order_status_id, int $language_id = 0): string
 {
     global $db;
     if (empty($language_id)) $language_id = $_SESSION['languages_id'];
@@ -261,12 +321,14 @@ function zen_get_orders_status_name(int $order_status_id, int $language_id = 0)
 }
 
 /**
+ * Used by Admin configuration dropdown selectors
  * @TODO collapse with zen_get_orders_status_name()
- * @param int $order_status_id
+ * @param numeric $order_status_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
-function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
+function zen_get_order_status_name(int|string $order_status_id, int $language_id = 0): string
 {
     global $db;
 
@@ -283,3 +345,53 @@ function zen_get_order_status_name(int $order_status_id, int $language_id = 0)
     return $result->fields['orders_status_name'] . ' [' . (int)$order_status_id . ']';
 }
 
+
+/**
+ * @since ZC v2.1.0
+ */
+function zen_lookup_admin_menu_language_override(string $lookup_type, ?string $lookup_key, ?string $fallback): ?string
+{
+    switch ($lookup_type) {
+        case 'product_type_name':
+            $lookup = strtoupper('PRODUCT_TYPE_NAME_FOR_HANDLER_' . $lookup_key);
+            break;
+        case 'product_type_layout_title':
+            $lookup = strtoupper('PRODUCT_TYPE_LAYOUT_TITLE_FOR_' . $lookup_key);
+            break;
+        case 'product_type_layout_description':
+            $lookup = strtoupper('PRODUCT_TYPE_LAYOUT_DESC_FOR_' . $lookup_key);
+            break;
+        case 'configuration_key_title':
+            $lookup = strtoupper('CFGTITLE_' . $lookup_key);
+            break;
+        case 'configuration_key_description':
+            $lookup = strtoupper('CFGDESC_' . $lookup_key);
+            break;
+        case 'configuration_group_title':
+            $str = $lookup_key;
+            $str = preg_replace('/[\s -\/]+/', '_', $str);
+            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
+            $lookup = strtoupper('CFG_GRP_TITLE_' . $str);
+            break;
+        case 'plugin_name':
+            $str = $lookup_key;
+            $str = preg_replace('/[\s -\/]+/', '_', $str);
+            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
+            $str = preg_replace('/_+/', '_', $str);
+            $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_NAME_FOR_' . $str);
+            break;
+        case 'plugin_description':
+            $str = $lookup_key;
+            $str = preg_replace('/[\s -\/]+/', '_', $str);
+            $str = preg_replace('/[^a-zA-Z0-9_\x80-\xff]/', '', $str);
+            $str = preg_replace('/_+/', '_', $str);
+            $lookup = strtoupper('ADMIN_PLUGIN_MANAGER_DESCRIPTION_FOR_' . $str);
+            break;
+    }
+
+    if (isset($lookup) && defined($lookup)) {
+        return constant($lookup);
+    }
+
+    return $fallback;
+}

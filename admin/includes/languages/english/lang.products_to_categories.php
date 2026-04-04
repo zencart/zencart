@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
+ * @version $Id: torvista 2025 Nov 25 Modified in v2.2.1 $
 */
 
 $define = [
@@ -22,6 +22,8 @@ $define = [
     'TEXT_HEADING_LINKED_CATEGORIES' => 'Linked Categories',
     'TEXT_SET_MASTER_CATEGORIES_ID' => '<strong>WARNING:</strong> a MASTER CATEGORIES ID must be assigned',
     'BUTTON_UPDATE_CATEGORY_LINKS' => 'Update Category Links for',
+    'BUTTON_HIDE_LINKED_CATEGORIES' => 'Hide Linked Categories',
+    'BUTTON_SHOW_LINKED_CATEGORIES' => 'Show Linked Categories',
     'TEXT_INFO_PRODUCTS_TO_CATEGORIES_LINKER_INTRO' => '<p>This product is currently linked to the categories selected below (you may change the number of columns displayed on <a target="_blank" href="configuration.php?&amp;gID=3">this page</a>).<br>To add/remove links, select/deselect the checkboxes as required and then click on the Update Category Links button.</p><p>Note that additional product/category actions are available using the Global Tools below.</p>',
     'TEXT_LABEL_CATEGORY_DISPLAY_ROOT' => 'Display the SubCategories under:',
     'BUTTON_SET_DEFAULT_TARGET_CATEGORY' => 'Set as Default',

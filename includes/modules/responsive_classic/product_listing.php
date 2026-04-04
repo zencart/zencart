@@ -2,10 +2,10 @@
 /**
  * product_listing module
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 23 Modified in v2.0.0-beta1 $
+ * @version $Id: torvista 2025 Oct 16 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -214,7 +214,7 @@ if ($num_products_count > 0) {
             $listing_product_name = $record['products_name'] ?? '';
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
-                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'])), PRODUCT_LIST_DESCRIPTION);
+                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'] ?? '')), (int)PRODUCT_LIST_DESCRIPTION);
                 $lc_text .= '<div class="listingDescription">' . $listing_description . '</div>';
             }
             $listing_model = $record['products_model'] ?? '';
@@ -292,7 +292,6 @@ if ($num_products_count > 0) {
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
                     $lc_text .= '<div class="list-model">';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MODEL . '</label>';
                     $lc_text .= $listing_model;
                     $lc_text .= '</div>';
                     break;
@@ -313,7 +312,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MANUFACTURER . '</label>';
                     $lc_text .= '<a class="mfgLink list-mfg" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
                     break;
 
@@ -321,20 +319,15 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    // if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_PRICE . '</label>';
                     $lc_text .= '<div class="list-price">';
                     $lc_text .= $listing_price;
                     $lc_text .= '</div>';
-//                    $lc_text .= '<br><br>';
                     $lc_text .= zen_get_buy_now_button($record['products_id'], $lc_button, $more_info_button);
-//                    $lc_text .= '<br>';
                     $lc_text .= zen_get_products_quantity_min_units_display($record['products_id']);
-//                    $lc_text .= '<br>';
                     if (zen_get_show_product_switch($record['products_id'], 'ALWAYS_FREE_SHIPPING_IMAGE_SWITCH')) {
                         if (zen_get_product_is_always_free_shipping($record['products_id'])) {
                             $lc_text .= '<br>';
                             $lc_text .= TEXT_PRODUCT_FREE_SHIPPING_ICON;
-//                            $lc_text .= '<br>';
                         }
                     }
                     break;
@@ -344,7 +337,6 @@ if ($num_products_count > 0) {
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
                     $lc_text .= '<div class="list-quantity">';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_QUANTITY . '</label>';
                     $lc_text .= TEXT_PRODUCTS_QUANTITY . $listing_quantity;
                     $lc_text .= '</div>';
                     break;
@@ -354,7 +346,6 @@ if ($num_products_count > 0) {
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
                     $lc_text .= '<div class="list-weight">';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_WEIGHT . '</label>';
                     $lc_text .= $listing_weight;
                     $lc_text .= '</div>';
                     break;
@@ -454,4 +445,3 @@ if ($how_many > 0 && PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit &
     // bof: multiple products
     echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_DEFAULT, zen_get_all_get_params(['action']) . 'action=multiple_products_add_product', $request_type), 'post', 'enctype="multipart/form-data"');
 }
-

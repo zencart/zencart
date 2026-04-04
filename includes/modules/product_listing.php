@@ -2,10 +2,10 @@
 /**
  * product_listing module
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: torvista 2025 Oct 16 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -218,7 +218,7 @@ if ($num_products_count > 0) {
             $listing_product_name = zen_get_products_name((int)$record['products_id']);
             $listing_description = '';
             if ((int)PRODUCT_LIST_DESCRIPTION > 0) {
-                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'])), PRODUCT_LIST_DESCRIPTION);
+                $listing_description = zen_trunc_string(zen_clean_html(stripslashes($record['products_description'] ?? '')), (int)PRODUCT_LIST_DESCRIPTION);
             }
             $listing_model = $record['products_model'] ?? '';
             $listing_mfg_name = $record['manufacturers_name'] ?? '';
@@ -284,7 +284,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MODEL . '</label>';
                     $lc_text .= $listing_model;
                     break;
 
@@ -304,7 +303,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_MANUFACTURER . '</label>';
                     $lc_text .= '<a class="mfgLink" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
                     break;
 
@@ -312,7 +310,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    // if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_PRICE . '</label>';
                     $lc_text .= $listing_price;
                     $lc_text .= '<br><br>';
                     $lc_text .= zen_get_buy_now_button($record['products_id'], $lc_button, $more_info_button);
@@ -331,7 +328,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_QUANTITY . '</label>';
                     $lc_text .= TEXT_PRODUCTS_QUANTITY . $listing_quantity;
                     break;
 
@@ -339,7 +335,6 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    //if ($product_listing_layout_style === 'columns') $lc_text .= '<label>' . TABLE_HEADING_WEIGHT . '</label>';
                     $lc_text .= $listing_weight;
                     break;
 
@@ -436,4 +431,3 @@ if ($how_many > 0 && PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit &
     // bof: multiple products
     echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_DEFAULT, zen_get_all_get_params(['action']) . 'action=multiple_products_add_product', $request_type), 'post', 'enctype="multipart/form-data"');
 }
-

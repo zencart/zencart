@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 09 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -27,7 +27,7 @@ $define = [
     'TABLE_HEADING_TRANS_ID' => 'Trans. ID',
     'TABLE_HEADING_PENDING_REASON' => 'Pending Reason',
     'TEXT_INFO_PAYPAL_IPN_HEADING' => 'PayPal IPN',
-    'TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX' => 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Transactions)',
+    'TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX' => 'Displaying <b>%1$d</b> to <b>%2$d</b> (of <b>%3$d</b> Transactions)',
 ];
 
 return $define;

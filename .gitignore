@@ -11,6 +11,10 @@ Thumbs.db
 clover.xml
 .DS_Store
 .phpunit.result.cache
+not_for_release/testFramework/Support/configs/test-runner.env
+not_for_release/testFramework/Support/configs/test-runner.local.env
+not_for_release/testFramework/test-framework.env
+not_for_release/testFramework/test-framework.local.env
 
 dev-*.*
 
@@ -19,8 +23,11 @@ dev-*.*
 .project
 .settings
 .buildpath
-# Ignore phpStorm stuff
+
+# Ignore phpStorm/intellij configuration
 .idea
+*.iml
+.vscode
 
 # dbv
 /data/meta/revision
@@ -227,16 +234,13 @@ images/dvd/blade_runner_01.gif
 #testing
 includes/*.config.save
 admin/includes/*.config.save
+**/security_test.php
 
 #release process
 modified_files.txt
 
 # ddev
-
 .ddev
-**/security_test.php
 
-# laravel
-
-laravel/.env
-
+# ensure test plugin is not checked in
+zc_plugins/zenTestPlugin

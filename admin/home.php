@@ -1,25 +1,27 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: pRose on charmes 2023 Jan 09 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Dec 01 Modified in v2.2.1 $
  */
-$version_check_index=true;
+$version_check_index = true;
 require('includes/application_top.php');
 
 $languages = zen_get_languages();
-$languages_array = array();
+$languages_array = [];
 $languages_selected = DEFAULT_LANGUAGE;
-for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-    $languages_array[] = array('id' => $languages[$i]['code'],
-                               'text' => $languages[$i]['name']);
-    if ($languages[$i]['directory'] == $_SESSION['language']) {
+for ($i = 0, $n = count($languages); $i < $n; $i++) {
+    $languages_array[] = [
+        'id' => $languages[$i]['code'],
+        'text' => $languages[$i]['name'],
+    ];
+    if ($languages[$i]['directory'] === $_SESSION['language']) {
         $languages_selected = $languages[$i]['code'];
     }
 }
 
-if (STORE_NAME == '' || STORE_OWNER =='' || STORE_OWNER_EMAIL_ADDRESS =='' || STORE_NAME_ADDRESS =='') {
+if (STORE_NAME === '' || STORE_OWNER === '' || STORE_OWNER_EMAIL_ADDRESS === '' || STORE_NAME_ADDRESS === '') {
     require('index_setup_wizard.php');
 } else {
     require('index_dashboard.php');
@@ -40,6 +42,24 @@ if (STORE_NAME == '' || STORE_OWNER =='' || STORE_OWNER_EMAIL_ADDRESS =='' || ST
 <?php
 $zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
 ?>
-    </body>
-    </html>
+
+<?php
+// Check for new version, and send output to placeholder in admin header
+require DIR_WS_INCLUDES . 'versioncheck.php';
+if ($new_version) { ?>
+    <script>
+        jQuery(function($){
+            let newVersion = <?php echo json_encode($new_version); ?>;
+            let versionInfo = <?php echo json_encode('(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'); ?>;
+            let outputHtml = newVersion + '<br>' + versionInfo;
+
+            let $target = $('#versionCheckAlert');
+            if ($target.length) {
+                $target.html(outputHtml);
+            }
+        });
+    </script>
+<?php } ?>
+</body>
+</html>
 <?php require('includes/application_bottom.php');

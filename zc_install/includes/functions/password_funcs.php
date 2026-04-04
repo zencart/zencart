@@ -2,13 +2,13 @@
 /**
  * zc_install password_funcs functions
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 Nov 23 Modified in v2.2.0 $
  */
 
-require_once(DIR_FS_ROOT . '/includes/classes/class.zcPassword.php');
+require_once DIR_FS_ROOT . '/includes/classes/class.zcPassword.php';
 
 /**
  * Validates a plain text password with the encrpyted password
@@ -32,7 +32,7 @@ function zen_validate_password(string $plain, string $encrypted): bool
     // split apart the hash / salt
     $stack = explode(':', $encrypted);
     if (count($stack) === 2) {
-        return (md5($stack[1] . $plain) === $stack[0]);
+        return (hash('md5', $stack[1] . $plain) === $stack[0]);
     }
 
     return false;
@@ -175,7 +175,7 @@ function zen_get_entropy(string $hash = 'sha1', int $size = 32): string
 
                 if ($entropy) {
                     //echo('Adding random data to entrohy using CAPICOM.Utilities');
-                    $stat['CAPICOM_Utilities_random'] = md5($entropy, true);
+                    $stat['CAPICOM_Utilities_random'] = hash('md5', $entropy, true);
                 }
                 unset($CAPI_Util, $entropy);
             } catch (Exception $ex) {

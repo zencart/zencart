@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Feb 27 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -37,6 +37,7 @@ require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customers.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_customer_groups.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_lookups.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_urls.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_communications.php';
 
 require DIR_WS_FUNCTIONS . 'html_output.php';
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 04 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 
@@ -393,7 +393,7 @@ if ($pr_list->EOF) {
         $products_id = $pr_list->fields['product_id'];
         $products_name = zen_get_products_name($products_id, $_SESSION['languages_id']);
         $products_model = htmlspecialchars(zen_get_products_model($products_id), ENT_COMPAT, CHARSET);
-        $products_status = htmlspecialchars(zen_get_products_status($products_id), ENT_COMPAT, CHARSET);
+        $products_status = zen_get_products_status($products_id);
 ?>
             <tr class="dataTableRow" data-rid="<?php echo $pr_list->fields['restrict_id']; ?>">
                 <td class="dataTableContent text-center"><?php echo $products_id; ?></td>

@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Jul 28 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;
@@ -11,7 +11,8 @@ if (!zen_is_superuser() && !check_page(FILENAME_ORDERS, '')) return;
 // return;
 
 // Configure settings
-// To override the $show_* or $attr_img_width values, see
+// To override the $includeAttributesInPopoverRows or $recentOrdersMaxRows 
+// values, see
 // https://docs.zen-cart.com/user/admin/site_specific_overrides/
 $includeAttributesInPopoverRows = $includeAttributesInPopoverRows ?? true;
 $maxRows = $recentOrdersMaxRows ?? 25;
@@ -25,8 +26,7 @@ $sql = "SELECT o.orders_id as orders_id, o.customers_name as customers_name, o.c
             ORDER BY orders_id DESC";
 $orders = $db->Execute($sql, (int)$maxRows, true, 1800);
 
-require_once(DIR_WS_CLASSES . 'currencies.php');
-$currencies = new currencies();
+$currencies ??= new currencies();
 
 ?>
 <div class="panel panel-default reportBox">
@@ -71,7 +71,7 @@ $currencies = new currencies();
         <tr>
           <td>
             <a href="<?php echo zen_href_link(FILENAME_ORDERS, 'oID=' . $order['orders_id'] . '&origin=' . FILENAME_DEFAULT); ?>" class="contentlink">
-                <?php echo $order['orders_id'] . ' - ' . substr($order['customers_name'], 0, 20); ?>
+                <?php echo $order['orders_id'] . ' - ' . mb_substr($order['customers_name'], 0, 20); ?>
             </a>
           </td>
           <td class="text-right" title="<?php echo zen_output_string($product_details, array('"' => '&quot;', "'" => '&#39;', '<br>' => '', '<br />' => '', '<hr>' => "----\n")); ?>">

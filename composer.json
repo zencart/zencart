@@ -20,22 +20,27 @@
         "source": "https://zen-cart.com/getit",
         "docs": "https://docs.zen-cart.com"
     },
-    "_comment": "compatible with PHP 8.0-8.3",
-    "require-dev": {
-        "php": "^8.0",
+    "_comment": "compatible with PHP 8.3-8.5",
+    "require": {
+        "php": "^8.3",
         "ext-curl": "*",
+        "ext-ctype": "*",
+        "ext-fileinfo": "*",
+        "ext-filter": "*",
+        "ext-gd": "*",
+        "ext-hash": "*",
+        "ext-iconv": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pcre": "*"
+    },
+    "require-dev": {
         "guzzlehttp/guzzle": "^7.7",
-        "illuminate/console": "^9.52",
-        "illuminate/database": "^9.52",
-        "illuminate/events": "^9.52",
-        "kitloong/laravel-migrations-generator": "^6.10",
         "mikey179/vfsstream": "^1.6",
         "phpunit/phpunit": "^9.6",
         "sempro/phpunit-pretty-print": "^1.4",
-        "symfony/browser-kit": "^6.0",
         "symfony/css-selector": "^6.0",
-        "symfony/http-client": "^6.0",
         "symfony/maker-bundle": "^1.49",
         "symfony/mime": "^6.0",
         "symfony/phpunit-bridge": "^7.0",
@@ -49,15 +54,12 @@
         "classmap": ["not_for_release/testFramework"],
         "psr-4": {
             "Tests\\": "not_for_release/testFramework/",
-            "App\\": "laravel/app/",
-            "Seeders\\": "not_for_release/testFramework/Support/database/Seeders/",
-            "Migrations\\": "not_for_release/testFramework/Support/database/migrations/"
-
+            "Seeders\\": "not_for_release/testFramework/Support/database/Seeders/"
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     },
     "config": {
@@ -67,9 +69,37 @@
     },
     "scripts": {
         "feature-tests": "phpunit --verbose --testsuite FeatureStore,FeatureAdmin --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "feature-tests-serial": "@feature-tests-admin-plugin-filesystem",
+        "feature-tests-parallel-candidate": "phpunit --verbose --testsuite FeatureStore,FeatureAdmin --group parallel-candidate",
+        "feature-tests-parallel": "bash not_for_release/testFramework/run-parallel-feature-tests.sh",
+        "feature-tests-parallel-local": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-parallel-feature-tests.sh --prepare-databases",
         "feature-tests-store": "phpunit --verbose --testsuite FeatureStore --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
         "feature-tests-admin": "phpunit --verbose --testsuite FeatureAdmin --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
-        "unit-tests": "phpunit --verbose  --process-isolation --testsuite Unit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'"
+        "feature-tests-admin-plugin-filesystem": "phpunit --verbose --testsuite FeatureAdmin --group plugin-filesystem --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "feature-tests-admin-parallel": "bash not_for_release/testFramework/run-parallel-admin-feature-tests.sh",
+        "feature-tests-admin-parallel-local": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-parallel-admin-feature-tests.sh --prepare-databases",
+        "feature-tests-admin-ci": "bash not_for_release/testFramework/run-admin-feature-tests-ci.sh",
+        "feature-tests-admin-ci-dry-run": "bash not_for_release/testFramework/run-admin-feature-tests-ci.sh --dry-run",
+        "feature-tests-ci": "bash not_for_release/testFramework/run-feature-tests-ci.sh",
+        "feature-tests-ci-local": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-feature-tests-ci.sh",
+        "feature-tests-ci-dry-run": "bash not_for_release/testFramework/run-feature-tests-ci.sh --dry-run",
+        "feature-tests-ci-local-dry-run": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-feature-tests-ci.sh --dry-run",
+        "feature-tests-store-parallel": "bash not_for_release/testFramework/run-parallel-storefront-feature-tests.sh",
+        "feature-tests-store-parallel-local": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-parallel-storefront-feature-tests.sh --prepare-databases",
+        "feature-tests-store-ci": "bash not_for_release/testFramework/run-store-feature-tests-ci.sh",
+        "feature-tests-store-ci-dry-run": "bash not_for_release/testFramework/run-store-feature-tests-ci.sh --dry-run",
+        "feature-test-group-report": "bash not_for_release/testFramework/report-feature-test-groups.sh",
+        "feature-test-group-report-strict": "bash not_for_release/testFramework/report-feature-test-groups.sh --fail-on-untagged --summary-only",
+        "test-runtime-describe": "php not_for_release/testFramework/describe-worker-runtime.php",
+        "test-db-prepare-workers": "bash not_for_release/testFramework/prepare-worker-databases.sh",
+        "test-db-prepare-workers-dry-run": "bash not_for_release/testFramework/prepare-worker-databases.sh --dry-run",
+        "tests-ci": "bash not_for_release/testFramework/run-tests-ci.sh",
+        "tests-ci-local": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-tests-ci.sh",
+        "tests-ci-dry-run": "bash not_for_release/testFramework/run-tests-ci.sh --dry-run",
+        "tests-ci-local-dry-run": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-tests-ci.sh --dry-run",
+        "unit-tests": "phpunit --verbose  --process-isolation --testsuite Unit --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
+        "unit-tests-ci": "@unit-tests-parallel",
+        "unit-tests-parallel": "bash not_for_release/testFramework/run-parallel-unit-tests.sh"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

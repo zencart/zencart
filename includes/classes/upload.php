@@ -2,10 +2,10 @@
 /**
  * upload Class.
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -15,6 +15,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * upload Class.
  * This class is used to manage file uploads
  *
+ * @since ZC v1.0.3
  */
  //
 // This is the old UPLOAD_FILENAME_EXTENSIONS which was in the database
@@ -39,7 +40,7 @@ class upload extends base
         $this->set_destination($destination);
         $this->set_permissions($permissions);
 
-        if (!!empty($extensions)) {
+        if (empty($extensions)) {
             $extensions = explode(" ", preg_replace('/[.,;\s]+/', ' ', UPLOAD_FILENAME_EXTENSIONS_LIST));
         }
         $this->set_extensions($extensions);
@@ -63,6 +64,7 @@ class upload extends base
     /**
      * @param string $key  - differentiates between different files uploaded
      * @return bool
+     * @since ZC v1.0.3
      */
     function parse($key = '')
     {
@@ -124,6 +126,7 @@ class upload extends base
     /**
      * @param bool $overwrite
      * @return bool
+     * @since ZC v1.0.3
      */
     function save($overwrite = true)
     {
@@ -157,6 +160,7 @@ class upload extends base
 
     /**
      * @param string $file
+     * @since ZC v1.0.3
      */
     function set_file($file)
     {
@@ -165,6 +169,7 @@ class upload extends base
 
     /**
      * @param string $destination
+     * @since ZC v1.0.3
      */
     function set_destination($destination)
     {
@@ -173,6 +178,7 @@ class upload extends base
 
     /**
      * @param string $permissions
+     * @since ZC v1.0.3
      */
     function set_permissions($permissions)
     {
@@ -181,14 +187,16 @@ class upload extends base
 
     /**
      * @param string $filename
+     * @since ZC v1.0.3
      */
     function set_filename($filename)
     {
-        $this->filename = $filename;
+        $this->filename = $this->sanitizeFileName($filename);
     }
 
     /**
      * @param string $filename
+     * @since ZC v1.0.3
      */
     function set_tmp_filename($filename)
     {
@@ -197,6 +205,7 @@ class upload extends base
 
     /**
      * @param array $extensions
+     * @since ZC v1.0.3
      */
     function set_extensions($extensions)
     {
@@ -211,6 +220,9 @@ class upload extends base
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check_destination()
     {
         if (!is_writeable($this->destination)) {
@@ -228,6 +240,7 @@ class upload extends base
 
     /**
      * @param string $location
+     * @since ZC v1.0.3
      */
     function set_output_messages($location)
     {
@@ -242,6 +255,9 @@ class upload extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.5e
+     */
     function message_stack($msg = '', $type = '')
     {
         global $messageStack;
@@ -258,5 +274,26 @@ class upload extends base
                 $messageStack->add_session('upload', $msg, $type);
             }
         }
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    protected function sanitizeFileName(string $filename): string
+    {
+        // Convert file-extension to lowercase
+        $file_pieces = pathinfo($filename);
+        $filename = $file_pieces['filename'] . '.' . strtolower($file_pieces['extension']);
+
+        // Replace spaces with hyphens
+        $filename = str_replace(' ', '-', $filename);
+
+        // Remove special characters (keep alphanumerics, dashes, underscores, and dots)
+        $filename = preg_replace('/[^a-zA-Z0-9_\-\.]/', '', $filename);
+
+        // Replace multiple dots with a single dot
+        $filename = preg_replace('/\.+/', '.', $filename);
+
+        return $filename;
     }
 }

@@ -8,7 +8,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Mar 03 Modified in v2.0.0-rc1 $
+ * @version $Id: DrByte 2024 Aug 26 Modified in v2.1.0-alpha2 $
  */
 ?>
 <div class="centerColumn" id="siteMap">
@@ -114,19 +114,19 @@
           case ($page_query['alt_url'] != '' && $page_query['page_open_new_window'] == '1'):
           $page_query_list[$rows]['altURL']  = (substr($page_query['alt_url'],0,4) == 'http') ?
           $page_query['alt_url'] :
-          ($page_query['alt_url']=='' ? '' : zen_href_link($page_query['alt_url'], '', ($page_query['page_is_ssl']=='0' ? 'NONSSL' : 'SSL'), true, true, true));
+          ($page_query['alt_url']=='' ? '' : zen_href_link($page_query['alt_url'], '', 'SSL', true, true, true));
           break;
           // internal link same window
           case ($page_query['alt_url'] != '' && $page_query['page_open_new_window'] == '0'):
           $page_query_list[$rows]['altURL']  = (substr($page_query['alt_url'],0,4) == 'http') ?
           $page_query['alt_url'] :
-          ($page_query['alt_url']=='' ? '' : zen_href_link($page_query['alt_url'], '', ($page_query['page_is_ssl']=='0' ? 'NONSSL' : 'SSL'), true, true, true));
+          ($page_query['alt_url']=='' ? '' : zen_href_link($page_query['alt_url'], '', 'SSL', true, true, true));
           break;
         }
 
         // if altURL is specified, use it; otherwise, use EZPage ID to create link
         $page_query_list[$rows]['link'] = empty($page_query_list[$rows]['altURL']) ?
-        zen_href_link(FILENAME_EZPAGES, 'id=' . $page_query['pages_id'] . ($page_query['toc_chapter'] > 0 ? '&chapter=' . $page_query['toc_chapter'] : ''), ($page_query['page_is_ssl']=='0' ? 'NONSSL' : 'SSL')) :
+        zen_href_link(FILENAME_EZPAGES, 'id=' . $page_query['pages_id'] . ($page_query['toc_chapter'] > 0 ? '&chapter=' . $page_query['toc_chapter'] : ''), 'SSL') :
         $page_query_list[$rows]['altURL'];
         $page_query_list[$rows]['link'] .= ($page_query['page_open_new_window'] == '1' ? '" rel="noreferrer noopener" target="_blank' : '');
       }

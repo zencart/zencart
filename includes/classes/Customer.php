@@ -1,12 +1,20 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Nick Fenwick 2024 May 12 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Oct 25 Modified in v2.2.0 $
+ * @since ZC v1.5.8
  */
 
 class Customer extends base
 {
+    //- customers::customers_authorization values
+    public const AUTH_OK = 0;           //- customer is authorized
+    public const AUTH_NO_BROWSE = 1;    //- customer must be authorized to browse
+    public const AUTH_NO_PRICES = 2;    //- customer can browse, but no prices until authorized
+    public const AUTH_NO_PURCHASE = 3;  //- customer can browse with prices, but no cart/checkout until authorized
+    public const AUTH_BANNED = 4;       //- customer is banned
+
     protected ?int $customer_id = null;
     protected bool $is_logged_in = false;
     protected bool $is_in_guest_checkout = false;
@@ -35,6 +43,9 @@ class Customer extends base
         }
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     protected static function getCustomerWholesaleInfo(): array
     {
         static $wholesaleInfo;
@@ -60,16 +71,24 @@ class Customer extends base
                     ];
                 }
             }
+            global $zco_notifier;
+            $zco_notifier->notify('NOTIFY_GET_CUSTOMER_WHOLESALE_INFO', $wholesale->fields ?? [], $wholesaleInfo);
         }
         return $wholesaleInfo;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function isWholesaleCustomer(): bool
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
         return $wholesale_info['is_wholesale'];
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function isTaxExempt(): bool
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
@@ -81,12 +100,111 @@ class Customer extends base
         return (bool)$is_tax_exempt;
     }
 
+    /**
+     * @since ZC v2.0.0
+     */
     public static function getCustomerWholesaleTier(): int
     {
         $wholesale_info = Customer::getCustomerWholesaleInfo();
         return $wholesale_info['wholesale_tier'];
     }
 
+    /**
+     * @since ZC v2.2.0
+     */
+    public static function createPasswordResetToken(string $email_address): array|false
+    {
+        global $db;
+
+        $sql =
+            "SELECT customers_firstname, customers_lastname, customers_id, customers_email_address
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_email_address = :emailAddress
+                AND customers_authorization != " . self::AUTH_BANNED;
+
+        $sql = $db->bindVars($sql, ':emailAddress', $email_address, 'string');
+        $check_customer = $db->Execute($sql, 1);
+        if ($check_customer->EOF) {
+            return false;
+        }
+
+        $length = defined('PASSWORD_RESET_TOKEN_LENGTH') ? constant('PASSWORD_RESET_TOKEN_LENGTH') : 24;
+        if ($length < 12 || $length > 100) { // under 12 is impractical; over 100 is too large for db field
+            $length = 24;
+        }
+        $token = zen_create_random_value($length);
+
+        $sql = "DELETE FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " WHERE customer_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
+        $db->Execute($sql);
+        $sql = "INSERT INTO " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " (customer_id, token) VALUES (:customerID, :token)";
+        $sql = $db->bindVars($sql, ':token', $token, 'string');
+        $sql = $db->bindVars($sql, ':customerID', $check_customer->fields['customers_id'], 'integer');
+        $db->Execute($sql);
+
+        $check_customer->fields['token'] = $token;
+        return $check_customer->fields;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public static function getPasswordResetTokenInfo(string $reset_token): array|false
+    {
+        global $db;
+
+        $token_valid_minutes = self::getPasswordResetTokenMinutesValid();
+
+        $sql = "SELECT c.customers_nick, c.customers_id
+                FROM   " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " ct
+                WHERE  ct.token = :reset_token AND c.customers_id = ct.customer_id AND ct.created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL $token_valid_minutes MINUTE)";
+        $sql = $db->bindVars($sql, ':reset_token', $reset_token, 'string');
+        $result = $db->Execute($sql);
+
+        if ($result->EOF) {
+            return false;
+        }
+        return $result->fields;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public static function getPasswordResetTokenForEmail(string $email_address): array|false
+    {
+        global $db;
+
+        $token_valid_minutes = self::getPasswordResetTokenMinutesValid();
+
+        $sql =
+            "SELECT ct.*
+               FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . " ct
+                    INNER JOIN " . TABLE_CUSTOMERS . " c
+                        ON ct.customer_id = c.customers_id
+              WHERE c.customers_email_address = :email_address
+                AND ct.created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL $token_valid_minutes MINUTE)
+              ORDER BY ct.created_at DESC";
+        $sql = $db->bindVars($sql, ':email_address', $email_address, 'string');
+        $result = $db->Execute($sql, 1);
+
+        return ($result->EOF) ? false : $result->fields;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public static function getPasswordResetTokenMinutesValid(): int
+    {
+        $token_valid_minutes = defined('PASSWORD_RESET_TOKEN_MINUTES_VALID') ? (int)constant('PASSWORD_RESET_TOKEN_MINUTES_VALID') : 60;
+        if ($token_valid_minutes < 1 || $token_valid_minutes > 1440) {
+            $token_valid_minutes = 60;
+        }
+        return $token_valid_minutes;
+    }
+
+    /**
+     * @since ZC v1.5.8
+     */
     public function getData(?string $element = null)
     {
         if (empty($element)) {
@@ -100,6 +218,9 @@ class Customer extends base
         return $this->data[$element];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getCurrentCustomerId(): int
     {
         if (empty($this->customer_id)) {
@@ -108,6 +229,9 @@ class Customer extends base
         return (int)$this->customer_id;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setCustomerIdFromSession(): int
     {
         if (!empty($_SESSION['customer_id'])) {
@@ -120,6 +244,7 @@ class Customer extends base
     /**
      * Return whether the indicated customer is currently logged into the site.
      * If no customer is specified, we check the one already assigned to this class
+     * @since ZC v1.5.8
      */
     public function isSameAsLoggedIn(?int $idToCheck = null): bool
     {
@@ -133,6 +258,7 @@ class Customer extends base
 
     /**
      * Return whether "any" customer is currently logged into the site.
+     * @since ZC v1.5.8
      */
     public function someoneIsLoggedIn(): bool
     {
@@ -141,6 +267,9 @@ class Customer extends base
         return (bool)$is_logged_in;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function doLoginLookupByEmail(string $email): array|false
     {
         global $db;
@@ -159,6 +288,9 @@ class Customer extends base
         return $result->fields;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function login(int $customer_id, $restore_cart = true): bool
     {
         global $db;
@@ -208,6 +340,8 @@ class Customer extends base
               WHERE customers_id = " . (int)$customer_id;
         $db->Execute($sql);
 
+        $this->clearPasswordResetTokens($customer_id);
+
         // these session variables are used in various places across the catalog
         $_SESSION['customer_id'] = (int)$customer_id;
         $_SESSION['customers_email_address'] = $this->data['customers_email_address'];
@@ -229,7 +363,169 @@ class Customer extends base
     }
 
     /**
+     * Clears any existing password reset-tokens for the specified customers_id.
+     * @since ZC v2.2.0
+     */
+    protected function clearPasswordResetTokens(int $customers_id): void
+    {
+        global $db;
+
+        $sql =
+            "DELETE FROM " . TABLE_CUSTOMER_PASSWORD_RESET_TOKENS . "
+              WHERE customer_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $customers_id, 'integer');
+        $db->Execute($sql);
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public static function setWelcomeEmailSent(int $customers_id): void
+    {
+        global $db;
+
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
+                SET welcome_email_sent = 1
+              WHERE customers_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $customers_id, 'integer');
+        $db->Execute($sql, 1);
+    }
+
+    /**
+     * Clears any existing account-authorization tokens for the current customer.
+     * @since ZC v2.2.0
+     */
+    protected static function clearAuthTokens(int $customers_id): void
+    {
+        global $db;
+
+        $sql =
+            "DELETE FROM " . TABLE_CUSTOMERS_AUTH_TOKENS . "
+              WHERE customers_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $customers_id, 'integer');
+        $db->Execute($sql);
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public static function getAuthTokenMinutesValid(): int
+    {
+        $token_valid_minutes = (int)CUSTOMERS_ACTIVATION_TOKEN_MINUTES_VALID;
+        if ($token_valid_minutes < 1 || $token_valid_minutes > 1440) {
+            $token_valid_minutes = 60;
+        }
+        return $token_valid_minutes;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function refreshCustomerAuthorization(): false|array
+    {
+        if (empty($this->customer_id)) {
+            return false;
+        }
+
+        global $db;
+        $sql =
+            "SELECT customers_authorization
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_id = :customersID
+              LIMIT 1";
+
+        $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
+        $check_customer = $db->ExecuteNoCache($sql);
+        if ($check_customer->EOF) {
+            return false;
+        }
+        $this->data['customers_authorization'] = (int)$check_customer->fields['customers_authorization'];
+        $_SESSION['customers_authorization'] = $this->data['customers_authorization'];
+
+        return $this->data;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function getAuthTokenInfo(): array|false
+    {
+        if (empty($this->data) || $this->data['activation_required'] === 0) {
+            return false;
+        }
+
+        global $db;
+
+        $sql =
+            "SELECT *
+               FROM " . TABLE_CUSTOMERS_AUTH_TOKENS . "
+              WHERE customers_id = :customer_id
+              LIMIT 1";
+        $sql = $db->bindVars($sql, ':customer_id', $this->customer_id, 'integer');
+        $result = $db->ExecuteNoCache($sql);
+
+        return ($result->EOF) ? false : $result->fields;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public static function getAuthTokenValid(string $reset_token): array|false
+    {
+        global $db;
+
+        $token_valid_minutes = self::getAuthTokenMinutesValid();
+
+        $sql =
+            "SELECT cat.*
+               FROM   " . TABLE_CUSTOMERS_AUTH_TOKENS . " cat
+                    INNER JOIN " . TABLE_CUSTOMERS . " c
+                        ON c.customers_id = cat.customers_id
+              WHERE cat.token = :reset_token
+                AND cat.created_at > DATE_SUB(CURRENT_TIMESTAMP, INTERVAL $token_valid_minutes MINUTE)
+              LIMIT 1";
+        $sql = $db->bindVars($sql, ':reset_token', $reset_token, 'string');
+        $result = $db->ExecuteNoCache($sql);
+
+        if ($result->EOF) {
+            return false;
+        }
+        return $result->fields;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function createAuthToken(): string|false
+    {
+        if (empty($this->data) || CUSTOMERS_ACTIVATION_REQUIRED === 'false') {
+            return false;
+        }
+
+        global $db;
+
+        $length = (int)CUSTOMERS_ACTIVATION_TOKEN_LENGTH;
+        if ($length < 12 || $length > 100) { // under 12 is impractical; over 100 is too large for db field
+            $length = 24;
+        }
+        $token = zen_create_random_value($length);
+
+        $sql = "DELETE FROM " . TABLE_CUSTOMERS_AUTH_TOKENS . " WHERE customers_id = :customerID";
+        $sql = $db->bindVars($sql, ':customerID', $this->customer_id, 'integer');
+        $db->Execute($sql);
+        $sql = "INSERT INTO " . TABLE_CUSTOMERS_AUTH_TOKENS . " (customers_id, email_address, token) VALUES (:customerID, :emailAddress, :token)";
+        $sql = $db->bindVars($sql, ':token', $token, 'string');
+        $sql = $db->bindVars($sql, ':customerID', $this->customer_id, 'integer');
+        $sql = $db->bindVars($sql, ':emailAddress', $this->data['customers_email_address'], 'string');
+        $db->Execute($sql);
+
+        return $token;
+    }
+
+    /**
      * Return whether the current customer session is associated with a guest-checkout process.
+     * @since ZC v1.5.8
      */
     public function isInGuestCheckout(): bool
     {
@@ -238,6 +534,9 @@ class Customer extends base
         return (bool)$in_guest_checkout;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function customerExistsInDatabase(?int $customer_id = null): bool
     {
         global $db;
@@ -256,9 +555,12 @@ class Customer extends base
 
         $result = $db->Execute($sql, 1);
 
-        return $result->RecordCount() > 0;
+        return !$result->EOF;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     protected function load(?int $customer_id = null): bool
     {
         global $db;
@@ -271,28 +573,10 @@ class Customer extends base
             return false;
         }
 
-        $sql =
-            "SELECT c.*,
-                    CONCAT(customers_firstname,' ',LEFT(customers_lastname,1),'.') as name_with_initial,
-                    cgc.amount as gv_balance,
-                    customers_info_date_account_created AS date_account_created,
-                    customers_info_date_account_last_modified AS date_account_last_modified,
-                    customers_info_date_of_last_logon AS date_of_last_login,
-                    customers_info_number_of_logons AS number_of_logins
-               FROM " . TABLE_CUSTOMERS . " c
-                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON (c.customers_id = ci.customers_info_id)
-                    LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON (c.customers_id = cgc.customer_id)
-              WHERE c.customers_id = " . (int)$customer_id;
-
-        $result = $db->Execute($sql, 1);
-
-        if ($result->EOF) {
-            $this->data = [];
+        $data_ok = $this->loadBaseCustomerInfo($customer_id);
+        if ($data_ok === false) {
             return false;
         }
-
-        $this->data = $result->fields;
-        unset($this->data['customers_password']);
 
         // load address info, while also correcting for missing default address_book id
         $addresses = $this->getFormattedAddressBookList($customer_id);
@@ -341,8 +625,57 @@ class Customer extends base
 
         $this->getPricingGroupAssociation();
 
-        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data);
+        $this->notify('NOTIFY_CUSTOMER_DATA_LOADED', $this->data, $this->data);
 
+        $this->convertDataToInts();
+
+        return true;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    protected function loadBaseCustomerInfo(int $customer_id): bool
+    {
+        global $db;
+
+        $sql =
+            "SELECT c.*,
+                    CONCAT(customers_firstname,' ',LEFT(customers_lastname,1),'.') as name_with_initial,
+                    cgc.amount as gv_balance,
+                    customers_info_date_account_created AS date_account_created,
+                    customers_info_date_account_last_modified AS date_account_last_modified,
+                    customers_info_date_of_last_logon AS date_of_last_login,
+                    customers_info_number_of_logons AS number_of_logins
+               FROM " . TABLE_CUSTOMERS . " c
+                    LEFT JOIN " . TABLE_CUSTOMERS_INFO . " ci ON (c.customers_id = ci.customers_info_id)
+                    LEFT JOIN " . TABLE_COUPON_GV_CUSTOMER . " cgc ON (c.customers_id = cgc.customer_id)
+              WHERE c.customers_id = " . (int)$customer_id . "
+              LIMIT 1";
+        $result = $db->ExecuteNoCache($sql);
+
+        $this->data = [];
+        if ($result->EOF) {
+            return false;
+        }
+
+        foreach ($result->fields as $key => $value) {
+            if ($key === 'customers_password') {
+                continue;
+            }
+            $this->data[$key] = $value;
+        }
+
+        $this->convertDataToInts();
+
+        return true;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    protected function convertDataToInts(): void
+    {
         // treat these as integers even though they (may have) come from the db as strings
         $ints = [
             'customers_id',
@@ -350,6 +683,7 @@ class Customer extends base
             'customers_newsletter',
             'customers_group_pricing',
             'customers_authorization',
+            'activation_required',
             'number_of_logins',
             'address_book_id',
             'zone_id',
@@ -358,16 +692,15 @@ class Customer extends base
             'number_of_orders',
         ];
         foreach ($ints as $key) {
-            if (isset($this->data[$key]) && is_numeric($this->data[$key])) {
+            if (isset($this->data[$key])) {
                 $this->data[$key] = (int)$this->data[$key];
             }
         }
-
-        return true;
     }
 
     /**
      * Return the count of the current customer's previous orders.
+     * @since ZC v1.5.8
      */
     protected function countCustomersPreviousOrders(): int
     {
@@ -383,6 +716,7 @@ class Customer extends base
     /**
      * Retrieve the current customer's lifetime value,
      * the sum of all previously-placed orders.
+     * @since ZC v1.5.8
      */
     protected function getLifetimeValue(): float|int
     {
@@ -417,6 +751,7 @@ class Customer extends base
 
     /**
      * Add group-pricing details to the $this->data array
+     * @since ZC v1.5.8
      */
     protected function getPricingGroupAssociation(): void
     {
@@ -440,6 +775,7 @@ class Customer extends base
 
     /**
      * Update customer record in db with default address-book id
+     * @since ZC v1.5.8
      */
     protected function setDefaultAddressBookId(int $id): void
     {
@@ -452,6 +788,9 @@ class Customer extends base
         $this->data['customers_default_address_id'] = (int)$id;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function isBanned(?int $customer_id = null): bool
     {
         $banned_status = false;
@@ -460,7 +799,7 @@ class Customer extends base
             $this->load($customer_id);
         }
 
-        if ((int)$this->data['customers_authorization'] === 4) {  // Banned status is 4
+        if ((int)$this->data['customers_authorization'] === self::AUTH_BANNED) {  // Banned status is 4
             $banned_status = true;
         }
 
@@ -469,6 +808,9 @@ class Customer extends base
         return $banned_status;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function banCustomer(): void
     {
         $proceed_with_ban = true;
@@ -476,7 +818,7 @@ class Customer extends base
         $this->notify('NOTIFY_BAN_CUSTOMER', $this->data, $proceed_with_ban, $reset_shopping_session_and_basket);
 
         if ($proceed_with_ban) {
-            $this->setCustomerAuthorizationStatus(4);
+            $this->setCustomerAuthorizationStatus(self::AUTH_BANNED);
 
             if ($reset_shopping_session_and_basket) {
                 $this->resetCustomerCart();
@@ -488,29 +830,77 @@ class Customer extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setCustomerAuthorizationStatus(int $status): array
     {
         global $db;
+
+        $activation_required = 0;
+        if ($status !== self::AUTH_OK && CUSTOMERS_ACTIVATION_REQUIRED === 'true') {
+            $activation_required = (int)($status === self::AUTH_NO_PURCHASE);
+        }
+
         $sql =
             "UPDATE " . TABLE_CUSTOMERS . "
-                SET customers_authorization = " . (int)$status . "
+                SET customers_authorization = " . (int)$status . ",
+                    activation_required = $activation_required
               WHERE customers_id = " . (int)$this->customer_id;
         $db->Execute($sql, 1);
 
         $this->data['customers_authorization'] = (int)$status;
+        $this->data['activation_required'] = $activation_required;
+
+        self::clearAuthTokens((int)$this->customer_id);
 
         return $this->data;
     }
 
+    /**
+     * Unconditionally authorizes the specified customer, returning an array containing
+     * the customer's current information, if that customer is present in the database.
+     *
+     * @since ZC v1.5.8
+     */
+    public static function authorizeCustomer(int $customers_id): array
+    {
+        global $db;
+
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
+                SET customers_authorization = " . (int)self::AUTH_OK . ",
+                    activation_required = 0
+              WHERE customers_id = " . (int)$customers_id;
+        $db->Execute($sql, 1);
+
+        self::clearAuthTokens($customers_id);
+
+        $customer = $db->ExecuteNoCache(
+            "SELECT *
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_id = " . (int)$customers_id . "
+              LIMIT 1"
+        );
+
+        return ($customer->EOF) ? [] : $customer->fields;
+    }
+
+    /**
+     * @since ZC v1.5.8
+     */
     public function resetCustomerCart(): void
     {
         global $db;
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id= " . $this->customer_id);
-        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id= " . $this->customer_id);
+        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET . " WHERE customers_id = " . $this->customer_id);
+        $db->Execute("DELETE FROM " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " WHERE customers_id = " . $this->customer_id);
         $_SESSION['cart']->reset(true);
         $this->forceLogout();
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function forceLogout(): bool
     {
         global $db;
@@ -527,7 +917,10 @@ class Customer extends base
         return false;
     }
 
-    public function getAddressBookEntries(?int $customer_id = null): object
+    /**
+     * @since ZC v1.5.8
+     */
+    public function getAddressBookEntries(?int $customer_id = null): queryFactoryResult|array
     {
         global $db;
 
@@ -547,6 +940,9 @@ class Customer extends base
         return $db->Execute($sql);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getNumberOfAddressBookEntries(?int $customer_id = null): int
     {
         if (empty($customer_id)) {
@@ -559,6 +955,9 @@ class Customer extends base
         return count($this->getAddressBookEntries());
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getFormattedAddressBookList(?int $customer_id = null): array
     {
         global $db;
@@ -580,7 +979,8 @@ class Customer extends base
                     zone_name, zone_code AS zone_iso,
                     entry_country_id AS country_id,
                     countries_name AS country_name,
-                    countries_iso_code_3 AS country_iso
+                    countries_iso_code_3 AS country_iso,
+                    countries_iso_code_2 AS country_iso_2
                FROM " . TABLE_ADDRESS_BOOK . " ab
                     INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
                     LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id AND z.zone_country_id = c.countries_id)
@@ -614,28 +1014,25 @@ class Customer extends base
         return $addressArray;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function getOrderHistory(int $max_number_to_return = 0, &$returned_history_split = null): array
     {
         $language = $_SESSION['languages_id'];
         global $db, $currencies;
         $sql =
-            "SELECT o.orders_id, o.date_purchased, o.delivery_name,
+              "SELECT o.orders_id, o.date_purchased, o.delivery_name,
                     o.order_total, o.currency, o.currency_value,
                     o.delivery_country, o.billing_name, o.billing_country,
-                    s.orders_status_name,
+                    o.orders_status, s.orders_status_name,
                     o.language_code
-               FROM " . TABLE_ORDERS . " o
-                    INNER JOIN " . TABLE_ORDERS_STATUS . " s
+              FROM " . TABLE_ORDERS . " o
+                    LEFT JOIN " . TABLE_ORDERS_STATUS . " s
+                        ON s.orders_status_id = o.orders_status
+                       AND s.language_id = :languagesID
               WHERE o.customers_id = :customersID
-                AND s.orders_status_id = (
-                        SELECT orders_status_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " osh
-                         WHERE osh.orders_id = o.orders_id
-                           AND osh.customer_notified >= 0
-                         ORDER BY osh.date_added DESC LIMIT 1
-                    )
-                AND s.language_id = :languagesID
               ORDER BY orders_id DESC";
-
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':languagesID', $language, 'integer');
         if ($returned_history_split !== null) {
@@ -671,7 +1068,7 @@ class Customer extends base
                 'order_type' => $order_type,
                 'order_name' => $order_name,
                 'order_country' => $order_country,
-                'orders_status_name' => $result['orders_status_name'],
+                'orders_status_name' => $result['orders_status_name'] ?? sprintf(TEXT_UNKNOWN_ORDERS_STATUS_NAME, (int)$result['orders_status']),
                 'order_total' => $currencies->format($result['order_total'], true, $result['currency'], $result['currency_value']),
                 'order_total_raw' => $result['order_total'],
                 'currency' => $result['currency'],
@@ -685,6 +1082,7 @@ class Customer extends base
 
     /**
      * Used catalog-side in the My Account page(s)
+     * @since ZC v1.5.8
      */
     public function getNumberOfOrders(): int
     {
@@ -710,6 +1108,9 @@ class Customer extends base
         return $result->fields['total'];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function setPassword(string $new_password): void
     {
         global $db;
@@ -719,13 +1120,30 @@ class Customer extends base
               WHERE customers_id = :customersID";
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
         $sql = $db->bindVars($sql, ':password', zen_encrypt_password($new_password), 'string');
-        $db->Execute($sql);
+        $db->Execute($sql, 1);
         $sql =
             "UPDATE " . TABLE_CUSTOMERS_INFO . "
                 SET customers_info_date_account_last_modified = now()
               WHERE customers_info_id = :customersID";
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
-        $db->Execute($sql);
+        $db->Execute($sql, 1);
+
+        $this->clearPasswordResetTokens($this->customer_id);
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function setPasswordUsingEmailAddress(string $new_password, string $email_address): void
+    {
+        global $db;
+        $sql =
+            "UPDATE " . TABLE_CUSTOMERS . "
+                SET customers_password = :password
+              WHERE customers_email_address = :emailAddress";
+        $sql = $db->bindVars($sql, ':emailAddress', $email_address, 'string');
+        $sql = $db->bindVars($sql, ':password', zen_encrypt_password($new_password), 'string');
+        $db->Execute($sql, 1);
     }
 
     /**
@@ -733,6 +1151,7 @@ class Customer extends base
      *
      * @param bool $delete_reviews
      * @param bool $forget_only Instead of delete, simply obfuscate address/name data
+     * @since ZC v1.5.8
      */
     public function delete(bool $delete_reviews = false, bool $forget_only = false): void
     {
@@ -837,14 +1256,24 @@ class Customer extends base
               WHERE customers_id = " . (int)$this->customer_id
         );
 
+        $this->clearPasswordResetTokens($this->customer_id);
+        self::clearAuthTokens($this->customer_id);
+
+        $this->notify('NOTIFY_CUSTOMER_AFTER_RECORD_DELETED', (int)$this->customer_id);
+
         zen_record_admin_activity('Customer with customer ID ' . (int)$this->customer_id . ' deleted.', 'warning');
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function create(array $data): array
     {
         global $db;
 
         $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDING_CUSTOMER_RECORD', null, $data);
+
+        $activation_required = (int)(CUSTOMERS_ACTIVATION_REQUIRED === 'true');
 
         $sql_data_array = [
             ['fieldName' => 'customers_firstname', 'value' => $data['firstname'], 'type' => 'stringIgnoreNull'],
@@ -858,27 +1287,33 @@ class Customer extends base
             ['fieldName' => 'customers_default_address_id', 'value' => 0, 'type' => 'integer'],
             ['fieldName' => 'customers_password', 'value' => zen_encrypt_password($data['password']), 'type' => 'stringIgnoreNull'],
             ['fieldName' => 'customers_authorization', 'value' => $data['customers_authorization'], 'type' => 'integer'],
+            ['fieldName' => 'activation_required', 'value' => $activation_required, 'type' => 'integer'],
+            ['fieldName' => 'welcome_email_sent', 'value' => 0, 'type' => 'integer'],
             ['fieldName' => 'registration_ip', 'value' => $data['ip_address'], 'type' => 'string'],
             ['fieldName' => 'last_login_ip', 'value' => $data['ip_address'], 'type' => 'string'],
         ];
 
-        if (CUSTOMERS_REFERRAL_STATUS == '2' && !empty($data['customers_referral'])) {
+        if (CUSTOMERS_REFERRAL_STATUS === '2' && !empty($data['customers_referral'])) {
             $sql_data_array[] = ['fieldName' => 'customers_referral', 'value' => $data['customers_referral'], 'type' => 'stringIgnoreNull'];
         }
         if (ACCOUNT_GENDER === 'true') {
             $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
         if (ACCOUNT_DOB === 'true') {
-            $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' => (empty($data['dob']) || $data['dob'] === '0001-01-01 00:00:00') ? '0001-01-01 00:00:00' : zen_date_raw($data['dob']), 'type' => 'date'];
+            $dob = (empty($data['dob']) || $data['dob'] === '0001-01-01 00:00:00') ? '0001-01-01 00:00:00' : zen_date_raw($data['dob']);
+            $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' => $dob, 'type' => 'date'];
         }
 
         $db->perform(TABLE_CUSTOMERS, $sql_data_array);
 
-        $this->customer_id = $db->Insert_ID();
+        $this->customer_id = $db->insert_ID();
         $customer_id = $this->customer_id;
 
-        $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(['customer_id' => $customer_id], $sql_data_array));
+        if ($activation_required) {
+            $this->createAuthToken();
+        }
 
+        $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_CUSTOMER_RECORD', array_merge(['customer_id' => $customer_id], $sql_data_array));
 
         $sql_data_array = [
             ['fieldName' => 'customers_id', 'value' => $customer_id, 'type' => 'integer'],
@@ -912,7 +1347,7 @@ class Customer extends base
 
         $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-        $address_id = $db->Insert_ID();
+        $address_id = $db->insert_ID();
 
         $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDED_ADDRESS_BOOK_RECORD', array_merge(['address_id' => $address_id], $sql_data_array));
 
@@ -920,18 +1355,61 @@ class Customer extends base
             "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_default_address_id = " . (int)$address_id . "
               WHERE customers_id = " . (int)$customer_id;
-        $db->Execute($sql);
+        $db->Execute($sql, 1);
 
         $sql =
             "INSERT INTO " . TABLE_CUSTOMERS_INFO . "
                 (customers_info_id, customers_info_number_of_logons,
                  customers_info_date_account_created, customers_info_date_of_last_logon)
              VALUES
-                ('" . (int)$customer_id . "', '1', now(), now())";
+                (" . (int)$customer_id . ", 1, now(), now())";
         $db->Execute($sql);
 
         $this->load($customer_id);
         return $this->data;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function update(array $sql_data_array): array
+    {
+        global $db;
+
+        $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', 'customers_id = ' . (int)$this->customer_id . ' LIMIT 1');
+
+        $db->Execute(
+            "UPDATE " . TABLE_CUSTOMERS_INFO . "
+                SET customers_info_date_account_last_modified = now()
+              WHERE customers_info_id = " . (int)$this->customer_id . "
+              LIMIT 1"
+        );
+
+        $this->loadBaseCustomerInfo($this->customer_id);
+
+        return $this->data;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function updatePrimaryAddress(array $sql_data_array): void
+    {
+        $this->updateAddress($sql_data_array, (int)$this->data['customers_default_address_id']);
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function updateAddress(array $sql_data_array, int $address_book_id): void
+    {
+        global $db;
+        $db->perform(
+            TABLE_ADDRESS_BOOK,
+            $sql_data_array,
+            'update',
+            "customers_id = " . (int)$this->customer_id . " AND address_book_id = " . (int)$address_book_id . " LIMIT 1"
+        );
     }
     // @TODO - add method for deleting duplicate identical address_book records?
 }

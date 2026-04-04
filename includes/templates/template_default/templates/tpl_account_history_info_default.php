@@ -2,10 +2,10 @@
 /**
  * Displays information related to a single specific order, both for checkout_success and in account_history_info
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Nick Fenwick 2023 Nov 22 Modified in v2.0.0-alpha1 $
+ * @version $Id: Scott Wilson 2024 Sep 30 Modified in v2.2.0 $
  */
 ?>
 <div class="centerColumn" id="accountHistInfo">
@@ -116,6 +116,17 @@ $zco_notifier->insertContent('CONTENT_ACCOUNT_HISTORY_INFO_POST_ORDER', $order);
   if (DOWNLOAD_ENABLED == 'true') require($template->get_template_dir('tpl_modules_downloads.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_modules_downloads.php');
 ?>
 
+<?php
+  $additional_content = false;
+  $zco_notifier->notify('NOTIFY_INVOICE_ADDITIONAL_DATA_MIDDLE', $order, $additional_content);
+    if ($additional_content !== false) {
+?>
+    <table class="table">
+        <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+    </table>
+<?php
+    }
+?>
 
 <?php
 /**
@@ -123,39 +134,61 @@ $zco_notifier->insertContent('CONTENT_ACCOUNT_HISTORY_INFO_POST_ORDER', $order);
  */
 if (!empty($order->statuses)) {
 ?>
-
 <h2 id="orderHistoryStatus"><?php echo HEADING_ORDER_HISTORY; ?></h2>
 <table id="myAccountOrdersStatus">
     <tr class="tableHeading">
         <th scope="col" id="myAccountStatusDate"><?php echo TABLE_HEADING_STATUS_DATE; ?></th>
         <th scope="col" id="myAccountStatus"><?php echo TABLE_HEADING_STATUS_ORDER_STATUS; ?></th>
-        <th scope="col" id="myAccountStatusComments"><?php echo TABLE_HEADING_STATUS_COMMENTS; ?></th>
-       </tr>
 <?php
-  // -----
-  // The *first* comment, made by the customer, is 'protected' from using HTML taga; all others are
-  // made by the admin or a 'known' entity and HTML is allowed.
-  //
-  $protected = true;
-  foreach ($order->statuses as $statuses) {
+    $extra_headings = [];
+    $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_OSH_HEADINGS', $order, $extra_headings);
+    foreach ($extra_headings as $next_heading) {
+?>
+        <th scope="col"><?= $next_heading ?></th>
+<?php
+    }
+?>
+        <th scope="col" id="myAccountStatusComments"><?php echo TABLE_HEADING_STATUS_COMMENTS; ?></th>
+    </tr>
+<?php
+    // -----
+    // The *first* comment, made by the customer, is 'protected' from using HTML taga; all others are
+    // made by the admin or a 'known' entity and HTML is allowed.
+    //
+    $protected = true;
+    foreach ($order->statuses as $statuses) {
 ?>
     <tr>
         <td><?php echo zen_date_short($statuses['date_added']); ?></td>
         <td><?php echo $statuses['orders_status_name']; ?></td>
+<?php
+        $extra_data = [];
+        $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_OSH_DATA', $statuses, $extra_data);
+        foreach ($extra_data as $next_data) {
+            if ($protected === true) {
+                $next_data = zen_output_string_protected($next_data);
+            }
+?>
+        <td><?= $next_data ?></td>
+<?php
+        }
+?>
         <td>
 <?php
-    if (!empty($statuses['comments'])) {
-       echo nl2br(zen_output_string($statuses['comments'], false, $protected));
-    }
+        if (!empty($statuses['comments'])) {
+           echo nl2br(zen_output_string($statuses['comments'], false, $protected));
+        }
 ?>
        </td>
-     </tr>
+    </tr>
 <?php
-    $protected = false;
-  }
+        $protected = false;
+    }
 ?>
 </table>
-<?php } ?>
+<?php
+}
+?>
 
 <hr>
 <div id="myAccountShipInfo" class="floatingBox back">

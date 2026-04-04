@@ -1,14 +1,13 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Erik Kerkhoven 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 16 Modified in v2.2.0 $
  * structurally identical to featured.php, modifications should be replicated
  */
 require 'includes/application_top.php';
 
-require DIR_WS_CLASSES . 'currencies.php';
 $currencies = new currencies();
 
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -59,8 +58,8 @@ if (!empty($action)) {
         }
 
         $specials_date_available_raw = zen_db_prepare_input($_POST['specials_date_available']);
-        if ($specials_date_available_raw === '') {
-            $specials_date_available = '0001-01-01';
+        if (empty($specials_date_available_raw)) {
+            $specials_date_available = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($specials_date_available_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -79,8 +78,8 @@ if (!empty($action)) {
         }
 
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-        if ($expires_date_raw === '') {
-            $expires_date = '0001-01-01';
+        if (empty($expires_date_raw)) {
+            $expires_date = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -104,7 +103,7 @@ if (!empty($action)) {
         }
 
         $db->Execute("INSERT INTO " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status, specials_date_available)
-                      VALUES (" . (int)$products_id . ", " . (float)$specials_price . ", now(), '" . zen_db_input($expires_date) . "', 1, '" . zen_db_input($specials_date_available) . "')");
+                      VALUES (" . (int)$products_id . ", " . (float)$specials_price . ", now(), '" . zen_db_input(!empty($expires_date) ? $expires_date : '0001-01-01') . "', 1, '" . zen_db_input(!empty($specials_date_available) ? $specials_date_available : '0001-01-01') . "')");
 
         $new_special = $db->Execute("SELECT specials_id
                                      FROM " . TABLE_SPECIALS . "
@@ -138,8 +137,8 @@ if (!empty($action)) {
       }
 
         $specials_date_available_raw = zen_db_prepare_input($_POST['specials_date_available']);
-        if ($specials_date_available_raw === '') {
-            $specials_date_available = '0001-01-01';
+        if (empty($specials_date_available_raw)) {
+            $specials_date_available = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($specials_date_available_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -158,8 +157,8 @@ if (!empty($action)) {
         }
 
         $expires_date_raw = zen_db_prepare_input($_POST['expires_date']);
-        if ($expires_date_raw === '') {
-            $expires_date = '0001-01-01';
+        if (empty($expires_date_raw)) {
+            $expires_date = '';
         } else {
             if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd' && !empty($expires_date_raw)) {
                 $local_fmt = zen_datepicker_format_fordate();
@@ -185,8 +184,8 @@ if (!empty($action)) {
       $db->Execute("UPDATE " . TABLE_SPECIALS . "
                     SET specials_new_products_price = '" . zen_db_input($specials_price) . "',
                         specials_last_modified = now(),
-                        expires_date = '" . zen_db_input($expires_date) . "',
-                        specials_date_available = '" . zen_db_input($specials_date_available) . "'
+                        expires_date = '" . zen_db_input(!empty($expires_date) ? $expires_date : '0001-01-01') . "',
+                        specials_date_available = '" . zen_db_input(!empty($specials_date_available) ? $specials_date_available : '0001-01-01') . "'
                     WHERE specials_id = " . (int)$specials_id);
 
       // reset products_price_sorter for searches etc.
@@ -256,6 +255,9 @@ if (!empty($action)) {
 <html <?php echo HTML_PARAMS; ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+      <link data-title="Select2CSS" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" integrity="sha384-OXVF05DQEe311p6ohU11NwlnX08FzMCsyoXzGOaL+83dKAb3qS17yZJxESl8YrJQ" crossorigin="anonymous" rel="stylesheet">
+      <link data-title="BS3SelectCSS" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-theme@0.1.0-beta.10/dist/select2-bootstrap.min.css" integrity="sha384-gmcw+R0EXbFmHe5f/e/UutiOrxubA/LkUzBVH0Y7uvP+IqhUSNFp7HZKD6ztR12u" crossorigin="anonymous" rel="stylesheet">
+      <script title="Select2JS" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" integrity="sha384-d3UHjPdzJkZuk5H3qKYMLRyWLAQBJbby2yr2Q58hXXtAGF8RSNO9jpLDlKKPv5v3" crossorigin="anonymous"></script>
   </head>
   <body>
     <!-- header //-->
@@ -276,7 +278,8 @@ if (!empty($action)) {
           $form_action = 'update';
 
           $product = $db->Execute("SELECT p.products_id, p.products_model, pd.products_name, p.products_price, p.products_priced_by_attribute,
-                                          s.specials_new_products_price, s.expires_date, s.specials_date_available
+                                          s.specials_new_products_price, DATE_FORMAT(s.expires_date, '" .  zen_datepicker_format_forsql() . "') AS expires_date,
+                                          DATE_FORMAT(s.specials_date_available, '" .  zen_datepicker_format_forsql() . "') AS specials_date_available
                                    FROM " . TABLE_PRODUCTS . " p,
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd,
                                         " . TABLE_SPECIALS . " s
@@ -286,6 +289,15 @@ if (!empty($action)) {
                                    AND s.specials_id = " . (int)$_GET['sID']);
 
           $sInfo = new objectInfo($product->fields);
+
+          // Set date to empty strings for values in database like 0001-01-01 or 01-01-0001 to accomodate different locales
+          if ($sInfo->specials_date_available === '0001-01-01' || $sInfo->specials_date_available === '01-01-0001') {
+              $sInfo->specials_date_available = '';
+          }
+
+          if ($sInfo->expires_date === '0001-01-01' || $sInfo->expires_date === '01-01-0001') {
+              $sInfo->expires_date = '';
+          }
 
           if ($sInfo->products_priced_by_attribute === '1') {
             $sInfo->products_price = zen_get_products_base_price($product->fields['products_id']);
@@ -381,9 +393,17 @@ if (!empty($action)) {
             </div>
           <?php } else { ?>
             <div class="form-group">
-              <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, 'products_id', 'class="col-sm-3 control-label"'); ?>
+              <?php echo zen_draw_label(TEXT_SPECIALS_PRODUCT, isset($_POST['keywords']) ? 'products_id' : 'productLookup', 'class="col-sm-3 control-label"'); ?>
               <div class="col-sm-9 col-md-6">
-                <?php echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true); ?>
+                <?php
+                if (isset($_POST['keywords'])) {
+                    echo zen_draw_pulldown_products('products_id', 'required size="15" class="form-control" id="products_id"', $specials_array, true, (!empty($_GET['add_products_id']) ? $_GET['add_products_id'] : ''), true);
+
+                } else {
+                    // draw Select2 pulldown (activated below via jQuery)
+                    echo zen_draw_pull_down_menu('products_id', [], '', 'required id="productLookup" class="form-control" style="width: 100%"');
+                }
+                ?>
               </div>
             </div>
           <?php } ?>
@@ -403,7 +423,7 @@ if (!empty($action)) {
                 <span class="input-group-addon datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
-                <?php echo zen_draw_input_field('specials_date_available', (($sInfo->specials_date_available == '0001-01-01') ? '' : $sInfo->specials_date_available), 'class="form-control" id="specials_date_available"'); ?>
+                <?php echo zen_draw_input_field('specials_date_available', $sInfo->specials_date_available, 'class="form-control" id="specials_date_available"'); ?>
               </div>
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_ACTIVE_DATE; ?></span></span>
             </div>
@@ -415,7 +435,7 @@ if (!empty($action)) {
                 <span class="input-group-addon datepicker_icon">
                   <?php echo zen_icon('calendar-days', size: 'lg') ?>
                 </span>
-                <?php echo zen_draw_input_field('expires_date', (($sInfo->expires_date == '0001-01-01') ? '' : $sInfo->expires_date), 'class="form-control" id="expires_date"'); ?>
+                <?php echo zen_draw_input_field('expires_date', $sInfo->expires_date, 'class="form-control" id="expires_date"'); ?>
               </div>
               <span class="help-block errorText">(<?php echo zen_datepicker_format_full(); ?>) <span class="date-check-error"><?php echo ERROR_INVALID_EXPIRES_DATE; ?></span></span>
             </div>
@@ -681,16 +701,45 @@ if (!empty($action)) {
     <!-- footer //-->
     <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->
-    <!-- script for datepicker -->
+    <!-- script init -->
     <script>
-      $(function () {
-        $('input[name="specials_date_available"]').datepicker({
-            minDate: 0
-        });
-        $('input[name="expires_date"]').datepicker({
-            minDate: 1
-        });
-      })
+        $(function() {
+            $('input[name="specials_date_available"]').datepicker({
+                minDate: 0
+            });
+            $('input[name="expires_date"]').datepicker({
+                minDate: 1
+            });
+
+            const ALLOW_HTML = false; // For product names, false strips html tags, true allows html, but might affect layout.
+            // Function to escape html special characters, except for <strong> tags, and replaces <br> tags with spaces
+            const esc = s => String(s)
+                .replace(/<br\s*\/?>/gi, ' ')
+                .replace(/[&<>"']/g, c =>
+                    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])
+                );
+            $("#productLookup").select2({
+                theme: "bootstrap", // bootstrap-5 for 5
+                minimumInputLength: 2, // only start searching when 2 or more characters have been typed
+                selectOnClose: true,
+                ajax: {
+                    url: 'ajax.php?act=ajaxSelect2Lookups&method=getProductsForSpecials',
+                    delay: 250, // debounce/wait 250 milliseconds before triggering the request
+                    dataType: 'json',
+                    method: 'POST',
+                    data: function(params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page || 1,
+                            strip_tags: !ALLOW_HTML,
+                            securityToken: '<?= $_SESSION['securityToken'] ?>'
+                        };
+                    }
+                },
+                templateResult: d => d.text,
+                escapeMarkup: m => (ALLOW_HTML ? m : esc(m))
+            });
+        })
     </script>
   </body>
 </html>

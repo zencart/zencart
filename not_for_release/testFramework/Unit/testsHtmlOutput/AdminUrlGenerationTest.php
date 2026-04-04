@@ -73,6 +73,9 @@ class AdminUrlGenerationTest extends zcUnitTestCase
      */
     public function testAddSessionWhenSidDefined()
     {
+        if (PHP_VERSION_ID >= 80401) {
+            $this->markTestSkipped('IgnoredAfterPHP841');
+        }
         $GLOBALS['session_started'] = true;
         define('SID', 'zenadminid=1234567890');
         $this->assertURLGenerated(

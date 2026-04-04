@@ -2,9 +2,9 @@
 /**
  * brands header_php.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Sep 24 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2025 Oct 25 Modified in v2.2.0 $
  */
 
 // This should be first line of the script:
@@ -53,13 +53,17 @@ foreach ($listing as $record) {
 // These are "soft" configuration setting that can be overridden on a site-specific basis.
 //
 if (!defined('BRANDS_IMAGE_WIDTH')) {
-    define('BRANDS_IMAGE_WIDTH', '126');
+    define('BRANDS_IMAGE_WIDTH', IMAGE_PRODUCT_LISTING_WIDTH);
 }
 if (!defined('BRANDS_IMAGE_HEIGHT')) {
-    define('BRANDS_IMAGE_HEIGHT', '126');
+    define('BRANDS_IMAGE_HEIGHT', IMAGE_PRODUCT_LISTING_HEIGHT);
 }
 if (!defined('BRANDS_MAX_COLUMNS')) {
-    define('BRANDS_MAX_COLUMNS', '6');
+    $product_listing_columns_per_row = (int)PRODUCT_LISTING_COLUMNS_PER_ROW;
+    if ($product_listing_columns_per_row < 1) {
+        $product_listing_columns_per_row = 1;
+    }
+    define('BRANDS_MAX_COLUMNS', $product_listing_columns_per_row);
 }
 
 // This should be last line of the script:

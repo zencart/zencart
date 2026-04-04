@@ -2,10 +2,10 @@
 /**
  * checkout_new_address.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Dec 12 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 13 Modified in v2.2.1 $
  */
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_MODULE_START_CHECKOUT_NEW_ADDRESS');
@@ -29,7 +29,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'submit')) {
     if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['street_address'])) {
         $process = true;
         if (ACCOUNT_GENDER === 'true') {
-            $gender = zen_db_prepare_input($_POST['gender']);
+            $gender = zen_db_prepare_input($_POST['gender'] ?? '');
         }
         if (ACCOUNT_COMPANY === 'true') {
             $company = zen_db_prepare_input($_POST['company']);
@@ -58,22 +58,22 @@ if (isset($_POST['action']) && ($_POST['action'] === 'submit')) {
             }
         }
 
-        if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+        if (mb_strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
             $error = true;
             $messageStack->add('checkout_address', ENTRY_FIRST_NAME_ERROR);
         }
 
-        if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+        if (mb_strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
             $error = true;
             $messageStack->add('checkout_address', ENTRY_LAST_NAME_ERROR);
         }
 
-        if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
+        if (mb_strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
             $error = true;
             $messageStack->add('checkout_address', ENTRY_STREET_ADDRESS_ERROR);
         }
 
-        if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
+        if (mb_strlen($city) < ENTRY_CITY_MIN_LENGTH) {
             $error = true;
             $messageStack->add('checkout_address', ENTRY_CITY_ERROR);
         }
@@ -121,14 +121,14 @@ if (isset($_POST['action']) && ($_POST['action'] === 'submit')) {
                     $error_state_input = true;
                     $messageStack->add('checkout_address', ENTRY_STATE_ERROR_SELECT);
                 }
-            } elseif (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+            } elseif (mb_strlen($state) < ENTRY_STATE_MIN_LENGTH) {
                 $error = true;
                 $error_state_input = true;
                 $messageStack->add('checkout_address', ENTRY_STATE_ERROR);
             }
         }
 
-        if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
+        if (mb_strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
             $error = true;
             $messageStack->add('checkout_address', ENTRY_POST_CODE_ERROR);
         }
@@ -170,7 +170,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'submit')) {
                 }
             }
             $db->perform(TABLE_ADDRESS_BOOK, $sql_data_array);
-            $address_book_id = $db->Insert_ID();
+            $address_book_id = $db->insert_ID();
             $zco_notifier->notify('NOTIFY_MODULE_CHECKOUT_ADDED_ADDRESS_BOOK_RECORD', array_merge(['address_id' => $address_book_id], $sql_data_array));
             switch($addressType) {
                 case 'billto':

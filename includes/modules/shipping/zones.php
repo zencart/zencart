@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Dec 20 Modified in v1.5.8a $
+ * @version $Id: lat9 2025 Oct 01 Modified in v2.2.0 $
  */
 
 /*
@@ -92,7 +92,9 @@
   Shipping Tables and Zone Countries.
 
 */
-
+/**
+ * @since ZC v1.0.3
+ */
 class zones extends ZenShipping
 {
     /**
@@ -118,6 +120,8 @@ class zones extends ZenShipping
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
             $this->enabled = ((MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
+        } else {
+            $this->enabled = false;
         }
 
         // CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
@@ -153,13 +157,11 @@ class zones extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v2.1.0
      */
     function update_status()
     {
-        if (!$this->enabled) {
-            return;
-        }
-        if (IS_ADMIN_FLAG === true) {
+        if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
@@ -171,10 +173,13 @@ class zones extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function quote($method = ''): array
     {
         global $order, $shipping_weight, $shipping_num_boxes, $total_count;
-        $dest_country = $order->delivery['country']['iso_code_2'];
+        $dest_country = $order->delivery['country']['iso_code_2'] ?? 'xyzzy';
         $dest_zone = 0;
         $error = false;
         $shipping_method = '';
@@ -226,8 +231,8 @@ class zones extends ZenShipping
 
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country . $show_box_weight;
                             $done = true;
-                            if (strstr($zones_table[$i + 1], '%')) {
-                                $shipping = ($zones_table[$i + 1] / 100) * $order_total_amount;
+                            if (str_ends_with($zones_table[$i + 1], '%')) {
+                                $shipping = (rtrim($zones_table[$i + 1], '%') / 100) * $order_total_amount;
                             } else {
                                 $shipping = $zones_table[$i + 1];
                             }
@@ -238,8 +243,8 @@ class zones extends ZenShipping
                         // shipping adjustment
                         if (($_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices()) <= $zones_table[$i]) {
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
-                            if (strstr($zones_table[$i + 1], '%')) {
-                                $shipping = ($zones_table[$i + 1] / 100) * $order_total_amount;
+                            if (str_ends_with($zones_table[$i + 1], '%')) {
+                                $shipping = (rtrim($zones_table[$i + 1], '%') / 100) * $order_total_amount;
                             } else {
                                 $shipping = $zones_table[$i + 1];
                             }
@@ -252,8 +257,8 @@ class zones extends ZenShipping
                         if (($total_count - $_SESSION['cart']->free_shipping_items()) <= $zones_table[$i]) {
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
                             $done = true;
-                            if (strstr($zones_table[$i + 1], '%')) {
-                                $shipping = ($zones_table[$i + 1] / 100) * $order_total_amount;
+                            if (str_ends_with($zones_table[$i + 1], '%')) {
+                                $shipping = (rtrim($zones_table[$i + 1], '%') / 100) * $order_total_amount;
                             } else {
                                 $shipping = $zones_table[$i + 1];
                             }
@@ -275,18 +280,18 @@ class zones extends ZenShipping
                         // charge per box when done by Weight
                         // Handling fee per box or order
                         if (constant('MODULE_SHIPPING_ZONES_HANDLING_METHOD_' . $dest_zone) == 'Box') {
-                            $shipping_cost = ($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone) * $shipping_num_boxes;
+                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone) * $shipping_num_boxes;
                         } else {
-                            $shipping_cost = ($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         }
                         break;
                     case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
                         // don't charge per box when done by Price
-                        $shipping_cost = ($shipping) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                        $shipping_cost = ($shipping) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         break;
                     case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
                         // don't charge per box when done by Item
-                        $shipping_cost = ($shipping) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                        $shipping_cost = ($shipping) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         break;
                 }
             }
@@ -303,7 +308,7 @@ class zones extends ZenShipping
             ],
         ];
 
-        if ($this->tax_class > 0) {
+        if ($this->tax_class > 0 && isset($order->delivery['country'])) {
             $this->quotes['tax'] = zen_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         }
 
@@ -323,6 +328,9 @@ class zones extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function check()
     {
         global $db;
@@ -333,6 +341,9 @@ class zones extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function install(): void
     {
         global $db;
@@ -356,11 +367,17 @@ class zones extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/zones/'];
     }
 
+    /**
+     * @since ZC v1.0.3
+     */
     function keys(): array
     {
         $keys = ['MODULE_SHIPPING_ZONES_STATUS', 'MODULE_SHIPPING_ZONES_METHOD', 'MODULE_SHIPPING_ZONES_TAX_CLASS', 'MODULE_SHIPPING_ZONES_TAX_BASIS', 'MODULE_SHIPPING_ZONES_SORT_ORDER', 'MODULE_SHIPPING_ZONES_SKIPPED'];

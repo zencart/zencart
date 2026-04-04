@@ -2,14 +2,17 @@
 /**
  * Pop up Image Header
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Nov 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 29 Modified in v2.2.0 $
  */
 /**
  * Header code file for the product-larger-images popup window
  */
+
+// Set $pid before the notifier starts.
+$pid = $_GET['pID'] ?? $_GET['pid'] ?? $_GET['products_id'] ?? $_GET['product_id'] ?? 0;
 
 // This should be first line of the script:
   $zco_notifier->notify('NOTIFY_HEADER_START_POPUP_IMAGES');
@@ -24,7 +27,7 @@
                             and p.products_id = :productsID
                             and pd.language_id = :languagesID ";
 
-  $products_values_query = $db->bindVars($products_values_query, ':productsID', $_GET['pID'] ?? 0, 'integer');
+  $products_values_query = $db->bindVars($products_values_query, ':productsID', $pid, 'integer');
   $products_values_query = $db->bindVars($products_values_query, ':languagesID', $_SESSION['languages_id'], 'integer');
 
   $products_values = $db->Execute($products_values_query);

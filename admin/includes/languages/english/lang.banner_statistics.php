@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -11,8 +11,8 @@ $define = [
     'TABLE_HEADING_SOURCE' => 'Source',
     'TABLE_HEADING_VIEWS' => 'Impressions',
     'TABLE_HEADING_CLICKS' => 'Clicks',
-    'TEXT_BANNERS_DAILY_STATISTICS' => '%s Daily Statistics For %s %s',
-    'TEXT_BANNERS_MONTHLY_STATISTICS' => '%s Monthly Statistics For %s',
+    'TEXT_BANNERS_DAILY_STATISTICS' => '%1$s Daily Statistics For %2$s %3$s',
+    'TEXT_BANNERS_MONTHLY_STATISTICS' => '%1$s Monthly Statistics For %2$s',
     'TEXT_BANNERS_YEARLY_STATISTICS' => '%s Yearly Statistics',
     'STATISTICS_TYPE_DAILY' => 'Daily',
     'STATISTICS_TYPE_MONTHLY' => 'Monthly',

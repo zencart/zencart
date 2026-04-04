@@ -1,9 +1,10 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @since ZC v1.5.6
  */
 
 class AdminNotifications
@@ -27,6 +28,9 @@ class AdminNotifications
         }
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     public function getNotifications($target, $adminId)
     {
         if ($this->enabled === false) {
@@ -49,6 +53,9 @@ class AdminNotifications
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function getNotificationInfo()
     {
         if (empty($this->projectNotificationServer)){
@@ -72,6 +79,9 @@ class AdminNotifications
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationAvailable($name, $target, $notification, $savedState)
     {
         if ($notification['target'] !== $target) {
@@ -89,6 +99,9 @@ class AdminNotifications
         return true;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationDismissed($name, $savedState)
     {
         if (!isset($savedState[$name])) {
@@ -97,6 +110,9 @@ class AdminNotifications
         return $savedState[$name]['dismissed'];
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationInDate($notification, $currentDatetime)
     {
         if (!isset($notification['start-date']) && !isset($notification['end-date'])) {
@@ -111,6 +127,9 @@ class AdminNotifications
         return true;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function isNotificationInCountry($notification)
     {
         if (!isset($notification['countries'])) {
@@ -123,16 +142,22 @@ class AdminNotifications
         return true;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected  function getStoreCountryIso3()
     {
         global $db;
 
         $sql = "SELECT countries_iso_code_3 from " . TABLE_COUNTRIES . " WHERE countries_id = " . STORE_COUNTRY;
-        $r = $db->execute($sql);
+        $r = $db->Execute($sql);
         $iso3 = $r->fields['countries_iso_code_3'];
         return $iso3;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function getSavedState($adminId)
     {
         global $db;
@@ -140,18 +165,24 @@ class AdminNotifications
         $savedState = [];
         $sql = "SELECT * FROM " . TABLE_ADMIN_NOTIFICATIONS . " WHERE admin_id = :adminId:";
         $sql = $db->bindVars($sql, ':adminId:', $adminId, 'integer');
-        $results = $db->execute($sql);
+        $results = $db->Execute($sql);
         foreach ($results as $result) {
             $savedState[$result['notification_key']]['dismissed'] = $result['dismissed'];
         }
         return $savedState;
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function getCurrentDate()
     {
         return new DateTime("now");
     }
 
+    /**
+     * @since ZC v1.5.6
+     */
     protected function pruneSavedState($notificationList)
     {
         global $db;
@@ -160,6 +191,6 @@ class AdminNotifications
         $keys = implode(',', $keys);
         $sql = "DELETE FROM " . TABLE_ADMIN_NOTIFICATIONS . " WHERE notification_key NOT IN (:keys:)";
         $sql = $db->bindVars($sql, ':keys:', $keys, 'inConstructString');
-        $db->execute($sql);
+        $db->Execute($sql);
     }
 }

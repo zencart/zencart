@@ -2,26 +2,32 @@
 /**
  * product-specials functions
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
-////
-// Set the status of a product on special
-  function zen_set_specials_status($specials_id, $status) {
+/**
+ * Set the status of a product on special
+ * @since ZC v1.0.3
+ */
+function zen_set_specials_status($specials_id, $status)
+{
     global $db;
     $sql = "update " . TABLE_SPECIALS . "
             set status = '" . (int)$status . "', date_status_change = now()
             where specials_id = '" . (int)$specials_id . "'";
 
     return $db->Execute($sql);
-   }
+}
 
-////
-// Auto expire products on special
-  function zen_expire_specials() {
+/**
+ * Auto expire products on special
+ * @since ZC v1.0.3
+ */
+function zen_expire_specials()
+{
     global $db;
 
     $date_range = time();
@@ -42,11 +48,14 @@
         $specials->MoveNext();
       }
     }
-  }
+}
 
-////
-// Auto start products on special
-  function zen_start_specials() {
+/**
+ * Auto start products on special
+ * @since ZC v1.2.0d
+ */
+function zen_start_specials()
+{
     global $db;
 
     $date_range = time();
@@ -87,5 +96,4 @@
         $specials->MoveNext();
       }
     }
-  }
-?>
+}

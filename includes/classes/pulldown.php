@@ -2,10 +2,11 @@
 /**
  * Class pulldown 
  * 
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @since ZC v1.5.8
  */
 
     abstract class pulldown extends base
@@ -74,6 +75,7 @@
          * @param int $id
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function setDefault(int $id)
         {
@@ -85,6 +87,7 @@
          * @param bool $status
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function showID(bool $status)
         {
@@ -96,6 +99,7 @@
          * @param int $filter_id
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function setOptionFilter(int $filter_id)
         {
@@ -108,6 +112,7 @@
          * @param array $array
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function exclude(array $array)
         {
@@ -119,6 +124,7 @@
          * @param bool $status
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function includeAttributes(bool $status)
         {
@@ -133,6 +139,7 @@
          * @param string $keywords
          *
          * @return $this
+         * @since ZC v1.5.8
          */
         public function setSearchTerms(string $keywords)
         {
@@ -142,16 +149,19 @@
 
         /**
          * @return mixed
+         * @since ZC v1.5.8
          */
         abstract protected function processSQL();
 
         /**
          * @return mixed
+         * @since ZC v1.5.8
          */
         abstract protected function setSQL();
 
         /**
          * @return void
+         * @since ZC v1.5.8
          */
         protected function runSQL()
         {
@@ -181,8 +191,9 @@
          * @param bool   $required
          *
          * @return string
+         * @since ZC v2.1.0
          */
-        public function generatePullDownHtml(string $name, string $parameters = '', bool $required = false)
+        public function generatePulldownHtml(string $name, string $parameters = '', bool $required = false)
         {
             $this->processSQL();
 

@@ -4,10 +4,11 @@
  *
  * Observer class used to detect spam input
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2017-2019 CowboyGeek.com
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 24 Modified in v1.5.8-alpha2 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @since ZC v1.5.7
  */
 
 class zcObserverNonCaptchaObserver extends base
@@ -30,12 +31,18 @@ class zcObserverNonCaptchaObserver extends base
     }
 
     // This update method fires if no updateNotifyxxxxxx function is declared below to match the notifier hooks we're listening to
+    /**
+     * @since ZC v1.5.7
+     */
     public function update(&$class, $eventID, $paramsArray)
     {
         $this->testURLSpam();
         $this->testAntiSpamFields();
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function updateNotifyContactUsCaptchaCheck(&$class, $eventID, $paramsArray)
     {
         // sanitize the contact-us name field more aggressively
@@ -45,6 +52,9 @@ class zcObserverNonCaptchaObserver extends base
         $this->update($class, $eventID, $paramsArray);
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function testAntiSpamFields()
     {
         if (!empty($_POST[$_SESSION['antispam_fieldname']]) || !empty($_POST['should_be_empty'])) {
@@ -52,6 +62,9 @@ class zcObserverNonCaptchaObserver extends base
         }
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function generate_random_string($input, $strength = 16)
     {
         $input_length = strlen($input);
@@ -64,6 +77,9 @@ class zcObserverNonCaptchaObserver extends base
         return $random_string;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function testURLSpam()
     {
         $test_string = '';
@@ -94,10 +110,20 @@ class zcObserverNonCaptchaObserver extends base
         ];
 
         // prepare for inspection
+        $array_found = false; 
         foreach ($fields as $field) {
             if (!empty($_POST[$field])) {
-                $test_string .= $_POST[$field];
+                if (is_array($_POST[$field])) {
+                   $array_found = true; 
+                   $_POST[$field] = '';
+                } else {
+                   $test_string .= $_POST[$field];
+                }
             }
+        }
+        if ($array_found) { 
+            $GLOBALS['antiSpam'] = 'spam';
+            return; 
         }
 
         if (empty(trim($test_string))) return;

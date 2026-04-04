@@ -7,15 +7,15 @@
  *
  * THIS FILE SHOULD NEVER BE EDITED MANUALLY !!!!!!!!
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 Apr 07 Modified in v2.0.0 $
+ * @version $Id: Scott Wilson 2026 Mar 19 Modified in v2.2.1 $
  * @private
  */
 
 define('PROJECT_VERSION_NAME', 'Zen Cart');
 define('PROJECT_VERSION_MAJOR', '2');
-define('PROJECT_VERSION_MINOR', '1.0-alpha');
+define('PROJECT_VERSION_MINOR', '2.1');
 define('PROJECT_VERSION_PATCH1', '');
 define('PROJECT_VERSION_PATCH2', '');
 define('PROJECT_VERSION_PATCH1_SOURCE', '');
@@ -25,4 +25,4 @@ define('PROJECT_VERSIONSERVER_URL', 'https://ping.zen-cart.com/zcversioncheck');
 define('PLUGIN_VERSIONSERVER_URL', 'https://ping.zen-cart.com/plugincheck');
 define('PROJECT_NOTIFICATIONSERVER_URL', 'https://ping.zen-cart.com/api/notifications');
 define('EXPECTED_DATABASE_VERSION_MAJOR', '2');
-define('EXPECTED_DATABASE_VERSION_MINOR', '1.0');
+define('EXPECTED_DATABASE_VERSION_MINOR', '2.0');

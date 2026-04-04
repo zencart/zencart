@@ -3,10 +3,10 @@
  * filenames.php
  * Defines the filenames used in the project
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2024 Mar 01 Modified in v2.0.0-rc1 $
+ * @version $Id: DrByte 2025 Sep 30 Modified in v2.2.0 $
  */
 /**
  * define project filenames
@@ -24,7 +24,6 @@ define('FILENAME_ADDRESS_BOOK', 'address_book');
 define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process');
 define('FILENAME_ADMIN_ACCOUNT', 'admin_account');
 define('FILENAME_ADMIN_ACTIVITY', 'admin_activity');
-define('FILENAME_ADMIN_PAGE_REGISTRATION', 'admin_page_registration');
 define('FILENAME_ADVANCED_SEARCH', 'search'); // alias since 1.5.8; to be removed later
 define('FILENAME_ADVANCED_SEARCH_RESULT', 'search_result'); // alias since 1.5.8; to be removed later
 define('FILENAME_AJAX', 'ajax');
@@ -57,6 +56,7 @@ define('FILENAME_COUPON_REFERRERS', 'coupon_referrers');
 define('FILENAME_COUPON_RESTRICT', 'coupon_restrict');
 define('FILENAME_COUPON_ADMIN_EXPORT', 'coupon_admin_export');
 define('FILENAME_CREATE_ACCOUNT', 'create_account');
+define('FILENAME_CREATE_ACCOUNT_SEND_EMAIL', 'create_account_send_email');
 define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success');
 define('FILENAME_CURRENCIES', 'currencies');
 define('FILENAME_CUSTOMERS', 'customers');
@@ -97,6 +97,7 @@ define('FILENAME_GV_MAIL', 'gv_mail');
 define('FILENAME_GV_SENT', 'gv_sent');
 define('FILENAME_FEATURED','featured');
 define('FILENAME_FEATURED_PRODUCTS','featured_products');
+define('FILENAME_FEATURED_CATEGORIES','featured_categories');
 define('FILENAME_INFO_SHOPPING_CART', 'info_shopping_cart');
 define('FILENAME_LANGUAGES', 'languages');
 define('FILENAME_LAYOUT_CONTROLLER','layout_controller');
@@ -125,6 +126,7 @@ define('FILENAME_PAGE_2', 'page_2');
 define('FILENAME_PAGE_3', 'page_3');
 define('FILENAME_PAGE_4', 'page_4');
 define('FILENAME_PASSWORD_FORGOTTEN', 'password_forgotten');
+define('FILENAME_PASSWORD_RESET', 'password_reset');
 define('FILENAME_PLUGIN_MANAGER', 'plugin_manager');
 define('FILENAME_POPUP_COUPON_HELP', 'popup_coupon_help');
 define('FILENAME_POPUP_IMAGE', 'popup_image');
@@ -157,13 +159,13 @@ define('FILENAME_SALEMAKER_INFO', 'salemaker_info');
 define('FILENAME_SALEMAKER_POPUP', 'salemaker_popup');
 define('FILENAME_SEARCH', 'search');
 define('FILENAME_SEARCH_RESULT', 'search_result');
+define('FILENAME_SEND_AUTH_TOKEN_EMAIL', 'send_auth_token_email');
 define('FILENAME_SERVER_INFO', 'server_info');
 define('FILENAME_SHIPPING', 'shippinginfo');
 define('FILENAME_SHOPPING_CART', 'shopping_cart');
 define('FILENAME_SITE_MAP', 'site_map');
 define('FILENAME_SPECIALS', 'specials');
 define('FILENAME_SQLPATCH','sqlpatch');
-define('FILENAME_SSL_CHECK', 'ssl_check');
 define('FILENAME_STATS_CUSTOMERS', 'stats_customers');
 define('FILENAME_STATS_CUSTOMERS_REFERRALS', 'stats_customers_referrals');
 define('FILENAME_STATS_PRODUCTS_PURCHASED', 'stats_products_purchased');
@@ -188,6 +190,7 @@ define('FILENAME_CATEGORIES_TABS','categories_tabs.php');
 define('FILENAME_CREDIT_CARDS', 'credit_cards.php');
 define('FILENAME_DATABASE_TEMPORARILY_DOWN','nddbc.html');
 define('FILENAME_EMAIL_EXTRAS','email_extras.php');
+define('FILENAME_FEATURED_CATEGORIES_MODULE','featured_categories.php');
 define('FILENAME_FEATURED_PRODUCTS_MODULE','featured_products.php');
 define('FILENAME_HEADER','header.php');
 define('FILENAME_ICON_NAMES','icon_names.php');
@@ -199,4 +202,5 @@ define('FILENAME_PREV_NEXT_DISPLAY', 'products_previous_next_display.php');
 define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
 define('FILENAME_SPECIALS_INDEX', 'specials_index.php');
 define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
+
 

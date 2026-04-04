@@ -2,10 +2,10 @@
 /**
  * music_genres sidebox - displays list of available music genres to filter on
  *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2022 Jul 05 Modified in v1.5.8-alpha $
+ * @version $Id: piloujp 2025 May 16 Modified in v2.2.0 $
  */
 $music_genres = $db->Execute(
     "SELECT music_genre_id, music_genre_name
@@ -27,8 +27,8 @@ if (!$music_genres->EOF) {
 
     foreach ($music_genres as $next_genre) {
         $music_genre_name = $next_genre['music_genre_name'];
-        if (strlen($music_genre_name) > (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) {
-            $music_genre_name = substr($music_genre_name, 0, (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) . '..';
+        if (mb_strlen($music_genre_name) > (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) {
+            $music_genre_name = mb_substr($music_genre_name, 0, (int)MAX_DISPLAY_MUSIC_GENRES_NAME_LEN) . '..';
         }
         $music_genres_array[] = [
             'id' => $next_genre['music_genre_id'],

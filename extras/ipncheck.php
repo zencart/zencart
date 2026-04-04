@@ -2,9 +2,9 @@
 /**
  * ipncheck.php diagnostic tool
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: dbltoe 2022 Nov 10 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 30 Modified in v2.2.0 $
  *
  * This utility is intended to be used to check whether this webserver is able to connect TO PayPal in order to RESPOND to an incoming IPN notification.
  * Unfortunately it cannot test whether PayPal's servers can successfully post an IPN *to* your store.  To do that one should test a live transaction.
@@ -221,7 +221,6 @@ function doPayPalIPNCurlPostback($web, $vars, $verboseMode = false, $headerMode 
         $commErrNo = curl_errno($ch);
     }
     //$commInfo = @curl_getinfo($ch);
-    curl_close($ch);
     //die("\n\n".'data:'.$response);
 
     if ($verboseMode) {

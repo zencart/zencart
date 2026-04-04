@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 09 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -20,7 +20,7 @@ $define = [
     'TEXT_EDIT_INTRO' => 'Please amend the details of the new media collection below',
     'TEXT_HEADING_DELETE_MEDIA_COLLECTION' => 'Delete Media Collection',
     'TEXT_DELETE_INTRO' => 'Do you want to delete this media collection?',
-    'TEXT_DISPLAY_NUMBER_OF_MEDIA' => 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Media Collections)',
+    'TEXT_DISPLAY_NUMBER_OF_MEDIA' => 'Displaying <strong>%1$d</strong> to <strong>%2$d</strong> (of <strong>%3$d</strong> Media Collections)',
     'TEXT_ADD_MEDIA_CLIP' => 'Add Media Clip',
     'TEXT_MEDIA_CLIP_DIR' => 'Upload to Media Directory',
     'TEXT_MEDIA_CLIP_TYPE' => 'Media Clip Type',

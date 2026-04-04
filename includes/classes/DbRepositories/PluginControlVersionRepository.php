@@ -1,0 +1,83 @@
+<?php
+/**
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: DrByte 2026 Feb 26 New in v2.2.1 $
+ */
+
+namespace Zencart\DbRepositories;
+
+use queryFactory;
+
+/**
+ * @since ZC v2.2.0
+ */
+class PluginControlVersionRepository
+{
+    public function __construct(private ?queryFactory $db = null)
+    {
+        if ($this->db === null) {
+            global $db;
+            $this->db = $db;
+        }
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function getByUniqueKey(string $uniqueKey): array
+    {
+        $results = $this->db->Execute(
+            "SELECT * FROM " . TABLE_PLUGIN_CONTROL_VERSIONS .
+            " WHERE unique_key = '" . $this->db->prepare_input($uniqueKey) . "'"
+        );
+
+        $versions = [];
+        foreach ($results as $result) {
+            $versions[] = $result;
+        }
+
+        return $versions;
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function setAllInfs(int $infs): void
+    {
+        $this->db->Execute(
+            "UPDATE " . TABLE_PLUGIN_CONTROL_VERSIONS . " SET infs = " . (int)$infs
+        );
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function upsertMany(array $rows): void
+    {
+        foreach ($rows as $row) {
+            $this->db->Execute(
+                "INSERT INTO " . TABLE_PLUGIN_CONTROL_VERSIONS . " (" .
+                "unique_key, author, version, zc_versions, infs" .
+                ") VALUES (" .
+                "'" . $this->db->prepare_input((string)$row['unique_key']) . "', " .
+                "'" . $this->db->prepare_input((string)$row['author']) . "', " .
+                "'" . $this->db->prepare_input((string)$row['version']) . "', " .
+                "'" . $this->db->prepare_input((string)$row['zc_versions']) . "', " .
+                (int)$row['infs'] .
+                ") ON DUPLICATE KEY UPDATE " .
+                "infs = VALUES(infs)"
+            );
+        }
+    }
+
+    /**
+     * @since ZC v2.2.0
+     */
+    public function deleteByInfs(int $infs): void
+    {
+        $this->db->Execute(
+            "DELETE FROM " . TABLE_PLUGIN_CONTROL_VERSIONS . " WHERE infs = " . (int)$infs
+        );
+    }
+}

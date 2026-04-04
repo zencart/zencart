@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: proseLA 2023 Aug 19 Modified in v2.0.0-alpha1 $
+ * @version $Id: JSWebSteve 2026 Jan 23 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 // To override the $show_* or $attr_img_width values, see
@@ -15,31 +15,32 @@ $show_product_tax = $show_product_tax ?? true;
 
 $img_width = defined('IMAGE_ON_INVOICE_IMAGE_WIDTH') ? (int)IMAGE_ON_INVOICE_IMAGE_WIDTH : '100';
 
-
-require(DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
 $oID = zen_db_prepare_input($_GET['oID']);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
 $order = new order($oID);
-$show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
 
-// prepare order-status pulldown list
-$ordersStatus = zen_getOrdersStatuses();
-$orders_statuses = $ordersStatus['orders_statuses'];
-$orders_status_array = $ordersStatus['orders_status_array'];
-
-$show_customer = false;
-if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
-  $show_customer = true;
-}
-if (isset($order->delivery['street_address']) && $order->billing['street_address'] != $order->delivery['street_address']) {
-  $show_customer = true;
-}
+// -----
+//
+// Give observers an opportunity to participate in invoice pre-initialization.
+//
+// Observers may:
+// - Inspect the order ID
+// - Populate or augment the $invoice_context array with invoice-related data
+// - Control whether the HTML head/body structure should be rendered
+//
+// Observer note:
+// - Use the provided references to add or modify data
+// - Be mindful that multiple observers may act on this notifier
+//
+$invoice_context = ['order_currency' => $order->info['currency'] ?? ''];
+$render_html_head = true;
+$zco_notifier->notify('NOTIFY_ADMIN_INVOICE_PRE_INITIALIZATION', $oID, $invoice_context, $render_html_head);
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <script>
@@ -47,6 +48,27 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
     </script>
   </head>
   <body>
+<?php
+if (empty($order->info)) {
+?>
+      <p class="text-danger text-center"><?= ERROR_ORDER_DOES_NOT_EXIST . $oID ?></p>
+<?php
+} else {
+    $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
+
+    // prepare order-status pulldown list
+    $ordersStatus = zen_getOrdersStatuses();
+    $orders_statuses = $ordersStatus['orders_statuses'];
+    $orders_status_array = $ordersStatus['orders_status_array'];
+
+    $show_customer = false;
+    if (isset($order->delivery['name']) && $order->billing['name'] != $order->delivery['name']) {
+      $show_customer = true;
+    }
+    if (isset($order->delivery['street_address']) && $order->billing['street_address'] != $order->delivery['street_address']) {
+      $show_customer = true;
+    }
+?>
     <div class="container">
       <!-- body_text //-->
       <table class="table">
@@ -90,11 +112,17 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
               <tr>
                 <td><?php echo zen_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
               </tr>
+<?php
+    if (!empty($order->customer['telephone'])) {
+?>
               <tr>
                 <td class="main">
                     <?php echo ENTRY_TELEPHONE_NUMBER . ' ' . $order->customer['telephone']; ?>
                 </td>
               </tr>
+<?php
+    }
+?>
               <tr>
                 <td class="main"><?php echo '<a href="mailto:' . $order->customer['email_address'] . '">' . $order->customer['email_address'] . '</a>'; ?></td>
               </tr>
@@ -197,7 +225,7 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
           //   'NOTIFY_ADMIN_INVOICE_DATA_AFTER_TAX' notification.
           //
           $extra_headings = false;
-          $zco_notifier->notify('NOTIFY_ADMIN_INVOIVE_HEADERS_AFTER_TAX', '', $extra_headings);
+          $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_HEADERS_AFTER_TAX', '', $extra_headings);
           if (is_array($extra_headings)) {
               foreach ($extra_headings as $heading_info) {
                   $align = (isset($heading_info['align'])) ? (' text-' . $heading_info['align']) : '';
@@ -375,6 +403,17 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
           ?>
         </tbody>
       </table>
+      <?php
+        $additional_content = false;
+        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_INVOICE_ADDITIONAL_DATA_MIDDLE', $oID, $additional_content);
+          if ($additional_content !== false) {
+      ?>
+          <table class="table">
+              <tr><td class="main additional_data" colspan="2"><?php echo $additional_content; ?></td></tr>
+          </table>
+      <?php
+          }
+      ?>
       <table class="table">
           <?php
           for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {
@@ -390,8 +429,26 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
           <?php
         }
         ?>
-      </table>
-      <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
+        <?php
+        // -----
+        //
+        // Give observers an opportunity to inject additional invoice totals rows.
+        //
+        // Observers may append HTML output (e.g. additional totals or summary rows)
+        // to be displayed within the invoice totals section.
+        //
+        // Observer note:
+        // - Append to the provided string rather than overwriting where possible
+        // - Multiple observers may contribute output
+        //
+        $extra_totals_html = '';
+        $zco_notifier->notify('NOTIFY_ADMIN_INVOICE_TOTALS_CUSTOM', $oID, $extra_totals_html);
+        if (!empty($extra_totals_html)) {
+          echo $extra_totals_html;
+        }
+        ?>
+        </table>
+        <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
         <table class="table table-condensed" style="width:100%;">
           <thead>
             <tr>
@@ -415,7 +472,7 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
                   ?>
                 <tr>
                   <td class="text-left"><?php echo zen_datetime_short($order_history['date_added']); ?></td>
-                  <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']]; ?></td>
+                  <td class="text-left"><?php echo $orders_status_array[$order_history['orders_status_id']] ?? ''; ?></td>
                   <td class="text-left">
                   <?php
                   if (empty($order_history['comments'])) {
@@ -459,7 +516,9 @@ if (isset($order->delivery['street_address']) && $order->billing['street_address
           }
       ?>
     </div>
-
+<?php
+}
+?>
     <!-- body_text_eof //-->
   </body>
 </html>

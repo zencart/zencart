@@ -1,16 +1,18 @@
 <?php
 
+/**
+ * ot_tax order-total module
+ *
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Portions Copyright 2003 osCommerce
+ * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ */
 
-    /**
-     * ot_tax order-total module
-     *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
-     * @copyright Portions Copyright 2003 osCommerce
-     * @license   http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-     * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
-     */
-
-    class ot_tax
+/**
+ * @since ZC v1.0.3
+ */
+class ot_tax
     {
      /**
      * $_check is used to check the configuration key set up
@@ -56,6 +58,9 @@
             $this->output = [];
         }
 
+        /**
+         * @since ZC v1.0.3
+         */
         public function process()
         {
             global $order, $currencies;
@@ -94,13 +99,16 @@
             }
             if (SHOW_SPLIT_TAX_CHECKOUT !== 'true' && ($taxValue > 0 || STORE_TAX_DISPLAY_STATUS === '1')) {
                 $this->output[] = [
-                    'title' => substr($taxDescription, 0, strlen($taxDescription) - 3) . ':',
+                    'title' => mb_substr($taxDescription, 0, mb_strlen($taxDescription) - 3) . ':',
                     'text' => $currencies->format($taxValue, true, $order->info['currency'], $order->info['currency_value']),
                     'value' => $taxValue,
                 ];
             }
         }
 
+        /**
+         * @since ZC v1.0.3
+         */
         public function check()
         {
             global $db;
@@ -112,11 +120,17 @@
             return $this->_check;
         }
 
+        /**
+         * @since ZC v1.0.3
+         */
         public function keys()
         {
             return ['MODULE_ORDER_TOTAL_TAX_STATUS', 'MODULE_ORDER_TOTAL_TAX_SORT_ORDER'];
         }
 
+        /**
+         * @since ZC v1.0.3
+         */
         public function install()
         {
             global $db;
@@ -124,9 +138,13 @@
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_TAX_SORT_ORDER', '300', 'Sort order of display.', '6', '2', now())");
         }
 
+        /**
+         * @since ZC v1.0.3
+         */
         public function remove()
         {
             global $db;
             $db->Execute("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
         }
-    }
+}
+

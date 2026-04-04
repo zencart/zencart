@@ -1,27 +1,27 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 May 13 Modified in v2.0.1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 namespace Zencart\PluginSupport;
 
 use queryFactory;
 
+/**
+ * @since ZC v1.5.7
+ */
 class ScriptedInstallerFactory
 {
-    protected queryFactory $dbConn;
-
-    protected PluginErrorContainer $errorContainer;
-
-    public function __construct($dbConn, $errorContainer)
+    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
     {
-        $this->dbConn = $dbConn;
-        $this->errorContainer = $errorContainer;
     }
 
-    public function make($pluginDir): \ScriptedInstaller
+    /**
+     * @since ZC v1.5.7
+     */
+    public function make($pluginDir): ScriptedInstaller
     {
         require_once $pluginDir . '/Installer/ScriptedInstaller.php';
         $scriptedInstaller = new \ScriptedInstaller($this->dbConn, $this->errorContainer);

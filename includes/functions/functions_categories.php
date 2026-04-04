@@ -2,18 +2,19 @@
 /**
  * functions_categories.php
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Feb 22 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 /**
  * Generate a cPath string from current category conditions
  * @param int $current_category_id
  * @return string
+ * @since ZC v1.0.3
  */
-function zen_get_path($current_category_id = null)
+function zen_get_path($current_category_id = null): string
 {
     global $cPath_array, $db;
 
@@ -53,10 +54,11 @@ function zen_get_path($current_category_id = null)
  * @param int $category_id
  * @param bool $include_inactive
  * @return int|mixed
+ * @since ZC v1.0.3
  */
-function zen_count_products_in_category($category_id, $include_inactive = false)
+function zen_count_products_in_category($category_id, bool $include_inactive = false)
 {
-//  Check if only want to count destinct peoducts in a category
+//  Check if only want to count distinct products in a category
     $distinct = defined('COUNT_DISTINCT_PRODUCTS') ? COUNT_DISTINCT_PRODUCTS : false;
     if ($distinct === true) {
         return zen_count_distinct_products_in_category($category_id, $include_inactive);
@@ -92,8 +94,9 @@ function zen_count_products_in_category($category_id, $include_inactive = false)
 
 /**
  * Return the count of distinct products in a category and its sub categories
+ * @since ZC v2.0.0
  */
-function zen_count_distinct_products_in_category($category_id, $include_inactive = false)
+function zen_count_distinct_products_in_category($category_id, bool $include_inactive = false): int
 {
     global $db;
     $products_count = 0;
@@ -108,7 +111,7 @@ function zen_count_distinct_products_in_category($category_id, $include_inactive
         $sql .= " AND p.products_status = 1";
     }
     $products = $db->Execute($sql);
-    $products_count += $products->fields['total'];
+    $products_count += (int)$products->fields['total'];
     return $products_count;
 }
 
@@ -116,8 +119,9 @@ function zen_count_distinct_products_in_category($category_id, $include_inactive
  * Return true if the category has subcategories
  * @param int $category_id
  * @return bool
+ * @since ZC v1.0.3
  */
-function zen_has_category_subcategories($category_id)
+function zen_has_category_subcategories($category_id): bool
 {
     global $db;
     $sql = "SELECT count(*) as count
@@ -136,13 +140,14 @@ function zen_has_category_subcategories($category_id)
  * @param string $indent
  * @param int $status_flag
  * @return array
+ * @since ZC v1.0.3
  */
-function zen_get_categories($categories_array = array(), $parent_id = TOPMOST_CATEGORY_PARENT_ID, $indent = '', $status_flag = null)
+function zen_get_categories(array $categories_array = [], $parent_id = TOPMOST_CATEGORY_PARENT_ID, string $indent = '', $status_flag = null): array
 {
     global $db;
 
     if (!is_array($categories_array)) {
-        $categories_array = array();
+        $categories_array = [];
     }
 
     // filter on status if requested
@@ -160,6 +165,12 @@ function zen_get_categories($categories_array = array(), $parent_id = TOPMOST_CA
     $results = $db->Execute($categories_query);
 
     foreach ($results as $result) {
+        if ($status_flag !== null) {
+            $count = zen_products_in_category_count($result['categories_id']);
+            if ($count === 0) {
+                continue;
+            }
+        }
         $categories_array[] = [
             'id' => $result['categories_id'],
             'text' => $indent . $result['categories_name'],
@@ -175,8 +186,9 @@ function zen_get_categories($categories_array = array(), $parent_id = TOPMOST_CA
  * Return all subcategory IDs
  * @param array $subcategories_array recursive
  * @param int $parent_id
+ * @since ZC v1.0.3
  */
-function zen_get_subcategories(&$subcategories_array, $parent_id = TOPMOST_CATEGORY_PARENT_ID)
+function zen_get_subcategories(array &$subcategories_array, $parent_id = TOPMOST_CATEGORY_PARENT_ID): void
 {
     global $db;
     $subcategories_query = "SELECT categories_id
@@ -186,7 +198,7 @@ function zen_get_subcategories(&$subcategories_array, $parent_id = TOPMOST_CATEG
     $subcategories = $db->Execute($subcategories_query);
 
     foreach ($subcategories as $result) {
-        $subcategories_array[count($subcategories_array)] = $result['categories_id'];
+        $subcategories_array[] = $result['categories_id'];
         if ($result['categories_id'] != $parent_id) {
             zen_get_subcategories($subcategories_array, $result['categories_id']);
         }
@@ -195,12 +207,13 @@ function zen_get_subcategories(&$subcategories_array, $parent_id = TOPMOST_CATEG
 
 
 /**
- * Recursively go through the categories and retreive all parent categories IDs
- * @param array $categories passed by reference
+ * Recursively go through the categories and retrieve all parent categories IDs
+ * @param  array  $categories passed by reference
  * @param int $category_id
  * @return bool
+ * @since ZC v1.0.3
  */
-function zen_get_parent_categories(&$categories, $category_id)
+function zen_get_parent_categories(array &$categories, $category_id)
 {
     global $db;
     $sql = "SELECT parent_id
@@ -213,7 +226,7 @@ function zen_get_parent_categories(&$categories, $category_id)
 
         if ($result['parent_id'] == TOPMOST_CATEGORY_PARENT_ID) return true;
 
-        $categories[count($categories)] = $result['parent_id'];
+        $categories[] = $result['parent_id'];
         if ($result['parent_id'] != $category_id) {
             zen_get_parent_categories($categories, $result['parent_id']);
         }
@@ -224,8 +237,9 @@ function zen_get_parent_categories(&$categories, $category_id)
  * Construct a category path to the product
  * @param int $product_id
  * @return string
+ * @since ZC v1.0.3
  */
-function zen_get_product_path($product_id)
+function zen_get_product_path($product_id): string
 {
     global $db;
     $cPath = '';
@@ -254,8 +268,9 @@ function zen_get_product_path($product_id)
  * Parse and sanitize the cPath parameter values
  * @param string $cPath
  * @return array
+ * @since ZC v1.0.3
  */
-function zen_parse_category_path($cPath)
+function zen_parse_category_path(string $cPath): array
 {
     // make sure the category IDs are integers
     $cPath_array = array_map(function($value) {return (int)trim($value);}, explode('_', $cPath));
@@ -276,8 +291,9 @@ function zen_parse_category_path($cPath)
  * @param int $product_id
  * @param int $cat_id
  * @return bool
+ * @since ZC v1.1.3
  */
-function zen_product_in_category($product_id, $cat_id)
+function zen_product_in_category($product_id, $cat_id): bool
 {
     global $db;
     $in_cat = false;
@@ -315,8 +331,9 @@ function zen_product_in_category($product_id, $cat_id)
  * @param int $cat_id
  * @param int $parent_cat_id
  * @return bool
+ * @since ZC v1.1.3
  */
-function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id)
+function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id): bool
 {
     global $db;
 
@@ -344,16 +361,20 @@ function zen_product_in_parent_category($product_id, $cat_id, $parent_cat_id)
 
 /**
  * pulldown menu for products, containing name, model and price
- * @param string $field_name
- * @param string $parameters
- * @param array $exclude array of ids to exclude
- * @param bool $show_id include ID #
- * @param int $set_selected default product id to be selected
- * @param bool $show_model
- * @param bool $show_current_category
+ * @param  string  $field_name
+ * @param  string  $parameters
+ * @param  array  $exclude  array of ids to exclude
+ * @param  bool  $show_id  include ID #
+ * @param  int  $set_selected  default product id to be selected
+ * @param  bool  $show_model
+ * @param  bool  $show_current_category
+ * @param  string  $order_by
+ * @param  null  $filter_by_option_name
+ * @param  bool  $includeAttributes
  * @return string
+ * @since ZC v1.5.8
  */
-function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null, bool $includeAttributes = false)
+function zen_draw_pulldown_products(string $field_name, string $parameters = '', $exclude = [], bool $show_id = false, $set_selected = 0, bool $show_model = false, bool $show_current_category = false, string $order_by = '', $filter_by_option_name = null, bool $includeAttributes = false): string
 {
     global $current_category_id;
 
@@ -372,7 +393,7 @@ function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = []
     $pulldown = new productPulldown();
 
     if ($show_current_category) {
-        $pulldown->setCategory($current_category_id);
+        $pulldown->setCategory((int)$current_category_id);
     }
 
     $pulldown->includeAttributes($includeAttributes);
@@ -395,8 +416,9 @@ function zen_draw_pulldown_products($field_name, $parameters = '', $exclude = []
  * @param string $order_by model|name
  * @param int $filter_by_option_name -1|0|option_name_id
  * @return string
+ * @since ZC v1.5.8
  */
-function zen_draw_pulldown_products_having_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
+function zen_draw_pulldown_products_having_attributes(string $field_name, string $parameters = '', array $exclude = [], string $order_by = 'name', $filter_by_option_name = null): string
 {
 
     if ($order_by == 'model') {
@@ -415,9 +437,13 @@ function zen_draw_pulldown_products_having_attributes($field_name, $parameters =
  * @param array $exclude to exclude
  * @param bool $show_id include ID #
  * @param bool $show_parent
+ * @param  bool  $show_full_path
+ * @param  null  $filter_by_option_name
+ * @param  bool  $includeAttributes
  * @return string
+ * @since ZC v1.5.8
  */
-function zen_draw_pulldown_categories_having_products($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false, $show_full_path = false, $filter_by_option_name = null, bool $includeAttributes = false)
+function zen_draw_pulldown_categories_having_products(string $field_name, string $parameters = '', array $exclude = [], bool $show_id = false, bool $show_parent = false, bool $show_full_path = false, $filter_by_option_name = null, bool $includeAttributes = false): string
 {
     if (!is_array($exclude)) {
         $exclude = [];
@@ -442,8 +468,9 @@ function zen_draw_pulldown_categories_having_products($field_name, $parameters =
  * @param bool $show_full_path
  * @param string|null $filter_by_option_name
  * @return string
+ * @since ZC v1.5.8
  */
-function zen_draw_pulldown_categories_having_products_with_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null)
+function zen_draw_pulldown_categories_having_products_with_attributes(string $field_name, string $parameters = '', array $exclude = [], bool $show_full_path = false, $filter_by_option_name = null): string
 {
     return zen_draw_pulldown_categories_having_products($field_name, $parameters , $exclude, false, false, $show_full_path, $filter_by_option_name, true);
 
@@ -453,8 +480,9 @@ function zen_draw_pulldown_categories_having_products_with_attributes($field_nam
  * look up the product_type that a category has been restricted to
  * @param int|string $lookup
  * @return bool|mixed false if not restricted; product_type_id if restricted
+ * @since ZC v1.2.0d
  */
-function zen_get_product_types_to_category($lookup)
+function zen_get_product_types_to_category($lookup): mixed
 {
     global $db;
 
@@ -476,8 +504,9 @@ function zen_get_product_types_to_category($lookup)
  * look up parent category's name
  * @param int $categories_id
  * @return string name of parent category, or blank if none
+ * @since ZC v1.2.5
  */
-function zen_get_categories_parent_name($categories_id)
+function zen_get_categories_parent_name($categories_id): string
 {
     global $db;
 
@@ -496,28 +525,34 @@ function zen_get_categories_parent_name($categories_id)
  * use as:
  * $my_products_id_list = array();
  * $my_products_id_list = zen_get_categories_products_list($categories_id)
- * @param int $categories_id
+ * @param int|string $categories_id (may be a cPath)
  * @param bool $include_deactivated
  * @param bool $include_child
  * @param string $parent_category
  * @param string $display_limit
  * @return array|null
+ * @since ZC v1.3.0
  */
-function zen_get_categories_products_list($categories_id, $include_deactivated = false, $include_child = true, $parent_category = TOPMOST_CATEGORY_PARENT_ID, $display_limit = '')
+function zen_get_categories_products_list($categories_id, bool $include_deactivated = false, bool $include_child = true, $parent_category = TOPMOST_CATEGORY_PARENT_ID, $display_limit = '')
 {
     global $db;
     global $categories_products_id_list;
+    $categories_id = (string)$categories_id;
 
     if (!empty($display_limit)) {
         $display_limit = $db->prepare_input($display_limit);
     }
 
     if (!isset($categories_products_id_list) || !is_array($categories_products_id_list)) {
-        $categories_products_id_list = array();
+        $categories_products_id_list = [];
     }
 
-    $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
-
+    $is_cPath = strrpos($categories_id, '_');
+    if ($is_cPath) {
+        $childCatID = str_replace('_', '', substr($categories_id, strrpos($categories_id, '_')));
+    } else {
+        $childCatID = $categories_id;
+    }
     $current_cPath = ($parent_category != TOPMOST_CATEGORY_PARENT_ID ? $parent_category . '_' : '') . $categories_id;
 
     $sql = "SELECT p.products_id
@@ -551,8 +586,9 @@ function zen_get_categories_products_list($categories_id, $include_deactivated =
  * @param array $categories_array
  * @param int $index
  * @return array|mixed
+ * @since ZC v1.0.3
  */
-function zen_generate_category_path($id, $from = 'category', $categories_array = [], $index = 0)
+function zen_generate_category_path($id, string $from = 'category', array $categories_array = [], $index = 0): mixed
 {
     global $db;
 
@@ -611,8 +647,9 @@ function zen_generate_category_path($id, $from = 'category', $categories_array =
  * @param int $category_id
  * @param string $from 'category'|'product'
  * @return string|string[]|null
+ * @since ZC v1.0.3
  */
-function zen_output_generated_category_path($category_id, $from = 'category')
+function zen_output_generated_category_path($category_id, string $from = 'category')
 {
     $calculated_category_path_string = '';
     $calculated_category_path = zen_generate_category_path($category_id, $from);
@@ -622,7 +659,7 @@ function zen_output_generated_category_path($category_id, $from = 'category')
             if ($from == 'category') {
                 $calculated_category_path_string = $innerValue['text'] . '&nbsp;&gt;&nbsp;' . $calculated_category_path_string;
             } else {
-                $calculated_category_path_string .= $calculated_category_path[$outerKey][$innerKey]['text'];
+                $calculated_category_path_string .= $innerValue['text'];
                 $calculated_category_path_string .= ' [ ' . TEXT_INFO_ID . $innerValue['id'] . ' ] ';
                 $calculated_category_path_string .= '<br>';
                 $calculated_category_path_string .= '&nbsp;&nbsp;';
@@ -639,7 +676,13 @@ function zen_output_generated_category_path($category_id, $from = 'category')
     return $calculated_category_path_string;
 }
 
-function zen_get_generated_category_path_ids($id, $from = 'category')
+/**
+ * @param $id
+ * @param  string  $from
+ * @return array|string|null
+ * @since ZC v1.0.3
+ */
+function zen_get_generated_category_path_ids($id, string $from = 'category')
 {
     global $db;
     $calculated_category_path_string = '';
@@ -660,8 +703,9 @@ function zen_get_generated_category_path_ids($id, $from = 'category')
 /**
  * @param int $this_categories_id
  * @return string
+ * @since ZC v1.3.8
  */
-function zen_get_generated_category_path_rev($this_categories_id)
+function zen_get_generated_category_path_rev($this_categories_id): string
 {
     $categories = [];
     zen_get_parent_categories($categories, $this_categories_id);
@@ -681,14 +725,17 @@ function zen_get_generated_category_path_rev($this_categories_id)
  * @param bool $check_if_cat_has_prods add a '*' markup if category has products in it
  * @param bool $limit
  * @return array
+ * @since ZC v1.0.3
  */
-function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing = '', $exclude = '', $category_tree_array = [], $include_itself = false, $check_if_cat_has_prods = false, $limit = false)
+function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, string $spacing = '', $exclude = '', $category_tree_array = [], $include_itself = false, bool $check_if_cat_has_prods = false, bool $limit = false): array
 {
     global $db;
 
     $limit_count = $limit ? " limit 1" : '';
 
-    if (!is_array($category_tree_array)) $category_tree_array = [];
+    if (!is_array($category_tree_array)) {
+        $category_tree_array = [];
+    }
 
     // init pulldown with Top category if list is empty and top cat not marked as excluded
     if (count($category_tree_array) < 1 && $exclude != TOPMOST_CATEGORY_PARENT_ID) {
@@ -696,15 +743,7 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
     }
 
     if ($include_itself) {
-        $sql = "SELECT cd.categories_name
-                FROM " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                WHERE cd.language_id = " . (int)$_SESSION['languages_id'] . "
-                AND cd.categories_id = " . (int)$parent_id . "
-                LIMIT 1";
-        $results = $db->Execute($sql);
-        if ($results->RecordCount()) {
-            $category_tree_array[] = ['id' => $parent_id, 'text' => $results->fields['categories_name']];
-        }
+        $category_tree_array[] = ['id' => $parent_id, 'text' => zen_get_category_name($parent_id)];
     }
 
     $sql = "SELECT c.categories_id, cd.categories_name, c.parent_id
@@ -714,7 +753,7 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
             ORDER BY c.sort_order, cd.categories_name";
     $results = $db->Execute($sql);
     foreach ($results as $result) {
-        if ($check_if_cat_has_prods && zen_products_in_category_count($result['categories_id'], '', false, true) >= 1) {
+        if ($check_if_cat_has_prods && zen_products_in_category_count($result['categories_id'], false, false, true) >= 1) {
             $mark = '*';
         } else {
             $mark = '&nbsp;&nbsp;';
@@ -734,8 +773,9 @@ function zen_get_category_tree($parent_id = TOPMOST_CATEGORY_PARENT_ID, $spacing
  * @param int $category_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.0.3
  */
-function zen_get_category_name($category_id, $language_id = null)
+function zen_get_category_name($category_id, $language_id = null): string
 {
     global $db;
     if (empty($language_id)) {
@@ -766,15 +806,18 @@ function zen_get_category_name($category_id, $language_id = null)
  * @param int $category_id
  * @param int $language_id
  * @return string
+ * @since ZC v1.2.0d
  */
-function zen_get_category_description($category_id, $language_id = null) {
-    global $db;
+function zen_get_category_description($category_id, $language_id = null): string
+{
+    global $db, $zco_notifier;
     if (empty($language_id)) $language_id = (int)$_SESSION['languages_id'];
     $category = $db->Execute("SELECT categories_description
                               FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                               WHERE categories_id = " . (int)$category_id . "
                               AND language_id = " . (int)$language_id);
     if ($category->EOF) return '';
+    $zco_notifier->notify('NOTIFY_GET_CATEGORY_DESCRIPTION', $category_id, $category->fields['categories_description']);
     return $category->fields['categories_description'];
 }
 
@@ -783,35 +826,42 @@ function zen_get_category_description($category_id, $language_id = null) {
  * Return category's image
  * @param $category_id
  * @return string
+ * @since ZC v1.0.3
  */
-function zen_get_categories_image($category_id) {
+function zen_get_categories_image($category_id): string
+{
     global $db;
 
-    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id= " . (int)$category_id;
-    $result = $db->Execute($sql);
+    $sql = "SELECT categories_image FROM " . TABLE_CATEGORIES . " WHERE categories_id = " . (int)$category_id;
+    $result = $db->Execute($sql, 1);
 
-    if ($result->EOF) return '';
+    if ($result->EOF) {
+        return '';
+    }
 
-    return $result->fields['categories_image'];
+    return (string)$result->fields['categories_image'];
 }
 
 /**
  * @deprecated Alias of zen_get_category_name
  * @param int $category_id
+ * @since ZC v1.0.3
  */
-function zen_get_categories_name($category_id) {
+function zen_get_categories_name($category_id): string
+{
     trigger_error('Call to deprecated function zen_get_categories_name. Use zen_get_category_name() instead', E_USER_DEPRECATED);
 
-    return zen_get_category_name($category_id, null);
+    return zen_get_category_name($category_id);
 }
 
 
 /**
  * Get the status of a category
- * @param int $categories_id
- * @return mixed|string
+ * @param  int  $categories_id
+ * @return string
+ * @since ZC v1.2.0d
  */
-function zen_get_categories_status($categories_id)
+function zen_get_categories_status($categories_id): string
 {
     global $db;
     $sql = "SELECT categories_status
@@ -828,8 +878,9 @@ function zen_get_categories_status($categories_id)
  * @param int $target_category_id
  * @param bool $reset_master_category
  * @return bool
+ * @since ZC v1.5.7
  */
-function zen_validate_categories($ref_category_id, $target_category_id = 0, $reset_master_category = false)
+function zen_validate_categories($ref_category_id, $target_category_id = 0, bool $reset_master_category = false): bool
 {
     global $db, $messageStack;
 
@@ -873,8 +924,9 @@ function zen_validate_categories($ref_category_id, $target_category_id = 0, $res
  * @param int $parent_id The ID of the parent category.
  * @param string $category_path_string The full path of the names of all the parent categories being included in the path for the (sub)categories info being generated.
  * @return void
+ * @since ZC v1.5.7
  */
-function zen_get_categories_info($parent_id = 0, $category_path_string = '')
+function zen_get_categories_info(int $parent_id = 0, string $category_path_string = ''): void
 {
     global $db, $categories_info;
 
@@ -912,8 +964,9 @@ function zen_get_categories_info($parent_id = 0, $category_path_string = '')
  * @param array $category_product_tree_array The array of categories and products being generated. Passed in function parameters so that it can be appended to when used recursively.
  * @param string $type category or product: to determine the array structure
  * @return array
+ * @since ZC v1.5.7
  */
-function zen_get_target_categories_products($parent_id = 0, $spacing = '', $category_product_tree_array = [], $type = 'category')
+function zen_get_target_categories_products($parent_id = 0, string $spacing = '', array $category_product_tree_array = [], string $type = 'category'): array
 {
     global $db, $products_filter;
     $sql = "SELECT cd.categories_id, cd.categories_name, c.parent_id
@@ -967,8 +1020,10 @@ function zen_get_target_categories_products($parent_id = 0, $spacing = '', $cate
  * Recursive algorithm to restrict all sub_categories of a specified category to a specified product_type
  * @param int $category_id
  * @param int $product_type_id
+ * @since ZC v1.2.0d
  */
-function zen_restrict_sub_categories($category_id, $product_type_id) {
+function zen_restrict_sub_categories(int $category_id, int $product_type_id): void
+{
     global $db;
     $sql = "SELECT categories_id FROM " . TABLE_CATEGORIES . " WHERE parent_id = " . (int)$category_id;
     $results = $db->Execute($sql);
@@ -995,8 +1050,10 @@ function zen_restrict_sub_categories($category_id, $product_type_id) {
  * Recursive algorithm to UNDO restriction from all sub_categories of a specified category for a specified product_type
  * @param int $category_id
  * @param int $product_type_id
+ * @since ZC v1.2.0d
  */
-function zen_remove_restrict_sub_categories($category_id, $product_type_id) {
+function zen_remove_restrict_sub_categories($category_id, $product_type_id): void
+{
     global $db;
     $sql = "SELECT categories_id FROM " . TABLE_CATEGORIES . " WHERE parent_id = " . (int)$category_id;
     $results = $db->Execute($sql);
@@ -1014,11 +1071,12 @@ function zen_remove_restrict_sub_categories($category_id, $product_type_id) {
  * Get an array of product types that the category is restricted to
  * @param int $category_id
  * @return array
+ * @since ZC v1.5.8
  */
-function zen_get_category_restricted_product_types($category_id)
+function zen_get_category_restricted_product_types($category_id): array
 {
     global $db;
-    $sql = "SELECT ptc.product_type_id as type_id, pt.type_name
+    $sql = "SELECT ptc.product_type_id as type_id, pt.type_name, pt.type_handler
              FROM " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
              LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON (pt.type_id = ptc.product_type_id)
              WHERE ptc.category_id = " . (int)$category_id;
@@ -1034,8 +1092,9 @@ function zen_get_category_restricted_product_types($category_id)
 /**
  * @param int $category_id
  * @param int $status
+ * @since ZC v1.5.8
  */
-function zen_set_category_status($category_id, $status)
+function zen_set_category_status($category_id, $status): void
 {
     global $db;
     $sql = "UPDATE " . TABLE_CATEGORIES . "
@@ -1047,8 +1106,9 @@ function zen_set_category_status($category_id, $status)
 /**
  * @param int $category_id
  * @param string $image_name
+ * @since ZC v1.5.8
  */
-function zen_set_category_image($category_id, $image_name = '')
+function zen_set_category_image($category_id, string $image_name = ''): void
 {
     global $db;
     $sql = "UPDATE " . TABLE_CATEGORIES . "
@@ -1060,11 +1120,14 @@ function zen_set_category_image($category_id, $image_name = '')
 
 
 /**
- * @TODO - refactor to category object?
+ * @deprecated 2.1.0 use Category class object instead
  * Return any field from categories or categories_description table
  * Example: zen_categories_lookup('10', 'parent_id');
+ * @since ZC v1.3.8
  */
 function zen_categories_lookup($categories_id, $what_field = 'categories_name', $language = '') {
+    trigger_error('Call to deprecated function zen_categories_lookup. Use Category class object instead', E_USER_DEPRECATED);
+
     global $db;
 
     if (empty($language)) $language = $_SESSION['languages_id'];
@@ -1083,12 +1146,16 @@ function zen_categories_lookup($categories_id, $what_field = 'categories_name', 
 
 /**
  * @param int $category_id
+ * @since ZC v1.0.3
  */
-function zen_remove_category($category_id)
+function zen_remove_category($category_id): void
 {
-    if ((int)$category_id == TOPMOST_CATEGORY_PARENT_ID) return;
+    if ((int)$category_id === (int)TOPMOST_CATEGORY_PARENT_ID) {
+        return;
+    }
+
     global $db, $zco_notifier;
-    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_CATEGORY', array(), $category_id);
+    $zco_notifier->notify('NOTIFIER_ADMIN_ZEN_REMOVE_CATEGORY', [], $category_id);
 
     // delete from salemaker - sale_categories_selected
     $chk_sale_categories_selected = $db->Execute("select * from " . TABLE_SALEMAKER_SALES . "
@@ -1106,114 +1173,58 @@ function zen_remove_category($category_id)
         OR sale_categories_all LIKE '%," . (int)$category_id . "'
         OR sale_categories_all LIKE '" . (int)$category_id . ",%'");
 
-//echo 'WORKING ON: ' . (int)$category_id . ' chk_sale_categories_selected: ' . $chk_sale_categories_selected->RecordCount() . ' chk_sale_categories_all: ' . $chk_sale_categories_all->RecordCount() . '<br>';
-    while (!$chk_sale_categories_selected->EOF) {
-        $skip_cats = false; // used when deleting
+    // -----
+    // In the salemaker_sales table, 'sale_categories_selected' is a comma-separated list of
+    // categories to which the sale applies; 'sale_categories_all' is a comma-separated list of
+    // categories, further enclosed in starting/ending commas.  Examples:
+    //
+    // - Sale applies to *all* categories: '0' and ',{comma-separated-list},'
+    // - Sale applies to a single category: '1' and ',1,'
+    // - Sale applies to 5 categories: '25,28,25,47,58' and ',25,28,25,47,58,'
+    //
+    $skip_sale_id = 0;  //- Set for sale_categories_all check, in case the category's not present in sale_categories_selected
+    foreach ($chk_sale_categories_selected as $sale_categories_selected) {
         $skip_sale_id = 0;
-//echo '<br>FIRST LOOP: sale_id ' . $chk_sale_categories_selected->fields['sale_id'] . ' sale_categories_selected: ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-        // 9 or ,9 or 9,
-        // delete record if sale_categories_selected = 9 and  sale_categories_all = ,9,
-        if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id and $chk_sale_categories_selected->fields['sale_categories_all'] == ',' . (int)$category_id . ',') { // delete record
-//echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_selected->fields['sale_id'] . '<br><br>';
-            $skip_cats = true;
-            $skip_sale_id = $chk_sale_categories_selected->fields['sale_id'];
-            $salemakerdelete = "DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id="  . (int)$skip_sale_id;
+
+        // delete record if sale_categories_selected = 9 and  sale_categories_all = ,9, (single category)
+        if ($sale_categories_selected['sale_categories_selected'] == (int)$category_id && $sale_categories_selected['sale_categories_all'] == ',' . (int)$category_id . ',') { // delete record
+            $skip_sale_id = $sale_categories_selected['sale_id'];
+            $db->Execute("DELETE from " . TABLE_SALEMAKER_SALES . " WHERE sale_id = "  . (int)$skip_sale_id . " LIMIT 1");
+            continue;
         }
 
-        // if in the front - remove 9,
-        //  if ($chk_sale_categories_selected->fields['sale_categories_selected'] == (int)$category_id . ',') { // front
-        if (!$skip_cats && (preg_match('/^' . (int)$category_id . ',/', $chk_sale_categories_selected->fields['sale_categories_selected'])) ) { // front
-//echo 'B: I need to remove - ' . (int)$category_id . ', - from the front of ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], strlen((int)$category_id . ','));
-//echo 'B: new_sale_categories_selected: ' . $new_sale_categories_selected . '<br><br>';
-        }
-
-        // if in the middle or end - remove ,9,
-        if (!$skip_cats && (strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',')) ) { // middle or end
-//echo 'C: I need to remove - ,' . (int)$category_id . ', - from the middle or end ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
-            $end_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_selected->fields['sale_categories_selected'], $start_cat);
-//echo 'C: new_sale_categories_selected: ' . $new_sale_categories_selected. '<br><br>';
-            $skip_cat_last = true;
-        }
-
-
-// not needed in loop 1 if middle does end
-        // if on the end - remove ,9 skip if middle cleaned it
-        if (!$skip_cats && !$skip_cat_last && (strripos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id)) ) { // end
-            $start_cat = (int)strpos($chk_sale_categories_selected->fields['sale_categories_selected'], ',' . (int)$category_id) + strlen(',' . (int)$category_id);
-//echo 'D: I need to remove - ,' . (int)$category_id . ' - from the end ' . $chk_sale_categories_selected->fields['sale_categories_selected'] . '<br>';
-            $new_sale_categories_selected = substr($chk_sale_categories_selected->fields['sale_categories_selected'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
-//echo 'D: new_sale_categories_selected: ' . $new_sale_categories_selected. '<br><br>';
-        }
-
-        if (!$skip_cats) {
-            $salemakerupdate =
+        $categories_selected = explode(',', $sale_categories_selected['sale_categories_selected']);
+        $key = array_search($category_id, $categories_selected);
+        if ($key !== false) {
+            unset($categories_selected[$key]);
+            $new_sale_categories_selected = implode(',', $categories_selected);
+            $db->Execute(
                 "UPDATE " . TABLE_SALEMAKER_SALES . "
-                 SET sale_categories_selected='" . $new_sale_categories_selected . "'
-                 WHERE sale_id = " . (int)$chk_sale_categories_selected->fields['sale_id'];
-//echo 'Update new_sale_categories_selected: ' . $salemakerupdate . '<br>';
-            $db->Execute($salemakerupdate);
-        } else {
-//echo 'Record was deleted sale_id ' . $skip_sale_id . '<br>' . $salemakerdelete;
-            $db->Execute($salemakerdelete);
+                    SET sale_categories_selected = '" . $new_sale_categories_selected . "'
+                  WHERE sale_id = " . (int)$sale_categories_selected['sale_id'] . "
+                  LIMIT 1"
+            );
         }
-
-        $chk_sale_categories_selected->MoveNext();
     }
 
-    while (!$chk_sale_categories_all->EOF) {
-//echo '<br><br>SECOND LOOP: sale_id ' . $chk_sale_categories_all->fields['sale_id'] . ' sale_categories_all: ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br><br>';
-        // remove ,9 if on front as ,9, - remove ,9 if in the middle as ,9, - remove ,9 if on the end as ,9,
-        // beware of ,79, or ,98, or ,99, when cleaning 9
-        // if ($chk_sale_categories_all->fields['sale_categories_all'] == ',9') { // front
-        // if (something for the middle) { // middle
-        // if (right($chk_sale_categories_all->fields['sale_categories_all']) == ',9,') { // end
-
-        $skip_cats = false;
-        if ($skip_sale_id == $chk_sale_categories_all->fields['sale_id']) { // was deleted
-//echo 'A: I should delete this record sale_id: ' . $chk_sale_categories_all->fields['sale_id'] . ' but already done' . '<br><br>';
-            $skip_cats = true;
+    foreach ($chk_sale_categories_all as $sale_categories_all) {
+        if ($skip_sale_id == $sale_categories_all['sale_id']) { // was deleted
+            continue;
         }
 
-        // if in the front - remove 9,
-        //  if ($chk_sale_categories_all->fields['sale_categories_all'] == (int)$category_id . ',') { // front
-        if (!$skip_cats && (preg_match('/^' . ',' . (int)$category_id . ',/', $chk_sale_categories_all->fields['sale_categories_all'])) ) { // front
-//echo 'B: I need to remove - ' . (int)$category_id . ', - from the front of ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], strlen(',' . (int)$category_id));
-//echo 'B: new_sale_categories_all: ' . $new_sale_categories_all . '<br><br>';
+        $categories_all = explode(',', trim($sale_categories_all['sale_categories_all'], ','));
+        $key = array_search($category_id, $categories_all);
+        if ($key !== false) {
+            unset($categories_all[$key]);
+            $new_sale_categories_all = ',' . implode(',', $categories_all) . ',';
+            $db->Execute(
+                "UPDATE " . TABLE_SALEMAKER_SALES . "
+                 SET sale_categories_all = '" . $new_sale_categories_all . "'
+                 WHERE sale_id = " . (int)$sale_categories_all['sale_id'] . "
+                 LIMIT 1"
+            );
         }
-
-        // if in the middle or end - remove ,9,
-        if (!$skip_cats && (strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // middle
-//echo 'C: I need to remove - ,' . (int)$category_id . ', - from the middle or end ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
-            $start_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',') + strlen(',' . (int)$category_id . ',');
-            $end_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',', $start_cat+strlen(',' . (int)$category_id . ','));
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1)) . substr($chk_sale_categories_all->fields['sale_categories_all'], $start_cat);
-//echo 'C: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
-        }
-
-        /*
-        // not needed in loop 2
-          // if on the end - remove ,9,
-          if (!$skip_cats && (strripos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id . ',')) ) { // end
-            $start_cat = (int)strpos($chk_sale_categories_all->fields['sale_categories_all'], ',' . (int)$category_id) + strlen(',' . (int)$category_id . ',');
-            echo 'D: I need to remove from the end - ,' . (int)$category_id . ', - from the end ' . $chk_sale_categories_all->fields['sale_categories_all'] . '<br>';
-            $new_sale_categories_all = substr($chk_sale_categories_all->fields['sale_categories_all'], 0, $start_cat - (strlen(',' . (int)$category_id . ',') - 1));
-            echo 'D: new_sale_categories_all: ' . $new_sale_categories_all. '<br><br>';
-          }
-        */
-        if (!empty($new_sale_categories_all)) {
-            $salemakerupdate = "UPDATE " . TABLE_SALEMAKER_SALES . " SET sale_categories_all='" . $new_sale_categories_all . "' WHERE sale_id = " . (int)$chk_sale_categories_all->fields['sale_id'];
-            $db->Execute($salemakerupdate);
-//echo 'Update sale_categories_all: ' . $salemakerupdate . '<br>';
-        }
-
-        $chk_sale_categories_all->MoveNext();
     }
-
-//die('DONE TESTING');
 
     $category_image = $db->Execute("SELECT categories_image
                                     FROM " . TABLE_CATEGORIES . "
@@ -1243,6 +1254,9 @@ function zen_remove_category($category_id)
     $db->Execute("DELETE FROM " . TABLE_COUPON_RESTRICT . "
                   WHERE category_id = " . (int)$category_id);
 
+    $db->Execute("DELETE FROM " . TABLE_FEATURED_CATEGORIES . "
+                  WHERE categories_id = " . (int)$category_id);
+
     zen_record_admin_activity('Deleted category ' . (int)$category_id . ' from database via admin console.', 'warning');
 }
 
@@ -1254,8 +1268,10 @@ function zen_remove_category($category_id)
  * @param bool $include_child
  * @param bool $limit
  * @return int
+ * @since ZC v1.0.3
  */
-function zen_products_in_category_count($category_id, $include_deactivated = false, $include_child = true, $limit = false) {
+function zen_products_in_category_count($category_id, bool $include_deactivated = false, bool $include_child = true, $limit = false): int
+{
     global $db;
     $products_count = 0;
 
@@ -1289,6 +1305,7 @@ function zen_products_in_category_count($category_id, $include_deactivated = fal
  * Count how many subcategories exist in a category
  * @param int $category_id
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_childs_in_category_count($category_id) {
     global $db;
@@ -1308,11 +1325,12 @@ function zen_childs_in_category_count($category_id) {
 
 
 /**
- * @TODO - is this even used?
  * get categories_name for product
  * @param int $product_id
  * @return string
- * @deprecated
+ * @deprecated Use zen_get_product_details()
+ * @TODO - delete from core in v2.2.0 or later
+ * @since ZC v1.2.0d
  */
 function zen_get_categories_name_from_product($product_id) {
     trigger_error('Call to deprecated function zen_get_categories_name_from_product. Use zen_get_product_details() instead', E_USER_DEPRECATED);
@@ -1337,8 +1355,10 @@ function zen_get_categories_name_from_product($product_id) {
  * @TODO - is this even used?
  * @param int $category_id
  * @return array
+ * @since ZC v1.2.2d
  */
-function zen_count_products_in_cats($category_id) {
+function zen_count_products_in_cats($category_id): array
+{
     global $db;
     $c_array = [];
     $cat_products_query = "SELECT COUNT(IF (p.products_status=1,1,NULL)) AS pr_on, COUNT(*) AS total
@@ -1377,17 +1397,18 @@ function zen_count_products_in_cats($category_id) {
  *
  * @TODO - refactor to use only a boolean response instead of string 'true'
  *
- * @param int $category_id
- * @param bool $include_inactive
- * @param string $counts_what products|products_active
- * @return bool|string
+ * @param  int  $category_id
+ * @param  bool  $include_inactive
+ * @param  string  $counts_what  products|products_active
+ * @return int|mixed|string
+ * @since ZC v1.2.0d
  */
-function zen_get_products_to_categories($category_id, $include_inactive = false, $counts_what = 'products') {
+function zen_get_products_to_categories($category_id, bool $include_inactive = false, string $counts_what = 'products') {
     global $db;
 
     $products_count = $cat_products_count = 0;
     $products_linked = '';
-    if ($include_inactive == true) {
+    if ($include_inactive) {
         switch ($counts_what) {
             case ('products'):
                 $cat_products_query = "SELECT count(*) as total

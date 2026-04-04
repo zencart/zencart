@@ -1,18 +1,19 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 10 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 11 Modified in v2.1.0-alpha2 $
  */
 
 if (!file_exists(DIR_FS_INSTALL . 'includes/custom_settings.php')) {
     echo 'Error: could not find the zc_install/includes/custom_settings.php file.' . "\n\n";
     exit(1);
-} else {
-    require(DIR_FS_INSTALL . 'includes/custom_settings.php');
 }
+
+require DIR_FS_INSTALL . 'includes/custom_settings.php';
 if (!isset($zc_settings) || !is_array($zc_settings)) {
     echo 'Error: $zc_settings array not found in custom_settings.php';
     exit(1);
@@ -76,17 +77,15 @@ $db_name = $zc_settings['db_name'] ?? 'zencart';
 $db_user = $zc_settings['db_user'] ?? '';
 $db_password = $zc_settings['db_password'] ?? '';
 
-require(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
-
 $admin_password = zen_create_PADSS_password();
 
 if (isset($_POST['http_server_catalog'])) {
-    require(DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php');
+    require DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileWriter.php';
     $result = new zcConfigureFileWriter($_POST);
 }
 
 
-require(DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php');
+require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
 if ($isUpgrade === false) {
     $options = $_POST;
     $dbInstaller = new zcDatabaseInstaller($options);

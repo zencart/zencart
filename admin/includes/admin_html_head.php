@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2024 Feb 11 Modified in v2.0.0-beta1 $
+ * @version $Id: DrByte 2026 Mar 05 Modified in v2.2.1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -43,9 +43,9 @@ $zen_admin_html_head_loaded = true;
 <?php if (file_exists($value = DIR_WS_INCLUDES . 'css/jquery-ui.css')) { ?>
     <link rel="stylesheet" href="<?php echo $value; ?>">
 <?php } else { ?>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" integrity="sha256-RPilbUJ5F7X6DdeTO6VFZ5vl5rO5MJnmSk4pwhWfV8A= sha384-xewr6kSkq3dBbEtB6Z/3oFZmknWn7nHqhLVLrYgzEFRbU/DHSxW7K3B44yWUN60D sha512-/Q1sBqvNZheW2yvAccKiu/xc/o2AtDS2jNBozDEqA/8Mk/IcH853wrwDSGqAdl7jFyOWOcefLtwDd3kYo276Hw==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css" integrity="sha384-b+3kCkBF7JElwswpAsmVFMmrPhoYrpI5w68/JyidGsEYjaPuo0WDeg5Hx6YXxZqs sha512-L32Q3WXcM2mi71hgvd56WcD4l1bF1zaqjPgDiW6AJ73zZevJZ+M/GHK6N5Rv72Wm+i+p02eINkWCq4s+uDDWAg==" crossorigin="anonymous">
 <?php } ?>
-    <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/jAlert.css">
+    <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/jAlert.min.css">
     <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/menu.css">
     <link rel="stylesheet" href="<?php echo DIR_WS_INCLUDES ?>css/stylesheet.css">
 <?php if (file_exists($value = DIR_WS_INCLUDES . 'css/' . basename($PHP_SELF, '.php') . '.css')) { ?>
@@ -56,8 +56,16 @@ $zen_admin_html_head_loaded = true;
 $page_base_name = basename($PHP_SELF, '.php');
 
 foreach ($installedPlugins as $plugin) {
-    $relativeDir = $plugin->getRelativePath();
-    $absoluteDir = $plugin->getAbsolutePath();
+    if (is_object($plugin) && method_exists($plugin, 'getRelativePath') && method_exists($plugin, 'getAbsolutePath')) {
+        $relativeDir = $plugin->getRelativePath();
+        $absoluteDir = $plugin->getAbsolutePath();
+    } else {
+        $pluginKey = $plugin['unique_key'] ?? '';
+        $pluginVersion = $plugin['version'] ?? '';
+        $relativeDir = ($GLOBALS['request_type'] === 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG)
+            . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+        $absoluteDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+    }
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^global_stylesheet/', '.css');
     foreach ($directory_array as $key => $value) {
 ?>

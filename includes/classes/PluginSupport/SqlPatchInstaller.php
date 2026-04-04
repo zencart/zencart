@@ -1,17 +1,20 @@
 <?php
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
 namespace Zencart\PluginSupport;
 
+/**
+ * @since ZC v1.5.7
+ */
 class SqlPatchInstaller
 {
 
     /**
-     * $dbConn is a database object 
+     * $dbConn is a database object
      * @var object
      */
     protected $dbConn;
@@ -21,7 +24,7 @@ class SqlPatchInstaller
      */
     protected $errorContainer;
     /**
-     * $sqlFunctionMap is a list of acceptable SQL 
+     * $sqlFunctionMap is a list of acceptable SQL
      * @var array
      */
     protected $sqlFunctionMap = [
@@ -49,6 +52,9 @@ class SqlPatchInstaller
         $this->errorContainer = $errorContainer;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function parse($lines)
     {
         $builtLines = $this->getFullLines($lines);
@@ -59,12 +65,15 @@ class SqlPatchInstaller
         return $paramLines;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     public function executePatchSql($paramLines)
     {
         $this->dbConn->dieOnErrors = false;
         foreach ($paramLines as $line) {
             $sql = implode(' ', $line) . ';';
-            $this->dbConn->execute($sql);
+            $this->dbConn->Execute($sql);
             if ($this->dbConn->error_number !== 0) {
                 $this->errorContainer->addError(0, ERROR_SQL_PATCH . $this->dbConn->error_text . '<br>' . $sql, true);
                 break;
@@ -73,6 +82,9 @@ class SqlPatchInstaller
         $this->dbConn->dieOnErrors = true;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function getFullLines($lines)
     {
         $fullLine = '';
@@ -88,6 +100,9 @@ class SqlPatchInstaller
         return $builtLines;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processLine($line)
     {
         $params = explode(" ", (substr($line, -1) == ';') ? substr($line, 0, strlen($line) - 1) : $line);
@@ -103,11 +118,14 @@ class SqlPatchInstaller
          * if empty the line could not be correctly parsed
          */
         if (empty($newParams)) {
-             $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);            
+             $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);
         }
         return $newParams;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function findSqlLineType($line)
     {
         $result = [];
@@ -121,12 +139,18 @@ class SqlPatchInstaller
         return $result;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processLineBasic($params, $typeEntry)
     {
         $params[$typeEntry['tableParamsOffset']] = DB_PREFIX . $params[$typeEntry['tableParamsOffset']];
         return $params;
     }
 
+    /**
+     * @since ZC v1.5.7
+     */
     protected function processLineSelect($params, $typeEntry)
     {
         $fromKey = array_search('FROM', $params);
@@ -142,7 +166,10 @@ class SqlPatchInstaller
         }
         return $params;
     }
-    
+
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processLineIndex($params, $typeEntry)
     {
         $fromKey = array_search('ON', $params);
@@ -152,7 +179,10 @@ class SqlPatchInstaller
         $params[$fromKey + 1] = DB_PREFIX . $params[$fromKey + 1];
         return $params;
     }
-    
+
+    /**
+     * @since ZC v1.5.8
+     */
     protected function processLineRenameTable($params, $typeEntry)
     {
         $params[$typeEntry['tableParamsOffset']] = DB_PREFIX . $params[$typeEntry['tableParamsOffset']];

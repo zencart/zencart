@@ -2,25 +2,23 @@
 /**
  * column_right module
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: highburyeye 2023 Sep 25 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-use App\Models\LayoutBox;
+use Zencart\DbRepositories\LayoutBoxRepository;
 use Zencart\ResourceLoaders\SideboxFinder;
 use Zencart\FileSystem\FileSystem;
 
 $column_box_default='tpl_box_default_right.php';
 // Check if there are boxes for the column
-$sideboxes = LayoutBox::where('layout_box_location', 1)
-                      ->where('layout_box_status', 1)
-                      ->where('layout_template', $template_dir)
-                      ->orderBy('layout_box_sort_order')
-                      ->limit(100)->get();
+global $db;
+$layoutBoxRepository = new LayoutBoxRepository($db);
+$sideboxes = $layoutBoxRepository->getActiveForLocation(1, $template_dir, 100);
 
 $column_width = (int)BOX_WIDTH_RIGHT;
 foreach ($sideboxes as $sidebox) {

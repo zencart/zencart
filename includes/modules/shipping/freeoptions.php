@@ -1,10 +1,11 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2024 May 15 Modified in v2.0.1 $
+ * @version $Id: lat9 2025 Oct 01 Modified in v2.2.0 $
+ * @since ZC v1.3.0
  */
 class freeoptions extends ZenShipping
 {
@@ -25,6 +26,8 @@ class freeoptions extends ZenShipping
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
             $this->enabled = ((MODULE_SHIPPING_FREEOPTIONS_STATUS == 'True') ? true : false);
+        } else {
+            $this->enabled = false;
         }
 
         $this->update_status();
@@ -32,34 +35,15 @@ class freeoptions extends ZenShipping
 
     /**
      * Perform various checks to see whether this module should be visible
+     * @since ZC v1.5.7a
      */
     public function update_status()
     {
-        global $order, $db;
         if ($this->enabled === false || IS_ADMIN_FLAG === true) {
             return;
         }
 
-        if ((int)MODULE_SHIPPING_FREEOPTIONS_ZONE > 0) {
-            $check_flag = false;
-            $check = $db->Execute(
-                "SELECT zone_id
-                   FROM " . TABLE_ZONES_TO_GEO_ZONES . "
-                  WHERE geo_zone_id = " . (int)MODULE_SHIPPING_FREEOPTIONS_ZONE . "
-                    AND zone_country_id = " . $order->delivery['country']['id'] . "
-                  ORDER BY zone_id"
-            );
-            foreach ($check as $next_zone) {
-                if ($next_zone['zone_id'] < 1 || $next_zone['zone_id'] == $order->delivery['zone_id']) {
-                    $check_flag = true;
-                    break;
-                }
-            }
-
-            if ($check_flag === false) {
-                $this->enabled = false;
-            }
-        }
+        $this->checkEnabledForZone(MODULE_SHIPPING_FREEOPTIONS_ZONE);
 
         // -----
         // If still enabled, check to see if any "Free Options" should be presented to the customer.
@@ -73,17 +57,30 @@ class freeoptions extends ZenShipping
     // This function checks to see if the order's total, weight or number-of-items qualifies for the
     // Free Options shipping method.
     //
+    /**
+     * @since ZC v1.5.8
+     */
     protected function checkForFreeOptions()
     {
         global $order;
+        
+        // -----
+        // Convert each of the min/max configured values into their floating-point equivalent.
+        //
+        $total_min = (float)MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN;
+        $total_max = (float)MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX;
+        $weight_min = (float)MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN;
+        $weight_max = (float)MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX;
+        $items_min = (float)MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN;
+        $items_max = (float)MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX;
 
         // -----
         // First, see if any of the 3 options for free shipping are configured.  If none are configured, there's no quote
         // to be returned.
         //
-        $freeoptions_total = (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX !== '');
-        $freeoptions_weight = (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX !== '');
-        $freeoptions_items = (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' || MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '');
+        $freeoptions_total = ($total_min != 0 || $total_max != 0);
+        $freeoptions_weight = ($weight_min != 0 || $weight_max != 0);
+        $freeoptions_items = ($items_min != 0 || $items_max != 0);
         $this->debug[] = [$freeoptions_total, $freeoptions_weight, $freeoptions_items];
 
         $this->enabled = ($freeoptions_total === true || $freeoptions_weight === true || $freeoptions_items === true);
@@ -96,12 +93,12 @@ class freeoptions extends ZenShipping
         //
         if ($freeoptions_total === true) {
             $cart_total = $_SESSION['cart']->show_total();
-            if (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '' && MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX !== '') {
-                $freeoptions_total = ($cart_total >= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN && $cart_total <= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX);
-            } elseif (MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN !== '') {
-                $freeoptions_total = ($cart_total >= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN);
+            if ($total_min != 0 && $total_max != 0) {
+                $freeoptions_total = ($cart_total >= $total_min && $cart_total <= $total_max);
+            } elseif ($total_min != 0) {
+                $freeoptions_total = ($cart_total >= $total_min);
             } else {
-                $freeoptions_total = ($cart_total <= MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX);
+                $freeoptions_total = ($cart_total <= $total_max);
             }
             $this->debug[] = ['total', $cart_total, $freeoptions_total, MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN, MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX];
         }
@@ -111,12 +108,12 @@ class freeoptions extends ZenShipping
         //
         if ($freeoptions_weight === true) {
             $order_weight = round($_SESSION['cart']->show_weight(), 9);
-            if (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '' && MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX !== '') {
-                $freeoptions_weight = ($order_weight >= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN && $order_weight <= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX);
-            } elseif (MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN !== '') {
-                $freeoptions_weight = ($order_weight >= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN);
+            if ($weight_min != 0 && $weight_max != 0) {
+                $freeoptions_weight = ($order_weight >= $weight_min && $order_weight <= $weight_max);
+            } elseif ($weight_min != 0) {
+                $freeoptions_weight = ($order_weight >= $weight_min);
             } else {
-                $freeoptions_weight = ($order_weight <= MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX);
+                $freeoptions_weight = ($order_weight <= $weight_max);
             }
             $this->debug[] = ['weight', $order_weight, $freeoptions_weight, MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN, MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX];
         }
@@ -126,12 +123,12 @@ class freeoptions extends ZenShipping
         //
         if ($freeoptions_items === true) {
             $num_items = $_SESSION['cart']->count_contents();
-            if (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '' && MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX !== '') {
-                $freeoptions_items = ($num_items >= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN && $num_items <= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX);
-            } elseif (MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN !== '') {
-                $freeoptions_items = ($num_items >= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN);
+            if ($items_min != 0 && $items_max != 0) {
+                $freeoptions_items = ($num_items >= $items_min && $num_items <= $items_max);
+            } elseif ($items_min != 0) {
+                $freeoptions_items = ($num_items >= $items_min);
             } else {
-                $freeoptions_items = ($num_items <= MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX);
+                $freeoptions_items = ($num_items <= $items_max);
             }
             $this->debug[] = ['items', $num_items, $freeoptions_items, MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN, MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX];
         }
@@ -153,6 +150,9 @@ class freeoptions extends ZenShipping
     // -----
     // Return the "Free Options" quote, as requested.
     //
+    /**
+     * @since ZC v1.3.0
+     */
     public function quote($method = ''): array
     {
         global $order;
@@ -184,6 +184,9 @@ class freeoptions extends ZenShipping
         return $this->quotes;
     }
 
+    /**
+     * @since ZC v1.3.0
+     */
     public function check()
     {
         global $db;
@@ -194,6 +197,9 @@ class freeoptions extends ZenShipping
         return $this->_check;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function get_configuration_errors()
     {
         if (!zen_check_for_misconfigured_downloads()) {
@@ -201,6 +207,9 @@ class freeoptions extends ZenShipping
         }
     }
 
+    /**
+     * @since ZC v1.3.0
+     */
     public function install(): void
     {
         global $db;
@@ -229,11 +238,17 @@ See: freeshipper<br><br>Do you want to offer per freeoptions rate shipping?', '6
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Sort Order', 'MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function help()
     {
         return ['link' => 'https://docs.zen-cart.com/user/shipping/free_shipping/'];
     }
 
+    /**
+     * @since ZC v1.3.0
+     */
     public function keys(): array
     {
         return [

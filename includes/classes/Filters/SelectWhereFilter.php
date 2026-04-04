@@ -1,15 +1,17 @@
 <?php declare(strict_types=1);
 /**
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 
 namespace Zencart\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
 use Zencart\Request\Request;
 
+/**
+ * @since ZC v1.5.8
+ */
 class SelectWhereFilter extends baseFilter implements RequestFilter
 {
     private $default;
@@ -17,6 +19,9 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
     protected $options = [];
     protected $parameters =[];
     
+    /**
+     * @since ZC v1.5.8
+     */
     public function make(array $filterDefinition) : void
     {
         $this->filterDefinition = $filterDefinition;
@@ -25,27 +30,50 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
         $this->parameters = $this->setParameters($filterDefinition);
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     public function output() : string
     {
         $select = $this->makeSelect($this->options, $this->default, $this->parameters);
         return $select;
     }
 
-    public function processRequest(Request $request, Builder $query) : Builder
+    /**
+     * @since ZC v1.5.8
+     */
+    public function processRequest(Request $request, $query)
     {
         $this->default = $request->input($this->filterDefinition['selectName'], '*');
         if ((string)$this->default == '*') {
             return $query;
         }
-        $query = $query->where($this->filterDefinition['field'], $this->default);
+
+        if (is_array($query)) {
+            return array_values(array_filter($query, function ($row) {
+                $field = $this->filterDefinition['field'];
+                return (string)($row[$field] ?? '') === (string)$this->default;
+            }));
+        }
+
+        if (is_object($query) && method_exists($query, 'where')) {
+            return $query->where($this->filterDefinition['field'], $this->default);
+        }
+
         return $query;
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function getOptionsForSelect(array $filterDefinition) : array
     {
         return $filterDefinition['options'];
     }
 
+    /**
+     * @since ZC v1.5.8
+     */
     private function setParameters($filterDefinition) : array
     {
         $parameters['label'] = $filterDefinition['label'];

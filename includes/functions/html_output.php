@@ -3,14 +3,16 @@
  * html_output.php
  * HTML-generating functions used throughout the core
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2023 Feb 15 Modified in v1.5.8a $
+ * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 
-/*
+/**
  * The HTML href link wrapper function
+ *
+ * @since ZC v1.0.3
  */
   function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
     global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
@@ -19,9 +21,8 @@
     if($link !== null) return $link;
 
     if (empty($page)) {
-      trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.",
-            E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine the page link!</strong><br><br><!--' . $page . '<br>' . $parameters . ' -->');
+        trigger_error("zen_href_link($page, $parameters, $connection), unable to determine the page link.");
+        $page = FILENAME_DEFAULT;
     }
 
     if ($connection == 'NONSSL') {
@@ -33,8 +34,8 @@
         $link = HTTP_SERVER;
       }
     } else {
-      trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_ERROR);
-      die('</td></tr></table></td></tr></table><br><br><strong class="note">Error!<br><br>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL</strong><br><br>');
+      trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL");
+      $link = HTTP_SERVER;
     }
 
     if ($use_dir_ws_catalog) {
@@ -62,15 +63,16 @@
     $separator = '&';
 
     while (substr($link, -1) == '&' || substr($link, -1) == '?') $link = substr($link, 0, -1);
-// Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ($add_session_id == true && $session_started == true && SESSION_FORCE_COOKIE_USE == 'False') {
-      if (defined('SID') && !empty(constant('SID'))) {
-        $sid = constant('SID');
-      } elseif ( ($request_type == 'NONSSL' && $connection == 'SSL' && ENABLE_SSL == 'true') || ($request_type == 'SSL' && $connection == 'NONSSL') ) {
-        if ($http_domain != $https_domain) {
-          $sid = zen_session_name() . '=' . zen_session_id();
+
+    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+    if ($add_session_id === true && $session_started === true && SESSION_FORCE_COOKIE_USE === 'False') {
+        if (PHP_VERSION_ID < 80401 && defined('SID') && !empty(constant('SID'))) {
+            $sid = constant('SID');
+        } elseif ( ($request_type === 'NONSSL' && $connection === 'SSL' && ENABLE_SSL === 'true') || ($request_type === 'SSL' && $connection === 'NONSSL') ) {
+            if ($http_domain !== $https_domain) {
+                $sid = zen_session_name() . '=' . zen_session_id();
+            }
         }
-      }
     }
 
 // clean up the link before processing
@@ -88,7 +90,7 @@
       $separator = '?';
     }
 
-    if (isset($sid)) {
+    if (!empty($sid)) {
       $link .= $separator . zen_output_string($sid);
     }
 
@@ -100,19 +102,21 @@
     return $link;
   }
 
-/*
+/**
  * This function, added to the storefront in zc1.5.6, provides a common method for
  * plugins that span the admin and storefront to create a storefront (a.k.a catalog)
  * link.
+ * @since ZC v1.5.6
  */
 function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL')
 {
     return zen_href_link($page, $parameters, $connection, false);
 }
 
-/*
+/**
  * The HTML image wrapper function for non-proportional images
  * used when "proportional images" is turned off or if calling from a template directory
+ * @since ZC v1.2.4
  */
 function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters = '')
 {
@@ -181,9 +185,11 @@ function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters
     return $image;
 }
 
-/*
- * The HTML image wrapper function
+/**
+ * HTML image wrapper function
+ * @since ZC v1.0.3
  */
+if (!function_exists('zen_image')) {
 function zen_image($src, $title = '', $width = '', $height = '', $parameters = '')
 {
     global $template_dir, $zco_notifier;
@@ -221,7 +227,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     if (PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !is_file($src)) {
         $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
     }
-    
+
     $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $title, $width, $height, $parameters);
 
     // Determine if the source-file exists.
@@ -295,14 +301,16 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
 
     return $image;
 }
+}
 
-/*
+/**
  * The HTML form submit button wrapper function
  * Outputs a "submit" button in the selected language
+ * @since ZC v1.0.3
  */
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes' && strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
+    if ((strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || (strtolower(IMAGE_USE_CSS_BUTTONS) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_SUBMIT');
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -316,7 +324,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     return $image_submit;
   }
 
-/*
+/**
  * Output a function button in the selected language
  */
   function zen_image_button($image, $alt = '', $parameters = '', $sec_class = '') {
@@ -328,7 +336,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) == 'yes') {
+    if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || (strtolower(IMAGE_USE_CSS_BUTTONS) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) {
         if (preg_match('/\.(png|gif|jpe?g|webp)/i', $image)) {
             return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
         } else {
@@ -341,6 +349,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
 
 /**
  * Draw a <button> element
+ * @since ZC v1.5.8
  **/
 function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters = '', $title = '', $type = 'button')
 {
@@ -349,7 +358,7 @@ function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters 
     // legacy support
     // remove .gif etc suffix if any
     $text = preg_replace('/\.(png|gif|jpe?g|webp)$/', '', $text);
-    $text = str_replace('_', ' ', Illuminate\Support\Str::title($text));
+    $text = str_replace('_', ' ', ucwords((string)$text));
 
     $classes = '';
     // optionally force something like 'btn' into the current template's buttons by defining a constant for the template:
@@ -396,7 +405,8 @@ function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters 
  * generate CSS buttons in the current language
  * concept from contributions by Seb Rouleau and paulm, subsequently adapted to Zen Cart
  * note: any hard-coded buttons will not be able to use this function
- **/
+ * @since ZC v1.3.0
+ */
   function zenCssButton($image = '', $text = '', $type = 'button', $sec_class = '', $parameters = '') {
    global $css_button_text, $css_button_opts, $template, $current_page_base, $language;
 
@@ -476,10 +486,11 @@ function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters 
   }
 
 
-/*
- *  Output a separator either through whitespace, or with an image
+/**
+ * Output a separator either through whitespace, or with an image
+ * @since ZC v1.0.3
  */
-  function zen_draw_separator($image = 'true', $width = '100%', $height = '1') {
+function zen_draw_separator($image = 'true', $width = '100%', $height = '1') {
 
     // set default to use from template - zen_image will translate if not found in current template
     if ($image == 'true') {
@@ -490,7 +501,7 @@ function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters 
       }
     }
     return zen_image($image, '', $width, $height);
-  }
+}
 
 
 /**
@@ -500,6 +511,7 @@ function zen_draw_button($text = '', $added_classes = '', $id = '', $parameters 
  * @param string $form html form name to attach to
  * @param string $field html field to attach to
  * @return string javascript segment
+ * @since ZC v1.0.3
  */
 function zen_js_zone_list(string $country, string $form, string $field) {
     global $db;
@@ -539,10 +551,11 @@ function zen_js_zone_list(string $country, string $form, string $field) {
 }
 
 
-/*
- *  Output a form
+/**
+ * Output a form
+ * @since ZC v1.0.3
  */
-  function zen_draw_form($name, $action, $method = 'post', $parameters = '') {
+function zen_draw_form($name, $action, $method = 'post', $parameters = '') {
     $form = '<form name="' . zen_output_string($name) . '" action="' . zen_output_string($action) . '" method="' . zen_output_string($method) . '"';
 
     if (!empty($parameters)) $form .= ' ' . $parameters;
@@ -550,12 +563,13 @@ function zen_js_zone_list(string $country, string $form, string $field) {
     $form .= '>';
     if (strtolower($method) == 'post') $form .= '<input type="hidden" name="securityToken" value="' . $_SESSION['securityToken'] . '">';
     return $form;
-  }
+}
 
 /*
- *  Output a form input field
+ * Output a form input field
+ * @since ZC v1.0.3
  */
-  function zen_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $required = false) {
+function zen_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $required = false) {
     // -----
     // Give an observer the opportunity to **totally** override this function's operation.
     //
@@ -608,19 +622,21 @@ function zen_js_zone_list(string $country, string $form, string $field) {
     }
 
     return $field;
-  }
+}
 
-/*
- *  Output a form password field
+/**
+ * Output a form password field
+ * @since ZC v1.0.3
  */
-  function zen_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
+function zen_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
     return zen_draw_input_field($name, $value, $parameters, 'password', false);
-  }
+}
 
-/*
- *  Output a selection field - alias function for zen_draw_checkbox_field() and zen_draw_radio_field()
+/**
+ * Output a selection field - alias function for zen_draw_checkbox_field() and zen_draw_radio_field()
+ * @since ZC v1.0.3
  */
-  function zen_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
+function zen_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
     // -----
     // Give an observer the opportunity to **totally** override this function's operation.
     //
@@ -672,26 +688,29 @@ function zen_js_zone_list(string $country, string $form, string $field) {
         $selection
     );
     return $selection;
-  }
+}
 
-/*
- *  Output a form checkbox field
+/**
+ * Output a form checkbox field
+ * @since ZC v1.0.3
  */
-  function zen_draw_checkbox_field($name, $value = '', $checked = false, $parameters = '') {
+function zen_draw_checkbox_field($name, $value = '', $checked = false, $parameters = '') {
     return zen_draw_selection_field($name, 'checkbox', $value, $checked, $parameters);
-  }
+}
 
-/*
+/**
  * Output a form radio field
+ * @since ZC v1.0.3
  */
-  function zen_draw_radio_field($name, $value = '', $checked = false, $parameters = '') {
+function zen_draw_radio_field($name, $value = '', $checked = false, $parameters = '') {
     return zen_draw_selection_field($name, 'radio', $value, $checked, $parameters);
-  }
+}
 
-/*
- *  Output a form textarea field
+/**
+ * Output a form textarea field
+ * @since ZC v1.0.3
  */
-  function zen_draw_textarea_field($name, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
+function zen_draw_textarea_field($name, $width, $height, $text = '~*~*#', $parameters = '', $reinsert_value = true) {
     // -----
     // Give an observer the opportunity to **totally** override this function's operation.
     //
@@ -742,12 +761,13 @@ function zen_js_zone_list(string $country, string $form, string $field) {
         $field
     );
     return $field;
-  }
+}
 
-/*
- *  Output a form hidden field
+/**
+ * Output a form hidden field
+ * @since ZC v1.0.3
  */
-  function zen_draw_hidden_field($name, $value = '~*~*#', $parameters = '') {
+function zen_draw_hidden_field($name, $value = '~*~*#', $parameters = '') {
     $field = '<input type="hidden" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
 
     if (zen_not_null($value) && $value != '~*~*#') {
@@ -761,34 +781,39 @@ function zen_js_zone_list(string $country, string $form, string $field) {
     $field .= '>';
 
     return $field;
-  }
+}
 
-/*
+/**
  * Output a form file-field
  * @param string $name name
  * @param boolean $required required
  * @return string
+ * @since ZC v1.0.3
  */
-  function zen_draw_file_field($name, $required = false) {
+function zen_draw_file_field($name, $required = false) {
     $field = zen_draw_input_field($name, '', ' size="50" ', 'file', false, $required);
 
     return $field;
-  }
+}
 
 
-/*
- *  Hide form elements while including session id info
- *  IMPORTANT: This should be used in every FORM that has an OnSubmit() function tied to it, to prevent unexpected logouts
+/**
+ * Hide form elements while including session id info
+ * IMPORTANT: This should be used in every FORM that has an OnSubmit() function tied to it, to prevent unexpected logouts
+ * @since ZC v1.0.3
  */
-  function zen_hide_session_id() {
+function zen_hide_session_id(): string
+{
     global $session_started;
 
-    if ($session_started == true && defined('SID') && !empty(SID) ) {
-      return zen_draw_hidden_field(zen_session_name(), zen_session_id());
+    if (PHP_VERSION_ID < 80401 && $session_started && defined('SID') && !empty(constant('SID'))) {
+        return zen_draw_hidden_field(zen_session_name(), zen_session_id());
     }
-  }
 
-  /**
+    return '';
+}
+
+/**
  *  Output a form pull down menu
  *  Pulls values from a passed array, with the indicated option pre-selected
  * @param string $name name
@@ -797,6 +822,7 @@ function zen_js_zone_list(string $country, string $form, string $field) {
  * @param string $parameters parameters
  * @param boolean $required required
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false)
 {
@@ -867,10 +893,12 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
   return $field;
 }
 
-/*
+/**
  * Creates a pull-down list of countries
+ * @since ZC v1.0.3
  */
-  function zen_get_country_list($name, $selected = '', $parameters = '') {
+function zen_get_country_list($name, $selected = '', $parameters = '')
+{
     $countriesAtTopOfList = array();
     $countries_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT));
     $countries = zen_get_countries();
@@ -913,9 +941,11 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
     }
 
     return zen_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
-  }
-/*
+}
+
+/**
  * Assesses suitability for additional parameters such as rel=nofollow etc
+ * @since ZC v1.3.8
  */
   function zen_href_params($page = '', $parameters = '') {
     global $current_page_base;
@@ -927,13 +957,14 @@ function zen_draw_pull_down_menu($name, $values, $default = '', $parameters = ''
         || $current_page_base=='down_for_maintenance') $addparms = 'rel="nofollow"';
     return ($parameters == '' ? $addparms : $parameters . ' ' . $addparms);
   }
-////
-// output label for input fields
+
 /**
+ * output label for input fields
  * @param string $text
  * @param string $for
  * @param string $parameters
  * @return string
+ * @since ZC v1.5.5
  */
 function zen_draw_label($text, $for, $parameters = '')
 {

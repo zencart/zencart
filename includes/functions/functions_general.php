@@ -3,10 +3,10 @@
  * functions_general.php
  * General functions used throughout Zen Cart
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2023 Dec 31 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 31 Modified in v2.2.0 $
  */
 
 
@@ -14,6 +14,7 @@
 /**
  * Return table heading with sorting capabilities
  * Used in Product Listing module
+ * @since ZC v1.0.3
  */
 function zen_create_sort_heading($sortby, $colnum, $heading)
 {
@@ -32,6 +33,7 @@ function zen_create_sort_heading($sortby, $colnum, $heading)
  * Count number of modules of a certain type are enabled
  * @param string $modules
  * @return int
+ * @since ZC v1.0.3
  */
 function zen_count_modules($modules = '')
 {
@@ -53,11 +55,17 @@ function zen_count_modules($modules = '')
     return $count;
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_count_payment_modules()
 {
     return zen_count_modules(MODULE_PAYMENT_INSTALLED);
 }
 
+/**
+ * @since ZC v1.0.3
+ */
 function zen_count_shipping_modules()
 {
     return zen_count_modules(MODULE_SHIPPING_INSTALLED);
@@ -70,6 +78,7 @@ function zen_count_shipping_modules()
  * @param string $code
  * @param bool $getFirstDefault
  * @return false|string
+ * @since ZC v1.0.3
  */
 function zen_currency_exists(string $code, bool $getFirstDefault = false)
 {
@@ -96,6 +105,7 @@ function zen_currency_exists(string $code, bool $getFirstDefault = false)
  * Sidebox Box Builder helper to calculate an HTML id tag value
  * @param string $box_id
  * @return string
+ * @since ZC v1.0.3
  */
 function zen_get_box_id(string $box_id)
 {
@@ -111,6 +121,7 @@ function zen_get_box_id(string $box_id)
  * @param string $buy_now_link the actual button link to use if "buy now" is allowed
  * @param string|bool $additional_link
  * @return string
+ * @since ZC v1.1.0
  */
 function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_link = false)
 {
@@ -118,13 +129,17 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
 
 // show case only supercedes all other settings
     if (STORE_STATUS != '0') {
-        return '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
+        return '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . (int)$product_id, 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
     }
 
-// 0 = normal shopping
-// 1 = Login to shop
-// 2 = Can browse but no prices
+    // 0 = normal shopping
+    // 1 = Login to shop
+    // 2 = Can browse but no prices
     // verify display of prices
+    $auth_pending_link =
+        '<a href="' . zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL') . '" rel="noindex nofollow">' .
+            TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE .
+        '</a>';
     switch (true) {
         case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
             // customer must be logged in to browse
@@ -146,25 +161,22 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
             return $login_for_price;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && CUSTOMERS_APPROVAL_AUTHORIZATION != '3' && !zen_is_logged_in()):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '3' && !zen_is_logged_in()):
             // customer must be logged in to browse
-            $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
-            return $login_for_price;
+            return $auth_pending_link;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION == '3' && !zen_is_logged_in()):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION === '3' && !zen_is_logged_in()):
             // customer must be logged in and approved to add to cart
             $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' . TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
             return $login_for_price;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
+        case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && (int)($_SESSION['customers_authorization'] ?? 0) > 0):
             // customer must be logged in to browse
-            $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
-            return $login_for_price;
+            return $auth_pending_link;
             break;
-        case (isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] >= 2):
+        case ((int)($_SESSION['customers_authorization'] ?? 0) >= 2):
             // customer is logged in and was changed to must be approved to buy
-            $login_for_price = TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE;
-            return $login_for_price;
+            return $auth_pending_link;
             break;
         default:
             // proceed normally
@@ -178,19 +190,19 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             return $additional_link;
             break;
         case ($button_check->fields['product_is_call'] == '1'):
-            $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pid=' . (int)$product_id . '&cfp=true', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
+            $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . (int)$product_id . '&cfp=true', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
             break;
         case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
             global $template;
-            $image = BUTTON_IMAGE_SOLD_OUT; 
-            $alt = BUTTON_SOLD_OUT_ALT; 
-            if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes') {
+            $image = BUTTON_IMAGE_SOLD_OUT;
+            $alt = BUTTON_SOLD_OUT_ALT;
+            if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || strtolower(IMAGE_USE_CSS_BUTTONS) === 'found') {
                 $return_button = zen_image_button($image, $alt);
             } else {
-                $return_button = '<span class="text-center">' . zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', '') . '</span>'; 
+                $return_button = '<span class="text-center">' . zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', '') . '</span>';
             }
             $zco_notifier->notify('NOTIFY_ZEN_SOLD_OUT_IMAGE', array_merge($button_check->fields, ['products_id' => (int)$product_id]), $return_button);
-                
+
             break;
         default:
             $return_button = $buy_now_link;

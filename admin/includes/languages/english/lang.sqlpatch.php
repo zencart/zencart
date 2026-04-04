@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2022 Feb 26 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -24,9 +24,9 @@ $define = [
     'REASON_COLUMN_DOESNT_EXIST_TO_DROP' => 'Cannot DROP column %s because it does not exist.',
     'REASON_COLUMN_DOESNT_EXIST_TO_CHANGE' => 'Cannot CHANGE column %s because it does not exist.',
     'REASON_PRODUCT_TYPE_LAYOUT_KEY_ALREADY_EXISTS' => 'Cannot insert prod-type-layout configuration_key "%s" because it already exists',
-    'REASON_INDEX_DOESNT_EXIST_TO_DROP' => 'Cannot drop index %s on table %s because it does not exist.',
+    'REASON_INDEX_DOESNT_EXIST_TO_DROP' => 'Cannot drop index %1$s on table %2$s because it does not exist.',
     'REASON_PRIMARY_KEY_DOESNT_EXIST_TO_DROP' => 'Cannot drop primary key on table %s because it does not exist.',
-    'REASON_INDEX_ALREADY_EXISTS' => 'Cannot add index %s to table %s because it already exists.',
+    'REASON_INDEX_ALREADY_EXISTS' => 'Cannot add index %1$s to table %2$s because it already exists.',
     'REASON_PRIMARY_KEY_ALREADY_EXISTS' => 'Cannot add primary key to table %s because a primary key already exists.',
     'REASON_NO_PRIVILEGES' => 'User ' . DB_SERVER_USERNAME . '@' . DB_SERVER . ' does not have %s privileges to database ' . DB_DATABASE . '.',
     'ERROR_RENAME_TABLE' => 'RENAME TABLE command not supported by SQLpatch tool. Please use phpMyAdmin instead.',

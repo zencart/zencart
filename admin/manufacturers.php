@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: lat9 2025 Oct 25 Modified in v2.2.0 $
  */
 require 'includes/application_top.php';
 
@@ -95,6 +95,12 @@ if (!empty($action)) {
         }
       }
 
+      // -----
+      // Give a watching observer the opportunity to add/update additional information for
+      // the current manufacturer.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_INSERT_UPDATE_COMPLETE', ['action' => $action, 'manufacturers_id' => (int)$manufacturers_id]);
+
       zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturers_id));
       break;
     case 'deleteconfirm':
@@ -130,6 +136,12 @@ if (!empty($action)) {
                       SET manufacturers_id = 0
                       WHERE manufacturers_id = " . (int)$manufacturers_id);
       }
+
+      // -----
+      // Give a watching observer the opportunity to cleanup additional information for
+      // the removal of the current manufacturer.
+      //
+      $zco_notifier->notify('NOTIFY_ADMIN_MANUFACTURERS_DELETECONFIRM', ['manufacturers_id' => (int)$manufacturers_id]);
 
       zen_redirect(zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '')));
       break;
@@ -241,7 +253,7 @@ if (is_array($extra_headings)) {
                   ?>
                   <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>'">
                   <?php } else { ?>
-                  <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>'" style="cursor:pointer">
+                  <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_MANUFACTURERS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'mID=' . $manufacturer['manufacturers_id'] . '&action=edit'); ?>'" style="cursor:pointer;">
                   <?php } ?>
                   <td class="dataTableContent text-center"><?php echo $manufacturer['manufacturers_id']; ?></td>
                   <td class="dataTableContent"><?php echo $manufacturer['manufacturers_name']; ?></td>
@@ -305,7 +317,7 @@ if (is_array($extra_data)) {
 
               $contents = ['form' => zen_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data" class="form-horizontal"')];
               $contents[] = ['text' => TEXT_NEW_INTRO];
-              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name"')];
+              $contents[] = ['text' => zen_draw_label(TEXT_MANUFACTURERS_NAME, 'manufacturers_name', 'class="control-label"') . zen_draw_input_field('manufacturers_name', '', zen_set_field_length(TABLE_MANUFACTURERS, 'manufacturers_name') . ' class="form-control" id="manufacturers_name" required')];
               $contents[] = ['text' => '<label class="checkbox-inline">' . zen_draw_checkbox_field('featured') . TEXT_MANUFACTURER_FEATURED_LABEL . '</label>'];
 
               // -----
@@ -384,7 +396,7 @@ if (is_array($extra_data)) {
 
               $contents[] = ['text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
 
-              $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+              $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="object-fit-contain"')];
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', zen_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . ' class="form-control"') . '</div><br>';
@@ -420,7 +432,7 @@ if (is_array($extra_data)) {
                 if (zen_not_null($mInfo->last_modified)) {
                   $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified)];
                 }
-                $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+                $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="object-fit-contain"')];
                 $contents[] = ['text' => TEXT_PRODUCTS . ' ' . $mInfo->products_count];
               }
               break;

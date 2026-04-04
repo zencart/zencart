@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 09 Modified in v2.0.0-rc2 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 require('includes/application_top.php');
 
@@ -51,6 +51,9 @@ $linebreak = '
 
 // NOTE: this line break is intentional!!!!
 
+/**
+ * @since ZC v1.2.0d
+ */
 function executeSql($lines, $database, $table_prefix = '') {
   zen_set_time_limit(1200);
   global $db, $debug, $messageStack;
@@ -190,6 +193,39 @@ function executeSql($lines, $database, $table_prefix = '') {
             $line = 'ALTER TABLE ' . $table_prefix . ltrim(substr($line, 12));
           }
           break;
+        case (substr($line_upper, 0, 18) === "AND TABLE_NAME = '"):
+          // look for the tablename between the quotes
+          preg_match("/'([^']+)'/", $param[3], $m);
+          $tablename = $m[1];
+
+          if (!$tbl_exists = zen_table_exists($tablename)) {
+            $result = sprintf(REASON_TABLE_NOT_FOUND, $tablename) . ' CHECK PREFIXES!';
+            zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
+            $ignore_line = true;
+            break;
+          } else {
+            $line = 'AND TABLE_NAME = \'' . $table_prefix . ltrim(substr($line, 18));
+          }
+          break;
+        case (str_starts_with(ltrim($line_upper), "FOREIGN KEY")):
+            // For foreign keys, we only check for the REFERENCES clause
+            $referencesWordPosition = array_search('REFERENCES', $param, true);
+            // if there is no REFERENCES keyword, or if there is no tablename after the REFERENCES keyword, we have nothing to do
+            if ($referencesWordPosition === false || !isset($param[$referencesWordPosition + 1])) {
+                break;
+            }
+            // To get the table name, we check whether it might have no space before the opening parenthesis
+            $parts = explode('(', $referencesWordPosition + 1);
+            $table = $parts[0];
+            if (!zen_table_exists($table)) {
+                $result = sprintf(REASON_TABLE_NOT_FOUND, $table) . ' CHECK PREFIXES!';
+                zen_write_to_upgrade_exceptions_table($line, $result, $sql_file);
+                error_log($result . "\n" . $line . "\n---------------\n\n");
+            } else {
+                $param[$referencesWordPosition + 1] = $table_prefix . $param[$referencesWordPosition + 1];
+                $line = implode(' ', $param) . (str_ends_with($line, ';') ? ';' : '');
+            }
+            break;
         case (substr($line_upper, 0, 13) == 'RENAME TABLE '):
           // RENAME TABLE command cannot be parsed to insert table prefixes, so skip if zen is using prefixes
           if (!empty(DB_PREFIX)) {
@@ -251,11 +287,17 @@ function executeSql($lines, $database, $table_prefix = '') {
         case (substr($line_upper, 0, 7) == 'SELECT ' && substr_count($line_upper, 'FROM ') > 0):
           $line = str_ireplace('FROM ', 'FROM ' . $table_prefix, $line);
           break;
-        case (substr($line_upper, 0, 10) == 'INNER JOIN '):
+        case (substr($line_upper, 0, 11) == 'INNER JOIN '):
           $line = 'INNER JOIN ' . $table_prefix . ltrim(substr($line, 11));
+          break;
+        case (substr($line_upper, 0, 11) == 'CROSS JOIN '):
+          $line = 'CROSS JOIN ' . $table_prefix . ltrim(substr($line, 11));
           break;
         case (substr($line_upper, 0, 10) == 'LEFT JOIN '):
           $line = 'LEFT JOIN ' . $table_prefix . ltrim(substr($line, 10));
+          break;
+        case ($line_upper === 'FROM INFORMATION_SCHEMA.COLUMNS'):
+          // do nothing; but we list it here instead of in Default so that it comes before less specific FROM matching below
           break;
         case (substr($line_upper, 0, 5) == 'FROM '):
           if (substr_count($line, ',') > 0) { // contains FROM and a comma, thus must parse for multiple tablenames
@@ -340,9 +382,11 @@ function executeSql($lines, $database, $table_prefix = '') {
   zen_record_admin_activity('Admin SQL Patch tool executed a query.', 'notice');
   return array('queries' => $results, 'string' => $string, 'output' => $return_output, 'ignored' => ($ignored_count), 'errors' => $errors);
 }
+// end function
 
-//end function
-
+/**
+ * @since ZC v1.2.5
+ */
 function zen_table_exists($tablename, $pre_install = false) {
   global $db;
   $tables = $db->Execute("SHOW TABLES LIKE '" . DB_PREFIX . $tablename . "'");
@@ -356,6 +400,9 @@ function zen_table_exists($tablename, $pre_install = false) {
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_database_privs($priv = '', $table = '', $show_privs = false) {
   // bypass until future version
   return true;
@@ -448,13 +495,16 @@ function zen_check_database_privs($priv = '', $table = '', $show_privs = false) 
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_drop_index_command($param) {
   if (!$checkprivs = zen_check_database_privs('INDEX')) {
     return sprintf(REASON_NO_PRIVILEGES, 'INDEX');
   }
   //this is only slightly different from the ALTER TABLE DROP INDEX command
   global $db;
-  if (!!empty($param)) {
+  if (empty($param)) {
     return "Empty SQL Statement";
   }
   $index = $param[2];
@@ -473,13 +523,16 @@ function zen_drop_index_command($param) {
   return sprintf(REASON_INDEX_DOESNT_EXIST_TO_DROP, $index, $param[4]);
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_create_index_command($param) {
   //this is only slightly different from the ALTER TABLE CREATE INDEX command
   if (!$checkprivs = zen_check_database_privs('INDEX')) {
     return sprintf(REASON_NO_PRIVILEGES, 'INDEX');
   }
   global $db;
-  if (!!empty($param)) {
+  if (empty($param)) {
     return "Empty SQL Statement";
   }
   $index = (strtoupper($param[1]) == 'INDEX') ? $param[2] : $param[3];
@@ -504,9 +557,12 @@ function zen_create_index_command($param) {
    */
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_alter_command($param) {
   global $db;
-  if (!!empty($param)) {
+  if (empty($param)) {
     return "Empty SQL Statement";
   }
   if (!$checkprivs = zen_check_database_privs('ALTER')) {
@@ -662,6 +718,9 @@ function zen_check_alter_command($param) {
   } //end switch
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_config_key($line) {
   global $db;
   $values = array();
@@ -681,6 +740,9 @@ function zen_check_config_key($line) {
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_check_product_type_layout_key($line) {
   global $db;
   $values = array();
@@ -694,6 +756,9 @@ function zen_check_product_type_layout_key($line) {
   }
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
   global $db;
   zen_create_exceptions_table();
@@ -708,6 +773,9 @@ function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
   return $result;
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_purge_exceptions_table() {
   global $db;
   zen_create_exceptions_table();
@@ -715,6 +783,9 @@ function zen_purge_exceptions_table() {
   return $result;
 }
 
+/**
+ * @since ZC v1.2.5
+ */
 function zen_create_exceptions_table() {
   global $db;
   if (!zen_table_exists(TABLE_UPGRADE_EXCEPTIONS)) {

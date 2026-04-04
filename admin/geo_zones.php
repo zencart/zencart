@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: neekfenwick 2023 Dec 09 Modified in v2.0.0-alpha1 $
+ * @version $Id: torvista 2026 Mar 13 Modified in v2.2.1 $
  */
 require('includes/application_top.php');
 
@@ -31,7 +31,7 @@ if (!empty($saction)) {
                             '" . (int)$zID . "',
                             now())");
 
-      $new_subzone_id = $db->Insert_ID();
+      $new_subzone_id = $db->insert_ID();
 
 //        zen_redirect(zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $new_subzone_id));
       zen_redirect(zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list' . '&sID=' . $new_subzone_id));
@@ -76,7 +76,7 @@ if (!empty($action)) {
                             '" . zen_db_input($geo_zone_description) . "',
                             now())");
 
-      $new_zone_id = $db->Insert_ID();
+      $new_zone_id = $db->insert_ID();
       zen_redirect(zen_href_link(FILENAME_GEO_ZONES, 'zID=' . $new_zone_id));
       break;
     case 'save_zone':

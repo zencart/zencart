@@ -10,23 +10,16 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-if  (isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] === 'Symfony BrowserKit') {
-    define('ZENCART_TESTFRAMEWORK_RUNNING', true);
-}
-
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     return;
 }
-$user = $_SERVER['USER'] ?? $_SERVER['MY_USER'] ?? 'runner';
+require_once __DIR__ . '/TestConfigResolver.php';
+
 $prefix = (IS_ADMIN_FLAG === true) ? '..' : '.';
 $context = (IS_ADMIN_FLAG === true) ? 'admin' : 'store';
-$config = $prefix . '/not_for_release/testFramework/Support/configs/' . $user . '.' . $context . '.configure.php';
-if (!file_exists($config)) {
-  die($config . ' does not exist');
-}
+$basePath = $prefix . '/not_for_release/testFramework/Support/configs/';
+$config = \Tests\Support\TestConfigResolver::resolveConfigPath($context, $basePath);
 if (!defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE')) {
     define('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', '');
 }
 require($config);
-
-

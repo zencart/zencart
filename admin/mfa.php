@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id:  New in v2.1 $
+ * @version $Id: Paul Williams 2024 Nov 27 Modified in v2.2.0 $
  */
 require 'includes/application_top.php';
 
@@ -17,6 +17,7 @@ $error = false;
 $setup_required = ($_GET['action'] ?? '') === 'setup' || !empty($_SESSION['mfa']['setup_required']);
 
 $mfa_modes_to_select_from = [
+    ['id' => '', 'text' => PLEASE_SELECT],
     ['id' => 'totp', 'text' => TEXT_MFA_METHOD_TOTP],
     ['id' => 'email', 'text' => TEXT_MFA_METHOD_EMAIL],
 ];
@@ -40,7 +41,7 @@ if (empty($_SESSION['mfa']) || str_starts_with($_POST['action'] ?? '', 'setup') 
 
 if (!empty($_POST['action'])) {
     // CSRF
-    if (!isset($_SESSION['securityToken'], $_POST['securityToken']) || ($_SESSION['securityToken'] !== $_POST['securityToken'])) {
+    if (!zen_request_has_valid_csrf_token()) {
         $error = true;
         $message = ERROR_SECURITY_ERROR;
         zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_MFA_LOGIN_WITHOUT_CSRF_TOKEN, 'warning');
@@ -62,8 +63,7 @@ if (!empty($_POST['action'])) {
                 zen_db_perform(TABLE_ADMIN_EXPIRED_TOKENS, ['admin_name' => $_SESSION['mfa']['admin_name'] ?? zen_get_admin_name($_SESSION['admin_id']), 'otp_code' => $_POST['mfa_code']]);
 
                 unset($_SESSION['mfa']);
-                $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
-                $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+                $redirect = zen_href_link($_GET['camefrom'] ?? FILENAME_DEFAULT, zen_get_all_get_params(['camefrom', 'action']), 'SSL');
                 zen_redirect($redirect);
             }
         } else {
@@ -83,8 +83,7 @@ if (!empty($_POST['action'])) {
                 zen_db_perform(TABLE_ADMIN_EXPIRED_TOKENS, ['admin_name' => $_SESSION['mfa']['admin_name'] ?? zen_get_admin_name($_SESSION['admin_id']), 'otp_code' => $_POST['mfa_code']]);
 
                 unset($_SESSION['mfa']);
-                $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
-                $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+                $redirect = zen_href_link($_GET['camefrom'] ?? FILENAME_DEFAULT, zen_get_all_get_params(['camefrom', 'action']), 'SSL');
                 zen_redirect($redirect);
             }
         }
@@ -99,8 +98,7 @@ if (!empty($_POST['action'])) {
         if ($_POST['selected'] === 'email') {
             zen_db_perform(TABLE_ADMIN, ['mfa' => json_encode(['via_email' => true])], 'update', "admin_id = " . (int)$_SESSION['admin_id']);
             zen_mfa_by_email(['admin_id' => $user['admin_id'], 'email' => $user['admin_email'], 'admin_name' => $user['admin_name'], 'mfa' => json_encode(['via_email' => true])]);
-            $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
-            $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+            $redirect = zen_href_link($_GET['camefrom'] ?? FILENAME_DEFAULT, zen_get_all_get_params(['camefrom', 'action']), 'SSL');
             zen_redirect($redirect);
         }
         // else set up OTP
@@ -140,8 +138,8 @@ $fieldAttributes .= match ($_SESSION['mfa']['type'] ?? 'digits') {
                     <?php if ($setup_required) { ?>
                     <?= zen_draw_hidden_field('action', 'setup' . $_SESSION['securityToken'], 'id="otpsetup"') . PHP_EOL ?>
                     <h2><?= TEXT_MFA_SELECT ?></h2>
-                    <div class="form-group form-group-lg">
-                        <?= zen_draw_pull_down_menu('selected', $mfa_modes_to_select_from, '', 'class="form-control input-lg" autofocus id="mfaselect-' . $_SESSION['securityToken'] . '" required') . PHP_EOL ?>
+                    <div class="form-group form-group">
+                        <?= zen_draw_pull_down_menu('selected', $mfa_modes_to_select_from, 'totp', 'class="form-control input" autofocus id="mfaselect-' . $_SESSION['securityToken'] . '" required') . PHP_EOL ?>
                     </div>
 
                     <?php } else { ?>
@@ -161,7 +159,15 @@ $fieldAttributes .= match ($_SESSION['mfa']['type'] ?? 'digits') {
                     if (!empty($_SESSION['mfa']['qrcode'])) { ?>
                         <div id="mfa-qrcode" class="col-xs-12 m-4">
                             <?= TEXT_MFA_SCAN_QR_CODE ?><br><br>
-                            <div id="mfa_qr_img"><?= $_SESSION['mfa']['qrcode'] ?></div>
+                            <div id="mfa_qr_img"><?php
+                                $qrCode = $_SESSION['mfa']['qrcode'];
+                                if (str_starts_with($qrCode, '<')) {
+                                    echo $qrCode;
+                                } else {
+                                    echo sprintf('<img class="text-center" src="%s" alt="QR Code"/>', $qrCode);
+                                }
+                                ?>
+                            <?php echo "<pre>" . $_SESSION['mfa']['secret'] . "</pre>";?></div>
                         </div>
                     <?php
                     } ?>

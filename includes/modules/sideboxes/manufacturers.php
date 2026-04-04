@@ -2,10 +2,10 @@
 /**
  * manufacturers sidebox - displays a list of manufacturers so customer can choose to filter on their products only
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: highburyeye 2023 Sep 25 Modified in v2.0.0-alpha1 $
+ * @version $Id: piloujp 2025 May 16 Modified in v2.2.0 $
  */
 // only check products if requested - this may slow down the processing of the manufacturers sidebox
 if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
@@ -41,8 +41,8 @@ if (!$manufacturer_sidebox->EOF) {
 
     foreach ($manufacturer_sidebox as $sidebox_element) {
         $manufacturer_sidebox_name = $sidebox_element['manufacturers_name'];
-        if (strlen($manufacturer_sidebox_name) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) {
-            $manufacturer_sidebox_name = substr($manufacturer_sidebox_name, 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..';
+        if (mb_strlen($manufacturer_sidebox_name) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) {
+            $manufacturer_sidebox_name = mb_substr($manufacturer_sidebox_name, 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..';
         }
         $manufacturer_sidebox_array[] = [
             'id' => $sidebox_element['manufacturers_id'],

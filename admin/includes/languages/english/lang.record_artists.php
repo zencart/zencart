@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2022 Zen Cart Development Team
+ * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Jan 11 New in v1.5.8-alpha $
+ * @version $Id: DrByte 2024 May 27 Modified in v2.1.0-alpha1 $
 */
 
 $define = [
@@ -19,7 +19,7 @@ $define = [
     'TEXT_HEADING_NEW_RECORD_ARTIST' => 'New Recording Artist',
     'TEXT_HEADING_EDIT_RECORD_ARTIST' => 'Edit Recording Artist',
     'TEXT_HEADING_DELETE_RECORD_ARTIST' => 'Delete Recording Artist',
-    'TEXT_DISPLAY_NUMBER_OF_ARTISTS' => 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> Recording Artists)',
+    'TEXT_DISPLAY_NUMBER_OF_ARTISTS' => 'Displaying <strong>%1$d</strong> to <strong>%2$d</strong> (of <strong>%3$d</strong> Recording Artists)',
     'TEXT_DELETE_PRODUCTS' => 'Delete this Recording Artist and all items linked to it?',
     'TEXT_DELETE_WARNING_PRODUCTS' => '<b>WARNING:</b> There are %s items still linked to this Recording Artist!',
 ];

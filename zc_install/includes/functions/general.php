@@ -2,10 +2,10 @@
 /**
  * zc_install general functions
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: JSWebSteve 2026 Jan 30 Modified in v2.2.1 $
  */
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) {
@@ -37,12 +37,14 @@ function logDetails(string $details, string $location = "General"): void
     }
 }
 
-function zen_rand(int $min = null, int $max = null): int
+function zen_rand(?int $min = null, ?int $max = null): int
 {
     static $seeded;
 
     if (!isset($seeded)) {
-        mt_srand((int)(microtime(true) * 1000000));
+        if (function_exists('mt_srand')) {
+            mt_srand((int)(microtime(true) * 1000000));
+        }
         $seeded = true;
     }
 
@@ -50,7 +52,7 @@ function zen_rand(int $min = null, int $max = null): int
         if ($min >= $max) {
             return $min;
         }
-        return mt_rand($min, $max);
+        return random_int($min, $max);
     }
 
     return mt_rand();

@@ -1,53 +1,72 @@
 <?php
 /**
- * @copyright Copyright 2003-2020 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
 namespace Tests\FeatureAdmin\Security;
 
-use App\Models\PluginControl;
-use Symfony\Component\Panther\Client;
-use Tests\Support\zcFeatureTestCaseAdmin;
+use Tests\Support\Database\TestDb;
+use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-class PluginsLFITest extends zcFeatureTestCaseAdmin
+/**
+ * @group serial
+ * @group custom-seeder
+ * @group plugin-filesystem
+ * @group shared-db-write
+ */
+class PluginsLFITest extends zcInProcessFeatureTestCaseAdmin
 {
+    protected $runTestInSeparateProcess = true;
+    protected $preserveGlobalState = false;
 
     public function testPluginLFI()
     {
         // note probably need to make the login a separate method
-        // would be nice if we could use Laravel actingAs
         $this->runCustomSeeder('StoreWizardSeeder');
         $this->runCustomSeeder('DisplayLogsSeeder');
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
-        $this->browser->submitForm('Submit', [
+
+        $this->visitAdminHome()
+            ->assertOk()
+            ->assertSee('Admin Login');
+
+        $this->submitAdminLogin([
             'admin_name' => 'Admin',
             'admin_pass' => 'password',
-        ]);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Admin Home', (string)$response->getContent() );
-        // need to hit the plugin manager end point to get the scanned modules into the database, if not already there.
-        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=plugin_manager');
-        // set the display logs to be installed
-        $pm = PluginControl::where('name', 'Display logs')->update(['status' => 1, 'version' => 'v3.0.2']);
-        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=display_logs');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('Admin Display Logs', (string)$response->getContent() );
+        ])->assertOk()
+            ->assertSee('Admin Home');
+
+        $this->visitAdminCommand('plugin_manager')->assertOk();
+
+        TestDb::update(
+            'plugin_control',
+            ['status' => 1, 'version' => 'v3.0.3'],
+            'name = :name',
+            [':name' => 'Display Logs']
+        );
+
+        $this->visitAdminCommand('display_logs')
+            ->assertOk()
+            ->assertSee('Admin Display Logs');
 
         $dir = 'includes/';
         touch($dir . 'security_test.php');
         file_put_contents($dir . 'security_test.php', "<?php\ndie('lfi-vulnerable');\n");
-        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=../../../../includes/security_test');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringNotContainsString('lfi-vulnerable', (string)$response->getContent());
-        $this->assertStringContainsString('Admin Home', (string)$response->getContent() );
-        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php?cmd=display_logs');
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Admin Display Logs', (string)$response->getContent() );
-        unlink($dir . 'security_test.php');
+
+        try {
+            $response = $this->visitAdminCommand('../../../../includes/security_test')
+                ->assertRedirect();
+
+            $response = $this->followAdminRedirect($response)->assertOk();
+
+            $this->assertStringNotContainsString('lfi-vulnerable', $response->content);
+            $response->assertSee('Admin Home');
+
+            $this->visitAdminCommand('display_logs')
+                ->assertOk()
+                ->assertSee('Admin Display Logs');
+        } finally {
+            @unlink($dir . 'security_test.php');
+        }
     }
 }

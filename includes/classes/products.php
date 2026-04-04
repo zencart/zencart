@@ -2,18 +2,21 @@
 /**
  * products class
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2022 Oct 16 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 /**
  * products class
- * Class used for managing various product information
+ * Deprecated class formerly used for managing various product information
  *
+ * @deprecated v2.1.0 - use Product class instead
+ * or call zen_get_products_name(), zen_get_handler_from_type(), zen_get_products_allow_add_to_cart()
+ * @since ZC v1.2.0d
  */
 class products extends base {
 
@@ -21,6 +24,9 @@ class products extends base {
   function __construct() {
   }
 
+  /**
+   * @since ZC v1.2.0d
+   */
   function get_products_in_category($zf_category_id, $zf_recurse=true, $zf_product_ids_only=false) {
     global $db;
     $za_products_array = array();
@@ -56,6 +62,9 @@ class products extends base {
     return $za_products_array;
   }
 
+  /**
+   * @since ZC v1.2.0d
+   */
   function products_name($zf_product_id) {
     global $db;
     $zp_product_name_query = "select products_name from " . TABLE_PRODUCTS_DESCRIPTION . "
@@ -66,10 +75,16 @@ class products extends base {
     return $zp_product_name;
   }
 
+  /**
+   * @since ZC v1.2.0d
+   */
   function get_admin_handler($type) {
     return $this->get_handler($type) . '.php';
   }
 
+  /**
+   * @since ZC v1.2.0d
+   */
   function get_handler($type) {
     global $db;
 
@@ -81,6 +96,9 @@ class products extends base {
     return $handler->fields['type_handler'];
   }
 
+  /**
+   * @since ZC v1.2.0d
+   */
   function get_allow_add_to_cart($zf_product_id) {
     global $db;
 

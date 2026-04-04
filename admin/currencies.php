@@ -1,14 +1,13 @@
 <?php
 
 /**
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Mar 15 Modified in v2.0.0-rc2 $
+ * @version $Id: torvista 2026 Mar 04 Modified in v2.2.1 $
  */
 require 'includes/application_top.php';
 
-require DIR_WS_CLASSES . 'currencies.php' ;
 $currencies = new currencies();
 
 $action = $_GET['action'] ?? '';
@@ -157,6 +156,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                 $currencies_query_raw = "SELECT currencies_id, title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, last_updated, value
                                          FROM " . TABLE_CURRENCIES . "
                                          ORDER BY title";
+                $currency_query_numrows = $currency_query_numrows ?? 0;
                 $currency_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $currencies_query_raw, $currency_query_numrows);
                 $currencies_all = $db->Execute($currencies_query_raw);
                 foreach ($currencies_all as $currency) {
@@ -271,7 +271,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_THOUSANDS_POINT . ' ' . $cInfo->thousands_point];
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places];
                         $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_LAST_UPDATED . ': ' . zen_datetime_short($cInfo->last_updated)];
-                        $contents[] = ['text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8)];
+                        $contents[] = ['text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format((float)$cInfo->value, 8)];
                         $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code)];
                     }
                     break;

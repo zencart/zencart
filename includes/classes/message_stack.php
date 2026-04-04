@@ -2,10 +2,10 @@
 /**
  * messageStack Class.
  *
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Nick Fenwick 2023 Jul 05 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -13,16 +13,26 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 /**
  * Manage messageStack alerts
- *
  */
 class messageStack extends base
 {
     /** to override these, call setMessageFormatting() and pass it an array of the desired formats, similar to what getDefaultFormats() returns */
-    private $formats = [];
+    private array $formats = [];
     /** array of messages to be displayed */
-    public $messages = [];
+    public array $messages = [];
 
-    function __construct()
+    public function __get(string $name)
+    {
+        if ($name === 'size') {
+            return $this->size('default');
+        }
+
+        trigger_error('Undefined property: ' . static::class . '::$' . $name, E_USER_WARNING);
+
+        return null;
+    }
+
+    public function __construct()
     {
         $this->messages = [];
 
@@ -31,7 +41,7 @@ class messageStack extends base
         }
     }
 
-    function add($class, $message, $type = 'error')
+    public function add($class, $message, $type = 'error')
     {
         $message = trim($message);
         $duplicate = false;
@@ -66,7 +76,7 @@ class messageStack extends base
         }
     }
 
-    function add_session($class, $message, $type = 'error')
+    public function add_session(string $class, string $message, string $type = 'error'): void
     {
         if (empty($_SESSION['messageToStack'])) {
             $messageToStack = [];
@@ -83,12 +93,29 @@ class messageStack extends base
         $this->add($class, $message, $type);
     }
 
-    function reset()
+    public function add_from_session(): void
+    {
+        if (!isset($_SESSION['messageToStack']) || !is_array($_SESSION['messageToStack'])) {
+            return;
+        }
+
+        foreach ($_SESSION['messageToStack'] as $message) {
+            $this->add(
+                $message['class'] ?? 'default',
+                $message['text'] ?? '',
+                $message['type'] ?? 'error'
+            );
+        }
+
+        $_SESSION['messageToStack'] = [];
+    }
+
+    public function reset(): void
     {
         $this->messages = [];
     }
 
-    function output($class)
+    public function output(string $class = 'default')
     {
         global $template, $current_page_base;
 
@@ -106,7 +133,7 @@ class messageStack extends base
 
         $output = [];
         foreach ($this->messages as $next_message) {
-            if ($next_message['class'] == $class) {
+            if ($next_message['class'] === $class) {
                 $output[] = $next_message;
             }
         }
@@ -117,7 +144,10 @@ class messageStack extends base
         require $template->get_template_dir('tpl_message_stack_default.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_message_stack_default.php';
     }
 
-    function size($class)
+    /**
+     * @since ZC v1.0.3
+     */
+    public function size(string $class): int
     {
         if (!empty($_SESSION['messageToStack'])) {
             foreach ($_SESSION['messageToStack'] as $next_message) {
@@ -128,7 +158,7 @@ class messageStack extends base
         $count = 0;
 
         foreach ($this->messages as $next_message) {
-            if ($next_message['class'] == $class) {
+            if ($next_message['class'] === $class) {
                 $count++;
             }
         }
@@ -137,17 +167,17 @@ class messageStack extends base
     }
 
     /**
-     * @param array $formattingArray
+     * @since ZC v1.5.8
      */
-    function setMessageFormatting($formattingArray = [])
+    public function setMessageFormatting(array $formattingArray = []): void
     {
         foreach ($formattingArray as $messageType => $keys) {
             foreach ($keys as $key => $value) {
-                if ($key == 'params') {
+                if ($key === 'params') {
                     $this->formats[$messageType]['params'] = $value;
                     continue;
                 }
-                if ($key == 'icon') {
+                if ($key === 'icon') {
                     $this->formats[$messageType]['icon'] = $value;
                 }
             }
@@ -156,10 +186,44 @@ class messageStack extends base
 
     /**
      * @return array
+     * @since ZC v1.5.8
      */
-    function getDefaultFormats()
+    public function getDefaultFormats(): array
     {
         global $template, $current_page_base;
+
+        if (
+            !is_object($template)
+            || !defined('ICON_IMAGE_ERROR')
+            || !defined('ICON_IMAGE_SUCCESS')
+            || !defined('ICON_IMAGE_WARNING')
+            || !defined('ICON_ERROR_ALT')
+            || !defined('ICON_SUCCESS_ALT')
+            || !defined('ICON_WARNING_ALT')
+            || !defined('DIR_WS_TEMPLATE')
+        ) {
+            return [
+                'error' => [
+                    'params' => 'class="messageStackError larger"',
+                    'icon' => '',
+                ],
+                'success' => [
+                    'params' => 'class="messageStackSuccess larger"',
+                    'icon' => '',
+                ],
+                'warning' => [
+                    'params' => 'class="messageStackWarning larger"',
+                    'icon' => '',
+                ],
+                'caution' => [
+                    'params' => 'class="messageStackCaution larger"',
+                    'icon' => '',
+                ],
+                'default' => [
+                    'params' => 'class="messageStackError larger"',
+                ],
+            ];
+        }
 
         return [
             'error' => [

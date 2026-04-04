@@ -2,14 +2,16 @@
 /**
  * Session processing specific to PayPal Website Payments Standard IPN handling
  *
- * @copyright Copyright 2003-2023 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: dbltoe 2022 Nov 10 Modified in v1.5.8a $
+ * @version $Id: DrByte 2025 Dec 13 Modified in v2.2.1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
+
+// NOTE: Depends on language subsystem being initialized already
 
 /**
  * Begin processing. Add notice to log if logging enabled.

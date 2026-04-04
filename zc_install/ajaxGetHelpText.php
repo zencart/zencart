@@ -4,13 +4,13 @@
  * ajaxGetHelpText.php
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2024 Aug 11 Modified in v2.1.0-alpha2 $
  */
 define('IS_ADMIN_FLAG', false);
 define('DIR_FS_INSTALL', __DIR__ . '/');
 define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 
-require(DIR_FS_INSTALL . 'includes/application_top.php');
+require DIR_FS_INSTALL . 'includes/application_top.php';
 
 if (isset($_POST['id'])) {
     $result = str_replace('helpId', '', zen_output_string_protected($_POST['id']));

@@ -1,9 +1,9 @@
 <?php
 /**
  * file contains systemChecker Class
- * @copyright Copyright 2003-2024 Zen Cart Development Team
+ * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
+ * @version $Id: DrByte 2025 Oct 29 Modified in v2.2.0 $
  */
 
 /**
@@ -79,6 +79,44 @@ class systemChecker
 //echo print_r($this->systemChecks);
         foreach ($this->systemChecks as $systemCheckName => $systemCheck) {
 //echo print_r($systemCheck);
+
+            $server = strtolower($_SERVER['SERVER_SOFTWARE'] ?? 'unknown');
+
+            // check for bypasses
+            if (isset($systemCheck['skipWhen'])) {
+                $parts = explode('=', $systemCheck['skipWhen']);
+                $what = $parts[0];
+                $when = strtolower($parts[1] ?? '');
+
+                if ($what === 'server' && str_contains($when, 'apache') && str_starts_with($server, 'apache')) {
+                    continue;
+                }
+                if ($what === 'server' && str_contains($when, 'nginx') && str_starts_with($server, 'nginx')) {
+                    continue;
+                }
+                if ($what === 'server' && str_contains($when, 'litespeed') && str_starts_with($server, 'nginx')) {
+                    continue;
+                }
+            } elseif (isset($systemCheck['onlyWhen'])) {
+                $parts = explode('=', $systemCheck['onlyWhen']);
+                $what = $parts[0];
+                $when = strtolower($parts[1] ?? '');
+
+                $skip = true;
+                if ($what === 'server' && str_contains($when, 'apache') && str_starts_with($server, 'apache')) {
+                    $skip = false;
+                }
+                if ($what === 'server' && str_contains($when, 'nginx') && str_starts_with($server, 'nginx')) {
+                    $skip = false;
+                }
+                if ($what === 'server' && str_contains($when, 'litespeed') && str_starts_with($server, 'litespeed')) {
+                    $skip = false;
+                }
+                if ($skip) {
+                    continue;
+                }
+            }
+
             if (in_array($systemCheck['runLevel'], $runLevels, false)) {
                 $resultCombined = true;
                 $criticalError = false;
@@ -180,6 +218,13 @@ class systemChecker
         return $result;
     }
 
+    public function configFileExists(): bool
+    {
+        $this->checkWriteableAdminFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        $this->checkWriteableFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
+        return $this->getServerConfig()->fileExists();
+    }
+
     public function getServerConfig(): ?zcConfigureFileReader
     {
         if (!isset($this->serverConfig)) {
@@ -208,7 +253,7 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -435,16 +480,19 @@ class systemChecker
 
     public function checkPhpVersion($parameters): bool|int
     {
+        $this->log('Found ' . PHP_VERSION, __METHOD__, []);
         return version_compare((string)PHP_VERSION, (string)$parameters['version'], (string)$parameters['versionTest']);
     }
 
     public function checkHtaccessSupport($parameters): bool
     {
         if (!function_exists('curl_init')) { // can't test if this fails
+            $this->log('curl_init() not found. Aborting check.', __METHOD__, []);
             return true;
         }
 
         if (false !== stripos($_SERVER['SERVER_SOFTWARE'], "nginx")) { // not relevant if nginx
+            $this->log('Found Nginx. Aborting .htaccess check.', __METHOD__, []);
             return true;
         }
 
@@ -491,7 +539,6 @@ class systemChecker
         $err = curl_errno($ch);
         $errmsg = curl_error($ch);
         $header = curl_getinfo($ch);
-        curl_close($ch);
 
         if ($header === false) {
             $header = [];
@@ -527,7 +574,7 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -551,7 +598,7 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = @$db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if ((int)$db->error_number !== 2002) {
@@ -562,7 +609,7 @@ class systemChecker
 
     public function checkNewDBConnection($parameters): bool|queryFactoryResult
     {
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect(zcRegistry::getValue('db_host'), zcRegistry::getValue('db_user'), zcRegistry::getValue('db_password'), zcRegistry::getValue('db_name'));
         if (!$result) {
@@ -612,12 +659,8 @@ class systemChecker
         $commInfo = @curl_getinfo($ch);
 // error_log('CURL Connect: ' . $errnum . ' ' . $errtext . "\n" . print_r($commInfo, TRUE));
 // error_log('CURL Response: ' . $result);
-        curl_close($ch);
-        if ($errnum !== 0 || trim($result) !== 'PASS') {
-            return false;
-        }
 
-        return true;
+        return $errnum === 0 && trim($result) === 'PASS';
     }
 
     public function checkHttpsRequest($parameters): bool
@@ -661,7 +704,7 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -738,6 +781,9 @@ class systemChecker
         if (empty($lines)) {
             return true;
         }
+
+        // Abort check if incoming version doesn't make sense (could be an HTTP error message, or other server message.)
+        // @TODO - This will require updating when "Major" ZC version numbers are used in releases.
         if (!in_array(trim($lines[0]), ['1', '2', '3'])) {
             return true;
         }
@@ -795,7 +841,7 @@ class systemChecker
             $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
             $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
             $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
-            require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
             $db = new queryFactory();
             $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
             $db->selectdb($dbNameVal);
@@ -820,25 +866,29 @@ class systemChecker
     {
         if (!function_exists('mysqli_connect')) {
             // mysqli_connect not available don't fail test
+            $this->log('mysqli_connect not available. Aborting MySQL version check.', __METHOD__, []);
             return true;
         }
         $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
-        require_once(DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php');
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if ((int)$db->error_number === 2002) {
             // Cannot connect to database; don't fail check
+            $this->log('Error 2002, cannot connect to database; aborting MySQL version check.', __METHOD__, []);
             return true;
         }
         $version = $db->get_server_info();
         if ($version === 'UNKNOWN') {
             // versions not found don't fail check
+            $this->log('Version === UNKNOWN. Aborting version check.', __METHOD__, []);
             return true;
         }
 
+        $this->log('Found ' . $version, __METHOD__, []);
         if (strripos($version, '-MariaDB') === false) {
             // mysql database check version
             $checkVersion = $parameters['mysqlVersion'];
@@ -848,6 +898,6 @@ class systemChecker
             $version = substr($version, 0, strripos($version, '-MariaDB'));
             $checkVersion = $parameters['mariaDBVersion'];
         }
-        return version_compare($version, $checkVersion) >= 0;
+        return version_compare($version, $checkVersion, '>=');
     }
 }

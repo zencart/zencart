@@ -6,50 +6,80 @@
 
 namespace Tests\FeatureAdmin\AdminEndpoints;
 
-use Tests\Support\zcFeatureTestCaseAdmin;
+use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-class AdminTest extends zcFeatureTestCaseAdmin
+/**
+ * @group parallel-candidate
+ */
+class AdminSimpleLoginTest extends zcInProcessFeatureTestCaseAdmin
 {
+    protected $runTestInSeparateProcess = true;
+    protected $preserveGlobalState = false;
 
     public function testSimpleAdmin()
     {
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
-        $this->browser->submitForm('Submit', [
+        $this->visitAdminHome()
+            ->assertOk()
+            ->assertSee('Admin Login');
+
+        $response = $this->submitAdminLogin([
             'admin_name' => 'Admin',
             'admin_pass' => 'password',
-        ]);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Initial Setup Wizard', (string)$response->getContent() );
+        ])->assertOk();
+
+        $response->assertSee('Initial Setup Wizard');
     }
 
     public function testInitialLogin()
     {
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
-        $response = $this->browser->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->submitForm('Submit', [
+        $this->visitAdminHome()
+            ->assertOk()
+            ->assertSee('Admin Login');
+
+        $this->submitAdminLogin([
             'admin_name' => 'Admin',
             'admin_pass' => 'password',
-        ]);
-        $this->browser->submitForm('Update', [
+        ])->assertOk()
+            ->assertSee('Initial Setup Wizard');
+
+        $this->submitAdminSetupWizard([
             'store_name' => 'Zencart Store',
-        ]);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Initial Setup Wizard', (string)$response->getContent() );
-        $this->browser->submitForm('Update', [
+        ])->assertOk()
+            ->assertSee('Initial Setup Wizard');
+
+        $response = $this->submitAdminSetupWizard([
             'store_name' => 'Zencart Store',
             'store_owner' => 'Store Owner',
-        ]);
-        $response = $this->browser->getResponse();
-        $this->assertStringContainsString('Admin Home', (string)$response->getContent() );
+        ])->assertOk();
+
+        $response->assertSee('Admin Home');
+    }
+
+    public function testAdminLoginAcceptsHeaderOnlyCsrfToken(): void
+    {
+        $page = $this->visitAdminHome()
+            ->assertOk()
+            ->assertSee('Admin Login');
+
+        $formData = $page->formDefaults('loginForm');
+        $securityToken = $formData['securityToken'] ?? null;
+
+        $this->assertNotNull($securityToken);
+        unset($formData['securityToken']);
+
+        $response = $this->postAdmin(
+            $page->formAction('loginForm') ?? '/admin/index.php',
+            array_merge($formData, [
+                'admin_name' => 'Admin',
+                'admin_pass' => 'password',
+            ]),
+            ['HTTP_X_CSRF_TOKEN' => $securityToken]
+        );
+
+        $response = $response->isRedirect() ? $this->followAdminRedirect($response) : $response;
+        $response->assertOk();
+
+        $response->assertSee('Initial Setup Wizard');
     }
 
 }

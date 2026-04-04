@@ -4,10 +4,32 @@
 ### 		                  NGINX CONFIGURATION FOR ZEN CART
 ###
 ### NOTES: 
-###    - Copy and paste into Zen Cart handling ‘server’ section of nginx conf file
+###    - Copy and paste into Zen Cart handling 'server' section of your site's nginx .conf file
 ###    - Location Block order is important
-###    - Include before any other location blocks if any
+###    - Include before any other location blocks, if any.
 ###
+###    - The original version of this template file has 3 placeholders in it, which zc_install will normally replace for you during an install.
+###    - However, if you are manually applying this template after-the-fact and these placeholders are still present in the file, you will need to 
+###    - replace the following placeholders as shown:
+###    - %%store_folder%% - either replace it with blank if your store is NOT in a subdirectory, or use /store_dir (slash followed by dir to store's files)
+###    - %%admin_folder%% - either replace it with blank if your store is NOT in a subdirectory, or use /store_dir/admin_dir (slash followed by dir to store's admin dir)
+###    - %%slash_folder%% - either replace it with just a slash (/) if your store is NOT in a subdirectory, or use /store_dir/ (slash followed by dir to store's files followed by slash)
+###
+###    Quick Implementation:
+###    1. Find DIR_WS_HTTP_CATALOG value from your /includes/configure.php file.
+###       a) %%store_folder%%:
+###         If DIR_WS_HTTP_CATALOG is blank, %%store_folder%% is blank; else, %%store_folder%% = "/" followed by the value of DIR_WS_HTTP_CATALOG 
+###       
+###       b) %%slash_folder%%:
+###          If DIR_WS_HTTP_CATALOG is blank, %%slash_folder%% is "/" (without quotes); else, %%slash_folder%% = "/" followed by the value of DIR_WS_HTTP_CATALOG followed by "/" again.
+###       
+###    2. Find DIR_WS_ADMIN value from your /admin_dir/includes/configure.php file.
+###       %%admin_folder%%:
+###       %%admin_folder%% = %%store_folder%% (from 1a above) followed by "/", followed by the value of DIR_WS_ADMIN
+###       
+###
+###    Also:
+###    - 127.0.0.1:9000 - if PHP's FPM is running on a different port, set that port or socket accordingly.
 ###
 ####################################################################################################
 ####################################################################################################
@@ -62,7 +84,7 @@
 	# Zen Cart Root Folder
 	#############################################################################################	
 	## Allow all requests to specific PHP files directly under the Zen Cart ROOT folder
-	location ~ %%store_folder%%/(ajax|index|page_not_found|ipn_main_handler)\.php$ {
+	location ~ %%store_folder%%/(ajax|index|page_not_found|ipn_main_handler|ppr_listener|ppr_webhook)\.php$ {
 		error_page 418 = @zencart_php_handler;
 		return 418;
 	}
@@ -76,7 +98,7 @@
 	#############################################################################################	
 	## Allow all 'GET' and 'HEAD' requests to specific static file types in 'includes' and/or subfolders
 	location ~ %%store_folder%%/includes {
-		location ~ %%store_folder%%/includes.+\.(ico|jpe?g|gif|otf|webp|png|swf|flv|pdf|svg?z)$ {
+		location ~ %%store_folder%%/includes.+\.(ico|jpe?g|gif|eot|otf|woff2?|ttf|webp|png|swf|flv|pdf|svgz?)$ {
 			if ( $request_method !~ ^(GET|HEAD)$ ) { return 403; }
 			add_header Cache-Control 'max-age=864000, public, must-revalidate';
 			expires $zencart_expires;		
