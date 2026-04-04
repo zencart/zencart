@@ -41,8 +41,7 @@ if ($result->RecordCount()) {
     $counter = $result->fields['counter'];
     $raw_date = $result->fields['startdate'];
     // format: "Since Jan 2003"
-    $counter_start_date = substr($raw_date, 0, 4) . '-' . substr($raw_date, 4, 2) . '-01';
-    $counter_date = $zcDate->output($counter_start_date, 'M Y');
+    $counter_date = $zcDate->output(DATE_FORMAT_SHORT_NO_DAY, mktime(0, 0, 0, (int)substr($raw_date, 4, 2), (int)substr($raw_date, -2), (int)substr($raw_date, 0, 4)));
 }
 ?>
 
@@ -86,7 +85,7 @@ if ($result->RecordCount()) {
 
             <li class="list-group-item">
                 <span class="link-text"><?= BOX_TITLE_TOTAL_VISITS ?></span>
-                <small class="text-muted">Since <?= $counter_date ?></small>
+                <small class="text-muted"><?= sprintf(TEXT_SINCE_DATE, $counter_date) ?></small>
                 <div class="pull-right" style="margin-top: -15px;">
                      <span class="badge base-counter-badge">
                         <?= number_format($counter) ?>

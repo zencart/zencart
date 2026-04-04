@@ -636,6 +636,7 @@ $define = [
     'TEXT_SHOW_GV_QUEUE' => '%s waiting approval ',
     'TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_OFF' => 'Display Global Features - OFF',
     'TEXT_SHOW_OPTION_NAMES_VALUES_COPIER_ON' => 'Display Global Features - ON',
+    'TEXT_SINCE_DATE' => 'Since %s',
     'TEXT_SORT_CATEGORIES_NAME' => 'Categories Name',
     'TEXT_SORT_CATEGORIES_SORT_ORDER_CATEGORIES_NAME' => 'Categories Sort Order, Categories Name',
     'TEXT_SORT_ORDER' => 'Sort Order',

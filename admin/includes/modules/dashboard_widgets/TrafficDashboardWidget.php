@@ -30,10 +30,7 @@ $temp_data = [];
 foreach ($visits as $visit) {
     $raw_date = $visit['startdate'];
     // convert YYYYMMDD to a locale-aware admin date label
-    $formatted_date = $zcDate->output(
-        substr($raw_date, 0, 4) . '-' . substr($raw_date, 4, 2) . '-' . substr($raw_date, 6, 2),
-        DATE_FORMAT_SHORT
-    );
+    $formatted_date = $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, mktime(0, 0, 0, (int)substr($raw_date, 4, 2), (int)substr($raw_date, -2), substr($raw_date, 0, 4)));
 
     $temp_data[] = [
         'label' => $formatted_date,
