@@ -70,13 +70,16 @@ $(function () {
         };
 
         $('#zone-main li').each(function () {
-            layout.main.push($(this).data('id'));
+            var widgetId = $(this).data('id');
+            if (widgetId) layout.main.push(widgetId);
         });
         $('#zone-sidebar li').each(function () {
-            layout.sidebar.push($(this).data('id'));
+            var widgetId = $(this).data('id');
+            if (widgetId) layout.sidebar.push(widgetId);
         });
         $('#zone-bottom li').each(function () {
-            layout.bottom.push($(this).data('id'));
+            var widgetId = $(this).data('id');
+            if (widgetId) layout.bottom.push(widgetId);
         });
 
         // AJAX save

@@ -9,9 +9,12 @@
 $currencies ??= new currencies();
 
 // make sure Dashboard Layout Config exists
-if (!defined('DASHBOARD_WIDGETS_CONFIG')) {
-    $db->Execute("INSERT IGNORE INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Dashboard Layout Config', 'DASHBOARD_WIDGETS_CONFIG', '', 'JSON data for dashboard layout', 6, 0, NOW());");
+if (!$sniffer->field_exists(TABLE_ADMIN, 'dashboard_layout')) {
+    $db->Execute("ALTER TABLE " . TABLE_ADMIN ." ADD dashboard_layout TEXT NULL AFTER mfa");
 }
+
+// check database for saved layout
+$dashboard_layout = $db->Execute("SELECT dashboard_layout FROM " . TABLE_ADMIN . " WHERE admin_id = " .(int)$_SESSION['admin_id']);
 
 // pre-fetch key metrics for KPI cards
 // we keep these hardcoded as they are specific to the header design
@@ -43,9 +46,7 @@ $default_zones = [
     ],
 ];
 
-// check database for saved layout
-$saved_config = defined('DASHBOARD_WIDGETS_CONFIG') ? DASHBOARD_WIDGETS_CONFIG : '';
-$zones = json_decode($saved_config, true);
+$zones = json_decode($dashboard_layout->fields['dashboard_layout'] ?? '', true);
 
 // if DB config is empty or invalid, use default
 if (!is_array($zones) || empty($zones)) {

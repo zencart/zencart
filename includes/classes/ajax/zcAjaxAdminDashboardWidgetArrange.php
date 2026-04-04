@@ -46,6 +46,10 @@ class zcAjaxAdminDashboardWidgetArrange extends base
             if (isset($layout[$zone]) && is_array($layout[$zone])) {
                 $clean_layout[$zone] = [];
                 foreach ($layout[$zone] as $widget) {
+                    // extra precaution in case a ghost element somehow gets through
+                    if (!is_string($widget) || empty(trim($widget))) {
+                        continue;
+                    }
                     // sanitize: filenames should only contain alphanumeric, underscore, dot
                     $clean_widget = preg_replace('/[^a-zA-Z0-9_\.]/', '', $widget);
                     if (!empty($clean_widget)) {
@@ -59,13 +63,13 @@ class zcAjaxAdminDashboardWidgetArrange extends base
 
         $json_data = json_encode($clean_layout);
 
-if ($json_data === '{"main":[],"sidebar":[],"bottom":[]}') {
-    return $this->response('problem', 'layout not parsed.', true);
-}
+        if ($json_data === '{"main":[],"sidebar":[],"bottom":[]}') {
+            return $this->response('problem', 'layout not parsed.', true);
+        }
 
-        $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
-              SET configuration_value = '" . $db->prepare_input($json_data) . "'
-              WHERE configuration_key = 'DASHBOARD_WIDGETS_CONFIG'");
+        $db->Execute("UPDATE " . TABLE_ADMIN . "
+              SET dashboard_layout = '" . $db->prepare_input($json_data) . "'
+              WHERE admin_id = " . $_SESSION['admin_id']);
 
         return $this->response('success', 'Layout saved');
     }
