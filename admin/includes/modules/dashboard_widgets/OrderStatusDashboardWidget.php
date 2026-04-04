@@ -48,7 +48,7 @@ foreach ($results as $result) {
             <li class="list-group-item">
                 <a href="<?= zen_href_link(FILENAME_ORDERS, 'statusFilterSelect=' . $sID) ?>" style="<?= $textStyle ?>">
                     <i class="fa <?= $icon ?> text-muted"></i>
-                    <?= $status['text'] ?>
+                    <?= zen_output_string_protected($status['text']) ?>
                 </a>
                 <div class="pull-right">
                 <span class="label order-status-label <?= $badgeClass ?>">

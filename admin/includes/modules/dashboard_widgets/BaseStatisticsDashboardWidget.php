@@ -41,7 +41,8 @@ if ($result->RecordCount()) {
     $counter = $result->fields['counter'];
     $raw_date = $result->fields['startdate'];
     // format: "Since Jan 2003"
-    $counter_date = date('M Y', mktime(0,0,0, substr($raw_date, 4, 2), 1, substr($raw_date, 0, 4)));
+    $counter_start_date = substr($raw_date, 0, 4) . '-' . substr($raw_date, 4, 2) . '-01';
+    $counter_date = $zcDate->output($counter_start_date, 'M Y');
 }
 ?>
 

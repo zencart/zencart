@@ -120,7 +120,7 @@ if ($show_status_pills) {
                     ?>
                     <a href="<?= zen_href_link(FILENAME_ORDERS, 'statusFilterSelect=' . $sID) ?>">
                         <span class="label <?= $badgeClass ?>" style="<?= $inlineStyle . $opacity ?>">
-                            <?= $name ?>: <strong><?= $count ?></strong>
+                            <?= zen_output_string_protected($name) ?>: <strong><?= $count ?></strong>
                         </span>
                     </a>
                 <?php }
@@ -212,7 +212,7 @@ if ($show_status_pills) {
 
                     <td>
                         <span class="label <?= $lblClass ?>" style="<?= $inlineStyle ?>">
-                            <?= $statusName ?>
+                            <?= zen_output_string_protected($statusName) ?>
                         </span>
                     </td>
 

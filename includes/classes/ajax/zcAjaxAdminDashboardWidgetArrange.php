@@ -69,7 +69,7 @@ class zcAjaxAdminDashboardWidgetArrange extends base
 
         $db->Execute("UPDATE " . TABLE_ADMIN . "
               SET dashboard_layout = '" . $db->prepare_input($json_data) . "'
-              WHERE admin_id = " . $_SESSION['admin_id']);
+              WHERE admin_id = " . (int)$_SESSION['admin_id']);
 
         return $this->response('success', 'Layout saved');
     }

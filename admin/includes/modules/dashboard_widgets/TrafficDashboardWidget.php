@@ -29,8 +29,11 @@ $visits = $db->Execute($visits_query, (int)$maxRows, true, 1800);
 $temp_data = [];
 foreach ($visits as $visit) {
     $raw_date = $visit['startdate'];
-    // convert YYYYMMDD to "M j" (e.g., Jan 15)
-    $formatted_date = date('M j', mktime(0, 0, 0, substr($raw_date, 4, 2), substr($raw_date, 6, 2), substr($raw_date, 0, 4)));
+    // convert YYYYMMDD to a locale-aware admin date label
+    $formatted_date = $zcDate->output(
+        substr($raw_date, 0, 4) . '-' . substr($raw_date, 4, 2) . '-' . substr($raw_date, 6, 2),
+        DATE_FORMAT_SHORT
+    );
 
     $temp_data[] = [
         'label' => $formatted_date,

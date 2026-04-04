@@ -236,7 +236,7 @@ foreach ($upperMenuArray as $menuItem) {
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span class="user-avatar"></span>
-                            <?= zen_get_admin_name($_SESSION['admin_id']) ?>
+                            <?= zen_output_string_protected(zen_get_admin_name($_SESSION['admin_id'])) ?>
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
