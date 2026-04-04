@@ -27,7 +27,7 @@ for ($i = $days_to_show - 1; $i >= 0; $i--) {
     $orders_data[$date_key] = 0;
 
     // Label format is locale-aware via Zen Cart's date formatter
-    $labels[$date_key] = $zcDate->output(DATE_FORMAT_SHORT, $timestamp);
+    $labels[$date_key] = $zcDate->output(DATE_FORMAT_SHORT_NO_YEAR, $timestamp);
 }
 
 // SQL: get daily sales totals AND order counts
