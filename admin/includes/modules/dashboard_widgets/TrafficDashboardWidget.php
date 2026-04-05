@@ -6,9 +6,8 @@
  */
 
 // safety check
-if (defined('TABLE_COUNTER_HISTORY')) {
-    $stats_enabled = true;
-} else {
+global $sniffer;
+if (!defined('TABLE_COUNTER_HISTORY') || !$sniffer->table_exists(TABLE_COUNTER_HISTORY)) {
     return; // counter module not installed
 }
 
