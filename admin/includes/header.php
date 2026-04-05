@@ -30,8 +30,6 @@ if (!isset($zen_admin_html_head_loaded) && !isset($_SESSION['pages_needing_updat
     trigger_error(WARNING_PAGE_REQUIRES_UPDATE, E_USER_DEPRECATED);
 }
 
-$version_check_requested = (isset($_GET['vcheck']) && $_GET['vcheck'] != '') ? true : false;
-
 // Show Languages Dropdown for convenience only if main filename and directory exists
 $languages_array = [];
 $languages = zen_get_languages();
@@ -53,75 +51,6 @@ if (empty($action) && count($languages) > 1) {
         $messageStack->add('MISSING LANGUAGE FILES OR DIRECTORIES ...' . $missing_languages, 'caution');
     }
 }
-
-// version check setup
-$version_from_ini = '';
-$version_ini_sysinfo = '';
-$version_ini_index_sysinfo = '';
-if (!isset($version_check_sysinfo)) $version_check_sysinfo = false;
-if (!isset($version_check_index)) $version_check_index = false;
-
-$skip_file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
-if (file_exists($skip_file) && $lines = @file($skip_file)) {
-    foreach ($lines as $line) {
-        if (substr(trim($line), 0, 14) == 'version_check=') $version_from_ini = substr(trim(strtolower(str_replace('version_check=', '', $line))), 0, 3);
-    }
-}
-
-$doVersionCheck = false;
-$versionCheckError = false;
-$system_update_available = false;
-
-if ((SHOW_VERSION_UPDATE_IN_HEADER == 'true' && $version_from_ini != 'off' && ($version_check_sysinfo == true || $version_check_index == true) && $zv_db_patch_ok == true) || $version_check_requested == true) {
-    $doVersionCheck = true;
-    $versionServer = new VersionServer();
-    $newinfo = $versionServer->getProjectVersion();
-    $new_version = TEXT_VERSION_CHECK_CURRENT;
-
-    if (empty($newinfo) || isset($newinfo['error'])) {
-        $isCurrent = true;
-        $versionCheckError = true;
-    } else {
-        $isCurrent = $versionServer->isProjectCurrent($newinfo);
-    }
-
-    $hasPatches = 0;
-    if (!$isCurrent) {
-        $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' :: ' . $newinfo['versionDetail'];
-        $system_update_available = true;
-    }
-    if ($isCurrent) {
-        $hasPatches = $versionServer->hasProjectPatches($newinfo);
-    }
-    if ($isCurrent && $hasPatches && $new_version == TEXT_VERSION_CHECK_CURRENT) {
-        $new_version = '';
-    }
-    if ($isCurrent && $hasPatches != 2 && $hasPatches) {
-        $new_version .= (($new_version != '') ? '<br>' : '') . '<span class="text-danger"><strong>' . TEXT_VERSION_CHECK_NEW_PATCH . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($newinfo['versionPatch1']) . '] :: ' . $newinfo['versionPatchDetail'] . '</strong></span>';
-        $system_update_available = true;
-    }
-
-    if ($new_version != '' && $new_version != TEXT_VERSION_CHECK_CURRENT) {
-        $new_version .= '<br><br><a href="' . $newinfo['versionDownloadURI'] . '" rel="noopener" target="_blank" class="btn btn-success btn-sm btn-block"><i class="fa fa-download"></i> ' . TEXT_VERSION_CHECK_DOWNLOAD . '</a>';
-    } elseif ($new_version == TEXT_VERSION_CHECK_CURRENT) {
-        $new_version = '<div class="text-center text-success"><i class="fa fa-check-circle fa-2x"></i><br>' . HEADER_TITLE_VERSION_SYSTEM_CHECK . '</div>';
-    }
-}
-
-if (!$doVersionCheck || $versionCheckError) {
-    $new_version = '';
-    if ($versionCheckError) {
-        $new_version = '<div class="text-danger">' . ERROR_CONTACTING_PROJECT_VERSION_SERVER . '</div><br>';
-    }
-    $url = zen_href_link(basename($PHP_SELF), zen_get_all_get_params(array('vcheck')), 'SSL');
-    $url .= (strpos($url, '?') !== false ? '&amp;' : '?') . 'vcheck=yes';
-
-    if ($zv_db_patch_ok == true || $version_check_sysinfo == true) {
-        $new_version .= '<a href="' . $url . '" role="button" class="btn btn-primary btn-sm btn-block"><i class="fa fa-refresh"></i> ' . TEXT_VERSION_CHECK_BUTTON . '</a>';
-    }
-}
-
-$current_ver_str = 'v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '');
 
 // gv queue check
 if (defined('MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN') && MODULE_ORDER_TOTAL_GV_SHOW_QUEUE_IN_ADMIN == 'true') {
@@ -200,8 +129,8 @@ foreach ($upperMenuArray as $menuItem) {
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="<?= HEADER_TITLE_VERSION ?>">
-                            <i class="fa fa-server <?= ($system_update_available ? 'text-danger' : '') ?>"></i> <span class="visible-xs-inline"> <?= HEADER_TITLE_VERSION ?></span>
-                            <?php if ($system_update_available) { ?> <span class="badge-notify"></span> <?php } ?>
+                            <i id="versionCheckPill" class="fa fa-server"></i> <span class="visible-xs-inline"> <?= HEADER_TITLE_VERSION ?></span>
+                            <span id="versionCheckNotifyBadge" class="badge-notify" style="display:none"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li>
@@ -209,12 +138,10 @@ foreach ($upperMenuArray as $menuItem) {
                                     <h5>
                                         <?= HEADER_TITLE_VERSION_SYSTEM_CHECK ?>
                                     </h5>
-                                    <div>
-                                        <?= $new_version ?>
-                                    </div>
+                                    <div id="versionCheckAlert"></div>
                                 </div>
-                                <div class="version-dropdown-footer">
-                                    <?= TEXT_CURRENT_VER_IS . ' ' . $current_ver_str ?>
+                                <div class="version-dropdown-footer" id="versionCheckFooter">
+                                    <?= TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') ?>
                                 </div>
                             </li>
                         </ul>
@@ -301,7 +228,7 @@ foreach ($upperMenuArray as $menuItem) {
         <?php } ?>
     </div>
 
-<?php if(!empty($messageStack->output())) { ?>
+<?php if(!empty($messageStack->size)) { ?>
     <div class="container-fluid mb-3">
         <?= $messageStack->output() ?>
     </div>
