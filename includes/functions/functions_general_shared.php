@@ -122,6 +122,8 @@ function issetorArray(array $array, $key, $default = null)
  *
  * If both the request header and POST field are present but don't match, `null` is returned
  * so callers fail closed rather than silently choosing one source.
+ *
+ * @since ZC v3.0.0
  */
 function zen_get_csrf_token_from_request(): ?string
 {
@@ -144,6 +146,8 @@ function zen_get_csrf_token_from_request(): ?string
 
 /**
  * Validates the current request's CSRF token against the session token.
+ *
+ * @since ZC v3.0.0
  */
 function zen_request_has_valid_csrf_token(): bool
 {
