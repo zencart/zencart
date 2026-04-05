@@ -63,7 +63,7 @@ class zcAjaxAdminDashboardWidgetArrange extends base
 
         $json_data = json_encode($clean_layout);
 
-        if ($json_data === json_encode($allowed_zones)) {
+        if ($json_data === false || $json_data === json_encode($allowed_zones)) {
             return $this->response('problem', 'layout not parsed.', true);
         }
 
