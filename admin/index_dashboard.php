@@ -20,10 +20,10 @@ $dashboard_layout = $db->Execute("SELECT dashboard_layout FROM " . TABLE_ADMIN .
 
 // pre-fetch key metrics for KPI cards
 // we keep these hardcoded as they are specific to the header design
-$orders_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_ORDERS . " WHERE date_purchased > CURDATE()");
-$revenue_today = $db->Execute("SELECT SUM(value) AS total FROM " . TABLE_ORDERS_TOTAL . " ot LEFT JOIN " . TABLE_ORDERS . " o ON o.orders_id = ot.orders_id where o.date_purchased > CURDATE() AND ot.class = 'ot_total'");
-$customers_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_date_account_created > CURDATE()");
-$reviews_pending = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_REVIEWS . " WHERE status = 0");
+$orders_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_ORDERS . " WHERE date_purchased > CURDATE()", null, true, 1800);
+$revenue_today = $db->Execute("SELECT SUM(value) AS total FROM " . TABLE_ORDERS_TOTAL . " ot LEFT JOIN " . TABLE_ORDERS . " o ON o.orders_id = ot.orders_id where o.date_purchased > CURDATE() AND ot.class = 'ot_total'", null, true, 1800);
+$customers_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_date_account_created > CURDATE()", null, true, 1800);
+$reviews_pending = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_REVIEWS . " WHERE status = 0", null, true, 1800);
 
 // zone definitions
 // each zone is an array of widget file paths to include
