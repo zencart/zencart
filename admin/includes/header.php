@@ -107,12 +107,13 @@ foreach ($upperMenuArray as $menuItem) {
                     <i class="fa fa-ellipsis-v"></i>
                 </button>
                 <?php if (defined('HEADER_LOGO_IMAGE') && HEADER_LOGO_IMAGE !== '') { ?>
-                    <a class="navbar-brand" href="<?= zen_href_link(FILENAME_DEFAULT) ?>" style="padding: 5px 15px;">
-                        <?= zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="img-responsive" style="max-height: 40px;"') ?>
+                    <a class="navbar-brand" href="<?= zen_href_link(FILENAME_DEFAULT) ?>" style="padding: 10px;">
+                        <?= zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="img-responsive object-fit-contain" style="max-height: 40px;"') ?>
                     </a>
                 <?php } else { ?>
                     <a class="navbar-brand" href="<?= zen_href_link(FILENAME_DEFAULT) ?>">
-                        <i class="fa fa-home"></i> <?= STORE_NAME ?> <small class="text-muted"><?= HEADER_TEXT_ADMIN ?></small>
+                        <i class="fa fa-home"></i> <?= STORE_NAME ?>
+                        <small class="text-muted"><?= HEADER_TEXT_ADMIN ?></small>
                     </a>
                 <?php } ?>
             </div>
