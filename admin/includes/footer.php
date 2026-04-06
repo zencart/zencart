@@ -30,7 +30,7 @@ $zco_notifier->notify('NOTIFY_ADMIN_FOOTER_END');
 <?php
 // Check for new version, and send output to placeholder in admin header
 require DIR_WS_INCLUDES . 'versioncheck.php';
-if ($new_version) { ?>
+if (!empty($new_version)) { ?>
 <script>
     jQuery(function($){
       let newVersion = <?php echo json_encode($new_version); ?>;
@@ -40,8 +40,10 @@ if ($new_version) { ?>
       if ($target1.length) {
         $target1.html(newVersion);
       }
-      $('#versionCheckPill').addClass('text-danger');
-      $('#versionCheckNotifyBadge').toggle();
+      if (newVersion !== <?php echo json_encode(TEXT_VERSION_CHECK_CURRENT); ?>) {
+          $('#versionCheckPill').addClass('text-danger');
+          $('#versionCheckNotifyBadge').toggle();
+      }
       let $target2 = $('#versionCheckFooter');
       if ($target2.length) {
         $target2.html(versionInfo);
