@@ -3,7 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: Nick Fenwick 2023 Jul 03 Modified in v2.0.0-alpha1 $
+ * @version $Id: ZenExpert 2026-04-06 Modified in v2.2.2 $
  */
 // reset-token is good for only 24 hours:
 define('ADMIN_PWD_TOKEN_DURATION', (24 * 60 * 60));
@@ -106,54 +106,61 @@ $has_duplicate_admin_emails = ($result->RecordCount() > 0);
     <meta name="robots" content="noindex, nofollow">
   </head>
   <body id="login">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-offset-1 col-md-offset-3 col-lg-offset-4 col-xs-12 col-sm-10 col-md-6 col-lg-4 text-center">
-          <div class="login-main-div login-box-shadow">
-            <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="login-img"') . PHP_EOL; ?>
-            <?php echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, '', 'post', 'id="loginForm" class="form-horizontal"', 'true') . PHP_EOL; ?>
-            <h2><?php echo HEADING_TITLE; ?></h2>
-            <?php if ($resetToken == '') { ?>
-              <div class="form-group">
-                <div class="input-group">
-                  <span class="input-group-addon">
-                    <i class="fa-solid fa-lg fa-at"></i>
-                  </span>
-                  <?php echo zen_draw_input_field('admin_email', '', 'class="form-control input-lg" id="admin_email" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus required placeholder="' . TEXT_ADMIN_EMAIL . '" aria-label="' . TEXT_ADMIN_EMAIL . '"', false, 'email') . PHP_EOL; ?>
-                </div>
-              </div>
-                <?php if ($has_duplicate_admin_emails) { ?>
-              <div class="form-group">
-                <div class="input-group">
-                  <span class="input-group-addon">
-                    <i class="fa-solid fa-lg fa-user"></i>
-                  </span>
-                  <?php echo zen_draw_input_field('admin_username', '', 'class="form-control input-lg" id="admin_username" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_USERNAME . '" aria-label="' . TEXT_ADMIN_USERNAME . '"', false, 'text') . PHP_EOL; ?>
-                </div>
-              </div>
-                <?php } ?>
-              <?php echo zen_draw_hidden_field('action', 'update') . PHP_EOL; ?>
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-lg"><?php echo TEXT_BUTTON_REQUEST_RESET; ?></button>
-              </div>
-              <div class="form-group">
-                <a href="<?php echo zen_href_link(FILENAME_LOGIN); ?>" class="btn btn-default btn-lg" role="button"><?php echo TEXT_BUTTON_CANCEL; ?></a>
-              </div>
-            <?php } else { ?>
-              <?php echo zen_draw_hidden_field('action', 'login') . PHP_EOL; ?>
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-lg"><?php echo TEXT_BUTTON_LOGIN; ?></button>
-              </div>
-            <?php } ?>
-            <br class="clearBoth">
-            <?php if ($email_message) { ?>
-              <p class="login-alert-warning alert alert-warning"><?php echo $email_message; ?></p>
-            <?php } ?>
-            <?php echo '</form>' . PHP_EOL; ?>
-          </div>
-        </div>
+
+  <div class="login-card">
+      <div class="login-brand">
+          <?php if (defined('HEADER_LOGO_IMAGE') && HEADER_LOGO_IMAGE !== '') { ?>
+              <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, '', '', 'class="img-responsive"') . PHP_EOL; ?>
+          <?php } else { ?>
+              <i class="fa fa-home text-primary"></i> <?php echo STORE_NAME; ?>
+          <?php } ?>
       </div>
-    </div>
+
+      <?php echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, '', 'post', 'id="loginForm"', 'true') . PHP_EOL; ?>
+
+      <h2><?php echo HEADING_TITLE; ?></h2>
+
+      <?php if ($email_message) { ?>
+          <p class="login-alert-warning alert text-center"><?php echo $email_message; ?></p>
+      <?php } ?>
+
+      <?php if ($resetToken == '') { ?>
+          <div class="form-group">
+              <div class="input-group">
+                  <span class="input-group-addon"><i class="fa-solid fa-at"></i></span>
+                  <?php echo zen_draw_input_field('admin_email', '', 'class="form-control input-lg" id="admin_email" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus required placeholder="' . TEXT_ADMIN_EMAIL . '" aria-label="' . TEXT_ADMIN_EMAIL . '"', false, 'email') . PHP_EOL; ?>
+              </div>
+          </div>
+
+          <?php if ($has_duplicate_admin_emails) { ?>
+              <div class="form-group">
+                  <div class="input-group">
+                      <span class="input-group-addon"><i class="fa-solid fa-user"></i></span>
+                      <?php echo zen_draw_input_field('admin_username', '', 'class="form-control input-lg" id="admin_username" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_USERNAME . '" aria-label="' . TEXT_ADMIN_USERNAME . '"', false, 'text') . PHP_EOL; ?>
+                  </div>
+              </div>
+          <?php } ?>
+
+          <?php echo zen_draw_hidden_field('action', 'update') . PHP_EOL; ?>
+
+          <div class="form-group" style="margin-top: 25px;">
+              <button type="submit" class="btn btn-primary btn-lg btn-block"><?php echo TEXT_BUTTON_REQUEST_RESET; ?></button>
+          </div>
+
+          <div class="text-center">
+              <a href="<?php echo zen_href_link(FILENAME_LOGIN); ?>" class="login-forgot-link"><?php echo TEXT_BUTTON_CANCEL; ?></a>
+          </div>
+
+      <?php } else { ?>
+          <?php echo zen_draw_hidden_field('action', 'login') . PHP_EOL; ?>
+          <div class="form-group" style="margin-top: 25px;">
+              <button type="submit" class="btn btn-primary btn-lg btn-block"><?php echo TEXT_BUTTON_LOGIN; ?></button>
+          </div>
+      <?php } ?>
+
+      <?php echo '</form>' . PHP_EOL; ?>
+  </div>
+
   </body>
 </html>
 
