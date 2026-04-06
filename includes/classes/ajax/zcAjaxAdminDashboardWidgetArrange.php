@@ -51,11 +51,16 @@ class zcAjaxAdminDashboardWidgetArrange extends base
                     if (!is_string($widget) || empty(trim($widget))) {
                         continue;
                     }
-                    // sanitize: filenames should only contain alphanumeric, underscore, dot
-                    $clean_widget = preg_replace('/[^a-zA-Z0-9_\.]/', '', $widget);
-                    if (!empty($clean_widget)) {
-                        $clean_layout[$zone][] = $clean_widget;
+                    // sanitize: filenames should only contain alphanumeric, underscore, dot, hyphen
+                    $clean_widget = preg_replace('/[^a-zA-Z0-9_.-]/', '', $widget);
+                    if (empty($clean_widget)) {
+                        continue;
                     }
+                    // require a .php extension (case-insensitive)
+                    if (!str_ends_with(strtolower($clean_widget), '.php')) {
+                        continue;
+                    }
+                    $clean_layout[$zone][] = $clean_widget;
                 }
             } else {
                 $clean_layout[$zone] = [];
