@@ -221,12 +221,6 @@ foreach ($upperMenuArray as $menuItem) {
 <?php require(DIR_WS_INCLUDES . 'header_navigation.php') ?>
 
     <div class="container-fluid admin-alerts-wrapper noprint">
-        <div class="visible-xs-block mb-3">
-            <a class="btn btn-primary btn-block" role="button" href="<?= zen_href_link(FILENAME_ORDERS) ?>">
-                <i class="fa fa-users"></i> <?= BOX_CUSTOMERS_ORDERS ?>
-            </a>
-        </div>
-
         <?php if (isset($_SESSION['reset_admin_activity_log']) && ($_SESSION['reset_admin_activity_log'] == true && (basename($PHP_SELF) == FILENAME_DEFAULT . '.php'))) { ?>
             <div class="alert alert-danger text-center mb-3">
                 <strong><?= HEADER_TEXT_SECURITY_WARNING ?></strong><br>

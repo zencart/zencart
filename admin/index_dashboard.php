@@ -181,46 +181,50 @@ foreach ($widgets as $widget) {
     <div class="row">
         <div class="col-xs-6 col-lg-3">
             <div class="kpi-card bg-aqua">
-                <div class="inner">
-                    <h3><?php echo $orders_today->fields['count']; ?></h3>
-                    <p><?php echo BOX_KPI_ORDERS_TODAY; ?></p>
-                </div>
-                <div class="icon"><i class="fa fa-shopping-cart"></i></div>
-                <a href="<?php echo zen_href_link(FILENAME_ORDERS); ?>"
-                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="<?php echo zen_href_link(FILENAME_ORDERS); ?>">
+                    <div class="inner">
+                        <h3><?php echo $orders_today->fields['count']; ?></h3>
+                        <p><?php echo BOX_KPI_ORDERS_TODAY; ?></p>
+                    </div>
+                    <div class="icon"><i class="fa fa-shopping-cart"></i></div>
+                    <div class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></div>
+                </a>
             </div>
         </div>
         <div class="col-xs-6 col-lg-3">
             <div class="kpi-card bg-green">
-                <div class="inner">
-                    <h3><?php echo $currencies->format($revenue_today->fields['total']); ?></h3>
-                    <p><?php echo BOX_KPI_REVENUE_TODAY; ?></p>
-                </div>
-                <div class="icon"><i class="fa fa-dollar"></i></div>
-                <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS); ?>"
-                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="<?php echo zen_href_link(FILENAME_STATS_SALES_REPORT_GRAPHS); ?>">
+                    <div class="inner">
+                        <h3><?php echo $currencies->format($revenue_today->fields['total']); ?></h3>
+                        <p><?php echo BOX_KPI_REVENUE_TODAY; ?></p>
+                    </div>
+                    <div class="icon"><i class="fa fa-dollar"></i></div>
+                    <div class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></div>
+                </a>
             </div>
         </div>
         <div class="col-xs-6 col-lg-3">
             <div class="kpi-card bg-yellow">
-                <div class="inner">
-                    <h3><?php echo $customers_today->fields['count']; ?></h3>
-                    <p><?php echo BOX_KPI_CUSTOMERS_TODAY; ?></p>
-                </div>
-                <div class="icon"><i class="fa fa-user-plus"></i></div>
-                <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS); ?>"
-                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="<?php echo zen_href_link(FILENAME_CUSTOMERS); ?>">
+                    <div class="inner">
+                        <h3><?php echo $customers_today->fields['count']; ?></h3>
+                        <p><?php echo BOX_KPI_CUSTOMERS_TODAY; ?></p>
+                    </div>
+                    <div class="icon"><i class="fa fa-user-plus"></i></div>
+                   <div class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></div>
+                </a>
             </div>
         </div>
         <div class="col-xs-6 col-lg-3">
             <div class="kpi-card bg-red">
-                <div class="inner">
-                    <h3><?php echo $reviews_pending->fields['count']; ?></h3>
-                    <p><?php echo BOX_KPI_REVIEWS_PENDING; ?></p>
-                </div>
-                <div class="icon"><i class="fa fa-comments"></i></div>
-                <a href="<?php echo zen_href_link(FILENAME_REVIEWS, 'status=1'); ?>"
-                   class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="<?php echo zen_href_link(FILENAME_REVIEWS, 'status=1'); ?>">
+                    <div class="inner">
+                        <h3><?php echo $reviews_pending->fields['count']; ?></h3>
+                        <p><?php echo BOX_KPI_REVIEWS_PENDING; ?></p>
+                    </div>
+                    <div class="icon"><i class="fa fa-comments"></i></div>
+                    <div class="kpi-card-footer"><?php echo BOX_KPI_MORE_INFO; ?> <i class="fa fa-arrow-circle-right"></i></div>
+                </a>
             </div>
         </div>
     </div>

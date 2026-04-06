@@ -122,6 +122,11 @@
     color: rgba(0, 0, 0, 0.15);
 }
 
+.kpi-card a {
+    color: #fff;
+    text-decoration: none;
+}
+
 .kpi-card-footer {
     display: block;
     padding: 6px 0;
