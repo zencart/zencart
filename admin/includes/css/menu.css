@@ -240,3 +240,15 @@ li.header-info-menu {
     padding: 5px 20px;
     background-color: #fcfcfc;
 }
+.navbar-nav li .fa-gift {
+    color: #5bc0de;
+    font-size: 18px;
+}
+.navbar-nav li .badge {
+    background-color: #d9534f;
+    position: absolute;
+    top: 8px;
+    right: 5px;
+    font-size: 10px;
+    padding: 3px 6px;
+}

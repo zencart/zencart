@@ -105,9 +105,15 @@ foreach ($upperMenuArray as $menuItem) {
                     <span class="sr-only"><?= HEADER_TOGGLE_NAVIGATION ?></span>
                     <i class="fa fa-ellipsis-v"></i>
                 </button>
-                <a class="navbar-brand" href="<?= zen_href_link(FILENAME_DEFAULT) ?>">
-                    <i class="fa fa-home"></i> <?= STORE_NAME ?> <small class="text-muted"><?= HEADER_TEXT_ADMIN ?></small>
-                </a>
+                <?php if (defined('HEADER_LOGO_IMAGE') && HEADER_LOGO_IMAGE !== '') { ?>
+                    <a class="navbar-brand" href="<?= zen_href_link(FILENAME_DEFAULT) ?>" style="padding: 5px 15px;">
+                        <?= zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, HEADER_LOGO_WIDTH, HEADER_LOGO_HEIGHT, 'class="img-responsive" style="max-height: 40px;"') ?>
+                    </a>
+                <?php } else { ?>
+                    <a class="navbar-brand" href="<?= zen_href_link(FILENAME_DEFAULT) ?>">
+                        <i class="fa fa-home"></i> <?= STORE_NAME ?> <small class="text-muted"><?= HEADER_TEXT_ADMIN ?></small>
+                    </a>
+                <?php } ?>
             </div>
 
             <div class="collapse navbar-collapse" id="top-bar-collapse">
@@ -121,6 +127,15 @@ foreach ($upperMenuArray as $menuItem) {
                 ?>
 
                 <ul class="nav navbar-nav navbar-right">
+                    <?php if (!empty($new_gv_queue_cnt)) { ?>
+                        <li>
+                            <a href="<?= zen_href_link(FILENAME_GV_QUEUE) ?>" title="<?= strip_tags(IMAGE_GIFT_QUEUE) ?>">
+                                <i class="fa fa-gift"></i>
+                                <span class="badge"><?= $new_gv_queue_cnt ?></span>
+                            </a>
+                        </li>
+                    <?php } ?>
+
                     <li>
                         <a href="<?= zen_catalog_href_link(FILENAME_DEFAULT) ?>" target="_blank" title="<?= HEADER_TITLE_ONLINE_CATALOG ?>">
                             <i class="fa fa-external-link"></i> <span class="visible-xs-inline"> <?= HEADER_TITLE_ONLINE_CATALOG ?></span>
@@ -219,13 +234,6 @@ foreach ($upperMenuArray as $menuItem) {
             </div>
         <?php } ?>
 
-        <?php if (!empty($new_gv_queue_cnt)) { ?>
-            <div class="alert alert-info text-center mb-3">
-                <strong><?= IMAGE_GIFT_QUEUE ?></strong><br>
-                <?= sprintf(TEXT_SHOW_GV_QUEUE, $new_gv_queue_cnt) ?><br>
-                <?= $goto_gv ?>
-            </div>
-        <?php } ?>
     </div>
 
 <?php if(!empty($messageStack->size)) { ?>
