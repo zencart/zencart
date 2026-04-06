@@ -58,6 +58,16 @@ class Installer
     }
 
     /**
+     * @param string $pluginDir
+     * @return array
+     * @since ZC v3.0.0
+     */
+    public function executePreInstallers(string $pluginDir): array
+    {
+        return $this->executeScriptedPreInstaller($pluginDir);
+    }
+
+    /**
      * @since ZC v1.5.7
      */
     public function executeUninstallers($pluginDir): void
@@ -70,11 +80,83 @@ class Installer
     }
 
     /**
+     * @param string $pluginDir
+     * @return array
+     * @since ZC v3.0.0
+     */
+    public function executePreUninstallers(string $pluginDir): array
+    {
+        return $this->executeScriptedPreUninstaller($pluginDir);
+    }
+
+    /**
      * @since ZC v1.5.8
      */
     public function executeUpgraders($pluginDir, $oldVersion): void
     {
         $this->executeScriptedUpgrader($pluginDir, $oldVersion);
+    }
+
+    /**
+     * @param string $pluginDir
+     * @param string $oldVersion
+     * @return array
+     * @since ZC v3.0.0
+     */
+    public function executePreUpgraders(string $pluginDir, string $oldVersion): array
+    {
+        return $this->executeScriptedPreUpgrader($pluginDir, $oldVersion);
+    }
+
+    /**
+     * @param string $pluginDir
+     * @param string $oldVersion
+     * @return array
+     * @since ZC v3.0.0
+     */
+    public function executePreConfirmUpgraders(string $pluginDir, string $oldVersion): array
+    {
+        return $this->executeScriptedPreConfirmUpgrader($pluginDir, $oldVersion);
+    }
+
+    /**
+     * @param string $pluginDir
+     * @return array
+     * @since ZC v3.0.0
+     */
+    public function executePreDisablers(string $pluginDir): array
+    {
+        return $this->executeScriptedPreDisabler($pluginDir);
+    }
+
+    /**
+     * @param string $pluginDir
+     * @return void
+     * @since ZC v3.0.0
+     */
+    public function executeDisablers(string $pluginDir): void
+    {
+        $this->executeScriptedDisabler($pluginDir);
+    }
+
+    /**
+     * @param string $pluginDir
+     * @return array
+     * @since ZC v3.0.0
+     */
+    public function executePreEnablers(string $pluginDir): array
+    {
+        return $this->executeScriptedPreEnabler($pluginDir);
+    }
+
+    /**
+     * @param string $pluginDir
+     * @return void
+     * @since ZC v3.0.0
+     */
+    public function executeEnablers(string $pluginDir): void
+    {
+        $this->executeScriptedEnabler($pluginDir);
     }
 
     /**
@@ -125,6 +207,19 @@ class Installer
     }
 
     /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreInstaller(string $pluginDir): array
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return [];
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        return $scriptedInstaller->doPreInstall();
+    }
+
+    /**
      * @since ZC v1.5.7
      */
     protected function executeScriptedUninstaller($pluginDir): void
@@ -138,6 +233,19 @@ class Installer
     }
 
     /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreUninstaller(string $pluginDir): array
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return [];
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        return $scriptedInstaller->doPreUninstall();
+    }
+
+    /**
      * @since ZC v1.5.8
      */
     protected function executeScriptedUpgrader($pluginDir, $oldVersion): void
@@ -148,6 +256,84 @@ class Installer
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
         $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doUpgrade($oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreUpgrader(string $pluginDir, string $oldVersion): array
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return [];
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        return $scriptedInstaller->doPreUpgrade($oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreConfirmUpgrader(string $pluginDir, string $oldVersion): array
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return [];
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        return $scriptedInstaller->doPreUpgrade($oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedDisabler(string $pluginDir): void
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return;
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        $scriptedInstaller->doDisable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreDisabler(string $pluginDir): array
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return [];
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        return $scriptedInstaller->doPreDisable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedEnabler(string $pluginDir): void
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return;
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        $scriptedInstaller->doEnable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreEnabler(string $pluginDir): array
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return [];
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        return $scriptedInstaller->doPreEnable();
     }
 
     /**
