@@ -104,7 +104,7 @@ if ($show_status_pills) {
                     if (!empty($customColor)) {
                         // custom color badge
                         $badgeClass  = 'label';
-                        $inlineStyle = 'background-color: ' . $customColor . '; border-color: ' . $customColor . '; color: #fff;';
+                        $inlineStyle = 'background-color: ' . zen_output_string_protected($customColor) . '; border-color: ' . zen_output_string_protected($customColor) . '; color: #fff;';
                     } else {
                         // fallback Bootstrap colors
                         switch ($sID) {
@@ -195,7 +195,7 @@ if ($show_status_pills) {
 
                     if (!empty($customColor)) {
                         $lblClass = 'label';
-                        $inlineStyle = 'background-color: ' . $customColor . '; color: #fff;';
+                        $inlineStyle = 'background-color: ' . zen_output_string_protected($customColor) . '; color: #fff;';
                     } else {
                         switch ($statusId) {
                             case 1: $lblClass = 'label-warning'; break;

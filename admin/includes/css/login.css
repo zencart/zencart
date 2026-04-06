@@ -2,69 +2,95 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
- * @version $Id: Zen4All 2020 Jul 02 Modified in v1.5.8-alpha $
+ * @version $Id: ZenExpert 2026-04-06 Modified in v2.2.2 $
  */
 
-body {
-  background-color: #feffef;
-  padding : 0;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #333;
+body#login {
+    background-color: #f4f6f9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 20px;
 }
-
-h2 {
-  border-bottom: 1px solid #e3e3e3;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-size: 30px;
+.login-card {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 420px;
 }
-
-a {
-  color: #777777;
+.login-brand {
+    display: block;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 24px;
+    color: #333;
+    text-decoration: none;
 }
-
-a:hover {
-  color: #0056b3;
+.login-brand:hover {
+    text-decoration: none;
 }
-
-.login-main-div {
-  background: #ffffff none repeat scroll 0 0;
-  border-radius: 2px;
-  margin-top: 15px;
-  padding: 50px 70px 70px 71px;
+.login-brand img {
+    max-width: 100%;
+    max-height: 60px;
+    margin: 0 auto;
 }
-
-.login-box-shadow {
-  -webkit-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-  -moz-box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
-  box-shadow: 4px 10px 41px 0px rgba(161, 161, 161, 0.75);
+.login-card h2 {
+    font-size: 16px;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #444;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-
+.input-group-addon {
+    background-color: #f0f2f5;
+    color: #555;
+    border-right: none;
+    border-color: #ccc;
+}
+.form-control.input-lg {
+    border-left: none;
+    border-color: #ccc;
+    box-shadow: none;
+    font-size: 16px;
+    color: #333;
+}
+.form-control.input-lg:focus {
+    box-shadow: none;
+    border-color: #adb5bd;
+}
+.form-group {
+    margin-bottom: 20px;
+}
 .login-alert-warning {
-  background: #ffc107;
-  border: 1px solid #ccc;
-  color: #333;
+    border-radius: 6px;
+    font-size: 15px;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
 }
-
-.row {
-    margin-right: -15px;
-    margin-left: -15px;
+.login-forgot-link {
+    display: inline-block;
+    margin-top: 20px;
+    font-size: 15px;
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: 500;
 }
-
-@media screen and (max-width: 63.999rem) {
-  .login-main-div {
-    padding: 25px 35px 35px 35px;
-  }
+.login-forgot-link:hover {
+    color: #004085;
+    text-decoration: underline;
 }
-@media screen and (max-width: 47.999rem) {
-  .login-main-div {
-    padding: 25px 35px 35px 35px;
-  }
-}
-@media screen and (max-width: 29.999rem) {
-  .login-main-div {
-    padding: 15px 25px 25px 25px;
-  }
+#loginExpiryPolicy {
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+    line-height: 1.4;
 }

@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version Modern Dynamic Dashboard 2026
- * @author ZenExpert - https://zenexpert.com
+ * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
+ *
+ * Developer note: This page's URL is "index", but is really the admin home/dashboard page. It loads CSS/JS based on page name of "index" which intentionally breaks pattern of filename matching just for this page.
+ * @var notifier $zco_notifier
  */
 
 $currencies ??= new currencies();
@@ -18,10 +20,10 @@ $dashboard_layout = $db->Execute("SELECT dashboard_layout FROM " . TABLE_ADMIN .
 
 // pre-fetch key metrics for KPI cards
 // we keep these hardcoded as they are specific to the header design
-$orders_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_ORDERS . " WHERE date_purchased > CURDATE()");
-$revenue_today = $db->Execute("SELECT SUM(value) AS total FROM " . TABLE_ORDERS_TOTAL . " ot LEFT JOIN " . TABLE_ORDERS . " o ON o.orders_id = ot.orders_id where o.date_purchased > CURDATE() AND ot.class = 'ot_total'");
-$customers_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_date_account_created > CURDATE()");
-$reviews_pending = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_REVIEWS . " WHERE status = 0");
+$orders_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_ORDERS . " WHERE date_purchased > CURDATE()", null, true, 1800);
+$revenue_today = $db->Execute("SELECT SUM(value) AS total FROM " . TABLE_ORDERS_TOTAL . " ot LEFT JOIN " . TABLE_ORDERS . " o ON o.orders_id = ot.orders_id where o.date_purchased > CURDATE() AND ot.class = 'ot_total'", null, true, 1800);
+$customers_today = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_CUSTOMERS_INFO . " WHERE customers_info_date_account_created > CURDATE()", null, true, 1800);
+$reviews_pending = $db->Execute("SELECT COUNT(*) AS count FROM " . TABLE_REVIEWS . " WHERE status = 0", null, true, 1800);
 
 // zone definitions
 // each zone is an array of widget file paths to include
