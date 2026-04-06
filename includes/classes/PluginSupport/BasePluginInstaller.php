@@ -115,21 +115,6 @@ class BasePluginInstaller
      * @return array
      * @since ZC v3.0.0
      */
-    public function processPreUpgrade(string $pluginKey, string $version): array
-    {
-        if (empty($pluginKey) || empty($version)) {
-            return [];
-        }
-        $this->processSetup($pluginKey, $version);
-        return $this->pluginInstaller->executePreUpgraders($this->pluginDir, $version);
-    }
-
-    /**
-     * @param string $pluginKey
-     * @param string $version
-     * @return array
-     * @since ZC v3.0.0
-     */
     public function processPreConfirmUpgrade(string $pluginKey, string $version): array
     {
         if (empty($pluginKey) || empty($version)) {

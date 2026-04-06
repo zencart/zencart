@@ -112,20 +112,20 @@ class ScriptedInstaller
 
     /**
      * Optionally, return an array of additional messages and/or
-     * form-fields to be added to the Plugin Manager's "Upgrade"
+     * form-fields to be added to the Plugin Manager's "Confirm Upgrade"
      * verification form.
      *
      * @param string $oldVersion
      * @return array
      * @since ZC v3.0.0
      */
-    protected function preUpgrade(string $oldVersion): array
+    protected function preConfirmUpgrade(string $oldVersion): array
     {
         return [];
     }
 
     /**
-     * Optionally, check any form-fields supplied by the preUpgrade
+     * Optionally, check any form-fields supplied by the preConfirmUpgrade
      * method.  Gives the installer a means to disallow the upgrade.
      * Returns a boolean indication whether (true) or not (false) the plugin's
      * upgrade should proceed.
@@ -134,7 +134,7 @@ class ScriptedInstaller
      * @return bool
      * @since ZC v3.0.0
      */
-    protected function validateUpgrade(string $oldVersion): bool
+    protected function validateConfirmUpgrade(string $oldVersion): bool
     {
         return true;
     }
@@ -272,9 +272,9 @@ class ScriptedInstaller
      * @return array
      * @since ZC v3.0.0
      */
-    public function doPreUpgrade(string $oldVersion): array
+    public function doPreConfirmUpgrade(string $oldVersion): array
     {
-        return $this->preUpgrade($oldVersion);
+        return $this->preConfirmUpgrade($oldVersion);
     }
 
     /**

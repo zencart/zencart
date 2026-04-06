@@ -323,12 +323,6 @@ class PluginManagerController extends BaseController
             $this->setBoxContent('<br><label class="radio-inline">' . zen_draw_radio_field('version', $version, $checked) . $version);
         }
 
-        $installer = $this->installerFactory->make($unique_key, $firstKey);
-        $additional_content = $installer->processPreUpgrade($unique_key, $firstKey);
-        foreach ($additional_content as $content) {
-            $this->setBoxContent($content);
-        }
-
         $this->setBoxContent(
             '<br><button type="submit" class="btn btn-primary">'
             . TEXT_UPGRADE . '</button> <a href="' . zen_href_link(

@@ -198,11 +198,10 @@ class Installer
      */
     protected function executeScriptedInstaller($pluginDir): void
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return;
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doInstall();
     }
 
@@ -211,11 +210,10 @@ class Installer
      */
     protected function executeScriptedPreInstaller(string $pluginDir): array
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return [];
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         return $scriptedInstaller->doPreInstall();
     }
 
@@ -224,11 +222,10 @@ class Installer
      */
     protected function executeScriptedUninstaller($pluginDir): void
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return;
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doUninstall();
     }
 
@@ -237,11 +234,10 @@ class Installer
      */
     protected function executeScriptedPreUninstaller(string $pluginDir): array
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return [];
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         return $scriptedInstaller->doPreUninstall();
     }
 
@@ -250,25 +246,11 @@ class Installer
      */
     protected function executeScriptedUpgrader($pluginDir, $oldVersion): void
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return;
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doUpgrade($oldVersion);
-    }
-
-    /**
-     * @since ZC v3.0.0
-     */
-    protected function executeScriptedPreUpgrader(string $pluginDir, string $oldVersion): array
-    {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
-            return [];
-        }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
-        return $scriptedInstaller->doPreUpgrade($oldVersion);
     }
 
     /**
@@ -276,12 +258,11 @@ class Installer
      */
     protected function executeScriptedPreConfirmUpgrader(string $pluginDir, string $oldVersion): array
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return [];
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
-        return $scriptedInstaller->doPreUpgrade($oldVersion);
+        return $scriptedInstaller->doPreConfirmUpgrade($oldVersion);
     }
 
     /**
@@ -289,11 +270,10 @@ class Installer
      */
     protected function executeScriptedDisabler(string $pluginDir): void
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return;
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doDisable();
     }
 
@@ -302,11 +282,10 @@ class Installer
      */
     protected function executeScriptedPreDisabler(string $pluginDir): array
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return [];
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         return $scriptedInstaller->doPreDisable();
     }
 
@@ -334,6 +313,19 @@ class Installer
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
         $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         return $scriptedInstaller->doPreEnable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function scriptedSetup(string $pluginDir): ?ScriptedInstaller
+    {
+        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+            return null;
+        }
+        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
+        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
+        return $scriptedInstaller;
     }
 
     /**
