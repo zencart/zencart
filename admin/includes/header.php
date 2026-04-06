@@ -239,7 +239,7 @@ foreach ($upperMenuArray as $menuItem) {
 
     </div>
 
-<?php if(!empty($messageStack->size)) { ?>
+<?php if($messageStack->size > 0) { ?>
     <div class="container-fluid mb-3">
         <?= $messageStack->output() ?>
     </div>
