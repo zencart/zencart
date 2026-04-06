@@ -11,7 +11,8 @@ class zcAjaxAdminDashboardWidgetArrange extends base
 {
     /**
      * Save the new dashboard widget arrangement.
-     * Expects a POSTed 'layout' form-urlencoded parameter
+     * Reads the posted layout data, validates and sanitizes it, and updates the admin's dashboard_layout in the database.
+     * Returns a structured response indicating success or error.
      *
      * @since ZC v3.0.0
      */
@@ -46,7 +47,7 @@ class zcAjaxAdminDashboardWidgetArrange extends base
             if (isset($layout[$zone]) && is_array($layout[$zone])) {
                 $clean_layout[$zone] = [];
                 foreach ($layout[$zone] as $widget) {
-                    // extra precaution in case a ghost element somehow gets through
+                    // filter out empty elements that the ajax drag-drop might send
                     if (!is_string($widget) || empty(trim($widget))) {
                         continue;
                     }
