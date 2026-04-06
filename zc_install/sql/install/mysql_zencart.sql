@@ -101,6 +101,7 @@ CREATE TABLE admin (
   last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00',
   last_failed_ip varchar(45) NOT NULL default '',
   mfa TEXT DEFAULT NULL,
+  dashboard_layout TEXT NULL,
   PRIMARY KEY  (admin_id),
   KEY idx_admin_name_zen (admin_name),
   KEY idx_admin_email_zen (admin_email),
