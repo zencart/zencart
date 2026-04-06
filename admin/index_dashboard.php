@@ -1,8 +1,8 @@
 <?php
 /**
- * @copyright Copyright 2003-2025 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: ZenExpert 2026-04-06 Modified in v3.0.0 $
  *
  * Developer note: This page's URL is "index", but is really the admin home/dashboard page. It loads CSS/JS based on page name of "index" which intentionally breaks pattern of filename matching just for this page.
  * @var notifier $zco_notifier

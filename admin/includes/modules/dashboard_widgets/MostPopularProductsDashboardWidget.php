@@ -1,8 +1,9 @@
 <?php
 /**
- * @copyright Copyright 2003-2025 Zen Cart Development Team
- * @version Modern Dynamic Dashboard 2026
- * @author ZenExpert - https://zenexpert.com
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: ZenExpert 2026-04-06 Modified in v3.0.0 $
+ * Portions copyright 2026 ZenExpert - https://zenexpert.com
  */
 
 if (!zen_is_superuser() && !check_page(FILENAME_STATS_PRODUCTS_PURCHASED, '')) {

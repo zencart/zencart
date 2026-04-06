@@ -3,8 +3,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version Modern Dynamic Dashboard 2026
- * @version $Id: ZenExpert 2026-0304 Modified in v2.2.1 $
+ * @version $Id: ZenExpert 2026-0304 Modified in v3.0.0 $
 */
 
 $define = [
