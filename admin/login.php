@@ -71,8 +71,8 @@ if ($expired && $message == '') {
 
   <div class="login-card">
       <div class="login-brand">
-          <?php if (defined('HEADER_LOGO_IMAGE') && HEADER_LOGO_IMAGE !== '') { ?>
-              <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT, '', '', 'class="img-responsive"') . PHP_EOL; ?>
+          <?php if (defined('HEADER_LOGO_IMAGE_HOME') && HEADER_LOGO_IMAGE_HOME !== '') { ?>
+              <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE_HOME, HEADER_ALT_TEXT, '', '', 'class="img-responsive object-fit-contain"') . PHP_EOL; ?>
           <?php } else { ?>
               <i class="fa fa-home text-primary"></i> <?php echo STORE_NAME; ?>
           <?php } ?>
