@@ -1,7 +1,8 @@
 <?php
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
- * @version Modern Dynamic Dashboard 2026
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
+ * @version $Id: ZenExpert 2026-04-06 Modified in v3.0.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -205,6 +206,7 @@ foreach ($upperMenuArray as $menuItem) {
                             </li>
 
                             <li class="divider"></li>
+                            <li><a href="https://www.zen-cart.com/forum"><i class="fa fa-info-circle"></i> <?= HEADER_TITLE_SUPPORT_SITE ?></a></li>
                             <li><a href="<?= zen_href_link(FILENAME_LOGOFF, '', 'NONSSL') ?>"><i class="fa fa-sign-out"></i> <?= HEADER_TITLE_LOGOFF ?></a></li>
                         </ul>
                     </li>
