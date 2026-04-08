@@ -147,6 +147,16 @@
     color: #337ab7;
 }
 
+.navbar-nav > li > .currentTime {
+    color: #f9f9f9;
+    font-weight: 400;
+    padding: 15px;
+}
+
+.navbar-form {
+    padding: 10px 10px;
+}
+
 .badge-notify {
     position: absolute;
     top: 10px;
@@ -179,15 +189,12 @@
     border: none;
     color: #fff;
     border-radius: 30px;
-    padding-left: 15px;
     margin-top: 8px;
-    width: 250px;
     transition: 0.3s;
 }
 
 .header-search input:focus {
     background: #46627f;
-    width: 300px;
     outline: none;
 }
 
@@ -229,6 +236,12 @@
     opacity: 0.6;
     display: block;
     line-height: 1;
+}
+
+.goto-category .text-muted {
+    color: #ecf0f1;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .navbar-header button i {

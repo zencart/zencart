@@ -120,16 +120,46 @@ foreach ($upperMenuArray as $menuItem) {
             </div>
 
             <div class="collapse navbar-collapse" id="top-bar-collapse">
-                <?php
-                echo zen_draw_form('orders', FILENAME_ORDERS, '', 'get', 'class="navbar-form navbar-left hidden-xs"', true);
-                echo '<div class="form-group header-search">';
-                echo zen_draw_input_field('oID', '', 'id="oID" class="form-control" placeholder="'.HEADER_TEXT_SEARCH_ORDERS.'"', '', '');
-                echo zen_draw_hidden_field('action', 'edit');
-                echo '</div>';
-                echo '</form>';
-                ?>
+                <ul class="nav navbar-nav navbar-left">
+                    <?php if (zen_is_superuser() || check_page(FILENAME_ADMIN_ACTIVITY, '')) { ?>
+                    <li class="hidden-xs">
+                        <?= zen_draw_form('order_search', FILENAME_ORDERS, '', 'get', 'class="navbar-form"', true) ?>
+                        <div class="form-group header-search">
+                        <?= zen_draw_input_field('oID', '', 'id="oIDsearch" class="form-control" placeholder="' . HEADER_TEXT_SEARCH_ORDERS . '"', false, 'search') ?>
+                        <?= zen_draw_hidden_field('action', 'edit') ?>
+                        </div>
+                        <?= '</form>' ?>
+                    </li>
+                    <?php } ?>
 
+                    <?php if (zen_is_superuser() || check_page(FILENAME_ADMIN_ACTIVITY, '')) { ?>
+                    <li class="hidden-xs">
+                        <?= zen_draw_form('customer_search', FILENAME_CUSTOMERS, '', 'get', 'class="navbar-form"', true); ?>
+                        <div class="form-group header-search">
+                        <?= zen_draw_input_field('search', '', 'id="cIDsearch" class="form-control" placeholder="' . HEADER_TEXT_SEARCH_CUSTOMERS . '"', false, 'search'); ?>
+                        </div>
+                        <?= '</form>' ?>
+                    </li>
+                    <?php } ?>
+
+                    <?php if (zen_is_superuser() || check_page(FILENAME_ADMIN_ACTIVITY, '')) { ?>
+                    <li class="hidden-xs">
+                        <?= zen_draw_form('goto', FILENAME_CATEGORY_PRODUCT_LISTING, '', 'get', 'class="navbar-form"') ?>
+                        <div class="form-group header-search goto-category">
+                            <small class="text-muted"><?= HEADER_TEXT_JUMP_TO_CATEGORY ?>><br></small>
+                        <?= zen_draw_pull_down_menu('cPath', zen_get_category_tree(), $current_category_id, 'onchange="this.form.submit();" class="form-control" id="cPath-search"') ?>
+                        <?= '</form>' ?>
+                    </li>
+                    <?php } ?>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="currentTime">
+                        <?= mb_convert_encoding($zcDate->output(str_replace('(%z)', '', ADMIN_NAV_DATE_TIME_FORMAT), time()), 'UTF-8') ?>
+                        <br><small><?= date_default_timezone_get() ?> <?= $zcDate->output(' (%z)', time()) ?></small>
+                        </div>
+                    </li>
+
                     <li class="hidden-xs">
                         <a href="<?= zen_href_link(FILENAME_DEFAULT) ?>" title="<?= HEADER_TITLE_TOP ?>">
                             <i class="fa fa-home"></i> <?= HEADER_TITLE_TOP ?>
