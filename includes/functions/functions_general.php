@@ -220,3 +220,15 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
 
     return $return_button;
 }
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_add_filemtime(string $relative_path): string
+{
+    $absolute_path = DIR_FS_CATALOG . $relative_path;
+    if (!file_exists($absolute_path)) {
+        return $relative_path;
+    }
+    return $relative_path . '?' . filemtime($absolute_path);
+}
