@@ -22,7 +22,7 @@ $pageLoader = PageLoader::getInstance();
  */
 $directory_array = $template->get_template_part($template->get_template_dir('^jscript_.*\.js', DIR_WS_TEMPLATE, $current_page_base, 'jscript'), '/^jscript_/', '.js');
 foreach ($directory_array as $value) {
-    echo '<script src="' .  $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'jscript') . '/' . $value . '"></script>' . "\n";
+    echo '<script src="' .  zen_add_filemtime($template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'jscript') . '/' . $value) . '"></script>' . "\n";
 }
 
 /**
@@ -30,7 +30,7 @@ foreach ($directory_array as $value) {
  */
 $directory_array = $pageLoader->listModulePagesFiles('jscript_', '.js');
 foreach ($directory_array as $value) {
-    echo '<script src="' . $value . '"></script>' . "\n";
+    echo '<script src="' . zen_add_filemtime($value) . '"></script>' . "\n";
 }
 
 /**

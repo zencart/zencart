@@ -803,16 +803,3 @@ function zen_get_customer_email_from_id($cid)
    if ($query->EOF) return '';
    return $query->fields['customers_email_address'];
 }
-
-/**
- * @since ZC v3.0.0
- */
-function zen_add_filemtime(string $relative_path, ?string $absolute_path = null): string
-{
-    $absolute_path ??= DIR_FS_ADMIN . $relative_path;
-    if (!file_exists($absolute_path)) {
-        return $relative_path;
-    }
-    return $relative_path . '?' . filemtime($absolute_path);
-}
-
