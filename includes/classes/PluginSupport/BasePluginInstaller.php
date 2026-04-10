@@ -43,9 +43,6 @@ class BasePluginInstaller
     }
 
     /**
-     * @param string $pluginKey
-     * @param string $version
-     * @return array
      * @since ZC v3.0.0
      */
     public function processPreInstall($pluginKey, $version): array
@@ -75,9 +72,6 @@ class BasePluginInstaller
     }
 
     /**
-     * @param string $pluginKey
-     * @param string $version
-     * @return array
      * @since ZC v3.0.0
      */
     public function processPreUninstall($pluginKey, $version): array
@@ -110,24 +104,18 @@ class BasePluginInstaller
     }
 
     /**
-     * @param string $pluginKey
-     * @param string $version
-     * @return array
      * @since ZC v3.0.0
      */
-    public function processPreConfirmUpgrade(string $pluginKey, string $version): array
+    public function processPreConfirmUpgrade(string $pluginKey, string $version, string $oldVersion): array
     {
         if (empty($pluginKey) || empty($version)) {
             return [];
         }
-        $this->processSetup($pluginKey, $version);
-        return $this->pluginInstaller->executePreConfirmUpgraders($this->pluginDir, $version);
+        $this->processSetup($pluginKey, $version, $oldVersion);
+        return $this->pluginInstaller->executePreConfirmUpgraders($this->pluginDir, $version, $oldVersion);
     }
 
     /**
-     * @param string $pluginKey
-     * @param string $version
-     * @return array
      * @since ZC v3.0.0
      */
     public function processPreDisable(string $pluginKey, string $version): array
@@ -157,9 +145,6 @@ class BasePluginInstaller
     }
 
     /**
-     * @param string $pluginKey
-     * @param string $version
-     * @return array
      * @since ZC v3.0.0
      */
     public function processPreEnable(string $pluginKey, string $version): array
@@ -189,16 +174,13 @@ class BasePluginInstaller
     }
 
     /**
-     * @param string $pluginKey
-     * @param string $version
-     * @return void
      * @since ZC v3.0.0
      */
-    public function processSetup(string $pluginKey, string $version): void
+    public function processSetup(string $pluginKey, string $version, ?string $oldVersion = null): void
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php');
-        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
     }
 
     /**
