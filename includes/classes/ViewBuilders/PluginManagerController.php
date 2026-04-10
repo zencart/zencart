@@ -179,12 +179,6 @@ class PluginManagerController extends BaseController
             );
         }
 
-        $installer = $this->installerFactory->make($unique_key, $firstKey);
-        $additional_content = $installer->processPreInstall($unique_key, $firstKey);
-        foreach ($additional_content as $content) {
-            $this->setBoxContent($content);
-        }
-
         $this->setBoxContent(
             '<br><button type="submit" class="btn btn-primary">'
             . TEXT_INSTALL . '</button> <a href="' . zen_href_link(

@@ -58,14 +58,6 @@ class Installer
     }
 
     /**
-     * @since ZC v3.0.0
-     */
-    public function executePreInstallers(string $pluginDir): array
-    {
-        return $this->executeScriptedPreInstaller($pluginDir);
-    }
-
-    /**
      * @since ZC v1.5.7
      */
     public function executeUninstallers($pluginDir): void
@@ -177,18 +169,6 @@ class Installer
             return;
         }
         $scriptedInstaller->doInstall();
-    }
-
-    /**
-     * @since ZC v3.0.0
-     */
-    protected function executeScriptedPreInstaller(string $pluginDir): array
-    {
-        $scriptedInstaller = $this->scriptedSetup($pluginDir);
-        if (empty($scriptedInstaller)) {
-            return [];
-        }
-        return $scriptedInstaller->doPreInstall();
     }
 
     /**

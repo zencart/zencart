@@ -43,18 +43,6 @@ class BasePluginInstaller
     }
 
     /**
-     * @since ZC v3.0.0
-     */
-    public function processPreInstall($pluginKey, $version): array
-    {
-        if (empty($pluginKey) || empty($version)) {
-            return [];
-        }
-        $this->processSetup($pluginKey, $version);
-        return $this->pluginInstaller->executePreInstallers($this->pluginDir);
-    }
-
-    /**
      * @since ZC v1.5.7
      */
     public function processUninstall($pluginKey, $version): bool
@@ -69,18 +57,6 @@ class BasePluginInstaller
         }
         $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
         return true;
-    }
-
-    /**
-     * @since ZC v3.0.0
-     */
-    public function processPreUninstall($pluginKey, $version): array
-    {
-        if (empty($pluginKey) || empty($version)) {
-            return [];
-        }
-        $this->processSetup($pluginKey, $version);
-        return $this->pluginInstaller->executePreUninstallers($this->pluginDir);
     }
 
     /**

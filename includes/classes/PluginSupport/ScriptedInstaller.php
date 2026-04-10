@@ -39,18 +39,6 @@ class ScriptedInstaller
     }
 
     /**
-     * Optionally, return an array of additional messages and/or
-     * form-fields to be added to the Plugin Manager's "Install"
-     * verification form.
-     *
-     * @since ZC v3.0.0
-     */
-    protected function preInstall(): array
-    {
-        return [];
-    }
-
-    /**
      * Optionally, check any form-fields supplied by the preInstall
      * method.  Gives the installer a means to disallow the installation.
      * Returns a boolean indication whether (true) or not (false) the plugin's
@@ -206,14 +194,6 @@ class ScriptedInstaller
         }
         return $this->executeInstall();
      }
-
-    /**
-     * @since ZC v3.0.0
-     */
-    public function doPreInstall(): array
-    {
-        return $this->preInstall();
-    }
 
     /**
      * @since ZC v1.5.7
