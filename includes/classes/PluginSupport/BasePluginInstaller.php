@@ -60,6 +60,18 @@ class BasePluginInstaller
     }
 
     /**
+     * @since ZC v3.0.0
+     */
+    public function processPreUninstall($pluginKey, $version): array
+    {
+        if (empty($pluginKey) || empty($version)) {
+            return [];
+        }
+        $this->processSetup($pluginKey, $version);
+        return $this->pluginInstaller->executePreUninstallers($this->pluginDir);
+    }
+
+    /**
      * @since ZC v1.5.8
      */
     public function processUpgrade($pluginKey, $version, $oldVersion): bool
