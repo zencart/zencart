@@ -457,6 +457,7 @@ h2.greeting a:hover{}
 #siteMapList {width:90%;float:right;}
 #gvFaqDefaultContent{line-height:20px;font-size:110%;}
 #advSearchDefault .floatingBox{min-height:115px;margin-bottom:30px;}
+.toggle-pw {margin-left:-25px;position:relative;z-index:2;}
 
 /*bof login*/
 #loginDefault{margin-bottom:30px;}
