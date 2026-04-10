@@ -134,7 +134,7 @@ class ScriptedInstaller
      * @return bool
      * @since ZC v3.0.0
      */
-    protected function validateConfirmUpgrade(string $oldVersion): bool
+    protected function validateUpgrade(string $oldVersion): bool
     {
         return true;
     }
