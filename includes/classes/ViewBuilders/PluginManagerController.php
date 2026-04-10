@@ -369,7 +369,7 @@ class PluginManagerController extends BaseController
         );
 
         $installer = $this->installerFactory->make($this->currentFieldValue('unique_key'), $this->request->input('version'));
-        $additional_content = $installer->processPreConfirmUpgrade($this->currentFieldValue('unique_key'), $this->request->input('version'));
+        $additional_content = $installer->processPreConfirmUpgrade($this->currentFieldValue('unique_key'), $this->request->input('version'), $this->currentFieldValue('version'));
         foreach ($additional_content as $content) {
             $this->setBoxContent($content);
         }

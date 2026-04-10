@@ -58,8 +58,6 @@ class Installer
     }
 
     /**
-     * @param string $pluginDir
-     * @return array
      * @since ZC v3.0.0
      */
     public function executePreInstallers(string $pluginDir): array
@@ -80,8 +78,6 @@ class Installer
     }
 
     /**
-     * @param string $pluginDir
-     * @return array
      * @since ZC v3.0.0
      */
     public function executePreUninstallers(string $pluginDir): array
@@ -98,30 +94,14 @@ class Installer
     }
 
     /**
-     * @param string $pluginDir
-     * @param string $oldVersion
-     * @return array
      * @since ZC v3.0.0
      */
-    public function executePreUpgraders(string $pluginDir, string $oldVersion): array
+    public function executePreConfirmUpgraders(string $pluginDir, string $version, string $oldVersion): array
     {
-        return $this->executeScriptedPreUpgrader($pluginDir, $oldVersion);
+        return $this->executeScriptedPreConfirmUpgrader($pluginDir, $version, $oldVersion);
     }
 
     /**
-     * @param string $pluginDir
-     * @param string $oldVersion
-     * @return array
-     * @since ZC v3.0.0
-     */
-    public function executePreConfirmUpgraders(string $pluginDir, string $oldVersion): array
-    {
-        return $this->executeScriptedPreConfirmUpgrader($pluginDir, $oldVersion);
-    }
-
-    /**
-     * @param string $pluginDir
-     * @return array
      * @since ZC v3.0.0
      */
     public function executePreDisablers(string $pluginDir): array
@@ -130,8 +110,6 @@ class Installer
     }
 
     /**
-     * @param string $pluginDir
-     * @return void
      * @since ZC v3.0.0
      */
     public function executeDisablers(string $pluginDir): void
@@ -140,8 +118,6 @@ class Installer
     }
 
     /**
-     * @param string $pluginDir
-     * @return array
      * @since ZC v3.0.0
      */
     public function executePreEnablers(string $pluginDir): array
@@ -150,8 +126,6 @@ class Installer
     }
 
     /**
-     * @param string $pluginDir
-     * @return void
      * @since ZC v3.0.0
      */
     public function executeEnablers(string $pluginDir): void
@@ -256,13 +230,13 @@ class Installer
     /**
      * @since ZC v3.0.0
      */
-    protected function executeScriptedPreConfirmUpgrader(string $pluginDir, string $oldVersion): array
+    protected function executeScriptedPreConfirmUpgrader(string $pluginDir, string $version, string $oldVersion): array
     {
         $scriptedInstaller = $this->scriptedSetup($pluginDir);
         if (empty($scriptedInstaller)) {
             return [];
         }
-        return $scriptedInstaller->doPreConfirmUpgrade($oldVersion);
+        return $scriptedInstaller->doPreConfirmUpgrade($version, $oldVersion);
     }
 
     /**
@@ -294,11 +268,10 @@ class Installer
      */
     protected function executeScriptedEnabler(string $pluginDir): void
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return;
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         $scriptedInstaller->doEnable();
     }
 
@@ -307,11 +280,10 @@ class Installer
      */
     protected function executeScriptedPreEnabler(string $pluginDir): array
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
             return [];
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
         return $scriptedInstaller->doPreEnable();
     }
 

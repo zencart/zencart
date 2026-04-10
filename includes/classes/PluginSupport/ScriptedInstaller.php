@@ -43,7 +43,6 @@ class ScriptedInstaller
      * form-fields to be added to the Plugin Manager's "Install"
      * verification form.
      *
-     * @return array
      * @since ZC v3.0.0
      */
     protected function preInstall(): array
@@ -57,7 +56,6 @@ class ScriptedInstaller
      * Returns a boolean indication whether (true) or not (false) the plugin's
      * installation should proceed.
      *
-     * @return bool
      * @since ZC v3.0.0
      */
     protected function validateInstall(): bool
@@ -79,7 +77,6 @@ class ScriptedInstaller
      * form-fields to be added to the Plugin Manager's "UnInstall"
      * verification form.
      *
-     * @return array
      * @since ZC v3.0.0
      */
     protected function preUninstall(): array
@@ -93,7 +90,6 @@ class ScriptedInstaller
      * Returns a boolean indication whether (true) or not (false) the plugin's
      * un-installation should proceed.
      *
-     * @return bool
      * @since ZC v3.0.0
      */
     protected function validateUninstall(): bool
@@ -115,11 +111,9 @@ class ScriptedInstaller
      * form-fields to be added to the Plugin Manager's "Confirm Upgrade"
      * verification form.
      *
-     * @param string $oldVersion
-     * @return array
      * @since ZC v3.0.0
      */
-    protected function preConfirmUpgrade(string $oldVersion): array
+    protected function preConfirmUpgrade(string $version, string $oldVersion): array
     {
         return [];
     }
@@ -130,8 +124,6 @@ class ScriptedInstaller
      * Returns a boolean indication whether (true) or not (false) the plugin's
      * upgrade should proceed.
      *
-     * @param string $oldVersion
-     * @return bool
      * @since ZC v3.0.0
      */
     protected function validateUpgrade(string $oldVersion): bool
@@ -144,7 +136,6 @@ class ScriptedInstaller
      * form-fields to be added to the Plugin Manager's "Enable"
      * verification form.
      *
-     * @return array
      * @since ZC v3.0.0
      */
     protected function preEnable(): array
@@ -158,7 +149,6 @@ class ScriptedInstaller
      * Returns a boolean indication whether (true) or not (false) the plugin's
      * enablement should proceed.
      *
-     * @return bool
      * @since ZC v3.0.0
      */
     protected function validateEnable(): bool
@@ -171,7 +161,6 @@ class ScriptedInstaller
      * form-fields to be added to the Plugin Manager's "Disable"
      * verification form.
      *
-     * @return array
      * @since ZC v3.0.0
      */
     protected function preDisable(): array
@@ -185,7 +174,6 @@ class ScriptedInstaller
      * Returns a boolean indication whether (true) or not (false) the plugin's
      * disable-action should proceed.
      *
-     * @return bool
      * @since ZC v3.0.0
      */
     protected function validateDisable(): bool
@@ -220,7 +208,6 @@ class ScriptedInstaller
      }
 
     /**
-     * @return array
      * @since ZC v3.0.0
      */
     public function doPreInstall(): array
@@ -244,7 +231,6 @@ class ScriptedInstaller
     }
 
     /**
-     * @return array
      * @since ZC v3.0.0
      */
     public function doPreUninstall(): array
@@ -268,17 +254,14 @@ class ScriptedInstaller
     }
 
     /**
-     * @param string $oldVersion
-     * @return array
      * @since ZC v3.0.0
      */
-    public function doPreConfirmUpgrade(string $oldVersion): array
+    public function doPreConfirmUpgrade(string $version, string $oldVersion): array
     {
-        return $this->preConfirmUpgrade($oldVersion);
+        return $this->preConfirmUpgrade($version, $oldVersion);
     }
 
     /**
-     * @return bool
      * @since ZC v3.0.0
      */
     public function doEnable(): bool
@@ -287,7 +270,6 @@ class ScriptedInstaller
     }
 
     /**
-     * @return array
      * @since ZC v3.0.0
      */
     public function doPreEnable(): array
@@ -296,7 +278,6 @@ class ScriptedInstaller
     }
 
     /**
-     * @return bool
      * @since ZC v3.0.0
      */
     public function doDisable(): bool
@@ -305,7 +286,6 @@ class ScriptedInstaller
     }
 
     /**
-     * @return array
      * @since ZC v3.0.0
      */
     public function doPreDisable(): array
@@ -341,9 +321,6 @@ class ScriptedInstaller
      * If a file-name is identified as '*.*', then **ALL** files and sub-directories
      * as well as the upper, keyed, directory are removed.
      *
-     * @param array $files_to_remove
-     * @param string $context
-     * @return bool
      * @since ZC v3.0.0
      */
     protected function removeFiles(array $files_to_remove, string $context): bool
@@ -392,8 +369,6 @@ class ScriptedInstaller
      * Returns a boolean indication as to whether (true) or not (false) all files
      * and sub-directories were removed.
      *
-     * @param string $dir_name
-     * @return bool
      * @since ZC v3.0.0
      */
     protected function removeDirectoryAndFilesRecursive(string $dir_name): bool
