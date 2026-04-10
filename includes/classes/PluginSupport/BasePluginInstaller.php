@@ -124,7 +124,7 @@ class BasePluginInstaller
             return [];
         }
         $this->processSetup($pluginKey, $version);
-        return $this->pluginInstaller->executePreDisablers($this->pluginDir, $version);
+        return $this->pluginInstaller->executePreDisablers($this->pluginDir);
     }
 
     /**
@@ -153,7 +153,7 @@ class BasePluginInstaller
             return [];
         }
         $this->processSetup($pluginKey, $version);
-        return $this->pluginInstaller->executePreEnablers($this->pluginDir, $version);
+        return $this->pluginInstaller->executePreEnablers($this->pluginDir);
     }
 
     /**
