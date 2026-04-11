@@ -54,6 +54,12 @@ $define = [
     'ERROR_REMOVE_FILES_CANT_DELETE' => 'Unable to remove file: %s',
     'ERROR_REMOVE_FILES_CONTEXT' => 'Invalid context supplied (%s), it must be either "catalog" or "admin".',
     'ERROR_SQL_PATCH' => 'Error while processing SQL install. ',
+    'ERROR_UNKNOWN_FAILURE' => 'The plugin denied the %s action, but did not provide a message indicating the reason.',
+        'ERROR_UNKNOWN_FAILURE_DISABLE' => 'disable',
+        'ERROR_UNKNOWN_FAILURE_ENABLE' => 'enable',
+        'ERROR_UNKNOWN_FAILURE_INSTALL' => 'install',
+        'ERROR_UNKNOWN_FAILURE_UNINSTALL' => 'un-install',
+        'ERROR_UNKNOWN_FAILURE_UPGRADE' => 'upgrade',
 
     'WARNING_NONENCAPSULATED_REMOVAL' => '<b>Note:</b> Installing this plugin will result in files provided by a non-encapsulated version (if present) being <b>permanently</b> removed!',
 ];

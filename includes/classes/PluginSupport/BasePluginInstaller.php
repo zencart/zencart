@@ -34,8 +34,8 @@ class BasePluginInstaller
             return false;
         }
         $this->processSetup($pluginKey, $version);
-        $this->pluginInstaller->executeInstallers($this->pluginDir);
-        if ($this->errorContainer->hasErrors()) {
+        $plugin_return = $this->pluginInstaller->executeInstallers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_INSTALL) === false) {
             return false;
         }
         $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
@@ -51,8 +51,8 @@ class BasePluginInstaller
             return false;
         }
         $this->processSetup($pluginKey, $version);
-        $this->pluginInstaller->executeUninstallers($this->pluginDir);
-        if ($this->errorContainer->hasErrors()) {
+        $plugin_return = $this->pluginInstaller->executeUninstallers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_UNINSTALL) === false) {
             return false;
         }
         $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
@@ -79,11 +79,9 @@ class BasePluginInstaller
         if (empty($pluginKey) || empty($version) || empty($oldVersion)) {
             return false;
         }
-        $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php');
-        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
-        $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
-        if ($this->errorContainer->hasErrors()) {
+        $this->processSetup($pluginKey, $version, $oldVersion);
+        $plugin_return = $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_UPGRADE) === false) {
             return false;
         }
         $this->setPluginVersionStatus($pluginKey, $oldVersion, PluginStatus::NOT_INSTALLED);
@@ -124,8 +122,8 @@ class BasePluginInstaller
             return false;
         }
         $this->processSetup($pluginKey, $version);
-        $this->pluginInstaller->executeDisablers($this->pluginDir);
-        if ($this->errorContainer->hasErrors()) {
+        $plugin_return = $this->pluginInstaller->executeDisablers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_DISABLE) === false) {
             return false;
         }
         $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::DISABLED);
@@ -153,8 +151,8 @@ class BasePluginInstaller
             return false;
         }
         $this->processSetup($pluginKey, $version);
-        $this->pluginInstaller->executeEnablers($this->pluginDir);
-        if ($this->errorContainer->hasErrors()) {
+        $plugin_return = $this->pluginInstaller->executeEnablers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_ENABLE) === false) {
             return false;
         }
         $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
@@ -164,11 +162,26 @@ class BasePluginInstaller
     /**
      * @since ZC v3.0.0
      */
-    public function processSetup(string $pluginKey, string $version, ?string $oldVersion = null): void
+    protected function processSetup(string $pluginKey, string $version, ?string $oldVersion = null): void
     {
         $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
         $this->loadInstallerLanguageFile('main.php');
         $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function checkPluginReturn(?bool $plugin_return, string $plugin_action): bool
+    {
+        if ($plugin_return !== false) {
+            return true;
+        }
+        if (!$this->errorContainer->hasErrors()) {
+            $default_message = sprintf(ERROR_UNKNOWN_FAILURE, $plugin_action);
+            $this->errorContainer->addError(0, $default_message, false, $default_message);
+        }
+        return false;
     }
 
     /**

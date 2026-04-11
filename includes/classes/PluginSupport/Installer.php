@@ -48,25 +48,25 @@ class Installer
     /**
      * @since ZC v1.5.7
      */
-    public function executeInstallers($pluginDir): void
+    public function executeInstallers($pluginDir): ?bool
     {
         $this->executePatchInstaller($pluginDir);
         if ($this->errorContainer->hasErrors()) {
-            return;
+            return null;
         }
-        $this->executeScriptedInstaller($pluginDir);
+        return $this->executeScriptedInstaller($pluginDir);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    public function executeUninstallers($pluginDir): void
+    public function executeUninstallers($pluginDir): ?bool
     {
         $this->executePatchUninstaller($pluginDir);
         if ($this->errorContainer->hasErrors()) {
-            return;
+            return null;
         }
-        $this->executeScriptedUninstaller($pluginDir);
+        return $this->executeScriptedUninstaller($pluginDir);
     }
 
     /**
@@ -80,9 +80,9 @@ class Installer
     /**
      * @since ZC v1.5.8
      */
-    public function executeUpgraders($pluginDir, $oldVersion): void
+public function executeUpgraders($pluginDir, $oldVersion): ?bool
     {
-        $this->executeScriptedUpgrader($pluginDir, $oldVersion);
+        return $this->executeScriptedUpgrader($pluginDir, $oldVersion);
     }
 
     /**
@@ -104,9 +104,9 @@ class Installer
     /**
      * @since ZC v3.0.0
      */
-    public function executeDisablers(string $pluginDir): void
+    public function executeDisablers(string $pluginDir): ?bool
     {
-        $this->executeScriptedDisabler($pluginDir);
+        return $this->executeScriptedDisabler($pluginDir);
     }
 
     /**
@@ -120,9 +120,9 @@ class Installer
     /**
      * @since ZC v3.0.0
      */
-    public function executeEnablers(string $pluginDir): void
+    public function executeEnablers(string $pluginDir): ?bool
     {
-        $this->executeScriptedEnabler($pluginDir);
+        return $this->executeScriptedEnabler($pluginDir);
     }
 
     /**
@@ -162,25 +162,25 @@ class Installer
     /**
      * @since ZC v1.5.7
      */
-    protected function executeScriptedInstaller($pluginDir): void
+    protected function executeScriptedInstaller($pluginDir): ?bool
     {
         $scriptedInstaller = $this->scriptedSetup($pluginDir);
         if (empty($scriptedInstaller)) {
-            return;
+            return null;
         }
-        $scriptedInstaller->doInstall();
+        return $scriptedInstaller->doInstall();
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executeScriptedUninstaller($pluginDir): void
+    protected function executeScriptedUninstaller($pluginDir): ?bool
     {
         $scriptedInstaller = $this->scriptedSetup($pluginDir);
         if (empty($scriptedInstaller)) {
-            return;
+            return null;
         }
-        $scriptedInstaller->doUninstall();
+        return $scriptedInstaller->doUninstall();
     }
 
     /**
@@ -198,13 +198,13 @@ class Installer
     /**
      * @since ZC v1.5.8
      */
-    protected function executeScriptedUpgrader($pluginDir, $oldVersion): void
+    protected function executeScriptedUpgrader($pluginDir, $oldVersion): ?bool
     {
         $scriptedInstaller = $this->scriptedSetup($pluginDir);
         if (empty($scriptedInstaller)) {
-            return;
+            return null;
         }
-        $scriptedInstaller->doUpgrade($oldVersion);
+        return $scriptedInstaller->doUpgrade($oldVersion);
     }
 
     /**
@@ -222,13 +222,13 @@ class Installer
     /**
      * @since ZC v3.0.0
      */
-    protected function executeScriptedDisabler(string $pluginDir): void
+    protected function executeScriptedDisabler(string $pluginDir): ?bool
     {
         $scriptedInstaller = $this->scriptedSetup($pluginDir);
         if (empty($scriptedInstaller)) {
-            return;
+            return null;
         }
-        $scriptedInstaller->doDisable();
+        return $scriptedInstaller->doDisable();
     }
 
     /**
@@ -246,13 +246,13 @@ class Installer
     /**
      * @since ZC v3.0.0
      */
-    protected function executeScriptedEnabler(string $pluginDir): void
+    protected function executeScriptedEnabler(string $pluginDir): ?bool
     {
         $scriptedInstaller = $this->scriptedSetup($pluginDir);
         if (empty($scriptedInstaller)) {
-            return;
+            return null;
         }
-        $scriptedInstaller->doEnable();
+        return $scriptedInstaller->doEnable();
     }
 
     /**

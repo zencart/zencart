@@ -39,8 +39,7 @@ class ScriptedInstaller
     }
 
     /**
-     * Optionally, check any form-fields supplied by the preInstall
-     * method.  Gives the installer a means to disallow the installation.
+     * Optional, gives the installer a means to disallow the installation.
      * Returns a boolean indication whether (true) or not (false) the plugin's
      * installation should proceed.
      *
