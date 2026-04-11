@@ -8,7 +8,7 @@ $(document).ready(function() {
         //
         let password_id = $(this).attr('id');
         if (!password_id) {
-            return false;
+            return true;
         }
         $(this).after('<span toggle="#'+password_id+'" class="fa-solid fa-eye toggle-pw"></span>');
     });
