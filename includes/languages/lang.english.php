@@ -8,6 +8,16 @@ global $locales;
 $locales = ['en_US', 'en_US.utf8', 'en', 'English_United States.1252'];
 @setlocale(LC_TIME, $locales);
 
+$define_locales = [
+    'CHARSET' => 'utf-8',
+    'DATE_FORMAT' => 'm/d/Y',
+    'DATE_FORMAT_LONG' => '%A %d %B, %Y',
+    'DATE_TIME_FORMAT_WITHOUT_SECONDS' => '%m/%d/%Y %H:%M',
+    'DOB_FORMAT_STRING' => 'mm/dd/yyyy',
+    'ENTRY_DATE_OF_BIRTH_ERROR' => 'Is your birth date correct? Our system requires the date in this format: MM/DD/YYYY (eg 05/21/1970)',
+    'ENTRY_DATE_OF_BIRTH_TEXT' => '* (eg. 05/21/1970)',
+];
+
 $define = [
     'ARIA_DELETE_ITEM_FROM_CART' => 'Delete this item from the cart',
     'ARIA_EDIT_QTY_IN_CART' => 'Edit quantity in cart',
@@ -91,12 +101,7 @@ $define = [
 
     'CATEGORY_COMPANY' => 'Company Details',
     'CATEGORY_PERSONAL' => 'Your Personal Details',
-    'CHARSET' => 'utf-8',
-    'DATE_FORMAT' => 'm/d/Y',
-    'DATE_FORMAT_LONG' => '%A %d %B, %Y',
-    'DATE_TIME_FORMAT_WITHOUT_SECONDS' => '%m/%d/%Y %H:%M',
     'DB_ERROR_NOT_CONNECTED' => 'Error - Could not connect to Database',
-    'DOB_FORMAT_STRING' => 'mm/dd/yyyy',
     'DOWNLOADS_CONTROLLER_ON_HOLD_MSG' => 'NOTE: Downloads are not available until payment has been confirmed',
     'EMAIL_SALUTATION' => 'Dear',
     'EMAIL_SEND_FAILED' => 'ERROR: Failed sending email to: "%1$s" <%2$s> with subject: "%3$s"',
@@ -114,8 +119,6 @@ $define = [
     'ENTRY_CUSTOMERS_REFERRAL' => 'Referral Code:',
     'ENTRY_DATE_FROM' => 'Date From:',
     'ENTRY_DATE_OF_BIRTH' => 'Date of Birth:',
-    'ENTRY_DATE_OF_BIRTH_ERROR' => 'Is your birth date correct? Our system requires the date in this format: MM/DD/YYYY (eg 05/21/1970)',
-    'ENTRY_DATE_OF_BIRTH_TEXT' => '* (eg. 05/21/1970)',
     'ENTRY_DATE_TO' => 'Date To:',
     'ENTRY_EMAIL' => 'Email Address:',
     'ENTRY_EMAIL_ADDRESS' => 'Email Address:',
@@ -553,4 +556,4 @@ $define = [
     $define['TEXT_SEND_OR_SPEND'] = 'You have a balance available in your ' . $define['TEXT_GV_NAME'] . ' account. You may spend it or send it to someone else. To send click the button below.';
     $define['VOUCHER_BALANCE'] = $define['TEXT_GV_NAME'] . ' Balance ';
 
-return $define;
+return array_merge($define, $define_locales);

@@ -8,8 +8,36 @@
 
 @setlocale(LC_TIME, ['en_US', 'en_US.utf8', 'en', 'English_United States.1252']);
 
-$define = [
+// locale-specific strings that are used in the date functions;
+$define_locales = [
     'ADMIN_NAV_DATE_TIME_FORMAT' => '%A %d %b %Y %X (%z)',
+    'CHARSET' => 'utf-8',
+    'DATE_FORMAT' => 'm/d/Y',
+    'DATE_FORMAT_DATE_PICKER' => 'mm-dd-yy',
+    'DATE_FORMAT_LONG' => '%A %d %B, %Y',
+    'DATE_FORMAT_SHORT' => '%m/%d/%Y',
+    'DATE_FORMAT_SHORT_NO_DAY' => '%B %Y',
+    'DATE_FORMAT_SHORT_NO_YEAR' => '%m/%d',
+    'DATE_FORMAT_SPIFFYCAL' => 'MM/dd/yyyy',
+    'DATE_TIME_FORMAT' => '%%DATE_FORMAT_SHORT%%' . ' %H:%M:%S',
+    'ENTRY_DATE_OF_BIRTH_ERROR' => '&nbsp;<span class="errorText">(eg. 05/21/1970)</span>',
+    'HTML_PARAMS' => 'dir="ltr" lang="en"',
+    'PHP_DATE_TIME_FORMAT' => 'm/d/Y H:i:s',
+    '_APRIL' => 'April',
+    '_AUGUST' => 'August',
+    '_DECEMBER' => 'December',
+    '_FEBRUARY' => 'February',
+    '_JANUARY' => 'January',
+    '_JULY' => 'July',
+    '_JUNE' => 'June',
+    '_MARCH' => 'March',
+    '_MAY' => 'May',
+    '_NOVEMBER' => 'November',
+    '_OCTOBER' => 'October',
+    '_SEPTEMBER' => 'September',
+];
+
+$define = [
     'ARIA_PAGINATION_' => '',
     'ARIA_PAGINATION_CURRENTLY_ON' => ', now on page %s',
     'ARIA_PAGINATION_CURRENT_PAGE' => 'Current Page',
@@ -144,17 +172,8 @@ $define = [
     'CATEGORY_HAS_SUBCATEGORIES' => 'NOTE: Category has SubCategories<br>Products cannot be added',
     'CATEGORY_OPTIONS' => 'Options',
     'CATEGORY_PERSONAL' => 'Personal',
-    'CHARSET' => 'utf-8',
     'CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME' => '1',
     'CONNECTION_TYPE_UNKNOWN' => '\'%1$s\' is not a valid connection type for generating URLs' . PHP_EOL . '%2$s' . PHP_EOL,
-    'DATE_FORMAT' => 'm/d/Y',
-    'DATE_FORMAT_DATE_PICKER' => 'mm-dd-yy',
-    'DATE_FORMAT_LONG' => '%A %d %B, %Y',
-    'DATE_FORMAT_SHORT' => '%m/%d/%Y',
-    'DATE_FORMAT_SHORT_NO_DAY' => '%B %Y',
-    'DATE_FORMAT_SHORT_NO_YEAR' => '%m/%d',
-    'DATE_FORMAT_SPIFFYCAL' => 'MM/dd/yyyy',
-    'DATE_TIME_FORMAT' => '%%DATE_FORMAT_SHORT%%' . ' %H:%M:%S',
     'DEDUCTION_TYPE_DROPDOWN_0' => 'Deduct amount',
     'DEDUCTION_TYPE_DROPDOWN_1' => 'Percent',
     'DEDUCTION_TYPE_DROPDOWN_2' => 'New Price',
@@ -169,7 +188,6 @@ $define = [
     'ENTRY_COUNTRY' => 'Country:',
     'ENTRY_COUNTRY_ERROR' => '',
     'ENTRY_DATE_OF_BIRTH' => 'Date of Birth:',
-    'ENTRY_DATE_OF_BIRTH_ERROR' => '&nbsp;<span class="errorText">(eg. 05/21/1970)</span>',
     'ENTRY_DATE_PURCHASED' => 'Date Purchased:',
     'ENTRY_EMAIL_ADDRESS' => 'E-Mail Address:',
     'ENTRY_EMAIL_ADDRESS_CHECK_ERROR' => '&nbsp;<span class="errorText">The email address doesn\'t appear to be valid!</span>',
@@ -278,7 +296,6 @@ $define = [
     'HEADER_TOGGLE_NAVIGATION' => 'Toggle navigation',
     'HELPTEXT_WHOLESALE_POPUP_TITLE' => 'Setting Wholesale Prices',
     'HELPTEXT_WHOLESALE_PRICES' => 'Enter 0 for retail pricing only. Otherwise, enter the wholesale-pricing levels separated by minus-sign (-). A pricing level can be either a fixed amount or a percent-off. For example, \'2.00-10%-1.00\' gives a price of 2.00 to customers at level-1, 10%-off to those at level-2 and 1.00 to those at level-3 and higher.',
-    'HTML_PARAMS' => 'dir="ltr" lang="en"',
     'ICON_COPY_TO' => 'Copy to',
     'ICON_CROSS' => 'False',
     'ICON_DELETE' => 'Delete',
@@ -377,7 +394,6 @@ $define = [
     'OTHER_IMAGE_CALL_FOR_PRICE' => 'call_for_prices.png',
     'OTHER_IMAGE_PRICE_IS_FREE' => 'free.png',
     'PAYMENT_MODULE_GV' => 'GV/DC',     //- NOTE: This value is also defined in the storefront's lang.english.php, be sure to update both if this one's changed!
-    'PHP_DATE_TIME_FORMAT' => 'm/d/Y H:i:s',
     'PLEASE_SELECT' => 'Please select ...',
     'PLUGIN_INSTALL_SQL_FAILURE' => 'one or more database errors occurred',
     'PREVNEXT_BUTTON_NEXT' => '[Next&nbsp;&raquo;]',
@@ -699,17 +715,5 @@ $define = [
     'WHOS_ONLINE_ACTIVE_TEXT' => 'Active cart',
     'WHOS_ONLINE_INACTIVE_NO_CART_TEXT' => 'Inactive no cart',
     'WHOS_ONLINE_INACTIVE_TEXT' => 'Inactive cart',
-    '_APRIL' => 'April',
-    '_AUGUST' => 'August',
-    '_DECEMBER' => 'December',
-    '_FEBRUARY' => 'February',
-    '_JANUARY' => 'January',
-    '_JULY' => 'July',
-    '_JUNE' => 'June',
-    '_MARCH' => 'March',
-    '_MAY' => 'May',
-    '_NOVEMBER' => 'November',
-    '_OCTOBER' => 'October',
-    '_SEPTEMBER' => 'September',
 ];
-return $define;
+return array_merge($define, $define_locales);
