@@ -87,22 +87,22 @@ foreach ($languages as $next_lang) {
     <div class="row table-bordered">
         <div class="row">
             <div class="col-sm-6 pageHeading">
-                <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $next_lang['directory'] . '/images/' . $next_lang['image'], $next_lang['name']) . '&nbsp;' . zen_output_string_protected($pInfo->products_name); ?>
+                <?= zen_image(DIR_WS_CATALOG_LANGUAGES . $next_lang['directory'] . '/images/' . $next_lang['image'], $next_lang['name']) . '&nbsp;' . zen_output_string_protected($pInfo->products_name) ?>
             </div>
             <div class="col-sm-6 text-right">
-          <?php echo $currencies->format($pInfo->products_price); ?>
-          <?php echo ($pInfo->products_virtual == 1 ? '<div class="errorText">' . '<br>' . TEXT_VIRTUAL_PREVIEW . '</div>' : ''); ?>
-          <?php echo ($pInfo->product_is_always_free_shipping == 1 ? '<div class="errorText">' . '<br>' . TEXT_FREE_SHIPPING_PREVIEW . '</div>' : ''); ?>
-          <?php echo ($pInfo->products_priced_by_attribute == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_PREVIEW . '</div>' : ''); ?>
-          <?php echo ($pInfo->product_is_free == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : ''); ?>
-          <?php echo ($pInfo->product_is_call == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_EDIT . '</div>' : '') ?>
-          <?php echo ($pInfo->products_qty_box_status == 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : ''); ?>
-          <?php echo ($pInfo->products_quantity_order_min < $pInfo->products_quantity_order_units ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_PREVIEW . '</div>' : ''); ?>
-          <?php echo ($pInfo->products_quantity_order_min > $pInfo->products_quantity_order_units && fmod_round($pInfo->products_quantity_order_min, $pInfo->products_quantity_order_units) != 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_MISMATCH_PREVIEW . '</div>' : ''); ?>
-          <?php echo (isset($_GET['pID']) && $pInfo->products_priced_by_attribute == 1 ? '<br>' . zen_get_products_display_price($_GET['pID']) : ''); ?>
+                <?= $currencies->format($pInfo->products_price) ?>
+                <?= ($pInfo->products_virtual == 1 ? '<div class="errorText">' . '<br>' . TEXT_VIRTUAL_PREVIEW . '</div>' : '') ?>
+                <?= ($pInfo->product_is_always_free_shipping == 1 ? '<div class="errorText">' . '<br>' . TEXT_FREE_SHIPPING_PREVIEW . '</div>' : '') ?>
+                <?= ($pInfo->products_priced_by_attribute == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_PRICED_BY_ATTRIBUTES_PREVIEW . '</div>' : '') ?>
+                <?= ($pInfo->product_is_free == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_FREE_PREVIEW . '</div>' : '') ?>
+                <?= ($pInfo->product_is_call == 1 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_IS_CALL_EDIT . '</div>' : '') ?>
+                <?= ($pInfo->products_qty_box_status == 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_BOX_STATUS_PREVIEW . '</div>' : '') ?>
+                <?= ($pInfo->products_quantity_order_min < $pInfo->products_quantity_order_units ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_PREVIEW . '</div>' : '') ?>
+                <?= ($pInfo->products_quantity_order_min > $pInfo->products_quantity_order_units && fmod_round($pInfo->products_quantity_order_min, $pInfo->products_quantity_order_units) != 0 ? '<div class="errorText">' . '<br>' . TEXT_PRODUCTS_QTY_MIN_UNITS_MISMATCH_PREVIEW . '</div>' : '') ?>
+                <?= (isset($_GET['pID']) && $pInfo->products_priced_by_attribute == 1 ? '<br>' . zen_get_products_display_price($_GET['pID']) : '') ?>
             </div>
         </div>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+        <div class="row"><?= zen_draw_separator('pixel_trans.gif', '1', '10') ?></div>
         <div class="row img">
 <?php
 //auto replace with defined missing image
@@ -158,26 +158,26 @@ foreach ($languages as $next_lang) {
 <?php
     if ($pInfo->products_url) {
 ?>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
-        <div class="row"><?php echo sprintf(TEXT_PRODUCT_MORE_INFORMATION, $pInfo->products_url); ?></div>
+        <div class="row"><?= zen_draw_separator('pixel_trans.gif', '1', '10') ?></div>
+        <div class="row"><?= sprintf(TEXT_PRODUCT_MORE_INFORMATION, $pInfo->products_url) ?></div>
 <?php
     }
 ?>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+        <div class="row"><?= zen_draw_separator('pixel_trans.gif', '1', '10') ?></div>
 <?php
     if ($p_date_available > date('Y-m-d')) {
 ?>
-        <div class="row"><?php echo sprintf(TEXT_PRODUCT_DATE_AVAILABLE, zen_date_long($p_date_available)); ?></div>
+        <div class="row"><?= sprintf(TEXT_PRODUCT_DATE_AVAILABLE, zen_date_long($p_date_available)) ?></div>
 <?php
     } else {
 ?>
-        <div class="row"><?php echo sprintf(TEXT_PRODUCT_DATE_ADDED, zen_date_long($pInfo->products_date_added)); ?></div>
+        <div class="row"><?= sprintf(TEXT_PRODUCT_DATE_ADDED, zen_date_long($pInfo->products_date_added)) ?></div>
 <?php
     }
 ?>
-        <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '1', '10'); ?></div>
+        <div class="row"><?= zen_draw_separator('pixel_trans.gif', '1', '10') ?></div>
     </div>
-    <div class="row"><?php echo zen_draw_separator('pixel_trans.gif', '5', '10'); ?></div>
+    <div class="row"><?= zen_draw_separator('pixel_trans.gif', '5', '10') ?></div>
 <?php
 }   //-END language loop
 
@@ -197,8 +197,8 @@ if ($is_read_only) {
     }
 ?>
     <div class="row text-right">
-        <a href="<?php echo zen_href_link($back_url, $back_url_params . $search_param); ?>" class="btn btn-default" role="button">
-            <?php echo IMAGE_BACK; ?>
+        <a href="<?= zen_href_link($back_url, $back_url_params . $search_param) ?>" class="btn btn-default" role="button">
+            <?= IMAGE_BACK ?>
         </a>
     </div>
 <?php
@@ -238,11 +238,11 @@ if ($is_read_only) {
         echo zen_draw_hidden_field('search', $_GET['search']);
     }
 ?>
-        <button type="submit" name="edit" value="edit" class="btn btn-default"><?php echo IMAGE_BACK; ?></button>
-        <button type="submit" class="btn btn-primary"><?php echo (isset($_GET['pID'])) ? IMAGE_UPDATE : IMAGE_INSERT; ?></button>
+        <button type="submit" name="edit" value="edit" class="btn btn-default"><?= IMAGE_BACK ?></button>
+        <button type="submit" class="btn btn-primary"><?= (isset($_GET['pID'])) ? IMAGE_UPDATE : IMAGE_INSERT ?></button>
 
-        <a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . $pID_param . $page_param . $search_param); ?>" class="btn btn-default" role="button">
-            <?php echo IMAGE_CANCEL; ?>
+        <a href="<?= zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $cPath . $pID_param . $page_param . $search_param) ?>" class="btn btn-default" role="button">
+            <?= IMAGE_CANCEL ?>
         </a>
     </div>
 <?php
