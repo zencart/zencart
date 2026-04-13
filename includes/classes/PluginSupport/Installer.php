@@ -50,9 +50,9 @@ class Installer
      */
     public function executeInstallers($pluginDir): ?bool
     {
-        $this->executePatchInstaller($pluginDir);
-        if ($this->errorContainer->hasErrors()) {
-            return null;
+        $patch_status = $this->executePatchInstaller($pluginDir);
+        if ($patch_status !== null) {
+            return $patch_status;
         }
         return $this->executeScriptedInstaller($pluginDir);
     }
@@ -62,9 +62,9 @@ class Installer
      */
     public function executeUninstallers($pluginDir): ?bool
     {
-        $this->executePatchUninstaller($pluginDir);
-        if ($this->errorContainer->hasErrors()) {
-            return null;
+        $patch_status = $this->executePatchUninstaller($pluginDir);
+        if ($patch_status !== null) {
+            return $patch_status;
         }
         return $this->executeScriptedUninstaller($pluginDir);
     }
@@ -80,7 +80,7 @@ class Installer
     /**
      * @since ZC v1.5.8
      */
-public function executeUpgraders($pluginDir, $oldVersion): ?bool
+    public function executeUpgraders($pluginDir, $oldVersion): ?bool
     {
         return $this->executeScriptedUpgrader($pluginDir, $oldVersion);
     }
@@ -128,35 +128,36 @@ public function executeUpgraders($pluginDir, $oldVersion): ?bool
     /**
      * @since ZC v1.5.7
      */
-    protected function executePatchInstaller($pluginDir): void
+    protected function executePatchInstaller($pluginDir): ?bool
     {
         $patchFile = 'install.sql';
-        $this->executePatchFile($pluginDir, $patchFile);
+        return $this->executePatchFile($pluginDir, $patchFile);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executePatchUninstaller($pluginDir): void
+    protected function executePatchUninstaller($pluginDir): ?bool
     {
         $patchFile = 'uninstall.sql';
-        $this->executePatchFile($pluginDir, $patchFile);
+        return $this->executePatchFile($pluginDir, $patchFile);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executePatchFile($pluginDir, $patchFile): void
+    protected function executePatchFile($pluginDir, $patchFile): ?bool
     {
         if (!file_exists($pluginDir . '/Installer/' . $patchFile)) {
-            return;
+            return null;
         }
         $lines = file($pluginDir . '/Installer/' . $patchFile);
         $paramLines = $this->patchInstaller->parse($lines);
         if ($this->errorContainer->hasErrors()) {
-            return;
+            return false;
         }
         $this->patchInstaller->executePatchSql($paramLines);
+        return true;
     }
 
     /**
