@@ -183,15 +183,23 @@ if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
         empty($_SERVER['HTTP_USER_AGENT']) ||
         preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', $_SERVER['HTTP_USER_AGENT'])
     );
-
-    $hasInternalReferer = (!empty($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === $_SERVER['HTTP_HOST']);
+ 
+    $hasInternalReferer = true;
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+        $referer_pieces = parse_url($_SERVER['HTTP_REFERER']);
+        $http_referer = $referer_pieces['host'];
+        if (isset($referer_pieces['port'])) {
+            $http_referer .= ':' . $referer_pieces['port'];
+        }
+        $hasInternalReferer = $http_referer === $_SERVER['HTTP_HOST'];
+    }
 
     if ($isCrawlerUA || !$hasInternalReferer) {
         $contaminated = true;
     }
 }
 
-unset($paramsToCheck, $paramsToAvoid, $key);
+unset($paramsToCheck, $paramsToAvoid, $key, $referer_pieces, $http_referer);
 
 if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
