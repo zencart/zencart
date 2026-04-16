@@ -28,11 +28,11 @@
 <!-- Thumbnail for additional image -->
 <div class="back">
     <a id="<?= $modal_link_id ?>"
-       href="<?= htmlspecialchars($large_image, ENT_QUOTES, 'UTF-8'); ?>"
+       href="<?= htmlspecialchars($image['products_image_large'], ENT_QUOTES, 'UTF-8'); ?>"
        onclick="openModal('<?= $modal_id ?>'); return false;"
        title="<?= htmlspecialchars(TEXT_CLICK_TO_ENLARGE . ' ' . $image['products_name'], ENT_QUOTES, 'UTF-8'); ?>">
-       
+
         <?= $modal_link_img; ?>
-        
+
     </a>
 </div>
