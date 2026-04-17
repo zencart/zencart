@@ -184,14 +184,16 @@ if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
         preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', $_SERVER['HTTP_USER_AGENT'])
     );
  
-    $hasInternalReferer = true;
+    $hasInternalReferer = false;
     if (!empty($_SERVER['HTTP_REFERER'])) {
         $referer_pieces = parse_url($_SERVER['HTTP_REFERER']);
-        $http_referer = $referer_pieces['host'];
-        if (isset($referer_pieces['port'])) {
-            $http_referer .= ':' . $referer_pieces['port'];
+        if ($referer_pieces !== false) {
+            $http_referer = $referer_pieces['host'];
+            if (isset($referer_pieces['port'])) {
+                $http_referer .= ':' . $referer_pieces['port'];
+            }
+            $hasInternalReferer = $http_referer === $_SERVER['HTTP_HOST'];
         }
-        $hasInternalReferer = $http_referer === $_SERVER['HTTP_HOST'];
     }
 
     if ($isCrawlerUA || !$hasInternalReferer) {
