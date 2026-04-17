@@ -183,18 +183,23 @@ if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
         empty($_SERVER['HTTP_USER_AGENT']) ||
         preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', $_SERVER['HTTP_USER_AGENT'])
     );
- 
-    $hasInternalReferer = false;
-    if (!empty($_SERVER['HTTP_REFERER'])) {
-        $referer_pieces = parse_url($_SERVER['HTTP_REFERER']);
-        if ($referer_pieces !== false) {
-            $http_referer = $referer_pieces['host'];
-            if (isset($referer_pieces['port'])) {
-                $http_referer .= ':' . $referer_pieces['port'];
-            }
-            $hasInternalReferer = $http_referer === $_SERVER['HTTP_HOST'];
-        }
-    }
+
+    $refHost = !empty($_SERVER['HTTP_REFERER'])
+        ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)
+        : null;
+
+    // Prefer X-Forwarded-Host when present (proxy/CDN); else fall back to HTTP_HOST.
+    // X-Forwarded-Host can be a comma-separated list; take the first.
+    $hostHeader = !empty($_SERVER['HTTP_X_FORWARDED_HOST'])
+        ? trim(strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ','))
+        : ($_SERVER['HTTP_HOST'] ?? '');
+
+    // Strip :port (IPv4/hostname) or ]:port (IPv6-in-brackets), and strip brackets for IPv6.
+    $hostOnly = strtolower($hostHeader);
+    $hostOnly = preg_replace('/^\[(.*)\](?::\d+)?$/', '$1', $hostOnly); // [::1]:8443 -> ::1
+    $hostOnly = preg_replace('/:\d+$/', '', $hostOnly);                // example.com:8443 -> example.com
+
+    $hasInternalReferer = (!empty($refHost) && strtolower($refHost) === $hostOnly);
 
     if ($isCrawlerUA || !$hasInternalReferer) {
         $contaminated = true;
