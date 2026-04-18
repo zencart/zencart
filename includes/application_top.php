@@ -173,6 +173,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         }
     }
 }
+unset($len, $paramsToCheck, $paramsToAvoid, $pairs, $pair, $parts, $keys, $key, $counts, $count);
 
 /**
  * reject crawler 'BUY NOW' attempts
@@ -206,13 +207,12 @@ if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
     }
 }
 
-unset($paramsToCheck, $paramsToAvoid, $key, $referer_pieces, $http_referer);
-
 if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
 }
-unset($contaminated, $len);
+unset($contaminated, $isCrawlerUA, $refHost, $hostHeader, $hostOnly, $hasInternalReferer);
+
 /* *** END OF INOCULATION *** */
 
 // if session id is reconfigured, then we want to exclude its use immediately
