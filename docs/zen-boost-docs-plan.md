@@ -8,6 +8,8 @@
 
 The plugin should own the Zen Cart-specific integration points, cached documentation snapshots, generated JSON catalogs, diagnostics, and developer-facing tools.
 
+The primary command surface should use the encapsulated-plugin console command framework being developed on the `feature/console-command-framework` branch. Zen Boost should not introduce a separate bespoke command dispatcher unless that framework needs a thin bridge entrypoint.
+
 An optional MCP server can be exposed from the same plugin for local development use in editors such as VS Code. That MCP server should read from the plugin's flat-file docs and code catalogs instead of depending on separate infrastructure.
 
 ## Goal
@@ -43,16 +45,42 @@ The first implementation should live inside a plugin structure similar to:
 - `zc_plugins/zen-boost/v1.0.0/catalog/includes/classes/`
 - `zc_plugins/zen-boost/v1.0.0/admin/includes/classes/`
 - `zc_plugins/zen-boost/v1.0.0/admin/`
+- plugin-local console command classes using the encapsulated-plugin console command convention
 - `zc_plugins/zen-boost/v1.0.0/resources/docs-cache/`
 - `zc_plugins/zen-boost/v1.0.0/resources/catalogs/`
-- `zc_plugins/zen-boost/v1.0.0/bin/`
+- optional `zc_plugins/zen-boost/v1.0.0/bin/` entrypoints only where needed for MCP or framework bridging
 
 Suggested responsibilities:
 
 - `resources/docs-cache/` stores fetched documentation snapshots
 - `resources/catalogs/` stores generated JSON chunk and repo catalogs
 - `admin/` exposes diagnostics or developer tools pages
-- `bin/` contains local developer scripts such as catalog rebuild helpers or an MCP entrypoint
+- plugin console commands expose catalog rebuild, search, comparison, and plugin diagnostic actions
+- `bin/` is reserved for a future MCP entrypoint or a small bridge script if the console framework requires one
+
+### Console Command Integration
+
+Zen Boost should be an early real-world consumer of the encapsulated-plugin console command framework.
+
+The exact directory names and registration metadata should follow the conventions from `feature/console-command-framework`, but the intended command shape is:
+
+- docs fetch command
+- docs index command
+- repository index command
+- docs/repo search command
+- docs/code comparison command
+- plugin doctor command
+- plugin scaffold command, later
+
+The command classes should be thin adapters over framework-neutral services. The services should contain the actual fetch, parse, index, search, and inspect logic so they can be unit tested without booting the console runtime.
+
+Example responsibility split:
+
+- console command class: parse input, call service, render output, return exit code
+- service class: perform fetch/index/search/inspection behavior
+- storage class: read/write JSON catalogs and raw page snapshots
+
+This keeps Zen Boost aligned with core console-command work and avoids a second plugin-specific CLI mechanism.
 
 ### 1. Documentation Ingestion
 
@@ -140,9 +168,9 @@ Do not require SQLite, Redis, embeddings, or a hosted search service for the fir
 
 If search quality later proves insufficient, a hosted documentation API can be considered as a second-phase enhancement.
 
-## CLI Surface
+## Console Surface
 
-The first useful interface should be a CLI inside a `zen-boost` package or plugin.
+The first useful interface should be console commands contributed by the `zen-boost` encapsulated plugin.
 
 Suggested commands:
 
@@ -167,6 +195,16 @@ The first version of `docs:search` should use:
 - simple weighted keyword ranking
 
 This should be enough for Zen Cart's documentation size without introducing semantic search infrastructure.
+
+The exact command namespace should be chosen to fit the console framework's conventions. If the framework prefers plugin-prefixed names, the commands could become:
+
+- `zen-boost:docs:search <term>`
+- `zen-boost:docs:ask "<question>"`
+- `zen-boost:docs:compare "<question>"`
+- `zen-boost:plugin:doctor <plugin>`
+- `zen-boost:make:plugin <name>`
+
+The important constraint is that command registration should happen through the encapsulated-plugin console command framework, not through a standalone Zen Boost router.
 
 ## MCP Option
 
@@ -200,18 +238,39 @@ This keeps the editor integration lightweight. The editor talks to the local MCP
 
 ## MVP Implementation Order
 
-1. Build a fetcher for the selected `docs.zen-cart.com` sections.
-2. Store raw page snapshots and metadata locally.
-3. Chunk the docs by heading and tag the chunks.
-4. Write chunk and repo catalogs as local JSON files.
-5. Implement a combined retrieval command for docs plus code using keyword and heading-aware search.
-6. Add a simple comparison mode that reports docs/code mismatches.
-7. Add developer-facing commands such as `plugin:doctor` and `make:plugin`.
-8. Add an optional local MCP server entrypoint backed by the same flat-file catalogs.
+1. Review and adopt the encapsulated-plugin console command conventions from `feature/console-command-framework`.
+2. Scaffold `zc_plugins/zen-boost/v1.0.0/` as an encapsulated plugin with console-command registration metadata.
+3. Implement the service layer independently of the command runtime.
+4. Implement `plugin:doctor` first because it can run entirely from local files and validates the plugin command integration without network access.
+5. Build a fetcher for the selected `docs.zen-cart.com` sections.
+6. Store raw page snapshots and metadata locally.
+7. Chunk the docs by heading and tag the chunks.
+8. Write chunk and repo catalogs as local JSON files.
+9. Implement a combined retrieval command for docs plus code using keyword and heading-aware search.
+10. Add a simple comparison mode that reports docs/code mismatches.
+11. Add developer-facing commands such as `make:plugin`.
+12. Add an optional local MCP server entrypoint backed by the same flat-file catalogs.
 
 ## Best First Deliverable
 
-The best first deliverable is a local CLI that can answer questions such as:
+The best first deliverable is a plugin-provided console command that can inspect a local plugin and report manifest/installer/convention issues.
+
+The initial target should be:
+
+- `plugin:doctor <plugin>`
+
+or the framework-preferred equivalent, for example:
+
+- `zen-boost:plugin:doctor <plugin>`
+
+This command can be implemented without network access and should prove:
+
+- Zen Boost can register commands from an encapsulated plugin
+- command classes can call plugin-local services
+- services can inspect local plugin manifests and installers
+- output can distinguish hard errors from warnings
+
+After that, add documentation indexing and search commands that answer questions such as:
 
 - what fields belong in a plugin manifest
 - how plugin classes are loaded
@@ -229,6 +288,7 @@ After that CLI is stable, the same search and comparison services can be reused 
 - Do not hide docs/code disagreements from the user.
 - Do not introduce a large infrastructure dependency for the first version.
 - Do not over-engineer search before validating that basic keyword retrieval is insufficient.
+- Do not create a separate Zen Boost command router if the encapsulated-plugin console command framework can provide the command surface.
 
 ## Summary
 
