@@ -38,7 +38,7 @@
     "require-dev": {
         "guzzlehttp/guzzle": "^7.7",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^11.5.42",
+        "phpunit/phpunit": "^12.5.22",
         "symfony/css-selector": "^6.0",
         "symfony/dom-crawler": "^7.4",
         "symfony/maker-bundle": "^1.49",
