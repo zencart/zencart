@@ -18,6 +18,15 @@ $page_param = $currentPage > 1 ? 'page=' . $currentPage . '&' : '';
 $status = ($_GET['status'] ?? '') !== '' ? (int)$_GET['status'] : 0;
 $status_param = $status !== 0 ? 'status=' . $status . '&' : '';
 
+// -----
+// If the current action requires an rID (reviews_id) parameter, but
+// that parameter isn't set, redirect back to the first page of the listing.
+//
+$rID = $_POST['rID'] ?? $_GET['rID'] ?? null;
+if (in_array($action, ['edit', 'preview', 'setflag', 'update', 'deleteconfirm']) && $rID === null) {
+    zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param));
+}
+
 $status_list = [
     ['id' => '', 'text' => TEXT_ALL_STATUS],
     ['id' => 1, 'text' => TEXT_PENDING_APPROVAL],
@@ -42,11 +51,15 @@ if (!empty($action)) {
             if (isset($_POST['flag'], $_GET['rID']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0)) {
                 zen_set_reviews_status($_GET['rID'], $_POST['flag']);
             }
-            zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID'], 'NONSSL'));
+            zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID']));
             break;
 
         case 'update':
-            $reviews_id = zen_db_prepare_input($_GET['rID']);
+            $reviews_id = (int)$_GET['rID'];
+            if (!isset($_POST['reviews_rating'], $_POST['reviews_text'], $_POST['reviews_title']) || $reviews_id < 1) {
+                zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param));
+            }
+
             $reviews_rating = (int)$_POST['reviews_rating'];
             $reviews_text = zen_db_prepare_input($_POST['reviews_text']);
             $reviews_title = zen_db_prepare_input($_POST['reviews_title']);
@@ -67,11 +80,11 @@ if (!empty($action)) {
                   LIMIT 1"
             );
 
-            zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID']));
+            zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $reviews_id));
             break;
 
         case 'deleteconfirm':
-            $reviews_id = zen_db_prepare_input($_POST['rID']);
+            $reviews_id = (int)$_POST['rID'];
 
             $db->Execute(
                 "DELETE FROM " . TABLE_REVIEWS . "
@@ -273,7 +286,7 @@ if ($action === 'edit') {
 ?>
                 <div class="form-group">
                     <div class="col-sm-12 text-right">
-                        <a href="<?= zen_href_link($back_url, $back_url_params, 'NONSSL') ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a>
+                        <a href="<?= zen_href_link($back_url, $back_url_params) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a>
                         <a href="<?= zen_href_link(FILENAME_REVIEWS, $page_param . $status_param. 'rID=' . $rInfo->reviews_id . '&action=edit') ?>" class="btn btn-primary" role="button">
                             <?= TEXT_EDIT_REVIEW ?>
                         </a>
@@ -380,11 +393,11 @@ if ($action === 'edit') {
     $reviews_split = new splitPageResults($currentPage, MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
     $reviews = $db->Execute($reviews_query_raw);
     foreach ($reviews as $review) {
-        if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ((int)$_GET['rID'] === (int)$review['reviews_id']))) && !isset($rInfo)) {
+        if ((!isset($_GET['rID']) || (int)$_GET['rID'] === (int)$review['reviews_id']) && !isset($rInfo)) {
             $rInfo = new objectInfo($review);
         }
 
-        if (isset($rInfo) && is_object($rInfo) && ((int)$review['reviews_id'] === (int)$rInfo->reviews_id)) {
+        if (isset($rInfo) && is_object($rInfo) && (int)$review['reviews_id'] === (int)$rInfo->reviews_id) {
 ?>
                     <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?= zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $rInfo->reviews_id . '&action=preview') ?>'">
 <?php
