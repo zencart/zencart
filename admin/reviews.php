@@ -309,22 +309,22 @@ if (!empty($action)) {
 
                 $order_by = " ORDER BY r.status, r.date_added DESC";
 
-                $reviews_query_raw = "SELECT r.reviews_id, r.products_id, r.customers_name, r.reviews_rating, r.date_added, r.status, r.last_modified, r.reviews_read,
-                                             rd.languages_id, rd.reviews_text, rd.reviews_title,
-                                             pd.products_name,
-                                             p.products_model, p.products_image,
-                                             length(rd.reviews_text) AS reviews_text_size,
-                                             (AVG(r.reviews_rating) / 5 * 100) AS average_rating
-                                      FROM " . TABLE_REVIEWS . " r
-                                      LEFT JOIN " . TABLE_REVIEWS_DESCRIPTION . " rd ON rd.reviews_id = r.reviews_id
-                                      LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON pd.products_id = r.products_id
-                                        AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
-                                      LEFT JOIN " . TABLE_PRODUCTS . " p ON p.products_id = r.products_id
-                                      WHERE r.products_id = p.products_id
-                                      " . $search . "
-                                      GROUP BY r.reviews_id, rd.languages_id, r.products_id, r.customers_name, r.reviews_rating, r.date_added, r.status,
-                                       r.last_modified, r.reviews_read, rd.reviews_text, pd.products_name, p.products_model, p.products_image
-                                      " . $order_by;
+                $reviews_query_raw =
+                    "SELECT r.reviews_id, r.products_id, r.customers_name, r.reviews_rating, r.date_added, r.status, r.last_modified, r.reviews_read,
+                            rd.languages_id, rd.reviews_text, rd.reviews_title,
+                            pd.products_name, p.products_model, p.products_image,
+                            LENGTH(rd.reviews_text) AS reviews_text_size
+                       FROM " . TABLE_REVIEWS . " r
+                            LEFT JOIN " . TABLE_REVIEWS_DESCRIPTION . " rd
+                                ON rd.reviews_id = r.reviews_id
+                            LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                ON pd.products_id = r.products_id
+                               AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
+                            LEFT JOIN " . TABLE_PRODUCTS . " p
+                                ON p.products_id = r.products_id
+                      WHERE r.products_id = p.products_id " .
+                            $search .
+                      $order_by;
 
                 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {
@@ -426,7 +426,13 @@ if (!empty($action)) {
                     str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$rInfo->reviews_rating));
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
                   $contents[] = array('text' => TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');
-                  $contents[] = array('text' => TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format((float)$rInfo->average_rating, 2) . '%');
+
+                  $average_rating = $db->Execute(
+                    "SELECT (AVG(reviews_rating) / 5 * 100) AS avg
+                       FROM " . TABLE_REVIEWS . "
+                      WHERE products_id = " . (int)$rInfo->products_id
+                  );
+                  $contents[] = array('text' => TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format((float)$average_rating->fields['avg'], 2) . '%');
                 }
                 break;
             }
