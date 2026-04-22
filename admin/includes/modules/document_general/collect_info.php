@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -97,8 +98,8 @@ if (!$category_lookup->EOF) {
 
 $manufacturers_array = [
     [
-    'id' => '',
-    'text' => TEXT_NONE,
+        'id' => '',
+        'text' => TEXT_NONE,
     ]
 ];
 $manufacturers = $db->Execute("SELECT manufacturers_id, manufacturers_name
@@ -117,47 +118,58 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
 }
 ?>
 <div class="container-fluid">
-    <?php
-    echo zen_draw_form('new_product', FILENAME_PRODUCT, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=new_product_preview' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : ''), 'post', 'enctype="multipart/form-data" class="form-horizontal"');
+    <?php echo zen_draw_form(
+        'new_product',
+        FILENAME_PRODUCT,
+        'cPath=' . $current_category_id .
+        (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') .
+        '&action=new_product_preview' .
+        (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') .
+        (!empty($_GET['search']) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') .
+        ((!empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : ''),
+        'post',
+        'enctype="multipart/form-data" class="form-horizontal"'
+    );
     if (isset($product_type)) {
       echo zen_draw_hidden_field('product_type', $product_type);
     }
     ?>
-  <h3 class="col-sm-11"><?php echo sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)); ?></h3>
-  <div class="col-sm-1"><?php echo zen_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT, 'class="object-fit-contain"'); ?></div>
+  <h3 class="col-sm-11"><?= sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)) ?></h3>
+  <div class="col-sm-1"><?= zen_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT, 'class="object-fit-contain"') ?></div>
     <div class="floatButton text-right">
-      <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, 'cPath=' . $current_category_id . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') . ( (isset($_GET['search']) && !empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') . ( (isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '')); ?>" class="btn btn-default" role="button"><?php echo IMAGE_CANCEL; ?></a>
+      <button type="submit" class="btn btn-primary"><?= IMAGE_PREVIEW ?></button>&nbsp;&nbsp;
+        <a href="<?= zen_href_link(
+            FILENAME_CATEGORY_PRODUCT_LISTING,
+            'cPath=' . $current_category_id .
+            (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') .
+            (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') .
+            ((!empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') .
+            ((!empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '')) ?>" class="btn btn-default" role="button">
+            <?= IMAGE_CANCEL ?>
+        </a>
     </div>
   <div class="form-group">
       <?php
 // show when product is linked
       if (isset($_GET['pID']) && zen_get_product_is_linked($_GET['pID']) == 'true' && (int)$_GET['pID'] > 0) {
         ?>
-        <?php echo zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"'); ?>
+        <?= zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"') ?>
       <div class="col-sm-9 col-md-6">
         <div class="input-group">
-          <span class="input-group-addon">
-              <?php
-              echo zen_icon('linked', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;';
-              ?>
-          </span>
-          <?php
-          echo zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($_GET['pID']), $pInfo->master_categories_id, 'class="form-control" id="master_category"');
-          ?>
+          <span class="input-group-addon"><?= zen_icon('linked', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;' ?></span>
+          <?= zen_draw_pull_down_menu('master_category', zen_get_master_categories_pulldown($_GET['pID']), $pInfo->master_categories_id, 'class="form-control" id="master_category"') ?>
         </div>
       </div>
     <?php } else { ?>
       <div class="col-sm-3 text-right">
-        <strong>
-            <?php echo TEXT_MASTER_CATEGORIES_ID; ?>
-        </strong>
+        <strong><?= TEXT_MASTER_CATEGORIES_ID ?></strong>
       </div>
-      <div class="col-sm-9 col-md-6"><?php echo TEXT_INFO_ID . (!empty($_GET['pID']) ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])); ?></div>
+      <div class="col-sm-9 col-md-6"><?= TEXT_INFO_ID . (!empty($_GET['pID']) ? $pInfo->master_categories_id . ' ' . zen_get_category_name($pInfo->master_categories_id, $_SESSION['languages_id']) : $current_category_id . ' ' . zen_get_category_name($current_category_id, $_SESSION['languages_id'])) ?></div>
     <?php } ?>
   </div>
   <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9 col-md-6">
-        <?php echo TEXT_INFO_MASTER_CATEGORIES_ID; ?>
+        <?= TEXT_INFO_MASTER_CATEGORIES_ID ?>
     </div>
   </div>
   <?php
@@ -187,37 +199,38 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
        zen_draw_hidden_field('products_qty_box_status', $pInfo->products_qty_box_status) .
        zen_draw_hidden_field('products_quantity_order_max', $pInfo->products_quantity_order_max);
   ?>
-  <div class="col-sm-12 text-center"><?php echo (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : ''); ?></div>
+  <div class="col-sm-12 text-center"><?= (zen_get_categories_status($current_category_id) == '0' ? TEXT_CATEGORIES_STATUS_INFO_OFF : '') . (isset($out_status) && $out_status ? ' ' . TEXT_PRODUCTS_STATUS_INFO_OFF : '') ?></div>
   <div class="form-group">
-      <p class="col-sm-3 control-label"><?php echo TEXT_DOCUMENT_STATUS; ?></p>
+      <p class="col-sm-3 control-label"><?= TEXT_DOCUMENT_STATUS ?></p>
     <div class="col-sm-9 col-md-6">
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '1', ($pInfo->products_status == 1)) . TEXT_PRODUCT_AVAILABLE; ?></label>
-      <label class="radio-inline"><?php echo zen_draw_radio_field('products_status', '0', ($pInfo->products_status == 0)) . TEXT_PRODUCT_NOT_AVAILABLE; ?></label>
+      <label class="radio-inline"><?= zen_draw_radio_field('products_status', '1', ($pInfo->products_status == 1)) . TEXT_PRODUCT_AVAILABLE ?></label>
+      <label class="radio-inline"><?= zen_draw_radio_field('products_status', '0', ($pInfo->products_status == 0)) . TEXT_PRODUCT_NOT_AVAILABLE ?></label>
     </div>
   </div>
   <div class="form-group">
-      <?php echo zen_draw_label(TEXT_DOCUMENT_DATE_AVAILABLE, 'products_date_available', 'class="col-sm-3 control-label"'); ?>
+      <?= zen_draw_label(TEXT_DOCUMENT_DATE_AVAILABLE, 'products_date_available', 'class="col-sm-3 control-label"') ?>
     <div class="col-sm-9 col-md-6">
       <div class="date input-group" id="datepicker">
         <span class="input-group-addon datepicker_icon">
           <i class="fa-regular fa-calendar-days fa-lg">&nbsp;</i>
         </span>
-        <?php echo zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control" id="products_date_available" autocomplete="off"'); ?>
+        <?= zen_draw_input_field('products_date_available', $pInfo->products_date_available, 'class="form-control" id="products_date_available" autocomplete="off"') ?>
       </div>
-        <span class="help-block errorText">(<?php echo zen_datepicker_format_full();?>)</span>
+        <span class="help-block errorText">(<?= zen_datepicker_format_full() ?>)</span>
     </div>
   </div>
   <div class="form-group">
-      <p class="col-sm-3 control-label"><?php echo TEXT_PRODUCTS_NAME; ?></p>
+      <p class="col-sm-3 control-label"><?= TEXT_PRODUCTS_NAME ?></p>
     <div class="col-sm-9 col-md-6">
         <?php
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
           ?>
         <div class="input-group">
-          <span class="input-group-addon">
-              <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
-          </span>
-          <?php echo zen_draw_input_field('products_name[' . $languages[$i]['id'] . ']', htmlspecialchars(isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : zen_get_products_name($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name') . ' class="form-control"', true); ?>
+          <span class="input-group-addon"><?= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) ?></span>
+          <?= zen_draw_input_field(
+              'products_name[' . $languages[$i]['id'] . ']',
+              htmlspecialchars(isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : zen_get_products_name($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE),
+              zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_name') . ' class="form-control"', true) ?>
         </div>
         <br>
         <?php
@@ -250,24 +263,30 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             $parms = (isset($extra_input['label']['parms'])) ? (' ' . $extra_input['label']['parms']) : '';
 ?>
             <div class="form-group">
-                <?php echo zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms); ?>
-                <div class="col-sm-9 col-md-6"><?php echo $extra_input['input']; ?></div>
+                <?= zen_draw_label($extra_input['label']['text'], $extra_input['label']['field_name'], 'class="col-sm-3 control-label' . $addl_class . '"' . $parms) ?>
+                <div class="col-sm-9 col-md-6"><?= $extra_input['input'] ?></div>
             </div>
 <?php
         }
     }
 ?>
   <div class="form-group">
-      <p class="col-sm-3 control-label"><?php echo TEXT_DOCUMENT_DETAILS; ?></p>
+      <p class="col-sm-3 control-label"><?= TEXT_DOCUMENT_DETAILS ?></p>
     <div class="col-sm-9 col-md-6">
         <?php
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
           ?>
         <div class="input-group">
           <span class="input-group-addon">
-              <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
+              <?= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) ?>
           </span>
-          <?php echo zen_draw_textarea_field('products_description[' . $languages[$i]['id'] . ']', 'soft', '100', '30', htmlspecialchars((isset($products_description[$languages[$i]['id']])) ? stripslashes($products_description[$languages[$i]['id']]) : zen_get_products_description($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), 'class="editorHook form-control"'); ?>
+          <?= zen_draw_textarea_field(
+              'products_description[' . $languages[$i]['id'] . ']',
+              'soft',
+              '100',
+              '30',
+              htmlspecialchars((isset($products_description[$languages[$i]['id']])) ? stripslashes($products_description[$languages[$i]['id']]) : zen_get_products_description($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE),
+              'class="editorHook form-control"') ?>
         </div>
         <br>
         <?php
@@ -275,33 +294,33 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       ?>
     </div>
   </div>
-    <hr>
+  <hr>
 
 <div class="well product-images-area">
-    <h2><?php echo TEXT_DOCUMENT_IMAGE; ?></h2>
+    <h2><?= TEXT_DOCUMENT_IMAGE ?></h2>
     <?php
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <?php echo zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), MEDIUM_IMAGE_WIDTH); ?>
+                <?= zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), MEDIUM_IMAGE_WIDTH) ?>
                 <br>
-                <?php echo $pInfo->products_image; ?>
+                <?= $pInfo->products_image ?>
             </div>
         </div>
         <div class="form-group">
-            <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_DELETE; ?></p>
+            <p class="col-sm-3 control-label"><?= TEXT_IMAGES_DELETE ?></p>
             <div class="col-sm-9 col-md-6">
-                <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO; ?></label>
-                <label class="radio-inline"><?php echo zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES; ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('image_delete', '0', true) . TABLE_HEADING_NO ?></label>
+                <label class="radio-inline"><?= zen_draw_radio_field('image_delete', '1', false) . TABLE_HEADING_YES ?></label>
             </div>
         </div>
     <?php }
     ?>
     <div class="form-group">
-        <?php echo zen_draw_label(TEXT_EDIT_PRODUCTS_IMAGE, 'products_image', 'class="col-sm-3 control-label"'); ?>
+        <?= zen_draw_label(TEXT_EDIT_PRODUCTS_IMAGE, 'products_image', 'class="col-sm-3 control-label"') ?>
         <div class="col-sm-9 col-md-9 col-lg-6">
-            <?php echo zen_draw_file_field('products_image', '', 'class="form-control" id="products_image"'); ?>
-            <?php echo zen_draw_hidden_field('products_previous_image', $pInfo->products_image ?? ''); ?>
+            <?= zen_draw_file_field('products_image', '', 'class="form-control" id="products_image"') ?>
+            <?= zen_draw_hidden_field('products_previous_image', $pInfo->products_image ?? '') ?>
         </div>
     </div>
     <?php
@@ -309,15 +328,15 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     $default_directory = substr($pInfo->products_image ?? '', 0, strpos($pInfo->products_image ?? '', '/') + 1);
     ?>
     <div class="form-group">
-        <?php echo zen_draw_label(TEXT_DOCUMENT_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"'); ?>
+        <?= zen_draw_label(TEXT_DOCUMENT_IMAGE_DIR, 'img_dir', 'class="col-sm-3 control-label"') ?>
         <div class="col-sm-9 col-md-9 col-lg-6">
-            <?php echo zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"'); ?>
+            <?= zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control" id="img_dir"') ?>
         </div>
     </div>
     <div class="form-group">
-        <?php echo zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="col-sm-3 control-label"'); ?>
+        <?= zen_draw_label(TEXT_PRODUCTS_IMAGE_MANUAL, 'products_image_manual', 'class="col-sm-3 control-label"') ?>
         <div class="col-sm-9 col-md-9 col-lg-6">
-            <?php echo zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"'); ?>
+            <?= zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"') ?>
         </div>
     </div>
     <?php if (ADDITIONAL_IMAGES_HANDLING === 'Database') { ?>
@@ -402,7 +421,9 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
 
             function handleFiles(selectedFiles) {
                 for (let file of selectedFiles) {
-                    if (!file.type.startsWith('image/')) continue;
+                    if (!file.type.startsWith('image/')) {
+                        continue;
+                    }
                     files.push(file);
                     showPreview(file);
                 }
@@ -458,25 +479,28 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <?php } ?>
 
     <div class="form-group">
-        <p class="col-sm-3 control-label"><?php echo TEXT_IMAGES_OVERWRITE; ?></p>
+        <p class="col-sm-3 control-label"><?= TEXT_IMAGES_OVERWRITE ?></p>
         <div class="col-sm-9 col-md-9 col-lg-6">
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO; ?></label>
-            <label class="radio-inline"><?php echo zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES; ?></label>
+            <label class="radio-inline"><?= zen_draw_radio_field('overwrite', '0', false) . TABLE_HEADING_NO ?></label>
+            <label class="radio-inline"><?= zen_draw_radio_field('overwrite', '1', true) . TABLE_HEADING_YES ?></label>
         </div>
     </div>
 </div>
     <hr>
   <div class="form-group">
-    <p class="col-sm-3 control-label"><?php echo TEXT_DOCUMENT_URL; ?><span class="help-block"><?php echo TEXT_DOCUMENT_URL_WITHOUT_HTTP; ?></span></p>
+    <p class="col-sm-3 control-label"><?= TEXT_DOCUMENT_URL ?><span class="help-block"><?= TEXT_DOCUMENT_URL_WITHOUT_HTTP ?></span></p>
     <div class="col-sm-9 col-md-6">
         <?php
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
           ?>
         <div class="input-group">
           <span class="input-group-addon">
-              <?php echo zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']); ?>
+              <?= zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) ?>
           </span>
-          <?php echo zen_draw_input_field('products_url[' . $languages[$i]['id'] . ']', htmlspecialchars($products_url[$languages[$i]['id']] ?? zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE), zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control" inputmode="url"'); ?>
+          <?= zen_draw_input_field(
+              'products_url[' . $languages[$i]['id'] . ']',
+              htmlspecialchars($products_url[$languages[$i]['id']] ?? zen_get_products_url($pInfo->products_id, $languages[$i]['id']), ENT_COMPAT, CHARSET, TRUE),
+              zen_set_field_length(TABLE_PRODUCTS_DESCRIPTION, 'products_url') . ' class="form-control" inputmode="url"') ?>
         </div>
         <br>
         <?php
@@ -485,15 +509,15 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     </div>
   </div>
   <div class="form-group">
-      <?php echo zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"'); ?>
+      <?= zen_draw_label(TEXT_PRODUCTS_SORT_ORDER, 'products_sort_order', 'class="col-sm-3 control-label"') ?>
     <div class="col-sm-9 col-md-6">
-      <?php echo zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control" id="products_sort_order" inputmode="decimal"'); ?>
+      <?= zen_draw_input_field('products_sort_order', $pInfo->products_sort_order, 'class="form-control" id="products_sort_order" inputmode="decimal"') ?>
     </div>
     <?php
     echo zen_draw_hidden_field('products_date_added', (zen_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
-    echo ((isset($_GET['search']) && !empty($_GET['search'])) ? zen_draw_hidden_field('search', zen_preserve_search_quotes($_GET['search'])) : '');
-    echo ((isset($_POST['search']) && !empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', zen_preserve_search_quotes($_POST['search'])) : '');
+    echo (!empty($_GET['search']) ? zen_draw_hidden_field('search', zen_preserve_search_quotes($_GET['search'])) : '');
+    echo ((!empty($_POST['search']) && empty($_GET['search'])) ? zen_draw_hidden_field('search', zen_preserve_search_quotes($_POST['search'])) : '');
     ?>
   </div>
-  <?php echo '</form>'; ?>
+  <?= '</form>' ?>
 </div>
