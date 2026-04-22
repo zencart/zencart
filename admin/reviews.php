@@ -8,8 +8,15 @@
 require 'includes/application_top.php';
 
 $action = $_GET['action'] ?? '';
-$currentPage = ($_GET['page'] ?? '') !== '' ? (int)$_GET['page'] : 0;
+
+// -----
+// Note: Potential double/trailing ampersands are resolved via zen_href_link's processing.
+//
+$currentPage = (int)($_GET['page'] ?? 1);
+$page_param = $currentPage > 1 ? 'page=' . $currentPage . '&' : '';
+
 $status = ($_GET['status'] ?? '') !== '' ? (int)$_GET['status'] : 0;
+$status_param = $status !== 0 ? 'status=' . $status . '&' : '';
 
 $status_list = [
     ['id' => '', 'text' => TEXT_ALL_STATUS],
@@ -27,7 +34,7 @@ if (!empty($action)) {
             // same as 'preview'
         case 'preview':
             if (empty($_GET['rID'])) {
-                zen_redirect(zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status : '')));
+                zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param));
             }
             break;
 
@@ -35,7 +42,7 @@ if (!empty($action)) {
             if (isset($_POST['flag'], $_GET['rID']) && ($_POST['flag'] == 1 || $_POST['flag'] == 0)) {
                 zen_set_reviews_status($_GET['rID'], $_POST['flag']);
             }
-            zen_redirect(zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID'], 'NONSSL'));
+            zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID'], 'NONSSL'));
             break;
 
         case 'update':
@@ -60,7 +67,7 @@ if (!empty($action)) {
                   LIMIT 1"
             );
 
-            zen_redirect(zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID']));
+            zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID']));
             break;
 
         case 'deleteconfirm':
@@ -78,7 +85,7 @@ if (!empty($action)) {
                   LIMIT 1"
             );
 
-            zen_redirect(zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status : '')));
+            zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param));
             break;
 
         default:
@@ -129,10 +136,10 @@ if ($action === 'edit' || $action === 'preview') {
     }
 }
 
-if ($action == 'edit') {
+if ($action === 'edit') {
 ?>
         <div class="row">
-            <?= zen_draw_form('update', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID'] . '&action=update', 'post', 'class="form-horizontal"') ?>
+            <?= zen_draw_form('update', FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID'] . '&action=update', 'post', 'class="form-horizontal"') ?>
             <div class="form-group">
                 <?= zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) ?>
             </div>
@@ -163,13 +170,13 @@ if ($action == 'edit') {
             <div class="form-group">
                 <?= zen_draw_label(ENTRY_REVIEW_TITLE, 'reviews_title', 'class="control-label col-sm-3"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?= zen_draw_input_field('reviews_title', (!empty($rInfo->reviews_title) ? htmlspecialchars(stripslashes($rInfo->reviews_title), ENT_COMPAT, CHARSET, TRUE) : ''), zen_set_field_length(TABLE_REVIEWS_DESCRIPTION, 'reviews_title', '128') . 'class="form-control" id="reviews_title"') ?>
+                    <?= zen_draw_input_field('reviews_title', (!empty($rInfo->reviews_title) ? htmlspecialchars(stripslashes($rInfo->reviews_title), ENT_COMPAT, CHARSET, true) : ''), zen_set_field_length(TABLE_REVIEWS_DESCRIPTION, 'reviews_title', '128') . 'class="form-control" id="reviews_title"') ?>
                 </div>
             </div>
             <div class="form-group">
                 <?= zen_draw_label(ENTRY_REVIEW, 'reviews_text', 'class="control-label col-sm-3"') ?>
                 <div class="col-sm-9 col-md-6">
-                    <?= zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text ?? ''), ENT_COMPAT, CHARSET, TRUE), 'class="noEditor form-control" id="reviews_text"') ?>
+                    <?= zen_draw_textarea_field('reviews_text', 'soft', '70', '15', htmlspecialchars(stripslashes($rInfo->reviews_text ?? ''), ENT_COMPAT, CHARSET, true), 'class="noEditor form-control" id="reviews_text"') ?>
                     <span class="help-block"><?= ENTRY_REVIEW_TEXT ?></span>
                 </div>
             </div>
@@ -178,7 +185,7 @@ if ($action == 'edit') {
                     <p class="control-label"><?= ENTRY_RATING ?></p>
                 </div>
                 <div class="col-sm-9 col-md-6">
-                    <?= TEXT_BAD . '&nbsp;'?>
+                    <?= TEXT_BAD . '&nbsp;' ?>
 <?php
         for ($i = 1; $i <= 5; $i++) {
             echo zen_draw_radio_field('reviews_rating', $i, '', $rInfo->reviews_rating, 'id="star' . $i . '"') . '&nbsp;';
@@ -190,7 +197,8 @@ if ($action == 'edit') {
             <div class="form-group">
                 <div class="col-sm-12 text-right">
                     <?= zen_draw_hidden_field('reviews_id', $rInfo->reviews_id) ?>
-                    <button type="submit" class="btn btn-primary"><?= IMAGE_UPDATE ?></button>&nbsp;<a href="<?= zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $_GET['rID']) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
+                    <button type="submit" class="btn btn-primary"><?= IMAGE_UPDATE ?></button>&nbsp;
+                    <a href="<?= zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID']) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
                 </div>
             </div>
             <?= '</form>' ?>
@@ -260,13 +268,15 @@ if ($action == 'edit') {
         $back_url_params = '';
     } else {
         $back_url = FILENAME_REVIEWS;
-        $back_url_params = ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id;
+        $back_url_params = $page_param . $status_param . 'rID=' . $rInfo->reviews_id;
     }
 ?>
                 <div class="form-group">
                     <div class="col-sm-12 text-right">
                         <a href="<?= zen_href_link($back_url, $back_url_params, 'NONSSL') ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a>
-                        <a href="<?= zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') ?>" class="btn btn-primary" role="button"><?= TEXT_EDIT_REVIEW ?></a>
+                        <a href="<?= zen_href_link(FILENAME_REVIEWS, $page_param . $status_param. 'rID=' . $rInfo->reviews_id . '&action=edit') ?>" class="btn btn-primary" role="button">
+                            <?= TEXT_EDIT_REVIEW ?>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -352,23 +362,22 @@ if ($action == 'edit') {
           $order_by;
 
     // reset page when page is unknown
-    if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['rID'])) {
+    if ($currentPage === 1 && !empty($_GET['rID'])) {
         $check_page = $db->Execute($reviews_query_raw);
-        $check_count = 0;
         if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+            $check_count = 0;
             foreach ($check_page as $item) {
-                if ($item['reviews_id'] == $_GET['rID']) {
+                $check_count++;
+                if ((int)$item['reviews_id'] === (int)$_GET['rID']) {
                     break;
                 }
-                $check_count++;
             }
-            $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
-        } else {
-            $_GET['page'] = 1;
+            $currentPage = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+            $page_param = $currentPage > 1 ? 'page=' . (int)$currentPage . '&' : '';
         }
     }
 
-    $reviews_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
+    $reviews_split = new splitPageResults($currentPage, MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
     $reviews = $db->Execute($reviews_query_raw);
     foreach ($reviews as $review) {
         if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ((int)$_GET['rID'] === (int)$review['reviews_id']))) && !isset($rInfo)) {
@@ -377,16 +386,20 @@ if ($action == 'edit') {
 
         if (isset($rInfo) && is_object($rInfo) && ((int)$review['reviews_id'] === (int)$rInfo->reviews_id)) {
 ?>
-                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?= zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=preview') ?>'">
+                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?= zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $rInfo->reviews_id . '&action=preview') ?>'">
 <?php
         } else {
 ?>
-                    <tr class="dataTableRow" onclick="document.location.href = '<?= zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id']) ?>'">
+                    <tr class="dataTableRow" onclick="document.location.href = '<?= zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $review['reviews_id']) ?>'">
 <?php
         }
 ?>
                         <td class="dataTableContent" style="white-space:nowrap"><?= $review['products_model'] ?></td>
-                        <td class="dataTableContent"><a href="<?= zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $review['reviews_id'] . '&action=preview') ?>" title="<?= ICON_PREVIEW ?>"><i class="fa-solid fa-binoculars fa-lg txt-black"></i></a>&nbsp;<?= zen_get_products_name($review['products_id']) ?></td>
+                        <td class="dataTableContent">
+                            <a href="<?= zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $review['reviews_id'] . '&action=preview') ?>" title="<?= ICON_PREVIEW ?>">
+                                <i class="fa-solid fa-binoculars fa-lg txt-black"></i>
+                            </a>&nbsp;<?= zen_get_products_name($review['products_id']) ?>
+                        </td>
                         <td class="dataTableContent"><?= $review['customers_name'] ?></td>
 <?php
         if (count($languages_array) > 1) {
@@ -398,7 +411,7 @@ if ($action == 'edit') {
                         <td class="dataTableContent"><?= str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$review['reviews_rating']) ?></td>
                         <td class="dataTableContent text-center"><?= zen_date_short($review['date_added']) ?></td>
                         <td  class="dataTableContent text-center">
-                            <?= zen_draw_form('setflag_products', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=setflag&rID=' . $review['reviews_id']) ?>
+                            <?= zen_draw_form('setflag_products', FILENAME_REVIEWS, $page_param . 'action=setflag&rID=' . $review['reviews_id']) ?>
 <?php
         if ($review['status'] === '1') {
 ?>
@@ -447,12 +460,12 @@ if ($action == 'edit') {
         case 'delete':
             $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_REVIEW . '</h4>'];
 
-            $contents = ['form' => zen_draw_form('reviews', FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'action=deleteconfirm') . zen_draw_hidden_field('rID', $rInfo->reviews_id)];
+            $contents = ['form' => zen_draw_form('reviews', FILENAME_REVIEWS, $page_param . $status_param . 'action=deleteconfirm') . zen_draw_hidden_field('rID', $rInfo->reviews_id)];
             $contents[] = ['text' => TEXT_INFO_DELETE_REVIEW_INTRO];
             $contents[] = ['text' => '<b>' . $rInfo->products_name . '</b>'];
             $contents[] = [
                 'align' => 'text-center',
-                'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
+                'text' => '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'
             ];
             break;
 
@@ -464,11 +477,15 @@ if ($action == 'edit') {
 
             $contents[] = [
                 'align' => 'text-center',
-                'text' => '<a href="' . zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_EDIT_REVIEW . '</a> ' . '<a href="' . zen_href_link(FILENAME_REVIEWS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . ($status != 0 ? 'status=' . $status . '&' : '') . 'rID=' . $rInfo->reviews_id . '&action=delete') . '" class="btn btn-warning" role="button">' . TEXT_DELETE_REVIEW . '</a> '
+                'text' =>
+                    '<a href="' . zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $rInfo->reviews_id . '&action=edit') . '" class="btn btn-primary" role="button">' . TEXT_EDIT_REVIEW . '</a> ' .
+                    '<a href="' . zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $rInfo->reviews_id . '&action=delete') . '" class="btn btn-warning" role="button">' . TEXT_DELETE_REVIEW . '</a> '
             ];
             $contents[] = [
                 'align' => 'text-center',
-                'text' => '<a rel="noopener" target="_blank" href="' . zen_catalog_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $rInfo->products_id . '&reviews_id=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . TEXT_VIEW_REVIEW . '</a> ' . '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id . '&action=new_product') . '" class="btn btn-default" role="button">' . TEXT_EDIT_PRODUCT . '</a>'
+                'text' =>
+                    '<a rel="noopener" target="_blank" href="' . zen_catalog_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $rInfo->products_id . '&reviews_id=' . $rInfo->reviews_id) . '" class="btn btn-default" role="button">' . TEXT_VIEW_REVIEW . '</a> ' .
+                    '<a href="' . zen_href_link(FILENAME_PRODUCT, 'cPath=' . zen_get_products_category_id($rInfo->products_id) . '&pID=' . $rInfo->products_id . '&action=new_product') . '" class="btn btn-default" role="button">' . TEXT_EDIT_PRODUCT . '</a>'
             ];
 
             $contents[] = ['text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($rInfo->date_added)];
@@ -503,10 +520,10 @@ if ($action == 'edit') {
             <table class="table">
                 <tr>
                     <td>
-                        <?= $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS) ?>
+                        <?= $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $currentPage, TEXT_DISPLAY_NUMBER_OF_REVIEWS) ?>
                     </td>
                     <td class="text-right">
-                    <?= $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'rID'))) ?>
+                        <?= $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $currentPage, zen_get_all_get_params(['page', 'rID'])) ?>
                     </td>
                 </tr>
             </table>
