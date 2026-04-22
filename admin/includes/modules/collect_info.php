@@ -144,13 +144,16 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') .
             (isset($_GET['page']) ? '&page=' . $_GET['page'] : '') .
             ((!empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '') .
-            ((!empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '')) ?>" class="btn btn-default" role="button"><?= IMAGE_CANCEL ?></a>
+            ((!empty($_POST['search']) && empty($_GET['search'])) ? '&search=' . zen_preserve_search_quotes($_POST['search']) : '')) ?>" class="btn btn-default" role="button">
+            <?= IMAGE_CANCEL ?>
+        </a>
     </div>
   <div class="form-group">
       <?php
 // show when product is linked
       if (isset($_GET['pID']) && zen_get_product_is_linked($_GET['pID']) == 'true' && (int)$_GET['pID'] > 0) {
-        echo zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"'); ?>
+        ?>
+        <?= zen_draw_label(TEXT_MASTER_CATEGORIES_ID, 'master_category', 'class="col-sm-3 control-label"') ?>
       <div class="col-sm-9 col-md-6">
         <div class="input-group">
           <span class="input-group-addon"><?= zen_icon('linked', IMAGE_ICON_LINKED) . '&nbsp;&nbsp;' ?></span>
@@ -301,8 +304,8 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     <div class="form-group">
     <?php if (!empty($current_field['label'])) { ?>
         <?= zen_draw_label($current_field['label'], $current_field['fieldname'], 'class="col-sm-3 control-label"') ?>
-    <?php }
-    if (!empty($current_field['fieldname'])) { ?>
+    <?php } ?>
+    <?php if (!empty($current_field['fieldname'])) { ?>
         <div class="col-sm-9 col-md-6"><?= $current_field['input'] ?></div>
     <?php } else { ?>
         <?= $current_field['input'] ?>
