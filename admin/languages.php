@@ -32,9 +32,13 @@ if (!empty($action)) {
 
         // set default, if selected
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
+          $code_2char = substr($code, 0, 2);
           $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
-                        SET configuration_value = '" . zen_db_input($code) . "'
+                        SET configuration_value = '" . zen_db_input($code_2char) . "'
                         WHERE configuration_key = 'DEFAULT_LANGUAGE'");
+          $_SESSION['language'] = $name;
+          $_SESSION['languages_id'] = (int)$insert_id;
+          $_SESSION['languages_code'] = $code_2char;
         }
 
 // create additional categories_description records
@@ -225,11 +229,15 @@ if (!empty($action)) {
                         sort_order = '" . zen_db_input($sort_order) . "'
                     WHERE languages_id = " . (int)$lID);
 
-      // update default language setting
+      // update default language setting (both database and session)
       if ((isset($_POST['default']) && $_POST['default'] == 'on') || $default_lang_change_flag == true) {
+        $code_2char = substr($code, 0, 2);
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . "
-                      SET configuration_value = '" . zen_db_input(substr($code, 0, 2)) . "'
+                      SET configuration_value = '" . zen_db_input($code_2char) . "'
                       WHERE configuration_key = 'DEFAULT_LANGUAGE'");
+        $_SESSION['language'] = $name;
+        $_SESSION['languages_id'] = (int)$lID;
+        $_SESSION['languages_code'] = $code_2char;
       }
       zen_record_admin_activity('Language entry updated for language code ' . $code, 'info');
       zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']));
