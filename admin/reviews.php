@@ -23,7 +23,7 @@ $status_param = $status !== 0 ? 'status=' . $status . '&' : '';
 // that parameter isn't set, redirect back to the first page of the listing.
 //
 $rID = $_POST['rID'] ?? $_GET['rID'] ?? null;
-if (in_array($action, ['edit', 'preview', 'setflag', 'update', 'deleteconfirm']) && $rID === null) {
+if (in_array($action, ['edit', 'preview', 'setflag', 'update', 'delete', 'deleteconfirm']) && $rID === null) {
     zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param));
 }
 
@@ -76,8 +76,7 @@ if (!empty($action)) {
                 "UPDATE " . TABLE_REVIEWS_DESCRIPTION . "
                     SET reviews_text = '" . zen_db_input($reviews_text) . "',
                         reviews_title = '" . zen_db_input($reviews_title) . "'
-                  WHERE reviews_id = " . (int)$reviews_id . "
-                  LIMIT 1"
+                  WHERE reviews_id = " . (int)$reviews_id
             );
 
             zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $reviews_id));
@@ -94,8 +93,7 @@ if (!empty($action)) {
 
             $db->Execute(
                 "DELETE FROM " . TABLE_REVIEWS_DESCRIPTION . "
-                  WHERE reviews_id = " . (int)$reviews_id . "
-                  LIMIT 1"
+                  WHERE reviews_id = " . (int)$reviews_id
             );
 
             zen_redirect(zen_href_link(FILENAME_REVIEWS, $page_param . $status_param));
