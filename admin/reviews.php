@@ -424,7 +424,7 @@ if ($action === 'edit') {
                         <td class="dataTableContent"><?= str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$review['reviews_rating']) ?></td>
                         <td class="dataTableContent text-center"><?= zen_date_short($review['date_added']) ?></td>
                         <td  class="dataTableContent text-center">
-                            <?= zen_draw_form('setflag_products', FILENAME_REVIEWS, $page_param . 'action=setflag&rID=' . $review['reviews_id']) ?>
+                            <?= zen_draw_form('setflag_products' . $review['reviews_id'], FILENAME_REVIEWS, $page_param . 'action=setflag&rID=' . $review['reviews_id']) ?>
 <?php
         if ($review['status'] === '1') {
 ?>
