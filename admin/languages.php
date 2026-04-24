@@ -277,7 +277,7 @@ switch ($action) {
 
         $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_INSERT', (int)$insert_id);
 
-        // set default, if selected, in both database and session
+        // set default, if selected
         if (($_POST['default'] ?? '') === 'on') {
             $db->Execute(
                 "UPDATE " . TABLE_CONFIGURATION . "
@@ -285,9 +285,6 @@ switch ($action) {
                   WHERE configuration_key = 'DEFAULT_LANGUAGE'
                   LIMIT 1"
             );
-            $_SESSION['language'] = $directory;
-            $_SESSION['languages_id'] = (int)$insert_id;
-            $_SESSION['languages_code'] = $code;
         }
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'lID=' . $insert_id));
         break;
@@ -327,16 +324,13 @@ switch ($action) {
                 WHERE languages_id = " . (int)$lID
         );
 
-        // update default language setting (both database and session)
+        // update default language setting
         if (($_POST['default'] ?? '') === 'on' || $default_lang_change_flag === true) {
             $db->Execute(
                 "UPDATE " . TABLE_CONFIGURATION . "
                     SET configuration_value = '" . zen_db_input($code) . "'
                   WHERE configuration_key = 'DEFAULT_LANGUAGE'"
             );
-            $_SESSION['language'] = $directory;
-            $_SESSION['languages_id'] = (int)$lID;
-            $_SESSION['languages_code'] = $code;
         }
         zen_record_admin_activity('Language entry updated for language code ' . $code, 'info');
         zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'lID=' . (int)$_GET['lID']));
