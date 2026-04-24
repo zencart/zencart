@@ -135,7 +135,7 @@ switch ($action) {
         // create additional products_options records
         $products_options = $db->Execute(
             "SELECT products_options_id, products_options_name, products_options_sort_order, products_options_type,
-                    products_options_length, products_options_comment, products_options_column_position, products_options_size,
+                    products_options_length, products_options_comment, products_options_comment_position, products_options_size,
                     products_options_images_per_row, products_options_images_style, products_options_rows
                FROM " . TABLE_PRODUCTS_OPTIONS . "
               WHERE language_id = " . (int)$_SESSION['languages_id']
@@ -278,7 +278,6 @@ switch ($action) {
         $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_INSERT', (int)$insert_id);
 
         // set default, if selected, in both database and session
-        $current_languages_id = $_SESSION['languages_id'];
         if (($_POST['default'] ?? '') === 'on') {
             $db->Execute(
                 "UPDATE " . TABLE_CONFIGURATION . "
@@ -286,7 +285,7 @@ switch ($action) {
                   WHERE configuration_key = 'DEFAULT_LANGUAGE'
                   LIMIT 1"
             );
-            $_SESSION['language'] = $name;
+            $_SESSION['language'] = $directory;
             $_SESSION['languages_id'] = (int)$insert_id;
             $_SESSION['languages_code'] = $code;
         }
@@ -335,7 +334,7 @@ switch ($action) {
                     SET configuration_value = '" . zen_db_input($code) . "'
                   WHERE configuration_key = 'DEFAULT_LANGUAGE'"
             );
-            $_SESSION['language'] = $name;
+            $_SESSION['language'] = $directory;
             $_SESSION['languages_id'] = (int)$lID;
             $_SESSION['languages_code'] = $code;
         }
@@ -381,7 +380,7 @@ switch ($action) {
 
         // if we just deleted our currently-selected language, need to switch to default lang:
         $getlang = '';
-        if ((int)$_SESSION['languages_id'] === (int)$_POST['lID']) {
+        if ((int)$_SESSION['languages_id'] === (int)$lID) {
             $getlang = '&language=' . DEFAULT_LANGUAGE;
         }
 
@@ -498,7 +497,7 @@ switch ($action) {
         // Note: This form is rendered under 3 possible conditions:
         //
         // 1. Editing an existing language definition, using $lInfo object for the data.
-        // 2. Redisplaying form date (as checked above for an 'insert' action) when an error occurs.
+        // 2. Redisplaying form data (as checked above for an 'insert' action) when an error occurs.
         // 3. Creating a new language definition.
         //
         $heading[] = ['text' => '<span class="infoBoxHeading h4">' . $info_heading . '</span>'];
@@ -507,29 +506,29 @@ switch ($action) {
         $contents[] = ['text' =>
             '<br>' .
             zen_draw_label(TEXT_INFO_LANGUAGE_NAME, 'name', 'class="control-label"') .
-            zen_draw_input_field('name', htmlspecialchars($lInfo->name ?? $name ?? '', ENT_COMPAT, CHARSET, true), zen_set_field_length(TABLE_LANGUAGES, 'name') . ' id="name" class="form-control"', true)
+            zen_draw_input_field('name', htmlspecialchars($lInfo?->name ?? $name ?? '', ENT_COMPAT, CHARSET, true), zen_set_field_length(TABLE_LANGUAGES, 'name') . ' id="name" class="form-control"', true)
         ];
         $contents[] = ['text' =>
             '<br>' .
             zen_draw_label(TEXT_INFO_LANGUAGE_CODE, 'code', 'class="control-label"') .
-            zen_draw_input_field('code', $lInfo->code ?? $code ?? '', zen_set_field_length(TABLE_LANGUAGES, 'code') . ' id="code" class="form-control"', true)
+            zen_draw_input_field('code', $lInfo?->code ?? $code ?? '', zen_set_field_length(TABLE_LANGUAGES, 'code') . ' id="code" class="form-control"', true)
         ];
         $contents[] = ['text' =>
             '<br>' .
             zen_draw_label(TEXT_INFO_LANGUAGE_IMAGE, 'image', 'class="control-label"') .
-            zen_draw_input_field('image', $lInfo->image ?? $image ?? '', zen_set_field_length(TABLE_LANGUAGES, 'image') . ' id="image" class="form-control"')
+            zen_draw_input_field('image', $lInfo?->image ?? $image ?? '', zen_set_field_length(TABLE_LANGUAGES, 'image') . ' id="image" class="form-control"')
         ];
         $contents[] = ['text' =>
             '<br>' .
             zen_draw_label(TEXT_INFO_LANGUAGE_DIRECTORY, 'directory', 'class="control-label"') .
-            zen_draw_input_field('directory', $lInfo->directory ?? $directory ?? '', zen_set_field_length(TABLE_LANGUAGES, 'directory') . ' id="directory" class="form-control"', true)
+            zen_draw_input_field('directory', $lInfo?->directory ?? $directory ?? '', zen_set_field_length(TABLE_LANGUAGES, 'directory') . ' id="directory" class="form-control"', true)
         ];
         $contents[] = ['text' =>
             '<br>' .
             zen_draw_label(TEXT_INFO_LANGUAGE_SORT_ORDER, 'sort_order', 'class="control-label"') .
-            zen_draw_input_field('sort_order', $lInfo->sort_order ?? $sort_order ?? '0', 'id="sort_order" class="form-control"', false, 'number')
+            zen_draw_input_field('sort_order', $lInfo?->sort_order ?? $sort_order ?? '0', 'id="sort_order" class="form-control"', false, 'number')
         ];
-        if (DEFAULT_LANGUAGE !== ($lInfo->code ?? '')) {
+        if (DEFAULT_LANGUAGE !== ($lInfo?->code ?? '')) {
             $contents[] = ['text' => '<div class="checkbox-inline"><label>' . zen_draw_checkbox_field('default') . TEXT_SET_DEFAULT . '</label></div>'];
         }
         $contents[] = [
