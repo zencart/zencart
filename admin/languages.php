@@ -447,7 +447,7 @@ foreach ($languages as $language) {
 <?php
     } else {
 ?>
-              <td class="dataTableContent"><?= $language['name'] ?></td>
+              <td class="dataTableContent"><?= zen_output_string_protected($language['name']) ?></td>
 <?php
     }
 ?>
@@ -540,7 +540,7 @@ switch ($action) {
         $heading[] = ['text' => '<span class="infoBoxHeading h4">' . TEXT_INFO_HEADING_DELETE_LANGUAGE . '</span>'];
         $contents = ['form' => zen_draw_form('delete', FILENAME_LANGUAGES, 'action=deleteconfirm') . zen_draw_hidden_field('lID', $lInfo->languages_id)];
         $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
-        $contents[] = ['text' => '<br><b>' . $lInfo->name . '</b>'];
+        $contents[] = ['text' => '<br><b>' . zen_output_string_protected($lInfo->name) . '</b>'];
         $contents[] = [
             'align' => 'text-center',
             'text' =>
@@ -556,7 +556,7 @@ switch ($action) {
             break;
         }
 
-        $heading[] = ['text' => '<h4>' . $lInfo->name . '</h4>'];
+        $heading[] = ['text' => '<h4>' . zen_output_string_protected($lInfo->name) . '</h4>'];
 
         $delete_button = '';
         if ($lInfo->code !== DEFAULT_LANGUAGE) {
@@ -573,11 +573,11 @@ switch ($action) {
                 '</a> ' .
                 $delete_button
         ];
-        $contents[] = ['text' => '<br>' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name];
+        $contents[] = ['text' => '<br>' . TEXT_INFO_LANGUAGE_NAME . ' ' . zen_output_string_protected($lInfo->name)];
         $contents[] = ['text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code];
         $contents[] = ['text' => '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . $lInfo->directory . '/images/' . $lInfo->image, $lInfo->name)];
-        $contents[] = ['text' => '<br>' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br>' . DIR_WS_CATALOG_LANGUAGES . '<b>' . $lInfo->directory . '</b>'];
-        $contents[] = ['text' => '<br>' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order];
+        $contents[] = ['text' => '<br>' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br>' . DIR_WS_CATALOG_LANGUAGES . '<b>' . zen_output_string_protected($lInfo->directory) . '</b>'];
+        $contents[] = ['text' => '<br>' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . (int)$lInfo->sort_order];
         break;
 }
 
