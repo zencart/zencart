@@ -338,22 +338,14 @@ switch ($action) {
 
     case 'deleteconfirm':
         $lID = (int)($_POST['lID'] ?? 0);
-        if ($lID < 1) {
+        $result = $db->Execute("SELECT code FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$lID);
+        if ($result->EOF) {
             zen_redirect(zen_href_link(FILENAME_LANGUAGES));
         }
 
-        $result = $db->Execute(
-            "SELECT languages_id
-               FROM " . TABLE_LANGUAGES . "
-              WHERE code = '" . zen_db_input(DEFAULT_LANGUAGE) . "'"
-        );
-
-        if ((int)$result->fields['languages_id'] === $lID) {
-            $db->Execute(
-                "UPDATE " . TABLE_CONFIGURATION . "
-                    SET configuration_value = ''
-                  WHERE configuration_key = 'DEFAULT_LANGUAGE'"
-            );
+        if ($result->fields['code'] === DEFAULT_LANGUAGE) {
+            $messageStack->add_session(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
+            zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'lID=' . (int)$lID));
         }
         zen_record_admin_activity('Language with ID ' . $lID . ' deleted.', 'info');
 
@@ -388,7 +380,7 @@ switch ($action) {
         $result = $db->Execute("SELECT code FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$lID);
         if (($result->fields['code'] ?? '') === DEFAULT_LANGUAGE) {
             $messageStack->add_session(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
-            zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'lID=' . (int)$_GET['lID']));
+            zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'lID=' . $lID));
         }
         break;
 
