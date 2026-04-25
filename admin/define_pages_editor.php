@@ -26,6 +26,9 @@ function zen_display_files(array $check_directory): array
 {
     $directory_array = [];
     foreach ($check_directory as $dir_check) {
+        if (!zen_directory_is_in_application_dir($dir_check)) {
+            continue;
+        }
         $dir = glob(rtrim($dir_check, '/') . '/*.php') ?? [];
         foreach ($dir as $file) {
             $directory_array[] = basename($file);
@@ -65,6 +68,13 @@ switch ($action) {
     case 'save':
         if ($_GET['lngdir'] && $_GET['filename']) {
             $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/html_includes/', $_GET['filename'] ?? '', 'false');
+            if (!file_exists($file)) {
+                $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/', $_GET['filename'] ?? '', 'false');
+                if (!file_exists($file)) {
+                    $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . '/', $_GET['filename'] ?? '', 'false');
+                }
+            }
+
             if (file_exists($file)) {
                 if (file_exists('bak' . $file)) {
                     @unlink('bak' . $file);
@@ -86,12 +96,20 @@ switch ($action) {
         }
         break;
     case 'edit':
+        // If a lang file is being requested, then we will ignore the define_it value and just load the requested lang. file. Otherwise, we will look for a define_ file based on the define_it value.
+        if (isset($_GET['filename']) && str_starts_with($_GET['filename'], 'lang.')) {
+            $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/', $_GET['filename'] ?? '', 'false');
+            if (!file_exists($file)) {
+                $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES, $_GET['filename'] ?? '', 'false');
+            }
+        } else {
             if (!isset($za_lookup[$selected_page])) {
                 $action = '';
             } else {
                 $_GET['filename'] = $za_lookup[$selected_page]['text'];
                 $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/html_includes/', $_GET['filename'] ?? '', 'false');
             }
+        }
         break;
 }
 
@@ -124,7 +142,9 @@ switch ($action) {
             echo '</form>';
             ?>
         </div>
-        <div class="col-sm-5 col-md-6">&nbsp;</div>
+        <div class="col-sm-5 col-md-6 text-left mt-1">
+            <a class="" href="<?= zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=') ?>"><?= zen_icon('file', BOX_LOCALIZATION_LANGUAGES, '2x') ?></a>
+        </div>
         <div class="col-sm-3 col-md-2" style="margin-top: -15px;">
             <?php
             // toggle switch for editor
@@ -155,7 +175,7 @@ switch ($action) {
                 }
 
                 $editorCSSClass = 'editorHook';
-                if (in_array($_GET['filename'], $no_html_editor_on_these_pages, true) || str_starts_with($file_contents, '<?php')) {
+                if (in_array($_GET['filename'], $no_html_editor_on_these_pages, true) || str_starts_with($_GET['filename'], 'lang.') || str_starts_with($file_contents, '<?php')) {
                     $editorCSSClass = 'noEditor';
                 }
                 ?>
@@ -202,17 +222,17 @@ switch ($action) {
                 ?>
                 <div class="row"><strong><?= sprintf(TEXT_FILE_DOES_NOT_EXIST, $file) ?></strong></div>
                 <div class="row py-4"></div>
-                <div class="row"><a href="<?= zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a></div>
+                <div class="row"><a href="<?= zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language']) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a></div>
                 <?php
             }
         } else {
-            $filename = $_SESSION['language'] . '.php';
+            $filename = 'lang.' . $_SESSION['language'] . '.php';
             ?>
             <div class="row">
                 <table class="table">
                     <tr>
                         <td>
-                            <a href="<?= zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $filename) ?>">
+                            <a href="<?= zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $filename . '&action=edit') ?>">
                                 <strong><?= $filename ?></strong>
                             </a>
                         </td>
@@ -221,8 +241,8 @@ switch ($action) {
                         $left = false;
                         if ($dir) {
                             while ($file = $dir->read()) {
-                                if (preg_match('~^[^\._].*\.php$~i', $file) > 0) {
-                                    echo '                <td class="smallText"><a href="' . zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $file) . '">' . $file . '</a></td>' . "\n";
+                                if (preg_match('~^lang\.[^._].*\.php$~i', $file) > 0) {
+                                    echo '                <td class="smallText"><a href="' . zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $file . '&action=edit') . '">' . $file . '</a></td>' . "\n";
                                     if (!$left) {
                                         echo '              </tr>' . "\n" .
                                              '              <tr>' . "\n";

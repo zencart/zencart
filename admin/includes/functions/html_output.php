@@ -251,6 +251,7 @@ $iconMap = [
   'unlocked' => 'fa-lock-open',
   'loading' => 'fa-gear fa-spin',
   'eye' => 'fa-eye',
+  'file' => 'fa-file-lines fa-regular txt-black',
 ];
 
 /**
