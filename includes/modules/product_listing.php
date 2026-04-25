@@ -284,7 +284,7 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    $lc_text .= $listing_model;
+                    $lc_text .= TABLE_HEADING_MODEL . ': ' . $listing_model;
                     break;
 
                 case 'PRODUCT_LIST_NAME':
@@ -303,7 +303,7 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = '';
                     $lc_text = '';
-                    $lc_text .= '<a class="mfgLink" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
+                    $lc_text .= TABLE_HEADING_MANUFACTURER . ': ' . '<a class="mfgLink" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
                     break;
 
                 case 'PRODUCT_LIST_PRICE':
@@ -335,7 +335,7 @@ if ($num_products_count > 0) {
                     $lc_align = 'center';
                     if ($product_listing_layout_style === 'table') $lc_align = 'right';
                     $lc_text = '';
-                    $lc_text .= $listing_weight;
+                    $lc_text .= TABLE_HEADING_WEIGHT . ': ' . $listing_weight;
                     break;
 
                 case 'PRODUCT_LIST_IMAGE':
