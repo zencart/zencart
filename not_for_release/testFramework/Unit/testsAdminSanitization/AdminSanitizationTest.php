@@ -22,7 +22,7 @@ class AdminSanitizationTest extends zcUnitTestCase
         $PHP_SELF = htmlspecialchars($PHP_SELF, ENT_COMPAT);
 
         parent::setUp();
-        require_once DIR_FS_CATALOG . '/admin/includes/classes/AdminRequestSanitizer.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/AdminRequestSanitizer.php';
     }
 
     public function testInstanceInstantitation()

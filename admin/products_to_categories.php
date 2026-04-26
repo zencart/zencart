@@ -380,7 +380,6 @@ if (!empty($action)) {
 
             // 1- Unlink the product from all the target subcategories. Subsequently below, it will then be (re-)linked into the selected target categories
             $target_categories_ids_string = implode(',', $target_categories_ids);
-// TODO better to compare and unlink only those necessary??
             $db->Execute("DELETE FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = " . $products_filter . " AND categories_id IN (" . $target_categories_ids_string . ")");
 
             $verify_current_category_id = ($current_category_id === $current_master_categories_id); // display product in same category after linking?
@@ -402,12 +401,10 @@ if (!empty($action)) {
             $messageStack->add_session(sprintf(SUCCESS_PRODUCT_LINKED_TO_CATEGORIES, $source_product_details), 'success');
 
             if ($verify_current_category_id) {// if product continues to be linked into the current categories_id, return to that category
-                zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id .
-                    '&target_category_id=' . $target_category_id));
-            } else {// if product was unlinked from the current categories_id, show product in it's master category
+                zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_category_id . '&target_category_id=' . $target_category_id));
+            } else {// if product was unlinked from the current categories_id, show product in its master category
                 $messageStack->add_session(sprintf(WARNING_PRODUCT_UNLINKED_FROM_CATEGORY, $current_category_name, $current_category_id), 'warning');
-                zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES,
-                    'products_filter=' . $products_filter . '&current_category_id=' . $current_master_categories_id . '&target_category_id=' . $target_category_id));
+                zen_redirect(zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, 'products_filter=' . $products_filter . '&current_category_id=' . $current_master_categories_id . '&target_category_id=' . $target_category_id));
             }
             break;
     }
@@ -494,8 +491,9 @@ if (empty($_SESSION['hide_linked_categories'])) {
 
                     <div class="col-lg-6">
                         <?php if ($product_to_copy->EOF) { //product not linked to ANY category: missing a master category ID/ID invalid ?>
-                            <span class="alert"
-                                  style="font-size: larger;padding:0;"><?= sprintf(TEXT_PRODUCTS_ID_INVALID, $products_filter) ?></span>
+                            <span class="alert" style="font-size: larger;padding:0;">
+                                <?= sprintf(TEXT_PRODUCTS_ID_INVALID, $products_filter) ?>
+                            </span>
 
                         <?php } else { //show drop-down for master category re-assignment ?>
                             <div class="form-group">
@@ -744,11 +742,12 @@ if (empty($_SESSION['hide_linked_categories'])) {
                         </tbody>
                     </table>
                     <div class="form-group text-center">
-                        <button type="submit" class="btn btn-primary floatButton"
-                                title="<?= BUTTON_UPDATE_CATEGORY_LINKS . " - " . $product_to_copy->fields['products_name'] ?>"><?= BUTTON_UPDATE_CATEGORY_LINKS . '<br><span>' . $product_to_copy->fields['products_model'] . '<br>' . $product_to_copy->fields['products_name'] . '<br>(#' . $products_filter . ')' ?></span></button>
+                        <button type="submit" class="btn btn-primary floatButton" title="<?= BUTTON_UPDATE_CATEGORY_LINKS . " - " . $product_to_copy->fields['products_name'] ?>">
+                            <?= BUTTON_UPDATE_CATEGORY_LINKS . '<br><span>' . $product_to_copy->fields['products_model'] . '<br>' . $product_to_copy->fields['products_name'] . '<br>(#' . $products_filter . ')' ?></span>
+                        </button>
                     </div>
-                    <?php echo '</form>';
-                } ?>
+                    <?= '</form>' ?>
+            <?php } ?>
             </div>
         </div>
         <?php

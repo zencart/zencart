@@ -25,8 +25,9 @@ abstract class zcInProcessFeatureTestCaseAdmin extends zcInProcessFeatureTestCas
         $this->cookies = [];
     }
 
-    protected function getAdmin(string $uri = '/admin', array $server = [], array $cookies = []): FeatureResponse
+    protected function getAdmin(string $uri = '', array $server = [], array $cookies = []): FeatureResponse
     {
+        $uri = $uri === '' ? $this->adminPath() : $uri;
         $response = (new AdminFeatureRunner())->handle(
             new FeatureRequest($uri, 'GET', server: $server, cookies: $this->mergeCookies($cookies))
         );
@@ -49,20 +50,20 @@ abstract class zcInProcessFeatureTestCaseAdmin extends zcInProcessFeatureTestCas
 
     protected function visitAdminHome(array $server = [], array $cookies = []): FeatureResponse
     {
-        $response = $this->getAdmin('/admin', $server, $cookies);
+        $response = $this->getAdmin($this->adminPath(), $server, $cookies);
 
         return $response->isRedirect() ? $this->followAdminRedirect($response, $server) : $response;
     }
 
     protected function visitAdminCommand(string $command, array $server = [], array $cookies = []): FeatureResponse
     {
-        return $this->getAdmin('/admin/index.php?cmd=' . $command, $server, $cookies);
+        return $this->getAdmin($this->adminIndexPath() . '?cmd=' . $command, $server, $cookies);
     }
 
     protected function submitAdminLogin(array $data = [], array $server = [], array $cookies = []): FeatureResponse
     {
         $page = $this->visitAdminHome($server, $cookies)->assertOk();
-        $formAction = $page->formAction('loginForm') ?? '/admin/index.php';
+        $formAction = $page->formAction('loginForm') ?? $this->adminIndexPath();
 
         $response = $this->postAdmin(
             $this->normalizeAdminUri($formAction),
@@ -77,7 +78,7 @@ abstract class zcInProcessFeatureTestCaseAdmin extends zcInProcessFeatureTestCas
     protected function submitAdminSetupWizard(array $data = [], array $server = [], array $cookies = []): FeatureResponse
     {
         $page = $this->visitAdminHome($server, $cookies)->assertOk();
-        $formAction = $page->formAction('setupWizardForm') ?? '/admin/index.php';
+        $formAction = $page->formAction('setupWizardForm') ?? $this->adminIndexPath();
 
         $response = $this->postAdmin(
             $this->normalizeAdminUri($formAction),
@@ -91,7 +92,7 @@ abstract class zcInProcessFeatureTestCaseAdmin extends zcInProcessFeatureTestCas
 
     protected function submitAdminForm(FeatureResponse $page, string $formId, array $data = [], array $server = [], array $cookies = []): FeatureResponse
     {
-        $formAction = $page->formAction($formId) ?? '/admin/index.php';
+        $formAction = $page->formAction($formId) ?? $this->adminIndexPath();
 
         $response = $this->postAdmin(
             $this->normalizeAdminUri($formAction),
@@ -140,7 +141,7 @@ abstract class zcInProcessFeatureTestCaseAdmin extends zcInProcessFeatureTestCas
         $this->assertNotNull($location);
 
         $parts = parse_url($location);
-        $path = $parts['path'] ?? '/admin';
+        $path = $parts['path'] ?? $this->adminPath();
         if (!empty($parts['query'])) {
             $path .= '?' . $parts['query'];
         }
@@ -165,7 +166,7 @@ abstract class zcInProcessFeatureTestCaseAdmin extends zcInProcessFeatureTestCas
             return $uri;
         }
 
-        $path = $parts['path'] ?? '/admin/index.php';
+        $path = $parts['path'] ?? $this->adminIndexPath();
         if (!empty($parts['query'])) {
             $path .= '?' . $parts['query'];
         }
@@ -196,5 +197,15 @@ abstract class zcInProcessFeatureTestCaseAdmin extends zcInProcessFeatureTestCas
         }
 
         return $server;
+    }
+
+    private function adminPath(): string
+    {
+        return '/' . trim(defined('DIR_WS_ADMIN') ? DIR_WS_ADMIN : '/admin/', '/') ;
+    }
+
+    private function adminIndexPath(): string
+    {
+        return $this->adminPath() . '/index.php';
     }
 }

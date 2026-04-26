@@ -120,16 +120,84 @@ mysql_args=(
     --batch
     --skip-column-names
 )
+used_existing_databases=0
 
+database_exists() {
+    local database_name="$1"
+    local output=""
+
+    output="$(mysql "${mysql_args[@]}" -e "SELECT SCHEMA_NAME FROM information_schema.schemata WHERE SCHEMA_NAME = '${database_name}';" 2>/dev/null)" || return 2
+    [ -n "$output" ]
+}
+
+handle_recreate_permission_error() {
+    local error_file="$1"
+    local -a missing_databases=()
+    local -a unverifiable_databases=()
+
+    if ! grep -Eq 'ERROR (1044|1045|1227)|Access denied' "$error_file"; then
+        return 1
+    fi
+
+    for database_name in "${DATABASES[@]}"; do
+        database_exists "$database_name"
+        status=$?
+        if [ "$status" -eq 0 ]; then
+            continue
+        fi
+
+        if [ "$status" -eq 1 ]; then
+            missing_databases+=("$database_name")
+            continue
+        fi
+
+        unverifiable_databases+=("$database_name")
+    done
+
+    echo "MySQL user ${DB_USER} on ${DB_HOST}:${DB_PORT} does not have permission to recreate test databases." >&2
+
+    if [ "${#unverifiable_databases[@]}" -gt 0 ]; then
+        echo "Unable to verify whether these databases already exist: ${unverifiable_databases[*]}" >&2
+        echo "Use a MySQL user that can CREATE/DROP databases, or pre-create the worker databases before running the feature suite." >&2
+        return 1
+    fi
+
+    if [ "${#missing_databases[@]}" -gt 0 ]; then
+        echo "Missing worker databases: ${missing_databases[*]}" >&2
+        echo "Pre-create them with a privileged MySQL user, or rerun with a user that can CREATE/DROP databases." >&2
+        return 1
+    fi
+
+    used_existing_databases=1
+    echo "Existing worker databases detected; continuing without resetting them." >&2
+    echo "If you need a clean run, pre-create/reset them with a privileged MySQL user or rerun with a user that can CREATE/DROP databases." >&2
+    return 0
+}
+
+error_file=""
 for database in "${DATABASES[@]}"; do
     echo "RESET $database"
     if [ "$DRY_RUN" != "1" ]; then
-        mysql "${mysql_args[@]}" -e "DROP DATABASE IF EXISTS \`$database\`; CREATE DATABASE \`$database\` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"
+        error_file="$(mktemp "${TMPDIR:-/tmp}/zc-db-prepare.XXXXXX")"
+        if ! mysql "${mysql_args[@]}" -e "DROP DATABASE IF EXISTS \`$database\`; CREATE DATABASE \`$database\` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;" 2>"$error_file"; then
+            if handle_recreate_permission_error "$error_file"; then
+                rm -f "$error_file"
+                error_file=""
+                break
+            fi
+            cat "$error_file" >&2
+            rm -f "$error_file"
+            exit 1
+        fi
+        rm -f "$error_file"
+        error_file=""
     fi
 done
 
 if [ "$DRY_RUN" = "1" ]; then
     echo "Planned databases:"
+elif [ "$used_existing_databases" = "1" ]; then
+    echo "Existing databases:"
 else
     echo "Recreated databases:"
 fi

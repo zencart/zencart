@@ -50,7 +50,8 @@ trait GeneralConcerns
     }
     protected function buildAdminLink($page)
     {
-        $URI = HTTP_SERVER . '/admin/index.php?cmd='.$page;
+        $adminPath = defined('DIR_WS_ADMIN') ? DIR_WS_ADMIN : '/admin/';
+        $URI = HTTP_SERVER . '/' . trim($adminPath, '/') . '/index.php?cmd='.$page;
         return $URI;
     }
 

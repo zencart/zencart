@@ -14,6 +14,47 @@ if (!function_exists('zc_test_config_catalog_path')) {
     }
 }
 
+if (!function_exists('zc_test_config_admin_directory')) {
+    function zc_test_config_admin_directory(?string $catalogPath = null): array
+    {
+        $catalogPath = rtrim(str_replace('\\', '/', $catalogPath ?? zc_test_config_catalog_path()), '/') . '/';
+        $defaultPath = $catalogPath . 'admin/';
+        if (is_file($defaultPath . 'includes/application_bootstrap.php')) {
+            return [
+                'basename' => 'admin',
+                'path' => $defaultPath,
+                'web_path' => '/admin/',
+            ];
+        }
+
+        $entries = scandir(rtrim($catalogPath, '/')) ?: [];
+        foreach ($entries as $entry) {
+            if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+
+            $candidatePath = $catalogPath . $entry . '/';
+            if (!is_dir($candidatePath)) {
+                continue;
+            }
+
+            if (is_file($candidatePath . 'includes/application_bootstrap.php')) {
+                return [
+                    'basename' => $entry,
+                    'path' => $candidatePath,
+                    'web_path' => '/' . $entry . '/',
+                ];
+            }
+        }
+
+        return [
+            'basename' => 'admin',
+            'path' => $defaultPath,
+            'web_path' => '/admin/',
+        ];
+    }
+}
+
 if (!function_exists('zc_test_config_worker_token')) {
     function zc_test_config_worker_token(): ?string
     {

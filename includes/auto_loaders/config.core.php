@@ -335,6 +335,16 @@ $autoLoadConfig[160][] = [
     'loadFile' => 'init_category_path.php',
 ];
 /**
+ * Breakpoint 161.
+ *
+ * require 'includes/init_includes/init_canonical.php';
+ *
+ */
+$autoLoadConfig[161][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_canonical.php',
+];
+/**
  * Breakpoint 170.
  *
  * require 'includes/init_includes/init_add_crumbs.php';

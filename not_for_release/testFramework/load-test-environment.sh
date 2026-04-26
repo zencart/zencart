@@ -9,6 +9,41 @@ source_test_framework_env_file() {
     set +a
 }
 
+apply_profile_db_defaults() {
+    local root_dir="$1"
+    local resolver="$root_dir/not_for_release/testFramework/resolve-profile-db-config.php"
+    local -a resolved=()
+
+    if [ ! -f "$resolver" ] || ! command -v php >/dev/null 2>&1; then
+        return 0
+    fi
+
+    mapfile -t resolved < <(php "$resolver" "$root_dir")
+    if [ "${#resolved[@]}" -lt 5 ]; then
+        return 0
+    fi
+
+    if [ -z "${ZC_TEST_DB_HOST+x}" ] && [ -n "${resolved[0]}" ]; then
+        export ZC_TEST_DB_HOST="${resolved[0]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_PORT+x}" ] && [ -n "${resolved[1]}" ]; then
+        export ZC_TEST_DB_PORT="${resolved[1]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_USER+x}" ] && [ -n "${resolved[2]}" ]; then
+        export ZC_TEST_DB_USER="${resolved[2]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_PASSWORD+x}" ]; then
+        export ZC_TEST_DB_PASSWORD="${resolved[3]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_BASE_NAME+x}" ] && [ -n "${resolved[4]}" ]; then
+        export ZC_TEST_DB_BASE_NAME="${resolved[4]}"
+    fi
+}
+
 load_test_framework_env() {
     local root_dir="$1"
     local env_file="${ZC_TEST_ENV_FILE:-}"
@@ -37,6 +72,7 @@ load_test_framework_env() {
                 export "$variable_name"
             done
         fi
+        apply_profile_db_defaults "$root_dir"
         return 0
     fi
 
@@ -58,4 +94,6 @@ load_test_framework_env() {
             export "$variable_name"
         done
     fi
+
+    apply_profile_db_defaults "$root_dir"
 }

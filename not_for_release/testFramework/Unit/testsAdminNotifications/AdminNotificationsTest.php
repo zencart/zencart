@@ -14,7 +14,7 @@ class AdminNotificationsTest extends zcUnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        require_once DIR_FS_CATALOG . '/admin/includes/classes/AdminNotifications.php';
+        require_once DIR_FS_ADMIN . 'includes/classes/AdminNotifications.php';
         $this->dummy = [
         'square1' => [
             'target'        => 'payment-square',
