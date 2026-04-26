@@ -144,9 +144,11 @@ if (!function_exists('zen_image')) {
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
     // off-site images hook
     $image_html = '';
-    $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_ZEN_IMAGE_OVERRIDE', array($src, $alt, $width, $height, $params), $image_html);
-    if ($image_html !== '') return $image_html;    
-    // end hook      
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_ZEN_IMAGE_OVERRIDE', compact('src', 'alt', 'width', 'height', 'params'), $image_html);
+    if ($image_html !== '') {
+        return $image_html;
+    }
+    // end hook
     if ($src === DIR_WS_CATALOG_IMAGES) {
       return '';
     }
