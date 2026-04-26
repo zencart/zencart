@@ -195,7 +195,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     global $template_dir, $zco_notifier;
     // off-site images hook
     $image_html = '';
-    $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_ZEN_IMAGE_OVERRIDE', compact('src', 'title', 'width', 'height', 'parameters'), $image_html);
+    $GLOBALS['zco_notifier']->notify('NOTIFY_CATALOG_ZEN_IMAGE_OVERRIDE', compact('src', 'title', 'width', 'height', 'parameters'), $image_html);
 
     if ($image_html !== '') {
         return $image_html;
