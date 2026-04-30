@@ -598,7 +598,7 @@ function zen_draw_input_field($name, $value = '', $parameters = '', $type = 'tex
     }
 
     $field = '<input type="' . zen_output_string($type) . '" name="' . zen_sanitize_string(zen_output_string($name)) . '"';
-    if (isset($GLOBALS[$name]) && is_string($GLOBALS[$name]) && $reinsert_value == true) {
+    if (!empty($GLOBALS[$name]) && is_string($GLOBALS[$name]) && $reinsert_value == true) {
       $field .= ' value="' . zen_output_string(stripslashes($GLOBALS[$name])) . '"';
     } elseif (zen_not_null($value)) {
       $field .= ' value="' . zen_output_string($value) . '"';
