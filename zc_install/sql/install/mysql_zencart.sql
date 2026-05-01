@@ -45,7 +45,7 @@ CREATE TABLE upgrade_exceptions (
 DROP TABLE IF EXISTS address_book;
 CREATE TABLE address_book (
   address_book_id int(11) NOT NULL auto_increment,
-  customers_id int(11) NOT NULL default '0',
+  customers_id int(11) NOT NULL default 0,
   entry_gender char(1) NOT NULL default '',
   entry_company varchar(64) default NULL,
   entry_firstname varchar(32) NOT NULL default '',
@@ -55,8 +55,8 @@ CREATE TABLE address_book (
   entry_postcode varchar(64) NOT NULL default '',
   entry_city varchar(128) NOT NULL default '',
   entry_state varchar(128) default NULL,
-  entry_country_id int(11) NOT NULL default '0',
-  entry_zone_id int(11) NOT NULL default '0',
+  entry_country_id int(11) NOT NULL default 0,
+  entry_zone_id int(11) NOT NULL default 0,
   PRIMARY KEY  (address_book_id),
   KEY idx_address_book_customers_id_zen (customers_id)
 ) ENGINE=MyISAM;
@@ -86,7 +86,7 @@ CREATE TABLE admin (
   admin_id int(11) NOT NULL auto_increment,
   admin_name varchar(32) NOT NULL default '',
   admin_email varchar(96) NOT NULL default '',
-  admin_profile int(11) NOT NULL default '0',
+  admin_profile int(11) NOT NULL default 0,
   admin_pass varchar(255) NOT NULL default '',
   prev_pass1 varchar(255) NOT NULL default '',
   prev_pass2 varchar(255) NOT NULL default '',
@@ -96,8 +96,8 @@ CREATE TABLE admin (
   last_modified datetime NOT NULL default '0001-01-01 00:00:00',
   last_login_date datetime NOT NULL default '0001-01-01 00:00:00',
   last_login_ip varchar(45) NOT NULL default '',
-  failed_logins smallint(4) unsigned NOT NULL default '0',
-  lockout_expires int(11) NOT NULL default '0',
+  failed_logins smallint(4) unsigned NOT NULL default 0,
+  lockout_expires int(11) NOT NULL default 0,
   last_failed_attempt datetime NOT NULL default '0001-01-01 00:00:00',
   last_failed_ip varchar(45) NOT NULL default '',
   mfa TEXT DEFAULT NULL,
@@ -147,11 +147,11 @@ DROP TABLE IF EXISTS admin_activity_log;
 CREATE TABLE admin_activity_log (
   log_id bigint(15) NOT NULL auto_increment,
   access_date datetime NOT NULL default '0001-01-01 00:00:00',
-  admin_id int(11) NOT NULL default '0',
+  admin_id int(11) NOT NULL default 0,
   page_accessed varchar(80) NOT NULL default '',
   page_parameters text,
   ip_address varchar(45) NOT NULL default '',
-  flagged tinyint NOT NULL default '0',
+  flagged tinyint NOT NULL default 0,
   attention MEDIUMTEXT,
   gzpost mediumblob,
   logmessage mediumtext NOT NULL,
@@ -217,7 +217,7 @@ CREATE TABLE admin_profiles (
 
 DROP TABLE IF EXISTS admin_pages_to_profiles;
 CREATE TABLE admin_pages_to_profiles (
-  profile_id int(11) NOT NULL default '0',
+  profile_id int(11) NOT NULL default 0,
   page_key varchar(191) NOT NULL default '',
   UNIQUE KEY profile_page (profile_id, page_key),
   UNIQUE KEY page_profile (page_key, profile_id)
@@ -231,9 +231,9 @@ CREATE TABLE admin_pages_to_profiles (
 DROP TABLE IF EXISTS authorizenet;
 CREATE TABLE authorizenet (
   id int(11) unsigned NOT NULL auto_increment,
-  customer_id int(11) NOT NULL default '0',
-  order_id int(11) NOT NULL default '0',
-  response_code int(1) NOT NULL default '0',
+  customer_id int(11) NOT NULL default 0,
+  order_id int(11) NOT NULL default 0,
+  response_code int(1) NOT NULL default 0,
   response_text varchar(255) NOT NULL default '',
   authorization_type varchar(50) NOT NULL default '',
   transaction_id varchar(32) default NULL,
@@ -258,15 +258,15 @@ CREATE TABLE banners (
   banners_image varchar(255) NOT NULL default '',
   banners_group varchar(15) NOT NULL default '',
   banners_html_text text,
-  expires_impressions int(7) default '0',
+  expires_impressions int(7) default 0,
   expires_date datetime default NULL,
   date_scheduled datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   date_status_change datetime default NULL,
-  status int(1) NOT NULL default '1',
-  banners_open_new_windows int(1) NOT NULL default '1',
-  banners_on_ssl int(1) NOT NULL default '1',
-  banners_sort_order int(11) NOT NULL default '0',
+  status int(1) NOT NULL default 1,
+  banners_open_new_windows int(1) NOT NULL default 1,
+  banners_on_ssl int(1) NOT NULL default 1,
+  banners_sort_order int(11) NOT NULL default 0,
   PRIMARY KEY  (banners_id),
   KEY idx_status_group_zen (status,banners_group),
   KEY idx_expires_date_zen (expires_date),
@@ -283,9 +283,9 @@ CREATE TABLE banners (
 DROP TABLE IF EXISTS banners_history;
 CREATE TABLE banners_history (
   banners_history_id int(11) NOT NULL auto_increment,
-  banners_id int(11) NOT NULL default '0',
-  banners_shown int(5) NOT NULL default '0',
-  banners_clicked int(5) NOT NULL default '0',
+  banners_id int(11) NOT NULL default 0,
+  banners_shown int(5) NOT NULL default 0,
+  banners_clicked int(5) NOT NULL default 0,
   banners_history_date datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (banners_history_id),
   KEY idx_banners_id_zen (banners_id)
@@ -301,11 +301,11 @@ DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   categories_id int(11) NOT NULL auto_increment,
   categories_image varchar(255) default NULL,
-  parent_id int(11) NOT NULL default '0',
+  parent_id int(11) NOT NULL default 0,
   sort_order int(3) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
-  categories_status tinyint(1) NOT NULL default '1',
+  categories_status tinyint(1) NOT NULL default 1,
   PRIMARY KEY  (categories_id),
   KEY idx_parent_id_cat_id_zen (parent_id,categories_id),
   KEY idx_status_zen (categories_status),
@@ -320,8 +320,8 @@ CREATE TABLE categories (
 
 DROP TABLE IF EXISTS categories_description;
 CREATE TABLE categories_description (
-  categories_id int(11) NOT NULL default '0',
-  language_id int(11) NOT NULL default '1',
+  categories_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
   categories_name varchar(32) NOT NULL default '',
   categories_description text NOT NULL,
   PRIMARY KEY  (categories_id,language_id),
@@ -341,7 +341,7 @@ CREATE TABLE configuration (
   configuration_key varchar(180) NOT NULL default '',
   configuration_value text NOT NULL,
   configuration_description text NOT NULL,
-  configuration_group_id int(11) NOT NULL default '0',
+  configuration_group_id int(11) NOT NULL default 0,
   sort_order int(5) default NULL,
   last_modified datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
@@ -366,7 +366,7 @@ CREATE TABLE configuration_group (
   configuration_group_title varchar(64) NOT NULL default '',
   configuration_group_description varchar(255) NOT NULL default '',
   sort_order int(5) default NULL,
-  visible int(1) default '1',
+  visible int(1) default 1,
   PRIMARY KEY  (configuration_group_id),
   KEY idx_visible_zen (visible)
 ) ENGINE=MyISAM;
@@ -426,7 +426,7 @@ CREATE TABLE countries (
   countries_name varchar(64) NOT NULL default '',
   countries_iso_code_2 char(2) NOT NULL default '',
   countries_iso_code_3 char(3) NOT NULL default '',
-  address_format_id int(11) NOT NULL default '0',
+  address_format_id int(11) NOT NULL default 0,
   status tinyint(1) default 1,
   PRIMARY KEY  (countries_id),
   KEY idx_countries_name_zen (countries_name),
@@ -444,8 +444,8 @@ CREATE TABLE countries (
 DROP TABLE IF EXISTS coupon_email_track;
 CREATE TABLE coupon_email_track (
   unique_id int(11) NOT NULL auto_increment,
-  coupon_id int(11) NOT NULL default '0',
-  customer_id_sent int(11) NOT NULL default '0',
+  coupon_id int(11) NOT NULL default 0,
+  customer_id_sent int(11) NOT NULL default 0,
   sent_firstname varchar(32) default NULL,
   sent_lastname varchar(32) default NULL,
   emailed_to varchar(96) default NULL,
@@ -462,7 +462,7 @@ CREATE TABLE coupon_email_track (
 
 DROP TABLE IF EXISTS coupon_gv_customer;
 CREATE TABLE coupon_gv_customer (
-  customer_id int(5) NOT NULL default '0',
+  customer_id int(5) NOT NULL default 0,
   amount decimal(15,4) NOT NULL default '0.0000',
   PRIMARY KEY  (customer_id)
 ) ENGINE=MyISAM;
@@ -476,8 +476,8 @@ CREATE TABLE coupon_gv_customer (
 DROP TABLE IF EXISTS coupon_gv_queue;
 CREATE TABLE coupon_gv_queue (
   unique_id int(5) NOT NULL auto_increment,
-  customer_id int(5) NOT NULL default '0',
-  order_id int(5) NOT NULL default '0',
+  customer_id int(5) NOT NULL default 0,
+  order_id int(5) NOT NULL default 0,
   amount decimal(15,4) NOT NULL default '0.0000',
   date_created datetime NOT NULL default '0001-01-01 00:00:00',
   ipaddr varchar(45) NOT NULL default '',
@@ -496,11 +496,11 @@ CREATE TABLE coupon_gv_queue (
 DROP TABLE IF EXISTS coupon_redeem_track;
 CREATE TABLE coupon_redeem_track (
   unique_id int(11) NOT NULL auto_increment,
-  coupon_id int(11) NOT NULL default '0',
-  customer_id int(11) NOT NULL default '0',
+  coupon_id int(11) NOT NULL default 0,
+  customer_id int(11) NOT NULL default 0,
   redeem_date datetime NOT NULL default '0001-01-01 00:00:00',
   redeem_ip varchar(45) NOT NULL default '',
-  order_id int(11) NOT NULL default '0',
+  order_id int(11) NOT NULL default 0,
   PRIMARY KEY  (unique_id),
   KEY idx_coupon_id_zen (coupon_id)
 ) ENGINE=MyISAM;
@@ -532,9 +532,9 @@ CREATE TABLE coupon_referrers (
 DROP TABLE IF EXISTS coupon_restrict;
 CREATE TABLE coupon_restrict (
   restrict_id int(11) NOT NULL auto_increment,
-  coupon_id int(11) NOT NULL default '0',
-  product_id int(11) NOT NULL default '0',
-  category_id int(11) NOT NULL default '0',
+  coupon_id int(11) NOT NULL default 0,
+  product_id int(11) NOT NULL default 0,
+  category_id int(11) NOT NULL default 0,
   coupon_restrict char(1) NOT NULL default 'N',
   PRIMARY KEY  (restrict_id),
   KEY idx_coup_id_prod_id_zen (coupon_id,product_id)
@@ -551,8 +551,8 @@ CREATE TABLE coupons (
   coupon_id int(11) NOT NULL auto_increment,
   coupon_type char(1) NOT NULL default 'F',
   coupon_code varchar(32) NOT NULL default '',
-  coupon_amount decimal(15,4) NOT NULL default '0.0000',
-  coupon_minimum_order decimal(15,4) NOT NULL default '0.0000',
+  coupon_amount decimal(15,4) NOT NULL default 0,
+  coupon_minimum_order decimal(15,4) NOT NULL default 0,
   coupon_start_date datetime NOT NULL default '0001-01-01 00:00:00',
   coupon_expire_date datetime NOT NULL default '0001-01-01 00:00:00',
   uses_per_coupon int(5) NOT NULL default 1,
@@ -582,8 +582,8 @@ CREATE TABLE coupons (
 
 DROP TABLE IF EXISTS coupons_description;
 CREATE TABLE coupons_description (
-  coupon_id int(11) NOT NULL default '0',
-  language_id int(11) NOT NULL default '0',
+  coupon_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 0,
   coupon_name varchar(64) NOT NULL default '',
   coupon_description text,
   PRIMARY KEY (coupon_id,language_id)
@@ -631,9 +631,9 @@ CREATE TABLE customers (
   customers_password varchar(255) NOT NULL default '',
   customers_secret varchar(64) NOT NULL default '',
   customers_newsletter char(1) default NULL,
-  customers_group_pricing int(11) NOT NULL default '0',
+  customers_group_pricing int(11) NOT NULL default 0,
   customers_email_format varchar(4) NOT NULL default 'TEXT',
-  customers_authorization int(1) NOT NULL default '0',
+  customers_authorization int(1) NOT NULL default 0,
   activation_required tinyint(1) NOT NULL DEFAULT 0,
   welcome_email_sent tinyint(1) DEFAULT NULL,
   customers_referral varchar(32) NOT NULL default '',
@@ -673,9 +673,9 @@ CREATE TABLE customers_auth_tokens (
 DROP TABLE IF EXISTS customers_basket;
 CREATE TABLE customers_basket (
   customers_basket_id int(11) NOT NULL auto_increment,
-  customers_id int(11) NOT NULL default '0',
+  customers_id int(11) NOT NULL default 0,
   products_id tinytext NOT NULL,
-  customers_basket_quantity float NOT NULL default '0',
+  customers_basket_quantity float NOT NULL default 0,
   customers_basket_date_added varchar(8) default NULL,
   PRIMARY KEY  (customers_basket_id),
   KEY idx_customers_id_zen (customers_id)
@@ -690,10 +690,10 @@ CREATE TABLE customers_basket (
 DROP TABLE IF EXISTS customers_basket_attributes;
 CREATE TABLE customers_basket_attributes (
   customers_basket_attributes_id int(11) NOT NULL auto_increment,
-  customers_id int(11) NOT NULL default '0',
+  customers_id int(11) NOT NULL default 0,
   products_id tinytext NOT NULL,
   products_options_id varchar(64) NOT NULL default '0',
-  products_options_value_id int(11) NOT NULL default '0',
+  products_options_value_id int(11) NOT NULL default 0,
   products_options_value_text BLOB NULL,
   products_options_sort_order text NOT NULL,
   PRIMARY KEY  (customers_basket_attributes_id),
@@ -708,12 +708,12 @@ CREATE TABLE customers_basket_attributes (
 
 DROP TABLE IF EXISTS customers_info;
 CREATE TABLE customers_info (
-  customers_info_id int(11) NOT NULL default '0',
+  customers_info_id int(11) NOT NULL default 0,
   customers_info_date_of_last_logon datetime default NULL,
   customers_info_number_of_logons int(5) default NULL,
   customers_info_date_account_created datetime default NULL,
   customers_info_date_account_last_modified datetime default NULL,
-  global_product_notifications int(1) default '0',
+  global_product_notifications int(1) default 0,
   PRIMARY KEY  (customers_info_id),
   KEY idx_date_created_cust_id_zen (customers_info_date_account_created, customers_info_id)
 ) ENGINE=MyISAM;
@@ -817,19 +817,19 @@ CREATE TABLE ezpages (
   alt_url varchar(255) NOT NULL default '',
   alt_url_external varchar(255) NOT NULL default '',
   status_mobile TINYINT NOT NULL DEFAULT 1,
-  status_header int(1) NOT NULL default '1',
-  status_sidebox int(1) NOT NULL default '1',
-  status_footer int(1) NOT NULL default '1',
-  status_visible int(1) NOT NULL default '0',
-  status_toc int(1) NOT NULL default '1',
+  status_header int(1) NOT NULL default 1,
+  status_sidebox int(1) NOT NULL default 1,
+  status_footer int(1) NOT NULL default 1,
+  status_visible int(1) NOT NULL default 0,
+  status_toc int(1) NOT NULL default 1,
   mobile_sort_order TINYINT NOT NULL DEFAULT 0,
-  header_sort_order int(3) NOT NULL default '0',
-  sidebox_sort_order int(3) NOT NULL default '0',
-  footer_sort_order int(3) NOT NULL default '0',
-  toc_sort_order int(3) NOT NULL default '0',
-  page_open_new_window int(1) NOT NULL default '0',
-  page_is_ssl INT(1) NOT NULL default '1',
-  toc_chapter int(11) NOT NULL default '0',
+  header_sort_order int(3) NOT NULL default 0,
+  sidebox_sort_order int(3) NOT NULL default 0,
+  footer_sort_order int(3) NOT NULL default 0,
+  toc_sort_order int(3) NOT NULL default 0,
+  page_open_new_window int(1) NOT NULL default 0,
+  page_is_ssl INT(1) NOT NULL default 1,
+  toc_chapter int(11) NOT NULL default 0,
   PRIMARY KEY  (pages_id),
   KEY idx_ezp_status_header_zen (status_header),
   KEY idx_ezp_status_sidebox_zen (status_sidebox),
@@ -846,8 +846,8 @@ CREATE TABLE ezpages (
 
 DROP TABLE IF EXISTS ezpages_content;
 CREATE TABLE ezpages_content (
-  pages_id int(11) NOT NULL DEFAULT '0',
-  languages_id int(11) NOT NULL DEFAULT '1',
+  pages_id int(11) NOT NULL DEFAULT 0,
+  languages_id int(11) NOT NULL DEFAULT 1,
   pages_title varchar(64) NOT NULL DEFAULT '',
   pages_html_text mediumtext,
   UNIQUE KEY idx_ezpages_content (pages_id,languages_id),
@@ -862,12 +862,12 @@ CREATE TABLE ezpages_content (
 DROP TABLE IF EXISTS featured;
 CREATE TABLE featured (
   featured_id int(11) NOT NULL auto_increment,
-  products_id int(11) NOT NULL default '0',
+  products_id int(11) NOT NULL default 0,
   featured_date_added datetime default NULL,
   featured_last_modified datetime default NULL,
   expires_date date NOT NULL default '0001-01-01',
   date_status_change datetime default NULL,
-  status int(1) NOT NULL default '1',
+  status int(1) NOT NULL default 1,
   featured_date_available date NOT NULL default '0001-01-01',
   PRIMARY KEY  (featured_id),
   KEY idx_status_zen (status),
@@ -954,7 +954,7 @@ DROP TABLE IF EXISTS group_pricing;
 CREATE TABLE group_pricing (
   group_id int(11) NOT NULL auto_increment,
   group_name varchar(32) NOT NULL default '',
-  group_percentage decimal(5,2) NOT NULL default '0.00',
+  group_percentage decimal(5,2) NOT NULL default 0,
   last_modified datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (group_id)
@@ -989,11 +989,11 @@ CREATE TABLE layout_boxes (
   layout_id int(11) NOT NULL auto_increment,
   layout_template varchar(64) NOT NULL default '',
   layout_box_name varchar(64) NOT NULL default '',
-  layout_box_status tinyint(1) NOT NULL default '0',
-  layout_box_location tinyint(1) NOT NULL default '0',
-  layout_box_sort_order int(11) NOT NULL default '0',
-  layout_box_sort_order_single int(11) NOT NULL default '0',
-  layout_box_status_single tinyint(4) NOT NULL default '0',
+  layout_box_status tinyint(1) NOT NULL default 0,
+  layout_box_location tinyint(1) NOT NULL default 0,
+  layout_box_sort_order int(11) NOT NULL default 0,
+  layout_box_sort_order_single int(11) NOT NULL default 0,
+  layout_box_status_single tinyint(4) NOT NULL default 0,
   plugin_details varchar(100) NOT NULL default '',
   PRIMARY KEY  (layout_id),
   KEY idx_name_template_zen (layout_template,layout_box_name),
@@ -1027,10 +1027,10 @@ CREATE TABLE manufacturers (
 
 DROP TABLE IF EXISTS manufacturers_info;
 CREATE TABLE manufacturers_info (
-  manufacturers_id int(11) NOT NULL default '0',
-  languages_id int(11) NOT NULL default '0',
+  manufacturers_id int(11) NOT NULL default 0,
+  languages_id int(11) NOT NULL default 0,
   manufacturers_url varchar(255) NOT NULL default '',
-  url_clicked int(5) NOT NULL default '0',
+  url_clicked int(5) NOT NULL default 0,
   date_last_click datetime default NULL,
   PRIMARY KEY  (manufacturers_id,languages_id)
 ) ENGINE=MyISAM;
@@ -1044,8 +1044,8 @@ CREATE TABLE manufacturers_info (
 DROP TABLE IF EXISTS media_clips;
 CREATE TABLE media_clips (
   clip_id int(11) NOT NULL auto_increment,
-  media_id int(11) NOT NULL default '0',
-  clip_type smallint(6) NOT NULL default '0',
+  media_id int(11) NOT NULL default 0,
+  clip_type smallint(6) NOT NULL default 0,
   clip_filename text NOT NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   last_modified datetime NOT NULL default '0001-01-01 00:00:00',
@@ -1078,8 +1078,8 @@ CREATE TABLE media_manager (
 
 DROP TABLE IF EXISTS media_to_products;
 CREATE TABLE media_to_products (
-  media_id int(11) NOT NULL default '0',
-  product_id int(11) NOT NULL default '0',
+  media_id int(11) NOT NULL default 0,
+  product_id int(11) NOT NULL default 0,
   KEY idx_media_product_zen (media_id,product_id)
 ) ENGINE=MyISAM;
 
@@ -1109,7 +1109,7 @@ INSERT INTO media_types (type_name, type_ext) VALUES ('MP3','.mp3');
 DROP TABLE IF EXISTS meta_tags_categories_description;
 CREATE TABLE meta_tags_categories_description (
   categories_id int(11) NOT NULL,
-  language_id int(11) NOT NULL default '1',
+  language_id int(11) NOT NULL default 1,
   metatags_title varchar(255) NOT NULL default '',
   metatags_keywords text,
   metatags_description text,
@@ -1125,7 +1125,7 @@ CREATE TABLE meta_tags_categories_description (
 DROP TABLE IF EXISTS meta_tags_products_description;
 CREATE TABLE meta_tags_products_description (
   products_id int(11) NOT NULL,
-  language_id int(11) NOT NULL default '1',
+  language_id int(11) NOT NULL default 1,
   metatags_title varchar(255) NOT NULL default '',
   metatags_keywords text,
   metatags_description text,
@@ -1164,7 +1164,7 @@ CREATE TABLE newsletters (
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   date_sent datetime default NULL,
   status int(1) default NULL,
-  locked int(1) default '0',
+  locked int(1) default 0,
   PRIMARY KEY  (newsletters_id)
 ) ENGINE=MyISAM;
 
@@ -1248,15 +1248,15 @@ CREATE TABLE orders (
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   orders_products_id int(11) NOT NULL auto_increment,
-  orders_id int(11) NOT NULL default '0',
-  products_id int(11) NOT NULL default '0',
+  orders_id int(11) NOT NULL default 0,
+  products_id int(11) NOT NULL default 0,
   products_model varchar(32) default NULL,
   products_name varchar(191) NOT NULL default '',
-  products_price decimal(15,4) NOT NULL default '0.0000',
-  final_price decimal(15,4) NOT NULL default '0.0000',
-  products_tax decimal(7,4) NOT NULL default '0.0000',
-  products_quantity float NOT NULL default '0',
-  onetime_charges decimal(15,4) NOT NULL default '0.0000',
+  products_price decimal(15,4) NOT NULL default 0,
+  final_price decimal(15,4) NOT NULL default 0,
+  products_tax decimal(7,4) NOT NULL default 0,
+  products_quantity float NOT NULL default 0,
+  onetime_charges decimal(15,4) NOT NULL default 0,
   products_priced_by_attribute tinyint(1) NOT NULL default 0,
   product_is_free tinyint(1) NOT NULL default 0,
   products_discount_type tinyint(1) NOT NULL default 0,
@@ -1284,30 +1284,30 @@ CREATE TABLE orders_products (
 DROP TABLE IF EXISTS orders_products_attributes;
 CREATE TABLE orders_products_attributes (
   orders_products_attributes_id int(11) NOT NULL auto_increment,
-  orders_id int(11) NOT NULL default '0',
-  orders_products_id int(11) NOT NULL default '0',
+  orders_id int(11) NOT NULL default 0,
+  orders_products_id int(11) NOT NULL default 0,
   products_options varchar(191) NOT NULL default '',
   products_options_values text NOT NULL,
-  options_values_price decimal(15,4) NOT NULL default '0.0000',
+  options_values_price decimal(15,4) NOT NULL default 0,
   price_prefix char(1) NOT NULL default '',
-  product_attribute_is_free tinyint(1) NOT NULL default '0',
+  product_attribute_is_free tinyint(1) NOT NULL default 0,
   products_attributes_weight float NOT NULL default '0',
   products_attributes_weight_prefix char(1) NOT NULL default '',
-  attributes_discounted tinyint(1) NOT NULL default '1',
-  attributes_price_base_included tinyint(1) NOT NULL default '1',
-  attributes_price_onetime decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor_offset decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor_onetime decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor_onetime_offset decimal(15,4) NOT NULL default '0.0000',
+  attributes_discounted tinyint(1) NOT NULL default 1,
+  attributes_price_base_included tinyint(1) NOT NULL default 1,
+  attributes_price_onetime decimal(15,4) NOT NULL default 0,
+  attributes_price_factor decimal(15,4) NOT NULL default 0,
+  attributes_price_factor_offset decimal(15,4) NOT NULL default 0,
+  attributes_price_factor_onetime decimal(15,4) NOT NULL default 0,
+  attributes_price_factor_onetime_offset decimal(15,4) NOT NULL default 0,
   attributes_qty_prices text,
   attributes_qty_prices_onetime text,
-  attributes_price_words decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_words_free int(4) NOT NULL default '0',
-  attributes_price_letters decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_letters_free int(4) NOT NULL default '0',
-  products_options_id int(11) NOT NULL default '0',
-  products_options_values_id int(11) NOT NULL default '0',
+  attributes_price_words decimal(15,4) NOT NULL default 0,
+  attributes_price_words_free int(4) NOT NULL default 0,
+  attributes_price_letters decimal(15,4) NOT NULL default 0,
+  attributes_price_letters_free int(4) NOT NULL default 0,
+  products_options_id int(11) NOT NULL default 0,
+  products_options_values_id int(11) NOT NULL default 0,
   products_prid tinytext NOT NULL,
   PRIMARY KEY  (orders_products_attributes_id),
   KEY idx_orders_id_prod_id_zen (orders_id,orders_products_id)
@@ -1360,10 +1360,10 @@ CREATE TABLE orders_status (
 DROP TABLE IF EXISTS orders_status_history;
 CREATE TABLE orders_status_history (
   orders_status_history_id int(11) NOT NULL auto_increment,
-  orders_id int(11) NOT NULL default '0',
-  orders_status_id int(5) NOT NULL default '0',
+  orders_id int(11) NOT NULL default 0,
+  orders_status_id int(5) NOT NULL default 0,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
-  customer_notified int(1) default '0',
+  customer_notified int(1) default 0,
   comments text,
   updated_by varchar(45) NOT NULL default '',
   PRIMARY KEY  (orders_status_history_id),
@@ -1379,12 +1379,12 @@ CREATE TABLE orders_status_history (
 DROP TABLE IF EXISTS orders_total;
 CREATE TABLE orders_total (
   orders_total_id int(10) unsigned NOT NULL auto_increment,
-  orders_id int(11) NOT NULL default '0',
+  orders_id int(11) NOT NULL default 0,
   title varchar(255) NOT NULL default '',
   text varchar(255) NOT NULL default '',
-  value decimal(15,4) NOT NULL default '0.0000',
+  value decimal(15,4) NOT NULL default 0,
   class varchar(32) NOT NULL default '',
-  sort_order int(11) NOT NULL default '0',
+  sort_order int(11) NOT NULL default 0,
   PRIMARY KEY  (orders_total_id),
   KEY idx_ot_orders_id_zen (orders_id),
   KEY idx_ot_class_zen (class),
@@ -1400,7 +1400,7 @@ CREATE TABLE orders_total (
 DROP TABLE IF EXISTS paypal;
 CREATE TABLE paypal (
   paypal_ipn_id int(11) unsigned NOT NULL auto_increment,
-  order_id int(11) unsigned NOT NULL default '0',
+  order_id int(11) unsigned NOT NULL default 0,
   txn_type varchar(40) NOT NULL default '',
   module_name varchar(40) NOT NULL default '',
   module_mode varchar(40) NOT NULL default '',
@@ -1429,9 +1429,9 @@ CREATE TABLE paypal (
   receiver_id varchar(32) NOT NULL default '',
   txn_id varchar(20) NOT NULL default '',
   parent_txn_id varchar(20) default NULL,
-  num_cart_items tinyint(4) unsigned NOT NULL default '1',
-  mc_gross decimal(15,4) NOT NULL default '0.00',
-  mc_fee decimal(15,4) NOT NULL default '0.00',
+  num_cart_items tinyint(4) unsigned NOT NULL default 1,
+  mc_gross decimal(15,4) NOT NULL default 0,
+  mc_fee decimal(15,4) NOT NULL default 0,
   payment_gross decimal(15,4) default NULL,
   payment_fee decimal(15,4) default NULL,
   settle_amount decimal(15,4) default NULL,
@@ -1480,7 +1480,7 @@ INSERT INTO paypal_payment_status VALUES (7, 'Reversed');
 DROP TABLE IF EXISTS paypal_payment_status_history;
 CREATE TABLE paypal_payment_status_history (
   payment_status_history_id int(11) NOT NULL auto_increment,
-  paypal_ipn_id int(11) NOT NULL default '0',
+  paypal_ipn_id int(11) NOT NULL default 0,
   txn_id varchar(64) NOT NULL default '',
   parent_txn_id varchar(64) NOT NULL default '',
   payment_status varchar(17) NOT NULL default '',
@@ -1501,7 +1501,7 @@ CREATE TABLE paypal_session (
   unique_id int(11) NOT NULL auto_increment,
   session_id text NOT NULL,
   saved_session mediumblob NOT NULL,
-  expiry int(17) NOT NULL default '0',
+  expiry int(17) NOT NULL default 0,
   PRIMARY KEY  (unique_id),
   KEY idx_session_id_zen (session_id(36))
 ) ENGINE=MyISAM;
@@ -1578,10 +1578,10 @@ CREATE TABLE plugin_groups_description (
 
 DROP TABLE IF EXISTS product_music_extra;
 CREATE TABLE product_music_extra (
-  products_id int(11) NOT NULL default '0',
-  artists_id int(11) NOT NULL default '0',
-  record_company_id int(11) NOT NULL default '0',
-  music_genre_id int(11) NOT NULL default '0',
+  products_id int(11) NOT NULL default 0,
+  artists_id int(11) NOT NULL default 0,
+  record_company_id int(11) NOT NULL default 0,
+  music_genre_id int(11) NOT NULL default 0,
   PRIMARY KEY  (products_id),
   KEY idx_music_genre_id_zen (music_genre_id),
   KEY idx_artists_id_zen (artists_id),
@@ -1601,7 +1601,7 @@ CREATE TABLE product_type_layout (
   configuration_key varchar(180) NOT NULL default '',
   configuration_value text NOT NULL,
   configuration_description text NOT NULL,
-  product_type_id int(11) NOT NULL default '0',
+  product_type_id int(11) NOT NULL default 0,
   sort_order int(5) default NULL,
   last_modified datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
@@ -1624,7 +1624,7 @@ CREATE TABLE product_types (
   type_id int(11) NOT NULL auto_increment,
   type_name varchar(255) NOT NULL default '',
   type_handler varchar(255) NOT NULL default '',
-  type_master_type int(11) NOT NULL default '1',
+  type_master_type int(11) NOT NULL default 1,
   allow_add_to_cart char(1) NOT NULL default 'Y',
   default_image varchar(255) NOT NULL default '',
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
@@ -1641,8 +1641,8 @@ CREATE TABLE product_types (
 
 DROP TABLE IF EXISTS product_types_to_category;
 CREATE TABLE product_types_to_category (
-  product_type_id int(11) NOT NULL default '0',
-  category_id int(11) NOT NULL default '0',
+  product_type_id int(11) NOT NULL default 0,
+  category_id int(11) NOT NULL default 0,
   KEY idx_category_id_zen (category_id),
   KEY idx_product_type_id_zen (product_type_id)
 ) ENGINE=MyISAM;
@@ -1657,46 +1657,46 @@ CREATE TABLE product_types_to_category (
 DROP TABLE IF EXISTS products;
 CREATE TABLE products (
   products_id int(11) NOT NULL auto_increment,
-  products_type int(11) NOT NULL default '1',
-  products_quantity float NOT NULL default '0',
+  products_type int(11) NOT NULL default 1,
+  products_quantity float NOT NULL default 0,
   products_model varchar(32) default NULL,
   products_mpn varchar(32) DEFAULT NULL,
   products_image varchar(255) default NULL,
-  products_price decimal(15,4) NOT NULL default '0.0000',
+  products_price decimal(15,4) NOT NULL default 0,
   products_price_w varchar(150) NOT NULL DEFAULT '0',
-  products_virtual tinyint(1) NOT NULL default '0',
+  products_virtual tinyint(1) NOT NULL default 0,
   products_date_added datetime NOT NULL default '0001-01-01 00:00:00',
   products_last_modified datetime default NULL,
   products_date_available datetime default NULL,
-  products_weight float NOT NULL default '0',
+  products_weight float NOT NULL default 0,
   products_length DECIMAL(8,4) DEFAULT NULL,
   products_width DECIMAL(8,4) DEFAULT NULL,
   products_height DECIMAL(8,4) DEFAULT NULL,
   product_ships_in_own_box TINYINT DEFAULT NULL,
-  products_status tinyint(1) NOT NULL default '0',
-  products_tax_class_id int(11) NOT NULL default '0',
+  products_status tinyint(1) NOT NULL default 0,
+  products_tax_class_id int(11) NOT NULL default 0,
   manufacturers_id int(11) default NULL,
-  products_ordered float NOT NULL default '0',
-  products_quantity_order_min float NOT NULL default '1',
-  products_quantity_order_units float NOT NULL default '1',
-  products_priced_by_attribute tinyint(1) NOT NULL default '0',
-  product_is_free tinyint(1) NOT NULL default '0',
-  product_is_call tinyint(1) NOT NULL default '0',
-  products_quantity_mixed tinyint(1) NOT NULL default '0',
-  product_is_always_free_shipping tinyint(1) NOT NULL default '0',
-  products_qty_box_status tinyint(1) NOT NULL default '1',
-  products_quantity_order_max float NOT NULL default '0',
-  products_sort_order int(11) NOT NULL default '0',
-  products_discount_type tinyint(1) NOT NULL default '0',
-  products_discount_type_from tinyint(1) NOT NULL default '0',
-  products_price_sorter decimal(15,4) NOT NULL default '0.0000',
-  master_categories_id int(11) NOT NULL default '0',
-  products_mixed_discount_quantity tinyint(1) NOT NULL default '1',
-  metatags_title_status tinyint(1) NOT NULL default '0',
-  metatags_products_name_status tinyint(1) NOT NULL default '0',
-  metatags_model_status tinyint(1) NOT NULL default '0',
-  metatags_price_status tinyint(1) NOT NULL default '0',
-  metatags_title_tagline_status tinyint(1) NOT NULL default '0',
+  products_ordered float NOT NULL default 0,
+  products_quantity_order_min float NOT NULL default 1,
+  products_quantity_order_units float NOT NULL default 1,
+  products_priced_by_attribute tinyint(1) NOT NULL default 0,
+  product_is_free tinyint(1) NOT NULL default 0,
+  product_is_call tinyint(1) NOT NULL default 0,
+  products_quantity_mixed tinyint(1) NOT NULL default 0,
+  product_is_always_free_shipping tinyint(1) NOT NULL default 0,
+  products_qty_box_status tinyint(1) NOT NULL default 1,
+  products_quantity_order_max float NOT NULL default 0,
+  products_sort_order int(11) NOT NULL default 0,
+  products_discount_type tinyint(1) NOT NULL default 0,
+  products_discount_type_from tinyint(1) NOT NULL default 0,
+  products_price_sorter decimal(15,4) NOT NULL default 0,
+  master_categories_id int(11) NOT NULL default 0,
+  products_mixed_discount_quantity tinyint(1) NOT NULL default 1,
+  metatags_title_status tinyint(1) NOT NULL default 0,
+  metatags_products_name_status tinyint(1) NOT NULL default 0,
+  metatags_model_status tinyint(1) NOT NULL default 0,
+  metatags_price_status tinyint(1) NOT NULL default 0,
+  metatags_title_tagline_status tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (products_id),
   KEY idx_products_date_added_zen (products_date_added),
   KEY idx_products_status_zen (products_status),
@@ -1732,33 +1732,33 @@ CREATE TABLE IF NOT EXISTS products_additional_images (
 DROP TABLE IF EXISTS products_attributes;
 CREATE TABLE products_attributes (
   products_attributes_id int(11) NOT NULL auto_increment,
-  products_id int(11) NOT NULL default '0',
-  options_id int(11) NOT NULL default '0',
-  options_values_id int(11) NOT NULL default '0',
-  options_values_price decimal(15,4) NOT NULL default '0.0000',
+  products_id int(11) NOT NULL default 0,
+  options_id int(11) NOT NULL default 0,
+  options_values_id int(11) NOT NULL default 0,
+  options_values_price decimal(15,4) NOT NULL default 0,
   options_values_price_w varchar(150) NOT NULL DEFAULT '0',
   price_prefix char(1) NOT NULL default '',
-  products_options_sort_order int(11) NOT NULL default '0',
-  product_attribute_is_free tinyint(1) NOT NULL default '0',
+  products_options_sort_order int(11) NOT NULL default 0,
+  product_attribute_is_free tinyint(1) NOT NULL default 0,
   products_attributes_weight float NOT NULL default '0',
   products_attributes_weight_prefix char(1) NOT NULL default '',
-  attributes_display_only tinyint(1) NOT NULL default '0',
-  attributes_default tinyint(1) NOT NULL default '0',
-  attributes_discounted tinyint(1) NOT NULL default '1',
+  attributes_display_only tinyint(1) NOT NULL default 0,
+  attributes_default tinyint(1) NOT NULL default 0,
+  attributes_discounted tinyint(1) NOT NULL default 1,
   attributes_image varchar(255) default NULL,
-  attributes_price_base_included tinyint(1) NOT NULL default '1',
-  attributes_price_onetime decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor_offset decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor_onetime decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_factor_onetime_offset decimal(15,4) NOT NULL default '0.0000',
+  attributes_price_base_included tinyint(1) NOT NULL default 1,
+  attributes_price_onetime decimal(15,4) NOT NULL default 0,
+  attributes_price_factor decimal(15,4) NOT NULL default 0,
+  attributes_price_factor_offset decimal(15,4) NOT NULL default 0,
+  attributes_price_factor_onetime decimal(15,4) NOT NULL default 0,
+  attributes_price_factor_onetime_offset decimal(15,4) NOT NULL default 0,
   attributes_qty_prices text,
   attributes_qty_prices_onetime text,
-  attributes_price_words decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_words_free int(4) NOT NULL default '0',
-  attributes_price_letters decimal(15,4) NOT NULL default '0.0000',
-  attributes_price_letters_free int(4) NOT NULL default '0',
-  attributes_required tinyint(1) NOT NULL default '0',
+  attributes_price_words decimal(15,4) NOT NULL default 0,
+  attributes_price_words_free int(4) NOT NULL default 0,
+  attributes_price_letters decimal(15,4) NOT NULL default 0,
+  attributes_price_letters_free int(4) NOT NULL default 0,
+  attributes_required tinyint(1) NOT NULL default 0,
   PRIMARY KEY  (products_attributes_id),
   KEY idx_id_options_id_values_zen (products_id,options_id,options_values_id),
   KEY idx_opt_sort_order_zen (products_options_sort_order)
@@ -1772,10 +1772,10 @@ CREATE TABLE products_attributes (
 
 DROP TABLE IF EXISTS products_attributes_download;
 CREATE TABLE products_attributes_download (
-  products_attributes_id int(11) NOT NULL default '0',
+  products_attributes_id int(11) NOT NULL default 0,
   products_attributes_filename varchar(255) NOT NULL default '',
-  products_attributes_maxdays int(2) default '0',
-  products_attributes_maxcount int(2) default '0',
+  products_attributes_maxdays int(2) default 0,
+  products_attributes_maxcount int(2) default 0,
   PRIMARY KEY  (products_attributes_id)
 ) ENGINE=MyISAM;
 
@@ -1788,11 +1788,11 @@ CREATE TABLE products_attributes_download (
 DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
   products_id int(11) NOT NULL,
-  language_id int(11) NOT NULL default '1',
+  language_id int(11) NOT NULL default 1,
   products_name varchar(191) NOT NULL default '',
   products_description text,
   products_url varchar(255) default NULL,
-  products_viewed int(5) default '0',
+  products_viewed int(5) default 0,
   PRIMARY KEY  (products_id,language_id),
   KEY idx_products_name_zen (products_name)
 ) ENGINE=MyISAM;
@@ -1804,11 +1804,11 @@ CREATE TABLE products_description (
 #
 DROP TABLE IF EXISTS products_discount_quantity;
 CREATE TABLE products_discount_quantity (
-  discount_id int(4) NOT NULL default '0',
-  products_id int(11) NOT NULL default '0',
-  discount_qty float NOT NULL default '0',
+  discount_id int(4) NOT NULL default 0,
+  products_id int(11) NOT NULL default 0,
+  discount_qty float NOT NULL default 0,
   discount_price_w varchar(150) NOT NULL DEFAULT '0',
-  discount_price decimal(15,4) NOT NULL default '0.0000',
+  discount_price decimal(15,4) NOT NULL default 0,
   KEY idx_id_qty_zen (products_id,discount_qty)
 ) ENGINE=MyISAM;
 
@@ -1820,8 +1820,8 @@ CREATE TABLE products_discount_quantity (
 
 DROP TABLE IF EXISTS products_notifications;
 CREATE TABLE products_notifications (
-  products_id int(11) NOT NULL default '0',
-  customers_id int(11) NOT NULL default '0',
+  products_id int(11) NOT NULL default 0,
+  customers_id int(11) NOT NULL default 0,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (products_id,customers_id)
 ) ENGINE=MyISAM;
@@ -1834,18 +1834,18 @@ CREATE TABLE products_notifications (
 
 DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
-  products_options_id int(11) NOT NULL default '0',
-  language_id int(11) NOT NULL default '1',
+  products_options_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
   products_options_name varchar(191) NOT NULL default '',
-  products_options_sort_order int(11) NOT NULL default '0',
-  products_options_type int(5) NOT NULL default '0',
-  products_options_length smallint(2) NOT NULL default '32',
+  products_options_sort_order int(11) NOT NULL default 0,
+  products_options_type int(5) NOT NULL default 0,
+  products_options_length smallint(2) NOT NULL default 32,
   products_options_comment varchar(256) default NULL,
-  products_options_comment_position smallint(2) NOT NULL default '0',
-  products_options_size smallint(2) NOT NULL default '32',
-  products_options_images_per_row int(2) default '5',
-  products_options_images_style int(1) default '0',
-  products_options_rows smallint(2) NOT NULL default '1',
+  products_options_comment_position smallint(2) NOT NULL default 0,
+  products_options_size smallint(2) NOT NULL default 32,
+  products_options_images_per_row int(2) default 5,
+  products_options_images_style int(1) default 0,
+  products_options_rows smallint(2) NOT NULL default 1,
   PRIMARY KEY  (products_options_id,language_id),
   KEY idx_lang_id_zen (language_id),
   KEY idx_products_options_sort_order_zen (products_options_sort_order),
@@ -1860,7 +1860,7 @@ CREATE TABLE products_options (
 
 DROP TABLE IF EXISTS products_options_types;
 CREATE TABLE products_options_types (
-  products_options_types_id int(11) NOT NULL default '0',
+  products_options_types_id int(11) NOT NULL default 0,
   products_options_types_name varchar(32) default NULL,
   PRIMARY KEY  (products_options_types_id)
 ) ENGINE=MyISAM COMMENT='Track products_options_types';
@@ -1873,10 +1873,10 @@ CREATE TABLE products_options_types (
 
 DROP TABLE IF EXISTS products_options_values;
 CREATE TABLE products_options_values (
-  products_options_values_id int(11) NOT NULL default '0',
-  language_id int(11) NOT NULL default '1',
+  products_options_values_id int(11) NOT NULL default 0,
+  language_id int(11) NOT NULL default 1,
   products_options_values_name varchar(191) NOT NULL default '',
-  products_options_values_sort_order int(11) NOT NULL default '0',
+  products_options_values_sort_order int(11) NOT NULL default 0,
   PRIMARY KEY (products_options_values_id,language_id),
   KEY idx_products_options_values_name_zen (products_options_values_name),
   KEY idx_products_options_values_sort_order_zen (products_options_values_sort_order)
@@ -1891,8 +1891,8 @@ CREATE TABLE products_options_values (
 DROP TABLE IF EXISTS products_options_values_to_products_options;
 CREATE TABLE products_options_values_to_products_options (
   products_options_values_to_products_options_id int(11) NOT NULL auto_increment,
-  products_options_id int(11) NOT NULL default '0',
-  products_options_values_id int(11) NOT NULL default '0',
+  products_options_id int(11) NOT NULL default 0,
+  products_options_values_id int(11) NOT NULL default 0,
   PRIMARY KEY  (products_options_values_to_products_options_id),
   KEY idx_products_options_id_zen (products_options_id),
   KEY idx_products_options_values_id_zen (products_options_values_id)
@@ -1906,8 +1906,8 @@ CREATE TABLE products_options_values_to_products_options (
 
 DROP TABLE IF EXISTS products_to_categories;
 CREATE TABLE products_to_categories (
-  products_id int(11) NOT NULL default '0',
-  categories_id int(11) NOT NULL default '0',
+  products_id int(11) NOT NULL default 0,
+  categories_id int(11) NOT NULL default 0,
   PRIMARY KEY  (products_id,categories_id),
   KEY idx_cat_prod_id_zen (categories_id,products_id)
 ) ENGINE=MyISAM;
@@ -1995,10 +1995,10 @@ CREATE TABLE record_artists (
 
 DROP TABLE IF EXISTS record_artists_info;
 CREATE TABLE record_artists_info (
-  artists_id int(11) NOT NULL default '0',
-  languages_id int(11) NOT NULL default '0',
+  artists_id int(11) NOT NULL default 0,
+  languages_id int(11) NOT NULL default 0,
   artists_url varchar(255) NOT NULL default '',
-  url_clicked int(5) NOT NULL default '0',
+  url_clicked int(5) NOT NULL default 0,
   date_last_click datetime default NULL,
   PRIMARY KEY  (artists_id,languages_id)
 ) ENGINE=MyISAM;
@@ -2028,10 +2028,10 @@ CREATE TABLE record_company (
 
 DROP TABLE IF EXISTS record_company_info;
 CREATE TABLE record_company_info (
-  record_company_id int(11) NOT NULL default '0',
-  languages_id int(11) NOT NULL default '0',
+  record_company_id int(11) NOT NULL default 0,
+  languages_id int(11) NOT NULL default 0,
   record_company_url varchar(255) NOT NULL default '',
-  url_clicked int(5) NOT NULL default '0',
+  url_clicked int(5) NOT NULL default 0,
   date_last_click datetime default NULL,
   PRIMARY KEY  (record_company_id,languages_id)
 ) ENGINE=MyISAM;
@@ -2045,14 +2045,14 @@ CREATE TABLE record_company_info (
 DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
   reviews_id int(11) NOT NULL auto_increment,
-  products_id int(11) NOT NULL default '0',
+  products_id int(11) NOT NULL default 0,
   customers_id int(11) default NULL,
   customers_name varchar(64) NOT NULL default '',
   reviews_rating int(1) default NULL,
   date_added datetime default NULL,
   last_modified datetime default NULL,
-  reviews_read int(5) NOT NULL default '0',
-  status int(1) NOT NULL default '1',
+  reviews_read int(5) NOT NULL default 0,
+  status int(1) NOT NULL default 1,
   PRIMARY KEY  (reviews_id),
   KEY idx_products_id_zen (products_id),
   KEY idx_customers_id_zen (customers_id),
@@ -2068,8 +2068,8 @@ CREATE TABLE reviews (
 
 DROP TABLE IF EXISTS reviews_description;
 CREATE TABLE reviews_description (
-  reviews_id int(11) NOT NULL default '0',
-  languages_id int(11) NOT NULL default '0',
+  reviews_id int(11) NOT NULL default 0,
+  languages_id int(11) NOT NULL default 0,
   reviews_text text NOT NULL,
   reviews_title VARCHAR(128) NOT NULL DEFAULT '',
   PRIMARY KEY  (reviews_id,languages_id)
@@ -2084,13 +2084,13 @@ CREATE TABLE reviews_description (
 DROP TABLE IF EXISTS salemaker_sales;
 CREATE TABLE salemaker_sales (
   sale_id int(11) NOT NULL auto_increment,
-  sale_status tinyint(4) NOT NULL default '0',
+  sale_status tinyint(4) NOT NULL default 0,
   sale_name varchar(128) NOT NULL default '',
-  sale_deduction_value decimal(15,4) NOT NULL default '0.0000',
-  sale_deduction_type tinyint(4) NOT NULL default '0',
-  sale_pricerange_from decimal(15,4) NOT NULL default '0.0000',
-  sale_pricerange_to decimal(15,4) NOT NULL default '0.0000',
-  sale_specials_condition tinyint(4) NOT NULL default '0',
+  sale_deduction_value decimal(15,4) NOT NULL default 0,
+  sale_deduction_type tinyint(4) NOT NULL default 0,
+  sale_pricerange_from decimal(15,4) NOT NULL default 0,
+  sale_pricerange_to decimal(15,4) NOT NULL default 0,
+  sale_specials_condition tinyint(4) NOT NULL default 0,
   sale_categories_selected text,
   sale_categories_all text,
   sale_date_start date NOT NULL default '0001-01-01',
@@ -2129,13 +2129,13 @@ CREATE TABLE sessions (
 DROP TABLE IF EXISTS specials;
 CREATE TABLE specials (
   specials_id int(11) NOT NULL auto_increment,
-  products_id int(11) NOT NULL default '0',
-  specials_new_products_price decimal(15,4) NOT NULL default '0.0000',
+  products_id int(11) NOT NULL default 0,
+  specials_new_products_price decimal(15,4) NOT NULL default 0,
   specials_date_added datetime default NULL,
   specials_last_modified datetime default NULL,
   expires_date date NOT NULL default '0001-01-01',
   date_status_change datetime default NULL,
-  status int(1) NOT NULL default '1',
+  status int(1) NOT NULL default 1,
   specials_date_available date NOT NULL default '0001-01-01',
   PRIMARY KEY  (specials_id),
   KEY idx_status_zen (status),
@@ -2169,10 +2169,10 @@ CREATE TABLE tax_class (
 DROP TABLE IF EXISTS tax_rates;
 CREATE TABLE tax_rates (
   tax_rates_id int(11) NOT NULL auto_increment,
-  tax_zone_id int(11) NOT NULL default '0',
-  tax_class_id int(11) NOT NULL default '0',
-  tax_priority int(5) default '1',
-  tax_rate decimal(7,4) NOT NULL default '0.0000',
+  tax_zone_id int(11) NOT NULL default 0,
+  tax_class_id int(11) NOT NULL default 0,
+  tax_priority int(5) default 1,
+  tax_rate decimal(7,4) NOT NULL default 0,
   last_modified datetime default NULL,
   date_added datetime NOT NULL default '0001-01-01 00:00:00',
   PRIMARY KEY  (tax_rates_id),
@@ -2248,7 +2248,7 @@ CREATE TABLE whos_online (
 DROP TABLE IF EXISTS zones;
 CREATE TABLE zones (
   zone_id int(11) NOT NULL auto_increment,
-  zone_country_id int(11) NOT NULL default '0',
+  zone_country_id int(11) NOT NULL default 0,
   zone_code varchar(32) NOT NULL default '',
   zone_name varchar(128) NOT NULL default '',
   PRIMARY KEY  (zone_id),
@@ -2265,7 +2265,7 @@ CREATE TABLE zones (
 DROP TABLE IF EXISTS zones_to_geo_zones;
 CREATE TABLE zones_to_geo_zones (
   association_id int(11) NOT NULL auto_increment,
-  zone_country_id int(11) NOT NULL default '0',
+  zone_country_id int(11) NOT NULL default 0,
   zone_id int(11) default NULL,
   geo_zone_id int(11) default NULL,
   last_modified datetime default NULL,
@@ -2273,19 +2273,6 @@ CREATE TABLE zones_to_geo_zones (
   PRIMARY KEY  (association_id),
   KEY idx_zones_zen (geo_zone_id,zone_country_id,zone_id)
 ) ENGINE=MyISAM;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # default data
