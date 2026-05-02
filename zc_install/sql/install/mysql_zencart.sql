@@ -463,7 +463,7 @@ CREATE TABLE coupon_email_track (
 DROP TABLE IF EXISTS coupon_gv_customer;
 CREATE TABLE coupon_gv_customer (
   customer_id int(5) NOT NULL default 0,
-  amount decimal(15,4) NOT NULL default '0.0000',
+  amount decimal(15,4) NOT NULL default 0,
   PRIMARY KEY  (customer_id)
 ) ENGINE=MyISAM;
 
@@ -478,7 +478,7 @@ CREATE TABLE coupon_gv_queue (
   unique_id int(5) NOT NULL auto_increment,
   customer_id int(5) NOT NULL default 0,
   order_id int(5) NOT NULL default 0,
-  amount decimal(15,4) NOT NULL default '0.0000',
+  amount decimal(15,4) NOT NULL default 0,
   date_created datetime NOT NULL default '0001-01-01 00:00:00',
   ipaddr varchar(45) NOT NULL default '',
   release_flag char(1) NOT NULL default 'N',
@@ -625,7 +625,7 @@ CREATE TABLE customers (
   customers_dob datetime NOT NULL default '0001-01-01 00:00:00',
   customers_email_address varchar(96) NOT NULL default '',
   customers_nick varchar(96) NOT NULL default '',
-  customers_default_address_id int(11) NOT NULL default '0',
+  customers_default_address_id int(11) NOT NULL default 0,
   customers_telephone varchar(32) NOT NULL default '',
   customers_fax varchar(32) default NULL,
   customers_password varchar(255) NOT NULL default '',
@@ -1291,7 +1291,7 @@ CREATE TABLE orders_products_attributes (
   options_values_price decimal(15,4) NOT NULL default 0,
   price_prefix char(1) NOT NULL default '',
   product_attribute_is_free tinyint(1) NOT NULL default 0,
-  products_attributes_weight float NOT NULL default '0',
+  products_attributes_weight float NOT NULL default 0,
   products_attributes_weight_prefix char(1) NOT NULL default '',
   attributes_discounted tinyint(1) NOT NULL default 1,
   attributes_price_base_included tinyint(1) NOT NULL default 1,
@@ -1740,7 +1740,7 @@ CREATE TABLE products_attributes (
   price_prefix char(1) NOT NULL default '',
   products_options_sort_order int(11) NOT NULL default 0,
   product_attribute_is_free tinyint(1) NOT NULL default 0,
-  products_attributes_weight float NOT NULL default '0',
+  products_attributes_weight float NOT NULL default 0,
   products_attributes_weight_prefix char(1) NOT NULL default '',
   attributes_display_only tinyint(1) NOT NULL default 0,
   attributes_default tinyint(1) NOT NULL default 0,
