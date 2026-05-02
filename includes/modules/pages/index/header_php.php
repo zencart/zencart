@@ -127,8 +127,9 @@ if (!empty($_GET['record_company_id'])) {
     $typefilter = 'record_company';
 } elseif (!empty($_GET['music_genre_id'])) {
     $typefilter = 'music_genre';
+} else {
+    $typefilter = $_GET['typefilter'] ?? 'default';
 }
-$typefilter ??= $_GET['typefilter'] ?? 'default';
 
 require zen_get_index_filters_directory($typefilter . '_filter.php');
 unset($and, $sql_joins, $order_by);
