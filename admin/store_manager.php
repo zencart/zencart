@@ -4,6 +4,10 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
+ *
+ * @var queryFactory $db
+ * @var messageStack $messageStack
+ * @var sniffer $sniffer
  */
 
   require 'includes/application_top.php';
@@ -60,21 +64,25 @@
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
 
-//    case ('update_all_products_viewed'):
-//    // reset products_viewed to 0
-////        $sql = "UPDATE " . TABLE_PRODUCTS_DESCRIPTION . " SET products_viewed = 0";
-////        $db->Execute($sql);
-//        $sql = "TRUNCATE TABLE " . TABLE_COUNT_PRODUCT_VIEWS;
-//        $db->Execute($sql);
-//
-//        $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
-//        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
-//        $action='';
-//        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
-//    break;
+    case ('update_all_products_viewed'):
+        // reset product views to 0 by purging all view history
+        $sql = "TRUNCATE TABLE " . TABLE_COUNT_PRODUCT_VIEWS;
+        $db->Execute($sql);
+
+        // if products_viewed column exists, drop it since it is no longer used since v1.5.1 and replaced in v1.5.7
+        if ($sniffer && $sniffer->field_exists(TABLE_PRODUCTS_DESCRIPTION, 'products_viewed')) {
+            $sql = "ALTER TABLE " . TABLE_PRODUCTS_DESCRIPTION . " DROP COLUMN products_viewed";
+            $db->Execute($sql);
+        }
+
+        $messageStack->add_session(SUCCESS_PRODUCT_UPDATE_PRODUCTS_VIEWED, 'success');
+        zen_record_admin_activity('Store Manager executed [update all products viewed]', 'info');
+        $action='';
+        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+    break;
 
     case ('update_all_products_ordered'):
-      // reset products_ordered to 0
+        // reset products_ordered to 0
         $sql = "UPDATE " . TABLE_PRODUCTS . " SET products_ordered= '0'";
         $db->Execute($sql);
 
@@ -250,10 +258,9 @@ if ($processing_message != '') {
     </tr>
     <!-- eof: reset all counter to 0 -->
 
-<?php /*
 <!-- bof: reset all products_viewed to 0 -->
       <tr>
-        <td colspan="2"><br><table border="0" cellspacing="0" cellpadding="2">
+        <td colspan="2"><br><table>
           <tr>
             <td class="main text-left align-top"><?php echo TEXT_INFO_PRODUCTS_VIEWED_UPDATE; ?></td>
             <td class="main text-right align-middle"><?php echo zen_draw_form('update_all_products_viewed', FILENAME_STORE_MANAGER, 'action=update_all_products_viewed')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
@@ -261,8 +268,6 @@ if ($processing_message != '') {
         </table></td>
       </tr>
 <!-- eof: reset all products_viewed to 0 -->
-*/
-?>
 
 <!-- bof: reset all products_ordered to 0 -->
       <tr>
@@ -350,8 +355,8 @@ if ($processing_message != '') {
 <!-- body_eof //-->
 
 <!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+<?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 <!-- footer_eof //-->
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
