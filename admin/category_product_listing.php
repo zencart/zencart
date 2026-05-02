@@ -1132,7 +1132,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $heading = [];
             $contents = [];
 
-            $cPath_pID_params = 'cPath=' . $cPath . '&pID=' . $pInfo->products_id;
+            $cPath_pID_params = 'cPath=' . $cPath . '&pID=' . ($pInfo->products_id ?? 0);
             switch ($action) {
                 case 'setflag_categories':
                     $heading[] = ['text' => '<h5>' . TEXT_INFO_HEADING_STATUS_CATEGORY . '</h5>' . '<h4>' . zen_output_generated_category_path($current_category_id) . ' > ' . zen_get_category_name($cInfo->categories_id, $_SESSION['languages_id']) . '</h4>'];
