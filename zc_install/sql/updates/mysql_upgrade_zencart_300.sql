@@ -41,7 +41,7 @@ DELETE FROM customers_auth_tokens WHERE created_at > DATE_SUB(CURRENT_TIMESTAMP,
 DROP TABLE IF EXISTS paypal_testing;
 ALTER TABLE admin ADD dashboard_layout TEXT NULL;
 ALTER TABLE reviews_description ADD reviews_title VARCHAR(128) NOT NULL DEFAULT '';
-
+ALTER TABLE products_description DROP COLUMN products_viewed;
 
 
 #PROGRESS_FEEDBACK:!TEXT=Updating configuration settings...

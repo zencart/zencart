@@ -244,37 +244,41 @@ if (!empty($upperMenuOverrideArray) && is_array($upperMenuOverrideArray)) {
                             </li>
                         </ul>
                     </li>
-                    <?php } ?>
+                    <?php }
 
-                    <?php if (!empty($languages_array)) { ?>
-                        <?php if (count($languages_array) === 2) { ?>
-                            <?php foreach ($languages_array as $lang_code => $lang) { ?>
-                                <?php if ($lang_code !== $_SESSION['languages_code']) { ?>
-                    <li id="nav-language-2nd">
-                        <a href="<?= zen_href_link(basename($PHP_SELF), zen_get_all_get_params(['language', 'action']) . 'language=' . $lang_code) ?>">
-                            <?= zen_image(DIR_WS_CATALOG_LANGUAGES . $lang['directory'] . '/images/' . $lang['image'], $lang['name']) ?>
-                        </a>
-                    </li>
-                                    <?php break; ?>
-                                <?php } ?>
-                            <?php } ?>
-                        <?php } else { ?>
-                    <li class="dropdown" id="nav-language-selector">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-flag"></i> <span class="visible-xs-inline"> <?= HEADER_TEXT_LANGUAGES ?></span> <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <?php foreach($languages_array as $lang_code => $lang) { ?>
-                            <li>
-                                <a href="<?= zen_href_link(basename($PHP_SELF), zen_get_all_get_params(['language', 'action']) . 'language=' . $lang_code) ?>">
-                                    <?= $lang['name'] ?>
+                    if (!empty($languages_array)) {
+                        if (count($languages_array) === 2) {
+                            foreach ($languages_array as $lang_code => $lang) {
+                                if ($lang_code !== $_SESSION['languages_code']) { ?>
+                                    <li id="nav-language-2nd">
+                                        <a href="<?= zen_href_link(basename($PHP_SELF), zen_get_all_get_params(['language']) . 'language=' . $lang_code) ?>">
+                                            <?= zen_image(DIR_WS_CATALOG_LANGUAGES . $lang['directory'] . '/images/' . $lang['image'], $lang['name']) ?>
+                                        </a>
+                                    </li>
+                                    <?php
+                                    break;
+                                }
+                            }
+                        } else { ?>
+                            <li class="dropdown" id="nav-language-selector">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-flag"></i> <span class="visible-xs-inline"> <?= HEADER_TEXT_LANGUAGES ?></span> <b class="caret"></b>
                                 </a>
+                                <ul class="dropdown-menu">
+                                    <?php
+                                    foreach ($languages_array as $lang_code => $lang) { ?>
+                                        <li>
+                                            <a href="<?= zen_href_link(basename($PHP_SELF), zen_get_all_get_params(['language', 'action']) . 'language=' . $lang_code) ?>">
+                                                <?= $lang['name'] ?>
+                                            </a>
+                                        </li>
+                                    <?php
+                                    } ?>
+                                </ul>
                             </li>
-                            <?php } ?>
-                        </ul>
-                    </li>
-                        <?php } ?>
-                    <?php } ?>
+                        <?php
+                        }
+                    } ?>
 
                     <li class="dropdown" id="nav-user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">

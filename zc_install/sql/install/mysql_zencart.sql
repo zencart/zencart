@@ -1792,7 +1792,6 @@ CREATE TABLE products_description (
   products_name varchar(191) NOT NULL default '',
   products_description text,
   products_url varchar(255) default NULL,
-  products_viewed int(5) default '0',
   PRIMARY KEY  (products_id,language_id),
   KEY idx_products_name_zen (products_name)
 ) ENGINE=MyISAM;
