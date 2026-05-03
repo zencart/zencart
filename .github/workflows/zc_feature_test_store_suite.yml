@@ -44,6 +44,15 @@ jobs:
       - name: Enable Apache2 Rewrite Module
         run: sudo a2enmod rewrite
 
+      - name: Configure Apache MPM for mod_php
+        run: |
+          sudo a2dismod mpm_event || true
+          sudo a2dismod mpm_worker || true
+          sudo a2enmod mpm_prefork
+
+      - name: Enable PHP Module
+        run: sudo a2enmod php${{ matrix.php-version }}
+
       - name: Configure Apache2 Document Root
         run: sudo sed -i "s|/var/www/html|$GITHUB_WORKSPACE|g" /etc/apache2/sites-available/000-default.conf
 
@@ -52,12 +61,6 @@ jobs:
 
       - name: SHOW GITHUB WORKSPACE
         run: echo $GITHUB_WORKSPACE
-
-      - name: Open Firewall
-        run: sudo ufw allow 'Apache Full'
-
-      - name: Enable PHP Modules
-        run: sudo apt-get install libapache2-mod-php${{ matrix.php-version }} && sudo a2enmod php${{ matrix.php-version }}
 
       - name: Install Composer Dependencies
         run: |
@@ -72,14 +75,16 @@ jobs:
 
       - name: Set Apache2 Environment Variables
         run: |
-            echo "export APACHE_RUN_USER=$USER" | sudo tee -a /etc/apache2/envvars
-            echo "export APACHE_RUN_GROUP=$(id -g -n $USER)" | sudo tee -a /etc/apache2/envvars
+          echo "export APACHE_RUN_USER=$USER" | sudo tee -a /etc/apache2/envvars
+          echo "export APACHE_RUN_GROUP=$(id -g -n $USER)" | sudo tee -a /etc/apache2/envvars
 
       - name: Set Apache User and Group on Web Server Files
         run: sudo chown -R $USER:$(id -g -n $USER) $GITHUB_WORKSPACE
 
       - name: Start Apache2
-        run: sudo service apache2 start
+        run: |
+          sudo apache2ctl configtest
+          sudo service apache2 start || sudo journalctl -xeu apache2.service --no-pager
 
       - name: Test Apache Status
         run: sudo service apache2 status
