@@ -1132,7 +1132,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
             $heading = [];
             $contents = [];
 
-            $cPath_pID_params = 'cPath=' . $cPath . '&pID=' . ($pInfo->products_id ?? 0);
             switch ($action) {
                 case 'setflag_categories':
                     $heading[] = ['text' => '<h5>' . TEXT_INFO_HEADING_STATUS_CATEGORY . '</h5>' . '<h4>' . zen_output_generated_category_path($current_category_id) . ' > ' . zen_get_category_name($cInfo->categories_id, $_SESSION['languages_id']) . '</h4>'];
@@ -1250,6 +1249,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     $copy_attributes_duplicates_overwrite = '0';
                     $copy_attributes_include_downloads = '1';
                     $copy_attributes_include_filename = '1';
+
+                    $cPath_pID_params = 'cPath=' . $cPath . '&pID=' . $pInfo->products_id;
 
                     $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_ATTRIBUTE_FEATURES . $pInfo->products_id . '</h4>'];
 
@@ -1386,6 +1387,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             '</label></div>'
                     ];
                     $contents[] = ['text' => zen_draw_pulldown_categories_having_products('categories_update_id', 'class="form-control"', [], true)];
+
+                    $cPath_pID_params = 'cPath=' . $cPath . '&pID=' . $pInfo->products_id;
                     $contents[] = [
                         'align' => 'center',
                         'text' =>
