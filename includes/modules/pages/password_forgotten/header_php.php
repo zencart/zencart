@@ -11,8 +11,7 @@
  * @var messageStack $messageStack
  * @var breadcrumb $breadcrumb
  * @var notifier $zco_notifier
- * 
- * TC changed improved password reset   
+ *
  */
 
 // This should be first line of the script:
