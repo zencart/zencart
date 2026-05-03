@@ -1,6 +1,11 @@
 <?php
 
-$password_reset_button_colour = '#00BCE4';//change to stores theme colour
+// change this to match your store's theme colour
+// You can define this in your /includes/extra_datafiles/site_specific_overrides.php file to avoid editing this file directly.
+$password_reset_email_button_colour ??= '#00BCE4'; 
+
+// Simple sanitization
+$password_reset_email_button_colour = htmlspecialchars(substr($password_reset_email_button_colour, 0, 32), ENT_QUOTES);
 
 $define = [
     'NAVBAR_TITLE_1' => 'Login',
@@ -25,12 +30,12 @@ $define = [
         '<p>Hello,</p>' .
         '<p>We received a request to reset the password for your %2$s account.</p>' .
         '<p>To choose a new password, please click the button below:</p>' .
-        '<p><a href="%3$s" style="display:inline-block;padding:10px 16px;background:' . $password_reset_button_colour . ';color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">Reset your password</a></p>' .
+        '<p><a href="%3$s" style="display:inline-block;padding:10px 16px;background:' . $password_reset_email_button_colour . ';color:#ffffff;text-decoration:none;border-radius:4px;font-weight:bold;">Reset your password</a></p>' .
         '<p>Or copy and paste this link into your browser:<br><a href="%3$s">%3$s</a></p>' .
         '<p>This link is for password reset only. If you did not request this, you can safely ignore this email and your password will not be changed.</p>' .
         '<p>For your security, this request was made from IP address: %1$s</p>' .
         '<p>Kind regards,<br>' .
-        STORE_NAME .
+        '%2$s' .
         '</p>',
 
     'SUCCESS_PASSWORD_RESET_SENT' =>
