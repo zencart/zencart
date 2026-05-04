@@ -9,7 +9,12 @@ require 'includes/application_top.php';
 
 $action = $_GET['action'] ?? '';
 $cID = (int)($_GET['cID'] ?? 0);
-$gID = (int)($_GET['gID'] ?? 0);
+
+$pagenum = (int)($_GET['page'] : 1);
+if ($pagenum < 1) {
+    $pagenum = 1;
+}
+$page_param = "page=$pagenum";
 
 switch ($action) {
     case 'layout_save':
@@ -21,7 +26,7 @@ switch ($action) {
                     last_modified = now()
               WHERE configuration_id = " . (int)$cID
         );
-        zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, 'gID=' . $_GET['gID'] . '&cID=' . $cID . '&ptID=' . $_GET['ptID'] . '&action=layout'));
+        zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, zen_get_all_get_params(['action']) . '&action=layout'));
         break;
 
     case 'insert':
@@ -81,16 +86,18 @@ switch ($action) {
             }
         }
 
-        zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'ptID=' . $type_id));
+        zen_redirect(zen_href_link(FILENAME_PRODUCT_TYPES, $page_param . '&ptID=' . $type_id));
         break;
 
     case 'deleteconfirm':
         $type_id = zen_db_prepare_input($_POST['ptID']);
 
-        if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
-            $product_type = $db->Execute("SELECT default_image
-                                      FROM " . TABLE_PRODUCT_TYPES . "
-                                      WHERE type_id = " . (int)$type_id);
+        if (isset($_POST['delete_image']) && $_POST['delete_image'] === 'on') {
+            $product_type = $db->Execute(
+                "SELECT default_image
+                   FROM " . TABLE_PRODUCT_TYPES . "
+                  WHERE type_id = " . (int)$type_id
+            );
 
             $image_location = DIR_FS_CATALOG_IMAGES . $product_type->fields['default_image'];
 
@@ -105,7 +112,7 @@ switch ($action) {
         );
 
 
-        if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
+        if (isset($_POST['delete_products']) && $_POST['delete_products'] === 'on')) {
             $products = $db->Execute(
                 "SELECT products_id
                    FROM " . TABLE_PRODUCTS . "
@@ -190,9 +197,11 @@ if ($action === 'layout' || $action === 'layout_edit') {
         }
 
         if (($cID === 0 || $cID === (int)$item['configuration_id']) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-            $cfg_extra = $db->Execute("SELECT configuration_key, configuration_description, date_added, last_modified, use_function, set_function
-                                         FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
-                                         WHERE configuration_id = " . (int)$item['configuration_id']);
+            $cfg_extra = $db->Execute(
+                "SELECT configuration_key, configuration_description, date_added, last_modified, use_function, set_function
+                   FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
+                  WHERE configuration_id = " . (int)$item['configuration_id']
+            );
             $cInfo_array = array_merge($item, $cfg_extra->fields);
             $cInfo_array['configuration_description'] = zen_lookup_admin_menu_language_override('product_type_layout_description', $cInfo_array['configuration_key'], $cInfo_array['configuration_description']);
             $cInfo = new objectInfo($cInfo_array);
@@ -340,7 +349,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
         case 'edit':
             $heading[] = ['text' => '<h4>' . TEXT_HEADING_EDIT_PRODUCT_TYPE . ' :: ' . $ptInfo->type_name . '</h4>'];
 
-            $contents = ['form' => zen_draw_form('product_types', FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=save', 'post', 'enctype="multipart/form-data" class="form-horizontal"')];
+            $contents = ['form' => zen_draw_form('product_types', FILENAME_PRODUCT_TYPES, $page_param . '&ptID=' . $ptInfo->type_id . '&action=save', 'post', 'enctype="multipart/form-data" class="form-horizontal"')];
             $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
             $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_NAME, 'type_name', 'class="control-label"') . zen_draw_input_field('type_name', $ptInfo->type_name, zen_set_field_length(TABLE_PRODUCT_TYPES, 'type_name') . ' class="form-control"')];
             $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_PRODUCT_TYPES_IMAGE, 'default_image', 'class="control-label"') . zen_draw_file_field('default_image') . '<br>' . $ptInfo->default_image];
@@ -361,12 +370,12 @@ if ($action === 'layout' || $action === 'layout_edit') {
             }
             $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_MASTER_TYPE, 'master_type', 'class="control-label"') . zen_draw_pull_down_menu('master_type', $product_type_array, $ptInfo->type_master_type, 'class="form-control"')];
 
-            $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+            $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-primary">' . IMAGE_SAVE . '</button> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, $page_params . '&ptID=' . $ptInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
             break;
     /*              case 'delete':
         $heading[] = array('text' => '<h4>' . TEXT_HEADING_DELETE_PRODUCT_TYPE . '</h4>');
 
-        $contents = array('form' => zen_draw_form('manufacturers', FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('ptID', $ptInfo->type_id));
+        $contents = array('form' => zen_draw_form('manufacturers', FILENAME_PRODUCT_TYPES, $page_param . '&action=deleteconfirm') . zen_draw_hidden_field('ptID', $ptInfo->type_id));
         $contents[] = array('text' => TEXT_DELETE_INTRO);
         $contents[] = array('text' => '<br><b>' . $ptInfo->type_name . '</b>');
         $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('delete_image', '', true) . ' ' . TEXT_DELETE_IMAGE);
@@ -376,13 +385,13 @@ if ($action === 'layout' || $action === 'layout_edit') {
           $contents[] = array('text' => '<br>' . sprintf(TEXT_DELETE_WARNING_PRODUCTS, $ptInfo->products_count));
         }
 
-        $contents[] = array('align' => 'text-center', 'text' => '<br>' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>' . ' <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
+        $contents[] = array('align' => 'text-center', 'text' => '<br>' . '<button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button>' . ' <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, $page_param . '&ptID=' . $ptInfo->type_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>');
         break;*/
         default:
             if (isset($ptInfo) && is_object($ptInfo)) {
                 $heading[] = ['text' => '<h4>' . $ptInfo->type_name . '</h4>'];
     // remove delete for now to avoid issues
-    //                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=delete') . '" class="btn btn-danger" role="button">' . IMAGE_DELETE . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '" class="btn btn-default" role="button">' . IMAGE_LAYOUT . '</a>');
+    //                  $contents[] = array('align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, $page_param . '&ptID=' . $ptInfo->type_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=delete') . '" class="btn btn-danger" role="button">' . IMAGE_DELETE . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '" class="btn btn-default" role="button">' . IMAGE_LAYOUT . '</a>');
                 $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCT_TYPES, 'page=' . $_GET['page'] . '&ptID=' . $ptInfo->type_id . '&action=layout') . '" class="btn btn-default" role="button">' . IMAGE_LAYOUT . '</a>'];
                 $contents[] = ['text' => '<br>' . TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($ptInfo->date_added)];
                 if (zen_not_null($ptInfo->last_modified)) {
