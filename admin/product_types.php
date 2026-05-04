@@ -172,7 +172,7 @@ if (!empty($action)) {
                     $cfgValue = $item['configuration_value'];
                   }
 
-                  if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $item['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+                  if (($_GET['cID'] === '' || $_GET['cID'] == $item['configuration_id']) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
                     $cfg_extra = $db->Execute("SELECT configuration_key, configuration_description, date_added, last_modified, use_function, set_function
                                                          FROM " . TABLE_PRODUCT_TYPE_LAYOUT . "
                                                          WHERE configuration_id = " . (int)$item['configuration_id']);
