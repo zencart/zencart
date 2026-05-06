@@ -82,7 +82,7 @@
 <?php } ?>
 <label class="inputLabel" for="state" id="stateLabel"><?php echo $state_field_label; ?></label>
 <?php
-    echo zen_draw_input_field('state', zen_get_zone_name((int)$entry->fields['entry_country_id'], (int)$entry->fields['entry_zone_id'], $entry->fields['entry_state']), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"' . ((int)ENTRY_STATE_MIN_LENGTH > 0 ? ' placeholder="' . ENTRY_STATE_TEXT . '" required' : ''));
+    echo zen_draw_input_field('state', zen_get_zone_name((int)$entry->fields['entry_country_id'], (int)$entry->fields['entry_zone_id'], $entry->fields['entry_state']), zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"' . ((int)ENTRY_STATE_MIN_LENGTH > 0 ? ' placeholder="' . ENTRY_STATE_TEXT . '"' : ''));
 
     if ($flag_show_pulldown_states == false) {
       echo zen_draw_hidden_field('zone_id', $zone_name, ' ');
