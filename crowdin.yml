@@ -1,58 +1,69 @@
+#
+# crowdin.yml for Zen Cart v3.0+
+#
+# IMPORTANT: This configuration enforces the requirement that all language-define files must start with 'lang.'
+# Only files matching 'lang.*.php' are included for translation. Legacy (non-'lang.'-prefixed) files are not supported.
+# Exceptions: Files in the 'html_includes' directories and zc_install do not use the lang. prefix.
+#
+# If you need to support prior Zen Cart versions, maintain a separate branch with its own crowdin.yml.
+# For more details, see AGENTS.md and project documentation.
+#
+
 export_languages:
   - english
 files:
   - source: /admin/includes/languages/lang.english.php
     translation: /admin/includes/languages/lang.%language%.php
     update_option: update_as_unapproved
-  - source: /admin/includes/languages/english/*.php
+  - source: /admin/includes/languages/english/lang.*.php
     translation: /admin/includes/languages/%language%/%original_file_name%
     update_option: update_as_unapproved
-  - source: /admin/includes/languages/english/extra_definitions/*.php
+  - source: /admin/includes/languages/english/extra_definitions/lang.*.php
     translation: /admin/includes/languages/%language%/extra_definitions/%original_file_name%
     update_option: update_as_unapproved
-  - source: /admin/includes/languages/english/modules/newsletters/*.php
+  - source: /admin/includes/languages/english/modules/newsletters/lang.*.php
     translation: /admin/includes/languages/%language%/modules/newsletters/%original_file_name%
     update_option: update_as_unapproved
   - source: /includes/languages/lang.english.php
     translation: /includes/languages/lang.%language%.php
     update_option: update_as_unapproved
-  - source: /includes/languages/english/*.php
+  - source: /includes/languages/english/lang.*.php
     translation: /includes/languages/%language%/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/classic/*.php
+  - source: /includes/languages/english/classic/lang.*.php
     translation: /includes/languages/%language%/classic/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/extra_definitions/*.php
+  - source: /includes/languages/english/extra_definitions/lang.*.php
     translation: /includes/languages/%language%/extra_definitions/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/extra_definitions/classic/*.php
+  - source: /includes/languages/english/extra_definitions/classic/lang.*.php
     translation: /includes/languages/%language%/extra_definitions/classic/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/extra_definitions/responsive_classic/*.php
+  - source: /includes/languages/english/extra_definitions/responsive_classic/lang.*.php
     translation: /includes/languages/%language%/extra_definitions/responsive_classic/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/html_includes/*.php
+  - source: /includes/languages/english/html_includes/define_*.php
     dest: /includes/languages/english/html_includes/%file_name%.txt
     translation: /includes/languages/%language%/html_includes/%file_name%.php
     update_option: update_as_unapproved
-  - source: /includes/languages/english/html_includes/classic/*.php
+  - source: /includes/languages/english/html_includes/classic/define_*.php
     dest: /includes/languages/english/html_includes/classic/%file_name%.txt
     translation: /includes/languages/%language%/html_includes/classic/%file_name%.php
     update_option: update_as_unapproved
-  - source: /includes/languages/english/html_includes/responsive_classic/*.php
+  - source: /includes/languages/english/html_includes/responsive_classic/define_*.php
     dest: /includes/languages/english/html_includes/responsive_classic/%file_name%.txt
     translation: /includes/languages/%language%/html_includes/responsive_classic/%file_name%.php
     update_option: update_as_unapproved
-  - source: /includes/languages/english/modules/order_total/*.php
+  - source: /includes/languages/english/modules/order_total/lang.*.php
     translation: /includes/languages/%language%/modules/order_total/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/modules/payment/*.php
+  - source: /includes/languages/english/modules/payment/lang.*.php
     translation: /includes/languages/%language%/modules/payment/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/modules/shipping/*.php
+  - source: /includes/languages/english/modules/shipping/lang.*.php
     translation: /includes/languages/%language%/modules/shipping/%original_file_name%
     update_option: update_as_unapproved
-  - source: /includes/languages/english/responsive_classic/*.php
+  - source: /includes/languages/english/responsive_classic/lang.*.php
     translation: /includes/languages/%language%/responsive_classic/%original_file_name%
     update_option: update_as_unapproved
   - source: /zc_install/includes/languages/en_us/*.php
