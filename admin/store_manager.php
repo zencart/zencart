@@ -16,11 +16,11 @@
 
   $languages = zen_get_languages();
 
-  $products_filter = (isset($_GET['products_filter']) ? $_GET['products_filter'] : 0);
+  $products_filter = $_GET['products_filter'] ?? 0;
 
-  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $action = $_GET['action'] ?? '';
 
-  $current_category_id = (isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id);
+  $current_category_id = isset($_GET['current_category_id']) ? (int)$_GET['current_category_id'] : (int)$current_category_id;
 
   $processing_message = '';
   $processing_action_url = '';
@@ -107,22 +107,25 @@
       $processing_message = TEXT_INFO_OPTIMIZING_DATABASE_TABLES;
       $processing_action_url = zen_href_link(FILENAME_STORE_MANAGER, 'action=optimize_db_do');
     break;
+
     case ('optimize_db_do'):
-    // clean out unused space in database
-        $sql = "SHOW TABLE STATUS FROM `" . DB_DATABASE ."`";
+        // clean out unused space in database
+        $sql = "SHOW TABLE STATUS FROM `" . DB_DATABASE . "`";
         $tables = $db->Execute($sql);
-        while(!$tables->EOF) {
-          // skip tables not matching prefixes
-          if (DB_PREFIX != '' && substr($tables->fields['Name'], 0, strlen(DB_PREFIX)) != DB_PREFIX) {
-            $tables->MoveNext();
-            continue;
-          }
-          zen_set_time_limit(600);
-          $db->Execute("OPTIMIZE TABLE `" . $tables->fields['Name'] . "`");
-          $i++;
-          if ($i/7 == (int)($i/7)) sleep(2);
-          $tables->MoveNext();
+        $i = 0;
+        foreach ($tables as $table) {
+            // skip tables not matching prefixes
+            if (DB_PREFIX != '' && !str_starts_with($table['Name'], DB_PREFIX)) {
+                continue;
+            }
+            zen_set_time_limit(600);
+            $db->Execute("OPTIMIZE TABLE `" . $table['Name'] . "`");
+            $i++;
+            if ($i / 7 == (int)($i / 7)) {
+                sleep(2);
+            }
         }
+
         $messageStack->add_session(SUCCESS_DB_OPTIMIZE . ' ' . $i, 'success');
         zen_record_admin_activity('Store Manager executed [optimize database tables]', 'info');
         $action='';
@@ -131,11 +134,11 @@
 
 // clean out old DEBUG logfiles
     case 'clean_debug_files':
-      foreach(array(DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . 'includes/modules/payment/paypal/logs') as $purgeFolder) {
+      foreach([DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . 'includes/modules/payment/paypal/logs'] as $purgeFolder) {
         $purgeFolder = rtrim($purgeFolder, '/');
         $dir = dir($purgeFolder);
         while ($file = $dir->read()) {
-          if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
+          if ( ($file != '.') && ($file != '..') && !str_starts_with($file, '.')) {
             if (preg_match('/^(' . implode('|', $log_filename_prefix_patterns) . ').*\.log$/i', $file)) {
               if (is_writeable($purgeFolder . '/' . $file)) {
                 zen_remove($purgeFolder . '/' . $file);
@@ -185,7 +188,7 @@
 
 ?>
 <!doctype html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
 <head>
       <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 <?php if ($processing_message != '' && $processing_action_url != '') echo '<meta http-equiv="refresh" content="2;URL=' . $processing_action_url . '">'; ?>
@@ -202,15 +205,15 @@
 <!-- body_text //-->
     <td><table>
       <tr>
-        <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-        <td class="pageHeading"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+        <td class="pageHeading"><?= HEADING_TITLE ?></td>
+        <td class="pageHeading"><?= zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT) ?></td>
       </tr>
 
 <?php
 if ($processing_message != '') {
 ?>
-  <tr><td><?php echo $processing_message; ?></td></tr>
-  <tr><td class="text-center"><?php echo zen_icon('loading', '', '2x'); ?></td></tr>
+  <tr><td><?= $processing_message ?></td></tr>
+  <tr><td class="text-center"><?= zen_icon('loading', '', '2x') ?></td></tr>
 <?php
 } else {
 ?>
@@ -219,10 +222,12 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><table>
           <tr>
-            <td class="main"><?php echo TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES; ?></td>
-            <td class="main"><?php echo zen_draw_form('update_all_products_attributes_sort_order', FILENAME_STORE_MANAGER, 'action=update_all_products_attributes_sort_order')?>
-                <button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button>
-                <?php echo '</form>'; ?></td>
+            <td class="main"><?= TEXT_INFO_ATTRIBUTES_FEATURES_UPDATES ?></td>
+            <td class="main">
+                <?= zen_draw_form('update_all_products_attributes_sort_order', FILENAME_STORE_MANAGER, 'action=update_all_products_attributes_sort_order') ?>
+                <button type="submit" class="btn btn-default btn-sm"><?= IMAGE_UPDATE ?></button>
+                <?= '</form>' ?>
+            </td>
           </tr>
         </table></td>
       </tr>
@@ -232,10 +237,12 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><table>
           <tr>
-            <td class="main"><?php echo TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE; ?></td>
-            <td class="main"><?php echo zen_draw_form('update_all_products_price_sorter', FILENAME_STORE_MANAGER, 'action=update_all_products_price_sorter')?>
-                <button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button>
-                <?php echo '</form>'; ?></td>
+            <td class="main"><?= TEXT_INFO_PRODUCTS_PRICE_SORTER_UPDATE ?></td>
+            <td class="main">
+                <?= zen_draw_form('update_all_products_price_sorter', FILENAME_STORE_MANAGER, 'action=update_all_products_price_sorter') ?>
+                <button type="submit" class="btn btn-default btn-sm"><?= IMAGE_UPDATE ?></button>
+                <?= '</form>' ?>
+            </td>
           </tr>
         </table></td>
       </tr>
@@ -244,16 +251,16 @@ if ($processing_message != '') {
 <!-- bof: reset all counter to 0 -->
     <tr>
         <td colspan="2">
-            <form name="update_counter" action="<?php echo zen_href_link(FILENAME_STORE_MANAGER, 'action=update_counter', 'NONSSL'); ?>" method="post">
-                <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+            <form name="update_counter" action="<?= zen_href_link(FILENAME_STORE_MANAGER, 'action=update_counter', 'NONSSL') ?>" method="post">
+                <?= zen_draw_hidden_field('securityToken', $_SESSION['securityToken']) ?>
                 <table>
                     <tr>
-                        <td class="main"><?php echo TEXT_INFO_COUNTER_UPDATE; ?></td>
-                        <td class="main"><?php echo zen_draw_input_field('new_counter'); ?></td>
-                        <td class="main"><button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button></td>
+                        <td class="main"><?= TEXT_INFO_COUNTER_UPDATE ?></td>
+                        <td class="main"><?= zen_draw_input_field('new_counter') ?></td>
+                        <td class="main"><button type="submit" class="btn btn-default btn-sm"><?= IMAGE_UPDATE ?></button></td>
                     </tr>
                 </table>
-                <?php echo '</form>'; ?>
+                <?= '</form>' ?>
         </td>
     </tr>
     <!-- eof: reset all counter to 0 -->
@@ -262,8 +269,12 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><br><table>
           <tr>
-            <td class="main text-left align-top"><?php echo TEXT_INFO_PRODUCTS_VIEWED_UPDATE; ?></td>
-            <td class="main text-right align-middle"><?php echo zen_draw_form('update_all_products_viewed', FILENAME_STORE_MANAGER, 'action=update_all_products_viewed')?><input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>"></form></td>
+            <td class="main text-left align-top"><?= TEXT_INFO_PRODUCTS_VIEWED_UPDATE ?></td>
+            <td class="main text-right align-middle">
+                <?= zen_draw_form('update_all_products_viewed', FILENAME_STORE_MANAGER, 'action=update_all_products_viewed') ?>
+                <input class="btn btn-default btn-sm" type="submit" value="<?= IMAGE_RESET ?>">
+                <?= '</form>' ?>
+            </td>
           </tr>
         </table></td>
       </tr>
@@ -273,10 +284,11 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><table>
           <tr>
-            <td class="main"><?php echo TEXT_INFO_PRODUCTS_ORDERED_UPDATE; ?></td>
-            <td class="main"><?php echo zen_draw_form('update_all_products_ordered', FILENAME_STORE_MANAGER, 'action=update_all_products_ordered')?>
-                <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>">
-                <?php echo '</form>'; ?>
+            <td class="main"><?= TEXT_INFO_PRODUCTS_ORDERED_UPDATE ?></td>
+            <td class="main">
+                <?= zen_draw_form('update_all_products_ordered', FILENAME_STORE_MANAGER, 'action=update_all_products_ordered') ?>
+                <input class="btn btn-default btn-sm" type="submit" value="<?= IMAGE_RESET ?>">
+                <?= '</form>' ?>
             </td>
           </tr>
         </table></td>
@@ -287,10 +299,11 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><table>
           <tr>
-            <td class="main"><?php echo TEXT_INFO_MASTER_CATEGORIES_ID_UPDATE; ?></td>
-            <td class="main"><?php echo zen_draw_form('update_all_master_categories_id', FILENAME_STORE_MANAGER, 'action=update_all_master_categories_id')?>
-                <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>">
-                <?php echo '</form>'; ?>
+            <td class="main"><?= TEXT_INFO_MASTER_CATEGORIES_ID_UPDATE ?></td>
+            <td class="main">
+                <?= zen_draw_form('update_all_master_categories_id', FILENAME_STORE_MANAGER, 'action=update_all_master_categories_id') ?>
+                <input class="btn btn-default btn-sm" type="submit" value="<?= IMAGE_RESET ?>">
+                <?= '</form>' ?>
             </td>
           </tr>
         </table></td>
@@ -300,17 +313,21 @@ if ($processing_message != '') {
 <!-- bof: reset next order to new order number -->
     <tr>
         <td colspan="2">
-            <form name="update_orders" action="<?php echo zen_href_link(FILENAME_STORE_MANAGER, 'action=update_orders_id', 'NONSSL'); ?>" method="post">
-                <?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']); ?>
+            <form name="update_orders" action="<?= zen_href_link(FILENAME_STORE_MANAGER, 'action=update_orders_id', 'NONSSL') ?>" method="post">
+                <?= zen_draw_hidden_field('securityToken', $_SESSION['securityToken']) ?>
                 <table>
                     <tr>
-                        <td class="main"><?php echo TEXT_INFO_SET_NEXT_ORDER_NUMBER; ?><br>
-                            <?php echo TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', (isset($new_orders_id) ? $new_orders_id : '')); ?>
-                            <button type="submit" class="btn btn-default btn-sm"><?php echo IMAGE_UPDATE; ?></button>
+                        <td class="main">
+                            <?php
+                            $result = $db->Execute('SELECT MAX(orders_id) as last_order_id FROM ' . TABLE_ORDERS);
+                            ?>
+                            <?= sprintf(TEXT_INFO_SET_NEXT_ORDER_NUMBER, $result->fields['last_order_id']) ?><br>
+                            <?= TEXT_NEW_ORDERS_ID . '&nbsp;' . zen_draw_input_field('new_orders_id', ($new_orders_id ?? '')) ?>
+                            <button type="submit" class="btn btn-default btn-sm"><?= IMAGE_UPDATE ?></button>
                         </td>
                     </tr>
                 </table>
-                <?php echo '</form>'; ?>
+                <?= '</form>' ?>
         </td>
     </tr>
     <!-- eof: reset next order to new order number -->
@@ -319,10 +336,11 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><table>
           <tr>
-            <td class="main"><?php echo TEXT_INFO_DATABASE_OPTIMIZE; ?></td>
-            <td class="main"><?php echo zen_draw_form('optimize_db_start', FILENAME_STORE_MANAGER, 'action=optimize_db_start')?>
-                <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>">
-            <?php echo '</form>'; ?>
+            <td class="main"><?= TEXT_INFO_DATABASE_OPTIMIZE ?></td>
+            <td class="main">
+                <?=zen_draw_form('optimize_db_start', FILENAME_STORE_MANAGER, 'action=optimize_db_start') ?>
+                <input class="btn btn-default btn-sm" type="submit" value="<?= IMAGE_RESET ?>">
+            <?= '</form>' ?>
             </td>
           </tr>
         </table></td>
@@ -333,10 +351,11 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><table>
           <tr>
-            <td class="main"><?php echo TEXT_INFO_PURGE_DEBUG_LOG_FILES; ?></td>
-            <td class="main"><?php echo zen_draw_form('clean_debug_files', FILENAME_STORE_MANAGER, 'action=clean_debug_files', 'post'); ?>
-                <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_CONFIRM; ?>">
-                <?php echo '</form>'; ?>
+            <td class="main"><?= TEXT_INFO_PURGE_DEBUG_LOG_FILES ?></td>
+            <td class="main">
+                <?= zen_draw_form('clean_debug_files', FILENAME_STORE_MANAGER, 'action=clean_debug_files', 'post') ?>
+                <input class="btn btn-default btn-sm" type="submit" value="<?= IMAGE_CONFIRM ?>">
+                <?= '</form>' ?>
           </tr>
         </table></td>
       </tr>
@@ -346,7 +365,7 @@ if ($processing_message != '') {
 } // eof configure
 ?>
       <tr>
-        <td colspan="2"><?php echo '<br>' . zen_draw_separator('pixel_black.gif', '100%', '2'); ?></td>
+        <td colspan="2"><?= '<br>' . zen_draw_separator('pixel_black.gif', '100%', '2') ?></td>
       </tr>
     </table></td>
 <!-- body_text_eof //-->

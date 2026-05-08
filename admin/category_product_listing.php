@@ -572,7 +572,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         <tr>
                             <th class="text-right shrink"><?= TABLE_HEADING_ID ?></th>
                             <th><?= TABLE_HEADING_CATEGORIES_PRODUCTS ?></th>
-                            <th class="hidden-sm hidden-xs imageView <?= $additionalClass ?>"><?= TABLE_HEADING_IMAGE ?></th>
+                            <th class="hidden-sm hidden-xs imageView<?= $additionalClass ?>"><?= TABLE_HEADING_IMAGE ?></th>
                             <?php if ($show_prod_labels) { ?>
                                 <th class="hidden-sm hidden-xs"><?= TABLE_HEADING_MODEL ?></th>
                                 <th class="text-right hidden-sm hidden-xs"><?= TABLE_HEADING_PRODUCTS_PRICE . $wholesale_pricing_heading ?></th>
@@ -723,7 +723,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                     <strong><?= $category['categories_name'] ?></strong>
                                 </a>
                             </td>
-                            <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>">
+                            <td class="hidden-sm hidden-xs imageView<?= $additionalClass ?>">
                                 <?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="object-fit-contain"') ?>
                             </td>
                         <?php if ($show_prod_labels) { ?>
@@ -976,7 +976,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                     <?= $product['products_name'] ?>
                                 </a>
                             </td>
-                            <td class="hidden-sm hidden-xs imageView <?= $additionalClass ?>">
+                            <td class="hidden-sm hidden-xs imageView<?= $additionalClass ?>">
                                 <?= zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="object-fit-contain"') ?>
                             </td>
                             <td class="hidden-sm hidden-xs"><?= $product['products_model'] ?></td>

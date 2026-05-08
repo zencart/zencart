@@ -49,7 +49,10 @@ ALTER TABLE products_description DROP COLUMN products_viewed;
 # update to new default, only if not customized from the original default of 50.
 UPDATE configuration SET configuration_value = '5' WHERE configuration_key = 'REVIEW_TEXT_MIN_LENGTH' AND configuration_value = 50 AND (last_modified IS NULL OR last_modified = date_added);
 
-
+# Remove configuration, configuration_group and admin_pages entries for "New Listing", "Featured Listing" and "All Listing"
+DELETE FROM configuration WHERE configuration_group_id IN (21, 22, 23);
+DELETE FROM configuration_group WHERE configuration_group_id IN (21, 22, 23);
+DELETE FROM admin_pages WHERE page_key IN ('configNewListing', 'configFeaturedListing', 'configAllListing');
 
 
 

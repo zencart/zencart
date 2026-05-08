@@ -11,6 +11,7 @@
  * @var messageStack $messageStack
  * @var breadcrumb $breadcrumb
  * @var notifier $zco_notifier
+ *
  */
 
 // This should be first line of the script:
@@ -36,11 +37,11 @@ if (($_GET['action'] ?? '') === 'process') {
         header('HTTP/1.1 406 Not Acceptable');
         exit(0);
     }
+
     // BEGIN SLAM PREVENTION
     if (!empty($_POST['email_address'])) {
         $_SESSION['login_attempt']++;
     } // END SLAM PREVENTION
-
 
     if (empty($_POST['email_address'])) {
         $messageStack->add_session('password_forgotten', ENTRY_EMAIL_ADDRESS_ERROR, 'error');
@@ -81,16 +82,30 @@ if (($_GET['action'] ?? '') === 'process') {
 
         $token = $check_customer['token'];
         $reset_url = zen_href_link(FILENAME_PASSWORD_RESET, "reset_token=$token");
+        $reset_url_text = html_entity_decode($reset_url, ENT_QUOTES, CHARSET);
 
         $name = $check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'];
-        $body = sprintf(EMAIL_PASSWORD_RESET_BODY, zen_get_ip_address(), STORE_NAME, $reset_url);
+
+        $body = sprintf(
+            EMAIL_PASSWORD_RESET_BODY,
+            zen_get_ip_address(),
+            STORE_NAME,
+            $reset_url_text
+        );
 
         $html_msg = [];
-        $html_msg['EMAIL_CUSTOMERS_NAME'] = $name;
-        $html_msg['EMAIL_MESSAGE_HTML'] = $body;
+        $html_msg['EMAIL_CUSTOMERS_NAME'] = htmlspecialchars($name, ENT_QUOTES, CHARSET);
 
-        // Note: If this mail frequently winds up in spam folders, try replacing $html_msg with 'none' below.
-        // $html_msg = 'none';
+        if (defined('EMAIL_PASSWORD_RESET_HTML')) {
+            $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(
+                EMAIL_PASSWORD_RESET_HTML,
+                htmlspecialchars(zen_get_ip_address(), ENT_QUOTES, CHARSET),
+                htmlspecialchars(STORE_NAME, ENT_QUOTES, CHARSET),
+                htmlspecialchars($reset_url, ENT_QUOTES, CHARSET)
+            );
+        } else {
+            $html_msg['EMAIL_MESSAGE_HTML'] = nl2br(htmlspecialchars($body, ENT_QUOTES, CHARSET));
+        }
 
         // Send the email
         zen_mail($name, $email_address, EMAIL_PASSWORD_RESET_SUBJECT, $body, STORE_NAME, EMAIL_FROM, $html_msg, 'password_forgotten');

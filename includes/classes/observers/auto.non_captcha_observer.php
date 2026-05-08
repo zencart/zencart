@@ -22,6 +22,7 @@ class zcObserverNonCaptchaObserver extends base
             'NOTIFY_CREATE_ACCOUNT_CAPTCHA_CHECK',
             'NOTIFY_CONTACT_US_CAPTCHA_CHECK',
             'NOTIFY_REVIEWS_WRITE_CAPTCHA_CHECK',
+            'NOTIFY_ASK_A_QUESTION_CAPTCHA_CHECK',
         ]);
 
         if (empty($_SESSION['antispam_fieldname'])) {
@@ -46,6 +47,18 @@ class zcObserverNonCaptchaObserver extends base
     public function updateNotifyContactUsCaptchaCheck(&$class, $eventID, $paramsArray)
     {
         // sanitize the contact-us name field more aggressively
+        $GLOBALS['name'] = zen_db_prepare_input(zen_sanitize_string($_POST['contactname'] ?? ''));
+
+        // fire default tests
+        $this->update($class, $eventID, $paramsArray);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function updateNotifyAskAQuestionCaptchaCheck(&$class, $eventID, $paramsArray)
+    {
+        // sanitize the contactname field more aggressively
         $GLOBALS['name'] = zen_db_prepare_input(zen_sanitize_string($_POST['contactname'] ?? ''));
 
         // fire default tests
@@ -109,6 +122,11 @@ class zcObserverNonCaptchaObserver extends base
             'enquiry',     // comment-out if you actually want to allow URLs for this
         ];
 
+        // -----
+        // Fire notification to enable plugins to add to the list of sanitized fields
+        //
+        $this->notify('NOTIFY_NONCAPTCHA_OBSERVER_FIELD_CHECK', $fields, $fields);
+
         // prepare for inspection
         $array_found = false; 
         foreach ($fields as $field) {
@@ -126,7 +144,9 @@ class zcObserverNonCaptchaObserver extends base
             return; 
         }
 
-        if (empty(trim($test_string))) return;
+        if (empty(trim($test_string))) {
+            return;
+        }
 
         $test_string = str_ireplace([HTTP_SERVER, HTTPS_SERVER], '', $test_string);
 
