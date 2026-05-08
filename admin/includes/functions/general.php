@@ -277,14 +277,25 @@ function zen_cfg_password_display($value)
 /**
  * @since ZC v1.0.3
  */
-function zen_cfg_select_option($select_array, $key_value, $key = '')
+function zen_cfg_select_option(array $select_array, string $key_value, string $key = ''): string
 {
-    $string = '';
+    // -----
+    // Display selections as a dropdown list if more than 2 selections to
+    // reduce screen real-estate required.
+    //
+    if (count($select_array) > 2) {
+        $dropdown_array = [];
+        foreach ($select_array as $selection) {
+            $dropdown_array[] = ['id' => $selection, 'text' => $selection];
+        }
+        return zen_cfg_select_drop_down($dropdown_array, $key_value, $key);
+    }
 
-    for ($i = 0, $n = count($select_array); $i < $n; $i++) {
-        $name = (zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
-        $element_id = preg_replace('/[^a-z0-9_-]/', '-', strtolower($select_array[$i] . '-' . $name));
-        $string .= '<div class="radio"><label>' . zen_draw_radio_field($name, $select_array[$i], ($key_value == $select_array[$i]), '', 'id="' . $element_id . '" class="inputSelect"') . $select_array[$i] . '</label></div>';
+    $string = '';
+    foreach ($select_array as $selection) {
+        $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
+        $element_id = preg_replace('/[^a-z0-9_-]/', '-', strtolower($selection . '-' . $name));
+        $string .= '<div class="radio"><label>' . zen_draw_radio_field($name, $selection, ($key_value === $selection), '', 'id="' . $element_id . '" class="inputSelect"') . $selection . '</label></div>';
     }
 
     return $string;
@@ -293,9 +304,9 @@ function zen_cfg_select_option($select_array, $key_value, $key = '')
 /**
  * @since ZC v1.2.0d
  */
-function zen_cfg_select_drop_down($select_array, $key_value, $key = '')
+function zen_cfg_select_drop_down(array $select_array, string $key_value, string $key = ''): string
 {
-    $name = (zen_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
+    $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
     return zen_draw_pull_down_menu($name, $select_array, (int)$key_value, 'class="form-control"');
 }
 

@@ -258,6 +258,7 @@ $iconMap = [
   'unlocked' => 'fa-lock-open',
   'loading' => 'fa-gear fa-spin',
   'eye' => 'fa-eye',
+  'maximize' => 'fa-maximize',
 ];
 
 /**

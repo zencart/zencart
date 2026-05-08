@@ -123,7 +123,14 @@ $define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] .
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // set the product filters according to selected product type
-$typefilter = $_GET['typefilter'] ?? 'default';
+if (!empty($_GET['record_company_id'])) {
+    $typefilter = 'record_company';
+} elseif (!empty($_GET['music_genre_id'])) {
+    $typefilter = 'music_genre';
+} else {
+    $typefilter = $_GET['typefilter'] ?? 'default';
+}
+
 require zen_get_index_filters_directory($typefilter . '_filter.php');
 unset($and, $sql_joins, $order_by);
 

@@ -17,6 +17,7 @@ $no_html_editor_on_these_pages = [
     // 'define_shopping_cart.php'
 ];
 
+zen_define_default('TEXT_FULLSCREEN', 'Full Screen');
 // =========================================
 /**
  * Returns an array of file names from the directories specified in $check_directory
@@ -158,10 +159,20 @@ switch ($action) {
                 if (in_array($_GET['filename'], $no_html_editor_on_these_pages, true) || str_starts_with($file_contents, '<?php')) {
                     $editorCSSClass = 'noEditor';
                 }
+                $fullscreenButtonStyle = ($current_editor_key !== $plain_editor_key && $editorCSSClass !== 'noEditor') ? ' style="display:none"' : '';
                 ?>
-                <div class="row"><strong><?= TEXT_INFO_CAUTION . '<br><br>' . TEXT_INFO_EDITING . '<br>' . $file . '<br>' ?></strong></div>
                 <div class="row">
-                    <?= zen_draw_form('page_editor', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save') ?>
+                    <div class="col-sm-6">
+                        <strong><?= TEXT_INFO_CAUTION . '<br><br>' . TEXT_INFO_EDITING . '<br>' . $file . '<br>' ?></strong>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <button type="button" id="fullscreen-toggle" class="btn btn-default" title="<?= TEXT_FULLSCREEN ?>" aria-label="<?= TEXT_FULLSCREEN ?>"<?= $fullscreenButtonStyle ?>>
+                            <?= zen_icon('maximize', hidden: true) ?>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <?= zen_draw_form('page_editor', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save', 'post', 'id="editing_form"') ?>
                     <div class="col-sm-6"><?= zen_draw_textarea_field(
                             'file_contents',
                             'soft',
@@ -169,7 +180,7 @@ switch ($action) {
                             '30',
                             htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, true),
                             (($file_writeable) ? '' : 'readonly')
-                            . ' class="' . $editorCSSClass . ' form-control"'
+                            . ' class="' . $editorCSSClass . ' form-control" id="file_contents_editor"'
                         ) ?>
                     </div>
                     <div class="col-sm-6">&nbsp;</div>
@@ -245,7 +256,24 @@ switch ($action) {
     <!-- body_text_eof //-->
 </div>
 <!-- body_eof //-->
-
+<script>
+$(function() {
+    $('#fullscreen-toggle').on('click', function() {
+        $('#file_contents_editor').toggleClass('fullscreen-textarea');
+        $('body').toggleClass('no-scroll', $('#file_contents_editor').hasClass('fullscreen-textarea'));
+    });
+});
+</script>
+<style>
+.fullscreen-textarea {
+    width: 85vw !important;
+    height: 65vh !important;
+    resize: none;
+}
+.no-scroll {
+    overflow: hidden !important;
+}
+</style>
 <!-- footer //-->
 <?php
 require DIR_WS_INCLUDES . 'footer.php'; ?>
