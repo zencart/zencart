@@ -110,7 +110,7 @@ function zen_get_site_url_for_request($url)
 /**
  * @since ZC v1.0.3
  */
-function zen_get_top_level_domain(string $url) 
+function zen_get_top_level_domain(string $url)
 {
     if (strpos($url, '://')) {
         $url = parse_url($url);

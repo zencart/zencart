@@ -105,7 +105,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa-solid 
     <li><a href="<?php echo zen_href_link(FILENAME_LOGOFF, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGOFF; ?></a></li>
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
 <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
-	    <?php } else { ?>
+        <?php } else { ?>
 <li class="last"><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
 
       <?php } ?>
@@ -115,10 +115,10 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa-solid 
 ?>
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGIN; ?></a></li>
-	    <?php } else { ?>
+        <?php } else { ?>
     <li class="last"><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGIN; ?></a></li>
 
-	    <?php } ?>
+        <?php } ?>
 <?php } } ?>
 
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
@@ -159,7 +159,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa-solid 
 ?>
 <?php if ($_SESSION['cart']->count_contents() != 0) { ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGIN; ?></a></li>
-	    <?php } else { ?>
+        <?php } else { ?>
     <li class="last"><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGIN; ?></a></li>
 <?php } ?>
 <?php

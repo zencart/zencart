@@ -351,7 +351,7 @@ foreach ($products_options_names as $next_option_name) {
                     }
 
                     if (!empty($next_option['attributes_image'])) {
-                        $tmp_attributes_image .= 
+                        $tmp_attributes_image .=
                             '<div class="attribImg">' .
                                 zen_draw_radio_field($option_form_name, $products_options_value_id, $selected_attribute, 'id="' . $inputFieldId . '" ' . $data_properties . $field_disabled) .
                                 '<label class="attribsRadioButton three" for="' . $inputFieldId . '">' .
@@ -360,7 +360,7 @@ foreach ($products_options_names as $next_option_name) {
                                 '</label>' .
                             '</div>' . "\n";
                     } else {
-                        $tmp_attributes_image .= 
+                        $tmp_attributes_image .=
                             '<div class="attribImg">' .
                                 zen_draw_radio_field($option_form_name, $products_options_value_id, $selected_attribute, 'id="' . $inputFieldId . '" ' . $data_properties . $field_disabled) .
                                 '<br>' .
@@ -626,7 +626,7 @@ foreach ($products_options_names as $next_option_name) {
                     $tmp_word_price = zen_get_word_count_price($tmp_word_cnt_string, $next_option['attributes_price_words_free'], $next_option['attributes_price_words']);
 
                     if ($next_option['attributes_price_words'] != 0) {
-                        $tmp_html .= 
+                        $tmp_html .=
                             TEXT_PER_WORD .
                             $currencies->display_price($next_option['attributes_price_words'], $products_tax_rate) .
                             ($next_option['attributes_price_words_free'] != 0 ? TEXT_WORDS_FREE . $next_option['attributes_price_words_free'] : '');

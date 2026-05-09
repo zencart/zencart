@@ -124,14 +124,14 @@ class ot_loworderfee
                 }
 
                 $tax_amount = zen_calculate_tax($low_order_fee, $tax);
-                $order->info['tax'] += $tax_amount; 
+                $order->info['tax'] += $tax_amount;
                 if (!isset($order->info['tax_groups'][$tax_description])) {
                     $order->info['tax_groups'][$tax_description] = 0;
                 }
-                $order->info['tax_groups'][$tax_description] += $tax_amount; 
-                $order->info['total'] += $low_order_fee + $tax_amount; 
+                $order->info['tax_groups'][$tax_description] += $tax_amount;
+                $order->info['total'] += $low_order_fee + $tax_amount;
                 if (DISPLAY_PRICE_WITH_TAX === 'true') {
-                    $low_order_fee += $tax_amount; 
+                    $low_order_fee += $tax_amount;
                 }
 
                 $this->output[] = [

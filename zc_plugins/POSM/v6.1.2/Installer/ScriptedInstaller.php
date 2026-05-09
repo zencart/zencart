@@ -28,7 +28,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         );
 
         $sql =
-            "INSERT IGNORE INTO " . TABLE_CONFIGURATION . " 
+            "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
                 (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function, set_function)
              VALUES
                 ('General: Enable Products\' Options\' Stock Manager?', 'POSM_ENABLE', 'true', 'Enable the <em>Products\' Options\' Stock</em> processing for the storefront?', $cgi, 20, now(), NULL, 'zen_cfg_select_option([\'true\', \'false\'],'),
@@ -256,7 +256,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         $this->executeInstallerSql($sql);
         $sql = "SELECT configuration_group_id FROM " . TABLE_CONFIGURATION_GROUP . " WHERE configuration_group_title = '$config_group_title' LIMIT 1";
         $config_group = $this->executeInstallerSelectSql($sql);
-        $cgi = (int)$config_group->fields['configuration_group_id']; 
+        $cgi = (int)$config_group->fields['configuration_group_id'];
         $sql = "UPDATE " . TABLE_CONFIGURATION_GROUP . " SET sort_order = $cgi WHERE configuration_group_id = $cgi LIMIT 1";
         $this->executeInstallerSql($sql);
         return $cgi;
@@ -283,7 +283,7 @@ class ScriptedInstaller extends ScriptedInstallBase
         }
         return false;
     }
-    
+
     protected function updateFromNonEncapsulatedVersion()
     {
         switch (true) {

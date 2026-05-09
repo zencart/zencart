@@ -81,9 +81,9 @@ class zcAjaxOptionsStockDependencies extends base
 
             if ($pos_info->EOF) {
                 $unmanaged_option_info = $db->Execute(
-                    "SELECT options_values_id 
+                    "SELECT options_values_id
                        FROM " . TABLE_PRODUCTS_ATTRIBUTES . "
-                      WHERE products_id = $products_id 
+                      WHERE products_id = $products_id
                         AND options_id = $options_id"
                 );
                 if ($unmanaged_option_info->EOF) {
@@ -95,8 +95,8 @@ class zcAjaxOptionsStockDependencies extends base
                 } else {
                     $this->debug_message("Processing unmanaged option ($options_id) ...");
                     $unmanaged_option = [
-                        'quantity' => 0, 
-                        'oos_message' => (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') ? PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK : '', 
+                        'quantity' => 0,
+                        'oos_message' => (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') ? PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK : '',
                         'model' => ''
                     ];
                     foreach ($unmanaged_option_info as $next_unmanaged) {
@@ -153,7 +153,7 @@ class zcAjaxOptionsStockDependencies extends base
         }
 
         $return_array = [
-            'error' => $error, 
+            'error' => $error,
             'error_message' => $error_message,
             'option_values' => $option_values,
             'last_selection' => $last_selection

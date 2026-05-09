@@ -215,7 +215,7 @@ if ($show_status_pills) {
                         </span>
                     </td>
 
-		            <td class="text-right">
+                    <td class="text-right">
                         <?= $date ?>
                     </td>
 

@@ -9,8 +9,8 @@
 */
 body {background-color: #ffffff;}
 #contentMainWrapper {background-color: #ffffff;}
-.messageStackWarning, #navMainWrapper, #navMainSearch, #navCatTabsWrapper, #navEZPagesTop, 
-#navColumnOne.columnLeft, #navColumnTwo.columnRight, 
+.messageStackWarning, #navMainWrapper, #navMainSearch, #navCatTabsWrapper, #navEZPagesTop,
+#navColumnOne.columnLeft, #navColumnTwo.columnRight,
 .navMainSearch,
 #navSupp, .banners, #navBreadCrumb, .buttonRow { display: none;}
 

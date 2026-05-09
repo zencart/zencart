@@ -1,6 +1,6 @@
 <?php
-/** 
- * used only to override the email encoding method for backward compatibility. 
+/**
+ * used only to override the email encoding method for backward compatibility.
  *
  * This file may NOT be required, depending on your host mailserver configuration.
  *

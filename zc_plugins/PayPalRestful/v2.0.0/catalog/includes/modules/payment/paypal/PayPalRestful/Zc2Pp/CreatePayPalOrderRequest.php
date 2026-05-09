@@ -257,7 +257,7 @@ class CreatePayPalOrderRequest extends ErrorInfo
             $product_is_physical = $this->isProductPhysical($next_product);
             $item = [
                 'name' => substr($name, 0, 127),
-                'sku' => substr($sku, 0, 127),   
+                'sku' => substr($sku, 0, 127),
                 'quantity' => $quantity,
                 'category' => ($product_is_physical === true) ? 'PHYSICAL_GOODS' : 'DIGITAL_GOODS',
                 'unit_amount' => $this->amount->setValue($products_price),

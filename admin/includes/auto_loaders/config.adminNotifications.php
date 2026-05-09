@@ -9,7 +9,7 @@
 if (!defined('IS_ADMIN_FLAG')) { die('Illegal Access'); }
 
 $autoLoadConfig[0][] = array(
-	'autoType'=>'class',
-	'loadFile'=>'AdminNotifications.php',
-	'classPath'=> DIR_FS_ADMIN . DIR_WS_CLASSES
+    'autoType'=>'class',
+    'loadFile'=>'AdminNotifications.php',
+    'classPath'=> DIR_FS_ADMIN . DIR_WS_CLASSES
 );

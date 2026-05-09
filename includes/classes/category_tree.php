@@ -17,20 +17,20 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @since ZC v1.2.0d
  */
 class category_tree extends base {
-    
+
     /**
      * Array of category details for display
      */
     private $box_categories_array = [];
     /**
-     * String containing concatenated list of categories with separator. 
+     * String containing concatenated list of categories with separator.
      * @since ZC v1.2.0d
      */
     private $categories_string;
     /*
      * Array of categories from database
      */
-    private $tree = []; 
+    private $tree = [];
 
   function zen_category_tree($product_type = "all") {
     global $db, $cPath, $cPath_array;

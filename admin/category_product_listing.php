@@ -1274,8 +1274,8 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             zen_has_product_attributes_downloads($pInfo->products_id, true)
                     ];
                     $contents[] = [
-                        'text' => 
-                            TEXT_INFO_ATTRIBUTES_FEATURES_DELETE . 
+                        'text' =>
+                            TEXT_INFO_ATTRIBUTES_FEATURES_DELETE .
                             '<strong>' . zen_get_products_name($pInfo->products_id) . ' ID# ' . $pInfo->products_id . '</strong>' .
                             '<a href="' . zen_href_link(FILENAME_CATEGORY_PRODUCT_LISTING, $cPath_pID_params . '&action=delete_attributes' . $page_param . '&products_id=' . $pInfo->products_id) . '" class="btn btn-danger btn-sm ms-2" role="button">' .
                                 IMAGE_DELETE .

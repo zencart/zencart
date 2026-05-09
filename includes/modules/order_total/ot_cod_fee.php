@@ -74,9 +74,9 @@
         $cod_country = false;
 
         //check if payment method is cod. If yes, check if cod is possible.
-        
+
         if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'cod') {
-          $cod_zones = []; 
+          $cod_zones = [];
           //process installed shipping modules
           if (substr_count($_SESSION['shipping']['id'], 'flat') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FLAT));
           if (substr_count($_SESSION['shipping']['id'], 'free') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FREE));
@@ -121,11 +121,11 @@
           if ($tax > 0) {
             $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
             $tax_amount = zen_calculate_tax($cod_cost, $tax);
-            $order->info['tax'] += $tax_amount; 
-            $order->info['tax_groups'][$tax_description] += $tax_amount; 
-            $order->info['total'] += $tax_amount; 
+            $order->info['tax'] += $tax_amount;
+            $order->info['tax_groups'][$tax_description] += $tax_amount;
+            $order->info['total'] += $tax_amount;
             if (DISPLAY_PRICE_WITH_TAX == 'true') {
-              $cod_cost += $tax_amount; 
+              $cod_cost += $tax_amount;
             }
           }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * unsubscribe header_php.php 
+ * unsubscribe header_php.php
  *
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -31,8 +31,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'unsubscribe') {
   /// Check and see if the email exists in the database, and is subscribed to the newsletter.
     $unsubscribe_count_query =
         "SELECT 1
-           FROM " . TABLE_CUSTOMERS . " 
-          WHERE customers_newsletter = '1' 
+           FROM " . TABLE_CUSTOMERS . "
+          WHERE customers_newsletter = '1'
             AND customers_email_address = :emailAddress";
 
     $unsubscribe_count_query = $db->bindVars($unsubscribe_count_query, ':emailAddress', $unsubscribe_address, 'string');
@@ -42,11 +42,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'unsubscribe') {
     if (!$unsubscribe->EOF) {
         $unsubscribe_query =
             "UPDATE " . TABLE_CUSTOMERS . "
-                SET customers_newsletter = '0' 
+                SET customers_newsletter = '0'
               WHERE customers_email_address = :emailAddress
               LIMIT 1";
 
-        $unsubscribe_query = $db->bindVars($unsubscribe_query, ':emailAddress', $unsubscribe_address, 'string');    
+        $unsubscribe_query = $db->bindVars($unsubscribe_query, ':emailAddress', $unsubscribe_address, 'string');
         $unsubscribe = $db->Execute($unsubscribe_query);
         $status_display = UNSUBSCRIBE_DONE_TEXT_INFORMATION . $unsubscribe_address;
     } else {

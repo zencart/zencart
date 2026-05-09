@@ -175,7 +175,7 @@ if ($_GET['action'] == 'process') {
       $gv_email .= "\n\n" . EMAIL_ADVISORY . "\n\n";
 
       $html_msg['EMAIL_GV_FIXED_FOOTER'] = str_replace(array("\r\n", "\n", "\r", "-----"), '', EMAIL_GV_FIXED_FOOTER);
-      $html_msg['EMAIL_GV_SHOP_FOOTER'] =	EMAIL_GV_SHOP_FOOTER;
+      $html_msg['EMAIL_GV_SHOP_FOOTER'] =    EMAIL_GV_SHOP_FOOTER;
 
       // send the email
       zen_mail($_POST['to_name'], $_POST['email'], $gv_email_subject, nl2br($gv_email), STORE_NAME, EMAIL_FROM, $html_msg, 'gv_send');

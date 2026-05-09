@@ -1205,7 +1205,7 @@ switch ($_GET['action']) {
                       $cInfo = new objectInfo($item);
                     }
                     if (isset($cInfo)) {
-					    $coupon_referrer = '';
+                        $coupon_referrer = '';
                         $sql = "SELECT referrer_domain
                                 FROM " . TABLE_COUPON_REFERRERS . "
                                 WHERE coupon_id = " . (int)$cInfo->coupon_id ?? 0;
@@ -1214,7 +1214,7 @@ switch ($_GET['action']) {
                             $coupon_referrer .= $result['referrer_domain'] . ',';
                         }
                         $cInfo->referrer = trim($coupon_referrer, ',');
-					}
+                    }
 
                     if ((isset($cInfo)) && ($item['coupon_id'] == $cInfo->coupon_id)) {
                       ?>

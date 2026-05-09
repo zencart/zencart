@@ -37,7 +37,7 @@ class Logger
         if (isset(self::$debugLogFile)) {
             return;
         }
-        
+
         if (!empty($current_page_base) && \str_contains($current_page_base, 'webhook')) {
             $logfile_suffix = 'webhook-' . $uniqueName;
             $logfile_suffix = trim($logfile_suffix, '-');

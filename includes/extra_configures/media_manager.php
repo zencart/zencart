@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
  * sundry defines for the music product type
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team

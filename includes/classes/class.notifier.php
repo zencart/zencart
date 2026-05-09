@@ -1,5 +1,5 @@
 <?php
-/** 
+/**
  * File contains just the notifier class
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
