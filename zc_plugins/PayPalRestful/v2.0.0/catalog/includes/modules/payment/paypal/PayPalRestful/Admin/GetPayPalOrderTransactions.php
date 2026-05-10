@@ -136,7 +136,7 @@ class GetPayPalOrderTransactions
         $db_txns = [];
         foreach ($txns as $txn) {
             // -----
-            //
+            // 
             //
             if ($txn['txn_type'] === 'CREATE') {
                 $db_txns[] = $txn;
