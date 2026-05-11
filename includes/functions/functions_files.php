@@ -6,7 +6,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 29 Modified in v2.2.0 $
  */
-
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\HtmlIncludesFinder;
 
 /**
  * build a list of directories in a specified parent folder
@@ -112,7 +113,7 @@ function zen_get_file_directory(string $check_directory, string $check_file, boo
         $zv_filename .= '.php';
     }
 
-    if (!str_contains($check_directory, '/html_includes/') && !str_contains($check_directory, 'zc_plugins')) {
+    if (!str_contains($check_directory, '/html_includes/')) {
         if (is_file($check_directory . $template_dir . '/' . $zv_filename)) {
             $zv_directory = $check_directory . $template_dir . '/';
         } else {
@@ -127,55 +128,19 @@ function zen_get_file_directory(string $check_directory, string $check_file, boo
     }
 
     global $installedPlugins;
-
     $language = str_replace([DIR_FS_CATALOG, DIR_WS_LANGUAGES, 'html_includes', '//'], '', $check_directory);
-    $fallback = 'english';
+    $htmlIncludesFinder = new HtmlIncludesFinder(new FileSystem(), $installedPlugins, $language, $template_dir);
 
-    $base_dir = '/catalog/includes/languages/' . $language . '/html_includes/';
-    $fallback_dir = '/catalog/includes/languages/' . $fallback . '/html_includes/';
-    foreach ($installedPlugins as $plugin) {
-        $pluginDirBase = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . $base_dir;
-        $pluginDirFallback = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . $fallback_dir;
+    $zv_directory = $htmlIncludesFinder->find($zv_filename);
+    if ($zv_directory === false) {
+        $zv_directory = $check_directory . $zv_filename;
+    } 
 
-        $dirs_to_check = [
-            $pluginDirBase . $template_dir . '/',
-            $pluginDirFallback . $template_dir . '/',
-            $pluginDirBase,
-            $pluginDirFallback,
-        ];
-        foreach ($dirs_to_check as $check_dir) {
-            if (is_file($check_dir . $zv_filename)) {
-                $zv_directory = $check_dir;
-                break;
-            }
-        }
-    }
-
-    if (!isset($zv_directory)) {
-        $mainDir = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $language . 'html_includes/';
-        $mainDirFallback = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $fallback . 'html_includes/';
-
-        $dirs_to_check = [
-            $mainDir . $template_dir . '/',
-            $mainDirFallback . $template_dir . '/',
-            $mainDir,
-            $mainDirFallback,
-        ];
-        foreach ($dirs_to_check as $check_dir) {
-            if (is_file($check_dir . $zv_filename)) {
-                $zv_directory = $check_dir;
-                break;
-            }
-        }
-    }
-
-    $zv_directory ??= $check_directory;
-
-    if ($dir_only === true) {
+    if ($dir_only !== true) {
         return $zv_directory;
     }
 
-    return $zv_directory . $zv_filename;
+    return str_replace($zv_filename, '', $zv_directory);
 }
 
 /**
@@ -192,18 +157,10 @@ function zen_include_language_file($file, $folder, $page)
     if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder)) {
         $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder);
     } else {
-        // -----
-        // If the language file's name doesn't start with 'lang.' (which they do,
-        // as of zc300), add that prefix for the cautionary message.
-        //
-        if (!str_starts_with($file, 'lang.')) {
-            $lang_file = str_replace($lang_file, $file, 'lang.' . $file);
-        }
-
         if ($page === 'inline') {
 ?>
           <div class="messageStackCaution">
-            <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?>
+             <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?>
           </div>
 <?php
         } else {

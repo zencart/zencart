@@ -6,6 +6,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Dec 03 Modified in v2.2.1 $
  */
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\HtmlIncludesFinder;
+
 require 'includes/application_top.php';
 
 /**
@@ -18,25 +21,6 @@ $no_html_editor_on_these_pages = [
 ];
 
 zen_define_default('TEXT_FULLSCREEN', 'Full Screen');
-// =========================================
-/**
- * Returns an array of file names from the directories specified in $check_directory
- * @since ZC v1.2.0d
- */
-function zen_display_files(array $check_directory): array
-{
-    $directory_array = [];
-    foreach ($check_directory as $dir_check) {
-        $dir = glob(rtrim($dir_check, '/') . '/*.php') ?? [];
-        foreach ($dir as $file) {
-            $directory_array[] = basename($file);
-        }
-    }
-
-    return $directory_array;
-}
-
-// =========================================
 
 $action = $_GET['action'] ?? '';
 $selected_page = (int)($_GET['define_it'] ?? -1);
@@ -48,13 +32,15 @@ if (isset($_GET['filename'])) {
 $file = '';
 
 // Build dropdown for define pages.
+$htmlIncludesFinder = new HtmlIncludesFinder(new FileSystem(), $installedPlugins, $_SESSION['language'], $template_dir);
+$directories = $htmlIncludesFinder->findAll();
+
 $check_directory = [];
-$check_directory[] = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/';
-$directory_files = zen_display_files($check_directory);
 $za_lookup = [];
 $za_lookup[-1] = ['id' => -1, 'text' => TEXT_INFO_SELECT_FILE];
-for ($i = 0, $n = count($directory_files); $i < $n; $i++) {
-    $za_lookup[$i] = ['id' => $i, 'text' => $directory_files[$i]];
+$filenames = array_keys($directories);
+for ($i = 0, $n = count($directories); $i < $n; $i++) {
+    $za_lookup[$i] = ['id' => $i, 'text' => $filenames[$i]];
 }
 
 switch ($action) {
