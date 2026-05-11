@@ -16,14 +16,11 @@ class CategoriesTreeTest extends zcUnitTestCase
     public function setUp(): void
     {
         parent::setUp();
-        require DIR_FS_CATALOG . 'includes/functions/functions_general.php';
-        require_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'category_tree.php');
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_general.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'category_tree.php';
     }
 
-    /**
-     * @test
-     */
-    public function it_builds_a_category_tree_for_the_legacy_category_sidebox()
+    public function testBuildsACategoryTreeForTheLegacyCategorySidebox()
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet.'

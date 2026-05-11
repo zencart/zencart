@@ -7,8 +7,17 @@ FAIL_ON_UNTAGGED=0
 SUMMARY_ONLY=0
 invalid_grouping_count=0
 
+TEST_FILES=()
 parallel_serial_conflict_files=()
 plugin_without_serial_files=()
+
+file_has_group() {
+    local file="$1"
+    local group="$2"
+
+    grep -Eq "^[[:space:]]*\*[[:space:]]+@group[[:space:]]+${group}([[:space:]]|$)" "$file" \
+        || grep -Eq "^[[:space:]]*#\[[^]]*Group\(['\"]${group}['\"]\)\]" "$file"
+}
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -36,9 +45,14 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
-mapfile -t TEST_FILES < <(
+while IFS= read -r test_file; do
+    TEST_FILES+=("$test_file")
+done < <(
     find "$ROOT_DIR/not_for_release/testFramework/FeatureStore" "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" \
         -type f -name '*Test.php' | sort
+    if [ -d "$ROOT_DIR/zc_plugins" ]; then
+        find "$ROOT_DIR/zc_plugins" \( -path '*/tests/FeatureStore/*Test.php' -o -path '*/tests/FeatureAdmin/*Test.php' \) -type f | sort
+    fi
 )
 
 if [ "${#TEST_FILES[@]}" -eq 0 ]; then
@@ -53,6 +67,7 @@ untagged_count=0
 direct_db_write_count=0
 custom_seeder_count=0
 filesystem_write_count=0
+plugin_local_count=0
 store_total_count=0
 store_serial_count=0
 store_parallel_candidate_count=0
@@ -79,19 +94,19 @@ for file in "${TEST_FILES[@]}"; do
     has_custom_seeder=0
     has_filesystem_write=0
 
-    if grep -Eq '^[[:space:]]*\*[[:space:]]+@group[[:space:]]+serial([[:space:]]|$)' "$file"; then
+    if file_has_group "$file" "serial"; then
         has_serial=1
         serial_count=$((serial_count + 1))
         serial_files+=("$relative")
     fi
 
-    if grep -Eq '^[[:space:]]*\*[[:space:]]+@group[[:space:]]+plugin-filesystem([[:space:]]|$)' "$file"; then
+    if file_has_group "$file" "plugin-filesystem"; then
         has_plugin_fs=1
         plugin_fs_count=$((plugin_fs_count + 1))
         plugin_fs_files+=("$relative")
     fi
 
-    if grep -Eq '^[[:space:]]*\*[[:space:]]+@group[[:space:]]+parallel-candidate([[:space:]]|$)' "$file"; then
+    if file_has_group "$file" "parallel-candidate"; then
         has_parallel_candidate=1
         parallel_candidate_count=$((parallel_candidate_count + 1))
         parallel_candidate_files+=("$relative")
@@ -109,7 +124,7 @@ for file in "${TEST_FILES[@]}"; do
         custom_seeder_files+=("$relative")
     fi
 
-    if grep -Eq 'installPluginToFilesystem\(|removePlugin\(|touch\(|file_put_contents\(|unlink\(' "$file"; then
+    if grep -Eq 'installPluginToFilesystem\(|installCurrentPluginToFilesystem\(|installPluginFromLocalSource\(|removePlugin\(|touch\(|file_put_contents\(|unlink\(' "$file"; then
         has_filesystem_write=1
         filesystem_write_count=$((filesystem_write_count + 1))
         filesystem_write_files+=("$relative")
@@ -123,8 +138,20 @@ for file in "${TEST_FILES[@]}"; do
         store_total_count=$((store_total_count + 1))
     fi
 
+    if [[ "$relative" == zc_plugins/*/*/tests/FeatureStore/* ]]; then
+        is_store_test=1
+        plugin_local_count=$((plugin_local_count + 1))
+        store_total_count=$((store_total_count + 1))
+    fi
+
     if [[ "$relative" == not_for_release/testFramework/FeatureAdmin/* ]]; then
         is_admin_test=1
+        admin_total_count=$((admin_total_count + 1))
+    fi
+
+    if [[ "$relative" == zc_plugins/*/*/tests/FeatureAdmin/* ]]; then
+        is_admin_test=1
+        plugin_local_count=$((plugin_local_count + 1))
         admin_total_count=$((admin_total_count + 1))
     fi
 
@@ -175,6 +202,7 @@ echo "Tagged serial: $serial_count"
 echo "Tagged plugin-filesystem: $plugin_fs_count"
 echo "Tagged parallel-candidate: $parallel_candidate_count"
 echo "Untagged files: $untagged_count"
+echo "Plugin-local feature test files: $plugin_local_count"
 echo "Heuristic direct DB writers: $direct_db_write_count"
 echo "Heuristic custom seeder users: $custom_seeder_count"
 echo "Heuristic filesystem writers: $filesystem_write_count"

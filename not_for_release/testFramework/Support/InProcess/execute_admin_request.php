@@ -23,6 +23,7 @@ if (!is_array($payload)) {
 }
 
 require $payload['root_cwd'] . 'vendor/autoload.php';
+require_once $payload['root_cwd'] . 'not_for_release/testFramework/Support/configs/runtime_config.php';
 
 $normalizeProcessLocale = static function (): void {
     $detectedLocale = setlocale(LC_TIME, '0');
@@ -81,6 +82,7 @@ $request = new FeatureRequest(
 
 $entrypoint = $payload['entrypoint'];
 $documentRoot = rtrim($payload['document_root'], '/');
+$adminInfo = zc_test_config_admin_directory($documentRoot);
 $capturedHeaders = [];
 
 $normalizeHeaders = static function (array $headers): array {
@@ -177,8 +179,8 @@ $_SERVER = array_merge([
     'REQUEST_METHOD' => strtoupper($request->method),
     'REQUEST_URI' => $requestUri,
     'SCRIPT_FILENAME' => $entrypoint,
-    'SCRIPT_NAME' => '/admin/index.php',
-    'PHP_SELF' => '/admin/index.php',
+    'SCRIPT_NAME' => $adminInfo['web_path'] . 'index.php',
+    'PHP_SELF' => $adminInfo['web_path'] . 'index.php',
     'SERVER_NAME' => 'localhost',
     'SERVER_PORT' => '80',
 ], $request->server);
@@ -204,7 +206,7 @@ if (function_exists('header_remove') && !headers_sent()) {
 }
 
 http_response_code(200);
-chdir($documentRoot . '/admin');
+chdir($adminInfo['path']);
 
 ob_start();
 

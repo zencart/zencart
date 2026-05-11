@@ -6,9 +6,7 @@ use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\LogFileConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;
@@ -18,9 +16,9 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
     protected $preserveGlobalState = false;
 
     /**
-     * @test
      * scenario GV 2
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testGvRedeemFixedCustomer(): void
     {
         self::runCustomSeeder('CouponTableSeeder');
@@ -35,9 +33,9 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GV 3
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testPurchaseWithGiftVoucher(): void
     {
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
@@ -50,9 +48,9 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GV 4
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testPurchaseCreditCoversFails(): void
     {
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');
@@ -64,9 +62,9 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GV 5
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testPurchaseCreditCoversFailsShippingTax(): void
     {
         $this->switchFlatShippingTax('on');
@@ -80,9 +78,9 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GV 6
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testPurchaseWithGiftVoucherSEK(): void
     {
         $this->setConfiguration('DEFAULT_CURRENCY', 'SEK');
@@ -98,9 +96,9 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GV 7
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testSendGiftVoucherSEK(): void
     {
         $this->setConfiguration('DEFAULT_CURRENCY', 'SEK');

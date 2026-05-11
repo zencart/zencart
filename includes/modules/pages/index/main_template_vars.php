@@ -182,10 +182,15 @@ if ($category_depth == 'nested')
     $select_column_list .= 'p.products_quantity, ';
   }
 
-  // set the product filters according to selected product type
-  $typefilter = $_GET['typefilter'] ?? 'default';
-  require(zen_get_index_filters_directory($typefilter . '_filter.php'));
-
+    // set the product filters according to selected product type
+    if (!empty($_GET['record_company_id'])) {
+        $typefilter = 'record_company';
+    } elseif (!empty($_GET['music_genre_id'])) {
+        $typefilter = 'music_genre';
+    } else {
+        $typefilter = $_GET['typefilter'] ?? 'default';
+    }
+    require zen_get_index_filters_directory($typefilter . '_filter.php');
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////

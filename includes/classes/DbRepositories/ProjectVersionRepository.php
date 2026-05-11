@@ -26,8 +26,7 @@ class ProjectVersionRepository
     {
         $projectVersionKey = $this->db->prepare_input($projectVersionKey);
         $result = $this->db->Execute(
-            "SELECT project_version_major, project_version_minor, project_version_patch1, project_version_patch2," .
-            " project_version_patch1_source, project_version_patch2_source" .
+            "SELECT project_version_major, project_version_minor" .
             " FROM " . TABLE_PROJECT_VERSION .
             " WHERE project_version_key = '" . $projectVersionKey . "' LIMIT 1"
         );

@@ -47,15 +47,18 @@ $adminMenu  = zen_get_admin_menu_for_user();
                     </li>
                 <?php } ?>
 
-                <?php
-                if (!empty($upperMenuArray)) {
-                    ?>
+                <?php if (!empty($upperMenuArray)) { ?>
                     <li class="dropdown visible-xs">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?= HEADER_TITLE_QUICK_ACTIONS ?> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <?php foreach ($upperMenuArray as $upperMenu) { ?>
-                                <li><a href="<?= $upperMenu['a'] ?>" <?= (isset($upperMenu['params']) ? $upperMenu['params'] : '') ?>><?= $upperMenu['title'] ?></a></li>
-                            <?php } ?>
+                        <?php
+                            foreach ($upperMenuArray as $upperMenu) {
+                                if (!isset($upperMenu['a'])) {
+                                    continue;
+                                }
+                        ?>
+                            <li><a href="<?= $upperMenu['a'] ?>" <?= ($upperMenu['params'] ?? '') ?>><?= $upperMenu['title'] ?? '' ?></a></li>
+                        <?php } ?>
                         </ul>
                     </li>
                 <?php } ?>

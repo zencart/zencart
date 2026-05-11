@@ -4,10 +4,15 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
- * @since ZC v1.5.7
  */
 
-function zen_get_zcversion()
+/**
+ * Determine the Zen Cart version currently installed.
+ * @return string in format "major.minor" (eg: "2.0.0", "3.1.0")
+ *
+ * @since ZC v1.5.7
+ */
+function zen_get_zcversion(): string
 {
     return PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
 }
@@ -680,4 +685,35 @@ function zen_get_orders_status()
 {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
    return zen_get_orders_status_pulldown_array();
+}
+
+/**
+ * Add a 'cache-busting' parameter to a CSS/JS file, using its last-modified timestamp.
+ *
+ * Storefront usage takes only the first parameter, since all storefront CSS/JS files (whether
+ * in the /includes/templates subdirectories or in a zc_plugin) are within
+ * DIR_FS_CATALOG.
+ *
+ * Admin usage takes either one (for CSS/JS files located in the 'base' admin/includes directory) or
+ * two parameters when a file is located in a zc_plugin's admin/includes directory.
+ *
+ * @since ZC v3.0.0
+ */
+function zen_add_filemtime(string $relative_path, ?string $absolute_path = null): string
+{
+    if (IS_ADMIN_FLAG === true) {
+        $absolute_path ??= DIR_FS_ADMIN . $relative_path;
+    } else {
+        $absolute_path = DIR_FS_CATALOG . $relative_path;
+    }
+
+    if (!is_file($absolute_path)) {
+        return $relative_path;
+    }
+
+    $mtime = filemtime($absolute_path);
+    if ($mtime === false) {
+        return $relative_path;
+    }
+    return $relative_path . '?' . $mtime;
 }

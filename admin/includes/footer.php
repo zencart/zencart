@@ -14,7 +14,6 @@
   $check_hist_details = $db->Execute($check_hist_query);
   if (!$check_hist_details->EOF) {
     $current_sinfo .=  'v' . $check_hist_details->fields['project_version_major'] . '.' . $check_hist_details->fields['project_version_minor'];
-    if (!empty($check_hist_details->fields['project_version_patch1'])) $current_sinfo .= '&nbsp;&nbsp;Patch: ' . $check_hist_details->fields['project_version_patch1'];
   }
 ?>
 <footer>
@@ -36,13 +35,13 @@ if (!empty($new_version)) { ?>
 <script>
     jQuery(function($){
       let newVersion = <?php echo json_encode($new_version); ?>;
-      let versionInfo = <?php echo json_encode('(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')'); ?>;
+      let versionInfo = <?php echo json_encode('(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . ')'); ?>;
 
       let $target1 = $('#versionCheckAlert');
       if ($target1.length) {
         $target1.html(newVersion);
       }
-      if (newVersion !== <?php echo json_encode(TEXT_VERSION_CHECK_CURRENT); ?>) {
+      if (newVersion !== <?php echo json_encode(TEXT_VERSION_CHECK_CURRENT); ?> && <?= !empty($doVersionCheck) ? 'true' : 'false' ?>) {
           $('#versionCheckPill').addClass('text-danger');
           $('#versionCheckNotifyBadge').toggle();
       }

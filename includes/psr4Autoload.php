@@ -3,6 +3,8 @@
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2026 Feb 27 Modified in v2.2.1 $
+ *
+ * NOTE: There are some additional classes that are loaded with their own autoloaders, located in /includes/classes/vendors/.
  */
 /** @var \Aura\Autoload\Loader $psr4Autoloader */
 $psr4Autoloader->addPrefix('Zencart\QueryBuilder', DIR_FS_CATALOG . DIR_WS_CLASSES);
@@ -21,6 +23,7 @@ $psr4Autoloader->setClassFile('App\Models\PluginControl', DIR_FS_CATALOG . DIR_W
 $psr4Autoloader->setClassFile('App\Models\PluginControlVersion', DIR_FS_CATALOG . DIR_WS_CLASSES . 'DbRepositories/PluginControlVersion.php');
 
 $psr4Autoloader->addPrefix('Zencart\PluginSupport', DIR_FS_CATALOG . DIR_WS_CLASSES . 'PluginSupport');
+$psr4Autoloader->addPrefix('Zencart\Console', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Console');
 $psr4Autoloader->addPrefix('Zencart\ViewBuilders', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ViewBuilders');
 $psr4Autoloader->addPrefix('Zencart\Exceptions', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Exceptions');
 $psr4Autoloader->addPrefix('Zencart\Filters', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Filters');

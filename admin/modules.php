@@ -174,7 +174,10 @@ $modules_for_display = [];
 $module_directory = DIR_FS_CATALOG . DIR_WS_MODULES . $module_type;
 foreach ($modules_found as $module_name => $module_file_dir) {
     if (!$languageLoader->loadModuleLanguageFile($module_name, $module_type)) {
-        echo ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $module_name . '<br>';
+        if (!str_starts_with($module_name, 'lang.')) {
+            $module_name = str_replace($lang_file, $module_name, 'lang.' . $module_name);
+        }
+        $messageStack->add(ERROR_MODULE_FILE_NOT_FOUND . DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $module_name, 'caution');;
         continue;
     }
 

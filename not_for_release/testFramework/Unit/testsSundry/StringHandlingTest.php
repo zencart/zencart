@@ -7,26 +7,25 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\zcUnitTestCase;
 
 class StringHandlingTest extends zcUnitTestCase
 {
-    public function setup(): void
+    public function setUp(): void
     {
-        parent::setup();
+        parent::setUp();
 
         require_once DIR_FS_CATALOG . 'includes/functions/functions_strings.php';
     }
 
-    /**
-     * @dataProvider zenTruncStringProvider
-     */
+    #[DataProvider('zenTruncStringProvider')]
     public function testZenTruncString(?string $str, int|string $len, string $more, string $expected): void
     {
         $this->assertEquals($expected, \zen_trunc_string($str, $len, $more));
     }
 
-    public function zenTruncStringProvider(): array
+    public static function zenTruncStringProvider(): array
     {
         return [
             [null, 10, '...', ''],

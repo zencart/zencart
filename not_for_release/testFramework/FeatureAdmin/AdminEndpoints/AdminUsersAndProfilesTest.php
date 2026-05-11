@@ -9,9 +9,7 @@ namespace Tests\FeatureAdmin\AdminEndpoints;
 use Tests\Support\Database\TestDb;
 use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class AdminUsersAndProfilesTest extends zcInProcessFeatureTestCaseAdmin
 {
     protected $runTestInSeparateProcess = true;
@@ -136,29 +134,5 @@ class AdminUsersAndProfilesTest extends zcInProcessFeatureTestCaseAdmin
         $this->assertSame('TestUserRenamed', $updatedUser['admin_name']);
         $this->assertSame('renamed-admin@example.com', $updatedUser['admin_email']);
         $this->assertSame((string) $profileId, (string) $updatedUser['admin_profile']);
-    }
-
-    protected function completeInitialAdminSetup(): void
-    {
-        $this->visitAdminHome()
-            ->assertOk()
-            ->assertSee('Admin Login');
-
-        $this->submitAdminLogin([
-            'admin_name' => 'Admin',
-            'admin_pass' => 'password',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-            'store_owner' => 'Store Owner',
-        ])->assertOk()
-            ->assertSee('Admin Home');
     }
 }

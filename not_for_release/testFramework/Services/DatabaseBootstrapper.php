@@ -37,9 +37,49 @@ class DatabaseBootstrapper
 
     private function loadInstallerDependencies(): void
     {
+        if (!defined('DIR_FS_INSTALL')) {
+            define('DIR_FS_INSTALL', ROOTCWD . 'zc_install/');
+        }
+        if (!defined('DIR_FS_ROOT')) {
+            define('DIR_FS_ROOT', ROOTCWD);
+        }
+        if (!defined('DIR_FS_LOGS')) {
+            define('DIR_FS_LOGS', zc_test_config_log_directory(ROOTCWD));
+        }
+        if (!defined('DIR_FS_SQL_CACHE')) {
+            define('DIR_FS_SQL_CACHE', ROOTCWD . 'cache');
+        }
+        if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
+            define('DIR_FS_DOWNLOAD_PUBLIC', ROOTCWD . 'pub');
+        }
+        if (!defined('DEBUG_LOG_FOLDER')) {
+            define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
+        }
+
+        $this->loadInstallerLanguageDefines();
+
         require_once ROOTCWD . 'zc_install/includes/classes/class.zcDatabaseInstaller.php';
         require_once ROOTCWD . 'zc_install/includes/functions/general.php';
         require_once ROOTCWD . 'zc_install/includes/functions/password_funcs.php';
+    }
+
+    private function loadInstallerLanguageDefines(): void
+    {
+        $languageFile = ROOTCWD . 'zc_install/includes/languages/en_us/main.php';
+        if (!file_exists($languageFile)) {
+            return;
+        }
+
+        $defines = require $languageFile;
+        if (!is_array($defines)) {
+            return;
+        }
+
+        foreach ($defines as $name => $value) {
+            if (!defined($name)) {
+                define($name, $value);
+            }
+        }
     }
 
     private function buildInstallerOptions(): array

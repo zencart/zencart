@@ -16,8 +16,8 @@ class DiscountCouponsTest extends zcDiscountCouponTest
     public function setUp(): void
     {
         parent::setUp();
-        require_once(TESTCWD . 'Support/functionsDiscountCoupons.php');
-        require_once(TESTCWD . 'Support/StubCouponValidation.php');
+        require_once TESTCWD . 'Support/StubCouponValidation.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php';
         require_once DIR_FS_CATALOG . 'includes/modules/order_total/ot_coupon.php';
         require_once DIR_FS_CATALOG . 'includes/classes/shopping_cart.php';
         require_once DIR_FS_CATALOG . 'includes/classes/currencies.php';

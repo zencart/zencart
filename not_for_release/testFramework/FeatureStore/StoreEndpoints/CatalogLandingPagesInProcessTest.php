@@ -8,17 +8,13 @@ namespace Tests\FeatureStore\StoreEndpoints;
 
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class CatalogLandingPagesInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
 
-    /**
-     * @dataProvider catalogLandingPageProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('catalogLandingPageProvider')]
     public function testCatalogLandingPagesRenderInProcess(string $page, string $expectedText): void
     {
         $this->getMainPage($page)

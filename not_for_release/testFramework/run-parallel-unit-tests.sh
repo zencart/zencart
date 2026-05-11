@@ -11,11 +11,13 @@ WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/zc-unit-parallel.XXXXXX")"
 TEST_LIST_FILE="$WORK_DIR/test-files.txt"
 TEST_FILTER="${ZC_UNIT_TEST_FILTER:-}"
 declare -a EXTRA_PHPUNIT_ARGS=("$@")
+declare -a PHPUNIT_ARGS=()
+declare -a TEST_FILES=()
+declare -a ACTIVE_PIDS=()
+declare -a ACTIVE_FILES=()
+declare -a ACTIVE_SLUGS=()
+declare -a ACTIVE_STARTED_AT=()
 CLI_FILTER=""
-
-declare -A PID_TO_FILE=()
-declare -A PID_TO_SLUG=()
-declare -A PID_TO_STARTED_AT=()
 TOTAL_TESTS=0
 TOTAL_ASSERTIONS=0
 
@@ -34,14 +36,22 @@ Useful environment variables:
   PHPUNIT_BIN             PHPUnit binary to use (default: vendor/bin/phpunit)
 
 Examples:
-  composer unit-tests-parallel
-  composer unit-tests-parallel -- --filter RuntimeConfigTest
-  ZC_UNIT_TEST_FILTER=RuntimeConfig composer unit-tests-parallel
+  composer tests-unit
+  composer tests-unit -- --filter RuntimeConfigTest
+  ZC_UNIT_TEST_FILTER=RuntimeConfig composer tests-unit
 EOF
 }
 
 cleanup() {
     rm -rf "$WORK_DIR"
+}
+
+load_test_files() {
+    TEST_FILES=()
+
+    while IFS= read -r test_file; do
+        TEST_FILES+=("$test_file")
+    done < "$TEST_LIST_FILE"
 }
 
 accumulate_phpunit_counts() {
@@ -64,7 +74,7 @@ accumulate_phpunit_counts() {
 
 trap cleanup EXIT
 
-for arg in "${EXTRA_PHPUNIT_ARGS[@]}"; do
+for arg in "${EXTRA_PHPUNIT_ARGS[@]+"${EXTRA_PHPUNIT_ARGS[@]}"}"; do
     case "$arg" in
         --help|-h)
             usage
@@ -91,13 +101,16 @@ fi
 for ((i = 0; i < ${#EXTRA_PHPUNIT_ARGS[@]}; i++)); do
     if [ "${EXTRA_PHPUNIT_ARGS[$i]}" = "--filter" ] && [ $((i + 1)) -lt ${#EXTRA_PHPUNIT_ARGS[@]} ]; then
         CLI_FILTER="${EXTRA_PHPUNIT_ARGS[$((i + 1))]}"
-        break
+        i=$((i + 1))
+        continue
     fi
 
     if [[ "${EXTRA_PHPUNIT_ARGS[$i]}" == --filter=* ]]; then
         CLI_FILTER="${EXTRA_PHPUNIT_ARGS[$i]#--filter=}"
-        break
+        continue
     fi
+
+    PHPUNIT_ARGS+=("${EXTRA_PHPUNIT_ARGS[$i]}")
 done
 
 find "$ROOT_DIR/not_for_release/testFramework/Unit" -type f -name '*Test.php' | sort > "$TEST_LIST_FILE"
@@ -122,7 +135,7 @@ if [ ! -s "$TEST_LIST_FILE" ]; then
     exit 1
 fi
 
-mapfile -t TEST_FILES < "$TEST_LIST_FILE"
+load_test_files
 TOTAL_FILES="${#TEST_FILES[@]}"
 
 run_test_file() {
@@ -140,12 +153,12 @@ run_test_file() {
 
     (
         if [ -n "$class_name" ]; then
-            if "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --verbose --process-isolation --debug --testsuite Unit "${EXTRA_PHPUNIT_ARGS[@]}" --filter "${class_name}" >"$output_file" 2>&1; then
+            if "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --process-isolation --testsuite Unit "${PHPUNIT_ARGS[@]+"${PHPUNIT_ARGS[@]}"}" --filter "${class_name}" >"$output_file" 2>&1; then
                 echo 0 >"$status_file"
             else
                 echo $? >"$status_file"
             fi
-        elif "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --verbose --process-isolation --debug "${EXTRA_PHPUNIT_ARGS[@]}" "$file" >"$output_file" 2>&1; then
+        elif "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --process-isolation "${PHPUNIT_ARGS[@]+"${PHPUNIT_ARGS[@]}"}" "$file" >"$output_file" 2>&1; then
             echo 0 >"$status_file"
         else
             echo $? >"$status_file"
@@ -153,20 +166,22 @@ run_test_file() {
     ) &
 
     local pid=$!
-    PID_TO_FILE["$pid"]="$relative"
-    PID_TO_SLUG["$pid"]="$slug"
-    PID_TO_STARTED_AT["$pid"]="$(date +%s)"
+    ACTIVE_PIDS+=("$pid")
+    ACTIVE_FILES+=("$relative")
+    ACTIVE_SLUGS+=("$slug")
+    ACTIVE_STARTED_AT+=("$(date +%s)")
 }
 
 report_active_jobs() {
     local now
     now="$(date +%s)"
     local -a details=()
+    local index=""
 
-    for pid in "${!PID_TO_FILE[@]}"; do
-        local started_at="${PID_TO_STARTED_AT[$pid]:-$now}"
+    for index in "${!ACTIVE_PIDS[@]}"; do
+        local started_at="${ACTIVE_STARTED_AT[$index]:-$now}"
         local elapsed=$((now - started_at))
-        details+=("${PID_TO_FILE[$pid]} (${elapsed}s)")
+        details+=("${ACTIVE_FILES[$index]} (${elapsed}s)")
     done
 
     if [ "${#details[@]}" -eq 0 ]; then
@@ -180,16 +195,22 @@ report_active_jobs() {
 }
 
 reap_one() {
+    local finished_index=""
     local finished_pid=""
     local wait_status=0
     local waited_seconds=0
 
-    while [ -z "$finished_pid" ]; do
-        for pid in "${!PID_TO_FILE[@]}"; do
+    while [ -z "$finished_index" ]; do
+        local index=""
+        local pid=""
+
+        for index in "${!ACTIVE_PIDS[@]}"; do
+            pid="${ACTIVE_PIDS[$index]}"
             if kill -0 "$pid" 2>/dev/null; then
                 continue
             fi
 
+            finished_index="$index"
             finished_pid="$pid"
             if wait "$pid"; then
                 wait_status=0
@@ -199,7 +220,7 @@ reap_one() {
             break
         done
 
-        if [ -n "$finished_pid" ]; then
+        if [ -n "$finished_index" ]; then
             break
         fi
 
@@ -210,14 +231,15 @@ reap_one() {
         fi
     done
 
-    local relative="${PID_TO_FILE[$finished_pid]}"
-    local slug="${PID_TO_SLUG[$finished_pid]}"
+    local relative="${ACTIVE_FILES[$finished_index]}"
+    local slug="${ACTIVE_SLUGS[$finished_index]}"
     local status_file="$WORK_DIR/$slug.status"
     local output_file="$WORK_DIR/$slug.log"
 
-    unset 'PID_TO_FILE[$finished_pid]'
-    unset 'PID_TO_SLUG[$finished_pid]'
-    unset 'PID_TO_STARTED_AT[$finished_pid]'
+    unset 'ACTIVE_PIDS[$finished_index]'
+    unset 'ACTIVE_FILES[$finished_index]'
+    unset 'ACTIVE_SLUGS[$finished_index]'
+    unset 'ACTIVE_STARTED_AT[$finished_index]'
 
     if [ -f "$status_file" ]; then
         wait_status="$(cat "$status_file")"

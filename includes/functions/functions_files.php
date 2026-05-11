@@ -137,10 +137,18 @@ function zen_include_language_file($file, $folder, $page)
     if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder)) {
         $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder);
     } else {
+        // -----
+        // If the language file's name doesn't start with 'lang.' (which they do,
+        // as of zc300), add that prefix for the cautionary message.
+        //
+        if (!str_starts_with($file, 'lang.')) {
+            $lang_file = str_replace($lang_file, $file, 'lang.' . $file);
+        }
+
         if ($page === 'inline') {
 ?>
           <div class="messageStackCaution">
-             <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?>
+            <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?>
           </div>
 <?php
         } else {

@@ -4,6 +4,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Support\zcUnitTestCase;
 use Tests\Support\zcURLTestObserver;
 
@@ -16,10 +17,10 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
             define('IS_ADMIN_FLAG', true);
         }
         parent::setUp();
-        require DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'general.php';
-        require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';
-        require DIR_FS_ADMIN . 'includes/functions/html_output.php';
-        require_once(TESTCWD . 'Support/zcURLTestObserver.php');
+        require_once DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'general.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';
+        require_once DIR_FS_ADMIN . 'includes/functions/html_output.php';
+        require_once TESTCWD . 'Support/zcURLTestObserver.php';
         $GLOBALS['zcURLTestObserver'] = new zcURLTestObserver();
 
         if (!defined('ENABLE_SSL')) {
@@ -55,9 +56,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         }
     }
 
-    /**
-     * @depends testUrlFunctionsExist
-     */
+    #[Depends('testUrlFunctionsExist')]
     public function testHomePage()
     {
         $this->assertURLGenerated(
@@ -66,9 +65,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testHomePageSsl()
     {
         $this->assertURLGenerated(
@@ -81,9 +78,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testNoAddSessionWhenSwitchingProtocolAndServers()
     {
         $GLOBALS['session_started'] = true;
@@ -98,9 +93,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testNoAddSessionWhenSwitchingProtocolAndServers
-     */
+    #[Depends('testNoAddSessionWhenSwitchingProtocolAndServers')]
     public function testNoAddSessionWhenSidDefined()
     {
         if (PHP_VERSION_ID >= 80401) {
@@ -118,9 +111,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testValidCategoryUrls()
     {
         $this->assertURLGenerated(
@@ -133,9 +124,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testValidCategoryUrls
-     */
+    #[Depends('testValidCategoryUrls')]
     public function testValidCategoryUrlsFilters()
     {
         $this->assertURLGenerated(
@@ -148,9 +137,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePageSsl
-     */
+    #[Depends('testHomePageSsl')]
     public function testValidCategoryUrlsSsl()
     {
         $this->assertURLGenerated(
@@ -163,9 +150,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testValidEzPageUrls()
     {
         $this->assertURLGenerated(
@@ -178,9 +163,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testDefinePageUrls()
     {
         $this->assertURLGenerated(
@@ -197,9 +180,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePageSsl
-     */
+    #[Depends('testHomePageSsl')]
     public function testObserverCannotDowngradeFromSsl()
     {
         $GLOBALS['zcURLTestObserver']->mode = zcURLTestObserver::$CHANGE_CONNECTION;

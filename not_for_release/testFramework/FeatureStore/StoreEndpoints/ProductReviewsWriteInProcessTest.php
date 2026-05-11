@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $
  */
 
 namespace Tests\FeatureStore\StoreEndpoints;
@@ -10,9 +11,7 @@ use Tests\Support\Database\TestDb;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class ProductReviewsWriteInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;
@@ -37,6 +36,7 @@ class ProductReviewsWriteInProcessTest extends zcInProcessFeatureTestCaseStore
             $page->formDefaults('product_reviews_write'),
             [
                 'rating' => '5',
+                'review_title' => 'Test Review',
                 'review_text' => 'In-process review text for coverage that is long enough to pass validation.',
             ]
         ));
@@ -49,7 +49,7 @@ class ProductReviewsWriteInProcessTest extends zcInProcessFeatureTestCaseStore
             ->assertSee('Matrox G400 32MB');
 
         $review = TestDb::selectOne(
-            'SELECT r.reviews_id, r.reviews_rating, rd.reviews_text
+            'SELECT r.reviews_id, r.reviews_rating, rd.reviews_text, rd.reviews_title
                FROM reviews r
                INNER JOIN reviews_description rd ON rd.reviews_id = r.reviews_id
               WHERE r.products_id = :products_id
@@ -64,6 +64,7 @@ class ProductReviewsWriteInProcessTest extends zcInProcessFeatureTestCaseStore
 
         $this->assertNotNull($review);
         $this->assertSame('5', (string) $review['reviews_rating']);
+        $this->assertSame('Test Review', $review['reviews_title']);
         $this->assertSame('In-process review text for coverage that is long enough to pass validation.', $review['reviews_text']);
     }
 
@@ -80,7 +81,8 @@ class ProductReviewsWriteInProcessTest extends zcInProcessFeatureTestCaseStore
             $page->formDefaults('product_reviews_write'),
             [
                 'rating' => '0',
-                'review_text' => 'Too short',
+                'review_title' => 'Short',
+                'review_text' => 'Tiny', // the default minimum length is 5 since ZC v3.0.0
             ]
         ));
 

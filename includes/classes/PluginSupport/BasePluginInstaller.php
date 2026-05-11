@@ -33,11 +33,9 @@ class BasePluginInstaller
         if (empty($pluginKey) || empty($version)) {
             return false;
         }
-        $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php');
-        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
-        $this->pluginInstaller->executeInstallers($this->pluginDir);
-        if ($this->errorContainer->hasErrors()) {
+        $this->processSetup($pluginKey, $version);
+        $plugin_return = $this->pluginInstaller->executeInstallers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_INSTALL) === false) {
             return false;
         }
         $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
@@ -52,15 +50,25 @@ class BasePluginInstaller
         if (empty($pluginKey) || empty($version)) {
             return false;
         }
-        $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php');
-        $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
-        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version);
-        $this->pluginInstaller->executeUninstallers($this->pluginDir);
-        if ($this->errorContainer->hasErrors()) {
+        $this->processSetup($pluginKey, $version);
+        $plugin_return = $this->pluginInstaller->executeUninstallers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_UNINSTALL) === false) {
             return false;
         }
+        $this->setPluginVersionStatus($pluginKey, '', PluginStatus::NOT_INSTALLED);
         return true;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function processPreUninstall($pluginKey, $version): array
+    {
+        if (empty($pluginKey) || empty($version)) {
+            return [];
+        }
+        $this->processSetup($pluginKey, $version);
+        return $this->pluginInstaller->executePreUninstallers($this->pluginDir);
     }
 
     /**
@@ -71,11 +79,9 @@ class BasePluginInstaller
         if (empty($pluginKey) || empty($version) || empty($oldVersion)) {
             return false;
         }
-        $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
-        $this->loadInstallerLanguageFile('main.php');
-        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
-        $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
-        if ($this->errorContainer->hasErrors()) {
+        $this->processSetup($pluginKey, $version, $oldVersion);
+        $plugin_return = $this->pluginInstaller->executeUpgraders($this->pluginDir, $oldVersion);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_UPGRADE) === false) {
             return false;
         }
         $this->setPluginVersionStatus($pluginKey, $oldVersion, PluginStatus::NOT_INSTALLED);
@@ -84,19 +90,98 @@ class BasePluginInstaller
     }
 
     /**
-     * @since ZC v1.5.7
+     * @since ZC v3.0.0
      */
-    public function processDisable($pluginKey, $version): void
+    public function processPreConfirmUpgrade(string $pluginKey, string $version, string $oldVersion): array
     {
-        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::DISABLED);
+        if (empty($pluginKey) || empty($version)) {
+            return [];
+        }
+        $this->processSetup($pluginKey, $version, $oldVersion);
+        return $this->pluginInstaller->executePreConfirmUpgraders($this->pluginDir, $version, $oldVersion);
     }
 
     /**
-     * @since ZC v1.5.7
+     * @since ZC v3.0.0
      */
-    public function processEnable($pluginKey, $version): void
+    public function processPreDisable(string $pluginKey, string $version): array
     {
+        if (empty($pluginKey) || empty($version)) {
+            return [];
+        }
+        $this->processSetup($pluginKey, $version);
+        return $this->pluginInstaller->executePreDisablers($this->pluginDir);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function processDisable($pluginKey, $version): bool
+    {
+        if (empty($pluginKey) || empty($version)) {
+            return false;
+        }
+        $this->processSetup($pluginKey, $version);
+        $plugin_return = $this->pluginInstaller->executeDisablers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_DISABLE) === false) {
+            return false;
+        }
+        $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::DISABLED);
+        return true;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function processPreEnable(string $pluginKey, string $version): array
+    {
+        if (empty($pluginKey) || empty($version)) {
+            return [];
+        }
+        $this->processSetup($pluginKey, $version);
+        return $this->pluginInstaller->executePreEnablers($this->pluginDir);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function processEnable($pluginKey, $version): bool
+    {
+        if (empty($pluginKey) || empty($version)) {
+            return false;
+        }
+        $this->processSetup($pluginKey, $version);
+        $plugin_return = $this->pluginInstaller->executeEnablers($this->pluginDir);
+        if ($this->checkPluginReturn($plugin_return, ERROR_UNKNOWN_FAILURE_ENABLE) === false) {
+            return false;
+        }
         $this->setPluginVersionStatus($pluginKey, $version, PluginStatus::ENABLED);
+        return true;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function processSetup(string $pluginKey, string $version, ?string $oldVersion = null): void
+    {
+        $this->pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $version;
+        $this->loadInstallerLanguageFile('main.php');
+        $this->pluginInstaller->setVersions($this->pluginDir, $pluginKey, $version, $oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function checkPluginReturn(?bool $plugin_return, string $plugin_action): bool
+    {
+        if ($plugin_return !== false) {
+            return true;
+        }
+        if (!$this->errorContainer->hasErrors()) {
+            $default_message = sprintf(ERROR_UNKNOWN_FAILURE, $plugin_action);
+            $this->errorContainer->addError(0, $default_message, false, $default_message);
+        }
+        return false;
     }
 
     /**

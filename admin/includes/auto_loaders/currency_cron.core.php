@@ -5,9 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 Jan 11 Modified in v2.0.0-alpha1 $
  */
-if (!defined('USE_PCONNECT')) {
-    define('USE_PCONNECT', 'false');
-}
 /**
  * autoloader array for admin currency_cron.php
  */

@@ -6,9 +6,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class BasicTaxShippingBillingWithShippingTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;
@@ -23,18 +21,18 @@ class BasicTaxShippingBillingWithShippingTest extends zcInProcessFeatureTestCase
     }
 
     /**
-     * @test
      * scenario BTC 3
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testBasicCheckoutFloridaCustomer(): void
     {
         $this->runBasicCheckoutAssertions('florida-basic1', ['69.99', '2.50', '5.07', '77.56']);
     }
 
     /**
-     * @test
      * scenario BTC 4
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testBasicCheckoutNonFloridaCustomer(): void
     {
         $this->runBasicCheckoutAssertions('US-not-florida-basic', ['69.99', '2.50', '72.49']);

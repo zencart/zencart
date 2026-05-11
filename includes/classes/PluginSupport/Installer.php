@@ -48,106 +48,237 @@ class Installer
     /**
      * @since ZC v1.5.7
      */
-    public function executeInstallers($pluginDir): void
+    public function executeInstallers($pluginDir): ?bool
     {
-        $this->executePatchInstaller($pluginDir);
-        if ($this->errorContainer->hasErrors()) {
-            return;
+        $patch_status = $this->executePatchInstaller($pluginDir);
+        if ($patch_status !== null) {
+            return $patch_status;
         }
-        $this->executeScriptedInstaller($pluginDir);
+        return $this->executeScriptedInstaller($pluginDir);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    public function executeUninstallers($pluginDir): void
+    public function executeUninstallers($pluginDir): ?bool
     {
-        $this->executePatchUninstaller($pluginDir);
-        if ($this->errorContainer->hasErrors()) {
-            return;
+        $patch_status = $this->executePatchUninstaller($pluginDir);
+        if ($patch_status !== null) {
+            return $patch_status;
         }
-        $this->executeScriptedUninstaller($pluginDir);
+        return $this->executeScriptedUninstaller($pluginDir);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function executePreUninstallers(string $pluginDir): array
+    {
+        return $this->executeScriptedPreUninstaller($pluginDir);
     }
 
     /**
      * @since ZC v1.5.8
      */
-    public function executeUpgraders($pluginDir, $oldVersion): void
+    public function executeUpgraders($pluginDir, $oldVersion): ?bool
     {
-        $this->executeScriptedUpgrader($pluginDir, $oldVersion);
+        return $this->executeScriptedUpgrader($pluginDir, $oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function executePreConfirmUpgraders(string $pluginDir, string $version, string $oldVersion): array
+    {
+        return $this->executeScriptedPreConfirmUpgrader($pluginDir, $version, $oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function executePreDisablers(string $pluginDir): array
+    {
+        return $this->executeScriptedPreDisabler($pluginDir);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function executeDisablers(string $pluginDir): ?bool
+    {
+        return $this->executeScriptedDisabler($pluginDir);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function executePreEnablers(string $pluginDir): array
+    {
+        return $this->executeScriptedPreEnabler($pluginDir);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function executeEnablers(string $pluginDir): ?bool
+    {
+        return $this->executeScriptedEnabler($pluginDir);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executePatchInstaller($pluginDir): void
+    protected function executePatchInstaller($pluginDir): ?bool
     {
         $patchFile = 'install.sql';
-        $this->executePatchFile($pluginDir, $patchFile);
+        return $this->executePatchFile($pluginDir, $patchFile);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executePatchUninstaller($pluginDir): void
+    protected function executePatchUninstaller($pluginDir): ?bool
     {
         $patchFile = 'uninstall.sql';
-        $this->executePatchFile($pluginDir, $patchFile);
+        return $this->executePatchFile($pluginDir, $patchFile);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executePatchFile($pluginDir, $patchFile): void
+    protected function executePatchFile($pluginDir, $patchFile): ?bool
     {
         if (!file_exists($pluginDir . '/Installer/' . $patchFile)) {
-            return;
+            return null;
         }
         $lines = file($pluginDir . '/Installer/' . $patchFile);
         $paramLines = $this->patchInstaller->parse($lines);
         if ($this->errorContainer->hasErrors()) {
-            return;
+            return false;
         }
         $this->patchInstaller->executePatchSql($paramLines);
+        return true;
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executeScriptedInstaller($pluginDir): void
+    protected function executeScriptedInstaller($pluginDir): ?bool
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
-            return;
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return null;
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
-        $scriptedInstaller->doInstall();
+        return $scriptedInstaller->doInstall();
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function executeScriptedUninstaller($pluginDir): void
+    protected function executeScriptedUninstaller($pluginDir): ?bool
     {
-        if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
-            return;
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return null;
         }
-        $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
-        $scriptedInstaller->setVersionDetails($this->getVersionInformation());
-        $scriptedInstaller->doUninstall();
+        return $scriptedInstaller->doUninstall();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreUninstaller(string $pluginDir): array
+    {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return [];
+        }
+        return $scriptedInstaller->doPreUninstall();
     }
 
     /**
      * @since ZC v1.5.8
      */
-    protected function executeScriptedUpgrader($pluginDir, $oldVersion): void
+    protected function executeScriptedUpgrader($pluginDir, $oldVersion): ?bool
+    {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return null;
+        }
+        return $scriptedInstaller->doUpgrade($oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreConfirmUpgrader(string $pluginDir, string $version, string $oldVersion): array
+    {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return [];
+        }
+        return $scriptedInstaller->doPreConfirmUpgrade($version, $oldVersion);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedDisabler(string $pluginDir): ?bool
+    {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return null;
+        }
+        return $scriptedInstaller->doDisable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreDisabler(string $pluginDir): array
+    {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return [];
+        }
+        return $scriptedInstaller->doPreDisable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedEnabler(string $pluginDir): ?bool
+    {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return null;
+        }
+        return $scriptedInstaller->doEnable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function executeScriptedPreEnabler(string $pluginDir): array
+    {
+        $scriptedInstaller = $this->scriptedSetup($pluginDir);
+        if (empty($scriptedInstaller)) {
+            return [];
+        }
+        return $scriptedInstaller->doPreEnable();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function scriptedSetup(string $pluginDir): ?ScriptedInstaller
     {
         if (!file_exists($pluginDir . '/Installer/ScriptedInstaller.php')) {
-            return;
+            return null;
         }
         $scriptedInstaller = $this->scriptedInstallerFactory->make($pluginDir);
         $scriptedInstaller->setVersionDetails($this->getVersionInformation());
-        $scriptedInstaller->doUpgrade($oldVersion);
+        return $scriptedInstaller;
     }
 
     /**

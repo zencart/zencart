@@ -8,17 +8,13 @@ namespace Tests\FeatureStore\StoreEndpoints;
 
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class StoreInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
 
-    /**
-     * @dataProvider simpleStorePageProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('simpleStorePageProvider')]
     public function testSimpleStorePagesCanBeRenderedInProcess(string $page, string $expectedText, array $server = []): void
     {
         $this->getMainPage($page, $server)

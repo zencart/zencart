@@ -104,8 +104,8 @@ if (extension_loaded('bcmath')) {
     if (!function_exists('bcdivmod')) {
         function bcdivmod(string $num1, string $num2, ?int $scale = null): ?array
         {
-            if (null === $quot = \bcdiv($num1, $num2, 0)) {
-                return null;
+            if (null === $quot = @bcdiv($num1, $num2, 0)) {
+                throw new \DivisionByZeroError('Division by zero');
             }
             $scale = $scale ?? (\PHP_VERSION_ID >= 70300 ? \bcscale() : (ini_get('bcmath.scale') ?: 0));
 

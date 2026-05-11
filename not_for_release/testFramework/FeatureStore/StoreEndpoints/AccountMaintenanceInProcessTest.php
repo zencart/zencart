@@ -9,10 +9,8 @@ namespace Tests\FeatureStore\StoreEndpoints;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- * @group customer-account-write
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
+#[\PHPUnit\Framework\Attributes\Group('customer-account-write')]
 class AccountMaintenanceInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;

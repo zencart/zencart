@@ -6,15 +6,15 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\UnitTestBootstrap;
 
 class UnitTestBootstrapTest extends TestCase
 {
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testInitializeDefinesExpectedStateWithoutEval(): void
     {
         UnitTestBootstrap::initialize();

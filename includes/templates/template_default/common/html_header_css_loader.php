@@ -18,7 +18,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 $directory_array = $template->get_template_part($template->get_template_dir('^style.*\.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^style/', '.css');
 foreach ($directory_array as $value) {
-    echo '<link rel="stylesheet" href="' . $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value . '">' . "\n";
+    echo '<link rel="stylesheet" href="' . zen_add_filemtime($template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value) . '">' . "\n";
 }
 
 /**
@@ -44,7 +44,7 @@ $sheets_array = [
 foreach ($sheets_array as $value) {
     $perpagefile = $template->get_template_dir('^' . $value . '.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
     if (file_exists($perpagefile)) {
-        echo '<link rel="stylesheet" href="' . $perpagefile . '">' . "\n";
+        echo '<link rel="stylesheet" href="' . zen_add_filemtime($perpagefile) . '">' . "\n";
     }
 }
 
@@ -58,12 +58,12 @@ foreach ($tmp_cats as $val) {
     $ppfile = 'c_' . $value . '_children.css';
     $perpagefile = $template->get_template_dir('^' . $ppfile, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $ppfile;
     if (file_exists($perpagefile)) {
-        echo '<link rel="stylesheet" href="' . $perpagefile . '">' . "\n";
+        echo '<link rel="stylesheet" href="' . zen_add_filemtime($perpagefile) . '">' . "\n";
     }
     $ppfile = $_SESSION['language'] . '_c_' . $value . '_children.css';
     $perpagefile = $template->get_template_dir('^' . $ppfile, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $ppfile;
     if (file_exists($perpagefile)) {
-        echo '<link rel="stylesheet" href="' . $perpagefile . '">' . "\n";
+        echo '<link rel="stylesheet" href="' . zen_add_filemtime($perpagefile) . '">' . "\n";
     }
     $value .= '_';
 }
@@ -73,7 +73,7 @@ foreach ($tmp_cats as $val) {
  */
 $directory_array = $template->get_template_part($template->get_template_dir('^print.*\.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^print/', '.css');
 foreach ($directory_array as $value) {
-    echo '<link rel="stylesheet" media="print" href="' . $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value . '">' . "\n";
+    echo '<link rel="stylesheet" media="print" href="' . zen_add_filemtime($template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value) . '">' . "\n";
 }
 
 /**

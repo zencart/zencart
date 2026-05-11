@@ -3,7 +3,7 @@ name: Zen Cart Unit Tests
 on: [push, pull_request]
 
 jobs:
-  unit-tests:
+  tests-unit:
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -37,7 +37,15 @@ jobs:
       - name: Run Unit Test CI Workflow
         env:
           ZC_PARALLEL_PROCESSES: 4
-        run: composer unit-tests-ci
+        run: composer tests-unit
+
+      - name: Run Plugin-Local Unit Tests
+        run: |
+          if composer tests-plugin -- --suite Unit --dry-run; then
+            composer tests-plugin -- --suite Unit
+          else
+            echo "No plugin-local unit tests found."
+          fi
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7

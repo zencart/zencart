@@ -86,16 +86,17 @@ class AdminFeatureRunner extends InProcessFeatureRunner
     private function resolveEntrypoint(FeatureRequest $request): string
     {
         $path = $request->requestPath();
+        $adminWebPath = $this->adminWebPath();
 
         if ($this->entrypoint !== null) {
             return $this->entrypoint;
         }
 
-        if (in_array($path, ['/admin', '/admin/', '/admin/index.php'], true)) {
-            return $this->resolvedDocumentRoot() . '/admin/index.php';
+        if (in_array($path, ['/admin', '/admin/', '/admin/index.php', rtrim($adminWebPath, '/'), $adminWebPath, $adminWebPath . 'index.php'], true)) {
+            return $this->adminEntrypoint();
         }
 
-        if (preg_match('#^/admin/[A-Za-z0-9_.-]+\.php$#', $path) === 1) {
+        if (preg_match('#^' . preg_quote($adminWebPath, '#') . '[A-Za-z0-9_.-]+\.php$#', $path) === 1) {
             $entrypoint = $this->resolvedDocumentRoot() . $path;
             if (is_file($entrypoint)) {
                 return $entrypoint;
@@ -122,5 +123,22 @@ class AdminFeatureRunner extends InProcessFeatureRunner
         }
 
         return realpath(__DIR__ . '/../../../..') . '/';
+    }
+
+    private function adminEntrypoint(): string
+    {
+        return $this->resolvedDocumentRoot() . $this->adminWebPath() . 'index.php';
+    }
+
+    private function adminWebPath(): string
+    {
+        if (defined('DIR_WS_ADMIN')) {
+            return '/' . trim(DIR_WS_ADMIN, '/') . '/';
+        }
+
+        require_once $this->resolvedRootCwd() . 'not_for_release/testFramework/Support/configs/runtime_config.php';
+        $adminInfo = zc_test_config_admin_directory($this->resolvedDocumentRoot());
+
+        return $adminInfo['web_path'];
     }
 }

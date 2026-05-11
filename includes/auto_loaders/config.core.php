@@ -10,9 +10,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-if (!defined('USE_PCONNECT')) {
-    define('USE_PCONNECT', 'false');
-}
 /**
  *
  * require DIR_WS_INCLUDES . 'version.php';
@@ -333,6 +330,16 @@ $autoLoadConfig[160][] = [
 $autoLoadConfig[160][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_category_path.php',
+];
+/**
+ * Breakpoint 161.
+ *
+ * require 'includes/init_includes/init_canonical.php';
+ *
+ */
+$autoLoadConfig[161][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_canonical.php',
 ];
 /**
  * Breakpoint 170.

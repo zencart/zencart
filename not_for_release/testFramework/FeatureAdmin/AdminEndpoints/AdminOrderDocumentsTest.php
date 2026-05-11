@@ -10,9 +10,7 @@ use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\InProcessStorefrontCheckoutConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class AdminOrderDocumentsTest extends zcInProcessFeatureTestCaseAdmin
 {
     use CustomerAccountConcerns;
@@ -66,29 +64,5 @@ class AdminOrderDocumentsTest extends zcInProcessFeatureTestCaseAdmin
             ->assertSee($order['customer_name'])
             ->assertSee($order['product_name'])
             ->assertSee($order['email_address']);
-    }
-
-    protected function completeInitialAdminSetup(): void
-    {
-        $this->visitAdminHome()
-            ->assertOk()
-            ->assertSee('Admin Login');
-
-        $this->submitAdminLogin([
-            'admin_name' => 'Admin',
-            'admin_pass' => 'password',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-            'store_owner' => 'Store Owner',
-        ])->assertOk()
-            ->assertSee('Admin Home');
     }
 }

@@ -8,25 +8,13 @@ namespace Tests\Support;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestResult;
 
 /**
  *
  */
 abstract class zcUnitTestCase extends TestCase
 {
-    /**
-     * @param TestResult|null $result
-     * @return TestResult
-     *
-     * This allows us to run in full isolation mode including
-     * classes, functions, and defined statements
-     */
-    public function run(?TestResult $result = null): TestResult
-    {
-        $this->setPreserveGlobalState(false);
-        return parent::run($result);
-    }
+    protected $preserveGlobalState = false;
 
     /**
      * @return void

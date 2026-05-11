@@ -52,6 +52,27 @@ class TestConfigResolverTest extends TestCase
         $this->assertSame('ddev', TestConfigResolver::detectUser(['IS_DDEV_PROJECT' => '1', 'USER' => 'runner']));
     }
 
+    public function testDetectShellUserReturnsActualUserWithoutDdevFallback(): void
+    {
+        putenv('IS_DDEV_PROJECT=1');
+
+        $this->assertSame('alice', TestConfigResolver::detectShellUser(['USER' => 'alice']));
+    }
+
+    public function testDetectUserDoesNotTreatFalseyDdevEnvironmentAsEnabled(): void
+    {
+        putenv('IS_DDEV_PROJECT=false');
+
+        $this->assertSame('alice', TestConfigResolver::detectUser(['USER' => 'alice']));
+    }
+
+    public function testDetectUserDoesNotTreatZeroDdevEnvironmentAsEnabled(): void
+    {
+        putenv('IS_DDEV_PROJECT=0');
+
+        $this->assertSame('bob', TestConfigResolver::detectUser(['USER' => 'bob']));
+    }
+
     public function testLoadConfigReturnsRequiredData(): void
     {
         file_put_contents(
@@ -62,6 +83,18 @@ class TestConfigResolverTest extends TestCase
         $config = TestConfigResolver::loadConfig('main', $this->configDirectory, ['USER' => 'unknown-user']);
 
         $this->assertSame(['mailserver-host' => 'localhost'], $config);
+    }
+
+    public function testResolveConfigProfileReturnsFallbackProfileName(): void
+    {
+        file_put_contents(
+            $this->configDirectory . '/runner.main.configure.php',
+            "<?php\nreturn ['mailserver-host' => 'localhost'];\n"
+        );
+
+        $profile = TestConfigResolver::resolveConfigProfile('main', $this->configDirectory, ['USER' => 'unknown-user']);
+
+        $this->assertSame('runner', $profile);
     }
 
     public function testResolveConfigPathThrowsHelpfulExceptionWhenNoFilesExist(): void

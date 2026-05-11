@@ -430,6 +430,7 @@ function zen_get_products_display_price($product_id)
         // If Call for Price, Show it
         if ($product_check->fields['product_is_call'] === '1') {
             $call_tag = '<br>';
+            $final_display_price = (IS_ADMIN_FLAG === false) ? '' : $final_display_price;
             if (PRODUCTS_PRICE_IS_CALL_IMAGE_ON === '0') {
                 $call_tag .= PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT;
             } else {

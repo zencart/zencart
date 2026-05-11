@@ -108,6 +108,14 @@ class VersionServer
     }
 
     /**
+     * This method checks the major and minor version numbers to determine if the project is current.
+     *
+     * Since v2.0.0, Zen Cart follows semantic versioning.
+     * But the version number is split across 2 constants: PROJECT_VERSION_MAJOR and PROJECT_VERSION_MINOR.
+     * PROJECT_VERSION_MAJOR is always the first digit(s) of the version number.
+     * PROJECT_VERSION_MINOR is the second digit(s) of the version number.
+     * The 2 segments must always be paired together for thorough comparison.
+     *
      * @since ZC v1.5.5f
      */
     public function isProjectCurrent(?array $newVersionInfo = null): bool
@@ -116,11 +124,17 @@ class VersionServer
             $newVersionInfo = $this->getProjectVersion();
         }
 
+        // If major version is higher on the server than the present major version, then this site is not current. So return false immediately.
         if (trim($newVersionInfo['versionMajor'] ?? 0) > PROJECT_VERSION_MAJOR) {
             return false;
         }
 
-        if ((int)trim($newVersionInfo['versionMajor'] ?? 0) === (int)PROJECT_VERSION_MAJOR && trim($newVersionInfo['versionMinor'] ?? 0) > PROJECT_VERSION_MINOR) {
+        // Note: If the formula used here for `PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR` changes, be sure to also update zen_get_zcversion() in functions_general_shared.php.
+
+        // Now use version_compare for a more thorough comparison with major/minor, including semantic-versioning support for pre-release identifiers such as -dev, -alpha, -beta, -rc, -pl.
+        $currentVersion = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+        $newVersion = trim($newVersionInfo['versionMajor'] ?? 0) . '.' . trim($newVersionInfo['versionMinor'] ?? 0);
+        if (version_compare($newVersion, $currentVersion, '>')) {
             return false;
         }
 
@@ -128,23 +142,15 @@ class VersionServer
     }
 
     /**
-     * @since ZC v1.5.5f
+     * Deprecated.
+     * Note: Since semantic versioning already accommodates "pl" or "p" as a patch-level indicator, we no longer use the patch-level constants (PROJECT_VERSION_PATCH1 and PROJECT_VERSION_PATCH2).
+     *
+     * @deprecated in v3.0.0. This method is no longer used since v2.0.0, and will be removed in a future major release.
+     * @since was added to this class in ZC v1.5.5f
      */
     public function hasProjectPatches(?array $newVersionInfo = null): int
     {
-        if (empty($newVersionInfo)) {
-            $newVersionInfo = $this->getProjectVersion();
-        }
-
-        $result = 0;
-        if (isset($newVersionInfo['versionPatch1']) && trim($newVersionInfo['versionPatch1'] ?? 0) > (int)PROJECT_VERSION_PATCH1) {
-            $result++;
-        }
-        if (isset($newVersionInfo['versionPatch2']) && trim($newVersionInfo['versionPatch2'] ?? 0) > (int)PROJECT_VERSION_PATCH2) {
-            $result++;
-            $result++;
-        }
-        return $result;
+        return 0;
     }
 
     /**

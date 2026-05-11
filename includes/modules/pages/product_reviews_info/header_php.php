@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2020 Dec 25 Modified in v1.5.8-alpha $
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
  */
 /**
  * Header code file for product review info page
@@ -76,7 +76,7 @@
   $sql = $db->bindVars($sql, ':reviewsID', $_GET['reviews_id'], 'integer');
   $db->Execute($sql);
 
-  $review_info_query = "SELECT rd.reviews_text, r.reviews_rating, r.reviews_id, r.customers_name,
+  $review_info_query = "SELECT rd.reviews_text, rd.reviews_title, r.reviews_rating, r.reviews_id, r.customers_name,
                                r.date_added, r.reviews_read, p.products_id, p.products_price,
                                p.products_tax_class_id, p.products_image, p.products_model, pd.products_name
                         FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd, " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd

@@ -2,11 +2,11 @@
 
 use Tests\Support\zcUnitTestCase;
 
-class functionDatesTest extends zcUnitTestCase
+class functionsDatesTest extends zcUnitTestCase
 {
-    public function setup(): void
+    public function setUp(): void
     {
-        parent::setup();
+        parent::setUp();
         require_once DIR_FS_CATALOG . 'includes/functions/functions_dates.php';
     }
 

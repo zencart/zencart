@@ -1,30 +1,34 @@
 <?php
+
+use Zencart\Traits\ObserverManager;
+
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  *
- * Designed for v1.5.7
  * @since ZC v1.5.1
  */
 
-class products_viewed_counter extends base
+class products_viewed_counter
 {
-    protected $exclude_spiders = true;
-    protected $exclude_maintenance_ips = true; // admins
+    use ObserverManager;
 
-    function __construct()
+    protected bool $exclude_spiders = true;
+    protected bool $exclude_maintenance_ips = true; // admins
+
+    public function __construct()
     {
         if ($this->should_be_excluded()) {
             return;
         }
-        $this->attach($this, array('NOTIFY_PRODUCT_VIEWS_HIT_INCREMENTOR'));
+        $this->attach($this, ['NOTIFY_PRODUCT_VIEWS_HIT_INCREMENTOR']);
     }
 
     /**
      * @since ZC v1.5.7
      */
-    function updateNotifyProductViewsHitIncrementor(&$class, $eventID, $product_id)
+    public function updateNotifyProductViewsHitIncrementor(&$class, $eventID, $product_id): void
     {
         global $db;
 
@@ -38,10 +42,10 @@ class products_viewed_counter extends base
     /**
      * @since ZC v1.5.7
      */
-    protected function should_be_excluded()
+    protected function should_be_excluded(): ?bool
     {
         global $spider_flag;
-        
+
         // exclude search-engine spiders
         if ($this->exclude_spiders && $spider_flag === true) {
             return true;
@@ -51,5 +55,7 @@ class products_viewed_counter extends base
         if ($this->exclude_maintenance_ips && zen_is_whitelisted_admin_ip()) { // admins
             return true;
         }
+
+        return false;
     }
 }

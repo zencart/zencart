@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott C Wilson 2023 Aug 27 Modified in v2.0.0-alpha1 $
+ * @version $Id: ZenExpert 2026 Jan 12 Modified in v2.2.0-alpha $
  */
 
   // This should be first line of the script:
@@ -13,7 +13,7 @@
 
   // if no product specified, go to all reviews page
   if (empty($_GET['products_id'])) {
-      zen_redirect(zen_href_link(FILENAME_REVIEWS)); 
+      zen_redirect(zen_href_link(FILENAME_REVIEWS));
   }
 
 // check product exists and current
@@ -61,7 +61,7 @@
 
   $review_status = " and r.status = 1";
 
-  $reviews_query_raw = "SELECT r.reviews_id, rd.reviews_text, r.reviews_rating, r.date_added, r.customers_name
+  $reviews_query_raw = "SELECT r.reviews_id, rd.reviews_text, rd.reviews_title, r.reviews_rating, r.date_added, r.customers_name
                         FROM " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd
                         WHERE r.products_id = :productsID
                         AND r.reviews_id = rd.reviews_id
@@ -78,12 +78,10 @@
                             'customersName'=>$reviews->fields['customers_name'],
                             'dateAdded'=>$reviews->fields['date_added'],
                             'reviewsText'=>$reviews->fields['reviews_text'],
-                            'reviewsRating'=>$reviews->fields['reviews_rating']);
+                            'reviewsRating'=>$reviews->fields['reviews_rating'],
+                            'reviewsTitle'=>$reviews->fields['reviews_title']);
     $reviews->MoveNext();
   }
-
-
-
 
   require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
   $breadcrumb->add(NAVBAR_TITLE);

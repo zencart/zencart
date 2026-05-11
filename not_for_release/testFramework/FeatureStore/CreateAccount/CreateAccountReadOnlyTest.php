@@ -4,9 +4,7 @@ namespace Tests\FeatureStore\CreateAccount;
 
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class CreateAccountReadOnlyTest extends zcInProcessFeatureTestCaseStore
 {
     protected $runTestInSeparateProcess = true;

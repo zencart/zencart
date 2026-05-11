@@ -8,15 +8,13 @@ namespace Tests\FeatureAdmin\AdminEndpoints;
 
 use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class AdminOperationalPagesTest extends zcInProcessFeatureTestCaseAdmin
 {
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
 
-    protected array $operationalPageMap = [
+    private const OPERATIONAL_PAGE_MAP = [
         'customers' => ['strings' => ['Customers', 'Account Created']],
         'customer_groups' => ['strings' => ['Customer Groups', 'Group Name']],
         'coupon_admin' => ['strings' => ['Discount Coupons', 'Coupon Name']],
@@ -26,9 +24,7 @@ class AdminOperationalPagesTest extends zcInProcessFeatureTestCaseAdmin
         'orders' => ['strings' => ['Orders', 'Order ID:']],
     ];
 
-    /**
-     * @dataProvider operationalPageProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('operationalPageProvider')]
     public function testOperationalPagesAreReachableAfterInitialSetup(string $page, array $contentTest): void
     {
         $this->completeInitialAdminSetup();
@@ -40,38 +36,14 @@ class AdminOperationalPagesTest extends zcInProcessFeatureTestCaseAdmin
         }
     }
 
-    public function operationalPageProvider(): array
+    public static function operationalPageProvider(): array
     {
         $pages = [];
 
-        foreach ($this->operationalPageMap as $page => $contentTest) {
+        foreach (self::OPERATIONAL_PAGE_MAP as $page => $contentTest) {
             $pages[$page] = [$page, $contentTest];
         }
 
         return $pages;
-    }
-
-    protected function completeInitialAdminSetup(): void
-    {
-        $this->visitAdminHome()
-            ->assertOk()
-            ->assertSee('Admin Login');
-
-        $this->submitAdminLogin([
-            'admin_name' => 'Admin',
-            'admin_pass' => 'password',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-            'store_owner' => 'Store Owner',
-        ])->assertOk()
-            ->assertSee('Admin Home');
     }
 }

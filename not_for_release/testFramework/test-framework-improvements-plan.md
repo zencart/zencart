@@ -269,10 +269,9 @@ This phase is already in place.
 
 Current implementation:
 
-- `composer unit-tests-parallel` runs the unit suite through `not_for_release/testFramework/run-parallel-unit-tests.sh`
+- `composer tests-unit` runs the unit suite through `not_for_release/testFramework/run-parallel-unit-tests.sh`
 - the runner prints live `START`, `PASS`, and `FAIL` output, supports `--help`, and forwards extra PHPUnit arguments
-- targeted runs such as `composer unit-tests-parallel -- --filter RuntimeConfigTest` now narrow the file list instead of fanning out across the full suite
-- `composer unit-tests-ci` currently delegates to the parallel unit runner
+- targeted runs such as `composer tests-unit -- --filter RuntimeConfigTest` now narrow the file list instead of fanning out across the full suite
 
 This remains the safest parallel lane because the unit suite is the least coupled to the shared storefront/admin runtime.
 
@@ -283,10 +282,10 @@ parallel/serial boundary is visible and enforced.
 
 Current implementation notes:
 
-- `composer feature-test-group-report` now summarizes explicit `serial`, `plugin-filesystem`, and `parallel-candidate` tags alongside heuristic shared-state buckets
+- `composer tests-report-feature-groups` now summarizes explicit `serial`, `plugin-filesystem`, and `parallel-candidate` tags alongside heuristic shared-state buckets
 - classification is currently complete for the existing feature suite: 68 total feature files, 2 tagged `serial`, 66 tagged `parallel-candidate`, and 0 untagged
 - the grouping report now also shows a store-vs-admin breakdown so it is easier to see where the remaining serial burden lives before attempting feature parallelism
-- `composer feature-test-group-report-strict` now fails if any future feature test file is added without one of the explicit grouping tags or if an explicit tag combination is contradictory
+- `composer tests-report-feature-groups-strict` now fails if any future feature test file is added without one of the explicit grouping tags or if an explicit tag combination is contradictory
 - that strict report now runs in a summary-only mode in CI so the logs stay readable while still blocking classification drift
 
 ### Phase 3: Introduce worker-scoped feature databases
@@ -301,10 +300,10 @@ Implementation notes:
 - the runtime config layer can now derive worker-specific progress-file paths from `ZC_TEST_WORKER` or `TEST_TOKEN`
 - the runtime config layer can now derive worker-specific artifact directories for captured console logs from `ZC_TEST_WORKER` or `TEST_TOKEN`
 - the runtime config layer can now derive worker-specific log directories from `ZC_TEST_WORKER` or `TEST_TOKEN`
-- `composer test-runtime-describe` now prints the derived worker-scoped DB, progress, log, artifact, and plugin paths for a given environment
+- `composer tests-runtime-describe` now prints the derived worker-scoped DB, progress, log, artifact, and plugin paths for a given environment
 - that runtime-description command is now covered by focused unit tests for both default and worker-scoped output
-- `composer test-db-prepare-workers` now creates the base and worker-suffixed databases expected by that naming scheme
-- `composer test-db-prepare-workers-dry-run` can be used to verify the planned database names without mutating MySQL
+- `composer tests-db-prepare-workers` now creates the base and worker-suffixed databases expected by that naming scheme
+- `composer tests-db-prepare-workers -- --dry-run` can be used to verify the planned database names without mutating MySQL
 - the worker-database helper now has unit coverage for dry-run output, `--skip-base`, env overrides, help text, invalid worker counts, and unknown options
 
 Remaining work:
@@ -333,7 +332,7 @@ Current implementation notes:
 - debug-log writes now resolve through worker-specific `DIR_FS_LOGS` paths in the runner configs
 - captured console artifacts can now resolve per worker
 - plugin install/remove helpers can now resolve a worker-specific plugin directory
-- worker-path derivation is visible through `composer test-runtime-describe`
+- worker-path derivation is visible through `composer tests-runtime-describe`
 
 Remaining work:
 
@@ -348,14 +347,14 @@ parallel-candidate classification.
 
 Current implementation notes:
 
-- `composer feature-tests-store-parallel` now runs `not_for_release/testFramework/run-parallel-storefront-feature-tests.sh`
-- `composer feature-tests-admin-parallel` now runs `not_for_release/testFramework/run-parallel-admin-feature-tests.sh`
+- `composer tests-feature-store-parallel` now runs `not_for_release/testFramework/run-parallel-storefront-feature-tests.sh`
+- `composer tests-feature-admin-parallel` now runs `not_for_release/testFramework/run-parallel-admin-feature-tests.sh`
 - the runner assigns `ZC_TEST_WORKER` per active worker process and launches one PHPUnit process per candidate test file
 - storefront now runs entirely through the parallel-candidate lane, while admin runs a parallel-candidate lane plus the 2 remaining serial plugin/filesystem tests
 - worker-count configuration now falls back cleanly between `ZC_FEATURE_PARALLEL_PROCESSES` and `ZC_TEST_DB_WORKERS`, so DB prep and runner scheduling can stay aligned from one setting
 - file selection now prefers exact basename matches for `--filter` and env-based targeting before falling back to substring matching
 - the runner now fails fast with a clearer message if the expected worker databases are missing or cannot be verified
-- `--prepare-databases` can now auto-create the worker DBs before execution, and `feature-tests-store-parallel-local` provides a documented local entrypoint around that behavior
+- `--prepare-databases` can now auto-create the worker DBs before execution, using the same `tests-feature-store-parallel` or `tests-feature-admin-parallel` entrypoint with environment overrides when needed
 - `--dry-run` support exists so worker assignment and file selection can be validated without requiring a live DB-backed feature run
 - CI-style wrapper scripts now exist for:
   - aggregate feature flow
@@ -372,9 +371,9 @@ Remaining work:
 
 Core commands:
 
-- `unit-tests-parallel`
+- `tests-unit`
   - default unit runner for local and CI use
-- `feature-tests-ci`
+- `tests-feature`
   - aggregate feature CI/local-repro entrypoint driven by `run-feature-tests-ci.sh`
   - performs worker-runtime description, strict classification check, worker-DB preparation, then the aggregate feature runner while forwarding filters to the final runner
 - `tests-ci`
@@ -383,19 +382,19 @@ Core commands:
 
 Dry-run and local helpers:
 
-- `feature-tests-ci-dry-run`
+- `tests-feature -- --dry-run`
   - aggregate feature dry-run entrypoint using the same wrapper, with worker DB prep preview instead of real creation
-- `feature-tests-ci-local`
-  - local convenience wrapper for `feature-tests-ci` that defaults the worker DB base/count and skips the shared base DB
-- `feature-tests-ci-local-dry-run`
-  - local convenience wrapper for `feature-tests-ci-dry-run`
-- `tests-ci-dry-run`
+- `tests-feature-local`
+  - local convenience wrapper for `tests-feature` that defaults the worker DB base/count and skips the shared base DB
+- `tests-feature-local -- --dry-run`
+  - local convenience dry-run wrapper using the same script and flags
+- `tests-ci -- --dry-run`
   - aggregate top-level dry-run entrypoint using the same wrapper, with feature dry-run behavior and filter-aware unit skipping
   - strips `--dry-run` before invoking the unit runner, so unit-targeted filters still execute cleanly
 - `tests-ci-local`
   - local convenience wrapper for `tests-ci` that defaults the worker DB base/count and skips the shared base DB
-- `tests-ci-local-dry-run`
-  - local convenience wrapper for `tests-ci-dry-run`
+- `tests-ci-local -- --dry-run`
+  - local convenience dry-run wrapper using the same script and flags
 
 Local environment configuration:
 
@@ -412,44 +411,41 @@ Local environment configuration:
   - `ZC_TEST_DB_PORT`
   - `ZC_TEST_DB_USER`
   - `ZC_TEST_DB_PASSWORD`
-- this is the preferred way to make local `feature-tests-ci-local` and `tests-ci-local` work with non-default Docker/DDEV database hostnames without repeating CLI overrides on every run
+- this is the preferred way to make local `tests-feature-local` and `tests-ci-local` work with non-default container database hostnames without repeating CLI overrides on every run
+
+Container runtime:
+
+- `not_for_release/testFramework/docker/test-runner/Dockerfile` defines the preferred Zen Cart test-runner image for CI and plugin testing
+- `not_for_release/testFramework/test-runner-container-ghcr.md` documents building and publishing the image to GHCR
+- DDEV can still be used for interactive local development, but the container image is the preferred repeatable runtime for plugin CI
 
 Lower-level runners:
 
-- `feature-tests-parallel`
+- `tests-feature-parallel`
   - aggregate feature-only entrypoint that dispatches to the storefront/admin parallel runners and the plugin-filesystem serial bucket based on the requested filter
-- `feature-tests-store-parallel`
+- `tests-feature-store-parallel`
   - worker-token-aware storefront parallel runner for the current `parallel-candidate` bucket
-- `feature-tests-admin-parallel`
+- `tests-feature-admin-parallel`
   - worker-token-aware admin parallel runner for the current `parallel-candidate` bucket
-- `feature-tests-admin-plugin-filesystem`
+- `tests-feature-admin-plugin-filesystem`
   - admin-only bucket for the 2 true serial plugin/filesystem tests
-- `feature-test-group-report-strict`
+- `tests-report-feature-groups-strict`
   - fails when any feature test lacks an explicit isolation tag or uses an invalid explicit combination such as `serial` plus `parallel-candidate`
-- `test-runtime-describe`
+- `tests-runtime-describe`
   - prints the derived worker-scoped runtime paths for the current environment
-- `test-db-prepare-workers`
+- `tests-db-prepare-workers`
   - creates the base and worker-suffixed databases
-- `test-db-prepare-workers-dry-run`
+- `tests-db-prepare-workers -- --dry-run`
   - preview-only version of worker DB creation
 
-Legacy/raw entrypoints kept mainly for direct access:
-
-- `unit-tests`
-- `feature-tests`
-- `feature-tests-store`
-- `feature-tests-admin`
-- `feature-tests-serial`
-- `feature-tests-parallel-candidate`
-
-The narrower classification-era aliases were intentionally removed.
+Legacy/raw entrypoints were intentionally removed rather than kept as compatibility aliases.
 For one-off local runs against specific buckets, prefer calling `phpunit` directly with `--testsuite` and `--group` instead of adding a permanent Composer script for each combination.
 
 ### Wrap-up Checklist
 
 To close out this parallelization push cleanly, the remaining work should be:
 
-1. Keep `unit-tests-parallel` as the default unit CI path.
+1. Keep `tests-unit` as the default unit CI path.
 2. Keep explicit feature-test grouping enforced through the strict report.
 3. Keep validating worker-DB provisioning and snapshot restore under repeated green CI runs.
 4. Keep validating worker-scoped log, progress, artifact, and plugin paths under real feature execution.

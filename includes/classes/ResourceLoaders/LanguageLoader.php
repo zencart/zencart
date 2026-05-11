@@ -116,10 +116,7 @@ class LanguageLoader
      */
     public function hasLanguageFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): bool
     {
-        if (is_file($rootPath . $language . $extraPath . '/lang.' . $fileName)) {
-            return true;
-        }
-        return false;
+        return $this->arrayLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath);
     }
 
     /**
@@ -135,7 +132,7 @@ class LanguageLoader
             $moduleType .= '/';
         }
         $match_string = 'modules/' . $moduleType . 'lang.' . $fileName;
-        $match_string_template = 'modules/' . $moduleType . $this->arrayLoader->getTemplateDir() . 'lang.' . $fileName;
+        $match_string_template = 'modules/' . $moduleType . $this->arrayLoader->getTemplateDir() . '/lang.' . $fileName;
         foreach ($language_files_loaded as $next_file) {
             if (str_contains($next_file, $match_string) || str_contains($next_file, $match_string_template)) {
                 return true;

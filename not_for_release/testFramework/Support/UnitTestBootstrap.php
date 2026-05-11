@@ -44,13 +44,16 @@ class UnitTestBootstrap
         if (file_exists(TESTCWD . 'localTestSetup.php')) {
             require_once TESTCWD . 'localTestSetup.php';
         }
+
+        require_once TESTCWD . 'Support/configs/runtime_config.php';
     }
 
     private static function definePathConstants(): void
     {
         self::defineIfMissing('DIR_WS_CATALOG', '/');
-        self::defineIfMissing('DIR_WS_ADMIN', '/admin/');
-        self::defineIfMissing('DIR_FS_ADMIN', DIR_FS_CATALOG . 'admin/');
+        $adminInfo = zc_test_config_admin_directory(DIR_FS_CATALOG);
+        self::defineIfMissing('DIR_WS_ADMIN', '/' . $adminInfo['basename'] . '/');
+        self::defineIfMissing('DIR_FS_ADMIN', $adminInfo['path']);
         self::defineIfMissing('DIR_WS_HTTPS_CATALOG', '/ssl/');
     }
 

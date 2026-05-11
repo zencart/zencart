@@ -311,9 +311,10 @@ systemChecks:
     methods:
       dbVersionChecker:
         parameters:
-          # TODO: The following checkType is merely a placeholder copied from 220 below as a stub. Update with an actual db change that can be inspected, and remove this comment.
-          - checkType: configKeyExists
-            keyName: PASSWORD_RESET_TOKEN_LENGTH
+          - checkType: fieldSchema
+            tableName: reviews_description
+            fieldName: reviews_title
+            fieldCheck: Exists
 
   checkDBVersion220:
     runLevel: dbVersion

@@ -27,6 +27,10 @@ function check_page(string $page, $params = []): bool
         return false;
     }
 
+    if (zen_is_superuser()) {
+        return true;
+    }
+
     $page_params = '';
     // Most entries (normal case) have their own pages. However, everything on the Configuration
     // and Modules menus are handled by the single pages configuration.php and modules.php. So for
@@ -60,7 +64,7 @@ function check_page(string $page, $params = []): bool
     $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
     $result = $db->Execute($sql);
     foreach ($result as $row) {
-        $adjustedPageKey = preg_replace('/_productTypes_/', '', $row['page_key']);
+        $adjustedPageKey = preg_replace('/_productTypes_/', '', $row['page_key'] ?? '');
         if ($adjustedPageKey === $page) {
             return true;
         }

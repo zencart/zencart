@@ -11,9 +11,7 @@ use Tests\Support\helpers\ProfileManager;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class AddressBookManagementInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;

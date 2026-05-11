@@ -10,31 +10,25 @@ devtools.php
 Thumbs.db
 clover.xml
 .DS_Store
-.phpunit.result.cache
-not_for_release/testFramework/Support/configs/test-runner.env
-not_for_release/testFramework/Support/configs/test-runner.local.env
-not_for_release/testFramework/test-framework.env
-not_for_release/testFramework/test-framework.local.env
 
 dev-*.*
 
 # IDE-specific things...
-# Ignore eclipse project files
+/.idea
+*.iml
+/.vscode
+/.cursor/
+/.zed
+/auth.json
+_ide_helper.php
+# Eclipse project files:
 .project
 .settings
 .buildpath
 
-# Ignore phpStorm/intellij configuration
-.idea
-*.iml
-.vscode
 
 # dbv
 /data/meta/revision
-localconfig_*.php
-!localconfig_travis.php
-!localconfig_EXAMPLE.php
-!localconfig_vagrant.php
 
 # Demo Images
 images/small_00.jpg
@@ -231,6 +225,13 @@ images/medium/dvd/blade_runner_01_MED.gif
 images/dvd/blade_runner_01.gif
 
 #testing
+not_for_release/testFramework/Support/configs/test-runner.env
+not_for_release/testFramework/Support/configs/test-runner.local.env
+not_for_release/testFramework/test-framework.env
+not_for_release/testFramework/test-framework.local.env
+localconfig_*.php
+!localconfig_github.php
+!localconfig_EXAMPLE.php
 includes/*.config.save
 admin/includes/*.config.save
 **/security_test.php
@@ -247,3 +248,10 @@ zc_plugins/zenTestPlugin
 # ignore ppr handler files:
 ppr_listener.php
 ppr_webhook.php
+
+# ignore phpunit cache file
+.phpunit.cache/
+.phpunit.result.cache
+
+
+

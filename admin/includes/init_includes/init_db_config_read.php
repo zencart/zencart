@@ -30,10 +30,6 @@ $projectVersionRepository = new ProjectVersionRepository($db);
 $versionInfo = $projectVersionRepository->getByKey('Zen-Cart Database');
 define('PROJECT_DB_VERSION_MAJOR', $versionInfo['project_version_major']);
 define('PROJECT_DB_VERSION_MINOR', $versionInfo['project_version_minor']);
-define('PROJECT_DB_VERSION_PATCH1', $versionInfo['project_version_patch1']);
-define('PROJECT_DB_VERSION_PATCH2', $versionInfo['project_version_patch2']);
-define('PROJECT_DB_VERSION_PATCH1_SOURCE', $versionInfo['project_version_patch1_source']);
-define('PROJECT_DB_VERSION_PATCH2_SOURCE', $versionInfo['project_version_patch2_source']);
 
 $productTypeLayoutRepository = new ProductTypeLayoutRepository($db);
 $productTypeLayoutRepository->loadConfigSettings();

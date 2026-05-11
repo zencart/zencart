@@ -44,7 +44,6 @@ if (file_exists($skip_file) && $lines = @file($skip_file)) {
 
 $doVersionCheck = false;
 $versionCheckError = false;
-$hasPatches = 0;
 
 // ignore version check if not enabled or if not on main page or sysinfo page
 if ((SHOW_VERSION_UPDATE_IN_HEADER === 'true'
@@ -68,20 +67,9 @@ if ((SHOW_VERSION_UPDATE_IN_HEADER === 'true'
     if (!$isCurrent) {
         $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' :: ' . $newinfo['versionDetail'];
     }
-    if ($isCurrent) {
-        $hasPatches = $versionServer->hasProjectPatches($newinfo);
-    }
 
-    if ($isCurrent && $hasPatches && $new_version === TEXT_VERSION_CHECK_CURRENT) {
+    if ($isCurrent && $new_version === TEXT_VERSION_CHECK_CURRENT) {
         $new_version = '';
-    }
-
-    // Handle patch notices
-    if ($isCurrent && $hasPatches !== 2 && $hasPatches) {
-        $new_version .= (($new_version !== '') ? '<br>' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($newinfo['versionPatch1']) . '] :: ' . $newinfo['versionPatchDetail'] . '</span>';
-    }
-    if ($isCurrent && $hasPatches > 1) {
-        $new_version .= (($new_version !== '') ? '<br>' : '') . '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($newinfo['versionMajor']) . '.' . trim($newinfo['versionMinor']) . ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($newinfo['versionPatch2']) . '] :: ' . $newinfo['versionPatchDetail'] . '</span>';
     }
 
     // Prepare download link
@@ -111,7 +99,7 @@ if (!$doVersionCheck || $versionCheckError) {
 //if ($new_version) {
 //    echo $new_version;
 //    echo '<br>';
-//    echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . (PROJECT_VERSION_PATCH1 != '' ? 'p' . PROJECT_VERSION_PATCH1 : '') . ')';
+//    echo '(' . TEXT_CURRENT_VER_IS . ' v' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
 //}
 //
 // In footer.php we place it into a jQuery snippet to insert into the #versionCheckAlert placeholder in the admin header.

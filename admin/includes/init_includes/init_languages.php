@@ -21,6 +21,8 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
         $zco_notifier->notify('NOTIFY_LANGUAGE_CHANGE_REQUESTED_BY_ADMIN_VISITOR', $_GET['language'], $lng);
     } else {
         $lng->get_browser_language();
+
+        //@TODO: This next line was added in v1.2.0. It's an aggressive override. Do we still need this?
         $lng->set_language(DEFAULT_LANGUAGE);
     }
 

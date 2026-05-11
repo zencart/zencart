@@ -55,6 +55,27 @@ class ArraysLanguageLoader extends BaseLanguageLoader
     }
 
     /**
+     * @since ZC v3.0.0
+     */
+    public function hasLanguageFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): bool
+    {
+        // -----
+        // Any $extraPath specified, if not an empty string, must start with a '/' and not end with one.
+        //
+        $extraPath = trim($extraPath, '/');
+        if ($extraPath !== '') {
+            $extraPath = '/' . $extraPath;
+        }
+        if (is_file($rootPath . $language . $extraPath . '/lang.' . $fileName)) {
+            return true;
+        }
+        if ($language !== $this->fallback && is_file($rootPath . $this->fallback . $extraPath . '/lang.' . $fileName)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @since ZC v1.5.8
      */
     protected function loadArraysFromDirectory(string $rootPath, string $language, string $extraPath): array
@@ -106,9 +127,15 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         }
 
         $defineListMain = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+        if ($language !== $this->fallback) {
+            $defineListMain = array_merge($defineListMain, $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath));
+        }
 
         $extraPath .= '/' . $this->templateDir;
         $defineListTemplate = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+        if ($language !== $this->fallback) {
+            $defineListTemplate = array_merge($defineListTemplate, $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath));
+        }
 
         $defineList = array_merge($defineListMain, $defineListTemplate);
         $this->makeConstants($defineList);

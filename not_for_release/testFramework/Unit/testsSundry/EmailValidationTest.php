@@ -25,7 +25,7 @@ class EmailValidationTest extends zcUnitTestCase
          */
         global $zco_notifier;
         $zco_notifier = new notifier();
-        require(DIR_FS_CATALOG . 'includes/functions/functions_email.php');
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_email.php';
 
         /**
          * Set up test of email addresses to validate

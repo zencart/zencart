@@ -181,6 +181,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         }
     }
 }
+unset($len, $paramsToCheck, $paramsToAvoid, $long_query_pages, $max_length, $pairs, $pair, $parts, $keys, $key, $counts, $count);
 
 /**
  * reject crawler 'BUY NOW' attempts
@@ -192,20 +193,34 @@ if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
         preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', $_SERVER['HTTP_USER_AGENT'])
     );
 
-    $hasInternalReferer = (!empty($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) === $_SERVER['HTTP_HOST']);
+    $refHost = !empty($_SERVER['HTTP_REFERER'])
+        ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)
+        : null;
+
+    // Prefer X-Forwarded-Host when present (proxy/CDN); else fall back to HTTP_HOST.
+    // X-Forwarded-Host can be a comma-separated list; take the first.
+    $hostHeader = !empty($_SERVER['HTTP_X_FORWARDED_HOST'])
+        ? trim(strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ','))
+        : ($_SERVER['HTTP_HOST'] ?? '');
+
+    // Strip :port (IPv4/hostname) or ]:port (IPv6-in-brackets), and strip brackets for IPv6.
+    $hostOnly = strtolower($hostHeader);
+    $hostOnly = preg_replace('/^\[(.*)\](?::\d+)?$/', '$1', $hostOnly); // [::1]:8443 -> ::1
+    $hostOnly = preg_replace('/:\d+$/', '', $hostOnly);                // example.com:8443 -> example.com
+
+    $hasInternalReferer = (!empty($refHost) && strtolower($refHost) === $hostOnly);
 
     if ($isCrawlerUA || !$hasInternalReferer) {
         $contaminated = true;
     }
 }
 
-unset($paramsToCheck, $paramsToAvoid, $key);
-
 if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
 }
-unset($contaminated, $len);
+unset($contaminated, $isCrawlerUA, $refHost, $hostHeader, $hostOnly, $hasInternalReferer);
+
 /* *** END OF INOCULATION *** */
 
 // if session id is reconfigured, then we want to exclude its use immediately

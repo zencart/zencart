@@ -6,25 +6,24 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\zcUnitTestCase;
 
 class FmodRoundTest extends zcUnitTestCase
 {
-    public function setup(): void
+    public function setUp(): void
     {
-        parent::setup();
+        parent::setUp();
         require_once DIR_FS_CATALOG . 'includes/functions/functions_general_shared.php';
     }
 
-    /**
-     * @dataProvider fmodRoundProvider
-     */
+    #[DataProvider('fmodRoundProvider')]
     public function testFmodRound($a, $b, $expected)
     {
         $this->assertEquals($expected, fmod_round($a, $b));
     }
 
-    public function fmodRoundProvider()
+    public static function fmodRoundProvider(): array
     {
         return array(
             array(0.01, 0.01, 0),

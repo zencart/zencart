@@ -9,18 +9,26 @@ PREPARE_DATABASES=0
 DRY_RUN=0
 declare -a EXTRA_ARGS=()
 
+file_has_group() {
+    local file="$1"
+    local group="$2"
+
+    grep -Eq "^[[:space:]]*\*[[:space:]]+@group[[:space:]]+${group}([[:space:]]|$)" "$file" \
+        || grep -Eq "^[[:space:]]*#\[[^]]*Group\(['\"]${group}['\"]\)\]" "$file"
+}
+
 usage() {
     cat <<EOF
 Usage: $(basename "$0") [--dry-run] [--prepare-databases] [phpunit-args...]
 
 Runs the storefront/admin parallel feature runners plus the remaining
-plugin-filesystem serial admin bucket, skipping buckets that do not match the
+plugin-filesystem serial buckets, skipping buckets that do not match the
 requested filter.
 
 Examples:
-  composer feature-tests-parallel -- --dry-run
-  composer feature-tests-parallel -- --filter AdminEndpointsTest
-  composer feature-tests-parallel-local -- --filter SearchInProcessTest
+  composer tests-feature-parallel -- --dry-run
+  composer tests-feature-parallel -- --filter AdminEndpointsTest
+  ZC_TEST_DB_BASE_NAME=db ZC_TEST_DB_WORKERS=2 ZC_TEST_DB_INCLUDE_BASE=0 composer tests-feature-parallel -- --prepare-databases --filter SearchInProcessTest
 EOF
 }
 
@@ -45,7 +53,7 @@ suite_has_matches() {
     local found_any=1
 
     while IFS= read -r file; do
-        if ! grep -q "@group ${required_group}" "$file"; then
+        if ! file_has_group "$file" "$required_group"; then
             continue
         fi
 
@@ -70,14 +78,14 @@ run_script_suite() {
     local script="$2"
 
     echo "RUN   [$label] $(basename "$script")"
-    bash "$script" "${EXTRA_ARGS[@]}"
+    bash "$script" "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}"
 }
 
 list_plugin_suite_matches() {
     local requested_filter="$1"
 
     while IFS= read -r file; do
-        if ! grep -q "@group plugin-filesystem" "$file"; then
+        if ! file_has_group "$file" "plugin-filesystem"; then
             continue
         fi
 
@@ -91,24 +99,83 @@ list_plugin_suite_matches() {
     done < <(find "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" -type f -name '*Test.php' | sort)
 }
 
+list_plugin_local_suite_matches() {
+    local requested_filter="$1"
+
+    if [ ! -d "$ROOT_DIR/zc_plugins" ]; then
+        return
+    fi
+
+    while IFS= read -r file; do
+        if ! file_has_group "$file" "plugin-filesystem"; then
+            continue
+        fi
+
+        local name="${file##*/}"
+        local stem="${name%.php}"
+        if [ -n "$requested_filter" ] && [ "$name" != "$requested_filter" ] && [ "$stem" != "$requested_filter" ] && [[ "$file" != *"$requested_filter"* ]]; then
+            continue
+        fi
+
+        printf '%s\n' "$file"
+    done < <(find "$ROOT_DIR/zc_plugins" \( -path '*/tests/FeatureAdmin/*Test.php' -o -path '*/tests/FeatureStore/*Test.php' \) -type f | sort)
+}
+
+plugin_local_suite_has_matches() {
+    local requested_filter="$1"
+    local first_match
+
+    first_match="$(list_plugin_local_suite_matches "$requested_filter" | sed -n '1p')"
+    [ -n "$first_match" ]
+}
+
+print_plugin_suite_dry_run_matches() {
+    while IFS= read -r file; do
+        [ -n "$file" ] || continue
+        echo "DRY   [admin-plugin] ${file#$ROOT_DIR/}"
+    done < <(list_plugin_suite_matches "$1")
+}
+
+print_plugin_local_dry_run_matches() {
+    while IFS= read -r file; do
+        [ -n "$file" ] || continue
+        echo "DRY   [plugin-local] ${file#$ROOT_DIR/}"
+    done < <(list_plugin_local_suite_matches "$1")
+}
+
 run_plugin_suite() {
     if [ "$DRY_RUN" -eq 1 ]; then
-        mapfile -t plugin_matches < <(list_plugin_suite_matches "$effective_filter")
-
-        echo "RUN   [admin-plugin] feature-tests-admin-plugin-filesystem (dry run)"
-        for file in "${plugin_matches[@]}"; do
-            echo "DRY   [admin-plugin] ${file#$ROOT_DIR/}"
-        done
+        echo "RUN   [admin-plugin] tests-feature-admin-plugin-filesystem (dry run)"
+        print_plugin_suite_dry_run_matches "$effective_filter"
         return 0
     fi
 
-    echo "RUN   [admin-plugin] feature-tests-admin-plugin-filesystem"
+    echo "RUN   [admin-plugin] tests-feature-admin-plugin-filesystem"
 
-    local -a command=(composer feature-tests-admin-plugin-filesystem)
+    local -a command=(composer tests-feature-admin-plugin-filesystem)
     if [ -n "$CLI_FILTER" ]; then
         command+=(-- --filter "$CLI_FILTER")
     elif [ -n "$TEST_FILTER" ]; then
         command+=(-- --filter "$TEST_FILTER")
+    fi
+
+    "${command[@]}"
+}
+
+run_plugin_local_suite() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "RUN   [plugin-local] tests-plugin plugin-filesystem (dry run)"
+        print_plugin_local_dry_run_matches "$effective_filter"
+        return 0
+    fi
+
+    echo "RUN   [plugin-local] tests-plugin plugin-filesystem"
+
+    local -a command=(bash "$ROOT_DIR/not_for_release/testFramework/run-plugin-tests.sh" --require-group plugin-filesystem --group plugin-filesystem)
+    if [ -n "$CLI_FILTER" ]; then
+        command+=(--filter "$CLI_FILTER")
+    elif [ -n "$TEST_FILTER" ]; then
+        command+=(--filter "$TEST_FILTER")
     fi
 
     "${command[@]}"
@@ -165,6 +232,13 @@ if suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "plu
     ran_any=1
 else
     echo "SKIP  [admin-plugin] no matching admin plugin-filesystem files"
+fi
+
+if plugin_local_suite_has_matches "$effective_filter"; then
+    run_plugin_local_suite
+    ran_any=1
+else
+    echo "SKIP  [plugin-local] no matching plugin-local plugin-filesystem files"
 fi
 
 if [ "$ran_any" -eq 0 ]; then

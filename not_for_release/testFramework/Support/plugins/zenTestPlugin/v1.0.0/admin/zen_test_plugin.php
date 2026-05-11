@@ -18,13 +18,13 @@ require 'includes/application_top.php';
     <?php echo '<h1>' . TEXT_DOCS_HELP . '</h1>'; ?>
    </div>
 
-   
+
     <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
     <!-- footer_eof //-->
   </body>
 </html>
 
 
-<?php 
-require(DIR_WS_INCLUDES . 'application_bottom.php'); 
+<?php
+require DIR_WS_INCLUDES . 'application_bottom.php';
 ?>

@@ -1,9 +1,5 @@
 <?php
 
-return [
-    'use-mailserver' => false,
-    'mailserver-port' => 1025,
-    'mailserver-host' => 'localhost',
-    'mailserver-user' => 'ddev',
-    'mailserver-password' => 'mailpit',
-];
+require_once __DIR__ . '/runtime_config.php';
+
+return zc_test_config_mailserver_options();

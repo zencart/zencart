@@ -38,8 +38,8 @@ if ((int)$timeoutAfter < 30) $timeoutAfter = 1440;
 .jAlert {font-size: 1.5rem;}
 .ja_btn {font-size: 1.5rem; padding: 15px !important;}
 </style>
-<script src="includes/javascript/jAlert.min.js"></script>
-<script src="includes/javascript/jTimeout.min.js"></script>
+<script src="<?= zen_add_filemtime('includes/javascript/jAlert.min.js') ?>"></script>
+<script src="<?= zen_add_filemtime('includes/javascript/jTimeout.min.js') ?>"></script>
 <script title="jTimeout-Init">
 jQuery(function(){
    jQuery.jTimeout(
