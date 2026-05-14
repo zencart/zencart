@@ -549,13 +549,13 @@ function zen_draw_order_status_dropdown(string $field_name, $default_value, stri
  * @return bool|string
  * @since ZC v1.0.3
  */
-function zen_get_language_icon(string $lookup): string
+function zen_get_language_icon(string|int $lookup): string
 {
     global $db;
     $languages_icon = $db->Execute("
         SELECT directory, image FROM " . TABLE_LANGUAGES . "
          WHERE languages_id = " . (int)$lookup . "
-            OR code = '" . zen_db_input($lookup) . "'
+            OR code = '" . zen_db_input((string)$lookup) . "'
          LIMIT 1"
     );
     if ($languages_icon->EOF) {
@@ -573,13 +573,13 @@ function zen_get_language_icon(string $lookup): string
  * @return mixed|string
  * @since ZC v1.0.3
  */
-function zen_get_language_name(string $lookup): string
+function zen_get_language_name(string|int $lookup): string
 {
     global $db;
     $check_language = $db->Execute(
         "SELECT directory FROM " . TABLE_LANGUAGES . "
           WHERE languages_id = " . (int)$lookup . "
-             OR code = '" . zen_db_input($lookup) . "'
+             OR code = '" . zen_db_input((string)$lookup) . "'
           LIMIT 1"
     );
 
