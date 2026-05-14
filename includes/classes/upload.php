@@ -23,13 +23,13 @@ zen_define_default('UPLOAD_FILENAME_EXTENSIONS_LIST', 'jpg,jpeg,gif,png,eps,cdr,
 
 class upload
 {
-    protected string $fileVarName;
-    protected string $destination;
-    protected array $extensions;
+    protected ?string $fileVarName;
+    protected ?string $destination;
+    protected ?array $extensions;
     public string $filename = '';
-    protected string $message_location;
-    protected int $permissions;
-    protected string $tmp_filename;
+    protected ?string $message_location;
+    protected ?int $permissions;
+    protected ?string $tmp_filename;
 
     public function __construct(string $fileVarName = '', string $destination = '', string $permissions = '644', array $extensions = [])
     {
@@ -53,7 +53,11 @@ class upload
 
             // self destruct
             foreach ($this as $key => $val) {
-                $this->$key = null;
+                if ($key === 'filename') {
+                    $this->$key = '';
+                } else {
+                    $this->$key = null;
+                }
             }
         }
     }
@@ -61,7 +65,7 @@ class upload
     /**
      * @since ZC v1.0.3
      */
-    public function parse(): bool
+    public function parse(string $key = ''): bool
     {
         if (empty($_FILES[$this->fileVarName])) {
             return false;
@@ -71,7 +75,17 @@ class upload
             return false;
         }
 
-        $file = $_FILES[$this->fileVarName];
+        if ($key !== '') {
+            $file = [
+                'name' => $_FILES[$this->fileVarName]['name'][$key],
+                'type' => $_FILES[$this->fileVarName]['type'][$key],
+                'size' => $_FILES[$this->fileVarName]['size'][$key],
+                'tmp_name' => $_FILES[$this->fileVarName]['tmp_name'][$key],
+                'error' => $_FILES[$this->fileVarName]['error'][$key],
+            ];
+        } else {
+            $file = $_FILES[$this->fileVarName];
+        }
         if ($this->fileError($file)) {
             return false;
         }
@@ -110,7 +124,7 @@ class upload
                 if (IS_ADMIN_FLAG === true) {
                     $this->message_stack(sprintf(ERROR_FILE_TOO_BIG_INI, ini_get('upload_max_filesize')), 'error'); //- TODO: Check post_max_size, too
                 } else {
-                    $this->message_stack(ERROR_FILE_TOO_BIG);
+                    $this->message_stack(ERROR_FILE_TOO_BIG, 'error');
                 }
                 break;
 
@@ -118,7 +132,7 @@ class upload
                 if (IS_ADMIN_FLAG === true) {
                     $this->message_stack(sprintf(ERROR_FILE_TOO_BIG_MAXSIZE, $_POST['MAX_FILE_SIZE']), 'error');
                 } else {
-                    $this->message_stack(ERROR_FILE_TOO_BIG);
+                    $this->message_stack(ERROR_FILE_TOO_BIG, 'error');
                 }
                 break;
 
@@ -127,7 +141,7 @@ class upload
                 break;
 
             default:
-                $this->message_stack(sprintf(ERROR_FILE_NOT_SAVED, (int)$file['error']));
+                $this->message_stack(sprintf(ERROR_FILE_NOT_SAVED, (int)$file['error']), 'error');
                 break;
         }
         return true;
@@ -143,10 +157,6 @@ class upload
         if (!$overwrite && is_file($this->destination . $this->filename)) {
             $this->message_stack(TEXT_IMAGE_OVERWRITE_WARNING . $this->filename, 'caution');
             return true;
-        }
-
-        if (!str_ends_with($this->destination, '/')) {
-            $this->destination .= '/';
         }
 
         if (move_uploaded_file($this->tmp_filename, $this->destination . $this->filename)) {
@@ -181,7 +191,7 @@ class upload
      */
     public function set_destination(string $destination): void
     {
-        $this->destination = $destination;
+        $this->destination = trim($destination, '/') . '/';
     }
 
     /**

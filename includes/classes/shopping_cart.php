@@ -2057,26 +2057,23 @@ class shoppingCart extends base
                         for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
                             $upload_prefix = UPLOAD_PREFIX . $i;
                             $text_prefix = TEXT_PREFIX . ($_POST[$upload_prefix] ?? '');
-                            if (isset($_POST[$upload_prefix]) && !empty($_FILES['id']['tmp_name'][$text_prefix]) && (!isset($_POST[$upload_prefix], $_FILES['id']['tmp_name'][$text_prefix]) || $_FILES['id']['tmp_name'][$text_prefix] != 'none')) {
+                            if (isset($_POST[$upload_prefix])) {
                                 $products_options_file = new upload('id');
                                 $products_options_file->set_destination(DIR_FS_UPLOADS);
                                 $products_options_file->set_output_messages('session');
-                                if ($products_options_file->parse($text_prefix)) {
-                                    $products_image_extension = substr($products_options_file->filename, strrpos($products_options_file->filename, '.'));
-                                    if (zen_is_logged_in()) {
-                                        $db->Execute("INSERT INTO " . TABLE_FILES_UPLOADED . " (sesskey, customers_id, files_uploaded_name) VALUES ('" . zen_session_id() . "', " . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_options_file->filename) . "')");
-                                    } else {
-                                        $db->Execute("INSERT INTO " . TABLE_FILES_UPLOADED . " (sesskey, files_uploaded_name) VALUES ('" . zen_session_id() . "', '" . zen_db_input($products_options_file->filename) . "')");
-                                    }
-                                    $insert_id = $db->insert_ID();
-                                    $real_ids[$text_prefix] = $insert_id . ". " . $products_options_file->filename;
-                                    $products_options_file->set_filename($insert_id . $products_image_extension);
-                                    if (!($products_options_file->save())) {
-                                        break;
-                                    }
-                                } else {
-                                    break;
+                                if (!$products_options_file->parse($text_prefix)) {
+                                    continue;
                                 }
+                                $products_image_extension = substr($products_options_file->filename, strrpos($products_options_file->filename, '.'));
+                                if (zen_is_logged_in()) {
+                                    $db->Execute("INSERT INTO " . TABLE_FILES_UPLOADED . " (sesskey, customers_id, files_uploaded_name) VALUES ('" . zen_session_id() . "', " . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_options_file->filename) . "')");
+                                } else {
+                                    $db->Execute("INSERT INTO " . TABLE_FILES_UPLOADED . " (sesskey, files_uploaded_name) VALUES ('" . zen_session_id() . "', '" . zen_db_input($products_options_file->filename) . "')");
+                                }
+                                $insert_id = $db->insert_ID();
+                                $real_ids[$text_prefix] = $insert_id . ". " . $products_options_file->filename;
+                                $products_options_file->set_filename($insert_id . $products_image_extension);
+                                $products_options_file->save();
                             } else { // No file uploaded -- use previous value
                                 $real_ids[$text_prefix] = $_POST[$text_prefix] ?? '';
                                 if (!zen_get_attributes_valid($_POST['products_id'], $text_prefix, !empty($_POST[$text_prefix]) ? $_POST[$text_prefix] : '')) {
