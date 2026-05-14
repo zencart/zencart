@@ -44,7 +44,7 @@ function zen_tax_classes_pull_down(string $parameters, string $selected = ''): s
 
     foreach ($classes as $class) {
         $select_string .= '<option value="' . $class['tax_class_id'] . '"';
-        if ($selected = $class['tax_class_id']) {
+        if ((int)$selected === (int)$class['tax_class_id']) {
             $select_string .= ' SELECTED';
         }
         $select_string .= '>' . $class['tax_class_title'] . '</option>';
@@ -70,7 +70,7 @@ function zen_geo_zones_pull_down(string $parameters, string $selected = ''): str
 
     foreach ($zones as $zone) {
         $select_string .= '<option value="' . $zone['geo_zone_id'] . '"';
-        if ($selected = $zone['geo_zone_id']) {
+        if ((int)$selected === (int)$zone['geo_zone_id']) {
             $select_string .= ' SELECTED';
         }
         $select_string .= '>' . $zone['geo_zone_name'] . '</option>';
@@ -153,7 +153,7 @@ function zen_cfg_pull_down_country_list(string $country_id, string $key = ''): s
  */
 function zen_cfg_pull_down_country_list_none(string $country_id, string $key = ''): string
 {
-    $country_array = zen_get_countries_for_admin_pulldown('None');
+    $country_array = zen_get_countries_for_admin_pulldown(TEXT_NONE);
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     return zen_draw_pull_down_menu($name, $country_array, $country_id, 'class="form-control"');
 }
@@ -451,7 +451,7 @@ function zen_remove_order($order_id, $restock = false): void
 /**
  * @since ZC v1.0.3
  */
-function zen_call_function(string $function, mixed $parameter, string $object = ''): mixed
+function zen_call_function(string $function, mixed $parameter, object|string $object = ''): mixed
 {
     if ($object === '') {
         return $function($parameter);
@@ -628,7 +628,7 @@ function zen_set_reviews_status(int|string $review_id, mixed $status): int
                 SET status = 0
               WHERE reviews_id = " . (int)$review_id
         );
-        return 0;
+        return 1;
     }
 
     return -1;
@@ -768,7 +768,7 @@ function zen_get_orders_comments(int|string $orders_id): string
           ORDER BY osh.orders_status_history_id
           LIMIT 1";
     $orders_comments = $db->Execute($orders_comments_query);
-    return ($orders_comments->EOF) ? '' : $orders_comments->fields['comments'];
+    return ($orders_comments->EOF) ? '' : (string)$orders_comments->fields['comments'];
 }
 
 
