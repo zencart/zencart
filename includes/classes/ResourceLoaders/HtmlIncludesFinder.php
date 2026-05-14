@@ -49,19 +49,21 @@ class HtmlIncludesFinder
         // a file's "name" is used as the $files' array's key so that the last file
         // of a matching name is the directory that is used!
         //
-        $file_search_order = [
-            DIR_FS_CATALOG . DIR_WS_LANGUAGES . $this->fallback . '/html_includes/',
-            DIR_FS_CATALOG . DIR_WS_LANGUAGES . $this->language . '/html_includes/',
-            DIR_FS_CATALOG . DIR_WS_LANGUAGES . $this->fallback . '/html_includes/' . $this->templateDir . '/',
-            DIR_FS_CATALOG . DIR_WS_LANGUAGES . $this->language . '/html_includes/' . $this->templateDir . '/',
-        ];
-        foreach ($this->installedPlugins as $plugin) {
-            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
-            $file_search_order[] = $pluginDir . $this->fallback . '/html_includes/';
-            $file_search_order[] = $pluginDir . $this->language . '/html_includes/';
-            $file_search_order[] = $pluginDir . $this->fallback . '/html_includes/' . $this->templateDir . '/';
-            $file_search_order[] = $pluginDir . $this->language . '/html_includes/' . $this->templateDir . '/';
+        // 1. Fallback (e.g. english) directories' /html_includes/ base.
+        // 2. Current language directories' /html_includes/ base.
+        // 3. Fallback (e.g. english) directories' /html_includes/{templateDir}/
+        // 4. Current language directories' /html_includes/{templateDir}/
+        //
+        $file_search_order = [];
+        if ($this->fallback !== $this->language) {
+            $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/');
         }
+        $file_search_order = $this->addToSearch($file_search_order, $this->language . '/html_includes/');
+
+        if ($this->fallback !== $this->language) {
+            $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/' . $this->templateDir . '/');
+        }
+        $file_search_order = $this->addToSearch($file_search_order, $this->language . '/html_includes/' . $this->templateDir . '/');
 
         $files = [];
         foreach ($file_search_order as $next_dir) {
@@ -73,6 +75,19 @@ class HtmlIncludesFinder
 
         self::$files = $files;
         return $files;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function addToSearch(array $search_array, string $html_includes_dir): array
+    {
+        $search_array[] = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $html_includes_dir;
+        foreach ($this->installedPlugins as $plugin) {
+            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
+            $search_array[] = $pluginDir . $html_includes_dir;
+        }
+        return $search_array;
     }
 
     /**
