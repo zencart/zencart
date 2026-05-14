@@ -169,13 +169,13 @@ class Search extends \base
         }
 
         $define_list = [
-            'PRODUCT_LIST_MODEL' => PRODUCT_LIST_MODEL,
-            'PRODUCT_LIST_NAME' => PRODUCT_LIST_NAME,
-            'PRODUCT_LIST_MANUFACTURER' => PRODUCT_LIST_MANUFACTURER,
-            'PRODUCT_LIST_PRICE' => PRODUCT_LIST_PRICE,
-            'PRODUCT_LIST_QUANTITY' => PRODUCT_LIST_QUANTITY,
-            'PRODUCT_LIST_WEIGHT' => PRODUCT_LIST_WEIGHT,
-            'PRODUCT_LIST_IMAGE' => PRODUCT_LIST_IMAGE
+            'PRODUCT_LIST_MODEL' => zen_get_config_value('PRODUCT_LIST_MODEL'),
+            'PRODUCT_LIST_NAME' => zen_get_config_value('PRODUCT_LIST_NAME'),
+            'PRODUCT_LIST_MANUFACTURER' => zen_get_config_value('PRODUCT_LIST_MANUFACTURER'),
+            'PRODUCT_LIST_PRICE' => zen_get_config_value('PRODUCT_LIST_PRICE'),
+            'PRODUCT_LIST_QUANTITY' => zen_get_config_value('PRODUCT_LIST_QUANTITY'),
+            'PRODUCT_LIST_WEIGHT' => zen_get_config_value('PRODUCT_LIST_WEIGHT'),
+            'PRODUCT_LIST_IMAGE' => zen_get_config_value('PRODUCT_LIST_IMAGE')
         ];
 
         asort($define_list);
@@ -224,7 +224,7 @@ class Search extends \base
         */
 
         // always add quantity regardless of whether or not it is in the listing for add to cart buttons
-        if (PRODUCT_LIST_QUANTITY < 1) {
+        if (zen_get_config_value('PRODUCT_LIST_QUANTITY') < 1) {
             if (empty($select_column_list)) {
                 $select_column_list .= ' p.products_quantity ';
             } else {
@@ -244,7 +244,7 @@ class Search extends \base
             p.products_price, p.products_tax_class_id, p.products_price_sorter,
             p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
 
-        if (DISPLAY_PRICE_WITH_TAX === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
+        if (zen_get_config_value('DISPLAY_PRICE_WITH_TAX') === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
             $select_str .= ", SUM(tr.tax_rate) AS tax_rate ";
         }
 
@@ -255,14 +255,14 @@ class Search extends \base
                     LEFT JOIN " . TABLE_MANUFACTURERS . " m
                     USING(manufacturers_id), " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c )";
 
-        if (ADVANCED_SEARCH_INCLUDE_METATAGS === 'true') {
+        if (zen_get_config_value('ADVANCED_SEARCH_INCLUDE_METATAGS') === 'true') {
             $from_str .=
                 " LEFT JOIN " . TABLE_META_TAGS_PRODUCTS_DESCRIPTION . " mtpd
                     ON (mtpd.products_id= p2c.products_id AND mtpd.language_id = :languagesID)";
             $from_str = $db->bindVars($from_str, ':languagesID', $_SESSION['languages_id'], 'integer');
         }
 
-        if (DISPLAY_PRICE_WITH_TAX === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
+        if (zen_get_config_value('DISPLAY_PRICE_WITH_TAX') === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
             if (empty($_SESSION['customer_country_id'])) {
                 $_SESSION['customer_country_id'] = STORE_COUNTRY;
                 $_SESSION['customer_zone_id'] = STORE_ZONE;
@@ -336,7 +336,7 @@ class Search extends \base
                 'm.manufacturers_name',
             ];
 
-            if (ADVANCED_SEARCH_INCLUDE_METATAGS === 'true') {
+            if (zen_get_config_value('ADVANCED_SEARCH_INCLUDE_METATAGS') === 'true') {
                 $keyword_search_fields[] = 'mtpd.metatags_keywords';
                 $keyword_search_fields[] = 'mtpd.metatags_description';
             }
@@ -379,7 +379,7 @@ class Search extends \base
             }
         }
 
-        if (DISPLAY_PRICE_WITH_TAX === 'true') {
+        if (zen_get_config_value('DISPLAY_PRICE_WITH_TAX') === 'true') {
             if (!empty($this->searchOptions->pfrom)) {
                 $where_str .= " AND (p.products_price_sorter * IF(gz.geo_zone_id IS NULL, 1, 1 + (tr.tax_rate / 100)) >= :price)";
                 $where_str = $db->bindVars($where_str, ':price', $this->searchOptions->pfrom, 'float');
@@ -405,7 +405,7 @@ class Search extends \base
         $this->notify('NOTIFY_SEARCH_WHERE_STRING', $this->searchOptions->keywords, $where_str, $keyword_search_fields);
 
 
-        if (DISPLAY_PRICE_WITH_TAX === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
+        if (zen_get_config_value('DISPLAY_PRICE_WITH_TAX') === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
             $where_str .= " GROUP BY p.products_id, tr.tax_priority";
         }
 
@@ -422,8 +422,8 @@ class Search extends \base
         //
         } else {
             // set the default sort order setting from the Admin when not defined by customer
-            if (empty($this->searchOptions->sort) && PRODUCT_LISTING_DEFAULT_SORT_ORDER != '') {
-                $this->searchOptions->sort = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
+            if (empty($this->searchOptions->sort) && zen_get_config_value('PRODUCT_LISTING_DEFAULT_SORT_ORDER') != '') {
+                $this->searchOptions->sort = zen_get_config_value('PRODUCT_LISTING_DEFAULT_SORT_ORDER');
             }
             if (empty($this->searchOptions->sort) ||
                 !preg_match('/[1-8][ad]/', $this->searchOptions->sort) ||
@@ -442,7 +442,7 @@ class Search extends \base
                     }
                 }
                 // if set to nothing use products_sort_order and PRODUCTS_LIST_NAME is off
-                if (PRODUCT_LISTING_DEFAULT_SORT_ORDER == '') {
+                if (zen_get_config_value('PRODUCT_LISTING_DEFAULT_SORT_ORDER') == '') {
                     $this->searchOptions->sort = '20a';
                 }
             } else {

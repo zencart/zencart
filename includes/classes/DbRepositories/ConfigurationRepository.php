@@ -87,4 +87,15 @@ class ConfigurationRepository
 
         return $this->db->affectedRows();
     }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function get(string $configurationKey): mixed
+    {
+        if (defined($configurationKey)) {
+            return constant($configurationKey);
+        }
+        return null;
+    }
 }
