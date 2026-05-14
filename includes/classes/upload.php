@@ -63,30 +63,38 @@ class upload
     }
 
     /**
-     * @since ZC v1.0.3
+     * @since ZC 3.0.0
      */
-    public function parse(string $key = ''): bool
+    protected function getFile(string $key): false|array
     {
         if (empty($_FILES[$this->fileVarName])) {
             return false;
         }
 
+        if ($key === '') {
+            return $_FILES[$this->fileVarName];
+        }
+
+        return [
+            'name' => $_FILES[$this->fileVarName]['name'][$key],
+            'type' => $_FILES[$this->fileVarName]['type'][$key],
+            'size' => $_FILES[$this->fileVarName]['size'][$key],
+            'tmp_name' => $_FILES[$this->fileVarName]['tmp_name'][$key],
+            'error' => $_FILES[$this->fileVarName]['error'][$key],
+        ];
+    }
+
+    /**
+     * @since ZC v1.0.3
+     */
+    public function parse(string $key = ''): bool
+    {
         if ($this->check_destination() === false) {
             return false;
         }
 
-        if ($key !== '') {
-            $file = [
-                'name' => $_FILES[$this->fileVarName]['name'][$key],
-                'type' => $_FILES[$this->fileVarName]['type'][$key],
-                'size' => $_FILES[$this->fileVarName]['size'][$key],
-                'tmp_name' => $_FILES[$this->fileVarName]['tmp_name'][$key],
-                'error' => $_FILES[$this->fileVarName]['error'][$key],
-            ];
-        } else {
-            $file = $_FILES[$this->fileVarName];
-        }
-        if ($this->fileError($file)) {
+        $file = $this->getFile($key);
+        if ($file === false || $this->fileError($file)) {
             return false;
         }
 
@@ -171,7 +179,11 @@ class upload
             return true;
         }
 
-        $this->message_stack(ERROR_FILE_NOT_SAVED, 'error');
+        if (IS_ADMIN_FLAG === true) {
+            $this->message_stack(sprintf(ERROR_FILE_NOT_SAVED, -1), 'error');
+        } else {
+            $this->message_stack(ERROR_FILE_NOT_SAVED, 'error');
+        }
 
         return false;
     }
@@ -191,7 +203,11 @@ class upload
      */
     public function set_destination(string $destination): void
     {
-        $this->destination = trim($destination, '/') . '/';
+        if ($destination === '') {
+            $this->destination = '';
+        } else {
+            $this->destination = rtrim($destination, '/') . '/';
+        }
     }
 
     /**
