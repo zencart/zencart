@@ -33,7 +33,7 @@ class upload extends base
     protected $message_location;
     protected $permissions;
     protected $tmp_filename;
-
+    
     function __construct($file = '', $destination = '', $permissions = '644', $extensions = array())
     {
         $this->set_file($file);

@@ -2,26 +2,26 @@
 *  Popup Calendar Styles
 */
 .head {
-    font-family: arial;
-    font-size: 12px;
-    font-weight: normal;
+	font-family: arial;
+	font-size: 12px;
+	font-weight: normal;
 }
 
 .text {
-    font-family: arial;
-    font-size: 12px;
-    font-weight: normal;
-    padding: 2px;
+	font-family: arial;
+	font-size: 12px;
+	font-weight: normal;
+	padding: 2px;
 }
 
 #popupcalendar {
-    width: 185px;
-    height:130px;
-    left: 0px;
-    top: 0px;
-    background-color: black;
-    position: absolute;
-    visibility: hidden;
+	width: 185px;
+	height:130px;
+	left: 0px;
+	top: 0px;
+	background-color: black;
+	position: absolute;
+	visibility: hidden;
 }
 
 
@@ -87,7 +87,7 @@ a.cal-TodayLink:active {
     font-size: 8pt;
     font-weight: normal;
     text-decoration: none;
-    background-color: #FFFFCC;
+	background-color: #FFFFCC;
     color: #999999;
 }
 
@@ -96,7 +96,7 @@ a.cal-TodayLink:active {
     font-size: 8pt;
     font-weight: normal;
     text-decoration: line-through;
-    background-color: #FFFFCC;
+	background-color: #FFFFCC;
     color: #999999;
 }
 
@@ -104,20 +104,20 @@ a.cal-TodayLink:active {
     font-family: Verdana, Arial, sans-serif;
     font-size: 8pt;
     font-weight: normal;
-    background-color:White; /*#FFFFCC;*/
+	background-color:White; /*#FFFFCC;*/
 }
 
 .cal-HeadCell {
     font-family: Verdana, Arial, sans-serif;
     font-size: 8pt;
     font-weight: bold;
-    background-color: #99CCCC;/* #CCCC99; */
+	background-color: #99CCCC;/* #CCCC99; */
 }
 
 .cal-Table{
-    border-top-color: #99CCCC;
-    border-left-color: #99CCCC;
-    border-right-color: #99CCCC;
-    border-bottom-color:  #99CCCC;
-    background-color:black;
+	border-top-color: #99CCCC;
+	border-left-color: #99CCCC;
+	border-right-color: #99CCCC;
+	border-bottom-color:  #99CCCC;
+	background-color:black;
 }

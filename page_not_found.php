@@ -1,7 +1,7 @@
 <?php
 /**
  * Handler for page not found errors
- *
+ * 
  * Generates a 301 Moved permanently error and redirects to index.php?main_page=page_not_found
  * Especially useful as for Google indexing
  *

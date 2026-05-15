@@ -32,10 +32,10 @@ var focusHack;
 /*================================================================================
  * Calendar Manager Object
  *
- *     the functions:
- *         isDate(), formatDate(), _isInteger(), _getInt(), and getDateFromFormat()
- *     are based on ones courtesy of Matt Kruse (mkruse@netexpress.net) http://www.mattkruse.com/javascript/
- *     with some modifications by myself and Michael Brydon
+ * 	the functions:
+ * 		isDate(), formatDate(), _isInteger(), _getInt(), and getDateFromFormat()
+ * 	are based on ones courtesy of Matt Kruse (mkruse@netexpress.net) http://www.mattkruse.com/javascript/
+ * 	with some modifications by myself and Michael Brydon
  *
  */
 
@@ -48,7 +48,7 @@ function spiffyCalManager() {
     this.matchedFormat = "";
     this.DefBtnImgPath = scImgPath; //'./js/common/calendar/';
 
-    // methods     ----------------------------------------------------------------------
+    // methods	 ----------------------------------------------------------------------
     this.getCount = new Function("return this.calendars.length;");
 
     function addCalendar(objWhatCal) {
@@ -77,7 +77,7 @@ function spiffyCalManager() {
             }
         }
         window.status = ' ';
-        //    return true;
+        //	return true;
     }
     this.swapImg = swapImg;
 
@@ -196,18 +196,18 @@ function spiffyCalManager() {
         var secondMatchAt = 0;
         var bOK = false;
         var bIsEmpty = false;
-        if (dStartDate == null &&  dEndDate == null && bRequired == false) {
+        if (dStartDate == null &&  dEndDate == null && bRequired == false) {  
             if (eInput.value  == null || eInput.value.trim() == '') {
-               return true;
+               return true; 
             }
-        }
-        var strStart = '';
-        if (dStartDate != null) {
+        } 
+        var strStart = ''; 
+        if (dStartDate != null) { 
            strStart = MONTH_NAMES[dStartDate.getMonth()] + '-' + dStartDate.getDate() + '-' + dStartDate.getFullYear();
-        }
-
-        var strEnd = '';
-        if (dEndDate != null) {
+        } 
+       
+        var strEnd = ''; 
+        if (dEndDate != null) { 
            strEnd = MONTH_NAMES[dEndDate.getMonth()] + '-' + dEndDate.getDate() + '-' + dEndDate.getFullYear();
         }
         var rangeMsg = 'This input box is set up to accept dates between:\n\n   ' +
@@ -321,7 +321,7 @@ function spiffyCalManager() {
             setTimeout('focusHack.focus();focusHack.select();');
             return false;
         }
-        return true;
+        return true; 
     }
     this.validateDate = validateDate;
 
@@ -983,7 +983,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
 
             strHold += 'onclick="calMgr.swapImg(' + this.varName + ',\'.imgDown\',true);';
 
-            //        strHold+=this.varName+'.show();return false;">';
+            //		strHold+=this.varName+'.show();return false;">';
             strHold += this.varName + '.show();">';
 
             strHold += '<img align="absmiddle" border="0" name="' + this.btnName + '" src="' + strBtnImg + '" width="' + strBtnW + '" height="' + strBtnH + '"></a>';
@@ -1434,14 +1434,14 @@ function makeArray0() {
 }
 
 function check_dates(date1, setting1, date2, setting2) {
-   if (!calMgr.validateDate(date1,setting1)) return false;
-   if (!calMgr.validateDate(date2,setting2)) return false;
+   if (!calMgr.validateDate(date1,setting1)) return false; 
+   if (!calMgr.validateDate(date2,setting2)) return false; 
    return true;
 }
 function check_dates_ppm(date1, setting1, date2, setting2, date3, setting3) {
-   if (!calMgr.validateDate(date1,setting1)) return false;
-   if (!calMgr.validateDate(date2,setting2)) return false;
-   if (!calMgr.validateDate(date3,setting3)) return false;
+   if (!calMgr.validateDate(date1,setting1)) return false; 
+   if (!calMgr.validateDate(date2,setting2)) return false; 
+   if (!calMgr.validateDate(date3,setting3)) return false; 
    return true;
 }
 //---------------------------------------

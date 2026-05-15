@@ -55,7 +55,7 @@ if ($paypalec_enabled) {
     unset($_SESSION['paypal_ec_payer_info']);
     unset($_SESSION['paypal_ec_markflow']);
 
-    zen_include_language_file('paypalwpp.php', '/modules/payment/', 'inline');
+    zen_include_language_file('paypalwpp.php', '/modules/payment/', 'inline'); 
 ?>
 <div id="PPECbutton" class="buttonRow">
   <a href="<?php echo zen_href_link('ipn_main_handler.php', 'type=ec', 'SSL', true, true, true); ?>"><img src="<?php echo MODULE_PAYMENT_PAYPALWPP_EC_BUTTON_IMG ?>" alt="<?php echo MODULE_PAYMENT_PAYPALWPP_TEXT_BUTTON_ALTTEXT; ?>" id="ecButton"></a>

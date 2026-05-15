@@ -1,9 +1,9 @@
 @charset "UTF-8";
 /*
-    jAlert
-    https://github.com/HTMLGuyLLC/jAlert
-    Made with love by HTMLGuy, LLC
-    MIT Licensed
+	jAlert
+	https://github.com/HTMLGuyLLC/jAlert
+	Made with love by HTMLGuy, LLC
+	MIT Licensed
 */
 
 /* Resets */
@@ -12,7 +12,7 @@ html, body {
 }
 
 /*
-     WRAPPER
+	 WRAPPER
 */
 .ja_wrap {
     position: fixed;
@@ -53,7 +53,7 @@ body.ja_blur > *:not(.ja_wrap) {
 }
 
 /*
-     jAlert
+	 jAlert
 */
 .jAlert {
     font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
@@ -74,7 +74,7 @@ body.ja_blur > *:not(.ja_wrap) {
 }
 
 /*
-     SIZES
+	 SIZES
 */
 .ja_xsm {
     width: 250px;
@@ -194,7 +194,7 @@ body.ja_blur > *:not(.ja_wrap) {
 }
 
 /*
-     TITLE
+	 TITLE
 */
 .ja_noTitle .ja_body {
     border-radius: 5px;
@@ -249,7 +249,7 @@ body.ja_blur > *:not(.ja_wrap) {
 }
 
 /*
-     THEMES
+	 THEMES
 */
 .ja_default {
     background: #E0E0E0;
@@ -337,7 +337,7 @@ body.ja_blur > *:not(.ja_wrap) {
 }
 
 /*
-     CONTENT WRAP
+	 CONTENT WRAP
 */
 .ja_body {
     background: white;
@@ -560,7 +560,7 @@ body.ja_blur > *:not(.ja_wrap) {
 }
 
 /*
-     BTNS
+	 BTNS
 */
 .ja_btn_wrap {
     text-align: center;
@@ -672,7 +672,7 @@ body.ja_blur > *:not(.ja_wrap) {
 }
 
 /*
-     LOADER
+	 LOADER
 */
 @-moz-keyframes ja-loader {
     0% {
@@ -4128,29 +4128,29 @@ body.ja_blur > *:not(.ja_wrap) {
         height: 35px;
         font-size: 16px;
     }
-
+    
     .ja_slideshow_prev {
         left: 5px;
     }
-
+    
     .ja_slideshow_next {
         right: 5px;
     }
-
+    
     .ja_slideshow_counter {
         font-size: 11px;
         padding: 6px 12px;
     }
-
+    
     .ja_slideshow_dots {
         gap: 6px;
     }
-
+    
     .ja_slideshow_dot {
         width: 10px;
         height: 10px;
     }
-
+    
     .ja_slideshow_caption {
         font-size: 12px;
         padding: 8px;
@@ -4283,7 +4283,7 @@ body.ja_blur > *:not(.ja_wrap) {
     .ja_slideshow_thumbnails {
         height: 60px;
     }
-
+    
     .ja_slideshow_thumbnail {
         width: 60px;
         height: 60px;
@@ -4293,12 +4293,12 @@ body.ja_blur > *:not(.ja_wrap) {
         min-height: 60px;
         max-height: 60px;
     }
-
+    
     .ja_slideshow_thumbnail_bg {
         width: 60px;
         height: 60px;
     }
-
+    
     .ja_slideshow_thumbnail_bg.error::before {
         font-size: 18px;
     }
@@ -4309,7 +4309,7 @@ body.ja_blur > *:not(.ja_wrap) {
     .ja_slideshow_thumbnails {
         height: 70px;
     }
-
+    
     .ja_slideshow_thumbnail {
         width: 70px;
         height: 70px;
@@ -4319,12 +4319,12 @@ body.ja_blur > *:not(.ja_wrap) {
         min-height: 70px;
         max-height: 70px;
     }
-
+    
     .ja_slideshow_thumbnail_bg {
         width: 70px;
         height: 70px;
     }
-
+    
     .ja_slideshow_thumbnail_bg.error::before {
         font-size: 20px;
     }
@@ -4342,18 +4342,18 @@ body.ja_blur > *:not(.ja_wrap) {
         align-items: center;
         justify-content: center;
     }
-
+    
     .ja_btn_wrap {
         margin-top: 15px;
         margin-bottom: -15px;
     }
-
+    
     .ja_btn_wrap.optBack {
         margin-top: 30px;
         margin: 30px -20px -20px -20px;
         padding: 10px 0px;
     }
-
+    
     /* Fix button wrap margins when using no padding on tablets */
     .ja_no_pad .ja_btn_wrap.optBack {
         margin-top: 30px;

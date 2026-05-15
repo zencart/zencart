@@ -19,7 +19,7 @@
 // +----------------------------------------------------------------------+
 //  $Id: product_music_functions.php 1105 2005-04-04 22:05:35Z birdbrain $
 //
-
+ 
 ////
 // Return the artists URL in the needed language
 /**

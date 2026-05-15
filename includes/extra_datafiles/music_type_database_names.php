@@ -1,5 +1,5 @@
 <?php
-/**
+/** 
  * Music product Type - Database Name Defines
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team
