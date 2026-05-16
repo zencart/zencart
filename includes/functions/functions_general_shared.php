@@ -402,35 +402,35 @@ function zen_get_shipping_enabled(string $shipping_module): bool
     $check_cart_weight = $_SESSION['cart']->show_weight();
 
     // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (ORDER_WEIGHT_ZERO_STATUS == '1' && ($check_cart_weight == 0 && $shipping_module == 'freeshipper')) {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module === 'freeshipper') {
         return true;
     }
 
     // Free Shipping when 0 weight - disable everyone - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (ORDER_WEIGHT_ZERO_STATUS == '1' && ($check_cart_weight == 0 && $shipping_module != 'freeshipper')) {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module !== 'freeshipper') {
         return false;
     }
 
-    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module == 'freeshipper') {
+    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module === 'freeshipper') {
         return true;
     }
 
-    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module != 'freeshipper') {
+    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module !== 'freeshipper') {
         return false;
     }
 
     // Always free shipping only true - enable freeshipper
-    if ($check_cart_free == $check_cart_cnt && $shipping_module == 'freeshipper') {
+    if ($check_cart_free == $check_cart_cnt && $shipping_module === 'freeshipper') {
         return true;
     }
 
     // Always free shipping only true - disable everyone
-    if ($check_cart_free == $check_cart_cnt && $shipping_module != 'freeshipper') {
+    if ($check_cart_free == $check_cart_cnt && $shipping_module !== 'freeshipper') {
         return false;
     }
 
     // Always free shipping only is false - disable freeshipper
-    if ($check_cart_free != $check_cart_cnt && $shipping_module == 'freeshipper') {
+    if ($check_cart_free != $check_cart_cnt && $shipping_module === 'freeshipper') {
         return false;
     }
     return true;
@@ -561,7 +561,7 @@ function zen_get_admin_name($id = null)
     $sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
     $sql = $db->bindVars($sql, ':adminid:', $id, 'integer');
     $result = $db->Execute($sql);
-    return $result->RecordCount() ? $result->fields['admin_name'] : null;
+    return !$result->EOF ? $result->fields['admin_name'] : null;
 }
 
 /**
@@ -716,4 +716,17 @@ function zen_add_filemtime(string $relative_path, ?string $absolute_path = null)
         return $relative_path;
     }
     return $relative_path . '?' . $mtime;
+}
+
+/**
+ * A helper function to retrieve a specific database constant (either in
+ * the configuration or product_type_layout tables).
+ *
+ * @since ZC 3.0.0
+ */
+function zen_config(string $key): mixed
+{
+    global $configurationRepository;
+
+    return $configurationRepository->get($key);
 }
