@@ -79,18 +79,6 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
         $this->addLanguageDefines($defineList);
 
         // -----
-        // Next, load some other files with multi-page-use constants, adding their
-        // definitions to the to-be-generated constants' list.
-        //
-        // Each file is first loaded from the 'english' sub-directory for the given
-        // directory and then, if the session's language is non-english, overwritten
-        // by any such file found in that language sub-directory (e.g. 'spanish').
-        //
-        $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, 'gv_name.php');
-        $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, FILENAME_EMAIL_EXTRAS);
-        $this->loadDefinesFromDirFileWithFallback(DIR_FS_CATALOG . DIR_WS_LANGUAGES, FILENAME_OTHER_IMAGES_NAMES);
-
-        // -----
         // Finally, if the 'lang.other_images_names.php' has a template-override file **in the
         // current session's language**, load those definitions, adding to the
         // to-be-generated constants' list.

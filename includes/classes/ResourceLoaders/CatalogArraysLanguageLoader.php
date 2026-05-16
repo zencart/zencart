@@ -240,7 +240,7 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $this->addLanguageDefines($defineList);
 
         // -----
-        // Next, if there is a template-override file **for the current session's language**,
+        // Finally, if there is a template-override file **for the current session's language**,
         // load those definitions, adding to the to-be-generated constants' list.
         //
         // Any definitions found in this file overwrite the 'base' main language files.
@@ -248,33 +248,5 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $templateMainFile = DIR_WS_LANGUAGES . $this->templateDir . '/lang.' . $_SESSION['language'] . '.php';
         $defineList = $this->loadArrayDefineFile($templateMainFile);
         $this->addLanguageDefines($defineList);
-
-        // -----
-        // Finally, load the various 'other' language files that have definitions used
-        // on multiple pages.
-        //
-        // Each of these files is first loaded from the 'fallback' (i.e. 'english') subdirectory,
-        // followed by the current session language directory and finally (if present) in the current
-        // language's template-override directory.
-        //
-        // Note: These files are not checked for presence in zc_plugins!
-        //
-        $extraFiles = [
-            FILENAME_EMAIL_EXTRAS,
-            FILENAME_HEADER,
-            FILENAME_BUTTON_NAMES,
-            FILENAME_ICON_NAMES,
-            FILENAME_OTHER_IMAGES_NAMES,
-            FILENAME_CREDIT_CARDS,
-            FILENAME_WHOS_ONLINE,
-            FILENAME_META_TAGS,
-        ];
-        foreach ($extraFiles as $file) {
-            $file = basename($file, '.php') . '.php';
-            $this->loadDefinesFromDirFileWithFallback(DIR_WS_LANGUAGES, $file);
-
-            $defineList = $this->loadArrayDefineFile(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $this->templateDir . '/lang.' . $file);
-            $this->addLanguageDefines($defineList);
-        }
     }
 }
