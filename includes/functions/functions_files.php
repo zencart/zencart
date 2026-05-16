@@ -112,6 +112,8 @@ function zen_get_file_directory(string $check_directory, string $check_file, boo
     if (!str_ends_with($zv_filename, '.php')) {
         $zv_filename .= '.php';
     }
+    
+    $dir_only = ($dir_only === true || $dir_only === 'true');
 
     if (!str_contains($check_directory, '/html_includes/')) {
         if (is_file($check_directory . $template_dir . '/' . $zv_filename)) {

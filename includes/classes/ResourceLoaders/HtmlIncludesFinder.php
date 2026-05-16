@@ -99,7 +99,7 @@ class HtmlIncludesFinder
             $this->findAll();
         }
 
-        if (!in_array($filename, array_keys(self::$files))) {
+        if (!array_key_exists($filename, self::$files)) {
             return false;
         }
 
