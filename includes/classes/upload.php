@@ -52,14 +52,14 @@ class upload
                 return;
             }
 
-            // self destruct
-            foreach ($this as $key => $val) {
-                if ($key === 'filename') {
-                    $this->$key = '';
-                } else {
-                    $this->$key = null;
-                }
-            }
+            $this->fileVarName = null;
+            $this->destination = null;
+            $this->extensions = null;
+            $this->filename = '';
+            $this->message_location = null;
+            $this->permissions = null;
+            $this->tmp_filename = null;
+            $this->fileUploaded = false;
         }
     }
 
@@ -104,10 +104,6 @@ class upload
      */
     public function parse(string $key = ''): bool
     {
-        if ($this->check_destination() === false) {
-            return false;
-        }
-
         $file = $this->getFile($key);
         if ($file === false || $this->fileError($file)) {
             return false;
@@ -118,8 +114,9 @@ class upload
             return false;
         }
 
-        $this->set_filename($file['name']);
-        $this->set_tmp_filename($file['tmp_name']);
+        if ($this->check_destination() === false) {
+            return false;
+        }
 
         if (!empty($file['size']) && $file['size'] > MAX_FILE_UPLOAD_SIZE) {
             $this->message_stack(ERROR_FILE_TOO_BIG, 'error');
@@ -131,6 +128,9 @@ class upload
             $this->message_stack(sprintf(ERROR_FILETYPE_NOT_ALLOWED, $file_extension, '.' . implode(', .', $this->extensions)), 'error');
             return false;
         }
+
+        $this->set_filename($file['name']);
+        $this->set_tmp_filename($file['tmp_name']);
 
         return true;
     }
