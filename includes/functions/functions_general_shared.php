@@ -722,7 +722,7 @@ function zen_add_filemtime(string $relative_path, ?string $absolute_path = null)
  * A helper function to retrieve a specific database constant (either in
  * the configuration or product_type_layout tables).
  *
- * @since ZC 3.0.0
+ * @since ZC v3.0.0
  */
 function zen_config(string $key): mixed
 {
