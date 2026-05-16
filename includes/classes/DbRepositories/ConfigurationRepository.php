@@ -96,6 +96,7 @@ class ConfigurationRepository
         if (defined($configurationKey)) {
             return constant($configurationKey);
         }
-        return null;
+
+        return $this->getByKey($configurationKey);
     }
 }
