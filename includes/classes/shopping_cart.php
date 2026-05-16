@@ -2055,9 +2055,9 @@ class shoppingCart extends base
                          * Need the upload class for attribute type that allows user uploads. Now psr4Autoloaded!
                          */
                         for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
-                            $upload_prefix = UPLOAD_PREFIX . $i;    //- e.g. upload_2
-                            $text_prefix = TEXT_PREFIX . ($_POST[$upload_prefix] ?? '');    //- e.g. txt_8
-                            $text_upload_prefix = TEXT_PREFIX . $upload_prefix;     //- e.g. txt_upload_2
+                            $upload_prefix = UPLOAD_PREFIX . $i;    //- e.g. upload_2, contains the associated options_id, e.g. 8
+                            $text_prefix = TEXT_PREFIX . ($_POST[$upload_prefix] ?? '');    //- e.g. txt_8, the array index for the $_FILES array
+                            $text_upload_prefix = TEXT_PREFIX . $upload_prefix; //- e.g. txt_upload_2, is either an empty string or contains a previously uploaded file-name
                             if (isset($_POST[$upload_prefix]) && empty($_POST[$text_upload_prefix])) {
                                 $products_options_file = new upload('id');
                                 $products_options_file->set_destination(DIR_FS_UPLOADS);

@@ -30,6 +30,7 @@ class upload
     protected ?string $message_location;
     protected ?int $permissions;
     protected ?string $tmp_filename;
+    protected bool $fileUploaded = false;
 
     public function __construct(string $fileVarName = '', string $destination = '', string $permissions = '644', array $extensions = [])
     {
@@ -67,6 +68,8 @@ class upload
      */
     protected function getFile(string $key): false|array
     {
+        $this->fileUploaded = false;
+
         if (empty($_FILES[$this->fileVarName])) {
             return false;
         }
@@ -82,6 +85,18 @@ class upload
             'tmp_name' => $_FILES[$this->fileVarName]['tmp_name'][$key],
             'error' => $_FILES[$this->fileVarName]['error'][$key],
         ];
+    }
+
+    /**
+     * Indicates whether/not the current upload instantiation has
+     * information about an uploaded file. Noting that the file associated
+     * with the form-field could be optional.
+     *
+     * @since ZC 3.0.0
+     */
+    public function fileUploaded(): bool
+    {
+        return $this->fileUploaded;
     }
 
     /**
@@ -111,8 +126,9 @@ class upload
             return false;
         }
 
-        if (str_ends_with($file['name'], '.htaccess') || (count($this->extensions) !== 0 && !in_array(strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $this->extensions))) {
-            $this->message_stack(ERROR_FILETYPE_NOT_ALLOWED . ' .' . implode(', .', $this->extensions), 'error');
+        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        if (str_ends_with($file['name'], '.htaccess') || (count($this->extensions) !== 0 && !in_array(strtolower($file_extension), $this->extensions))) {
+            $this->message_stack(sprintf(ERROR_FILETYPE_NOT_ALLOWED, $file_extension, '.' . implode(', .', $this->extensions)), 'error');
             return false;
         }
 
@@ -124,7 +140,7 @@ class upload
      */
     protected function fileError(array $file): bool
     {
-        if ((int)$file['error'] === 0) {
+        if ((int)$file['error'] === UPLOAD_ERR_OK) {
             return false;
         }
         switch ((int)$file['error']) {  //- See for details: https://www.php.net/manual/en/filesystem.constants.php#constant.upload-err-form-size
@@ -144,8 +160,11 @@ class upload
                 }
                 break;
 
+            // -----
+            // Note: No message here, intentionally.
+            //
             case UPLOAD_ERR_NO_FILE:    //- 4
-                $this->message_stack(WARNING_NO_FILE_UPLOADED, 'warning');
+                $this->fileUploaded = false;
                 break;
 
             default:
@@ -175,6 +194,8 @@ class upload
             if (function_exists('zen_record_admin_activity')) {
                 zen_record_admin_activity(sprintf(SUCCESS_FILE_SAVED_SUCCESSFULLY, $this->filename), 'notice');
             }
+
+            $this->fileUploaded = true;
 
             return true;
         }
