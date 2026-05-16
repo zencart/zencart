@@ -402,12 +402,12 @@ function zen_get_shipping_enabled(string $shipping_module): bool
     $check_cart_weight = $_SESSION['cart']->show_weight();
 
     // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (zen_get_config_value('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module === 'freeshipper') {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module === 'freeshipper') {
         return true;
     }
 
     // Free Shipping when 0 weight - disable everyone - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (zen_get_config_value('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module !== 'freeshipper') {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module !== 'freeshipper') {
         return false;
     }
 
@@ -724,7 +724,7 @@ function zen_add_filemtime(string $relative_path, ?string $absolute_path = null)
  *
  * @since ZC 3.0.0
  */
-function zen_get_config_value(string $key): mixed
+function zen_config(string $key): mixed
 {
     global $configurationRepository;
 

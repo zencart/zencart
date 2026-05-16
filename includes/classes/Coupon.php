@@ -60,7 +60,7 @@ class Coupon extends base
         $sql = "SELECT coupon_id
                 FROM " . TABLE_COUPONS . "
                 WHERE coupon_code LIKE ':original_code:%'
-                AND coupon_id = " . (int)zen_get_config_value('NEW_SIGNUP_DISCOUNT_COUPON');
+                AND coupon_id = " . (int)zen_config('NEW_SIGNUP_DISCOUNT_COUPON');
         $sql = $db->bindVars($sql, ':original_code:', $origin_prefix, 'noquotestring');
         $delete_duplicate_coupons_check = $db->Execute($sql);
         if ($delete_duplicate_coupons_check->RecordCount() > 0) {
@@ -72,7 +72,7 @@ class Coupon extends base
                 FROM " . TABLE_COUPONS . "
                 WHERE coupon_code LIKE ':original_code:%'
                 AND coupon_active = 'Y'
-                AND coupon_id !=  " . (int)zen_get_config_value('NEW_SIGNUP_DISCOUNT_COUPON') . "
+                AND coupon_id !=  " . (int)zen_config('NEW_SIGNUP_DISCOUNT_COUPON') . "
                 AND coupon_type != 'G'";
         $sql = $db->bindVars($sql, ':original_code:', $origin_prefix, 'noquotestring');
         $delete_duplicate_coupons = $db->Execute($sql);
@@ -94,7 +94,7 @@ class Coupon extends base
         for ($i = 1; $i <= $quantity; $i++) {
             $old_code_length = strlen($new_code);
             $minimum_extra_chars = 7;
-            $delta_calculation = zen_get_config_value('SECURITY_CODE_LENGTH') - ($old_code_length + $minimum_extra_chars);
+            $delta_calculation = zen_config('SECURITY_CODE_LENGTH') - ($old_code_length + $minimum_extra_chars);
             $new_code_length = ($delta_calculation > 0) ? $minimum_extra_chars + $delta_calculation : $minimum_extra_chars;
 
             $generated_code = static::generateRandomCouponCode((string)$original_id, $new_code_length, $new_code);
@@ -190,7 +190,7 @@ class Coupon extends base
      * @return string (new coupon code) (will be blank if the function failed)
      * @since ZC v2.0.0
      */
-    //- TODO: SECURITY_CODE_LENGTH is a configuration setting, needs to be accessed by zen_get_config_value
+    //- TODO: SECURITY_CODE_LENGTH is a configuration setting, needs to be accessed by zen_config
     public static function generateRandomCouponCode(string $salt = "secret", $length = SECURITY_CODE_LENGTH, string $prefix = ''): string
     {
         $length = (int)$length;
