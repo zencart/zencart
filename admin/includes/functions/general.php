@@ -782,7 +782,13 @@ function zen_get_orders_comments(int|string $orders_id): string
  */
 function zen_set_ezpage_status(int $pages_id, int $status, string $status_field): void
 {
-    global $db;
+    global $db, $sniffer;
+    
+    // Use the $sniffer class to check if the field exists in the table
+    if (!$sniffer->field_exists($status_field, TABLE_EZPAGES)) {
+        return; // invalid field, do not proceed
+    }
+
     if ($status === 1 || $status === 0) {
         zen_record_admin_activity('EZ-Page ID ' . (int)$pages_id . ' [' . $status_field . '] changed to ' . $status, 'info');
         $db->Execute(
