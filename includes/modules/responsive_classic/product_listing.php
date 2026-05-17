@@ -206,6 +206,7 @@ if ($num_products_count > 0) {
         if (!empty($_GET['cPath'])) $linkCpath = $_GET['cPath'];
         if (!empty($_GET['manufacturers_id']) && !empty($_GET['filter_id'])) $linkCpath = $_GET['filter_id'];
 
+        $is_table_layout = $product_listing_layout_style === 'table';
         for ($col = 0, $n = count($column_list); $col < $n; $col++) {
             $lc_align = '';
             $lc_text = '';
@@ -221,7 +222,7 @@ if ($num_products_count > 0) {
             $listing_mfg_name = $record['manufacturers_name'] ?? '';
             $listing_quantity = $record['products_quantity'] ?? 0;
             $listing_weight = $record['products_weight'] ?? 0;
-            $listing_mfg_link = zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . (int)$record['manufacturers_id']);
+            $listing_mfg_link = !empty($record['manufacturers_id']) ? zen_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . (int)$record['manufacturers_id']) : '';
             $listing_price = zen_get_products_display_price($record['products_id']);
             $more_info_button = '<a class="moreinfoLink list-more" href="' . $href . '" title="' . $record['products_id'] . '">' . MORE_INFO_TEXT . '</a>';
             $buy_now_link = zen_href_link($_GET['main_page'], zen_get_all_get_params(['action']) . 'action=buy_now&products_id=' . $record['products_id']);
@@ -288,12 +289,14 @@ if ($num_products_count > 0) {
 
             switch ($column_list[$col]) {
                 case 'PRODUCT_LIST_MODEL':
-                    $lc_align = 'center';
-                    if ($product_listing_layout_style === 'table') $lc_align = '';
-                    $lc_text = '';
-                    $lc_text .= '<div class="list-model">';
-                    $lc_text .= $listing_model;
-                    $lc_text .= '</div>';
+                    $lc_align = ($is_table_layout) ? '' : 'center';
+                    $lc_text = $listing_model;
+                    if ($lc_text === '') {
+                        break;
+                    }
+
+                    $lc_text = TEXT_PRODUCT_MODEL . $listing_model;
+                    $lc_text = '<div class="list-model">' . $lc_text . '</div>';
                     break;
 
                 case 'PRODUCT_LIST_NAME':
@@ -309,10 +312,21 @@ if ($num_products_count > 0) {
                     break;
 
                 case 'PRODUCT_LIST_MANUFACTURER':
-                    $lc_align = 'center';
-                    if ($product_listing_layout_style === 'table') $lc_align = '';
+                    $lc_align = ($is_table_layout) ? '' : 'center';
                     $lc_text = '';
-                    $lc_text .= '<a class="mfgLink list-mfg" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
+
+                    // -----
+                    // If no manufacturer present for the current product, nothing to be added.
+                    //
+                    if ($listing_mfg_link === '' || $listing_mfg_name === '') {
+                        if ($is_table_layout) {
+                            $lc_text = '&mdash;';
+                        }
+                        break;
+                    }
+
+                    $lc_text = '<a class="mfgLink list-mfg" href="' . $listing_mfg_link . '">' . $listing_mfg_name . '</a>';
+                    $lc_text = rtrim(TEXT_MANUFACTURER, ' ') . ' ' . $lc_text;
                     break;
 
                 case 'PRODUCT_LIST_PRICE':
@@ -342,12 +356,22 @@ if ($num_products_count > 0) {
                     break;
 
                 case 'PRODUCT_LIST_WEIGHT':
-                    $lc_align = 'center';
-                    if ($product_listing_layout_style === 'table') $lc_align = 'right';
+                    $lc_align = ($is_table_layout) ? 'right' : 'center';
+
+                    // -----
+                    // Virtual products don't have a 'weight'.
+                    //
                     $lc_text = '';
-                    $lc_text .= '<div class="list-weight">';
-                    $lc_text .= $listing_weight;
-                    $lc_text .= '</div>';
+                    if ($record['products_virtual']) {
+                        if ($is_table_layout) {
+                            $lc_text = '&mdash;';
+                        }
+                        break;
+                    }
+
+                    $lc_text = $record['products_weight'] ?? 0;
+                    $lc_text = TEXT_PRODUCT_WEIGHT . $lc_text . TEXT_PRODUCT_WEIGHT_UNIT;
+                    $lc_text = '<div class="list-weight">' . $lc_text . '</div>';
                     break;
 
                 case 'PRODUCT_LIST_IMAGE':

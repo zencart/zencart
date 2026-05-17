@@ -36,7 +36,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           ini-values: log_errors=On
-          tools: composer, phpunit
+          tools: composer:v2.9.8, phpunit
 
       - name: Install Apache2
         run: sudo apt-get update && sudo apt-get install apache2 -y

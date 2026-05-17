@@ -165,7 +165,7 @@ class category_tree extends base {
 
     for ($i=0; $i<$this->tree[$counter]['level']; $i++) {
       if ($this->tree[$counter]['parent'] != TOPMOST_CATEGORY_PARENT_ID) {
-        $this->categories_string .= CATEGORIES_SUBCATEGORIES_INDENT;
+        $this->categories_string .= zen_config('CATEGORIES_SUBCATEGORIES_INDENT');
       }
     }
 
@@ -176,7 +176,7 @@ class category_tree extends base {
     } else {
       $this->box_categories_array[$ii]['top'] = 'false';
       $cPath_new = 'cPath=' . $this->tree[$counter]['path'];
-      $this->categories_string .= CATEGORIES_SEPARATOR_SUBS;
+      $this->categories_string .= zen_config('CATEGORIES_SEPARATOR_SUBS');
     }
     $this->box_categories_array[$ii]['path'] = $cPath_new;
 
@@ -198,7 +198,7 @@ class category_tree extends base {
       $this->box_categories_array[$ii]['has_sub_cat'] = false;
     }
 
-    if (SHOW_COUNTS == 'true') {
+    if (zen_config('SHOW_COUNTS') === 'true') {
       $products_in_category = zen_count_products_in_category($counter);
       if ($products_in_category > 0) {
         $this->box_categories_array[$ii]['count'] = $products_in_category;
