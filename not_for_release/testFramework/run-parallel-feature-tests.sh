@@ -7,6 +7,7 @@ TEST_FILTER="${ZC_FEATURE_TEST_FILTER:-}"
 CLI_FILTER=""
 PREPARE_DATABASES=0
 DRY_RUN=0
+PHPUNIT_BIN="${PHPUNIT_BIN:-$ROOT_DIR/vendor/bin/phpunit}"
 declare -a EXTRA_ARGS=()
 
 file_has_group() {
@@ -17,12 +18,25 @@ file_has_group() {
         || grep -Eq "^[[:space:]]*#\[[^]]*Group\(['\"]${group}['\"]\)\]" "$file"
 }
 
+matches_filter() {
+    local file="$1"
+    local requested_filter="$2"
+
+    if [ -z "$requested_filter" ]; then
+        return 0
+    fi
+
+    local name="${file##*/}"
+    local stem="${name%.php}"
+    [ "$name" = "$requested_filter" ] || [ "$stem" = "$requested_filter" ] || [[ "$file" == *"$requested_filter"* ]]
+}
+
 usage() {
     cat <<EOF
 Usage: $(basename "$0") [--dry-run] [--prepare-databases] [phpunit-args...]
 
 Runs the storefront/admin parallel feature runners plus the remaining
-plugin-filesystem serial buckets, skipping buckets that do not match the
+admin serial and plugin-filesystem serial buckets, skipping buckets that do not match the
 requested filter.
 
 Examples:
@@ -99,6 +113,26 @@ list_plugin_suite_matches() {
     done < <(find "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" -type f -name '*Test.php' | sort)
 }
 
+list_admin_serial_suite_matches() {
+    local requested_filter="$1"
+
+    while IFS= read -r file; do
+        if ! file_has_group "$file" "serial"; then
+            continue
+        fi
+
+        if file_has_group "$file" "plugin-filesystem"; then
+            continue
+        fi
+
+        if ! matches_filter "$file" "$requested_filter"; then
+            continue
+        fi
+
+        printf '%s\n' "$file"
+    done < <(find "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" -type f -name '*Test.php' | sort)
+}
+
 list_plugin_local_suite_matches() {
     local requested_filter="$1"
 
@@ -129,11 +163,26 @@ plugin_local_suite_has_matches() {
     [ -n "$first_match" ]
 }
 
+admin_serial_suite_has_matches() {
+    local requested_filter="$1"
+    local first_match
+
+    first_match="$(list_admin_serial_suite_matches "$requested_filter" | sed -n '1p')"
+    [ -n "$first_match" ]
+}
+
 print_plugin_suite_dry_run_matches() {
     while IFS= read -r file; do
         [ -n "$file" ] || continue
         echo "DRY   [admin-plugin] ${file#$ROOT_DIR/}"
     done < <(list_plugin_suite_matches "$1")
+}
+
+print_admin_serial_dry_run_matches() {
+    while IFS= read -r file; do
+        [ -n "$file" ] || continue
+        echo "DRY   [admin-serial] ${file#$ROOT_DIR/}"
+    done < <(list_admin_serial_suite_matches "$1")
 }
 
 print_plugin_local_dry_run_matches() {
@@ -160,6 +209,20 @@ run_plugin_suite() {
     fi
 
     "${command[@]}"
+}
+
+run_admin_serial_suite() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "RUN   [admin-serial] phpunit serial bucket (dry run)"
+        print_admin_serial_dry_run_matches "$effective_filter"
+        return 0
+    fi
+
+    while IFS= read -r file; do
+        [ -n "$file" ] || continue
+        echo "RUN   [admin-serial] ${file#$ROOT_DIR/}"
+        "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --testsuite FeatureAdmin --group serial --exclude-group plugin-filesystem "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}" "$file"
+    done < <(list_admin_serial_suite_matches "$effective_filter")
 }
 
 run_plugin_local_suite() {
@@ -225,6 +288,13 @@ if suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "par
     ran_any=1
 else
     echo "SKIP  [admin] no matching admin parallel-candidate files"
+fi
+
+if admin_serial_suite_has_matches "$effective_filter"; then
+    run_admin_serial_suite
+    ran_any=1
+else
+    echo "SKIP  [admin-serial] no matching admin serial files"
 fi
 
 if suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "plugin-filesystem" "$effective_filter"; then

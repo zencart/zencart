@@ -22,7 +22,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          tools: composer, phpunit
+          tools: composer:v2.9.8, phpunit
 
       - name: Install Composer dependencies
         run: composer install --no-progress --no-interaction --ignore-platform-reqs --prefer-dist --optimize-autoloader --no-ansi --no-scripts

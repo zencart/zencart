@@ -705,6 +705,7 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
         $this->assertContains('SKIP  [store] no matching storefront parallel-candidate files', $output);
         $this->assertContains('SKIP  [admin] no matching admin parallel-candidate files', $output);
+        $this->assertContains('SKIP  [admin-serial] no matching admin serial files', $output);
         $this->assertContains('RUN   [admin-plugin] tests-feature-admin-plugin-filesystem (dry run)', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/PluginTests/BasicPluginInstallTest.php', $output);
     }
@@ -719,6 +720,9 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
         $this->assertContains('RUN   [store] run-parallel-storefront-feature-tests.sh', $output);
         $this->assertContains('RUN   [admin] run-parallel-admin-feature-tests.sh', $output);
+        $this->assertContains('RUN   [admin-serial] phpunit serial bucket (dry run)', $output);
+        $this->assertContains('DRY   [admin-serial] not_for_release/testFramework/FeatureAdmin/PluginTests/ConfigGetCommandTest.php', $output);
+        $this->assertContains('DRY   [admin-serial] not_for_release/testFramework/FeatureAdmin/PluginTests/VersionShowCommandTest.php', $output);
         $this->assertContains('RUN   [admin-plugin] tests-feature-admin-plugin-filesystem (dry run)', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/PluginTests/BasicPluginInstallTest.php', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/Security/PluginsLFITest.php', $output);
@@ -825,9 +829,33 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertContains('Database: db', $output);
         $this->assertContains('Dry run for 2 planned test database(s) on 127.0.0.1:3306 for user root.', $output);
         $this->assertContains('SKIP  [admin] no matching admin parallel-candidate files', $output);
+        $this->assertContains('SKIP  [admin-serial] no matching admin serial files', $output);
         $this->assertContains('RUN   [admin-plugin] tests-feature-admin-plugin-filesystem (dry run)', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/PluginTests/BasicPluginInstallTest.php', $output);
         $this->assertStringNotContainsString('PluginsLFITest.php', implode(PHP_EOL, $output));
+    }
+
+    public function testAdminFeatureTestsCiRunnerDryRunIncludesSerialBucketForSerialOnlyFilter(): void
+    {
+        $script = $this->rootPath . '/not_for_release/testFramework/run-admin-feature-tests-ci.sh';
+        $command = sprintf(
+            'USER=%s IS_DDEV_PROJECT= ZC_TEST_ENV_FILE=%s ZC_TEST_DB_BASE_NAME=%s ZC_TEST_DB_WORKERS=%s ZC_TEST_DB_INCLUDE_BASE=%s bash %s --dry-run --filter %s',
+            escapeshellarg('runner'),
+            escapeshellarg('/dev/null'),
+            escapeshellarg('db'),
+            escapeshellarg('2'),
+            escapeshellarg('0'),
+            escapeshellarg($script),
+            escapeshellarg('ConfigGetCommandTest')
+        );
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
+        $this->assertContains('SKIP  [admin] no matching admin parallel-candidate files', $output);
+        $this->assertContains('RUN   [admin-serial] phpunit serial bucket (dry run)', $output);
+        $this->assertContains('DRY   [admin-serial] not_for_release/testFramework/FeatureAdmin/PluginTests/ConfigGetCommandTest.php', $output);
+        $this->assertContains('SKIP  [admin-plugin] no matching admin plugin-filesystem files', $output);
     }
 
     public function testPrepareWorkerDatabasesAllowsExplicitBlankPassword(): void
