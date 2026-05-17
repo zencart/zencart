@@ -62,7 +62,7 @@ namespace Symfony\Polyfill\Mbstring;
  * - mb_regex_encoding       - Returns current encoding for multibyte regex as string
  * - mb_regex_set_options    - Set/Get the default options for mbregex functions
  * - mb_send_mail            - Send encoded mail
- * - mb_split                - Split multibyte string using regular expression
+ * - mb_split                - Split multibyte string using regular expression (deprecated in PHP 8.6 anyway)
  * - mb_strcut               - Get part of string
  * - mb_strimwidth           - Get truncated string with specified width
  *
