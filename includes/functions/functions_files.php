@@ -146,7 +146,7 @@ function zen_get_file_directory(string $check_directory, string $check_file, boo
     // -----
     // The returned value includes both the file's directory and filename.
     //
-    $dir_filename = $htmlIncludesFinder->find($zv_filename);
+    $dir_filename = $htmlIncludesFinder->find($zv_filename, false);
     if ($dir_filename === false) {
         $dir_filename = $check_directory . $zv_filename;
     } 

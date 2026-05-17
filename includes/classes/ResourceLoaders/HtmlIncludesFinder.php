@@ -16,8 +16,9 @@ class HtmlIncludesFinder
     private string $language;
     private string $fallback = 'english';
     private string $templateDir;
+    private TemplateResolver $templateResolver;
 
-    private static ?array $files;
+    private static array $files = [];
 
     public function __construct($filesystem, array $installedPlugins, string $language, string $templateDir)
     {
@@ -25,6 +26,7 @@ class HtmlIncludesFinder
         $this->installedPlugins = $installedPlugins;
         $this->language = $language;
         $this->templateDir = $templateDir;
+        $this->templateResolver = new TemplateResolver(null, null, null, $installedPlugins);
     }
 
     /**
@@ -36,7 +38,7 @@ class HtmlIncludesFinder
             return;
         }
         $this->fallback = $fallback;
-        self::$files = null;
+        unset(self::$files[$this->getCacheKey()]);
     }
 
     /**
@@ -44,8 +46,9 @@ class HtmlIncludesFinder
      */
     public function findAll(): array
     {
-        if (isset(self::$files)) {
-            return self::$files;
+        $cacheKey = $this->getCacheKey();
+        if (isset(self::$files[$cacheKey])) {
+            return self::$files[$cacheKey];
         }
 
         // -----
@@ -53,15 +56,20 @@ class HtmlIncludesFinder
         // searched, the returned array is ordered by "base" includes/languages directory
         // first, followed by plugin directories (alphabetically sorted by plugin key).
         //
-        // 1. Current language directories' /html_includes/{templateDir}/
+        // 1. Current language directories' /html_includes/{template inheritance chain}/
         // 2. Current language directories' /html_includes/ base.
-        // 3. Fallback (e.g. english) directories' /html_includes/{templateDir}/
+        // 3. Fallback (e.g. english) directories' /html_includes/{template inheritance chain}/
         // 4. Fallback (e.g. english) directories' /html_includes/ base.
         //
-        $file_search_order = $this->addToSearch([], $this->language . '/html_includes/' . $this->templateDir . '/');
+        $file_search_order = [];
+        foreach ($this->getTemplateInheritanceChain() as $templateKey) {
+            $file_search_order = $this->addToSearch($file_search_order, $this->language . '/html_includes/' . $templateKey . '/');
+        }
         $file_search_order = $this->addToSearch($file_search_order, $this->language . '/html_includes/');
         if ($this->fallback !== $this->language) {
-            $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/' . $this->templateDir . '/');
+            foreach ($this->getTemplateInheritanceChain() as $templateKey) {
+                $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/' . $templateKey . '/');
+            }
             $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/');
         }
 
@@ -73,8 +81,8 @@ class HtmlIncludesFinder
             }
         }
 
-        self::$files = $files;
-        return $files;
+        self::$files[$cacheKey] = $files;
+        return self::$files[$cacheKey];
     }
 
     /**
@@ -97,19 +105,48 @@ class HtmlIncludesFinder
      */
     public function find(string $filename, bool $withFullPath = true): bool|string
     {
-        if (!isset(self::$files)) {
-            $this->findAll();
-        }
+        $files = $this->findAll();
 
-        if (!array_key_exists($filename, self::$files)) {
+        if (!array_key_exists($filename, $files)) {
             return false;
         }
 
-        $found_file = self::$files[$filename] . $filename;
+        $found_file = $files[$filename] . $filename;
         if ($withFullPath === true) {
             return $found_file;
         }
 
         return str_replace(DIR_FS_CATALOG, '', $found_file);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function getTemplateInheritanceChain(): array
+    {
+        $chain = $this->templateResolver->getTemplateInheritanceChain($this->templateDir);
+        if ($chain === []) {
+            return [$this->templateDir];
+        }
+
+        return array_values(array_unique($chain));
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function getCacheKey(): string
+    {
+        $plugins = array_map(
+            static fn(array $plugin): string => ($plugin['unique_key'] ?? '') . ':' . ($plugin['version'] ?? ''),
+            $this->installedPlugins
+        );
+
+        return implode('|', [
+            $this->language,
+            $this->fallback,
+            $this->templateDir,
+            implode(',', $plugins),
+        ]);
     }
 }

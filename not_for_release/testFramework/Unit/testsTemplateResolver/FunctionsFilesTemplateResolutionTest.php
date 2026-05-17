@@ -24,6 +24,7 @@ class FunctionsFilesTemplateResolutionTest extends zcTemplateResolverTest
         require_once DIR_FS_CATALOG . 'includes/classes/TemplateDto.php';
         require_once DIR_FS_CATALOG . 'includes/classes/TemplateSelect.php';
         require_once DIR_FS_CATALOG . 'includes/classes/ResourceLoaders/TemplateResolver.php';
+        require_once DIR_FS_CATALOG . 'includes/classes/ResourceLoaders/HtmlIncludesFinder.php';
         require_once DIR_FS_CATALOG . 'includes/classes/db/mysql/query_factory.php';
         require_once DIR_FS_CATALOG . 'includes/functions/functions_templates.php';
         require_once DIR_FS_CATALOG . 'includes/functions/functions_files.php';
