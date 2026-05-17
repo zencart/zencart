@@ -34,15 +34,16 @@ class storepickup extends ZenShipping
         $this->code = 'storepickup';
         $this->title = MODULE_SHIPPING_STOREPICKUP_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_STOREPICKUP_TEXT_DESCRIPTION;
-        $this->sort_order = defined('MODULE_SHIPPING_STOREPICKUP_SORT_ORDER') ? MODULE_SHIPPING_STOREPICKUP_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_SHIPPING_STOREPICKUP_SORT_ORDER');
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
 
+        $this->sort_order = (int)$this->sort_order;
         $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
-        $this->tax_class = MODULE_SHIPPING_STOREPICKUP_TAX_CLASS;
-        $this->tax_basis = MODULE_SHIPPING_STOREPICKUP_TAX_BASIS;
-        $this->enabled = (MODULE_SHIPPING_STOREPICKUP_STATUS === 'True');
+        $this->tax_class = zen_config('MODULE_SHIPPING_STOREPICKUP_TAX_CLASS');
+        $this->tax_basis = zen_config('MODULE_SHIPPING_STOREPICKUP_TAX_BASIS');
+        $this->enabled = (zen_config('MODULE_SHIPPING_STOREPICKUP_STATUS') === 'True');
         $this->update_status();
     }
 
@@ -56,7 +57,7 @@ class storepickup extends ZenShipping
             return;
         }
 
-        $this->checkEnabledForZone(MODULE_SHIPPING_STOREPICKUP_ZONE);
+        $this->checkEnabledForZone(zen_config('MODULE_SHIPPING_STOREPICKUP_ZONE'));
 
         // other status checks?
         if ($this->enabled) {
@@ -82,14 +83,14 @@ class storepickup extends ZenShipping
 
         // this code looks to see if there's a language-specific translation for the available shipping locations/methods, to override what is entered in the Admin (since the admin setting is in the default language)
         $ways_translated = (defined('MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS')) ? trim(MODULE_SHIPPING_STOREPICKUP_MULTIPLE_WAYS) : '';
-        $ways_default = trim(MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST);
+        $ways_default = trim(zen_config('MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST'));
         $methodsToParse = ($ways_translated == '') ? $ways_default : $ways_translated;
 
         if ($methodsToParse == '') {
             $this->methodsList[] = [
                 'id' => $this->code,
                 'title' => trim((string)MODULE_SHIPPING_STOREPICKUP_TEXT_WAY),
-                'cost' => MODULE_SHIPPING_STOREPICKUP_COST,
+                'cost' => zen_config('MODULE_SHIPPING_STOREPICKUP_COST'),
             ];
         } else {
             $this->locations = explode(';', (string)$methodsToParse);
@@ -98,7 +99,7 @@ class storepickup extends ZenShipping
                 if ($method != '' && $method != $this->code . (string)$key) {
                     continue;
                 }
-                $cost = MODULE_SHIPPING_STOREPICKUP_COST;
+                $cost = zen_config('MODULE_SHIPPING_STOREPICKUP_COST');
                 $title = $val;
                 if (strstr($val, ',')) {
                     [$title, $cost] = explode(',', $val);
@@ -138,10 +139,9 @@ class storepickup extends ZenShipping
     {
         global $db;
         if (!isset($this->_check)) {
-            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_STOREPICKUP_STATUS'");
-            $this->_check = $check_query->RecordCount();
+            $this->_check = (int)(zen_config('MODULE_SHIPPING_STOREPICKUP_STATUS') !== null);
         }
-        if ($this->_check > 0 && !defined('MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST')) {
+        if ($this->_check > 0 && zen_config('MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST') === null) {
             $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Pickup Locations', 'MODULE_SHIPPING_STOREPICKUP_LOCATIONS_LIST', 'Walk In', 'Enter a list of locations, separated by semicolons (;).<br>Optionally you may specify a fee/surcharge for each location by adding a comma and an amount. If no amount is specified, then the generic Shipping Cost amount from the next setting will be applied.<br><br>Examples:<br>121 Main Street;20 Church Street<br>Sunnyside,4.00;Lee Park,5.00;High Street,0.00<br>Dallas;Tulsa,5.00;Phoenix,0.00<br>For multilanguage use, see the define-statement in the language file for this module.', '6', '0', now())");
         }
         return $this->_check;

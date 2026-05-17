@@ -108,18 +108,19 @@ class zones extends ZenShipping
         $this->code = 'zones';
         $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION;
-        $this->sort_order = defined('MODULE_SHIPPING_ZONES_SORT_ORDER') ? MODULE_SHIPPING_ZONES_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_SHIPPING_ZONES_SORT_ORDER');
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
 
+        $this->sort_order = (int)$this->sort_order;
         $this->icon = '';
-        $this->tax_class = MODULE_SHIPPING_ZONES_TAX_CLASS;
-        $this->tax_basis = MODULE_SHIPPING_ZONES_TAX_BASIS;
+        $this->tax_class = zen_config('MODULE_SHIPPING_ZONES_TAX_CLASS');
+        $this->tax_basis = zen_config('MODULE_SHIPPING_ZONES_TAX_BASIS');
 
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = ((MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
+            $this->enabled = (zen_config('MODULE_SHIPPING_ZONES_STATUS') === 'True');
         } else {
             $this->enabled = false;
         }
@@ -127,18 +128,19 @@ class zones extends ZenShipping
         // CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
         $this->num_zones = 3;
 
-        if (IS_ADMIN_FLAG === true) {
+        if (IS_ADMIN_FLAG === true && $this->enabled) {
             // build in admin only additional zones if missing in the configuration table due to customization of default $this->num_zones = 3
             global $db;
             for ($i = 1; $i <= $this->num_zones; $i++) {
-                $check = $db->Execute("select * from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i . "'");
-                if ($this->enabled && $check->EOF) {
-                    $default_countries = '';
-                    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i . " Countries', 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i . "', '" . $default_countries . "', 'Comma separated list of two character ISO country codes that are part of Zone " . $i . ".<br>Set as 00 to indicate all two character ISO country codes that are not specifically defined.', '6', '0', 'zen_cfg_textarea(', now())");
-                    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i . " Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i . "', '3:8.50,7:10.50,99:20.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights/prices. Example: 3:8.50,7:10.50,... Weight/Price less than or equal to 3 would cost 8.50 for Zone " . $i . " destinations.<br>You can end the last amount as 10000:7% to charge 7% of the Order Total', '6', '0', 'zen_cfg_textarea(', now())");
-                    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i . " Handling Fee', 'MODULE_SHIPPING_ZONES_HANDLING_" . $i . "', '0', 'Handling Fee for this shipping zone', '6', '0', now())");
-                    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . "  (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i . "', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
+                if (zen_config("MODULE_SHIPPING_ZONES_COUNTRIES_$i") !== null) {
+                    continue;
                 }
+
+                $default_countries = '';
+                $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i . " Countries', 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i . "', '" . $default_countries . "', 'Comma separated list of two character ISO country codes that are part of Zone " . $i . ".<br>Set as 00 to indicate all two character ISO country codes that are not specifically defined.', '6', '0', 'zen_cfg_textarea(', now())");
+                $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Zone " . $i . " Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i . "', '3:8.50,7:10.50,99:20.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights/prices. Example: 3:8.50,7:10.50,... Weight/Price less than or equal to 3 would cost 8.50 for Zone " . $i . " destinations.<br>You can end the last amount as 10000:7% to charge 7% of the Order Total', '6', '0', 'zen_cfg_textarea(', now())");
+                $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i . " Handling Fee', 'MODULE_SHIPPING_ZONES_HANDLING_" . $i . "', '0', 'Handling Fee for this shipping zone', '6', '0', now())");
+                $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . "  (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i . "', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
             }
         } // build in admin only
 
@@ -146,10 +148,11 @@ class zones extends ZenShipping
             global $db;
             for ($i = 1; $i <= $this->num_zones; $i++) {
                 // check MODULE_SHIPPING_TABLE_HANDLING_METHOD is in
-                $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i . "'");
-                if ($check_query->EOF) {
-                    $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . "  (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i . "', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
+                if (zen_config("MODULE_SHIPPING_ZONES_HANDLING_METHOD_$i") !== null) {
+                    continue;
                 }
+
+                $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box Zone " . $i . "  (when by weight)' , 'MODULE_SHIPPING_ZONES_HANDLING_METHOD_" . $i . "', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
             }
         }
         $this->update_status();
@@ -188,7 +191,7 @@ class zones extends ZenShipping
         $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
 
         for ($i = 1; $i <= $this->num_zones; $i++) {
-            $countries_table = constant('MODULE_SHIPPING_ZONES_COUNTRIES_' . $i);
+            $countries_table = zen_config('MODULE_SHIPPING_ZONES_COUNTRIES_' . $i);
             $countries_table = strtoupper(str_replace(' ', '', $countries_table));
             $country_zones = preg_split("/[,]/", $countries_table);
             if (in_array($dest_country, $country_zones)) {
@@ -205,16 +208,16 @@ class zones extends ZenShipping
             $error = true;
         } else {
             $shipping = -1;
-            $zones_cost = constant('MODULE_SHIPPING_ZONES_COST_' . $dest_zone);
+            $zones_cost = zen_config('MODULE_SHIPPING_ZONES_COST_' . $dest_zone);
 
             $zones_table = preg_split("/[:,]/", $zones_cost);
             $size = sizeof($zones_table);
             $done = false;
             for ($i = 0; $i < $size; $i += 2) {
-                switch (MODULE_SHIPPING_ZONES_METHOD) {
-                    case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
+                switch (zen_config('MODULE_SHIPPING_ZONES_METHOD')) {
+                    case 'Weight':
                         if (round($shipping_weight, 9) <= $zones_table[$i]) {
-                            switch (SHIPPING_BOX_WEIGHT_DISPLAY) {
+                            switch (zen_config('SHIPPING_BOX_WEIGHT_DISPLAY')) {
                                 case (0):
                                     $show_box_weight = '';
                                     break;
@@ -239,7 +242,7 @@ class zones extends ZenShipping
                             break;
                         }
                         break;
-                    case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
+                    case 'Price':
                         // shipping adjustment
                         if (($_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices()) <= $zones_table[$i]) {
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
@@ -252,7 +255,7 @@ class zones extends ZenShipping
                             break;
                         }
                         break;
-                    case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
+                    case 'Item':
                         // shipping adjustment
                         if (($total_count - $_SESSION['cart']->free_shipping_items()) <= $zones_table[$i]) {
                             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country;
@@ -275,23 +278,23 @@ class zones extends ZenShipping
                 $shipping_cost = 0;
                 $shipping_method = MODULE_SHIPPING_ZONES_UNDEFINED_RATE;
             } else {
-                switch (MODULE_SHIPPING_ZONES_METHOD) {
-                    case (MODULE_SHIPPING_ZONES_METHOD == 'Weight'):
+                switch (zen_config('MODULE_SHIPPING_ZONES_METHOD')) {
+                    case 'Weight':
                         // charge per box when done by Weight
                         // Handling fee per box or order
-                        if (constant('MODULE_SHIPPING_ZONES_HANDLING_METHOD_' . $dest_zone) == 'Box') {
-                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone) * $shipping_num_boxes;
+                        if (zen_config('MODULE_SHIPPING_ZONES_HANDLING_METHOD_' . $dest_zone) == 'Box') {
+                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)zen_config('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone) * $shipping_num_boxes;
                         } else {
-                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                            $shipping_cost = ($shipping * $shipping_num_boxes) + (float)zen_config('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         }
                         break;
-                    case (MODULE_SHIPPING_ZONES_METHOD == 'Price'):
+                    case 'Price':
                         // don't charge per box when done by Price
-                        $shipping_cost = ($shipping) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                        $shipping_cost = ($shipping) + (float)zen_config('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         break;
-                    case (MODULE_SHIPPING_ZONES_METHOD == 'Item'):
+                    case 'Item':
                         // don't charge per box when done by Item
-                        $shipping_cost = ($shipping) + (float)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
+                        $shipping_cost = ($shipping) + (float)zen_config('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
                         break;
                 }
             }
@@ -316,7 +319,7 @@ class zones extends ZenShipping
             $this->quotes['icon'] = zen_image($this->icon, $this->title);
         }
 
-        if (strpos(MODULE_SHIPPING_ZONES_SKIPPED, $dest_country) !== false) {
+        if (strpos(zen_config('MODULE_SHIPPING_ZONES_SKIPPED'), $dest_country) !== false) {
             // don't show anything for this country
             $this->quotes = [];
         } else {
@@ -333,10 +336,8 @@ class zones extends ZenShipping
      */
     function check()
     {
-        global $db;
         if (!isset($this->_check)) {
-            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_ZONES_STATUS'");
-            $this->_check = $check_query->RecordCount();
+            $this->_check = (int)(zen_config('MODULE_SHIPPING_ZONES_STATUS') !== null);
         }
         return $this->_check;
     }

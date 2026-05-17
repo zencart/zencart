@@ -25,26 +25,26 @@ class perweightunit extends ZenShipping
         $this->code = 'perweightunit';
         $this->title = MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_DESCRIPTION;
-        $this->sort_order = defined('MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER') ? MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_SORT_ORDER');
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
 
+        $this->sort_order = (int)$this->sort_order;
         $this->icon = '';
-        $this->tax_class = MODULE_SHIPPING_PERWEIGHTUNIT_TAX_CLASS;
-        $this->tax_basis = MODULE_SHIPPING_PERWEIGHTUNIT_TAX_BASIS;
+        $this->tax_class = zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_TAX_CLASS');
+        $this->tax_basis = zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_TAX_BASIS');
 
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = (MODULE_SHIPPING_PERWEIGHTUNIT_STATUS === 'True');
+            $this->enabled = (zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_STATUS') === 'True');
         } else {
             $this->enabled = false;
         }
 
         if ($this->enabled) {
             // check MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD is in
-            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD'");
-            if ($check_query->EOF) {
+            if (zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD') === null) {
                 $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box', 'MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
             }
         }
@@ -62,7 +62,7 @@ class perweightunit extends ZenShipping
             return;
         }
 
-        $this->checkEnabledForZone(MODULE_SHIPPING_PERWEIGHTUNIT_ZONE);
+        $this->checkEnabledForZone(zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_ZONE'));
 
         if ($this->enabled) {
             // -----
@@ -91,8 +91,11 @@ class perweightunit extends ZenShipping
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_PERWEIGHTUNIT_TEXT_WAY,
-                    'cost' => (float)MODULE_SHIPPING_PERWEIGHTUNIT_COST * ($total_weight_units * $shipping_num_boxes) +
-                        (MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD == 'Box' ? (float)MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING * $shipping_num_boxes : (float)MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING),
+                    'cost' => (float)zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_COST') * ($total_weight_units * $shipping_num_boxes) +
+                        (zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING_METHOD') === 'Box'
+                            ? (float)zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING') * $shipping_num_boxes
+                            : (float)zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_HANDLING')
+                        ),
                 ],
             ],
         ];
@@ -117,10 +120,8 @@ class perweightunit extends ZenShipping
      */
     function check()
     {
-        global $db;
         if (!isset($this->_check)) {
-            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_PERWEIGHTUNIT_STATUS'");
-            $this->_check = $check_query->RecordCount();
+            $this->_check = (int)(zen_config('MODULE_SHIPPING_PERWEIGHTUNIT_STATUS') !== null);
         }
         return $this->_check;
     }
