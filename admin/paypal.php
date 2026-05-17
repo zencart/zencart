@@ -115,9 +115,9 @@ $paypal_ipn_sort_order_array = [
     }
 
     if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $ipn_tran['order_id']; ?></td>

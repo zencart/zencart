@@ -333,19 +333,15 @@ tr.attributeBoxContent {
     background-color: #facbfa;
 }
 
-.dataTableRowOver {
+.dataTableRow:hover,
+.dataTableRowOver,
+.dataTableRowBot:hover,
+.dataTableRowOverBot,
+.dataTableRowWhois:hover,
+.dataTableRowOverWhois {
     background-color: #ffffff;
     cursor: pointer;
 }
-
-.dataTableRowOverBot {
-    background-color: #ffffff;
-}
-
-.dataTableRowOverWhois {
-    background-color: #ffffff;
-}
-
 .dataTableRowSelected {
     background-color: #e7e6e0;
 }

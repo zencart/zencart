@@ -166,9 +166,9 @@
     }
 
     if (isset($mInfo) && is_object($mInfo) && ($media->fields['media_id'] == $mInfo->media_id)) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id']) . '\'">' . "\n";
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id']) . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_MEDIA_MANAGER, 'page=' . $_GET['page'] . '&mID=' . $media->fields['media_id']) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $media->fields['media_name']; ?></td>
