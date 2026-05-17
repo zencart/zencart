@@ -17,7 +17,7 @@ class HtmlIncludesFinder
     private string $fallback = 'english';
     private string $templateDir;
 
-    private static array $files;
+    private static ?array $files;
 
     public function __construct($filesystem, array $installedPlugins, string $language, string $templateDir)
     {
@@ -32,7 +32,11 @@ class HtmlIncludesFinder
      */
     public function setFallback(string $fallback): void
     {
+        if ($this->fallback === $fallback) {
+            return;
+        }
         $this->fallback = $fallback;
+        self::$files = null;
     }
 
     /**
@@ -45,31 +49,27 @@ class HtmlIncludesFinder
         }
 
         // -----
-        // Note: File directories are searched in reverse order of precedence, since
-        // a file's "name" is used as the $files' array's key so that the last file
-        // of a matching name is the directory that is used!
+        // Files are found using this search order. For each of the directories
+        // searched, the returned array is ordered by "base" includes/languages directory
+        // first, followed by plugin directories (alphabetically sorted by plugin key).
         //
-        // 1. Fallback (e.g. english) directories' /html_includes/ base.
+        // 1. Current language directories' /html_includes/{templateDir}/
         // 2. Current language directories' /html_includes/ base.
         // 3. Fallback (e.g. english) directories' /html_includes/{templateDir}/
-        // 4. Current language directories' /html_includes/{templateDir}/
+        // 4. Fallback (e.g. english) directories' /html_includes/ base.
         //
-        $file_search_order = [];
-        if ($this->fallback !== $this->language) {
-            $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/');
-        }
+        $file_search_order = $this->addToSearch([], $this->language . '/html_includes/' . $this->templateDir . '/');
         $file_search_order = $this->addToSearch($file_search_order, $this->language . '/html_includes/');
-
         if ($this->fallback !== $this->language) {
             $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/' . $this->templateDir . '/');
+            $file_search_order = $this->addToSearch($file_search_order, $this->fallback . '/html_includes/');
         }
-        $file_search_order = $this->addToSearch($file_search_order, $this->language . '/html_includes/' . $this->templateDir . '/');
 
         $files = [];
         foreach ($file_search_order as $next_dir) {
             $dir_files = $this->filesystem->listFilesFromDirectoryAlphaSorted($next_dir);
             foreach ($dir_files as $filename) {
-                $files[$filename] = $next_dir;
+                $files[$filename] ??= $next_dir;  //- First file found is used
             }
         }
 
@@ -87,6 +87,8 @@ class HtmlIncludesFinder
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/languages/';
             $search_array[] = $pluginDir . $html_includes_dir;
         }
+
+
         return $search_array;
     }
 

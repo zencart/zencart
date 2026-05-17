@@ -112,7 +112,8 @@ function zen_get_file_directory(string $check_directory, string $check_file, boo
     if (!str_ends_with($zv_filename, '.php')) {
         $zv_filename .= '.php';
     }
-    
+
+    $check_directory = rtrim($check_directory, '/') . '/';
     $dir_only = ($dir_only === true || $dir_only === 'true');
 
     if (!str_contains($check_directory, '/html_includes/')) {
@@ -133,16 +134,15 @@ function zen_get_file_directory(string $check_directory, string $check_file, boo
     $language = str_replace([DIR_FS_CATALOG, DIR_WS_LANGUAGES, 'html_includes', '//'], '', $check_directory);
     $htmlIncludesFinder = new HtmlIncludesFinder(new FileSystem(), $installedPlugins, $language, $template_dir);
 
-    $zv_directory = $htmlIncludesFinder->find($zv_filename);
-    if ($zv_directory === false) {
-        $zv_directory = $check_directory . $zv_filename;
+    // -----
+    // The returned value includes both the file's directory and filename.
+    //
+    $dir_filename = $htmlIncludesFinder->find($zv_filename);
+    if ($dir_filename === false) {
+        $dir_filename = $check_directory . $zv_filename;
     } 
 
-    if ($dir_only !== true) {
-        return $zv_directory;
-    }
-
-    return str_replace($zv_filename, '', $zv_directory);
+    return ($dir_only === false) ? $dir_filename : pathinfo($dir_filename, PATHINFO_DIRNAME);
 }
 
 /**

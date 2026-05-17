@@ -39,6 +39,7 @@ $check_directory = [];
 $za_lookup = [];
 $za_lookup[-1] = ['id' => -1, 'text' => TEXT_INFO_SELECT_FILE];
 $filenames = array_keys($directories);
+sort($filenames);
 for ($i = 0, $n = count($directories); $i < $n; $i++) {
     $za_lookup[$i] = ['id' => $i, 'text' => $filenames[$i]];
 }
