@@ -1,127 +1,137 @@
 <?php
-    /**
-     * consolidated zen_jscript_form_check
-     *
-     * required by various pages' jscript_form_check.php.
-     *
- * @copyright Copyright 2003-2022 Zen Cart Development Team
-     * @copyright Portions Copyright 2003 osCommerce
-     * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-     * @version $Id: pRose on charmes 2022 May 19 New in v1.5.8-alpha $
-     */
+/**
+ * zen_jscript_form_check
+ *
+ * required by various pages' jscript_form_check.php
+ * provides client-side form validation for various forms, with error messages defined in language files
+ *
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @version $Id: Modified in v3.0 $
+ */
 
 ?>
 <script>
-    var selected;
+    let selected; // retained for compatibility if referenced elsewhere
 
     function check_form_optional(form_name) {
-        var form = form_name;
-        if (!form.elements['firstname']) {
-            return true;
-        } else {
-            var firstname = form.elements['firstname'].value;
-            var lastname = form.elements['lastname'].value;
-            var street_address = form.elements['street_address'].value;
+        const f = form_name;
+        if (!f.elements['firstname']) return true;
 
-            if (firstname == '' && lastname == '' && street_address == '') {
-                return true;
-            } else {
-                return check_form(form_name);
-            }
+        const firstname = f.elements['firstname'].value;
+        const lastname = f.elements['lastname'].value;
+        const street_address = f.elements['street_address'].value;
+
+        if (firstname === '' && lastname === '' && street_address === '') {
+            return true;
         }
+        return check_form(form_name);
     }
-    var form = "";
-    var submitted = false;
-    var error = false;
-    var error_message = "";
+
+    let form = "";
+    let submitted = false;
+    let error = false;
+    let error_message = "";
+
+    function getElement(field_name) {
+        return form && form.elements ? form.elements[field_name] : null;
+    }
+
+    function isVisibleInput(el) {
+        return !!el && el.type !== "hidden";
+    }
+
+    function appendError(message) {
+        error_message += "* " + message + "\n";
+        error = true;
+    }
 
     function check_input(field_name, field_size, message) {
-        if (form.elements[field_name] && (form.elements[field_name].type != "hidden")) {
-            if (field_size == 0) return;
-            var field_value = form.elements[field_name].value;
+        const el = getElement(field_name);
+        if (!isVisibleInput(el) || field_size === 0) return;
 
-            if (field_value == '' || field_value.length < field_size) {
-                error_message = error_message + "* " + message + "\n";
-                error = true;
-            }
+        const field_value = el.value;
+        if (field_value === '' || field_value.length < field_size) {
+            appendError(message);
         }
     }
 
     function check_radio(field_name, message) {
-        var isChecked = false;
+        const el = getElement(field_name);
+        if (!isVisibleInput(el)) return;
 
-        if (form.elements[field_name] && (form.elements[field_name].type != "hidden")) {
-            var radio = form.elements[field_name];
+        // Handles both radio groups (NodeList/HTMLCollection) and single radio inputs
+        const radios = (typeof el.length === "number" && !el.tagName) ? el : [el];
+        let isChecked = false;
 
-            for (var i=0; i<radio.length; i++) {
-                if (radio[i].checked == true) {
-                    isChecked = true;
-                    break;
-                }
-            }
-
-            if (isChecked == false) {
-                error_message = error_message + "* " + message + "\n";
-                error = true;
+        for (let i = 0; i < radios.length; i++) {
+            if (radios[i].checked === true) {
+                isChecked = true;
+                break;
             }
         }
+
+        if (isChecked === false) appendError(message);
     }
 
     function check_select(field_name, field_default, message) {
-        if (form.elements[field_name] && (form.elements[field_name].type != "hidden")) {
-            var field_value = form.elements[field_name].value;
+        const el = getElement(field_name);
+        if (!isVisibleInput(el)) return;
 
-            if (field_value == field_default) {
-                error_message = error_message + "* " + message + "\n";
-                error = true;
-            }
+        if (el.value === field_default) {
+            appendError(message);
         }
     }
 
     function check_password(field_name_1, field_name_2, field_size, message_1, message_2) {
-        if (form.elements[field_name_1] && (form.elements[field_name_1].type != "hidden")) {
-            var password = form.elements[field_name_1].value;
-            var confirmation = form.elements[field_name_2].value;
+        const p1 = getElement(field_name_1);
+        const p2 = getElement(field_name_2);
+        if (!isVisibleInput(p1) || !p2) return;
 
-            if (password == '' || password.length < field_size) {
-                error_message = error_message + "* " + message_1 + "\n";
-                error = true;
-            } else if (password != confirmation) {
-                error_message = error_message + "* " + message_2 + "\n";
-                error = true;
-            }
+        const password = p1.value;
+        const confirmation = p2.value;
+
+        if (password === '' || password.length < field_size) {
+            appendError(message_1);
+        } else if (password !== confirmation) {
+            appendError(message_2);
         }
     }
 
     function check_password_new(field_name_1, field_name_2, field_name_3, field_size, message_1, message_2, message_3) {
-        if (form.elements[field_name_1] && (form.elements[field_name_1].type != "hidden")) {
-            var password_current = form.elements[field_name_1].value;
-            var password_new = form.elements[field_name_2].value;
-            var password_confirmation = form.elements[field_name_3].value;
+        const currentEl = getElement(field_name_1);
+        const newEl = getElement(field_name_2);
+        const confirmEl = getElement(field_name_3);
+        if (!isVisibleInput(currentEl) || !newEl || !confirmEl) return;
 
-            if (password_current == '' ) {
-                error_message = error_message + "* " + message_1 + "\n";
-                error = true;
-            } else if (password_new == '' || password_new.length < field_size) {
-                error_message = error_message + "* " + message_2 + "\n";
-                error = true;
-            } else if (password_new != password_confirmation) {
-                error_message = error_message + "* " + message_3 + "\n";
-                error = true;
-            }
+        const password_current = currentEl.value;
+        const password_new = newEl.value;
+        const password_confirmation = confirmEl.value;
+
+        if (password_current === '') {
+            appendError(message_1);
+        } else if (password_new === '' || password_new.length < field_size) {
+            appendError(message_2);
+        } else if (password_new !== password_confirmation) {
+            appendError(message_3);
         }
     }
 
     function check_state(min_length, min_message, select_message) {
-        if (form.elements["state"] && form.elements["zone_id"]) {
-            if (!form.state.disabled && form.zone_id.value == "") check_input("state", min_length, min_message);
-        } else if (form.elements["state"] && form.elements["state"].type != "hidden" && form.state.disabled) {
+        const stateEl = getElement("state");
+        const zoneEl = getElement("zone_id");
+
+        if (stateEl && zoneEl) {
+            if (!form.state.disabled && form.zone_id.value === "") {
+                check_input("state", min_length, min_message);
+            }
+        } else if (stateEl && stateEl.type !== "hidden" && form.state.disabled) {
             check_select("zone_id", "", select_message);
         }
     }
 
     function check_form(form_name) {
-        if (submitted == true) {
+        if (submitted === true) {
             alert("<?php echo JS_ERROR_SUBMITTED; ?>");
             return false;
         }
@@ -169,12 +179,12 @@
         check_password_new("password_current", "password_new", "password_confirmation", <?php echo (int)ENTRY_PASSWORD_MIN_LENGTH; ?>, "<?php echo ENTRY_PASSWORD_ERROR; ?>", "<?php echo ENTRY_PASSWORD_NEW_ERROR; ?>", "<?php echo ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING; ?>");
         <?php } ?>
 
-        if (error == true) {
+        if (error === true) {
             alert(error_message);
             return false;
-        } else {
-            submitted = true;
-            return true;
         }
+
+        submitted = true;
+        return true;
     }
 </script>
