@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  * @since ZC v1.3.0
  */
  class zen_SiteMapTree {
-     
+
      /**
       * The root category name
       * @var string
@@ -73,7 +73,7 @@ if (!defined('IS_ADMIN_FLAG')) {
      */
     protected  $child_end_string = "</li>\n";
     /**
-     * String to use as separator 
+     * String to use as separator
      * @var string
      */
     protected  $spacer_string = '';

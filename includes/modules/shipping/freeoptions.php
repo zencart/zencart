@@ -63,7 +63,7 @@ class freeoptions extends ZenShipping
     protected function checkForFreeOptions()
     {
         global $order;
-        
+
         // -----
         // Convert each of the min/max configured values into their floating-point equivalent.
         //

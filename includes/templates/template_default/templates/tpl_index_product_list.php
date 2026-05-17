@@ -30,7 +30,7 @@ if ($current_categories_description != '') {
 ?>
     <div id="indexProductListCatDescription" class="content"><?= $current_categories_description ?></div>
 <?php
-} // categories_description  
+} // categories_description
 
 $check_for_alpha = $listing_sql;
 $check_for_alpha = $db->Execute($check_for_alpha);

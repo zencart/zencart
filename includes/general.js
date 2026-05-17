@@ -3,9 +3,9 @@
 // |zen-cart Open Source E-commerce                                       |
 // +----------------------------------------------------------------------+
 // | Copyright (c) 2003 The zen-cart developers                           |
-// |                                                                      |   
-// | http://www.zen-cart.com/index.php                                    |   
-// |                                                                      |   
+// |                                                                      |
+// | http://www.zen-cart.com/index.php                                    |
+// |                                                                      |
 // | Portions Copyright (c) 2003 osCommerce                               |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the GPL license,       |
@@ -31,7 +31,7 @@ function SetFocus(TargetFormName) {
   }
 
   var TargetForm = document.forms[target];
-    
+
   for (i=0; i<TargetForm.length; i++) {
     if ( (TargetForm.elements[i].type != "image") && (TargetForm.elements[i].type != "hidden") && (TargetForm.elements[i].type != "reset") && (TargetForm.elements[i].type != "submit") ) {
       TargetForm.elements[i].focus();
@@ -80,7 +80,7 @@ function IsValidDate(DateToCheck, FormatString) {
 
   strDateToCheck = DateToCheck.toLowerCase();
   strFormatString = FormatString.toLowerCase();
-  
+
   if (strDateToCheck.length != strFormatString.length) {
     return false;
   }
@@ -181,7 +181,7 @@ function IsValidDate(DateToCheck, FormatString) {
   if (intday > intDaysArray[intMonth - 1]) {
     return false;
   }
-  
+
   return true;
 }
 

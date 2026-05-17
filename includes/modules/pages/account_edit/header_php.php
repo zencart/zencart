@@ -34,7 +34,7 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
     $fax = zen_db_prepare_input($_POST['fax'] ?? '');
     $email_format = in_array($_POST['email_format'], ['HTML', 'TEXT', 'NONE', 'OUT'], true) ? $_POST['email_format'] : 'TEXT';
 
-    $customers_referral = ''; 
+    $customers_referral = '';
     if (CUSTOMERS_REFERRAL_STATUS === '2' && !empty($_POST['customers_referral']) ) {
         $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
     }

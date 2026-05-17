@@ -38,7 +38,7 @@ class ot_group_pricing {
     public $deduction;
     /**
      * $description is a soft name for this order total method
-     * @var string 
+     * @var string
      */
     public $description;
     /**
@@ -297,7 +297,7 @@ class ot_group_pricing {
    * @since ZC v1.5.8
    */
   function help() {
-       return array('link' => 'https://docs.zen-cart.com/user/order_total/group_pricing/'); 
+       return array('link' => 'https://docs.zen-cart.com/user/order_total/group_pricing/');
   }
 
   /**

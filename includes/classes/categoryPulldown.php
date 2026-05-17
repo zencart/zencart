@@ -1,6 +1,6 @@
 <?php
 /**
- * Class categoryPulldown 
+ * Class categoryPulldown
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -69,7 +69,7 @@
             $this->sql = "SELECT DISTINCT c.categories_id, cd.categories_name
             FROM " . TABLE_CATEGORIES . " c
             LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd ON (c.categories_id = cd.categories_id AND cd.language_id = " . (int)$_SESSION['languages_id'] . ")
-            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptoc on (c.categories_id = ptoc.categories_id) 
+            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " ptoc on (c.categories_id = ptoc.categories_id)
             " . $this->attributes_join . "
             WHERE TRUE ";
         }

@@ -8,7 +8,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 // ----
 // Point 80 is where the shopping cart class is loaded and instantiated, need to be there during cart processing.
-// 
+//
 $autoLoadConfig[78][] = [
     'autoType' => 'class',
     'loadFile' => 'observers/class.products_options_stock_observer.php'

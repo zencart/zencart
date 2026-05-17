@@ -16,7 +16,7 @@ use Zencart\Traits\NotifierManager;
 abstract class DataTableDataSource
 {
     use NotifierManager;
-    
+
     protected $tableDefinition;
 
     public function __construct(TableViewDefinition $tableViewDefinition)

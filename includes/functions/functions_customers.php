@@ -310,7 +310,7 @@ function zen_is_hmac_login()
 function zen_validate_hmac_login()
 {
     global $db, $zenSessionId;
-    
+
     if (!isset($_POST['aid'], $_POST['cid'], $_POST['email_address'], $_POST['timestamp'])) {
         return false;
     }

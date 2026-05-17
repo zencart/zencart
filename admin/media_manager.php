@@ -162,7 +162,7 @@
     if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $media->fields['media_id']))) && !isset($mInfo) && (substr($action, 0, 3) != 'new')) {
 
       $mInfo = new objectInfo($media->fields);
-	  $mManager_parameter = '&mID=' . $mInfo->media_id;
+      $mManager_parameter = '&mID=' . $mInfo->media_id;
     }
 
     if (isset($mInfo) && is_object($mInfo) && ($media->fields['media_id'] == $mInfo->media_id)) {

@@ -12,7 +12,7 @@
 global $db;
 $lowstock_option = $db->Execute(
     "SELECT configuration_group_id, configuration_id
-       FROM " . TABLE_CONFIGURATION . " 
+       FROM " . TABLE_CONFIGURATION . "
       WHERE configuration_key = 'POSM_STOCK_REORDER_LEVEL'
       LIMIT 1"
 );

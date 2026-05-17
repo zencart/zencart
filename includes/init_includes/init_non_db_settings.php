@@ -30,7 +30,7 @@ $non_db_settings = [
     'ORDER_STATUS_DISPLAY_PRODUCTS' => 'true',      //- "
     'ORDER_STATUS_SLAM_COUNT' => '3',               //- A numeric string (defaults to '3'). Used by order_status/header_php.php
 
-    // Shared - Storefront and Admin 
+    // Shared - Storefront and Admin
     'TOPMOST_CATEGORY_PARENT_ID' => '0',
 
     // -----

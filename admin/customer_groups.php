@@ -115,7 +115,7 @@ if (!empty($action)) {
                     if (isset($gInfo) && is_object($gInfo) && ($group['group_id'] == $gInfo->group_id)) {
                         $class_and_id = 'id="defaultSelected" class="dataTableRowSelected"';
                         $role = 'role="option" aria-selected="true"';
-                    } 
+                    }
                     ?>
                     <tr <?php echo $class_and_id; ?> onclick="document.location.href='<?php echo zen_href_link(FILENAME_CUSTOMER_GROUPS, $href_page_param . 'gID=' . $group['group_id']); ?>'" <?php echo $role;?>>
                         <td class="dataTableContent text-center"><?php echo $group['group_id']; ?></td>
@@ -131,7 +131,7 @@ if (!empty($action)) {
                                 <?php echo zen_icon('trash') ?>
                             </a>
                             </div>
-<?php 
+<?php
                     if (isset($gInfo) && is_object($gInfo) && ($group['group_id'] == $gInfo->group_id)) {
                         echo zen_icon('caret-right', ICON_SELECTED, '2x', true);
                     } else {

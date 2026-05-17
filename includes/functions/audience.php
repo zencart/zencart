@@ -42,7 +42,7 @@
   foreach ($queries_list as $query_list) {
     // if requested, show recordcounts at end of descriptions of each entry
     // This could slow things down considerably, so use sparingly !!!!
-    if ($show_count) { 
+    if ($show_count) {
       $count_array = $db->Execute(parsed_query_string($query_list['query_string']) );
       $count = $count_array->RecordCount();
     }

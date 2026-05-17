@@ -48,7 +48,7 @@
     $word_member = '&nbsp;' . BOX_WHOS_ONLINE_MEMBERS;
   }
 
-  if (($n_guests >= 1) && ($n_members >= 1)) { 
+  if (($n_guests >= 1) && ($n_members >= 1)) {
     $word_and = '&nbsp;' . BOX_WHOS_ONLINE_AND . '&nbsp;<br>';
   } else {
     $word_and = "";
