@@ -726,7 +726,7 @@ function zen_add_filemtime(string $relative_path, ?string $absolute_path = null)
  */
 function zen_config(string $key): mixed
 {
-    global $configurationRepository;
+    global $configurationRepository, $productTypeLayoutRepository;
 
-    return $configurationRepository->get($key);
+    return $configurationRepository->get($key) ?? $productTypeLayoutRepository->get($key) ?? null;
 }
