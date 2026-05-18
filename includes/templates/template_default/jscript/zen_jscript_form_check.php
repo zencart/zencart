@@ -9,14 +9,16 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Modified in v3.0 $
  */
-
 ?>
-<script>
+<script title="zen_jscript_form_check (template_default)">
+    "use strict";
     let selected; // retained for compatibility if referenced elsewhere
 
     function check_form_optional(form_name) {
         const f = form_name;
-        if (!f.elements['firstname']) return true;
+        if (!f.elements['firstname']) {
+            return true;
+        }
 
         const firstname = f.elements['firstname'].value;
         const lastname = f.elements['lastname'].value;
@@ -48,7 +50,9 @@
 
     function check_input(field_name, field_size, message) {
         const el = getElement(field_name);
-        if (!isVisibleInput(el) || field_size === 0) return;
+        if (!isVisibleInput(el) || field_size === 0) {
+            return;
+        }
 
         const field_value = el.value;
         if (field_value === '' || field_value.length < field_size) {
@@ -58,7 +62,9 @@
 
     function check_radio(field_name, message) {
         const el = getElement(field_name);
-        if (!isVisibleInput(el)) return;
+        if (!isVisibleInput(el)) {
+            return;
+        }
 
         // Handles both radio groups (NodeList/HTMLCollection) and single radio inputs
         const radios = (typeof el.length === "number" && !el.tagName) ? el : [el];
@@ -71,12 +77,16 @@
             }
         }
 
-        if (isChecked === false) appendError(message);
+        if (isChecked === false) {
+            appendError(message);
+        }
     }
 
     function check_select(field_name, field_default, message) {
         const el = getElement(field_name);
-        if (!isVisibleInput(el)) return;
+        if (!isVisibleInput(el)) {
+            return;
+        }
 
         if (el.value === field_default) {
             appendError(message);
@@ -86,7 +96,9 @@
     function check_password(field_name_1, field_name_2, field_size, message_1, message_2) {
         const p1 = getElement(field_name_1);
         const p2 = getElement(field_name_2);
-        if (!isVisibleInput(p1) || !p2) return;
+        if (!isVisibleInput(p1) || !p2) {
+            return;
+        }
 
         const password = p1.value;
         const confirmation = p2.value;
@@ -102,7 +114,9 @@
         const currentEl = getElement(field_name_1);
         const newEl = getElement(field_name_2);
         const confirmEl = getElement(field_name_3);
-        if (!isVisibleInput(currentEl) || !newEl || !confirmEl) return;
+        if (!isVisibleInput(currentEl) || !newEl || !confirmEl) {
+            return;
+        }
 
         const password_current = currentEl.value;
         const password_new = newEl.value;
@@ -132,51 +146,65 @@
 
     function check_form(form_name) {
         if (submitted === true) {
-            alert("<?php echo JS_ERROR_SUBMITTED; ?>");
+            alert("<?= JS_ERROR_SUBMITTED ?>");
             return false;
         }
 
         error = false;
         form = form_name;
-        error_message = "<?php echo JS_ERROR; ?>";
+        error_message = "<?= JS_ERROR ?>";
 
-        <?php if (ACCOUNT_GENDER == 'true') echo '  check_radio("gender", "' . ENTRY_GENDER_ERROR . '");' . "\n"; ?>
+        <?php
+        if (ACCOUNT_GENDER === 'true') { ?>
+            check_radio("gender", "<?= ENTRY_GENDER_ERROR ?>");
+        <?php }
 
-        <?php if ((int)ENTRY_FIRST_NAME_MIN_LENGTH > 0) { ?>
-        check_input("firstname", <?php echo (int)ENTRY_FIRST_NAME_MIN_LENGTH; ?>, "<?php echo ENTRY_FIRST_NAME_ERROR; ?>");
-        <?php } ?>
-        <?php if ((int)ENTRY_LAST_NAME_MIN_LENGTH > 0) { ?>
-        check_input("lastname", <?php echo (int)ENTRY_LAST_NAME_MIN_LENGTH; ?>, "<?php echo ENTRY_LAST_NAME_ERROR; ?>");
+        if ((int)ENTRY_FIRST_NAME_MIN_LENGTH > 0) { ?>
+        check_input("firstname", <?= (int)ENTRY_FIRST_NAME_MIN_LENGTH ?>, "<?= ENTRY_FIRST_NAME_ERROR ?>");
+        <?php }
+
+        if ((int)ENTRY_LAST_NAME_MIN_LENGTH > 0) { ?>
+        check_input("lastname", <?= (int)ENTRY_LAST_NAME_MIN_LENGTH ?>, "<?= ENTRY_LAST_NAME_ERROR ?>");
+        <?php }
+
+        if (ACCOUNT_DOB === 'true' && (int)ENTRY_DOB_MIN_LENGTH != 0) { ?>
+        check_input("dob", <?= (int)ENTRY_DOB_MIN_LENGTH ?>, "<?= ENTRY_DATE_OF_BIRTH_ERROR ?>");
+        <?php }
+
+        if (ACCOUNT_COMPANY === 'true' && (int)ENTRY_COMPANY_MIN_LENGTH != 0) { ?>
+        check_input("company", <?= (int)ENTRY_COMPANY_MIN_LENGTH ?>, "<?= ENTRY_COMPANY_ERROR ?>");
+        <?php }
+
+        if ((int)ENTRY_EMAIL_ADDRESS_MIN_LENGTH > 0) { ?>
+        check_input("email_address", <?= (int)ENTRY_EMAIL_ADDRESS_MIN_LENGTH ?>, "<?= ENTRY_EMAIL_ADDRESS_ERROR ?>");
+        <?php }
+
+        if ((int)ENTRY_STREET_ADDRESS_MIN_LENGTH > 0) { ?>
+        check_input("street_address", <?= (int)ENTRY_STREET_ADDRESS_MIN_LENGTH ?>, "<?= ENTRY_STREET_ADDRESS_ERROR ?>");
+        <?php }
+
+        if ((int)ENTRY_POSTCODE_MIN_LENGTH > 0) { ?>
+        check_input("postcode", <?= (int)ENTRY_POSTCODE_MIN_LENGTH ?>, "<?= ENTRY_POST_CODE_ERROR ?>");
+        <?php }
+
+        if ((int)ENTRY_CITY_MIN_LENGTH > 0) { ?>
+        check_input("city", <?= (int)ENTRY_CITY_MIN_LENGTH ?>, "<?= ENTRY_CITY_ERROR ?>");
+        <?php }
+
+        if (ACCOUNT_STATE === 'true') { ?>
+        check_state(<?= (int)ENTRY_STATE_MIN_LENGTH ?>, "<?= ENTRY_STATE_ERROR ?>", "<?= ENTRY_STATE_ERROR_SELECT ?>");
         <?php } ?>
 
-        <?php if (ACCOUNT_DOB == 'true' && (int)ENTRY_DOB_MIN_LENGTH != 0) echo '  check_input("dob", ' . (int)ENTRY_DOB_MIN_LENGTH . ', "' . ENTRY_DATE_OF_BIRTH_ERROR . '");' . "\n"; ?>
-        <?php if (ACCOUNT_COMPANY == 'true' && (int)ENTRY_COMPANY_MIN_LENGTH != 0) echo '  check_input("company", ' . (int)ENTRY_COMPANY_MIN_LENGTH . ', "' . ENTRY_COMPANY_ERROR . '");' . "\n"; ?>
+        check_select("country", "", "<?= ENTRY_COUNTRY_ERROR ?>");
 
-        <?php if ((int)ENTRY_EMAIL_ADDRESS_MIN_LENGTH > 0) { ?>
-        check_input("email_address", <?php echo (int)ENTRY_EMAIL_ADDRESS_MIN_LENGTH; ?>, "<?php echo ENTRY_EMAIL_ADDRESS_ERROR; ?>");
-        <?php } ?>
-        <?php if ((int)ENTRY_STREET_ADDRESS_MIN_LENGTH > 0) { ?>
-        check_input("street_address", <?php echo (int)ENTRY_STREET_ADDRESS_MIN_LENGTH; ?>, "<?php echo ENTRY_STREET_ADDRESS_ERROR; ?>");
-        <?php } ?>
-        <?php if ((int)ENTRY_POSTCODE_MIN_LENGTH > 0) { ?>
-        check_input("postcode", <?php echo (int)ENTRY_POSTCODE_MIN_LENGTH; ?>, "<?php echo ENTRY_POST_CODE_ERROR; ?>");
-        <?php } ?>
-        <?php if ((int)ENTRY_CITY_MIN_LENGTH > 0) { ?>
-        check_input("city", <?php echo (int)ENTRY_CITY_MIN_LENGTH; ?>, "<?php echo ENTRY_CITY_ERROR; ?>");
-        <?php } ?>
-        <?php if (ACCOUNT_STATE == 'true') { ?>
-        check_state(<?php echo (int)ENTRY_STATE_MIN_LENGTH . ', "' . ENTRY_STATE_ERROR . '", "' . ENTRY_STATE_ERROR_SELECT . '"'; ?>);
-        <?php } ?>
+        <?php
+        if ((int)ENTRY_TELEPHONE_MIN_LENGTH > 0) { ?>
+        check_input("telephone", <?= (int)ENTRY_TELEPHONE_MIN_LENGTH ?>, "<?= ENTRY_TELEPHONE_NUMBER_ERROR ?>");
+        <?php }
 
-        check_select("country", "", "<?php echo ENTRY_COUNTRY_ERROR; ?>");
-
-        <?php if ((int)ENTRY_TELEPHONE_MIN_LENGTH > 0) { ?>
-        check_input("telephone", <?php echo ENTRY_TELEPHONE_MIN_LENGTH; ?>, "<?php echo ENTRY_TELEPHONE_NUMBER_ERROR; ?>");
-        <?php } ?>
-
-        <?php if ((int)ENTRY_PASSWORD_MIN_LENGTH > 0) { ?>
-        check_password("password", "confirmation", <?php echo (int)ENTRY_PASSWORD_MIN_LENGTH; ?>, "<?php echo ENTRY_PASSWORD_ERROR; ?>", "<?php echo ENTRY_PASSWORD_ERROR_NOT_MATCHING; ?>");
-        check_password_new("password_current", "password_new", "password_confirmation", <?php echo (int)ENTRY_PASSWORD_MIN_LENGTH; ?>, "<?php echo ENTRY_PASSWORD_ERROR; ?>", "<?php echo ENTRY_PASSWORD_NEW_ERROR; ?>", "<?php echo ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING; ?>");
+        if ((int)ENTRY_PASSWORD_MIN_LENGTH > 0) { ?>
+        check_password("password", "confirmation", <?= (int)ENTRY_PASSWORD_MIN_LENGTH ?>, "<?= ENTRY_PASSWORD_ERROR ?>", "<?= ENTRY_PASSWORD_ERROR_NOT_MATCHING ?>");
+        check_password_new("password_current", "password_new", "password_confirmation", <?= (int)ENTRY_PASSWORD_MIN_LENGTH ?>, "<?= ENTRY_PASSWORD_ERROR ?>", "<?= ENTRY_PASSWORD_NEW_ERROR ?>", "<?= ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING ?>");
         <?php } ?>
 
         if (error === true) {
