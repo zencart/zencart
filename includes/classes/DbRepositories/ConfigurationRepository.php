@@ -56,7 +56,7 @@ class ConfigurationRepository
     /**
      * @since ZC v2.2.0
      */
-    public function getByKey(string $configurationKey, bool $valueOnly = false): ?array
+    public function getByKey(string $configurationKey, bool $valueOnly = false): array|string|null
     {
         $configurationKey = $this->db->prepare_input($configurationKey);
         $result = $this->db->Execute(
