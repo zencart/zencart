@@ -40,7 +40,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'send')) {
 
             // auto complete when logged in
             if (zen_is_logged_in() && !zen_in_guest_checkout()) {
-                $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone 
+                $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone
                       FROM " . TABLE_CUSTOMERS . "
                       WHERE customers_id = :customersID";
 
@@ -125,7 +125,7 @@ $email_address = $email_address ?? '';
 
 // default email and name if customer is logged in
 if (zen_is_logged_in() && !zen_in_guest_checkout()) {
-    $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone 
+    $sql = "SELECT customers_id, customers_firstname, customers_lastname, customers_password, customers_email_address, customers_default_address_id, customers_telephone
             FROM " . TABLE_CUSTOMERS . "
             WHERE customers_id = :customersID";
 

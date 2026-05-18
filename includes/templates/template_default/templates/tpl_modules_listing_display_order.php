@@ -18,7 +18,7 @@ foreach($_GET as $key => $value) {
     if (in_array($key, ['main_page', 'cPath', 'manufacturers_id', 'filter_id', 'alpha_filter_id', 'music_genre_id', 'record_company_id'])) {
         echo zen_draw_hidden_field($key, $value);
     }
-    
+
     if ($current_page_base === FILENAME_SEARCH_RESULT && in_array($key, ['keyword', 'search_in_description', 'categories_id', 'inc_subcat', 'pfrom', 'pto', 'dfrom', 'dto'])) {
         echo zen_draw_hidden_field($key, $value);
     }

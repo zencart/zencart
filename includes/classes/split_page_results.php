@@ -19,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  */
 class splitPageResults extends base {
-    
+
     /**
      * Database field used to define unique item to count. Becomes the sql query.
      */

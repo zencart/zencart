@@ -35,7 +35,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.9.8 /usr/bin/composer /usr/bin/composer
 
 RUN { \
         echo "memory_limit=512M"; \

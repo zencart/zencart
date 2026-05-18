@@ -709,7 +709,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
     foreach ($attributes as $attribute) {
         $products_options_values_name = str_replace(
             ['-', '(', ')', '"', '&quot;', '&frac12;', '&amp;'],
-            ['\-', '\(', '\)', '\"', '\"', '1/2', '&'], 
+            ['\-', '\(', '\)', '\"', '\"', '1/2', '&'],
             $attribute['products_options_values_name']
         );
 
@@ -811,7 +811,7 @@ if ($products_filter !== 0 && !in_array($action, ['attribute_features_copy_to_pr
 ?>
               <li role="presentation"><a role="menuitem" href="<?= zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) ?>"><?= IMAGE_PRODUCTS_TO_CATEGORIES ?></a></li>
 <?php
-} 
+}
 ?>
             </ul>
           </div>

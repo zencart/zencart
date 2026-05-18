@@ -1,6 +1,6 @@
 <?php
 /**
- * Customer Authorization 
+ * Customer Authorization
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce

@@ -56,7 +56,7 @@ class ConfigurationRepository
     /**
      * @since ZC v2.2.0
      */
-    public function getByKey(string $configurationKey): ?array
+    public function getByKey(string $configurationKey, bool $valueOnly = false): array|string|null
     {
         $configurationKey = $this->db->prepare_input($configurationKey);
         $result = $this->db->Execute(
@@ -68,7 +68,7 @@ class ConfigurationRepository
             return null;
         }
 
-        return $result->fields;
+        return ($valueOnly === true) ? $result->fields['configuration_value'] : $result->fields;
     }
 
     /**
@@ -80,11 +80,25 @@ class ConfigurationRepository
         $configurationValue = $this->db->prepare_input($configurationValue);
 
         $this->db->Execute(
-            "UPDATE " . TABLE_CONFIGURATION .
-            " SET configuration_value = '" . $configurationValue . "'" .
-            " WHERE configuration_key = '" . $configurationKey . "'"
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_value = '" . $configurationValue . "',
+                    last_modified = NOW()
+              WHERE configuration_key = '" . $configurationKey . "'
+              LIMIT 1"
         );
 
         return $this->db->affectedRows();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function get(string $configurationKey): mixed
+    {
+        if (defined($configurationKey)) {
+            return constant($configurationKey);
+        }
+
+        return $this->getByKey(configurationKey: $configurationKey, valueOnly: true);
     }
 }

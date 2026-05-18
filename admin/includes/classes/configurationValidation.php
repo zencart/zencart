@@ -30,7 +30,7 @@ class configurationValidation extends base
         if ($val === '') {
             return true;
         }
-        return configurationValidation::sanitizeEmail($val, false); 
+        return configurationValidation::sanitizeEmail($val, false);
     }
 
     /**

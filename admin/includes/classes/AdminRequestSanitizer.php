@@ -694,7 +694,7 @@ class AdminRequestSanitizer extends base
             }
             $newKey = $_POST[$parameterName]; // Moved from above to reduce redundancy
             $requestPost[$parameterName][$newKey] = $hacked; // Moved from above to reduce redundancy
-            
+
             $this->arrayName = $currentArrayName; // Set/Reset $this->arrayName to the base for this iteration of the array
             $newCurrentArrayName = $this->setCurrentArrayName($newKey);
             foreach ($hacked as $pkey => $pvalue) {
@@ -747,7 +747,7 @@ class AdminRequestSanitizer extends base
         $currentArrayName = $this->setCurrentArrayName($parameterName);
         foreach ($hacked as $pkey => $pvalue) {
             $this->arrayName = $currentArrayName; // set/reset $this->arrayName back to the base for this iteration of the array.
-            
+
             if (isset($parameterDefinition['params'][$pkey])) {
                 unset($requestPost[$parameterName][$pkey]);
                 unset($_POST);
@@ -973,7 +973,7 @@ class AdminRequestSanitizer extends base
             fclose($fp);
         }
     }
-    
+
     /**
      * @param string $parameterName      the sub-parameter (key) to be added to the $this->arrayname if $this->arrayname has already been defined as a non-empty string.
      * @return string                    the newly built arrayname to be assigned/evaluated as necessary.
@@ -982,7 +982,7 @@ class AdminRequestSanitizer extends base
     private function setCurrentArrayName($parameterName)
     {
         $result = $parameterName; // Assign as base variable, assumed to not be an array, but instead a single name/string.
-        
+
         // if the currentArray has already been built, then append the parameter to it.
         // This assumes that $this->arrayName is not an array but instead convertable to text.
         //   If $this->arrayName were an array, how should it be returned? with $parameterName attached to each element?
@@ -990,7 +990,7 @@ class AdminRequestSanitizer extends base
         if (isset($this->arrayName) && $this->arrayName != '') {
             $result = $this->arrayName . '[' . $parameterName . ']';
         }
-        
+
         return $result;
     }
 }

@@ -41,6 +41,7 @@ abstract class zcInProcessFeatureTestCase extends TestCase
 
     protected function tearDown(): void
     {
+        $this->cleanupManagedPlugins();
         self::removeProgressFile();
         parent::tearDown();
     }

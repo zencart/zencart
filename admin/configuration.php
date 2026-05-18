@@ -172,10 +172,10 @@ if ($gID === 7) {
             bottom: 15px;
             right: 15px;
         }
-    	.form-horizontal hr {
-			margin: 0;
-			border: 0;
-			border-top: 1px solid #949494;
+        .form-horizontal hr {
+            margin: 0;
+            border: 0;
+            border-top: 1px solid #949494;
 }
 @media (max-width: 767px) {
         .form-control {
@@ -220,6 +220,9 @@ echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'
 <?php
 foreach ($configuration as $item) {
     $fieldName = 'cfg_' . $item['configuration_id'];
+    if (isset($_GET['cID']) && $_GET['cID'] === $item['configuration_id']) {
+        $focusField = $fieldName;
+    }
     $cfgValue = htmlspecialchars($item['configuration_value'], ENT_COMPAT, CHARSET, true);
 
     if (defined('CFGTITLE_' . $item['configuration_key'])) {
@@ -274,7 +277,17 @@ foreach ($configuration as $item) {
     </div>
     <?= '</form>' ?>
 </div>
-
+<?php
+if (isset($focusField)) {
+?>
+<script id="config-focus">
+$(window).on('load', function() {
+    $('input[name="<?= $focusField ?>"], input[name="configuration[<?= $focusField ?>]"]:checked, select[name="configuration[<?= $focusField ?>]"]').focus();
+});
+</script>
+<?php
+}
+?>
 <!-- body_eof //-->
 
 <!-- footer //-->

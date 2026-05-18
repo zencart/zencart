@@ -1,7 +1,7 @@
 <?php
 /**
- * Class pulldown 
- * 
+ * Class pulldown
+ *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -40,10 +40,10 @@
          * @var int
          */
         protected $count = 0;
-        
+
         protected $keywords;
-        protected $keyword_search_fields; 
-        protected $results;    
+        protected $keyword_search_fields;
+        protected $results;
         protected $sort;
         protected $sql;
         protected $values = [];

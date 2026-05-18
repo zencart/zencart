@@ -14,18 +14,19 @@ class freeoptions extends ZenShipping
         $this->code = 'freeoptions';
         $this->title = MODULE_SHIPPING_FREEOPTIONS_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_FREEOPTIONS_TEXT_DESCRIPTION;
-        $this->sort_order = defined('MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER') ? MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_SHIPPING_FREEOPTIONS_SORT_ORDER');
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
 
+        $this->sort_order = (int)$this->sort_order;
         $this->icon = '';
-        $this->tax_class = MODULE_SHIPPING_FREEOPTIONS_TAX_CLASS;
-        $this->tax_basis = MODULE_SHIPPING_FREEOPTIONS_TAX_BASIS;
+        $this->tax_class = zen_config('MODULE_SHIPPING_FREEOPTIONS_TAX_CLASS');
+        $this->tax_basis = zen_config('MODULE_SHIPPING_FREEOPTIONS_TAX_BASIS');
 
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = ((MODULE_SHIPPING_FREEOPTIONS_STATUS == 'True') ? true : false);
+            $this->enabled = (zen_config('MODULE_SHIPPING_FREEOPTIONS_STATUS') === 'True');
         } else {
             $this->enabled = false;
         }
@@ -43,7 +44,7 @@ class freeoptions extends ZenShipping
             return;
         }
 
-        $this->checkEnabledForZone(MODULE_SHIPPING_FREEOPTIONS_ZONE);
+        $this->checkEnabledForZone(zen_config('MODULE_SHIPPING_FREEOPTIONS_ZONE'));
 
         // -----
         // If still enabled, check to see if any "Free Options" should be presented to the customer.
@@ -63,16 +64,16 @@ class freeoptions extends ZenShipping
     protected function checkForFreeOptions()
     {
         global $order;
-        
+
         // -----
         // Convert each of the min/max configured values into their floating-point equivalent.
         //
-        $total_min = (float)MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN;
-        $total_max = (float)MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX;
-        $weight_min = (float)MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN;
-        $weight_max = (float)MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX;
-        $items_min = (float)MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN;
-        $items_max = (float)MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX;
+        $total_min = (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN');
+        $total_max = (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX');
+        $weight_min = (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN');
+        $weight_max = (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX');
+        $items_min = (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN');
+        $items_max = (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX');
 
         // -----
         // First, see if any of the 3 options for free shipping are configured.  If none are configured, there's no quote
@@ -100,7 +101,7 @@ class freeoptions extends ZenShipping
             } else {
                 $freeoptions_total = ($cart_total <= $total_max);
             }
-            $this->debug[] = ['total', $cart_total, $freeoptions_total, MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN, MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX];
+            $this->debug[] = ['total', $cart_total, $freeoptions_total, zen_config('MODULE_SHIPPING_FREEOPTIONS_TOTAL_MIN'), zen_config('MODULE_SHIPPING_FREEOPTIONS_TOTAL_MAX')];
         }
 
         // -----
@@ -115,7 +116,7 @@ class freeoptions extends ZenShipping
             } else {
                 $freeoptions_weight = ($order_weight <= $weight_max);
             }
-            $this->debug[] = ['weight', $order_weight, $freeoptions_weight, MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN, MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX];
+            $this->debug[] = ['weight', $order_weight, $freeoptions_weight, zen_config('MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MIN'), zen_config('MODULE_SHIPPING_FREEOPTIONS_WEIGHT_MAX')];
         }
 
         // -----
@@ -130,7 +131,7 @@ class freeoptions extends ZenShipping
             } else {
                 $freeoptions_items = ($num_items <= $items_max);
             }
-            $this->debug[] = ['items', $num_items, $freeoptions_items, MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN, MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX];
+            $this->debug[] = ['items', $num_items, $freeoptions_items, zen_config('MODULE_SHIPPING_FREEOPTIONS_ITEMS_MIN'), zen_config('MODULE_SHIPPING_FREEOPTIONS_ITEMS_MAX')];
         }
 
         // -----
@@ -168,7 +169,7 @@ class freeoptions extends ZenShipping
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_FREEOPTIONS_TEXT_WAY,
-                    'cost' => (float)MODULE_SHIPPING_FREEOPTIONS_COST + (float)MODULE_SHIPPING_FREEOPTIONS_HANDLING,
+                    'cost' => (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_COST') + (float)zen_config('MODULE_SHIPPING_FREEOPTIONS_HANDLING'),
                 ],
             ],
         ];
@@ -189,10 +190,8 @@ class freeoptions extends ZenShipping
      */
     public function check()
     {
-        global $db;
         if (!isset($this->_check)) {
-            $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_FREEOPTIONS_STATUS'");
-            $this->_check = $check_query->RecordCount();
+            $this->_check = (int)(zen_config('MODULE_SHIPPING_FREEOPTIONS_STATUS') !== null);
         }
         return $this->_check;
     }

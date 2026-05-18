@@ -222,7 +222,7 @@ if (!empty($action)) {
                                    AND f.featured_id = " . (int)$_GET['fID']);
 
           $fInfo = new objectInfo($product->fields);
-          
+
           if ($fInfo->featured_date_available === '0001-01-01' || $fInfo->featured_date_available === '01-01-0001') {
               $fInfo->featured_date_available = '';
           }

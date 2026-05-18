@@ -44,7 +44,7 @@ function resize() {
 
 //  window.resizeTo(imgWidth, imgHeight);
   window.resizeTo(frameWidth,frameHeight+i);
-	}
+    }
   else if (document.body) {
     window.resizeTo(document.body.clientWidth, document.body.clientHeight-i);
   }

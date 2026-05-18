@@ -36,7 +36,7 @@ $define = [
                           </li>
                           <li>
                             <strong>Ignore Sale Condition - No Sale Applied When Special Exists</strong><br>
-                            The sale deduction will not be applied to Specials. The Specials price will display 
+                            The sale deduction will not be applied to Specials. The Specials price will display
                             independently of the sale. (eg. Regular price $10.00, Specials price is $9.50,
                             Sale Condition is 10%. The product\'s final price will show $9.50 on sale.
                             The Sale Condition is ignored.)

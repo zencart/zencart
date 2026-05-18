@@ -16,8 +16,8 @@ while (!$random_whats_new_sidebox_product->EOF) {
     if (empty($data['products_id'])) {
         $random_whats_new_sidebox_product->MoveNextRandom();
         continue;
-    }    
-    
+    }
+
     $whats_new_box_counter++;
     $whats_new_price = zen_get_products_display_price($data['products_id']);
     $content .= "\n" . '  <div class="sideBoxContentItem">';

@@ -128,20 +128,20 @@ class zcObserverNonCaptchaObserver extends base
         $this->notify('NOTIFY_NONCAPTCHA_OBSERVER_FIELD_CHECK', $fields, $fields);
 
         // prepare for inspection
-        $array_found = false; 
+        $array_found = false;
         foreach ($fields as $field) {
             if (!empty($_POST[$field])) {
                 if (is_array($_POST[$field])) {
-                   $array_found = true; 
+                   $array_found = true;
                    $_POST[$field] = '';
                 } else {
                    $test_string .= $_POST[$field];
                 }
             }
         }
-        if ($array_found) { 
+        if ($array_found) {
             $GLOBALS['antiSpam'] = 'spam';
-            return; 
+            return;
         }
 
         if (empty(trim($test_string))) {

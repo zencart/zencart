@@ -22,7 +22,7 @@
     public $code;
     /**
      * $description is a soft name for this payment method
-     * @var string 
+     * @var string
      */
     public $description;
     /**

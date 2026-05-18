@@ -107,7 +107,7 @@ if ($product_not_found) {
         include_once $prod_type_specific_vars_info;
     }
     $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_PRODUCT_TYPE_VARS_PRODUCT_FREE_SHIPPING_INFO');
-  
+
     /**
      * Load all *.PHP files from the /includes/templates/MYTEMPLATE/PAGENAME/extra_main_template_vars
      */
