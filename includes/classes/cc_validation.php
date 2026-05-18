@@ -26,7 +26,7 @@ class cc_validation
     public function validate($number, $expiry_m, $expiry_y, $start_m = null, $start_y = null): int
     {
         $this->cc_number = preg_replace('/[^0-9]/', '', $number);
-        
+
         // NOTE: We check Solo before Maestro, and Maestro/Switch *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
         switch (true) {
             case preg_match('/^(6334[5-9][0-9]|6767[0-9]{2})[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && zen_config('CC_ENABLED_SOLO') === '1':
@@ -118,7 +118,7 @@ class cc_validation
         $cardNumber = strrev($this->cc_number);
         $numSum = 0;
 
-        for ($i = 0; $ i< strlen($cardNumber); $i++) {
+        for ($i = 0; $i< strlen($cardNumber); $i++) {
             $currentNum = substr($cardNumber, $i, 1);
 
             // Double every second digit
