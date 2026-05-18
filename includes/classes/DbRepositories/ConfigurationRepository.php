@@ -80,9 +80,11 @@ class ConfigurationRepository
         $configurationValue = $this->db->prepare_input($configurationValue);
 
         $this->db->Execute(
-            "UPDATE " . TABLE_CONFIGURATION .
-            " SET configuration_value = '" . $configurationValue . "'" .
-            " WHERE configuration_key = '" . $configurationKey . "'"
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_value = '" . $configurationValue . "',
+                    last_modified = NOW()
+              WHERE configuration_key = '" . $configurationKey . "'
+              LIMIT 1"
         );
 
         return $this->db->affectedRows();
