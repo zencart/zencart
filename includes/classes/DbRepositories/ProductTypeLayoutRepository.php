@@ -62,9 +62,10 @@ class ProductTypeLayoutRepository
         $configurationValue = $this->db->prepare_input($configurationValue);
 
         $this->db->Execute(
-            "UPDATE " . TABLE_PRODUCT_TYPE_LAYOUT .
-            " SET configuration_value = '" . $configurationValue . "'" .
-            " WHERE configuration_key = '" . $configurationKey . "' LIMIT 1"
+            "UPDATE " . TABLE_PRODUCT_TYPE_LAYOUT . "
+                SET configuration_value = '" . $configurationValue . "',
+                    last_modified = NOW()
+              WHERE configuration_key = '" . $configurationKey . "' LIMIT 1"
         );
 
         return $this->db->affectedRows();
