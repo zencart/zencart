@@ -91,7 +91,7 @@
 <label class="inputLabel" for="stateZone" id="zoneLabel"><?php echo ENTRY_STATE; ?></label>
 <?php
       echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $zone_id, 'id="stateZone"');
-      echo '&nbsp;<span class="alert">' . ((!empty(ENTRY_STATE_TEXT) && (int)ENTRY_STATE_MIN_LENGTH > 0) ? ENTRY_STATE_TEXT : '') . '</span>';
+      echo '<span class="alert">' . ((!empty(ENTRY_STATE_TEXT) && (int)ENTRY_STATE_MIN_LENGTH > 0) ? ENTRY_STATE_TEXT : '') . '</span>';
     }
 ?>
 
